@@ -7,7 +7,6 @@ import com.inspur.emmcloud.api.APIInterface;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
 import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
 import com.inspur.emmcloud.basemodule.api.HttpUtils;
@@ -1074,8 +1073,8 @@ public class ScheduleApiService {
                 .getHttpRequestParams(completeUrl);
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("id", building.getId());
             jsonObject.put("name", building.getName());
+            jsonObject.put("id", building.getId());
             params.setBodyContent(jsonObject.toString());
             params.setAsJsonContent(true);
         } catch (Exception e) {
@@ -1103,7 +1102,6 @@ public class ScheduleApiService {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                LogUtils.LbcDebug("returnSetMeetingCommonBuildingSuccess::" + arg0.toString());
                 apiInterface.returnSetMeetingCommonBuildingSuccess(building);
             }
 
@@ -1143,7 +1141,6 @@ public class ScheduleApiService {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                LogUtils.LbcDebug("returnCancelMeetingCommonBuildingSuccess::" + arg0.toString());
                 apiInterface.returnCancelMeetingCommonBuildingSuccess(building);
             }
 

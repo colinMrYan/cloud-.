@@ -14,6 +14,7 @@ import com.inspur.emmcloud.adapter.ScheduleMeetingRoomAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.widget.DateTimePickerDialog;
 import com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout;
@@ -261,6 +262,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
 
         @Override
         public void returnMeetingRoomListSuccess(GetMeetingRoomListResult getMeetingRoomListResult) {
+            LogUtils.LbcDebug("11111111111111111111");
             swipeRefreshLayout.setRefreshing(false);
             meetingRoomAreaList.clear();
             meetingRoomAdapter.setData(meetingRoomAreaList);

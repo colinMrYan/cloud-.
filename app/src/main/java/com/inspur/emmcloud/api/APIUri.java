@@ -1171,7 +1171,7 @@ public class APIUri {
     }
 
     /**
-     * 增加办公地点
+     * 增加办公地点设置常用办公地点
      *
      * @return
      */
@@ -1236,7 +1236,6 @@ public class APIUri {
     public static String getMeetingAttendStatusUrl(String responseType) {
         return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/" + responseType + "/";
     }
-
 
     /**********************日历接口**********************/
     /**
