@@ -3,12 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/text_layout_selector"
-    android:orientation="vertical"
-    android:paddingLeft="16dp">
+    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="44dp">
+        android:layout_height="44dp"
+        android:layout_marginLeft="16dp">
 
         <TextView
             android:id="@+id/tv_meeting_reply"
@@ -30,6 +30,15 @@
 
     </RelativeLayout>
 
-    <View style="@style/divide_style" />
+    <View
+        style="@style/divide_style"
+        android:layout_marginLeft="16dp" />
+
+    <View
+        android:id="@+id/item_meeting_reply_space"
+        android:layout_width="match_parent"
+        android:layout_height="9dp"
+        android:background="@color/content_bg"
+        android:visibility="gone" />
 
 </LinearLayout>

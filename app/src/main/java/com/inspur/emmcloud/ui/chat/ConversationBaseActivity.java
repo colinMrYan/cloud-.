@@ -8,6 +8,7 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
@@ -132,7 +133,11 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity {
         public void returnConversationInfoFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDlg);
 //            WebServiceMiddleUtils.hand(BaseApplication.getInstance(), error, errorCode);
-            finish();
+            if (errorCode == 400) {
+                ToastUtils.show(R.string.chat_group_chanel_not_exist);
+            } else {
+                finish();
+            }
         }
 
     }

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.inspur.mvp_demo">
+
+    <application>
+
+        <activity android:name="com.inspur.mvp_demo.meeting.view.MeetingHistoryActivity"></activity>
+    </application>
+
+</manifest>

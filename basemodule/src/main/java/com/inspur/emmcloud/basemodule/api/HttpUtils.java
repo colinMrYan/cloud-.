@@ -6,6 +6,7 @@ import android.content.Intent;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.AppExceptionCacheUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
@@ -55,6 +56,10 @@ public class HttpUtils {
                 distributeRequest(context, HttpMethod.CONNECT, params, callback);
                 break;
         }
+    }
+
+    public static void request(CloudHttpMethod cloudHttpMethod, RequestParams params, BaseModuleAPICallback callback) {
+        request(BaseApplication.getInstance().getApplicationContext(), cloudHttpMethod, params, callback);
     }
 
     /**
