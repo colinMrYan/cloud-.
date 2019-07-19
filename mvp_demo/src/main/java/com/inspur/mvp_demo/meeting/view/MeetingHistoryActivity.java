@@ -27,7 +27,6 @@ public class MeetingHistoryActivity extends BaseMvpActivity<MeetingHistoryPresen
     ListView meetingListView;
     @BindView(R2.id.rl_meeting_list_default)
     LinearLayout meetingListDefaultLayout;
-    private MeetingFragment meetingFragment;
     private ScheduleMeetingListAdapter scheduleMeetingListAdapter;
 
     @Override
