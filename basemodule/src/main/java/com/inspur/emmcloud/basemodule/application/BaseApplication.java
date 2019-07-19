@@ -80,7 +80,6 @@ public abstract class BaseApplication extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
         init();
-        LogUtils.jasonDebug("onCreate========================");
         LanguageManager.getInstance().setLanguageLocal();
         removeAllSessionCookie();
         myActivityLifecycleCallbacks = new MyActivityLifecycleCallbacks();
@@ -95,6 +94,10 @@ public abstract class BaseApplication extends MultiDexApplication {
         Router.registerComponent("com.inspur.emmcloud.web.applike.WebAppLike");
         Router.registerComponent("com.inspur.emmcloud.news.applike.NewsAppLike");
         instance = this;
+        Router.registerComponent("com.inspur.emmcloud.applike.AppApplike");
+        Router.registerComponent("com.inspur.emmcloud.login.applike.LoginAppLike");
+        Router.registerComponent("com.inspur.emmcloud.web.applike.WebAppLike");
+        Router.registerComponent("com.inspur.emmcloud.news.applike.NewsAppLike");
         CrashHandler crashHandler = CrashHandler.getInstance();
         crashHandler.init(getInstance());
         x.Ext.init(BaseApplication.this);
