@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.basemodule;
+package com.inspur.emmcloud.basemodule.ui;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.inspur.emmcloud.basemodule.ui.BaseFragment;
+import com.inspur.emmcloud.basemodule.R;
 
 /**
  * Created by chenmch on 2019/2/18.
