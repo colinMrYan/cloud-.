@@ -8,7 +8,6 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.MeetingOfficeAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
@@ -146,7 +145,6 @@ public class MeetingOfficeSettingActivity extends BaseActivity implements Expand
         @Override
         public void returnCancelMeetingCommonBuildingSuccess(Building building) {
             LoadingDialog.dimissDlg(loadingDlg);
-            LogUtils.LbcDebug("取消常用办公地点成功");
             changeBuildingIsFavoriteState(building);
             EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_MEETING_COMMON_OFFICE_CHANGED, null));
             adapter.notifyDataSetChanged();
@@ -155,14 +153,12 @@ public class MeetingOfficeSettingActivity extends BaseActivity implements Expand
         @Override
         public void returnCancelMeetingCommonBuildingFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDlg);
-            LogUtils.LbcDebug("取消常用办公地点失败");
             super.returnCancelMeetingCommonBuildingFail(error, errorCode);
     }
 
         @Override
         public void returnSetMeetingCommonBuildingSuccess(Building building) {
             LoadingDialog.dimissDlg(loadingDlg);
-            LogUtils.LbcDebug("设置常用办公地点成功");
             changeBuildingIsFavoriteState(building);
             EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_MEETING_COMMON_OFFICE_CHANGED, null));
             adapter.notifyDataSetChanged();
@@ -171,7 +167,6 @@ public class MeetingOfficeSettingActivity extends BaseActivity implements Expand
         @Override
         public void returnSetMeetingCommonBuildingFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDlg);
-            LogUtils.LbcDebug("设置常用办公地点失败");
             super.returnSetMeetingCommonBuildingFail(error, errorCode);
         }
     }

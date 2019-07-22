@@ -120,7 +120,7 @@ public class NetworkService extends ImpPlugin {
     /**
      * 获取网络2G/3G/4G/wifi
      */
-    public String getType(NetworkInfo networkInfo) {
+    private String getType(NetworkInfo networkInfo) {
         String netWorkType = null;
         if (networkInfo != null && networkInfo.isConnected()) {
             if (networkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
