@@ -264,7 +264,7 @@
     <string name="socket_close">Disconnect</string>
     <string name="chat_file_download_success">File has been downloaded successfully, click again to open</string>
     <string name="group_name_longth_valid">Group name, word overrun (no more than 40 characters)</string>
-    <string name="message_create_group">New Chat</string>
+    <string name="message_create_group">Meeting Chat</string>
     <string name="business_card">Business Card</string>
     <string name="no_channel_album">No content</string>
     <string name="no_channel_file">No content</string>
@@ -341,7 +341,7 @@
     <string name="work_task_end">%1$s End</string>
 
     <!-- 日程 （新）-->
-    <string name="schedule_event_alert">Schedule Reminder</string>
+    <string name="schedule_event_alert">Alert</string>
     <string name="schedule_calendar_add">Add Schedule</string>
     <string name="schedule_calendar_detail">Schedule Detail</string>
     <string name="schedule_setting_list_view">List view</string>
@@ -410,8 +410,8 @@
 
     <!--会议（新）-->
     <string name="schedule_meeting_booking">Book Meeting</string>
-    <string name="schedule_meeting_room_booking">Book a Meeting</string>
-    <string name="schedule_meeting_add_content_hint">Please enter the meeting content</string>
+    <string name="schedule_meeting_room_booking">New Meeting</string>
+    <string name="schedule_meeting_add_content_hint">Please enter the meeting topic</string>
     <string name="schedule_meeting_add_location_hint">Please select a meeting place</string>
     <string name="schedule_meeting_room_booking_detail">Meeting Room Details</string>
     <string name="schedule_meeting_add_attendee_title">Attendee</string>
@@ -422,7 +422,7 @@
     <string name="schedule_meeting_select_record_holder_title">Select Recorder</string>
     <string name="schedule_meeting_select_conference_title">Select Conference</string>
     <string name="schedule_meeting_add_note">Note</string>
-    <string name="schedule_meeting_add_alert_time">Reminder</string>
+    <string name="schedule_meeting_add_alert_time">Alert</string>
     <string name="schedule_meeting_history">History Meetings</string>
     <string name="schedule_meeting_search">Search Meeting</string>
     <string name="schedule_meeting_booking_room">Book a Meeting Room</string>
@@ -432,8 +432,8 @@
     <string name="schedule_choose_common_office">Common office locations</string>
     <string name="schedule_meeting_change">Modify Meeting</string>
     <string name="schedule_meeting_cancel">Delete Meeting</string>
-    <string name="schedule_meeting_my_create">Mine：</string>
-    <string name="schedule_meeting_my_take_part_in">Participant：</string>
+    <string name="schedule_meeting_my_create">Created</string>
+    <string name="schedule_meeting_my_take_part_in">Involved</string>
     <string name="schedule_meeting_attend_reply">Reply Attend Meeting</string>
     <string name="schedule_meeting_attend_or_not">Attend Or Not</string>
     <string name="schedule_meeting_attend_status_default">No Reply</string>
@@ -837,7 +837,7 @@
     <string name="meeting_room_time_late">Start time cannot be earlier than the current time</string>
     <string name="meeting_detail_attendee_accept">Accept</string>
     <string name="meeting_detail_attendee_decline">Decline</string>
-    <string name="meeting_detail_attendee_unknown">Unknown</string>
+    <string name="meeting_detail_attendee_unknown">No Response</string>
     <string name="meeting_detail_attendee_tentative">Tentative</string>
     <string name="meeting_detail_invite">Inviter</string>
     <string name="meeting_group_chat_fail">Meeting chat fail</string>
@@ -861,13 +861,13 @@
     <string name="meeting_detail_time">Time：%1$s</string>
     <string name="meeting_detail_remind">Remind：%1$s</string>
     <string name="meeting_detail_create">%1$s Created</string>
-    <string name="meeting_detail_inviter">Inviter:%1$s</string>
-    <string name="meeting_detail_attendee">Attendee:%1$s</string>
-    <string name="meeting_detail_record_holder">Recorder:%1$s</string>
-    <string name="meeting_detail_conference">Contact:%1$s</string>
+    <string name="meeting_detail_inviter">Inviter：%1$s</string>
+    <string name="meeting_detail_attendee">Attendee：%1$s</string>
+    <string name="meeting_detail_record_holder">Recorder：%1$s</string>
+    <string name="meeting_detail_conference">Contact：%1$s</string>
     <string name="meeting_detail_record_title">Recorder</string>
     <string name="meeting_detail_conference_title">Contact</string>
-    <string name="meeting_detail_note">Note:%1$s</string>
+    <string name="meeting_detail_note">Note：%1$s</string>
     <string name="meeting_detail_sign">Meeting Sign</string>
     <string name="meeting_detail_summary">十 Add Summary</string>
     <string name="meeting_detail_change_meeting">Change Meeting</string>
@@ -880,7 +880,7 @@
     <string name="meeting_detail_one_hour">One Hour Before</string>
     <string name="meeting_detail_one_day">One Day Before</string>
     <string name="meeting_detail_attendee_num">%1$s et al. %2$d</string>
-    <string name="meeting_detail_location">Place:</string>
+    <string name="meeting_detail_location">Location：</string>
 
 
     <!-- 日历 -->
@@ -896,20 +896,20 @@
     <string name="monthly">Every Month</string>
     <string name="weekly">Every Week</string>
     <string name="every_day">Every Day</string>
-    <string name="calendar_when_event_occurs">The Event Occurs</string>
-    <string name="calendar_five_minite_ago">5 Minutes Ago</string>
-    <string name="calendar_ten_minite_ago">10 Minutes Ago</string>
-    <string name="calendar_fifteen_minite_ago">15 Minutes Ago</string>
-    <string name="calendar_twenty_minite_ago">20 Minutes Ago</string>
-    <string name="calendar_thirty_minite_ago">30 Minutes Ago</string>
-    <string name="calendar_one_hour_ago">1 Hour Ago</string>
-    <string name="calendar_two_hours_ago">2 Hour Ago</string>
-    <string name="calendar_one_day_ago">One Day Before</string>
-    <string name="calendar_two_days_ago">Two Day Before</string>
-    <string name="calendar_a_week_ago">1 Week Ago</string>
+    <string name="calendar_when_event_occurs">At time of event</string>
+    <string name="calendar_five_minite_ago">5 minutes before start</string>
+    <string name="calendar_ten_minite_ago">10 minutes before start</string>
+    <string name="calendar_fifteen_minite_ago">15 minutes before start</string>
+    <string name="calendar_twenty_minite_ago">20 minutes before start</string>
+    <string name="calendar_thirty_minite_ago">30 minutes before start</string>
+    <string name="calendar_one_hour_ago">1 hour before start</string>
+    <string name="calendar_two_hours_ago">2 hour before start</string>
+    <string name="calendar_one_day_ago">One day before start</string>
+    <string name="calendar_two_days_ago">Two day before start</string>
+    <string name="calendar_a_week_ago">1 week before start</string>
     <string name="calendar_add_calendar">Add Calendars</string>
     <string name="calendar_divide_into_groups">Grouping</string>
-    <string name="calendar_no_alert">No Reminder</string>
+    <string name="calendar_no_alert">None</string>
     <string name="calendar_when_event_finished">Finished</string>
 
     <!-- 通用 -->
