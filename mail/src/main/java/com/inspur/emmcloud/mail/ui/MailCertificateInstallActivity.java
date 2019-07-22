@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.EncryptUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
@@ -23,6 +24,7 @@ import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
+import com.inspur.emmcloud.componentservice.mail.MailService;
 import com.inspur.emmcloud.mail.R;
 import com.inspur.emmcloud.mail.api.MailAPIInterfaceImpl;
 import com.inspur.emmcloud.mail.api.MailAPIService;
@@ -176,6 +178,9 @@ public class MailCertificateInstallActivity extends BaseActivity {
                         String key = text.toString().trim();
                         if (getCertificate(path, key)) {
                             certificatePassWord = key;
+                            if (Router.getInstance().getService(MailService.class) != null) {
+
+                            }
                             String mail = ContactUserCacheUtils.getUserMail(MyApplication.getInstance().getUid());
                             uploadCertificateFile(mail, path, certificatePassWord);
                             dialog.dismiss();

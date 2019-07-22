@@ -5,9 +5,11 @@ import android.app.Activity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
+import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.componentservice.mail.MailService;
 import com.inspur.emmcloud.componentservice.mail.OnExchangeLoginListener;
 import com.inspur.emmcloud.util.privates.ExchangeLoginUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 
 /**
  * Created by chenmch on 2019/7/9.
@@ -29,5 +31,12 @@ public class MailServiceImpl implements MailService {
         new ExchangeLoginUtils.Builder(activity)
                 .setShowLoadingDlg(true)
                 .setOnExchageLoginListener(onExchangeLoginListener).build().login();
+    }
+
+    @Override
+    public ContactUser getContactUserByUidOrEmail(boolean isEmail, String uidOrMail) {
+        ContactUser contactUser = isEmail ? ContactUserCacheUtils.getContactUserByEmail(uidOrMail) :
+                ContactUserCacheUtils.getContactUserByUid(uidOrMail);
+        return contactUser;
     }
 }
