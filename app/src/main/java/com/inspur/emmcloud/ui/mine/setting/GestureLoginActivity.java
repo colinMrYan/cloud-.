@@ -68,10 +68,7 @@ public class GestureLoginActivity extends BaseActivity {
                             IntentUtils.startActivity(GestureLoginActivity.this, CreateGestureActivity.class);
                             finish();
                         } else if (command.equals("login")) {
-                            isLogin = true;
-                            //发送解锁广播是，SchemeHandleActivity中接收处理
-                            MyApplication.getInstance().setSafeLock(false);
-                            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SAFE_UNLOCK));
+                            afterUnLockSuccess();
                         } else if (command.equals("close")) {
                             clearGestureInfo();
                             finish();
@@ -85,6 +82,16 @@ public class GestureLoginActivity extends BaseActivity {
             }
         }
     };
+
+    /**
+     * 通过手势解锁或指纹解锁成功后
+     */
+    private void afterUnLockSuccess() {
+        isLogin = true;
+        //发送解锁广播是，SchemeHandleActivity中接收处理
+        MyApplication.getInstance().setSafeLock(false);
+        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SAFE_UNLOCK));
+    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveWSMessage(SimpleEventMessage eventMessage) {
@@ -125,10 +132,9 @@ public class GestureLoginActivity extends BaseActivity {
         }
         String userHeadImgUri = APIUri
                 .getChannelImgUrl(GestureLoginActivity.this, ((MyApplication) getApplication()).getUid());
-        CircleTextImageView circleImageView = (CircleTextImageView) findViewById(R.id.gesture_login_user_head_img);
+        CircleTextImageView circleImageView = findViewById(R.id.gesture_login_user_head_img);
         ImageDisplayUtils.getInstance().displayImage(circleImageView,
                 userHeadImgUri, R.drawable.icon_person_default);
-        //由于机型，系统等问题，目前不开启指纹识别功能
         initFingerPrint();
     }
 
@@ -145,12 +151,11 @@ public class GestureLoginActivity extends BaseActivity {
 //            LogUtils.YfcDebug("用户没有开启指纹解锁");
 //            return;
 //        }
-        cloudFingerprintIdentify.startIdentify(10, new BaseFingerprint.FingerprintIdentifyListener() {
+        cloudFingerprintIdentify.startIdentify(5, new BaseFingerprint.FingerprintIdentifyListener() {
             @Override
             public void onSucceed() {
                 // 验证成功，自动结束指纹识别
-                EventBus.getDefault().post("success");
-                finish();
+                afterUnLockSuccess();
                 LogUtils.YfcDebug("指纹识别成功");
             }
 
@@ -158,9 +163,10 @@ public class GestureLoginActivity extends BaseActivity {
             public void onNotMatch(int availableTimes) {
                 // 指纹不匹配，并返回可用剩余次数并自动继续验证
                 LogUtils.YfcDebug("指纹识别剩余次数：" + availableTimes);
-                ToastUtils.show(GestureLoginActivity.this, "指纹认证失败，您还可以尝试" + availableTimes + "次");
-                if (availableTimes == 0) {
+                if (availableTimes <= 0) {
                     ToastUtils.show(GestureLoginActivity.this, "您的识别次数用尽，请尝试手势解锁，或者一段时间后重试");
+                } else {
+                    ToastUtils.show(GestureLoginActivity.this, "指纹认证失败，您还可以尝试" + availableTimes + "次");
                 }
             }
 
@@ -168,6 +174,8 @@ public class GestureLoginActivity extends BaseActivity {
             public void onFailed(boolean isDeviceLocked) {
                 // 错误次数达到上限或者API报错停止了验证，自动结束指纹识别
                 // isDeviceLocked 表示指纹硬件是否被暂时锁定
+                // 通常情况错误五次后会锁定三十秒，不同硬件也不一定完全如此，有资料介绍有的硬件也会锁定长达两分钟
+                ToastUtils.show(GestureLoginActivity.this, "您的识别次数用尽，请尝试手势解锁，或者一段时间后重试");
                 LogUtils.YfcDebug("isDeviceLocked:" + isDeviceLocked);
             }
 
