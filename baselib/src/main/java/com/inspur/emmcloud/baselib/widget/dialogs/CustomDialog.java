@@ -71,6 +71,7 @@ public class CustomDialog extends AlertDialog {
     private static void setActionBtnAttr(AlertDialog dialog) {
         Button positiveBtn = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
         Button negativeBtn = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+        Button neutralBtn = dialog.getButton(AlertDialog.BUTTON_NEUTRAL);
         int btnPadding = DensityUtil.dip2px(12);
         positiveBtn.setPadding(btnPadding, 0, btnPadding, btnPadding);
         positiveBtn.setTextSize(TypedValue.COMPLEX_UNIT_DIP, btnTextSize);
@@ -78,6 +79,9 @@ public class CustomDialog extends AlertDialog {
         negativeBtn.setPadding(btnPadding, btnPadding, btnPadding, btnPadding);
         negativeBtn.setTextSize(TypedValue.COMPLEX_UNIT_DIP, btnTextSize);
         negativeBtn.setTextColor(btnTextColor);
+        neutralBtn.setPadding(btnPadding, btnPadding, btnPadding, btnPadding);
+        neutralBtn.setTextSize(TypedValue.COMPLEX_UNIT_DIP, btnTextSize);
+        neutralBtn.setTextColor(btnTextColor);
     }
 
     private void init() {
