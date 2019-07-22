@@ -743,6 +743,9 @@ public class ConversationActivity extends ConversationBaseActivity {
                 case "file":
                     List<String> pathList = getIntent().getStringArrayListExtra("share_paths");
                     for (String url : pathList) {
+                        if (type.equals("image")) {
+                            url = getCompressorUrl(url);
+                        }
                         combinAndSendMessageWithFile(url, type.equals("file") ? Message.MESSAGE_TYPE_FILE_REGULAR_FILE : Message.MESSAGE_TYPE_MEDIA_IMAGE, null);
                     }
                     break;
@@ -760,6 +763,24 @@ public class ConversationActivity extends ConversationBaseActivity {
             }
 
         }
+    }
+
+    /**
+     * 压缩图片逻辑，正常压缩返回压缩url，压缩有异常返回传入的原url
+     *
+     * @param url
+     * @return
+     */
+    private String getCompressorUrl(String url) {
+        String compressorUrl = "";
+        Compressor compressor = new Compressor(ConversationActivity.this).setMaxArea(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE * MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH);
+        try {
+            File file = compressor.compressToFile(new File(url));
+            compressorUrl = file.getAbsolutePath();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return StringUtils.isBlank(compressorUrl) ? url : compressorUrl;
     }
 
 
@@ -781,13 +802,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                     break;
                 case REQUEST_CAMERA:
                     String imgPath = data.getExtras().getString(MyCameraActivity.OUT_FILE_PATH);
-                    try {
-                        File fileCamera = new Compressor(ConversationActivity.this).setMaxHeight(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setMaxWidth(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
-                                .compressToFile(new File(imgPath));
-                        imgPath = fileCamera.getAbsolutePath();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    imgPath = getCompressorUrl(imgPath);
                     combinAndSendMessageWithFile(imgPath, Message.MESSAGE_TYPE_MEDIA_IMAGE, null);
                     break;
                 case REQUEST_MENTIONS:
