@@ -436,10 +436,12 @@
     <string name="schedule_meeting_my_take_part_in"> I involved：</string>
     <string name="schedule_meeting_attend_reply">Reply Attend Meeting</string>
     <string name="schedule_meeting_attend_or_not">Attend Or Not</string>
-    <string name="schedule_meeting_attend_unknown">Unknown</string>
+    <string name="schedule_meeting_attend_status_default">No Reply</string>
+    <string name="schedule_meeting_attend_unknown">No Response</string>
     <string name="schedule_meeting_attend_ignore">Tentative</string>
     <string name="schedule_meeting_attend_accept">Accept</string>
     <string name="schedule_meeting_attend_reject">Reject</string>
+    <string name="chat_group_chanel_not_exist">Not in the current group</string>
 
     <!-- 发现部分 -->
     <string name="find">Discover</string>

@@ -134,7 +134,8 @@ public class MeetingDetailReplyActivity extends BaseActivity {
             ReplyAttendResult info = dataList.get(position);
             ((TextView) convertView.findViewById(R.id.tv_meeting_reply)).setText(info.content);
             convertView.findViewById(R.id.iv_meeting_reply_selected).setVisibility(info.isSelect ? View.VISIBLE : View.INVISIBLE);
-
+            convertView.findViewById(R.id.item_meeting_reply_space)
+                    .setVisibility((dataList.size() == 4 && position == 0) ? View.VISIBLE : View.GONE);
             return convertView;
         }
     }
