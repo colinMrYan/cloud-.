@@ -296,7 +296,11 @@ public class ChatCreateUtils {
         @Override
         public void returnGetCalendarChatBindSuccess(final String calendar, String cid) {
             if (StringUtils.isBlank(cid)) { //新建群聊
-                new ConversationCreateUtils().createGroupConversation((Activity) context, peopleArray, new ConversationCreateUtils.OnCreateGroupConversationListener() {
+                String groupName = null;
+                if (meeting != null && !StringUtils.isBlank(meeting.getTitle())) {
+                    groupName = meeting.getTitle();
+                }
+                new ConversationCreateUtils().createGroupConversation((Activity) context, peopleArray, groupName, new ConversationCreateUtils.OnCreateGroupConversationListener() {
                     @Override
                     public void createGroupConversationSuccess(Conversation conversation) {
                         if (loadingDlg != null) {
