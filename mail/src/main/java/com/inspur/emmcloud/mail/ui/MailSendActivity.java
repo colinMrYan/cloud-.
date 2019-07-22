@@ -16,10 +16,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.MailApiService;
 import com.inspur.emmcloud.baselib.util.EncryptUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
@@ -35,22 +31,21 @@ import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.basemodule.widget.richedit.InsertModel;
 import com.inspur.emmcloud.basemodule.widget.richedit.RichEdit;
-import com.inspur.emmcloud.bean.appcenter.mail.Mail;
-import com.inspur.emmcloud.bean.appcenter.mail.MailCertificateDetail;
-import com.inspur.emmcloud.bean.appcenter.mail.MailRecipient;
-import com.inspur.emmcloud.bean.appcenter.mail.MailRecipientModel;
-import com.inspur.emmcloud.bean.appcenter.mail.MailSend;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
-import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
-import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
-import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.MailCacheUtils;
+import com.inspur.emmcloud.mail.R;
+import com.inspur.emmcloud.mail.bean.Mail;
+import com.inspur.emmcloud.mail.bean.MailCertificateDetail;
+import com.inspur.emmcloud.mail.bean.MailRecipient;
+import com.inspur.emmcloud.mail.bean.MailRecipientModel;
+import com.inspur.emmcloud.mail.bean.MailSend;
+import com.inspur.emmcloud.mail.util.MailCacheUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
 
 /**
  * Created by libaochao on 2018/12/20.

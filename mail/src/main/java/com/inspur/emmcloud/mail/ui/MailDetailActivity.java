@@ -22,12 +22,7 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.adapter.MailAttachmentListAdapter;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.api.apiservice.MailApiService;
+import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.EncryptUtils;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
@@ -40,12 +35,20 @@ import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.NoScrollWebView;
 import com.inspur.emmcloud.baselib.widget.ScrollViewWithListView;
 import com.inspur.emmcloud.basemodule.api.APIDownloadCallBack;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.componentservice.contact.ContactUser;
+import com.inspur.emmcloud.componentservice.mail.MailService;
+import com.inspur.emmcloud.mail.R;
+import com.inspur.emmcloud.mail.adapter.MailAttachmentListAdapter;
+import com.inspur.emmcloud.mail.api.MailAPIInterfaceImpl;
+import com.inspur.emmcloud.mail.api.MailAPIService;
+import com.inspur.emmcloud.mail.api.MailAPIUri;
 import com.inspur.emmcloud.mail.bean.Mail;
 import com.inspur.emmcloud.mail.bean.MailAttachment;
 import com.inspur.emmcloud.mail.bean.MailRecipient;
@@ -114,8 +117,9 @@ public class MailDetailActivity extends BaseActivity {
     private MailAttachmentListAdapter mailAttachmentListAdapter;
 
     private Mail mail;
-    private MailApiService apiService;
+    private MailAPIService apiService;
     private LoadingDialog loadingDlg;
+    private ContactUser contactUser;
 
 
     @Override
@@ -126,6 +130,10 @@ public class MailDetailActivity extends BaseActivity {
         mail = MailCacheUtils.getMail(simpleMail.getId());
         if (!mail.isComplete()) {
             getMailDetail();
+        }
+        MailService mailService = Router.getInstance().getService(MailService.class);
+        if (mailService != null) {
+            contactUser = mailService.getContactUserByUidOrEmail(false, BaseApplication.getInstance().getUid());
         }
         initView();
     }
@@ -298,7 +306,7 @@ public class MailDetailActivity extends BaseActivity {
             if (FileUtils.isFileExist(mailAttachmentFilePath)) {
                 return;
             }
-            String source = APIUri.getMailAttachmentUrl();
+            String source = MailAPIUri.getMailAttachmentUrl();
             APIDownloadCallBack callBack = new APIDownloadCallBack(getApplicationContext(), source) {
                 @Override
                 public void callbackStart() {
@@ -342,7 +350,7 @@ public class MailDetailActivity extends BaseActivity {
                 }
             };
 
-            RequestParams params = MyApplication.getInstance().getHttpRequestParams(source);
+            RequestParams params = (BaseApplication.getInstance()).getHttpRequestParams(source);
             params.addQueryStringParameter("itemId", mailAttachment.getId());
             params.setAutoResume(true);// 断点下载
             params.setSaveFilePath(mailAttachmentFilePath);
@@ -407,10 +415,10 @@ public class MailDetailActivity extends BaseActivity {
     }
 
     private TextView getFlowChildText() {
-        int height = DensityUtil.dip2px(MyApplication.getInstance(), 21);
+        int height = DensityUtil.dip2px(BaseApplication.getInstance(), 21);
         FlowLayout.LayoutParams params = new FlowLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, height);
-        params.rightMargin = DensityUtil.dip2px(MyApplication.getInstance(), 10);
+        params.rightMargin = DensityUtil.dip2px(BaseApplication.getInstance(), 10);
         TextView textView = new TextView(this);
         textView.setLayoutParams(params);
         textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14);
@@ -465,9 +473,8 @@ public class MailDetailActivity extends BaseActivity {
 
 
     private byte[] decryptBytes(byte[] encryptBytes) {
-        String account = ContactUserCacheUtils.getUserMail(MyApplication.getInstance().getUid());
+        String account = contactUser != null ? contactUser.getEmail() : "";
         String key = EncryptUtils.stringToMD5(account);
-
         try {
             encryptBytes = EncryptUtils.decode(encryptBytes, key, Constant.MAIL_ENCRYPT_IV);
         } catch (Exception e) {
@@ -484,30 +491,30 @@ public class MailDetailActivity extends BaseActivity {
     }
 
     private void removeMail(Mail mail) {
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+        if (NetUtils.isNetworkConnected(BaseApplication.getInstance())) {
             loadingDlg.show();
             JSONObject object = new JSONObject();
-            object.put("Email", ContactUserCacheUtils.getUserMail(MyApplication.getInstance().getUid()));
+            object.put("Email", contactUser != null ? contactUser.getEmail() : "");
             object.put("DeleteMode", 2);
             JSONArray array = new JSONArray();
             array.add(mail.getId());
             object.put("ItemIds", array);
-            apiService = new MailApiService(this);
+            apiService = new MailAPIService(this);
             apiService.setAPIInterface(new WebService());
             apiService.removeMail(object.toJSONString());
         }
     }
 
     private void getMailDetail() {
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-            apiService = new MailApiService(this);
+        if (NetUtils.isNetworkConnected(BaseApplication.getInstance())) {
+            apiService = new MailAPIService(this);
             apiService.setAPIInterface(new WebService());
             apiService.getMailDetail(mail.getId(), mail.isEncrypted());
         }
     }
 
 
-    private class WebService extends APIInterfaceInstance {
+    private class WebService extends MailAPIInterfaceImpl {
 
         @Override
         public void returnMailDetailSuccess(byte[] response) {

@@ -5,14 +5,17 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
 
-import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseFragmentActivity;
-import com.inspur.emmcloud.bean.system.SimpleEventMessage;
-import com.inspur.emmcloud.widget.sildemenu.AllInterface;
-import com.inspur.emmcloud.widget.sildemenu.LeftDrawerLayout;
+import com.inspur.emmcloud.componentservice.contact.ContactUser;
+import com.inspur.emmcloud.componentservice.mail.MailService;
+import com.inspur.emmcloud.mail.R;
+import com.inspur.emmcloud.mail.widget.sildemenu.AllInterface;
+import com.inspur.emmcloud.mail.widget.sildemenu.LeftDrawerLayout;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -33,6 +36,7 @@ public class MailHomeBaseActivity extends BaseFragmentActivity implements AllInt
     @BindView(R.id.v_shadow)
     View shadowView;
     private MailLeftMenuFragment mailLeftMenuFragment;
+    private ContactUser contactUser;
 
 
     @Override
@@ -43,6 +47,10 @@ public class MailHomeBaseActivity extends BaseFragmentActivity implements AllInt
         loadingDlg = new LoadingDialog(this);
         addMailLeftMenyu();
         setStatus();
+        MailService mailService = Router.getInstance().getService(MailService.class);
+        if (mailService != null) {
+            contactUser = mailService.getContactUserByUidOrEmail(false, BaseApplication.getInstance().getUid());
+        }
     }
 
 //    private void loginMail(){

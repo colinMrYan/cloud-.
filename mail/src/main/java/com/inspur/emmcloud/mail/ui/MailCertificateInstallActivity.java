@@ -19,11 +19,13 @@ import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
+import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.componentservice.mail.MailService;
 import com.inspur.emmcloud.mail.R;
 import com.inspur.emmcloud.mail.api.MailAPIInterfaceImpl;
@@ -181,7 +183,13 @@ public class MailCertificateInstallActivity extends BaseActivity {
                             if (Router.getInstance().getService(MailService.class) != null) {
 
                             }
-                            String mail = ContactUserCacheUtils.getUserMail(MyApplication.getInstance().getUid());
+                            ContactUser contactUser = null;
+                            Router router = Router.getInstance();
+                            if (router.getService(MailService.class) != null) {
+                                MailService service = router.getService(MailService.class);
+                                contactUser = service.getContactUserByUidOrEmail(false, BaseApplication.getInstance().getUid());
+                            }
+                            String mail = contactUser.getEmail();
                             uploadCertificateFile(mail, path, certificatePassWord);
                             dialog.dismiss();
                         } else {

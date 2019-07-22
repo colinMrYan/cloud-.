@@ -9,25 +9,26 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.adapter.MailListAdapter;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.MailApiService;
+import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
-import com.inspur.emmcloud.bean.appcenter.mail.GetMailListResult;
-import com.inspur.emmcloud.bean.appcenter.mail.Mail;
-import com.inspur.emmcloud.bean.appcenter.mail.MailFolder;
-import com.inspur.emmcloud.bean.system.SimpleEventMessage;
-import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.MailCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.MailFolderCacheUtils;
+import com.inspur.emmcloud.componentservice.contact.ContactUser;
+import com.inspur.emmcloud.componentservice.mail.MailService;
+import com.inspur.emmcloud.mail.R;
+import com.inspur.emmcloud.mail.adapter.MailListAdapter;
+import com.inspur.emmcloud.mail.api.MailAPIInterfaceImpl;
+import com.inspur.emmcloud.mail.api.MailAPIService;
+import com.inspur.emmcloud.mail.bean.GetMailListResult;
+import com.inspur.emmcloud.mail.bean.Mail;
+import com.inspur.emmcloud.mail.bean.MailFolder;
+import com.inspur.emmcloud.mail.util.MailCacheUtils;
+import com.inspur.emmcloud.mail.util.MailFolderCacheUtils;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -57,16 +58,21 @@ public class MailHomeActivity extends MailHomeBaseActivity implements MySwipeRef
     RelativeLayout mailOperationLayout;
 
     private MailListAdapter mailAdapter;
-    private MailApiService apiService;
+    private MailAPIService apiService;
     private MailFolder currentMailFolder;
     private MailFolder currentRootMailFolder;
     private List<Mail> mailList = new ArrayList<>();
     private List<Mail> mailSelectList = new ArrayList<>();
+    private ContactUser contactUser;
 
 
     @Override
     public void onCreate() {
         super.onCreate();
+        MailService mailService = Router.getInstance().getService(MailService.class);
+        if (mailService != null) {
+            contactUser = mailService.getContactUserByUidOrEmail(false, BaseApplication.getInstance().getUid());
+        }
         initView();
     }
 
@@ -74,7 +80,7 @@ public class MailHomeActivity extends MailHomeBaseActivity implements MySwipeRef
         mailAdapter = new MailListAdapter(this);
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setOnLoadListener(this);
-        apiService = new MailApiService(this);
+        apiService = new MailAPIService(this);
         apiService.setAPIInterface(new WebService());
         mailListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -244,10 +250,10 @@ public class MailHomeActivity extends MailHomeBaseActivity implements MySwipeRef
     }
 
     private void removeMail() {
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+        if (NetUtils.isNetworkConnected(BaseApplication.getInstance())) {
             loadingDlg.show();
             JSONObject object = new JSONObject();
-            object.put("Email", ContactUserCacheUtils.getUserMail(MyApplication.getInstance().getUid()));
+            object.put("Email", contactUser != null ? contactUser.getEmail() : "");
             object.put("DeleteMode", 2);
             JSONArray array = new JSONArray();
             for (Mail mail : mailSelectList) {
@@ -258,7 +264,7 @@ public class MailHomeActivity extends MailHomeBaseActivity implements MySwipeRef
         }
     }
 
-    private class WebService extends APIInterfaceInstance {
+    private class WebService extends MailAPIInterfaceImpl {
         @Override
         public void returnMailListSuccess(String folderId, int pageSize, int offset, GetMailListResult getMailListResult) {
             swipeRefreshLayout.setLoading(false);

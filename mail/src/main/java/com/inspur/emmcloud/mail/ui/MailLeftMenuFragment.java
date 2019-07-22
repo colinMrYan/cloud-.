@@ -9,18 +9,19 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.MailApiService;
+import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
-import com.inspur.emmcloud.bean.appcenter.mail.GetMailFolderResult;
-import com.inspur.emmcloud.bean.appcenter.mail.MailFolder;
-import com.inspur.emmcloud.bean.system.SimpleEventMessage;
-import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.MailFolderCacheUtils;
+import com.inspur.emmcloud.componentservice.contact.ContactUser;
+import com.inspur.emmcloud.componentservice.mail.MailService;
+import com.inspur.emmcloud.mail.R;
+import com.inspur.emmcloud.mail.api.MailAPIInterfaceImpl;
+import com.inspur.emmcloud.mail.api.MailAPIService;
+import com.inspur.emmcloud.mail.bean.GetMailFolderResult;
+import com.inspur.emmcloud.mail.bean.MailFolder;
+import com.inspur.emmcloud.mail.util.MailFolderCacheUtils;
 import com.unnamed.b.atv.model.TreeNode;
 import com.unnamed.b.atv.view.AndroidTreeView;
 
@@ -34,16 +35,21 @@ import java.util.List;
 
 public class MailLeftMenuFragment extends Fragment {
     private LoadingDialog loadingDialog;
-    private MailApiService apiService;
+    private MailAPIService apiService;
     private AndroidTreeView treeView;
     private RelativeLayout containerLayout;
     private TextView mailAcountText;
     private boolean hasOpenFirstMailFolder = false;
+    private ContactUser contactUser;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        apiService = new MailApiService(getActivity());
+        apiService = new MailAPIService(getActivity());
+        MailService mailService = Router.getInstance().getService(MailService.class);
+        if (mailService != null) {
+            contactUser = mailService.getContactUserByUidOrEmail(false, BaseApplication.getInstance().getUid());
+        }
         apiService.setAPIInterface(new WebService());
     }
 
@@ -52,7 +58,7 @@ public class MailLeftMenuFragment extends Fragment {
         loadingDialog = new LoadingDialog(getActivity());
         containerLayout = view.findViewById(R.id.rl_container);
         mailAcountText = view.findViewById(R.id.tv_mail_acount);
-        mailAcountText.setText(ContactUserCacheUtils.getUserMail(MyApplication.getInstance().getUid()));
+        mailAcountText.setText(contactUser.getEmail());
         addTreeView();
         getMailFolder();
         return view;
@@ -103,7 +109,7 @@ public class MailLeftMenuFragment extends Fragment {
     }
 
 
-    private class WebService extends APIInterfaceInstance {
+    private class WebService extends MailAPIInterfaceImpl {
         @Override
         public void returnMailFolderSuccess(GetMailFolderResult getMailfolderResult) {
             LoadingDialog.dimissDlg(loadingDialog);
