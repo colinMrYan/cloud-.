@@ -1,8 +1,6 @@
 package com.inspur.mvp_demo.meeting.presenter;
 
-import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
-import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.mvp.BasePresenter;
 import com.inspur.emmcloud.componentservice.login.OauthCallBack;
 import com.inspur.mvp_demo.meeting.contract.MeetingContract;
@@ -23,10 +21,6 @@ public class MeetingHistoryPresenter extends BasePresenter<MeetingContract.View>
 
     @Override
     public void getMeetingList(int pageNum) {
-        if (!BaseApplication.getInstance().isHaveLogin()) {
-            ARouter.getInstance().build("/login/main").navigation();
-            return;
-        }
         String completeUrl = ApiUrl.getMeetingHistoryUrl(pageNum);
 
         ApiServiceImpl.getInstance().getMeetingList(new BaseModuleAPICallback(mView.getContext(), completeUrl) {
