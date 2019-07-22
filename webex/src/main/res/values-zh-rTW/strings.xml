@@ -2,6 +2,7 @@
 <resources>
     <string name="webex_meeting_title">%1$s的會議</string>
     <string name="webex_input_invitee_emails_hint">添加參會人含後綴郵箱</string>
+    <string name="webex_input_invitee_emails">請輸入參會人的電子郵箱地址</string>
     <string name="webex_input_correct_invitee_emails">請輸入正確的的電子郵箱地址</string>
     <string name="webex_not_add_repeated">不能重複添加</string>
     <string name="webex_start">開始</string>

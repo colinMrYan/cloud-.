@@ -69,6 +69,8 @@
     <string name="app_update_error">更新失敗</string>
     <string name="app_update_loaded">已下載：</string>
     <string name="unsupport_type">不支援的類型</string>
+    <string name="function_load_fail">加載出錯，輕觸屏幕重新加載</string>
+    <string name="function_reload">網絡診斷</string>
 
 
     <!-- 公共部分 -->
@@ -138,7 +140,6 @@
     <string name="mins">分鐘</string>
     <string name="join">加入</string>
     <string name="none">无</string>
-    <string name="webex_input_invitee_emails">請輸入正確的的電子郵箱地址</string>
 
 
     <!-- 新添加部分 -->
