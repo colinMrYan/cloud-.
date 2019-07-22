@@ -88,7 +88,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="20dp"
-            android:text="@string/web_load_fail"
+            android:text="@string/function_load_fail"
             android:textColor="#666666"
             android:textSize="16sp" />
 
@@ -103,7 +103,7 @@
             android:onClick="onClick"
             android:paddingLeft="25dp"
             android:paddingRight="25dp"
-            android:text="@string/web_reload"
+            android:text="@string/function_reload"
             android:textColor="#666666"
             android:textSize="15sp" />
     </LinearLayout>
@@ -112,10 +112,10 @@
         android:id="@+id/rl_web_content"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:clickable="true"
-        android:onClick="onClick"
         android:layout_below="@id/rl_header"
-        android:background="@color/content_bg">
+        android:background="@color/content_bg"
+        android:clickable="true"
+        android:onClick="onClick">
 
         <WebView
             android:id="@+id/wv_news"

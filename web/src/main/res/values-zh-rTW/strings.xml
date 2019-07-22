@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="web_load_fail">加載出錯，輕觸屏幕重新加載</string>
-    <string name="web_reload">網絡診斷</string>
+
 
     <string name="web_put_qrcode_in_frame">將取景框對準二維碼/條碼，</string>
     <string name="web_can_auto_scan">即可自動掃描</string>
