@@ -743,10 +743,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 case "file":
                     List<String> pathList = getIntent().getStringArrayListExtra("share_paths");
                     for (String url : pathList) {
-                        if (type.equals("image")) {
-                            url = getCompressorUrl(url);
-                        }
-                        combinAndSendMessageWithFile(url, type.equals("file") ? Message.MESSAGE_TYPE_FILE_REGULAR_FILE : Message.MESSAGE_TYPE_MEDIA_IMAGE, null);
+                        combinAndSendMessageWithFile(type.equals("image") ? getCompressorUrl(url) : url, type.equals("file") ? Message.MESSAGE_TYPE_FILE_REGULAR_FILE : Message.MESSAGE_TYPE_MEDIA_IMAGE, null);
                     }
                     break;
                 case "link":
@@ -801,8 +798,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                     }
                     break;
                 case REQUEST_CAMERA:
-                    String imgPath = data.getExtras().getString(MyCameraActivity.OUT_FILE_PATH);
-                    imgPath = getCompressorUrl(imgPath);
+                    String imgPath = getCompressorUrl(data.getExtras().getString(MyCameraActivity.OUT_FILE_PATH));
                     combinAndSendMessageWithFile(imgPath, Message.MESSAGE_TYPE_MEDIA_IMAGE, null);
                     break;
                 case REQUEST_MENTIONS:
