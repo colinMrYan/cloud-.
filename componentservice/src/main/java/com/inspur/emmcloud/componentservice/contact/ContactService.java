@@ -14,4 +14,6 @@ public interface ContactService extends CoreService {
     List<ContactUser> getSortUserList(List<String> uidList);
 
     ContactUser getContactUserByUid(String uid);
+
+    ContactUser getContactUserByMail(String mail);
 }

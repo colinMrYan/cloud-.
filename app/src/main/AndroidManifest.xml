@@ -102,11 +102,6 @@
                 android:value="true" />
         </activity>
         <activity
-            android:name=".ui.mine.setting.NoPermissionDialogActivity"
-            android:launchMode="singleInstance"
-            android:resizeableActivity="true"
-            android:theme="@style/dialog_activity" />
-        <activity
             android:name=".ui.mine.setting.EnterpriseSwitchActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
@@ -188,37 +183,7 @@
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.appcenter.webex.WebexScheduleMeetingActivity"
-            android:launchMode="singleTask"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.appcenter.webex.WebexMyMeetingActivity"
-            android:launchMode="singleTask"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.appcenter.webex.WebexAttendeesActivity"
-            android:launchMode="singleTask"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
 
-        <activity
-            android:name=".ui.appcenter.webex.WebexMeetingDetailActivity"
-            android:launchMode="singleTask"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.appcenter.webex.WebexAddAttendeesActivity"
-            android:launchMode="singleTask"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.appcenter.webex.WebexAddExternalAttendeesActivity"
-            android:launchMode="singleTask"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.ShareFilesActivity"

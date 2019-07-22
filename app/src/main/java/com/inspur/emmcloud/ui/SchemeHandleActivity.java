@@ -29,7 +29,6 @@ import com.inspur.emmcloud.ui.appcenter.ReactNativeAppActivity;
 import com.inspur.emmcloud.ui.appcenter.mail.MailHomeActivity;
 import com.inspur.emmcloud.ui.appcenter.mail.MailLoginActivity;
 import com.inspur.emmcloud.ui.appcenter.volume.VolumeHomePageActivity;
-import com.inspur.emmcloud.ui.appcenter.webex.WebexMyMeetingActivity;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
@@ -446,7 +445,8 @@ public class SchemeHandleActivity extends BaseActivity {
                 String installUri = intent.getExtras().getString("installUri", "");
                 Bundle bundle = new Bundle();
                 bundle.putString("installUri", installUri);
-                IntentUtils.startActivity(SchemeHandleActivity.this, WebexMyMeetingActivity.class, bundle, true);
+                ARouter.getInstance().build(Constant.AROUTER_CLASS_WEBEX_MAIN).with(bundle).navigation(SchemeHandleActivity.this);
+                finish();
                 break;
             case "mail":
                 new ExchangeLoginUtils.Builder(this)
