@@ -333,8 +333,7 @@ public class ScheduleApiService {
      * 获取会议室列表
      */
     public void getMeetingRoomList() {
-        String baseUrl = APIUri.getMeetingRoomsUrl();
-        final String completeUrl = baseUrl;
+        final String completeUrl = APIUri.getMeetingRoomsUrl();
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
 
@@ -1065,7 +1064,7 @@ public class ScheduleApiService {
 
 
     /**
-     * 设置常用会议点点
+     * 设置常用会议地点
      */
     public void setMeetingCommonBuilding(final Building building) {
         final String completeUrl = APIUri.addOfficeUrl();
