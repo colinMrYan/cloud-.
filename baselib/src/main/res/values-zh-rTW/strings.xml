@@ -433,10 +433,12 @@
     <string name="schedule_meeting_room_booking_detail">會議室詳情</string>
     <string name="schedule_meeting_attend_reply">參會答復</string>
     <string name="schedule_meeting_attend_or_not">是否參會</string>
-    <string name="schedule_meeting_attend_unknown">未知</string>
+    <string name="schedule_meeting_attend_status_default">未答復</string>
+    <string name="schedule_meeting_attend_unknown">未響應</string>
     <string name="schedule_meeting_attend_ignore">忽略</string>
     <string name="schedule_meeting_attend_accept">接受</string>
     <string name="schedule_meeting_attend_reject">拒絕</string>
+    <string name="chat_group_chanel_not_exist">不在當前群聊内</string>
 
     <!-- 發現部分 -->
     <string name="find">發現</string>

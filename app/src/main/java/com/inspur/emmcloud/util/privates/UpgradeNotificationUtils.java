@@ -54,10 +54,8 @@ public class UpgradeNotificationUtils {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             builder.setShowWhen(true);
         }
-        //builder.setDefaults(NotificationCompat.FLAG_ONLY_ALERT_ONCE);//消息提示模式
+        builder.setDefaults(Notification.DEFAULT_LIGHTS);//消息提示模式
         builder.setOnlyAlertOnce(true);
-        builder.setVibrate(new long[]{0});
-        builder.setSound(null);
         notificationManager.notify(notificationId, builder.build());
     }
 

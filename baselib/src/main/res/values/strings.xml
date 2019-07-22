@@ -442,11 +442,12 @@
     <string name="schedule_meeting_my_take_part_in">我参与的：</string>
     <string name="schedule_meeting_attend_reply">参会答复</string>
     <string name="schedule_meeting_attend_or_not">是否参会</string>
-    <string name="schedule_meeting_attend_unknown">未知</string>
+    <string name="schedule_meeting_attend_status_default">未答复</string>
+    <string name="schedule_meeting_attend_unknown">未响应</string>
     <string name="schedule_meeting_attend_accept">接受</string>
     <string name="schedule_meeting_attend_ignore">暂定</string>
     <string name="schedule_meeting_attend_reject">拒绝</string>
-
+    <string name="chat_group_chanel_not_exist">不在当前群聊内</string>
 
     <!-- 发现部分 -->
     <string name="find">发现</string>
