@@ -106,7 +106,8 @@ buildscript {
             jpush             : [
                     'jpush': 'cn.jiguang.sdk:jpush:3.3.2',
                     'jcore': 'cn.jiguang.sdk:jcore:2.0.1'],
-            ical4j            :'org.mnode.ical4j:ical4j:2.0.1'
+            ical4j            :'org.mnode.ical4j:ical4j:2.0.1',
+            fingerprintidentify : 'com.wei.android.lib:fingerprintidentify:1.2.1'
     ]
 
     repositories {
