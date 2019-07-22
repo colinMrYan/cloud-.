@@ -1237,6 +1237,7 @@ public class APIUri {
         return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/" + responseType + "/";
     }
 
+
     /**********************日历接口**********************/
     /**
      * 日历相关Uri
