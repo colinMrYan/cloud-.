@@ -224,6 +224,8 @@ public class Constant {
 
     public static final String AROUTER_CLASS_GROUP_NEWS = "/group/news";
 
+    public static final String AROUTER_CLASS_WEBEX_MAIN = "/webex/WebexMyMeetingActivity";
+
     //参会状态
     public static final int ATTEND_MEETING_STATUS_ACCEPT = 1;
     public static final int ATTEND_MEETING_STATUS_REJECT = 2;

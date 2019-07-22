@@ -272,7 +272,6 @@ public class MediaPlayerManagerUtils {
         LogUtils.jasonDebug("changeToHeadsetMode---------------------");
         currentMode = MODE_HEADSET;
         audioManager.setSpeakerphoneOn(false);
-        mediaPlayer.start();
     }
 
     /**
