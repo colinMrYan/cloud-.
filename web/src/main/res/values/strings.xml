@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="web_load_fail">加载出错，轻触屏幕重新加载</string>
-    <string name="web_reload">网络诊断</string>
-
     <string name="web_put_qrcode_in_frame">将取景框对准二维码/条形码，</string>
     <string name="web_can_auto_scan">即可自动扫描</string>
     <string name="web_scan_result">扫描结果</string>
