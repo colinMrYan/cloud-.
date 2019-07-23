@@ -109,6 +109,51 @@ public class Schedule implements Serializable {
         return eventList;
     }
 
+    public static List<Event> exchangeCalendarEvent2EventList(List<Schedule> scheduleList, Calendar selectCalendar) {
+        List<Event> eventList = new ArrayList<>();
+        for (Schedule schedule : scheduleList) {
+            Calendar scheduleStartTime = schedule.getStartTimeCalendar();
+            Calendar scheduleEndTime = schedule.getEndTimeCalendar();
+            if (TimeUtils.isContainTargetCalendarDay(selectCalendar, scheduleStartTime, scheduleEndTime) && schedule.getType().equals(Schedule.CALENDAR_TYPE_EXCHANGE)) {
+                Calendar dayBeginCalendar = TimeUtils.getDayBeginCalendar(selectCalendar);
+                Calendar dayEndCalendar = TimeUtils.getDayEndCalendar(selectCalendar);
+                if (scheduleStartTime.before(dayBeginCalendar)) {
+                    scheduleStartTime = dayBeginCalendar;
+                }
+                if (scheduleEndTime.after(dayEndCalendar)) {
+                    scheduleEndTime = dayEndCalendar;
+                }
+                Event event = new Event(schedule.getId(), Schedule.TYPE_CALENDAR, schedule.getTitle(), schedule.getScheduleLocationObj().getDisplayName(), scheduleStartTime, scheduleEndTime, schedule, schedule.getType(), schedule.getOwner());
+                event.setAllDay(schedule.getAllDay());
+                eventList.add(event);
+            }
+        }
+        return eventList;
+    }
+
+    public static List<Event> excludeExchangeCalendarEvent2EventList(List<Schedule> scheduleList, Calendar selectCalendar) {
+        List<Event> eventList = new ArrayList<>();
+        for (Schedule schedule : scheduleList) {
+            Calendar scheduleStartTime = schedule.getStartTimeCalendar();
+            Calendar scheduleEndTime = schedule.getEndTimeCalendar();
+            if (TimeUtils.isContainTargetCalendarDay(selectCalendar, scheduleStartTime, scheduleEndTime) && !schedule.getType().equals(Schedule.CALENDAR_TYPE_EXCHANGE)) {
+                Calendar dayBeginCalendar = TimeUtils.getDayBeginCalendar(selectCalendar);
+                Calendar dayEndCalendar = TimeUtils.getDayEndCalendar(selectCalendar);
+                if (scheduleStartTime.before(dayBeginCalendar)) {
+                    scheduleStartTime = dayBeginCalendar;
+                }
+                if (scheduleEndTime.after(dayEndCalendar)) {
+                    scheduleEndTime = dayEndCalendar;
+                }
+                Event event = new Event(schedule.getId(), Schedule.TYPE_CALENDAR, schedule.getTitle(), schedule.getScheduleLocationObj().getDisplayName(), scheduleStartTime, scheduleEndTime, schedule, schedule.getType(), schedule.getOwner());
+                event.setAllDay(schedule.getAllDay());
+                eventList.add(event);
+            }
+        }
+        return eventList;
+    }
+
+
     public String getId() {
         return id;
     }
