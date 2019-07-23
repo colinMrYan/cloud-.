@@ -362,7 +362,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     }
 
     /**
-     * 显示说有的全天事件列表
+     * 显示所有的全天事件列表
      */
     private void showAllDayEventListDlg() {
         if (myDialog == null)
