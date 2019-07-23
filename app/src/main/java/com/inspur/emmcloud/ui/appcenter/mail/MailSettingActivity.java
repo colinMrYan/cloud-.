@@ -11,7 +11,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
-import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
+import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 
 import org.greenrobot.eventbus.EventBus;
@@ -34,8 +34,8 @@ public class MailSettingActivity extends BaseActivity {
     @Override
     public void onCreate() {
         ButterKnife.bind(this);
-        String mail = PreferencesByUsersUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, "");
-        String password = PreferencesByUsersUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_PASSWORD, "");
+        String mail = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, "");
+        String password = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_PASSWORD, "");
         mailAccountText.setText(mail);
         mailPasswrodText.setText(password);
         mailPasswrodText.setTransformationMethod(PasswordTransformationMethod.getInstance());
@@ -64,8 +64,8 @@ public class MailSettingActivity extends BaseActivity {
                 }
                 break;
             case R.id.tv_mail_account_delete:
-                PreferencesByUsersUtils.putString(MailSettingActivity.this, Constant.PREF_MAIL_ACCOUNT, "");
-                PreferencesByUsersUtils.putString(MailSettingActivity.this, Constant.PREF_MAIL_PASSWORD, "");
+                PreferencesByUserAndTanentUtils.putString(MailSettingActivity.this, Constant.PREF_MAIL_ACCOUNT, "");
+                PreferencesByUserAndTanentUtils.putString(MailSettingActivity.this, Constant.PREF_MAIL_PASSWORD, "");
                 EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_MAIL_ACCOUNT_DELETE, ""));
                 IntentUtils.startActivity(MailSettingActivity.this, MailLoginActivity.class, true);
                 break;

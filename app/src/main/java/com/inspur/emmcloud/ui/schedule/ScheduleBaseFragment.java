@@ -3,8 +3,12 @@ package com.inspur.emmcloud.ui.schedule;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -18,6 +22,7 @@ import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
@@ -75,10 +80,25 @@ public class ScheduleBaseFragment extends BaseLayoutFragment implements View.OnL
 
     @Override
     protected void onCreate() {
+        LogUtils.jasonDebug("onCreate============");
         init();
         apiService = new ScheduleApiService(getActivity());
         apiService.setAPIInterface(new WebService());
         checkExchangeLogin();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        LogUtils.jasonDebug("onResume=111111111111=============");
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        LogUtils.jasonDebug("on-------------------");
+        return super.onCreateView(inflater, container, savedInstanceState);
+
     }
 
     @Override
@@ -187,6 +207,7 @@ public class ScheduleBaseFragment extends BaseLayoutFragment implements View.OnL
             pageEndCalendar.set(endEmmCalendar.getYear(), endEmmCalendar.getMonth() - 1, endEmmCalendar.getDay());
             showCalendarEvent(false);
         }
+        LogUtils.jasonDebug("onCalendarSelect=============");
     }
 
 
@@ -360,12 +381,7 @@ public class ScheduleBaseFragment extends BaseLayoutFragment implements View.OnL
         public void returnScheduleBasicDataSuccess(GetScheduleBasicDataResult getScheduleBasicDataResult) {
             PreferencesByUserAndTanentUtils.putString(BaseApplication.getInstance(), Constant.PREF_SCHEDULE_BASIC_DATA_VERSION, getScheduleBasicDataResult.getVersion());
             if (getScheduleBasicDataResult.getCommand().equals("FORWARD")) {
-                boolean isEnableExchangePrevious = PreferencesByUserAndTanentUtils.getBoolean(BaseApplication.getInstance(), Constant.PREF_SCHEDULE_ENABLE_EXCHANGE, false);
                 PreferencesByUserAndTanentUtils.putBoolean(BaseApplication.getInstance(), Constant.PREF_SCHEDULE_ENABLE_EXCHANGE, getScheduleBasicDataResult.isEnableExchange());
-                //当检测到突然开启Exchange日历功能时，进行Exchange登录检查
-                if (getScheduleBasicDataResult.isEnableExchange() && !isEnableExchangePrevious) {
-                    checkExchangeLogin();
-                }
                 List<Holiday> holidayList = getScheduleBasicDataResult.getHolidayList();
                 int year = getScheduleBasicDataResult.getYear();
                     yearHolidayListMap.put(year, holidayList);

@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ResolutionUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButtonDrawable;
@@ -54,6 +55,7 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
     private Calendar selectCalendar;
     private TextView dragViewStartTmeText;
     private TextView dragViewEndTimeText;
+    private int earliestEventOffset = -1;
 
     public CalendarDayView(Context context) {
         this(context, null);
@@ -171,8 +173,15 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
      * 每次打开日视图需要滚动到当前时间前一个小时
      */
     public int getScrollOffset() {
-        Calendar currentCalendar = Calendar.getInstance();
-        int offset = (int) ((currentCalendar.get(Calendar.HOUR_OF_DAY) - 1 + currentCalendar.get(Calendar.MINUTE) / 60.0f) * TIME_HOUR_HEIGHT - DensityUtil.dip2px(MyApplication.getInstance(), 3));
+        int offset = 0;
+        if (eventList.size() > 0) {
+            LogUtils.jasonDebug("earliestEventOffset==" + earliestEventOffset);
+            LogUtils.jasonDebug("TIME_HOUR_HEIGHT==" + TIME_HOUR_HEIGHT);
+            offset = earliestEventOffset - TIME_HOUR_HEIGHT;
+        } else {
+            Calendar currentCalendar = Calendar.getInstance();
+            offset = (int) ((currentCalendar.get(Calendar.HOUR_OF_DAY) - 1 + currentCalendar.get(Calendar.MINUTE) / 60.0f) * TIME_HOUR_HEIGHT - DensityUtil.dip2px(MyApplication.getInstance(), 3));
+        }
         if (offset < 0) {
             offset = 0;
         }
@@ -263,6 +272,7 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
     }
 
     private void showEventList() {
+        earliestEventOffset = -1;
         eventLayout.removeAllViews();
         for (TimeHourRow timeHourRow : timeHourRowList) {
             List<Event> eventList = timeHourRow.getEventList();
@@ -311,6 +321,10 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
                     dayStartTime.set(Calendar.HOUR_OF_DAY, 0);
                     dayStartTime.set(Calendar.MINUTE, 0);
                     int marginTop = (int) ((startTime.getTimeInMillis() - dayStartTime.getTimeInMillis()) * TIME_HOUR_HEIGHT / 3600000);
+                    //为了在打开当天日程时滚动到相应的位置
+                    if (earliestEventOffset == -1 || marginTop < earliestEventOffset) {
+                        earliestEventOffset = marginTop;
+                    }
                     RelativeLayout.LayoutParams eventLayoutParams = new RelativeLayout.LayoutParams(eventWidth,
                             eventHeight);
                     eventLayoutParams.setMargins(marginLeft, marginTop, 0, 0);

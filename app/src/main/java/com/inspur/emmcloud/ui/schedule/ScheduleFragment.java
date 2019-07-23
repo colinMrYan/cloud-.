@@ -19,6 +19,7 @@ import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
@@ -110,6 +111,9 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
             case Constant.EVENTBUS_TAG_SCHEDULE_TASK_DATA_CHANGED:
             case Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED:
                 showCalendarEvent(true);
+            case Constant.EVENTBUS_TAG_OPEN_WORK_TAB:
+                LogUtils.jasonDebug("555555555555555555555555555");
+                getScheduleBasicData(Calendar.getInstance().get(Calendar.YEAR));
                 break;
         }
     }
@@ -151,6 +155,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
             @Override
             public void run() {
                 setScheduleBackToToday();
+                LogUtils.jasonDebug("onResume=33333333333=============");
             }
         });
         switch (LanguageManager.getInstance().getCurrentAppLanguage()) {
@@ -165,7 +170,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         calendarDayView.setOnTouchListener(this);
         calendarDayView.setOnLongClickListener(this);
         calendarDayView.setOnClickListener(this);
-
+        LogUtils.jasonDebug("onResume=2222222222=============");
     }
 
 

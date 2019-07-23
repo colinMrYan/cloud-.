@@ -11,7 +11,7 @@ import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
-import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
+import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.componentservice.mail.OnExchangeLoginListener;
 
 /**
@@ -32,10 +32,10 @@ public class ExchangeLoginUtils {
         exchangePassword = builder.exchangePassword;
         isShowLoadingDlg = builder.isShowLoadingDlg;
         if (StringUtils.isBlank(exchangeAccount)) {
-            exchangeAccount = PreferencesByUsersUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, "");
+            exchangeAccount = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, "");
         }
         if (StringUtils.isBlank(exchangePassword)) {
-            exchangePassword = PreferencesByUsersUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_PASSWORD, "");
+            exchangePassword = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_PASSWORD, "");
         }
     }
 
