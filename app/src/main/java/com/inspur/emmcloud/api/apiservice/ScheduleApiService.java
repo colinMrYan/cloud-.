@@ -7,7 +7,6 @@ import com.inspur.emmcloud.api.APIInterface;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
 import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
 import com.inspur.emmcloud.basemodule.api.HttpUtils;
@@ -284,6 +283,8 @@ public class ScheduleApiService {
         String baseUrl = APIUri.getMeetingRoomsUrl();
         final String completeUrl = baseUrl;
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl, true);
+        final String completeUrl = APIUri.getMeetingRoomsUrl();
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
@@ -1013,7 +1014,7 @@ public class ScheduleApiService {
 
 
     /**
-     * 设置常用会议点点
+     * 设置常用会议地点
      */
     public void setMeetingCommonBuilding(final Building building) {
         final String completeUrl = APIUri.addOfficeUrl();
@@ -1021,8 +1022,8 @@ public class ScheduleApiService {
                 .getHttpRequestParams(completeUrl, true);
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("id", building.getId());
             jsonObject.put("name", building.getName());
+            jsonObject.put("id", building.getId());
             params.setBodyContent(jsonObject.toString());
             params.setAsJsonContent(true);
         } catch (Exception e) {
@@ -1050,7 +1051,6 @@ public class ScheduleApiService {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                LogUtils.LbcDebug("returnSetMeetingCommonBuildingSuccess::" + arg0.toString());
                 apiInterface.returnSetMeetingCommonBuildingSuccess(building);
             }
 
@@ -1090,7 +1090,6 @@ public class ScheduleApiService {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                LogUtils.LbcDebug("returnCancelMeetingCommonBuildingSuccess::" + arg0.toString());
                 apiInterface.returnCancelMeetingCommonBuildingSuccess(building);
             }
 

@@ -65,7 +65,7 @@
     <string name="tab_not_support_tips">%1$s功能已改版，请<Data><![CDATA[<font color=\'#0F7BCA\'>升级到最新版本</font>]]></Data></string>
     <string name="choose">选择</string>
     <string name="file_type">文件类型</string>
-    <string name="app_update_prepare">准备下载</string>
+    <string name="app_update_prepare">正在下载</string>
     <string name="app_update_error">更新失败</string>
     <string name="app_update_loaded">已下载：</string>
     <string name="unsupport_type">不支持的类型</string>
@@ -374,9 +374,9 @@
     <string name="schedule_calendar_modify">修改日程</string>
     <string name="schedule_calendar_delete">删除日程</string>
     <string name="schedule_calendar_create">新建日程</string>
-    <string name="schedule_calendar_my_schedule">我的日程</string>
-    <string name="schedule_calendar_my_meeting">我的会议</string>
-    <string name="schedule_calendar_my_task">我的任务</string>
+    <string name="schedule_calendar_my_schedule">日程</string>
+    <string name="schedule_calendar_my_meeting">会议</string>
+    <string name="schedule_calendar_my_task">任务</string>
     <string name="schedule_calendar_all_day">全天</string>
     <string name="schedule_calendar_am">上午</string>
     <string name="schedule_calendar_pm">下午</string>
@@ -884,6 +884,7 @@
     <string name="meeting_detail_attendee_unknown">无响应</string>
     <string name="meeting_detail_attendee_tentative">暂定</string>
     <string name="meeting_group_chat_fail">发起会议群聊失败</string>
+    <string name="meeting_create_group_chat">发起群聊</string>
 
     <!-- 会议预定错误提示 -->
     <string name="meeting_user_profile_broken">部门信息缺失</string>

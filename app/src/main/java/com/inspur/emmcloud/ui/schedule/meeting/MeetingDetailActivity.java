@@ -138,7 +138,7 @@ public class MeetingDetailActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_meeting_detail_tmp;
+        return R.layout.activity_meeting_detail_latest;
     }
 
     @SuppressLint("StringFormatInvalid")
@@ -162,10 +162,6 @@ public class MeetingDetailActivity extends BaseActivity {
         meetingCreateTimeText.setText(getString(R.string.meeting_detail_create, TimeUtils.calendar2FormatString(this,
                 TimeUtils.timeLong2Calendar(meeting.getCreationTime()), TimeUtils.FORMAT_MONTH_DAY_HOUR_MINUTE)));
         attendeeText.setText(getString(R.string.meeting_detail_attendee, getMeetingParticipant()));
-//        meetingRecordHolderText.setText(getString(R.string.meeting_detail_record_holder, getMeetingParticipant(MEETING_RECORD_HOLDER)));
-//        meetingConferenceText.setText(getString(R.string.meeting_detail_conference, getMeetingParticipant(MEETING_CONTACT)));
-//        meetingRecordHolderLayout.setVisibility(meeting.getRecorderParticipantList().size() > 0 ? View.VISIBLE : View.GONE);
-//        meetingConferenceLayout.setVisibility(meeting.getRoleParticipantList().size() > 0 ? View.VISIBLE : View.GONE);
         meetingNoteText.setText(meeting.getNote());
         meetingNoteLayout.setVisibility(StringUtil.isBlank(meeting.getNote()) ? View.GONE : View.VISIBLE);
         meetingMoreImg.setVisibility((PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(), Constant.PREF_IS_MEETING_ADMIN,
@@ -384,21 +380,6 @@ public class MeetingDetailActivity extends BaseActivity {
                 replyIntent.putExtra("meetingId", meetingId);
                 startActivityForResult(replyIntent, 0);
                 break;
-            case R.id.tv_meeting_create_group_chat: //发起群聊
-                new ChatCreateUtils().startGroupChat(this, meeting, chatGroupId, new ChatCreateUtils.ICreateGroupChatListener() {
-                    @Override
-                    public void createSuccess() {
-                        //创建成功
-                        ToastUtils.show("创建成功");
-                    }
-
-                    @Override
-                    public void createFail() {
-                        //创建失败
-                        ToastUtils.show("创建失败");
-                    }
-                });
-                break;
         }
     }
 
@@ -413,25 +394,28 @@ public class MeetingDetailActivity extends BaseActivity {
 
     private void startMembersActivity(int type) {
         List<String> uidList = new ArrayList<>();
+        Bundle bundle = new Bundle();
         switch (type) {
             case MEETING_ATTENDEE:
                 uidList = getUidList(meeting.getCommonParticipantList());
+                bundle.putString("title", getString(R.string.schedule_meeting_add_attendee_title));
                 break;
             case MEETING_RECORD_HOLDER:
                 uidList = getUidList(meeting.getRecorderParticipantList());
+                bundle.putString("title", getString(R.string.schedule_meeting_add_record_holder_title));
                 break;
             case MEETING_CONTACT:
                 uidList = getUidList(meeting.getRoleParticipantList());
+                bundle.putString("title", getString(R.string.schedule_meeting_add_conference_title));
                 break;
             case MEETING_INVITE:
                 uidList.add(meeting.getOwner());
+                bundle.putString("title", getString(R.string.meeting_detail_invite));
                 break;
             default:
                 break;
         }
-        Bundle bundle = new Bundle();
         bundle.putStringArrayList("uidList", (ArrayList<String>) uidList);
-        bundle.putString("title", getString(R.string.meeting_memebers));
         bundle.putInt(MembersActivity.MEMBER_PAGE_STATE, MembersActivity.CHECK_STATE);
         IntentUtils.startActivity(this, MembersActivity.class, bundle);
     }
