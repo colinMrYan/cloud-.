@@ -59,8 +59,8 @@ public class Constant {
     public static final String PREF_APP_PREVIOUS_VERSION = "previousVersion";
     public static final String PREF_LOGIN_ENTERPRISE_NAME = "login_enterprise_name";
     public static final String PREF_LOGIN_HAVE_SET_PASSWORD = "hasPassword";
-    public static final String PREF_MAIL_ACCOUNT = "mail_account";
-    public static final String PREF_MAIL_PASSWORD = "mail_password";
+    public static final String PREF_MAIL_ACCOUNT = "exchange_account";
+    public static final String PREF_MAIL_PASSWORD = "exchange_pw";
     public static final String PREF_MY_INFO_SHOW_CONFIG = "user_profiles";
     public static final String PREF_MINE_USER_MENUS = "mine_user_menus";
 
@@ -128,6 +128,7 @@ public class Constant {
     public static final String EVENTBUS_TAG_CHAT_CHANGE = "tag_chat_change"; //会议详情发起群聊后，通知聊天界面同步
     public static final String EVENTBUS_TAG_SCHEDULE_MEETING_COMMON_OFFICE_CHANGED = "tag_schedule_meeting_common_office_changed";
     public static final String EVENTBUS_TAG_OPEN_WORK_TAB = "tag_open_work_tab";
+    public static final String EVENTBUS_TAG_EWS_401 = "tag_ews_401";
 
     public static final String SERVICE_VERSION_CHAT_V0 = "v0";
     public static final String SERVICE_VERSION_CHAT_V1 = "v1";

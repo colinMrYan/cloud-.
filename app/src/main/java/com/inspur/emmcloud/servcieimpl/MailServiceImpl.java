@@ -28,6 +28,6 @@ public class MailServiceImpl implements MailService {
     public void exchangeLogin(Activity activity, OnExchangeLoginListener onExchangeLoginListener) {
         new ExchangeLoginUtils.Builder(activity)
                 .setShowLoadingDlg(true)
-                .setOnExchageLoginListener(onExchangeLoginListener).build().login();
+                .setOnExchangeLoginListener(onExchangeLoginListener).build().login();
     }
 }
