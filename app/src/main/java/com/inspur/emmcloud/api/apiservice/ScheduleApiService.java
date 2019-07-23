@@ -280,11 +280,8 @@ public class ScheduleApiService {
      * 获取会议室列表
      */
     public void getMeetingRoomList() {
-        String baseUrl = APIUri.getMeetingRoomsUrl();
-        final String completeUrl = baseUrl;
-        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl, true);
         final String completeUrl = APIUri.getMeetingRoomsUrl();
-        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl, true);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
