@@ -105,11 +105,11 @@ public class MeetingDetailActivity extends BaseActivity {
     RelativeLayout attendStatusLayout;
     @BindView(R.id.tv_meeting_attend_status)
     TextView attendStatusText;
+    ReplyAttendResult info = new ReplyAttendResult(); //参会答复
     private Meeting meeting;
     private ScheduleApiService scheduleApiService;
     private LoadingDialog loadingDlg;
     private String meetingId;   //会议id
-    ReplyAttendResult info = new ReplyAttendResult(); //参会答复
     private boolean isHistoryMeeting = false; //是否来自历史会议
     private List<String> moreTextList = new ArrayList<>();
     private String chatGroupId; //群聊ID
@@ -413,25 +413,28 @@ public class MeetingDetailActivity extends BaseActivity {
 
     private void startMembersActivity(int type) {
         List<String> uidList = new ArrayList<>();
+        Bundle bundle = new Bundle();
         switch (type) {
             case MEETING_ATTENDEE:
                 uidList = getUidList(meeting.getCommonParticipantList());
+                bundle.putString("title", getString(R.string.schedule_meeting_add_attendee_title));
                 break;
             case MEETING_RECORD_HOLDER:
                 uidList = getUidList(meeting.getRecorderParticipantList());
+                bundle.putString("title", getString(R.string.schedule_meeting_add_record_holder_title));
                 break;
             case MEETING_CONTACT:
                 uidList = getUidList(meeting.getRoleParticipantList());
+                bundle.putString("title", getString(R.string.schedule_meeting_add_conference_title));
                 break;
             case MEETING_INVITE:
                 uidList.add(meeting.getOwner());
+                bundle.putString("title", getString(R.string.meeting_detail_invite));
                 break;
             default:
                 break;
         }
-        Bundle bundle = new Bundle();
         bundle.putStringArrayList("uidList", (ArrayList<String>) uidList);
-        bundle.putString("title", getString(R.string.meeting_memebers));
         bundle.putInt(MembersActivity.MEMBER_PAGE_STATE, MembersActivity.CHECK_STATE);
         IntentUtils.startActivity(this, MembersActivity.class, bundle);
     }

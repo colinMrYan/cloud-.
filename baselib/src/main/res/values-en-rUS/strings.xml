@@ -351,7 +351,7 @@
     <string name="schedule_setting_quarter">Quarter</string>
     <string name="schedule_setting_month">Month</string>
     <string name="schedule_setting_view">View</string>
-    <string name="schedule_calendar_input_content_hint">Please enter the schedule content...</string>
+    <string name="schedule_calendar_input_content_hint">Please enter the schedule topic</string>
     <string name="schedule_calendar_time_alert">End time cannot be earlier than start time</string>
     <string name="schedule_alert_time_occur">On day of event(9 AM)</string>
     <string name="schedule_alert_time_before_one_day">1 day before(9 AM)</string>
@@ -420,7 +420,7 @@
     <string name="schedule_meeting_select_attendee_title">Select attendee</string>
     <string name="schedule_meeting_booking_detail">Meeting Detail</string>
     <string name="schedule_meeting_select_record_holder_title">Select Recorder</string>
-    <string name="schedule_meeting_select_conference_title">Select Conference</string>
+    <string name="schedule_meeting_select_conference_title">Select Contact</string>
     <string name="schedule_meeting_add_note">Note</string>
     <string name="schedule_meeting_add_alert_time">Alert</string>
     <string name="schedule_meeting_history">History Meetings</string>
@@ -859,7 +859,7 @@
     <string name="meeting_department_booking_times_over_run">Department booking time over run</string>
 
     <string name="meeting_detail_time">Time：%1$s</string>
-    <string name="meeting_detail_remind">Remind：%1$s</string>
+    <string name="meeting_detail_remind">Alert：%1$s</string>
     <string name="meeting_detail_create">%1$s Created</string>
     <string name="meeting_detail_inviter">Inviter：%1$s</string>
     <string name="meeting_detail_attendee">Attendee：%1$s</string>
