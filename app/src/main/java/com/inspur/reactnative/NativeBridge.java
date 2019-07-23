@@ -157,22 +157,52 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
             messageDialogBuilder.setMessage(content);
         }
         JSONArray array = JSONUtils.getJSONArray(buttonJson, new JSONArray());
-        for (int i = 0; i < array.length(); i++) {
-            final AlertButton alertButton = new AlertButton(JSONUtils.getJSONObject(array, i, new JSONObject()));
-            messageDialogBuilder.setPositiveButton(alertButton.getText(), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                    try {
-                        promise.resolve(alertButton.getCode());
-                    } catch (Exception e) {
-                        promise.reject(e);
-                    }
-                }
-            });
-        }
+        handleDialogAction(messageDialogBuilder, array, promise);
         messageDialogBuilder.show();
 
+    }
+
+    private void handleDialogAction(CustomDialog.MessageDialogBuilder messageDialogBuilder, JSONArray array, Promise promise) {
+        List<AlertButton> btnList = new ArrayList<>();
+        for (int i = 0; i < array.length(); i++) {
+            final AlertButton alertButton = new AlertButton(JSONUtils.getJSONObject(array, i, new JSONObject()));
+            btnList.add(alertButton);
+        }
+
+        switch (array.length()) {
+            case 3:
+                messageDialogBuilder.setNeutralButton(btnList.get(0).getText(), new BridgeActionListener(btnList.get(0), promise));
+                messageDialogBuilder.setNegativeButton(btnList.get(1).getText(), new BridgeActionListener(btnList.get(1), promise));
+                messageDialogBuilder.setPositiveButton(btnList.get(2).getText(), new BridgeActionListener(btnList.get(2), promise));
+                break;
+            case 2:
+                messageDialogBuilder.setPositiveButton(btnList.get(1).getText(), new BridgeActionListener(btnList.get(1), promise));
+            case 1:
+                messageDialogBuilder.setNegativeButton(btnList.get(0).getText(), new BridgeActionListener(btnList.get(0), promise));
+                break;
+        }
+    }
+
+    class BridgeActionListener implements DialogInterface.OnClickListener {
+        AlertButton alertButton;
+        Promise promise;
+
+        public BridgeActionListener(final AlertButton alertButton, Promise promise) {
+            this.alertButton = alertButton;
+            this.promise = promise;
+        }
+
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            dialog.dismiss();
+
+            try {
+                promise.resolve(alertButton.getCode());
+            } catch (Exception e) {
+                promise.reject(e);
+            }
+
+        }
     }
 
     @ReactMethod

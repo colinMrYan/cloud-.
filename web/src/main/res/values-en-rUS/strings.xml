@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="web_load_fail">Load failed,Touch the screen to reload </string>
-    <string name="web_reload">Network Diagnosis</string>
+
     <string name="web_put_qrcode_in_frame">The viewfinder is aligned QR code/barcode，</string>
     <string name="web_can_auto_scan">can automatically scan</string>
     <string name="web_scan_result">Scan Results</string>
