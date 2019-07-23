@@ -14,6 +14,7 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.bean.chat.Conversation;
@@ -51,6 +52,12 @@ public class ConversationCreateUtils {
 
     public void createGroupConversation(Activity context, JSONArray peopleArray,
                                         OnCreateGroupConversationListener onCreateGroupConversationListener) {
+        createGroupConversation(context, peopleArray, null, onCreateGroupConversationListener);
+    }
+
+    //增加群聊名称  会议过来的使用会议名称
+    public void createGroupConversation(Activity context, JSONArray peopleArray, String groupName,
+                                        OnCreateGroupConversationListener onCreateGroupConversationListener) {
         this.context = context;
         this.onCreateGroupConversationListener = onCreateGroupConversationListener;
         JSONArray uidArray = new JSONArray();
@@ -68,7 +75,9 @@ public class ConversationCreateUtils {
             }
 
         }
-        String groupName = createChannelGroupName(nameArray);
+        if (StringUtils.isBlank(groupName)) {
+            groupName = createChannelGroupName(nameArray);
+        }
         loadingDlg = new LoadingDialog(context);
         loadingDlg.show();
         ChatAPIService apiService = new ChatAPIService(context);
