@@ -842,6 +842,7 @@
     <string name="meeting_room_booked">時間已被預訂，請重新選擇</string>
     <string name="meeting_room_ilegal_time">時間非法，請檢查 </string>
     <string name="meeting_room_time_late">開始時間不能早於當前時間</string>
+    <string name="meeting_create_group_chat">發起群聊</string>
 
     <!-- 会议预定错误提示 -->
     <string name="meeting_user_profile_broken">部門資訊缺失</string>

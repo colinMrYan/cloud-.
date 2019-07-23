@@ -266,7 +266,7 @@
     <string name="socket_close">Disconnect</string>
     <string name="chat_file_download_success">File has been downloaded successfully, click again to open</string>
     <string name="group_name_longth_valid">Group name, word overrun (no more than 40 characters)</string>
-    <string name="message_create_group">Meeting Chat</string>
+    <string name="message_create_group">New Chat</string>
     <string name="business_card">Business Card</string>
     <string name="no_channel_album">No content</string>
     <string name="no_channel_file">No content</string>
@@ -843,6 +843,7 @@
     <string name="meeting_detail_attendee_tentative">Tentative</string>
     <string name="meeting_detail_invite">Inviter</string>
     <string name="meeting_group_chat_fail">Meeting chat fail</string>
+    <string name="meeting_create_group_chat">Meeting Chat</string>
 
     <!-- 会议预定错误提示 -->
     <string name="meeting_user_profile_broken">Departmental information loss</string>
