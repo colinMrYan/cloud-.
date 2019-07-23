@@ -14,6 +14,7 @@ import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
@@ -22,7 +23,6 @@ import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.schedule.calendar.CalendarEvent;
 import com.inspur.emmcloud.bean.system.ChangeTabBean;
-import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.componentservice.mail.OnExchangeLoginListener;
 import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.ui.appcenter.ReactNativeAppActivity;
@@ -451,7 +451,7 @@ public class SchemeHandleActivity extends BaseActivity {
             case "mail":
                 new ExchangeLoginUtils.Builder(this)
                         .setShowLoadingDlg(true)
-                        .setOnExchageLoginListener(new OnExchangeLoginListener() {
+                        .setOnExchangeLoginListener(new OnExchangeLoginListener() {
                             @Override
                             public void onMailLoginSuccess() {
                                 IntentUtils.startActivity(SchemeHandleActivity.this, MailHomeActivity.class, true);

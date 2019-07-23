@@ -32,6 +32,7 @@ import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.basemodule.widget.richedit.InsertModel;
 import com.inspur.emmcloud.basemodule.widget.richedit.RichEdit;
@@ -290,7 +291,7 @@ public class MailSendActivity extends BaseActivity {
         mail.setBody(html);
         mail.setToRecipients(recipientList);
         mail.setCcRecipients(ccRecipientList);
-        String mailSenderAddess = PreferencesByUsersUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT);
+        String mailSenderAddess = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT);
         ContactUser contactUser = ContactUserCacheUtils.getContactUserByEmail(mailSenderAddess);
         mail.setFrom(new MailRecipientModel(contactUser.getName(), contactUser.getEmail()));
         mail.setNeedEncrypt(myCertificate.isEncryptedMail());

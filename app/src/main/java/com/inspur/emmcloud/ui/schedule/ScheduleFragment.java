@@ -28,6 +28,7 @@ import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.MaxHeightListView;
 import com.inspur.emmcloud.baselib.widget.dialogs.MyDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
@@ -36,7 +37,6 @@ import com.inspur.emmcloud.bean.schedule.GetScheduleListResult;
 import com.inspur.emmcloud.bean.schedule.Schedule;
 import com.inspur.emmcloud.bean.schedule.calendar.Holiday;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
-import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.componentservice.communication.CommunicationService;
 import com.inspur.emmcloud.componentservice.communication.ShareToConversationListener;
 import com.inspur.emmcloud.interf.ScheduleEventListener;
@@ -110,7 +110,10 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
             case Constant.EVENTBUS_TAG_SCHEDULE_TASK_DATA_CHANGED:
             case Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED:
                 showCalendarEvent(true);
-                break;
+//            case Constant.EVENTBUS_TAG_OPEN_WORK_TAB:
+//                LogUtils.jasonDebug("555555555555555555555555555");
+//                getScheduleBasicData(Calendar.getInstance().get(Calendar.YEAR));
+//                break;
         }
     }
 
@@ -151,6 +154,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
             @Override
             public void run() {
                 setScheduleBackToToday();
+                getScheduleBasicData(Calendar.getInstance().get(Calendar.YEAR));
             }
         });
         switch (LanguageManager.getInstance().getCurrentAppLanguage()) {
@@ -165,7 +169,6 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         calendarDayView.setOnTouchListener(this);
         calendarDayView.setOnLongClickListener(this);
         calendarDayView.setOnClickListener(this);
-
     }
 
 
@@ -588,6 +591,10 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
 
         }
 
+        @Override
+        public void returnScheduleListFail(String error, int errorCode) {
+            WebServiceMiddleUtils.hand(BaseApplication.getInstance(), error, errorCode, false);
+        }
 
         @Override
         public void returnDeleteMeetingSuccess(Meeting meeting) {

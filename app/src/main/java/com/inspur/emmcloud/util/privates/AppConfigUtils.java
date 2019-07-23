@@ -51,11 +51,9 @@ public class AppConfigUtils {
             apiService.setAPIInterface(new WebService());
             String commonAppListJson = AppConfigCacheUtils.getAppConfigValue(context, Constant.CONCIG_COMMON_FUNCTIONS, "null");
             boolean isGetCommonAppConfig = commonAppListJson.equals("null");
-            String WorkPortletConfigJson = AppConfigCacheUtils.getAppConfigValue(context, "WorkPortlet", "null");
-            boolean isGetWorkPortletAppConfig = WorkPortletConfigJson.equals("null");
             String webAutoRotateJson = AppConfigCacheUtils.getAppConfigValue(context, Constant.CONCIG_WEB_AUTO_ROTATE, "null");
             boolean isGetWebAutoRotate = webAutoRotateJson.equals("null");
-            apiService.getAppConfig(isGetCommonAppConfig, isGetWorkPortletAppConfig, isGetWebAutoRotate);
+            apiService.getAppConfig(isGetCommonAppConfig, isGetWebAutoRotate);
         }
     }
 

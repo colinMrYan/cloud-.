@@ -424,9 +424,8 @@ public class AppAPIService {
     /**
      * 获取应用的配置信息
      */
-    public void getAppConfig(final boolean isGetCommonAppConfig, final boolean isGetWorkPortletAppConfig,
-                             final boolean isGetWebAutoRotate) {
-        final String url = APIUri.getAppConfigUrl(isGetCommonAppConfig, isGetWorkPortletAppConfig, isGetWebAutoRotate);
+    public void getAppConfig(final boolean isGetCommonAppConfig, final boolean isGetWebAutoRotate) {
+        final String url = APIUri.getAppConfigUrl(isGetCommonAppConfig, isGetWebAutoRotate);
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, url) {
             @Override
@@ -444,7 +443,7 @@ public class AppAPIService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        getAppConfig(isGetCommonAppConfig, isGetWorkPortletAppConfig, isGetWebAutoRotate);
+                        getAppConfig(isGetCommonAppConfig, isGetWebAutoRotate);
                     }
 
                     @Override
