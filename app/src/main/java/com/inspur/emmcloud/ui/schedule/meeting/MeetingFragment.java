@@ -154,8 +154,12 @@ public class MeetingFragment extends BaseFragment implements MySwipeRefreshLayou
 
     @Override
     public void onLoadMore() {
-        isPullUp = true;
-        getMeetingList();
+        if (uiMeetingList.size() > 0) {
+            isPullUp = true;
+            getMeetingList();
+        } else {
+            swipeRefreshLayout.setLoading(false);
+        }
     }
 
     @Event(value = R.id.rl_meeting_search)
@@ -192,6 +196,7 @@ public class MeetingFragment extends BaseFragment implements MySwipeRefreshLayou
             apiService.getMeetingHistoryListByPage(page);
         } else {
             swipeRefreshLayout.setCanLoadMore(false);
+            swipeRefreshLayout.setRefreshing(false);
         }
     }
 
@@ -223,6 +228,7 @@ public class MeetingFragment extends BaseFragment implements MySwipeRefreshLayou
             List<Meeting> meetingHistoryList = getMeetingListByPage.getMeetingList();
             currentPageSize = meetingHistoryList.size();
             swipeRefreshLayout.setLoading(false);
+            swipeRefreshLayout.setRefreshing(false);
             if (!isPullUp) {
                 meetingList.clear();
                 uiMeetingList.clear();
