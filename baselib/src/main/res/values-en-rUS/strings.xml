@@ -97,7 +97,7 @@
     <string name="format_month_day">MMM dd</string>
     <string name="format_task_month_day">MMM dd</string>
     <string name="format_year_month_day_hour_minute">MM/dd/yy HH:mm</string>
-    <string name="format_month_day_hour_minute">MM/dd HH:mm</string>
+    <string name="format_month_day_hour_minute">MMM dd HH:mm</string>
     <string name="format_year_month">yyyy-MM</string>
     <string name="time_null">null</string>
     <string name="cutdown_now">now</string>
@@ -796,7 +796,7 @@
     <string name="meeting_log">Conference</string>
     <string name="meeting_ageda">The agenda</string>
     <string name="meeting_summary">Summary</string>
-    <string name="meeting_place">Room</string>
+    <string name="schedule_location">Location</string>
     <string name="meeting_list_title">List of meeting rooms</string>
     <string name="meeting">Meetings</string>
     <string name="meeting_add">Add Meetings</string>
