@@ -15,10 +15,11 @@ import com.inspur.emmcloud.baselib.util.FomatUtils;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.ClearEditText;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
-import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
+import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.componentservice.mail.OnExchangeLoginListener;
 import com.inspur.emmcloud.util.privates.ExchangeLoginUtils;
@@ -49,7 +50,7 @@ public class MailLoginActivity extends BaseActivity {
     public void onCreate() {
         ButterKnife.bind(this);
         TextWatcher watcher = new TextWatcher();
-        mail = PreferencesByUsersUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, "");
+        mail = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, "");
         if (StringUtils.isBlank(mail)) {
             mail = ContactUserCacheUtils.getUserMail(MyApplication.getInstance().getUid());
         }
@@ -86,11 +87,10 @@ public class MailLoginActivity extends BaseActivity {
             new ExchangeLoginUtils.Builder(this)
                     .setShowLoadingDlg(true)
                     .setExchangeLoginAccount(mail, password)
-                    .setOnExchageLoginListener(new OnExchangeLoginListener() {
+                    .setOnExchangeLoginListener(new OnExchangeLoginListener() {
                         @Override
                         public void onMailLoginSuccess() {
-                            PreferencesByUsersUtils.putString(MyApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, mail);
-                            PreferencesByUsersUtils.putString(MyApplication.getInstance(), Constant.PREF_MAIL_PASSWORD, password);
+                            BaseApplication.getInstance().setExchangeAuthHeaderValue();
                             if (getIntent().hasExtra("from") && getIntent().getExtras().getString("from").equals("schedule_exchange_login")) {
                                 setResult(RESULT_OK);
                                 finish();

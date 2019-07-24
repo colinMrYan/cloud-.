@@ -4,7 +4,7 @@ import android.app.Activity;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
-import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
+import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.componentservice.mail.MailService;
 import com.inspur.emmcloud.componentservice.mail.OnExchangeLoginListener;
 import com.inspur.emmcloud.util.privates.ExchangeLoginUtils;
@@ -16,18 +16,18 @@ import com.inspur.emmcloud.util.privates.ExchangeLoginUtils;
 public class MailServiceImpl implements MailService {
     @Override
     public String getExchangeMailAccount() {
-        return PreferencesByUsersUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, "");
+        return PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, "");
     }
 
     @Override
     public String getExchangeMailPassword() {
-        return PreferencesByUsersUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_PASSWORD, "");
+        return PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_PASSWORD, "");
     }
 
     @Override
     public void exchangeLogin(Activity activity, OnExchangeLoginListener onExchangeLoginListener) {
         new ExchangeLoginUtils.Builder(activity)
                 .setShowLoadingDlg(true)
-                .setOnExchageLoginListener(onExchangeLoginListener).build().login();
+                .setOnExchangeLoginListener(onExchangeLoginListener).build().login();
     }
 }
