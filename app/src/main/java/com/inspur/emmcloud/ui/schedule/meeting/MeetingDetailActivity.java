@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.ui.schedule.meeting;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -21,6 +22,7 @@ import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.ActionSheetDialog;
+import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
@@ -468,7 +470,7 @@ public class MeetingDetailActivity extends BaseActivity {
                     bundle.putSerializable(EXTRA_MEETING_ENTITY, meeting);
                     IntentUtils.startActivity(MeetingDetailActivity.this, MeetingAddActivity.class, bundle, true);
                 } else if (tag.equals(getString(R.string.schedule_meeting_cancel))) {
-                    deleteMeeting(meeting);
+                    showConfirmClearDialog(meeting);
                 } else if (tag.equals(getString(R.string.message_create_group))) {
 //                    startGroupChat();
                     new ChatCreateUtils().startGroupChat(MeetingDetailActivity.this, meeting, chatGroupId, new ChatCreateUtils.ICreateGroupChatListener() {
@@ -495,6 +497,30 @@ public class MeetingDetailActivity extends BaseActivity {
                 .build()
                 .show();
     }
+
+    /**
+     * 确认清除
+     */
+    private void showConfirmClearDialog(final Meeting meeting) {
+        new CustomDialog.MessageDialogBuilder(MeetingDetailActivity.this)
+                .setMessage(getString(R.string.meeting_cancel_the_meeting))
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        deleteMeeting(meeting);
+                        finish();
+                    }
+                })
+                .show();
+    }
+
 
     /**
      * 删除会议

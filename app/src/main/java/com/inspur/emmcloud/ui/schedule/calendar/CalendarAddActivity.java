@@ -419,7 +419,7 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
                                 calendarDetailMoreImageView.setVisibility(View.GONE);
                                 break;
                             case 1:
-                                delCalendarEvent();
+                                showConfirmClearDialog();
                                 break;
                             default:
                                 break;
@@ -427,6 +427,29 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
                         dialog.dismiss();
                     }
                 }).build().show();
+    }
+
+    /**
+     * 确认清除
+     */
+    private void showConfirmClearDialog() {
+        new CustomDialog.MessageDialogBuilder(CalendarAddActivity.this)
+                .setMessage(R.string.calendar_cancel_the_schedule)
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        delCalendarEvent();
+                        finish();
+                    }
+                })
+                .show();
     }
 
     /**

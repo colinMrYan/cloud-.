@@ -87,6 +87,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     private Calendar newDataEndCalendar = null;
     private MyDialog myDialog = null;
     private LoadingDialog loadingDlg;
+    private ScheduleAllDayEventListAdapter adapter;
 
     @Override
     protected void init() {
@@ -368,7 +369,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
             myDialog = new MyDialog(getActivity(), R.layout.schedule_all_day_event_pop);
         MaxHeightListView listView = myDialog.findViewById(R.id.lv_all_day_event);
         listView.setMaxHeight(DensityUtil.dip2px(MyApplication.getInstance(), 300));
-        ScheduleAllDayEventListAdapter adapter = new ScheduleAllDayEventListAdapter(getActivity(), allDayEventList, selectCalendar);
+        adapter = new ScheduleAllDayEventListAdapter(getActivity(), allDayEventList, selectCalendar);
         adapter.setOnEventClickListener(this);
         listView.setAdapter(adapter);
         myDialog.findViewById(R.id.iv_close).setOnClickListener(this);
@@ -597,6 +598,13 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
             LoadingDialog.dimissDlg(loadingDlg);
             MeetingCacheUtils.removeMeeting(BaseApplication.getInstance(), meeting.getId());
             showCalendarEvent(true);
+            if (adapter != null) {
+                adapter.setEventList(allDayEventList);
+                adapter.notifyDataSetChanged();
+                if (allDayEventList.size() < 1) {
+                    myDialog.dismiss();
+                }
+            }
         }
 
         @Override
@@ -609,6 +617,13 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
             LoadingDialog.dimissDlg(loadingDlg);
             ScheduleCacheUtils.removeSchedule(BaseApplication.getInstance(), scheduleId);
             showCalendarEvent(true);
+            if (adapter != null) {
+                adapter.setEventList(allDayEventList);
+                adapter.notifyDataSetChanged();
+                if (allDayEventList.size() < 1) {
+                    myDialog.dismiss();
+                }
+            }
         }
 
         @Override
