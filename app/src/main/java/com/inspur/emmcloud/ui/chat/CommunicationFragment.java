@@ -810,13 +810,9 @@ public class CommunicationFragment extends BaseFragment {
     //接收到websocket发过来的消息，在channel里正常收发消息触发此方法
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveWSMessage(EventMessage eventMessage) {
-        LogUtils.YfcDebug("1111111111111");
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE)) {
-            LogUtils.YfcDebug("222222222222222");
             if (eventMessage.getStatus() == EventMessage.RESULT_OK) {
                 String content = eventMessage.getContent();
-                LogUtils.YfcDebug("消息内容：" + content);
-
                 //消息拦截逻辑，以后应当拦截命令消息，此时注释掉，以后解开注意判空
                 CustomProtocol customProtocol = getCommandMessageProtocol(new Message(JSONUtils.getJSONObject(content)));
                 if (customProtocol != null) {
