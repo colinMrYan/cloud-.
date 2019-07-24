@@ -12,6 +12,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
@@ -31,6 +32,7 @@ import com.inspur.emmcloud.ui.appcenter.mail.MailLoginActivity;
 import com.inspur.emmcloud.ui.appcenter.volume.VolumeHomePageActivity;
 import com.inspur.emmcloud.ui.appcenter.webex.WebexMyMeetingActivity;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
+import com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
@@ -42,6 +44,7 @@ import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
 import com.inspur.emmcloud.ui.schedule.meeting.MeetingDetailActivity;
 import com.inspur.emmcloud.ui.schedule.task.TaskAddActivity;
 import com.inspur.emmcloud.util.privates.AppId2AppAndOpenAppUtils;
+import com.inspur.emmcloud.util.privates.CustomProtocol;
 import com.inspur.emmcloud.util.privates.ExchangeLoginUtils;
 import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.ProfileUtils;
@@ -240,6 +243,18 @@ public class SchemeHandleActivity extends BaseActivity {
                                             break;
                                     }
                                 }
+                                break;
+                            case "ecc-cmd":
+                                CustomProtocol customProtocol = new CustomProtocol(uri.toString());
+                                LogUtils.YfcDebug("id:" + customProtocol.getParamMap().get("id"));
+                                if (customProtocol != null) {
+                                    Intent intent = new Intent();
+                                    intent.setClass(SchemeHandleActivity.this, ChannelVoiceCommunicationActivity.class);
+                                    intent.putExtra("channelId", customProtocol.getParamMap().get("id"));
+                                    intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.INVITEE_LAYOUT_STATE);
+                                    startActivity(intent);
+                                }
+                                finish();
                                 break;
                             default:
                                 finish();
