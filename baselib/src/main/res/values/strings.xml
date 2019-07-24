@@ -885,6 +885,7 @@
     <string name="meeting_detail_attendee_tentative">暂定</string>
     <string name="meeting_group_chat_fail">发起会议群聊失败</string>
     <string name="meeting_create_group_chat">发起群聊</string>
+    <string name="meeting_cancel_the_meeting">确定取消会议？</string>
 
     <!-- 会议预定错误提示 -->
     <string name="meeting_user_profile_broken">部门信息缺失</string>
@@ -930,6 +931,7 @@
     <string name="calendar_add_calendar">添加日历</string>
     <string name="calendar_no_alert">无提醒</string>
     <string name="calendar_when_event_finished">结束时</string>
+    <string name="calendar_cancel_the_schedule">确定取消日程？</string>
 
     <!-- 通用 -->
     <string name="save">保存</string>

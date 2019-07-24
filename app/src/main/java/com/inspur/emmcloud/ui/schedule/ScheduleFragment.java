@@ -87,6 +87,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     private Calendar newDataEndCalendar = null;
     private MyDialog myDialog = null;
     private LoadingDialog loadingDlg;
+    private ScheduleAllDayEventListAdapter adapter;
 
     @Override
     protected void init() {
@@ -189,8 +190,11 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
      * @param isForceUpdate 是否强制刷新数据
      */
     protected void showCalendarEvent(boolean isForceUpdate) {
-        List<Schedule> scheduleList = ScheduleCacheUtils.getScheduleList(MyApplication.getInstance(), pageStartCalendar, pageEndCalendar);
-        List<Meeting> meetingList = MeetingCacheUtils.getMeetingList(MyApplication.getInstance(), pageStartCalendar, pageEndCalendar);
+        boolean isScheduleShow = !MyCalendarOperationCacheUtils.getIsHide(getContext(), "schedule");
+        boolean isMeetingShow = !MyCalendarOperationCacheUtils.getIsHide(getContext(), "meeting");
+        boolean isExchangeShow = !MyCalendarOperationCacheUtils.getIsHide(getContext(), "exchange");   //getMeetingListByExchange
+        List<Schedule> scheduleList = ScheduleCacheUtils.getScheduleListByIsExchange(MyApplication.getInstance(), pageStartCalendar, pageEndCalendar, isExchangeShow, isScheduleShow);
+        List<Meeting> meetingList = MeetingCacheUtils.getMeetingListByExchange(MyApplication.getInstance(), pageStartCalendar, pageEndCalendar, isExchangeShow, isMeetingShow);
         ScheduleAlertUtils.setScheduleListAlert(MyApplication.getInstance(), scheduleList);
         ScheduleAlertUtils.setMeetingListAlert(MyApplication.getInstance(), meetingList);
         //在非强制刷新情况下如果前一次日历的日期包含此次的日期则不用重新获取数据
@@ -217,15 +221,8 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
             getScheduleList(calendarLastTime, meetingLastTime, taskLastTime, scheduleIdList, meetingIdList, taskIdList);
         }
         eventList.clear();
-        boolean isScheduleShow = !MyCalendarOperationCacheUtils.getIsHide(getContext(), "schedule");
-        boolean isMeetingShow = !MyCalendarOperationCacheUtils.getIsHide(getContext(), "meeting");
-        if (isMeetingShow) {
-            eventList.addAll(Meeting.meetingEvent2EventList(meetingList, selectCalendar));
-        }
-        //  eventList.addAll(Task.taskList2EventList(taskList,selectCalendar));
-        if (isScheduleShow) {
-            eventList.addAll(Schedule.calendarEvent2EventList(scheduleList, selectCalendar));
-        }
+        eventList.addAll(Meeting.meetingEvent2EventList(meetingList, selectCalendar));
+        eventList.addAll(Schedule.calendarEvent2EventList(scheduleList, selectCalendar));
         showAllEventCalendarViewMark(scheduleList, meetingList, isScheduleShow, isMeetingShow);
         allDayLayout.setVisibility(View.GONE);
         int eventListSize = eventList.size();
@@ -372,7 +369,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
             myDialog = new MyDialog(getActivity(), R.layout.schedule_all_day_event_pop);
         MaxHeightListView listView = myDialog.findViewById(R.id.lv_all_day_event);
         listView.setMaxHeight(DensityUtil.dip2px(MyApplication.getInstance(), 300));
-        ScheduleAllDayEventListAdapter adapter = new ScheduleAllDayEventListAdapter(getActivity(), allDayEventList, selectCalendar);
+        adapter = new ScheduleAllDayEventListAdapter(getActivity(), allDayEventList, selectCalendar);
         adapter.setOnEventClickListener(this);
         listView.setAdapter(adapter);
         myDialog.findViewById(R.id.iv_close).setOnClickListener(this);
@@ -604,6 +601,13 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
             LoadingDialog.dimissDlg(loadingDlg);
             MeetingCacheUtils.removeMeeting(BaseApplication.getInstance(), meeting.getId());
             showCalendarEvent(true);
+            if (adapter != null) {
+                adapter.setEventList(allDayEventList);
+                adapter.notifyDataSetChanged();
+                if (allDayEventList.size() < 1) {
+                    myDialog.dismiss();
+                }
+            }
         }
 
         @Override
@@ -616,6 +620,13 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
             LoadingDialog.dimissDlg(loadingDlg);
             ScheduleCacheUtils.removeSchedule(BaseApplication.getInstance(), scheduleId);
             showCalendarEvent(true);
+            if (adapter != null) {
+                adapter.setEventList(allDayEventList);
+                adapter.notifyDataSetChanged();
+                if (allDayEventList.size() < 1) {
+                    myDialog.dismiss();
+                }
+            }
         }
 
         @Override

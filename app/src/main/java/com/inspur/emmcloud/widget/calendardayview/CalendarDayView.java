@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.widget.calendardayview;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
@@ -21,6 +22,7 @@ import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ResolutionUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
+import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButtonDrawable;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.MatheSet;
@@ -374,6 +376,31 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
         });
     }
 
+    /**
+     * 确认清除
+     */
+    private void showConfirmClearDialog(final Event event, final PopupWindow popupWindow) {
+        new CustomDialog.MessageDialogBuilder(getContext())
+                .setMessage(event.getEventType().equals(Schedule.TYPE_MEETING) ? R.string.meeting_cancel_the_meeting : R.string.calendar_cancel_the_schedule)
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (onEventClickListener != null) {
+                            onEventClickListener.onEventDelete(event);
+                        }
+                        dialog.dismiss();
+                        popupWindow.dismiss();
+                    }
+                })
+                .show();
+    }
+
     private void showEventDetailPop(final View view, final Event event, final Drawable drawableNormal, int marginLeft) {
         CustomRoundButtonDrawable drawableSelected = CalendarUtils.getEventBgSelectDrawable(event);
         final TextView eventTitleText = view.findViewById(R.id.tv_event_title);
@@ -409,10 +436,7 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
             contentView.findViewById(R.id.iv_delete).setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (onEventClickListener != null) {
-                        onEventClickListener.onEventDelete(event);
-                    }
-                    popupWindow.dismiss();
+                    showConfirmClearDialog(event, popupWindow);
                 }
             });
         } else {

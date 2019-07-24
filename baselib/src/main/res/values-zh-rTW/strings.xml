@@ -843,6 +843,8 @@
     <string name="meeting_room_ilegal_time">時間非法，請檢查 </string>
     <string name="meeting_room_time_late">開始時間不能早於當前時間</string>
     <string name="meeting_create_group_chat">發起群聊</string>
+    <string name="meeting_cancel_the_meeting">確定取消會議?</string>
+
 
     <!-- 会议预定错误提示 -->
     <string name="meeting_user_profile_broken">部門資訊缺失</string>
@@ -916,6 +918,7 @@
     <string name="calendar_add_calendar">添加行事曆</string>
     <string name="calendar_no_alert">無提醒</string>
     <string name="calendar_when_event_finished">結束時</string>
+    <string name="calendar_cancel_the_schedule">確定取消日程?</string>
 
     <!-- 通用 -->
     <string name="save">保存</string>
