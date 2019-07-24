@@ -801,7 +801,7 @@
     <string name="meeting_log">會務</string>
     <string name="meeting_ageda">議程</string>
     <string name="meeting_summary">紀要</string>
-    <string name="meeting_place">地點</string>
+    <string name="schedule_location">地點</string>
     <string name="meeting_list_title">會議室列表</string>
     <string name="meeting">會議</string>
     <string name="meeting_add">預定會議</string>

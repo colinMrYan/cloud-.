@@ -477,8 +477,11 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         String endTime = TimeUtils.calendar2FormatString(MyApplication.getInstance(), event.getEventEndTime(), TimeUtils.FORMAT_MONTH_DAY_HOUR_MINUTE);
         StringBuilder builder = new StringBuilder();
         builder.append(event.eventType.endsWith(Schedule.TYPE_CALENDAR) ? getString(R.string.schedule_title) : getString(R.string.schedule_meeting_topic));
-        builder.append(" : ").append(event.getEventTitle()).append("\n")
-                .append(getString(R.string.meeting_start_time)).append(" : ").append(startTime).append("\n")
+        builder.append(" : ").append(event.getEventTitle()).append("\n");
+        if (event.eventType.endsWith(Schedule.TYPE_MEETING)) {
+            builder.append(getString(R.string.schedule_location)).append(" : ").append(event.getEventSubTitle()).append("\n");
+        }
+        builder.append(getString(R.string.meeting_start_time)).append(" : ").append(startTime).append("\n")
                 .append(getString(R.string.meeting_end_time)).append(" : ").append(endTime);
         Router router = Router.getInstance();
         if (router.getService(CommunicationService.class) != null) {
