@@ -4,11 +4,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
@@ -33,10 +36,13 @@ import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
+import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.bean.schedule.Location;
+import com.inspur.emmcloud.bean.schedule.MyCalendar;
 import com.inspur.emmcloud.bean.schedule.Participant;
 import com.inspur.emmcloud.bean.schedule.RemindEvent;
+import com.inspur.emmcloud.bean.schedule.Schedule;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.bean.schedule.meeting.MeetingRoom;
 import com.inspur.emmcloud.componentservice.contact.ContactService;
@@ -45,6 +51,8 @@ import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.ui.schedule.ScheduleAlertTimeActivity;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.MyCalendarCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ScheduleCacheUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
@@ -63,6 +71,8 @@ import butterknife.ButterKnife;
  */
 
 public class MeetingAddActivity extends BaseActivity {
+    public static final String EXTRA_EVENT_TYPE = "extra_event_type";
+    public static final String EXTRA_SCHEDULE_CALENDAR_EVENT = "schedule_calendar_event";
     private static final int REQUEST_SELECT_ATTENDEE = 1;
     private static final int REQUEST_SELECT_RECORDER = 2;
     private static final int REQUEST_SELECT_LIAISON = 3;
@@ -90,28 +100,52 @@ public class MeetingAddActivity extends BaseActivity {
     EditText notesEdit;
     @BindView(R.id.tv_reminder)
     TextView reminderText;
+    @BindView(R.id.tv_new_event_title)
+    TextView newEventTitleText;
+    @BindView(R.id.rl_calendar_type)
+    RelativeLayout calendarTypeLayout;
+    @BindView(R.id.switch_all_day)
+    Switch allDaySwitch;
+    @BindView(R.id.tv_event_type)
+    TextView eventTypeText;
+
     private LoadingDialog loadingDlg;
     private ScheduleApiService apiService;
-    private Calendar startTimeCalendar;
-    private Calendar endTimeCalendar;
-    private boolean isAllDay = false;
-    private List<SearchModel> attendeeSearchModelList = new ArrayList<>();
-    private List<SearchModel> recorderSearchModelList = new ArrayList<>();
-    private List<SearchModel> liaisonSearchModelList = new ArrayList<>();
-    private MeetingRoom meetingRoom;
-    private Location location;
-    private String title;
-    private String note;
+    private Calendar startTimeCalendar; // 开始时间
+    private Calendar endTimeCalendar;   //结束时间
+    private boolean isAllDay = false;   //是否全天
+    private List<SearchModel> attendeeSearchModelList = new ArrayList<>();  //参会人
+    private List<SearchModel> recorderSearchModelList = new ArrayList<>();  //记录人
+    private List<SearchModel> liaisonSearchModelList = new ArrayList<>();   //联系人
+    private MeetingRoom meetingRoom;    //会议室
+    private Location location;          // 地点
+    private String title;               // 标题
+    private String note;                // 备注
     private String meetingPosition;
-    private String meetingOwner = "";
-    private RemindEvent remindEvent;
+    private String meetingOwner = "";   // 所有者
+    private RemindEvent remindEvent;    // 提醒
     private Meeting meeting = new Meeting();
+    private Schedule schedule = new Schedule();
     private boolean isMeetingEditModel = false;
+    private boolean isScheduleEditModel = false;
+    private boolean eventTypeIsMeeting = false;
+    private boolean isAllDay = false;
+    private String id;
 
     @Override
     public void onCreate() {
         ButterKnife.bind(this);
-        initData();
+        eventTypeIsMeeting = getIntent().getBooleanExtra(EXTRA_EVENT_TYPE, false);
+        apiService = new ScheduleApiService(this);
+        apiService.setAPIInterface(new WebService());
+        if (eventTypeIsMeeting) {
+            initMeetingData();
+        } else {
+
+        }
+
+
+
         initView();
     }
 
@@ -120,12 +154,11 @@ public class MeetingAddActivity extends BaseActivity {
         return R.layout.activity_meeting_add;
     }
 
+
     /**
-     * 初始化数据
+     * 初始化会议数据
      */
-    private void initData() {
-        apiService = new ScheduleApiService(this);
-        apiService.setAPIInterface(new WebService());
+    private void initMeetingData() {
         isMeetingEditModel = getIntent().hasExtra(MeetingDetailActivity.EXTRA_MEETING_ENTITY);
         if (isMeetingEditModel) {
             meeting = (Meeting) getIntent().getSerializableExtra(MeetingDetailActivity.EXTRA_MEETING_ENTITY);
@@ -174,6 +207,131 @@ public class MeetingAddActivity extends BaseActivity {
             }
         }
     }
+
+    /**
+     * 初始化日程数据
+     */
+    private void initSchedule() {
+
+    }
+
+
+    /**
+     * 初始化View
+     */
+    private void initScheduleView() {
+        allDaySwitch.setOnCheckedChangeListener(this);
+        allDaySwitch.setChecked(isAllDay);
+        titleEdit.setText(title);
+        newEventTitleText.setText(isScheduleEditModel ? getApplication().getString(R.string.schedule_calendar_create) :
+                getApplication().getString(R.string.schedule_calendar_detail));
+        eventTypeText.setText(getApplication().getString(R.string.schedule_calendar_company));
+        initStartEndTimeView();
+        alertText.setText(remindEvent.getName());
+        setViewIsEditable(isAddCalendar);
+    }
+
+    /**
+     * 初始化日期数据
+     */
+    private void init() {
+        if (getIntent().hasExtra(Constant.COMMUNICATION_LONG_CLICK_TO_SCHEDULE)) {
+            title = getIntent().getStringExtra(Constant.COMMUNICATION_LONG_CLICK_TO_SCHEDULE);
+        }
+
+        id = getIntent().getStringExtra(Constant.SCHEDULE_QUERY);   //解析通知字段获取id
+        if (!TextUtils.isEmpty(id)) {        ////来自通知
+            isScheduleEditModel = false;
+            getDbCalendarFromId();
+            getNetCalendarFromId();
+        } else if (getIntent().hasExtra(EXTRA_SCHEDULE_CALENDAR_EVENT)) {  //通知没有，列表页跳转过来
+            isScheduleEditModel = false;
+            schedule = (Schedule) getIntent().getSerializableExtra(EXTRA_SCHEDULE_CALENDAR_EVENT);
+            initscheduleData();     //直接用传过来的数据
+        } else {    //创建日程
+            createCalendar();
+        }
+    }
+
+    /**
+     * 设置日程相关数据
+     */
+    private void initscheduleData() {
+        isAllDay = schedule.getAllDay();
+        startTimeCalendar = schedule.getStartTimeCalendar();
+        endTimeCalendar = schedule.getEndTimeCalendar();
+        title = schedule.getTitle();
+        //saveTextView.setVisibility(View.GONE);
+        // calendarDetailMoreImageView.setVisibility(View.VISIBLE);
+        List<MyCalendar> allCalendarList = MyCalendarCacheUtils.getAllMyCalendarList(getApplicationContext());
+        String calendarType = schedule.getType();
+        String alertTimeName = ScheduleAlertTimeActivity.getAlertTimeNameByTime(JSONUtils.getInt(schedule.getRemindEvent(), "advanceTimeSpan", -1), isAllDay);
+        remindEvent = new RemindEvent(JSONUtils.getString(schedule.getRemindEvent(), "remindType", "in_app"),
+                JSONUtils.getInt(schedule.getRemindEvent(), "advanceTimeSpan", -1), alertTimeName);
+    }
+
+    /**
+     * 创建日程
+     */
+    private void createCalendar() {
+        //此参数传过来精确的开始时间和结束时间
+        if (getIntent().hasExtra(EXTRA_START_CALENDAR)) {
+            startTimeCalendar = (Calendar) getIntent().getSerializableExtra(EXTRA_START_CALENDAR);
+            endTimeCalendar = (Calendar) getIntent().getSerializableExtra(EXTRA_END_CALENDAR);
+        } else {
+            Calendar currentCalendar = Calendar.getInstance();
+            if (getIntent().hasExtra(EXTRA_SELECT_CALENDAR)) {
+                startTimeCalendar = (Calendar) getIntent().getSerializableExtra(EXTRA_SELECT_CALENDAR);
+            }
+            if (startTimeCalendar == null) {
+                startTimeCalendar = (Calendar) currentCalendar.clone();
+            }
+            startTimeCalendar.set(Calendar.HOUR_OF_DAY, currentCalendar.get(Calendar.HOUR_OF_DAY));
+            startTimeCalendar.set(Calendar.MINUTE, currentCalendar.get(Calendar.MINUTE));
+            startTimeCalendar = TimeUtils.getNextHalfHourTime(startTimeCalendar);
+            endTimeCalendar = (Calendar) startTimeCalendar.clone();
+            if (!isAllDay) {
+                endTimeCalendar.add(Calendar.HOUR_OF_DAY, 1);
+            }
+        }
+        schedule.setOwner(MyApplication.getInstance().getUid());//??默认
+        remindEvent.setName(ScheduleAlertTimeActivity.getAlertTimeNameByTime(remindEvent.getAdvanceTimeSpan(), isAllDay));
+        intervalMin = (int) getIntervalMin();
+        initView();
+    }
+
+    /**
+     * 从数据库获取日程数据
+     */
+    private void getDbCalendarFromId() {
+        schedule = ScheduleCacheUtils.getDBScheduleById(this, id);
+        if (schedule != null) {
+            initscheduleData();
+            // initView();
+        }
+    }
+
+    /**
+     * 从网络获取日程数据
+     */
+    private void getNetCalendarFromId() {
+        if (NetUtils.isNetworkConnected(this)) {
+            if (!TextUtils.isEmpty(id)) {
+                if (schedule == null || TextUtils.isEmpty(schedule.getId())) { //如果缓存有数据则不显示loading
+                    loadingDlg.show();
+                }
+                apiService.getCalendarDataFromId(id);
+            }
+        } else {
+            ToastUtils.show(this, "");
+        }
+    }
+
+
+
+
+
+
 
     private SearchModel getSearchModel(String uid) {
         SearchModel searchModel = new SearchModel();

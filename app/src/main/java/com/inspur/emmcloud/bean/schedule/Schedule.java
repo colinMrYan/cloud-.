@@ -24,6 +24,7 @@ import java.util.List;
 public class Schedule implements Serializable {
     public static final String TYPE_MEETING = "schedule_meeting";
     public static final String TYPE_CALENDAR = "schedule_calendar";
+    public static final String TYPE_UNKNOWN = "schedule_unknown";
     public static final String TYPE_TASK = "schedule_task";
     public static final String CALENDAR_TYPE_MEETING = "meeting";
     public static final String CALENDAR_TYPE_MY_CALENDAR = "default";
@@ -61,6 +62,9 @@ public class Schedule implements Serializable {
     private String note = "";
     @Column(name = "participants")
     private String participants = "";
+    @Column(name = "isMeeting")
+    private boolean isMeeting = false;
+
     private List<String> getParticipantList = new ArrayList<>();
 
     public Schedule() {
@@ -80,6 +84,7 @@ public class Schedule implements Serializable {
         isAllDay = JSONUtils.getBoolean(object, "isAllDay", false);
         isCommunity = JSONUtils.getBoolean(object, "isCommunity", false);
         syncToLocal = JSONUtils.getBoolean(object, "syncToLocal", false);
+        isMeeting = JSONUtils.getBoolean(object, "isMeeting", false);
         remindEvent = JSONUtils.getString(object, "remindEvent", "");
         state = JSONUtils.getInt(object, "state", -1);
         location = JSONUtils.getString(object, "location", "");
@@ -187,6 +192,14 @@ public class Schedule implements Serializable {
 
     public Calendar getLastTimeCalendar() {
         return TimeUtils.timeLong2Calendar(lastTime);
+    }
+
+    public boolean isMeeting() {
+        return isMeeting;
+    }
+
+    public void setMeeting(boolean meeting) {
+        isMeeting = meeting;
     }
 
     public List<Participant> getCommonParticipantList() {
@@ -354,6 +367,7 @@ public class Schedule implements Serializable {
         jsonObject.put("location", location);
         jsonObject.put("participants", participants);
         jsonObject.put("note", note);
+        jsonObject.put("isMeeting", isMeeting);
         return jsonObject.toString();
     }
 
@@ -378,6 +392,7 @@ public class Schedule implements Serializable {
             jsonObject.put("isCommunity", isCommunity);
             jsonObject.put("syncToLocal", syncToLocal);
             jsonObject.put("state", state);
+            jsonObject.put("isMeeting", isMeeting);
 
             if (!StringUtils.isBlank(remindEvent)) {
                 JSONObject remindJson = JSONUtils.getJSONObject(remindEvent);

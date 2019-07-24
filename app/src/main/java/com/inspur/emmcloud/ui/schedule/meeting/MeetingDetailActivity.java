@@ -33,6 +33,7 @@ import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.schedule.Location;
 import com.inspur.emmcloud.bean.schedule.Participant;
+import com.inspur.emmcloud.bean.schedule.Schedule;
 import com.inspur.emmcloud.bean.schedule.meeting.GetIsMeetingAdminResult;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.bean.schedule.meeting.ReplyAttendResult;
@@ -107,14 +108,19 @@ public class MeetingDetailActivity extends BaseActivity {
     RelativeLayout attendStatusLayout;
     @BindView(R.id.tv_meeting_attend_status)
     TextView attendStatusText;
+    @BindView(R.id.header_text)
+    TextView headerTextView;
+
     ReplyAttendResult info = new ReplyAttendResult(); //参会答复
     private Meeting meeting;
+    private Schedule schedule;
     private ScheduleApiService scheduleApiService;
     private LoadingDialog loadingDlg;
     private String meetingId;   //会议id
     private boolean isHistoryMeeting = false; //是否来自历史会议
     private List<String> moreTextList = new ArrayList<>();
     private String chatGroupId; //群聊ID
+    private String eventType;
 
     @Override
     public void onCreate() {
@@ -123,9 +129,11 @@ public class MeetingDetailActivity extends BaseActivity {
         scheduleApiService = new ScheduleApiService(this);
         scheduleApiService.setAPIInterface(new WebService());
         meetingId = getIntent().getStringExtra(Constant.SCHEDULE_QUERY); //来自通知
-        meeting = (Meeting) getIntent().getSerializableExtra(EXTRA_MEETING_ENTITY); //来自列表
+        meeting = (Meeting) getIntent().getSerializableExtra(EXTRA_MEETING_ENTITY); //来自列表的会议
+        schedule = (Schedule) getIntent().getSerializableExtra(EXTRA_MEETING_ENTITY); //来自列表的日程
         isHistoryMeeting = getIntent().getBooleanExtra(Constant.EXTRA_IS_HISTORY_MEETING, false);
         info.responseType = Participant.CALENDAR_RESPONSE_TYPE_UNKNOWN; //默认参会状态未知
+        eventType = meeting != null || !StringUtils.isBlank(meetingId) ? Schedule.TYPE_MEETING : Schedule.TYPE_CALENDAR;//判断当前的事件类型(会议或日程)
         getIsMeetingAdmin();
         if (!TextUtils.isEmpty(meetingId)) {    //id不为空是从网络获取数据  来自通知
             getMeetingFromId(meetingId);
@@ -145,6 +153,7 @@ public class MeetingDetailActivity extends BaseActivity {
 
     @SuppressLint("StringFormatInvalid")
     private void initViews() {
+        // headerTextView.setText();
         meetingTitleText.setText(meeting.getTitle());
         meetingTimeText.setText(getString(R.string.meeting_detail_time, getMeetingTime()));
         meetingRemindText.setText(getString(R.string.meeting_detail_remind, ScheduleAlertTimeActivity.getAlertTimeNameByTime(meeting.getRemindEventObj().getAdvanceTimeSpan(), meeting.getAllDay())));
@@ -261,7 +270,7 @@ public class MeetingDetailActivity extends BaseActivity {
      * 判断当前用户是否会议室管理员
      */
     private void getIsMeetingAdmin() {
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance()) && (eventType.equals(Schedule.TYPE_MEETING))) {
             if (!PreferencesByUserAndTanentUtils.isKeyExist(MyApplication.getInstance(), Constant.PREF_IS_MEETING_ADMIN)) {
                 loadingDlg.show();
             }
