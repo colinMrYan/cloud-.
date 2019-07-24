@@ -189,8 +189,11 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
      * @param isForceUpdate 是否强制刷新数据
      */
     protected void showCalendarEvent(boolean isForceUpdate) {
-        List<Schedule> scheduleList = ScheduleCacheUtils.getScheduleList(MyApplication.getInstance(), pageStartCalendar, pageEndCalendar);
-        List<Meeting> meetingList = MeetingCacheUtils.getMeetingList(MyApplication.getInstance(), pageStartCalendar, pageEndCalendar);
+        boolean isScheduleShow = !MyCalendarOperationCacheUtils.getIsHide(getContext(), "schedule");
+        boolean isMeetingShow = !MyCalendarOperationCacheUtils.getIsHide(getContext(), "meeting");
+        boolean isExchangeShow = !MyCalendarOperationCacheUtils.getIsHide(getContext(), "exchange");   //getMeetingListByExchange
+        List<Schedule> scheduleList = ScheduleCacheUtils.getScheduleListByIsExchange(MyApplication.getInstance(), pageStartCalendar, pageEndCalendar, isExchangeShow, isScheduleShow);
+        List<Meeting> meetingList = MeetingCacheUtils.getMeetingListByExchange(MyApplication.getInstance(), pageStartCalendar, pageEndCalendar, isExchangeShow, isMeetingShow);
         ScheduleAlertUtils.setScheduleListAlert(MyApplication.getInstance(), scheduleList);
         ScheduleAlertUtils.setMeetingListAlert(MyApplication.getInstance(), meetingList);
         //在非强制刷新情况下如果前一次日历的日期包含此次的日期则不用重新获取数据
@@ -217,15 +220,8 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
             getScheduleList(calendarLastTime, meetingLastTime, taskLastTime, scheduleIdList, meetingIdList, taskIdList);
         }
         eventList.clear();
-        boolean isScheduleShow = !MyCalendarOperationCacheUtils.getIsHide(getContext(), "schedule");
-        boolean isMeetingShow = !MyCalendarOperationCacheUtils.getIsHide(getContext(), "meeting");
-        if (isMeetingShow) {
-            eventList.addAll(Meeting.meetingEvent2EventList(meetingList, selectCalendar));
-        }
-        //  eventList.addAll(Task.taskList2EventList(taskList,selectCalendar));
-        if (isScheduleShow) {
-            eventList.addAll(Schedule.calendarEvent2EventList(scheduleList, selectCalendar));
-        }
+        eventList.addAll(Meeting.meetingEvent2EventList(meetingList, selectCalendar));
+        eventList.addAll(Schedule.calendarEvent2EventList(scheduleList, selectCalendar));
         showAllEventCalendarViewMark(scheduleList, meetingList, isScheduleShow, isMeetingShow);
         allDayLayout.setVisibility(View.GONE);
         int eventListSize = eventList.size();

@@ -62,6 +62,31 @@ public class ScheduleCacheUtils {
         return scheduleList;
     }
 
+    public static List<Schedule> getScheduleListByIsExchange(Context context, Calendar startTime, Calendar endTime, boolean isExchange, boolean isSchedule) {
+        List<Schedule> scheduleList = null;
+        try {
+            long startTimeLong = startTime.getTimeInMillis();
+            long endTimeLong = endTime.getTimeInMillis();
+            if (isExchange && isSchedule) {
+                scheduleList = DbCacheUtils.getDb(context).selector(Schedule.class).where(WhereBuilder.b("endTime", ">=", startTimeLong)
+                        .and("startTime", "<=", endTimeLong)).findAll();
+            } else if (!isExchange && isSchedule) {
+                scheduleList = DbCacheUtils.getDb(context).selector(Schedule.class).where(WhereBuilder.b("endTime", ">=", startTimeLong)
+                        .and("startTime", "<=", endTimeLong).and("type", "!=", Schedule.CALENDAR_TYPE_EXCHANGE)).findAll();
+            } else if (isExchange && !isSchedule) {
+                scheduleList = DbCacheUtils.getDb(context).selector(Schedule.class).where(WhereBuilder.b("endTime", ">=", startTimeLong)
+                        .and("startTime", "<=", endTimeLong).and("type", "!=", Schedule.CALENDAR_TYPE_EXCHANGE)).findAll();
+            }
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        if (scheduleList == null) {
+            scheduleList = new ArrayList<>();
+        }
+        return scheduleList;
+    }
+
     /**
      * 通过id获取缓存日程据
      */
