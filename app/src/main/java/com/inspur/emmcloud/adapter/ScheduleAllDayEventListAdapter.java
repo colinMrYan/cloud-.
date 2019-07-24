@@ -39,6 +39,11 @@ public class ScheduleAllDayEventListAdapter extends BaseAdapter {
         this.selectCalendar = selectCalendar;
     }
 
+    public void setEventList(List<Event> eventList) {
+        this.eventList.clear();
+        this.eventList.addAll(eventList);
+    }
+
     public void setOnEventClickListener(ScheduleEventListener onEventClickListener) {
         this.onEventClickListener = onEventClickListener;
     }
