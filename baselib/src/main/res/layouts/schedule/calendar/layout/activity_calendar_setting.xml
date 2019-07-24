@@ -96,7 +96,7 @@
                     android:layout_height="wrap_content"
                     android:paddingBottom="11dp"
                     android:paddingTop="11dp"
-                    android:text="添加日历"
+                    android:text="@string/calendar_add_calendar"
                     android:textColor="#36A5F6"
                     android:textSize="16sp" />
             </LinearLayout>

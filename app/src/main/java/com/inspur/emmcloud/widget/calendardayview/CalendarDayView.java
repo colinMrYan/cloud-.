@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.widget.calendardayview;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
@@ -18,8 +19,10 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ResolutionUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
+import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButtonDrawable;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.MatheSet;
@@ -54,6 +57,7 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
     private Calendar selectCalendar;
     private TextView dragViewStartTmeText;
     private TextView dragViewEndTimeText;
+    private int earliestEventOffset = -1;
 
     public CalendarDayView(Context context) {
         this(context, null);
@@ -171,8 +175,15 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
      * 每次打开日视图需要滚动到当前时间前一个小时
      */
     public int getScrollOffset() {
-        Calendar currentCalendar = Calendar.getInstance();
-        int offset = (int) ((currentCalendar.get(Calendar.HOUR_OF_DAY) - 1 + currentCalendar.get(Calendar.MINUTE) / 60.0f) * TIME_HOUR_HEIGHT - DensityUtil.dip2px(MyApplication.getInstance(), 3));
+        int offset = 0;
+        if (eventList.size() > 0) {
+            LogUtils.jasonDebug("earliestEventOffset==" + earliestEventOffset);
+            LogUtils.jasonDebug("TIME_HOUR_HEIGHT==" + TIME_HOUR_HEIGHT);
+            offset = earliestEventOffset - TIME_HOUR_HEIGHT;
+        } else {
+            Calendar currentCalendar = Calendar.getInstance();
+            offset = (int) ((currentCalendar.get(Calendar.HOUR_OF_DAY) - 1 + currentCalendar.get(Calendar.MINUTE) / 60.0f) * TIME_HOUR_HEIGHT - DensityUtil.dip2px(MyApplication.getInstance(), 3));
+        }
         if (offset < 0) {
             offset = 0;
         }
@@ -263,6 +274,7 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
     }
 
     private void showEventList() {
+        earliestEventOffset = -1;
         eventLayout.removeAllViews();
         for (TimeHourRow timeHourRow : timeHourRowList) {
             List<Event> eventList = timeHourRow.getEventList();
@@ -311,6 +323,10 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
                     dayStartTime.set(Calendar.HOUR_OF_DAY, 0);
                     dayStartTime.set(Calendar.MINUTE, 0);
                     int marginTop = (int) ((startTime.getTimeInMillis() - dayStartTime.getTimeInMillis()) * TIME_HOUR_HEIGHT / 3600000);
+                    //为了在打开当天日程时滚动到相应的位置
+                    if (earliestEventOffset == -1 || marginTop < earliestEventOffset) {
+                        earliestEventOffset = marginTop;
+                    }
                     RelativeLayout.LayoutParams eventLayoutParams = new RelativeLayout.LayoutParams(eventWidth,
                             eventHeight);
                     eventLayoutParams.setMargins(marginLeft, marginTop, 0, 0);
@@ -325,10 +341,13 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
         View eventView = LayoutInflater.from(getContext()).inflate(R.layout.schedule_calendar_day_event_view, null);
         final Drawable drawableNormal = CalendarUtils.getEventBgNormalDrawable(event);
         eventView.setBackground(drawableNormal);
-        if (eventLayoutParams.height >= DensityUtil.dip2px(MyApplication.getInstance(), 24)) {
-            ImageView eventImg = eventView.findViewById(R.id.iv_event);
-            TextView eventTitleEvent = eventView.findViewById(R.id.tv_event_title);
-            TextView eventSubtitleEvent = eventView.findViewById(R.id.tv_event_subtitle);
+        ImageView eventImg = eventView.findViewById(R.id.iv_event);
+        TextView eventTitleEvent = eventView.findViewById(R.id.tv_event_title);
+        TextView eventSubtitleEvent = eventView.findViewById(R.id.tv_event_subtitle);
+        if (eventLayoutParams.height >= DensityUtil.dip2px(MyApplication.getInstance(), 26)) {
+            eventImg.setVisibility(VISIBLE);
+            eventTitleEvent.setVisibility(VISIBLE);
+            eventSubtitleEvent.setVisibility(VISIBLE);
             eventImg.setImageResource(event.getEventIconResId(false));
             eventTitleEvent.setText(event.getEventTitle());
             String subTitle = event.getShowEventSubTitle(getContext(), selectCalendar);
@@ -355,6 +374,31 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
                 return true;
             }
         });
+    }
+
+    /**
+     * 确认清除
+     */
+    private void showConfirmClearDialog(final Event event, final PopupWindow popupWindow) {
+        new CustomDialog.MessageDialogBuilder(getContext())
+                .setMessage(event.getEventType().equals(Schedule.TYPE_MEETING) ? R.string.meeting_cancel_the_meeting : R.string.calendar_cancel_the_schedule)
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (onEventClickListener != null) {
+                            onEventClickListener.onEventDelete(event);
+                        }
+                        dialog.dismiss();
+                        popupWindow.dismiss();
+                    }
+                })
+                .show();
     }
 
     private void showEventDetailPop(final View view, final Event event, final Drawable drawableNormal, int marginLeft) {
@@ -392,10 +436,7 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
             contentView.findViewById(R.id.iv_delete).setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (onEventClickListener != null) {
-                        onEventClickListener.onEventDelete(event);
-                    }
-                    popupWindow.dismiss();
+                    showConfirmClearDialog(event, popupWindow);
                 }
             });
         } else {

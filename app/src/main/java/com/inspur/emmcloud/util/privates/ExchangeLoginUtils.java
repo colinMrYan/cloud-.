@@ -11,7 +11,7 @@ import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
-import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
+import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.componentservice.mail.OnExchangeLoginListener;
 
 /**
@@ -32,10 +32,17 @@ public class ExchangeLoginUtils {
         exchangePassword = builder.exchangePassword;
         isShowLoadingDlg = builder.isShowLoadingDlg;
         if (StringUtils.isBlank(exchangeAccount)) {
-            exchangeAccount = PreferencesByUsersUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, "");
+            exchangeAccount = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, "");
         }
         if (StringUtils.isBlank(exchangePassword)) {
-            exchangePassword = PreferencesByUsersUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_PASSWORD, "");
+            exchangePassword = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_PASSWORD, "");
+        } else {
+            String key = EncryptUtils.stringToMD5(exchangeAccount);
+            try {
+                exchangePassword = EncryptUtils.encode(exchangePassword, key, Constant.MAIL_ENCRYPT_IV, Base64.NO_WRAP);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -43,12 +50,6 @@ public class ExchangeLoginUtils {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance(), false) && !StringUtils.isBlank(exchangeAccount) && !StringUtils.isBlank(exchangePassword)) {
             loadingDlg = new LoadingDialog(activity);
             loadingDlg.show(isShowLoadingDlg);
-            String key = EncryptUtils.stringToMD5(exchangeAccount);
-            try {
-                exchangePassword = EncryptUtils.encode(exchangePassword, key, Constant.MAIL_ENCRYPT_IV, Base64.NO_WRAP);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
             MailApiService apiService = new MailApiService(MyApplication.getInstance());
             apiService.setAPIInterface(new WebService());
             apiService.loginMail(exchangeAccount, exchangePassword);
@@ -86,7 +87,7 @@ public class ExchangeLoginUtils {
             this.activity = activity;
         }
 
-        public Builder setOnExchageLoginListener(OnExchangeLoginListener onExchangeLoginListener) {
+        public Builder setOnExchangeLoginListener(OnExchangeLoginListener onExchangeLoginListener) {
             this.onExchangeLoginListener = onExchangeLoginListener;
             return this;
         }
@@ -110,6 +111,8 @@ public class ExchangeLoginUtils {
     private class WebService extends APIInterfaceInstance {
         @Override
         public void returnMailLoginSuccess() {
+            PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, exchangeAccount);
+            PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_MAIL_PASSWORD, exchangePassword);
             callbackLoginSuccess();
 
         }

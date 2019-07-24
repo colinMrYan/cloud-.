@@ -7,7 +7,6 @@ import com.inspur.emmcloud.api.APIInterface;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
 import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
 import com.inspur.emmcloud.basemodule.api.HttpUtils;
@@ -15,7 +14,6 @@ import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.bean.appcenter.GetIDResult;
 import com.inspur.emmcloud.bean.schedule.GetScheduleListResult;
 import com.inspur.emmcloud.bean.schedule.Schedule;
-import com.inspur.emmcloud.bean.schedule.calendar.GetHolidayDataResult;
 import com.inspur.emmcloud.bean.schedule.calendar.GetMyCalendarResult;
 import com.inspur.emmcloud.bean.schedule.calendar.GetScheduleBasicDataResult;
 import com.inspur.emmcloud.bean.schedule.meeting.Building;
@@ -23,7 +21,6 @@ import com.inspur.emmcloud.bean.schedule.meeting.GetIsMeetingAdminResult;
 import com.inspur.emmcloud.bean.schedule.meeting.GetLocationResult;
 import com.inspur.emmcloud.bean.schedule.meeting.GetMeetingListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.GetMeetingRoomListResult;
-import com.inspur.emmcloud.bean.schedule.meeting.GetOfficeListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.GetTagResult;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.bean.schedule.meeting.Office;
@@ -70,8 +67,7 @@ public class ScheduleApiService {
      */
     public void addSchedule(final String schedule) {
         final String completeUrl = APIUri.getAddScheduleUrl();
-        RequestParams params = MyApplication.getInstance()
-                .getHttpRequestParams(completeUrl);
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl, true);
         params.setBodyContent(schedule);
         params.setAsJsonContent(true);
         HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
@@ -113,7 +109,7 @@ public class ScheduleApiService {
     public void updateSchedule(final String schedule) {
         final String completeUrl = APIUri.getUpdateScheduleUrl();
         RequestParams params = MyApplication.getInstance()
-                .getHttpRequestParams(completeUrl);
+                .getHttpRequestParams(completeUrl, true);
         params.setBodyContent(schedule);
         params.setAsJsonContent(true);
         HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
@@ -158,7 +154,7 @@ public class ScheduleApiService {
      */
     public void getScheduleList(final Calendar startTime, final Calendar endTime, final long calendarLastTime, final long meetingLastTime, final long taskLastTime, final List<String> calendarIdList, final List<String> meetingIdList, final List<String> taskIdList) {
         final String url = APIUri.getScheduleListUrl();
-        RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(url, true);
         params.addQueryStringParameter("startTime", startTime.getTimeInMillis() + "");
         params.addQueryStringParameter("endTime", endTime.getTimeInMillis() + "");
         params.addQueryStringParameter("calendarLastTime", calendarLastTime + "");
@@ -202,7 +198,7 @@ public class ScheduleApiService {
     public void deleteSchedule(final String scheduleId) {
         final String completeUrl = APIUri.getDeleteScheduleUrl(scheduleId);
         RequestParams params = MyApplication.getInstance()
-                .getHttpRequestParams(completeUrl);
+                .getHttpRequestParams(completeUrl, true);
         params.setBodyContent(scheduleId);
         params.setAsJsonContent(true);
         HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
@@ -238,105 +234,54 @@ public class ScheduleApiService {
         });
     }
 
-    /**
-     * 获取常用办公地点
-     */
-    public void getOfficeList() {
-        final String completeUrl = APIUri.getOfficeUrl();
-        RequestParams params = MyApplication.getInstance()
-                .getHttpRequestParams(completeUrl);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
+//    /**
+//     * 获取常用办公地点
+//     */
+//    public void getOfficeList() {
+//        final String completeUrl = APIUri.getOfficeUrl();
+//        RequestParams params = MyApplication.getInstance()
+//                .getHttpRequestParams(completeUrl,true);
+//        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
+//
+//            @Override
+//            public void callbackSuccess(byte[] arg0) {
+//                // TODO Auto-generated method stub
+//                apiInterface.returnOfficeListResultSuccess(new GetOfficeListResult(new String(arg0)));
+//            }
+//
+//            @Override
+//            public void callbackFail(String error, int responseCode) {
+//                // TODO Auto-generated method stub
+//                apiInterface.returnOfficeListResultFail(error, responseCode);
+//            }
+//
+//            @Override
+//            public void callbackTokenExpire(long requestTime) {
+//                OauthCallBack oauthCallBack = new OauthCallBack() {
+//                    @Override
+//                    public void reExecute() {
+//                        getOfficeList();
+//                    }
+//
+//                    @Override
+//                    public void executeFailCallback() {
+//                        callbackFail("", -1);
+//                    }
+//                };
+//                refreshToken(oauthCallBack, requestTime);
+//            }
+//
+//        });
+//    }
 
-            @Override
-            public void callbackSuccess(byte[] arg0) {
-                // TODO Auto-generated method stub
-                apiInterface.returnOfficeListResultSuccess(new GetOfficeListResult(new String(arg0)));
-            }
-
-            @Override
-            public void callbackFail(String error, int responseCode) {
-                // TODO Auto-generated method stub
-                apiInterface.returnOfficeListResultFail(error, responseCode);
-            }
-
-            @Override
-            public void callbackTokenExpire(long requestTime) {
-                OauthCallBack oauthCallBack = new OauthCallBack() {
-                    @Override
-                    public void reExecute() {
-                        getOfficeList();
-                    }
-
-                    @Override
-                    public void executeFailCallback() {
-                        callbackFail("", -1);
-                    }
-                };
-                refreshToken(oauthCallBack, requestTime);
-            }
-
-        });
-    }
-
-    /**
-     * 获取过滤后的会议室列表
-     *
-     * @param start
-     * @param end
-     * @param officeIdList
-     * @param isFilter
-     */
-    public void getMeetingRoomList(final long start, final long end, final List<String> officeIdList,
-                                   final boolean isFilter) {
-        String baseUrl = APIUri.getMeetingRoomsUrl() + "?";
-        if (isFilter) {
-            baseUrl = baseUrl + "start=" + start + "&end=" + end;
-        } else {
-            baseUrl = baseUrl + "start=" + "&end=";
-        }
-
-        final String completeUrl = baseUrl;
-        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
-
-            @Override
-            public void callbackTokenExpire(long requestTime) {
-                OauthCallBack oauthCallBack = new OauthCallBack() {
-                    @Override
-                    public void reExecute() {
-                        getMeetingRoomList(start, end, officeIdList, isFilter);
-                    }
-
-                    @Override
-                    public void executeFailCallback() {
-                        callbackFail("", -1);
-                    }
-                };
-                refreshToken(oauthCallBack, requestTime);
-            }
-
-            @Override
-            public void callbackSuccess(byte[] arg0) {
-                // TODO Auto-generated method stub
-                apiInterface.returnMeetingRoomListSuccess(new GetMeetingRoomListResult(new String(arg0)));
-            }
-
-            @Override
-            public void callbackFail(String error, int responseCode) {
-                // TODO Auto-generated method stub
-                apiInterface.returnMeetingRoomListFail(error, responseCode);
-            }
-        });
-    }
 
 
     /**
      * 获取会议室列表
      */
     public void getMeetingRoomList() {
-        String baseUrl = APIUri.getMeetingRoomsUrl();
-        final String completeUrl = baseUrl;
-        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
+        final String completeUrl = APIUri.getMeetingRoomsUrl();
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl, true);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
@@ -378,7 +323,7 @@ public class ScheduleApiService {
     public void setCalendarBindChat(final String calendarId, final String chatId) {
         String baseUrl = APIUri.getSetCalendarBindChatUrl();
         final String completeUrl = baseUrl;
-        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl, true);
         params.addParameter("calendarId", calendarId);
         params.addParameter("chatId", chatId);
         params.setAsJsonContent(true);
@@ -424,7 +369,7 @@ public class ScheduleApiService {
     public void getCalendarBindChat(final String calendarId) {
         String baseUrl = APIUri.getCalendarBindChatUrl(calendarId);
         final String completeUrl = baseUrl;
-        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl, true);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
@@ -462,7 +407,7 @@ public class ScheduleApiService {
      */
     public void setMeetingAttendStatus(final String meetingId, final String responseType) {
         final String completeUrl = APIUri.getMeetingAttendStatusUrl(responseType) + meetingId;
-        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl, true);
         HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(byte[] arg0) {
@@ -718,7 +663,7 @@ public class ScheduleApiService {
     public void deleteMeeting(final Meeting meeting) {
         final String completeUrl = APIUri.getDelMeetingUrl(meeting.getId());
         RequestParams params = MyApplication.getInstance()
-                .getHttpRequestParams(completeUrl);
+                .getHttpRequestParams(completeUrl, true);
         params.setBodyContent(meeting.getId());
         params.setAsJsonContent(true);
         HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
@@ -762,7 +707,7 @@ public class ScheduleApiService {
     public void getMeetingDataFromId(final String id) {
         final String completeUrl = APIUri.getMeetingUrlFromId(id);
         RequestParams params = MyApplication.getInstance()
-                .getHttpRequestParams(completeUrl);
+                .getHttpRequestParams(completeUrl, true);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
@@ -804,7 +749,7 @@ public class ScheduleApiService {
     public void getCalendarDataFromId(final String id) {
         final String completeUrl = APIUri.getCalendarUrlFromId(id);
         RequestParams params = MyApplication.getInstance()
-                .getHttpRequestParams(completeUrl);
+                .getHttpRequestParams(completeUrl, true);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
@@ -847,7 +792,7 @@ public class ScheduleApiService {
      */
     public void getRoomMeetingListByMeetingRoom(final String roomId, final long startTime, final long endTime) {
         final String completeUrl = APIUri.getRoomMeetingListByMeetingRoom();
-        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl, true);
         params.addQueryStringParameter("roomId", roomId);
         params.addQueryStringParameter("startTime", startTime + "");
         params.addQueryStringParameter("endTime", endTime + "");
@@ -891,7 +836,7 @@ public class ScheduleApiService {
      */
     public void getIsMeetingAdmin(final String uid) {
         final String completeUrl = APIUri.getMeetingIsAdminUrl();
-        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl, true);
         params.addQueryStringParameter("cid", uid);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
 
@@ -932,7 +877,7 @@ public class ScheduleApiService {
     public void getMeetingLocation() {
         final String completeUrl = APIUri.getLocationUrl();
         RequestParams params = MyApplication.getInstance()
-                .getHttpRequestParams(completeUrl);
+                .getHttpRequestParams(completeUrl, true);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
@@ -976,7 +921,7 @@ public class ScheduleApiService {
     public void addMeetingOffice(final Building building) {
         final String completeUrl = APIUri.addOfficeUrl();
         RequestParams params = MyApplication.getInstance()
-                .getHttpRequestParams(completeUrl);
+                .getHttpRequestParams(completeUrl, true);
         JSONObject jsonBuild = new JSONObject();
         JSONObject jsonObject = new JSONObject();
         try {
@@ -1022,60 +967,60 @@ public class ScheduleApiService {
     }
 
 
+//    /**
+//     * 删除常用办公地点
+//     *
+//     * @param office
+//     */
+//    public void deleteMeetingOffice(final Office office) {
+//        final String completeUrl = APIUri.addOfficeUrl() + "/" + office.getId();
+//        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
+//        HttpUtils.request(context, CloudHttpMethod.DELETE, params, new BaseModuleAPICallback(context, completeUrl) {
+//
+//            @Override
+//            public void callbackTokenExpire(long requestTime) {
+//                OauthCallBack oauthCallBack = new OauthCallBack() {
+//                    @Override
+//                    public void reExecute() {
+//                        deleteMeetingOffice(office);
+//                    }
+//
+//                    @Override
+//                    public void executeFailCallback() {
+//                        callbackFail("", -1);
+//                    }
+//                };
+//                refreshToken(
+//                        oauthCallBack, requestTime);
+//            }
+//
+//            @Override
+//            public void callbackSuccess(byte[] arg0) {
+//                // TODO Auto-generated method stub
+//                apiInterface.returnDeleteOfficeSuccess(office);
+//            }
+//
+//            @Override
+//            public void callbackFail(String error, int responseCode) {
+//                // TODO Auto-generated method stub
+//                apiInterface.returnDeleteOfficeFail(error, responseCode);
+//            }
+//        });
+//
+//    }
+
+
     /**
-     * 删除常用办公地点
-     *
-     * @param office
-     */
-    public void deleteMeetingOffice(final Office office) {
-        final String completeUrl = APIUri.addOfficeUrl() + "/" + office.getId();
-        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
-        HttpUtils.request(context, CloudHttpMethod.DELETE, params, new BaseModuleAPICallback(context, completeUrl) {
-
-            @Override
-            public void callbackTokenExpire(long requestTime) {
-                OauthCallBack oauthCallBack = new OauthCallBack() {
-                    @Override
-                    public void reExecute() {
-                        deleteMeetingOffice(office);
-                    }
-
-                    @Override
-                    public void executeFailCallback() {
-                        callbackFail("", -1);
-                    }
-                };
-                refreshToken(
-                        oauthCallBack, requestTime);
-            }
-
-            @Override
-            public void callbackSuccess(byte[] arg0) {
-                // TODO Auto-generated method stub
-                apiInterface.returnDeleteOfficeSuccess(office);
-            }
-
-            @Override
-            public void callbackFail(String error, int responseCode) {
-                // TODO Auto-generated method stub
-                apiInterface.returnDeleteOfficeFail(error, responseCode);
-            }
-        });
-
-    }
-
-
-    /**
-     * 设置常用会议点点
+     * 设置常用会议地点
      */
     public void setMeetingCommonBuilding(final Building building) {
         final String completeUrl = APIUri.addOfficeUrl();
         RequestParams params = MyApplication.getInstance()
-                .getHttpRequestParams(completeUrl);
+                .getHttpRequestParams(completeUrl, true);
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("id", building.getId());
             jsonObject.put("name", building.getName());
+            jsonObject.put("id", building.getId());
             params.setBodyContent(jsonObject.toString());
             params.setAsJsonContent(true);
         } catch (Exception e) {
@@ -1103,7 +1048,6 @@ public class ScheduleApiService {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                LogUtils.LbcDebug("returnSetMeetingCommonBuildingSuccess::" + arg0.toString());
                 apiInterface.returnSetMeetingCommonBuildingSuccess(building);
             }
 
@@ -1120,7 +1064,7 @@ public class ScheduleApiService {
      */
     public void cancelMeetingCommonBuilding(final Building building) {
         final String completeUrl = APIUri.addOfficeUrl() + "/" + building.getId();
-        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl, true);
         HttpUtils.request(context, CloudHttpMethod.DELETE, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
@@ -1143,7 +1087,6 @@ public class ScheduleApiService {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                LogUtils.LbcDebug("returnCancelMeetingCommonBuildingSuccess::" + arg0.toString());
                 apiInterface.returnCancelMeetingCommonBuildingSuccess(building);
             }
 
@@ -1162,7 +1105,7 @@ public class ScheduleApiService {
      */
     public void addMeeting(final String meetingJson) {
         final String completeUrl = APIUri.getAddMeetingUrl();
-        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl, true);
         params.setBodyContent(meetingJson);
         params.setAsJsonContent(true);
         HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
@@ -1200,7 +1143,7 @@ public class ScheduleApiService {
 
     public void updateMeeting(final String meetingJson) {
         final String completeUrl = APIUri.getMeetingUpdateUrl();
-        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl, true);
         params.setBodyContent(meetingJson);
         params.setAsJsonContent(true);
         HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
@@ -1245,7 +1188,7 @@ public class ScheduleApiService {
     public void getMeetingListByTime(final long startTime) {
         final String completeUrl = APIUri.getMeetingListByStartTime();
         RequestParams params = MyApplication.getInstance()
-                .getHttpRequestParams(completeUrl);
+                .getHttpRequestParams(completeUrl, true);
         params.addQueryStringParameter("startTime", startTime + "");
         HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
 
@@ -1287,7 +1230,7 @@ public class ScheduleApiService {
      */
     public void getMeetingHistoryListByPage(final int pageNum) {
         final String completeUrl = APIUri.getMeetingHistoryListByPage(pageNum);
-        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl, true);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
@@ -1320,46 +1263,47 @@ public class ScheduleApiService {
             }
         });
     }
-
-    /**
-     * 获取节假日信息
-     * @param year
-     */
-    public void getHolidayData(final int year) {
-        final String completeUrl = APIUri.getHolidayDataUrl() + year;
-        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
-
-            @Override
-            public void callbackTokenExpire(long requestTime) {
-                OauthCallBack oauthCallBack = new OauthCallBack() {
-                    @Override
-                    public void reExecute() {
-                        getHolidayData(year);
-                    }
-
-                    @Override
-                    public void executeFailCallback() {
-                        callbackFail("", -1);
-                    }
-                };
-                refreshToken(
-                        oauthCallBack, requestTime);
-            }
-
-            @Override
-            public void callbackSuccess(byte[] arg0) {
-                // TODO Auto-generated method stub
-                apiInterface.returnHolidayDataSuccess(new GetHolidayDataResult(new String(arg0),year));
-            }
-
-            @Override
-            public void callbackFail(String error, int responseCode) {
-                // TODO Auto-generated method stub
-                apiInterface.returnHolidayDataFail(error, responseCode);
-            }
-        });
-    }
+//
+//    /**
+//     * 获取节假日信息
+//     *
+//     * @param year
+//     */
+//    public void getHolidayData(final int year) {
+//        final String completeUrl = APIUri.getHolidayDataUrl() + year;
+//        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
+//        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
+//
+//            @Override
+//            public void callbackTokenExpire(long requestTime) {
+//                OauthCallBack oauthCallBack = new OauthCallBack() {
+//                    @Override
+//                    public void reExecute() {
+//                        getHolidayData(year);
+//                    }
+//
+//                    @Override
+//                    public void executeFailCallback() {
+//                        callbackFail("", -1);
+//                    }
+//                };
+//                refreshToken(
+//                        oauthCallBack, requestTime);
+//            }
+//
+//            @Override
+//            public void callbackSuccess(byte[] arg0) {
+//                // TODO Auto-generated method stub
+//                apiInterface.returnHolidayDataSuccess(new GetHolidayDataResult(new String(arg0), year));
+//            }
+//
+//            @Override
+//            public void callbackFail(String error, int responseCode) {
+//                // TODO Auto-generated method stub
+//                apiInterface.returnHolidayDataFail(error, responseCode);
+//            }
+//        });
+//    }
 
     /**
      * 创建任务
@@ -1937,7 +1881,7 @@ public class ScheduleApiService {
     public void getMyCalendar(final int page, final int limit) {
         final String completeUrl = APIUri.getCalendarUrl() + "/calendar";
         RequestParams params = MyApplication.getInstance()
-                .getHttpRequestParams(completeUrl);
+                .getHttpRequestParams(completeUrl, true);
         params.addParameter("page", page);
         params.addParameter("limit", limit);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
@@ -1979,7 +1923,7 @@ public class ScheduleApiService {
     /**
      * 删除任务中的标签
      **/
-    public void deleteTaskTags(final String taskId,final String tagsIdJSON) {
+    public void deleteTaskTags(final String taskId, final String tagsIdJSON) {
         final String completeUrl = APIUri.getDelTaskTagsUrl(taskId);
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
@@ -2062,7 +2006,7 @@ public class ScheduleApiService {
 
     public void getScheduleBasicData(final int year, final String version) {
         final String completeUrl = APIUri.getScheduleBasicDataUrl();
-        RequestParams params = BaseApplication.getInstance().getHttpRequestParams(completeUrl);
+        RequestParams params = BaseApplication.getInstance().getHttpRequestParams(completeUrl, true);
         params.addQueryStringParameter("year", year + "");
         params.addQueryStringParameter("version", version);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {

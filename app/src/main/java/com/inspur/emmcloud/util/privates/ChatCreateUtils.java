@@ -19,6 +19,7 @@ import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
@@ -26,7 +27,6 @@ import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.schedule.Participant;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
-import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
@@ -47,15 +47,15 @@ import java.util.TreeSet;
  * com.inspur.emmcloud.util.privates.ChatCreateUtils create at 2016年11月29日 下午7:44:41
  */
 public class ChatCreateUtils {
+    JSONArray peopleArray;
+    ICreateGroupChatListener iCreateGroupChatListener;
+    Meeting meeting;
     private Context context;
     private OnCreateDirectChannelListener onCreateDirectChannelListener;
     private OnCreateGroupChannelListener onCreateGroupChannelListener;
     private LoadingDialog loadingDlg;
     private boolean isShowErrorAlert = true;
-    JSONArray peopleArray;
     private ScheduleApiService scheduleApiService;
-    ICreateGroupChatListener iCreateGroupChatListener;
-    Meeting meeting;
 
     public void createDirectChannel(Activity context, String uid,
                                     OnCreateDirectChannelListener onCreateDirectChannelListener) {
@@ -138,18 +138,6 @@ public class ChatCreateUtils {
         return nameBuilder.toString();
     }
 
-    public interface OnCreateDirectChannelListener {
-        void createDirectChannelSuccess(GetCreateSingleChannelResult getCreateSingleChannelResult);
-
-        void createDirectChannelFail();
-    }
-
-    public interface OnCreateGroupChannelListener {
-        void createGroupChannelSuccess(ChannelGroup channelGroup);
-
-        void createGroupChannelFail();
-    }
-
     /**
      * 发起群聊  入口
      *
@@ -227,6 +215,18 @@ public class ChatCreateUtils {
         Collections.reverse(result);
 
         return result;
+    }
+
+    public interface OnCreateDirectChannelListener {
+        void createDirectChannelSuccess(GetCreateSingleChannelResult getCreateSingleChannelResult);
+
+        void createDirectChannelFail();
+    }
+
+    public interface OnCreateGroupChannelListener {
+        void createGroupChannelSuccess(ChannelGroup channelGroup);
+
+        void createGroupChannelFail();
     }
 
     public interface ICreateGroupChatListener {

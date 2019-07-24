@@ -21,10 +21,10 @@ import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.widget.CustomScrollViewPager;
 import com.inspur.emmcloud.baselib.widget.popmenu.DropPopMenu;
 import com.inspur.emmcloud.baselib.widget.popmenu.MenuItem;
+import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseFragment;
 import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
-import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarSettingActivity;
 import com.inspur.emmcloud.ui.schedule.meeting.MeetingAddActivity;
@@ -60,6 +60,7 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
     private MeetingFragment meetingFragment;
     private TaskFragment taskFragment;
     private TextView dateText;
+    private boolean isRunForeground = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,6 +68,18 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
         super.onCreate(savedInstanceState);
         initView();
         EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        isRunForeground = true;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        isRunForeground = false;
     }
 
     @Override
@@ -117,6 +130,10 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
                         tabLayout.getTabAt(0).select();
                     }
                     break;
+            }
+        } else if (scheme.getAction().equals(Constant.EVENTBUS_TAG_EWS_401)) {
+            if (isRunForeground) {
+                scheduleFragment.showExchangeLoginFailDlg();
             }
         }
     }

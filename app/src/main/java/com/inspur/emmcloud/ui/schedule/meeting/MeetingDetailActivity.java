@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.ui.schedule.meeting;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -21,7 +22,9 @@ import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.ActionSheetDialog;
+import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
@@ -33,7 +36,6 @@ import com.inspur.emmcloud.bean.schedule.Participant;
 import com.inspur.emmcloud.bean.schedule.meeting.GetIsMeetingAdminResult;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.bean.schedule.meeting.ReplyAttendResult;
-import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
 import com.inspur.emmcloud.ui.schedule.ScheduleAlertTimeActivity;
@@ -105,11 +107,11 @@ public class MeetingDetailActivity extends BaseActivity {
     RelativeLayout attendStatusLayout;
     @BindView(R.id.tv_meeting_attend_status)
     TextView attendStatusText;
+    ReplyAttendResult info = new ReplyAttendResult(); //参会答复
     private Meeting meeting;
     private ScheduleApiService scheduleApiService;
     private LoadingDialog loadingDlg;
     private String meetingId;   //会议id
-    ReplyAttendResult info = new ReplyAttendResult(); //参会答复
     private boolean isHistoryMeeting = false; //是否来自历史会议
     private List<String> moreTextList = new ArrayList<>();
     private String chatGroupId; //群聊ID
@@ -394,25 +396,28 @@ public class MeetingDetailActivity extends BaseActivity {
 
     private void startMembersActivity(int type) {
         List<String> uidList = new ArrayList<>();
+        Bundle bundle = new Bundle();
         switch (type) {
             case MEETING_ATTENDEE:
                 uidList = getUidList(meeting.getCommonParticipantList());
+                bundle.putString("title", getString(R.string.schedule_meeting_add_attendee_title));
                 break;
             case MEETING_RECORD_HOLDER:
                 uidList = getUidList(meeting.getRecorderParticipantList());
+                bundle.putString("title", getString(R.string.schedule_meeting_add_record_holder_title));
                 break;
             case MEETING_CONTACT:
                 uidList = getUidList(meeting.getRoleParticipantList());
+                bundle.putString("title", getString(R.string.schedule_meeting_add_conference_title));
                 break;
             case MEETING_INVITE:
                 uidList.add(meeting.getOwner());
+                bundle.putString("title", getString(R.string.meeting_detail_invite));
                 break;
             default:
                 break;
         }
-        Bundle bundle = new Bundle();
         bundle.putStringArrayList("uidList", (ArrayList<String>) uidList);
-        bundle.putString("title", getString(R.string.meeting_memebers));
         bundle.putInt(MembersActivity.MEMBER_PAGE_STATE, MembersActivity.CHECK_STATE);
         IntentUtils.startActivity(this, MembersActivity.class, bundle);
     }
@@ -465,7 +470,7 @@ public class MeetingDetailActivity extends BaseActivity {
                     bundle.putSerializable(EXTRA_MEETING_ENTITY, meeting);
                     IntentUtils.startActivity(MeetingDetailActivity.this, MeetingAddActivity.class, bundle, true);
                 } else if (tag.equals(getString(R.string.schedule_meeting_cancel))) {
-                    deleteMeeting(meeting);
+                    showConfirmClearDialog(meeting);
                 } else if (tag.equals(getString(R.string.message_create_group))) {
 //                    startGroupChat();
                     new ChatCreateUtils().startGroupChat(MeetingDetailActivity.this, meeting, chatGroupId, new ChatCreateUtils.ICreateGroupChatListener() {
@@ -492,6 +497,30 @@ public class MeetingDetailActivity extends BaseActivity {
                 .build()
                 .show();
     }
+
+    /**
+     * 确认清除
+     */
+    private void showConfirmClearDialog(final Meeting meeting) {
+        new CustomDialog.MessageDialogBuilder(MeetingDetailActivity.this)
+                .setMessage(getString(R.string.meeting_cancel_the_meeting))
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        deleteMeeting(meeting);
+                        finish();
+                    }
+                })
+                .show();
+    }
+
 
     /**
      * 删除会议

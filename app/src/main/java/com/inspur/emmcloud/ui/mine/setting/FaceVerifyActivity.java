@@ -40,6 +40,7 @@ import com.inspur.emmcloud.baselib.util.ImageUtils;
 import com.inspur.emmcloud.baselib.util.ResolutionUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
+import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
@@ -47,7 +48,6 @@ import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.basemodule.util.mycamera.CameraUtils;
 import com.inspur.emmcloud.basemodule.util.mycamera.FocusSurfaceView;
 import com.inspur.emmcloud.bean.mine.GetFaceSettingResult;
-import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.util.privates.ProfileUtils;
 

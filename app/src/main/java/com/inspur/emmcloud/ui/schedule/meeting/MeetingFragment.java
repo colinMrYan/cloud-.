@@ -18,13 +18,13 @@ import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.widget.ClearEditText;
 import com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout;
+import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseFragment;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.bean.schedule.meeting.GetMeetingListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
-import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -154,8 +154,12 @@ public class MeetingFragment extends BaseFragment implements MySwipeRefreshLayou
 
     @Override
     public void onLoadMore() {
-        isPullUp = true;
-        getMeetingList();
+        if (uiMeetingList.size() > 0) {
+            isPullUp = true;
+            getMeetingList();
+        } else {
+            swipeRefreshLayout.setLoading(false);
+        }
     }
 
     @Event(value = R.id.rl_meeting_search)
@@ -192,6 +196,7 @@ public class MeetingFragment extends BaseFragment implements MySwipeRefreshLayou
             apiService.getMeetingHistoryListByPage(page);
         } else {
             swipeRefreshLayout.setCanLoadMore(false);
+            swipeRefreshLayout.setRefreshing(false);
         }
     }
 
@@ -223,6 +228,7 @@ public class MeetingFragment extends BaseFragment implements MySwipeRefreshLayou
             List<Meeting> meetingHistoryList = getMeetingListByPage.getMeetingList();
             currentPageSize = meetingHistoryList.size();
             swipeRefreshLayout.setLoading(false);
+            swipeRefreshLayout.setRefreshing(false);
             if (!isPullUp) {
                 meetingList.clear();
                 uiMeetingList.clear();

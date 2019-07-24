@@ -142,8 +142,8 @@ public class APIUri {
     }
 
 
-    public static String getAppConfigUrl(boolean isGetCommonAppConfig, boolean isGetWorkPortletAppConfig, boolean isGetWebAutoRotate) {
-        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/sys/v6.0/config/array?key=PosReportTimeInterval" + (isGetCommonAppConfig ? "&key=CommonFunctions" : "") + (isGetWorkPortletAppConfig ? "&key=WorkPortlet" : "") + (isGetWebAutoRotate ? "&key=WebAutoRotate" : "");
+    public static String getAppConfigUrl(boolean isGetCommonAppConfig, boolean isGetWebAutoRotate) {
+        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/sys/v6.0/config/array?key=PosReportTimeInterval" + (isGetCommonAppConfig ? "&key=CommonFunctions" : "") + (isGetWebAutoRotate ? "&key=WebAutoRotate" : "");
     }
 
     /**
@@ -1117,7 +1117,7 @@ public class APIUri {
     }
 
     /**
-     * 增加办公地点
+     * 增加办公地点设置常用办公地点
      *
      * @return
      */
