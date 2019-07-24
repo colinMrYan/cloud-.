@@ -339,10 +339,13 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
         View eventView = LayoutInflater.from(getContext()).inflate(R.layout.schedule_calendar_day_event_view, null);
         final Drawable drawableNormal = CalendarUtils.getEventBgNormalDrawable(event);
         eventView.setBackground(drawableNormal);
-        if (eventLayoutParams.height >= DensityUtil.dip2px(MyApplication.getInstance(), 24)) {
-            ImageView eventImg = eventView.findViewById(R.id.iv_event);
-            TextView eventTitleEvent = eventView.findViewById(R.id.tv_event_title);
-            TextView eventSubtitleEvent = eventView.findViewById(R.id.tv_event_subtitle);
+        ImageView eventImg = eventView.findViewById(R.id.iv_event);
+        TextView eventTitleEvent = eventView.findViewById(R.id.tv_event_title);
+        TextView eventSubtitleEvent = eventView.findViewById(R.id.tv_event_subtitle);
+        if (eventLayoutParams.height >= DensityUtil.dip2px(MyApplication.getInstance(), 26)) {
+            eventImg.setVisibility(VISIBLE);
+            eventTitleEvent.setVisibility(VISIBLE);
+            eventSubtitleEvent.setVisibility(VISIBLE);
             eventImg.setImageResource(event.getEventIconResId(false));
             eventTitleEvent.setText(event.getEventTitle());
             String subTitle = event.getShowEventSubTitle(getContext(), selectCalendar);

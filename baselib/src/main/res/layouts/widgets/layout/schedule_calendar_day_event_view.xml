@@ -12,7 +12,8 @@
         android:layout_height="18dp"
         android:layout_marginLeft="9dp"
         android:layout_marginRight="10dp"
-        android:scaleType="fitXY" />
+        android:scaleType="fitXY"
+        android:visibility="invisible" />
 
     <TextView
         android:id="@+id/tv_event_title"
@@ -22,7 +23,8 @@
         android:ellipsize="middle"
         android:maxLines="2"
         android:textColor="#333333"
-        android:textSize="13sp" />
+        android:textSize="13sp"
+        android:visibility="invisible" />
 
     <TextView
         android:id="@+id/tv_event_subtitle"
@@ -33,5 +35,6 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:textColor="#333333"
-        android:textSize="11sp" />
+        android:textSize="11sp"
+        android:visibility="invisible" />
 </RelativeLayout>
