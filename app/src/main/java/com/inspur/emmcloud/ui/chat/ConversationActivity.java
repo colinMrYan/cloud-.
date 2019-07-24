@@ -6,6 +6,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
@@ -38,6 +39,7 @@ import com.inspur.emmcloud.baselib.widget.CustomLoadingView;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButton;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
@@ -89,6 +91,7 @@ import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.util.privates.richtext.markdown.MarkDown;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
 import com.inspur.emmcloud.widget.ECMChatInputMenu.ChatInputMenuListener;
+import com.inspur.emmcloud.widget.ECMChatInputMenuCallback;
 import com.inspur.emmcloud.widget.RecycleViewForSizeChange;
 import com.inspur.emmcloud.widget.bubble.BubbleLayout;
 
@@ -386,6 +389,41 @@ public class ConversationActivity extends ConversationBaseActivity {
         String draftMessageContent = MessageCacheUtil.getDraftByCid(ConversationActivity.this, cid);
         if (draftMessageContent != null) {
             chatInputMenu.setChatDrafts(draftMessageContent);
+        }
+        chatInputMenu.setInputMenuClickCallback(new ECMChatInputMenuCallback() {
+            @Override
+            public void onInputMenuClick(String type) {
+                inputMenuClick(type);
+            }
+        });
+    }
+
+    private void inputMenuClick(String type) {
+        switch (type) {
+            case "mail":
+                if (conversation == null) return;
+                List<ContactUser> totalList = ContactUserCacheUtils.getContactUserListById(conversation.getMemberList());
+                List<ContactUser> userList = new ArrayList<>();
+                for (ContactUser user : totalList) {
+                    if (!BaseApplication.getInstance().getUid().equals(user.getId())) {
+                        userList.add(user);
+                    }
+                }
+                if (userList.size() > 50) {
+                    ToastUtils.show("收件人超过50人，确定发送么？");
+                }
+                String mailListStr = userList.get(0).getEmail();
+                StringBuilder builder = new StringBuilder(mailListStr);
+                for (int i = 1; i < userList.size(); i++) {
+                    builder.append(",");
+                    builder.append(userList.get(i).getEmail());
+                }
+                mailListStr = builder.toString();
+
+                Intent intent = new Intent(Intent.ACTION_SENDTO);
+                intent.setData(Uri.parse("mailto:" + mailListStr));
+                startActivity(intent);
+                break;
         }
     }
 

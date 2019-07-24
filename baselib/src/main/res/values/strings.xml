@@ -456,7 +456,7 @@
     <string name="schedule_meeting_attend_accept">接受</string>
     <string name="schedule_meeting_attend_ignore">暂定</string>
     <string name="schedule_meeting_attend_reject">拒绝</string>
-    <string name="chat_group_chanel_not_exist">不在当前群聊内</string>
+    <string name="chat_group_chanel_not_exist">当前聊天信息不存在</string>
 
     <!-- 发现部分 -->
     <string name="find">发现</string>
