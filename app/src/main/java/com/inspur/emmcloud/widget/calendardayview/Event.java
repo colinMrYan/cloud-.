@@ -2,14 +2,20 @@ package com.inspur.emmcloud.widget.calendardayview;
 
 
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
+import com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButtonDrawable;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
-import com.inspur.emmcloud.basemodule.config.Constant;
-import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.bean.schedule.Schedule;
+import com.inspur.emmcloud.bean.schedule.calendar.CalendarColor;
+import com.inspur.emmcloud.bean.schedule.calendar.ScheduleCalendar;
+import com.inspur.emmcloud.util.privates.cache.ScheduleCalendarCacheUtils;
 
 import java.util.Calendar;
 import java.util.Iterator;
@@ -143,28 +149,30 @@ public class Event {
     }
 
     public boolean canDelete() {
-        if (getEventType().equals(Schedule.TYPE_CALENDAR)) {
-            return true;
-        }
-        if (getEventType().equals(Schedule.TYPE_MEETING)) {
-            boolean isAdmin = PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(), Constant.PREF_IS_MEETING_ADMIN,
-                    false);
-            if (isAdmin || (getOwner().equals(BaseApplication.getInstance().getUid()) && getEventEndTime().after(Calendar.getInstance()))) {
-                return true;
-            }
-        }
-        return false;
+//        if (getEventType().equals(Schedule.TYPE_CALENDAR)) {
+//            return true;
+//        }
+//        if (getEventType().equals(Schedule.TYPE_MEETING)) {
+//            boolean isAdmin = PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(), Constant.PREF_IS_MEETING_ADMIN,
+//                    false);
+//            if (isAdmin || (getOwner().equals(BaseApplication.getInstance().getUid()) && getEventEndTime().after(Calendar.getInstance()))) {
+//                return true;
+//            }
+//        }
+        Schedule schedule = (Schedule) getEventObj();
+        return schedule.canDelete();
     }
 
     public boolean canModify() {
-        boolean isOwner = getOwner().equals(BaseApplication.getInstance().getUid());
-        if (getEventType().equals(Schedule.TYPE_CALENDAR) && isOwner) {
-            return true;
-        }
-        if (getEventType().equals(Schedule.TYPE_MEETING) && isOwner && getEventEndTime().after(Calendar.getInstance())) {
-            return true;
-        }
-        return false;
+//        boolean isOwner = getOwner().equals(BaseApplication.getInstance().getUid());
+//        if (getEventType().equals(Schedule.TYPE_CALENDAR) && isOwner) {
+//            return true;
+//        }
+//        if (getEventType().equals(Schedule.TYPE_MEETING) && isOwner && getEventEndTime().after(Calendar.getInstance())) {
+//            return true;
+//        }
+        Schedule schedule = (Schedule) getEventObj();
+        return schedule.canModify();
     }
 
     public String getCalendarType() {
@@ -218,12 +226,11 @@ public class Event {
 
     public int getEventColorResId() {
         int eventColorIconResId = -1;
-        if (getEventType().equals(Schedule.TYPE_CALENDAR)) {
-            eventColorIconResId = R.drawable.schedule_calendar_type_orange;
-        } else if (getEventType().equals(Schedule.TYPE_MEETING)) {
-            eventColorIconResId = R.drawable.schedule_calendar_type_yellow;
-        } else {
-            eventColorIconResId = R.drawable.schedule_calendar_type_purple;
+        String scheduleCalendarId = ((Schedule) getEventObj()).getScheduleCalendar();
+        ScheduleCalendar scheduleCalendar = ScheduleCalendarCacheUtils.getScheduleCalendar(BaseApplication.getInstance(), scheduleCalendarId);
+        if (scheduleCalendar != null) {
+            CalendarColor calendarColor = CalendarColor.getCalendarColor(scheduleCalendar.getColor());
+            return calendarColor.getIconResId();
         }
         return eventColorIconResId;
     }
@@ -240,5 +247,46 @@ public class Event {
             }
         }
         return showEventSubTitle;
+    }
+
+    public Drawable getEventBgNormalDrawable() {
+        Drawable drawable = null;
+        String scheduleCalendarId = ((Schedule) getEventObj()).getScheduleCalendar();
+        ScheduleCalendar scheduleCalendar = ScheduleCalendarCacheUtils.getScheduleCalendar(BaseApplication.getInstance(), scheduleCalendarId);
+        if (scheduleCalendar != null) {
+            CalendarColor calendarColor = CalendarColor.getCalendarColor(scheduleCalendar.getColor());
+            LogUtils.jasonDebug("calendarColor.eventBgNormalResId==" + calendarColor.eventBgNormalResId);
+            LogUtils.jasonDebug("calendarColor.eventBgNormalResId3333==" + R.drawable.schedule_calendar_view_event_bg_blue);
+            return ContextCompat.getDrawable(BaseApplication.getInstance(), calendarColor.eventBgNormalResId);
+        }
+        return drawable;
+
+    }
+
+    public CustomRoundButtonDrawable getEventBgSelectDrawable() {
+        CustomRoundButtonDrawable drawableSelected = new CustomRoundButtonDrawable();
+        ColorStateList colorStateList = null;
+        String scheduleCalendarId = ((Schedule) getEventObj()).getScheduleCalendar();
+        ScheduleCalendar scheduleCalendar = ScheduleCalendarCacheUtils.getScheduleCalendar(BaseApplication.getInstance(), scheduleCalendarId);
+        if (scheduleCalendar != null) {
+            CalendarColor calendarColor = CalendarColor.getCalendarColor(scheduleCalendar.getColor());
+            colorStateList = ColorStateList.valueOf(ContextCompat.getColor(BaseApplication.getInstance(), calendarColor.getColor()));
+        }
+        drawableSelected.setBgData(colorStateList);
+        drawableSelected.setCornerRadius(DensityUtil.dip2px(2));
+        drawableSelected.setIsRadiusAdjustBounds(false);
+        return drawableSelected;
+    }
+
+
+    public int getCalendarTypeColor() {
+        Integer color = -1;
+        String scheduleCalendarId = ((Schedule) getEventObj()).getScheduleCalendar();
+        ScheduleCalendar scheduleCalendar = ScheduleCalendarCacheUtils.getScheduleCalendar(BaseApplication.getInstance(), scheduleCalendarId);
+        if (scheduleCalendar != null) {
+            CalendarColor calendarColor = CalendarColor.getCalendarColor(scheduleCalendar.getColor());
+            return ContextCompat.getColor(BaseApplication.getInstance(), calendarColor.getColor());
+        }
+        return color;
     }
 }

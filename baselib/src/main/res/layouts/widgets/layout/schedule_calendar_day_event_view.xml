@@ -2,9 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="3dp"
-    android:paddingRight="7dp"
-    android:paddingTop="3dp">
+    android:paddingRight="7dp">
 
     <ImageView
         android:id="@+id/iv_event"
@@ -12,6 +10,7 @@
         android:layout_height="18dp"
         android:layout_marginLeft="9dp"
         android:layout_marginRight="10dp"
+        android:layout_marginTop="3dp"
         android:scaleType="fitXY"
         android:visibility="invisible" />
 

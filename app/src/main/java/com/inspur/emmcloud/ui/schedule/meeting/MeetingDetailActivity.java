@@ -31,7 +31,6 @@ import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
-import com.inspur.emmcloud.bean.schedule.Location;
 import com.inspur.emmcloud.bean.schedule.Participant;
 import com.inspur.emmcloud.bean.schedule.meeting.GetIsMeetingAdminResult;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
@@ -85,6 +84,8 @@ public class MeetingDetailActivity extends BaseActivity {
     TextView attendeeText;
     @BindView(R.id.tv_location)
     TextView meetingLocationText;
+    @BindView(R.id.rl_meeting_location)
+    RelativeLayout meetingLocationLayout;
     @BindView(R.id.tv_meeting_record_holder)
     TextView meetingRecordHolderText;
     @BindView(R.id.tv_meeting_conference)
@@ -154,8 +155,12 @@ public class MeetingDetailActivity extends BaseActivity {
             meetingInviteText.setText(getString(R.string.meeting_detail_inviter, userName));
         }
         meetingInviteText.setVisibility(StringUtils.isBlank(meeting.getOwner()) ? View.GONE : View.VISIBLE);
-        String locationData = getString(R.string.meeting_detail_location) + new Location(meeting.getLocation()).getBuilding() + " " + new Location(meeting.getLocation()).getDisplayName();
-        meetingLocationText.setText(locationData);
+        if (StringUtils.isBlank(meeting.getLocation())) {
+            meetingLocationLayout.setVisibility(View.GONE);
+        } else {
+            String locationData = getString(R.string.meeting_detail_location) + meeting.getScheduleLocationObj().getBuilding() + " " + meeting.getScheduleLocationObj().getDisplayName();
+            meetingLocationText.setText(locationData);
+        }
         meetingDistributionText.setVisibility(View.VISIBLE);
         meetingDistributionText.setText(getMeetingCategory(meeting));
         if (StringUtils.isBlank(getMeetingCategory(meeting))) {
@@ -223,19 +228,10 @@ public class MeetingDetailActivity extends BaseActivity {
 
     private void initScheduleType() {
         if (meeting == null) return;
-        switch (meeting.getType()) {
-            case TYPE_MEETING:
-                meetingCalendarTypeText.setText(getString(R.string.meeting));
-                break;
-            case TYPE_EXCHANGE:
-                meetingCalendarTypeText.setText(TYPE_EXCHANGE);
-                break;
-            case TYPE_WEBEX:
-                meetingCalendarTypeText.setText(TYPE_WEBEX);
-                break;
-            default:
-                meetingCalendarTypeText.setText(getString(R.string.calendar));
-                break;
+        if (meeting.getType().equals("exchange")) {
+            meetingCalendarTypeText.setText("Exchange");
+        } else {
+            meetingCalendarTypeText.setText("Meeting");
         }
     }
 
@@ -360,7 +356,6 @@ public class MeetingDetailActivity extends BaseActivity {
                 break;
             case R.id.iv_meeting_detail_more:
                 showOperationDialog();
-                break;
             case R.id.rl_meeting_attendee:
                 if (meeting != null)
                     IntentUtils.startActivity(MeetingDetailActivity.this, MeetingAttendeeStateActivity.class, bundle);
