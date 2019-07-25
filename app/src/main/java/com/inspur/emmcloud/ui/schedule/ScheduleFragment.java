@@ -40,8 +40,8 @@ import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.componentservice.communication.CommunicationService;
 import com.inspur.emmcloud.componentservice.communication.ShareToConversationListener;
 import com.inspur.emmcloud.interf.ScheduleEventListener;
-import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarSettingActivity;
+import com.inspur.emmcloud.ui.schedule.meeting.MeetingAddActivity;
 import com.inspur.emmcloud.ui.schedule.meeting.MeetingDetailActivity;
 import com.inspur.emmcloud.util.privates.CalendarUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
@@ -405,8 +405,9 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
                 break;
             case Schedule.TYPE_CALENDAR:
                 Schedule schedule = (Schedule) event.getEventObj();
-                bundle.putSerializable(CalendarAddActivity.EXTRA_SCHEDULE_CALENDAR_EVENT, schedule);
-                IntentUtils.startActivity(getActivity(), CalendarAddActivity.class, bundle);
+                bundle.putSerializable(MeetingAddActivity.EXTRA_SCHEDULE_CALENDAR_EVENT, schedule);
+                bundle.putBoolean(MeetingAddActivity.EXTRA_EVENT_TYPE, false);
+                IntentUtils.startActivity(getActivity(), MeetingAddActivity.class, bundle);
                 break;
             case Schedule.TYPE_TASK:
                 break;
@@ -547,11 +548,11 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
             loadingDlg.show();
             if (event.getEventType().equals(Schedule.TYPE_CALENDAR)) {
-                apiService.deleteSchedule(event.getEventId());
+                apiService.deleteSchedule(event.getEventId(), false);
             } else {
                 Meeting meeting = new Meeting();
                 meeting.setId(event.getEventId());
-                apiService.deleteMeeting(meeting);
+                apiService.deleteMeeting(meeting, false);
             }
 
         }

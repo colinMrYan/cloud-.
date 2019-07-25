@@ -1579,8 +1579,65 @@ public class APIUri {
         return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/add";
     }
 
+    /**
+     * 考虑Exchange 的日程添加
+     */
+    public static String getAddScheduleUrl(boolean isExchange) {
+        if (isExchange) {
+            return getScheduleBaseUrl() + "api/schedule/v6.0/ews/add";
+        } else {
+            return getScheduleBaseUrl() + "api/schedule/v6.0/calendar/add";
+        }
+    }
+
+
+    /**
+     * 考虑Exchange 的日程更新
+     */
+    public static String getUpdateScheduleUrl(boolean isExchange) {
+        if (isExchange) {
+            return getScheduleBaseUrl() + "api/schedule/v6.0/ews/update";
+        } else {
+            return getScheduleBaseUrl() + "api/schedule/v6.0/calendar/update";
+        }
+    }
+
+
+    /**
+     * 考虑Exchange 的日程删除
+     */
+    public static String getDelScheduleUrl(boolean isExchange, String scheduleId) {
+        if (isExchange) {
+            return getScheduleBaseUrl() + "api/schedule/v6.0/ews/remove/";
+        } else {
+            return getScheduleBaseUrl() + "api/schedule/v6.0/calendar/remove/" + scheduleId;
+        }
+    }
+
+    /**
+     * 考虑Exchange 的会议添加
+     */
+    public static String getAddMeetingUrl(boolean isExchange) {
+        if (isExchange) {
+            return getScheduleBaseUrl() + "api/schedule/v6.0/ews/add";
+        } else {
+            return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/add";
+        }
+    }
+
     public static String getDelMeetingUrl(String meetingId) {
         return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/remove/" + meetingId;
+    }
+
+    /**
+     * 考虑Exchange 的会议删除
+     */
+    public static String getDelMeetingUrl(String meetingId, boolean isExchange) {
+        if (isExchange) {
+            return getScheduleBaseUrl() + "api/schedule/v6.0/ews/remove/";
+        } else {
+            return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/remove/" + meetingId;
+        }
     }
 
     public static String getMeetingListByStartTime() {
@@ -1611,6 +1668,17 @@ public class APIUri {
 
     public static String getMeetingUpdateUrl() {
         return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/update";
+    }
+
+    /**
+     * 考虑Exchange 的会议更新
+     */
+    public static String getMeetingUpdateUrl(Boolean isExchange) {
+        if (isExchange) {
+            return getScheduleBaseUrl() + "api/schedule/v6.0/ews/update";
+        } else {
+            return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/update";
+        }
     }
 
     public static String getHolidayDataUrl() {

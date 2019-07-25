@@ -537,7 +537,7 @@ public class MeetingDetailActivity extends BaseActivity {
     private void deleteMeeting(Meeting meeting) {
         if (NetUtils.isNetworkConnected(this)) {
             loadingDlg.show();
-            scheduleApiService.deleteMeeting(meeting);
+            scheduleApiService.deleteMeeting(meeting, false);
         }
     }
 

@@ -34,7 +34,7 @@ import com.inspur.emmcloud.bean.schedule.Schedule;
 import com.inspur.emmcloud.bean.schedule.calendar.GetScheduleBasicDataResult;
 import com.inspur.emmcloud.bean.schedule.calendar.Holiday;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
-import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
+import com.inspur.emmcloud.ui.schedule.meeting.MeetingAddActivity;
 import com.inspur.emmcloud.util.privates.cache.HolidayCacheUtils;
 import com.inspur.emmcloud.widget.DragScaleView;
 import com.inspur.emmcloud.widget.calendardayview.CalendarDayView;
@@ -289,9 +289,10 @@ public class ScheduleBaseFragment extends BaseLayoutFragment implements View.OnL
             public void onClick(View v) {
                 if (modifyEvent == null) {
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable(CalendarAddActivity.EXTRA_START_CALENDAR, calendarDayView.getDragViewStartTime(selectCalendar));
-                    bundle.putSerializable(CalendarAddActivity.EXTRA_END_CALENDAR, calendarDayView.getDragViewEndTime(selectCalendar));
-                    IntentUtils.startActivity(getActivity(), CalendarAddActivity.class, bundle);
+                    bundle.putSerializable(MeetingAddActivity.EXTRA_START_CALENDAR, calendarDayView.getDragViewStartTime(selectCalendar));
+                    bundle.putSerializable(MeetingAddActivity.EXTRA_END_CALENDAR, calendarDayView.getDragViewEndTime(selectCalendar));
+                    bundle.putBoolean(MeetingAddActivity.EXTRA_EVENT_TYPE, false);
+                    IntentUtils.startActivity(getActivity(), MeetingAddActivity.class, bundle);
                     removeEventAddDragScaleView();
                 }
 
@@ -361,14 +362,14 @@ public class ScheduleBaseFragment extends BaseLayoutFragment implements View.OnL
                 if (!startTime.equals(schedule.getStartTimeCalendar()) || !endTime.equals(schedule.getEndTimeCalendar())) {
                     schedule.setStartTime(startTime.getTimeInMillis());
                     schedule.setEndTime(endTime.getTimeInMillis());
-                    apiService.updateSchedule(schedule.toCalendarEventJSONObject().toString());
+                    apiService.updateSchedule(schedule.toCalendarEventJSONObject().toString(), false);
                 }
             } else if (modifyEvent.getEventType() == Schedule.TYPE_MEETING) {
                 Meeting meeting = (Meeting) modifyEvent.getEventObj();
                 if (!startTime.equals(meeting.getStartTimeCalendar()) || !endTime.equals(meeting.getEndTimeCalendar())) {
                     meeting.setStartTime(startTime.getTimeInMillis());
                     meeting.setEndTime(endTime.getTimeInMillis());
-                    apiService.updateSchedule(meeting.toJSONObject().toString());
+                    apiService.updateSchedule(meeting.toJSONObject().toString(), false);
                 }
             }
 

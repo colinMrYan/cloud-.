@@ -37,7 +37,7 @@ import com.inspur.emmcloud.ui.find.AnalysisActivity;
 import com.inspur.emmcloud.ui.find.DocumentActivity;
 import com.inspur.emmcloud.ui.find.KnowledgeActivity;
 import com.inspur.emmcloud.ui.find.trip.TripInfoActivity;
-import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
+import com.inspur.emmcloud.ui.schedule.meeting.MeetingAddActivity;
 import com.inspur.emmcloud.ui.schedule.meeting.MeetingDetailActivity;
 import com.inspur.emmcloud.ui.schedule.task.TaskAddActivity;
 import com.inspur.emmcloud.util.privates.AppId2AppAndOpenAppUtils;
@@ -205,7 +205,7 @@ public class SchemeHandleActivity extends BaseActivity {
                                 if (content != null) {
                                     JSONObject calEventObj = JSONUtils.getJSONObject(content);
                                     CalendarEvent calendarEvent = new CalendarEvent(calEventObj);
-                                    Intent intent = new Intent(SchemeHandleActivity.this, CalendarAddActivity.class);
+                                    Intent intent = new Intent(SchemeHandleActivity.this, MeetingAddActivity.class);
                                     intent.putExtra("calEvent", calendarEvent);
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                     startActivity(intent);
@@ -419,7 +419,7 @@ public class SchemeHandleActivity extends BaseActivity {
                     simpleEventMessage.setMessageObj(Constant.ACTION_CALENDAR);
                     EventBus.getDefault().post(simpleEventMessage);
                 } else if (!StringUtils.isBlank(query.getQueryParameter("id"))) {
-                    openScheduleActivity(query.getQueryParameter("id"), CalendarAddActivity.class);
+                    openScheduleActivity(query.getQueryParameter("id"), MeetingAddActivity.class);
                 }
                 finish();
                 break;

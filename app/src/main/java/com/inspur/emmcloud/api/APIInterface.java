@@ -801,4 +801,17 @@ public interface APIInterface {
 
     void returnAttendMeetingStatusFail(String error, int errorCode);
 
+    void returnAddScheduleEventSuccess(GetIDResult getIDResult);
+
+    void returnAddScheduleEventFail(String error, int errorCode);
+
+    void returnUpdateScheduleEventSuccess(GetIDResult getIDResult);
+
+    void returnUpdateScheduleEventFail(String error, int errorCode);
+
+    void returnDeleteScheduleEventSuccess();
+
+    void returnDeleteScheduleEventFail(String error, int errorCode);
+
+
 }
