@@ -1,9 +1,16 @@
 package com.inspur.emmcloud.bean.schedule;
 
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.bean.schedule.calendar.AccountType;
+import com.inspur.emmcloud.bean.schedule.calendar.ScheduleCalendar;
+import com.inspur.emmcloud.util.privates.cache.ScheduleCalendarCacheUtils;
 import com.inspur.emmcloud.widget.calendardayview.Event;
 
 import org.json.JSONArray;
@@ -252,7 +259,7 @@ public class Schedule implements Serializable {
         JSONArray array = JSONUtils.getJSONArray(participants, new JSONArray());
         for (int i = 0; i < array.length(); i++) {
             Participant participant = new Participant(JSONUtils.getJSONObject(array, i, new JSONObject()));
-                participantList.add(participant);
+            participantList.add(participant);
         }
         return participantList;
     }
@@ -379,7 +386,7 @@ public class Schedule implements Serializable {
         return jsonObject.toString();
     }
 
-    public JSONObject toCalendarEventJSONObject()  {
+    public JSONObject toCalendarEventJSONObject() {
         JSONObject jsonObject = new JSONObject();
         try {
             if (!StringUtils.isBlank(id)) {
@@ -415,10 +422,10 @@ public class Schedule implements Serializable {
                 jsonObject.put("participants", partJsonArray);
             }
 
-            if(!StringUtils.isBlank(note)){
+            if (!StringUtils.isBlank(note)) {
                 jsonObject.put("note", note);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -428,32 +435,64 @@ public class Schedule implements Serializable {
 
 
     public boolean canDelete() {
-        return true;
+        if (scheduleCalendar.equals(AccountType.APP_SCHEDULE.toString())) {
+            return true;
+        } else if (scheduleCalendar.equals(AccountType.APP_MEETING.toString())) {
+            boolean isAdmin = PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(), Constant.PREF_IS_MEETING_ADMIN,
+                    false);
+            if (isAdmin || (getOwner().equals(BaseApplication.getInstance().getUid()))) {
+                return true;
+            }
+            return false;
+        } else {
+//            ScheduleCalendar scheduleCalendar = ScheduleCalendarCacheUtils.getScheduleCalendar(BaseApplication.getInstance(), getScheduleCalendar());
+//            String account = scheduleCalendar.getAcName();
+//            if ()
+            return true;
+
+        }
+
+
     }
 
     public boolean canModify() {
-        return true;
-    }
+        if (scheduleCalendar.equals(AccountType.APP_SCHEDULE.toString())) {
+            return true;
+        } else if (scheduleCalendar.equals(AccountType.APP_MEETING.toString())) {
+            if (getOwner().equals(BaseApplication.getInstance().getUid()) && getEndTimeCalendar().after(Calendar.getInstance())) {
+                return true;
+            }
+            return false;
+        } else {
+            ScheduleCalendar scheduleCalendar = ScheduleCalendarCacheUtils.getScheduleCalendar(BaseApplication.getInstance(), getScheduleCalendar());
+            String account = scheduleCalendar.getAcName();
+            if (getOwner().equals(account)) {
+                return true;
+            }
+            return false;
 
-    public Calendar getDayEventStartTime(Calendar selectCalendar) {
-        Calendar startTimeCalendar = getStartTimeCalendar();
-        if (!TimeUtils.isSameDay(startTimeCalendar, selectCalendar)) {
-            return TimeUtils.getDayBeginCalendar(selectCalendar);
         }
-        return startTimeCalendar;
     }
 
-    public Calendar getDayEventEndTime(Calendar selectCalendar) {
-        Calendar endTimeCalendar = getEndTimeCalendar();
-        if (!TimeUtils.isSameDay(endTimeCalendar, selectCalendar)) {
-            return TimeUtils.getDayEndCalendar(selectCalendar);
-        }
-        return endTimeCalendar;
-    }
-
-    public long getDayDurationInMillSeconds(Calendar selectCalendar) {
-        return getDayEventEndTime(selectCalendar).getTimeInMillis() - getDayEventStartTime(selectCalendar).getTimeInMillis();
-    }
+//    public Calendar getDayEventStartTime(Calendar selectCalendar) {
+//        Calendar startTimeCalendar = getStartTimeCalendar();
+//        if (!TimeUtils.isSameDay(startTimeCalendar, selectCalendar)) {
+//            return TimeUtils.getDayBeginCalendar(selectCalendar);
+//        }
+//        return startTimeCalendar;
+//    }
+//
+//    public Calendar getDayEventEndTime(Calendar selectCalendar) {
+//        Calendar endTimeCalendar = getEndTimeCalendar();
+//        if (!TimeUtils.isSameDay(endTimeCalendar, selectCalendar)) {
+//            return TimeUtils.getDayEndCalendar(selectCalendar);
+//        }
+//        return endTimeCalendar;
+//    }
+//
+//    public long getDayDurationInMillSeconds(Calendar selectCalendar) {
+//        return getDayEventEndTime(selectCalendar).getTimeInMillis() - getDayEventStartTime(selectCalendar).getTimeInMillis();
+//    }
 
 
 //    public int getEventIconResId(boolean isSelect) {
