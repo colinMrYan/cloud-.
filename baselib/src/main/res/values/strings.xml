@@ -813,7 +813,7 @@
     <string name="meeting_log">会务</string>
     <string name="meeting_ageda">议程</string>
     <string name="meeting_summary">纪要</string>
-    <string name="meeting_place">地点</string>
+    <string name="schedule_location">地点</string>
     <string name="meeting_list_title">会议室列表</string>
     <string name="meeting">会议</string>
     <string name="meeting_add">预定会议</string>

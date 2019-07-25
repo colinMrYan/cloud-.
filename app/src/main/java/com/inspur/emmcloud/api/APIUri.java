@@ -1559,8 +1559,12 @@ public class APIUri {
     }
 
 
-    public static String getScheduleListUrl() {
-        return getScheduleBaseUrl() + "api/schedule/v6.0/calendar/GetList?";
+    public static String getScheduleListUrl(boolean isExchange) {
+        if (isExchange) {
+            return getScheduleBaseUrl() + "api/schedule/v6.0/ews/GetList?";
+        } else {
+            return getScheduleBaseUrl() + "api/schedule/v6.0/calendar/GetList?";
+        }
     }
 
     public static String getAddScheduleUrl() {

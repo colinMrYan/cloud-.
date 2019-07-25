@@ -19,7 +19,6 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
@@ -150,7 +149,6 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
 
     @ReactMethod
     public void alertDialog(String title, String content, String buttonJson, final Promise promise) {
-        LogUtils.jasonDebug("jjjjjjjjjjjjjj");
         CustomDialog.MessageDialogBuilder messageDialogBuilder = new CustomDialog.MessageDialogBuilder(getCurrentActivity());
         if (!StringUtils.isBlank(title)) {
             messageDialogBuilder.setTitle(title);
@@ -160,8 +158,7 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
         }
         JSONArray array = JSONUtils.getJSONArray(buttonJson, new JSONArray());
         handleDialogAction(messageDialogBuilder, array, promise);
-        // messageDialogBuilder.show();
-
+        messageDialogBuilder.show();
     }
 
     private void handleDialogAction(CustomDialog.MessageDialogBuilder messageDialogBuilder, JSONArray array, Promise promise) {
@@ -185,10 +182,31 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
         }
     }
 
+    class BridgeActionListener implements DialogInterface.OnClickListener {
+        AlertButton alertButton;
+        Promise promise;
+
+        public BridgeActionListener(final AlertButton alertButton, Promise promise) {
+            this.alertButton = alertButton;
+            this.promise = promise;
+        }
+
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            dialog.dismiss();
+            try {
+                promise.resolve(alertButton.getCode());
+            } catch (Exception e) {
+                promise.reject(e);
+            }
+        }
+    }
+
     @ReactMethod
     public void showToast(String content, Promise promise) {
         ToastUtils.show(MyApplication.getInstance(), content, Toast.LENGTH_LONG);
     }
+
 
     /**
      * 通讯录选人
@@ -251,6 +269,7 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
     public void exit() {
         getCurrentActivity().finish();
     }
+
 
     @Override
     public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
@@ -335,27 +354,5 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
     @Override
     public void onNewIntent(Intent intent) {
 
-    }
-
-    class BridgeActionListener implements DialogInterface.OnClickListener {
-        AlertButton alertButton;
-        Promise promise;
-
-        public BridgeActionListener(final AlertButton alertButton, Promise promise) {
-            this.alertButton = alertButton;
-            this.promise = promise;
-        }
-
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            dialog.dismiss();
-
-            try {
-                promise.resolve(alertButton.getCode());
-            } catch (Exception e) {
-                promise.reject(e);
-            }
-
-        }
     }
 }

@@ -338,6 +338,10 @@ public class ScheduleBaseFragment extends BaseLayoutFragment implements View.OnL
 
     }
 
+    protected void initScheduleCalendar() {
+
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -380,9 +384,14 @@ public class ScheduleBaseFragment extends BaseLayoutFragment implements View.OnL
     class WebService extends APIInterfaceInstance {
         @Override
         public void returnScheduleBasicDataSuccess(GetScheduleBasicDataResult getScheduleBasicDataResult) {
+            boolean isEnableExchangePrevious = PreferencesByUserAndTanentUtils.getBoolean(BaseApplication.getInstance(), Constant.PREF_SCHEDULE_ENABLE_EXCHANGE, false);
             PreferencesByUserAndTanentUtils.putString(BaseApplication.getInstance(), Constant.PREF_SCHEDULE_BASIC_DATA_VERSION, getScheduleBasicDataResult.getVersion());
             if (getScheduleBasicDataResult.getCommand().equals("FORWARD")) {
-                PreferencesByUserAndTanentUtils.putBoolean(BaseApplication.getInstance(), Constant.PREF_SCHEDULE_ENABLE_EXCHANGE, getScheduleBasicDataResult.isEnableExchange());
+                boolean isEnableExchange = getScheduleBasicDataResult.isEnableExchange();
+                if (isEnableExchangePrevious != isEnableExchange) {
+                    PreferencesByUserAndTanentUtils.putBoolean(BaseApplication.getInstance(), Constant.PREF_SCHEDULE_ENABLE_EXCHANGE, getScheduleBasicDataResult.isEnableExchange());
+                    initScheduleCalendar();
+                }
                 List<Holiday> holidayList = getScheduleBasicDataResult.getHolidayList();
                 int year = getScheduleBasicDataResult.getYear();
                     yearHolidayListMap.put(year, holidayList);
