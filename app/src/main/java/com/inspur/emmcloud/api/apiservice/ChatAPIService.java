@@ -594,7 +594,7 @@ public class ChatAPIService {
             @Override
             public void callbackFail(String error, int responseCode) {
                 // TODO Auto-generated method stub
-                apiInterface.returnCreatSingleChannelFail(error, responseCode);
+                apiInterface.returnCreateSingleChannelFail(error, responseCode);
 
             }
         });
@@ -932,7 +932,7 @@ public class ChatAPIService {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnCreatChannelGroupSuccess(new ChannelGroup(new String(arg0)));
+                apiInterface.returnCreateChannelGroupSuccess(new ChannelGroup(new String(arg0)));
             }
 
             @Override

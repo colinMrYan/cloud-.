@@ -6,7 +6,7 @@ import android.content.Context;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.baselib.util.ImageUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
-import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.Robot;
@@ -142,8 +142,8 @@ public class APIUri {
     }
 
 
-    public static String getAppConfigUrl(boolean isGetCommonAppConfig, boolean isGetWorkPortletAppConfig, boolean isGetWebAutoRotate) {
-        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/sys/v6.0/config/array?key=PosReportTimeInterval" + (isGetCommonAppConfig ? "&key=CommonFunctions" : "") + (isGetWorkPortletAppConfig ? "&key=WorkPortlet" : "") + (isGetWebAutoRotate ? "&key=WebAutoRotate" : "");
+    public static String getAppConfigUrl(boolean isGetCommonAppConfig, boolean isGetWebAutoRotate) {
+        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/sys/v6.0/config/array?key=PosReportTimeInterval" + (isGetCommonAppConfig ? "&key=CommonFunctions" : "") + (isGetWebAutoRotate ? "&key=WebAutoRotate" : "");
     }
 
     /**
@@ -194,9 +194,9 @@ public class APIUri {
         if (StringUtils.isBlank(uid) || uid.equals("null"))
             return null;
         String headImgUrl = null;
-        boolean isCacheUserPhotoUrl = MyApplication.getInstance().isKeysContainUid(uid);
+        boolean isCacheUserPhotoUrl = BaseApplication.getInstance().isKeysContainUid(uid);
         if (isCacheUserPhotoUrl) {
-            headImgUrl = MyApplication.getInstance().getUserPhotoUrl(uid);
+            headImgUrl = BaseApplication.getInstance().getUserPhotoUrl(uid);
         } else {
             ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(uid);
             if (contactUser != null) {
@@ -206,7 +206,7 @@ public class APIUri {
                     if (!StringUtils.isBlank(lastQueryTime) && (!lastQueryTime.equals("null"))) {
                         headImgUrl = headImgUrl + "?" + lastQueryTime;
                     }
-                    MyApplication.getInstance().setUsesrPhotoUrl(uid, headImgUrl);
+                    BaseApplication.getInstance().setUsesrPhotoUrl(uid, headImgUrl);
                 } else {
                     String name = contactUser.getName();
                     if (!StringUtils.isBlank(name)) {
@@ -226,8 +226,8 @@ public class APIUri {
                     }
                 }
             }
-            if (MyApplication.getInstance().getIsContactReady() && headImgUrl == null) {
-                MyApplication.getInstance().setUsesrPhotoUrl(uid, headImgUrl);
+            if (BaseApplication.getInstance().getIsContactReady() && headImgUrl == null) {
+                BaseApplication.getInstance().setUsesrPhotoUrl(uid, headImgUrl);
             }
         }
         return headImgUrl;
@@ -982,62 +982,7 @@ public class APIUri {
     public static String getVolumeFileGroupUrl(String volumeId) {
         return getUrlBaseVolume() + "/" + volumeId + "/file/group/privilege";
     }
-    /**************************Webex********************************************/
 
-    /**
-     * 获取webex会议列表
-     *
-     * @return
-     */
-    public static String getWebexMeetingListUrl() {
-        return getEMMBaseUrl() + "api/mam/v6.0/webex";
-    }
-
-    /**
-     * 预定会议
-     *
-     * @return
-     */
-    public static String getScheduleWebexMeetingUrl() {
-        return getEMMBaseUrl() + "api/mam/v6.0/webex/v2";
-    }
-
-    /**
-     * 获取webex头像地址
-     *
-     * @param email
-     * @return
-     */
-    public static String getWebexPhotoUrl(String email) {
-        return getEMMBaseUrl() + "img/userhead/" + email;
-    }
-
-    /**
-     * 获取webex会议
-     *
-     * @return
-     */
-    public static String getWebexMeetingUrl(String meetingID) {
-        return getEMMBaseUrl() + "api/mam/v6.0/webex/SessionInfo/" + meetingID;
-    }
-
-    /**
-     * 删除webex会议
-     *
-     * @return
-     */
-    public static String getRemoveWebexMeetingUrl(String meetingID) {
-        return getEMMBaseUrl() + "api/mam/v6.0/webex/remove/" + meetingID;
-    }
-
-    /**
-     * 获取webex会议TK
-     *
-     * @return
-     */
-    public static String getWebexTK() {
-        return getEMMBaseUrl() + "api/mam/v6.0/webex/gettk";
-    }
 
     /**************************Mail********************************************/
     public static String getMailBaseUrl() {
@@ -1122,7 +1067,7 @@ public class APIUri {
      * @return
      */
     public static String getMeetingRoomsUrl() {
-        return "https://emm.inspur.com/schedule-ext/api/schedule/v6.0/meeting/" + "room";
+        return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/room";
     }
 
     /**
@@ -1168,16 +1113,16 @@ public class APIUri {
      * @return
      */
     public static String getOfficeUrl() {
-        return "https://emm.inspur.com/schedule-ext/api/schedule/v6.0/meeting/" + "Location";
+        return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/Location";
     }
 
     /**
-     * 增加办公地点
+     * 增加办公地点设置常用办公地点
      *
      * @return
      */
     public static String addOfficeUrl() {
-        return "https://emm.inspur.com/schedule-ext/api/schedule/v6.0/meeting/" + "CommonLocation";
+        return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/CommonLocation";
     }
 
     /**
@@ -1195,7 +1140,7 @@ public class APIUri {
      * @return
      */
     public static String getMeetingIsAdminUrl() {
-        return "https://emm.inspur.com/schedule-ext/api/schedule/v6.0/meeting/" + "is_admin";
+        return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/is_admin";
     }
 
     /**
@@ -1213,7 +1158,7 @@ public class APIUri {
      * @return
      */
     public static String getLocationUrl() {
-        return "https://emm.inspur.com/schedule-ext/api/schedule/v6.0/meeting/" + "Location";
+        return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/Location";
     }
 
 
@@ -1234,20 +1179,8 @@ public class APIUri {
     /**
      * 会议详情参会状态
      */
-    public static String getMeetingAttendStatusUrl(int type) {
-        String status = "";
-        switch (Constant.ATTEND_MEETING_STATUS_ACCEPT) {
-            case Constant.ATTEND_MEETING_STATUS_ACCEPT:
-                status = "Accept";
-                break;
-            case Constant.ATTEND_MEETING_STATUS_REJECT:
-                status = "Decline";
-                break;
-            case Constant.ATTEND_MEETING_STATUS_TENTATIVE:
-                status = "Tentative";
-                break;
-        }
-        return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/" + status + "/";
+    public static String getMeetingAttendStatusUrl(String responseType) {
+        return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/" + responseType + "/";
     }
 
 

@@ -35,6 +35,7 @@ import com.inspur.emmcloud.baselib.widget.DateTimePickerDialog;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.api.APIDownloadCallBack;
 import com.inspur.emmcloud.basemodule.bean.SearchModel;
+import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
@@ -51,13 +52,12 @@ import com.inspur.emmcloud.bean.schedule.task.GetTaskListResult;
 import com.inspur.emmcloud.bean.schedule.task.Task;
 import com.inspur.emmcloud.bean.schedule.task.TaskColorTag;
 import com.inspur.emmcloud.bean.schedule.task.TaskSubject;
-import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.ui.schedule.ScheduleAlertTimeActivity;
-import com.inspur.emmcloud.util.privates.CalendarColorUtils;
+import com.inspur.emmcloud.util.privates.CalendarUtils;
 import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 
@@ -433,7 +433,7 @@ public class TaskAddActivity extends BaseActivity {
         if (taskColorTagList.size() == 1) {
             singleTagLayout.setVisibility(View.VISIBLE);
             tagsLayout.setVisibility(View.GONE);
-            taskTypeTapImage.setImageResource(CalendarColorUtils.getCalendarTypeResId(taskColorTagList.get(0).getColor()));
+            taskTypeTapImage.setImageResource(CalendarUtils.getCalendarTypeResId(taskColorTagList.get(0).getColor()));
             taskTypeNameText.setText(taskColorTagList.get(0).getTitle());
         } else if (taskColorTagList.size() > 1) {
             singleTagLayout.setVisibility(View.GONE);
@@ -445,7 +445,7 @@ public class TaskAddActivity extends BaseActivity {
                 int rightPaddingPixNum = DensityUtil.dip2px(this, 5);
                 view.setPadding(rightPaddingPixNum, 0, 0, 0);
                 view.setLayoutParams(new ViewGroup.LayoutParams(widthAndHigh + rightPaddingPixNum, widthAndHigh));
-                view.setImageResource(CalendarColorUtils.getCalendarTypeResId(taskColorTagList.get(i).getColor()));
+                view.setImageResource(CalendarUtils.getCalendarTypeResId(taskColorTagList.get(i).getColor()));
                 tagsLayout.addView(view);
             }
         }

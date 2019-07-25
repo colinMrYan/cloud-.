@@ -10,12 +10,9 @@ import android.view.View;
 import android.view.WindowManager;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
-import com.alibaba.android.arouter.launcher.ARouter;
 import com.gxz.PagerSlidingTabStrip;
-import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
-import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseFragmentActivity;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
@@ -46,21 +43,8 @@ public class GroupNewsActivity extends BaseFragmentActivity {
         loadingDlg = new LoadingDialog(GroupNewsActivity.this);
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
         setStatus();
-        checkLogin();
+        getNewTitles();
     }
-
-    /**
-     * 先检查是否登录
-     * 未登录则跳转到登录页面，已经登录则获取标题及列表
-     */
-    private void checkLogin() {
-        if (StringUtils.isBlank(BaseApplication.getInstance().getAccessToken())) {
-            ARouter.getInstance().build(Constant.AROUTER_CLASS_LOGIN_MAIN).navigation();
-        } else {
-            getNewTitles();
-        }
-    }
-
     /**
      * 获取新闻类别
      */

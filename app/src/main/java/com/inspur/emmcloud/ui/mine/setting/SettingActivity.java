@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -348,6 +349,10 @@ public class SettingActivity extends BaseActivity {
                 break;
             case R.id.clear_cache_layout:
                 showClearCacheDlg();
+                break;
+            case R.id.rl_setting_self_start: //TODO zyj
+//                UriUtils.openUrl(this, "http://www.baidu.com");
+                ARouter.getInstance().build("/meeting/history").navigation();
                 break;
             case R.id.rl_setting_account_safe:
                 IntentUtils.startActivity(SettingActivity.this, SafeCenterActivity.class);

@@ -17,14 +17,13 @@ import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.ScrollViewWithListView;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
-import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.bean.schedule.MyCalendar;
-import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.componentservice.mail.MailService;
-import com.inspur.emmcloud.util.privates.CalendarColorUtils;
+import com.inspur.emmcloud.util.privates.CalendarUtils;
 import com.inspur.emmcloud.util.privates.cache.MyCalendarOperationCacheUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -60,8 +59,8 @@ public class CalendarSettingActivity extends BaseActivity {
         boolean isListView = viewDisplayType.equals(SHOW_TYPE_LIST);
         listSelectImageView.setVisibility(isListView ? View.VISIBLE : View.GONE);
         daySelectImageView.setVisibility(isListView ? View.GONE : View.VISIBLE);
-        calendarsList.add(new MyCalendar("schedule", getApplication().getString(R.string.schedule_calendar_my_schedule), "ORANGE", "", "", true));
-        calendarsList.add(new MyCalendar("meeting", getApplication().getString(R.string.schedule_calendar_my_meeting), "BLUE", "", "", false));
+        calendarsList.add(new MyCalendar("schedule", getApplication().getString(R.string.schedule_calendar_my_schedule), "BLUE", "", "", true));
+        calendarsList.add(new MyCalendar("meeting", getApplication().getString(R.string.schedule_calendar_my_meeting), "ORANGE", "", "", false));
         calendarAdapter = new CalendarAdapter();
         calendarsListView.setAdapter(calendarAdapter);
         setAddCalendarLayoutVisible();
@@ -78,7 +77,7 @@ public class CalendarSettingActivity extends BaseActivity {
                 String exchangeAccount = service.getExchangeMailAccount();
                 String exchangePassword = service.getExchangeMailPassword();
                 if (!StringUtils.isBlank(exchangeAccount) && !StringUtils.isBlank(exchangePassword)) {
-                    calendarsList.add(new MyCalendar("exchange", exchangeAccount, "YELLOW", "", "", true));
+                    calendarsList.add(new MyCalendar("exchange", exchangeAccount, "GREEN", "", "", true));
                     calendarAdapter.notifyDataSetChanged();
                 }
             }
@@ -133,7 +132,7 @@ public class CalendarSettingActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == REQUEST_ADD_CALENDAR) {
-            String mail = PreferencesByUsersUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, "");
+            String mail = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, "");
             calendarsList.add(new MyCalendar("exchange", mail, "YELLOW", "", "", true));
             calendarAdapter.notifyDataSetChanged();
         }
@@ -167,7 +166,7 @@ public class CalendarSettingActivity extends BaseActivity {
             convertView = View.inflate(CalendarSettingActivity.this, R.layout.schedule_calendar_setting_mycalendars, null);
             boolean isHide = MyCalendarOperationCacheUtils.getIsHide(getApplicationContext(), calendar.getId());
             ((SwitchCompat) convertView.findViewById(R.id.switch_view_calendar_state)).setChecked(!isHide);
-            int calendarTypeResId = CalendarColorUtils.getCalendarTypeResId(calendar.getColor());
+            int calendarTypeResId = CalendarUtils.getCalendarTypeResId(calendar.getColor());
             ((ImageView) convertView.findViewById(R.id.iv_calendar_color)).setImageResource(calendarTypeResId);
             ((TextView)convertView.findViewById(R.id.tv_calendar_name)).setText(calendar.getName());
             ((SwitchCompat)(convertView.findViewById(R.id.switch_view_calendar_state))).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

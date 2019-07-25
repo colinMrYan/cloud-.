@@ -29,10 +29,6 @@ import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeResultWithPermissionRe
 import com.inspur.emmcloud.bean.appcenter.volume.Volume;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeDetail;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
-import com.inspur.emmcloud.bean.appcenter.webex.GetScheduleWebexMeetingSuccess;
-import com.inspur.emmcloud.bean.appcenter.webex.GetWebexMeetingListResult;
-import com.inspur.emmcloud.bean.appcenter.webex.GetWebexTKResult;
-import com.inspur.emmcloud.bean.appcenter.webex.WebexMeeting;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetAllRobotsResult;
@@ -413,13 +409,13 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnCreatSingleChannelFail(String error, int errorCode) {
+    public void returnCreateSingleChannelFail(String error, int errorCode) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void returnCreatChannelGroupSuccess(ChannelGroup channelGroup) {
+    public void returnCreateChannelGroupSuccess(ChannelGroup channelGroup) {
         // TODO Auto-generated method stub
 
     }
@@ -1496,46 +1492,6 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnWebexMeetingListSuccess(GetWebexMeetingListResult getWebexMeetingListResult) {
-    }
-
-    @Override
-    public void returnWebexMeetingListFail(String error, int errorCode) {
-    }
-
-    @Override
-    public void returnScheduleWebexMeetingSuccess(GetScheduleWebexMeetingSuccess getScheduleWebexMeetingSuccess) {
-    }
-
-    @Override
-    public void returnScheduleWebexMeetingFail(String error, int errorCode) {
-    }
-
-    @Override
-    public void returnWebexMeetingSuccess(WebexMeeting webexMeeting) {
-    }
-
-    @Override
-    public void returnWebexMeetingFail(String error, int errorCode) {
-    }
-
-    @Override
-    public void returnWebexTKSuccess(GetWebexTKResult getWebexTKResult) {
-    }
-
-    @Override
-    public void returnWebexTKFail(String error, int errorCode) {
-    }
-
-    @Override
-    public void returnRemoveWebexMeetingSuccess() {
-    }
-
-    @Override
-    public void returnRemoveWebexMeetingFail(String error, int errorCode) {
-    }
-
-    @Override
     public void returnConversationInfoSuccess(Conversation conversation) {
     }
 
@@ -1858,7 +1814,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnAttendMeetingStatusSuccess(String result, int type) {
+    public void returnAttendMeetingStatusSuccess(String result, String responseType) {
 
     }
 

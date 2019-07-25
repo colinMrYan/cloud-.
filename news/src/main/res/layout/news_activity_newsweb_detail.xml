@@ -66,11 +66,56 @@
 
     </RelativeLayout>
 
+    <LinearLayout
+        android:id="@+id/load_error_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/rl_header"
+        android:background="@color/content_bg"
+        android:onClick="onClick"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="113dp"
+            android:layout_height="133dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="133dp"
+            android:src="@drawable/imp_load_fail" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:text="@string/function_load_fail"
+            android:textColor="#666666"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/refresh_text"
+            android:layout_width="wrap_content"
+            android:layout_height="34dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/bg_net_error_tip"
+            android:gravity="center"
+            android:onClick="onClick"
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp"
+            android:text="@string/function_reload"
+            android:textColor="#666666"
+            android:textSize="15sp" />
+    </LinearLayout>
+
     <RelativeLayout
+        android:id="@+id/rl_web_content"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_below="@id/rl_header"
-        android:background="@color/content_bg">
+        android:background="@color/content_bg"
+        android:clickable="true"
+        android:onClick="onClick">
 
         <WebView
             android:id="@+id/wv_news"

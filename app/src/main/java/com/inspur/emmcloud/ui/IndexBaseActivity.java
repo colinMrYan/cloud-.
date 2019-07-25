@@ -4,10 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
+import android.provider.Settings;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -29,6 +31,7 @@ import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.SelectorUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.ConfirmDialog;
+import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseFragmentActivity;
 import com.inspur.emmcloud.basemodule.util.ECMShortcutBadgeNumberManagerUtils;
@@ -43,12 +46,12 @@ import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.bean.system.MainTabPayLoad;
 import com.inspur.emmcloud.bean.system.MainTabResult;
 import com.inspur.emmcloud.bean.system.MainTabTitleResult;
-import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.bean.system.TabBean;
 import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
 import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
 import com.inspur.emmcloud.bean.system.navibar.NaviBarScheme;
 import com.inspur.emmcloud.broadcastreceiver.NetworkChangeReceiver;
+import com.inspur.emmcloud.broadcastreceiver.ScreenBroadcastReceiver;
 import com.inspur.emmcloud.componentservice.web.WebService;
 import com.inspur.emmcloud.ui.appcenter.MyAppFragment;
 import com.inspur.emmcloud.ui.chat.CommunicationFragment;
@@ -60,7 +63,6 @@ import com.inspur.emmcloud.ui.mine.setting.CreateGestureActivity;
 import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
 import com.inspur.emmcloud.ui.schedule.ScheduleHomeFragment;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
-import com.inspur.emmcloud.util.privates.WhiteListUtil;
 import com.inspur.emmcloud.util.privates.cache.MyAppCacheUtils;
 import com.inspur.emmcloud.widget.MyFragmentTabHost;
 import com.inspur.emmcloud.widget.tipsview.TipsView;
@@ -107,6 +109,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
         setStatus();
         mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
         registerNetWorkListenerAccordingSysLevel();
+        registerScreenReceiver();
         initTabs();
     }
 
@@ -132,6 +135,14 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
         // connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         // connectivityManager.registerNetworkCallback(request, networkCallback);
         // }
+    }
+
+    private void registerScreenReceiver() {
+        ScreenBroadcastReceiver screenBroadcastReceiver = new ScreenBroadcastReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_SCREEN_OFF);
+        filter.addAction(Intent.ACTION_SCREEN_ON);
+        getApplicationContext().registerReceiver(screenBroadcastReceiver, filter);
     }
 
     /**
@@ -316,42 +327,39 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M && batteryDialogIsShow) {
             try {
                 PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
-//                boolean hasIgnored = powerManager.isIgnoringBatteryOptimizations(context.getPackageName());
-//                if (!hasIgnored) {
-                confirmDialog = new ConfirmDialog(context, R.string.white_list_tip_content,
-                        R.string.battery_tip_ishide, R.string.battery_tip_toset, R.string.battery_tip_cancel);
-                confirmDialog.setClicklistener(new ConfirmDialog.ClickListenerInterface() {
-                    @Override
-                    public void doConfirm() {
-                        if (confirmDialog.getIsHide()) {
+                boolean hasIgnored = powerManager.isIgnoringBatteryOptimizations(context.getPackageName());
+                if (!hasIgnored) {
+                    confirmDialog = new ConfirmDialog(context, R.string.battery_tip_content,
+                            R.string.battery_tip_ishide, R.string.battery_tip_toset, R.string.battery_tip_cancel);
+                    confirmDialog.setClicklistener(new ConfirmDialog.ClickListenerInterface() {
+                        @Override
+                        public void doConfirm() {
+                            if (confirmDialog.getIsHide()) {
+                                PreferencesUtils.putBoolean(context, Constant.BATTERY_WHITE_LIST_STATE, false);
+                            }
+                            try {
+                                Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                                intent.setData(Uri.parse("package:" + context.getPackageName()));
+                                startActivity(intent);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                PreferencesUtils.putBoolean(context, Constant.BATTERY_WHITE_LIST_STATE, false);
+                            } finally {
+                                confirmDialog.dismiss();
+                            }
                         }
-                        //点击去设置  下次进来不再提示
-                        PreferencesUtils.putBoolean(context, Constant.BATTERY_WHITE_LIST_STATE, false);
-                        try {
-//                                Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
-//                                intent.setData(Uri.parse("package:" + context.getPackageName()));
-//                                startActivity(intent);
-                            //自启动设置  zyj
-                            WhiteListUtil.enterWhiteListSetting(context);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            PreferencesUtils.putBoolean(context, Constant.BATTERY_WHITE_LIST_STATE, false);
-                        } finally {
+
+                        @Override
+                        public void doCancel() {
+                            if (confirmDialog.getIsHide()) {
+                                PreferencesUtils.putBoolean(context, Constant.BATTERY_WHITE_LIST_STATE, false);
+                            }
+                            // TODO Auto-generated method stub
                             confirmDialog.dismiss();
                         }
-                    }
-
-                    @Override
-                    public void doCancel() {
-                        if (confirmDialog.getIsHide()) {
-                            PreferencesUtils.putBoolean(context, Constant.BATTERY_WHITE_LIST_STATE, false);
-                        }
-                        // TODO Auto-generated method stub
-                        confirmDialog.dismiss();
-                    }
-                });
-                confirmDialog.show();
-//                }
+                    });
+                    confirmDialog.show();
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -408,7 +416,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
                 } else {
                     bundle.putBoolean(Constant.WEB_FRAGMENT_SHOW_HEADER, false);
                 }
-                bundle.putBoolean("web_from_index", true);
+                bundle.putBoolean(Constant.Web_STATIC_TITLE, true);
             }
             bundle.putString(Constant.APP_WEB_URI, tabBean.getMainTabResult().getUri());
             bundle.putString(Constant.WEB_FRAGMENT_APP_NAME, tabBean.getTabName());
@@ -813,6 +821,21 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
             PVCollectModelCacheUtils.saveCollectModel(mainTabName, mainTabName);
             isSystemChangeTag = true;
         }
+        //每次切换到工作tab时需要发出通知，获取基础数据
+//        if (tabId.equals(Constant.APP_TAB_BAR_WORK)) {
+//            new Handler().postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    try {
+//                        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_OPEN_WORK_TAB));
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//
+//                }
+//            }, 800);
+//        }
+
     }
 
     @Override

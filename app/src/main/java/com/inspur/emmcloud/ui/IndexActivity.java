@@ -77,11 +77,11 @@ public class IndexActivity extends IndexBaseActivity {
     @Override
     public void onCreate() {
         super.onCreate();
+        EventBus.getDefault().register(this);
         initAppEnvironment();
         initView();
         getInitData();
         startService();
-        EventBus.getDefault().register(this);
     }
 
     private void getNaviTabData(String naviTabSaveConfigVersion) {
@@ -102,11 +102,11 @@ public class IndexActivity extends IndexBaseActivity {
         MyApplication.getInstance().clearUserPhotoMap();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             if (NotificationSetUtils.isNotificationEnabled(this) &&
-                    (PreferencesByUserAndTanentUtils.putBoolean(IndexActivity.this, Constant.PUSH_SWITCH_FLAG, true))) {
+                    (PreferencesByUserAndTanentUtils.getBoolean(IndexActivity.this, Constant.PUSH_SWITCH_FLAG, true))) {
                 PushManagerUtils.getInstance().startPush();
             }
         } else {
-            if (PreferencesByUserAndTanentUtils.putBoolean(IndexActivity.this, Constant.PUSH_SWITCH_FLAG, true)) {
+            if (PreferencesByUserAndTanentUtils.getBoolean(IndexActivity.this, Constant.PUSH_SWITCH_FLAG, true)) {
                 PushManagerUtils.getInstance().startPush();
             }
         }
@@ -274,7 +274,7 @@ public class IndexActivity extends IndexBaseActivity {
                             getContactOrg();
                         }
                         WebSocketPush.getInstance().startWebSocket();// 启动webSocket推送
-//                        batteryWhiteListRemind(IndexActivity.this);
+                        batteryWhiteListRemind(IndexActivity.this);
                         break;
                     case RELOAD_WEB:
                         if (webView != null) {

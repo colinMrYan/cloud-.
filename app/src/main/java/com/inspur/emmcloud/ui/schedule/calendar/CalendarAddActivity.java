@@ -24,6 +24,7 @@ import com.inspur.emmcloud.baselib.widget.DateTimePickerDialog;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.ActionSheetDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
+import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
@@ -33,9 +34,8 @@ import com.inspur.emmcloud.bean.schedule.MyCalendar;
 import com.inspur.emmcloud.bean.schedule.RemindEvent;
 import com.inspur.emmcloud.bean.schedule.Schedule;
 import com.inspur.emmcloud.bean.schedule.calendar.GetMyCalendarResult;
-import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.ui.schedule.ScheduleAlertTimeActivity;
-import com.inspur.emmcloud.util.privates.CalendarColorUtils;
+import com.inspur.emmcloud.util.privates.CalendarUtils;
 import com.inspur.emmcloud.util.privates.cache.MyCalendarCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ScheduleCacheUtils;
 
@@ -419,7 +419,7 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
                                 calendarDetailMoreImageView.setVisibility(View.GONE);
                                 break;
                             case 1:
-                                delCalendarEvent();
+                                showConfirmClearDialog();
                                 break;
                             default:
                                 break;
@@ -427,6 +427,29 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
                         dialog.dismiss();
                     }
                 }).build().show();
+    }
+
+    /**
+     * 确认清除
+     */
+    private void showConfirmClearDialog() {
+        new CustomDialog.MessageDialogBuilder(CalendarAddActivity.this)
+                .setMessage(R.string.calendar_cancel_the_schedule)
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        delCalendarEvent();
+                        finish();
+                    }
+                })
+                .show();
     }
 
     /**
@@ -500,7 +523,7 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
                     myCalendar = (MyCalendar) data.getSerializableExtra(EXTRA_SCHEDULE_CALENDAR_TYPE);
                     calendarTypeLayout.setVisibility(View.VISIBLE);
                     calendarTypeNameText.setText(myCalendar.getName());
-                    calendarTypeFlagImage.setImageResource(CalendarColorUtils.getCalendarTypeResId(myCalendar.getColor()));
+                    calendarTypeFlagImage.setImageResource(CalendarUtils.getCalendarTypeResId(myCalendar.getColor()));
                     calenderTypeTipLayout.setVisibility(View.VISIBLE);
                     break;
                 case REQUEST_CAL_ALERT_TIME:

@@ -27,4 +27,8 @@ public class ContactServiceImpl implements ContactService {
         return ContactUserCacheUtils.getContactUserByUid(uid);
     }
 
+    @Override
+    public ContactUser getContactUserByMail(String mail) {
+        return ContactUserCacheUtils.getContactUserByEmail(mail);
+    }
 }

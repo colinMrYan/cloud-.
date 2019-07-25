@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.support.multidex.MultiDexApplication;
+import android.util.Base64;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
@@ -22,12 +24,14 @@ import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.basemodule.util.ClientConfigUpdateUtils;
 import com.inspur.emmcloud.basemodule.util.CrashHandler;
 import com.inspur.emmcloud.basemodule.util.CustomImageDownloader;
 import com.inspur.emmcloud.basemodule.util.DbCacheUtils;
 import com.inspur.emmcloud.basemodule.util.ECMShortcutBadgeNumberManagerUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.LanguageManager;
+import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.basemodule.util.Res;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
@@ -61,9 +65,9 @@ public abstract class BaseApplication extends MultiDexApplication {
     private MyActivityLifecycleCallbacks myActivityLifecycleCallbacks;
     private boolean isOpenNotification = false;
     private String tanent;
-
     private String currentChannelCid = "";
     private boolean isSafeLock = false;//是否正处于安全锁定中（正处于二次认证解锁页面）
+    private String exchangeAuthHeaderValue;
 
 
     /**
@@ -87,7 +91,15 @@ public abstract class BaseApplication extends MultiDexApplication {
 
     private void init() {
         // TODO Auto-generated method stub
+        Router.registerComponent("com.inspur.emmcloud.applike.AppApplike");
+        Router.registerComponent("com.inspur.emmcloud.login.applike.LoginAppLike");
+        Router.registerComponent("com.inspur.emmcloud.web.applike.WebAppLike");
+        Router.registerComponent("com.inspur.emmcloud.news.applike.NewsAppLike");
         instance = this;
+        Router.registerComponent("com.inspur.emmcloud.applike.AppApplike");
+        Router.registerComponent("com.inspur.emmcloud.login.applike.LoginAppLike");
+        Router.registerComponent("com.inspur.emmcloud.web.applike.WebAppLike");
+        Router.registerComponent("com.inspur.emmcloud.news.applike.NewsAppLike");
         CrashHandler crashHandler = CrashHandler.getInstance();
         crashHandler.init(getInstance());
         x.Ext.init(BaseApplication.this);
@@ -118,6 +130,8 @@ public abstract class BaseApplication extends MultiDexApplication {
         //科大讯飞语音SDK初始化
         SpeechUtility.createUtility(this, SpeechConstant.APPID + "=5a6001bf");
         ToastUtils.init(this);
+        //置为0，调起解锁界面 (强杀进程后)
+        PreferencesUtils.putLong(BaseApplication.getInstance(), Constant.PREF_APP_BACKGROUND_TIME, 0L);
     }
 
     /**************************************登出逻辑相关********************************************************/
@@ -187,6 +201,10 @@ public abstract class BaseApplication extends MultiDexApplication {
      * @return
      */
     public RequestParams getHttpRequestParams(String url) {
+        return getHttpRequestParams(url, false);
+    }
+
+    public RequestParams getHttpRequestParams(String url, boolean isAddExchangeHeader) {
         RequestParams params = new RequestParams(url);
         String versionValue = AppUtils.getVersion(getInstance());
         try {
@@ -212,8 +230,33 @@ public abstract class BaseApplication extends MultiDexApplication {
         if (currentEnterprise != null) {
             params.addHeader("X-ECC-Current-Enterprise", currentEnterprise.getId());
         }
+        if (isAddExchangeHeader) {
+            setExchangeAuthHeaderValue();
+            if (!StringUtils.isBlank(exchangeAuthHeaderValue)) {
+                params.addHeader("x-ews-auth", exchangeAuthHeaderValue);
+            }
+        }
         params.addHeader("Accept-Language", LanguageManager.getInstance().getCurrentAppLanguage());
         return params;
+    }
+
+    public void setExchangeAuthHeaderValue() {
+        boolean isEnableExchange = PreferencesByUserAndTanentUtils.getBoolean(BaseApplication.getInstance(), Constant.PREF_SCHEDULE_ENABLE_EXCHANGE, false);
+        if (isEnableExchange) {
+            if (StringUtils.isBlank(exchangeAuthHeaderValue)) {
+                if (isHaveLogin()) {
+                    String exchangeAccount = PreferencesByUserAndTanentUtils.getString(getInstance(), Constant.PREF_MAIL_ACCOUNT, "");
+                    String exchangePassword = PreferencesByUserAndTanentUtils.getString(getInstance(), Constant.PREF_MAIL_PASSWORD, "");
+                    if (!StringUtils.isBlank(exchangeAccount) && !StringUtils.isBlank(exchangePassword)) {
+                        exchangeAuthHeaderValue = exchangeAccount + ":" + exchangePassword;
+                        exchangeAuthHeaderValue = Base64.encodeToString(exchangeAuthHeaderValue.getBytes(), Base64.NO_WRAP);
+                    }
+                }
+            }
+
+        } else {
+            exchangeAuthHeaderValue = "";
+        }
     }
 
     public boolean getIsContactReady() {
@@ -390,8 +433,14 @@ public abstract class BaseApplication extends MultiDexApplication {
     @Override
     public void onConfigurationChanged(Configuration config) {
         // TODO Auto-generated method stub
+        String previousLocal = PreferencesUtils.getString(BaseApplication.getInstance(), Constant.PREF_LANGUAGE_CURRENT_LOCAL, "");
         if (config != null) {
             super.onConfigurationChanged(config);
+            String currentLocal = Resources.getSystem().getConfiguration().locale.toString();
+            if (!previousLocal.equals(currentLocal)) {
+                //清空我的应用统一更新版本信息防止切换语言不刷新列表
+                ClientConfigUpdateUtils.getInstance().clearDbDataConfigWithMyApp();
+            }
         }
         LanguageManager.getInstance().setLanguageLocal();
     }

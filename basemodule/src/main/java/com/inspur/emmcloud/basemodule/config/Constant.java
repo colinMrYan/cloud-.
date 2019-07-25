@@ -59,14 +59,15 @@ public class Constant {
     public static final String PREF_APP_PREVIOUS_VERSION = "previousVersion";
     public static final String PREF_LOGIN_ENTERPRISE_NAME = "login_enterprise_name";
     public static final String PREF_LOGIN_HAVE_SET_PASSWORD = "hasPassword";
-    public static final String PREF_MAIL_ACCOUNT = "mail_account";
-    public static final String PREF_MAIL_PASSWORD = "mail_password";
+    public static final String PREF_MAIL_ACCOUNT = "exchange_account";
+    public static final String PREF_MAIL_PASSWORD = "exchange_pw";
     public static final String PREF_MY_INFO_SHOW_CONFIG = "user_profiles";
     public static final String PREF_MINE_USER_MENUS = "mine_user_menus";
 
     public static final String PREF_CALENDAR_EVENT_SHOW_TYPE = "calendar_event_show_type";
     public static final String PREF_MEETING_OFFICE_ID_LIST = "meeting_office_id_list";
     public static final String PREF_IS_MEETING_ADMIN = "is_meeting_admin";
+    public static final String PREF_LANGUAGE_CURRENT_LOCAL = "language_current_local";
     public static final String PREF_SERVER_SUPPORT_LANGUAGE = "server_support_language";
     public static final String PREF_CURRENT_LANGUAGE = "current_language";
     public static final String PREF_CURRENT_LANGUAGE_NAME = "current_language_name";
@@ -126,6 +127,8 @@ public class Constant {
     public static final String EVENTBUS_TAG_SAFE_UNLOCK = "tag_safe_unlock";//二次认证（刷脸、手势认证通过）
     public static final String EVENTBUS_TAG_CHAT_CHANGE = "tag_chat_change"; //会议详情发起群聊后，通知聊天界面同步
     public static final String EVENTBUS_TAG_SCHEDULE_MEETING_COMMON_OFFICE_CHANGED = "tag_schedule_meeting_common_office_changed";
+    public static final String EVENTBUS_TAG_OPEN_WORK_TAB = "tag_open_work_tab";
+    public static final String EVENTBUS_TAG_EWS_401 = "tag_ews_401";
 
     public static final String SERVICE_VERSION_CHAT_V0 = "v0";
     public static final String SERVICE_VERSION_CHAT_V1 = "v1";
@@ -159,6 +162,7 @@ public class Constant {
     public static final String WEB_FRAGMENT_APP_NAME = "appName";
     public static final String WEB_FRAGMENT_MENU = "menuList";
     public static final String WEB_FRAGMENT_SHOW_HEADER = "show_webview_header";
+    public static final String Web_STATIC_TITLE = "web_from_index";
 
     public static final String INSPUR_HOST_URL = ".inspur.com";
     public static final String INSPURONLINE_HOST_URL = ".inspuronline.com";
@@ -195,12 +199,9 @@ public class Constant {
 
 
     public static final String SMS_LOGIN_START_TIME = "sms_login_start_time";
-    public static final String APP_MYAPP_LIST_IN_CACHE = "my_app_list";
-    public static final String APP_MYAPP_LIST_FROM_NET = "my_app_list_from_net";
     public static final String EXTRA_IS_HISTORY_MEETING = "is_history_meeting"; //来源  历史会议
 
     public static final String AROUTER_CLASS_COMMUNICATION_MEMBER = "/communication/MembersActivity";
-
     public static final String AROUTER_CLASS_LOGIN_MAIN = "/login/LoginActivity";
     public static final String AROUTER_CLASS_LOGIN_PASSWORD_MODIFY = "/login/PasswordModifyActivity";
     public static final String AROUTER_CLASS_LOGIN_GS = "/login/ScanQrCodeLoginGSActivity";
@@ -225,10 +226,13 @@ public class Constant {
 
     public static final String AROUTER_CLASS_GROUP_NEWS = "/group/news";
 
+    public static final String AROUTER_CLASS_WEBEX_MAIN = "/webex/WebexMyMeetingActivity";
+
     //参会状态
     public static final int ATTEND_MEETING_STATUS_ACCEPT = 1;
     public static final int ATTEND_MEETING_STATUS_REJECT = 2;
     public static final int ATTEND_MEETING_STATUS_TENTATIVE = 3;
+    public static final String APP_MYAPP_LIST_FROM_NET = "my_app_list_from_net";
 
 
 }

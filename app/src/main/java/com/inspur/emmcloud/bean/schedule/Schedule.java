@@ -25,6 +25,10 @@ public class Schedule implements Serializable {
     public static final String TYPE_MEETING = "schedule_meeting";
     public static final String TYPE_CALENDAR = "schedule_calendar";
     public static final String TYPE_TASK = "schedule_task";
+    public static final String CALENDAR_TYPE_MEETING = "meeting";
+    public static final String CALENDAR_TYPE_MY_CALENDAR = "default";
+    public static final String CALENDAR_TYPE_EXCHANGE = "exchange";
+    public static final String CALENDAR_TYPE_WEBEX = "webex";
     @Column(name = "id", isId = true)
     private String id = "";// 唯一标识
     @Column(name = "title")
@@ -97,7 +101,7 @@ public class Schedule implements Serializable {
                 if (scheduleEndTime.after(dayEndCalendar)) {
                     scheduleEndTime = dayEndCalendar;
                 }
-                Event event = new Event(schedule.getId(), Schedule.TYPE_CALENDAR, schedule.getTitle(), schedule.getScheduleLocationObj().getDisplayName(), scheduleStartTime, scheduleEndTime, schedule, schedule.getType());
+                Event event = new Event(schedule.getId(), Schedule.TYPE_CALENDAR, schedule.getTitle(), schedule.getScheduleLocationObj().getDisplayName(), scheduleStartTime, scheduleEndTime, schedule, schedule.getType(), schedule.getOwner());
                 event.setAllDay(schedule.getAllDay());
                 eventList.add(event);
             }

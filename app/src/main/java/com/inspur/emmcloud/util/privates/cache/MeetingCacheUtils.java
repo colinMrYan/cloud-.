@@ -3,6 +3,7 @@ package com.inspur.emmcloud.util.privates.cache;
 import android.content.Context;
 
 import com.inspur.emmcloud.basemodule.util.DbCacheUtils;
+import com.inspur.emmcloud.bean.schedule.Schedule;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 
 import org.xutils.db.sqlite.WhereBuilder;
@@ -56,6 +57,37 @@ public class MeetingCacheUtils {
                     .and("endTime", "<", endTimeLong)).or(WhereBuilder.b("startTime", "<=", startTimeLong)
                     .and("endTime", ">", endTimeLong)).or(WhereBuilder.b("startTime", "<=", endTimeLong)
                     .and("endTime", ">=", endTimeLong)).orderBy("lastTime", true).findAll();
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        if (meetingList == null) {
+            meetingList = new ArrayList<>();
+        }
+        return meetingList;
+    }
+
+    public static List<Meeting> getMeetingListByExchange(final Context context, Calendar startTime, Calendar endTime, boolean isExchangeShow, boolean isMeetingShow) {
+        List<Meeting> meetingList = null;
+        try {
+            long startTimeLong = startTime.getTimeInMillis();
+            long endTimeLong = endTime.getTimeInMillis();
+            if (isExchangeShow && isMeetingShow) {
+                meetingList = DbCacheUtils.getDb(context).selector(Meeting.class).where(WhereBuilder.b("startTime", ">", startTimeLong)
+                        .and("endTime", "<", endTimeLong)).or(WhereBuilder.b("startTime", "<=", startTimeLong)
+                        .and("endTime", ">", endTimeLong)).or(WhereBuilder.b("startTime", "<=", endTimeLong)
+                        .and("endTime", ">=", endTimeLong)).orderBy("lastTime", true).findAll();
+            } else if (!isExchangeShow && isMeetingShow) {
+                meetingList = DbCacheUtils.getDb(context).selector(Meeting.class).where(WhereBuilder.b("startTime", ">", startTimeLong)
+                        .and("endTime", "<", endTimeLong).and("type", "!=", Schedule.CALENDAR_TYPE_EXCHANGE)).or(WhereBuilder.b("startTime", "<=", startTimeLong)
+                        .and("endTime", ">", endTimeLong).and("type", "!=", Schedule.CALENDAR_TYPE_EXCHANGE)).or(WhereBuilder.b("startTime", "<=", endTimeLong)
+                        .and("endTime", ">=", endTimeLong).and("type", "!=", Schedule.CALENDAR_TYPE_EXCHANGE)).orderBy("lastTime", true).findAll();
+            } else if (isExchangeShow && !isMeetingShow) {
+                meetingList = DbCacheUtils.getDb(context).selector(Meeting.class).where(WhereBuilder.b("startTime", ">", startTimeLong)
+                        .and("endTime", "<", endTimeLong).and("type", "=", Schedule.CALENDAR_TYPE_EXCHANGE)).or(WhereBuilder.b("startTime", "<=", startTimeLong)
+                        .and("endTime", ">", endTimeLong).and("type", "=", Schedule.CALENDAR_TYPE_EXCHANGE)).or(WhereBuilder.b("startTime", "<=", endTimeLong)
+                        .and("endTime", ">=", endTimeLong).and("type", "=", Schedule.CALENDAR_TYPE_EXCHANGE)).orderBy("lastTime", true).findAll();
+            }
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

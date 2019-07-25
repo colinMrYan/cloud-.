@@ -28,10 +28,6 @@ import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeResultWithPermissionRe
 import com.inspur.emmcloud.bean.appcenter.volume.Volume;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeDetail;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
-import com.inspur.emmcloud.bean.appcenter.webex.GetScheduleWebexMeetingSuccess;
-import com.inspur.emmcloud.bean.appcenter.webex.GetWebexMeetingListResult;
-import com.inspur.emmcloud.bean.appcenter.webex.GetWebexTKResult;
-import com.inspur.emmcloud.bean.appcenter.webex.WebexMeeting;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetAllRobotsResult;
@@ -210,9 +206,9 @@ public interface APIInterface {
 
     void returnCreateSingleChannelSuccess(GetCreateSingleChannelResult getCreatSingleChannelResult);
 
-    void returnCreatSingleChannelFail(String error, int errorCode);
+    void returnCreateSingleChannelFail(String error, int errorCode);
 
-    void returnCreatChannelGroupSuccess(ChannelGroup channelGroup);
+    void returnCreateChannelGroupSuccess(ChannelGroup channelGroup);
 
     void returnCreateChannelGroupFail(String error, int errorCode);
 
@@ -660,25 +656,7 @@ public interface APIInterface {
 
     void returnDelConversationGroupMemberFail(String error, int errorCode);
 
-    void returnWebexMeetingListSuccess(GetWebexMeetingListResult getWebexMeetingListResult);
 
-    void returnWebexMeetingListFail(String error, int errorCode);
-
-    void returnScheduleWebexMeetingSuccess(GetScheduleWebexMeetingSuccess getScheduleWebexMeetingSuccess);
-
-    void returnScheduleWebexMeetingFail(String error, int errorCode);
-
-    void returnWebexMeetingSuccess(WebexMeeting webexMeeting);
-
-    void returnWebexMeetingFail(String error, int errorCode);
-
-    void returnWebexTKSuccess(GetWebexTKResult getWebexTKResult);
-
-    void returnWebexTKFail(String error, int errorCode);
-
-    void returnRemoveWebexMeetingSuccess();
-
-    void returnRemoveWebexMeetingFail(String error, int errorCode);
 
     void returnConversationInfoSuccess(Conversation conversation);
 
@@ -819,7 +797,7 @@ public interface APIInterface {
 
     void returnGetCalendarChatBindFail(String error, int errorCode);
 
-    void returnAttendMeetingStatusSuccess(String result, int type);
+    void returnAttendMeetingStatusSuccess(String result, String responseType);
 
     void returnAttendMeetingStatusFail(String error, int errorCode);
 

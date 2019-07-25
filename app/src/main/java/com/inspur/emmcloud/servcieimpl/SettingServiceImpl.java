@@ -23,10 +23,12 @@ public class SettingServiceImpl implements SettingService {
         if (isSetFaceLock()) {
             Intent intent = new Intent(MyApplication.getInstance(), FaceVerifyActivity.class);
             intent.putExtra("isFaceVerifyExperience", false);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             MyApplication.getInstance().startActivity(intent);
         } else if (isSetGestureLock()) {
             Intent intent = new Intent(MyApplication.getInstance(), GestureLoginActivity.class);
             intent.putExtra("gesture_code_change", "login");
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             MyApplication.getInstance().startActivity(intent);
         }
     }

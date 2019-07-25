@@ -15,6 +15,7 @@ import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
@@ -23,14 +24,12 @@ import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.schedule.calendar.CalendarEvent;
 import com.inspur.emmcloud.bean.system.ChangeTabBean;
-import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.componentservice.mail.OnExchangeLoginListener;
 import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.ui.appcenter.ReactNativeAppActivity;
 import com.inspur.emmcloud.ui.appcenter.mail.MailHomeActivity;
 import com.inspur.emmcloud.ui.appcenter.mail.MailLoginActivity;
 import com.inspur.emmcloud.ui.appcenter.volume.VolumeHomePageActivity;
-import com.inspur.emmcloud.ui.appcenter.webex.WebexMyMeetingActivity;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
 import com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
@@ -461,12 +460,13 @@ public class SchemeHandleActivity extends BaseActivity {
                 String installUri = intent.getExtras().getString("installUri", "");
                 Bundle bundle = new Bundle();
                 bundle.putString("installUri", installUri);
-                IntentUtils.startActivity(SchemeHandleActivity.this, WebexMyMeetingActivity.class, bundle, true);
+                ARouter.getInstance().build(Constant.AROUTER_CLASS_WEBEX_MAIN).with(bundle).navigation(SchemeHandleActivity.this);
+                finish();
                 break;
             case "mail":
                 new ExchangeLoginUtils.Builder(this)
                         .setShowLoadingDlg(true)
-                        .setOnExchageLoginListener(new OnExchangeLoginListener() {
+                        .setOnExchangeLoginListener(new OnExchangeLoginListener() {
                             @Override
                             public void onMailLoginSuccess() {
                                 IntentUtils.startActivity(SchemeHandleActivity.this, MailHomeActivity.class, true);

@@ -102,11 +102,6 @@
                 android:value="true" />
         </activity>
         <activity
-            android:name=".ui.mine.setting.NoPermissionDialogActivity"
-            android:launchMode="singleInstance"
-            android:resizeableActivity="true"
-            android:theme="@style/dialog_activity" />
-        <activity
             android:name=".ui.mine.setting.EnterpriseSwitchActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
@@ -188,37 +183,7 @@
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.appcenter.webex.WebexScheduleMeetingActivity"
-            android:launchMode="singleTask"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.appcenter.webex.WebexMyMeetingActivity"
-            android:launchMode="singleTask"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.appcenter.webex.WebexAttendeesActivity"
-            android:launchMode="singleTask"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
 
-        <activity
-            android:name=".ui.appcenter.webex.WebexMeetingDetailActivity"
-            android:launchMode="singleTask"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.appcenter.webex.WebexAddAttendeesActivity"
-            android:launchMode="singleTask"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.appcenter.webex.WebexAddExternalAttendeesActivity"
-            android:launchMode="singleTask"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.ShareFilesActivity"
@@ -369,7 +334,8 @@
                 <data android:scheme="inspur-ecc-native" />
             </intent-filter>
 
-            <intent-filter>
+            <!--ics文件识别 excel-->
+            <!--<intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
 
@@ -378,7 +344,7 @@
                 <data android:mimeType="application/vnd.ms-excel" />
                 <data android:mimeType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
                 <data android:mimeType="text/calendar" />
-            </intent-filter>
+            </intent-filter>-->
 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -819,11 +785,11 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
 
-            <!--屏幕点亮和熄灭-->
-            <intent-filter>
+            <!--屏幕点亮和熄灭   此种方式删除  采用动态注册-->
+            <!--<intent-filter>
                 <action android:name="android.intent.action.ACTION_SCREEN_OFF" />
                 <action android:name="android.intent.action.ACTION_SCREEN_ON" />
-            </intent-filter>
+            </intent-filter>-->
 
             <!--屏幕解锁-->
             <intent-filter>

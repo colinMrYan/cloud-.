@@ -38,6 +38,7 @@ import com.inspur.emmcloud.baselib.widget.CustomLoadingView;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButton;
+import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
@@ -61,7 +62,6 @@ import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
 import com.inspur.emmcloud.bean.chat.UIMessage;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
 import com.inspur.emmcloud.bean.system.EventMessage;
-import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.bean.system.VoiceResult;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.interf.OnVoiceResultCallback;
@@ -743,7 +743,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 case "file":
                     List<String> pathList = getIntent().getStringArrayListExtra("share_paths");
                     for (String url : pathList) {
-                        combinAndSendMessageWithFile(url, type.equals("file") ? Message.MESSAGE_TYPE_FILE_REGULAR_FILE : Message.MESSAGE_TYPE_MEDIA_IMAGE, null);
+                        combinAndSendMessageWithFile(type.equals("image") ? getCompressorUrl(url) : url, type.equals("file") ? Message.MESSAGE_TYPE_FILE_REGULAR_FILE : Message.MESSAGE_TYPE_MEDIA_IMAGE, null);
                     }
                     break;
                 case "link":
@@ -760,6 +760,24 @@ public class ConversationActivity extends ConversationBaseActivity {
             }
 
         }
+    }
+
+    /**
+     * 压缩图片逻辑，正常压缩返回压缩url，压缩有异常返回传入的原url
+     *
+     * @param url
+     * @return
+     */
+    private String getCompressorUrl(String url) {
+        String compressorUrl = "";
+        Compressor compressor = new Compressor(ConversationActivity.this).setMaxArea(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE * MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH);
+        try {
+            File file = compressor.compressToFile(new File(url));
+            compressorUrl = file.getAbsolutePath();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return StringUtils.isBlank(compressorUrl) ? url : compressorUrl;
     }
 
 
@@ -780,14 +798,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                     }
                     break;
                 case REQUEST_CAMERA:
-                    String imgPath = data.getExtras().getString(MyCameraActivity.OUT_FILE_PATH);
-                    try {
-                        File fileCamera = new Compressor(ConversationActivity.this).setMaxHeight(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setMaxWidth(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
-                                .compressToFile(new File(imgPath));
-                        imgPath = fileCamera.getAbsolutePath();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    String imgPath = getCompressorUrl(data.getExtras().getString(MyCameraActivity.OUT_FILE_PATH));
                     combinAndSendMessageWithFile(imgPath, Message.MESSAGE_TYPE_MEDIA_IMAGE, null);
                     break;
                 case REQUEST_MENTIONS:

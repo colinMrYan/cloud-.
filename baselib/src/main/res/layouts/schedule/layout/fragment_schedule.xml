@@ -133,7 +133,7 @@
 
                     <TextView
                         android:id="@+id/tv_all_day"
-                        android:layout_width="40dp"
+                        android:layout_width="50dp"
                         android:layout_height="30dp"
                         android:layout_centerVertical="true"
                         android:gravity="center"
@@ -142,6 +142,7 @@
                         android:textSize="11sp" />
 
                     <RelativeLayout
+                        android:id="@+id/rl_event_all_day"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
@@ -182,7 +183,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:background="@color/white">
+                android:background="@color/white"
+                android:paddingRight="17dp"
+                android:scrollbars="none">
 
                 <RelativeLayout
                     android:layout_width="match_parent"

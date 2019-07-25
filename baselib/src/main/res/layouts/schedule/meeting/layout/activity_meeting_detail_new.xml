@@ -68,7 +68,7 @@
                 android:layout_height="18dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="12dp"
-                android:src="@drawable/ic_schedule_event_meeing" />
+                android:src="@drawable/ic_schedule_event_meeting_normal" />
 
             <LinearLayout
                 android:layout_width="match_parent"

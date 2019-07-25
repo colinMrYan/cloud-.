@@ -11,13 +11,17 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
+import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
-import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.util.privates.ninelock.LockPatternUtil;
 import com.inspur.emmcloud.util.privates.ninelock.LockPatternView;
+import com.wei.android.lib.fingerprintidentify.FingerprintIdentify;
+import com.wei.android.lib.fingerprintidentify.base.BaseFingerprint;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -64,10 +68,7 @@ public class GestureLoginActivity extends BaseActivity {
                             IntentUtils.startActivity(GestureLoginActivity.this, CreateGestureActivity.class);
                             finish();
                         } else if (command.equals("login")) {
-                            isLogin = true;
-                            //发送解锁广播是，SchemeHandleActivity中接收处理
-                            MyApplication.getInstance().setSafeLock(false);
-                            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SAFE_UNLOCK));
+                            afterUnLockSuccess();
                         } else if (command.equals("close")) {
                             clearGestureInfo();
                             finish();
@@ -81,6 +82,16 @@ public class GestureLoginActivity extends BaseActivity {
             }
         }
     };
+
+    /**
+     * 通过手势解锁或指纹解锁成功后
+     */
+    private void afterUnLockSuccess() {
+        isLogin = true;
+        //发送解锁广播是，SchemeHandleActivity中接收处理
+        MyApplication.getInstance().setSafeLock(false);
+        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SAFE_UNLOCK));
+    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveWSMessage(SimpleEventMessage eventMessage) {
@@ -108,7 +119,6 @@ public class GestureLoginActivity extends BaseActivity {
     }
 
 
-
     private void init() {
         //得到当前用户的手势密码
         gesturePassword = CreateGestureActivity.getGestureCodeByUser(GestureLoginActivity.this);
@@ -122,9 +132,102 @@ public class GestureLoginActivity extends BaseActivity {
         }
         String userHeadImgUri = APIUri
                 .getChannelImgUrl(GestureLoginActivity.this, ((MyApplication) getApplication()).getUid());
-        CircleTextImageView circleImageView = (CircleTextImageView) findViewById(R.id.gesture_login_user_head_img);
+        CircleTextImageView circleImageView = findViewById(R.id.gesture_login_user_head_img);
         ImageDisplayUtils.getInstance().displayImage(circleImageView,
                 userHeadImgUri, R.drawable.icon_person_default);
+        initFingerPrint();
+    }
+
+    /**
+     * 初始化指纹识别
+     */
+    private void initFingerPrint() {
+        FingerprintIdentify cloudFingerprintIdentify = new FingerprintIdentify(this);
+        if (!isFingerPrintAvaiable(cloudFingerprintIdentify)) {
+            LogUtils.YfcDebug("设备指纹不可用");
+            return;
+        }
+//        if (!PreferencesByUserAndTanentUtils.getBoolean(GestureLoginActivity.this, "finger_print_state", false)) {
+//            LogUtils.YfcDebug("用户没有开启指纹解锁");
+//            return;
+//        }
+        cloudFingerprintIdentify.startIdentify(5, new BaseFingerprint.FingerprintIdentifyListener() {
+            @Override
+            public void onSucceed() {
+                // 验证成功，自动结束指纹识别
+                afterUnLockSuccess();
+                LogUtils.YfcDebug("指纹识别成功");
+            }
+
+            @Override
+            public void onNotMatch(int availableTimes) {
+                // 指纹不匹配，并返回可用剩余次数并自动继续验证
+                LogUtils.YfcDebug("指纹识别剩余次数：" + availableTimes);
+                if (availableTimes <= 0) {
+                    ToastUtils.show(GestureLoginActivity.this, "您的识别次数用尽，请尝试手势解锁，或者一段时间后重试");
+                } else {
+                    ToastUtils.show(GestureLoginActivity.this, "指纹认证失败，您还可以尝试" + availableTimes + "次");
+                }
+            }
+
+            @Override
+            public void onFailed(boolean isDeviceLocked) {
+                // 错误次数达到上限或者API报错停止了验证，自动结束指纹识别
+                // isDeviceLocked 表示指纹硬件是否被暂时锁定
+                // 通常情况错误五次后会锁定三十秒，不同硬件也不一定完全如此，有资料介绍有的硬件也会锁定长达两分钟
+                ToastUtils.show(GestureLoginActivity.this, "您的识别次数用尽，请尝试手势解锁，或者一段时间后重试");
+                LogUtils.YfcDebug("isDeviceLocked:" + isDeviceLocked);
+            }
+
+            @Override
+            public void onStartFailedByDeviceLocked() {
+                // 第一次调用startIdentify失败，因为设备被暂时锁定
+                LogUtils.YfcDebug("设备被锁定");
+            }
+
+        });
+    }
+
+    /**
+     * 判断指纹是否可用
+     *
+     * @param cloudFingerprintIdentify
+     * @return
+     */
+    private boolean isFingerPrintAvaiable(FingerprintIdentify cloudFingerprintIdentify) {
+        boolean isHardwareEnable = getIsHardwareEnable(cloudFingerprintIdentify);
+        boolean isFingerprintEnable = getIsFingerprintEnable(cloudFingerprintIdentify);
+        return isHardwareEnable && isFingerprintEnable;
+    }
+
+    /**
+     * 判断是否设置了指纹
+     *
+     * @param cloudFingerprintIdentify
+     * @return
+     */
+    private boolean getIsFingerprintEnable(FingerprintIdentify cloudFingerprintIdentify) {
+        return cloudFingerprintIdentify.isFingerprintEnable();
+    }
+
+
+    /**
+     * 判断指纹识别成功，识别成功后关闭锁屏Activity
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onFingerPrintSuccess(String fingerPrintSuccess) {
+        if (fingerPrintSuccess.equals("success")) {
+            finish();
+        }
+    }
+
+    /**
+     * 硬件是否可用
+     *
+     * @return
+     */
+    private boolean getIsHardwareEnable(FingerprintIdentify cloudFingerprintIdentify) {
+        return cloudFingerprintIdentify.isHardwareEnable();
     }
 
     /**
