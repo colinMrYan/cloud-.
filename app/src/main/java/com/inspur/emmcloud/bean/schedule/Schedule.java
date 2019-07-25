@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * Created by chenmch on 2019/4/6.
  */
-@Table(name = "Schedule")
+@Table(name = " ")
 public class Schedule implements Serializable {
     public static final String TYPE_MEETING = "schedule_meeting";
     public static final String TYPE_CALENDAR = "schedule_calendar";
@@ -61,6 +61,11 @@ public class Schedule implements Serializable {
     private String note = "";
     @Column(name = "participants")
     private String participants = "";
+    @Column(name = "scheduleCalendar")
+    private String scheduleCalendar = "";
+    @Column(name = "isMeeting")
+    private boolean isMeeting = false;
+    private int index = -1;
     private List<String> getParticipantList = new ArrayList<>();
 
     public Schedule() {
@@ -101,7 +106,8 @@ public class Schedule implements Serializable {
                 if (scheduleEndTime.after(dayEndCalendar)) {
                     scheduleEndTime = dayEndCalendar;
                 }
-                Event event = new Event(schedule.getId(), Schedule.TYPE_CALENDAR, schedule.getTitle(), schedule.getScheduleLocationObj().getDisplayName(), scheduleStartTime, scheduleEndTime, schedule, schedule.getType(), schedule.getOwner());
+                String eventType = schedule.isMeeting() ? Schedule.TYPE_MEETING : Schedule.TYPE_CALENDAR;
+                Event event = new Event(schedule.getId(), eventType, schedule.getTitle(), schedule.getScheduleLocationObj().getDisplayName(), scheduleStartTime, scheduleEndTime, schedule, schedule.getType(), schedule.getOwner());
                 event.setAllDay(schedule.getAllDay());
                 eventList.add(event);
             }
@@ -187,6 +193,22 @@ public class Schedule implements Serializable {
 
     public Calendar getLastTimeCalendar() {
         return TimeUtils.timeLong2Calendar(lastTime);
+    }
+
+    public String getScheduleCalendar() {
+        return scheduleCalendar;
+    }
+
+    public void setScheduleCalendar(String scheduleCalendar) {
+        this.scheduleCalendar = scheduleCalendar;
+    }
+
+    public boolean isMeeting() {
+        return isMeeting;
+    }
+
+    public void setMeeting(boolean meeting) {
+        isMeeting = meeting;
     }
 
     public List<Participant> getCommonParticipantList() {
@@ -404,4 +426,48 @@ public class Schedule implements Serializable {
         return jsonObject;
     }
 
+
+    public boolean canDelete() {
+        return true;
+    }
+
+    public boolean canModify() {
+        return true;
+    }
+
+    public Calendar getDayEventStartTime(Calendar selectCalendar) {
+        Calendar startTimeCalendar = getStartTimeCalendar();
+        if (!TimeUtils.isSameDay(startTimeCalendar, selectCalendar)) {
+            return TimeUtils.getDayBeginCalendar(selectCalendar);
+        }
+        return startTimeCalendar;
+    }
+
+    public Calendar getDayEventEndTime(Calendar selectCalendar) {
+        Calendar endTimeCalendar = getEndTimeCalendar();
+        if (!TimeUtils.isSameDay(endTimeCalendar, selectCalendar)) {
+            return TimeUtils.getDayEndCalendar(selectCalendar);
+        }
+        return endTimeCalendar;
+    }
+
+    public long getDayDurationInMillSeconds(Calendar selectCalendar) {
+        return getDayEventEndTime(selectCalendar).getTimeInMillis() - getDayEventStartTime(selectCalendar).getTimeInMillis();
+    }
+
+
+//    public int getEventIconResId(boolean isSelect) {
+//        int eventIconResId = -1;
+//        return eventIconResId;
+//    }
+//
+//    public int getEventColorResId() {
+//        int eventColorIconResId = -1;
+//        return eventColorIconResId;
+//    }
+//
+//    public String getShowEventSubTitle(Context context, Calendar selectCalendar) {
+//        String showEventSubTitle = "";
+//        return showEventSubTitle;
+//    }
 }

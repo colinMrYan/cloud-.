@@ -1,18 +1,12 @@
 package com.inspur.emmcloud.bean.schedule.meeting;
 
 import com.inspur.emmcloud.baselib.util.StringUtils;
-import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.bean.schedule.Schedule;
-import com.inspur.emmcloud.widget.calendardayview.Event;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.helper.StringUtil;
 import org.xutils.db.annotation.Table;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
 
 /**
  * Created by chenmch on 2019/4/8.
@@ -27,27 +21,27 @@ public class Meeting extends Schedule {
     public Meeting(JSONObject obj){
         super(obj);
     }
-    public static List<Event> meetingEvent2EventList(List<Meeting> meetingList, Calendar selectCalendar) {
-        List<Event> eventList = new ArrayList<>();
-        for (Meeting meeting : meetingList) {
-            Calendar meetingStartTime = meeting.getStartTimeCalendar();
-            Calendar meetingEndTime = meeting.getEndTimeCalendar();
-            if (TimeUtils.isContainTargetCalendarDay(selectCalendar, meetingStartTime, meetingEndTime)) {
-                Calendar dayBeginCalendar = TimeUtils.getDayBeginCalendar(selectCalendar);
-                Calendar dayEndCalendar = TimeUtils.getDayEndCalendar(selectCalendar);
-                if (meetingStartTime.before(dayBeginCalendar)) {
-                    meetingStartTime = dayBeginCalendar;
-                }
-                if (meetingEndTime.after(dayEndCalendar)) {
-                    meetingEndTime = dayEndCalendar;
-                }
-                Event event = new Event(meeting.getId(), Schedule.TYPE_MEETING, meeting.getTitle(), meeting.getScheduleLocationObj().getDisplayName(), meetingStartTime, meetingEndTime, meeting, meeting.getType(), meeting.getOwner());
-                event.setAllDay(meeting.getAllDay());
-                eventList.add(event);
-            }
-        }
-        return eventList;
-    }
+//    public static List<Event> meetingEvent2EventList(List<Meeting> meetingList, Calendar selectCalendar) {
+//        List<Event> eventList = new ArrayList<>();
+//        for (Meeting meeting : meetingList) {
+//            Calendar meetingStartTime = meeting.getStartTimeCalendar();
+//            Calendar meetingEndTime = meeting.getEndTimeCalendar();
+//            if (TimeUtils.isContainTargetCalendarDay(selectCalendar, meetingStartTime, meetingEndTime)) {
+//                Calendar dayBeginCalendar = TimeUtils.getDayBeginCalendar(selectCalendar);
+//                Calendar dayEndCalendar = TimeUtils.getDayEndCalendar(selectCalendar);
+//                if (meetingStartTime.before(dayBeginCalendar)) {
+//                    meetingStartTime = dayBeginCalendar;
+//                }
+//                if (meetingEndTime.after(dayEndCalendar)) {
+//                    meetingEndTime = dayEndCalendar;
+//                }
+//                Event event = new Event(meeting.getId(), Schedule.TYPE_MEETING, meeting.getTitle(), meeting.getScheduleLocationObj().getDisplayName(), meetingStartTime, meetingEndTime, meeting, meeting.getType(), meeting.getOwner());
+//                event.setAllDay(meeting.getAllDay());
+//                eventList.add(event);
+//            }
+//        }
+//        return eventList;
+//    }
 
     public JSONObject toJSONObject() {
         JSONObject obj = new JSONObject();

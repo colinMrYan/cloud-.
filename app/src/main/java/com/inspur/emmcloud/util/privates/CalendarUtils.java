@@ -1,17 +1,17 @@
 package com.inspur.emmcloud.util.privates;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
+import android.util.Base64;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.baselib.util.DensityUtil;
-import com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButtonDrawable;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.bean.schedule.Schedule;
-import com.inspur.emmcloud.widget.calendardayview.Event;
+import com.inspur.emmcloud.bean.schedule.calendar.AccountType;
+import com.inspur.emmcloud.bean.schedule.calendar.CalendarColor;
+import com.inspur.emmcloud.bean.schedule.calendar.ScheduleCalendar;
+import com.inspur.emmcloud.util.privates.cache.ScheduleCalendarCacheUtils;
 
 public class CalendarUtils {
     public static int getColor(Context context, String color) {
@@ -36,27 +36,6 @@ public class CalendarUtils {
         return displayColor;
     }
 
-    public static int getTaskTagResId(String color) {
-        int displayColor = -1;
-        if (color.equals("ORANGE")) {
-            displayColor = R.drawable.icon_orange_circle;
-        } else if (color.equals("YELLOW")) {
-            displayColor = R.drawable.icon_yellow_circle;
-        } else if (color.equals("GREEN")) {
-            displayColor = R.drawable.icon_green_circle;
-        } else if (color.equals("BLUE")) {
-            displayColor = R.drawable.icon_blue_circle;
-        } else if (color.equals("PURPLE")) {
-            displayColor = R.drawable.icon_purple_circle;
-        } else if (color.equals("BROWN")) {
-            displayColor = R.drawable.icon_brown_circle;
-        } else if (color.equals("PINK")) {
-            displayColor = R.drawable.icon_red_circle;
-        } else {
-            displayColor = R.drawable.icon_blue_circle;
-        }
-        return displayColor;
-    }
 
     public static int getCalendarTypeResId(String color) {
         int resId = -1;
@@ -78,151 +57,83 @@ public class CalendarUtils {
         return resId;
     }
 
-    public static int getCalendarDayViewEventBgResId(String color) {
-        int resId = R.drawable.ic_schedule_calendar_view_event_bg_blue;
-        if (color.equals("ORANGE")) {
-            resId = R.drawable.ic_schedule_calendar_view_event_bg_orange;
-        } else if (color.equals("PURPLE")) {
-            resId = R.drawable.ic_schedule_calendar_view_event_bg_purple;
-        } else if (color.equals("BLUE")) {
-            resId = R.drawable.ic_schedule_calendar_view_event_bg_blue;
-        } else if (color.equals("GREEN")) {
-            resId = R.drawable.ic_schedule_calendar_view_event_bg_green;
-        }
-        return resId;
-    }
 
-
-    public static String getCalendarName(Event event) {
+    public static String getCalendarName(Schedule schedule) {
         String calendarName = "";
-        switch (event.getEventType()) {
-            case Schedule.TYPE_CALENDAR:
-                if (event.getCalendarType().equals("exchange")) {
-                    calendarName = "Exchange";
-                } else {
+        ScheduleCalendar scheduleCalendar = ScheduleCalendarCacheUtils.getScheduleCalendar(BaseApplication.getInstance(), schedule.getScheduleCalendar());
+        if (scheduleCalendar != null) {
+            AccountType accountType = AccountType.getAccountType(scheduleCalendar.getAcType());
+            switch (accountType) {
+                case APP_SCHEDULE:
                     calendarName = BaseApplication.getInstance().getString(R.string.schedule_calendar_my_schedule);
-                }
-
-                break;
-            case Schedule.TYPE_MEETING:
-                if (event.getCalendarType().equals("exchange")) {
-                    calendarName = "Exchange";
-                } else {
+                    break;
+                case APP_MEETING:
                     calendarName = BaseApplication.getInstance().getString(R.string.schedule_calendar_my_meeting);
-                }
-
-                break;
-            default:
-                break;
+                    break;
+                case EXCHANGE:
+                    calendarName = scheduleCalendar.getAcName();
+                    break;
+            }
         }
+
         return calendarName;
     }
 
-    public static Drawable getEventBgNormalDrawable(Event event) {
-        Drawable drawable = null;
-        switch (event.getEventType()) {
-            case Schedule.TYPE_CALENDAR:
-                if (event.getCalendarType().equals("exchange")) {
-                    drawable = ContextCompat.getDrawable(BaseApplication.getInstance(), (R.drawable.ic_schedule_calendar_view_event_bg_green));
-                } else {
-                    drawable = ContextCompat.getDrawable(BaseApplication.getInstance(), (R.drawable.ic_schedule_calendar_view_event_bg_blue));
-                }
 
-                break;
-            case Schedule.TYPE_MEETING:
-                if (event.getCalendarType().equals("exchange")) {
-                    drawable = ContextCompat.getDrawable(BaseApplication.getInstance(), (R.drawable.ic_schedule_calendar_view_event_bg_green));
-                } else {
-                    drawable = ContextCompat.getDrawable(BaseApplication.getInstance(), (R.drawable.ic_schedule_calendar_view_event_bg_orange));
-                }
-
-                break;
-            default:
-                drawable = ContextCompat.getDrawable(BaseApplication.getInstance(), (R.drawable.ic_schedule_calendar_view_event_bg_blue));
-                break;
-        }
-        return drawable;
-
-    }
-
-    public static CustomRoundButtonDrawable getEventBgSelectDrawable(Event event) {
-        CustomRoundButtonDrawable drawableSelected = new CustomRoundButtonDrawable();
-        ColorStateList colorStateList = null;
-
-        switch (event.getEventType()) {
-            case Schedule.TYPE_CALENDAR:
-
-                if (event.getCalendarType().equals("exchange")) {
-                    colorStateList = ColorStateList.valueOf(Color.parseColor("#7ED321"));
-                } else {
-                    colorStateList = ColorStateList.valueOf(Color.parseColor("#36A5F6"));
-                }
-
-                break;
-            case Schedule.TYPE_MEETING:
-                if (event.getCalendarType().equals("exchange")) {
-                    colorStateList = ColorStateList.valueOf(Color.parseColor("#7ED321"));
-                } else {
-                    colorStateList = ColorStateList.valueOf(Color.parseColor("#FF8603"));
-                }
-
-                break;
-            default:
-                colorStateList = ColorStateList.valueOf(Color.parseColor("#36A5F6"));
-                break;
-        }
-        drawableSelected.setBgData(colorStateList);
-        drawableSelected.setCornerRadius(DensityUtil.dip2px(2));
-        drawableSelected.setIsRadiusAdjustBounds(false);
-        return drawableSelected;
-    }
-
-    public static int getCalendarTypeImgResId(Event event) {
+    public static int getCalendarTypeImgResId(Schedule schedule) {
         int resId = -1;
-        switch (event.getEventType()) {
-            case Schedule.TYPE_CALENDAR:
-                if (event.getCalendarType().equals("exchange")) {
-                    resId = CalendarUtils.getCalendarTypeResId("GREEN");
-                } else {
-                    resId = CalendarUtils.getCalendarTypeResId("BLUE");
-                }
-                break;
-            case Schedule.TYPE_MEETING:
-                if (event.getCalendarType().equals("exchange")) {
-                    resId = CalendarUtils.getCalendarTypeResId("GREEN");
-                } else {
-                    resId = CalendarUtils.getCalendarTypeResId("ORANGE");
-                }
-                break;
-            default:
-                break;
+        Drawable drawable = null;
+        String scheduleCalendarId = schedule.getScheduleCalendar();
+        ScheduleCalendar scheduleCalendar = ScheduleCalendarCacheUtils.getScheduleCalendar(BaseApplication.getInstance(), scheduleCalendarId);
+        if (scheduleCalendar != null) {
+            CalendarColor calendarColor = CalendarColor.getCalendarColor(scheduleCalendar.getColor());
+            return calendarColor.getIconResId();
         }
+
         return resId;
     }
 
-    public static int getCalendarTypeColor(Event event) {
-        Integer color = null;
-        switch (event.getEventType()) {
-            case Schedule.TYPE_CALENDAR:
-                if (event.getCalendarType().equals("exchange")) {
-                    color = Color.parseColor("#7ED321");
-                } else {
-                    color = Color.parseColor("#36A5F6");
-                }
 
-                break;
-            case Schedule.TYPE_MEETING:
-                if (event.getCalendarType().equals("exchange")) {
-                    color = Color.parseColor("#7ED321");
-                } else {
-                    color = Color.parseColor("#FF8603");
-                }
+    /********************************************************************************/
 
+
+    public static String getScheduleCalendarShowName(ScheduleCalendar scheduleCalendar) {
+        String scheduleCalendarShowName = BaseApplication.getInstance().getString(R.string.schedule_calendar_my_schedule);
+        switch (AccountType.valueOf(scheduleCalendar.getAcType())) {
+            case EXCHANGE:
+                scheduleCalendarShowName = scheduleCalendar.getAcName();
                 break;
-            default:
-                color = Color.parseColor("#36A5F6");
+            case APP_MEETING:
+                scheduleCalendarShowName = BaseApplication.getInstance().getString(R.string.meeting);
+                break;
+            case APP_SCHEDULE:
+                scheduleCalendarShowName = BaseApplication.getInstance().getString(R.string.schedule_calendar_my_schedule);
                 break;
         }
-        return color;
+        return scheduleCalendarShowName;
     }
+
+
+    public static String getHttpHeaderExtraValue(ScheduleCalendar scheduleCalendar) {
+        String exchangeAuthHeaderValue = "";
+        if (scheduleCalendar != null && scheduleCalendar.getAcType().equals(AccountType.EXCHANGE.toString())) {
+            String exchangeAccount = scheduleCalendar.getAcName();
+            String exchangePassword = scheduleCalendar.getAcPW();
+            if (!StringUtils.isBlank(exchangeAccount) && !StringUtils.isBlank(exchangePassword)) {
+                exchangeAuthHeaderValue = exchangeAccount + ":" + exchangePassword;
+                exchangeAuthHeaderValue = Base64.encodeToString(exchangeAuthHeaderValue.getBytes(), Base64.NO_WRAP);
+            }
+        }
+        return exchangeAuthHeaderValue;
+    }
+
+    public static String getHttpHeaderExtraKey(ScheduleCalendar scheduleCalendar) {
+        String exchangeAuthHeaderKey = "";
+        if (scheduleCalendar != null && scheduleCalendar.getAcType().equals(AccountType.EXCHANGE.toString())) {
+            exchangeAuthHeaderKey = "x-ews-auth";
+        }
+        return exchangeAuthHeaderKey;
+    }
+
+
 }
