@@ -114,6 +114,7 @@ public class ECMChatInputMenu extends LinearLayout {
     private List<String> mp3FilePathList = new ArrayList<>();
     private Map<String, Boolean> voiceBooleanMap = new HashMap<>();
     private AudioDialogManager audioDialogManager;
+    private ECMChatInputMenuCallback inputMenuClickCallback;
 
     public ECMChatInputMenu(Context context) {
         this(context, null);
@@ -381,11 +382,11 @@ public class ECMChatInputMenu extends LinearLayout {
             //功能组的图标，名称
             int[] functionIconArray = {R.drawable.ic_chat_input_add_gallery,
                     R.drawable.ic_chat_input_add_camera, R.drawable.ic_chat_input_add_file, R.drawable.ic_chat_input_add_voice_2_word,
-                    R.drawable.ic_chat_input_add_mention, R.drawable.ic_chat_input_add_voice_call};
+                    R.drawable.ic_chat_input_add_mention, R.drawable.ic_chat_input_add_voice_call, R.drawable.ic_chat_input_add_voice_call};
             String[] functionNameArray = {getContext().getString(R.string.album),
                     getContext().getString(R.string.take_photo),
-                    getContext().getString(R.string.file), getContext().getString(R.string.voice_input), getContext().getString(R.string.mention), getContext().getString(R.string.voice_call)};
-            String[] functionActionArray = {"gallery", "camera", "file", "voice_input", "mention", "voice_call"};
+                    getContext().getString(R.string.file), getContext().getString(R.string.voice_input), getContext().getString(R.string.mention), getContext().getString(R.string.voice_call), "Email"};
+            String[] functionActionArray = {"gallery", "camera", "file", "voice_input", "mention", "voice_call", "mail"};
             String inputControl = "-1";
             if (!StringUtils.isBlank(inputs)) {
                 try {
@@ -400,7 +401,7 @@ public class ECMChatInputMenu extends LinearLayout {
                 inputControl = "11101";
             }
             //控制binaryString长度，防止穿的数字过大
-            int length = inputControl.length() > 5 ? 5 : inputControl.length();
+            int length = inputControl.length() > 6 ? 6 : inputControl.length();
             boolean isInputTextEnable = false;
             boolean isInputPhotoEnable = false;
             boolean isInputFileEnable = false;
@@ -449,6 +450,8 @@ public class ECMChatInputMenu extends LinearLayout {
             if (canMentions) {
                 inputTypeBeanList.add(new InputTypeBean(functionIconArray[4], functionNameArray[4], functionActionArray[4]));
             }
+
+            inputTypeBeanList.add(new InputTypeBean(functionIconArray[6], functionNameArray[6], functionActionArray[6]));
 
             if (inputTypeBeanList.size() > 0) {
                 addBtn.setVisibility(VISIBLE);
@@ -505,6 +508,9 @@ public class ECMChatInputMenu extends LinearLayout {
 
                                 });
                             }
+                            break;
+                        case "mail":
+                            inputMenuClickCallback.onInputMenuClick("mail");
                             break;
                         default:
                             break;
@@ -862,5 +868,7 @@ public class ECMChatInputMenu extends LinearLayout {
         void onChatDraftsClear();
     }
 
-
+    public void setInputMenuClickCallback(ECMChatInputMenuCallback inputMenuClickCallback) {
+        this.inputMenuClickCallback = inputMenuClickCallback;
+    }
 }
