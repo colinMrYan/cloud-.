@@ -279,6 +279,7 @@
     <string name="play_fail">播放失败</string>
     <string name="record_count_down_text">还可以说 %1$d 秒</string>
     <string name="voice_call">语音通话</string>
+    <string name="send_email">邮件</string>
     <string name="sure_to_resend_message">确认重新发送该消息?</string>
     <string name="message_type_drafts">[草稿]</string>
     <string name="quit_group">退出群组</string>

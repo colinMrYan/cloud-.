@@ -278,6 +278,7 @@
     <string name="voice_call">語音通話</string>
     <string name="sure_to_resend_message">確認重新發送該消息?</string>
     <string name="message_type_drafts">[草稿]</string>
+    <string name="send_email">郵件</string>
     <string name="quit_group">退出群組</string>
     <string name="dismiss_group">解散群組</string>
     <string name="quit_group_warning_text">確定要退出群组？</string>

@@ -280,6 +280,7 @@
     <string name="chat_remove">Delete</string>
     <string name="chat_remove_from_top">Remove from Top</string>
     <string name="no_chat_content">No chat content</string>
+    <string name="send_email">Mail</string>
     <string name="msg_key_search_member"> Please enter key words</string>
     <string name="chat_file_open_fail_tip">No corresponding program was found.</string>
     <string name="chat_conversation_unread_count">%1$d new messages</string>
