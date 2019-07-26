@@ -212,6 +212,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
                     bundle.putSerializable(MeetingRoomListActivity.EXTRA_START_TIME,data.getSerializableExtra(EXTRA_START_TIME));
                     bundle.putSerializable(MeetingRoomListActivity.EXTRA_END_TIME,data.getSerializableExtra(EXTRA_END_TIME));
                     bundle.putSerializable(MeetingRoomInfoActivity.EXTRA_MEETING_ROOM, selectMeetingRoom);
+                    bundle.putBoolean(MeetingAddActivity.EXTRA_EVENT_TYPE_FROM_MEETING, true);
                     IntentUtils.startActivity(this,MeetingAddActivity.class,bundle,true);
                 }
             }

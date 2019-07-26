@@ -87,7 +87,7 @@ public class MeetingDetailReplyActivity extends BaseActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (!dataList.get(position).isSelect) {  //已选中的点击无反应  未知无反应
                     loadingDlg.show();
-                    scheduleApiService.setMeetingAttendStatus(meetingId, responseTypeList.get(position));
+                    // scheduleApiService.setMeetingAttendStatus(meetingId, responseTypeList.get(position));
                 }
                 adapter.notifyDataSetChanged();
             }

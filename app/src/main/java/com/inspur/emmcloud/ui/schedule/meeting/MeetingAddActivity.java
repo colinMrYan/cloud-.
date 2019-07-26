@@ -74,7 +74,7 @@ import butterknife.ButterKnife;
  */
 
 public class MeetingAddActivity extends BaseActivity {
-    public static final String EXTRA_EVENT_TYPE = "extra_event_type";
+    public static final String EXTRA_EVENT_TYPE_FROM_MEETING = "extra_event_type_from_meeting";
     public static final String EXTRA_SCHEDULE_CALENDAR_EVENT = "schedule_calendar_event";
     public static final String EXTRA_START_CALENDAR = "extra_start_calendar";
     public static final String EXTRA_END_CALENDAR = "extra_end_calendar";
@@ -141,7 +141,7 @@ public class MeetingAddActivity extends BaseActivity {
     @Override
     public void onCreate() {
         ButterKnife.bind(this);
-        isFromMeeting = getIntent().getBooleanExtra(EXTRA_EVENT_TYPE, false);
+        isFromMeeting = getIntent().getBooleanExtra(EXTRA_EVENT_TYPE_FROM_MEETING, false);
         scheduleTypeList = ScheduleCalendarCacheUtils.getScheduleCalendarList(BaseApplication.getInstance(), true);
         scheduleCalendar = getScheduleCalendar(isFromMeeting ? AccountType.APP_MEETING : AccountType.APP_SCHEDULE);
         apiService = new ScheduleApiService(this);
@@ -335,12 +335,12 @@ public class MeetingAddActivity extends BaseActivity {
     }
 
     private void modifyUIByEventType(ScheduleCalendar scheduleCalendar) {
-        if (scheduleCalendar.getAcType().equals(AccountType.APP_SCHEDULE)) {
+        if (scheduleCalendar.getAcType().equals(AccountType.APP_SCHEDULE.toString())) {
             findViewById(R.id.ll_all_participants).setVisibility(View.GONE);
-        } else if (scheduleCalendar.getAcType().equals(AccountType.APP_MEETING)) {
+        } else if (scheduleCalendar.getAcType().equals(AccountType.APP_MEETING.toString())) {
             findViewById(R.id.ll_recorder_liaison).setVisibility(View.VISIBLE);
             findViewById(R.id.ll_all_participants).setVisibility(View.VISIBLE);
-        } else if (scheduleCalendar.getAcType().equals(AccountType.APP_SCHEDULE)) {
+        } else if (scheduleCalendar.getAcType().equals(AccountType.APP_SCHEDULE.toString())) {
             findViewById(R.id.ll_recorder_liaison).setVisibility(View.GONE);
         }
     }

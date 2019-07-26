@@ -375,12 +375,13 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
             case Schedule.TYPE_MEETING:
                 Meeting meeting = (Meeting) event.getEventObj();
                 bundle.putSerializable(MeetingDetailActivity.EXTRA_MEETING_ENTITY, meeting);
+                bundle.putBoolean(MeetingAddActivity.EXTRA_EVENT_TYPE_FROM_MEETING, true);
                 IntentUtils.startActivity(getActivity(), MeetingDetailActivity.class, bundle);
                 break;
             case Schedule.TYPE_CALENDAR:
                 Schedule schedule = (Schedule) event.getEventObj();
                 bundle.putSerializable(MeetingAddActivity.EXTRA_SCHEDULE_CALENDAR_EVENT, schedule);
-                bundle.putBoolean(MeetingAddActivity.EXTRA_EVENT_TYPE, false);
+                bundle.putBoolean(MeetingAddActivity.EXTRA_EVENT_TYPE_FROM_MEETING, false);
                 IntentUtils.startActivity(getActivity(), MeetingAddActivity.class, bundle);
                 break;
             case Schedule.TYPE_TASK:
