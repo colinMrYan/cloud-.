@@ -433,8 +433,8 @@
     <string name="schedule_meeting_in_meeting">Meeting</string>
     <string name="schedule_meeting_be_free">Free</string>
     <string name="schedule_choose_common_office">Common office locations</string>
-    <string name="schedule_meeting_change">Modify</string>
-    <string name="schedule_meeting_cancel">Delete</string>
+    <string name="schedule_meeting_change">Modify Meeting</string>
+    <string name="schedule_meeting_cancel">Delete Meeting</string>
     <string name="schedule_meeting_my_create">Created</string>
     <string name="schedule_meeting_my_take_part_in">Involved</string>
     <string name="schedule_meeting_attend_reply">Reply Attend Meeting</string>

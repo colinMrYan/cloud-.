@@ -8,6 +8,7 @@ import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.schedule.calendar.AccountType;
 import com.inspur.emmcloud.bean.schedule.calendar.ScheduleCalendar;
 import com.inspur.emmcloud.util.privates.cache.ScheduleCalendarCacheUtils;
@@ -482,6 +483,23 @@ public class Schedule implements Serializable {
             return false;
 
         }
+    }
+
+    //会议中是否显示群聊
+    public boolean isShowGroupChat() {
+        //如果不是相关人员  隐藏
+        boolean relatedPersonFlag = false;
+        List<Participant> list = getAllParticipantList();
+        for (Participant item : list) {
+            if (BaseApplication.getInstance().getUid().equals(item.getId())) {
+                relatedPersonFlag = true;
+            }
+        }
+        if (BaseApplication.getInstance().getUid().equals(getOwner())) {
+            relatedPersonFlag = true;
+        }
+        return relatedPersonFlag && WebServiceRouterManager.getInstance().isV1xVersionChat();
+
     }
 
 }

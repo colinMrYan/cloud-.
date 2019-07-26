@@ -44,7 +44,6 @@ import com.inspur.emmcloud.componentservice.communication.CommunicationService;
 import com.inspur.emmcloud.componentservice.communication.ShareToConversationListener;
 import com.inspur.emmcloud.interf.ScheduleEventListener;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarSettingActivity;
-import com.inspur.emmcloud.ui.schedule.meeting.ScheduleAddActivity;
 import com.inspur.emmcloud.ui.schedule.meeting.ScheduleDetailActivity;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.cache.HolidayCacheUtils;
@@ -374,12 +373,12 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         switch (event.getEventType()) {
             case Schedule.TYPE_MEETING:
                 Schedule meetingSchedule = (Schedule) event.getEventObj();
-                bundle.putSerializable(ScheduleDetailActivity.EXTRA_MEETING_ENTITY, meetingSchedule);
+                bundle.putSerializable(ScheduleDetailActivity.EXTRA_SCHEDULE_ENTITY, meetingSchedule);
                 IntentUtils.startActivity(getActivity(), ScheduleDetailActivity.class, bundle);
                 break;
             case Schedule.TYPE_CALENDAR:
                 Schedule schedule = (Schedule) event.getEventObj();
-                bundle.putSerializable(ScheduleAddActivity.EXTRA_SCHEDULE_CALENDAR_EVENT, schedule);
+                bundle.putSerializable(ScheduleDetailActivity.EXTRA_SCHEDULE_ENTITY, schedule);
                 bundle.putBoolean(Constant.EXTRA_IS_FROM_CALENDAR, true);
                 IntentUtils.startActivity(getActivity(), ScheduleDetailActivity.class, bundle);
                 break;
