@@ -106,7 +106,7 @@ public class CalendarUtils {
 
     public static String getScheduleCalendarShowName(ScheduleCalendar scheduleCalendar) {
         String scheduleCalendarShowName = BaseApplication.getInstance().getString(R.string.schedule_calendar_my_schedule);
-        switch (AccountType.valueOf(scheduleCalendar.getAcType())) {
+        switch (AccountType.getAccountType(scheduleCalendar.getAcType())) {
             case EXCHANGE:
                 scheduleCalendarShowName = scheduleCalendar.getAcName();
                 break;
@@ -123,21 +123,29 @@ public class CalendarUtils {
 
     public static String getHttpHeaderExtraValue(ScheduleCalendar scheduleCalendar) {
         String exchangeAuthHeaderValue = "";
-        if (scheduleCalendar != null && scheduleCalendar.getAcType().equals(AccountType.EXCHANGE.toString())) {
-            String exchangeAccount = scheduleCalendar.getAcName();
-            String exchangePassword = scheduleCalendar.getAcPW();
-            if (!StringUtils.isBlank(exchangeAccount) && !StringUtils.isBlank(exchangePassword)) {
-                exchangeAuthHeaderValue = exchangeAccount + ":" + exchangePassword;
-                exchangeAuthHeaderValue = Base64.encodeToString(exchangeAuthHeaderValue.getBytes(), Base64.NO_WRAP);
-            }
+        switch (AccountType.getAccountType(scheduleCalendar.getAcType())) {
+            case EXCHANGE:
+                String exchangeAccount = scheduleCalendar.getAcName();
+                String exchangePassword = scheduleCalendar.getAcPW();
+                if (!StringUtils.isBlank(exchangeAccount) && !StringUtils.isBlank(exchangePassword)) {
+                    exchangeAuthHeaderValue = exchangeAccount + ":" + exchangePassword;
+                    exchangeAuthHeaderValue = Base64.encodeToString(exchangeAuthHeaderValue.getBytes(), Base64.NO_WRAP);
+                }
+                break;
+            default:
+                break;
         }
         return exchangeAuthHeaderValue;
     }
 
     public static String getHttpHeaderExtraKey(ScheduleCalendar scheduleCalendar) {
         String exchangeAuthHeaderKey = "";
-        if (scheduleCalendar != null && scheduleCalendar.getAcType().equals(AccountType.EXCHANGE.toString())) {
-            exchangeAuthHeaderKey = "x-ews-auth";
+        switch (AccountType.getAccountType(scheduleCalendar.getAcType())) {
+            case EXCHANGE:
+                exchangeAuthHeaderKey = "x-ews-auth";
+                break;
+            default:
+                break;
         }
         return exchangeAuthHeaderKey;
     }

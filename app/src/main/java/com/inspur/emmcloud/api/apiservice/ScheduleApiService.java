@@ -32,6 +32,7 @@ import com.inspur.emmcloud.bean.schedule.task.GetTaskListResult;
 import com.inspur.emmcloud.componentservice.login.LoginService;
 import com.inspur.emmcloud.componentservice.login.OauthCallBack;
 import com.inspur.emmcloud.util.privates.CalendarUtils;
+import com.inspur.emmcloud.util.privates.cache.ScheduleCalendarCacheUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -106,48 +107,6 @@ public class ScheduleApiService {
     }
 
     /**
-     * 更新日程
-     */
-    public void updateSchedule(final String schedule) {
-        final String completeUrl = APIUri.getUpdateScheduleUrl();
-        RequestParams params = MyApplication.getInstance()
-                .getHttpRequestParams(completeUrl);
-        params.setBodyContent(schedule);
-        params.setAsJsonContent(true);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
-
-            @Override
-            public void callbackTokenExpire(long requestTime) {
-                OauthCallBack oauthCallBack = new OauthCallBack() {
-                    @Override
-                    public void reExecute() {
-                        updateSchedule(schedule);
-                    }
-
-                    @Override
-                    public void executeFailCallback() {
-                        callbackFail("", -1);
-                    }
-                };
-                refreshToken(
-                        oauthCallBack, requestTime);
-            }
-
-            @Override
-            public void callbackSuccess(byte[] arg0) {
-                // TODO Auto-generated method stub
-                apiInterface.returnUpdateScheduleSuccess();
-            }
-
-            @Override
-            public void callbackFail(String error, int responseCode) {
-                // TODO Auto-generated method stub
-                apiInterface.returnUpdateScheduleFail(error, responseCode);
-            }
-        });
-    }
-
-    /**
      * 获取日程列表（日程和会议）
      *
      * @param startTime
@@ -155,7 +114,7 @@ public class ScheduleApiService {
      */
     public void getScheduleList(final Calendar startTime, final Calendar endTime, final ScheduleCalendar scheduleCalendar) {
         boolean isExchange = scheduleCalendar != null && scheduleCalendar.getAcType().equals(AccountType.EXCHANGE.toString());
-        final String url = APIUri.getScheduleListUrl(isExchange);
+        final String url = APIUri.getScheduleListUrl(scheduleCalendar);
         RequestParams params = null;
         if (isExchange) {
             params = MyApplication.getInstance().getHttpRequestParams(url, CalendarUtils.getHttpHeaderExtraKey(scheduleCalendar), CalendarUtils.getHttpHeaderExtraValue(scheduleCalendar));
@@ -200,14 +159,32 @@ public class ScheduleApiService {
     }
 
     /**
-     * 根据schedule Id 删除schedule
+     * 删除日程
+     *
+     * @param schedule
      */
-    public void deleteSchedule(final String scheduleId) {
-        final String completeUrl = APIUri.getDeleteScheduleUrl(scheduleId);
-        RequestParams params = MyApplication.getInstance()
-                .getHttpRequestParams(completeUrl);
-        params.setBodyContent(scheduleId);
-        params.setAsJsonContent(true);
+    public void deleteSchedule(final Schedule schedule) {
+        ScheduleCalendar scheduleCalendar = ScheduleCalendarCacheUtils.getScheduleCalendar(BaseApplication.getInstance(), schedule.getScheduleCalendar());
+        boolean isExchange = scheduleCalendar != null && scheduleCalendar.getAcType().equals(AccountType.EXCHANGE.toString());
+        final String completeUrl = APIUri.getDeleteScheduleUrl(scheduleCalendar, schedule);
+        RequestParams params = null;
+        if (isExchange) {
+            params = MyApplication.getInstance()
+                    .getHttpRequestParams(completeUrl, CalendarUtils.getHttpHeaderExtraKey(scheduleCalendar), CalendarUtils.getHttpHeaderExtraValue(scheduleCalendar));
+            JSONObject object = new JSONObject();
+            try {
+                object.put("calendarId", schedule.getId());
+                object.put("isMeeting", schedule.isMeeting());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            params.setBodyContent(object.toString());
+            params.setAsJsonContent(true);
+        } else {
+            params = MyApplication.getInstance()
+                    .getHttpRequestParams(completeUrl);
+        }
+
         HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
@@ -215,7 +192,7 @@ public class ScheduleApiService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        deleteSchedule(scheduleId);
+                        deleteSchedule(schedule);
                     }
 
                     @Override
@@ -230,7 +207,7 @@ public class ScheduleApiService {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnDeleteScheduleSuccess(scheduleId);
+                apiInterface.returnDeleteScheduleSuccess(schedule.getId());
             }
 
             @Override
@@ -280,7 +257,6 @@ public class ScheduleApiService {
 //
 //        });
 //    }
-
 
 
     /**
@@ -412,9 +388,10 @@ public class ScheduleApiService {
     /**
      * 会议详情页  参会状态
      */
-    public void setMeetingAttendStatus(final String meetingId, final String responseType) {
-        final String completeUrl = APIUri.getMeetingAttendStatusUrl(responseType) + meetingId;
-        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
+    public void setMeetingAttendStatus(final Schedule schedule, final String responseType) {
+        ScheduleCalendar scheduleCalendar = ScheduleCalendarCacheUtils.getScheduleCalendar(BaseApplication.getInstance(), schedule.getScheduleCalendar());
+        final String completeUrl = APIUri.getMeetingAttendStatusUrl(responseType, scheduleCalendar) + schedule.getId();
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl, CalendarUtils.getHttpHeaderExtraKey(scheduleCalendar), CalendarUtils.getHttpHeaderExtraValue(scheduleCalendar));
         HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(byte[] arg0) {
@@ -431,7 +408,7 @@ public class ScheduleApiService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        setMeetingAttendStatus(meetingId, responseType);
+                        setMeetingAttendStatus(schedule, responseType);
                     }
 
                     @Override
@@ -1270,47 +1247,6 @@ public class ScheduleApiService {
             }
         });
     }
-//
-//    /**
-//     * 获取节假日信息
-//     *
-//     * @param year
-//     */
-//    public void getHolidayData(final int year) {
-//        final String completeUrl = APIUri.getHolidayDataUrl() + year;
-//        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
-//        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
-//
-//            @Override
-//            public void callbackTokenExpire(long requestTime) {
-//                OauthCallBack oauthCallBack = new OauthCallBack() {
-//                    @Override
-//                    public void reExecute() {
-//                        getHolidayData(year);
-//                    }
-//
-//                    @Override
-//                    public void executeFailCallback() {
-//                        callbackFail("", -1);
-//                    }
-//                };
-//                refreshToken(
-//                        oauthCallBack, requestTime);
-//            }
-//
-//            @Override
-//            public void callbackSuccess(byte[] arg0) {
-//                // TODO Auto-generated method stub
-//                apiInterface.returnHolidayDataSuccess(new GetHolidayDataResult(new String(arg0), year));
-//            }
-//
-//            @Override
-//            public void callbackFail(String error, int responseCode) {
-//                // TODO Auto-generated method stub
-//                apiInterface.returnHolidayDataFail(error, responseCode);
-//            }
-//        });
-//    }
 
     /**
      * 创建任务
@@ -2048,5 +1984,98 @@ public class ScheduleApiService {
             }
         });
     }
+
+
+    /**
+     * 添加日程
+     *
+     * @param schedule
+     * @param scheduleCalendar
+     */
+    public void addSchedule(final String schedule, final ScheduleCalendar scheduleCalendar) {
+        final String completeUrl = APIUri.getAddScheduleUrl(scheduleCalendar);
+        String headerExtraKey = CalendarUtils.getHttpHeaderExtraKey(scheduleCalendar);
+        String headerExtraValue = CalendarUtils.getHttpHeaderExtraValue(scheduleCalendar);
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl, headerExtraKey, headerExtraValue);
+        params.setBodyContent(schedule);
+        params.setAsJsonContent(true);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        addSchedule(schedule, scheduleCalendar);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnAddScheduleSuccess(new GetIDResult(new String(arg0)));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnAddScheduleFail(error, responseCode);
+            }
+        });
+    }
+
+
+    /**
+     * 更新日程
+     */
+    public void updateSchedule(final String scheduleJson, final Schedule schedule) {
+        ScheduleCalendar scheduleCalendar = ScheduleCalendarCacheUtils.getScheduleCalendar(context, schedule.getScheduleCalendar());
+        final String completeUrl = APIUri.getUpdateScheduleUrl(scheduleCalendar, schedule.isMeeting());
+        String headerExtraKey = CalendarUtils.getHttpHeaderExtraKey(scheduleCalendar);
+        String headerExtraValue = CalendarUtils.getHttpHeaderExtraValue(scheduleCalendar);
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl, headerExtraKey, headerExtraValue);
+        params.setBodyContent(scheduleJson);
+        params.setAsJsonContent(true);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        updateSchedule(scheduleJson, schedule);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnUpdateScheduleSuccess();
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnUpdateScheduleFail(error, responseCode);
+            }
+        });
+    }
+
 
 }
