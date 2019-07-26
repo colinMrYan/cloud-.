@@ -335,13 +335,16 @@ public class ScheduleAddActivity extends BaseActivity {
     private void modifyUIByEventType(ScheduleCalendar scheduleCalendar) {
         if (scheduleCalendar.getAcType().equals(AccountType.APP_SCHEDULE.toString())) {
             findViewById(R.id.ll_all_participants).setVisibility(View.GONE);
-        } else if (scheduleCalendar.getAcType().equals(AccountType.APP_MEETING.toString())) {
+            isFromMeeting = false;
+        } else if (scheduleCalendar.getAcType().equals(AccountType.EXCHANGE.toString())) {
             findViewById(R.id.ll_recorder_liaison).setVisibility(View.VISIBLE);
             findViewById(R.id.ll_all_participants).setVisibility(View.VISIBLE);
         } else if (scheduleCalendar.getAcType().equals(AccountType.APP_SCHEDULE.toString())) {
             findViewById(R.id.ll_recorder_liaison).setVisibility(View.GONE);
+            isFromMeeting = true;
         }
     }
+
 
     /**
      * 获取类型
@@ -443,7 +446,7 @@ public class ScheduleAddActivity extends BaseActivity {
             return false;
         }
 
-        if (endTimeCalendar.before(Calendar.getInstance())) {
+        if (endTimeCalendar.before(Calendar.getInstance()) && isMeeting) {
             ToastUtils.show(ScheduleAddActivity.this, R.string.calendar_end_time_no_before_current);
             return false;
         }
