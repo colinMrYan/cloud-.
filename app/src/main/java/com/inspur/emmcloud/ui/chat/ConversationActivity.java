@@ -411,7 +411,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 }
                 if (userList.size() > 3) {
                     new CustomDialog.MessageDialogBuilder(this)
-                            .setMessage("收件人太多会影像邮件发送速度，确定发送？")
+                            .setMessage(R.string.chat_send_email_too_many_person)
                             .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
