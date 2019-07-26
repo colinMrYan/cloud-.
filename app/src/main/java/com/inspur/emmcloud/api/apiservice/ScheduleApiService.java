@@ -1996,7 +1996,7 @@ public class ScheduleApiService {
         final String completeUrl = APIUri.getAddScheduleUrl(scheduleCalendar);
         String headerExtraKey = CalendarUtils.getHttpHeaderExtraKey(scheduleCalendar);
         String headerExtraValue = CalendarUtils.getHttpHeaderExtraValue(scheduleCalendar);
-        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl, headerExtraKey, headerExtraValue);
+        RequestParams params = BaseApplication.getInstance().getHttpRequestParams(completeUrl, headerExtraKey, headerExtraValue);
         params.setBodyContent(schedule);
         params.setAsJsonContent(true);
         HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
