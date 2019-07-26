@@ -365,14 +365,14 @@ public class ScheduleBaseFragment extends BaseLayoutFragment implements View.OnL
                 if (!startTime.equals(schedule.getStartTimeCalendar()) || !endTime.equals(schedule.getEndTimeCalendar())) {
                     schedule.setStartTime(startTime.getTimeInMillis());
                     schedule.setEndTime(endTime.getTimeInMillis());
-                    apiService.updateSchedule(schedule.toCalendarEventJSONObject().toString());
+                    apiService.updateSchedule(schedule.toCalendarEventJSONObject().toString(), schedule);
                 }
             } else if (modifyEvent.getEventType() == Schedule.TYPE_MEETING) {
                 Meeting meeting = (Meeting) modifyEvent.getEventObj();
                 if (!startTime.equals(meeting.getStartTimeCalendar()) || !endTime.equals(meeting.getEndTimeCalendar())) {
                     meeting.setStartTime(startTime.getTimeInMillis());
                     meeting.setEndTime(endTime.getTimeInMillis());
-                    apiService.updateSchedule(meeting.toJSONObject().toString());
+                    apiService.updateSchedule(meeting.toJSONObject().toString(), meeting);
                 }
             }
 
