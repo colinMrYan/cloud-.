@@ -32,7 +32,6 @@ import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
@@ -322,7 +321,6 @@ public class CommunicationFragment extends BaseFragment {
             int indexBegin = pattenString.indexOf("(");
             int indexEnd = pattenString.indexOf(")");
             pattenString = pattenString.substring(indexBegin + 1, indexEnd);
-            LogUtils.YfcDebug("patternString:" + pattenString);
             CustomProtocol customProtocol = new CustomProtocol(pattenString);
             if (customProtocol.getProtocol().equals("ecc-cmd") && customProtocol.getParamMap().get("cmd").equals("join")) {
                 return customProtocol;
@@ -813,17 +811,8 @@ public class CommunicationFragment extends BaseFragment {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE)) {
             if (eventMessage.getStatus() == EventMessage.RESULT_OK) {
                 String content = eventMessage.getContent();
-                //消息拦截逻辑，以后应当拦截命令消息，此时注释掉，以后解开注意判空
-                CustomProtocol customProtocol = getCommandMessageProtocol(new Message(JSONUtils.getJSONObject(content)));
-                if (customProtocol != null) {
-                    LogUtils.YfcDebug("");
-//                    MsgReadCreationDateCacheUtils.saveMessageReadCreationDate(getActivity(),receivedMsg.getCid(),receivedMsg.getTime());
-                    Intent intent = new Intent();
-                    intent.setClass(getActivity(), ChannelVoiceCommunicationActivity.class);
-                    intent.putExtra("channelId", customProtocol.getParamMap().get("id"));
-                    intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.INVITEE_LAYOUT_STATE);
-                    startActivity(intent);
-                }
+                startVoiceCall(content);
+
                 JSONObject contentObj = JSONUtils.getJSONObject(content);
                 Message receivedWSMessage = new Message(contentObj);
                 //验重处理
@@ -862,6 +851,24 @@ public class CommunicationFragment extends BaseFragment {
                 }
             }
 
+        }
+    }
+
+    /**
+     * 跳转到
+     *
+     * @param content
+     */
+    private void startVoiceCall(String content) {
+        //消息拦截逻辑，以后应当拦截命令消息，此时注释掉，以后解开注意判空
+        CustomProtocol customProtocol = getCommandMessageProtocol(new Message(JSONUtils.getJSONObject(content)));
+        if (customProtocol != null) {
+//                    MsgReadCreationDateCacheUtils.saveMessageReadCreationDate(getActivity(),receivedMsg.getCid(),receivedMsg.getTime());
+            Intent intent = new Intent();
+            intent.setClass(getActivity(), ChannelVoiceCommunicationActivity.class);
+            intent.putExtra("channelId", customProtocol.getParamMap().get("id"));
+            intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.INVITEE_LAYOUT_STATE);
+            startActivity(intent);
         }
     }
 
