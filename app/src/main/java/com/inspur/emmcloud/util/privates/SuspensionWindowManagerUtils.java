@@ -3,6 +3,7 @@ package com.inspur.emmcloud.util.privates;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
+import android.os.Build;
 import android.os.SystemClock;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -162,6 +163,13 @@ public class SuspensionWindowManagerUtils {
         params.y = DensityUtil.dip2px(windowContext, 4);
         //设置悬浮窗位置和滑动参数
         params.gravity = Gravity.LEFT | Gravity.TOP;
+
+        //窗口类型
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            params.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+        } else {
+            params.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
+        }
     }
 
     /**

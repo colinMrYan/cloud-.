@@ -25,6 +25,7 @@ import com.czt.mp3recorder.MP3Recorder;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
@@ -382,11 +383,11 @@ public class ECMChatInputMenu extends LinearLayout {
             //功能组的图标，名称
             int[] functionIconArray = {R.drawable.ic_chat_input_add_gallery,
                     R.drawable.ic_chat_input_add_camera, R.drawable.ic_chat_input_add_file, R.drawable.ic_chat_input_add_voice_2_word,
-                    R.drawable.ic_chat_input_add_mention, R.drawable.ic_chat_input_add_voice_call, R.drawable.ic_chat_input_add_voice_call};
+                    R.drawable.ic_chat_input_add_mention, R.drawable.ic_chat_input_add_voice_call, R.drawable.ic_chat_input_add_send_email};
             String[] functionNameArray = {getContext().getString(R.string.album),
                     getContext().getString(R.string.take_photo),
-                    getContext().getString(R.string.file), getContext().getString(R.string.voice_input), getContext().getString(R.string.mention), getContext().getString(R.string.voice_call), "Email"};
-            String[] functionActionArray = {"gallery", "camera", "file", "voice_input", "mention", "voice_call", "mail"};
+                    getContext().getString(R.string.file), getContext().getString(R.string.voice_input), getContext().getString(R.string.mention), getContext().getString(R.string.voice_call), getContext().getString(R.string.send_email)};
+            String[] functionActionArray = {"gallery", "camera", "file", "voice_input", "mention", "voice_call", "send_email"};
             String inputControl = "-1";
             if (!StringUtils.isBlank(inputs)) {
                 try {
@@ -401,12 +402,13 @@ public class ECMChatInputMenu extends LinearLayout {
                 inputControl = "11101";
             }
             //控制binaryString长度，防止穿的数字过大
-            int length = inputControl.length() > 6 ? 6 : inputControl.length();
+            int length = inputControl.length() > 7 ? 7 : inputControl.length();
             boolean isInputTextEnable = false;
             boolean isInputPhotoEnable = false;
             boolean isInputFileEnable = false;
             boolean isInputVoiceEnable = false;
             boolean isVoiceCallEnable = false;
+            boolean isSendEmailEnable = false;
 
             for (int i = 0; i < length; i++) {
                 String controlValue = inputControl.charAt(i) + "";
@@ -422,6 +424,14 @@ public class ECMChatInputMenu extends LinearLayout {
                         break;
                     case 4:
                         isInputVoiceEnable = controlValue.equals("1");
+                        break;
+                    case 5:
+                        isVoiceCallEnable = controlValue.endsWith("1");
+                        break;
+                    case 6:
+                        isSendEmailEnable = controlValue.endsWith("1");
+                        break;
+                    default:
                         break;
                 }
             }
@@ -451,7 +461,13 @@ public class ECMChatInputMenu extends LinearLayout {
                 inputTypeBeanList.add(new InputTypeBean(functionIconArray[4], functionNameArray[4], functionActionArray[4]));
             }
 
-            inputTypeBeanList.add(new InputTypeBean(functionIconArray[6], functionNameArray[6], functionActionArray[6]));
+            if (isVoiceCallEnable) {
+                inputTypeBeanList.add(new InputTypeBean(functionIconArray[5], functionNameArray[5], functionActionArray[5]));
+            }
+
+            if (isSendEmailEnable) {
+                inputTypeBeanList.add(new InputTypeBean(functionIconArray[6], functionNameArray[6], functionActionArray[6]));
+            }
 
             if (inputTypeBeanList.size() > 0) {
                 addBtn.setVisibility(VISIBLE);
@@ -509,8 +525,8 @@ public class ECMChatInputMenu extends LinearLayout {
                                 });
                             }
                             break;
-                        case "mail":
-                            inputMenuClickCallback.onInputMenuClick("mail");
+                        case "send_email":
+                            LogUtils.YfcDebug("点击了发送邮件");
                             break;
                         default:
                             break;

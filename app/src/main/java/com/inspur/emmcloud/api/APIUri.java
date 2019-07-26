@@ -1626,16 +1626,18 @@ public class APIUri {
     }
 
     public static String getDeleteScheduleUrl(ScheduleCalendar scheduleCalendar, Schedule schedule) {
-        String url = getScheduleBaseUrl() + (schedule.isMeeting() ? "api/schedule/v6.0/meeting/remove/" : "api/schedule/v6.0/calendar/remove/") + schedule.getId();
-        if (scheduleCalendar != null) {
-            AccountType accountType = AccountType.getAccountType(scheduleCalendar.getAcType());
-            switch (accountType) {
-                case EXCHANGE:
-                    url = getScheduleBaseUrl() + "api/schedule/v6.0/ews/remove";
-                    break;
-                default:
-                    break;
-            }
+        String url = "";
+        AccountType accountType = AccountType.getAccountType(scheduleCalendar.getAcType());
+        switch (accountType) {
+            case EXCHANGE:
+                url = getScheduleBaseUrl() + "api/schedule/v6.0/ews/remove";
+                break;
+            case APP_MEETING:
+                url = getScheduleBaseUrl() + "api/schedule/v6.0/meeting/remove/" + schedule.getId();
+                break;
+            default:
+                url = getScheduleBaseUrl() + "api/schedule/v6.0/calendar/remove/" + schedule.getId();
+                break;
         }
         return url;
     }

@@ -480,7 +480,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
 
     @Override
     public void onGroupChat(Event event) {
-        (new ChatCreateUtils()).startGroupChat(getActivity(), (Meeting) (event.getEventObj()), "", new ChatCreateUtils.ICreateGroupChatListener() {
+        (new ChatCreateUtils()).startGroupChat(getActivity(), (Schedule) (event.getEventObj()), "", new ChatCreateUtils.ICreateGroupChatListener() {
             @Override
             public void createSuccess() {
             }
