@@ -73,7 +73,7 @@ import butterknife.ButterKnife;
  * Created by chenmch on 2019/4/9.
  */
 
-public class MeetingAddActivity extends BaseActivity {
+public class ScheduleAddActivity extends BaseActivity {
     public static final String EXTRA_EVENT_TYPE_FROM_MEETING = "extra_event_type_from_meeting";
     public static final String EXTRA_SCHEDULE_CALENDAR_EVENT = "schedule_calendar_event";
     public static final String EXTRA_START_CALENDAR = "extra_start_calendar";
@@ -135,7 +135,6 @@ public class MeetingAddActivity extends BaseActivity {
     private boolean isEventEditModel = false; //是否是编辑模式
     private boolean isFromMeeting = false;
     private ScheduleCalendar scheduleCalendar = new ScheduleCalendar();
-    private String id;
     private List<ScheduleCalendar> scheduleTypeList = new ArrayList<>();
 
     @Override
@@ -288,7 +287,6 @@ public class MeetingAddActivity extends BaseActivity {
         schedule.setOwner(MyApplication.getInstance().getUid());//??默认
         remindEvent.setName(ScheduleAlertTimeActivity.getAlertTimeNameByTime(remindEvent.getAdvanceTimeSpan(), isAllDay));
         scheduleCalendar = getScheduleCalendar(AccountType.APP_SCHEDULE);
-        initView();
     }
 
 
@@ -441,18 +439,18 @@ public class MeetingAddActivity extends BaseActivity {
         }
 
         if (startTimeCalendar.after(endTimeCalendar)) {
-            ToastUtils.show(MeetingAddActivity.this, R.string.calendar_start_or_end_time_illegal);
+            ToastUtils.show(ScheduleAddActivity.this, R.string.calendar_start_or_end_time_illegal);
             return false;
         }
 
         if (endTimeCalendar.before(Calendar.getInstance())) {
-            ToastUtils.show(MeetingAddActivity.this, R.string.calendar_end_time_no_before_current);
+            ToastUtils.show(ScheduleAddActivity.this, R.string.calendar_end_time_no_before_current);
             return false;
         }
 
         int countHour = TimeUtils.getCeil(endTimeCalendar, startTimeCalendar);
         if (meetingRoom != null && countHour > Integer.parseInt(meetingRoom.getMaxDuration()) && isMeeting) {
-            ToastUtils.show(MeetingAddActivity.this, getString(R.string.meeting_more_than_max_time));
+            ToastUtils.show(ScheduleAddActivity.this, getString(R.string.meeting_more_than_max_time));
             return false;
         }
         if (location == null) {
@@ -658,7 +656,7 @@ public class MeetingAddActivity extends BaseActivity {
                     public void onClick(View view) {
                         Bundle bundle = new Bundle();
                         bundle.putString("uid", uid);
-                        IntentUtils.startActivity(MeetingAddActivity.this, UserInfoActivity.class, bundle);
+                        IntentUtils.startActivity(ScheduleAddActivity.this, UserInfoActivity.class, bundle);
                     }
                 });
                 layout.addView(imageView);
@@ -802,7 +800,7 @@ public class MeetingAddActivity extends BaseActivity {
         @Override
         public void returnAddScheduleFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDlg);
-            WebServiceMiddleUtils.hand(MeetingAddActivity.this, error, errorCode);
+            WebServiceMiddleUtils.hand(ScheduleAddActivity.this, error, errorCode);
         }
 
         @Override
@@ -818,7 +816,7 @@ public class MeetingAddActivity extends BaseActivity {
         @Override
         public void returnUpdateScheduleFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDlg);
-            WebServiceMiddleUtils.hand(MeetingAddActivity.this, error, errorCode);
+            WebServiceMiddleUtils.hand(ScheduleAddActivity.this, error, errorCode);
         }
 
         @Override

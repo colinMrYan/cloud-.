@@ -26,10 +26,10 @@ import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseFragment;
 import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarSettingActivity;
-import com.inspur.emmcloud.ui.schedule.meeting.MeetingAddActivity;
 import com.inspur.emmcloud.ui.schedule.meeting.MeetingFragment;
 import com.inspur.emmcloud.ui.schedule.meeting.MeetingHistoryActivity;
 import com.inspur.emmcloud.ui.schedule.meeting.MeetingRoomListActivity;
+import com.inspur.emmcloud.ui.schedule.meeting.ScheduleAddActivity;
 import com.inspur.emmcloud.ui.schedule.task.TaskAddActivity;
 import com.inspur.emmcloud.ui.schedule.task.TaskFragment;
 import com.inspur.emmcloud.ui.schedule.task.TaskSetActivity;
@@ -251,8 +251,8 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
                 switch (menuItem.getItemId()) {
                     case 1:
                         recordUserClickWorkFunction(PV_COLLECTION_CAL);
-                        bundle.putBoolean(MeetingAddActivity.EXTRA_EVENT_TYPE_FROM_MEETING, false);
-                        IntentUtils.startActivity(getActivity(), MeetingAddActivity.class, bundle);
+                        bundle.putBoolean(ScheduleAddActivity.EXTRA_EVENT_TYPE_FROM_MEETING, false);
+                        IntentUtils.startActivity(getActivity(), ScheduleAddActivity.class, bundle);
                         break;
                     case 2:
                         if(viewPager.getCurrentItem() == 2){
@@ -260,8 +260,8 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
                             IntentUtils.startActivity(getActivity(), TaskAddActivity.class);
                         }else{
                             recordUserClickWorkFunction(PV_COLLECTION_MEETING);
-                            bundle.putBoolean(MeetingAddActivity.EXTRA_EVENT_TYPE_FROM_MEETING, true);
-                            IntentUtils.startActivity(getActivity(), MeetingAddActivity.class, bundle);
+                            bundle.putBoolean(ScheduleAddActivity.EXTRA_EVENT_TYPE_FROM_MEETING, true);
+                            IntentUtils.startActivity(getActivity(), ScheduleAddActivity.class, bundle);
                         }
                         break;
                     case 3:
@@ -270,8 +270,8 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
                             IntentUtils.startActivity(getActivity(), TaskAddActivity.class);
                         }else if(viewPager.getCurrentItem() == 1){
                             recordUserClickWorkFunction(PV_COLLECTION_MEETING);
-                            bundle.putBoolean(MeetingAddActivity.EXTRA_EVENT_TYPE_FROM_MEETING, true);
-                            IntentUtils.startActivity(getActivity(), MeetingAddActivity.class, bundle);
+                            bundle.putBoolean(ScheduleAddActivity.EXTRA_EVENT_TYPE_FROM_MEETING, true);
+                            IntentUtils.startActivity(getActivity(), ScheduleAddActivity.class, bundle);
                         }
                         break;
                     case 4:

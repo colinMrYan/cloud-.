@@ -34,7 +34,7 @@ import com.inspur.emmcloud.bean.schedule.Schedule;
 import com.inspur.emmcloud.bean.schedule.calendar.GetScheduleBasicDataResult;
 import com.inspur.emmcloud.bean.schedule.calendar.Holiday;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
-import com.inspur.emmcloud.ui.schedule.meeting.MeetingAddActivity;
+import com.inspur.emmcloud.ui.schedule.meeting.ScheduleAddActivity;
 import com.inspur.emmcloud.util.privates.cache.HolidayCacheUtils;
 import com.inspur.emmcloud.widget.DragScaleView;
 import com.inspur.emmcloud.widget.calendardayview.CalendarDayView;
@@ -289,10 +289,10 @@ public class ScheduleBaseFragment extends BaseLayoutFragment implements View.OnL
             public void onClick(View v) {
                 if (modifyEvent == null) {
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable(MeetingAddActivity.EXTRA_START_CALENDAR, calendarDayView.getDragViewStartTime(selectCalendar));
-                    bundle.putSerializable(MeetingAddActivity.EXTRA_END_CALENDAR, calendarDayView.getDragViewEndTime(selectCalendar));
-                    bundle.putBoolean(MeetingAddActivity.EXTRA_EVENT_TYPE_FROM_MEETING, false);
-                    IntentUtils.startActivity(getActivity(), MeetingAddActivity.class, bundle);
+                    bundle.putSerializable(ScheduleAddActivity.EXTRA_START_CALENDAR, calendarDayView.getDragViewStartTime(selectCalendar));
+                    bundle.putSerializable(ScheduleAddActivity.EXTRA_END_CALENDAR, calendarDayView.getDragViewEndTime(selectCalendar));
+                    bundle.putBoolean(ScheduleAddActivity.EXTRA_EVENT_TYPE_FROM_MEETING, false);
+                    IntentUtils.startActivity(getActivity(), ScheduleAddActivity.class, bundle);
                     removeEventAddDragScaleView();
                 }
 

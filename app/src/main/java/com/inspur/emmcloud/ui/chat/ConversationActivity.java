@@ -74,7 +74,7 @@ import com.inspur.emmcloud.ui.chat.pop.PopupWindowList;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
-import com.inspur.emmcloud.ui.schedule.meeting.MeetingAddActivity;
+import com.inspur.emmcloud.ui.schedule.meeting.ScheduleAddActivity;
 import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
@@ -1764,8 +1764,8 @@ public class ConversationActivity extends ConversationBaseActivity {
     private void addTextToSchedule(String content) {
         Intent intent = new Intent();
         intent.putExtra(Constant.COMMUNICATION_LONG_CLICK_TO_SCHEDULE, content);
-        intent.putExtra(MeetingAddActivity.EXTRA_EVENT_TYPE_FROM_MEETING, false);
-        intent.setClass(ConversationActivity.this, MeetingAddActivity.class);
+        intent.putExtra(ScheduleAddActivity.EXTRA_EVENT_TYPE_FROM_MEETING, false);
+        intent.setClass(ConversationActivity.this, ScheduleAddActivity.class);
         startActivity(intent);
     }
 

@@ -540,8 +540,8 @@ public class MeetingDetailActivity extends BaseActivity {
                         IntentUtils.startActivity(MeetingDetailActivity.this, CalendarAddActivity.class, bundle, true);
                     } else {
                         bundle.putSerializable(EXTRA_MEETING_ENTITY, scheduleEvent);
-                        bundle.putBoolean(MeetingAddActivity.EXTRA_EVENT_TYPE_FROM_MEETING, true);
-                        IntentUtils.startActivity(MeetingDetailActivity.this, MeetingAddActivity.class, bundle, true);
+                        bundle.putBoolean(ScheduleAddActivity.EXTRA_EVENT_TYPE_FROM_MEETING, true);
+                        IntentUtils.startActivity(MeetingDetailActivity.this, ScheduleAddActivity.class, bundle, true);
                     }
                 } else if (tag.equals(getString(R.string.schedule_meeting_cancel))) {
                     showConfirmClearDialog(meeting);
