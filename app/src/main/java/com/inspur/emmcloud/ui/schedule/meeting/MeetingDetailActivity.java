@@ -31,7 +31,6 @@ import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
-import com.inspur.emmcloud.bean.schedule.Location;
 import com.inspur.emmcloud.bean.schedule.Participant;
 import com.inspur.emmcloud.bean.schedule.Schedule;
 import com.inspur.emmcloud.bean.schedule.meeting.GetIsMeetingAdminResult;
@@ -93,6 +92,8 @@ public class MeetingDetailActivity extends BaseActivity {
     TextView attendeeText;
     @BindView(R.id.tv_location)
     TextView meetingLocationText;
+    @BindView(R.id.rl_meeting_location)
+    RelativeLayout meetingLocationLayout;
     @BindView(R.id.tv_meeting_record_holder)
     TextView meetingRecordHolderText;
     @BindView(R.id.tv_meeting_conference)
@@ -204,8 +205,12 @@ public class MeetingDetailActivity extends BaseActivity {
             meetingDistributionLayout.setVisibility(View.GONE);
         }
 
-        String locationData = getString(R.string.meeting_detail_location) + new Location(scheduleEvent.getLocation()).getBuilding() + " " + new Location(scheduleEvent.getLocation()).getDisplayName();
-        meetingLocationText.setText(locationData);
+        if (StringUtils.isBlank(meeting.getLocation())) {
+            meetingLocationLayout.setVisibility(View.GONE);
+        } else {
+            String locationData = getString(R.string.meeting_detail_location) + meeting.getScheduleLocationObj().getBuilding() + " " + meeting.getScheduleLocationObj().getDisplayName();
+            meetingLocationText.setText(locationData);
+        }
 
         meetingCreateTimeText.setText(getString(R.string.meeting_detail_create, TimeUtils.calendar2FormatString(this,
                 TimeUtils.timeLong2Calendar(scheduleEvent.getCreationTime()), TimeUtils.FORMAT_MONTH_DAY_HOUR_MINUTE)));

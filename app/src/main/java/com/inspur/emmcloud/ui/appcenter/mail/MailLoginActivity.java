@@ -15,7 +15,6 @@ import com.inspur.emmcloud.baselib.util.FomatUtils;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.ClearEditText;
-import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
@@ -90,7 +89,6 @@ public class MailLoginActivity extends BaseActivity {
                     .setOnExchangeLoginListener(new OnExchangeLoginListener() {
                         @Override
                         public void onMailLoginSuccess() {
-                            BaseApplication.getInstance().setExchangeAuthHeaderValue();
                             if (getIntent().hasExtra("from") && getIntent().getExtras().getString("from").equals("schedule_exchange_login")) {
                                 setResult(RESULT_OK);
                                 finish();

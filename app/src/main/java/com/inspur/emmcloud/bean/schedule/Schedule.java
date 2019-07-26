@@ -1,9 +1,16 @@
 package com.inspur.emmcloud.bean.schedule;
 
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.bean.schedule.calendar.AccountType;
+import com.inspur.emmcloud.bean.schedule.calendar.ScheduleCalendar;
+import com.inspur.emmcloud.util.privates.cache.ScheduleCalendarCacheUtils;
 import com.inspur.emmcloud.widget.calendardayview.Event;
 
 import org.json.JSONArray;
@@ -20,7 +27,7 @@ import java.util.List;
 /**
  * Created by chenmch on 2019/4/6.
  */
-@Table(name = "Schedule")
+@Table(name = " ")
 public class Schedule implements Serializable {
     public static final String TYPE_MEETING = "schedule_meeting";
     public static final String TYPE_CALENDAR = "schedule_calendar";
@@ -61,6 +68,11 @@ public class Schedule implements Serializable {
     private String note = "";
     @Column(name = "participants")
     private String participants = "";
+    @Column(name = "scheduleCalendar")
+    private String scheduleCalendar = "";
+    @Column(name = "isMeeting")
+    private boolean isMeeting = false;
+    private int index = -1;
     private List<String> getParticipantList = new ArrayList<>();
 
     public Schedule() {
@@ -101,7 +113,8 @@ public class Schedule implements Serializable {
                 if (scheduleEndTime.after(dayEndCalendar)) {
                     scheduleEndTime = dayEndCalendar;
                 }
-                Event event = new Event(schedule.getId(), Schedule.TYPE_CALENDAR, schedule.getTitle(), schedule.getScheduleLocationObj().getDisplayName(), scheduleStartTime, scheduleEndTime, schedule, schedule.getType(), schedule.getOwner());
+                String eventType = schedule.isMeeting() ? Schedule.TYPE_MEETING : Schedule.TYPE_CALENDAR;
+                Event event = new Event(schedule.getId(), eventType, schedule.getTitle(), schedule.getScheduleLocationObj().getDisplayName(), scheduleStartTime, scheduleEndTime, schedule, schedule.getType(), schedule.getOwner());
                 event.setAllDay(schedule.getAllDay());
                 eventList.add(event);
             }
@@ -189,6 +202,22 @@ public class Schedule implements Serializable {
         return TimeUtils.timeLong2Calendar(lastTime);
     }
 
+    public String getScheduleCalendar() {
+        return scheduleCalendar;
+    }
+
+    public void setScheduleCalendar(String scheduleCalendar) {
+        this.scheduleCalendar = scheduleCalendar;
+    }
+
+    public boolean isMeeting() {
+        return isMeeting;
+    }
+
+    public void setMeeting(boolean meeting) {
+        isMeeting = meeting;
+    }
+
     public List<Participant> getCommonParticipantList() {
         List<Participant> participantList = new ArrayList<>();
         JSONArray array = JSONUtils.getJSONArray(participants, new JSONArray());
@@ -230,7 +259,7 @@ public class Schedule implements Serializable {
         JSONArray array = JSONUtils.getJSONArray(participants, new JSONArray());
         for (int i = 0; i < array.length(); i++) {
             Participant participant = new Participant(JSONUtils.getJSONObject(array, i, new JSONObject()));
-                participantList.add(participant);
+            participantList.add(participant);
         }
         return participantList;
     }
@@ -357,7 +386,7 @@ public class Schedule implements Serializable {
         return jsonObject.toString();
     }
 
-    public JSONObject toCalendarEventJSONObject()  {
+    public JSONObject toCalendarEventJSONObject() {
         JSONObject jsonObject = new JSONObject();
         try {
             if (!StringUtils.isBlank(id)) {
@@ -393,10 +422,10 @@ public class Schedule implements Serializable {
                 jsonObject.put("participants", partJsonArray);
             }
 
-            if(!StringUtils.isBlank(note)){
+            if (!StringUtils.isBlank(note)) {
                 jsonObject.put("note", note);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -404,14 +433,45 @@ public class Schedule implements Serializable {
         return jsonObject;
     }
 
-    //修改会议  日程
-    public boolean canModify() {
-        return true;
+
+    public boolean canDelete() {
+        if (scheduleCalendar.equals(AccountType.APP_SCHEDULE.toString())) {
+            return true;
+        } else if (scheduleCalendar.equals(AccountType.APP_MEETING.toString())) {
+            boolean isAdmin = PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(), Constant.PREF_IS_MEETING_ADMIN,
+                    false);
+            if (isAdmin || (getOwner().equals(BaseApplication.getInstance().getUid()))) {
+                return true;
+            }
+            return false;
+        } else {
+//            ScheduleCalendar scheduleCalendar = ScheduleCalendarCacheUtils.getScheduleCalendar(BaseApplication.getInstance(), getScheduleCalendar());
+//            String account = scheduleCalendar.getAcName();
+//            if ()
+            return true;
+
+        }
+
+
     }
 
-    //删除会议  日程
-    public boolean canDelete() {
-        return true;
+    public boolean canModify() {
+        if (scheduleCalendar.equals(AccountType.APP_SCHEDULE.toString())) {
+            return true;
+        } else if (scheduleCalendar.equals(AccountType.APP_MEETING.toString())) {
+            if (getOwner().equals(BaseApplication.getInstance().getUid()) && getEndTimeCalendar().after(Calendar.getInstance())) {
+                return true;
+            }
+            return false;
+        } else {
+            ScheduleCalendar scheduleCalendar = ScheduleCalendarCacheUtils.getScheduleCalendar(BaseApplication.getInstance(), getScheduleCalendar());
+            String account = scheduleCalendar.getAcName();
+            if (getOwner().equals(account)) {
+                return true;
+            }
+            return false;
+
+        }
     }
 
 }
