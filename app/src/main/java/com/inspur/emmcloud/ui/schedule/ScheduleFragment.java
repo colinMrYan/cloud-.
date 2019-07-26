@@ -508,16 +508,18 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
      */
     private void getScheduleList() {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
+            ScheduleCalendar appScheduleCalendar = null;
             boolean isContainAppSchedule = false;
             for (ScheduleCalendar scheduleCalendar : scheduleCalendarList) {
                 if (scheduleCalendar.getAcType().equals(AccountType.APP_MEETING.toString()) || scheduleCalendar.getAcType().equals(AccountType.APP_SCHEDULE.toString())) {
                     isContainAppSchedule = true;
+                    appScheduleCalendar = scheduleCalendar;
                     continue;
                 }
                 apiService.getScheduleList((Calendar) pageStartCalendar.clone(), (Calendar) pageEndCalendar.clone(), scheduleCalendar);
             }
             if (isContainAppSchedule) {
-                apiService.getScheduleList((Calendar) pageStartCalendar.clone(), (Calendar) pageEndCalendar.clone(), null);
+                apiService.getScheduleList((Calendar) pageStartCalendar.clone(), (Calendar) pageEndCalendar.clone(), appScheduleCalendar);
             }
 
         }
