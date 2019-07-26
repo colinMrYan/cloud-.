@@ -126,9 +126,9 @@ public class MeetingAddActivity extends BaseActivity {
     private void initData() {
         apiService = new ScheduleApiService(this);
         apiService.setAPIInterface(new WebService());
-        isMeetingEditModel = getIntent().hasExtra(MeetingDetailActivity.EXTRA_MEETING_ENTITY);
+        isMeetingEditModel = getIntent().hasExtra(ScheduleDetailActivity.EXTRA_MEETING_ENTITY);
         if (isMeetingEditModel) {
-            meeting = (Meeting) getIntent().getSerializableExtra(MeetingDetailActivity.EXTRA_MEETING_ENTITY);
+            meeting = (Meeting) getIntent().getSerializableExtra(ScheduleDetailActivity.EXTRA_MEETING_ENTITY);
             meetingOwner = meeting.getOwner();
             location = new Location(JSONUtils.getJSONObject(meeting.getLocation()));
             startTimeCalendar = meeting.getStartTimeCalendar();
