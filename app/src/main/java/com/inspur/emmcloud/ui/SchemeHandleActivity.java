@@ -12,7 +12,6 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
@@ -244,15 +243,7 @@ public class SchemeHandleActivity extends BaseActivity {
                                 }
                                 break;
                             case "ecc-cmd":
-                                CustomProtocol customProtocol = new CustomProtocol(uri.toString());
-                                LogUtils.YfcDebug("id:" + customProtocol.getParamMap().get("id"));
-                                if (customProtocol != null) {
-                                    Intent intent = new Intent();
-                                    intent.setClass(SchemeHandleActivity.this, ChannelVoiceCommunicationActivity.class);
-                                    intent.putExtra("channelId", customProtocol.getParamMap().get("id"));
-                                    intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.INVITEE_LAYOUT_STATE);
-                                    startActivity(intent);
-                                }
+                                startVoiceCall(uri.toString());
                                 finish();
                                 break;
                             default:
@@ -266,6 +257,22 @@ public class SchemeHandleActivity extends BaseActivity {
         } else {
             ARouter.getInstance().build(Constant.AROUTER_CLASS_LOGIN_MAIN).navigation();
             finish();
+        }
+    }
+
+    /**
+     * 进入音频通话页面
+     *
+     * @param content
+     */
+    private void startVoiceCall(String content) {
+        CustomProtocol customProtocol = new CustomProtocol(content);
+        if (customProtocol != null) {
+            Intent intent = new Intent();
+            intent.setClass(SchemeHandleActivity.this, ChannelVoiceCommunicationActivity.class);
+            intent.putExtra("channelId", customProtocol.getParamMap().get("id"));
+            intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.INVITEE_LAYOUT_STATE);
+            startActivity(intent);
         }
     }
 
