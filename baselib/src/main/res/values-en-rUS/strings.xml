@@ -347,7 +347,7 @@
     <string name="schedule_event_alert">Alert</string>
     <string name="schedule_calendar_add">Add Schedule</string>
     <string name="schedule_calendar_detail">Schedule Detail</string>
-    <string name="schedule_setting_list_view">List view</string>
+    <string name="schedule_setting_list_view">List View</string>
     <string name="schedule_setting_day_view">Day View</string>
     <string name="schedule_calendar_company">My Schedule</string>
     <string name="schedule_setting_divide_group">Divide groups</string>
@@ -433,8 +433,8 @@
     <string name="schedule_meeting_in_meeting">Meeting</string>
     <string name="schedule_meeting_be_free">Free</string>
     <string name="schedule_choose_common_office">Common office locations</string>
-    <string name="schedule_meeting_change">Modify Meeting</string>
-    <string name="schedule_meeting_cancel">Delete Meeting</string>
+    <string name="schedule_meeting_change">Modify</string>
+    <string name="schedule_meeting_cancel">Delete</string>
     <string name="schedule_meeting_my_create">Created</string>
     <string name="schedule_meeting_my_take_part_in">Involved</string>
     <string name="schedule_meeting_attend_reply">Reply Attend Meeting</string>
@@ -444,7 +444,7 @@
     <string name="schedule_meeting_attend_ignore">Tentative</string>
     <string name="schedule_meeting_attend_accept">Accept</string>
     <string name="schedule_meeting_attend_reject">Reject</string>
-    <string name="chat_group_chanel_not_exist">Not in the current group</string>
+    <string name="chat_group_chanel_not_exist">chat message does not exist</string>
 
     <!-- 发现部分 -->
     <string name="find">Discover</string>
@@ -1081,8 +1081,8 @@
     <string name="forgetpwd">Forget Password</string>
     <string name="download_fail">Download Failed</string>
     <string name="download_success">Download Success</string>
-    <string name="file_downloading">In the download, please later...</string>
-    <string name="file_download_success">the file Has been downloaded, is it open?</string>
+    <string name="file_downloading">Download...Please wait</string>
+    <string name="file_download_success">Download succeeded,open now?</string>
     <string name="has_downloaded">Downloaded</string>
     <string name="imp_content">Content</string>
     <string name="file_ok">Confirm</string>

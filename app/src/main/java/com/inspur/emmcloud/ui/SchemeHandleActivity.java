@@ -38,8 +38,7 @@ import com.inspur.emmcloud.ui.find.AnalysisActivity;
 import com.inspur.emmcloud.ui.find.DocumentActivity;
 import com.inspur.emmcloud.ui.find.KnowledgeActivity;
 import com.inspur.emmcloud.ui.find.trip.TripInfoActivity;
-import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
-import com.inspur.emmcloud.ui.schedule.meeting.MeetingDetailActivity;
+import com.inspur.emmcloud.ui.schedule.meeting.ScheduleDetailActivity;
 import com.inspur.emmcloud.ui.schedule.task.TaskAddActivity;
 import com.inspur.emmcloud.util.privates.AppId2AppAndOpenAppUtils;
 import com.inspur.emmcloud.util.privates.CustomProtocol;
@@ -207,9 +206,10 @@ public class SchemeHandleActivity extends BaseActivity {
                                 if (content != null) {
                                     JSONObject calEventObj = JSONUtils.getJSONObject(content);
                                     CalendarEvent calendarEvent = new CalendarEvent(calEventObj);
-                                    Intent intent = new Intent(SchemeHandleActivity.this, CalendarAddActivity.class);
+                                    Intent intent = new Intent(SchemeHandleActivity.this, ScheduleDetailActivity.class);
                                     intent.putExtra("calEvent", calendarEvent);
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    intent.putExtra(Constant.EXTRA_IS_FROM_CALENDAR, true);
                                     startActivity(intent);
                                 }
                                 finish();
@@ -441,7 +441,7 @@ public class SchemeHandleActivity extends BaseActivity {
                     simpleEventMessage.setMessageObj(Constant.ACTION_CALENDAR);
                     EventBus.getDefault().post(simpleEventMessage);
                 } else if (!StringUtils.isBlank(query.getQueryParameter("id"))) {
-                    openScheduleActivity(query.getQueryParameter("id"), CalendarAddActivity.class);
+                    openScheduleActivity(query.getQueryParameter("id"), ScheduleDetailActivity.class);
                 }
                 finish();
                 break;
@@ -459,7 +459,7 @@ public class SchemeHandleActivity extends BaseActivity {
                     simpleEventMessage.setMessageObj(Constant.ACTION_MEETING);
                     EventBus.getDefault().postSticky(simpleEventMessage);
                 } else if (!StringUtils.isBlank(query.getQueryParameter("id"))) {
-                    openScheduleActivity(query.getQueryParameter("id"), MeetingDetailActivity.class);
+                    openScheduleActivity(query.getQueryParameter("id"), ScheduleDetailActivity.class);
                 }
                 finish();
                 break;
@@ -500,6 +500,7 @@ public class SchemeHandleActivity extends BaseActivity {
     private void openScheduleActivity(String query, Class scheduleActivity) {
         Bundle bundle = new Bundle();
         bundle.putString(Constant.SCHEDULE_QUERY, query);
+        bundle.putBoolean(Constant.EXTRA_IS_FROM_CALENDAR, true);
         IntentUtils.startActivity(SchemeHandleActivity.this, scheduleActivity, bundle);
     }
 

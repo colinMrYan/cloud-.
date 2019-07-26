@@ -140,9 +140,9 @@ public class MeetingFragment extends BaseFragment implements MySwipeRefreshLayou
     public void onItemClick(View view, int position) {
         Meeting meeting = uiMeetingList.get(position);
         Bundle bundle = new Bundle();
-        bundle.putSerializable(MeetingDetailActivity.EXTRA_MEETING_ENTITY, meeting);
+        bundle.putSerializable(ScheduleDetailActivity.EXTRA_MEETING_ENTITY, meeting);
         bundle.putBoolean(Constant.EXTRA_IS_HISTORY_MEETING, isHistoryMeeting);
-        IntentUtils.startActivity(getActivity(), MeetingDetailActivity.class, bundle);
+        IntentUtils.startActivity(getActivity(), ScheduleDetailActivity.class, bundle);
     }
 
     @Override

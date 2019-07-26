@@ -7,6 +7,7 @@ import android.widget.EditText;
 public class EditTextUtils {
     public static void setText(EditText edit, String content) {
         try {
+            content = StringUtils.isBlank(content) ? "" : content;
             edit.setText(content);
             Editable editable = edit.getText();
             int position = content.length();

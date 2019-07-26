@@ -631,11 +631,11 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.schedule.meeting.MeetingDetailActivity"
+            android:name=".ui.schedule.meeting.ScheduleDetailActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.schedule.meeting.MeetingDetailReplyActivity"
+            android:name=".ui.schedule.meeting.ScheduleDetailReplyActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
@@ -690,6 +690,11 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.chat.ChannelMembersDelActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.schedule.ScheduleTypeSelectActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
 

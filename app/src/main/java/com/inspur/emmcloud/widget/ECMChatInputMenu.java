@@ -115,6 +115,7 @@ public class ECMChatInputMenu extends LinearLayout {
     private List<String> mp3FilePathList = new ArrayList<>();
     private Map<String, Boolean> voiceBooleanMap = new HashMap<>();
     private AudioDialogManager audioDialogManager;
+    private ECMChatInputMenuCallback inputMenuClickCallback;
 
     public ECMChatInputMenu(Context context) {
         this(context, null);
@@ -883,5 +884,7 @@ public class ECMChatInputMenu extends LinearLayout {
         void onChatDraftsClear();
     }
 
-
+    public void setInputMenuClickCallback(ECMChatInputMenuCallback inputMenuClickCallback) {
+        this.inputMenuClickCallback = inputMenuClickCallback;
+    }
 }

@@ -1,9 +1,16 @@
 package com.inspur.emmcloud.bean.schedule;
 
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.bean.schedule.calendar.AccountType;
+import com.inspur.emmcloud.bean.schedule.calendar.ScheduleCalendar;
+import com.inspur.emmcloud.util.privates.cache.ScheduleCalendarCacheUtils;
 import com.inspur.emmcloud.widget.calendardayview.Event;
 
 import org.json.JSONArray;
@@ -24,6 +31,7 @@ import java.util.List;
 public class Schedule implements Serializable {
     public static final String TYPE_MEETING = "schedule_meeting";
     public static final String TYPE_CALENDAR = "schedule_calendar";
+    public static final String TYPE_UNKNOWN = "schedule_unknown";
     public static final String TYPE_TASK = "schedule_task";
     public static final String CALENDAR_TYPE_MEETING = "meeting";
     public static final String CALENDAR_TYPE_MY_CALENDAR = "default";
@@ -61,6 +69,11 @@ public class Schedule implements Serializable {
     private String note = "";
     @Column(name = "participants")
     private String participants = "";
+    @Column(name = "scheduleCalendar")
+    private String scheduleCalendar = "";
+    @Column(name = "isMeeting")
+    private boolean isMeeting = false;
+    private int index = -1;
     private List<String> getParticipantList = new ArrayList<>();
 
     public Schedule() {
@@ -80,6 +93,7 @@ public class Schedule implements Serializable {
         isAllDay = JSONUtils.getBoolean(object, "isAllDay", false);
         isCommunity = JSONUtils.getBoolean(object, "isCommunity", false);
         syncToLocal = JSONUtils.getBoolean(object, "syncToLocal", false);
+        isMeeting = JSONUtils.getBoolean(object, "isMeeting", false);
         remindEvent = JSONUtils.getString(object, "remindEvent", "");
         state = JSONUtils.getInt(object, "state", -1);
         location = JSONUtils.getString(object, "location", "");
@@ -101,7 +115,8 @@ public class Schedule implements Serializable {
                 if (scheduleEndTime.after(dayEndCalendar)) {
                     scheduleEndTime = dayEndCalendar;
                 }
-                Event event = new Event(schedule.getId(), Schedule.TYPE_CALENDAR, schedule.getTitle(), schedule.getScheduleLocationObj().getDisplayName(), scheduleStartTime, scheduleEndTime, schedule, schedule.getType(), schedule.getOwner());
+                String eventType = schedule.isMeeting() ? Schedule.TYPE_MEETING : Schedule.TYPE_CALENDAR;
+                Event event = new Event(schedule.getId(), eventType, schedule.getTitle(), schedule.getScheduleLocationObj().getDisplayName(), scheduleStartTime, scheduleEndTime, schedule, schedule.getType(), schedule.getOwner());
                 event.setAllDay(schedule.getAllDay());
                 eventList.add(event);
             }
@@ -189,6 +204,28 @@ public class Schedule implements Serializable {
         return TimeUtils.timeLong2Calendar(lastTime);
     }
 
+    public String getScheduleCalendar() {
+        if (StringUtils.isBlank(scheduleCalendar)) {
+            if (isMeeting()) {
+                return AccountType.APP_MEETING.toString();
+            }
+            return AccountType.APP_SCHEDULE.toString();
+        }
+        return scheduleCalendar;
+    }
+
+    public void setScheduleCalendar(String scheduleCalendar) {
+        this.scheduleCalendar = scheduleCalendar;
+    }
+
+    public boolean isMeeting() {
+        return isMeeting;
+    }
+
+    public void setMeeting(boolean meeting) {
+        isMeeting = meeting;
+    }
+
     public List<Participant> getCommonParticipantList() {
         List<Participant> participantList = new ArrayList<>();
         JSONArray array = JSONUtils.getJSONArray(participants, new JSONArray());
@@ -230,7 +267,7 @@ public class Schedule implements Serializable {
         JSONArray array = JSONUtils.getJSONArray(participants, new JSONArray());
         for (int i = 0; i < array.length(); i++) {
             Participant participant = new Participant(JSONUtils.getJSONObject(array, i, new JSONObject()));
-                participantList.add(participant);
+            participantList.add(participant);
         }
         return participantList;
     }
@@ -354,10 +391,11 @@ public class Schedule implements Serializable {
         jsonObject.put("location", location);
         jsonObject.put("participants", participants);
         jsonObject.put("note", note);
+        jsonObject.put("isMeeting", isMeeting);
         return jsonObject.toString();
     }
 
-    public JSONObject toCalendarEventJSONObject()  {
+    public JSONObject toCalendarEventJSONObject() {
         JSONObject jsonObject = new JSONObject();
         try {
             if (!StringUtils.isBlank(id)) {
@@ -378,6 +416,7 @@ public class Schedule implements Serializable {
             jsonObject.put("isCommunity", isCommunity);
             jsonObject.put("syncToLocal", syncToLocal);
             jsonObject.put("state", state);
+            jsonObject.put("isMeeting", isMeeting);
 
             if (!StringUtils.isBlank(remindEvent)) {
                 JSONObject remindJson = JSONUtils.getJSONObject(remindEvent);
@@ -393,15 +432,56 @@ public class Schedule implements Serializable {
                 jsonObject.put("participants", partJsonArray);
             }
 
-            if(!StringUtils.isBlank(note)){
+            if (!StringUtils.isBlank(note)) {
                 jsonObject.put("note", note);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
 
         return jsonObject;
+    }
+
+
+    public boolean canDelete() {
+        if (getScheduleCalendar().equals(AccountType.APP_SCHEDULE.toString())) {
+            return true;
+        } else if (getScheduleCalendar().equals(AccountType.APP_MEETING.toString())) {
+            boolean isAdmin = PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(), Constant.PREF_IS_MEETING_ADMIN,
+                    false);
+            if (isAdmin || (getOwner().equals(BaseApplication.getInstance().getUid()))) {
+                return true;
+            }
+            return false;
+        } else {
+//            ScheduleCalendar scheduleCalendar = ScheduleCalendarCacheUtils.getScheduleCalendar(BaseApplication.getInstance(), getScheduleCalendar());
+//            String account = scheduleCalendar.getAcName();
+//            if ()
+            return true;
+
+        }
+
+
+    }
+
+    public boolean canModify() {
+        if (getScheduleCalendar().equals(AccountType.APP_SCHEDULE.toString())) {
+            return true;
+        } else if (getScheduleCalendar().equals(AccountType.APP_MEETING.toString())) {
+            if (getOwner().equals(BaseApplication.getInstance().getUid()) && getEndTimeCalendar().after(Calendar.getInstance())) {
+                return true;
+            }
+            return false;
+        } else {
+            ScheduleCalendar scheduleCalendar = ScheduleCalendarCacheUtils.getScheduleCalendar(BaseApplication.getInstance(), getScheduleCalendar());
+            String account = scheduleCalendar.getAcName();
+            if (getOwner().equals(account)) {
+                return true;
+            }
+            return false;
+
+        }
     }
 
 }

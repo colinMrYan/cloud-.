@@ -19,7 +19,6 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ResolutionUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
@@ -177,8 +176,6 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
     public int getScrollOffset() {
         int offset = 0;
         if (eventList.size() > 0) {
-            LogUtils.jasonDebug("earliestEventOffset==" + earliestEventOffset);
-            LogUtils.jasonDebug("TIME_HOUR_HEIGHT==" + TIME_HOUR_HEIGHT);
             offset = earliestEventOffset - TIME_HOUR_HEIGHT;
         } else {
             Calendar currentCalendar = Calendar.getInstance();
@@ -339,17 +336,22 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
 
     private void setEventLayout(final Event event, final RelativeLayout.LayoutParams eventLayoutParams) {
         View eventView = LayoutInflater.from(getContext()).inflate(R.layout.schedule_calendar_day_event_view, null);
-        final Drawable drawableNormal = CalendarUtils.getEventBgNormalDrawable(event);
+        final Drawable drawableNormal = event.getEventBgNormalDrawable();
         eventView.setBackground(drawableNormal);
         ImageView eventImg = eventView.findViewById(R.id.iv_event);
         TextView eventTitleEvent = eventView.findViewById(R.id.tv_event_title);
         TextView eventSubtitleEvent = eventView.findViewById(R.id.tv_event_subtitle);
+        if (eventLayoutParams.height >= DensityUtil.dip2px(MyApplication.getInstance(), 20)) {
+            if (eventLayoutParams.height < DensityUtil.dip2px(MyApplication.getInstance(), 26)) {
+                eventTitleEvent.setPadding(0, 0, 0, 0);
+            }
+            eventTitleEvent.setVisibility(VISIBLE);
+            eventTitleEvent.setText(event.getEventTitle());
+        }
         if (eventLayoutParams.height >= DensityUtil.dip2px(MyApplication.getInstance(), 26)) {
             eventImg.setVisibility(VISIBLE);
-            eventTitleEvent.setVisibility(VISIBLE);
             eventSubtitleEvent.setVisibility(VISIBLE);
             eventImg.setImageResource(event.getEventIconResId(false));
-            eventTitleEvent.setText(event.getEventTitle());
             String subTitle = event.getShowEventSubTitle(getContext(), selectCalendar);
             if (event.getEventType().equals(Schedule.TYPE_TASK)) {
                 subTitle += "截止";
@@ -402,7 +404,7 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
     }
 
     private void showEventDetailPop(final View view, final Event event, final Drawable drawableNormal, int marginLeft) {
-        CustomRoundButtonDrawable drawableSelected = CalendarUtils.getEventBgSelectDrawable(event);
+        CustomRoundButtonDrawable drawableSelected = event.getEventBgSelectDrawable();
         final TextView eventTitleText = view.findViewById(R.id.tv_event_title);
         final TextView eventSubtitleText = view.findViewById(R.id.tv_event_subtitle);
         final ImageView eventImg = view.findViewById(R.id.iv_event);
@@ -477,9 +479,9 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
         TextView popEventTimeText = contentView.findViewById(R.id.tv_event_time);
         ImageView popEventTitleImg = contentView.findViewById(R.id.iv_event_title);
         popEventTitleImg.setImageResource(event.getEventIconResId(false));
-        popCalendarNameText.setText(CalendarUtils.getCalendarName(event));
-        popCalendarNameText.setTextColor(CalendarUtils.getCalendarTypeColor(event));
-        int resId = CalendarUtils.getCalendarTypeImgResId(event);
+        popCalendarNameText.setText(CalendarUtils.getCalendarName((Schedule) event.getEventObj()));
+        popCalendarNameText.setTextColor(event.getCalendarTypeColor());
+        int resId = CalendarUtils.getCalendarIconResId((Schedule) event.getEventObj());
         if (resId != -1) {
             popCalendarTypeImg.setImageResource(resId);
         }

@@ -10,6 +10,9 @@ import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.Robot;
+import com.inspur.emmcloud.bean.schedule.Schedule;
+import com.inspur.emmcloud.bean.schedule.calendar.AccountType;
+import com.inspur.emmcloud.bean.schedule.calendar.ScheduleCalendar;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
@@ -180,9 +183,6 @@ public class APIUri {
     public static String getUploadPositionUrl() {
         return WebServiceRouterManager.getInstance().getClusterEmm() + "api/mam/v6.0/app/pos";
     }
-
-
-
 
 
     /**************************************************************沟通***************************************************************/
@@ -602,7 +602,6 @@ public class APIUri {
     public static String getTransmitFileUrl(String channelId, String fileType) {
         return "https://api.inspuronline.com/" + "chat/rest/v1" + "/channel/" + channelId + "/" + fileType + "/share";
     }
-
 
 
     /**************************************************应用和应用中心********************************************************************/
@@ -1179,8 +1178,17 @@ public class APIUri {
     /**
      * 会议详情参会状态
      */
-    public static String getMeetingAttendStatusUrl(String responseType) {
-        return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/" + responseType + "/";
+    public static String getMeetingAttendStatusUrl(String responseType, ScheduleCalendar scheduleCalendar) {
+        switch (AccountType.getAccountType(scheduleCalendar.getAcType())) {
+            case EXCHANGE:
+                return getScheduleBaseUrl() + "api/schedule/v6.0/ews/" + responseType + "/";
+
+            default:
+                return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/" + responseType + "/";
+
+
+        }
+
     }
 
 
@@ -1449,7 +1457,6 @@ public class APIUri {
     }
 
 
-
     /**
      * 获取卡包信息
      *
@@ -1554,13 +1561,60 @@ public class APIUri {
         return getECMScheduleUrl() + "/schedule-ext/";
     }
 
-    public static String getCheckCloudPluseConnectUrl() {
-        return getScheduleBaseUrl() + "api/mam/v3.0/heart/success";
+    public static String getScheduleListUrl(ScheduleCalendar scheduleCalendar) {
+        String url = getScheduleBaseUrl() + "api/schedule/v6.0/ews/GetList?";
+        if (scheduleCalendar != null) {
+            AccountType accountType = AccountType.getAccountType(scheduleCalendar.getAcType());
+            switch (accountType) {
+                case EXCHANGE:
+                    url = getScheduleBaseUrl() + "api/schedule/v6.0/calendar/GetList?";
+                    break;
+                default:
+                    break;
+            }
+        }
+        return url;
+    }
+
+    public static String getAddScheduleUrl(ScheduleCalendar scheduleCalendar) {
+        String url = getScheduleBaseUrl() + "api/schedule/v6.0/calendar/add";
+        if (scheduleCalendar != null) {
+            AccountType accountType = AccountType.getAccountType(scheduleCalendar.getAcType());
+            switch (accountType) {
+                case EXCHANGE:
+                    url = getScheduleBaseUrl() + "api/schedule/v6.0/ews/add";
+                    break;
+                case APP_MEETING:
+                    url = getScheduleBaseUrl() + "api/schedule/v6.0/meeting/add";
+                    break;
+                case APP_SCHEDULE:
+                    url = getScheduleBaseUrl() + "api/schedule/v6.0/calendar/add";
+                default:
+                    break;
+            }
+        }
+        return url;
     }
 
 
-    public static String getScheduleListUrl() {
-        return getScheduleBaseUrl() + "api/schedule/v6.0/calendar/GetList?";
+    public static String getUpdateScheduleUrl(ScheduleCalendar scheduleCalendar, boolean isMeeting) {
+        String url = getScheduleBaseUrl() + (isMeeting ? "api/schedule/v6.0/meeting/update" : "api/schedule/v6.0/calendar/update");
+        if (scheduleCalendar != null) {
+            AccountType accountType = AccountType.getAccountType(scheduleCalendar.getAcType());
+            switch (accountType) {
+                case EXCHANGE:
+                    url = getScheduleBaseUrl() + "api/schedule/v6.0/ews/update";
+                    break;
+                default:
+                    break;
+            }
+        }
+        return url;
+    }
+
+
+    public static String getCheckCloudPluseConnectUrl() {
+        return getScheduleBaseUrl() + "api/mam/v3.0/heart/success";
     }
 
     public static String getAddScheduleUrl() {
@@ -1571,8 +1625,19 @@ public class APIUri {
         return getScheduleBaseUrl() + "api/schedule/v6.0/calendar/update";
     }
 
-    public static String getDeleteScheduleUrl(String scheduleId) {
-        return getScheduleBaseUrl() + "api/schedule/v6.0/calendar/remove/" + scheduleId;
+    public static String getDeleteScheduleUrl(ScheduleCalendar scheduleCalendar, Schedule schedule) {
+        String url = getScheduleBaseUrl() + (schedule.isMeeting() ? "api/schedule/v6.0/meeting/remove/" : "api/schedule/v6.0/calendar/remove/") + schedule.getId();
+        if (scheduleCalendar != null) {
+            AccountType accountType = AccountType.getAccountType(scheduleCalendar.getAcType());
+            switch (accountType) {
+                case EXCHANGE:
+                    url = getScheduleBaseUrl() + "api/schedule/v6.0/ews/remove";
+                    break;
+                default:
+                    break;
+            }
+        }
+        return url;
     }
 
     public static String getAddMeetingUrl() {

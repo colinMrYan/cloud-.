@@ -97,9 +97,9 @@ public class ScheduleAllDayEventListAdapter extends BaseAdapter {
         TextView popEventTimeText = contentView.findViewById(R.id.tv_event_time);
         ImageView popEventTitleImg = contentView.findViewById(R.id.iv_event_title);
         popEventTitleImg.setImageResource(event.getEventIconResId(false));
-        popCalendarNameText.setText(CalendarUtils.getCalendarName(event));
-        popCalendarNameText.setTextColor(CalendarUtils.getCalendarTypeColor(event));
-        int resId = CalendarUtils.getCalendarTypeImgResId(event);
+        popCalendarNameText.setText(CalendarUtils.getCalendarName((Schedule) event.getEventObj()));
+        popCalendarNameText.setTextColor(event.getCalendarTypeColor());
+        int resId = CalendarUtils.getCalendarIconResId((Schedule) event.getEventObj());
         if (resId != -1) {
             popCalendarTypeImg.setImageResource(resId);
         }

@@ -68,6 +68,7 @@ import com.inspur.emmcloud.bean.schedule.Schedule;
 import com.inspur.emmcloud.bean.schedule.calendar.GetHolidayDataResult;
 import com.inspur.emmcloud.bean.schedule.calendar.GetMyCalendarResult;
 import com.inspur.emmcloud.bean.schedule.calendar.GetScheduleBasicDataResult;
+import com.inspur.emmcloud.bean.schedule.calendar.ScheduleCalendar;
 import com.inspur.emmcloud.bean.schedule.meeting.Building;
 import com.inspur.emmcloud.bean.schedule.meeting.GetIsMeetingAdminResult;
 import com.inspur.emmcloud.bean.schedule.meeting.GetLocationResult;
@@ -1626,8 +1627,10 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnScheduleListSuccess(GetScheduleListResult getScheduleListResult, Calendar startCalendar, Calendar endCalendar, List<String> calendarIdList, List<String> meetingIdList, List<String> taskIdList) {
+    public void returnScheduleListSuccess(GetScheduleListResult getScheduleListResult, Calendar startCalendar, Calendar endCalendar, ScheduleCalendar scheduleCalendar) {
+
     }
+
 
     @Override
     public void returnScheduleListFail(String error, int errorCode) {
@@ -1694,7 +1697,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnDelMeetingSuccess(Meeting meeting) {
+    public void returnDelMeetingSuccess(Schedule meeting) {
 
     }
 

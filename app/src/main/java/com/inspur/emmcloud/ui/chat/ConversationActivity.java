@@ -6,6 +6,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
@@ -38,6 +39,7 @@ import com.inspur.emmcloud.baselib.widget.CustomLoadingView;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButton;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
@@ -72,7 +74,7 @@ import com.inspur.emmcloud.ui.chat.pop.PopupWindowList;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
-import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
+import com.inspur.emmcloud.ui.schedule.meeting.MeetingAddActivity;
 import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
@@ -89,6 +91,7 @@ import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.util.privates.richtext.markdown.MarkDown;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
 import com.inspur.emmcloud.widget.ECMChatInputMenu.ChatInputMenuListener;
+import com.inspur.emmcloud.widget.ECMChatInputMenuCallback;
 import com.inspur.emmcloud.widget.RecycleViewForSizeChange;
 import com.inspur.emmcloud.widget.bubble.BubbleLayout;
 
@@ -387,6 +390,61 @@ public class ConversationActivity extends ConversationBaseActivity {
         if (draftMessageContent != null) {
             chatInputMenu.setChatDrafts(draftMessageContent);
         }
+        chatInputMenu.setInputMenuClickCallback(new ECMChatInputMenuCallback() {
+            @Override
+            public void onInputMenuClick(String type) {
+                inputMenuClick(type);
+            }
+        });
+    }
+
+    private void inputMenuClick(String type) {
+        switch (type) {
+            case "mail":
+                if (conversation == null) return;
+                List<ContactUser> totalList = ContactUserCacheUtils.getContactUserListById(conversation.getMemberList());
+                final List<ContactUser> userList = new ArrayList<>();
+                for (ContactUser user : totalList) {
+                    if (!BaseApplication.getInstance().getUid().equals(user.getId())) {
+                        userList.add(user);
+                    }
+                }
+                if (userList.size() > 3) {
+                    new CustomDialog.MessageDialogBuilder(this)
+                            .setMessage("收件人超过50人，确定发送么？")
+                            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    sendEmail(userList);
+                                }
+                            })
+                            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            })
+                            .show();
+                } else {
+                    sendEmail(userList);
+                }
+
+                break;
+        }
+    }
+
+    private void sendEmail(List<ContactUser> userList) {
+        String mailListStr = userList.get(0).getEmail();
+        StringBuilder builder = new StringBuilder(mailListStr);
+        for (int i = 1; i < userList.size(); i++) {
+            builder.append(",");
+            builder.append(userList.get(i).getEmail());
+        }
+        mailListStr = builder.toString();
+
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:" + mailListStr));
+        startActivity(intent);
     }
 
 
@@ -1706,7 +1764,8 @@ public class ConversationActivity extends ConversationBaseActivity {
     private void addTextToSchedule(String content) {
         Intent intent = new Intent();
         intent.putExtra(Constant.COMMUNICATION_LONG_CLICK_TO_SCHEDULE, content);
-        intent.setClass(ConversationActivity.this, CalendarAddActivity.class);
+        intent.putExtra(MeetingAddActivity.EXTRA_EVENT_TYPE, false);
+        intent.setClass(ConversationActivity.this, MeetingAddActivity.class);
         startActivity(intent);
     }
 
