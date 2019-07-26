@@ -749,7 +749,7 @@ public interface APIInterface {
 
     void returnAddMeetingFail(String error, int errorCode);
 
-    void returnDelMeetingSuccess(Meeting meeting);
+    void returnDelMeetingSuccess(Schedule meeting);
 
     void returnDelMeetingFail(String error, int errorCode);
 

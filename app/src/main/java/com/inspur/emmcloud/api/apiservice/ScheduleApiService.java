@@ -667,7 +667,7 @@ public class ScheduleApiService {
      *
      * @param meeting
      */
-    public void deleteMeeting(final Meeting meeting) {
+    public void deleteMeeting(final Schedule meeting) {
         final String completeUrl = APIUri.getDelMeetingUrl(meeting.getId());
         RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);

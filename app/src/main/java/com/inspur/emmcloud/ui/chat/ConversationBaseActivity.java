@@ -135,9 +135,8 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity {
 //            WebServiceMiddleUtils.hand(BaseApplication.getInstance(), error, errorCode);
             if (errorCode == 400) {
                 ToastUtils.show(R.string.chat_group_chanel_not_exist);
-            } else {
-                finish();
             }
+            finish();
         }
 
     }
