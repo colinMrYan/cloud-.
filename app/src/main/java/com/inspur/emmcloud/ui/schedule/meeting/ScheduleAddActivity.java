@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -73,7 +74,7 @@ import butterknife.ButterKnife;
  * Created by chenmch on 2019/4/9.
  */
 
-public class ScheduleAddActivity extends BaseActivity {
+public class ScheduleAddActivity extends BaseActivity implements CompoundButton.OnCheckedChangeListener {
     public static final String EXTRA_EVENT_TYPE_FROM_MEETING = "extra_event_type_from_meeting";
     public static final String EXTRA_SCHEDULE_CALENDAR_EVENT = "schedule_calendar_event";
     public static final String EXTRA_START_CALENDAR = "extra_start_calendar";
@@ -153,6 +154,21 @@ public class ScheduleAddActivity extends BaseActivity {
         initView();
     }
 
+    @Override
+    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+        isAllDay = b;
+        timeTextChangeByIsAllDay(isAllDay);
+    }
+
+    /**
+     * 全天及非全天UI切换
+     */
+    private void timeTextChangeByIsAllDay(boolean IsAllDay) {
+        String startTime = TimeUtils.calendar2FormatString(this, startTimeCalendar, TimeUtils.FORMAT_HOUR_MINUTE);
+        String endTime = TimeUtils.calendar2FormatString(this, endTimeCalendar, TimeUtils.FORMAT_HOUR_MINUTE);
+        startTimeText.setText(IsAllDay ? TimeUtils.getWeekDay(this, startTimeCalendar) : startTime);
+        endTimeText.setText(IsAllDay ? TimeUtils.getWeekDay(this, endTimeCalendar) : endTime);
+    }
 
     @Override
     public int getLayoutResId() {
@@ -309,7 +325,7 @@ public class ScheduleAddActivity extends BaseActivity {
      */
     private void initView() {
         loadingDlg = new LoadingDialog(this);
-        newEventTitleText.setText(isEventEditModel ? "编辑" : "新建");//设置标题
+        newEventTitleText.setText(isEventEditModel ? R.string.schedule_update : R.string.schedule_add);//设置标题
         EditTextUtils.setText(titleEdit, title); //设置topic
         allDaySwitch.setChecked(isAllDay); //设置全天
         //设置类型
@@ -330,6 +346,12 @@ public class ScheduleAddActivity extends BaseActivity {
         eventTypeText.setText(CalendarUtils.getScheduleCalendarShowName(scheduleCalendar));
         modifyUIByEventType();
         calendarTypeLayout.setClickable(!isEventEditModel);
+        allDaySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                isAllDay = b;
+            }
+        });
     }
 
     private void modifyUIByEventType() {
