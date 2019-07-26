@@ -67,8 +67,8 @@ public class ScheduleApiService {
     /**
      * 添加日程
      */
-    public void addSchedule(final String schedule, final boolean isExchange) {
-        final String completeUrl = APIUri.getAddScheduleUrl(isExchange);
+    public void addSchedule(final String schedule) {
+        final String completeUrl = APIUri.getAddScheduleUrl();
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
         params.setBodyContent(schedule);
         params.setAsJsonContent(true);
@@ -79,7 +79,7 @@ public class ScheduleApiService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        addSchedule(schedule, isExchange);
+                        addSchedule(schedule);
                     }
 
                     @Override
@@ -108,8 +108,8 @@ public class ScheduleApiService {
     /**
      * 更新日程
      */
-    public void updateSchedule(final String schedule, final boolean isMeeting) {
-        final String completeUrl = APIUri.getUpdateScheduleUrl(isMeeting);
+    public void updateSchedule(final String schedule) {
+        final String completeUrl = APIUri.getUpdateScheduleUrl();
         RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
         params.setBodyContent(schedule);
@@ -121,7 +121,7 @@ public class ScheduleApiService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        updateSchedule(schedule, isMeeting);
+                        updateSchedule(schedule);
                     }
 
                     @Override
@@ -202,17 +202,11 @@ public class ScheduleApiService {
     /**
      * 根据schedule Id 删除schedule
      */
-    public void deleteSchedule(final String scheduleId, final boolean isExchange) {
+    public void deleteSchedule(final String scheduleId) {
         final String completeUrl = APIUri.getDeleteScheduleUrl(scheduleId);
         RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
-        if (isExchange) {
-            params.addParameter("calendarId", scheduleId);
-            params.addParameter("isMeeting", false);
-        } else {
-            params.setBodyContent(scheduleId);
-        }
-
+        params.setBodyContent(scheduleId);
         params.setAsJsonContent(true);
         HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
 
@@ -221,7 +215,7 @@ public class ScheduleApiService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        deleteSchedule(scheduleId, isExchange);
+                        deleteSchedule(scheduleId);
                     }
 
                     @Override
@@ -673,16 +667,11 @@ public class ScheduleApiService {
      *
      * @param meeting
      */
-    public void deleteMeeting(final Meeting meeting, final boolean isExchange) {
+    public void deleteMeeting(final Schedule meeting) {
         final String completeUrl = APIUri.getDelMeetingUrl(meeting.getId());
         RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
-        if (isExchange) {
-            params.addParameter("calendarId", meeting.getId());
-            params.addParameter("isMeeting", true);
-        } else {
-            params.setBodyContent(meeting.getId());
-        }
+        params.setBodyContent(meeting.getId());
         params.setAsJsonContent(true);
         HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
 
@@ -691,7 +680,7 @@ public class ScheduleApiService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        deleteMeeting(meeting, isExchange);
+                        deleteMeeting(meeting);
                     }
 
                     @Override
@@ -1121,8 +1110,8 @@ public class ScheduleApiService {
      *
      * @param meetingJson
      */
-    public void addMeeting(final String meetingJson, final boolean isExchange) {
-        final String completeUrl = APIUri.getAddMeetingUrl(isExchange);
+    public void addMeeting(final String meetingJson) {
+        final String completeUrl = APIUri.getAddMeetingUrl();
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
         params.setBodyContent(meetingJson);
         params.setAsJsonContent(true);
@@ -1133,7 +1122,7 @@ public class ScheduleApiService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        addMeeting(meetingJson, isExchange);
+                        addMeeting(meetingJson);
                     }
 
                     @Override
@@ -1159,8 +1148,8 @@ public class ScheduleApiService {
         });
     }
 
-    public void updateMeeting(final String meetingJson, final boolean isExchange) {
-        final String completeUrl = APIUri.getMeetingUpdateUrl(isExchange);
+    public void updateMeeting(final String meetingJson) {
+        final String completeUrl = APIUri.getMeetingUpdateUrl();
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
         params.setBodyContent(meetingJson);
         params.setAsJsonContent(true);
@@ -1171,7 +1160,7 @@ public class ScheduleApiService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        updateMeeting(meetingJson, isExchange);
+                        addMeeting(meetingJson);
                     }
 
                     @Override

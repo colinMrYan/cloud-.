@@ -528,11 +528,11 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
             loadingDlg.show();
             if (event.getEventType().equals(Schedule.TYPE_CALENDAR)) {
-                apiService.deleteSchedule(event.getEventId(), false);
+                apiService.deleteSchedule(event.getEventId());
             } else {
                 Meeting meeting = new Meeting();
                 meeting.setId(event.getEventId());
-                apiService.deleteMeeting(meeting, false);
+                apiService.deleteMeeting(meeting);
             }
 
         }

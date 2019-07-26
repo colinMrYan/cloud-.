@@ -99,7 +99,7 @@ public class ScheduleAllDayEventListAdapter extends BaseAdapter {
         popEventTitleImg.setImageResource(event.getEventIconResId(false));
         popCalendarNameText.setText(CalendarUtils.getCalendarName((Schedule) event.getEventObj()));
         popCalendarNameText.setTextColor(event.getCalendarTypeColor());
-        int resId = CalendarUtils.getCalendarTypeImgResId((Schedule) event.getEventObj());
+        int resId = CalendarUtils.getCalendarIconResId((Schedule) event.getEventObj());
         if (resId != -1) {
             popCalendarTypeImg.setImageResource(resId);
         }

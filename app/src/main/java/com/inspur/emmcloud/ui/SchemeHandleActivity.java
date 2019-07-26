@@ -205,9 +205,10 @@ public class SchemeHandleActivity extends BaseActivity {
                                 if (content != null) {
                                     JSONObject calEventObj = JSONUtils.getJSONObject(content);
                                     CalendarEvent calendarEvent = new CalendarEvent(calEventObj);
-                                    Intent intent = new Intent(SchemeHandleActivity.this, MeetingAddActivity.class);
+                                    Intent intent = new Intent(SchemeHandleActivity.this, MeetingDetailActivity.class);
                                     intent.putExtra("calEvent", calendarEvent);
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    intent.putExtra(Constant.EXTRA_IS_FROM_CALENDAR, true);
                                     startActivity(intent);
                                 }
                                 finish();
@@ -478,6 +479,7 @@ public class SchemeHandleActivity extends BaseActivity {
     private void openScheduleActivity(String query, Class scheduleActivity) {
         Bundle bundle = new Bundle();
         bundle.putString(Constant.SCHEDULE_QUERY, query);
+        bundle.putBoolean(Constant.EXTRA_IS_FROM_CALENDAR, true);
         IntentUtils.startActivity(SchemeHandleActivity.this, scheduleActivity, bundle);
     }
 
