@@ -69,7 +69,7 @@ public class ScheduleApiService {
      */
     public void addSchedule(final String schedule, final boolean isExchange) {
         final String completeUrl = APIUri.getAddScheduleUrl(isExchange);
-        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl, true);
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
         params.setBodyContent(schedule);
         params.setAsJsonContent(true);
         HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
@@ -111,7 +111,7 @@ public class ScheduleApiService {
     public void updateSchedule(final String schedule, final boolean isMeeting) {
         final String completeUrl = APIUri.getUpdateScheduleUrl(isMeeting);
         RequestParams params = MyApplication.getInstance()
-                .getHttpRequestParams(completeUrl, true);
+                .getHttpRequestParams(completeUrl);
         params.setBodyContent(schedule);
         params.setAsJsonContent(true);
         HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
@@ -205,7 +205,7 @@ public class ScheduleApiService {
     public void deleteSchedule(final String scheduleId, final boolean isExchange) {
         final String completeUrl = APIUri.getDeleteScheduleUrl(scheduleId);
         RequestParams params = MyApplication.getInstance()
-                .getHttpRequestParams(completeUrl, true);
+                .getHttpRequestParams(completeUrl);
         if (isExchange) {
             params.addParameter("calendarId", scheduleId);
             params.addParameter("isMeeting", false);
@@ -725,7 +725,7 @@ public class ScheduleApiService {
     public void getMeetingDataFromId(final String id) {
         final String completeUrl = APIUri.getMeetingUrlFromId(id);
         RequestParams params = MyApplication.getInstance()
-                .getHttpRequestParams(completeUrl, true);
+                .getHttpRequestParams(completeUrl);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
@@ -1123,7 +1123,7 @@ public class ScheduleApiService {
      */
     public void addMeeting(final String meetingJson, final boolean isExchange) {
         final String completeUrl = APIUri.getAddMeetingUrl(isExchange);
-        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl, true);
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
         params.setBodyContent(meetingJson);
         params.setAsJsonContent(true);
         HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
@@ -1161,7 +1161,7 @@ public class ScheduleApiService {
 
     public void updateMeeting(final String meetingJson, final boolean isExchange) {
         final String completeUrl = APIUri.getMeetingUpdateUrl(isExchange);
-        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl, true);
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
         params.setBodyContent(meetingJson);
         params.setAsJsonContent(true);
         HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {

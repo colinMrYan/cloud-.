@@ -12,7 +12,13 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.bean.schedule.calendar.ScheduleCalendar;
+import com.inspur.emmcloud.util.privates.CalendarUtils;
+import com.inspur.emmcloud.util.privates.cache.ScheduleCalendarCacheUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,19 +32,20 @@ import butterknife.ButterKnife;
 
 public class ScheduleTypeSelectActivity extends BaseActivity {
 
+    public static final String SCHEDULE_AC_TYPE = "schedule_ac_type";
 
     @BindView(R.id.lv_schedule_types)
     ListView scheduleTypesListView;
 
-    private List<ScheduleType> scheduleTypeList = new ArrayList<>();
+    private List<ScheduleCalendar> scheduleTypeList = new ArrayList<>();
     private ScheduleTypeAdapter scheduleTypeAdapter;
 
     @Override
     public void onCreate() {
         ButterKnife.bind(this);
-        scheduleTypeList.add(new ScheduleType("云+日程", false));
-        scheduleTypeList.add(new ScheduleType("云+会议", false));
-        scheduleTypeList.add(new ScheduleType("libaochao@inspur.com", false));
+        boolean isEnableExchange = PreferencesByUserAndTanentUtils.getBoolean(BaseApplication.getInstance(), Constant.PREF_SCHEDULE_ENABLE_EXCHANGE, false);
+        scheduleTypeList = ScheduleCalendarCacheUtils.getScheduleCalendarList(BaseApplication.getInstance(), isEnableExchange);
+        cleanState();
         scheduleTypeAdapter = new ScheduleTypeAdapter();
         scheduleTypesListView.setAdapter(scheduleTypeAdapter);
         scheduleTypesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -49,7 +56,7 @@ public class ScheduleTypeSelectActivity extends BaseActivity {
                 scheduleTypeAdapter.notifyDataSetChanged();
                 Intent intent = new Intent();
                 Bundle bundle = new Bundle();
-                bundle.putString("schedule_type", scheduleTypeList.get(i).getTypeName());
+                bundle.putSerializable(SCHEDULE_AC_TYPE, scheduleTypeList.get(i));
                 setResult(RESULT_OK, intent.putExtras(bundle));
                 finish();
             }
@@ -61,9 +68,9 @@ public class ScheduleTypeSelectActivity extends BaseActivity {
                 finish();
             }
         });
-        String scheduleType = getIntent().getStringExtra("schedule_type");
-        if (!StringUtils.isBlank(scheduleType)) {
-            setStateByName(scheduleType);
+        String scheduleTypeId = getIntent().getStringExtra(SCHEDULE_AC_TYPE);
+        if (!StringUtils.isBlank(scheduleTypeId)) {
+            setStateByName(scheduleTypeId);
         }
     }
 
@@ -73,7 +80,7 @@ public class ScheduleTypeSelectActivity extends BaseActivity {
      */
     private void cleanState() {
         for (int i = 0; i < scheduleTypeList.size(); i++) {
-            scheduleTypeList.get(i).typeState = false;
+            scheduleTypeList.get(i).setOpen(false);
         }
     }
 
@@ -81,7 +88,7 @@ public class ScheduleTypeSelectActivity extends BaseActivity {
      * 设置状态
      */
     private void setStateByIndex(int i) {
-        scheduleTypeList.get(i).setTypeState(true);
+        scheduleTypeList.get(i).setOpen(true);
     }
 
     /**
@@ -89,8 +96,8 @@ public class ScheduleTypeSelectActivity extends BaseActivity {
      */
     private void setStateByName(String name) {
         for (int i = 0; i < scheduleTypeList.size(); i++) {
-            if (scheduleTypeList.get(i).getTypeName().equals(name)) {
-                scheduleTypeList.get(i).setTypeState(true);
+            if (scheduleTypeList.get(i).getId().equals(name)) {
+                scheduleTypeList.get(i).setOpen(true);
                 break;
             }
         }
@@ -122,40 +129,10 @@ public class ScheduleTypeSelectActivity extends BaseActivity {
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
             view = LayoutInflater.from(ScheduleTypeSelectActivity.this).inflate(R.layout.schedule_item_schedule_type, null);
-            ((TextView) (view.findViewById(R.id.tv_schedule_type_name))).setText(scheduleTypeList.get(i).getTypeName());
-            (view.findViewById(R.id.iv_schedule_type_state)).setVisibility(scheduleTypeList.get(i).isTypeState() ? View.VISIBLE : View.GONE);
+            ((TextView) (view.findViewById(R.id.tv_schedule_type_name))).setText(CalendarUtils.getScheduleCalendarShowName(scheduleTypeList.get(i)));
+            (view.findViewById(R.id.iv_schedule_type_state)).setVisibility(scheduleTypeList.get(i).isOpen() ? View.VISIBLE : View.GONE);
             return view;
         }
     }
 
-    private class ScheduleType {
-
-        private String typeName;
-        private boolean typeState = false;
-
-
-        public ScheduleType() {
-        }
-
-        public ScheduleType(String typeName, boolean state) {
-            this.typeName = typeName;
-            this.typeState = state;
-        }
-
-        public String getTypeName() {
-            return typeName;
-        }
-
-        public void setTypeName(String typeName) {
-            this.typeName = typeName;
-        }
-
-        public boolean isTypeState() {
-            return typeState;
-        }
-
-        public void setTypeState(boolean typeState) {
-            this.typeState = typeState;
-        }
-    }
 }

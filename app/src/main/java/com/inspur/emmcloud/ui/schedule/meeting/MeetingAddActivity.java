@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.EditText;
@@ -31,6 +30,7 @@ import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.DateTimePickerDialog;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
@@ -44,7 +44,9 @@ import com.inspur.emmcloud.bean.schedule.MyCalendar;
 import com.inspur.emmcloud.bean.schedule.Participant;
 import com.inspur.emmcloud.bean.schedule.RemindEvent;
 import com.inspur.emmcloud.bean.schedule.Schedule;
+import com.inspur.emmcloud.bean.schedule.calendar.AccountType;
 import com.inspur.emmcloud.bean.schedule.calendar.GetMyCalendarResult;
+import com.inspur.emmcloud.bean.schedule.calendar.ScheduleCalendar;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.bean.schedule.meeting.MeetingRoom;
 import com.inspur.emmcloud.componentservice.contact.ContactService;
@@ -53,9 +55,9 @@ import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.ui.schedule.ScheduleAlertTimeActivity;
 import com.inspur.emmcloud.ui.schedule.ScheduleTypeSelectActivity;
+import com.inspur.emmcloud.util.privates.CalendarUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.MyCalendarCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.ScheduleCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ScheduleCalendarCacheUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
@@ -78,10 +80,6 @@ public class MeetingAddActivity extends BaseActivity {
     public static final String EXTRA_SCHEDULE_CALENDAR_EVENT = "schedule_calendar_event";
     public static final String EXTRA_START_CALENDAR = "extra_start_calendar";
     public static final String EXTRA_END_CALENDAR = "extra_end_calendar";
-    public static final String EXTRA_SCHEDULE_TYPE = "extra_schedule_type";
-    public static final String SCHEDULE_TYPE_CALENDAR = "云+日程";
-    public static final String SCHEDULE_TYPE_MEETING = "云+会议";
-    public static final String SCHEDULE_TYPE_EXCHANGE = "libaochao@inspur.com";
     public static final int REQUEST_SET_SCHEDULE_TYPE = 6;
     private static final String EXTRA_SELECT_CALENDAR = "extra_select_calendar";
     private static final int REQUEST_SELECT_ATTENDEE = 1;
@@ -132,23 +130,25 @@ public class MeetingAddActivity extends BaseActivity {
     private Location location;          // 地点
     private String title;               // 标题
     private String note;                // 备注
-    private String eventType;           // 类型 云+ 日程，云+会议，Exchange具体账号
     private String meetingPosition;
     private String owner = "";   // 所有者
     private RemindEvent remindEvent = new RemindEvent();    // 提醒
     private Schedule schedule = new Schedule();
     private boolean isEventEditModel = false; //是否是编辑模式
-    private boolean isMeeting = false;
-    private boolean isEditable = true;         //
+    private boolean isFromMeeting = false;
+    private ScheduleCalendar scheduleCalendar = new ScheduleCalendar();
     private String id;
+    private List<ScheduleCalendar> scheduleTypeList = new ArrayList<>();
 
     @Override
     public void onCreate() {
         ButterKnife.bind(this);
-        isMeeting = getIntent().getBooleanExtra(EXTRA_EVENT_TYPE, false);
+        isFromMeeting = getIntent().getBooleanExtra(EXTRA_EVENT_TYPE, false);
+        scheduleTypeList = ScheduleCalendarCacheUtils.getScheduleCalendarList(BaseApplication.getInstance(), true);
+        scheduleCalendar = getScheduleCalendar(isFromMeeting ? AccountType.APP_MEETING : AccountType.APP_SCHEDULE);
         apiService = new ScheduleApiService(this);
         apiService.setAPIInterface(new WebService());
-        if (isMeeting) {
+        if (isFromMeeting) {
             initMeetingData();
         } else {
             initScheduleData();
@@ -170,29 +170,7 @@ public class MeetingAddActivity extends BaseActivity {
         isEventEditModel = getIntent().hasExtra(MeetingDetailActivity.EXTRA_MEETING_ENTITY);
         if (isEventEditModel) {
             schedule = (Schedule) getIntent().getSerializableExtra(MeetingDetailActivity.EXTRA_MEETING_ENTITY);
-            owner = schedule.getOwner();
-            location = new Location(JSONUtils.getJSONObject(schedule.getLocation()));
-            startTimeCalendar = schedule.getStartTimeCalendar();
-            endTimeCalendar = schedule.getEndTimeCalendar();
-            title = schedule.getTitle();
-            note = schedule.getNote();
-            List<String> attendeeList = schedule.getGetParticipantList();
-            for (int i = 0; i < attendeeList.size(); i++) {
-                schedule.getRoleParticipantList();
-                JSONObject jsonObject = JSONUtils.getJSONObject(attendeeList.get(i));
-                String uid = JSONUtils.getString(jsonObject, "id", "");
-                SearchModel searchModel = getSearchModel(uid);
-                String role = JSONUtils.getString(jsonObject, "role", "");
-                if (Participant.TYPE_COMMON.equals(role)) {
-                    attendeeSearchModelList.add(searchModel);
-                } else if (Participant.TYPE_CONTACT.equals(role)) {
-                    liaisonSearchModelList.add(searchModel);
-                } else if (Participant.TYPE_RECORDER.equals(role)) {
-                    recorderSearchModelList.add(searchModel);
-                }
-            }
-            remindEvent = schedule.getRemindEventObj();
-            eventType = schedule.getType().equals("exchange") ? SCHEDULE_TYPE_EXCHANGE : SCHEDULE_TYPE_MEETING;
+            initScheduleDataByEntity();
         } else {
             String myUid = MyApplication.getInstance().getUid();
             ContactUser myInfo = ContactUserCacheUtils.getContactUserByUid(myUid);
@@ -214,7 +192,7 @@ public class MeetingAddActivity extends BaseActivity {
                 location.setBuilding(meetingRoom.getBuilding().getName());
                 location.setDisplayName(meetingRoom.getName());
             }
-            eventType = SCHEDULE_TYPE_MEETING;
+            scheduleCalendar = getScheduleCalendar(AccountType.APP_MEETING);
         }
     }
 
@@ -224,14 +202,10 @@ public class MeetingAddActivity extends BaseActivity {
     private void initScheduleData() {
         if (getIntent().hasExtra(Constant.COMMUNICATION_LONG_CLICK_TO_SCHEDULE)) {
             title = getIntent().getStringExtra(Constant.COMMUNICATION_LONG_CLICK_TO_SCHEDULE);
-            eventType = SCHEDULE_TYPE_CALENDAR;
+            scheduleCalendar = getScheduleCalendar(AccountType.APP_SCHEDULE);
         }                                                          //来自分享
-        id = getIntent().getStringExtra(Constant.SCHEDULE_QUERY);   //解析通知字段获取id
-        if (!TextUtils.isEmpty(id)) {        ////来自通知
-            isEventEditModel = false;
-            getDbCalendarFromId();
-            getNetCalendarFromId();
-        } else if (getIntent().hasExtra(EXTRA_SCHEDULE_CALENDAR_EVENT)) {  //通知没有，列表页跳转过来
+
+        if (getIntent().hasExtra(EXTRA_SCHEDULE_CALENDAR_EVENT)) {  //通知没有，列表页跳转过来
             isEventEditModel = true;
             schedule = (Schedule) getIntent().getSerializableExtra(EXTRA_SCHEDULE_CALENDAR_EVENT);
             initScheduleDataByEntity();     //直接用传过来的数据
@@ -244,16 +218,49 @@ public class MeetingAddActivity extends BaseActivity {
      * 设置日程相关数据
      */
     private void initScheduleDataByEntity() {
+        owner = schedule.getOwner();          //获取owner
+        location = StringUtils.isBlank(schedule.getLocation()) ? null : new Location(JSONUtils.getJSONObject(schedule.getLocation()));
+        startTimeCalendar = schedule.getStartTimeCalendar();
+        endTimeCalendar = schedule.getEndTimeCalendar();
+        title = schedule.getTitle();
+        note = schedule.getNote();
+        List<String> attendeeList = schedule.getGetParticipantList();
+        for (int i = 0; i < attendeeList.size(); i++) {
+            schedule.getRoleParticipantList();
+            JSONObject jsonObject = JSONUtils.getJSONObject(attendeeList.get(i));
+            String uid = JSONUtils.getString(jsonObject, "id", "");
+            SearchModel searchModel = getSearchModel(uid);
+            String role = JSONUtils.getString(jsonObject, "role", "");
+            if (Participant.TYPE_COMMON.equals(role)) {
+                attendeeSearchModelList.add(searchModel);
+            } else if (Participant.TYPE_CONTACT.equals(role)) {
+                liaisonSearchModelList.add(searchModel);
+            } else if (Participant.TYPE_RECORDER.equals(role)) {
+                recorderSearchModelList.add(searchModel);
+            }
+        }
+        remindEvent = schedule.getRemindEventObj();
         isAllDay = schedule.getAllDay();
         startTimeCalendar = schedule.getStartTimeCalendar();
         endTimeCalendar = schedule.getEndTimeCalendar();
         title = schedule.getTitle();
-        List<MyCalendar> allCalendarList = MyCalendarCacheUtils.getAllMyCalendarList(getApplicationContext());
-        String calendarType = schedule.getType();
         String alertTimeName = ScheduleAlertTimeActivity.getAlertTimeNameByTime(JSONUtils.getInt(schedule.getRemindEvent(), "advanceTimeSpan", -1), isAllDay);
         remindEvent = new RemindEvent(JSONUtils.getString(schedule.getRemindEvent(), "remindType", "in_app"),
                 JSONUtils.getInt(schedule.getRemindEvent(), "advanceTimeSpan", -1), alertTimeName);
-        eventType = schedule.getType().equals("excange") ? SCHEDULE_TYPE_EXCHANGE : SCHEDULE_TYPE_CALENDAR;
+        switch (schedule.getType()) {
+            case "default":
+                scheduleCalendar = getScheduleCalendar(AccountType.APP_SCHEDULE);
+                break;
+            case "meeting":
+                scheduleCalendar = getScheduleCalendar(AccountType.APP_MEETING);
+                break;
+            case "exchange":
+                scheduleCalendar = getScheduleCalendar(AccountType.EXCHANGE);
+                break;
+            default:
+                scheduleCalendar = getScheduleCalendar(AccountType.APP_SCHEDULE);
+                break;
+        }
     }
 
     /**
@@ -282,35 +289,8 @@ public class MeetingAddActivity extends BaseActivity {
         }
         schedule.setOwner(MyApplication.getInstance().getUid());//??默认
         remindEvent.setName(ScheduleAlertTimeActivity.getAlertTimeNameByTime(remindEvent.getAdvanceTimeSpan(), isAllDay));
-        eventType = SCHEDULE_TYPE_CALENDAR;
+        scheduleCalendar = getScheduleCalendar(AccountType.APP_SCHEDULE);
         initView();
-    }
-
-    /**
-     * 从数据库获取日程数据
-     */
-    private void getDbCalendarFromId() {
-        schedule = ScheduleCacheUtils.getDBScheduleById(this, id);
-        if (schedule != null) {
-            initScheduleDataByEntity();
-            initView();
-        }
-    }
-
-    /**
-     * 从网络获取日程数据
-     */
-    private void getNetCalendarFromId() {
-        if (NetUtils.isNetworkConnected(this)) {
-            if (!TextUtils.isEmpty(id)) {
-                if (schedule == null || TextUtils.isEmpty(schedule.getId())) { //如果缓存有数据则不显示loading
-                    loadingDlg.show();
-                }
-                apiService.getCalendarDataFromId(id);
-            }
-        } else {
-            ToastUtils.show(this, "");
-        }
     }
 
 
@@ -328,7 +308,6 @@ public class MeetingAddActivity extends BaseActivity {
         return searchModel;
     }
 
-
     /**
      * 初始化视图
      */
@@ -338,7 +317,7 @@ public class MeetingAddActivity extends BaseActivity {
         EditTextUtils.setText(titleEdit, title); //设置topic
         allDaySwitch.setChecked(isAllDay); //设置全天
         //设置类型
-        positionEditText.setEnabled(!isMeeting);
+        positionEditText.setEnabled(!isFromMeeting);
         if (isEventEditModel) {
             positionEditText.setText(location != null ? location.getBuilding() + " " + location.getDisplayName() : "");
             notesEdit.setText(note);
@@ -351,26 +330,34 @@ public class MeetingAddActivity extends BaseActivity {
         reminderText.setText(ScheduleAlertTimeActivity.getAlertTimeNameByTime(remindEvent.getAdvanceTimeSpan(), isAllDay));//设置提醒
         showSelectUser(attendeeLayout, attendeeSearchModelList);
         setMeetingTime();   //设置时间
-        findViewById(R.id.ll_all_participants).setVisibility(isMeeting ? View.VISIBLE : View.GONE);
-        eventTypeText.setText(eventType);
-        modifyUIByEventType(eventType);
+        findViewById(R.id.ll_all_participants).setVisibility(isFromMeeting ? View.VISIBLE : View.GONE);
+        eventTypeText.setText(CalendarUtils.getScheduleCalendarShowName(scheduleCalendar));
+        modifyUIByEventType(scheduleCalendar);
+        calendarTypeLayout.setClickable(!isEventEditModel);
     }
 
-    private void modifyUIByEventType(String eventType) {
-        switch (eventType) {
-            case SCHEDULE_TYPE_CALENDAR:
-                findViewById(R.id.ll_all_participants).setVisibility(View.GONE);
-                break;
-            case SCHEDULE_TYPE_MEETING:
-                findViewById(R.id.ll_recorder_liaison).setVisibility(View.VISIBLE);
-                findViewById(R.id.ll_all_participants).setVisibility(View.VISIBLE);
-                break;
-            case SCHEDULE_TYPE_EXCHANGE:
-                findViewById(R.id.ll_recorder_liaison).setVisibility(View.GONE);
-                break;
+    private void modifyUIByEventType(ScheduleCalendar scheduleCalendar) {
+        if (scheduleCalendar.getAcType().equals(AccountType.APP_SCHEDULE)) {
+            findViewById(R.id.ll_all_participants).setVisibility(View.GONE);
+        } else if (scheduleCalendar.getAcType().equals(AccountType.APP_MEETING)) {
+            findViewById(R.id.ll_recorder_liaison).setVisibility(View.VISIBLE);
+            findViewById(R.id.ll_all_participants).setVisibility(View.VISIBLE);
+        } else if (scheduleCalendar.getAcType().equals(AccountType.APP_SCHEDULE)) {
+            findViewById(R.id.ll_recorder_liaison).setVisibility(View.GONE);
         }
     }
 
+    /**
+     * 获取类型
+     */
+    private ScheduleCalendar getScheduleCalendar(AccountType accountType) {
+        for (int i = 0; i < scheduleTypeList.size(); i++) {
+            if (scheduleTypeList.get(i).getAcType().equals(accountType.toString())) {
+                return scheduleTypeList.get(i);
+            }
+        }
+        return null;
+    }
 
     public void onClick(View view) {
         switch (view.getId()) {
@@ -378,9 +365,9 @@ public class MeetingAddActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.tv_save:
-                if (!isInputValid(isMeeting))
+                if (!isInputValid(isFromMeeting))
                     return;
-                if (isMeeting && eventType.equals(SCHEDULE_TYPE_EXCHANGE)) {
+                if (!scheduleCalendar.getAcType().equals(AccountType.APP_SCHEDULE)) {
                     addOrUpdateMeeting();
                 } else {
                     saveCalendarEvent();
@@ -418,8 +405,7 @@ public class MeetingAddActivity extends BaseActivity {
                 break;
             case R.id.rl_calendar_type:
                 Intent intent3 = new Intent(this, ScheduleTypeSelectActivity.class);
-                LogUtils.LbcDebug("eventType:" + eventType);
-                intent3.putExtra("schedule_type", eventType);
+                intent3.putExtra(ScheduleTypeSelectActivity.SCHEDULE_AC_TYPE, scheduleCalendar.getId());
                 startActivityForResult(intent3, REQUEST_SET_SCHEDULE_TYPE);
                 break;
         }
@@ -604,9 +590,9 @@ public class MeetingAddActivity extends BaseActivity {
                     reminderText.setText(ScheduleAlertTimeActivity.getAlertTimeNameByTime(remindEvent.getAdvanceTimeSpan(), isAllDay));
                     break;
                 case REQUEST_SET_SCHEDULE_TYPE:
-                    eventType = data.getStringExtra("schedule_type");
-                    eventTypeText.setText(eventType);
-                    modifyUIByEventType(eventType);
+                    scheduleCalendar = (ScheduleCalendar) data.getSerializableExtra(ScheduleTypeSelectActivity.SCHEDULE_AC_TYPE);
+                    eventTypeText.setText(CalendarUtils.getScheduleCalendarShowName(scheduleCalendar));
+                    modifyUIByEventType(scheduleCalendar);
                     break;
             }
         }
@@ -747,9 +733,9 @@ public class MeetingAddActivity extends BaseActivity {
         Meeting meeting = getMeeting();
         loadingDlg.show();
         if (isEventEditModel) {
-            apiService.updateMeeting(meeting.toJSONObject().toString(), eventType.equals(SCHEDULE_TYPE_EXCHANGE) ? true : false);
+            apiService.updateMeeting(meeting.toJSONObject().toString(), scheduleCalendar.getAcType().equals(AccountType.EXCHANGE) ? true : false);
         } else {
-            apiService.addMeeting(meeting.toJSONObject().toString(), eventType.equals(SCHEDULE_TYPE_EXCHANGE) ? true : false);
+            apiService.addMeeting(meeting.toJSONObject().toString(), scheduleCalendar.getAcType().equals(AccountType.EXCHANGE) ? true : false);
         }
     }
 
@@ -884,7 +870,6 @@ public class MeetingAddActivity extends BaseActivity {
             LoadingDialog.dimissDlg(loadingDlg);
             ToastUtils.show(getApplicationContext(), R.string.calendar_add_success);
             schedule.setId(getIDResult.getId());
-            LogUtils.LbcDebug("add Schedsuccess 11111111111111111111111");
             sendCalendarEventNotification();
             finish();
         }
