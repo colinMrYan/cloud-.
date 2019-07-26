@@ -39,7 +39,6 @@ import com.inspur.emmcloud.bean.schedule.meeting.ReplyAttendResult;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
 import com.inspur.emmcloud.ui.schedule.ScheduleAlertTimeActivity;
-import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
 import com.inspur.emmcloud.util.privates.CalendarUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
@@ -536,7 +535,7 @@ public class ScheduleDetailActivity extends BaseActivity {
                 if (tag.equals(getString(R.string.schedule_meeting_change))) {
                     Bundle bundle = new Bundle();
                     bundle.putSerializable(EXTRA_SCHEDULE_CALENDAR_EVENT, scheduleEvent);
-                    IntentUtils.startActivity(ScheduleDetailActivity.this, CalendarAddActivity.class, bundle, true);
+                    IntentUtils.startActivity(ScheduleDetailActivity.this, ScheduleAddActivity.class, bundle, true);
                 } else if (tag.equals(getString(R.string.schedule_meeting_cancel))) {
                     showConfirmClearDialog(meeting);
                 } else if (tag.equals(getString(R.string.message_create_group))) {
