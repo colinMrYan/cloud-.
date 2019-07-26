@@ -288,6 +288,7 @@
     <string name="chat_remove">Delete</string>
     <string name="chat_remove_from_top">Remove from Top</string>
     <string name="no_chat_content">No chat content</string>
+    <string name="send_email">Mail</string>
     <string name="msg_key_search_member"> Please enter key words</string>
     <string name="chat_file_open_fail_tip">No corresponding program was found.</string>
     <string name="chat_conversation_unread_count">%1$d new messages</string>
@@ -1230,6 +1231,8 @@
     <string name="permission_dialog_title">Tips</string>
     <string name="permission_message_always_failed">You have forbidden granting %1$s %2$s permission, which may cause the function to be unavailable. If you need to use it, please go to the settings to grant permission.</string>
     <string name="permission_grant_fail">You have forbidden granting %1$s %2$s permission</string>
+    <string name="permission_grant_window_alert">Please grant %1$s suspension window permission</string>
+    <string name="permission_grant_window_fail">You have forbidden granting %1$s suspension window permission</string>
 
     <string name="permission_open_cloud_plus">Open %1$s</string>
     <string name="permission_necessary_permission">In order for you to use the %1$s properly, you need the following permissions</string>
@@ -1292,5 +1295,44 @@
         <item>FRI</item>
         <item>SAT</item>
     </string-array>
+
+    <string name="webex_meeting_title">Meeting held by %1$s</string>
+    <string name="webex_input_invitee_emails_hint">Enter participant email(contain suffix)</string>
+    <string name="webex_input_invitee_emails">Enter participant email</string>
+    <string name="webex_input_correct_invitee_emails">Enter correct participant email</string>
+    <string name="webex_not_add_repeated">Cannot be added repeatedly</string>
+    <string name="webex_start">START</string>
+    <string name="webex_meeting_info">Meeting Info</string>
+    <string name="webex_host">Host</string>
+    <string name="webex_when">When</string>
+    <string name="webex_meeting_number">Meeting number</string>
+    <string name="webex_meeting_password">Meeting password</string>
+    <string name="webex_host_password">Host key</string>
+    <string name="webex_meeting_ended">The meeting has ended</string>
+    <string name="webex_start_time_error">Invalid start time</string>
+    <string name="webex_start_time_error_info">You hava specified a start time for the meeting that is before the current time. Please specify a different starting time</string>
+    <string name="webex_enter_meeting_name">Enter the meeting name </string>
+    <string name="webex_enter_meeting_password">Enter the meeting password</string>
+    <string name="webex_set_duration_correct">Please set the correct meeting duration</string>
+    <string name="webex_meeting_duration">Duration</string>
+    <string name="webex_remove_meeting_warning_title">Delete meeting</string>
+    <string name="webex_remove_meeting_warning_info">Are you sure you want to delete this meeting?</string>
+    <string name="webex_password_length_error">Password length is not valid (6-10)</string>
+    <string name="webex_install_tips">Using this function, you need to install the WebEx client first. Now install?</string>
+    <string name="webex_add_invitee_from_contact">Add from address book</string>
+    <string name="webex_add_invitee_num">Joined: %1$d Member(s) / Up to %2$d Members</string>
+    <string name="webex_internal_attendees">Internal</string>
+    <string name="webex_external_attendees">External</string>
+    <string name="webex_internal_share">Internal</string>
+    <string name="webex_time">Time：</string>
+    <string name="webex_meeting_code">Meeting number：</string>
+    <string name="webex_meeting_password_tip">Meeting password：</string>
+    <string name="webex_add_external_attendees">Add</string>
+    <string name="webex_no_meeting_tips"><Data><![CDATA[<font color=\'#999999\'>No meetings before </font>]]></Data>%1$s</string>
+    <string name="webex_participant">Participants</string>
+    <string name="webex_password_invalid">Passwords only contain numbers and letters</string>
+    <string name="webex_duration_time">Duration</string>
+    <string name="webex_schedule_meeting">Schedule Meeting</string>
+    <string name="webex_my_meeting">My Meetings</string>
 
 </resources>

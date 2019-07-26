@@ -1,6 +1,11 @@
 package com.inspur.emmcloud.ui.chat;
 
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.SystemClock;
+import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,12 +19,16 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.VoiceCommunicationMemberAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.ResolutionUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
+import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
@@ -54,6 +63,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     public static final int COME_BACK_FROM_SERVICE = 3;//预留从小窗口回到聊天页面的状态
     private static final int EXCEPTION_STATE = -1;
     private static int STATE = -1;
+    private static final int REQUEST_WINDOW_PERMISSION = 100;//请求悬浮窗权限
     @BindView(R.id.ll_voice_communication_invite)
     LinearLayout inviteeLinearLayout;
     @BindView(R.id.img_user_head)
@@ -470,12 +480,43 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 break;
             case R.id.img_voice_communication_pack_up:
                 saveCommunicationData();
+                if (Build.VERSION.SDK_INT >= 23) {
+                    if (Settings.canDrawOverlays(this)) {
+                        SuspensionWindowManagerUtils.getInstance().showCommunicationSmallWindow(this, ResolutionUtils.getWidth(this),
+                                Long.parseLong(TimeUtils.getChronometerSeconds(communicationTimeChronometer.getText().toString())));
+                        finish();
+                    } else {
+                        new CustomDialog.MessageDialogBuilder(ChannelVoiceCommunicationActivity.this)
+                                .setMessage(getString(R.string.permission_grant_window_alert, AppUtils.getAppName(ChannelVoiceCommunicationActivity.this)))
+                                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Uri uri = Uri.parse("package:" + getPackageName());
+                                        Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, uri);
+                                        startActivityForResult(intent, REQUEST_WINDOW_PERMISSION);
+                                    }
+                                })
+                                .show();
+                    }
+                }
 //                createCommunicationService();
-                SuspensionWindowManagerUtils.getInstance().showCommunicationSmallWindow(this, ResolutionUtils.getWidth(this), Long.parseLong(TimeUtils.getChronometerSeconds(communicationTimeChronometer.getText().toString())));
-                finish();
                 break;
             default:
                 break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_WINDOW_PERMISSION) {
+            if (Build.VERSION.SDK_INT >= 23 && Settings.canDrawOverlays(this)) {
+                SuspensionWindowManagerUtils.getInstance().showCommunicationSmallWindow(this, ResolutionUtils.getWidth(this),
+                        Long.parseLong(TimeUtils.getChronometerSeconds(communicationTimeChronometer.getText().toString())));
+                finish();
+            } else {
+                ToastUtils.show(getString(R.string.permission_grant_window_fail, AppUtils.getAppName(ChannelVoiceCommunicationActivity.this)));
+            }
         }
     }
 
@@ -490,6 +531,16 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         voiceCommunicationUtils.setInviteeInfoBean(inviteeInfoBean);
         voiceCommunicationUtils.setUserCount(userCount);
     }
+
+//    /**
+//     * 创建通话小窗口
+//     */
+//    public void createCommunicationService(){
+//        Intent intent = new Intent(this,VoiceHoldService.class);
+//        intent.putExtra(VOICE_TIME, Long.parseLong(TimeUtils.getChronometerSeconds(communicationTimeChronometer.getText().toString())));
+//        intent.putExtra(SCREEN_SIZE, ResolutionUtils.getWidth(this));
+//        startService(intent);
+//    }
 
     /**
      * 修改Image选中状态和textView属性
@@ -522,7 +573,9 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
      */
     private void setInviterInfo(GetVoiceCommunicationResult getVoiceCommunicationResult) {
         VoiceCommunicationJoinChannelInfoBean infoBean = getVoiceCommunicationResult.getVoiceCommunicationJoinChannelInfoBeanList().get(0);
-        ImageDisplayUtils.getInstance().displayImage(userHeadImg, infoBean.getHeadImageUrl(), R.drawable.icon_person_default);
+        //头像源数据修改为本地，注释掉的是从接口中读取的url
+//        ImageDisplayUtils.getInstance().displayImage(userHeadImg, infoBean.getHeadImageUrl(), R.drawable.icon_person_default);
+        ImageDisplayUtils.getInstance().displayImage(userHeadImg, APIUri.getUserIconUrl(this, infoBean.getUserId()), R.drawable.icon_person_default);
         userNameTv.setText(infoBean.getUserName());
     }
 
@@ -541,6 +594,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         }
         return null;
     }
+
 
     class WebService extends APIInterfaceInstance {
         @Override
@@ -584,6 +638,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         @Override
         public void returnGetVoiceCommunicationChannelInfoFail(String error, int errorCode) {
             WebServiceMiddleUtils.hand(ChannelVoiceCommunicationActivity.this, error, errorCode);
+            finish();
         }
 
         @Override
