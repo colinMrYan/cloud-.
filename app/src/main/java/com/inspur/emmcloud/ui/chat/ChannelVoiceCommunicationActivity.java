@@ -1,6 +1,11 @@
 package com.inspur.emmcloud.ui.chat;
 
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.SystemClock;
+import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,14 +19,16 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.VoiceCommunicationMemberAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
-import com.inspur.emmcloud.baselib.util.JSONUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ResolutionUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
+import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
@@ -56,6 +63,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     public static final int COME_BACK_FROM_SERVICE = 3;//预留从小窗口回到聊天页面的状态
     private static final int EXCEPTION_STATE = -1;
     private static int STATE = -1;
+    private static final int REQUEST_WINDOW_PERMISSION = 100;//请求悬浮窗权限
     @BindView(R.id.ll_voice_communication_invite)
     LinearLayout inviteeLinearLayout;
     @BindView(R.id.img_user_head)
@@ -272,7 +280,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         muteImg.setClickable(state == COMMUNICATION_LAYOUT_STATE);
 
         //启用悬浮窗打开这里
-//        packUpImg.setVisibility(state == COMMUNICATION_LAYOUT_STATE ? View.VISIBLE : View.GONE);
+        packUpImg.setVisibility(state == COMMUNICATION_LAYOUT_STATE ? View.VISIBLE : View.GONE);
 
         communicationStateTv.setText(state == INVITER_LAYOUT_STATE ? getString(R.string.voice_communication_dialog) : (state == INVITEE_LAYOUT_STATE ? getString(R.string.voice_communication_waitting_answer) : (state == COMMUNICATION_LAYOUT_STATE ? getString(R.string.voice_communicaiton_watting_talking) : "")));
         if (state == COMMUNICATION_LAYOUT_STATE) {
@@ -472,27 +480,43 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 break;
             case R.id.img_voice_communication_pack_up:
                 saveCommunicationData();
+                if (Build.VERSION.SDK_INT >= 23) {
+                    if (Settings.canDrawOverlays(this)) {
+                        SuspensionWindowManagerUtils.getInstance().showCommunicationSmallWindow(this, ResolutionUtils.getWidth(this),
+                                Long.parseLong(TimeUtils.getChronometerSeconds(communicationTimeChronometer.getText().toString())));
+                        finish();
+                    } else {
+                        new CustomDialog.MessageDialogBuilder(ChannelVoiceCommunicationActivity.this)
+                                .setMessage(getString(R.string.permission_grant_window_alert, AppUtils.getAppName(ChannelVoiceCommunicationActivity.this)))
+                                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Uri uri = Uri.parse("package:" + getPackageName());
+                                        Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, uri);
+                                        startActivityForResult(intent, REQUEST_WINDOW_PERMISSION);
+                                    }
+                                })
+                                .show();
+                    }
+                }
 //                createCommunicationService();
-
-//                final WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
-//                final WindowManager.LayoutParams   params = new WindowManager.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){//6.0
-//                    params.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
-//                }else {
-//                    params.type =  WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
-//                }
-//                new Handler().postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        SuspensionWindowManagerUtils.getInstance().showCommunicationSmallWindow(BaseApplication.getInstance(), ResolutionUtils.getWidth(MyApplication.getInstance()), Long.parseLong(TimeUtils.getChronometerSeconds(communicationTimeChronometer.getText().toString())));
-//                        finish();
-//                    }
-//                },200);
-                SuspensionWindowManagerUtils.getInstance().showCommunicationSmallWindow(this, ResolutionUtils.getWidth(this), Long.parseLong(TimeUtils.getChronometerSeconds(communicationTimeChronometer.getText().toString())));
-                finish();
                 break;
             default:
                 break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_WINDOW_PERMISSION) {
+            if (Build.VERSION.SDK_INT >= 23 && Settings.canDrawOverlays(this)) {
+                SuspensionWindowManagerUtils.getInstance().showCommunicationSmallWindow(this, ResolutionUtils.getWidth(this),
+                        Long.parseLong(TimeUtils.getChronometerSeconds(communicationTimeChronometer.getText().toString())));
+                finish();
+            } else {
+                ToastUtils.show(getString(R.string.permission_grant_window_fail, AppUtils.getAppName(ChannelVoiceCommunicationActivity.this)));
+            }
         }
     }
 
@@ -513,7 +537,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
 //     */
 //    public void createCommunicationService(){
 //        Intent intent = new Intent(this,VoiceHoldService.class);
-//        intent.putExtra(VOICE_TIME, Long.parseLong(TimeUtils.getChronometerSeconds(communicationTimeChronometer.get)));
+//        intent.putExtra(VOICE_TIME, Long.parseLong(TimeUtils.getChronometerSeconds(communicationTimeChronometer.getText().toString())));
 //        intent.putExtra(SCREEN_SIZE, ResolutionUtils.getWidth(this));
 //        startService(intent);
 //    }
@@ -549,8 +573,9 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
      */
     private void setInviterInfo(GetVoiceCommunicationResult getVoiceCommunicationResult) {
         VoiceCommunicationJoinChannelInfoBean infoBean = getVoiceCommunicationResult.getVoiceCommunicationJoinChannelInfoBeanList().get(0);
-        ImageDisplayUtils.getInstance().displayImage(userHeadImg, infoBean.getHeadImageUrl(), R.drawable.icon_person_default);
-//        ImageDisplayUtils.getInstance().displayImage(userHeadImg, APIUri.getUserIconUrl(this,infoBean.getUserId()), R.drawable.icon_person_default);
+        //头像源数据修改为本地，注释掉的是从接口中读取的url
+//        ImageDisplayUtils.getInstance().displayImage(userHeadImg, infoBean.getHeadImageUrl(), R.drawable.icon_person_default);
+        ImageDisplayUtils.getInstance().displayImage(userHeadImg, APIUri.getUserIconUrl(this, infoBean.getUserId()), R.drawable.icon_person_default);
         userNameTv.setText(infoBean.getUserName());
     }
 
@@ -570,6 +595,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         return null;
     }
 
+
     class WebService extends APIInterfaceInstance {
         @Override
         public void returnGetVoiceCommunicationResultSuccess(GetVoiceCommunicationResult getVoiceCommunicationResult) {
@@ -581,7 +607,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                         getVoiceCommunicationResult.getChannelId(), voiceCommunicationJoinChannelInfoBean.getUserId(), voiceCommunicationJoinChannelInfoBean.getAgoraUid());
             }
             voiceCommunicationMemberList.addAll(getVoiceCommunicationResult.getVoiceCommunicationJoinChannelInfoBeanList());
-            LogUtils.YfcDebug("成员信息：" + JSONUtils.toJSONString(voiceCommunicationMemberList));
         }
 
         @Override
@@ -613,6 +638,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         @Override
         public void returnGetVoiceCommunicationChannelInfoFail(String error, int errorCode) {
             WebServiceMiddleUtils.hand(ChannelVoiceCommunicationActivity.this, error, errorCode);
+            finish();
         }
 
         @Override

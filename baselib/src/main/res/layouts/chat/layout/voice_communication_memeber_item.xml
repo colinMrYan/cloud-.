@@ -6,8 +6,8 @@
 
     <com.inspur.emmcloud.baselib.widget.CircleTextImageView
         android:id="@+id/img_voice_communication_member_head"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:src="@drawable/ic_app_default" />
 
     <TextView
