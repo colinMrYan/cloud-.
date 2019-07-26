@@ -426,7 +426,7 @@
     <string name="schedule_meeting_select_record_holder_title">選擇會議記錄人</string>
     <string name="schedule_meeting_select_conference_title">選擇會議聯絡人</string>
     <string name="schedule_meeting_add_note">備註</string>
-    <string name="schedule_meeting_add_alert_time">會前提醒</string>
+    <string name="schedule_meeting_add_alert_time">提醒</string>
     <string name="schedule_meeting_history">歷史會議</string>
     <string name="schedule_meeting_search">蒐索會議</string>
     <string name="schedule_meeting_booking_room">預定會議室</string>
@@ -434,8 +434,8 @@
     <string name="schedule_meeting_in_meeting">會議中</string>
     <string name="schedule_meeting_be_free">空閒</string>
     <string name="schedule_choose_common_office">常用辦公地點</string>
-    <string name="schedule_meeting_change">修改</string>
-    <string name="schedule_meeting_cancel">取消</string>
+    <string name="schedule_meeting_change">修改會議</string>
+    <string name="schedule_meeting_cancel">取消會議</string>
     <string name="schedule_meeting_booking_detail">會議詳情</string>
     <string name="schedule_meeting_my_create">我創建的：</string>
     <string name="schedule_meeting_my_take_part_in">我參與的：</string>
@@ -845,6 +845,9 @@
     <string name="meeting_room_time_late">開始時間不能早於當前時間</string>
     <string name="meeting_create_group_chat">發起群聊</string>
     <string name="meeting_cancel_the_meeting">確定取消會議?</string>
+    <string name="schedule_add">新建</string>
+    <string name="schedule_update">更新</string>
+    <string name="schedule_add_position">请输入地点...</string>
 
 
     <!-- 会议预定错误提示 -->

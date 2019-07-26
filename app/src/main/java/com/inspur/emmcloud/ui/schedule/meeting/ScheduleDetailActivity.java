@@ -62,7 +62,7 @@ import butterknife.ButterKnife;
  */
 public class ScheduleDetailActivity extends BaseActivity {
 
-    public static final String EXTRA_MEETING_ENTITY = "extra_meeting_entity";
+    public static final String EXTRA_SCHEDULE_ENTITY = "extra_schedule_entity";
     private static final int MEETING_ATTENDEE = 0;
     private static final int MEETING_RECORD_HOLDER = 1;
     private static final int MEETING_CONTACT = 2;
@@ -74,7 +74,6 @@ public class ScheduleDetailActivity extends BaseActivity {
     /**
      * 日程相关
      **/
-    private static final String EXTRA_SCHEDULE_CALENDAR_EVENT = "schedule_calendar_event";
     @BindView(R.id.tv_meeting_title)
     TextView meetingTitleText;
     @BindView(R.id.tv_meeting_time)
@@ -141,7 +140,7 @@ public class ScheduleDetailActivity extends BaseActivity {
         scheduleApiService = new ScheduleApiService(this);
         scheduleApiService.setAPIInterface(new WebService());
         meetingId = getIntent().getStringExtra(Constant.SCHEDULE_QUERY); //来自通知
-        scheduleEvent = (Schedule) getIntent().getSerializableExtra(EXTRA_MEETING_ENTITY); //来自列表
+        scheduleEvent = (Schedule) getIntent().getSerializableExtra(EXTRA_SCHEDULE_ENTITY); //来自列表
         isHistoryMeeting = getIntent().getBooleanExtra(Constant.EXTRA_IS_HISTORY_MEETING, false);
         info.responseType = Participant.CALENDAR_RESPONSE_TYPE_UNKNOWN; //默认参会状态未知
         isFromCalendar = getIntent().getBooleanExtra(Constant.EXTRA_IS_FROM_CALENDAR, false);
@@ -162,8 +161,8 @@ public class ScheduleDetailActivity extends BaseActivity {
             if (!TextUtils.isEmpty(calendarId)) {        //来自通知
                 getDbCalendarFromId();
                 getNetCalendarFromId();
-            } else if (getIntent().hasExtra(EXTRA_SCHEDULE_CALENDAR_EVENT)) {  //通知没有，列表页跳转过来
-                scheduleEvent = (Schedule) getIntent().getSerializableExtra(EXTRA_SCHEDULE_CALENDAR_EVENT);
+            } else if (getIntent().hasExtra(EXTRA_SCHEDULE_ENTITY)) {  //通知没有，列表页跳转过来
+                scheduleEvent = (Schedule) getIntent().getSerializableExtra(EXTRA_SCHEDULE_ENTITY);
                 initViews();
             }
         }
@@ -250,10 +249,10 @@ public class ScheduleDetailActivity extends BaseActivity {
     private void initDiffStatus() {
         if (isFromCalendar) {  //来自日程
             if (scheduleEvent.canModify()) {
-                moreTextList.add(getString(R.string.schedule_meeting_change));
+                moreTextList.add(getString(R.string.schedule_calendar_modify));
             }
             if (scheduleEvent.canDelete()) {
-                moreTextList.add(getString(R.string.schedule_meeting_cancel));
+                moreTextList.add(getString(R.string.schedule_calendar_delete));
             }
 
             if (!scheduleEvent.canModify() && !scheduleEvent.canDelete()) {
@@ -430,7 +429,7 @@ public class ScheduleDetailActivity extends BaseActivity {
         } else {
             LogUtils.LbcDebug("meeting == null");
         }
-        bundle.putSerializable(EXTRA_MEETING_ENTITY, scheduleEvent);
+        bundle.putSerializable(EXTRA_SCHEDULE_ENTITY, scheduleEvent);
         switch (v.getId()) {
             case R.id.ibt_back:
                 finish();
@@ -530,7 +529,7 @@ public class ScheduleDetailActivity extends BaseActivity {
                 String tag = (String) itemView.getTag();
                 if (tag.equals(getString(R.string.schedule_meeting_change))) {
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable(EXTRA_SCHEDULE_CALENDAR_EVENT, scheduleEvent);
+                    bundle.putSerializable(ScheduleAddActivity.EXTRA_SCHEDULE_CALENDAR_EVENT, scheduleEvent);
                     IntentUtils.startActivity(ScheduleDetailActivity.this, ScheduleAddActivity.class, bundle, true);
                 } else if (tag.equals(getString(R.string.schedule_meeting_cancel))) {
                     showConfirmClearDialog(scheduleEvent);
