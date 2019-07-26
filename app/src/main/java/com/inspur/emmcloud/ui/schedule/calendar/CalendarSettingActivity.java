@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.ui.schedule.calendar;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.SwitchCompat;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
@@ -41,6 +43,7 @@ public class CalendarSettingActivity extends BaseActivity {
     public static final String SHOW_TYPE_LIST = "show_type_list";
     public static final String SHOW_TYPE_DAY_VIEW = "show_type_day_view";
     private final int REQUEST_ADD_CALENDAR = 1;
+    private final int REQUEST_MODIFY_CALENDAR = 2;
     @BindView(R.id.listview_list_calendars)
     ScrollViewWithListView calendarsListView;
     @BindView(R.id.iv_list_view_select)
@@ -51,6 +54,7 @@ public class CalendarSettingActivity extends BaseActivity {
     LinearLayout addCalendarLayout;
     private List<ScheduleCalendar> scheduleCalendarList = new ArrayList<>();
     private CalendarAdapter calendarAdapter;
+    private ScheduleCalendar currentScheduleCalendar;
 
     @Override
     public void onCreate() {
@@ -110,20 +114,30 @@ public class CalendarSettingActivity extends BaseActivity {
         super.onBackPressed();
     }
 
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && requestCode == REQUEST_ADD_CALENDAR) {
+        if (resultCode == RESULT_OK) {
             String account = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, "");
             String password = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_PASSWORD, "");
             ScheduleCalendar scheduleCalendar = new ScheduleCalendar(CalendarColor.GREEN, account, account, password, AccountType.EXCHANGE);
-            if (!scheduleCalendarList.contains(scheduleCalendar)) {
+            if (requestCode == REQUEST_ADD_CALENDAR) {
+                if (!scheduleCalendarList.contains(scheduleCalendar)) {
+                    scheduleCalendarList.add(scheduleCalendar);
+                    ScheduleCalendarCacheUtils.saveScheduleCalendar(BaseApplication.getInstance(), scheduleCalendar);
+                    calendarAdapter.notifyDataSetChanged();
+                }
+            } else if (requestCode == REQUEST_MODIFY_CALENDAR) {
+                scheduleCalendarList.remove(currentScheduleCalendar);
                 scheduleCalendarList.add(scheduleCalendar);
+                ScheduleCalendarCacheUtils.removeScheduleCalendar(BaseApplication.getInstance(), currentScheduleCalendar);
                 ScheduleCalendarCacheUtils.saveScheduleCalendar(BaseApplication.getInstance(), scheduleCalendar);
                 calendarAdapter.notifyDataSetChanged();
             }
 
         }
+
     }
 
     //处理弹框点击事件
@@ -133,8 +147,10 @@ public class CalendarSettingActivity extends BaseActivity {
             scheduleCalendarList.remove(position);
             calendarAdapter.notifyDataSetChanged();
         } else if (action.equals(getString(R.string.schedule_modify_ac))) {
-            Intent intent = new Intent(CalendarSettingActivity.this, CalendarAccountSelectActivity.class);
-            startActivityForResult(intent, REQUEST_ADD_CALENDAR);
+            currentScheduleCalendar = scheduleCalendarList.get(position);
+            Bundle bundle = new Bundle();
+            bundle.putString("from", "schedule_exchange_login");
+            ARouter.getInstance().build(Constant.AROUTER_CLASS_MAIL_LOGIN).with(bundle).navigation(CalendarSettingActivity.this, REQUEST_MODIFY_CALENDAR);
         }
     }
 

@@ -180,9 +180,9 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
      * 初始化会议数据
      */
     private void initMeetingData() {
-        isEventEditModel = getIntent().hasExtra(ScheduleDetailActivity.EXTRA_SCHEDULE_ENTITY);
+        isEventEditModel = getIntent().hasExtra(EXTRA_SCHEDULE_CALENDAR_EVENT);
         if (isEventEditModel) {
-            schedule = (Schedule) getIntent().getSerializableExtra(ScheduleDetailActivity.EXTRA_SCHEDULE_ENTITY);
+            schedule = (Schedule) getIntent().getSerializableExtra(EXTRA_SCHEDULE_CALENDAR_EVENT);
             initScheduleDataByEntity();
         } else {
             String myUid = MyApplication.getInstance().getUid();
@@ -721,12 +721,12 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
         schedule.setEndTime(endTimeCalendar.getTimeInMillis());
         schedule.setNote(note);
         schedule.setLocation(location != null ? JSONUtils.toJSONString(location) : "");
-        if (scheduleCalendar.getAcType().equals(AccountType.EXCHANGE)) {
+        if (scheduleCalendar.getAcType().equals(AccountType.EXCHANGE.toString())) {
             schedule.setType("exchange");
-        } else if (scheduleCalendar.getAcType().equals(AccountType.APP_SCHEDULE)) {
+        } else if (scheduleCalendar.getAcType().equals(AccountType.APP_SCHEDULE.toString())) {
             schedule.setType("default");
             schedule.setMeeting(false);
-        } else if (scheduleCalendar.getAcType().equals(AccountType.APP_MEETING)) {
+        } else if (scheduleCalendar.getAcType().equals(AccountType.APP_MEETING.toString())) {
             schedule.setType("meeting");
             schedule.setMeeting(true);
         }
@@ -777,6 +777,7 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
             loadingDlg.show();
             schedule.setLastTime(System.currentTimeMillis());
+            apiService.updateSchedule(schedule.toCalendarEventJSONObject().toString(), schedule);
         }
     }
 
