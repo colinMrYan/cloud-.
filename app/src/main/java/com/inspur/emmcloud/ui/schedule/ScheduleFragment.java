@@ -43,8 +43,8 @@ import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.componentservice.communication.CommunicationService;
 import com.inspur.emmcloud.componentservice.communication.ShareToConversationListener;
 import com.inspur.emmcloud.interf.ScheduleEventListener;
-import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarSettingActivity;
+import com.inspur.emmcloud.ui.schedule.meeting.MeetingAddActivity;
 import com.inspur.emmcloud.ui.schedule.meeting.MeetingDetailActivity;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.cache.HolidayCacheUtils;
@@ -379,9 +379,9 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
                 break;
             case Schedule.TYPE_CALENDAR:
                 Schedule schedule = (Schedule) event.getEventObj();
-                bundle.putSerializable(CalendarAddActivity.EXTRA_SCHEDULE_CALENDAR_EVENT, schedule);
-                bundle.putBoolean(Constant.EXTRA_IS_FROM_CALENDAR, true);
-                IntentUtils.startActivity(getActivity(), MeetingDetailActivity.class, bundle);
+                bundle.putSerializable(MeetingAddActivity.EXTRA_SCHEDULE_CALENDAR_EVENT, schedule);
+                bundle.putBoolean(MeetingAddActivity.EXTRA_EVENT_TYPE, false);
+                IntentUtils.startActivity(getActivity(), MeetingAddActivity.class, bundle);
                 break;
             case Schedule.TYPE_TASK:
                 break;
