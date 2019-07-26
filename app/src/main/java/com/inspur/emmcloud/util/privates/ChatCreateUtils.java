@@ -17,6 +17,7 @@ import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
@@ -26,7 +27,7 @@ import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.schedule.Participant;
-import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
+import com.inspur.emmcloud.bean.schedule.Schedule;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
@@ -49,7 +50,7 @@ import java.util.TreeSet;
 public class ChatCreateUtils {
     JSONArray peopleArray;
     ICreateGroupChatListener iCreateGroupChatListener;
-    Meeting meeting;
+    Schedule meeting;
     private Context context;
     private OnCreateDirectChannelListener onCreateDirectChannelListener;
     private OnCreateGroupChannelListener onCreateGroupChannelListener;
@@ -145,7 +146,7 @@ public class ChatCreateUtils {
      * @param chatGroupId CID 群聊ID
      * @param listener    成功失败回调 可以传null
      */
-    public void startGroupChat(Activity context, Meeting meeting, String chatGroupId, ICreateGroupChatListener listener) {
+    public void startGroupChat(Activity context, Schedule meeting, String chatGroupId, ICreateGroupChatListener listener) {
         this.context = context;
         this.iCreateGroupChatListener = listener;
 
@@ -154,6 +155,9 @@ public class ChatCreateUtils {
         this.meeting = meeting;
         if (meeting == null) return;
         peopleArray = getPeopleArray(meeting);
+        if (peopleArray.length() < 2) {
+            ToastUtils.show("群聊至少需要2人及以上");
+        }
 
         if (StringUtils.isBlank(chatGroupId)) {
             loadingDlg = new LoadingDialog(context);
@@ -168,7 +172,7 @@ public class ChatCreateUtils {
         }
     }
 
-    private JSONArray getPeopleArray(Meeting meeting) {
+    private JSONArray getPeopleArray(Schedule meeting) {
         List<Participant> totalList = deleteRepeatData(meeting.getAllParticipantList(), meeting.getOwner());
         JSONArray peopleArray = new JSONArray();
         for (Participant participant : totalList) {

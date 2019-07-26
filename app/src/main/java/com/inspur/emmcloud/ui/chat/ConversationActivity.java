@@ -403,28 +403,48 @@ public class ConversationActivity extends ConversationBaseActivity {
             case "mail":
                 if (conversation == null) return;
                 List<ContactUser> totalList = ContactUserCacheUtils.getContactUserListById(conversation.getMemberList());
-                List<ContactUser> userList = new ArrayList<>();
+                final List<ContactUser> userList = new ArrayList<>();
                 for (ContactUser user : totalList) {
                     if (!BaseApplication.getInstance().getUid().equals(user.getId())) {
                         userList.add(user);
                     }
                 }
-                if (userList.size() > 50) {
-                    ToastUtils.show("收件人超过50人，确定发送么？");
+                if (userList.size() > 3) {
+                    new CustomDialog.MessageDialogBuilder(this)
+                            .setMessage("收件人超过50人，确定发送么？")
+                            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    sendEmail(userList);
+                                }
+                            })
+                            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            })
+                            .show();
+                } else {
+                    sendEmail(userList);
                 }
-                String mailListStr = userList.get(0).getEmail();
-                StringBuilder builder = new StringBuilder(mailListStr);
-                for (int i = 1; i < userList.size(); i++) {
-                    builder.append(",");
-                    builder.append(userList.get(i).getEmail());
-                }
-                mailListStr = builder.toString();
 
-                Intent intent = new Intent(Intent.ACTION_SENDTO);
-                intent.setData(Uri.parse("mailto:" + mailListStr));
-                startActivity(intent);
                 break;
         }
+    }
+
+    private void sendEmail(List<ContactUser> userList) {
+        String mailListStr = userList.get(0).getEmail();
+        StringBuilder builder = new StringBuilder(mailListStr);
+        for (int i = 1; i < userList.size(); i++) {
+            builder.append(",");
+            builder.append(userList.get(i).getEmail());
+        }
+        mailListStr = builder.toString();
+
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:" + mailListStr));
+        startActivity(intent);
     }
 
 

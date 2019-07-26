@@ -406,7 +406,8 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
             case Schedule.TYPE_CALENDAR:
                 Schedule schedule = (Schedule) event.getEventObj();
                 bundle.putSerializable(CalendarAddActivity.EXTRA_SCHEDULE_CALENDAR_EVENT, schedule);
-                IntentUtils.startActivity(getActivity(), CalendarAddActivity.class, bundle);
+                bundle.putBoolean(Constant.EXTRA_IS_FROM_CALENDAR, true);
+                IntentUtils.startActivity(getActivity(), MeetingDetailActivity.class, bundle);
                 break;
             case Schedule.TYPE_TASK:
                 break;

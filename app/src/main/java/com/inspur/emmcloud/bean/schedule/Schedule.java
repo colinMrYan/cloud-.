@@ -404,4 +404,14 @@ public class Schedule implements Serializable {
         return jsonObject;
     }
 
+    //修改会议  日程
+    public boolean canModify() {
+        return true;
+    }
+
+    //删除会议  日程
+    public boolean canDelete() {
+        return true;
+    }
+
 }

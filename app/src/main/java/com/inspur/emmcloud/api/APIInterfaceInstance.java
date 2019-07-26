@@ -1694,7 +1694,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnDelMeetingSuccess(Meeting meeting) {
+    public void returnDelMeetingSuccess(Schedule meeting) {
 
     }
 
