@@ -733,9 +733,9 @@ public class MeetingAddActivity extends BaseActivity {
         Meeting meeting = getMeeting();
         loadingDlg.show();
         if (isEventEditModel) {
-            apiService.updateMeeting(meeting.toJSONObject().toString(), scheduleCalendar.getAcType().equals(AccountType.EXCHANGE) ? true : false);
+            //  apiService.updateMeeting(meeting.toJSONObject().toString(), scheduleCalendar.getAcType().equals(AccountType.EXCHANGE) ? true : false);
         } else {
-            apiService.addMeeting(meeting.toJSONObject().toString(), scheduleCalendar.getAcType().equals(AccountType.EXCHANGE) ? true : false);
+            //apiService.addMeeting(meeting.toJSONObject().toString(), scheduleCalendar.getAcType().equals(AccountType.EXCHANGE) ? true : false);
         }
     }
 
@@ -751,7 +751,17 @@ public class MeetingAddActivity extends BaseActivity {
         schedule.setState(-1);
         schedule.setStartTime(startTimeCalendar.getTimeInMillis());
         schedule.setEndTime(endTimeCalendar.getTimeInMillis());
-        schedule.setType("default");
+        schedule.setOwner(owner);
+        schedule.setLocation(location != null ? JSONUtils.toJSONString(location) : "");
+        if (scheduleCalendar.getAcType().equals(AccountType.EXCHANGE)) {
+            schedule.setType("exchange");
+        } else if (scheduleCalendar.getAcType().equals(AccountType.APP_SCHEDULE)) {
+            schedule.setType("default");
+            schedule.setMeeting(false);
+        } else if (scheduleCalendar.getAcType().equals(AccountType.APP_MEETING)) {
+            schedule.setType("meeting");
+            schedule.setMeeting(true);
+        }
         if (remindEvent.getAdvanceTimeSpan() != -1) {
             schedule.setRemindEvent(remindEvent.toJSONObject().toString());
         }
@@ -770,7 +780,8 @@ public class MeetingAddActivity extends BaseActivity {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
             loadingDlg.show();
             schedule.setLastTime(System.currentTimeMillis());
-            apiService.updateSchedule(schedule.toCalendarEventJSONObject().toString(), false);
+            // apiService.updateSchedule(schedule,scheduleCalendar);
+            //apiService.updateSchedule(schedule.toCalendarEventJSONObject().toString(), false);
         }
     }
 
@@ -782,11 +793,19 @@ public class MeetingAddActivity extends BaseActivity {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
             try {
                 loadingDlg.show();
-                apiService.addSchedule(schedule.toCalendarEventJSONObject().toString(), false);
+                // apiService.addSchedule(schedule.toCalendarEventJSONObject().toString(), false);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    private void updateSchedule() {
+
+    }
+
+    private void addSchedule() {
+
     }
 
     /**
