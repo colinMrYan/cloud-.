@@ -25,7 +25,6 @@ import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseFragment;
 import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
-import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarSettingActivity;
 import com.inspur.emmcloud.ui.schedule.meeting.MeetingAddActivity;
 import com.inspur.emmcloud.ui.schedule.meeting.MeetingFragment;
@@ -252,7 +251,8 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
                 switch (menuItem.getItemId()) {
                     case 1:
                         recordUserClickWorkFunction(PV_COLLECTION_CAL);
-                        IntentUtils.startActivity(getActivity(), CalendarAddActivity.class, bundle);
+                        bundle.putBoolean(MeetingAddActivity.EXTRA_EVENT_TYPE, false);
+                        IntentUtils.startActivity(getActivity(), MeetingAddActivity.class, bundle);
                         break;
                     case 2:
                         if(viewPager.getCurrentItem() == 2){

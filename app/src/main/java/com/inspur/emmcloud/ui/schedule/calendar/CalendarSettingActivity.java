@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.schedule.calendar;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.widget.SwitchCompat;
 import android.view.View;
@@ -14,6 +15,7 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.widget.ScrollViewWithListView;
+import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
@@ -159,6 +161,32 @@ public class CalendarSettingActivity extends BaseActivity {
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     scheduleCalendar.setOpen(isChecked);
                     ScheduleCalendarCacheUtils.saveScheduleCalendar(BaseApplication.getInstance(), scheduleCalendar);
+                }
+            });
+            convertView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    if (scheduleCalendarList.get(position).getAcType().equals(AccountType.EXCHANGE.toString())) {
+                        new CustomDialog.MessageDialogBuilder(CalendarSettingActivity.this)
+                                .setMessage("确定删除  " + CalendarUtils.getScheduleCalendarShowName(scheduleCalendarList.get(position)) + " ?")
+                                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                        ScheduleCalendarCacheUtils.removeScheduleCalendar(getApplicationContext(), scheduleCalendarList.get(position));
+                                        scheduleCalendarList.remove(position);
+                                        calendarAdapter.notifyDataSetChanged();
+                                    }
+                                })
+                                .show();
+                    }
+                    return true;
                 }
             });
             CalendarColor calendarColor = CalendarColor.getCalendarColor(scheduleCalendar.getColor());

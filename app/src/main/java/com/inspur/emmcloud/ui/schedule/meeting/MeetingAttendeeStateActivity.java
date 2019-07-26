@@ -59,7 +59,7 @@ public class MeetingAttendeeStateActivity extends BaseActivity implements SwipeR
     @Override
     public void onCreate() {
         ButterKnife.bind(this);
-        meeting = (Meeting) getIntent().getSerializableExtra(MeetingDetailActivity.EXTRA_MEETING_ENTITY); //来自列表
+        meeting = (Meeting) getIntent().getSerializableExtra(ScheduleDetailActivity.EXTRA_MEETING_ENTITY); //来自列表
         init();
     }
 

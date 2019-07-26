@@ -259,8 +259,8 @@ public class MeetingRoomInfoActivity extends BaseActivity {
                         finish();
                     } else {
                         Bundle bundle = new Bundle();
-                        bundle.putSerializable(com.inspur.emmcloud.ui.schedule.meeting.MeetingDetailActivity.EXTRA_MEETING_ENTITY, meeting);
-                        IntentUtils.startActivity(MeetingRoomInfoActivity.this, com.inspur.emmcloud.ui.schedule.meeting.MeetingDetailActivity.class, bundle);
+                        bundle.putSerializable(ScheduleDetailActivity.EXTRA_MEETING_ENTITY, meeting);
+                        IntentUtils.startActivity(MeetingRoomInfoActivity.this, ScheduleDetailActivity.class, bundle);
                     }
                 }
             });
@@ -316,7 +316,7 @@ public class MeetingRoomInfoActivity extends BaseActivity {
     protected void showMeetingInfo(Meeting meeting) {
         Intent intent = new Intent();
         intent.putExtra("meeting", meeting);
-        intent.setClass(this, MeetingDetailActivity.class);
+        intent.setClass(this, ScheduleDetailActivity.class);
         startActivityForResult(intent, REQUEST_MEETING_INFO);
     }
 

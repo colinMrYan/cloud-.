@@ -82,6 +82,15 @@ public class ScheduleCalendarCacheUtils {
         return scheduleCalendarList;
     }
 
+    public static void removeScheduleCalendar(Context context, ScheduleCalendar scheduleCalendar) {
+        try {
+            DbCacheUtils.getDb(context).delete(scheduleCalendar);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
     public static List<ScheduleCalendar> getScheduleCalendarList(Context context, boolean isOpen) {
         boolean isEnableExchange = PreferencesByUserAndTanentUtils.getBoolean(BaseApplication.getInstance(), Constant.PREF_SCHEDULE_ENABLE_EXCHANGE, false);
         List<ScheduleCalendar> scheduleCalendarList = null;

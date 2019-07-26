@@ -43,9 +43,9 @@ import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.componentservice.communication.CommunicationService;
 import com.inspur.emmcloud.componentservice.communication.ShareToConversationListener;
 import com.inspur.emmcloud.interf.ScheduleEventListener;
-import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarSettingActivity;
-import com.inspur.emmcloud.ui.schedule.meeting.MeetingDetailActivity;
+import com.inspur.emmcloud.ui.schedule.meeting.MeetingAddActivity;
+import com.inspur.emmcloud.ui.schedule.meeting.ScheduleDetailActivity;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.cache.HolidayCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MeetingCacheUtils;
@@ -374,14 +374,14 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         switch (event.getEventType()) {
             case Schedule.TYPE_MEETING:
                 Meeting meeting = (Meeting) event.getEventObj();
-                bundle.putSerializable(MeetingDetailActivity.EXTRA_MEETING_ENTITY, meeting);
-                IntentUtils.startActivity(getActivity(), MeetingDetailActivity.class, bundle);
+                bundle.putSerializable(ScheduleDetailActivity.EXTRA_MEETING_ENTITY, meeting);
+                IntentUtils.startActivity(getActivity(), ScheduleDetailActivity.class, bundle);
                 break;
             case Schedule.TYPE_CALENDAR:
                 Schedule schedule = (Schedule) event.getEventObj();
-                bundle.putSerializable(CalendarAddActivity.EXTRA_SCHEDULE_CALENDAR_EVENT, schedule);
-                bundle.putBoolean(Constant.EXTRA_IS_FROM_CALENDAR, true);
-                IntentUtils.startActivity(getActivity(), MeetingDetailActivity.class, bundle);
+                bundle.putSerializable(MeetingAddActivity.EXTRA_SCHEDULE_CALENDAR_EVENT, schedule);
+                bundle.putBoolean(MeetingAddActivity.EXTRA_EVENT_TYPE, false);
+                IntentUtils.startActivity(getActivity(), MeetingAddActivity.class, bundle);
                 break;
             case Schedule.TYPE_TASK:
                 break;
