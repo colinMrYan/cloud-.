@@ -8,7 +8,6 @@ import android.support.v4.content.ContextCompat;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButtonDrawable;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
@@ -224,8 +223,8 @@ public class Event {
         return eventIconResId;
     }
 
-    public int getEventColorResId() {
-        int eventColorIconResId = -1;
+    public int getCalendarIconResId() {
+        int eventColorIconResId = R.drawable.schedule_calendar_type_blue;
         String scheduleCalendarId = ((Schedule) getEventObj()).getScheduleCalendar();
         ScheduleCalendar scheduleCalendar = ScheduleCalendarCacheUtils.getScheduleCalendar(BaseApplication.getInstance(), scheduleCalendarId);
         if (scheduleCalendar != null) {
@@ -255,8 +254,6 @@ public class Event {
         ScheduleCalendar scheduleCalendar = ScheduleCalendarCacheUtils.getScheduleCalendar(BaseApplication.getInstance(), scheduleCalendarId);
         if (scheduleCalendar != null) {
             CalendarColor calendarColor = CalendarColor.getCalendarColor(scheduleCalendar.getColor());
-            LogUtils.jasonDebug("calendarColor.eventBgNormalResId==" + calendarColor.eventBgNormalResId);
-            LogUtils.jasonDebug("calendarColor.eventBgNormalResId3333==" + R.drawable.schedule_calendar_view_event_bg_blue);
             return ContextCompat.getDrawable(BaseApplication.getInstance(), calendarColor.eventBgNormalResId);
         }
         return drawable;
