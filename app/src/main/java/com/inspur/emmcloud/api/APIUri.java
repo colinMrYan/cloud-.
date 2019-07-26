@@ -1562,12 +1562,12 @@ public class APIUri {
     }
 
     public static String getScheduleListUrl(ScheduleCalendar scheduleCalendar) {
-        String url = getScheduleBaseUrl() + "api/schedule/v6.0/ews/GetList?";
+        String url = getScheduleBaseUrl() + "api/schedule/v6.0/calendar/GetList?";
         if (scheduleCalendar != null) {
             AccountType accountType = AccountType.getAccountType(scheduleCalendar.getAcType());
             switch (accountType) {
                 case EXCHANGE:
-                    url = getScheduleBaseUrl() + "api/schedule/v6.0/calendar/GetList?";
+                    url = getScheduleBaseUrl() + "api/schedule/v6.0/ews/GetList?";
                     break;
                 default:
                     break;

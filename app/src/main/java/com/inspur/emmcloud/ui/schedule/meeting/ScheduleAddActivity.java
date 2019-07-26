@@ -164,9 +164,9 @@ public class ScheduleAddActivity extends BaseActivity {
      * 初始化会议数据
      */
     private void initMeetingData() {
-        isEventEditModel = getIntent().hasExtra(MeetingDetailActivity.EXTRA_MEETING_ENTITY);
+        isEventEditModel = getIntent().hasExtra(ScheduleDetailActivity.EXTRA_MEETING_ENTITY);
         if (isEventEditModel) {
-            schedule = (Schedule) getIntent().getSerializableExtra(MeetingDetailActivity.EXTRA_MEETING_ENTITY);
+            schedule = (Schedule) getIntent().getSerializableExtra(ScheduleDetailActivity.EXTRA_MEETING_ENTITY);
             initScheduleDataByEntity();
         } else {
             String myUid = MyApplication.getInstance().getUid();

@@ -44,6 +44,8 @@ import com.inspur.emmcloud.componentservice.communication.CommunicationService;
 import com.inspur.emmcloud.componentservice.communication.ShareToConversationListener;
 import com.inspur.emmcloud.interf.ScheduleEventListener;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarSettingActivity;
+import com.inspur.emmcloud.ui.schedule.meeting.MeetingAddActivity;
+import com.inspur.emmcloud.ui.schedule.meeting.ScheduleDetailActivity;
 import com.inspur.emmcloud.ui.schedule.meeting.MeetingDetailActivity;
 import com.inspur.emmcloud.ui.schedule.meeting.ScheduleAddActivity;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
@@ -374,9 +376,8 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         switch (event.getEventType()) {
             case Schedule.TYPE_MEETING:
                 Meeting meeting = (Meeting) event.getEventObj();
-                bundle.putSerializable(MeetingDetailActivity.EXTRA_MEETING_ENTITY, meeting);
-                bundle.putBoolean(ScheduleAddActivity.EXTRA_EVENT_TYPE_FROM_MEETING, true);
-                IntentUtils.startActivity(getActivity(), MeetingDetailActivity.class, bundle);
+                bundle.putSerializable(ScheduleDetailActivity.EXTRA_MEETING_ENTITY, meeting);
+                IntentUtils.startActivity(getActivity(), ScheduleDetailActivity.class, bundle);
                 break;
             case Schedule.TYPE_CALENDAR:
                 Schedule schedule = (Schedule) event.getEventObj();
@@ -509,16 +510,18 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
      */
     private void getScheduleList() {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
+            ScheduleCalendar appScheduleCalendar = null;
             boolean isContainAppSchedule = false;
             for (ScheduleCalendar scheduleCalendar : scheduleCalendarList) {
                 if (scheduleCalendar.getAcType().equals(AccountType.APP_MEETING.toString()) || scheduleCalendar.getAcType().equals(AccountType.APP_SCHEDULE.toString())) {
                     isContainAppSchedule = true;
+                    appScheduleCalendar = scheduleCalendar;
                     continue;
                 }
                 apiService.getScheduleList((Calendar) pageStartCalendar.clone(), (Calendar) pageEndCalendar.clone(), scheduleCalendar);
             }
             if (isContainAppSchedule) {
-                apiService.getScheduleList((Calendar) pageStartCalendar.clone(), (Calendar) pageEndCalendar.clone(), null);
+                apiService.getScheduleList((Calendar) pageStartCalendar.clone(), (Calendar) pageEndCalendar.clone(), appScheduleCalendar);
             }
 
         }

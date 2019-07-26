@@ -13,8 +13,10 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.bean.schedule.Participant;
+import com.inspur.emmcloud.bean.schedule.Schedule;
 import com.inspur.emmcloud.bean.schedule.meeting.ReplyAttendResult;
 
 import java.util.ArrayList;
@@ -23,10 +25,10 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MeetingDetailReplyActivity extends BaseActivity {
+public class ScheduleDetailReplyActivity extends BaseActivity {
     @BindView(R.id.lv_meeting_reply)
     ListView listView;
-    private String meetingId;
+    private Schedule schedule;
     private List<ReplyAttendResult> dataList = new ArrayList<>();
     private List<String> responseTypeList = new ArrayList<>();
     private LoadingDialog loadingDlg;
@@ -50,7 +52,7 @@ public class MeetingDetailReplyActivity extends BaseActivity {
 
     private void initData() {
         ReplyAttendResult originData = (ReplyAttendResult) getIntent().getSerializableExtra("OriginReplyData");
-        meetingId = getIntent().getStringExtra("meetingId");
+        schedule = (Schedule) getIntent().getSerializableExtra(Constant.SCHEDULE_DETAIL);
         if (originData.responseType.equals(Participant.CALENDAR_RESPONSE_TYPE_UNKNOWN)) {
             ReplyAttendResult info = new ReplyAttendResult();
             info.content = getString(R.string.schedule_meeting_attend_unknown);
@@ -87,7 +89,7 @@ public class MeetingDetailReplyActivity extends BaseActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (!dataList.get(position).isSelect) {  //已选中的点击无反应  未知无反应
                     loadingDlg.show();
-                    // scheduleApiService.setMeetingAttendStatus(meetingId, responseTypeList.get(position));
+                    scheduleApiService.setMeetingAttendStatus(schedule, responseTypeList.get(position));
                 }
                 adapter.notifyDataSetChanged();
             }
