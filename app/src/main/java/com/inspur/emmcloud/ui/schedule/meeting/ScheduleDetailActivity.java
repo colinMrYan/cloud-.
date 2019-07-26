@@ -61,7 +61,7 @@ import butterknife.ButterKnife;
 /**
  * Created by yufuchang on 2019/4/16.
  */
-public class MeetingDetailActivity extends BaseActivity {
+public class ScheduleDetailActivity extends BaseActivity {
 
     public static final String EXTRA_MEETING_ENTITY = "extra_meeting_entity";
     private static final int MEETING_ATTENDEE = 0;
@@ -173,7 +173,7 @@ public class MeetingDetailActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_meeting_detail_latest;
+        return R.layout.activity_schedule_detail_latest;
     }
 
     @SuppressLint("StringFormatInvalid")
@@ -435,7 +435,7 @@ public class MeetingDetailActivity extends BaseActivity {
         } else {
             LogUtils.LbcDebug("meeting == null");
         }
-        bundle.putSerializable(MeetingDetailActivity.EXTRA_MEETING_ENTITY, meeting);
+        bundle.putSerializable(EXTRA_MEETING_ENTITY, meeting);
         switch (v.getId()) {
             case R.id.ibt_back:
                 finish();
@@ -447,15 +447,15 @@ public class MeetingDetailActivity extends BaseActivity {
             case R.id.rl_meeting_record_holder:
             case R.id.rl_meeting_conference:
                 if (meeting != null)
-                    IntentUtils.startActivity(MeetingDetailActivity.this, MeetingAttendeeStateActivity.class, bundle);
+                    IntentUtils.startActivity(this, MeetingAttendeeStateActivity.class, bundle);
                 break;
             case R.id.rl_meeting_invite:
                 startMembersActivity(MEETING_INVITE);
                 break;
             case R.id.rl_meeting_attend_status:     //参会答复
-                Intent replyIntent = new Intent(this, MeetingDetailReplyActivity.class);
+                Intent replyIntent = new Intent(this, ScheduleDetailReplyActivity.class);
                 replyIntent.putExtra("OriginReplyData", info);
-                replyIntent.putExtra("meetingId", meetingId);
+                replyIntent.putExtra(Constant.SCHEDULE_DETAIL, scheduleEvent);
                 startActivityForResult(replyIntent, 0);
                 break;
         }
@@ -535,17 +535,12 @@ public class MeetingDetailActivity extends BaseActivity {
                 String tag = (String) itemView.getTag();
                 if (tag.equals(getString(R.string.schedule_meeting_change))) {
                     Bundle bundle = new Bundle();
-                    if (isFromCalendar) {
-                        bundle.putSerializable(EXTRA_SCHEDULE_CALENDAR_EVENT, scheduleEvent);
-                        IntentUtils.startActivity(MeetingDetailActivity.this, CalendarAddActivity.class, bundle, true);
-                    } else {
-                        bundle.putSerializable(EXTRA_MEETING_ENTITY, scheduleEvent);
-                        IntentUtils.startActivity(MeetingDetailActivity.this, MeetingAddActivity.class, bundle, true);
-                    }
+                    bundle.putSerializable(EXTRA_SCHEDULE_CALENDAR_EVENT, scheduleEvent);
+                    IntentUtils.startActivity(ScheduleDetailActivity.this, CalendarAddActivity.class, bundle, true);
                 } else if (tag.equals(getString(R.string.schedule_meeting_cancel))) {
                     showConfirmClearDialog(meeting);
                 } else if (tag.equals(getString(R.string.message_create_group))) {
-                    new ChatCreateUtils().startGroupChat(MeetingDetailActivity.this, meeting, chatGroupId, null);
+                    new ChatCreateUtils().startGroupChat(ScheduleDetailActivity.this, meeting, chatGroupId, null);
                 }
                 dialog.dismiss();
             }
@@ -563,8 +558,8 @@ public class MeetingDetailActivity extends BaseActivity {
     /**
      * 确认清除
      */
-    private void showConfirmClearDialog(final Schedule meeting) {
-        new CustomDialog.MessageDialogBuilder(MeetingDetailActivity.this)
+    private void showConfirmClearDialog(final Schedule schedule) {
+        new CustomDialog.MessageDialogBuilder(ScheduleDetailActivity.this)
                 .setMessage(getString(isFromCalendar ? R.string.calendar_cancel_the_schedule : R.string.meeting_cancel_the_meeting))
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
@@ -576,11 +571,7 @@ public class MeetingDetailActivity extends BaseActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        if (isFromCalendar) {
-                            delCalendarEvent();
-                        } else {
-                            deleteMeeting(meeting);
-                        }
+                        delSchedule();
                         finish();
                     }
                 })
@@ -590,7 +581,7 @@ public class MeetingDetailActivity extends BaseActivity {
     /**
      * 刪除日程
      **/
-    private void delCalendarEvent() {
+    private void delSchedule() {
         if (NetUtils.isNetworkConnected(this)) {
             loadingDlg.show();
             scheduleApiService.deleteSchedule(scheduleEvent);
@@ -600,12 +591,12 @@ public class MeetingDetailActivity extends BaseActivity {
     /**
      * 删除会议
      */
-    private void deleteMeeting(Schedule meeting) {
-        if (NetUtils.isNetworkConnected(this)) {
-            loadingDlg.show();
-            scheduleApiService.deleteMeeting(meeting);
-        }
-    }
+//    private void deleteMeeting(Schedule meeting) {
+//        if (NetUtils.isNetworkConnected(this)) {
+//            loadingDlg.show();
+//            scheduleApiService.deleteMeeting(meeting);
+//        }
+//    }
 
     class WebService extends APIInterfaceInstance {
 
@@ -624,27 +615,21 @@ public class MeetingDetailActivity extends BaseActivity {
         @Override
         public void returnDeleteScheduleSuccess(String scheduleId) {
             LoadingDialog.dimissDlg(loadingDlg);
-            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED, null));
+            if (isFromCalendar) {
+                EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED, null));
+            } else {
+                EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_MEETING_DATA_CHANGED, null));
+            }
             finish();
         }
 
         @Override
         public void returnDeleteScheduleFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDlg);
+            if (!isFromCalendar) {
+                WebServiceMiddleUtils.hand(MyApplication.getInstance(), error, errorCode);
+            }
             super.returnDeleteScheduleFail(error, errorCode);
-        }
-
-        @Override
-        public void returnDelMeetingSuccess(Schedule meeting) {
-            LoadingDialog.dimissDlg(loadingDlg);
-            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_MEETING_DATA_CHANGED, null));
-            finish();
-        }
-
-        @Override
-        public void returnDelMeetingFail(String error, int errorCode) {
-            LoadingDialog.dimissDlg(loadingDlg);
-            WebServiceMiddleUtils.hand(MyApplication.getInstance(), error, errorCode);
         }
 
         @Override
