@@ -1169,10 +1169,10 @@ public class ScheduleApiService {
      *
      * @param startTime
      */
-    public void getMeetingListByTime(final long startTime) {
-        final String completeUrl = APIUri.getMeetingListByStartTime();
+    public void getMeetingListByTime(final long startTime, final ScheduleCalendar scheduleCalendar) {
+        final String completeUrl = APIUri.getMeetingListByStartTime(scheduleCalendar);
         RequestParams params = MyApplication.getInstance()
-                .getHttpRequestParams(completeUrl);
+                .getHttpRequestParams(completeUrl, CalendarUtils.getHttpHeaderExtraKey(scheduleCalendar), CalendarUtils.getHttpHeaderExtraValue(scheduleCalendar));
         params.addQueryStringParameter("startTime", startTime + "");
         HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
 
@@ -1181,7 +1181,7 @@ public class ScheduleApiService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        getMeetingListByTime(startTime);
+                        getMeetingListByTime(startTime, scheduleCalendar);
                     }
 
                     @Override
@@ -1196,7 +1196,7 @@ public class ScheduleApiService {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnMeetingListSuccess(new GetMeetingListResult(new String(arg0)));
+                apiInterface.returnMeetingListSuccess(new GetMeetingListResult(new String(arg0), scheduleCalendar));
             }
 
             @Override

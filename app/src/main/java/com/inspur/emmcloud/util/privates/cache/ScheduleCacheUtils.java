@@ -60,6 +60,15 @@ public class ScheduleCacheUtils {
 
     }
 
+    public static void removeScheduleList(Context context, ScheduleCalendar scheduleCalendar) {
+        try {
+            DbCacheUtils.getDb(context).delete(Schedule.class, WhereBuilder.b("scheduleCalendar", "=", scheduleCalendar.getId()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
     public static void removeSchedule(Context context, String scheduleId) {
         try {
             DbCacheUtils.getDb(context).deleteById(Schedule.class, scheduleId);
@@ -125,7 +134,7 @@ public class ScheduleCacheUtils {
                 long startTimeLong = startTime.getTimeInMillis();
                 long endTimeLong = endTime.getTimeInMillis();
                 scheduleList = DbCacheUtils.getDb(context).selector(Schedule.class).where(WhereBuilder.b("endTime", ">=", startTimeLong)
-                        .and("startTime", "<=", endTimeLong).and("scheduleCalendar", "in", scheduleCalendarIdList)).findAll();
+                        .and("startTime", "<=", endTimeLong).and("scheduleCalendar", "in", scheduleCalendarIdList)).orderBy("creationTime").findAll();
             } catch (Exception e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();

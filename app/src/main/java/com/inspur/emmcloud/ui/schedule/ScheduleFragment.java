@@ -39,7 +39,6 @@ import com.inspur.emmcloud.bean.schedule.calendar.AccountType;
 import com.inspur.emmcloud.bean.schedule.calendar.CalendarColor;
 import com.inspur.emmcloud.bean.schedule.calendar.Holiday;
 import com.inspur.emmcloud.bean.schedule.calendar.ScheduleCalendar;
-import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.componentservice.communication.CommunicationService;
 import com.inspur.emmcloud.componentservice.communication.ShareToConversationListener;
 import com.inspur.emmcloud.interf.ScheduleEventListener;
@@ -47,7 +46,6 @@ import com.inspur.emmcloud.ui.schedule.calendar.CalendarSettingActivity;
 import com.inspur.emmcloud.ui.schedule.meeting.ScheduleDetailActivity;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.cache.HolidayCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.MeetingCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ScheduleCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ScheduleCalendarCacheUtils;
 import com.inspur.emmcloud.widget.calendardayview.Event;
@@ -528,14 +526,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     private void deleteScheduleEvent(Event event) {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
             loadingDlg.show();
-            if (event.getEventType().equals(Schedule.TYPE_CALENDAR)) {
-                apiService.deleteSchedule((Schedule) event.getEventObj());
-            } else {
-                Meeting meeting = new Meeting();
-                meeting.setId(event.getEventId());
-                apiService.deleteMeeting(meeting);
-            }
-
+            apiService.deleteSchedule((Schedule) event.getEventObj());
         }
     }
 
@@ -563,24 +554,24 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
             WebServiceMiddleUtils.hand(BaseApplication.getInstance(), error, errorCode, false);
         }
 
-        @Override
-        public void returnDeleteMeetingSuccess(Meeting meeting) {
-            LoadingDialog.dimissDlg(loadingDlg);
-            MeetingCacheUtils.removeMeeting(BaseApplication.getInstance(), meeting.getId());
-            showCalendarEvent(true);
-            if (adapter != null) {
-                adapter.setEventList(allDayEventList);
-                adapter.notifyDataSetChanged();
-                if (allDayEventList.size() < 1) {
-                    myDialog.dismiss();
-                }
-            }
-        }
-
-        @Override
-        public void returnDeleteMeetingFail(String error, int errorCode) {
-            returnDeleteScheduleFail(error, errorCode);
-        }
+//        @Override
+//        public void returnDeleteMeetingSuccess(Meeting meeting) {
+//            LoadingDialog.dimissDlg(loadingDlg);
+//            MeetingCacheUtils.removeMeeting(BaseApplication.getInstance(), meeting.getId());
+//            showCalendarEvent(true);
+//            if (adapter != null) {
+//                adapter.setEventList(allDayEventList);
+//                adapter.notifyDataSetChanged();
+//                if (allDayEventList.size() < 1) {
+//                    myDialog.dismiss();
+//                }
+//            }
+//        }
+//
+//        @Override
+//        public void returnDeleteMeetingFail(String error, int errorCode) {
+//            returnDeleteScheduleFail(error, errorCode);
+//        }
 
         @Override
         public void returnDeleteScheduleSuccess(String scheduleId) {

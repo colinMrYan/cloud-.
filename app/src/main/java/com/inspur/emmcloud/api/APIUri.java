@@ -1650,7 +1650,7 @@ public class APIUri {
         return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/remove/" + meetingId;
     }
 
-    public static String getMeetingListByStartTime() {
+    public static String getMeetingListByStartTime(ScheduleCalendar scheduleCalendar) {
         return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/GetByStartTime?";
     }
 

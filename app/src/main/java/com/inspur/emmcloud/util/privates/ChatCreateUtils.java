@@ -10,6 +10,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 
+import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
@@ -156,7 +157,8 @@ public class ChatCreateUtils {
         if (meeting == null) return;
         peopleArray = getPeopleArray(meeting);
         if (peopleArray.length() < 2) {
-            ToastUtils.show("群聊至少需要2人及以上");
+            ToastUtils.show(R.string.chat_group_least_two_person);
+            return;
         }
 
         if (StringUtils.isBlank(chatGroupId)) {

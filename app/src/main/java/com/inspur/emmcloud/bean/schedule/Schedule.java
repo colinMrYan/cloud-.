@@ -497,4 +497,17 @@ public class Schedule implements Serializable {
 
     }
 
+    public boolean equals(Object other) { // 重写equals方法，后面最好重写hashCode方法
+
+        if (this == other) // 先检查是否其自反性，后比较other是否为空。这样效率高
+            return true;
+        if (other == null)
+            return false;
+        if (!(other instanceof Schedule))
+            return false;
+
+        final Schedule otherSchedule = (Schedule) other;
+        return getId().equals(otherSchedule.getId());
+    }
+
 }
