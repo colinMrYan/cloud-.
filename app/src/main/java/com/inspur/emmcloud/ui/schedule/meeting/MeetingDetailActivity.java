@@ -39,6 +39,7 @@ import com.inspur.emmcloud.bean.schedule.meeting.ReplyAttendResult;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
 import com.inspur.emmcloud.ui.schedule.ScheduleAlertTimeActivity;
+import com.inspur.emmcloud.util.privates.CalendarUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ScheduleCacheUtils;
@@ -112,6 +113,8 @@ public class MeetingDetailActivity extends BaseActivity {
     RelativeLayout meetingAttendLayout;
     @BindView(R.id.tv_meeting_invite)
     TextView meetingInviteText;
+    @BindView(R.id.image_meeting_calendar_type)
+    ImageView meetingCalendarTypeImage;
     @BindView(R.id.tv_meeting_calendar_type)
     TextView meetingCalendarTypeText;  //日历类型
     @BindView(R.id.rl_meeting_attend_status)
@@ -189,14 +192,14 @@ public class MeetingDetailActivity extends BaseActivity {
         } else {                //来自会议
             meetingInviteLayout.setVisibility(View.VISIBLE);
             meetingAttendLayout.setVisibility(StringUtils.isBlank(getMeetingParticipant()) ? View.GONE : View.VISIBLE);   //参会人
-            if (!StringUtils.isBlank(meeting.getOwner())) { //邀请人
-                String userName = ContactUserCacheUtils.getUserName(meeting.getOwner());
+            if (!StringUtils.isBlank(scheduleEvent.getOwner())) { //邀请人
+                String userName = ContactUserCacheUtils.getUserName(scheduleEvent.getOwner());
                 meetingInviteText.setText(getString(R.string.meeting_detail_inviter, userName));
             }
-            meetingInviteText.setVisibility(StringUtils.isBlank(meeting.getOwner()) ? View.GONE : View.VISIBLE);
+            meetingInviteText.setVisibility(StringUtils.isBlank(scheduleEvent.getOwner()) ? View.GONE : View.VISIBLE);
             attendeeText.setText(getString(R.string.meeting_detail_attendee, getMeetingParticipant())); //参会人
-            meetingNoteText.setText(meeting.getNote());             //备注
-            meetingNoteLayout.setVisibility(StringUtil.isBlank(meeting.getNote()) ? View.GONE : View.VISIBLE);
+            meetingNoteText.setText(scheduleEvent.getNote());             //备注
+            meetingNoteLayout.setVisibility(StringUtil.isBlank(scheduleEvent.getNote()) ? View.GONE : View.VISIBLE);
         }
 
         meetingDistributionText.setVisibility(View.VISIBLE);
@@ -205,10 +208,10 @@ public class MeetingDetailActivity extends BaseActivity {
             meetingDistributionLayout.setVisibility(View.GONE);
         }
 
-        if (StringUtils.isBlank(meeting.getLocation())) {
+        if (StringUtils.isBlank(scheduleEvent.getLocation())) {
             meetingLocationLayout.setVisibility(View.GONE);
         } else {
-            String locationData = getString(R.string.meeting_detail_location) + meeting.getScheduleLocationObj().getBuilding() + " " + meeting.getScheduleLocationObj().getDisplayName();
+            String locationData = getString(R.string.meeting_detail_location) + scheduleEvent.getScheduleLocationObj().getBuilding() + " " + scheduleEvent.getScheduleLocationObj().getDisplayName();
             meetingLocationText.setText(locationData);
         }
 
@@ -259,6 +262,8 @@ public class MeetingDetailActivity extends BaseActivity {
 
             if (!scheduleEvent.canModify() && !scheduleEvent.canDelete()) {
                 meetingMoreImg.setVisibility(View.GONE);
+            } else {
+                meetingMoreImg.setVisibility(View.VISIBLE);
             }
             return;
         }
@@ -311,20 +316,8 @@ public class MeetingDetailActivity extends BaseActivity {
     }
 
     private void initScheduleType() {
-        switch (scheduleEvent.getType()) {
-            case TYPE_MEETING:
-                meetingCalendarTypeText.setText(getString(R.string.meeting));
-                break;
-            case TYPE_EXCHANGE:
-                meetingCalendarTypeText.setText(TYPE_EXCHANGE);
-                break;
-            case TYPE_WEBEX:
-                meetingCalendarTypeText.setText(TYPE_WEBEX);
-                break;
-            default:
-                meetingCalendarTypeText.setText(getString(R.string.calendar));
-                break;
-        }
+        meetingCalendarTypeImage.setImageResource(CalendarUtils.getCalendarIconResId(scheduleEvent));
+        meetingCalendarTypeText.setText(CalendarUtils.getCalendarName(scheduleEvent));
     }
 
     private void initAttendStatus(Participant participant) {
@@ -577,13 +570,26 @@ public class MeetingDetailActivity extends BaseActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        deleteMeeting(meeting);
+                        if (isFromCalendar) {
+                            delCalendarEvent();
+                        } else {
+                            deleteMeeting(meeting);
+                        }
                         finish();
                     }
                 })
                 .show();
     }
 
+    /**
+     * 刪除日程
+     **/
+    private void delCalendarEvent() {
+        if (NetUtils.isNetworkConnected(this)) {
+            loadingDlg.show();
+            scheduleApiService.deleteSchedule(scheduleEvent.getId());
+        }
+    }
 
     /**
      * 删除会议
@@ -607,6 +613,19 @@ public class MeetingDetailActivity extends BaseActivity {
         @Override
         public void returnIsMeetingAdminFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDlg);
+        }
+
+        @Override
+        public void returnDeleteScheduleSuccess(String scheduleId) {
+            LoadingDialog.dimissDlg(loadingDlg);
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED, null));
+            finish();
+        }
+
+        @Override
+        public void returnDeleteScheduleFail(String error, int errorCode) {
+            LoadingDialog.dimissDlg(loadingDlg);
+            super.returnDeleteScheduleFail(error, errorCode);
         }
 
         @Override
