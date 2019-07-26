@@ -25,7 +25,6 @@ import com.czt.mp3recorder.MP3Recorder;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
@@ -428,7 +427,7 @@ public class ECMChatInputMenu extends LinearLayout {
                     case 5:
                         isVoiceCallEnable = controlValue.endsWith("1");
                         break;
-                    case 6:
+                    case 3:
                         isSendEmailEnable = controlValue.endsWith("1");
                         break;
                     default:
@@ -526,7 +525,7 @@ public class ECMChatInputMenu extends LinearLayout {
                             }
                             break;
                         case "send_email":
-                            LogUtils.YfcDebug("点击了发送邮件");
+                            inputMenuClickCallback.onInputMenuClick("mail");
                             break;
                         default:
                             break;
