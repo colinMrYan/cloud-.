@@ -246,8 +246,7 @@
         android:paddingBottom="11dp"
         android:paddingLeft="14dp"
         android:paddingRight="15dp"
-        android:paddingTop="11dp"
-        android:visibility="gone">
+        android:paddingTop="11dp">
 
         <TextView
             android:layout_width="wrap_content"
