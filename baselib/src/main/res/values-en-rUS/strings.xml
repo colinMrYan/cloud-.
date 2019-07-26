@@ -376,7 +376,9 @@
     <string name="schedule_meeting_no_meeting_today">No Meeting</string>
     <string name="schedule_task_no_task_today">No Task</string>
 
-
+    <string name="schedule_add">Create</string>
+    <string name="schedule_update">Update</string>
+    <string name="schedule_add_position">Please enter the location...</string>
     <!--任务（新）-->
     <string name="schedule_task_add">Add Task</string>
     <string name="schedule_task_detail">Task Detail</string>

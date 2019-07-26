@@ -264,7 +264,7 @@
                     android:layout_toLeftOf="@+id/ll_add_position"
                     android:background="@null"
                     android:clickable="true"
-                    android:hint="请输入地点"
+                    android:hint="@string/schedule_add_position"
                     android:onClick="onClick"
                     android:paddingBottom="11dp"
                     android:paddingLeft="16dp"
