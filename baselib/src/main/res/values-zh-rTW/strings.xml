@@ -448,6 +448,8 @@
     <string name="schedule_meeting_attend_accept">接受</string>
     <string name="schedule_meeting_attend_reject">拒絕</string>
     <string name="chat_group_chanel_not_exist">當前聊天信息不存在</string>
+    <string name="schedule_delete_ac">刪除賬户</string>
+    <string name="schedule_modify_ac">修改賬户</string>
 
     <!-- 發現部分 -->
     <string name="find">發現</string>

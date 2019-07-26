@@ -860,6 +860,9 @@
     <string name="meeting_room_time_late">开始时间不能早于当前时间</string>
     <string name="meeting_room_locked_by_admin">会议室被管理员锁定，不可预定</string>
 
+    <string name="schedule_delete_ac">删除账号</string>
+    <string name="schedule_modify_ac">修改账号</string>
+
     <string name="meeting_detail_time">时间：%1$s</string>
     <string name="meeting_detail_remind">提醒：%1$s</string>
     <string name="meeting_detail_create">%1$s 创建</string>
