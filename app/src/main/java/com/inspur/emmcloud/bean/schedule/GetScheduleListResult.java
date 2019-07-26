@@ -26,6 +26,9 @@ public class GetScheduleListResult {
             isForward = command.equals("FORWARD");
             String array = JSONUtils.getString(object, "list", "[]");
             scheduleList = JSONUtils.parseArray(array, Schedule.class);
+            for (Schedule schedule : scheduleList) {
+                schedule.setScheduleCalendar(scheduleCalendar.getId());
+            }
         } else {
             isForward = true;
             String scheduleJson = JSONUtils.getString(response, "calendar", "");
@@ -37,11 +40,7 @@ public class GetScheduleListResult {
                 scheduleList = JSONUtils.parseArray(array, Schedule.class);
                 for (Schedule schedule : scheduleList) {
                     schedule.setMeeting(false);
-                    if (isExchangeAccount) {
-                        schedule.setScheduleCalendar(scheduleCalendar.getId());
-                    } else {
-                        schedule.setScheduleCalendar(AccountType.APP_SCHEDULE.toString());
-                    }
+                    schedule.setScheduleCalendar(AccountType.APP_SCHEDULE.toString());
                 }
             }
             if (meetingCommand.equals("FORWARD")) {
@@ -49,11 +48,7 @@ public class GetScheduleListResult {
                 List<Schedule> meetingScheduleList = JSONUtils.parseArray(array, Schedule.class);
                 for (Schedule schedule : meetingScheduleList) {
                     schedule.setMeeting(true);
-                    if (isExchangeAccount) {
-                        schedule.setScheduleCalendar(scheduleCalendar.getId());
-                    } else {
-                        schedule.setScheduleCalendar(AccountType.APP_MEETING.toString());
-                    }
+                    schedule.setScheduleCalendar(AccountType.APP_MEETING.toString());
                 }
                 scheduleList.addAll(meetingScheduleList);
             }

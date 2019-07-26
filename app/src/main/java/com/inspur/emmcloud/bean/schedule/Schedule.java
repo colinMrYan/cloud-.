@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * Created by chenmch on 2019/4/6.
  */
-@Table(name = " ")
+@Table(name = "Schedule")
 public class Schedule implements Serializable {
     public static final String TYPE_MEETING = "schedule_meeting";
     public static final String TYPE_CALENDAR = "schedule_calendar";
