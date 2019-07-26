@@ -530,6 +530,7 @@ public class ScheduleDetailActivity extends BaseActivity {
                 if (tag.equals(getString(R.string.schedule_meeting_change))) {
                     Bundle bundle = new Bundle();
                     bundle.putSerializable(ScheduleAddActivity.EXTRA_SCHEDULE_CALENDAR_EVENT, scheduleEvent);
+                    bundle.putBoolean(ScheduleAddActivity.EXTRA_EVENT_TYPE_FROM_MEETING, !scheduleEvent.getType().equals("default"));
                     IntentUtils.startActivity(ScheduleDetailActivity.this, ScheduleAddActivity.class, bundle, true);
                 } else if (tag.equals(getString(R.string.schedule_meeting_cancel))) {
                     showConfirmClearDialog(scheduleEvent);
