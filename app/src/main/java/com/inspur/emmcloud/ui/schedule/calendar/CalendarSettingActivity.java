@@ -61,7 +61,7 @@ public class CalendarSettingActivity extends BaseActivity {
         listSelectImageView.setVisibility(isListView ? View.VISIBLE : View.GONE);
         daySelectImageView.setVisibility(isListView ? View.GONE : View.VISIBLE);
         boolean isEnableExchange = PreferencesByUserAndTanentUtils.getBoolean(BaseApplication.getInstance(), Constant.PREF_SCHEDULE_ENABLE_EXCHANGE, false);
-        scheduleCalendarList = ScheduleCalendarCacheUtils.getScheduleCalendarList(BaseApplication.getInstance(), isEnableExchange);
+        scheduleCalendarList = ScheduleCalendarCacheUtils.getScheduleCalendarList(BaseApplication.getInstance());
         calendarAdapter = new CalendarAdapter();
         calendarsListView.setAdapter(calendarAdapter);
         addCalendarLayout.setVisibility(isEnableExchange ? View.VISIBLE : View.GONE);
@@ -118,12 +118,12 @@ public class CalendarSettingActivity extends BaseActivity {
             String account = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, "");
             String password = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_PASSWORD, "");
             ScheduleCalendar scheduleCalendar = new ScheduleCalendar(CalendarColor.GREEN, account, account, password, AccountType.EXCHANGE);
-            if (!scheduleCalendarList.contains(scheduleCalendar)) {
-                scheduleCalendarList.add(scheduleCalendar);
-                ScheduleCalendarCacheUtils.saveScheduleCalendar(BaseApplication.getInstance(), scheduleCalendar);
-                calendarAdapter.notifyDataSetChanged();
+            if (scheduleCalendarList.contains(scheduleCalendar)) {
+                scheduleCalendarList.remove(scheduleCalendar);
             }
-
+            scheduleCalendarList.add(scheduleCalendar);
+            ScheduleCalendarCacheUtils.saveScheduleCalendar(BaseApplication.getInstance(), scheduleCalendar);
+            calendarAdapter.notifyDataSetChanged();
         }
     }
 

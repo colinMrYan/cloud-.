@@ -10,8 +10,6 @@ import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.schedule.calendar.AccountType;
-import com.inspur.emmcloud.bean.schedule.calendar.ScheduleCalendar;
-import com.inspur.emmcloud.util.privates.cache.ScheduleCalendarCacheUtils;
 import com.inspur.emmcloud.widget.calendardayview.Event;
 
 import org.json.JSONArray;
@@ -446,43 +444,40 @@ public class Schedule implements Serializable {
 
 
     public boolean canDelete() {
-        if (getScheduleCalendar().equals(AccountType.APP_SCHEDULE.toString())) {
-            return true;
-        } else if (getScheduleCalendar().equals(AccountType.APP_MEETING.toString())) {
-            boolean isAdmin = PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(), Constant.PREF_IS_MEETING_ADMIN,
-                    false);
-            if (isAdmin || (getOwner().equals(BaseApplication.getInstance().getUid()))) {
-                return true;
-            }
-            return false;
-        } else {
-//            ScheduleCalendar scheduleCalendar = ScheduleCalendarCacheUtils.getScheduleCalendar(BaseApplication.getInstance(), getScheduleCalendar());
-//            String account = scheduleCalendar.getAcName();
-//            if ()
-            return true;
-
+        boolean canDelete = false;
+        AccountType accountType = AccountType.getAccountType(getScheduleCalendar());
+        switch (accountType) {
+            case APP_MEETING:
+                boolean isAdmin = PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(), Constant.PREF_IS_MEETING_ADMIN,
+                        false);
+                if (isAdmin || (getOwner().equals(BaseApplication.getInstance().getUid()))) {
+                    canDelete = true;
+                }
+                break;
+            case EXCHANGE:
+            case APP_SCHEDULE:
+                canDelete = true;
+                break;
         }
-
+        return canDelete;
 
     }
 
     public boolean canModify() {
-        if (getScheduleCalendar().equals(AccountType.APP_SCHEDULE.toString())) {
-            return true;
-        } else if (getScheduleCalendar().equals(AccountType.APP_MEETING.toString())) {
-            if (getOwner().equals(BaseApplication.getInstance().getUid()) && getEndTimeCalendar().after(Calendar.getInstance())) {
-                return true;
-            }
-            return false;
-        } else {
-            ScheduleCalendar scheduleCalendar = ScheduleCalendarCacheUtils.getScheduleCalendar(BaseApplication.getInstance(), getScheduleCalendar());
-            String account = scheduleCalendar.getAcName();
-            if (getOwner().equals(account)) {
-                return true;
-            }
-            return false;
-
+        boolean canModify = false;
+        AccountType accountType = AccountType.getAccountType(getScheduleCalendar());
+        switch (accountType) {
+            case EXCHANGE:
+                canModify = getOwner().equals(BaseApplication.getInstance().getUid());
+                break;
+            case APP_MEETING:
+                canModify = getOwner().equals(BaseApplication.getInstance().getUid()) && getEndTimeCalendar().after(Calendar.getInstance());
+                break;
+            case APP_SCHEDULE:
+                canModify = true;
+                break;
         }
+        return canModify;
     }
 
     //会议中是否显示群聊
@@ -500,6 +495,19 @@ public class Schedule implements Serializable {
         }
         return relatedPersonFlag && WebServiceRouterManager.getInstance().isV1xVersionChat();
 
+    }
+
+    public boolean equals(Object other) { // 重写equals方法，后面最好重写hashCode方法
+
+        if (this == other) // 先检查是否其自反性，后比较other是否为空。这样效率高
+            return true;
+        if (other == null)
+            return false;
+        if (!(other instanceof Schedule))
+            return false;
+
+        final Schedule otherSchedule = (Schedule) other;
+        return getId().equals(otherSchedule.getId());
     }
 
 }

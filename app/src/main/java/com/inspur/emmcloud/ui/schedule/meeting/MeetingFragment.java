@@ -18,13 +18,17 @@ import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.widget.ClearEditText;
 import com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseFragment;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.bean.schedule.calendar.AccountType;
+import com.inspur.emmcloud.bean.schedule.calendar.ScheduleCalendar;
 import com.inspur.emmcloud.bean.schedule.meeting.GetMeetingListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
+import com.inspur.emmcloud.util.privates.cache.ScheduleCalendarCacheUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -55,6 +59,7 @@ public class MeetingFragment extends BaseFragment implements MySwipeRefreshLayou
     private boolean isPullUp = false;
     private boolean isHistoryMeeting = false;
     private View rootView;
+    private boolean isRefresh = false;
 
 
     @Override
@@ -183,9 +188,21 @@ public class MeetingFragment extends BaseFragment implements MySwipeRefreshLayou
 
     private void getMeetingListByStartTime() {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
+            isRefresh = true;
             long startTime = TimeUtils.getDayBeginCalendar(Calendar.getInstance()).getTimeInMillis();
             swipeRefreshLayout.setRefreshing(true);
-            apiService.getMeetingListByTime(startTime);
+            List<ScheduleCalendar> scheduleCalendarList = ScheduleCalendarCacheUtils.getScheduleCalendarList(BaseApplication.getInstance());
+            ScheduleCalendar appScheduleCalendar = null;
+            for (ScheduleCalendar scheduleCalendar : scheduleCalendarList) {
+                if (scheduleCalendar.getAcType().equals(AccountType.APP_MEETING.toString()) || scheduleCalendar.getAcType().equals(AccountType.APP_SCHEDULE.toString())) {
+                    appScheduleCalendar = scheduleCalendar;
+                    continue;
+                }
+                apiService.getMeetingListByTime(startTime, scheduleCalendar);
+            }
+
+
+            apiService.getMeetingListByTime(startTime, appScheduleCalendar);
         } else {
             swipeRefreshLayout.setRefreshing(false);
         }
@@ -205,7 +222,11 @@ public class MeetingFragment extends BaseFragment implements MySwipeRefreshLayou
         public void returnMeetingListSuccess(GetMeetingListResult getMeetingListResult) {
             searchEdit.setText("");
             meetingList = getMeetingListResult.getMeetingList();
-            uiMeetingList.clear();
+            if (isRefresh) {
+                isRefresh = false;
+                uiMeetingList.clear();
+            }
+            uiMeetingList.removeAll(meetingList);
             uiMeetingList.addAll(meetingList);
             scheduleMeetingListAdapter.setMeetingList(uiMeetingList);
             scheduleMeetingListAdapter.notifyDataSetChanged();

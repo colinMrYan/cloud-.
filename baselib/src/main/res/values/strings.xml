@@ -436,7 +436,7 @@
     <string name="schedule_meeting_select_record_holder_title">选择会议记录人</string>
     <string name="schedule_meeting_select_conference_title">选择会议联络人</string>
     <string name="schedule_meeting_add_note">备注</string>
-    <string name="schedule_meeting_add_alert_time">会前提醒</string>
+    <string name="schedule_meeting_add_alert_time">提醒</string>
     <string name="schedule_meeting_detail_location">会议地点:</string>
     <string name="schedule_meeting_booking_detail">会议详情</string>
     <string name="schedule_meeting_history">历史会议</string>
@@ -460,6 +460,9 @@
     <string name="schedule_meeting_attend_ignore">暂定</string>
     <string name="schedule_meeting_attend_reject">拒绝</string>
     <string name="chat_group_chanel_not_exist">当前聊天信息不存在</string>
+    <string name="schedule_add">新建</string>
+    <string name="schedule_update">更新</string>
+    <string name="schedule_add_position">请输入地点...</string>
 
     <!-- 发现部分 -->
     <string name="find">发现</string>
