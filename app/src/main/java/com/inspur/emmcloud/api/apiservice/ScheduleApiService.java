@@ -173,7 +173,7 @@ public class ScheduleApiService {
                     .getHttpRequestParams(completeUrl, CalendarUtils.getHttpHeaderExtraKey(scheduleCalendar), CalendarUtils.getHttpHeaderExtraValue(scheduleCalendar));
             JSONObject object = new JSONObject();
             try {
-                object.put("calendarId", schedule.getId());
+                object.put("id", schedule.getId());
                 object.put("isMeeting", schedule.isMeeting());
             } catch (Exception e) {
                 e.printStackTrace();

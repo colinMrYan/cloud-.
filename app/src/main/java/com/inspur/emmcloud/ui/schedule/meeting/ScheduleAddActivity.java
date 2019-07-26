@@ -180,9 +180,9 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
      * 初始化会议数据
      */
     private void initMeetingData() {
-        isEventEditModel = getIntent().hasExtra(ScheduleDetailActivity.EXTRA_MEETING_ENTITY);
+        isEventEditModel = getIntent().hasExtra(ScheduleDetailActivity.EXTRA_SCHEDULE_ENTITY);
         if (isEventEditModel) {
-            schedule = (Schedule) getIntent().getSerializableExtra(ScheduleDetailActivity.EXTRA_MEETING_ENTITY);
+            schedule = (Schedule) getIntent().getSerializableExtra(ScheduleDetailActivity.EXTRA_SCHEDULE_ENTITY);
             initScheduleDataByEntity();
         } else {
             String myUid = MyApplication.getInstance().getUid();
