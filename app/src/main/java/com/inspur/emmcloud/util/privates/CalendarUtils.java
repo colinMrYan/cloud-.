@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.util.privates;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.util.Base64;
 
 import com.inspur.emmcloud.R;
@@ -58,6 +57,12 @@ public class CalendarUtils {
     }
 
 
+    /**
+     * 获取日程calendar的名称
+     *
+     * @param schedule
+     * @return
+     */
     public static String getCalendarName(Schedule schedule) {
         String calendarName = "";
         ScheduleCalendar scheduleCalendar = ScheduleCalendarCacheUtils.getScheduleCalendar(BaseApplication.getInstance(), schedule.getScheduleCalendar());
@@ -79,18 +84,20 @@ public class CalendarUtils {
         return calendarName;
     }
 
-
-    public static int getCalendarTypeImgResId(Schedule schedule) {
-        int resId = -1;
-        Drawable drawable = null;
-        String scheduleCalendarId = schedule.getScheduleCalendar();
-        ScheduleCalendar scheduleCalendar = ScheduleCalendarCacheUtils.getScheduleCalendar(BaseApplication.getInstance(), scheduleCalendarId);
+    /**
+     * 获取日程calendar的Icon
+     *
+     * @param schedule
+     * @return
+     */
+    public static int getCalendarIconResId(Schedule schedule) {
+        int eventColorIconResId = R.drawable.schedule_calendar_type_blue;
+        ScheduleCalendar scheduleCalendar = ScheduleCalendarCacheUtils.getScheduleCalendar(BaseApplication.getInstance(), schedule.getScheduleCalendar());
         if (scheduleCalendar != null) {
             CalendarColor calendarColor = CalendarColor.getCalendarColor(scheduleCalendar.getColor());
             return calendarColor.getIconResId();
         }
-
-        return resId;
+        return eventColorIconResId;
     }
 
 

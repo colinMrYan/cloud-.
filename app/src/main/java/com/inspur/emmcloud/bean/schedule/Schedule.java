@@ -474,39 +474,4 @@ public class Schedule implements Serializable {
         }
     }
 
-//    public Calendar getDayEventStartTime(Calendar selectCalendar) {
-//        Calendar startTimeCalendar = getStartTimeCalendar();
-//        if (!TimeUtils.isSameDay(startTimeCalendar, selectCalendar)) {
-//            return TimeUtils.getDayBeginCalendar(selectCalendar);
-//        }
-//        return startTimeCalendar;
-//    }
-//
-//    public Calendar getDayEventEndTime(Calendar selectCalendar) {
-//        Calendar endTimeCalendar = getEndTimeCalendar();
-//        if (!TimeUtils.isSameDay(endTimeCalendar, selectCalendar)) {
-//            return TimeUtils.getDayEndCalendar(selectCalendar);
-//        }
-//        return endTimeCalendar;
-//    }
-//
-//    public long getDayDurationInMillSeconds(Calendar selectCalendar) {
-//        return getDayEventEndTime(selectCalendar).getTimeInMillis() - getDayEventStartTime(selectCalendar).getTimeInMillis();
-//    }
-
-
-//    public int getEventIconResId(boolean isSelect) {
-//        int eventIconResId = -1;
-//        return eventIconResId;
-//    }
-//
-//    public int getEventColorResId() {
-//        int eventColorIconResId = -1;
-//        return eventColorIconResId;
-//    }
-//
-//    public String getShowEventSubTitle(Context context, Calendar selectCalendar) {
-//        String showEventSubTitle = "";
-//        return showEventSubTitle;
-//    }
 }
