@@ -328,20 +328,29 @@ public class ScheduleAddActivity extends BaseActivity {
         setMeetingTime();   //设置时间
         findViewById(R.id.ll_all_participants).setVisibility(isFromMeeting ? View.VISIBLE : View.GONE);
         eventTypeText.setText(CalendarUtils.getScheduleCalendarShowName(scheduleCalendar));
-        modifyUIByEventType(scheduleCalendar);
+        modifyUIByEventType();
         calendarTypeLayout.setClickable(!isEventEditModel);
     }
 
-    private void modifyUIByEventType(ScheduleCalendar scheduleCalendar) {
-        if (scheduleCalendar.getAcType().equals(AccountType.APP_SCHEDULE.toString())) {
-            findViewById(R.id.ll_all_participants).setVisibility(View.GONE);
-            isFromMeeting = false;
-        } else if (scheduleCalendar.getAcType().equals(AccountType.EXCHANGE.toString())) {
-            findViewById(R.id.ll_recorder_liaison).setVisibility(View.VISIBLE);
-            findViewById(R.id.ll_all_participants).setVisibility(View.VISIBLE);
-        } else if (scheduleCalendar.getAcType().equals(AccountType.APP_SCHEDULE.toString())) {
-            findViewById(R.id.ll_recorder_liaison).setVisibility(View.GONE);
-            isFromMeeting = true;
+    private void modifyUIByEventType() {
+        AccountType accountType = AccountType.getAccountType(scheduleCalendar.getAcType());
+        switch (accountType) {
+            case EXCHANGE:
+                findViewById(R.id.ll_recorder_liaison).setVisibility(View.GONE);
+                findViewById(R.id.ll_all_participants).setVisibility(View.GONE);
+                findViewById(R.id.ll_add_position).setClickable(false);
+                break;
+            case APP_MEETING:
+                findViewById(R.id.ll_all_participants).setVisibility(View.VISIBLE);
+                findViewById(R.id.ll_recorder_liaison).setVisibility(View.VISIBLE);
+                findViewById(R.id.ll_all_participants).setVisibility(View.VISIBLE);
+
+                break;
+            case APP_SCHEDULE:
+                findViewById(R.id.ll_all_participants).setVisibility(View.GONE);
+                findViewById(R.id.ll_add_position).setClickable(false);
+                isFromMeeting = false;
+                break;
         }
     }
 
@@ -593,7 +602,7 @@ public class ScheduleAddActivity extends BaseActivity {
                 case REQUEST_SET_SCHEDULE_TYPE:
                     scheduleCalendar = (ScheduleCalendar) data.getSerializableExtra(ScheduleTypeSelectActivity.SCHEDULE_AC_TYPE);
                     eventTypeText.setText(CalendarUtils.getScheduleCalendarShowName(scheduleCalendar));
-                    modifyUIByEventType(scheduleCalendar);
+                    modifyUIByEventType();
                     break;
             }
         }

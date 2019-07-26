@@ -250,12 +250,12 @@
                 android:background="@color/color_list_divider" />
 
             <RelativeLayout
+                android:id="@+id/rl_all_position_show"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:background="@android:color/white"
                 android:orientation="horizontal">
-
                 <EditText
                     android:id="@+id/et_meeting_position"
                     android:layout_width="match_parent"
@@ -264,7 +264,7 @@
                     android:layout_toLeftOf="@+id/ll_add_position"
                     android:background="@null"
                     android:clickable="true"
-                    android:hint="请输入会议地点"
+                    android:hint="请输入地点"
                     android:onClick="onClick"
                     android:paddingBottom="11dp"
                     android:paddingLeft="16dp"
