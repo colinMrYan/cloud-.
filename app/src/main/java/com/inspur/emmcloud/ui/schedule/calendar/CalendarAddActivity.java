@@ -479,7 +479,7 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
     private void delCalendarEvent() {
         if (NetUtils.isNetworkConnected(this) && (!isAddCalendar)) {
             loadingDlg.show();
-            apiService.deleteSchedule(scheduleEvent.getId(), false);
+            apiService.deleteSchedule(scheduleEvent);
         }
     }
 
@@ -583,7 +583,7 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
             loadingDlg.show();
             scheduleEvent.setLastTime(System.currentTimeMillis());
-            apiService.updateSchedule(scheduleEvent.toCalendarEventJSONObject().toString(), false);
+            apiService.updateSchedule(scheduleEvent.toCalendarEventJSONObject().toString(), scheduleEvent);
         }
     }
 
@@ -595,7 +595,7 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
             try {
                 loadingDlg.show();
-                apiService.addSchedule(scheduleEvent.toCalendarEventJSONObject().toString(), false);
+                apiService.addSchedule(scheduleEvent.toCalendarEventJSONObject().toString());
             } catch (Exception e) {
                 e.printStackTrace();
             }

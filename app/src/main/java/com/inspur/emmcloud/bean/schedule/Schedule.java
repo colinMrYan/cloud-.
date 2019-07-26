@@ -205,6 +205,12 @@ public class Schedule implements Serializable {
     }
 
     public String getScheduleCalendar() {
+        if (StringUtils.isBlank(scheduleCalendar)) {
+            if (isMeeting()) {
+                return AccountType.APP_MEETING.toString();
+            }
+            return AccountType.APP_SCHEDULE.toString();
+        }
         return scheduleCalendar;
     }
 
@@ -439,9 +445,9 @@ public class Schedule implements Serializable {
 
 
     public boolean canDelete() {
-        if (scheduleCalendar.equals(AccountType.APP_SCHEDULE.toString())) {
+        if (getScheduleCalendar().equals(AccountType.APP_SCHEDULE.toString())) {
             return true;
-        } else if (scheduleCalendar.equals(AccountType.APP_MEETING.toString())) {
+        } else if (getScheduleCalendar().equals(AccountType.APP_MEETING.toString())) {
             boolean isAdmin = PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(), Constant.PREF_IS_MEETING_ADMIN,
                     false);
             if (isAdmin || (getOwner().equals(BaseApplication.getInstance().getUid()))) {
@@ -460,9 +466,9 @@ public class Schedule implements Serializable {
     }
 
     public boolean canModify() {
-        if (scheduleCalendar.equals(AccountType.APP_SCHEDULE.toString())) {
+        if (getScheduleCalendar().equals(AccountType.APP_SCHEDULE.toString())) {
             return true;
-        } else if (scheduleCalendar.equals(AccountType.APP_MEETING.toString())) {
+        } else if (getScheduleCalendar().equals(AccountType.APP_MEETING.toString())) {
             if (getOwner().equals(BaseApplication.getInstance().getUid()) && getEndTimeCalendar().after(Calendar.getInstance())) {
                 return true;
             }

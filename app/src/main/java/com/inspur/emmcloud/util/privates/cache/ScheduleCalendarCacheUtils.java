@@ -2,6 +2,7 @@ package com.inspur.emmcloud.util.privates.cache;
 
 import android.content.Context;
 
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.DbCacheUtils;
@@ -36,12 +37,15 @@ public class ScheduleCalendarCacheUtils {
 
     public static ScheduleCalendar getScheduleCalendar(Context context, String id) {
         try {
-            return DbCacheUtils.getDb(context).findById(ScheduleCalendar.class, id);
+            if (!StringUtils.isBlank(id)) {
+                return DbCacheUtils.getDb(context).findById(ScheduleCalendar.class, id);
+            }
+
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-            return null;
         }
+        return null;
     }
 
 //    public static List<ScheduleCalendar> getScheduleCalendarList(Context context) {
