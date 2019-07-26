@@ -39,6 +39,7 @@ import com.inspur.emmcloud.bean.schedule.meeting.ReplyAttendResult;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
 import com.inspur.emmcloud.ui.schedule.ScheduleAlertTimeActivity;
+import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
 import com.inspur.emmcloud.util.privates.CalendarUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
@@ -534,8 +535,13 @@ public class MeetingDetailActivity extends BaseActivity {
                 String tag = (String) itemView.getTag();
                 if (tag.equals(getString(R.string.schedule_meeting_change))) {
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable(EXTRA_MEETING_ENTITY, meeting);
-                    IntentUtils.startActivity(MeetingDetailActivity.this, MeetingAddActivity.class, bundle, true);
+                    if (isFromCalendar) {
+                        bundle.putSerializable(EXTRA_SCHEDULE_CALENDAR_EVENT, scheduleEvent);
+                        IntentUtils.startActivity(MeetingDetailActivity.this, CalendarAddActivity.class, bundle, true);
+                    } else {
+                        bundle.putSerializable(EXTRA_MEETING_ENTITY, scheduleEvent);
+                        IntentUtils.startActivity(MeetingDetailActivity.this, MeetingAddActivity.class, bundle, true);
+                    }
                 } else if (tag.equals(getString(R.string.schedule_meeting_cancel))) {
                     showConfirmClearDialog(meeting);
                 } else if (tag.equals(getString(R.string.message_create_group))) {
@@ -559,7 +565,7 @@ public class MeetingDetailActivity extends BaseActivity {
      */
     private void showConfirmClearDialog(final Schedule meeting) {
         new CustomDialog.MessageDialogBuilder(MeetingDetailActivity.this)
-                .setMessage(getString(R.string.meeting_cancel_the_meeting))
+                .setMessage(getString(isFromCalendar ? R.string.calendar_cancel_the_schedule : R.string.meeting_cancel_the_meeting))
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
