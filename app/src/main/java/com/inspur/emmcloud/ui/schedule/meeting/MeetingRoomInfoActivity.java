@@ -462,7 +462,7 @@ public class MeetingRoomInfoActivity extends BaseActivity {
     private void deleteMeeting(Meeting meeting) {
         if (NetUtils.isNetworkConnected(MeetingRoomInfoActivity.this)) {
             loadingDlg.show();
-            apiService.deleteMeeting(meeting, false);
+            apiService.deleteMeeting(meeting);
         }
     }
 

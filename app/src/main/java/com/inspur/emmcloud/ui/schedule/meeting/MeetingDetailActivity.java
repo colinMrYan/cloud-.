@@ -593,7 +593,7 @@ public class MeetingDetailActivity extends BaseActivity {
     private void delCalendarEvent() {
         if (NetUtils.isNetworkConnected(this)) {
             loadingDlg.show();
-            scheduleApiService.deleteSchedule(scheduleEvent.getId());
+            scheduleApiService.deleteSchedule(scheduleEvent);
         }
     }
 

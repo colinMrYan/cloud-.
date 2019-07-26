@@ -1825,34 +1825,4 @@ public class APIInterfaceInstance implements APIInterface {
     public void returnAttendMeetingStatusFail(String error, int errorCode) {
 
     }
-
-    @Override
-    public void returnAddScheduleEventSuccess(GetIDResult getIDResult) {
-
-    }
-
-    @Override
-    public void returnAddScheduleEventFail(String error, int errorCode) {
-
-    }
-
-    @Override
-    public void returnUpdateScheduleEventSuccess(GetIDResult getIDResult) {
-
-    }
-
-    @Override
-    public void returnUpdateScheduleEventFail(String error, int errorCode) {
-
-    }
-
-    @Override
-    public void returnDeleteScheduleEventSuccess() {
-
-    }
-
-    @Override
-    public void returnDeleteScheduleEventFail(String error, int errorCode) {
-
-    }
 }
