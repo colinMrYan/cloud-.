@@ -33,7 +33,6 @@ import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.bean.schedule.Schedule;
 import com.inspur.emmcloud.bean.schedule.calendar.GetScheduleBasicDataResult;
 import com.inspur.emmcloud.bean.schedule.calendar.Holiday;
-import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.ui.schedule.meeting.ScheduleAddActivity;
 import com.inspur.emmcloud.util.privates.cache.HolidayCacheUtils;
 import com.inspur.emmcloud.widget.DragScaleView;
@@ -361,23 +360,12 @@ public class ScheduleBaseFragment extends BaseLayoutFragment implements View.OnL
         if (NetUtils.isNetworkConnected(BaseApplication.getInstance())) {
             Calendar startTime = calendarDayView.getDragViewStartTime(selectCalendar);
             Calendar endTime = calendarDayView.getDragViewEndTime(selectCalendar);
-            if (modifyEvent.getEventType() == Schedule.TYPE_CALENDAR) {
-                Schedule schedule = (Schedule) modifyEvent.getEventObj();
-                if (!startTime.equals(schedule.getStartTimeCalendar()) || !endTime.equals(schedule.getEndTimeCalendar())) {
-                    schedule.setStartTime(startTime.getTimeInMillis());
-                    schedule.setEndTime(endTime.getTimeInMillis());
-                    apiService.updateSchedule(schedule.toCalendarEventJSONObject().toString(), schedule);
-                }
-            } else if (modifyEvent.getEventType() == Schedule.TYPE_MEETING) {
-                Meeting meeting = (Meeting) modifyEvent.getEventObj();
-                if (!startTime.equals(meeting.getStartTimeCalendar()) || !endTime.equals(meeting.getEndTimeCalendar())) {
-                    meeting.setStartTime(startTime.getTimeInMillis());
-                    meeting.setEndTime(endTime.getTimeInMillis());
-                    apiService.updateSchedule(meeting.toJSONObject().toString(), meeting);
-                }
+            Schedule schedule = (Schedule) modifyEvent.getEventObj();
+            if (!startTime.equals(schedule.getStartTimeCalendar()) || !endTime.equals(schedule.getEndTimeCalendar())) {
+                schedule.setStartTime(startTime.getTimeInMillis());
+                schedule.setEndTime(endTime.getTimeInMillis());
+                apiService.updateSchedule(schedule.toCalendarEventJSONObject().toString(), schedule);
             }
-
-
         }
     }
 

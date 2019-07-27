@@ -105,16 +105,16 @@ public class CalendarUtils {
 
 
     public static String getScheduleCalendarShowName(ScheduleCalendar scheduleCalendar) {
-        String scheduleCalendarShowName = BaseApplication.getInstance().getString(R.string.schedule_calendar_my_schedule);
+        String scheduleCalendarShowName = BaseApplication.getInstance().getString(R.string.schedule_cloud_calendar);
         switch (AccountType.getAccountType(scheduleCalendar.getAcType())) {
             case EXCHANGE:
                 scheduleCalendarShowName = scheduleCalendar.getAcName();
                 break;
             case APP_MEETING:
-                scheduleCalendarShowName = BaseApplication.getInstance().getString(R.string.meeting);
+                scheduleCalendarShowName = BaseApplication.getInstance().getString(R.string.schedule_cloud_meeting);
                 break;
             case APP_SCHEDULE:
-                scheduleCalendarShowName = BaseApplication.getInstance().getString(R.string.schedule_calendar_my_schedule);
+                scheduleCalendarShowName = BaseApplication.getInstance().getString(R.string.schedule_cloud_calendar);
                 break;
         }
         return scheduleCalendarShowName;
