@@ -20,7 +20,6 @@ import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
-import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
@@ -180,11 +179,11 @@ public class ChatCreateUtils {
         for (Participant participant : totalList) {
             JSONObject json = new JSONObject();
             try {
-                if (!participant.getId().equals(BaseApplication.getInstance().getUid())) {
-                    json.put("pid", participant.getId());
-                    json.put("name", participant.getName());
-                    peopleArray.put(json);
-                }
+//                if (!participant.getId().equals(BaseApplication.getInstance().getUid())) {
+                json.put("pid", participant.getId());
+                json.put("name", participant.getName());
+                peopleArray.put(json);
+//                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
