@@ -314,6 +314,8 @@
     <string name="chat_transmit_message_success">已转发</string>
     <string name="chat_transmit_message_fail">转发失败</string>
     <string name="chat_original_picture_download_progress">&#037;%1d</string>
+    <string name="chat_group_least_two_person">群聊至少需要2人及以上</string>
+    <string name="chat_send_email_too_many_person">收件人太多会影响邮件发送速度，确定发送？</string>
 
     <!-- 会议卡片 -->
     <string name="meeting_has_confirmed">已确认</string>
