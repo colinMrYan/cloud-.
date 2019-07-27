@@ -18,6 +18,13 @@ public class Location {
 
     }
 
+    public Location(String id, String building, String displayName) {
+        this.id = id;
+        this.building = building;
+        this.displayName = displayName;
+    }
+
+
     public Location(String json) {
         this(JSONUtils.getJSONObject(json));
     }

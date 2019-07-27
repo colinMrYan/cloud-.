@@ -360,23 +360,12 @@ public class ScheduleBaseFragment extends BaseLayoutFragment implements View.OnL
         if (NetUtils.isNetworkConnected(BaseApplication.getInstance())) {
             Calendar startTime = calendarDayView.getDragViewStartTime(selectCalendar);
             Calendar endTime = calendarDayView.getDragViewEndTime(selectCalendar);
-            if (modifyEvent.getEventType() == Schedule.TYPE_CALENDAR) {
-                Schedule schedule = (Schedule) modifyEvent.getEventObj();
-                if (!startTime.equals(schedule.getStartTimeCalendar()) || !endTime.equals(schedule.getEndTimeCalendar())) {
-                    schedule.setStartTime(startTime.getTimeInMillis());
-                    schedule.setEndTime(endTime.getTimeInMillis());
-                    apiService.updateSchedule(schedule.toCalendarEventJSONObject().toString(), schedule);
-                }
-            } else if (modifyEvent.getEventType() == Schedule.TYPE_MEETING) {
-                Schedule meeting = (Schedule) modifyEvent.getEventObj();
-                if (!startTime.equals(meeting.getStartTimeCalendar()) || !endTime.equals(meeting.getEndTimeCalendar())) {
-                    meeting.setStartTime(startTime.getTimeInMillis());
-                    meeting.setEndTime(endTime.getTimeInMillis());
-                    apiService.updateSchedule(meeting.toCalendarEventJSONObject().toString(), meeting);
-                }
+            Schedule schedule = (Schedule) modifyEvent.getEventObj();
+            if (!startTime.equals(schedule.getStartTimeCalendar()) || !endTime.equals(schedule.getEndTimeCalendar())) {
+                schedule.setStartTime(startTime.getTimeInMillis());
+                schedule.setEndTime(endTime.getTimeInMillis());
+                apiService.updateSchedule(schedule.toCalendarEventJSONObject().toString(), schedule);
             }
-
-
         }
     }
 
