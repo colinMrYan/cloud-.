@@ -409,7 +409,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                         userList.add(user);
                     }
                 }
-                if (userList.size() > 3) {
+                if (userList.size() > 50) {
                     new CustomDialog.MessageDialogBuilder(this)
                             .setMessage("收件人太多会影像邮件发送速度，确定发送？")
                             .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
