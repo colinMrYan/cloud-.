@@ -216,7 +216,7 @@
                     android:paddingBottom="11dp"
                     android:paddingLeft="16dp"
                     android:paddingTop="11dp"
-                    android:text="类型"
+                    android:text="@string/schedule_account_type"
                     android:textColor="#333333"
                     android:textSize="16sp" />
 
@@ -249,63 +249,70 @@
                 android:layout_marginLeft="16dp"
                 android:background="@color/color_list_divider" />
 
-            <RelativeLayout
-                android:id="@+id/rl_all_position_show"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:background="@android:color/white"
-                android:orientation="horizontal">
-                <EditText
-                    android:id="@+id/et_meeting_position"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@+id/ll_add_position"
-                    android:background="@null"
-                    android:clickable="true"
-                    android:hint="@string/schedule_add_position"
-                    android:onClick="onClick"
-                    android:paddingBottom="11dp"
-                    android:paddingLeft="16dp"
-                    android:paddingTop="11dp"
-                    android:textColor="#333333"
-                    android:textColorHint="#999999"
-                    android:textSize="15sp" />
-
-                <LinearLayout
-                    android:id="@+id/ll_add_position"
-                    android:layout_width="wrap_content"
-                    android:layout_height="44dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:gravity="center_vertical"
-                    android:onClick="onClick"
-                    android:orientation="horizontal"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp">
-
-                    <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:layout_centerVertical="true"
-                        android:src="@drawable/ic_arrow_right" />
-                </LinearLayout>
-
-            </RelativeLayout>
-
             <LinearLayout
-                android:id="@+id/ll_all_participants"
+                android:id="@+id/ll_all_location"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/rl_all_position_show"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@android:color/white"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/et_meeting_position"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@+id/ll_add_position"
+                        android:background="@null"
+                        android:clickable="true"
+                        android:hint="@string/schedule_add_position"
+                        android:paddingBottom="11dp"
+                        android:paddingLeft="16dp"
+                        android:paddingTop="11dp"
+                        android:textColor="#333333"
+                        android:textColorHint="#999999"
+                        android:textSize="15sp" />
+
+                    <LinearLayout
+                        android:id="@+id/ll_add_position"
+                        android:layout_width="wrap_content"
+                        android:layout_height="44dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp">
+
+                        <ImageView
+                            android:id="@+id/iv_meeting_position_enter"
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:layout_centerVertical="true"
+                            android:onClick="onClick"
+                            android:src="@drawable/ic_arrow_right" />
+                    </LinearLayout>
+
+                </RelativeLayout>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5px"
                     android:layout_marginLeft="16dp"
                     android:background="@color/color_list_divider" />
+            </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/ll_all_participants"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
                 <LinearLayout
                     android:id="@+id/ll_add_attendee"
                     android:layout_width="match_parent"
@@ -433,13 +440,13 @@
                     </LinearLayout>
 
                 </LinearLayout>
-            </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5px"
-                android:layout_marginLeft="16dp"
-                android:background="@color/color_list_divider" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5px"
+                    android:layout_marginLeft="16dp"
+                    android:background="@color/color_list_divider" />
+            </LinearLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"

@@ -388,6 +388,7 @@
     <string name="schedule_task_no_task_today">暂无任務安排</string>
     <string name="schedule_click_to_add_schedule">再次點擊新建日程</string>
     <string name="schedule_exchange_login_fail">Exchange帳戶登入失敗，是否重新登入？</string>
+    <string name="schedule_account_type">賬戶</string>
 
     <!--任务-->
     <string name="schedule_task_add">添加任務</string>
@@ -449,6 +450,8 @@
     <string name="schedule_meeting_attend_accept">接受</string>
     <string name="schedule_meeting_attend_reject">拒絕</string>
     <string name="chat_group_chanel_not_exist">當前聊天信息不存在</string>
+    <string name="schedule_delete_ac">刪除賬户</string>
+    <string name="schedule_modify_ac">修改賬户</string>
 
     <!-- 發現部分 -->
     <string name="find">發現</string>
