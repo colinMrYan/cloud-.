@@ -358,12 +358,15 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
         AccountType accountType = AccountType.getAccountType(scheduleCalendar.getAcType());
         switch (accountType) {
             case EXCHANGE:
+                findViewById(R.id.ll_all_participants).setVisibility(View.VISIBLE);
+                findViewById(R.id.ll_add_attendee).setVisibility(View.VISIBLE);
                 findViewById(R.id.ll_recorder_liaison).setVisibility(View.GONE);
                 findViewById(R.id.ll_all_participants).setVisibility(View.GONE);
                 findViewById(R.id.ll_add_position).setClickable(false);
                 break;
             case APP_MEETING:
                 findViewById(R.id.ll_all_participants).setVisibility(View.VISIBLE);
+                findViewById(R.id.ll_add_attendee).setVisibility(View.VISIBLE);
                 findViewById(R.id.ll_recorder_liaison).setVisibility(View.VISIBLE);
                 findViewById(R.id.ll_all_participants).setVisibility(View.VISIBLE);
 
