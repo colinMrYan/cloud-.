@@ -134,8 +134,6 @@ public class MeetingFragment extends BaseFragment implements MySwipeRefreshLayou
     public void onReceiverSimpleEventMessage(SimpleEventMessage eventMessage) {
         switch (eventMessage.getAction()) {
             case Constant.EVENTBUS_TAG_SCHEDULE_MEETING_DATA_CHANGED:
-                isPullUp = false;
-                pageNum = 1;
                 getMeetingList();
                 break;
         }
@@ -192,17 +190,27 @@ public class MeetingFragment extends BaseFragment implements MySwipeRefreshLayou
             long startTime = TimeUtils.getDayBeginCalendar(Calendar.getInstance()).getTimeInMillis();
             swipeRefreshLayout.setRefreshing(true);
             List<ScheduleCalendar> scheduleCalendarList = ScheduleCalendarCacheUtils.getScheduleCalendarList(BaseApplication.getInstance());
+//            ScheduleCalendar appScheduleCalendar = null;
+//            for (ScheduleCalendar scheduleCalendar : scheduleCalendarList) {
+//                if (scheduleCalendar.getAcType().equals(AccountType.APP_MEETING.toString()) || scheduleCalendar.getAcType().equals(AccountType.APP_SCHEDULE.toString())) {
+//                    appScheduleCalendar = scheduleCalendar;
+//                    continue;
+//                }
+//                apiService.getMeetingListByTime(startTime, scheduleCalendar);
+//            }
+//            apiService.getMeetingListByTime(startTime, appScheduleCalendar);
             ScheduleCalendar appScheduleCalendar = null;
-            for (ScheduleCalendar scheduleCalendar : scheduleCalendarList) {
-                if (scheduleCalendar.getAcType().equals(AccountType.APP_MEETING.toString()) || scheduleCalendar.getAcType().equals(AccountType.APP_SCHEDULE.toString())) {
-                    appScheduleCalendar = scheduleCalendar;
-                    continue;
+            ScheduleCalendar appMeetingCalendar = null;
+            for (int i = 0; i < scheduleCalendarList.size(); i++) {
+                if (scheduleCalendarList.get(i).getAcType().equals(AccountType.EXCHANGE.toString())) {
+                    appScheduleCalendar = scheduleCalendarList.get(i);
                 }
-                apiService.getMeetingListByTime(startTime, scheduleCalendar);
+                if (scheduleCalendarList.get(i).getAcType().equals(AccountType.APP_MEETING.toString())) {
+                    appMeetingCalendar = scheduleCalendarList.get(i);
+                }
             }
+            apiService.getMeetingListByTime(startTime, appScheduleCalendar == null ? appMeetingCalendar : appScheduleCalendar);
 
-
-            apiService.getMeetingListByTime(startTime, appScheduleCalendar);
         } else {
             swipeRefreshLayout.setRefreshing(false);
         }

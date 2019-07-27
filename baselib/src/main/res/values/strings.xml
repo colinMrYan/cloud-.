@@ -391,7 +391,10 @@
     <string name="schedule_click_to_add_schedule">再次点击新建日程</string>
     <string name="schedule_exchange_login_fail">Exchange账户登录失败，是否重新登录？</string>
 
-    <string name="schedule_account_type">账户</string>
+    <string name="schedule_account_type">日历</string>
+    <string name="schedule_cloud_calendar">云+日程</string>
+    <string name="schedule_cloud_meeting">云+会议</string>
+
 
     <!--任务（新）-->
     <string name="schedule_task_add">添加任务</string>
@@ -431,7 +434,7 @@
     <string name="schedule_meeting_room_booking">新建会议</string>
     <string name="schedule_meeting_add_content_hint">请输入主题...</string>
     <string name="schedule_meeting_add_location_hint">请选择会议地点...</string>
-    <string name="schedule_meeting_add_attendee_title">参会人</string>
+    <string name="schedule_meeting_add_attendee_title">参与人</string>
     <string name="schedule_meeting_add_record_holder_title">会议记录人</string>
     <string name="schedule_meeting_add_conference_title">会议联络人</string>
     <string name="schedule_meeting_select_attendee_title">选择参会人</string>
@@ -463,7 +466,7 @@
     <string name="schedule_meeting_attend_reject">拒绝</string>
     <string name="chat_group_chanel_not_exist">当前聊天信息不存在</string>
     <string name="schedule_add">新建</string>
-    <string name="schedule_update">修改</string>
+    <string name="schedule_update">编辑</string>
     <string name="schedule_add_position">请输入地点...</string>
 
     <!-- 发现部分 -->

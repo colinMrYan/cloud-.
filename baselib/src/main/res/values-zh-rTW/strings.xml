@@ -389,6 +389,8 @@
     <string name="schedule_click_to_add_schedule">再次點擊新建日程</string>
     <string name="schedule_exchange_login_fail">Exchange帳戶登入失敗，是否重新登入？</string>
     <string name="schedule_account_type">賬戶</string>
+    <string name="schedule_cloud_calendar">云+ 日程</string>
+    <string name="schedule_cloud_meeting">云+ 會議</string>
 
     <!--任务-->
     <string name="schedule_task_add">添加任務</string>
@@ -421,7 +423,7 @@
     <!--会议-->
     <string name="schedule_meeting_booking">預定會議</string>
     <string name="schedule_meeting_room_booking">新建會議</string>
-    <string name="schedule_meeting_add_attendee_title">參會人</string>
+    <string name="schedule_meeting_add_attendee_title">參与人</string>
     <string name="schedule_meeting_add_record_holder_title">會議記錄人</string>
     <string name="schedule_meeting_add_conference_title">會議聯絡人</string>
     <string name="schedule_meeting_select_attendee_title">選擇參會人</string>
@@ -850,7 +852,7 @@
     <string name="meeting_create_group_chat">發起群聊</string>
     <string name="meeting_cancel_the_meeting">確定取消會議?</string>
     <string name="schedule_add">新建</string>
-    <string name="schedule_update">更新</string>
+    <string name="schedule_update">编辑</string>
     <string name="schedule_add_position">请输入地点...</string>
 
 
