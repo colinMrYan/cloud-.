@@ -357,17 +357,21 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
                 findViewById(R.id.ll_recorder_liaison).setVisibility(View.GONE);
                 findViewById(R.id.iv_meeting_position_enter).setClickable(false);
                 findViewById(R.id.ll_all_location).setVisibility(View.VISIBLE);
+                findViewById(R.id.et_meeting_position).setEnabled(true);
                 break;
             case APP_MEETING:
                 findViewById(R.id.ll_all_participants).setVisibility(View.VISIBLE);
                 findViewById(R.id.ll_recorder_liaison).setVisibility(View.VISIBLE);
                 findViewById(R.id.iv_meeting_position_enter).setClickable(true);
                 findViewById(R.id.ll_all_location).setVisibility(View.VISIBLE);
+                findViewById(R.id.et_meeting_position).setEnabled(false);
                 break;
             case APP_SCHEDULE:
-                findViewById(R.id.ll_all_participants).setVisibility(View.GONE);
+                findViewById(R.id.ll_all_participants).setVisibility(View.VISIBLE);
+                findViewById(R.id.ll_recorder_liaison).setVisibility(View.GONE);
                 findViewById(R.id.iv_meeting_position_enter).setClickable(false);
-                findViewById(R.id.ll_all_location).setVisibility(View.GONE);
+                findViewById(R.id.ll_all_location).setVisibility(View.VISIBLE);
+                findViewById(R.id.et_meeting_position).setEnabled(true);
                 isFromMeeting = false;
                 break;
         }
