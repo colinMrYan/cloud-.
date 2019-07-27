@@ -312,7 +312,25 @@ public class ScheduleDetailActivity extends BaseActivity {
 
     private void initScheduleType() {
         meetingCalendarTypeImage.setImageResource(CalendarUtils.getCalendarIconResId(scheduleEvent));
-        meetingCalendarTypeText.setText(CalendarUtils.getCalendarName(scheduleEvent));
+        meetingCalendarTypeText.setText(getCalendarName(scheduleEvent.getType()));
+    }
+
+    String getCalendarName(String type) {
+        String calendarName = "";
+        switch (type) {
+            case ScheduleDetailActivity.TYPE_DEFAULT:
+                calendarName = BaseApplication.getInstance().getString(R.string.schedule_calendar_my_schedule);
+                break;
+            case ScheduleDetailActivity.TYPE_MEETING:
+                calendarName = BaseApplication.getInstance().getString(R.string.schedule_calendar_my_meeting);
+                break;
+            case ScheduleDetailActivity.TYPE_EXCHANGE:
+                calendarName = CalendarUtils.getCalendarName(scheduleEvent);
+                break;
+        }
+
+        return calendarName;
+
     }
 
     private void initAttendStatus(Participant participant) {
