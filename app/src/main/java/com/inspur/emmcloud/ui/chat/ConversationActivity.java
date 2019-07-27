@@ -409,7 +409,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                         userList.add(user);
                     }
                 }
-                if (userList.size() > 3) {
+                if (userList.size() > 50) {
                     new CustomDialog.MessageDialogBuilder(this)
                             .setMessage(R.string.chat_send_email_too_many_person)
                             .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
