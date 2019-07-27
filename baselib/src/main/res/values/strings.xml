@@ -463,7 +463,7 @@
     <string name="schedule_meeting_attend_reject">拒绝</string>
     <string name="chat_group_chanel_not_exist">当前聊天信息不存在</string>
     <string name="schedule_add">新建</string>
-    <string name="schedule_update">更新</string>
+    <string name="schedule_update">修改</string>
     <string name="schedule_add_position">请输入地点...</string>
 
     <!-- 发现部分 -->
