@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
+import android.os.Build;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -135,7 +136,9 @@ public class GestureLoginActivity extends BaseActivity {
         CircleTextImageView circleImageView = findViewById(R.id.gesture_login_user_head_img);
         ImageDisplayUtils.getInstance().displayImage(circleImageView,
                 userHeadImgUri, R.drawable.icon_person_default);
-        initFingerPrint();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            initFingerPrint();
+        }
     }
 
     /**
