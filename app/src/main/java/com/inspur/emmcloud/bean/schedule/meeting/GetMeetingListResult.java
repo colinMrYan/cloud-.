@@ -33,6 +33,7 @@ public class GetMeetingListResult {
         for (int i = 0; i < array.length(); i++) {
             Meeting meeting = new Meeting(JSONUtils.getJSONObject(array, i, new JSONObject()));
             meeting.setMeeting(true);
+
             if (meeting.getType().equals(Schedule.CALENDAR_TYPE_EXCHANGE)) {
                 meeting.setScheduleCalendar(scheduleCalendar.getId());
             } else if (meeting.getType().equals(Schedule.CALENDAR_TYPE_MEETING)) {
