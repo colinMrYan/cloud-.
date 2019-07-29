@@ -344,7 +344,7 @@ public class TaskListFragment extends Fragment {
         public void returnRecentTasksFail(String error, int errorCode) {
             swipeRefreshLayout.setLoading(false);
             swipeRefreshLayout.setRefreshing(false);
-            WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
+            //   WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
             noResultText.setVisibility(taskList.size() > 0 ? View.GONE : View.VISIBLE);
             taskNoResultImageView.setVisibility(taskList.size() > 0 ? View.GONE : View.VISIBLE);
         }

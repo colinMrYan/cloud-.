@@ -409,9 +409,9 @@ public class ConversationActivity extends ConversationBaseActivity {
                         userList.add(user);
                     }
                 }
-                if (userList.size() > 3) {
+                if (userList.size() > 50) {
                     new CustomDialog.MessageDialogBuilder(this)
-                            .setMessage(R.string.chat_send_email_too_many_person)
+                            .setMessage(userList.size() > 200 ? R.string.chat_send_email_max_person_tip : R.string.chat_send_email_too_many_person_tip)
                             .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {

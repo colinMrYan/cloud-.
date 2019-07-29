@@ -25,6 +25,7 @@ import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseLayoutFragment;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
@@ -33,7 +34,6 @@ import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.bean.schedule.Schedule;
 import com.inspur.emmcloud.bean.schedule.calendar.GetScheduleBasicDataResult;
 import com.inspur.emmcloud.bean.schedule.calendar.Holiday;
-import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.ui.schedule.meeting.ScheduleAddActivity;
 import com.inspur.emmcloud.util.privates.cache.HolidayCacheUtils;
 import com.inspur.emmcloud.widget.DragScaleView;
@@ -42,6 +42,8 @@ import com.inspur.emmcloud.widget.calendardayview.Event;
 import com.inspur.emmcloud.widget.calendarview.CalendarLayout;
 import com.inspur.emmcloud.widget.calendarview.CalendarView;
 import com.inspur.emmcloud.widget.calendarview.EmmCalendar;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -361,23 +363,12 @@ public class ScheduleBaseFragment extends BaseLayoutFragment implements View.OnL
         if (NetUtils.isNetworkConnected(BaseApplication.getInstance())) {
             Calendar startTime = calendarDayView.getDragViewStartTime(selectCalendar);
             Calendar endTime = calendarDayView.getDragViewEndTime(selectCalendar);
-            if (modifyEvent.getEventType() == Schedule.TYPE_CALENDAR) {
-                Schedule schedule = (Schedule) modifyEvent.getEventObj();
-                if (!startTime.equals(schedule.getStartTimeCalendar()) || !endTime.equals(schedule.getEndTimeCalendar())) {
-                    schedule.setStartTime(startTime.getTimeInMillis());
-                    schedule.setEndTime(endTime.getTimeInMillis());
-                    apiService.updateSchedule(schedule.toCalendarEventJSONObject().toString(), schedule);
-                }
-            } else if (modifyEvent.getEventType() == Schedule.TYPE_MEETING) {
-                Meeting meeting = (Meeting) modifyEvent.getEventObj();
-                if (!startTime.equals(meeting.getStartTimeCalendar()) || !endTime.equals(meeting.getEndTimeCalendar())) {
-                    meeting.setStartTime(startTime.getTimeInMillis());
-                    meeting.setEndTime(endTime.getTimeInMillis());
-                    apiService.updateSchedule(meeting.toJSONObject().toString(), meeting);
-                }
+            Schedule schedule = (Schedule) modifyEvent.getEventObj();
+            if (!startTime.equals(schedule.getStartTimeCalendar()) || !endTime.equals(schedule.getEndTimeCalendar())) {
+                schedule.setStartTime(startTime.getTimeInMillis());
+                schedule.setEndTime(endTime.getTimeInMillis());
+                apiService.updateSchedule(schedule.toCalendarEventJSONObject().toString(), schedule);
             }
-
-
         }
     }
 
@@ -418,7 +409,7 @@ public class ScheduleBaseFragment extends BaseLayoutFragment implements View.OnL
 
         @Override
         public void returnUpdateMeetingSuccess() {
-            showCalendarEvent(true);
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED, null));
         }
 
         @Override

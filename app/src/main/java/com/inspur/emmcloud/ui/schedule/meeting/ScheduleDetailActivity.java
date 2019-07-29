@@ -144,6 +144,7 @@ public class ScheduleDetailActivity extends BaseActivity {
         isHistoryMeeting = getIntent().getBooleanExtra(Constant.EXTRA_IS_HISTORY_MEETING, false);
         info.responseType = Participant.CALENDAR_RESPONSE_TYPE_UNKNOWN; //默认参会状态未知
         isFromCalendar = getIntent().getBooleanExtra(Constant.EXTRA_IS_FROM_CALENDAR, false);
+        isFromCalendar = isFromCalendar || (!scheduleEvent.isMeeting());
         headText.setText(getString(isFromCalendar ? R.string.schedule_calendar_detail : R.string.schedule_meeting_booking_detail));
         if (!isFromCalendar) {      //来自会议
             getIsMeetingAdmin();
@@ -176,6 +177,7 @@ public class ScheduleDetailActivity extends BaseActivity {
     @SuppressLint("StringFormatInvalid")
     private void initViews() {
         isFromCalendar = getIntent().getBooleanExtra(Constant.EXTRA_IS_FROM_CALENDAR, false);
+        isFromCalendar = isFromCalendar || (!scheduleEvent.isMeeting());
         meetingTitleText.setText(scheduleEvent.getTitle());
         meetingTimeText.setText(getString(R.string.meeting_detail_time, getMeetingTime()));
         meetingRemindText.setText(getString(R.string.meeting_detail_remind, ScheduleAlertTimeActivity.getAlertTimeNameByTime(scheduleEvent.getRemindEventObj().getAdvanceTimeSpan(), scheduleEvent.getAllDay())));
@@ -312,7 +314,25 @@ public class ScheduleDetailActivity extends BaseActivity {
 
     private void initScheduleType() {
         meetingCalendarTypeImage.setImageResource(CalendarUtils.getCalendarIconResId(scheduleEvent));
-        meetingCalendarTypeText.setText(CalendarUtils.getCalendarName(scheduleEvent));
+        meetingCalendarTypeText.setText(getCalendarName(scheduleEvent.getType()));
+    }
+
+    String getCalendarName(String type) {
+        String calendarName = CalendarUtils.getCalendarName(scheduleEvent);
+//        switch (type) {
+//            case ScheduleDetailActivity.TYPE_DEFAULT:
+//                calendarName = BaseApplication.getInstance().getString(R.string.schedule_calendar_my_schedule);
+//                break;
+//            case ScheduleDetailActivity.TYPE_MEETING:
+//                calendarName = BaseApplication.getInstance().getString(R.string.schedule_calendar_my_meeting);
+//                break;
+//            case ScheduleDetailActivity.TYPE_EXCHANGE:
+//                calendarName = CalendarUtils.getCalendarName(scheduleEvent);
+//                break;
+//        }
+
+        return calendarName;
+
     }
 
     private void initAttendStatus(Participant participant) {
@@ -527,11 +547,12 @@ public class ScheduleDetailActivity extends BaseActivity {
             @Override
             public void onClick(ActionSheetDialog dialog, View itemView, int position) {
                 String tag = (String) itemView.getTag();
-                if (tag.equals(getString(R.string.schedule_meeting_change))) {
+                if (tag.equals(getString(isFromCalendar ? R.string.schedule_calendar_modify : R.string.schedule_meeting_change))) {
                     Bundle bundle = new Bundle();
                     bundle.putSerializable(ScheduleAddActivity.EXTRA_SCHEDULE_CALENDAR_EVENT, scheduleEvent);
+                    bundle.putBoolean(ScheduleAddActivity.EXTRA_EVENT_TYPE_FROM_MEETING, !isFromCalendar);
                     IntentUtils.startActivity(ScheduleDetailActivity.this, ScheduleAddActivity.class, bundle, true);
-                } else if (tag.equals(getString(R.string.schedule_meeting_cancel))) {
+                } else if (tag.equals(getString(isFromCalendar ? R.string.schedule_calendar_delete : R.string.schedule_meeting_cancel))) {
                     showConfirmClearDialog(scheduleEvent);
                 } else if (tag.equals(getString(R.string.message_create_group))) {
                     new ChatCreateUtils().startGroupChat(ScheduleDetailActivity.this, scheduleEvent, chatGroupId, null);
@@ -609,11 +630,7 @@ public class ScheduleDetailActivity extends BaseActivity {
         @Override
         public void returnDeleteScheduleSuccess(String scheduleId) {
             LoadingDialog.dimissDlg(loadingDlg);
-            if (isFromCalendar) {
-                EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED, null));
-            } else {
-                EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_MEETING_DATA_CHANGED, null));
-            }
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED, null));
             finish();
         }
 
