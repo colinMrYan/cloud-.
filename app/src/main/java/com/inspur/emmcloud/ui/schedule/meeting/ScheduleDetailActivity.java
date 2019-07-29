@@ -144,7 +144,7 @@ public class ScheduleDetailActivity extends BaseActivity {
         isHistoryMeeting = getIntent().getBooleanExtra(Constant.EXTRA_IS_HISTORY_MEETING, false);
         info.responseType = Participant.CALENDAR_RESPONSE_TYPE_UNKNOWN; //默认参会状态未知
         isFromCalendar = getIntent().getBooleanExtra(Constant.EXTRA_IS_FROM_CALENDAR, false);
-        isFromCalendar = isFromCalendar && (!scheduleEvent.isMeeting());
+        isFromCalendar = isFromCalendar || (!scheduleEvent.isMeeting());
         headText.setText(getString(isFromCalendar ? R.string.schedule_calendar_detail : R.string.schedule_meeting_booking_detail));
         if (!isFromCalendar) {      //来自会议
             getIsMeetingAdmin();
@@ -177,7 +177,7 @@ public class ScheduleDetailActivity extends BaseActivity {
     @SuppressLint("StringFormatInvalid")
     private void initViews() {
         isFromCalendar = getIntent().getBooleanExtra(Constant.EXTRA_IS_FROM_CALENDAR, false);
-        isFromCalendar = isFromCalendar && (!scheduleEvent.isMeeting());
+        isFromCalendar = isFromCalendar || (!scheduleEvent.isMeeting());
         meetingTitleText.setText(scheduleEvent.getTitle());
         meetingTimeText.setText(getString(R.string.meeting_detail_time, getMeetingTime()));
         meetingRemindText.setText(getString(R.string.meeting_detail_remind, ScheduleAlertTimeActivity.getAlertTimeNameByTime(scheduleEvent.getRemindEventObj().getAdvanceTimeSpan(), scheduleEvent.getAllDay())));

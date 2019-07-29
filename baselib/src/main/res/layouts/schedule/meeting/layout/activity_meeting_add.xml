@@ -114,6 +114,7 @@
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:gravity="center_vertical"
+                        android:onClick="onClick"
                         android:orientation="horizontal"
                         android:paddingLeft="16dp"
                         android:paddingRight="16dp">
@@ -123,7 +124,6 @@
                             android:layout_width="30dp"
                             android:layout_height="15dp"
                             android:layout_centerVertical="true"
-                            android:onClick="onClick"
                             android:paddingLeft="15dp"
                             android:src="@drawable/ic_arrow_right" />
                     </LinearLayout>
