@@ -63,7 +63,7 @@ import butterknife.ButterKnife;
 public class ScheduleDetailActivity extends BaseActivity {
 
     public static final String EXTRA_SCHEDULE_ENTITY = "extra_schedule_entity";
-    private static final int MEETING_ATTENDEE = 0;
+    private static final int MEETING_ATTENDEE = 0;  //参与人
     private static final int MEETING_RECORD_HOLDER = 1;
     private static final int MEETING_CONTACT = 2;
     private static final int MEETING_INVITE = 3;
@@ -131,6 +131,7 @@ public class ScheduleDetailActivity extends BaseActivity {
     private String meetingId, calendarId;   //会议id  日程Id
     private boolean isFromCalendar = false;   //是否来自日程
     private Schedule scheduleEvent = new Schedule();
+    private boolean relatedPersonFlag, isMeetingAdmin, isMeetingCreater;    //会议相关人员  管理员  创建者
 
 
     @Override
@@ -265,7 +266,6 @@ public class ScheduleDetailActivity extends BaseActivity {
             return;
         }
         //如果不是相关人员  隐藏
-        boolean relatedPersonFlag = false;
         List<Participant> list = scheduleEvent.getAllParticipantList();
         Participant mParticipant = null;
         for (Participant item : list) {
@@ -281,8 +281,8 @@ public class ScheduleDetailActivity extends BaseActivity {
         if (BaseApplication.getInstance().getUid().equals(scheduleEvent.getOwner())) {
             relatedPersonFlag = true;
         }
-        boolean isMeetingAdmin = PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(), Constant.PREF_IS_MEETING_ADMIN, false);
-        boolean isMeetingCreater = scheduleEvent.getOwner().equals(MyApplication.getInstance().getUid());
+        isMeetingAdmin = PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(), Constant.PREF_IS_MEETING_ADMIN, false);
+        isMeetingCreater = scheduleEvent.getOwner().equals(MyApplication.getInstance().getUid());
         if (relatedPersonFlag || isMeetingAdmin) {
             meetingMoreImg.setVisibility(View.VISIBLE);
             attendStatusLayout.setVisibility((isHistoryMeeting || isMeetingCreater) ? View.GONE : View.VISIBLE);
@@ -460,8 +460,11 @@ public class ScheduleDetailActivity extends BaseActivity {
             case R.id.rl_meeting_attendee:
             case R.id.rl_meeting_record_holder:
             case R.id.rl_meeting_conference:
-                if (scheduleEvent != null)
+                if (!relatedPersonFlag && !isMeetingCreater && !isMeetingAdmin) {
+                    startMembersActivity(MEETING_ATTENDEE);
+                } else if (scheduleEvent != null) {
                     IntentUtils.startActivity(this, MeetingAttendeeStateActivity.class, bundle);
+                }
                 break;
             case R.id.rl_meeting_invite:
                 startMembersActivity(MEETING_INVITE);
@@ -489,7 +492,7 @@ public class ScheduleDetailActivity extends BaseActivity {
         Bundle bundle = new Bundle();
         switch (type) {
             case MEETING_ATTENDEE:
-                uidList = getUidList(scheduleEvent.getCommonParticipantList());
+                uidList = getUidList(deleteRepeatData(scheduleEvent.getAllParticipantList()));
                 bundle.putString("title", getString(R.string.schedule_meeting_add_attendee_title));
                 break;
             case MEETING_RECORD_HOLDER:
