@@ -120,10 +120,11 @@
 
                         <ImageView
                             android:id="@+id/iv_meeting_position_enter"
-                            android:layout_width="15dp"
+                            android:layout_width="30dp"
                             android:layout_height="15dp"
                             android:layout_centerVertical="true"
                             android:onClick="onClick"
+                            android:paddingLeft="15dp"
                             android:src="@drawable/ic_arrow_right" />
                     </LinearLayout>
 
