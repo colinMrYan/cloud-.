@@ -628,11 +628,7 @@ public class ScheduleDetailActivity extends BaseActivity {
         @Override
         public void returnDeleteScheduleSuccess(String scheduleId) {
             LoadingDialog.dimissDlg(loadingDlg);
-            if (isFromCalendar) {
-                EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED, null));
-            } else {
-                EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_MEETING_DATA_CHANGED, null));
-            }
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED, null));
             finish();
         }
 

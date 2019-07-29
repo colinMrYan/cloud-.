@@ -25,6 +25,7 @@ import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseLayoutFragment;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
@@ -41,6 +42,8 @@ import com.inspur.emmcloud.widget.calendardayview.Event;
 import com.inspur.emmcloud.widget.calendarview.CalendarLayout;
 import com.inspur.emmcloud.widget.calendarview.CalendarView;
 import com.inspur.emmcloud.widget.calendarview.EmmCalendar;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -406,7 +409,7 @@ public class ScheduleBaseFragment extends BaseLayoutFragment implements View.OnL
 
         @Override
         public void returnUpdateMeetingSuccess() {
-            showCalendarEvent(true);
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED, null));
         }
 
         @Override

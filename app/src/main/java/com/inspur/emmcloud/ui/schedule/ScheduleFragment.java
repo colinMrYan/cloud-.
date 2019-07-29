@@ -577,14 +577,15 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         public void returnDeleteScheduleSuccess(String scheduleId) {
             LoadingDialog.dimissDlg(loadingDlg);
             ScheduleCacheUtils.removeSchedule(BaseApplication.getInstance(), scheduleId);
-            showCalendarEvent(true);
-            if (adapter != null) {
-                adapter.setEventList(allDayEventList);
-                adapter.notifyDataSetChanged();
-                if (allDayEventList.size() < 1) {
-                    myDialog.dismiss();
-                }
-            }
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED));
+//            showCalendarEvent(true);
+//            if (adapter != null) {
+//                adapter.setEventList(allDayEventList);
+//                adapter.notifyDataSetChanged();
+//                if (allDayEventList.size() < 1) {
+//                    myDialog.dismiss();
+//                }
+//            }
         }
 
         @Override
