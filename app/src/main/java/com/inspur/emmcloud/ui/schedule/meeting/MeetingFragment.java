@@ -200,17 +200,15 @@ public class MeetingFragment extends BaseFragment implements MySwipeRefreshLayou
 //                apiService.getMeetingListByTime(startTime, scheduleCalendar);
 //            }
 //            apiService.getMeetingListByTime(startTime, appScheduleCalendar);
-            ScheduleCalendar appScheduleCalendar = null;
-            ScheduleCalendar appMeetingCalendar = null;
+
+            ScheduleCalendar scheduleCalendar = null;
             for (int i = 0; i < scheduleCalendarList.size(); i++) {
                 if (scheduleCalendarList.get(i).getAcType().equals(AccountType.EXCHANGE.toString())) {
-                    appScheduleCalendar = scheduleCalendarList.get(i);
-                }
-                if (scheduleCalendarList.get(i).getAcType().equals(AccountType.APP_MEETING.toString())) {
-                    appMeetingCalendar = scheduleCalendarList.get(i);
+                    scheduleCalendar = scheduleCalendarList.get(i);
+                    break;
                 }
             }
-            apiService.getMeetingListByTime(startTime, appScheduleCalendar == null ? appMeetingCalendar : appScheduleCalendar);
+            apiService.getMeetingListByTime(startTime, scheduleCalendar);
 
         } else {
             swipeRefreshLayout.setRefreshing(false);

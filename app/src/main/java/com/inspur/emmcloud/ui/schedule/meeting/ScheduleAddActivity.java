@@ -811,7 +811,7 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
      * @param
      */
     public void sendCalendarEventNotification() {
-        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_TASK_DATA_CHANGED, ""));
+        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED, ""));
     }
 
 

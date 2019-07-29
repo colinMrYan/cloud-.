@@ -316,18 +316,18 @@ public class ScheduleDetailActivity extends BaseActivity {
     }
 
     String getCalendarName(String type) {
-        String calendarName = "";
-        switch (type) {
-            case ScheduleDetailActivity.TYPE_DEFAULT:
-                calendarName = BaseApplication.getInstance().getString(R.string.schedule_calendar_my_schedule);
-                break;
-            case ScheduleDetailActivity.TYPE_MEETING:
-                calendarName = BaseApplication.getInstance().getString(R.string.schedule_calendar_my_meeting);
-                break;
-            case ScheduleDetailActivity.TYPE_EXCHANGE:
-                calendarName = CalendarUtils.getCalendarName(scheduleEvent);
-                break;
-        }
+        String calendarName = CalendarUtils.getCalendarName(scheduleEvent);
+//        switch (type) {
+//            case ScheduleDetailActivity.TYPE_DEFAULT:
+//                calendarName = BaseApplication.getInstance().getString(R.string.schedule_calendar_my_schedule);
+//                break;
+//            case ScheduleDetailActivity.TYPE_MEETING:
+//                calendarName = BaseApplication.getInstance().getString(R.string.schedule_calendar_my_meeting);
+//                break;
+//            case ScheduleDetailActivity.TYPE_EXCHANGE:
+//                calendarName = CalendarUtils.getCalendarName(scheduleEvent);
+//                break;
+//        }
 
         return calendarName;
 

@@ -57,32 +57,6 @@ public class CalendarUtils {
     }
 
 
-    /**
-     * 获取日程calendar的名称
-     *
-     * @param schedule
-     * @return
-     */
-    public static String getCalendarName(Schedule schedule) {
-        String calendarName = "";
-        ScheduleCalendar scheduleCalendar = ScheduleCalendarCacheUtils.getScheduleCalendar(BaseApplication.getInstance(), schedule.getScheduleCalendar());
-        if (scheduleCalendar != null) {
-            AccountType accountType = AccountType.getAccountType(scheduleCalendar.getAcType());
-            switch (accountType) {
-                case APP_SCHEDULE:
-                    calendarName = BaseApplication.getInstance().getString(R.string.schedule_calendar_my_schedule);
-                    break;
-                case APP_MEETING:
-                    calendarName = BaseApplication.getInstance().getString(R.string.schedule_calendar_my_meeting);
-                    break;
-                case EXCHANGE:
-                    calendarName = scheduleCalendar.getAcName();
-                    break;
-            }
-        }
-
-        return calendarName;
-    }
 
     /**
      * 获取日程calendar的Icon
@@ -102,6 +76,18 @@ public class CalendarUtils {
 
 
     /********************************************************************************/
+
+    /**
+     * 获取日程calendar的名称
+     *
+     * @param schedule
+     * @return
+     */
+    public static String getCalendarName(Schedule schedule) {
+        ScheduleCalendar scheduleCalendar = ScheduleCalendarCacheUtils.getScheduleCalendar(BaseApplication.getInstance(), schedule.getScheduleCalendar());
+        return getScheduleCalendarShowName(scheduleCalendar);
+    }
+
 
 
     public static String getScheduleCalendarShowName(ScheduleCalendar scheduleCalendar) {
@@ -123,29 +109,34 @@ public class CalendarUtils {
 
     public static String getHttpHeaderExtraValue(ScheduleCalendar scheduleCalendar) {
         String exchangeAuthHeaderValue = "";
-        switch (AccountType.getAccountType(scheduleCalendar.getAcType())) {
-            case EXCHANGE:
-                String exchangeAccount = scheduleCalendar.getAcName();
-                String exchangePassword = scheduleCalendar.getAcPW();
-                if (!StringUtils.isBlank(exchangeAccount) && !StringUtils.isBlank(exchangePassword)) {
-                    exchangeAuthHeaderValue = exchangeAccount + ":" + exchangePassword;
-                    exchangeAuthHeaderValue = Base64.encodeToString(exchangeAuthHeaderValue.getBytes(), Base64.NO_WRAP);
-                }
-                break;
-            default:
-                break;
+        if (scheduleCalendar != null) {
+            switch (AccountType.getAccountType(scheduleCalendar.getAcType())) {
+                case EXCHANGE:
+                    String exchangeAccount = scheduleCalendar.getAcName();
+                    String exchangePassword = scheduleCalendar.getAcPW();
+                    if (!StringUtils.isBlank(exchangeAccount) && !StringUtils.isBlank(exchangePassword)) {
+                        exchangeAuthHeaderValue = exchangeAccount + ":" + exchangePassword;
+                        exchangeAuthHeaderValue = Base64.encodeToString(exchangeAuthHeaderValue.getBytes(), Base64.NO_WRAP);
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
+
         return exchangeAuthHeaderValue;
     }
 
     public static String getHttpHeaderExtraKey(ScheduleCalendar scheduleCalendar) {
         String exchangeAuthHeaderKey = "";
-        switch (AccountType.getAccountType(scheduleCalendar.getAcType())) {
-            case EXCHANGE:
-                exchangeAuthHeaderKey = "x-ews-auth";
-                break;
-            default:
-                break;
+        if (scheduleCalendar != null) {
+            switch (AccountType.getAccountType(scheduleCalendar.getAcType())) {
+                case EXCHANGE:
+                    exchangeAuthHeaderKey = "x-ews-auth";
+                    break;
+                default:
+                    break;
+            }
         }
         return exchangeAuthHeaderKey;
     }
