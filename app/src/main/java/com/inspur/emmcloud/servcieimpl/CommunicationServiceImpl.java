@@ -53,6 +53,8 @@ public class CommunicationServiceImpl implements CommunicationService {
         intent.putExtra("title", title);
         intent.putExtra("subTitle", subTitle);
         intent.putExtra("url", url);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setClass(BaseApplication.getInstance(), ShareToConversationBlankActivity.class);
         ShareToConversationBlankActivity.startActivity(BaseApplication.getInstance(), intent, listener);
     }
 
@@ -61,6 +63,7 @@ public class CommunicationServiceImpl implements CommunicationService {
         Intent intent = new Intent();
         intent.putExtra("type", Message.MESSAGE_TYPE_TEXT_PLAIN);
         intent.putExtra("content", content);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setClass(BaseApplication.getInstance(), ShareToConversationBlankActivity.class);
         ShareToConversationBlankActivity.startActivity(BaseApplication.getInstance(), intent, listener);
     }
