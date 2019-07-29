@@ -445,7 +445,7 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
             ToastUtils.show(MyApplication.getInstance(), R.string.meeting_room_booking_topic);
             return false;
         }
-        if (StringUtils.isBlank(meetingPosition) && isMeeting) {
+        if (StringUtils.isBlank(meetingPosition) && isMeeting && scheduleCalendar.getAcType().equals(AccountType.APP_MEETING.toString())) {
             ToastUtils.show(MyApplication.getInstance(), R.string.meeting_room_booking_choosing_room);
             return false;
         }
@@ -624,6 +624,7 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
         }
 
     }
+
 
     /**
      * 修正会议室可用时间
