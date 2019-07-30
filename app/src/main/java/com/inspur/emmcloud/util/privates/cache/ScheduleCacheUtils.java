@@ -47,6 +47,7 @@ public class ScheduleCacheUtils {
             if (scheduleCalendar == null || scheduleCalendar.getId().equals(AccountType.APP_SCHEDULE.toString()) || scheduleCalendar.getId().equals(AccountType.APP_MEETING.toString())) {
                 List<String> accountTypeList = new ArrayList<>();
                 accountTypeList.add(AccountType.APP_SCHEDULE.toString());
+                accountTypeList.add(AccountType.APP_MEETING.toString());
                 DbCacheUtils.getDb(context).delete(Schedule.class, WhereBuilder.b("endTime", ">=", startTimeLong)
                         .and("startTime", "<=", endTimeLong).and("scheduleCalendar", "in", accountTypeList));
             } else {

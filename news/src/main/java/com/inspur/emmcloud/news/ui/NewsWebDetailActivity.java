@@ -54,6 +54,9 @@ import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
+import com.inspur.emmcloud.componentservice.communication.CommunicationService;
+import com.inspur.emmcloud.componentservice.communication.ShareToConversationListener;
 import com.inspur.emmcloud.news.R;
 import com.inspur.emmcloud.news.api.NewsAPIInsterfaceImpl;
 import com.inspur.emmcloud.news.api.NewsAPIUri;
@@ -607,7 +610,7 @@ public class NewsWebDetailActivity extends BaseActivity {
             setDialogModel(darkMode);
 
         } else if (i == R.id.app_news_share_btn) {
-            //                shareNewsToFrinds();
+            shareNewsToConversation();
         } else if (i == R.id.app_news_instructions_btn) {//批示逻辑
             dialog.dismiss();
             if (!StringUtils.isBlank(groupNews.getApprovedDate())) {
@@ -834,22 +837,38 @@ public class NewsWebDetailActivity extends BaseActivity {
         ((Button) dialog.findViewById(R.id.app_news_instructions_btn)).setCompoundDrawables(instructionIcon, null, null, null);
     }
 
-//    /**
-//     * 给朋友分享新闻
-//     */
-//    private void shareNewsToFrinds() {
-//        Intent intent = new Intent();
-//        intent.putExtra(ContactSearchFragment.EXTRA_TYPE, 0);
-//        intent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, false);
-//        ArrayList<String> uidList = new ArrayList<>();
-//        uidList.add(BaseApplication.getInstance().getUid());
-//        intent.putStringArrayListExtra(ContactSearchFragment.EXTRA_EXCLUDE_SELECT, uidList);
-//        intent.putExtra(ContactSearchFragment.EXTRA_TITLE, getString(R.string.news_share));
-//        intent.setClass(getApplicationContext(),
-//                ContactSearchActivity.class);
-//        startActivityForResult(intent, SHARE_SEARCH_RUEST_CODE);
-//        dialog.dismiss();
-//    }
+    /**
+     * 给朋友分享新闻
+     */
+    private void shareNewsToConversation() {
+        Router router = Router.getInstance();
+        if (router.getService(CommunicationService.class) != null) {
+            CommunicationService service = router.getService(CommunicationService.class);
+            String poster = null;
+            if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
+                poster = groupNews.getPoster();
+            } else {
+                poster = StringUtils.isBlank(groupNews.getPoster()) ? "" : NewsAPIUri.getPreviewUrl(groupNews.getPoster());
+            }
+
+            service.shareExtendedLinksToConversation(poster, groupNews.getTitle(), groupNews.getSummary(), url, new ShareToConversationListener() {
+                @Override
+                public void shareSuccess(String cid) {
+                    ToastUtils.show(R.string.baselib_share_success);
+                }
+
+                @Override
+                public void shareFail() {
+                    ToastUtils.show(R.string.baselib_share_fail);
+                }
+
+                @Override
+                public void shareCancel() {
+
+                }
+            });
+        }
+    }
 
 //    @Override
 //    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
