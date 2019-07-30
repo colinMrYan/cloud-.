@@ -42,6 +42,7 @@ public class GestureLoginActivity extends BaseActivity {
 
     private static final int GESTURE_CODE_TIMES = 5;
     private static final long DELAYTIME = 600l;
+    public final static String GESTURE_CODE_CHANGE = "gesture_code_change";
     @BindView(R.id.lockPatternView)
     LockPatternView lockPatternView;
     @BindView(R.id.gestrue_message_text)
@@ -63,8 +64,8 @@ public class GestureLoginActivity extends BaseActivity {
             if (pattern != null) {
                 if (LockPatternUtil.checkPattern(pattern, gesturePassword)) {
                     updateStatus(Status.CORRECT);
-                    if (getIntent().hasExtra("gesture_code_change")) {
-                        String command = getIntent().getStringExtra("gesture_code_change");
+                    if (getIntent().hasExtra(GESTURE_CODE_CHANGE)) {
+                        String command = getIntent().getStringExtra(GESTURE_CODE_CHANGE);
                         if (command.equals("reset")) {
                             IntentUtils.startActivity(GestureLoginActivity.this, CreateGestureActivity.class);
                             finish();
@@ -125,8 +126,8 @@ public class GestureLoginActivity extends BaseActivity {
         gesturePassword = CreateGestureActivity.getGestureCodeByUser(GestureLoginActivity.this);
         lockPatternView.setOnPatternListener(patternListener);
         updateStatus(Status.DEFAULT);
-        if (getIntent().hasExtra("gesture_code_change")) {
-            String command = getIntent().getStringExtra("gesture_code_change");
+        if (getIntent().hasExtra(GESTURE_CODE_CHANGE)) {
+            String command = getIntent().getStringExtra(GESTURE_CODE_CHANGE);
             if (command.equals("login")) {
                 isLogin = true;
             }

@@ -55,7 +55,7 @@ public class SafeGustureFaceSettingActivity extends BaseActivity {
                     int doubleValidation = PreferencesByUserAndTanentUtils.getInt(MyApplication.getInstance(), Constant.PREF_MNM_DOUBLE_VALIADATION, -1);
                     if (doubleValidation != 1) {
                         Bundle bundle = new Bundle();
-                        bundle.putString("gesture_code_change", "close");
+                        bundle.putString(GestureLoginActivity.GESTURE_CODE_CHANGE, "close");
                         IntentUtils.startActivity(SafeGustureFaceSettingActivity.this, GestureLoginActivity.class, bundle);
                     } else {
                         guestureSwitchView.setChecked(true);
@@ -99,7 +99,7 @@ public class SafeGustureFaceSettingActivity extends BaseActivity {
                 break;
             case R.id.rl_setting_safe_reset_guesture:
                 Bundle bundle = new Bundle();
-                bundle.putString("gesture_code_change", "reset");
+                bundle.putString(GestureLoginActivity.GESTURE_CODE_CHANGE, "reset");
                 IntentUtils.startActivity(SafeGustureFaceSettingActivity.this, GestureLoginActivity.class, bundle);
                 break;
             case R.id.rl_setting_safe_reset_face:
