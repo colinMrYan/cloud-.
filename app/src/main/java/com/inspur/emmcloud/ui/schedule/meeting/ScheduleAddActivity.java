@@ -116,6 +116,9 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
     TextView eventTypeText;
     @BindView(R.id.et_meeting_position)
     EditText positionEditText;
+    @BindView(R.id.ll_del_position)
+    LinearLayout delPositionLayout;
+
 
     private LoadingDialog loadingDlg;
     private ScheduleApiService apiService;
@@ -347,39 +350,45 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
         modifyUIByEventType();
         calendarTypeLayout.setClickable(!isEventEditModel);
         allDaySwitch.setOnCheckedChangeListener(this);
+        modifyLocationUI();
+
     }
 
+    /**
+     * 修改
+     */
     private void modifyUIByEventType() {
         AccountType accountType = AccountType.getAccountType(scheduleCalendar.getAcType());
         switch (accountType) {
             case EXCHANGE:
                 findViewById(R.id.ll_all_participants).setVisibility(View.VISIBLE);
                 findViewById(R.id.ll_recorder_liaison).setVisibility(View.GONE);
-                findViewById(R.id.ll_add_position).setClickable(false);
-                findViewById(R.id.ll_add_position).setVisibility(View.GONE);
-                findViewById(R.id.ll_all_location).setVisibility(View.VISIBLE);
-                findViewById(R.id.et_meeting_position).setEnabled(true);
+                isFromMeeting = false;
+                recorderSearchModelList.clear();
+                liaisonSearchModelList.clear();
                 break;
             case APP_MEETING:
                 findViewById(R.id.ll_all_participants).setVisibility(View.VISIBLE);
                 findViewById(R.id.ll_recorder_liaison).setVisibility(View.VISIBLE);
-                findViewById(R.id.ll_add_position).setClickable(true);
-                findViewById(R.id.ll_all_location).setVisibility(View.VISIBLE);
-                findViewById(R.id.et_meeting_position).setEnabled(false);
-                findViewById(R.id.ll_add_position).setVisibility(View.VISIBLE);
+                isFromMeeting = true;
                 break;
             case APP_SCHEDULE:
                 findViewById(R.id.ll_all_participants).setVisibility(View.VISIBLE);
                 findViewById(R.id.ll_recorder_liaison).setVisibility(View.GONE);
-                findViewById(R.id.ll_add_position).setClickable(false);
-                findViewById(R.id.ll_all_location).setVisibility(View.VISIBLE);
-                findViewById(R.id.et_meeting_position).setEnabled(true);
-                findViewById(R.id.ll_add_position).setVisibility(View.GONE);
                 isFromMeeting = false;
+                recorderSearchModelList.clear();
+                liaisonSearchModelList.clear();
                 break;
         }
     }
 
+
+    private void modifyLocationUI() {
+        positionEditText.setText(location != null ? location.getBuilding() + " " + location.getDisplayName() : "");
+        delPositionLayout.setVisibility(location != null ? View.VISIBLE : View.GONE);
+        delPositionLayout.setClickable(location != null);
+        positionEditText.setEnabled(location == null);
+    }
 
     /**
      * 获取类型
@@ -437,10 +446,17 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
                 intent3.putExtra(ScheduleTypeSelectActivity.SCHEDULE_AC_TYPE, scheduleCalendar.getId());
                 startActivityForResult(intent3, REQUEST_SET_SCHEDULE_TYPE);
                 break;
+            case R.id.ll_del_position:
+                location = null;
+                modifyLocationUI();
+                break;
         }
     }
 
 
+    /**
+     * 判定当前是否有效
+     */
     private boolean isInputValid(boolean isMeeting) {
         title = titleEdit.getText().toString().trim();
         meetingPosition = positionEditText.getText().toString();
@@ -492,6 +508,8 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
         return true;
     }
 
+    /**
+     * 设置提醒*/
     private void setReminder() {
         Intent intent = new Intent(this, ScheduleAlertTimeActivity.class);
         int advanceTimeSpan = -1;
@@ -613,6 +631,7 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
                     location.setId(meetingRoom.getId());
                     location.setBuilding(meetingRoom.getBuilding().getName());
                     location.setDisplayName(meetingRoom.getName());
+                    modifyLocationUI();
                     break;
                 case REQUEST_SET_REMIND_EVENT:
                     remindEvent = (RemindEvent) data.getSerializableExtra(ScheduleAlertTimeActivity.EXTRA_SCHEDULE_ALERT_TIME);
