@@ -344,7 +344,6 @@ public class MeetingRoomInfoActivity extends BaseActivity {
     public void onReceiverSimpleEventMessage(SimpleEventMessage eventMessage) {
         switch (eventMessage.getAction()) {
             case Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED:
-            case Constant.EVENTBUS_TAG_SCHEDULE_MEETING_DATA_CHANGED:
                 getMeetingListByMeetingRoom();
                 break;
         }

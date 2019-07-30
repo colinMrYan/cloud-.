@@ -466,7 +466,7 @@ public class Schedule implements Serializable {
                 break;
             case EXCHANGE:
             case APP_SCHEDULE:
-                canDelete = true;
+                canDelete = getOwner().equals(BaseApplication.getInstance().getUid());
                 break;
         }
         return canDelete;
@@ -484,7 +484,7 @@ public class Schedule implements Serializable {
                 canModify = getOwner().equals(BaseApplication.getInstance().getUid()) && getEndTimeCalendar().after(Calendar.getInstance());
                 break;
             case APP_SCHEDULE:
-                canModify = true;
+                canModify = getOwner().equals(BaseApplication.getInstance().getUid());
                 break;
         }
         return canModify;

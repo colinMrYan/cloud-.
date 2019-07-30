@@ -875,7 +875,7 @@
     <string name="meeting_detail_remind">提醒：%1$s</string>
     <string name="meeting_detail_create">%1$s 创建</string>
     <string name="meeting_detail_inviter">邀请人:%1$s</string>
-    <string name="meeting_detail_attendee">参会人:%1$s</string>
+    <string name="meeting_detail_attendee">参与人:%1$s</string>
     <string name="meeting_detail_record_holder">会议记录人:%1$s</string>
     <string name="meeting_detail_conference">会议联络人:%1$s</string>
     <string name="meeting_detail_record_title">会议记录人</string>
