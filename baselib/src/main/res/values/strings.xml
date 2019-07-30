@@ -453,7 +453,7 @@
     <string name="schedule_meeting_booking_room">预定会议室</string>
     <string name="schedule_meeting_in_meeting">会议中</string>
     <string name="schedule_meeting_be_free">空闲</string>
-    <string name="meeting_detail_location">地点:</string>
+    <string name="meeting_detail_location">地点：</string>
     <string name="schedule_meeting_change">修改会议</string>
     <string name="schedule_meeting_cancel">取消会议</string>
     <string name="schedule_meeting_my_create">我创建的：</string>
@@ -875,7 +875,7 @@
     <string name="meeting_detail_remind">提醒：%1$s</string>
     <string name="meeting_detail_create">%1$s 创建</string>
     <string name="meeting_detail_inviter">邀请人:%1$s</string>
-    <string name="meeting_detail_attendee">参与人:%1$s</string>
+    <string name="meeting_detail_attendee">参与人：%1$s</string>
     <string name="meeting_detail_record_holder">会议记录人:%1$s</string>
     <string name="meeting_detail_conference">会议联络人:%1$s</string>
     <string name="meeting_detail_record_title">会议记录人</string>

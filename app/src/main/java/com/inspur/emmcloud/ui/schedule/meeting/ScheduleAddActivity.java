@@ -615,6 +615,9 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             List<SearchModel> searchModelList = (List<SearchModel>) data.getExtras().getSerializable("selectMemList");
+            if (searchModelList != null && searchModelList.size() > 0) {
+                searchModelList = getSearchModelListHaveEmail(searchModelList);
+            }
             switch (requestCode) {
                 case REQUEST_SELECT_ATTENDEE:
                     attendeeSearchModelList = searchModelList;
@@ -653,6 +656,19 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
             }
         }
 
+    }
+
+    List<SearchModel> getSearchModelListHaveEmail(List<SearchModel> searchModelList) {
+        List<SearchModel> searchModelList1 = new ArrayList<>();
+        for (int i = 0; i < searchModelList.size(); i++) {
+            SearchModel searchModel = searchModelList.get(i);
+            ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(searchModelList.get(i).getId());
+            if (contactUser != null) {
+                searchModel.setEmail(contactUser.getEmail());
+            }
+            searchModelList1.add(searchModel);
+        }
+        return searchModelList1;
     }
 
 
