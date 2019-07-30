@@ -98,6 +98,16 @@ public class Schedule implements Serializable {
         location = JSONUtils.getString(object, "location", "");
         participants = JSONUtils.getString(object, "participants", "");
         note = JSONUtils.getString(object, "note", "");
+        if (!StringUtils.isBlank(type)) {
+            switch (type) {
+                case CALENDAR_TYPE_MY_CALENDAR:
+                    scheduleCalendar = AccountType.APP_SCHEDULE.toString();
+                    break;
+                case CALENDAR_TYPE_MEETING:
+                    scheduleCalendar = AccountType.APP_MEETING.toString();
+                    break;
+            }
+        }
     }
 
     public static List<Event> calendarEvent2EventList(List<Schedule> scheduleList, Calendar selectCalendar) {
