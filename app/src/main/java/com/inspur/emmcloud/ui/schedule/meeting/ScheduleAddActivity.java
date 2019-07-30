@@ -118,6 +118,9 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
     EditText positionEditText;
     @BindView(R.id.ll_del_position)
     LinearLayout delPositionLayout;
+    @BindView(R.id.ll_add_position)
+    LinearLayout addPositionLayout;
+
 
 
     private LoadingDialog loadingDlg;
@@ -388,6 +391,8 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
         delPositionLayout.setVisibility(location != null ? View.VISIBLE : View.GONE);
         delPositionLayout.setClickable(location != null);
         positionEditText.setEnabled(location == null);
+        addPositionLayout.setVisibility(location != null ? View.GONE : View.VISIBLE);
+        addPositionLayout.setClickable(location == null);
     }
 
     /**
