@@ -28,6 +28,7 @@ import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.schedule.MeetingAttendees;
 import com.inspur.emmcloud.bean.schedule.Participant;
+import com.inspur.emmcloud.bean.schedule.Schedule;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
@@ -50,7 +51,7 @@ public class MeetingAttendeeStateActivity extends BaseActivity implements SwipeR
     @BindView(R.id.swipe_refresh_layout)
     MySwipeRefreshLayout swipeRefreshLayout;
     MeetingAttendeeStateAdapter meetingAttendeeStateAdapter;
-    Meeting meeting;
+    Schedule meeting;
     private List<MeetingAttendees> meetingAttendeesList = new ArrayList<>();
     private List<Participant> recordParticipants = new ArrayList<>();
     private List<Participant> contactParticipants = new ArrayList<>();
@@ -59,7 +60,7 @@ public class MeetingAttendeeStateActivity extends BaseActivity implements SwipeR
     @Override
     public void onCreate() {
         ButterKnife.bind(this);
-        meeting = (Meeting) getIntent().getSerializableExtra(MeetingDetailActivity.EXTRA_MEETING_ENTITY); //来自列表
+        meeting = (Schedule) getIntent().getSerializableExtra(ScheduleDetailActivity.EXTRA_SCHEDULE_ENTITY); //来自列表
         init();
     }
 

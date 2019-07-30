@@ -28,6 +28,7 @@ import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
+import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
@@ -36,7 +37,6 @@ import com.inspur.emmcloud.bean.schedule.meeting.GetMeetingListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.bean.schedule.meeting.MeetingRoom;
 import com.inspur.emmcloud.bean.schedule.meeting.MeetingSchedule;
-import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -259,8 +259,8 @@ public class MeetingRoomInfoActivity extends BaseActivity {
                         finish();
                     } else {
                         Bundle bundle = new Bundle();
-                        bundle.putSerializable(com.inspur.emmcloud.ui.schedule.meeting.MeetingDetailActivity.EXTRA_MEETING_ENTITY, meeting);
-                        IntentUtils.startActivity(MeetingRoomInfoActivity.this, com.inspur.emmcloud.ui.schedule.meeting.MeetingDetailActivity.class, bundle);
+                        bundle.putSerializable(ScheduleDetailActivity.EXTRA_SCHEDULE_ENTITY, meeting);
+                        IntentUtils.startActivity(MeetingRoomInfoActivity.this, ScheduleDetailActivity.class, bundle);
                     }
                 }
             });
@@ -316,7 +316,7 @@ public class MeetingRoomInfoActivity extends BaseActivity {
     protected void showMeetingInfo(Meeting meeting) {
         Intent intent = new Intent();
         intent.putExtra("meeting", meeting);
-        intent.setClass(this, MeetingDetailActivity.class);
+        intent.setClass(this, ScheduleDetailActivity.class);
         startActivityForResult(intent, REQUEST_MEETING_INFO);
     }
 
@@ -343,6 +343,7 @@ public class MeetingRoomInfoActivity extends BaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiverSimpleEventMessage(SimpleEventMessage eventMessage) {
         switch (eventMessage.getAction()) {
+            case Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED:
             case Constant.EVENTBUS_TAG_SCHEDULE_MEETING_DATA_CHANGED:
                 getMeetingListByMeetingRoom();
                 break;

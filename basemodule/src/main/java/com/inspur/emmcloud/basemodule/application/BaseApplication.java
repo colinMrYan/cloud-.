@@ -63,7 +63,6 @@ public abstract class BaseApplication extends MultiDexApplication {
     private MyActivityLifecycleCallbacks myActivityLifecycleCallbacks;
     private boolean isOpenNotification = false;
     private String tanent;
-
     private String currentChannelCid = "";
     private boolean isSafeLock = false;//是否正处于安全锁定中（正处于二次认证解锁页面）
 
@@ -102,7 +101,7 @@ public abstract class BaseApplication extends MultiDexApplication {
         crashHandler.init(getInstance());
         x.Ext.init(BaseApplication.this);
         x.Ext.setDebug(true);
-        LogUtils.isDebug = AppUtils.isApkDebugable(getInstance());
+        LogUtils.isDebug = true;
         Res.init(this); // 注册imp的资源文件类
         ImageDisplayUtils.getInstance().initImageLoader(getInstance(), new CustomImageDownloader(getInstance()), MyAppConfig.LOCAL_CACHE_PATH);
         initTanent();
@@ -199,6 +198,10 @@ public abstract class BaseApplication extends MultiDexApplication {
      * @return
      */
     public RequestParams getHttpRequestParams(String url) {
+        return getHttpRequestParams(url, "", "");
+    }
+
+    public RequestParams getHttpRequestParams(String url, String extraHeaderKey, String extraHeaderValue) {
         RequestParams params = new RequestParams(url);
         String versionValue = AppUtils.getVersion(getInstance());
         try {
@@ -223,6 +226,9 @@ public abstract class BaseApplication extends MultiDexApplication {
         }
         if (currentEnterprise != null) {
             params.addHeader("X-ECC-Current-Enterprise", currentEnterprise.getId());
+        }
+        if (!StringUtils.isBlank(extraHeaderKey) && !StringUtils.isBlank(extraHeaderValue)) {
+            params.addHeader(extraHeaderKey, extraHeaderValue);
         }
         params.addHeader("Accept-Language", LanguageManager.getInstance().getCurrentAppLanguage());
         return params;

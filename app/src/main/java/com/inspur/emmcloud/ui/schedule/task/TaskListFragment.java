@@ -22,12 +22,12 @@ import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
+import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.bean.schedule.task.GetTaskListResult;
 import com.inspur.emmcloud.bean.schedule.task.Task;
-import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -344,7 +344,7 @@ public class TaskListFragment extends Fragment {
         public void returnRecentTasksFail(String error, int errorCode) {
             swipeRefreshLayout.setLoading(false);
             swipeRefreshLayout.setRefreshing(false);
-            WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
+            //   WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
             noResultText.setVisibility(taskList.size() > 0 ? View.GONE : View.VISIBLE);
             taskNoResultImageView.setVisibility(taskList.size() > 0 ? View.GONE : View.VISIBLE);
         }

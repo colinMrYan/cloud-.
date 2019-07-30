@@ -97,7 +97,7 @@
     <string name="format_month_day">MMM dd</string>
     <string name="format_task_month_day">MMM dd</string>
     <string name="format_year_month_day_hour_minute">MM/dd/yy HH:mm</string>
-    <string name="format_month_day_hour_minute">MM/dd HH:mm</string>
+    <string name="format_month_day_hour_minute">MMM dd HH:mm</string>
     <string name="format_year_month">yyyy-MM</string>
     <string name="time_null">null</string>
     <string name="cutdown_now">now</string>
@@ -288,6 +288,7 @@
     <string name="chat_remove">Delete</string>
     <string name="chat_remove_from_top">Remove from Top</string>
     <string name="no_chat_content">No chat content</string>
+    <string name="send_email">Mail</string>
     <string name="msg_key_search_member"> Please enter key words</string>
     <string name="chat_file_open_fail_tip">No corresponding program was found.</string>
     <string name="chat_conversation_unread_count">%1$d new messages</string>
@@ -300,6 +301,9 @@
     <string name="chat_transmit_message_success">successfully sent</string>
     <string name="chat_transmit_message_fail">Failed sent</string>
     <string name="chat_long_click_reply">Reply</string>
+    <string name="chat_group_least_two_person">group chat need two person at least</string>
+    <string name="chat_send_email_too_many_person_tip">Too many recipients will affect the speed of mail delivery, make sure to send？</string>
+    <string name="chat_send_email_max_person_tip">There are too many recipients at present, which may cause the mail to send an exception, make sure to send？</string>
 
     <!-- 会议卡片 -->
     <string name="meeting_has_confirmed">Confirmed</string>
@@ -343,17 +347,17 @@
     <string name="work_task_end">%1$s End</string>
 
     <!-- 日程 （新）-->
-    <string name="schedule_event_alert">Schedule Reminder</string>
+    <string name="schedule_event_alert">Alert</string>
     <string name="schedule_calendar_add">Add Schedule</string>
     <string name="schedule_calendar_detail">Schedule Detail</string>
-    <string name="schedule_setting_list_view">List view</string>
+    <string name="schedule_setting_list_view">List View</string>
     <string name="schedule_setting_day_view">Day View</string>
     <string name="schedule_calendar_company">My Schedule</string>
     <string name="schedule_setting_divide_group">Divide groups</string>
     <string name="schedule_setting_quarter">Quarter</string>
     <string name="schedule_setting_month">Month</string>
     <string name="schedule_setting_view">View</string>
-    <string name="schedule_calendar_input_content_hint">Please enter the schedule content...</string>
+    <string name="schedule_calendar_input_content_hint">Please enter the schedule topic</string>
     <string name="schedule_calendar_time_alert">End time cannot be earlier than start time</string>
     <string name="schedule_alert_time_occur">On day of event(9 AM)</string>
     <string name="schedule_alert_time_before_one_day">1 day before(9 AM)</string>
@@ -362,9 +366,9 @@
     <string name="schedule_calendar_modify">Modify Schedule</string>
     <string name="schedule_calendar_delete">Delete Schedule</string>
     <string name="schedule_calendar_create">New Schedule</string>
-    <string name="schedule_calendar_my_schedule">My Schedule</string>
-    <string name="schedule_calendar_my_meeting">My Meeting</string>
-    <string name="schedule_calendar_my_task">My task</string>
+    <string name="schedule_calendar_my_schedule">Schedule</string>
+    <string name="schedule_calendar_my_meeting">Meeting</string>
+    <string name="schedule_calendar_my_task">Task</string>
     <string name="schedule_calendar_all_day">All day</string>
     <string name="schedule_calendar_am">AM</string>
     <string name="schedule_calendar_pm">PM</string>
@@ -375,7 +379,9 @@
     <string name="schedule_meeting_no_meeting_today">No Meeting</string>
     <string name="schedule_task_no_task_today">No Task</string>
 
-
+    <string name="schedule_add">Create</string>
+    <string name="schedule_update">Update</string>
+    <string name="schedule_add_position">Please enter the location...</string>
     <!--任务（新）-->
     <string name="schedule_task_add">Add Task</string>
     <string name="schedule_task_detail">Task Detail</string>
@@ -410,10 +416,14 @@
     <string name="schedule_click_to_add_schedule">Click to Add Schedule</string>
     <string name="schedule_exchange_login_fail">Exchange account login failed, re-login?</string>
 
+    <string name="schedule_account_type">Calendar</string>
+    <string name="schedule_cloud_calendar">Cloud+ Schedule</string>
+    <string name="schedule_cloud_meeting">Cloud+ Meeting</string>
+
     <!--会议（新）-->
     <string name="schedule_meeting_booking">Book Meeting</string>
-    <string name="schedule_meeting_room_booking">Book a Meeting</string>
-    <string name="schedule_meeting_add_content_hint">Please enter the meeting content</string>
+    <string name="schedule_meeting_room_booking">New Meeting</string>
+    <string name="schedule_meeting_add_content_hint">Please enter the  topic</string>
     <string name="schedule_meeting_add_location_hint">Please select a meeting place</string>
     <string name="schedule_meeting_room_booking_detail">Meeting Room Details</string>
     <string name="schedule_meeting_add_attendee_title">Attendee</string>
@@ -422,9 +432,9 @@
     <string name="schedule_meeting_select_attendee_title">Select attendee</string>
     <string name="schedule_meeting_booking_detail">Meeting Detail</string>
     <string name="schedule_meeting_select_record_holder_title">Select Recorder</string>
-    <string name="schedule_meeting_select_conference_title">Select Conference</string>
+    <string name="schedule_meeting_select_conference_title">Select Contact</string>
     <string name="schedule_meeting_add_note">Note</string>
-    <string name="schedule_meeting_add_alert_time">Reminder</string>
+    <string name="schedule_meeting_add_alert_time">Alert</string>
     <string name="schedule_meeting_history">History Meetings</string>
     <string name="schedule_meeting_search">Search Meeting</string>
     <string name="schedule_meeting_booking_room">Book a Meeting Room</string>
@@ -434,8 +444,8 @@
     <string name="schedule_choose_common_office">Common office locations</string>
     <string name="schedule_meeting_change">Modify Meeting</string>
     <string name="schedule_meeting_cancel">Delete Meeting</string>
-    <string name="schedule_meeting_my_create">I created：</string>
-    <string name="schedule_meeting_my_take_part_in"> I involved：</string>
+    <string name="schedule_meeting_my_create">Created</string>
+    <string name="schedule_meeting_my_take_part_in">Involved</string>
     <string name="schedule_meeting_attend_reply">Reply Attend Meeting</string>
     <string name="schedule_meeting_attend_or_not">Attend Or Not</string>
     <string name="schedule_meeting_attend_status_default">No Reply</string>
@@ -443,7 +453,9 @@
     <string name="schedule_meeting_attend_ignore">Tentative</string>
     <string name="schedule_meeting_attend_accept">Accept</string>
     <string name="schedule_meeting_attend_reject">Reject</string>
-    <string name="chat_group_chanel_not_exist">Not in the current group</string>
+    <string name="chat_group_chanel_not_exist">chat message does not exist</string>
+    <string name="schedule_delete_ac">Delete Account</string>
+    <string name="schedule_modify_ac">Modify Account</string>
 
     <!-- 发现部分 -->
     <string name="find">Discover</string>
@@ -796,7 +808,7 @@
     <string name="meeting_log">Conference</string>
     <string name="meeting_ageda">The agenda</string>
     <string name="meeting_summary">Summary</string>
-    <string name="meeting_place">Room</string>
+    <string name="schedule_location">Location</string>
     <string name="meeting_list_title">List of meeting rooms</string>
     <string name="meeting">Meetings</string>
     <string name="meeting_add">Add Meetings</string>
@@ -839,10 +851,12 @@
     <string name="meeting_room_time_late">Start time cannot be earlier than the current time</string>
     <string name="meeting_detail_attendee_accept">Accept</string>
     <string name="meeting_detail_attendee_decline">Decline</string>
-    <string name="meeting_detail_attendee_unknown">Unknown</string>
+    <string name="meeting_detail_attendee_unknown">No Response</string>
     <string name="meeting_detail_attendee_tentative">Tentative</string>
     <string name="meeting_detail_invite">Inviter</string>
     <string name="meeting_group_chat_fail">Meeting chat fail</string>
+    <string name="meeting_create_group_chat">Meeting Chat</string>
+    <string name="meeting_cancel_the_meeting">Are you sure to cancel the meeting?</string>
 
     <!-- 会议预定错误提示 -->
     <string name="meeting_user_profile_broken">Departmental information loss</string>
@@ -861,15 +875,15 @@
     <string name="meeting_department_booking_times_over_run">Department booking time over run</string>
 
     <string name="meeting_detail_time">Time：%1$s</string>
-    <string name="meeting_detail_remind">Remind：%1$s</string>
-    <string name="meeting_detail_create">%1$s Create</string>
-    <string name="meeting_detail_inviter">Inviter:%1$s</string>
-    <string name="meeting_detail_attendee">Attendee:%1$s</string>
-    <string name="meeting_detail_record_holder">Recorder:%1$s</string>
-    <string name="meeting_detail_conference">Contact:%1$s</string>
+    <string name="meeting_detail_remind">Alert：%1$s</string>
+    <string name="meeting_detail_create">%1$s Created</string>
+    <string name="meeting_detail_inviter">Inviter：%1$s</string>
+    <string name="meeting_detail_attendee">Attendee：%1$s</string>
+    <string name="meeting_detail_record_holder">Recorder：%1$s</string>
+    <string name="meeting_detail_conference">Contact：%1$s</string>
     <string name="meeting_detail_record_title">Recorder</string>
     <string name="meeting_detail_conference_title">Contact</string>
-    <string name="meeting_detail_note">Note:%1$s</string>
+    <string name="meeting_detail_note">Note：%1$s</string>
     <string name="meeting_detail_sign">Meeting Sign</string>
     <string name="meeting_detail_summary">十 Add Summary</string>
     <string name="meeting_detail_change_meeting">Change Meeting</string>
@@ -882,7 +896,7 @@
     <string name="meeting_detail_one_hour">One Hour Before</string>
     <string name="meeting_detail_one_day">One Day Before</string>
     <string name="meeting_detail_attendee_num">%1$s et al. %2$d</string>
-    <string name="meeting_detail_location">Place:</string>
+    <string name="meeting_detail_location">Location：</string>
 
 
     <!-- 日历 -->
@@ -898,21 +912,22 @@
     <string name="monthly">Every Month</string>
     <string name="weekly">Every Week</string>
     <string name="every_day">Every Day</string>
-    <string name="calendar_when_event_occurs">The Event Occurs</string>
-    <string name="calendar_five_minite_ago">5 Minutes Ago</string>
-    <string name="calendar_ten_minite_ago">10 Minutes Ago</string>
-    <string name="calendar_fifteen_minite_ago">15 Minutes Ago</string>
-    <string name="calendar_twenty_minite_ago">20 Minutes Ago</string>
-    <string name="calendar_thirty_minite_ago">30 Minutes Ago</string>
-    <string name="calendar_one_hour_ago">1 Hour Ago</string>
-    <string name="calendar_two_hours_ago">2 Hour Ago</string>
-    <string name="calendar_one_day_ago">One Day Before</string>
-    <string name="calendar_two_days_ago">Two Day Before</string>
-    <string name="calendar_a_week_ago">1 Week Ago</string>
+    <string name="calendar_when_event_occurs">At time of event</string>
+    <string name="calendar_five_minite_ago">5 minutes before start</string>
+    <string name="calendar_ten_minite_ago">10 minutes before start</string>
+    <string name="calendar_fifteen_minite_ago">15 minutes before start</string>
+    <string name="calendar_twenty_minite_ago">20 minutes before start</string>
+    <string name="calendar_thirty_minite_ago">30 minutes before start</string>
+    <string name="calendar_one_hour_ago">1 hour before start</string>
+    <string name="calendar_two_hours_ago">2 hour before start</string>
+    <string name="calendar_one_day_ago">One day before start</string>
+    <string name="calendar_two_days_ago">Two day before start</string>
+    <string name="calendar_a_week_ago">1 week before start</string>
     <string name="calendar_add_calendar">Add Calendars</string>
     <string name="calendar_divide_into_groups">Grouping</string>
-    <string name="calendar_no_alert">No Reminder</string>
+    <string name="calendar_no_alert">None</string>
     <string name="calendar_when_event_finished">Finished</string>
+    <string name="calendar_cancel_the_schedule">Are you sure to cancel the schedule?</string>
 
     <!-- 通用 -->
     <string name="save">Save</string>
@@ -1077,8 +1092,8 @@
     <string name="forgetpwd">Forget Password</string>
     <string name="download_fail">Download Failed</string>
     <string name="download_success">Download Success</string>
-    <string name="file_downloading">In the download, please later...</string>
-    <string name="file_download_success">the file Has been downloaded, is it open?</string>
+    <string name="file_downloading">Download...Please wait</string>
+    <string name="file_download_success">Download succeeded,open now?</string>
     <string name="has_downloaded">Downloaded</string>
     <string name="imp_content">Content</string>
     <string name="file_ok">Confirm</string>
@@ -1227,6 +1242,8 @@
     <string name="permission_dialog_title">Tips</string>
     <string name="permission_message_always_failed">You have forbidden granting %1$s %2$s permission, which may cause the function to be unavailable. If you need to use it, please go to the settings to grant permission.</string>
     <string name="permission_grant_fail">You have forbidden granting %1$s %2$s permission</string>
+    <string name="permission_grant_window_alert">Please grant %1$s suspension window permission</string>
+    <string name="permission_grant_window_fail">You have forbidden granting %1$s suspension window permission</string>
 
     <string name="permission_open_cloud_plus">Open %1$s</string>
     <string name="permission_necessary_permission">In order for you to use the %1$s properly, you need the following permissions</string>
@@ -1289,5 +1306,6 @@
         <item>FRI</item>
         <item>SAT</item>
     </string-array>
+
 
 </resources>

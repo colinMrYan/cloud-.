@@ -40,6 +40,7 @@ import android.widget.AbsListView;
 import android.widget.LinearLayout;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 
 
 /**
@@ -401,9 +402,12 @@ public class CalendarLayout extends LinearLayout {
 //                if(!getIsFirstItemZero(mContentView)){
 //                    return false;
 //                }
+                LogUtils.jasonDebug("1111111111111111");
+                LogUtils.jasonDebug("mContentViewTranslateY==" + mContentViewTranslateY);
                 if (!isViewTopShow) {
                     return false;
                 }
+                LogUtils.jasonDebug("mContentView.getTranslationY()===" + mContentView.getTranslationY());
                 if ((dy < 0 && mContentView.getTranslationY() == -mContentViewTranslateY)) {
                     return false;
                 }
@@ -518,7 +522,9 @@ public class CalendarLayout extends LinearLayout {
             int heightSpec = MeasureSpec.makeMeasureSpec(h,
                     MeasureSpec.EXACTLY);
             mContentView.measure(widthMeasureSpec, heightSpec);
+            LogUtils.jasonDebug("height000===" + mItemHeight);
             mContentView.layout(mContentView.getLeft(), mContentView.getTop(), mContentView.getRight(), mContentView.getBottom());
+            LogUtils.jasonDebug("height===" + (mContentView.getBottom() - mContentView.getTop()));
         } else {
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         }

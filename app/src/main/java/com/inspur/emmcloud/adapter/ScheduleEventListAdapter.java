@@ -78,7 +78,7 @@ public class ScheduleEventListAdapter extends RecyclerView.Adapter<ScheduleEvent
             endTime = "截止";
         }
         holder.eventImg.setImageResource(event.getEventIconResId(false));
-        holder.eventColorImage.setImageResource(event.getEventColorResId());
+        holder.eventColorImage.setImageResource(event.getCalendarIconResId());
         holder.eventStartTimeText.setText(startTime);
         holder.eventEndTimeText.setText(endTime);
     }

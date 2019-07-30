@@ -46,6 +46,7 @@ import com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.ClientConfigItem;
 import com.inspur.emmcloud.basemodule.bean.GetAllConfigVersionResult;
+import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseFragment;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
@@ -60,7 +61,6 @@ import com.inspur.emmcloud.bean.appcenter.AppOrder;
 import com.inspur.emmcloud.bean.appcenter.GetAppGroupResult;
 import com.inspur.emmcloud.bean.appcenter.GetRecommendAppWidgetListResult;
 import com.inspur.emmcloud.bean.appcenter.RecommendAppWidgetBean;
-import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
 import com.inspur.emmcloud.bean.system.badge.BadgeBodyModuleModel;
 import com.inspur.emmcloud.interf.OnRecommendAppWidgetItemClickListener;
@@ -822,6 +822,16 @@ public class MyAppFragment extends BaseFragment {
     }
 
     /**
+     * 判断是否需要移除常用应用分组
+     *
+     * @return
+     */
+    private boolean getNeedRemoveCommonlyUseGroup() {
+        return MyAppCacheUtils.getNeedCommonlyUseApp() && AppCacheUtils.getCommonlyUseNeedShowList(getActivity()).size() > 0
+                && (MyAppCacheUtils.getMyAppListFromNet(getActivity()).size() != appListAdapter.getCount());
+    }
+
+    /**
      * App组列表Adapter
      */
     public class AppListAdapter extends BaseAdapter {
@@ -1003,7 +1013,6 @@ public class MyAppFragment extends BaseFragment {
         }
     }
 
-
     /**
      * 常用应用排序接口，比较权重，用于存储常用app
      */
@@ -1024,16 +1033,6 @@ public class MyAppFragment extends BaseFragment {
                 return -1;
             }
         }
-    }
-
-    /**
-     * 判断是否需要移除常用应用分组
-     *
-     * @return
-     */
-    private boolean getNeedRemoveCommonlyUseGroup() {
-        return MyAppCacheUtils.getNeedCommonlyUseApp() && AppCacheUtils.getCommonlyUseNeedShowList(getActivity()).size() > 0
-                && (MyAppCacheUtils.getMyAppListFromNet(getActivity()).size() != appListAdapter.getCount());
     }
 
     class MyOnClickListener implements OnClickListener {

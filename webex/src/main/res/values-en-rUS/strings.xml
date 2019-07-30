@@ -3,6 +3,7 @@
     <string name="webex_meeting_title">Meeting held by %1$s</string>
     <string name="webex_input_invitee_emails_hint">Enter participant email(contain suffix)</string>
     <string name="webex_input_invitee_emails">Enter participant email</string>
+    <string name="webex_input_correct_invitee_emails">Enter correct participant email</string>
     <string name="webex_not_add_repeated">Cannot be added repeatedly</string>
     <string name="webex_start">START</string>
     <string name="webex_meeting_info">Meeting Info</string>

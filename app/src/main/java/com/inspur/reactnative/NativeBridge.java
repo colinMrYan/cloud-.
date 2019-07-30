@@ -159,7 +159,6 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
         JSONArray array = JSONUtils.getJSONArray(buttonJson, new JSONArray());
         handleDialogAction(messageDialogBuilder, array, promise);
         messageDialogBuilder.show();
-
     }
 
     private void handleDialogAction(CustomDialog.MessageDialogBuilder messageDialogBuilder, JSONArray array, Promise promise) {
@@ -195,13 +194,11 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
         @Override
         public void onClick(DialogInterface dialog, int which) {
             dialog.dismiss();
-
             try {
                 promise.resolve(alertButton.getCode());
             } catch (Exception e) {
                 promise.reject(e);
             }
-
         }
     }
 

@@ -14,6 +14,7 @@ import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
@@ -22,7 +23,6 @@ import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.schedule.calendar.CalendarEvent;
 import com.inspur.emmcloud.bean.system.ChangeTabBean;
-import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.componentservice.mail.OnExchangeLoginListener;
 import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.ui.appcenter.ReactNativeAppActivity;
@@ -30,6 +30,7 @@ import com.inspur.emmcloud.ui.appcenter.mail.MailHomeActivity;
 import com.inspur.emmcloud.ui.appcenter.mail.MailLoginActivity;
 import com.inspur.emmcloud.ui.appcenter.volume.VolumeHomePageActivity;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
+import com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
@@ -37,10 +38,10 @@ import com.inspur.emmcloud.ui.find.AnalysisActivity;
 import com.inspur.emmcloud.ui.find.DocumentActivity;
 import com.inspur.emmcloud.ui.find.KnowledgeActivity;
 import com.inspur.emmcloud.ui.find.trip.TripInfoActivity;
-import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
-import com.inspur.emmcloud.ui.schedule.meeting.MeetingDetailActivity;
+import com.inspur.emmcloud.ui.schedule.meeting.ScheduleDetailActivity;
 import com.inspur.emmcloud.ui.schedule.task.TaskAddActivity;
 import com.inspur.emmcloud.util.privates.AppId2AppAndOpenAppUtils;
+import com.inspur.emmcloud.util.privates.CustomProtocol;
 import com.inspur.emmcloud.util.privates.ExchangeLoginUtils;
 import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.ProfileUtils;
@@ -205,9 +206,10 @@ public class SchemeHandleActivity extends BaseActivity {
                                 if (content != null) {
                                     JSONObject calEventObj = JSONUtils.getJSONObject(content);
                                     CalendarEvent calendarEvent = new CalendarEvent(calEventObj);
-                                    Intent intent = new Intent(SchemeHandleActivity.this, CalendarAddActivity.class);
+                                    Intent intent = new Intent(SchemeHandleActivity.this, ScheduleDetailActivity.class);
                                     intent.putExtra("calEvent", calendarEvent);
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    intent.putExtra(Constant.EXTRA_IS_FROM_CALENDAR, true);
                                     startActivity(intent);
                                 }
                                 finish();
@@ -240,6 +242,10 @@ public class SchemeHandleActivity extends BaseActivity {
                                     }
                                 }
                                 break;
+                            case "ecc-cmd":
+                                startVoiceCall(uri.toString());
+                                finish();
+                                break;
                             default:
                                 finish();
                                 break;
@@ -251,6 +257,22 @@ public class SchemeHandleActivity extends BaseActivity {
         } else {
             ARouter.getInstance().build(Constant.AROUTER_CLASS_LOGIN_MAIN).navigation();
             finish();
+        }
+    }
+
+    /**
+     * 进入音频通话页面
+     *
+     * @param content
+     */
+    private void startVoiceCall(String content) {
+        CustomProtocol customProtocol = new CustomProtocol(content);
+        if (customProtocol != null) {
+            Intent intent = new Intent();
+            intent.setClass(SchemeHandleActivity.this, ChannelVoiceCommunicationActivity.class);
+            intent.putExtra("channelId", customProtocol.getParamMap().get("id"));
+            intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.INVITEE_LAYOUT_STATE);
+            startActivity(intent);
         }
     }
 
@@ -419,7 +441,7 @@ public class SchemeHandleActivity extends BaseActivity {
                     simpleEventMessage.setMessageObj(Constant.ACTION_CALENDAR);
                     EventBus.getDefault().post(simpleEventMessage);
                 } else if (!StringUtils.isBlank(query.getQueryParameter("id"))) {
-                    openScheduleActivity(query.getQueryParameter("id"), CalendarAddActivity.class);
+                    openScheduleActivity(query.getQueryParameter("id"), ScheduleDetailActivity.class);
                 }
                 finish();
                 break;
@@ -437,7 +459,7 @@ public class SchemeHandleActivity extends BaseActivity {
                     simpleEventMessage.setMessageObj(Constant.ACTION_MEETING);
                     EventBus.getDefault().postSticky(simpleEventMessage);
                 } else if (!StringUtils.isBlank(query.getQueryParameter("id"))) {
-                    openScheduleActivity(query.getQueryParameter("id"), MeetingDetailActivity.class);
+                    openScheduleActivity(query.getQueryParameter("id"), ScheduleDetailActivity.class);
                 }
                 finish();
                 break;
@@ -451,7 +473,7 @@ public class SchemeHandleActivity extends BaseActivity {
             case "mail":
                 new ExchangeLoginUtils.Builder(this)
                         .setShowLoadingDlg(true)
-                        .setOnExchageLoginListener(new OnExchangeLoginListener() {
+                        .setOnExchangeLoginListener(new OnExchangeLoginListener() {
                             @Override
                             public void onMailLoginSuccess() {
                                 IntentUtils.startActivity(SchemeHandleActivity.this, MailHomeActivity.class, true);
@@ -478,6 +500,7 @@ public class SchemeHandleActivity extends BaseActivity {
     private void openScheduleActivity(String query, Class scheduleActivity) {
         Bundle bundle = new Bundle();
         bundle.putString(Constant.SCHEDULE_QUERY, query);
+        bundle.putBoolean(Constant.EXTRA_IS_FROM_CALENDAR, true);
         IntentUtils.startActivity(SchemeHandleActivity.this, scheduleActivity, bundle);
     }
 

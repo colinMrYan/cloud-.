@@ -10,7 +10,7 @@ import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
 import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
 import com.inspur.emmcloud.basemodule.api.HttpUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
-import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
+import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailFolderResult;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailListResult;
 import com.inspur.emmcloud.componentservice.login.LoginService;
@@ -251,7 +251,7 @@ public class MailApiService {
         final String url = APIUri.getUploadMailUrl();
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
         params.setMultipart(true);
-        params.addQueryStringParameter("mail", PreferencesByUsersUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT));
+        params.addQueryStringParameter("mail", PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT));
         params.addBodyParameter("file", new ByteArrayInputStream(mailContent), "application/octet-stream", "111");
 //        String fileName = System.currentTimeMillis()+".aa";
 //        String path = MyAppConfig.LOCAL_DOWNLOAD_PATH+fileName;

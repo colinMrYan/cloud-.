@@ -286,6 +286,7 @@
     <string name="voice_call">語音通話</string>
     <string name="sure_to_resend_message">確認重新發送該消息?</string>
     <string name="message_type_drafts">[草稿]</string>
+    <string name="send_email">郵件</string>
     <string name="quit_group">退出群組</string>
     <string name="dismiss_group">解散群組</string>
     <string name="quit_group_warning_text">確定要退出群组？</string>
@@ -306,7 +307,9 @@
     <string name="chat_transmit_message_success">已轉發</string>
     <string name="chat_transmit_message_fail">轉發失敗</string>
     <string name="chat_long_click_reply">回复</string>
-
+    <string name="chat_group_least_two_person">群聊至少需要兩人及以上</string>
+    <string name="chat_send_email_too_many_person_tip">收件人太多會影響郵件發送速度，確定發送？</string>
+    <string name="chat_send_email_max_person_tip">當前收件人太多，可能導致郵件發送異常，是否確定發送？</string>
 
     <!-- 會議卡片 -->
     <string name="meeting_has_confirmed">已確認</string>
@@ -373,9 +376,9 @@
     <string name="schedule_calendar_modify">修改日程</string>
     <string name="schedule_calendar_delete">刪除日程</string>
     <string name="schedule_calendar_create">新建日程</string>
-    <string name="schedule_calendar_my_schedule">我的日程</string>
-    <string name="schedule_calendar_my_meeting">我的會議</string>
-    <string name="schedule_calendar_my_task">我的任務</string>
+    <string name="schedule_calendar_my_schedule">日程</string>
+    <string name="schedule_calendar_my_meeting">會議</string>
+    <string name="schedule_calendar_my_task">任務</string>
     <string name="schedule_calendar_all_day">全天</string>
     <string name="schedule_calendar_am">上午</string>
     <string name="schedule_calendar_pm">下午</string>
@@ -386,6 +389,9 @@
     <string name="schedule_task_no_task_today">暂无任務安排</string>
     <string name="schedule_click_to_add_schedule">再次點擊新建日程</string>
     <string name="schedule_exchange_login_fail">Exchange帳戶登入失敗，是否重新登入？</string>
+    <string name="schedule_account_type">賬戶</string>
+    <string name="schedule_cloud_calendar">云+ 日程</string>
+    <string name="schedule_cloud_meeting">云+ 會議</string>
 
     <!--任务-->
     <string name="schedule_task_add">添加任務</string>
@@ -418,14 +424,14 @@
     <!--会议-->
     <string name="schedule_meeting_booking">預定會議</string>
     <string name="schedule_meeting_room_booking">新建會議</string>
-    <string name="schedule_meeting_add_attendee_title">參會人</string>
+    <string name="schedule_meeting_add_attendee_title">參与人</string>
     <string name="schedule_meeting_add_record_holder_title">會議記錄人</string>
     <string name="schedule_meeting_add_conference_title">會議聯絡人</string>
     <string name="schedule_meeting_select_attendee_title">選擇參會人</string>
     <string name="schedule_meeting_select_record_holder_title">選擇會議記錄人</string>
     <string name="schedule_meeting_select_conference_title">選擇會議聯絡人</string>
     <string name="schedule_meeting_add_note">備註</string>
-    <string name="schedule_meeting_add_alert_time">會前提醒</string>
+    <string name="schedule_meeting_add_alert_time">提醒</string>
     <string name="schedule_meeting_history">歷史會議</string>
     <string name="schedule_meeting_search">蒐索會議</string>
     <string name="schedule_meeting_booking_room">預定會議室</string>
@@ -440,13 +446,15 @@
     <string name="schedule_meeting_my_take_part_in">我參與的：</string>
     <string name="schedule_meeting_room_booking_detail">會議室詳情</string>
     <string name="schedule_meeting_attend_reply">參會答復</string>
-    <string name="schedule_meeting_attend_or_not">是否參會</string>
+    <string name="schedule_meeting_attend_or_not">是否參與</string>
     <string name="schedule_meeting_attend_status_default">未答復</string>
     <string name="schedule_meeting_attend_unknown">未響應</string>
     <string name="schedule_meeting_attend_ignore">忽略</string>
     <string name="schedule_meeting_attend_accept">接受</string>
     <string name="schedule_meeting_attend_reject">拒絕</string>
-    <string name="chat_group_chanel_not_exist">不在當前群聊内</string>
+    <string name="chat_group_chanel_not_exist">當前聊天信息不存在</string>
+    <string name="schedule_delete_ac">刪除賬户</string>
+    <string name="schedule_modify_ac">修改賬户</string>
 
     <!-- 發現部分 -->
     <string name="find">發現</string>
@@ -801,7 +809,7 @@
     <string name="meeting_log">會務</string>
     <string name="meeting_ageda">議程</string>
     <string name="meeting_summary">紀要</string>
-    <string name="meeting_place">地點</string>
+    <string name="schedule_location">地點</string>
     <string name="meeting_list_title">會議室列表</string>
     <string name="meeting">會議</string>
     <string name="meeting_add">預定會議</string>
@@ -842,6 +850,12 @@
     <string name="meeting_room_booked">時間已被預訂，請重新選擇</string>
     <string name="meeting_room_ilegal_time">時間非法，請檢查 </string>
     <string name="meeting_room_time_late">開始時間不能早於當前時間</string>
+    <string name="meeting_create_group_chat">發起群聊</string>
+    <string name="meeting_cancel_the_meeting">確定取消會議?</string>
+    <string name="schedule_add">新建</string>
+    <string name="schedule_update">编辑</string>
+    <string name="schedule_add_position">请输入地点...</string>
+
 
     <!-- 会议预定错误提示 -->
     <string name="meeting_user_profile_broken">部門資訊缺失</string>
@@ -879,7 +893,7 @@
     <string name="meeting_detail_twenty_minutes">提前20分鐘</string>
     <string name="meeting_detail_thirty_minutes">提前30分鐘</string>
     <string name="meeting_detail_one_hour">提前一個小時</string>
-    <string name="meeting_detail_location">會議地點:</string>
+    <string name="meeting_detail_location">地點:</string>
     <string name="meeting_detail_attendee_accept">接收</string>
     <string name="meeting_detail_attendee_decline">拒絕</string>
     <string name="meeting_detail_attendee_unknown">無響應</string>
@@ -915,6 +929,7 @@
     <string name="calendar_add_calendar">添加行事曆</string>
     <string name="calendar_no_alert">無提醒</string>
     <string name="calendar_when_event_finished">結束時</string>
+    <string name="calendar_cancel_the_schedule">確定取消日程?</string>
 
     <!-- 通用 -->
     <string name="save">保存</string>
@@ -1225,6 +1240,8 @@
     <string name="permission_dialog_title">提示</string>
     <string name="permission_message_always_failed">您已禁止授予%1$s %2$s許可權，可能會造成功能不可用，如需使用請到設定裏授予許可權</string>
     <string name="permission_grant_fail">您已禁止授予%1$s %2$s許可權</string>
+    <string name="permission_grant_window_alert">請您授予%1$s懸浮窗許可權</string>
+    <string name="permission_grant_window_fail">您已禁止授予%1$s懸浮窗許可權</string>
 
     <string name="permission_open_cloud_plus">開啟%1$s</string>
     <string name="permission_necessary_permission">為了您能正常使用%1$s，需要以下許可權</string>
@@ -1476,4 +1493,6 @@
         <item>中</item>
         <item>高</item>
     </string-array>
+
+
 </resources>

@@ -28,28 +28,26 @@ import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.MaxHeightListView;
 import com.inspur.emmcloud.baselib.widget.dialogs.MyDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.bean.schedule.GetScheduleListResult;
 import com.inspur.emmcloud.bean.schedule.Schedule;
+import com.inspur.emmcloud.bean.schedule.calendar.AccountType;
+import com.inspur.emmcloud.bean.schedule.calendar.CalendarColor;
 import com.inspur.emmcloud.bean.schedule.calendar.Holiday;
-import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
-import com.inspur.emmcloud.bean.system.SimpleEventMessage;
+import com.inspur.emmcloud.bean.schedule.calendar.ScheduleCalendar;
 import com.inspur.emmcloud.componentservice.communication.CommunicationService;
 import com.inspur.emmcloud.componentservice.communication.ShareToConversationListener;
 import com.inspur.emmcloud.interf.ScheduleEventListener;
-import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarSettingActivity;
-import com.inspur.emmcloud.ui.schedule.meeting.MeetingDetailActivity;
-import com.inspur.emmcloud.util.privates.CalendarUtils;
+import com.inspur.emmcloud.ui.schedule.meeting.ScheduleDetailActivity;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
-import com.inspur.emmcloud.util.privates.ScheduleAlertUtils;
 import com.inspur.emmcloud.util.privates.cache.HolidayCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.MeetingCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.MyCalendarOperationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ScheduleCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ScheduleCalendarCacheUtils;
 import com.inspur.emmcloud.widget.calendardayview.Event;
 import com.inspur.emmcloud.widget.calendarview.EmmCalendar;
 
@@ -87,6 +85,8 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     private Calendar newDataEndCalendar = null;
     private MyDialog myDialog = null;
     private LoadingDialog loadingDlg;
+    private ScheduleAllDayEventListAdapter adapter;
+    private List<ScheduleCalendar> scheduleCalendarList;
 
     @Override
     protected void init() {
@@ -96,6 +96,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         pageStartCalendar = TimeUtils.getDayBeginCalendar(Calendar.getInstance());
         pageEndCalendar = TimeUtils.getDayEndCalendar(Calendar.getInstance());
         yearHolidayListMap = HolidayCacheUtils.getYearHolidayListMap(MyApplication.getInstance());
+        initScheduleCalendar();
         initView();
     }
 
@@ -103,6 +104,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     public void onReceiverSimpleEventMessage(SimpleEventMessage eventMessage) {
         switch (eventMessage.getAction()) {
             case Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_SETTING_CHANGED:
+                initScheduleCalendar();
                 setEventShowType();
                 showCalendarEvent(true);
                 break;
@@ -110,7 +112,6 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
             case Constant.EVENTBUS_TAG_SCHEDULE_TASK_DATA_CHANGED:
             case Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED:
                 showCalendarEvent(true);
-                break;
         }
     }
 
@@ -151,6 +152,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
             @Override
             public void run() {
                 setScheduleBackToToday();
+                getScheduleBasicData(Calendar.getInstance().get(Calendar.YEAR));
             }
         });
         switch (LanguageManager.getInstance().getCurrentAppLanguage()) {
@@ -165,10 +167,18 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         calendarDayView.setOnTouchListener(this);
         calendarDayView.setOnLongClickListener(this);
         calendarDayView.setOnClickListener(this);
-
     }
 
-
+    protected void initScheduleCalendar() {
+        scheduleCalendarList = ScheduleCalendarCacheUtils.getScheduleCalendarList(BaseApplication.getInstance());
+        if (scheduleCalendarList.size() == 0) {
+            scheduleCalendarList.add(new ScheduleCalendar(CalendarColor.BLUE, "", "", "", AccountType.APP_SCHEDULE));
+            scheduleCalendarList.add(new ScheduleCalendar(CalendarColor.ORANGE, "", "", "", AccountType.APP_MEETING));
+            ScheduleCalendarCacheUtils.saveScheduleCalendarList(BaseApplication.getInstance(), scheduleCalendarList);
+        } else {
+            scheduleCalendarList = ScheduleCalendarCacheUtils.getScheduleCalendarList(BaseApplication.getInstance(), true);
+        }
+    }
 
     /**
      * 设置事件展示样式-日视图和列表视图
@@ -186,44 +196,17 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
      * @param isForceUpdate 是否强制刷新数据
      */
     protected void showCalendarEvent(boolean isForceUpdate) {
-        List<Schedule> scheduleList = ScheduleCacheUtils.getScheduleList(MyApplication.getInstance(), pageStartCalendar, pageEndCalendar);
-        List<Meeting> meetingList = MeetingCacheUtils.getMeetingList(MyApplication.getInstance(), pageStartCalendar, pageEndCalendar);
-        ScheduleAlertUtils.setScheduleListAlert(MyApplication.getInstance(), scheduleList);
-        ScheduleAlertUtils.setMeetingListAlert(MyApplication.getInstance(), meetingList);
+        List<Schedule> scheduleList = ScheduleCacheUtils.getScheduleList(MyApplication.getInstance(), pageStartCalendar, pageEndCalendar, scheduleCalendarList);
         //在非强制刷新情况下如果前一次日历的日期包含此次的日期则不用重新获取数据
         boolean isNeedGetDataFromNet = isForceUpdate || newDataStartCalendar == null || newDataEndCalendar == null || pageStartCalendar.before(newDataStartCalendar) || pageEndCalendar.after(newDataEndCalendar);
+
+
         if (isNeedGetDataFromNet) {
-            List<String> scheduleIdList = new ArrayList<>();
-            List<String> meetingIdList = new ArrayList<>();
-            List<String> taskIdList = new ArrayList<>();
-            long calendarLastTime = 0L;
-            long meetingLastTime = 0L;
-            long taskLastTime = 0L;
-            if (scheduleList.size() > 0) {
-                for (Schedule schedule : scheduleList) {
-                    scheduleIdList.add(schedule.getId());
-                }
-                calendarLastTime = scheduleList.get(0).getLastTime();
-            }
-            if (meetingList.size() > 0) {
-                for (Meeting meeting : meetingList) {
-                    meetingIdList.add(meeting.getId());
-                }
-                meetingLastTime = meetingList.get(0).getLastTime();
-            }
-            getScheduleList(calendarLastTime, meetingLastTime, taskLastTime, scheduleIdList, meetingIdList, taskIdList);
+            getScheduleList();
         }
         eventList.clear();
-        boolean isScheduleShow = !MyCalendarOperationCacheUtils.getIsHide(getContext(), "schedule");
-        boolean isMeetingShow = !MyCalendarOperationCacheUtils.getIsHide(getContext(), "meeting");
-        if (isMeetingShow) {
-            eventList.addAll(Meeting.meetingEvent2EventList(meetingList, selectCalendar));
-        }
-        //  eventList.addAll(Task.taskList2EventList(taskList,selectCalendar));
-        if (isScheduleShow) {
-            eventList.addAll(Schedule.calendarEvent2EventList(scheduleList, selectCalendar));
-        }
-        showAllEventCalendarViewMark(scheduleList, meetingList, isScheduleShow, isMeetingShow);
+        eventList.addAll(Schedule.calendarEvent2EventList(scheduleList, selectCalendar));
+        showAllEventCalendarViewMark(scheduleList);
         allDayLayout.setVisibility(View.GONE);
         int eventListSize = eventList.size();
         scheduleListDefaultLayout.setVisibility((isEventShowTypeList && eventListSize < 1) ? View.VISIBLE : View.GONE);
@@ -238,7 +221,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
                 Event event = allDayEventList.get(0);
                 allDayLayout.setVisibility(View.VISIBLE);
                 eventAllDayImg.setImageResource(event.getEventIconResId(false));
-                eventAllDayLayout.setBackground(CalendarUtils.getEventBgNormalDrawable(event));
+                eventAllDayLayout.setBackground(event.getEventBgNormalDrawable());
                 String eventTitle = event.getEventTitle();
                 if (allDayEventList.size() > 1) {
                     if (eventTitle.length() > 14) {
@@ -301,14 +284,10 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     }
 
     /**
-     * 展示日历事件标志
-     *
+     * 展示日历时间轴上事件标志
      * @param scheduleList
-     * @param meetingList
-     * @param isScheduleShow
-     * @param isMeetingShow
      */
-    private void showAllEventCalendarViewMark(List<Schedule> scheduleList, List<Meeting> meetingList, boolean isScheduleShow, boolean isMeetingShow) {
+    private void showAllEventCalendarViewMark(List<Schedule> scheduleList) {
         calendarView.clearSchemeDate();
         Map<String, EmmCalendar> map = new HashMap<>();
         int startYear = pageStartCalendar.get(Calendar.YEAR);
@@ -331,17 +310,9 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
                     , holiday.getColor(), holiday.getBadge(), holiday.getBadgeColor(), false);
             map.put(schemeCalendar.toString(), schemeCalendar);
         }
-        if (isScheduleShow) {
-            for (Schedule schedule : scheduleList) {
-                showScheduleEventCalendarViewMark(schedule.getStartTimeCalendar(), schedule.getEndTimeCalendar(), map);
-            }
+        for (Schedule schedule : scheduleList) {
+            showScheduleEventCalendarViewMark(schedule.getStartTimeCalendar(), schedule.getEndTimeCalendar(), map);
         }
-        if (isMeetingShow) {
-            for (Meeting meeting : meetingList) {
-                showScheduleEventCalendarViewMark(meeting.getStartTimeCalendar(), meeting.getEndTimeCalendar(), map);
-            }
-        }
-
         calendarView.setSchemeDate(map);
     }
 
@@ -362,14 +333,14 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     }
 
     /**
-     * 显示说有的全天事件列表
+     * 显示所有的全天事件列表
      */
     private void showAllDayEventListDlg() {
         if (myDialog == null)
             myDialog = new MyDialog(getActivity(), R.layout.schedule_all_day_event_pop);
         MaxHeightListView listView = myDialog.findViewById(R.id.lv_all_day_event);
         listView.setMaxHeight(DensityUtil.dip2px(MyApplication.getInstance(), 300));
-        ScheduleAllDayEventListAdapter adapter = new ScheduleAllDayEventListAdapter(getActivity(), allDayEventList, selectCalendar);
+        adapter = new ScheduleAllDayEventListAdapter(getActivity(), allDayEventList, selectCalendar);
         adapter.setOnEventClickListener(this);
         listView.setAdapter(adapter);
         myDialog.findViewById(R.id.iv_close).setOnClickListener(this);
@@ -399,14 +370,15 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         Bundle bundle = new Bundle();
         switch (event.getEventType()) {
             case Schedule.TYPE_MEETING:
-                Meeting meeting = (Meeting) event.getEventObj();
-                bundle.putSerializable(MeetingDetailActivity.EXTRA_MEETING_ENTITY, meeting);
-                IntentUtils.startActivity(getActivity(), MeetingDetailActivity.class, bundle);
+                Schedule meetingSchedule = (Schedule) event.getEventObj();
+                bundle.putSerializable(ScheduleDetailActivity.EXTRA_SCHEDULE_ENTITY, meetingSchedule);
+                IntentUtils.startActivity(getActivity(), ScheduleDetailActivity.class, bundle);
                 break;
             case Schedule.TYPE_CALENDAR:
                 Schedule schedule = (Schedule) event.getEventObj();
-                bundle.putSerializable(CalendarAddActivity.EXTRA_SCHEDULE_CALENDAR_EVENT, schedule);
-                IntentUtils.startActivity(getActivity(), CalendarAddActivity.class, bundle);
+                bundle.putSerializable(ScheduleDetailActivity.EXTRA_SCHEDULE_ENTITY, schedule);
+                bundle.putBoolean(Constant.EXTRA_IS_FROM_CALENDAR, true);
+                IntentUtils.startActivity(getActivity(), ScheduleDetailActivity.class, bundle);
                 break;
             case Schedule.TYPE_TASK:
                 break;
@@ -474,8 +446,11 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         String endTime = TimeUtils.calendar2FormatString(MyApplication.getInstance(), event.getEventEndTime(), TimeUtils.FORMAT_MONTH_DAY_HOUR_MINUTE);
         StringBuilder builder = new StringBuilder();
         builder.append(event.eventType.endsWith(Schedule.TYPE_CALENDAR) ? getString(R.string.schedule_title) : getString(R.string.schedule_meeting_topic));
-        builder.append(" : ").append(event.getEventTitle()).append("\n")
-                .append(getString(R.string.meeting_start_time)).append(" : ").append(startTime).append("\n")
+        builder.append(" : ").append(event.getEventTitle()).append("\n");
+        if (event.eventType.endsWith(Schedule.TYPE_MEETING)) {
+            builder.append(getString(R.string.schedule_location)).append(" : ").append(event.getEventSubTitle()).append("\n");
+        }
+        builder.append(getString(R.string.meeting_start_time)).append(" : ").append(startTime).append("\n")
                 .append(getString(R.string.meeting_end_time)).append(" : ").append(endTime);
         Router router = Router.getInstance();
         if (router.getService(CommunicationService.class) != null) {
@@ -502,7 +477,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
 
     @Override
     public void onGroupChat(Event event) {
-        (new ChatCreateUtils()).startGroupChat(getActivity(), (Meeting) (event.getEventObj()), "", new ChatCreateUtils.ICreateGroupChatListener() {
+        (new ChatCreateUtils()).startGroupChat(getActivity(), (Schedule) (event.getEventObj()), "", new ChatCreateUtils.ICreateGroupChatListener() {
             @Override
             public void createSuccess() {
             }
@@ -527,18 +502,23 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
 
     /**
      * 获取日程、会议、任务信息
-     *
-     * @param calendarLastTime
-     * @param meetingLastTime
-     * @param taskLastTime
-     * @param calendarIdList
-     * @param meetingIdList
-     * @param taskIdList
      */
-    private void getScheduleList(long calendarLastTime, long meetingLastTime, long taskLastTime, List<String> calendarIdList, List<String> meetingIdList, List<String> taskIdList) {
+    private void getScheduleList() {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
-            apiService.getScheduleList((Calendar) pageStartCalendar.clone(), (Calendar) pageEndCalendar.clone(),
-                    calendarLastTime, meetingLastTime, taskLastTime, calendarIdList, meetingIdList, taskIdList);
+            ScheduleCalendar appScheduleCalendar = null;
+            boolean isContainAppSchedule = false;
+            for (ScheduleCalendar scheduleCalendar : scheduleCalendarList) {
+                if (scheduleCalendar.getAcType().equals(AccountType.APP_MEETING.toString()) || scheduleCalendar.getAcType().equals(AccountType.APP_SCHEDULE.toString())) {
+                    isContainAppSchedule = true;
+                    appScheduleCalendar = scheduleCalendar;
+                    continue;
+                }
+                apiService.getScheduleList((Calendar) pageStartCalendar.clone(), (Calendar) pageEndCalendar.clone(), scheduleCalendar);
+            }
+            if (isContainAppSchedule) {
+                apiService.getScheduleList((Calendar) pageStartCalendar.clone(), (Calendar) pageEndCalendar.clone(), appScheduleCalendar);
+            }
+
         }
     }
 
@@ -546,14 +526,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     private void deleteScheduleEvent(Event event) {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
             loadingDlg.show();
-            if (event.getEventType().equals(Schedule.TYPE_CALENDAR)) {
-                apiService.deleteSchedule(event.getEventId());
-            } else {
-                Meeting meeting = new Meeting();
-                meeting.setId(event.getEventId());
-                apiService.deleteMeeting(meeting);
-            }
-
+            apiService.deleteSchedule((Schedule) event.getEventObj());
         }
     }
 
@@ -561,25 +534,13 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     class WebService extends APIInterfaceInstance {
         @Override
         public void returnScheduleListSuccess(GetScheduleListResult getScheduleListResult, Calendar startCalendar,
-                                              Calendar endCalendar, List<String> calendarIdList, List<String> meetingIdList, List<String> taskIdList) {
+                                              Calendar endCalendar, ScheduleCalendar scheduleCalendar) {
             newDataStartCalendar = startCalendar;
             newDataEndCalendar = endCalendar;
             if (getScheduleListResult.isForward()) {
-                if (getScheduleListResult.isScheduleForward()) {
-                    List<Schedule> scheduleList = getScheduleListResult.getScheduleList();
-                    ScheduleCacheUtils.removeScheduleList(MyApplication.getInstance(), calendarIdList);
-                    ScheduleCacheUtils.saveScheduleList(MyApplication.getInstance(), scheduleList);
-                }
-                if (getScheduleListResult.isMeetingForward()) {
-                    List<Meeting> meetingList = getScheduleListResult.getMeetingList();
-                    MeetingCacheUtils.removeMeetingList(MyApplication.getInstance(), meetingIdList);
-                    MeetingCacheUtils.saveMeetingList(MyApplication.getInstance(), meetingList);
-                }
-//                if (getScheduleListResult.isTaskForward()) {
-//                    List<Task> taskList = getScheduleListResult.getTaskList();
-//                    //
-//                    TaskCacheUtils.saveTaskList(MyApplication.getInstance(), taskList);
-//                }
+                List<Schedule> scheduleList = getScheduleListResult.getScheduleList();
+                ScheduleCacheUtils.removeScheduleList(BaseApplication.getInstance(), startCalendar, endCalendar, scheduleCalendar);
+                ScheduleCacheUtils.saveScheduleList(BaseApplication.getInstance(), scheduleList);
                 if (startCalendar.equals(pageStartCalendar) && endCalendar.equals(pageEndCalendar)) {
                     showCalendarEvent(false);
                 }
@@ -588,24 +549,43 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
 
         }
 
-
         @Override
-        public void returnDeleteMeetingSuccess(Meeting meeting) {
-            LoadingDialog.dimissDlg(loadingDlg);
-            MeetingCacheUtils.removeMeeting(BaseApplication.getInstance(), meeting.getId());
-            showCalendarEvent(true);
+        public void returnScheduleListFail(String error, int errorCode) {
+            WebServiceMiddleUtils.hand(BaseApplication.getInstance(), error, errorCode, false);
         }
 
-        @Override
-        public void returnDeleteMeetingFail(String error, int errorCode) {
-            returnDeleteScheduleFail(error, errorCode);
-        }
+//        @Override
+//        public void returnDeleteMeetingSuccess(Meeting meeting) {
+//            LoadingDialog.dimissDlg(loadingDlg);
+//            MeetingCacheUtils.removeMeeting(BaseApplication.getInstance(), meeting.getId());
+//            showCalendarEvent(true);
+//            if (adapter != null) {
+//                adapter.setEventList(allDayEventList);
+//                adapter.notifyDataSetChanged();
+//                if (allDayEventList.size() < 1) {
+//                    myDialog.dismiss();
+//                }
+//            }
+//        }
+//
+//        @Override
+//        public void returnDeleteMeetingFail(String error, int errorCode) {
+//            returnDeleteScheduleFail(error, errorCode);
+//        }
 
         @Override
         public void returnDeleteScheduleSuccess(String scheduleId) {
             LoadingDialog.dimissDlg(loadingDlg);
             ScheduleCacheUtils.removeSchedule(BaseApplication.getInstance(), scheduleId);
-            showCalendarEvent(true);
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED));
+//            showCalendarEvent(true);
+//            if (adapter != null) {
+//                adapter.setEventList(allDayEventList);
+//                adapter.notifyDataSetChanged();
+//                if (allDayEventList.size() < 1) {
+//                    myDialog.dismiss();
+//                }
+//            }
         }
 
         @Override

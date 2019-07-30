@@ -10,6 +10,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 
+import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
@@ -17,16 +18,16 @@ import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
-import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.schedule.Participant;
-import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
-import com.inspur.emmcloud.bean.system.SimpleEventMessage;
+import com.inspur.emmcloud.bean.schedule.Schedule;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
@@ -47,15 +48,15 @@ import java.util.TreeSet;
  * com.inspur.emmcloud.util.privates.ChatCreateUtils create at 2016年11月29日 下午7:44:41
  */
 public class ChatCreateUtils {
+    JSONArray peopleArray;
+    ICreateGroupChatListener iCreateGroupChatListener;
+    Schedule meeting;
     private Context context;
     private OnCreateDirectChannelListener onCreateDirectChannelListener;
     private OnCreateGroupChannelListener onCreateGroupChannelListener;
     private LoadingDialog loadingDlg;
     private boolean isShowErrorAlert = true;
-    JSONArray peopleArray;
     private ScheduleApiService scheduleApiService;
-    ICreateGroupChatListener iCreateGroupChatListener;
-    Meeting meeting;
 
     public void createDirectChannel(Activity context, String uid,
                                     OnCreateDirectChannelListener onCreateDirectChannelListener) {
@@ -138,18 +139,6 @@ public class ChatCreateUtils {
         return nameBuilder.toString();
     }
 
-    public interface OnCreateDirectChannelListener {
-        void createDirectChannelSuccess(GetCreateSingleChannelResult getCreateSingleChannelResult);
-
-        void createDirectChannelFail();
-    }
-
-    public interface OnCreateGroupChannelListener {
-        void createGroupChannelSuccess(ChannelGroup channelGroup);
-
-        void createGroupChannelFail();
-    }
-
     /**
      * 发起群聊  入口
      *
@@ -157,7 +146,7 @@ public class ChatCreateUtils {
      * @param chatGroupId CID 群聊ID
      * @param listener    成功失败回调 可以传null
      */
-    public void startGroupChat(Activity context, Meeting meeting, String chatGroupId, ICreateGroupChatListener listener) {
+    public void startGroupChat(Activity context, Schedule meeting, String chatGroupId, ICreateGroupChatListener listener) {
         this.context = context;
         this.iCreateGroupChatListener = listener;
 
@@ -166,6 +155,10 @@ public class ChatCreateUtils {
         this.meeting = meeting;
         if (meeting == null) return;
         peopleArray = getPeopleArray(meeting);
+        if (peopleArray.length() < 2) {
+            ToastUtils.show(R.string.chat_group_least_two_person);
+            return;
+        }
 
         if (StringUtils.isBlank(chatGroupId)) {
             loadingDlg = new LoadingDialog(context);
@@ -180,17 +173,17 @@ public class ChatCreateUtils {
         }
     }
 
-    private JSONArray getPeopleArray(Meeting meeting) {
+    private JSONArray getPeopleArray(Schedule meeting) {
         List<Participant> totalList = deleteRepeatData(meeting.getAllParticipantList(), meeting.getOwner());
         JSONArray peopleArray = new JSONArray();
         for (Participant participant : totalList) {
             JSONObject json = new JSONObject();
             try {
-                if (!participant.getId().equals(BaseApplication.getInstance().getUid())) {
-                    json.put("pid", participant.getId());
-                    json.put("name", participant.getName());
-                    peopleArray.put(json);
-                }
+//                if (!participant.getId().equals(BaseApplication.getInstance().getUid())) {
+                json.put("pid", participant.getId());
+                json.put("name", participant.getName());
+                peopleArray.put(json);
+//                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -227,6 +220,18 @@ public class ChatCreateUtils {
         Collections.reverse(result);
 
         return result;
+    }
+
+    public interface OnCreateDirectChannelListener {
+        void createDirectChannelSuccess(GetCreateSingleChannelResult getCreateSingleChannelResult);
+
+        void createDirectChannelFail();
+    }
+
+    public interface OnCreateGroupChannelListener {
+        void createGroupChannelSuccess(ChannelGroup channelGroup);
+
+        void createGroupChannelFail();
     }
 
     public interface ICreateGroupChatListener {
@@ -296,7 +301,11 @@ public class ChatCreateUtils {
         @Override
         public void returnGetCalendarChatBindSuccess(final String calendar, String cid) {
             if (StringUtils.isBlank(cid)) { //新建群聊
-                new ConversationCreateUtils().createGroupConversation((Activity) context, peopleArray, new ConversationCreateUtils.OnCreateGroupConversationListener() {
+                String groupName = null;
+                if (meeting != null && !StringUtils.isBlank(meeting.getTitle())) {
+                    groupName = meeting.getTitle();
+                }
+                new ConversationCreateUtils().createGroupConversation((Activity) context, peopleArray, groupName, new ConversationCreateUtils.OnCreateGroupConversationListener() {
                     @Override
                     public void createGroupConversationSuccess(Conversation conversation) {
                         if (loadingDlg != null) {

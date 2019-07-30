@@ -21,16 +21,15 @@ import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.widget.CustomScrollViewPager;
 import com.inspur.emmcloud.baselib.widget.popmenu.DropPopMenu;
 import com.inspur.emmcloud.baselib.widget.popmenu.MenuItem;
+import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseFragment;
 import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
-import com.inspur.emmcloud.bean.system.SimpleEventMessage;
-import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarSettingActivity;
-import com.inspur.emmcloud.ui.schedule.meeting.MeetingAddActivity;
 import com.inspur.emmcloud.ui.schedule.meeting.MeetingFragment;
 import com.inspur.emmcloud.ui.schedule.meeting.MeetingHistoryActivity;
 import com.inspur.emmcloud.ui.schedule.meeting.MeetingRoomListActivity;
+import com.inspur.emmcloud.ui.schedule.meeting.ScheduleAddActivity;
 import com.inspur.emmcloud.ui.schedule.task.TaskAddActivity;
 import com.inspur.emmcloud.ui.schedule.task.TaskFragment;
 import com.inspur.emmcloud.ui.schedule.task.TaskSetActivity;
@@ -60,6 +59,7 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
     private MeetingFragment meetingFragment;
     private TaskFragment taskFragment;
     private TextView dateText;
+    private boolean isRunForeground = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,6 +67,18 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
         super.onCreate(savedInstanceState);
         initView();
         EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        isRunForeground = true;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        isRunForeground = false;
     }
 
     @Override
@@ -117,6 +129,10 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
                         tabLayout.getTabAt(0).select();
                     }
                     break;
+            }
+        } else if (scheme.getAction().equals(Constant.EVENTBUS_TAG_EWS_401)) {
+            if (isRunForeground) {
+                scheduleFragment.showExchangeLoginFailDlg();
             }
         }
     }
@@ -235,7 +251,8 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
                 switch (menuItem.getItemId()) {
                     case 1:
                         recordUserClickWorkFunction(PV_COLLECTION_CAL);
-                        IntentUtils.startActivity(getActivity(), CalendarAddActivity.class, bundle);
+                        bundle.putBoolean(ScheduleAddActivity.EXTRA_EVENT_TYPE_FROM_MEETING, false);
+                        IntentUtils.startActivity(getActivity(), ScheduleAddActivity.class, bundle);
                         break;
                     case 2:
                         if(viewPager.getCurrentItem() == 2){
@@ -243,7 +260,8 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
                             IntentUtils.startActivity(getActivity(), TaskAddActivity.class);
                         }else{
                             recordUserClickWorkFunction(PV_COLLECTION_MEETING);
-                            IntentUtils.startActivity(getActivity(), MeetingAddActivity.class, bundle);
+                            bundle.putBoolean(ScheduleAddActivity.EXTRA_EVENT_TYPE_FROM_MEETING, true);
+                            IntentUtils.startActivity(getActivity(), ScheduleAddActivity.class, bundle);
                         }
                         break;
                     case 3:
@@ -252,7 +270,8 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
                             IntentUtils.startActivity(getActivity(), TaskAddActivity.class);
                         }else if(viewPager.getCurrentItem() == 1){
                             recordUserClickWorkFunction(PV_COLLECTION_MEETING);
-                            IntentUtils.startActivity(getActivity(), MeetingAddActivity.class, bundle);
+                            bundle.putBoolean(ScheduleAddActivity.EXTRA_EVENT_TYPE_FROM_MEETING, true);
+                            IntentUtils.startActivity(getActivity(), ScheduleAddActivity.class, bundle);
                         }
                         break;
                     case 4:

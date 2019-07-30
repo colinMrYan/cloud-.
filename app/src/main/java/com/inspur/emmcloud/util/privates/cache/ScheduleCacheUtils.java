@@ -4,6 +4,8 @@ import android.content.Context;
 
 import com.inspur.emmcloud.basemodule.util.DbCacheUtils;
 import com.inspur.emmcloud.bean.schedule.Schedule;
+import com.inspur.emmcloud.bean.schedule.calendar.AccountType;
+import com.inspur.emmcloud.bean.schedule.calendar.ScheduleCalendar;
 
 import org.xutils.db.sqlite.WhereBuilder;
 
@@ -37,6 +39,37 @@ public class ScheduleCacheUtils {
 
     }
 
+
+    public static void removeScheduleList(Context context, Calendar startTime, Calendar endTime, ScheduleCalendar scheduleCalendar) {
+        try {
+            long startTimeLong = startTime.getTimeInMillis();
+            long endTimeLong = endTime.getTimeInMillis();
+            if (scheduleCalendar == null || scheduleCalendar.getId().equals(AccountType.APP_SCHEDULE.toString()) || scheduleCalendar.getId().equals(AccountType.APP_MEETING.toString())) {
+                List<String> accountTypeList = new ArrayList<>();
+                accountTypeList.add(AccountType.APP_SCHEDULE.toString());
+                accountTypeList.add(AccountType.APP_MEETING.toString());
+                DbCacheUtils.getDb(context).delete(Schedule.class, WhereBuilder.b("endTime", ">=", startTimeLong)
+                        .and("startTime", "<=", endTimeLong).and("scheduleCalendar", "in", accountTypeList));
+            } else {
+                DbCacheUtils.getDb(context).delete(Schedule.class, WhereBuilder.b("endTime", ">=", startTimeLong)
+                        .and("startTime", "<=", endTimeLong).and("scheduleCalendar", "=", scheduleCalendar.getId()));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public static void removeScheduleList(Context context, ScheduleCalendar scheduleCalendar) {
+        try {
+            DbCacheUtils.getDb(context).delete(Schedule.class, WhereBuilder.b("scheduleCalendar", "=", scheduleCalendar.getId()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
     public static void removeSchedule(Context context, String scheduleId) {
         try {
             DbCacheUtils.getDb(context).deleteById(Schedule.class, scheduleId);
@@ -61,6 +94,61 @@ public class ScheduleCacheUtils {
         }
         return scheduleList;
     }
+
+    public static List<Schedule> getScheduleListByIsExchange(Context context, Calendar startTime, Calendar endTime, boolean isExchange, boolean isSchedule) {
+        List<Schedule> scheduleList = null;
+        try {
+            long startTimeLong = startTime.getTimeInMillis();
+            long endTimeLong = endTime.getTimeInMillis();
+            if (isExchange && isSchedule) {
+                scheduleList = DbCacheUtils.getDb(context).selector(Schedule.class).where(WhereBuilder.b("endTime", ">=", startTimeLong)
+                        .and("startTime", "<=", endTimeLong)).findAll();
+            } else if (!isExchange && isSchedule) {
+                scheduleList = DbCacheUtils.getDb(context).selector(Schedule.class).where(WhereBuilder.b("endTime", ">=", startTimeLong)
+                        .and("startTime", "<=", endTimeLong).and("type", "!=", Schedule.CALENDAR_TYPE_EXCHANGE)).findAll();
+            } else if (isExchange && !isSchedule) {
+                scheduleList = DbCacheUtils.getDb(context).selector(Schedule.class).where(WhereBuilder.b("endTime", ">=", startTimeLong)
+                        .and("startTime", "<=", endTimeLong).and("type", "!=", Schedule.CALENDAR_TYPE_EXCHANGE)).findAll();
+            }
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        if (scheduleList == null) {
+            scheduleList = new ArrayList<>();
+        }
+        return scheduleList;
+    }
+
+
+    public static List<Schedule> getScheduleList(Context context, Calendar startTime, Calendar endTime, List<ScheduleCalendar> scheduleCalendarList) {
+        List<Schedule> scheduleList = null;
+        List<String> scheduleCalendarIdList = new ArrayList<>();
+        for (ScheduleCalendar scheduleCalendar : scheduleCalendarList) {
+            if (scheduleCalendar.isOpen()) {
+                scheduleCalendarIdList.add(scheduleCalendar.getId());
+            }
+
+        }
+        if (scheduleCalendarIdList.size() > 0) {
+            try {
+                long startTimeLong = startTime.getTimeInMillis();
+                long endTimeLong = endTime.getTimeInMillis();
+                scheduleList = DbCacheUtils.getDb(context).selector(Schedule.class).where(WhereBuilder.b("endTime", ">=", startTimeLong)
+                        .and("startTime", "<=", endTimeLong).and("scheduleCalendar", "in", scheduleCalendarIdList)).orderBy("creationTime").findAll();
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+
+
+        if (scheduleList == null) {
+            scheduleList = new ArrayList<>();
+        }
+        return scheduleList;
+    }
+
 
     /**
      * 通过id获取缓存日程据

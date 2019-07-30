@@ -18,13 +18,17 @@ import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.widget.ClearEditText;
 import com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseFragment;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.bean.schedule.calendar.AccountType;
+import com.inspur.emmcloud.bean.schedule.calendar.ScheduleCalendar;
 import com.inspur.emmcloud.bean.schedule.meeting.GetMeetingListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
-import com.inspur.emmcloud.bean.system.SimpleEventMessage;
+import com.inspur.emmcloud.util.privates.cache.ScheduleCalendarCacheUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -55,6 +59,7 @@ public class MeetingFragment extends BaseFragment implements MySwipeRefreshLayou
     private boolean isPullUp = false;
     private boolean isHistoryMeeting = false;
     private View rootView;
+    private boolean isRefresh = false;
 
 
     @Override
@@ -128,9 +133,8 @@ public class MeetingFragment extends BaseFragment implements MySwipeRefreshLayou
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiverSimpleEventMessage(SimpleEventMessage eventMessage) {
         switch (eventMessage.getAction()) {
+            case Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED:
             case Constant.EVENTBUS_TAG_SCHEDULE_MEETING_DATA_CHANGED:
-                isPullUp = false;
-                pageNum = 1;
                 getMeetingList();
                 break;
         }
@@ -140,9 +144,9 @@ public class MeetingFragment extends BaseFragment implements MySwipeRefreshLayou
     public void onItemClick(View view, int position) {
         Meeting meeting = uiMeetingList.get(position);
         Bundle bundle = new Bundle();
-        bundle.putSerializable(MeetingDetailActivity.EXTRA_MEETING_ENTITY, meeting);
+        bundle.putSerializable(ScheduleDetailActivity.EXTRA_SCHEDULE_ENTITY, meeting);
         bundle.putBoolean(Constant.EXTRA_IS_HISTORY_MEETING, isHistoryMeeting);
-        IntentUtils.startActivity(getActivity(), MeetingDetailActivity.class, bundle);
+        IntentUtils.startActivity(getActivity(), ScheduleDetailActivity.class, bundle);
     }
 
     @Override
@@ -154,8 +158,12 @@ public class MeetingFragment extends BaseFragment implements MySwipeRefreshLayou
 
     @Override
     public void onLoadMore() {
-        isPullUp = true;
-        getMeetingList();
+        if (uiMeetingList.size() > 0) {
+            isPullUp = true;
+            getMeetingList();
+        } else {
+            swipeRefreshLayout.setLoading(false);
+        }
     }
 
     @Event(value = R.id.rl_meeting_search)
@@ -179,9 +187,29 @@ public class MeetingFragment extends BaseFragment implements MySwipeRefreshLayou
 
     private void getMeetingListByStartTime() {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
+            isRefresh = true;
             long startTime = TimeUtils.getDayBeginCalendar(Calendar.getInstance()).getTimeInMillis();
             swipeRefreshLayout.setRefreshing(true);
-            apiService.getMeetingListByTime(startTime);
+            List<ScheduleCalendar> scheduleCalendarList = ScheduleCalendarCacheUtils.getScheduleCalendarList(BaseApplication.getInstance());
+//            ScheduleCalendar appScheduleCalendar = null;
+//            for (ScheduleCalendar scheduleCalendar : scheduleCalendarList) {
+//                if (scheduleCalendar.getAcType().equals(AccountType.APP_MEETING.toString()) || scheduleCalendar.getAcType().equals(AccountType.APP_SCHEDULE.toString())) {
+//                    appScheduleCalendar = scheduleCalendar;
+//                    continue;
+//                }
+//                apiService.getMeetingListByTime(startTime, scheduleCalendar);
+//            }
+//            apiService.getMeetingListByTime(startTime, appScheduleCalendar);
+
+            ScheduleCalendar scheduleCalendar = null;
+            for (int i = 0; i < scheduleCalendarList.size(); i++) {
+                if (scheduleCalendarList.get(i).getAcType().equals(AccountType.EXCHANGE.toString())) {
+                    scheduleCalendar = scheduleCalendarList.get(i);
+                    break;
+                }
+            }
+            apiService.getMeetingListByTime(startTime, scheduleCalendar);
+
         } else {
             swipeRefreshLayout.setRefreshing(false);
         }
@@ -192,6 +220,7 @@ public class MeetingFragment extends BaseFragment implements MySwipeRefreshLayou
             apiService.getMeetingHistoryListByPage(page);
         } else {
             swipeRefreshLayout.setCanLoadMore(false);
+            swipeRefreshLayout.setRefreshing(false);
         }
     }
 
@@ -200,7 +229,11 @@ public class MeetingFragment extends BaseFragment implements MySwipeRefreshLayou
         public void returnMeetingListSuccess(GetMeetingListResult getMeetingListResult) {
             searchEdit.setText("");
             meetingList = getMeetingListResult.getMeetingList();
-            uiMeetingList.clear();
+            if (isRefresh) {
+                isRefresh = false;
+                uiMeetingList.clear();
+            }
+            uiMeetingList.removeAll(meetingList);
             uiMeetingList.addAll(meetingList);
             scheduleMeetingListAdapter.setMeetingList(uiMeetingList);
             scheduleMeetingListAdapter.notifyDataSetChanged();
@@ -223,6 +256,7 @@ public class MeetingFragment extends BaseFragment implements MySwipeRefreshLayou
             List<Meeting> meetingHistoryList = getMeetingListByPage.getMeetingList();
             currentPageSize = meetingHistoryList.size();
             swipeRefreshLayout.setLoading(false);
+            swipeRefreshLayout.setRefreshing(false);
             if (!isPullUp) {
                 meetingList.clear();
                 uiMeetingList.clear();

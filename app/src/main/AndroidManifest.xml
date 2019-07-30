@@ -346,6 +346,15 @@
                 <data android:mimeType="text/calendar" />
             </intent-filter>-->
 
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="ecc-cmd" />
+            </intent-filter>
+
         </activity>
         <activity
             android:name=".ui.chat.ChannelV0Activity"
@@ -618,15 +627,15 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.schedule.meeting.MeetingAddActivity"
+            android:name=".ui.schedule.meeting.ScheduleAddActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.schedule.meeting.MeetingDetailActivity"
+            android:name=".ui.schedule.meeting.ScheduleDetailActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.schedule.meeting.MeetingDetailReplyActivity"
+            android:name=".ui.schedule.meeting.ScheduleDetailReplyActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
@@ -681,6 +690,11 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.chat.ChannelMembersDelActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.schedule.ScheduleTypeSelectActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
 
