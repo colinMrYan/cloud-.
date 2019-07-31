@@ -43,8 +43,8 @@ import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.componentservice.contact.ContactService;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
-import com.inspur.emmcloud.componentservice.mail.MailService;
 import com.inspur.emmcloud.mail.R;
 import com.inspur.emmcloud.mail.R2;
 import com.inspur.emmcloud.mail.adapter.MailAttachmentListAdapter;
@@ -133,9 +133,9 @@ public class MailDetailActivity extends BaseActivity {
         if (!mail.isComplete()) {
             getMailDetail();
         }
-        MailService mailService = Router.getInstance().getService(MailService.class);
+        ContactService mailService = Router.getInstance().getService(ContactService.class);
         if (mailService != null) {
-            contactUser = mailService.getContactUserByUidOrEmail(false, BaseApplication.getInstance().getUid());
+            contactUser = mailService.getContactUserByUid(BaseApplication.getInstance().getUid());
         }
         initView();
     }

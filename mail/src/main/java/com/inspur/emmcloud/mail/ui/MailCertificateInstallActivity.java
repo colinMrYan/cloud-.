@@ -25,8 +25,8 @@ import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
+import com.inspur.emmcloud.componentservice.contact.ContactService;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
-import com.inspur.emmcloud.componentservice.mail.MailService;
 import com.inspur.emmcloud.mail.R;
 import com.inspur.emmcloud.mail.R2;
 import com.inspur.emmcloud.mail.api.MailAPIInterfaceImpl;
@@ -181,14 +181,11 @@ public class MailCertificateInstallActivity extends BaseActivity {
                         String key = text.toString().trim();
                         if (getCertificate(path, key)) {
                             certificatePassWord = key;
-                            if (Router.getInstance().getService(MailService.class) != null) {
-
-                            }
                             ContactUser contactUser = null;
                             Router router = Router.getInstance();
-                            if (router.getService(MailService.class) != null) {
-                                MailService service = router.getService(MailService.class);
-                                contactUser = service.getContactUserByUidOrEmail(false, BaseApplication.getInstance().getUid());
+                            if (router.getService(ContactService.class) != null) {
+                                ContactService service = router.getService(ContactService.class);
+                                contactUser = service.getContactUserByUid(BaseApplication.getInstance().getUid());
                             }
                             String mail = contactUser.getEmail();
                             uploadCertificateFile(mail, path, certificatePassWord);

@@ -20,11 +20,12 @@ import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.componentservice.contact.ContactService;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
-import com.inspur.emmcloud.componentservice.mail.MailService;
 import com.inspur.emmcloud.componentservice.mail.OnExchangeLoginListener;
 import com.inspur.emmcloud.mail.R;
 import com.inspur.emmcloud.mail.R2;
+import com.inspur.emmcloud.mail.util.ExchangeLoginUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -52,9 +53,9 @@ public class MailLoginActivity extends BaseActivity {
         ButterKnife.bind(this);
         TextWatcher watcher = new TextWatcher();
         mail = PreferencesByUsersUtils.getString(BaseApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, "");
-        MailService mailService = Router.getInstance().getService(MailService.class);
-        if (mailService != null) {
-            ContactUser contactUser = mailService.getContactUserByUidOrEmail(false, BaseApplication.getInstance().getUid());
+        ContactService contactService = Router.getInstance().getService(ContactService.class);
+        if (contactService != null) {
+            ContactUser contactUser = contactService.getContactUserByUid(BaseApplication.getInstance().getUid());
             mail = contactUser.getEmail();
         }
         EditTextUtils.setText(mailEdit, mail);
@@ -87,29 +88,25 @@ public class MailLoginActivity extends BaseActivity {
 
     private void login(final String mail, final String password) {
         if (NetUtils.isNetworkConnected(this)) {
-            MailService mailService = Router.getInstance().getService(MailService.class);
-            if (mailService != null) {
-                mailService.exchangeLogin(MailLoginActivity.this, new OnExchangeLoginListener() {
-                    @Override
-                    public void onMailLoginSuccess() {
-                        PreferencesByUsersUtils.putString(BaseApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, mail);
-                        PreferencesByUsersUtils.putString(BaseApplication.getInstance(), Constant.PREF_MAIL_PASSWORD, password);
-                        if (getIntent().hasExtra("from") && getIntent().getExtras().getString("from").equals("schedule_exchange_login")) {
-                            setResult(RESULT_OK);
-                            finish();
-                        } else {
-                            IntentUtils.startActivity(MailLoginActivity.this, MailHomeActivity.class, true);
+            new ExchangeLoginUtils.Builder(this)
+                    .setShowLoadingDlg(true)
+                    .setExchangeLoginAccount(mail, password)
+                    .setOnExchangeLoginListener(new OnExchangeLoginListener() {
+                        @Override
+                        public void onMailLoginSuccess() {
+                            if (getIntent().hasExtra("from") && getIntent().getExtras().getString("from").equals("schedule_exchange_login")) {
+                                setResult(RESULT_OK);
+                                finish();
+                            } else {
+                                IntentUtils.startActivity(MailLoginActivity.this, MailHomeActivity.class, true);
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onMailLoginFail(String error, int errorCode) {
-                        WebServiceMiddleUtils.hand(MailLoginActivity.this, error, errorCode);
-                    }
-                });
-            }
-
-
+                        @Override
+                        public void onMailLoginFail(String error, int errorCode) {
+                            WebServiceMiddleUtils.hand(MailLoginActivity.this, error, errorCode);
+                        }
+                    }).build().login();
         }
     }
 

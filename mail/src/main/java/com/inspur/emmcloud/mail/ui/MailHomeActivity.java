@@ -19,8 +19,8 @@ import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.componentservice.contact.ContactService;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
-import com.inspur.emmcloud.componentservice.mail.MailService;
 import com.inspur.emmcloud.mail.R;
 import com.inspur.emmcloud.mail.R2;
 import com.inspur.emmcloud.mail.adapter.MailListAdapter;
@@ -71,9 +71,9 @@ public class MailHomeActivity extends MailHomeBaseActivity implements MySwipeRef
     @Override
     public void onCreate() {
         super.onCreate();
-        MailService mailService = Router.getInstance().getService(MailService.class);
-        if (mailService != null) {
-            contactUser = mailService.getContactUserByUidOrEmail(false, BaseApplication.getInstance().getUid());
+        ContactService contactService = Router.getInstance().getService(ContactService.class);
+        if (contactService != null) {
+            contactUser = contactService.getContactUserByUid(BaseApplication.getInstance().getUid());
         }
         initView();
     }

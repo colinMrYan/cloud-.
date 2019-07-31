@@ -15,8 +15,8 @@ import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.componentservice.contact.ContactService;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
-import com.inspur.emmcloud.componentservice.mail.MailService;
 import com.inspur.emmcloud.mail.R;
 import com.inspur.emmcloud.mail.api.MailAPIInterfaceImpl;
 import com.inspur.emmcloud.mail.api.MailAPIService;
@@ -47,9 +47,9 @@ public class MailLeftMenuFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         apiService = new MailAPIService(getActivity());
-        MailService mailService = Router.getInstance().getService(MailService.class);
-        if (mailService != null) {
-            contactUser = mailService.getContactUserByUidOrEmail(false, BaseApplication.getInstance().getUid());
+        ContactService contactService = Router.getInstance().getService(ContactService.class);
+        if (contactService != null) {
+            contactUser = contactService.getContactUserByUid(BaseApplication.getInstance().getUid());
         }
         apiService.setAPIInterface(new WebService());
     }

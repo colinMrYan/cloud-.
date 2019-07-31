@@ -1,4 +1,4 @@
-package com.inspur.emmcloud;
+package com.inspur.emmcloud.mail;
 
 import org.junit.Test;
 

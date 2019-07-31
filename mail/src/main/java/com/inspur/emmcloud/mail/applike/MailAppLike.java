@@ -10,6 +10,7 @@ import com.inspur.emmcloud.mail.serviceimpl.MailServiceImpl;
  */
 
 public class MailAppLike implements IApplicationLike {
+
     Router router = Router.getInstance();
 
     @Override

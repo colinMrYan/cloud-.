@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.EncryptUtils;
@@ -33,8 +34,8 @@ import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.basemodule.widget.richedit.InsertModel;
 import com.inspur.emmcloud.basemodule.widget.richedit.RichEdit;
+import com.inspur.emmcloud.componentservice.contact.ContactService;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
-import com.inspur.emmcloud.componentservice.mail.MailService;
 import com.inspur.emmcloud.mail.R;
 import com.inspur.emmcloud.mail.R2;
 import com.inspur.emmcloud.mail.api.MailAPIInterfaceImpl;
@@ -299,10 +300,10 @@ public class MailSendActivity extends BaseActivity {
         mail.setToRecipients(recipientList);
         mail.setCcRecipients(ccRecipientList);
         String mailSenderAddess = PreferencesByUsersUtils.getString(BaseApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT);
-        MailService mailService = Router.getInstance().getService(MailService.class);
+        ContactService contactService = Router.getInstance().getService(ContactService.class);
         ContactUser contactUser = new ContactUser();
-        if (mailService != null) {
-            contactUser = mailService.getContactUserByUidOrEmail(true, mailSenderAddess);
+        if (contactService != null) {
+            contactUser = contactService.getContactUserByMail(mailSenderAddess);
         }
         mail.setFrom(new MailRecipientModel(contactUser.getName(), contactUser.getEmail()));
         mail.setNeedEncrypt(myCertificate.isEncryptedMail());
@@ -380,20 +381,25 @@ public class MailSendActivity extends BaseActivity {
 
         } else if (i == R.id.iv_recipients) {
             recipientRichEdit.insertLastManualData(0);
-            //     ARouter.getInstance().build("").with(bundle).navigation();
-            MailService mailService = Router.getInstance().getService(MailService.class);
-            if (mailService != null) {
-                mailService.startContactSearchActivityForResult(MailSendActivity.this, 2, memberUidList, true, "添加收件人", QEQUEST_ADD_MEMBER);
-            }
+            Bundle bundle = new Bundle();
+            bundle.putInt(EXTRA_TYPE, 2);
+            bundle.putStringArrayList(EXTRA_EXCLUDE_SELECT, memberUidList);
+            bundle.putBoolean(EXTRA_MULTI_SELECT, true);
+            bundle.putString(EXTRA_TITLE, "添加发送人");
+            ARouter.getInstance().build(Constant.AROUTER_CLASS_CONTACT_SEARCH).with(bundle).navigation(MailSendActivity.this, QEQUEST_ADD_MEMBER);
 
         } else if (i == R.id.iv_cc_recipients) {
             ccRecipientsShowText.setVisibility(View.GONE);
             ccRecipientRichEdit.setVisibility(View.VISIBLE);
             ccRecipientRichEdit.insertLastManualData(0);
-            MailService mailService = Router.getInstance().getService(MailService.class);
-            if (mailService != null) {
-                mailService.startContactSearchActivityForResult(MailSendActivity.this, 2, memberUidList, true, "添加抄送人", QEQUEST_CC_MEMBER);
-            }
+
+            Bundle bundle = new Bundle();
+            bundle.putInt(EXTRA_TYPE, 2);
+            bundle.putStringArrayList(EXTRA_EXCLUDE_SELECT, memberUidList);
+            bundle.putBoolean(EXTRA_MULTI_SELECT, true);
+            bundle.putString(EXTRA_TITLE, "添加抄送人");
+            ARouter.getInstance().build(Constant.AROUTER_CLASS_CONTACT_SEARCH).with(bundle).navigation(MailSendActivity.this, QEQUEST_CC_MEMBER);
+
 
         } else if (i == R.id.iv_fw_tip) {
             fwTipImageView.setVisibility(View.GONE);
@@ -427,10 +433,10 @@ public class MailSendActivity extends BaseActivity {
                         for (int i = 0; i < addMemberList.size(); i++) {
                             MailRecipientModel singleRecipient = new MailRecipientModel();
 
-                            MailService mailService = Router.getInstance().getService(MailService.class);
+                            ContactService contactService = Router.getInstance().getService(ContactService.class);
                             ContactUser contactUser = new ContactUser();
-                            if (mailService != null) {
-                                contactUser = mailService.getContactUserByUidOrEmail(false, addMemberList.get(i).getId());
+                            if (contactService != null) {
+                                contactUser = contactService.getContactUserByUid(addMemberList.get(i).getId());
                             }
                             singleRecipient.setAddress(contactUser.getEmail());
                             singleRecipient.setName(contactUser.getName());
@@ -448,10 +454,10 @@ public class MailSendActivity extends BaseActivity {
                     if (ctAddMemberList.size() > 0) {
                         for (int i = 0; i < ctAddMemberList.size(); i++) {
                             MailRecipientModel singleRecipient = new MailRecipientModel();
-                            MailService mailService = Router.getInstance().getService(MailService.class);
+                            ContactService contactService = Router.getInstance().getService(ContactService.class);
                             ContactUser contactUser = new ContactUser();
-                            if (mailService != null) {
-                                contactUser = mailService.getContactUserByUidOrEmail(false, ctAddMemberList.get(i).getId());
+                            if (contactService != null) {
+                                contactUser = contactService.getContactUserByUid(ctAddMemberList.get(i).getId());
                             }
                             singleRecipient.setAddress(contactUser.getEmail());
                             singleRecipient.setName(contactUser.getName());

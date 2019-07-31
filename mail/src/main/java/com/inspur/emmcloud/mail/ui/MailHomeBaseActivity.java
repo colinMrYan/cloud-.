@@ -12,8 +12,8 @@ import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseFragmentActivity;
+import com.inspur.emmcloud.componentservice.contact.ContactService;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
-import com.inspur.emmcloud.componentservice.mail.MailService;
 import com.inspur.emmcloud.mail.R;
 import com.inspur.emmcloud.mail.R2;
 import com.inspur.emmcloud.mail.widget.sildemenu.AllInterface;
@@ -49,9 +49,9 @@ public class MailHomeBaseActivity extends BaseFragmentActivity implements AllInt
         loadingDlg = new LoadingDialog(this);
         addMailLeftMenyu();
         setStatus();
-        MailService mailService = Router.getInstance().getService(MailService.class);
+        ContactService mailService = Router.getInstance().getService(ContactService.class);
         if (mailService != null) {
-            contactUser = mailService.getContactUserByUidOrEmail(false, BaseApplication.getInstance().getUid());
+            contactUser = mailService.getContactUserByUid(BaseApplication.getInstance().getUid());
         }
     }
 

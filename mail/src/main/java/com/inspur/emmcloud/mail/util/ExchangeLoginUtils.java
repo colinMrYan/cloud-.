@@ -1,18 +1,19 @@
-package com.inspur.emmcloud.util.privates;
+package com.inspur.emmcloud.mail.util;
 
 import android.app.Activity;
 import android.util.Base64;
 
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.MailApiService;
 import com.inspur.emmcloud.baselib.util.EncryptUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.componentservice.mail.OnExchangeLoginListener;
+import com.inspur.emmcloud.mail.api.MailAPIInterfaceImpl;
+import com.inspur.emmcloud.mail.api.MailAPIService;
 
 /**
  * 封装出的Exchange账户登录类
@@ -32,10 +33,10 @@ public class ExchangeLoginUtils {
         exchangePassword = builder.exchangePassword;
         isShowLoadingDlg = builder.isShowLoadingDlg;
         if (StringUtils.isBlank(exchangeAccount)) {
-            exchangeAccount = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, "");
+            exchangeAccount = PreferencesByUserAndTanentUtils.getString(BaseApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, "");
         }
         if (StringUtils.isBlank(exchangePassword)) {
-            exchangePassword = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_PASSWORD, "");
+            exchangePassword = PreferencesByUserAndTanentUtils.getString(BaseApplication.getInstance(), Constant.PREF_MAIL_PASSWORD, "");
         } else {
             String key = EncryptUtils.stringToMD5(exchangeAccount);
             try {
@@ -47,10 +48,11 @@ public class ExchangeLoginUtils {
     }
 
     public void login() {
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance(), false) && !StringUtils.isBlank(exchangeAccount) && !StringUtils.isBlank(exchangePassword)) {
+        LogUtils.LbcDebug("777777777777777777777777777777777777777");
+        if (NetUtils.isNetworkConnected(BaseApplication.getInstance(), false) && !StringUtils.isBlank(exchangeAccount) && !StringUtils.isBlank(exchangePassword)) {
             loadingDlg = new LoadingDialog(activity);
             loadingDlg.show(isShowLoadingDlg);
-            MailApiService apiService = new MailApiService(MyApplication.getInstance());
+            MailAPIService apiService = new MailAPIService(BaseApplication.getInstance());
             apiService.setAPIInterface(new WebService());
             apiService.loginMail(exchangeAccount, exchangePassword);
         } else {
@@ -59,6 +61,7 @@ public class ExchangeLoginUtils {
     }
 
     private void callbackLoginSuccess() {
+        LogUtils.LbcDebug("444444444444444444");
         if (isShowLoadingDlg) {
             LoadingDialog.dimissDlg(loadingDlg);
         }
@@ -68,6 +71,7 @@ public class ExchangeLoginUtils {
     }
 
     private void callbackLoginFail(String error, int errorCode) {
+        LogUtils.LbcDebug("666666666666666666");
         if (isShowLoadingDlg) {
             LoadingDialog.dimissDlg(loadingDlg);
         }
@@ -108,11 +112,11 @@ public class ExchangeLoginUtils {
         }
     }
 
-    private class WebService extends APIInterfaceInstance {
+    private class WebService extends MailAPIInterfaceImpl {
         @Override
         public void returnMailLoginSuccess() {
-            PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, exchangeAccount);
-            PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_MAIL_PASSWORD, exchangePassword);
+            PreferencesByUserAndTanentUtils.putString(BaseApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, exchangeAccount);
+            PreferencesByUserAndTanentUtils.putString(BaseApplication.getInstance(), Constant.PREF_MAIL_PASSWORD, exchangePassword);
             callbackLoginSuccess();
 
         }
