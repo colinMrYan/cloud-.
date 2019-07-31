@@ -134,7 +134,6 @@ public class MeetingFragment extends BaseFragment implements MySwipeRefreshLayou
     public void onReceiverSimpleEventMessage(SimpleEventMessage eventMessage) {
         switch (eventMessage.getAction()) {
             case Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED:
-            case Constant.EVENTBUS_TAG_SCHEDULE_MEETING_DATA_CHANGED:
                 getMeetingList();
                 break;
         }

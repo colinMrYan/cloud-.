@@ -108,7 +108,6 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
                 setEventShowType();
                 showCalendarEvent(true);
                 break;
-            case Constant.EVENTBUS_TAG_SCHEDULE_MEETING_DATA_CHANGED:
             case Constant.EVENTBUS_TAG_SCHEDULE_TASK_DATA_CHANGED:
             case Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED:
                 showCalendarEvent(true);
