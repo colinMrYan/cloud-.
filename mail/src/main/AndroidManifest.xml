@@ -1,5 +1,35 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.inspur.emmcloud">
+    package="com.inspur.emmcloud.mail">
 
-    <application android:allowBackup="true" />
+    <application>
+
+        <!-- Mail-->
+        <activity
+            android:name=".ui.MailHomeActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.MailDetailActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.MailLoginActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name=".ui.MailCertificateInstallActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.MailSendActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.MailSettingActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+
+
+    </application>
 </manifest>

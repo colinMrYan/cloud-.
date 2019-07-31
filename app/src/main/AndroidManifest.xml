@@ -746,32 +746,6 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
 
-        <!-- Mail-->
-        <activity
-            android:name=".ui.appcenter.mail.MailHomeActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".ui.appcenter.mail.MailDetailActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".ui.appcenter.mail.MailLoginActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait"></activity>
-
-        <activity
-            android:name=".ui.appcenter.mail.MailCertificateInstallActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.appcenter.mail.MailSendActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.appcenter.mail.MailSettingActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
 
 
         <!-- service -->

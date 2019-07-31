@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.EditTextUtils;
 import com.inspur.emmcloud.baselib.util.FomatUtils;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
@@ -19,6 +20,8 @@ import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.componentservice.contact.ContactUser;
+import com.inspur.emmcloud.componentservice.mail.MailService;
 import com.inspur.emmcloud.componentservice.mail.OnExchangeLoginListener;
 import com.inspur.emmcloud.mail.R;
 
@@ -48,8 +51,10 @@ public class MailLoginActivity extends BaseActivity {
         ButterKnife.bind(this);
         TextWatcher watcher = new TextWatcher();
         mail = PreferencesByUsersUtils.getString(BaseApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, "");
-        if (StringUtils.isBlank(mail)) {
-            mail = ContactUserCacheUtils.getUserMail(MyApplication.getInstance().getUid());
+        MailService mailService = Router.getInstance().getService(MailService.class);
+        if (mailService != null) {
+            ContactUser contactUser = mailService.getContactUserByUidOrEmail(false, BaseApplication.getInstance().getUid());
+            mail = contactUser.getEmail();
         }
         EditTextUtils.setText(mailEdit, mail);
         mailEdit.addTextChangedListener(watcher);
@@ -81,27 +86,28 @@ public class MailLoginActivity extends BaseActivity {
 
     private void login(final String mail, final String password) {
         if (NetUtils.isNetworkConnected(this)) {
-            new ExchangeLoginUtils.Builder(this)
-                    .setShowLoadingDlg(true)
-                    .setExchangeLoginAccount(mail, password)
-                    .setOnExchageLoginListener(new OnExchangeLoginListener() {
-                        @Override
-                        public void onMailLoginSuccess() {
-                            PreferencesByUsersUtils.putString(MyApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, mail);
-                            PreferencesByUsersUtils.putString(MyApplication.getInstance(), Constant.PREF_MAIL_PASSWORD, password);
-                            if (getIntent().hasExtra("from") && getIntent().getExtras().getString("from").equals("schedule_exchange_login")) {
-                                setResult(RESULT_OK);
-                                finish();
-                            } else {
-                                IntentUtils.startActivity(MailLoginActivity.this, MailHomeActivity.class, true);
-                            }
+            MailService mailService = Router.getInstance().getService(MailService.class);
+            if (mailService != null) {
+                mailService.exchangeLogin(MailLoginActivity.this, new OnExchangeLoginListener() {
+                    @Override
+                    public void onMailLoginSuccess() {
+                        PreferencesByUsersUtils.putString(BaseApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, mail);
+                        PreferencesByUsersUtils.putString(BaseApplication.getInstance(), Constant.PREF_MAIL_PASSWORD, password);
+                        if (getIntent().hasExtra("from") && getIntent().getExtras().getString("from").equals("schedule_exchange_login")) {
+                            setResult(RESULT_OK);
+                            finish();
+                        } else {
+                            IntentUtils.startActivity(MailLoginActivity.this, MailHomeActivity.class, true);
                         }
+                    }
 
-                        @Override
-                        public void onMailLoginFail(String error, int errorCode) {
-                            WebServiceMiddleUtils.hand(MailLoginActivity.this, error, errorCode);
-                        }
-                    }).build().login();
+                    @Override
+                    public void onMailLoginFail(String error, int errorCode) {
+                        WebServiceMiddleUtils.hand(MailLoginActivity.this, error, errorCode);
+                    }
+                });
+            }
+
 
         }
     }

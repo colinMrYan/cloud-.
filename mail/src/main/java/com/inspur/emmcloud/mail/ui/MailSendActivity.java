@@ -16,6 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.EncryptUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
@@ -24,6 +25,7 @@ import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.NoScrollWebView;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
@@ -32,7 +34,10 @@ import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.basemodule.widget.richedit.InsertModel;
 import com.inspur.emmcloud.basemodule.widget.richedit.RichEdit;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
+import com.inspur.emmcloud.componentservice.mail.MailService;
 import com.inspur.emmcloud.mail.R;
+import com.inspur.emmcloud.mail.api.MailAPIInterfaceImpl;
+import com.inspur.emmcloud.mail.api.MailAPIService;
 import com.inspur.emmcloud.mail.bean.Mail;
 import com.inspur.emmcloud.mail.bean.MailCertificateDetail;
 import com.inspur.emmcloud.mail.bean.MailRecipient;
@@ -57,6 +62,13 @@ public class MailSendActivity extends BaseActivity {
     public static final String MODE_FORWARD = "mail_forward";
     public static final String EXTRA_MAIL_ID = "extra_mail_id";
     public static final String EXTRA_MAIL_MODE = "extra_mail_mode";
+    public static final String EXTRA_TITLE = "title";
+    public static final String EXTRA_MULTI_SELECT = "isMulti_select";
+    public static final String EXTRA_TYPE = "select_content";
+    public static final String EXTRA_CONTAIN_ME = "isContainMe";
+    public static final String EXTRA_HAS_SELECT = "hasSearchResult";
+    public static final String EXTRA_EXCLUDE_SELECT = "excludeContactUidList";
+    public static final String EXTRA_LIMIT = "select_limit";
     private static final int QEQUEST_ADD_MEMBER = 2;
     private static final int QEQUEST_CC_MEMBER = 3;
     @BindView(R.id.rich_edit_recipients)
@@ -285,8 +297,12 @@ public class MailSendActivity extends BaseActivity {
         mail.setBody(html);
         mail.setToRecipients(recipientList);
         mail.setCcRecipients(ccRecipientList);
-        String mailSenderAddess = PreferencesByUsersUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT);
-        ContactUser contactUser = ContactUserCacheUtils.getContactUserByEmail(mailSenderAddess);
+        String mailSenderAddess = PreferencesByUsersUtils.getString(BaseApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT);
+        MailService mailService = Router.getInstance().getService(MailService.class);
+        ContactUser contactUser = new ContactUser();
+        if (mailService != null) {
+            contactUser = mailService.getContactUserByUidOrEmail(true, mailSenderAddess);
+        }
         mail.setFrom(new MailRecipientModel(contactUser.getName(), contactUser.getEmail()));
         mail.setNeedEncrypt(myCertificate.isEncryptedMail());
         mail.setNeedSign(myCertificate.isSignedMail());
@@ -343,7 +359,7 @@ public class MailSendActivity extends BaseActivity {
         byte[] mailContent = EncryptUtils.encodeNoBase64(jsonMail, key, Constant.MAIL_ENCRYPT_IV);
         if (NetUtils.isNetworkConnected(this)) {
             loadingDlg.show();
-            MailApiService apiService = new MailApiService(this);
+            MailAPIService apiService = new MailAPIService(this);
             apiService.setAPIInterface(new WebService());
             apiService.sendEncryptMail(mailContent);
         }
@@ -364,10 +380,11 @@ public class MailSendActivity extends BaseActivity {
             case R.id.iv_recipients:
                 recipientRichEdit.insertLastManualData(0);
                 Intent intent = new Intent();
-                intent.putExtra(ContactSearchFragment.EXTRA_TYPE, 2);
-                intent.putExtra(ContactSearchFragment.EXTRA_EXCLUDE_SELECT, memberUidList);
-                intent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, true);
-                intent.putExtra(ContactSearchFragment.EXTRA_TITLE, "添加收件人");
+                intent.putExtra(EXTRA_TYPE, 2);
+                intent.putExtra(EXTRA_EXCLUDE_SELECT, memberUidList);
+                intent.putExtra(EXTRA_MULTI_SELECT, true);
+                intent.putExtra(EXTRA_TITLE, "添加收件人");
+
                 intent.setClass(getApplicationContext(), ContactSearchActivity.class);
                 startActivityForResult(intent, QEQUEST_ADD_MEMBER);
                 break;
@@ -376,10 +393,10 @@ public class MailSendActivity extends BaseActivity {
                 ccRecipientRichEdit.setVisibility(View.VISIBLE);
                 ccRecipientRichEdit.insertLastManualData(0);
                 Intent intent1 = new Intent();
-                intent1.putExtra(ContactSearchFragment.EXTRA_TYPE, 2);
-                intent1.putExtra(ContactSearchFragment.EXTRA_EXCLUDE_SELECT, memberUidList);
-                intent1.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, true);
-                intent1.putExtra(ContactSearchFragment.EXTRA_TITLE, "添加抄送人");
+                intent1.putExtra(EXTRA_TYPE, 2);
+                intent1.putExtra(EXTRA_EXCLUDE_SELECT, memberUidList);
+                intent1.putExtra(EXTRA_MULTI_SELECT, true);
+                intent1.putExtra(EXTRA_TITLE, "添加抄送人");
                 intent1.setClass(getApplicationContext(), ContactSearchActivity.class);
                 startActivityForResult(intent1, QEQUEST_CC_MEMBER);
                 break;
@@ -406,6 +423,7 @@ public class MailSendActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case QEQUEST_ADD_MEMBER:
@@ -414,7 +432,12 @@ public class MailSendActivity extends BaseActivity {
                     if (addMemberList.size() > 0) {
                         for (int i = 0; i < addMemberList.size(); i++) {
                             MailRecipientModel singleRecipient = new MailRecipientModel();
-                            ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(addMemberList.get(i).getId());
+
+                            MailService mailService = Router.getInstance().getService(MailService.class);
+                            ContactUser contactUser = new ContactUser();
+                            if (mailService != null) {
+                                contactUser = mailService.getContactUserByUidOrEmail(false, addMemberList.get(i).getId());
+                            }
                             singleRecipient.setAddress(contactUser.getEmail());
                             singleRecipient.setName(contactUser.getName());
                             boolean isContaion = isListContaionSpecItem(recipientList, singleRecipient);
@@ -431,7 +454,11 @@ public class MailSendActivity extends BaseActivity {
                     if (ctAddMemberList.size() > 0) {
                         for (int i = 0; i < ctAddMemberList.size(); i++) {
                             MailRecipientModel singleRecipient = new MailRecipientModel();
-                            ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(ctAddMemberList.get(i).getId());
+                            MailService mailService = Router.getInstance().getService(MailService.class);
+                            ContactUser contactUser = new ContactUser();
+                            if (mailService != null) {
+                                contactUser = mailService.getContactUserByUidOrEmail(false, ctAddMemberList.get(i).getId());
+                            }
                             singleRecipient.setAddress(contactUser.getEmail());
                             singleRecipient.setName(contactUser.getName());
                             boolean isContaion = isListContaionSpecItem(ccRecipientList, singleRecipient);
@@ -521,7 +548,7 @@ public class MailSendActivity extends BaseActivity {
     /**
      * 网络通信类
      */
-    private class WebService extends APIInterfaceInstance {
+    private class WebService extends MailAPIInterfaceImpl {
         @Override
         public void returnSendMailSuccess() {
             LoadingDialog.dimissDlg(loadingDlg);

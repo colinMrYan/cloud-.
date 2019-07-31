@@ -57,7 +57,7 @@ android {
 }
 
 combuild {
-    applicationName = 'com.inspur.emmcloud.news.runalone.application.MailApplication'
+    applicationName = 'com.inspur.emmcloud.mail.runalone.application.MailApplication'
     isRegisterCompoAuto = false
 }
 

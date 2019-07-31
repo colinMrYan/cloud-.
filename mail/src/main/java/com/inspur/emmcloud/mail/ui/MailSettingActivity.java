@@ -6,13 +6,13 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
-import com.inspur.emmcloud.bean.system.SimpleEventMessage;
+import com.inspur.emmcloud.mail.R;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -34,8 +34,8 @@ public class MailSettingActivity extends BaseActivity {
     @Override
     public void onCreate() {
         ButterKnife.bind(this);
-        String mail = PreferencesByUsersUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, "");
-        String password = PreferencesByUsersUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_PASSWORD, "");
+        String mail = PreferencesByUsersUtils.getString(BaseApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, "");
+        String password = PreferencesByUsersUtils.getString(BaseApplication.getInstance(), Constant.PREF_MAIL_PASSWORD, "");
         mailAccountText.setText(mail);
         mailPasswrodText.setText(password);
         mailPasswrodText.setTransformationMethod(PasswordTransformationMethod.getInstance());

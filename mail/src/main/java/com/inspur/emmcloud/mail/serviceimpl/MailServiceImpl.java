@@ -1,11 +1,14 @@
 package com.inspur.emmcloud.mail.serviceimpl;
 
 import android.app.Activity;
+import android.content.Context;
 
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.componentservice.mail.MailService;
 import com.inspur.emmcloud.componentservice.mail.OnExchangeLoginListener;
 import com.inspur.emmcloud.mail.api.MailAPIInterfaceImpl;
+
+import java.util.ArrayList;
 
 /**
  * Created by libaochao on 2019/7/22.
@@ -30,5 +33,10 @@ public class MailServiceImpl extends MailAPIInterfaceImpl implements MailService
     @Override
     public ContactUser getContactUserByUidOrEmail(boolean isEmail, String uidOrMail) {
         return null;
+    }
+
+    @Override
+    public void startContactSearchActivityForResult(Context context, int type, ArrayList<String> memberUidList, boolean multiSelect, String title, int qequestCode) {
+
     }
 }

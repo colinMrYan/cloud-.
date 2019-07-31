@@ -7,5 +7,32 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"></application>
+        android:theme="@style/AppTheme">
+        <!-- Mail-->
+        <activity
+            android:name=".ui.MailHomeActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.MailDetailActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.MailLoginActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name=".ui.MailCertificateInstallActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.MailSendActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.MailSettingActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+    </application>
 </manifest>

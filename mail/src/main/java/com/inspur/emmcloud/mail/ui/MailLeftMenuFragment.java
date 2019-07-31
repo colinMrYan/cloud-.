@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
@@ -102,7 +103,7 @@ public class MailLeftMenuFragment extends Fragment {
 
 
     private void getMailFolder() {
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+        if (NetUtils.isNetworkConnected(BaseApplication.getInstance())) {
             //loadingDialog.show();
             apiService.getMailFolder();
         }

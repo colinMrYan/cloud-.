@@ -10,9 +10,13 @@ import com.inspur.emmcloud.basemodule.config.Constant;
 
 public class MailApplication extends BaseApplication {
 
+    @Override
+    public void onCreate() {
+        super.onCreate();
+    }
 
     @Override
     public String getIntentClassRouterAfterLogin() {
-        return Constant.AROUTER_CLASS_APP_INDEX;
+        return Constant.AROUTER_CLASS_MAIL_LOGIN;
     }
 }
