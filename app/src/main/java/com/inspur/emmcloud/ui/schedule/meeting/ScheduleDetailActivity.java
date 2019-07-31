@@ -215,7 +215,8 @@ public class ScheduleDetailActivity extends BaseActivity {
                 false) || (scheduleEvent.getOwner().equals(MyApplication.getInstance().getUid())) && System.currentTimeMillis() < scheduleEvent.getEndTime()) ? View.VISIBLE : View.GONE);
         initScheduleType();
         initDiffStatus();
-        attendStatusLayout.setVisibility(Calendar.getInstance().after(TimeUtils.timeLong2Calendar(scheduleEvent.getEndTime())) ? View.GONE : View.VISIBLE);
+        attendStatusLayout.setVisibility((Calendar.getInstance().after(TimeUtils.timeLong2Calendar(scheduleEvent.getEndTime())) ||
+                scheduleEvent.getOwner().equals(BaseApplication.getInstance().getUid())) ? View.GONE : View.VISIBLE);
     }
 
     /**
@@ -485,6 +486,7 @@ public class ScheduleDetailActivity extends BaseActivity {
         if (resultCode == 100) {
             info = (ReplyAttendResult) data.getSerializableExtra("ReplyResult");
             attendStatusText.setText(info.content);
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED, null));
         }
         super.onActivityResult(requestCode, resultCode, data);
     }

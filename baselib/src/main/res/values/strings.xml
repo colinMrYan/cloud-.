@@ -894,7 +894,7 @@
     <string name="meeting_detail_one_hour">提前一个小时</string>
     <string name="meeting_detail_one_day">提前一天</string>
     <string name="meeting_detail_attendee_num">%1$s等%2$d人</string>
-    <string name="meeting_detail_attendee_accept">接收</string>
+    <string name="meeting_detail_attendee_accept">接受</string>
     <string name="meeting_detail_attendee_decline">拒绝</string>
     <string name="meeting_detail_attendee_unknown">无响应</string>
     <string name="meeting_detail_attendee_tentative">暂定</string>

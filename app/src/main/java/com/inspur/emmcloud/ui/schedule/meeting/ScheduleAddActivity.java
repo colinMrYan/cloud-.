@@ -755,7 +755,7 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
      */
     private Schedule getScheduleEvent() {
         Schedule schedule = new Schedule();
-        schedule.setOwner(owner);
+        schedule.setOwner(StringUtils.isBlank(owner) ? BaseApplication.getInstance().getUid() : owner);
         schedule.setTitle(title);
         correctedCalendarTime();
         schedule.setStartTime(startTimeCalendar.getTimeInMillis());

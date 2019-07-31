@@ -894,7 +894,7 @@
     <string name="meeting_detail_thirty_minutes">提前30分鐘</string>
     <string name="meeting_detail_one_hour">提前一個小時</string>
     <string name="meeting_detail_location">地點：</string>
-    <string name="meeting_detail_attendee_accept">接收</string>
+    <string name="meeting_detail_attendee_accept">接受</string>
     <string name="meeting_detail_attendee_decline">拒絕</string>
     <string name="meeting_detail_attendee_unknown">無響應</string>
     <string name="meeting_detail_attendee_tentative">暫定</string>

@@ -156,25 +156,27 @@ public class ScheduleBaseFragment extends BaseLayoutFragment implements View.OnL
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (isNeedScroll) {
-                    int scrollOffset = ScrollOffset;
-                    int currentScrollY = eventScrollView.getScrollY();
-                    eventScrollView.scrollBy(0, scrollOffset);
-                    if (ScrollOffset < 0) {//向下滚动
-                        if (currentScrollY < -ScrollOffset) {
-                            scrollOffset = -currentScrollY;
-                        }
-                    } else {
-                        int maxScrollOffset = eventScrollView.getChildAt(0).getHeight() - currentScrollY - eventScrollView.getHeight();
-                        if (scrollOffset > maxScrollOffset) {
-                            scrollOffset = maxScrollOffset;
-                        }
+                if (calendarDayView != null) {
+                    if (isNeedScroll) {
+                        int scrollOffset = ScrollOffset;
+                        int currentScrollY = eventScrollView.getScrollY();
+                        eventScrollView.scrollBy(0, scrollOffset);
+                        if (ScrollOffset < 0) {//向下滚动
+                            if (currentScrollY < -ScrollOffset) {
+                                scrollOffset = -currentScrollY;
+                            }
+                        } else {
+                            int maxScrollOffset = eventScrollView.getChildAt(0).getHeight() - currentScrollY - eventScrollView.getHeight();
+                            if (scrollOffset > maxScrollOffset) {
+                                scrollOffset = maxScrollOffset;
+                            }
 
+                        }
+                        //ScrollView滚动后，DragScaleView也会随之滚动，为了让DragScaleView能够跟随手势
+                        dragScaleView.updateLastY(-scrollOffset);
                     }
-                    //ScrollView滚动后，DragScaleView也会随之滚动，为了让DragScaleView能够跟随手势
-                    dragScaleView.updateLastY(-scrollOffset);
+                    calendarDayView.showDragViewTime(top, height);
                 }
-                calendarDayView.showDragViewTime(top, height);
             }
         }, 10);
     }
