@@ -30,7 +30,7 @@ public class SqlService extends ImpPlugin {
 
     @Override
     public void execute(String action, JSONObject paramsObject) {
-        if ("open".equals(action)) {
+        if ("executeSql".equals(action)) {
             this.database = getSQLiteDatabase("emmcloud.db");
             executeSqlSelect(paramsObject);
         }
@@ -61,7 +61,6 @@ public class SqlService extends ImpPlugin {
         // 查询或者插入的字段值以逗号隔开
         String[] params = null;
         String txId = "";
-//		sql = "select * from Robot";
         sql = JSONUtils.getString(jsonObject, "sql", "");
         param = JSONUtils.getString(jsonObject, "param", "");
         txId = JSONUtils.getString(jsonObject, "txId", "");
