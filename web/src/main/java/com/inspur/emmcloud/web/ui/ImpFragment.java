@@ -53,6 +53,7 @@ import com.inspur.emmcloud.web.plugin.camera.CameraService;
 import com.inspur.emmcloud.web.plugin.filetransfer.FileTransferService;
 import com.inspur.emmcloud.web.plugin.photo.PhotoService;
 import com.inspur.emmcloud.web.plugin.staff.SelectStaffService;
+import com.inspur.emmcloud.web.plugin.video.VideoRecordService;
 import com.inspur.emmcloud.web.plugin.window.DropItemTitle;
 import com.inspur.emmcloud.web.plugin.window.OnKeyDownListener;
 import com.inspur.emmcloud.web.webview.ImpWebView;
@@ -78,6 +79,7 @@ public class ImpFragment extends ImpBaseFragment {
     public static final int DO_NOTHING_REQUEST = 7;
     public static final int BARCODE_SERVER__SCAN_REQUEST = 8;
     public static final int SELECT_FILE_SERVICE_REQUEST = 9;
+    public static final int REQUEST_CODE_RECORD_VIDEO = 10;
     public static final int FILE_CHOOSER_RESULT_CODE = 5173;
     private static final String JAVASCRIPT_PREFIX = "javascript:";
     private ImpWebView webView;
@@ -717,6 +719,9 @@ public class ImpFragment extends ImpBaseFragment {
                         break;
                     case SELECT_FILE_SERVICE_REQUEST:
                         serviceName = FileTransferService.class.getCanonicalName().trim();
+                        break;
+                    case REQUEST_CODE_RECORD_VIDEO:
+                        serviceName = VideoRecordService.class.getCanonicalName();
                         break;
                     default:
                         break;
