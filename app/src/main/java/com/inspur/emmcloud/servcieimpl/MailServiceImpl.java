@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.servcieimpl;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 
 import com.inspur.emmcloud.MyApplication;
@@ -49,14 +48,14 @@ public class MailServiceImpl implements MailService {
     }
 
     @Override
-    public void startContactSearchActivityForResult(Context context, int type, ArrayList<String> memberUidList, boolean multiSelect, String title, int questCode) {
+    public void startContactSearchActivityForResult(Activity activity, int type, ArrayList<String> memberUidList, boolean multiSelect, String title, int questCode) {
         Intent intent = new Intent();
         intent.putExtra(ContactSearchFragment.EXTRA_TYPE, type);
         intent.putExtra(ContactSearchFragment.EXTRA_EXCLUDE_SELECT, memberUidList);
         intent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, true);
         intent.putExtra(ContactSearchFragment.EXTRA_TITLE, title);
 
-        intent.setClass(context, ContactSearchActivity.class);
-        startActivityForResult((Activity) context, intent, questCode, null);
+        intent.setClass(activity, ContactSearchActivity.class);
+        startActivityForResult(activity, intent, questCode, null);
     }
 }

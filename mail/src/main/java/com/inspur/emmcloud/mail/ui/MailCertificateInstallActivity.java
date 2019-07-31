@@ -28,6 +28,7 @@ import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.componentservice.mail.MailService;
 import com.inspur.emmcloud.mail.R;
+import com.inspur.emmcloud.mail.R2;
 import com.inspur.emmcloud.mail.api.MailAPIInterfaceImpl;
 import com.inspur.emmcloud.mail.api.MailAPIService;
 import com.inspur.emmcloud.mail.bean.MailCertificateDetail;
@@ -49,29 +50,29 @@ import butterknife.ButterKnife;
 public class MailCertificateInstallActivity extends BaseActivity {
     public static final int SELECT_CREDIFICATE_FILE = 10;
     public static String CERTIFICATER_KEY = "certificate";
-    @BindView(R.id.rl_installed_certificate)
+    @BindView(R2.id.rl_installed_certificate)
     RelativeLayout installedCerLayout;
-    @BindView(R.id.tv_cer_use_state)
+    @BindView(R2.id.tv_cer_use_state)
     TextView cerUseStateText;
-    @BindView(R.id.tv_installed_cer_title)
+    @BindView(R2.id.tv_installed_cer_title)
     TextView installedCerTitleText;
-    @BindView(R.id.tv_installed_cer_owner_name)
+    @BindView(R2.id.tv_installed_cer_owner_name)
     TextView cerOwnerNameText;
-    @BindView(R.id.tv_installed_cer_issuer_name)
+    @BindView(R2.id.tv_installed_cer_issuer_name)
     TextView cerIssuerNameText;
-    @BindView(R.id.tv_installed_cer_final_data)
+    @BindView(R2.id.tv_installed_cer_final_data)
     TextView cerFinalDataText;
-    @BindView(R.id.sv_encryption_action)
+    @BindView(R2.id.sv_encryption_action)
     SwitchCompat encryptionSwitchView;
-    @BindView(R.id.sv_signature_action)
+    @BindView(R2.id.sv_signature_action)
     SwitchCompat signatureSwitchView;
-    @BindView(R.id.tv_new_cer_title)
+    @BindView(R2.id.tv_new_cer_title)
     TextView newCerTitleText;
-    @BindView(R.id.tv_new_cer_ower_name)
+    @BindView(R2.id.tv_new_cer_ower_name)
     TextView newCerOwnerNameText;
-    @BindView(R.id.tv_new_cer_issuer_name)
+    @BindView(R2.id.tv_new_cer_issuer_name)
     TextView newCerIssuerNameText;
-    @BindView(R.id.tv_new_cer_final_data)
+    @BindView(R2.id.tv_new_cer_final_data)
     TextView newCerFinalDataText;
     private String certificatePassWord;
     private MailCertificateDetail myCertificate;
@@ -123,15 +124,15 @@ public class MailCertificateInstallActivity extends BaseActivity {
      * 点击事件
      */
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.ibt_back:
-                finish();
-                break;
-            case R.id.tv_install_certificate:
-                Bundle bundle = new Bundle();
-                bundle.putInt("extra_maximum", 1);
-                ARouter.getInstance().build(Constant.AROUTER_CLASS_WEB_FILEMANAGER).with(bundle).navigation(MailCertificateInstallActivity.this, SELECT_CREDIFICATE_FILE);
-                break;
+        int i = v.getId();
+        if (i == R.id.ibt_back) {
+            finish();
+
+        } else if (i == R.id.tv_install_certificate) {
+            Bundle bundle = new Bundle();
+            bundle.putInt("extra_maximum", 1);
+            ARouter.getInstance().build(Constant.AROUTER_CLASS_WEB_FILEMANAGER).with(bundle).navigation(MailCertificateInstallActivity.this, SELECT_CREDIFICATE_FILE);
+
         }
     }
 

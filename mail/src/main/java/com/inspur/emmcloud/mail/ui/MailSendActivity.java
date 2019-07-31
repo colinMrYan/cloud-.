@@ -36,6 +36,7 @@ import com.inspur.emmcloud.basemodule.widget.richedit.RichEdit;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.componentservice.mail.MailService;
 import com.inspur.emmcloud.mail.R;
+import com.inspur.emmcloud.mail.R2;
 import com.inspur.emmcloud.mail.api.MailAPIInterfaceImpl;
 import com.inspur.emmcloud.mail.api.MailAPIService;
 import com.inspur.emmcloud.mail.bean.Mail;
@@ -71,33 +72,33 @@ public class MailSendActivity extends BaseActivity {
     public static final String EXTRA_LIMIT = "select_limit";
     private static final int QEQUEST_ADD_MEMBER = 2;
     private static final int QEQUEST_CC_MEMBER = 3;
-    @BindView(R.id.rich_edit_recipients)
+    @BindView(R2.id.rich_edit_recipients)
     RichEdit recipientRichEdit;
-    @BindView(R.id.rich_edit_cc_recipient)
+    @BindView(R2.id.rich_edit_cc_recipient)
     RichEdit ccRecipientRichEdit;
-    @BindView(R.id.et_theme_send)
+    @BindView(R2.id.et_theme_send)
     EditText sendThemeEditText;
-    @BindView(R.id.tv_recipients_show)
+    @BindView(R2.id.tv_recipients_show)
     TextView recipientsShowText;
-    @BindView(R.id.tv_cc_recipient_show)
+    @BindView(R2.id.tv_cc_recipient_show)
     TextView ccRecipientsShowText;
-    @BindView(R.id.et_content_send)
+    @BindView(R2.id.et_content_send)
     EditText contentSendEditText;
-    @BindView(R.id.iv_fw_tip)
+    @BindView(R2.id.iv_fw_tip)
     ImageView fwTipImageView;
-    @BindView(R.id.rl_fw_body)
+    @BindView(R2.id.rl_fw_body)
     RelativeLayout fwBodyLayout;
-    @BindView(R.id.rl_include_origin)
+    @BindView(R2.id.rl_include_origin)
     RelativeLayout includeOriginLayout;
-    @BindView(R.id.cb_fw_body)
+    @BindView(R2.id.cb_fw_body)
     CheckBox fwBodyCheckBox;
-    @BindView(R.id.wv_body)
+    @BindView(R2.id.wv_body)
     NoScrollWebView bodyWebView;
-    @BindView(R.id.tv_header_title)
+    @BindView(R2.id.tv_header_title)
     TextView headerTitleText;
-    @BindView(R.id.iv_recipients)
+    @BindView(R2.id.iv_recipients)
     ImageView recipientsImageView;
-    @BindView(R.id.iv_cc_recipients)
+    @BindView(R2.id.iv_cc_recipients)
     ImageView ccRecipientsImageView;
     private ArrayList<String> memberUidList = new ArrayList<>();
     private ArrayList<MailRecipientModel> recipientList = new ArrayList<>();
@@ -369,54 +370,47 @@ public class MailSendActivity extends BaseActivity {
      * 点击事件
      */
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.tv_send_mail:
-                if (recipientList.size() == 0) {
-                    ToastUtils.show(this, "至少添加一个收件人");
-                    return;
-                }
-                noSignOrEncryptHintDialog();
-                break;
-            case R.id.iv_recipients:
-                recipientRichEdit.insertLastManualData(0);
-                Intent intent = new Intent();
-                intent.putExtra(EXTRA_TYPE, 2);
-                intent.putExtra(EXTRA_EXCLUDE_SELECT, memberUidList);
-                intent.putExtra(EXTRA_MULTI_SELECT, true);
-                intent.putExtra(EXTRA_TITLE, "添加收件人");
+        int i = v.getId();
+        if (i == R.id.tv_send_mail) {
+            if (recipientList.size() == 0) {
+                ToastUtils.show(this, "至少添加一个收件人");
+                return;
+            }
+            noSignOrEncryptHintDialog();
 
-                intent.setClass(getApplicationContext(), ContactSearchActivity.class);
-                startActivityForResult(intent, QEQUEST_ADD_MEMBER);
-                break;
-            case R.id.iv_cc_recipients:
-                ccRecipientsShowText.setVisibility(View.GONE);
-                ccRecipientRichEdit.setVisibility(View.VISIBLE);
-                ccRecipientRichEdit.insertLastManualData(0);
-                Intent intent1 = new Intent();
-                intent1.putExtra(EXTRA_TYPE, 2);
-                intent1.putExtra(EXTRA_EXCLUDE_SELECT, memberUidList);
-                intent1.putExtra(EXTRA_MULTI_SELECT, true);
-                intent1.putExtra(EXTRA_TITLE, "添加抄送人");
-                intent1.setClass(getApplicationContext(), ContactSearchActivity.class);
-                startActivityForResult(intent1, QEQUEST_CC_MEMBER);
-                break;
-            case R.id.iv_fw_tip:
-                fwTipImageView.setVisibility(View.GONE);
-                fwBodyLayout.setVisibility(View.VISIBLE);
-                break;
-            case R.id.ibt_back:
-                finish();
-                break;
-            case R.id.tv_recipients_show:
-                recipientsShowText.setVisibility(View.GONE);
-                recipientRichEdit.setVisibility(View.VISIBLE);
-                break;
-            case R.id.tv_cc_recipient_show:
-                ccRecipientsShowText.setVisibility(View.GONE);
-                ccRecipientRichEdit.setVisibility(View.VISIBLE);
-                break;
-            default:
-                break;
+        } else if (i == R.id.iv_recipients) {
+            recipientRichEdit.insertLastManualData(0);
+            //     ARouter.getInstance().build("").with(bundle).navigation();
+            MailService mailService = Router.getInstance().getService(MailService.class);
+            if (mailService != null) {
+                mailService.startContactSearchActivityForResult(MailSendActivity.this, 2, memberUidList, true, "添加收件人", QEQUEST_ADD_MEMBER);
+            }
+
+        } else if (i == R.id.iv_cc_recipients) {
+            ccRecipientsShowText.setVisibility(View.GONE);
+            ccRecipientRichEdit.setVisibility(View.VISIBLE);
+            ccRecipientRichEdit.insertLastManualData(0);
+            MailService mailService = Router.getInstance().getService(MailService.class);
+            if (mailService != null) {
+                mailService.startContactSearchActivityForResult(MailSendActivity.this, 2, memberUidList, true, "添加抄送人", QEQUEST_CC_MEMBER);
+            }
+
+        } else if (i == R.id.iv_fw_tip) {
+            fwTipImageView.setVisibility(View.GONE);
+            fwBodyLayout.setVisibility(View.VISIBLE);
+
+        } else if (i == R.id.ibt_back) {
+            finish();
+
+        } else if (i == R.id.tv_recipients_show) {
+            recipientsShowText.setVisibility(View.GONE);
+            recipientRichEdit.setVisibility(View.VISIBLE);
+
+        } else if (i == R.id.tv_cc_recipient_show) {
+            ccRecipientsShowText.setVisibility(View.GONE);
+            ccRecipientRichEdit.setVisibility(View.VISIBLE);
+
+        } else {
         }
     }
 

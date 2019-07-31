@@ -46,6 +46,7 @@ import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.componentservice.mail.MailService;
 import com.inspur.emmcloud.mail.R;
+import com.inspur.emmcloud.mail.R2;
 import com.inspur.emmcloud.mail.adapter.MailAttachmentListAdapter;
 import com.inspur.emmcloud.mail.api.MailAPIInterfaceImpl;
 import com.inspur.emmcloud.mail.api.MailAPIService;
@@ -77,43 +78,43 @@ import butterknife.ButterKnife;
 public class MailDetailActivity extends BaseActivity {
     public static final String EXTRA_MAIL = "extra_mail";
     public static final String EXTRA_MAIL_ID = "extra_mail_id";
-    @BindView(R.id.sv_slide_data)
+    @BindView(R2.id.sv_slide_data)
     ObservableScrollView scrollView;
-    @BindView(R.id.tv_mail_sender)
+    @BindView(R2.id.tv_mail_sender)
     TextView senderText;
-    @BindView(R.id.tv_mail_receiver_collapse)
+    @BindView(R2.id.tv_mail_receiver_collapse)
     TextView receiverCollapseText;
-    @BindView(R.id.fl_mail_receiver_expand)
+    @BindView(R2.id.fl_mail_receiver_expand)
     FlowLayout receiverFlowLayout;
-    @BindView(R.id.tv_mail_receiver_expand)
+    @BindView(R2.id.tv_mail_receiver_expand)
     TextView receiverExpandText;
-    @BindView(R.id.rl_receiver_collapse)
+    @BindView(R2.id.rl_receiver_collapse)
     RelativeLayout receiverCollapseLayout;
-    @BindView(R.id.rl_mail_cc)
+    @BindView(R2.id.rl_mail_cc)
     RelativeLayout ccLayout;
-    @BindView(R.id.fl_mail_cc_expand)
+    @BindView(R2.id.fl_mail_cc_expand)
     FlowLayout ccFlowLayout;
-    @BindView(R.id.tv_mail_cc_expand)
+    @BindView(R2.id.tv_mail_cc_expand)
     TextView ccExpandText;
-    @BindView(R.id.tv_mail_cc_collapse)
+    @BindView(R2.id.tv_mail_cc_collapse)
     TextView ccCollapseText;
-    @BindView(R.id.rl_cc_collapse)
+    @BindView(R2.id.rl_cc_collapse)
     RelativeLayout ccCollapseLayout;
-    @BindView(R.id.iv_flag_encrypt)
+    @BindView(R2.id.iv_flag_encrypt)
     ImageView encryptImg;
-    @BindView(R.id.iv_flag_sign)
+    @BindView(R2.id.iv_flag_sign)
     ImageView signImg;
-    @BindView(R.id.tv_topic)
+    @BindView(R2.id.tv_topic)
     TextView topicText;
-    @BindView(R.id.tv_mail_send_time)
+    @BindView(R2.id.tv_mail_send_time)
     TextView sendTimeText;
-    @BindView(R.id.lv_attachment)
+    @BindView(R2.id.lv_attachment)
     ScrollViewWithListView mailAttachmentListView;
-    @BindView(R.id.wv_content)
+    @BindView(R2.id.wv_content)
     NoScrollWebView contentWebView;
-    @BindView(R.id.rl_mail_operation)
+    @BindView(R2.id.rl_mail_operation)
     RelativeLayout mailOperationLayout;
-    @BindView(R.id.progress_bar_load)
+    @BindView(R2.id.progress_bar_load)
     ProgressBar loadProgressBar;
     private MailAttachmentListAdapter mailAttachmentListAdapter;
 
@@ -429,46 +430,45 @@ public class MailDetailActivity extends BaseActivity {
 
 
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.ibt_back:
-                finish();
-                break;
-            case R.id.rl_forward:
-                intentMailSendActivity(MailSendActivity.MODE_FORWARD);
-                break;
-            case R.id.rl_reply_all:
-                intentMailSendActivity(MailSendActivity.MODE_REPLY_ALL);
-                break;
-            case R.id.rl_reply:
-                intentMailSendActivity(MailSendActivity.MODE_REPLY);
-                break;
-            case R.id.ibt_mail_delete:
-                removeMail(mail);
-                break;
-            case R.id.tv_mail_receiver_expand:
-                if (receiverFlowLayout.getVisibility() == View.GONE) {
-                    receiverFlowLayout.setVisibility(View.VISIBLE);
-                    receiverCollapseLayout.setVisibility(View.GONE);
-                    receiverExpandText.setText("收起");
-                } else {
-                    receiverFlowLayout.setVisibility(View.GONE);
-                    receiverCollapseLayout.setVisibility(View.VISIBLE);
-                    receiverExpandText.setText("展开");
-                }
-                break;
-            case R.id.tv_mail_cc_expand:
-                if (ccFlowLayout.getVisibility() == View.GONE) {
-                    ccFlowLayout.setVisibility(View.VISIBLE);
-                    ccCollapseLayout.setVisibility(View.GONE);
-                    ccExpandText.setText("收起");
-                } else {
-                    ccFlowLayout.setVisibility(View.GONE);
-                    ccCollapseLayout.setVisibility(View.VISIBLE);
-                    ccExpandText.setText("展开");
-                }
-                break;
-            case R.id.tv_install_cert:
-                break;
+        int i = v.getId();
+        if (i == R.id.ibt_back) {
+            finish();
+
+        } else if (i == R.id.rl_forward) {
+            intentMailSendActivity(MailSendActivity.MODE_FORWARD);
+
+        } else if (i == R.id.rl_reply_all) {
+            intentMailSendActivity(MailSendActivity.MODE_REPLY_ALL);
+
+        } else if (i == R.id.rl_reply) {
+            intentMailSendActivity(MailSendActivity.MODE_REPLY);
+
+        } else if (i == R.id.ibt_mail_delete) {
+            removeMail(mail);
+
+        } else if (i == R.id.tv_mail_receiver_expand) {
+            if (receiverFlowLayout.getVisibility() == View.GONE) {
+                receiverFlowLayout.setVisibility(View.VISIBLE);
+                receiverCollapseLayout.setVisibility(View.GONE);
+                receiverExpandText.setText("收起");
+            } else {
+                receiverFlowLayout.setVisibility(View.GONE);
+                receiverCollapseLayout.setVisibility(View.VISIBLE);
+                receiverExpandText.setText("展开");
+            }
+
+        } else if (i == R.id.tv_mail_cc_expand) {
+            if (ccFlowLayout.getVisibility() == View.GONE) {
+                ccFlowLayout.setVisibility(View.VISIBLE);
+                ccCollapseLayout.setVisibility(View.GONE);
+                ccExpandText.setText("收起");
+            } else {
+                ccFlowLayout.setVisibility(View.GONE);
+                ccCollapseLayout.setVisibility(View.VISIBLE);
+                ccExpandText.setText("展开");
+            }
+
+        } else if (i == R.id.tv_install_cert) {
         }
     }
 

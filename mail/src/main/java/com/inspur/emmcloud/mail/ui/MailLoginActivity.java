@@ -24,6 +24,7 @@ import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.componentservice.mail.MailService;
 import com.inspur.emmcloud.componentservice.mail.OnExchangeLoginListener;
 import com.inspur.emmcloud.mail.R;
+import com.inspur.emmcloud.mail.R2;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,13 +36,13 @@ import butterknife.ButterKnife;
 @Route(path = Constant.AROUTER_CLASS_MAIL_LOGIN)
 public class MailLoginActivity extends BaseActivity {
 
-    @BindView(R.id.et_mail)
+    @BindView(R2.id.et_mail)
     ClearEditText mailEdit;
-    @BindView(R.id.et_password)
+    @BindView(R2.id.et_password)
     EditText passwordEdit;
-    @BindView(R.id.bt_login)
+    @BindView(R2.id.bt_login)
     Button loginBtn;
-    @BindView(R.id.text_input_layout_username)
+    @BindView(R2.id.text_input_layout_username)
     TextInputLayout usernameTextInputLayout;
     private String mail = "";
     private String password = "";
@@ -72,15 +73,15 @@ public class MailLoginActivity extends BaseActivity {
     }
 
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.bt_login:
-                mail = mailEdit.getText().toString();
-                password = passwordEdit.getText().toString();
-                login(mail, password);
-                break;
-            case R.id.ibt_back:
-                finish();
-                break;
+        int i = v.getId();
+        if (i == R.id.bt_login) {
+            mail = mailEdit.getText().toString();
+            password = passwordEdit.getText().toString();
+            login(mail, password);
+
+        } else if (i == R.id.ibt_back) {
+            finish();
+
         }
     }
 
@@ -128,7 +129,7 @@ public class MailLoginActivity extends BaseActivity {
             String mail = mailEdit.getText().toString();
             String password = passwordEdit.getText().toString();
             if (!StringUtils.isBlank(mail) && !FomatUtils.isValiadEmail(mail)) {
-                usernameTextInputLayout.setError(getString(R.string.webex_input_correct_invitee_emails));
+                usernameTextInputLayout.setError(getString(R.string.mail_string_input_correct_invitee_emails));
             } else {
                 usernameTextInputLayout.setError("");
             }

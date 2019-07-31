@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.mail.serviceimpl;
 
 import android.app.Activity;
-import android.content.Context;
 
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.componentservice.mail.MailService;
@@ -36,7 +35,7 @@ public class MailServiceImpl extends MailAPIInterfaceImpl implements MailService
     }
 
     @Override
-    public void startContactSearchActivityForResult(Context context, int type, ArrayList<String> memberUidList, boolean multiSelect, String title, int qequestCode) {
+    public void startContactSearchActivityForResult(Activity context, int type, ArrayList<String> memberUidList, boolean multiSelect, String title, int qequestCode) {
 
     }
 }

@@ -22,6 +22,7 @@ import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.componentservice.mail.MailService;
 import com.inspur.emmcloud.mail.R;
+import com.inspur.emmcloud.mail.R2;
 import com.inspur.emmcloud.mail.adapter.MailListAdapter;
 import com.inspur.emmcloud.mail.api.MailAPIInterfaceImpl;
 import com.inspur.emmcloud.mail.api.MailAPIService;
@@ -46,16 +47,16 @@ import butterknife.BindView;
 public class MailHomeActivity extends MailHomeBaseActivity implements MySwipeRefreshLayout.OnRefreshListener, MySwipeRefreshLayout.OnLoadListener {
 
     private static final int pageSize = 10;
-    @BindView(R.id.srl_refresh)
+    @BindView(R2.id.srl_refresh)
     MySwipeRefreshLayout swipeRefreshLayout;
 
-    @BindView(R.id.lv_mail)
+    @BindView(R2.id.lv_mail)
     ListView mailListView;
 
-    @BindView(R.id.tv_header)
+    @BindView(R2.id.tv_header)
     TextView headerText;
 
-    @BindView(R.id.rl_mail_operation)
+    @BindView(R2.id.rl_mail_operation)
     RelativeLayout mailOperationLayout;
 
     private MailListAdapter mailAdapter;
@@ -232,12 +233,11 @@ public class MailHomeActivity extends MailHomeBaseActivity implements MySwipeRef
 
     public void onClick(View v) {
         super.onClick(v);
-        switch (v.getId()) {
-            case R.id.rl_delete:
-                removeMail();
-                break;
-            default:
-                break;
+        int i = v.getId();
+        if (i == R.id.rl_delete) {
+            removeMail();
+
+        } else {
         }
     }
 

@@ -15,6 +15,7 @@ import com.inspur.emmcloud.basemodule.ui.BaseFragmentActivity;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.componentservice.mail.MailService;
 import com.inspur.emmcloud.mail.R;
+import com.inspur.emmcloud.mail.R2;
 import com.inspur.emmcloud.mail.widget.sildemenu.AllInterface;
 import com.inspur.emmcloud.mail.widget.sildemenu.LeftDrawerLayout;
 
@@ -32,9 +33,9 @@ import butterknife.ButterKnife;
 public class MailHomeBaseActivity extends BaseFragmentActivity implements AllInterface.OnMenuSlideListener {
 
     protected LoadingDialog loadingDlg;
-    @BindView(R.id.ldl_menu)
+    @BindView(R2.id.ldl_menu)
     LeftDrawerLayout leftDrawerLayout;
-    @BindView(R.id.v_shadow)
+    @BindView(R2.id.v_shadow)
     View shadowView;
     private MailLeftMenuFragment mailLeftMenuFragment;
     private ContactUser contactUser;
@@ -84,30 +85,28 @@ public class MailHomeBaseActivity extends BaseFragmentActivity implements AllInt
     }
 
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.ibt_setting:
-                openMenu();
-                break;
-            case R.id.ibt_menu_back:
-                closeMenu();
-                break;
-            case R.id.ibt_mail_setting:
-                IntentUtils.startActivity(this, MailSettingActivity.class);
-                break;
-            case R.id.ibt_mail_add:
-                Bundle bundle = new Bundle();
-                bundle.putString(MailSendActivity.EXTRA_MAIL_MODE, MailSendActivity.MODE_NEW);
-                IntentUtils.startActivity(this, MailSendActivity.class, bundle);
-                break;
-            case R.id.ibt_back:
-                finish();
-                break;
-            case R.id.v_shadow:
-                closeMenu();
-                break;
-            case R.id.tv_mail_acount:
+        int i = v.getId();
+        if (i == R.id.ibt_setting) {
+            openMenu();
 
-                break;
+        } else if (i == R.id.ibt_menu_back) {
+            closeMenu();
+
+        } else if (i == R.id.ibt_mail_setting) {
+            IntentUtils.startActivity(this, MailSettingActivity.class);
+
+        } else if (i == R.id.ibt_mail_add) {
+            Bundle bundle = new Bundle();
+            bundle.putString(MailSendActivity.EXTRA_MAIL_MODE, MailSendActivity.MODE_NEW);
+            IntentUtils.startActivity(this, MailSendActivity.class, bundle);
+
+        } else if (i == R.id.ibt_back) {
+            finish();
+
+        } else if (i == R.id.v_shadow) {
+            closeMenu();
+
+        } else if (i == R.id.tv_mail_acount) {
         }
     }
 

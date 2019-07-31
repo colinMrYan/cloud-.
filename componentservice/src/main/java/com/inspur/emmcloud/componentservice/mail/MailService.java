@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.componentservice.mail;
 
 import android.app.Activity;
-import android.content.Context;
 
 import com.inspur.emmcloud.componentservice.CoreService;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
@@ -21,6 +20,6 @@ public interface MailService extends CoreService {
 
     ContactUser getContactUserByUidOrEmail(boolean isEmail, String uidOrMail);
 
-    void startContactSearchActivityForResult(Context context, int type, ArrayList<String> memberUidList, boolean multiSelect, String title, int qequestCode);
+    void startContactSearchActivityForResult(Activity activity, int type, ArrayList<String> memberUidList, boolean multiSelect, String title, int qequestCode);
 
 }
