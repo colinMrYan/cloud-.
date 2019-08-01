@@ -266,20 +266,7 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
         String alertTimeName = ScheduleAlertTimeActivity.getAlertTimeNameByTime(JSONUtils.getInt(schedule.getRemindEvent(), "advanceTimeSpan", -1), isAllDay);
         remindEvent = new RemindEvent(JSONUtils.getString(schedule.getRemindEvent(), "remindType", "in_app"),
                 JSONUtils.getInt(schedule.getRemindEvent(), "advanceTimeSpan", -1), alertTimeName);
-        switch (schedule.getType()) {
-            case "default":
-                scheduleCalendar = getScheduleCalendar(AccountType.APP_SCHEDULE);
-                break;
-            case "meeting":
-                scheduleCalendar = getScheduleCalendar(AccountType.APP_MEETING);
-                break;
-            case "exchange":
-                scheduleCalendar = getScheduleCalendar(AccountType.EXCHANGE);
-                break;
-            default:
-                scheduleCalendar = getScheduleCalendar(AccountType.APP_SCHEDULE);
-                break;
-        }
+        scheduleCalendar = ScheduleCalendarCacheUtils.getScheduleCalendar(this, schedule.getScheduleCalendar());
     }
 
     /**
@@ -766,6 +753,9 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
                 JSONUtils.toJSONString(new Location("", "", positionEditText.getText().toString())));
         if (scheduleCalendar.getAcType().equals(AccountType.EXCHANGE.toString())) {
             schedule.setType("exchange");
+            if (isEventEditModel) {
+                schedule.setMeeting(this.schedule.isMeeting());
+            }
         } else if (scheduleCalendar.getAcType().equals(AccountType.APP_SCHEDULE.toString())) {
             schedule.setType("default");
             schedule.setMeeting(false);
@@ -820,7 +810,8 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
             loadingDlg.show();
             schedule.setLastTime(System.currentTimeMillis());
-            apiService.updateSchedule(schedule.toCalendarEventJSONObject().toString(), schedule);
+            schedule.setScheduleCalendar(scheduleCalendar.getAcType().toString());
+            apiService.updateSchedule(schedule.toCalendarEventJSONObject().toString(), this.schedule);
         }
     }
 
