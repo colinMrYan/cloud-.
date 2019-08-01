@@ -127,23 +127,19 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
     private ScheduleApiService apiService;
     private Calendar startTimeCalendar; // 开始时间
     private Calendar endTimeCalendar;   //结束时间
-    //  private boolean isAllDay = false;   //是否全天
     private List<SearchModel> attendeeSearchModelList = new ArrayList<>();  //参会人
     private List<SearchModel> recorderSearchModelList = new ArrayList<>();  //记录人
     private List<SearchModel> liaisonSearchModelList = new ArrayList<>();   //联系人
     private MeetingRoom meetingRoom;    //会议室
     private Location location;          // 地点
-    private String meetingPosition;
     private RemindEvent remindEvent = new RemindEvent();    // 提醒
     private Schedule schedule = new Schedule();
     private boolean isEventEditModel = false; //是否是编辑模式
     private boolean isFromMeeting = false;
-    private List<ScheduleCalendar> scheduleTypeList = new ArrayList<>();
 
     @Override
     public void onCreate() {
         ButterKnife.bind(this);
-        scheduleTypeList = ScheduleCalendarCacheUtils.getScheduleCalendarList(BaseApplication.getInstance(), true);
         apiService = new ScheduleApiService(this);
         apiService.setAPIInterface(new WebService());
         initSchedule();
@@ -401,7 +397,7 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
      */
     private boolean isInputValid() {
         String title = titleEdit.getText().toString().trim();
-        meetingPosition = positionEditText.getText().toString();
+        String meetingPosition = positionEditText.getText().toString();
         if (StringUtils.isBlank(title)) {
             ToastUtils.show(MyApplication.getInstance(), R.string.meeting_room_booking_topic);
             return false;
