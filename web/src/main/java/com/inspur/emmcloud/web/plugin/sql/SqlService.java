@@ -2,10 +2,11 @@ package com.inspur.emmcloud.web.plugin.sql;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Environment;
+import android.os.Build;
+import android.webkit.ValueCallback;
 
 import com.inspur.emmcloud.baselib.util.JSONUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.web.plugin.ImpPlugin;
 
 import org.json.JSONArray;
@@ -23,22 +24,35 @@ public class SqlService extends ImpPlugin {
     private static final String SELECT = "select";
     // 数据库对象
     private SQLiteDatabase database = null;
-    // 数据库路径
-    private String path = null;
-    // 数据库名
-    private String dbName = null;
+    // 成功回调
+    private String successCb = "";
+    // 失败回调
+    private String failCb = "";
 
     @Override
     public void execute(String action, JSONObject paramsObject) {
-        if ("executeSql".equals(action)) {
-            this.database = getSQLiteDatabase("emmcloud.db");
-            executeSqlSelect(paramsObject);
-        }
+        operateDataBase(action, paramsObject);
     }
 
     @Override
     public String executeAndReturn(String action, JSONObject paramsObject) {
-        return null;
+        operateDataBase(action, paramsObject);
+        return "";
+    }
+
+    /**
+     * 操作数据库的逻辑
+     *
+     * @param action
+     * @param paramsObject
+     */
+    private void operateDataBase(String action, JSONObject paramsObject) {
+        if ("executeSql".equals(action)) {
+            this.database = getSQLiteDatabase(JSONUtils.getString(paramsObject, "dbName", ""));
+            successCb = JSONUtils.getString(paramsObject, "success", "");
+            failCb = JSONUtils.getString(paramsObject, "fail", "");
+            executeSql(paramsObject);
+        }
     }
 
     /**
@@ -48,54 +62,99 @@ public class SqlService extends ImpPlugin {
      * @return
      */
     private SQLiteDatabase getSQLiteDatabase(String dbName) {
-        String dbPath = Environment.getExternalStorageDirectory() + "/" + dbName;
+        String dbPath = MyAppConfig.LOCAL_DOWNLOAD_PATH + dbName;
         return SQLiteDatabase.openOrCreateDatabase(dbPath, null);
     }
 
     /**
-     * 对数据库进行操作
+     * 数据库操作
+     *
+     * @param jsonObject
      */
-    private void executeSqlSelect(JSONObject jsonObject) {
-        String sql = "";
-        String param = "";
-        // 查询或者插入的字段值以逗号隔开
-        String[] params = null;
-        String txId = "";
-        sql = JSONUtils.getString(jsonObject, "sql", "");
-        param = JSONUtils.getString(jsonObject, "param", "");
-        txId = JSONUtils.getString(jsonObject, "txId", "");
-        String[] sqls = sql.split(";");
+    private void executeSql(JSONObject jsonObject) {
+        String sql = JSONUtils.getString(jsonObject, "sql", "");
+        String txId = JSONUtils.getString(jsonObject, "txId", "");
+//        sql = "INSERT INTO Robot ('id','avatar','mode','name','support','title') VALUES('BOT6005','A8GJ2B6A4JB.png','','云+客服1111','yisiqi@inspur.com','投诉建议专用');";
+//        sql = "update Robot set name='yunjiakefu' where name like '%云%';";
+//        sql = "select * from Robot";
+//        sql = "delete from Robot where title like '%投诉%';";
+//        sql = "create table testTable ('id' int unique, name varchar(20))";
+//        sql = "drop table testTable";
+//        sql = "alter table testTable  add address varchar(40)";
+//        sql = "alter table testTable drop column address";//目前sqlite不支持drop column方法
+//        sql = "create database myDatabase";    //不支持Sql语句创建数据库  只支持命令创建数据库
         try {
-            if (isDDL(sql)) {
-                for (String sqlitem : sqls) {
-                    this.database.execSQL(sqlitem + ";");
-                }
-                // 将查询结果传回前台
-                this.webview.loadUrl("javascript:completeQuery('" + txId
-                        + "','[]');");
-            } else {
-                Cursor myCursor = this.database.rawQuery(sql, params);
+            if (isSelectSql(sql)) {
+                Cursor myCursor = this.database.rawQuery(sql,null);
                 this.processResults(myCursor, txId);
                 myCursor.close();
+            } else {
+                this.database.execSQL(sql);
+                // 将查询结果传回前台
+                jsCallback(successCb,txId);
             }
         } catch (Exception e) {
             e.printStackTrace();
             // 将错误信息反馈回前台
-            this.webview.loadUrl("javascript:failQuery('" + e.getMessage()
-                    + "','" + txId + "');");
+            jsCallback(failCb, e.getMessage());
+        }
+    }
+
+    /**
+     * 回调JavaScript方法，回调参数是字符串
+     *
+     * @param functionName
+     * @param params
+     */
+    @Override
+    public void jsCallback(String functionName, String params) {
+        String script = "javascript: " + functionName + "('" + params + "')";
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            this.webview.evaluateJavascript(script, new ValueCallback<String>() {
+                @Override
+                public void onReceiveValue(String value) {
+                }
+            });
+        } else {
+            this.webview.loadUrl(script);
+        }
+    }
+
+    /**
+     * 回调JavaScript方法，回调参数是字符串数组
+     *
+     * @param functionName
+     * @param params
+     */
+    @Override
+    public void jsCallback(String functionName, String[] params) {
+        JSONArray jsonArray = new JSONArray();
+        for (int i = 0; i < params.length; i++) {
+            jsonArray.put(params[i]);
+        }
+        String script = "javascript: " + functionName + "("
+                + jsonArray.toString() + ")";
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            this.webview.evaluateJavascript(script, new ValueCallback<String>() {
+                @Override
+                public void onReceiveValue(String value) {
+                }
+            });
+        } else {
+            this.webview.loadUrl(script);
         }
     }
 
 
     /**
-     * 判断是否SQL语句
+     * 判断是否查询SQL语句
      *
      * @param sql
      * @return
      */
-    private boolean isDDL(String sql) {
+    private boolean isSelectSql(String sql) {
         String cmd = sql.toLowerCase();
-        if (!cmd.startsWith(SELECT)) {
+        if (cmd.startsWith(SELECT)) {
             return true;
         }
         return false;
@@ -131,10 +190,8 @@ public class SqlService extends ImpPlugin {
                 }
             } while (cursor.moveToNext());
         }
-        LogUtils.YfcDebug("result：" + result.toString());
         // 将查询结果传回前台
-        this.webview.loadUrl("javascript:completeQuery('" + txId + "','"
-                + result.toString() + "');");
+        jsCallback(successCb, result.toString());
     }
 
     @Override
