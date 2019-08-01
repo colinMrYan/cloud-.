@@ -20,6 +20,7 @@ import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.Res;
@@ -48,6 +49,7 @@ import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.text.Format;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -195,10 +197,100 @@ public class FileTransferService extends ImpPlugin {
             case "base64File":
                 getFileBase64(paramsObject);
                 break;
+            case "writeFile":
+                //写文件
+                writeFile(paramsObject);
+                break;
+            case "readFile":
+                //读文件
+                readFile(paramsObject);
+                break;
+            case "deleteFile":
+                //删除指定文件
+                deleteFile(paramsObject);
+                break;
+            case "listFile":
+                //列出在指定目录下的文件名
+                listFile(paramsObject);
+                break;
             default:
                 showCallIMPMethodErrorDlg();
                 break;
         }
+    }
+
+    /**
+     * 列出文件夹中所有文件
+     *
+     * @param paramsObject
+     */
+    private void listFile(JSONObject paramsObject) {
+        String fileDicPath = JSONUtils.getString(paramsObject, "directory", MyAppConfig.LOCAL_CACHE_PATH);
+        List<String> arrayList = FileUtils.getFileNamesInFolder(fileDicPath, false);
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("files", arrayList.toArray());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        jsCallback(JSONUtils.getString(paramsObject, "success", ""), jsonObject.toString());
+    }
+
+    /**
+     * 删除文件或文件夹
+     *
+     * @param paramsObject
+     */
+    private void deleteFile(JSONObject paramsObject) {
+        String fileDeletePath = JSONUtils.getString(paramsObject, "directory", MyAppConfig.LOCAL_CACHE_PATH)
+                + JSONUtils.getString(paramsObject, "filename", "default.txt");
+        JSONObject jsonObject = new JSONObject();
+        boolean isDel = FileUtils.deleteFile(fileDeletePath);
+        try {
+            jsonObject.put("status", isDel);
+            jsonObject.put("errormessage", "");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        jsCallback(JSONUtils.getString(paramsObject, "success", ""), jsonObject.toString());
+    }
+
+    /**
+     * 读文件
+     *
+     * @param paramsObject
+     */
+    private void readFile(JSONObject paramsObject) {
+        String fileReadPath = JSONUtils.getString(paramsObject, "directory", MyAppConfig.LOCAL_CACHE_PATH)
+                + JSONUtils.getString(paramsObject, "filename", "default.txt");
+        String readContent = FileUtils.readFile(fileReadPath, "utf-8").toString();
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("content", readContent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        jsCallback(JSONUtils.getString(paramsObject, "success", ""), jsonObject.toString());
+    }
+
+    /**
+     * 写文件
+     *
+     * @param paramsObject
+     */
+    private void writeFile(JSONObject paramsObject) {
+        String fileSavePath = JSONUtils.getString(paramsObject, "directory", MyAppConfig.LOCAL_CACHE_PATH)
+                + JSONUtils.getString(paramsObject, "filename", "default.txt");
+        FileUtils.writeFile(fileSavePath
+                , JSONUtils.getString(paramsObject, "log", ""),
+                JSONUtils.getBoolean(paramsObject, "append", true));
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("path", fileSavePath);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        jsCallback(JSONUtils.getString(paramsObject, "success", ""), jsonObject.toString());
     }
 
     @Override
