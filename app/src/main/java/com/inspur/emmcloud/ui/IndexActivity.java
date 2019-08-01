@@ -15,7 +15,6 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.ContactAPIService;
-import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.NotificationSetUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
@@ -87,7 +86,9 @@ public class IndexActivity extends IndexBaseActivity {
 
         String[] columns = new String[]{"title", "support", "name", "mode", "avatar", "id"};
         String selection = "title like '" + "%" + "" + "%'";
-        LogUtils.YfcDebug("查询数据结果：" + JSONUtils.toJSONString(SqlUtils.query(SqlUtils.DBManager("emmcloud.db"), null, null, null)));
+//        SqlUtils.query(SqlUtils.DBManager("emmcloud.db"), null, null, null);
+//        SqlUtils.getAllTableName(SqlUtils.DBManager("emmcloud.db"));
+        SqlUtils.getTableContent(SqlUtils.DBManager("emmcloud.db"));
     }
 
     private void getNaviTabData(String naviTabSaveConfigVersion) {
