@@ -191,7 +191,8 @@ public class Constant {
     public static final String SF_OPEN_URL = "open-url";
 
     //沟通文本消息长按至日程
-    public static final String COMMUNICATION_LONG_CLICK_TO_SCHEDULE = "message_long_click_to_schedule";
+    public static final String EXTRA_SCHEDULE_TITLE_EVENT = "schedule_title_event";
+    //COMMUNICATION_LONG_CLICK_TO_SCHEDULE
 
     public static final String SCHEDULE_QUERY = "schedule_query";
     public static final String SCHEDULE_DETAIL = "schedule_detail";
