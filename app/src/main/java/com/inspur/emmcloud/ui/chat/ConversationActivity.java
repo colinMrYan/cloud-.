@@ -1764,7 +1764,6 @@ public class ConversationActivity extends ConversationBaseActivity {
     private void addTextToSchedule(String content) {
         Intent intent = new Intent();
         intent.putExtra(Constant.COMMUNICATION_LONG_CLICK_TO_SCHEDULE, content);
-        intent.putExtra(ScheduleAddActivity.EXTRA_EVENT_TYPE_FROM_MEETING, false);
         intent.setClass(ConversationActivity.this, ScheduleAddActivity.class);
         startActivity(intent);
     }

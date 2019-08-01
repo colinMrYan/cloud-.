@@ -445,7 +445,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         StringBuilder builder = new StringBuilder();
         builder.append(event.eventType.endsWith(Schedule.TYPE_CALENDAR) ? getString(R.string.schedule_title) : getString(R.string.schedule_meeting_topic));
         builder.append(" : ").append(event.getEventTitle()).append("\n");
-        if (event.eventType.endsWith(Schedule.TYPE_MEETING)) {
+        if (!StringUtils.isBlank(event.getEventSubTitle())) {
             builder.append(getString(R.string.schedule_location)).append(" : ").append(event.getEventSubTitle()).append("\n");
         }
         builder.append(getString(R.string.meeting_start_time)).append(" : ").append(startTime).append("\n")
@@ -576,14 +576,14 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
             LoadingDialog.dimissDlg(loadingDlg);
             ScheduleCacheUtils.removeSchedule(BaseApplication.getInstance(), scheduleId);
             EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED));
-//            showCalendarEvent(true);
-//            if (adapter != null) {
-//                adapter.setEventList(allDayEventList);
-//                adapter.notifyDataSetChanged();
-//                if (allDayEventList.size() < 1) {
-//                    myDialog.dismiss();
-//                }
-//            }
+            //全天弹出框列表刷新
+            if (adapter != null) {
+                adapter.setEventList(allDayEventList);
+                adapter.notifyDataSetChanged();
+                if (allDayEventList.size() < 1) {
+                    myDialog.dismiss();
+                }
+            }
         }
 
         @Override
