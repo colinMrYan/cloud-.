@@ -134,7 +134,6 @@ public class MeetingFragment extends BaseFragment implements MySwipeRefreshLayou
     public void onReceiverSimpleEventMessage(SimpleEventMessage eventMessage) {
         switch (eventMessage.getAction()) {
             case Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED:
-            case Constant.EVENTBUS_TAG_SCHEDULE_MEETING_DATA_CHANGED:
                 getMeetingList();
                 break;
         }
@@ -239,8 +238,12 @@ public class MeetingFragment extends BaseFragment implements MySwipeRefreshLayou
             scheduleMeetingListAdapter.notifyDataSetChanged();
             meetingListDefaultLayout.setVisibility(uiMeetingList.size() > 0 ? View.GONE : View.VISIBLE);
             swipeRefreshLayout.setRefreshing(false);
-            swipeRefreshLayout.setCanLoadMore(false);
-            swipeRefreshLayout.setLoading(false);
+        }
+
+        @Override
+        public void returnMeetingListFail(String error, int errorCode) {
+
+            swipeRefreshLayout.setRefreshing(false);
         }
 
         @Override

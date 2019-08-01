@@ -1182,9 +1182,8 @@ public class APIUri {
         switch (AccountType.getAccountType(scheduleCalendar.getAcType())) {
             case EXCHANGE:
                 return getScheduleBaseUrl() + "api/schedule/v6.0/ews/" + responseType + "/";
-
             default:
-                return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/" + responseType + "/";
+                return getScheduleBaseUrl() + "api/schedule/v6.0/calendar/" + responseType + "/";
 
 
         }
@@ -1576,6 +1575,7 @@ public class APIUri {
         return url;
     }
 
+    //添加日程
     public static String getAddScheduleUrl(ScheduleCalendar scheduleCalendar) {
         String url = getScheduleBaseUrl() + "api/schedule/v6.0/calendar/add";
         if (scheduleCalendar != null) {
@@ -1585,8 +1585,8 @@ public class APIUri {
                     url = getScheduleBaseUrl() + "api/schedule/v6.0/ews/add";
                     break;
                 case APP_MEETING:
-                    url = getScheduleBaseUrl() + "api/schedule/v6.0/meeting/add";
-                    break;
+//                    url = getScheduleBaseUrl() + "api/schedule/v6.0/meeting/add";
+//                    break;
                 case APP_SCHEDULE:
                     url = getScheduleBaseUrl() + "api/schedule/v6.0/calendar/add";
                 default:
@@ -1596,9 +1596,10 @@ public class APIUri {
         return url;
     }
 
-
+    //更新日程
     public static String getUpdateScheduleUrl(ScheduleCalendar scheduleCalendar, boolean isMeeting) {
-        String url = getScheduleBaseUrl() + (isMeeting ? "api/schedule/v6.0/meeting/update" : "api/schedule/v6.0/calendar/update");
+        // String url = getScheduleBaseUrl() + (isMeeting ? "api/schedule/v6.0/meeting/update" : "api/schedule/v6.0/calendar/update");
+        String url = getScheduleBaseUrl() + ("api/schedule/v6.0/calendar/update");
         if (scheduleCalendar != null) {
             AccountType accountType = AccountType.getAccountType(scheduleCalendar.getAcType());
             switch (accountType) {
@@ -1625,6 +1626,7 @@ public class APIUri {
         return getScheduleBaseUrl() + "api/schedule/v6.0/calendar/update";
     }
 
+    //删除日程
     public static String getDeleteScheduleUrl(ScheduleCalendar scheduleCalendar, Schedule schedule) {
         String url = "";
         AccountType accountType = AccountType.getAccountType(scheduleCalendar.getAcType());
@@ -1633,8 +1635,8 @@ public class APIUri {
                 url = getScheduleBaseUrl() + "api/schedule/v6.0/ews/remove";
                 break;
             case APP_MEETING:
-                url = getScheduleBaseUrl() + "api/schedule/v6.0/meeting/remove/" + schedule.getId();
-                break;
+//                url = getScheduleBaseUrl() + "api/schedule/v6.0/meeting/remove/" + schedule.getId();
+//                break;
             default:
                 url = getScheduleBaseUrl() + "api/schedule/v6.0/calendar/remove/" + schedule.getId();
                 break;

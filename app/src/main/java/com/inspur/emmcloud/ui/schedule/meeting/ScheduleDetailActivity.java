@@ -48,6 +48,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.jsoup.helper.StringUtil;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -182,12 +183,7 @@ public class ScheduleDetailActivity extends BaseActivity {
         meetingTitleText.setText(scheduleEvent.getTitle());
         meetingTimeText.setText(getString(R.string.meeting_detail_time, getMeetingTime()));
         meetingRemindText.setText(getString(R.string.meeting_detail_remind, ScheduleAlertTimeActivity.getAlertTimeNameByTime(scheduleEvent.getRemindEventObj().getAdvanceTimeSpan(), scheduleEvent.getAllDay())));
-//        meetingDistributionText.setText(meeting.getOwner());
-        if (isFromCalendar) {  //来自日历
-            meetingInviteLayout.setVisibility(View.GONE);   //邀请人
-            meetingNoteLayout.setVisibility(View.GONE);     //备注
-            meetingAttendLayout.setVisibility(View.GONE);   //参会人
-        } else {                //来自会议
+        //来自会议
             meetingInviteLayout.setVisibility(View.VISIBLE);
             meetingAttendLayout.setVisibility(StringUtils.isBlank(getMeetingParticipant()) ? View.GONE : View.VISIBLE);   //参会人
             if (!StringUtils.isBlank(scheduleEvent.getOwner())) { //邀请人
@@ -198,7 +194,6 @@ public class ScheduleDetailActivity extends BaseActivity {
             attendeeText.setText(getString(R.string.meeting_detail_attendee, getMeetingParticipant())); //参会人
             meetingNoteText.setText(scheduleEvent.getNote());             //备注
             meetingNoteLayout.setVisibility(StringUtil.isBlank(scheduleEvent.getNote()) ? View.GONE : View.VISIBLE);
-        }
 
         meetingDistributionText.setVisibility(View.VISIBLE);
         meetingDistributionText.setText(getMeetingCategory(scheduleEvent));
@@ -216,11 +211,12 @@ public class ScheduleDetailActivity extends BaseActivity {
         meetingCreateTimeText.setText(getString(R.string.meeting_detail_create, TimeUtils.calendar2FormatString(this,
                 TimeUtils.timeLong2Calendar(scheduleEvent.getCreationTime()), TimeUtils.FORMAT_MONTH_DAY_HOUR_MINUTE)));
 
-
         meetingMoreImg.setVisibility((PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(), Constant.PREF_IS_MEETING_ADMIN,
                 false) || (scheduleEvent.getOwner().equals(MyApplication.getInstance().getUid())) && System.currentTimeMillis() < scheduleEvent.getEndTime()) ? View.VISIBLE : View.GONE);
         initScheduleType();
         initDiffStatus();
+        attendStatusLayout.setVisibility((Calendar.getInstance().after(TimeUtils.timeLong2Calendar(scheduleEvent.getEndTime())) ||
+                scheduleEvent.getOwner().equals(BaseApplication.getInstance().getUid())) ? View.GONE : View.VISIBLE);
     }
 
     /**
@@ -250,21 +246,7 @@ public class ScheduleDetailActivity extends BaseActivity {
     }
 
     private void initDiffStatus() {
-        if (isFromCalendar) {  //来自日程
-            if (scheduleEvent.canModify()) {
-                moreTextList.add(getString(R.string.schedule_calendar_modify));
-            }
-            if (scheduleEvent.canDelete()) {
-                moreTextList.add(getString(R.string.schedule_calendar_delete));
-            }
 
-            if (!scheduleEvent.canModify() && !scheduleEvent.canDelete()) {
-                meetingMoreImg.setVisibility(View.GONE);
-            } else {
-                meetingMoreImg.setVisibility(View.VISIBLE);
-            }
-            return;
-        }
         //如果不是相关人员  隐藏
         List<Participant> list = scheduleEvent.getAllParticipantList();
         Participant mParticipant = null;
@@ -281,6 +263,27 @@ public class ScheduleDetailActivity extends BaseActivity {
         if (BaseApplication.getInstance().getUid().equals(scheduleEvent.getOwner())) {
             relatedPersonFlag = true;
         }
+
+        if (isFromCalendar) {  //来自日程
+            if (scheduleEvent.canModify()) {
+                moreTextList.add(getString(R.string.schedule_calendar_modify));
+            }
+            if (scheduleEvent.canDelete()) {
+                moreTextList.add(getString(R.string.schedule_calendar_delete));
+            }
+            //管理员不显示发起群聊 (创建者跟参会人)
+            if (relatedPersonFlag && WebServiceRouterManager.getInstance().isV1xVersionChat()) {
+                moreTextList.add(getString(R.string.message_create_group)); //发起群聊
+            }
+
+            if (!relatedPersonFlag && !scheduleEvent.canModify() && !scheduleEvent.canDelete()) {
+                meetingMoreImg.setVisibility(View.GONE);
+            } else {
+                meetingMoreImg.setVisibility(View.VISIBLE);
+            }
+            return;
+        }
+
         isMeetingAdmin = PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(), Constant.PREF_IS_MEETING_ADMIN, false);
         isMeetingCreater = scheduleEvent.getOwner().equals(MyApplication.getInstance().getUid());
         if (relatedPersonFlag || isMeetingAdmin) {
@@ -483,6 +486,7 @@ public class ScheduleDetailActivity extends BaseActivity {
         if (resultCode == 100) {
             info = (ReplyAttendResult) data.getSerializableExtra("ReplyResult");
             attendStatusText.setText(info.content);
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED, null));
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
