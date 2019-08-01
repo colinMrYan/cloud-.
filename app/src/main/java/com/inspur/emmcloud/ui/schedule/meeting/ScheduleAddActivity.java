@@ -248,6 +248,9 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
     }
 
 
+    /**
+     * 获取Search Module
+     */
     private SearchModel getSearchModel(String uid) {
         SearchModel searchModel = new SearchModel();
         Router router = Router.getInstance();
@@ -460,6 +463,8 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
     }
 
 
+    /**
+     * 选择参会人*/
     private void selectContact(int requestCode) {
         String title = "";
         Intent intent = new Intent();
@@ -589,6 +594,8 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
     }
 
 
+    /**
+     *添加邮箱到联络人*/
     List<SearchModel> getSearchModelListHaveEmail(List<SearchModel> searchModelList) {
         List<SearchModel> searchModelList1 = new ArrayList<>();
         for (int i = 0; i < searchModelList.size(); i++) {
