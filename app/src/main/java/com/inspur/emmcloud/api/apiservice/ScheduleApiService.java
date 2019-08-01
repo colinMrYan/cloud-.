@@ -136,7 +136,7 @@ public class ScheduleApiService {
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnScheduleListFail(error, responseCode);
+                apiInterface.returnScheduleListFail(error, responseCode, scheduleCalendar);
             }
 
             @Override
