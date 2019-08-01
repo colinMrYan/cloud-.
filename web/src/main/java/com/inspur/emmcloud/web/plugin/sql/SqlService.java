@@ -10,6 +10,7 @@ import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.web.plugin.ImpPlugin;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 
@@ -91,12 +92,12 @@ public class SqlService extends ImpPlugin {
             } else {
                 this.database.execSQL(sql);
                 // 将查询结果传回前台
-                jsCallback(successCb,txId);
+                jsCallback(successCb, getResultJsonObj("success", "", ""));
             }
         } catch (Exception e) {
             e.printStackTrace();
             // 将错误信息反馈回前台
-            jsCallback(failCb, e.getMessage());
+            jsCallback(failCb, getResultJsonObj("fail", "", e.getMessage()));
         }
     }
 
@@ -191,7 +192,28 @@ public class SqlService extends ImpPlugin {
             } while (cursor.moveToNext());
         }
         // 将查询结果传回前台
-        jsCallback(successCb, result.toString());
+        String jsonResult = getResultJsonObj("success", result.toString(), "");
+        jsCallback(successCb, jsonResult);
+    }
+
+    /**
+     * 组装JSON字符串
+     *
+     * @param success
+     * @param content
+     * @param errorMessage
+     * @return
+     */
+    private String getResultJsonObj(String success, String content, String errorMessage) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("status", "success");
+            jsonObject.put("result", content);
+            jsonObject.put("errormessage", "");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject.toString();
     }
 
     @Override
