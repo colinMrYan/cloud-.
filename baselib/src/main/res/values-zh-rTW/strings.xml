@@ -930,6 +930,9 @@
     <string name="calendar_no_alert">無提醒</string>
     <string name="calendar_when_event_finished">結束時</string>
     <string name="calendar_cancel_the_schedule">確定取消日程?</string>
+    <string name="schedule_alert_time_before_minutes">%1$s分鐘前</string>
+    <string name="schedule_alert_time_before_hours">%1$s小時前</string>
+    <string name="schedule_alert_time_before_days">%1$s天前</string>
 
     <!-- 通用 -->
     <string name="save">保存</string>

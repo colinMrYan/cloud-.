@@ -254,8 +254,8 @@ public class ScheduleBaseFragment extends BaseLayoutFragment implements View.OnL
             public void onClick(View v) {
                 if (modifyEvent == null) {
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable(ScheduleAddActivity.EXTRA_START_CALENDAR, calendarDayView.getDragViewStartTime(selectCalendar));
-                    bundle.putSerializable(ScheduleAddActivity.EXTRA_END_CALENDAR, calendarDayView.getDragViewEndTime(selectCalendar));
+                    bundle.putSerializable(ScheduleAddActivity.EXTRA_SCHEDULE_START_TIME, calendarDayView.getDragViewStartTime(selectCalendar));
+                    bundle.putSerializable(ScheduleAddActivity.EXTRA_SCHEDULE_END_TIME, calendarDayView.getDragViewEndTime(selectCalendar));
                     bundle.putBoolean(ScheduleAddActivity.EXTRA_EVENT_TYPE_FROM_MEETING, false);
                     IntentUtils.startActivity(getActivity(), ScheduleAddActivity.class, bundle);
                     removeEventAddDragScaleView();

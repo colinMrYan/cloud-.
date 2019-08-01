@@ -577,14 +577,14 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
             LoadingDialog.dimissDlg(loadingDlg);
             ScheduleCacheUtils.removeSchedule(BaseApplication.getInstance(), scheduleId);
             EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED));
-//            showCalendarEvent(true);
-//            if (adapter != null) {
-//                adapter.setEventList(allDayEventList);
-//                adapter.notifyDataSetChanged();
-//                if (allDayEventList.size() < 1) {
-//                    myDialog.dismiss();
-//                }
-//            }
+            //全天弹出框列表刷新
+            if (adapter != null) {
+                adapter.setEventList(allDayEventList);
+                adapter.notifyDataSetChanged();
+                if (allDayEventList.size() < 1) {
+                    myDialog.dismiss();
+                }
+            }
         }
 
         @Override
