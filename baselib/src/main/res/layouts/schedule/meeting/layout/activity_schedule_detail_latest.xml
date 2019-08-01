@@ -33,7 +33,7 @@
             android:textSize="@dimen/header_textsize" />
 
         <ImageView
-            android:id="@+id/iv_meeting_detail_more"
+            android:id="@+id/iv_schedule_detail_more"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
@@ -83,7 +83,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/tv_meeting_title"
+                        android:id="@+id/tv_schedule_title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="#333333"
@@ -97,13 +97,13 @@
                         android:orientation="horizontal">
 
                         <LinearLayout
-                            android:id="@+id/meeting_distribution_layout"
+                            android:id="@+id/schedule_distribution_layout"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
 
                             <TextView
-                                android:id="@+id/tv_meeting_distribution"
+                                android:id="@+id/tv_schedule_distribution"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textColor="#339EEC"
@@ -121,7 +121,7 @@
                         </LinearLayout>
 
                         <TextView
-                            android:id="@+id/tv_meeting_create"
+                            android:id="@+id/tv_schedule_create"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="#999999"
@@ -131,7 +131,7 @@
             </RelativeLayout>
             <!--会议时间-->
             <TextView
-                android:id="@+id/tv_meeting_time"
+                android:id="@+id/tv_schedule_time"
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
                 android:layout_marginLeft="16dp"
@@ -148,7 +148,7 @@
 
             <!--会议提醒-->
             <TextView
-                android:id="@+id/tv_meeting_remind"
+                android:id="@+id/tv_schedule_remind"
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
                 android:layout_marginLeft="16dp"
@@ -164,21 +164,30 @@
 
             <!--会议地点-->
             <RelativeLayout
-                android:id="@+id/rl_meeting_location"
+                android:id="@+id/rl_schedule_location"
                 android:layout_width="match_parent"
-                android:layout_height="44dp"
+                android:layout_height="wrap_content"
+                android:minHeight="44dp"
                 android:layout_marginTop="10dp"
                 android:onClick="onClick">
+
+                <ImageView
+                    android:id="@+id/iv_location_icon"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="13dp"
+                    android:layout_marginRight="12dp"
+                    android:src="@drawable/ic_schedule_meeting_location" />
 
                 <TextView
                     android:id="@+id/tv_location"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="16dp"
-                    android:drawableLeft="@drawable/ic_schedule_meeting_location"
-                    android:drawablePadding="12dp"
-                    android:gravity="center_vertical"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="14dp"
+                    android:layout_marginBottom="12dp"
+                    android:layout_toRightOf="@+id/iv_location_icon"
                     android:textColor="#333333"
                     android:textSize="16sp" />
 
@@ -190,13 +199,13 @@
 
             <!--邀請人-->
             <RelativeLayout
-                android:id="@+id/rl_meeting_invite"
+                android:id="@+id/rl_schedule_invite"
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
                 android:onClick="onClick">
 
                 <TextView
-                    android:id="@+id/tv_meeting_invite"
+                    android:id="@+id/tv_schedule_invite"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
@@ -223,7 +232,7 @@
 
             <!--参会人-->
             <RelativeLayout
-                android:id="@+id/rl_meeting_attendee"
+                android:id="@+id/rl_schedule_attendee"
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
                 android:onClick="onClick">
@@ -256,14 +265,14 @@
 
             <!--记录人-->
             <RelativeLayout
-                android:id="@+id/rl_meeting_record_holder"
+                android:id="@+id/rl_schedule_record_holder"
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
                 android:onClick="onClick"
                 android:visibility="gone">
 
                 <TextView
-                    android:id="@+id/tv_meeting_record_holder"
+                    android:id="@+id/tv_schedule_record_holder"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
@@ -290,14 +299,14 @@
 
             <!--联络人-->
             <RelativeLayout
-                android:id="@+id/rl_meeting_conference"
+                android:id="@+id/rl_schedule_conference"
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
                 android:onClick="onClick"
                 android:visibility="gone">
 
                 <TextView
-                    android:id="@+id/tv_meeting_conference"
+                    android:id="@+id/tv_schedule_conference"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
@@ -324,7 +333,7 @@
 
             <!--会议note-->
             <RelativeLayout
-                android:id="@+id/rl_meeting_note"
+                android:id="@+id/rl_schedule_note"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="44dp">
@@ -339,7 +348,7 @@
                     android:src="@drawable/ic_schedule_meeting_note" />
 
                 <TextView
-                    android:id="@+id/tv_meeting_note"
+                    android:id="@+id/tv_schedule_note"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
@@ -357,13 +366,13 @@
 
             <!--日历-->
             <RelativeLayout
-                android:id="@+id/rl_meeting_calendar"
+                android:id="@+id/rl_schedule_calendar"
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
                 android:onClick="onClick">
 
                 <TextView
-                    android:id="@+id/tv_meeting_calendar"
+                    android:id="@+id/tv_schedule_calendar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
@@ -376,15 +385,15 @@
                     android:textSize="16sp" />
 
                 <ImageView
-                    android:id="@+id/image_meeting_calendar_type"
+                    android:id="@+id/image_schedule_calendar_type"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="8dp"
-                    android:layout_toLeftOf="@+id/tv_meeting_calendar_type" />
+                    android:layout_toLeftOf="@+id/tv_schedule_calendar_type" />
 
                 <TextView
-                    android:id="@+id/tv_meeting_calendar_type"
+                    android:id="@+id/tv_schedule_calendar_type"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
@@ -402,7 +411,7 @@
 
             <!--是否参会-->
             <RelativeLayout
-                android:id="@+id/rl_meeting_attend_status"
+                android:id="@+id/rl_schedule_attend_status"
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
                 android:onClick="onClick">
@@ -420,7 +429,7 @@
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/tv_meeting_attend_status"
+                    android:id="@+id/tv_schedule_attend_status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"

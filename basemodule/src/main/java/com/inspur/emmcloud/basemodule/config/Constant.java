@@ -199,7 +199,6 @@ public class Constant {
 
     public static final String SMS_LOGIN_START_TIME = "sms_login_start_time";
     public static final String EXTRA_IS_HISTORY_MEETING = "is_history_meeting"; //来源  历史会议
-    public static final String EXTRA_IS_FROM_CALENDAR = "is_from_calendar";     //来源  日程
 
     public static final String AROUTER_CLASS_COMMUNICATION_MEMBER = "/communication/MembersActivity";
     public static final String AROUTER_CLASS_LOGIN_MAIN = "/login/LoginActivity";
