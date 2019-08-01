@@ -88,10 +88,6 @@ public abstract class BaseApplication extends MultiDexApplication {
 
     private void init() {
         // TODO Auto-generated method stub
-        Router.registerComponent("com.inspur.emmcloud.applike.AppApplike");
-        Router.registerComponent("com.inspur.emmcloud.login.applike.LoginAppLike");
-        Router.registerComponent("com.inspur.emmcloud.web.applike.WebAppLike");
-        Router.registerComponent("com.inspur.emmcloud.news.applike.NewsAppLike");
         instance = this;
         Router.registerComponent("com.inspur.emmcloud.applike.AppApplike");
         Router.registerComponent("com.inspur.emmcloud.login.applike.LoginAppLike");
@@ -99,9 +95,9 @@ public abstract class BaseApplication extends MultiDexApplication {
         Router.registerComponent("com.inspur.emmcloud.news.applike.NewsAppLike");
         CrashHandler crashHandler = CrashHandler.getInstance();
         crashHandler.init(getInstance());
-        x.Ext.init(BaseApplication.this);
+        x.Ext.init(getInstance());
         x.Ext.setDebug(true);
-        LogUtils.isDebug = true;
+        LogUtils.isDebug = AppUtils.isApkDebugable(getInstance());
         Res.init(this); // 注册imp的资源文件类
         ImageDisplayUtils.getInstance().initImageLoader(getInstance(), new CustomImageDownloader(getInstance()), MyAppConfig.LOCAL_CACHE_PATH);
         initTanent();

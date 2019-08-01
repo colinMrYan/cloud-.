@@ -108,7 +108,6 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
                 setEventShowType();
                 showCalendarEvent(true);
                 break;
-            case Constant.EVENTBUS_TAG_SCHEDULE_MEETING_DATA_CHANGED:
             case Constant.EVENTBUS_TAG_SCHEDULE_TASK_DATA_CHANGED:
             case Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED:
                 showCalendarEvent(true);
@@ -550,8 +549,8 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         }
 
         @Override
-        public void returnScheduleListFail(String error, int errorCode) {
-            WebServiceMiddleUtils.hand(BaseApplication.getInstance(), error, errorCode, false);
+        public void returnScheduleListFail(String error, int errorCode, ScheduleCalendar scheduleCalendar) {
+            WebServiceMiddleUtils.hand(BaseApplication.getInstance(), error, errorCode, false, scheduleCalendar.getAcName());
         }
 
 //        @Override
