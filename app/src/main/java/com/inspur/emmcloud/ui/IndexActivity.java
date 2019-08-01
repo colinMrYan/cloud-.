@@ -50,7 +50,6 @@ import com.inspur.emmcloud.util.privates.MyAppWidgetUtils;
 import com.inspur.emmcloud.util.privates.ProfileUtils;
 import com.inspur.emmcloud.util.privates.ReactNativeUtils;
 import com.inspur.emmcloud.util.privates.SplashPageUtils;
-import com.inspur.emmcloud.util.privates.SqlUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactOrgCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
@@ -83,12 +82,6 @@ public class IndexActivity extends IndexBaseActivity {
         initView();
         getInitData();
         startService();
-
-        String[] columns = new String[]{"title", "support", "name", "mode", "avatar", "id"};
-        String selection = "title like '" + "%" + "" + "%'";
-//        SqlUtils.query(SqlUtils.DBManager("emmcloud.db"), null, null, null);
-//        SqlUtils.getAllTableName(SqlUtils.DBManager("emmcloud.db"));
-        SqlUtils.getTableContent(SqlUtils.DBManager("emmcloud.db"));
     }
 
     private void getNaviTabData(String naviTabSaveConfigVersion) {
