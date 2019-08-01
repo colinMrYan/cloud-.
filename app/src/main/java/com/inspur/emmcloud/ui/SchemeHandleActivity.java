@@ -209,7 +209,6 @@ public class SchemeHandleActivity extends BaseActivity {
                                     Intent intent = new Intent(SchemeHandleActivity.this, ScheduleDetailActivity.class);
                                     intent.putExtra("calEvent", calendarEvent);
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    intent.putExtra(Constant.EXTRA_IS_FROM_CALENDAR, true);
                                     startActivity(intent);
                                 }
                                 finish();
@@ -500,7 +499,6 @@ public class SchemeHandleActivity extends BaseActivity {
     private void openScheduleActivity(String query, Class scheduleActivity) {
         Bundle bundle = new Bundle();
         bundle.putString(Constant.SCHEDULE_QUERY, query);
-        bundle.putBoolean(Constant.EXTRA_IS_FROM_CALENDAR, true);
         IntentUtils.startActivity(SchemeHandleActivity.this, scheduleActivity, bundle);
     }
 
