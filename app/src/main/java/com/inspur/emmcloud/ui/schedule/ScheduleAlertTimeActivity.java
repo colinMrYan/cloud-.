@@ -68,7 +68,7 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
                 MyApplication.getInstance().getString(R.string.schedule_alert_time_before_a_week)};
         String[] returnAlertTimeString = isAllDay ? allDayAlertTimeArray : alertTimeArray;
         int[] returnAlertTimeInt = isAllDay ? alertTimeAllDayIntArray : alertTimeIntArray;
-        if (alertTime == -1) {
+        if (alertTime == -1 || (isAllDay && alertTime == 0)) {
             return MyApplication.getInstance().getString(R.string.calendar_no_alert);
         }
         for (int i = 0; i < returnAlertTimeInt.length; i++) {
