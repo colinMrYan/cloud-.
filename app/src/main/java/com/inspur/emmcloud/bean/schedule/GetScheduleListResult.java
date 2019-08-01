@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.bean.schedule;
 
 import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.bean.schedule.calendar.AccountType;
 import com.inspur.emmcloud.bean.schedule.calendar.ScheduleCalendar;
 
@@ -27,6 +28,8 @@ public class GetScheduleListResult {
             String array = JSONUtils.getString(object, "list", "[]");
             scheduleList = JSONUtils.parseArray(array, Schedule.class);
             for (Schedule schedule : scheduleList) {
+                LogUtils.jasonDebug("schedule==" + schedule.getTitle());
+                LogUtils.jasonDebug("scheduleCalendar.getId()==" + scheduleCalendar.getId());
                 schedule.setScheduleCalendar(scheduleCalendar.getId());
             }
         } else {
