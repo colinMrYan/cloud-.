@@ -1633,7 +1633,8 @@ public class APIInterfaceInstance implements APIInterface {
 
 
     @Override
-    public void returnScheduleListFail(String error, int errorCode) {
+    public void returnScheduleListFail(String error, int errorCode, ScheduleCalendar scheduleCalendar) {
+
     }
 
     @Override

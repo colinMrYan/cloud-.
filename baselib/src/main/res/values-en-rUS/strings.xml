@@ -417,8 +417,7 @@
     <string name="schedule_task_a_person">person</string>
     <string name="schedule_task_tag_name_length">Tag name up to 64 characters</string>
     <string name="schedule_click_to_add_schedule">Click to Add Schedule</string>
-    <string name="schedule_exchange_login_fail">Exchange account login failed, re-login?</string>
-
+    <string name="schedule_exchange_login_fail">%1$s Password has changed.Update it in the schedule settings.</string>
     <string name="schedule_account_type">Calendar</string>
     <string name="schedule_cloud_calendar">Cloud+ Schedule</string>
     <string name="schedule_cloud_meeting">Cloud+ Meeting</string>
