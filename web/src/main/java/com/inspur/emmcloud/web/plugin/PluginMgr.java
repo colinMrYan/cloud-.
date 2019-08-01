@@ -28,6 +28,7 @@ import com.inspur.emmcloud.web.plugin.staff.SelectStaffService;
 import com.inspur.emmcloud.web.plugin.staff.StuffInformationService;
 import com.inspur.emmcloud.web.plugin.startapp.StartAppService;
 import com.inspur.emmcloud.web.plugin.telephone.TelephoneService;
+import com.inspur.emmcloud.web.plugin.window.WindowService;
 import com.inspur.emmcloud.web.ui.ImpCallBackInterface;
 import com.inspur.emmcloud.web.ui.iLog;
 import com.inspur.emmcloud.web.util.StrUtil;
@@ -201,8 +202,7 @@ public class PluginMgr {
             } else if (serviceName.endsWith("StartAppService")) {
                 serviceName = StartAppService.class.getCanonicalName();
             } else if (serviceName.endsWith("WindowService")) {
-//                serviceName = WindowService.class.getCanonicalName();
-                serviceName = SqlService.class.getCanonicalName();
+                serviceName = WindowService.class.getCanonicalName();
             } else if (serviceName.endsWith("DeviceService")) {
                 serviceName = DeviceService.class.getCanonicalName();
             } else if (serviceName.endsWith("StuffInformationService")) {
