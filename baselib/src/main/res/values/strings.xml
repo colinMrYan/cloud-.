@@ -264,7 +264,7 @@
     <string name="group_member">群成员列表 </string>
     <string name="group_name_cannot_null">请输入群组名称 </string>
     <string name="channel_unknown_text">您的%1$s暂不支持该消息，请【升级】%1$s最新版本查看</string>
-    <string name="comment_hallcomment_text">评论了:</string>
+    <string name="comment_hallcomment_text">评论了：</string>
     <string name="channel_info">频道详情</string>
     <string name="comment_text">评论：</string>
     <string name="administrators_of_channel">(管理员)</string>
@@ -447,7 +447,7 @@
     <string name="schedule_meeting_select_conference_title">选择会议联络人</string>
     <string name="schedule_meeting_add_note">备注</string>
     <string name="schedule_meeting_add_alert_time">提醒</string>
-    <string name="schedule_meeting_detail_location">会议地点:</string>
+    <string name="schedule_meeting_detail_location">会议地点：</string>
     <string name="schedule_meeting_booking_detail">会议详情</string>
     <string name="schedule_meeting_history">历史会议</string>
     <string name="schedule_choose_common_office">常用办公地点</string>
@@ -686,7 +686,7 @@
     <string name="current_device">当前设备</string>
     <string name="history_device">历史设备</string>
     <string name="device_history_use">历史使用</string>
-    <string name="device_bind_time_title">绑定时间: </string>
+    <string name="device_bind_time_title">绑定时间：</string>
     <string name="device_bind_time">绑定时间</string>
     <string name="device_info">设备详情</string>
     <string name="device_id">设备ID</string>
@@ -878,14 +878,14 @@
     <string name="meeting_detail_time">时间：%1$s</string>
     <string name="meeting_detail_remind">提醒：%1$s</string>
     <string name="meeting_detail_create">%1$s 创建</string>
-    <string name="meeting_detail_inviter">邀请人:%1$s</string>
+    <string name="meeting_detail_inviter">邀请人：%1$s</string>
     <string name="meeting_detail_attendee">参与人：%1$s</string>
-    <string name="meeting_detail_record_holder">会议记录人:%1$s</string>
-    <string name="meeting_detail_conference">会议联络人:%1$s</string>
+    <string name="meeting_detail_record_holder">会议记录人：%1$s</string>
+    <string name="meeting_detail_conference">会议联络人：%1$s</string>
     <string name="meeting_detail_record_title">会议记录人</string>
     <string name="meeting_detail_conference_title">会议联络人</string>
     <string name="meeting_detail_invite">邀请者</string>
-    <string name="meeting_detail_note">着装要求:%1$s</string>
+    <string name="meeting_detail_note">着装要求：%1$s</string>
     <string name="meeting_detail_sign">会议签到</string>
     <string name="meeting_detail_summary">十 添加会议摘要</string>
     <string name="meeting_detail_change_meeting">修改会议</string>
@@ -1045,7 +1045,7 @@
     <string name="battery_tip_cancel">取消</string>
     <string name="battery_tip_toset">去设置</string>
     <!-- ListView自定义控件部分 -->
-    <string name="xlistview_header_last_time">上次更新时间:</string>
+    <string name="xlistview_header_last_time">上次更新时间：</string>
     <string name="release_to_refresh">释放立即刷新</string>
     <string name="pull_down_refresh">下拉刷新</string>
     <string name="refreshing">正在刷新...</string>
