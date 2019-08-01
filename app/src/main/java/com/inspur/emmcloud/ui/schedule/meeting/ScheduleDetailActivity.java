@@ -241,7 +241,7 @@ public class ScheduleDetailActivity extends BaseActivity {
                 scheduleApiService.getCalendarDataFromId(calendarId);
             }
         } else {
-            ToastUtils.show(this, "");
+            finish();
         }
     }
 
@@ -687,6 +687,7 @@ public class ScheduleDetailActivity extends BaseActivity {
 
         @Override
         public void returnScheduleDataFromIdFail(String error, int errorCode) {
+            WebServiceMiddleUtils.hand(BaseApplication.getInstance(), error, errorCode);
             LoadingDialog.dimissDlg(loadingDlg);
             finish();
         }

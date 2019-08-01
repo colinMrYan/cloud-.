@@ -103,9 +103,9 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceiveFragmentScheme(SimpleEventMessage scheme){
-        if(scheme.getAction().equals(Constant.SCHEDULE_DETAIL)){
-            switch ((String)scheme.getMessageObj()){
+    public void onReceiveFragmentScheme(SimpleEventMessage eventMessage) {
+        if (eventMessage.getAction().equals(Constant.SCHEDULE_DETAIL)) {
+            switch ((String) eventMessage.getMessageObj()) {
                 case Constant.ACTION_CALENDAR:
                     if(tabLayout != null){
                         tabLayout.getTabAt(0).select();
@@ -130,9 +130,10 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
                     }
                     break;
             }
-        } else if (scheme.getAction().equals(Constant.EVENTBUS_TAG_EWS_401)) {
+        } else if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_EWS_401)) {
             if (isRunForeground) {
-                scheduleFragment.showExchangeLoginFailDlg();
+                String ewsAccount = (String) eventMessage.getMessageObj();
+                scheduleFragment.showExchangeLoginFailToast(ewsAccount);
             }
         }
     }

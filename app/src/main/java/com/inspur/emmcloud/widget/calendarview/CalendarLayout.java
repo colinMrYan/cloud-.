@@ -402,12 +402,9 @@ public class CalendarLayout extends LinearLayout {
 //                if(!getIsFirstItemZero(mContentView)){
 //                    return false;
 //                }
-                LogUtils.jasonDebug("1111111111111111");
-                LogUtils.jasonDebug("mContentViewTranslateY==" + mContentViewTranslateY);
                 if (!isViewTopShow) {
                     return false;
                 }
-                LogUtils.jasonDebug("mContentView.getTranslationY()===" + mContentView.getTranslationY());
                 if ((dy < 0 && mContentView.getTranslationY() == -mContentViewTranslateY)) {
                     return false;
                 }
