@@ -26,6 +26,7 @@ import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.bean.schedule.Schedule;
+import com.inspur.emmcloud.bean.schedule.calendar.AccountType;
 import com.inspur.emmcloud.bean.schedule.calendar.GetScheduleBasicDataResult;
 import com.inspur.emmcloud.bean.schedule.calendar.Holiday;
 import com.inspur.emmcloud.ui.schedule.meeting.ScheduleAddActivity;
@@ -256,7 +257,7 @@ public class ScheduleBaseFragment extends BaseLayoutFragment implements View.OnL
                     Bundle bundle = new Bundle();
                     bundle.putSerializable(ScheduleAddActivity.EXTRA_SCHEDULE_START_TIME, calendarDayView.getDragViewStartTime(selectCalendar));
                     bundle.putSerializable(ScheduleAddActivity.EXTRA_SCHEDULE_END_TIME, calendarDayView.getDragViewEndTime(selectCalendar));
-                    bundle.putBoolean(ScheduleAddActivity.EXTRA_EVENT_TYPE_FROM_MEETING, false);
+                    bundle.putString(ScheduleAddActivity.EXTRA_SCHEDULE_SCHEDULECALENDAR_TYPE, AccountType.APP_SCHEDULE.toString());
                     IntentUtils.startActivity(getActivity(), ScheduleAddActivity.class, bundle);
                     removeEventAddDragScaleView();
                 }

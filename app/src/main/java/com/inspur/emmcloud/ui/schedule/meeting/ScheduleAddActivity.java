@@ -40,12 +40,10 @@ import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.bean.appcenter.GetIDResult;
 import com.inspur.emmcloud.bean.schedule.Location;
-import com.inspur.emmcloud.bean.schedule.MyCalendar;
 import com.inspur.emmcloud.bean.schedule.Participant;
 import com.inspur.emmcloud.bean.schedule.RemindEvent;
 import com.inspur.emmcloud.bean.schedule.Schedule;
 import com.inspur.emmcloud.bean.schedule.calendar.AccountType;
-import com.inspur.emmcloud.bean.schedule.calendar.GetMyCalendarResult;
 import com.inspur.emmcloud.bean.schedule.calendar.ScheduleCalendar;
 import com.inspur.emmcloud.bean.schedule.meeting.MeetingRoom;
 import com.inspur.emmcloud.componentservice.contact.ContactService;
@@ -75,7 +73,8 @@ import butterknife.ButterKnife;
  */
 
 public class ScheduleAddActivity extends BaseActivity implements CompoundButton.OnCheckedChangeListener {
-    public static final String EXTRA_EVENT_TYPE_FROM_MEETING = "extra_event_type_from_meeting";
+    public static final String EXTRA_SCHEDULE_SCHEDULECALENDAR_TYPE = "extra_schedule_calendar_type";
+    //EXTRA_EVENT_TYPE_FROM_MEETING
     public static final String EXTRA_SCHEDULE_CALENDAR_EVENT = "schedule_calendar_event";
     public static final String EXTRA_SCHEDULE_START_TIME = "extra_schedule_start_time";
     public static final String EXTRA_SCHEDULE_END_TIME = "extra_schedule_end_time";
@@ -172,14 +171,21 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
                     endTimeCalendar = (Calendar) endTimeFromRoomCalendar.clone();
                     schedule.setScheduleCalendar(AccountType.APP_SCHEDULE.toString());
                 }
-            } else if (getIntent().hasExtra(Constant.COMMUNICATION_LONG_CLICK_TO_SCHEDULE)) {     //来自沟通长按
-                String title = getIntent().getStringExtra(Constant.COMMUNICATION_LONG_CLICK_TO_SCHEDULE);
+            }
+
+            if (getIntent().hasExtra(Constant.EXTRA_SCHEDULE_TITLE_EVENT)) {     //来自沟通长按
+                String title = getIntent().getStringExtra(Constant.EXTRA_SCHEDULE_TITLE_EVENT);
                 schedule.setTitle(title);
                 schedule.setScheduleCalendar(AccountType.APP_SCHEDULE.toString());
+            }
+
+            if (getIntent().hasExtra(EXTRA_SCHEDULE_SCHEDULECALENDAR_TYPE)) {
+                String intentScheduleCalendar = getIntent().getStringExtra(EXTRA_SCHEDULE_SCHEDULECALENDAR_TYPE);
+                schedule.setScheduleCalendar(intentScheduleCalendar);
             } else {
-                isFromMeeting = getIntent().getBooleanExtra(EXTRA_EVENT_TYPE_FROM_MEETING, false);
-                schedule.setScheduleCalendar(isFromMeeting ? AccountType.APP_MEETING.toString() : AccountType.APP_SCHEDULE.toString());
-            }                                                                          //正常创建跳转
+                schedule.setScheduleCalendar(AccountType.APP_SCHEDULE.toString());
+            }
+            //正常创建跳转
             String myUid = MyApplication.getInstance().getUid();
             ContactUser myInfo = ContactUserCacheUtils.getContactUserByUid(myUid);
             SearchModel myInfoSearchModel = new SearchModel(myInfo);
@@ -297,7 +303,6 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
         AccountType accountType = AccountType.getAccountType(scheduleCalendar.getAcType());
         switch (accountType) {
             case APP_MEETING:
-                findViewById(R.id.ll_all_participants).setVisibility(View.VISIBLE);
                 findViewById(R.id.ll_recorder_liaison).setVisibility(View.VISIBLE);
                 schedule.setType(Schedule.CALENDAR_TYPE_MEETING);
                 if (!isEventEditModel) {
@@ -306,7 +311,6 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
                 }
                 break;
             case EXCHANGE:
-                findViewById(R.id.ll_all_participants).setVisibility(View.VISIBLE);
                 findViewById(R.id.ll_recorder_liaison).setVisibility(View.GONE);
                 schedule.setType(Schedule.CALENDAR_TYPE_EXCHANGE);
                 recorderSearchModelList.clear();
@@ -316,7 +320,6 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
                 }
                 break;
             case APP_SCHEDULE:
-                findViewById(R.id.ll_all_participants).setVisibility(View.VISIBLE);
                 findViewById(R.id.ll_recorder_liaison).setVisibility(View.GONE);
                 schedule.setType(Schedule.CALENDAR_TYPE_MY_CALENDAR);
                 recorderSearchModelList.clear();
@@ -818,29 +821,6 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
             WebServiceMiddleUtils.hand(ScheduleAddActivity.this, error, errorCode);
         }
 
-        @Override
-        public void returnMyCalendarSuccess(GetMyCalendarResult getMyCalendarResult) {
-            LoadingDialog.dimissDlg(loadingDlg);
-            List<MyCalendar> allCalendarList = getMyCalendarResult.getCalendarList();
-        }
 
-        @Override
-        public void returnMyCalendarFail(String error, int errorCode) {
-            LoadingDialog.dimissDlg(loadingDlg);
-            super.returnMyCalendarFail(error, errorCode);
-        }
-
-        @Override
-        public void returnDeleteScheduleSuccess(String scheduleId) {
-            LoadingDialog.dimissDlg(loadingDlg);
-            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED, null));
-            finish();
-        }
-
-        @Override
-        public void returnDeleteScheduleFail(String error, int errorCode) {
-            LoadingDialog.dimissDlg(loadingDlg);
-            super.returnDeleteScheduleFail(error, errorCode);
-        }
     }
 }

@@ -23,6 +23,7 @@ import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.bean.schedule.calendar.AccountType;
 import com.inspur.emmcloud.bean.schedule.meeting.GetMeetingRoomListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.MeetingRoom;
 import com.inspur.emmcloud.bean.schedule.meeting.MeetingRoomArea;
@@ -212,7 +213,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
                     bundle.putSerializable(ScheduleAddActivity.EXTRA_SCHEDULE_START_TIME, data.getSerializableExtra(EXTRA_START_TIME));
                     bundle.putSerializable(ScheduleAddActivity.EXTRA_SCHEDULE_END_TIME, data.getSerializableExtra(EXTRA_END_TIME));
                     bundle.putSerializable(MeetingRoomInfoActivity.EXTRA_MEETING_ROOM, selectMeetingRoom);
-                    bundle.putBoolean(ScheduleAddActivity.EXTRA_EVENT_TYPE_FROM_MEETING, true);
+                    bundle.putString(ScheduleAddActivity.EXTRA_SCHEDULE_SCHEDULECALENDAR_TYPE, AccountType.APP_MEETING.toString());
                     IntentUtils.startActivity(this, ScheduleAddActivity.class, bundle, true);
                 }
             }
