@@ -147,18 +147,58 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
     @Override
     public void onCreate() {
         ButterKnife.bind(this);
-        isFromMeeting = getIntent().getBooleanExtra(EXTRA_EVENT_TYPE_FROM_MEETING, false);
         scheduleTypeList = ScheduleCalendarCacheUtils.getScheduleCalendarList(BaseApplication.getInstance(), true);
-        scheduleCalendar = getScheduleCalendar(isFromMeeting ? AccountType.APP_MEETING : AccountType.APP_SCHEDULE);
         apiService = new ScheduleApiService(this);
         apiService.setAPIInterface(new WebService());
-        if (isFromMeeting) {
-            initMeetingData();
-        } else {
-            initScheduleData();
-        }
+        initSchedule();
         initView();
     }
+
+
+    private void initSchedule() {
+        isEventEditModel = getIntent().hasExtra(EXTRA_SCHEDULE_CALENDAR_EVENT);
+        if (isEventEditModel) {    //有对象传入时
+            schedule = (Schedule) getIntent().getSerializableExtra(EXTRA_SCHEDULE_CALENDAR_EVENT);
+            initScheduleDataByEntity();
+        } else {
+
+            if (getIntent().hasExtra(MeetingRoomListActivity.EXTRA_START_TIME)
+                    && getIntent().hasExtra(MeetingRoomListActivity.EXTRA_END_TIME)
+                    && getIntent().hasExtra(MeetingRoomListActivity.EXTRA_MEETING_ROOM)) {        //会议室来的数据
+                Calendar startTimeFromRoomCalendar = (Calendar) getIntent().getSerializableExtra(MeetingRoomListActivity.EXTRA_START_TIME);
+                Calendar endTimeFromRoomCalendar = (Calendar) getIntent().getSerializableExtra(MeetingRoomListActivity.EXTRA_END_TIME);
+                correctMeetingRoomTime(startTimeFromRoomCalendar, endTimeFromRoomCalendar);
+                meetingRoom = (MeetingRoom) getIntent().getSerializableExtra(MeetingRoomListActivity.EXTRA_MEETING_ROOM);
+                location = new Location();
+                location.setId(meetingRoom.getId());
+                location.setBuilding(meetingRoom.getBuilding().getName());
+                location.setDisplayName(meetingRoom.getName());
+                scheduleCalendar = getScheduleCalendar(AccountType.APP_MEETING);
+            } else if (getIntent().hasExtra(Constant.COMMUNICATION_LONG_CLICK_TO_SCHEDULE)) {     //来自沟通长按
+                title = getIntent().getStringExtra(Constant.COMMUNICATION_LONG_CLICK_TO_SCHEDULE);
+                scheduleCalendar = getScheduleCalendar(AccountType.APP_SCHEDULE);
+            } else if (getIntent().hasExtra(EXTRA_START_CALENDAR)) {                              //来自日程列表
+                startTimeCalendar = (Calendar) getIntent().getSerializableExtra(EXTRA_START_CALENDAR);
+                endTimeCalendar = (Calendar) getIntent().getSerializableExtra(EXTRA_END_CALENDAR);
+                scheduleCalendar = getScheduleCalendar(AccountType.APP_SCHEDULE);
+            }                                                                            //正常创建跳转
+            String myUid = MyApplication.getInstance().getUid();
+            ContactUser myInfo = ContactUserCacheUtils.getContactUserByUid(myUid);
+            SearchModel myInfoSearchModel = new SearchModel(myInfo);
+            attendeeSearchModelList.add(myInfoSearchModel);
+            startTimeCalendar = startTimeCalendar != null ? startTimeCalendar : TimeUtils.getNextHalfHourTime(Calendar.getInstance());
+            if (endTimeCalendar == null) {
+                endTimeCalendar = (Calendar) startTimeCalendar.clone();
+                endTimeCalendar.add(Calendar.HOUR_OF_DAY, 2);
+            }
+            owner = MyApplication.getInstance().getUid();
+            remindEvent.setName(ScheduleAlertTimeActivity.getAlertTimeNameByTime(remindEvent.getAdvanceTimeSpan(), isAllDay));
+            isFromMeeting = getIntent().getBooleanExtra(EXTRA_EVENT_TYPE_FROM_MEETING, false);
+            scheduleCalendar = getScheduleCalendar(isFromMeeting ? AccountType.APP_MEETING : AccountType.APP_SCHEDULE);
+        }
+    }
+
+
 
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -181,57 +221,6 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
         return R.layout.activity_meeting_add;
     }
 
-
-    /**
-     * 初始化会议数据
-     */
-    private void initMeetingData() {
-        isEventEditModel = getIntent().hasExtra(EXTRA_SCHEDULE_CALENDAR_EVENT);
-        if (isEventEditModel) {
-            schedule = (Schedule) getIntent().getSerializableExtra(EXTRA_SCHEDULE_CALENDAR_EVENT);
-            initScheduleDataByEntity();
-        } else {
-            String myUid = MyApplication.getInstance().getUid();
-            ContactUser myInfo = ContactUserCacheUtils.getContactUserByUid(myUid);
-            SearchModel myInfoSearchModel = new SearchModel(myInfo);
-            attendeeSearchModelList.add(myInfoSearchModel);
-            startTimeCalendar = TimeUtils.getNextHalfHourTime(Calendar.getInstance());
-            endTimeCalendar = (Calendar) startTimeCalendar.clone();
-            endTimeCalendar.add(Calendar.HOUR_OF_DAY, 2);
-            owner = MyApplication.getInstance().getUid();
-            if (getIntent().hasExtra(MeetingRoomListActivity.EXTRA_START_TIME)
-                    && getIntent().hasExtra(MeetingRoomListActivity.EXTRA_END_TIME)
-                    && getIntent().hasExtra(MeetingRoomListActivity.EXTRA_MEETING_ROOM)) {
-                Calendar startTimeFromRoomCalendar = (Calendar) getIntent().getSerializableExtra(MeetingRoomListActivity.EXTRA_START_TIME);
-                Calendar endTimeFromRoomCalendar = (Calendar) getIntent().getSerializableExtra(MeetingRoomListActivity.EXTRA_END_TIME);
-                correctMeetingRoomTime(startTimeFromRoomCalendar, endTimeFromRoomCalendar);
-                meetingRoom = (MeetingRoom) getIntent().getSerializableExtra(MeetingRoomListActivity.EXTRA_MEETING_ROOM);
-                location = new Location();
-                location.setId(meetingRoom.getId());
-                location.setBuilding(meetingRoom.getBuilding().getName());
-                location.setDisplayName(meetingRoom.getName());
-            }
-            scheduleCalendar = getScheduleCalendar(AccountType.APP_MEETING);
-        }
-    }
-
-    /**
-     * 初始化日程数据
-     */
-    private void initScheduleData() {
-        if (getIntent().hasExtra(Constant.COMMUNICATION_LONG_CLICK_TO_SCHEDULE)) {
-            title = getIntent().getStringExtra(Constant.COMMUNICATION_LONG_CLICK_TO_SCHEDULE);
-            scheduleCalendar = getScheduleCalendar(AccountType.APP_SCHEDULE);
-        }                                                          //来自分享
-
-        if (getIntent().hasExtra(EXTRA_SCHEDULE_CALENDAR_EVENT)) {  //通知没有，列表页跳转过来
-            isEventEditModel = true;
-            schedule = (Schedule) getIntent().getSerializableExtra(EXTRA_SCHEDULE_CALENDAR_EVENT);
-            initScheduleDataByEntity();     //直接用传过来的数据
-        } else {    //创建日程  创建分为两种一种是有时间的一种是没有时间的
-            createCalendar();
-        }
-    }
 
     /**
      * 设置日程相关数据
@@ -267,35 +256,6 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
         remindEvent = new RemindEvent(JSONUtils.getString(schedule.getRemindEvent(), "remindType", "in_app"),
                 JSONUtils.getInt(schedule.getRemindEvent(), "advanceTimeSpan", -1), alertTimeName);
         scheduleCalendar = ScheduleCalendarCacheUtils.getScheduleCalendar(this, schedule.getScheduleCalendar());
-    }
-
-    /**
-     * 创建日程
-     */
-    private void createCalendar() {
-        //此参数传过来精确的开始时间和结束时间
-        if (getIntent().hasExtra(EXTRA_START_CALENDAR)) {    //从日视图中创建
-            startTimeCalendar = (Calendar) getIntent().getSerializableExtra(EXTRA_START_CALENDAR);
-            endTimeCalendar = (Calendar) getIntent().getSerializableExtra(EXTRA_END_CALENDAR);
-        } else {                                            //正常创建
-            Calendar currentCalendar = Calendar.getInstance();
-            if (getIntent().hasExtra(EXTRA_SELECT_CALENDAR)) {
-                startTimeCalendar = (Calendar) getIntent().getSerializableExtra(EXTRA_SELECT_CALENDAR);
-            }
-            if (startTimeCalendar == null) {
-                startTimeCalendar = (Calendar) currentCalendar.clone();
-            }
-            startTimeCalendar.set(Calendar.HOUR_OF_DAY, currentCalendar.get(Calendar.HOUR_OF_DAY));
-            startTimeCalendar.set(Calendar.MINUTE, currentCalendar.get(Calendar.MINUTE));
-            startTimeCalendar = TimeUtils.getNextHalfHourTime(startTimeCalendar);
-            endTimeCalendar = (Calendar) startTimeCalendar.clone();
-            if (!isAllDay) {
-                endTimeCalendar.add(Calendar.HOUR_OF_DAY, 1);
-            }
-        }
-        schedule.setOwner(MyApplication.getInstance().getUid());//??默认
-        remindEvent.setName(ScheduleAlertTimeActivity.getAlertTimeNameByTime(remindEvent.getAdvanceTimeSpan(), isAllDay));
-        scheduleCalendar = getScheduleCalendar(AccountType.APP_SCHEDULE);
     }
 
 
@@ -350,17 +310,17 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
     private void modifyUIByEventType() {
         AccountType accountType = AccountType.getAccountType(scheduleCalendar.getAcType());
         switch (accountType) {
+            case APP_MEETING:
+                findViewById(R.id.ll_all_participants).setVisibility(View.VISIBLE);
+                findViewById(R.id.ll_recorder_liaison).setVisibility(View.VISIBLE);
+                isFromMeeting = true;
+                break;
             case EXCHANGE:
                 findViewById(R.id.ll_all_participants).setVisibility(View.VISIBLE);
                 findViewById(R.id.ll_recorder_liaison).setVisibility(View.GONE);
                 isFromMeeting = false;
                 recorderSearchModelList.clear();
                 liaisonSearchModelList.clear();
-                break;
-            case APP_MEETING:
-                findViewById(R.id.ll_all_participants).setVisibility(View.VISIBLE);
-                findViewById(R.id.ll_recorder_liaison).setVisibility(View.VISIBLE);
-                isFromMeeting = true;
                 break;
             case APP_SCHEDULE:
                 findViewById(R.id.ll_all_participants).setVisibility(View.VISIBLE);
@@ -403,7 +363,7 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
                 finish();
                 break;
             case R.id.tv_save:
-                if (!isInputValid(isFromMeeting))
+                if (!isInputValid())
                     return;
                 Schedule schedule = getScheduleEvent();
                 if (isEventEditModel) {
@@ -452,7 +412,7 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
     /**
      * 判定当前是否有效
      */
-    private boolean isInputValid(boolean isMeeting) {
+    private boolean isInputValid() {
         title = titleEdit.getText().toString().trim();
         meetingPosition = positionEditText.getText().toString();
         if (StringUtils.isBlank(title)) {
@@ -492,7 +452,7 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
         }
 
         int countHour = TimeUtils.getCeil(endTimeCalendar, startTimeCalendar);
-        if (meetingRoom != null && countHour > Integer.parseInt(meetingRoom.getMaxDuration()) && scheduleCalendar.getAcType().equals(AccountType.APP_MEETING.toString())) {
+        if (meetingRoom != null && countHour > Integer.parseInt(meetingRoom.getMaxDuration())) {
             ToastUtils.show(ScheduleAddActivity.this, getString(R.string.meeting_more_than_max_time));
             return false;
         }
@@ -645,6 +605,7 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
 
     }
 
+
     List<SearchModel> getSearchModelListHaveEmail(List<SearchModel> searchModelList) {
         List<SearchModel> searchModelList1 = new ArrayList<>();
         for (int i = 0; i < searchModelList.size(); i++) {
@@ -657,7 +618,6 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
         }
         return searchModelList1;
     }
-
 
     /**
      * 修正会议室可用时间
@@ -854,8 +814,6 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
 
 
     private class WebService extends APIInterfaceInstance {
-
-
 
         @Override
         public void returnAddScheduleSuccess(GetIDResult getIDResult) {
