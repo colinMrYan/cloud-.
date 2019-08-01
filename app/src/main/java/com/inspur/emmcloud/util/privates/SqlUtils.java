@@ -2,9 +2,10 @@ package com.inspur.emmcloud.util.privates;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Environment;
 
+import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.bean.chat.Robot;
 
 import org.json.JSONArray;
@@ -16,7 +17,7 @@ import java.util.List;
 public class SqlUtils {
 
     public static SQLiteDatabase DBManager(String dbName) {
-        String dbPath = Environment.getExternalStorageDirectory() + "/" + dbName;
+        String dbPath = MyAppConfig.LOCAL_DOWNLOAD_PATH + dbName;
         return SQLiteDatabase.openOrCreateDatabase(dbPath, null);
     }
 
@@ -50,6 +51,26 @@ public class SqlUtils {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static List<String> getAllTableName(SQLiteDatabase sqliteDB) {
+        Cursor cursor = sqliteDB.rawQuery("select name from sqlite_master where type='table' order by name", null);
+        while (cursor.moveToNext()) {
+            //遍历出表名
+            String name = cursor.getString(0);
+            LogUtils.YfcDebug("表名：" + name);
+        }
+        return null;
+    }
+
+    public static void getTableContent(SQLiteDatabase sqLiteDatabase) {
+        Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM testTable  WHERE 0", null);
+        try {
+            String[] columnNames = c.getColumnNames();
+            LogUtils.YfcDebug("表里所有字段名：" + JSONUtils.toJSONString(columnNames));
+        } finally {
+            c.close();
+        }
     }
 
     /**
