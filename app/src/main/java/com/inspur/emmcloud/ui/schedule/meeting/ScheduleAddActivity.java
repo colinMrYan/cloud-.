@@ -155,8 +155,8 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
             if (getIntent().hasExtra(EXTRA_SCHEDULE_END_TIME)
                     && getIntent().hasExtra(EXTRA_SCHEDULE_START_TIME)) {
                 //会议室来的数据
-                Calendar startTimeFromRoomCalendar = (Calendar) getIntent().getSerializableExtra(EXTRA_SCHEDULE_END_TIME);
-                Calendar endTimeFromRoomCalendar = (Calendar) getIntent().getSerializableExtra(EXTRA_SCHEDULE_START_TIME);
+                Calendar startTimeFromRoomCalendar = (Calendar) getIntent().getSerializableExtra(EXTRA_SCHEDULE_START_TIME);
+                Calendar endTimeFromRoomCalendar = (Calendar) getIntent().getSerializableExtra(EXTRA_SCHEDULE_END_TIME);
                 if (getIntent().hasExtra(MeetingRoomListActivity.EXTRA_MEETING_ROOM)) {
                     correctMeetingRoomTime(startTimeFromRoomCalendar, endTimeFromRoomCalendar);
                     meetingRoom = (MeetingRoom) getIntent().getSerializableExtra(MeetingRoomListActivity.EXTRA_MEETING_ROOM);
