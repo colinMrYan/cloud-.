@@ -77,15 +77,22 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
             }
         }
         if (alertTime > 0) {
-            int[] dayHourMinutes = {0, 0, 0};
-            dayHourMinutes[0] = alertTime / (24 * 3600);
-            dayHourMinutes[1] = (alertTime % (24 * 3600)) / 3600;
-            dayHourMinutes[2] = ((alertTime % (24 * 3600)) % 3600) / 60;
-            String day = dayHourMinutes[0] != 0 ? MyApplication.getInstance().getString(R.string.schedule_alert_time_before_days, dayHourMinutes[0]) : "";
-            String hour = dayHourMinutes[1] != 0 ? MyApplication.getInstance().getString(R.string.schedule_alert_time_before_hours, dayHourMinutes[1]) : "";
-            String minutes = dayHourMinutes[2] != 0 ? MyApplication.getInstance().getString(R.string.schedule_alert_time_before_minutes, dayHourMinutes[2]) : "";
-            String before = MyApplication.getInstance().getString(R.string.schedule_alert_time_before);
-            return day + hour + minutes + before;
+
+            int intDay = 0;
+            int intHour = 0;
+            int intMin = 0;
+            if (0 == alertTime % (24 * 3600)) {
+                intDay = alertTime / (24 * 3600);
+                return MyApplication.getInstance().getString(R.string.schedule_alert_time_before_days, intDay);
+            } else {
+                if (0 == alertTime % (3600)) {
+                    intHour = alertTime / (3600);
+                    return MyApplication.getInstance().getString(R.string.schedule_alert_time_before_hours, intHour);
+                } else {
+                    intMin = alertTime / 60;
+                    return MyApplication.getInstance().getString(R.string.schedule_alert_time_before_minutes, intMin);
+                }
+            }
         }
         return MyApplication.getInstance().getString(R.string.calendar_no_alert);
     }
