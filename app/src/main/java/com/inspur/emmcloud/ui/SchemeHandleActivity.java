@@ -13,6 +13,7 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
@@ -474,6 +475,7 @@ public class SchemeHandleActivity extends BaseActivity {
                     mailService.exchangeLogin(this, new OnExchangeLoginListener() {
                         @Override
                         public void onMailLoginSuccess() {
+                            LogUtils.LbcDebug("8888888888888888888888888888888888888888888888888888");
                             ARouter.getInstance().build(Constant.AROUTER_CLASS_MAIL_HOME).navigation();
                             finish();
                         }

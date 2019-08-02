@@ -60,7 +60,6 @@ public class ExchangeLoginUtils {
     }
 
     private void callbackLoginSuccess() {
-        LogUtils.LbcDebug("444444444444444444");
         if (isShowLoadingDlg) {
             LoadingDialog.dimissDlg(loadingDlg);
         }

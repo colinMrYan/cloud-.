@@ -7,6 +7,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.inspur.emmcloud.baselib.router.Router;
@@ -43,7 +44,7 @@ import butterknife.BindView;
 /**
  * Created by chenmch on 2018/12/20.
  */
-
+@Route(path = Constant.AROUTER_CLASS_MAIL_HOME)
 public class MailHomeActivity extends MailHomeBaseActivity implements MySwipeRefreshLayout.OnRefreshListener, MySwipeRefreshLayout.OnLoadListener {
 
     private static final int pageSize = 10;

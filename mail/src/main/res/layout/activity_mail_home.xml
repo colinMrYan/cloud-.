@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <com.inspur.emmcloud.widget.sildemenu.LeftDrawerLayout
+    <com.inspur.emmcloud.mail.widget.sildemenu.LeftDrawerLayout
         android:id="@+id/ldl_menu"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -141,6 +141,6 @@
             android:id="@+id/fm_container_menu"
             android:layout_width="match_parent"
             android:layout_height="match_parent"></FrameLayout>
-    </com.inspur.emmcloud.widget.sildemenu.LeftDrawerLayout>
+    </com.inspur.emmcloud.mail.widget.sildemenu.LeftDrawerLayout>
 </RelativeLayout>
 
