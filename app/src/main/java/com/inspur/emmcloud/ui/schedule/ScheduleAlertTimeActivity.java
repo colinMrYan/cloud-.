@@ -15,8 +15,6 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.bean.schedule.RemindEvent;
 
-import java.text.DecimalFormat;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -79,18 +77,22 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
             }
         }
         if (alertTime > 0) {
-            DecimalFormat df = new DecimalFormat("##0.0");
-            if (alertTime < 60 * 60) {
-                String alertData = MyApplication.getInstance().getString(R.string.schedule_alert_time_before_minutes, df.format(alertTime * 1.0 / 60));
-                return alertData;
-            }
-            if (alertTime < 24 * 60 * 60) {
-                String alertData = MyApplication.getInstance().getString(R.string.schedule_alert_time_before_hours, df.format(alertTime * 1.0 / 3600));
-                return alertData;
-            }
 
-            String alertData = MyApplication.getInstance().getString(R.string.schedule_alert_time_before_days, df.format(alertTime * 1.0 / (24 * 3600)));
-            return alertData;
+            int intDay = 0;
+            int intHour = 0;
+            int intMin = 0;
+            if (0 == alertTime % (24 * 3600)) {
+                intDay = alertTime / (24 * 3600);
+                return MyApplication.getInstance().getString(R.string.schedule_alert_time_before_days, intDay);
+            } else {
+                if (0 == alertTime % (3600)) {
+                    intHour = alertTime / (3600);
+                    return MyApplication.getInstance().getString(R.string.schedule_alert_time_before_hours, intHour);
+                } else {
+                    intMin = alertTime / 60;
+                    return MyApplication.getInstance().getString(R.string.schedule_alert_time_before_minutes, intMin);
+                }
+            }
         }
         return MyApplication.getInstance().getString(R.string.calendar_no_alert);
     }
