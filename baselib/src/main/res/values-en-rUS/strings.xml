@@ -363,6 +363,9 @@
     <string name="schedule_alert_time_before_one_day">1 day before(9 AM)</string>
     <string name="schedule_alert_time_before_two_day">2 day before(9 AM)</string>
     <string name="schedule_alert_time_before_a_week">1 Week before</string>
+    <string name="schedule_alert_time_before_minutes">%1$s minutes before</string>
+    <string name="schedule_alert_time_before_hours">%1$s hours before</string>
+    <string name="schedule_alert_time_before_days">%1$s days before</string>
     <string name="schedule_calendar_modify">Modify Schedule</string>
     <string name="schedule_calendar_delete">Delete Schedule</string>
     <string name="schedule_calendar_create">New Schedule</string>
@@ -414,8 +417,7 @@
     <string name="schedule_task_a_person">person</string>
     <string name="schedule_task_tag_name_length">Tag name up to 64 characters</string>
     <string name="schedule_click_to_add_schedule">Click to Add Schedule</string>
-    <string name="schedule_exchange_login_fail">Exchange account login failed, re-login?</string>
-
+    <string name="schedule_exchange_login_fail">%1$s Password has changed.Update it in the schedule settings.</string>
     <string name="schedule_account_type">Calendar</string>
     <string name="schedule_cloud_calendar">Cloud+ Schedule</string>
     <string name="schedule_cloud_meeting">Cloud+ Meeting</string>

@@ -449,6 +449,12 @@
             android:screenOrientation="portrait" />
 
         <activity
+            android:name=".ui.mine.setting.PlayVideoActivity"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+
+        <activity
             android:name=".ui.mine.setting.SettingActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"

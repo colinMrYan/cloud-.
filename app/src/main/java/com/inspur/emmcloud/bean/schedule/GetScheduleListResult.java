@@ -38,18 +38,10 @@ public class GetScheduleListResult {
             if (scheduleCommand.equals("FORWARD")) {
                 String array = JSONUtils.getString(scheduleJson, "list", "[]");
                 scheduleList = JSONUtils.parseArray(array, Schedule.class);
-                for (Schedule schedule : scheduleList) {
-                    schedule.setMeeting(false);
-                    schedule.setScheduleCalendar(AccountType.APP_SCHEDULE.toString());
-                }
             }
             if (meetingCommand.equals("FORWARD")) {
                 String array = JSONUtils.getString(meetingJson, "list", "[]");
                 List<Schedule> meetingScheduleList = JSONUtils.parseArray(array, Schedule.class);
-                for (Schedule schedule : meetingScheduleList) {
-                    schedule.setMeeting(true);
-                    schedule.setScheduleCalendar(AccountType.APP_MEETING.toString());
-                }
                 scheduleList.addAll(meetingScheduleList);
             }
 

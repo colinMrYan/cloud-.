@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.widget.ScrollViewWithListView;
 import com.inspur.emmcloud.baselib.widget.dialogs.ActionSheetDialog;
@@ -63,10 +64,10 @@ public class CalendarSettingActivity extends BaseActivity {
         boolean isListView = viewDisplayType.equals(SHOW_TYPE_LIST);
         listSelectImageView.setVisibility(isListView ? View.VISIBLE : View.GONE);
         daySelectImageView.setVisibility(isListView ? View.GONE : View.VISIBLE);
-        boolean isEnableExchange = PreferencesByUserAndTanentUtils.getBoolean(BaseApplication.getInstance(), Constant.PREF_SCHEDULE_ENABLE_EXCHANGE, false);
-        scheduleCalendarList = ScheduleCalendarCacheUtils.getScheduleCalendarList(BaseApplication.getInstance(), isEnableExchange);
+        scheduleCalendarList = ScheduleCalendarCacheUtils.getScheduleCalendarList(BaseApplication.getInstance());
         calendarAdapter = new CalendarAdapter();
         calendarsListView.setAdapter(calendarAdapter);
+        boolean isEnableExchange = PreferencesByUserAndTanentUtils.getBoolean(BaseApplication.getInstance(), Constant.PREF_SCHEDULE_ENABLE_EXCHANGE, false);
         addCalendarLayout.setVisibility(isEnableExchange ? View.VISIBLE : View.GONE);
 
     }
@@ -179,14 +180,18 @@ public class CalendarSettingActivity extends BaseActivity {
                             ViewGroup parent) {
             // TODO Auto-generated method stub
             final ScheduleCalendar scheduleCalendar = scheduleCalendarList.get(position);
+            LogUtils.LbcDebug("222222222222222222222222222222222222222222");
             convertView = View.inflate(CalendarSettingActivity.this, R.layout.schedule_calendar_setting_mycalendars, null);
             SwitchCompat switchCompat = convertView.findViewById(R.id.switch_view_calendar_state);
             switchCompat.setChecked(scheduleCalendar.isOpen());
             switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    scheduleCalendar.setOpen(isChecked);
-                    ScheduleCalendarCacheUtils.saveScheduleCalendar(BaseApplication.getInstance(), scheduleCalendar);
+                    ScheduleCalendar scheduleCalendar1 = new ScheduleCalendar();
+                    scheduleCalendar1 = scheduleCalendarList.get(position);
+                    scheduleCalendar1.setOpen(isChecked);
+                    LogUtils.LbcDebug("11111111111111111111111111111111111");
+                    ScheduleCalendarCacheUtils.saveScheduleCalendar(BaseApplication.getInstance(), scheduleCalendar1);
                 }
             });
             convertView.setOnLongClickListener(new View.OnLongClickListener() {

@@ -108,7 +108,6 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
                 setEventShowType();
                 showCalendarEvent(true);
                 break;
-            case Constant.EVENTBUS_TAG_SCHEDULE_MEETING_DATA_CHANGED:
             case Constant.EVENTBUS_TAG_SCHEDULE_TASK_DATA_CHANGED:
             case Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED:
                 showCalendarEvent(true);
@@ -377,7 +376,6 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
             case Schedule.TYPE_CALENDAR:
                 Schedule schedule = (Schedule) event.getEventObj();
                 bundle.putSerializable(ScheduleDetailActivity.EXTRA_SCHEDULE_ENTITY, schedule);
-                bundle.putBoolean(Constant.EXTRA_IS_FROM_CALENDAR, true);
                 IntentUtils.startActivity(getActivity(), ScheduleDetailActivity.class, bundle);
                 break;
             case Schedule.TYPE_TASK:
@@ -447,7 +445,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         StringBuilder builder = new StringBuilder();
         builder.append(event.eventType.endsWith(Schedule.TYPE_CALENDAR) ? getString(R.string.schedule_title) : getString(R.string.schedule_meeting_topic));
         builder.append(" : ").append(event.getEventTitle()).append("\n");
-        if (event.eventType.endsWith(Schedule.TYPE_MEETING)) {
+        if (!StringUtils.isBlank(event.getEventSubTitle())) {
             builder.append(getString(R.string.schedule_location)).append(" : ").append(event.getEventSubTitle()).append("\n");
         }
         builder.append(getString(R.string.meeting_start_time)).append(" : ").append(startTime).append("\n")
@@ -550,8 +548,8 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         }
 
         @Override
-        public void returnScheduleListFail(String error, int errorCode) {
-            WebServiceMiddleUtils.hand(BaseApplication.getInstance(), error, errorCode, false);
+        public void returnScheduleListFail(String error, int errorCode, ScheduleCalendar scheduleCalendar) {
+            WebServiceMiddleUtils.hand(BaseApplication.getInstance(), error, errorCode, false, scheduleCalendar.getAcName());
         }
 
 //        @Override
@@ -578,14 +576,14 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
             LoadingDialog.dimissDlg(loadingDlg);
             ScheduleCacheUtils.removeSchedule(BaseApplication.getInstance(), scheduleId);
             EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED));
-//            showCalendarEvent(true);
-//            if (adapter != null) {
-//                adapter.setEventList(allDayEventList);
-//                adapter.notifyDataSetChanged();
-//                if (allDayEventList.size() < 1) {
-//                    myDialog.dismiss();
-//                }
-//            }
+            //全天弹出框列表刷新
+            if (adapter != null) {
+                adapter.setEventList(allDayEventList);
+                adapter.notifyDataSetChanged();
+                if (allDayEventList.size() < 1) {
+                    myDialog.dismiss();
+                }
+            }
         }
 
         @Override

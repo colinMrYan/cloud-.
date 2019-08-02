@@ -1,7 +1,5 @@
 package com.inspur.emmcloud.ui.schedule;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,18 +10,14 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.alibaba.android.arouter.core.LogisticsCenter;
-import com.alibaba.android.arouter.facade.Postcard;
-import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
-import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
@@ -32,6 +26,7 @@ import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.bean.schedule.Schedule;
+import com.inspur.emmcloud.bean.schedule.calendar.AccountType;
 import com.inspur.emmcloud.bean.schedule.calendar.GetScheduleBasicDataResult;
 import com.inspur.emmcloud.bean.schedule.calendar.Holiday;
 import com.inspur.emmcloud.ui.schedule.meeting.ScheduleAddActivity;
@@ -78,14 +73,12 @@ public class ScheduleBaseFragment extends BaseLayoutFragment implements View.OnL
     private float contentLayoutTouchY = -1;
     private ScheduleApiService apiService;
     private Event modifyEvent;
-    private AlertDialog ewsReloginDlg;
 
     @Override
     protected void onCreate() {
         init();
         apiService = new ScheduleApiService(getActivity());
         apiService.setAPIInterface(new WebService());
-//        checkExchangeLogin();
     }
 
     @Override
@@ -156,25 +149,27 @@ public class ScheduleBaseFragment extends BaseLayoutFragment implements View.OnL
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (isNeedScroll) {
-                    int scrollOffset = ScrollOffset;
-                    int currentScrollY = eventScrollView.getScrollY();
-                    eventScrollView.scrollBy(0, scrollOffset);
-                    if (ScrollOffset < 0) {//向下滚动
-                        if (currentScrollY < -ScrollOffset) {
-                            scrollOffset = -currentScrollY;
-                        }
-                    } else {
-                        int maxScrollOffset = eventScrollView.getChildAt(0).getHeight() - currentScrollY - eventScrollView.getHeight();
-                        if (scrollOffset > maxScrollOffset) {
-                            scrollOffset = maxScrollOffset;
-                        }
+                if (calendarDayView != null && dragScaleView != null) {
+                    if (isNeedScroll) {
+                        int scrollOffset = ScrollOffset;
+                        int currentScrollY = eventScrollView.getScrollY();
+                        eventScrollView.scrollBy(0, scrollOffset);
+                        if (ScrollOffset < 0) {//向下滚动
+                            if (currentScrollY < -ScrollOffset) {
+                                scrollOffset = -currentScrollY;
+                            }
+                        } else {
+                            int maxScrollOffset = eventScrollView.getChildAt(0).getHeight() - currentScrollY - eventScrollView.getHeight();
+                            if (scrollOffset > maxScrollOffset) {
+                                scrollOffset = maxScrollOffset;
+                            }
 
+                        }
+                        //ScrollView滚动后，DragScaleView也会随之滚动，为了让DragScaleView能够跟随手势
+                        dragScaleView.updateLastY(-scrollOffset);
                     }
-                    //ScrollView滚动后，DragScaleView也会随之滚动，为了让DragScaleView能够跟随手势
-                    dragScaleView.updateLastY(-scrollOffset);
+                    calendarDayView.showDragViewTime(top, height);
                 }
-                calendarDayView.showDragViewTime(top, height);
             }
         }, 10);
     }
@@ -194,7 +189,6 @@ public class ScheduleBaseFragment extends BaseLayoutFragment implements View.OnL
             pageEndCalendar.set(endEmmCalendar.getYear(), endEmmCalendar.getMonth() - 1, endEmmCalendar.getDay());
             showCalendarEvent(false);
         }
-        LogUtils.jasonDebug("onCalendarSelect=============");
     }
 
 
@@ -212,36 +206,6 @@ public class ScheduleBaseFragment extends BaseLayoutFragment implements View.OnL
         builder.append(TimeUtils.getWeekDay(MyApplication.getInstance(), selectCalendar));
         scheduleDataText.setText(builder.toString());
     }
-
-
-//    /**
-//     * 检查Exchange邮箱登录
-//     */
-//    private void checkExchangeLogin() {
-//        if (PreferencesByUserAndTanentUtils.getBoolean(BaseApplication.getInstance(), Constant.PREF_SCHEDULE_ENABLE_EXCHANGE, false)) {
-//            Router router = Router.getInstance();
-//            if (router.getService(MailService.class) != null) {
-//                MailService service = router.getService(MailService.class);
-//                String exchangeAccount = service.getExchangeMailAccount();
-//                String exchangePassword = service.getExchangeMailPassword();
-//                if (!StringUtils.isBlank(exchangeAccount) && !StringUtils.isBlank(exchangePassword)) {
-//                    service.exchangeLogin(getActivity(), new OnExchangeLoginListener() {
-//                        @Override
-//                        public void onMailLoginSuccess() {
-//
-//                        }
-//
-//                        @Override
-//                        public void onMailLoginFail(String error, int errorCode) {
-//                            showExchangeLoginFailDlg();
-//                        }
-//                    });
-//                }
-//            }
-//        }
-//
-//    }
-
 
     /**
      * 删除日历添加DragView
@@ -291,9 +255,9 @@ public class ScheduleBaseFragment extends BaseLayoutFragment implements View.OnL
             public void onClick(View v) {
                 if (modifyEvent == null) {
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable(ScheduleAddActivity.EXTRA_START_CALENDAR, calendarDayView.getDragViewStartTime(selectCalendar));
-                    bundle.putSerializable(ScheduleAddActivity.EXTRA_END_CALENDAR, calendarDayView.getDragViewEndTime(selectCalendar));
-                    bundle.putBoolean(ScheduleAddActivity.EXTRA_EVENT_TYPE_FROM_MEETING, false);
+                    bundle.putSerializable(ScheduleAddActivity.EXTRA_SCHEDULE_START_TIME, calendarDayView.getDragViewStartTime(selectCalendar));
+                    bundle.putSerializable(ScheduleAddActivity.EXTRA_SCHEDULE_END_TIME, calendarDayView.getDragViewEndTime(selectCalendar));
+                    bundle.putString(ScheduleAddActivity.EXTRA_SCHEDULE_SCHEDULECALENDAR_TYPE, AccountType.APP_SCHEDULE.toString());
                     IntentUtils.startActivity(getActivity(), ScheduleAddActivity.class, bundle);
                     removeEventAddDragScaleView();
                 }
@@ -312,32 +276,8 @@ public class ScheduleBaseFragment extends BaseLayoutFragment implements View.OnL
     /**
      * 弹出注销提示框
      */
-    public void showExchangeLoginFailDlg() {
-        if (ewsReloginDlg == null || !ewsReloginDlg.isShowing()) {
-            ewsReloginDlg = new CustomDialog.MessageDialogBuilder(getActivity())
-                    .setMessage(R.string.schedule_exchange_login_fail)
-                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    })
-                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                            Bundle bundle = new Bundle();
-                            bundle.putString("from", "schedule_exchange_login");
-                            Postcard postcard = ARouter.getInstance().build(Constant.AROUTER_CLASS_MAIL_LOGIN).with(bundle);
-                            LogisticsCenter.completion(postcard);
-                            Intent intent = new Intent(getActivity(), postcard.getDestination());
-                            intent.putExtras(postcard.getExtras());
-                            startActivityForResult(intent, REQUEST_EXCHANGE_LOGIN);
-                        }
-                    })
-                    .show();
-        }
-
+    public void showExchangeLoginFailToast(String ewsAccount) {
+        ToastUtils.show(getString(R.string.schedule_exchange_login_fail, ewsAccount));
     }
 
     protected void initScheduleCalendar() {
@@ -387,7 +327,7 @@ public class ScheduleBaseFragment extends BaseLayoutFragment implements View.OnL
                 int year = getScheduleBasicDataResult.getYear();
                     yearHolidayListMap.put(year, holidayList);
                 if (pageStartCalendar.get(Calendar.YEAR) == year || pageEndCalendar.get(Calendar.YEAR) == year) {
-                    showCalendarEvent(true);
+                    showCalendarEvent(false);
                 }
                 HolidayCacheUtils.saveHolidayList(MyApplication.getInstance(), getScheduleBasicDataResult.getYear(), holidayList);
             }

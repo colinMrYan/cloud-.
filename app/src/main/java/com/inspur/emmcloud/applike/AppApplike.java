@@ -35,6 +35,7 @@ public class AppApplike implements IApplicationLike {
         router.removeService(SettingService.class);
         router.removeService(AppService.class);
         router.removeService(CommunicationService.class);
-        router.addService(ContactService.class, new ContactServiceImpl());
+        router.removeService(ContactService.class);
+        router.removeService(MailService.class);
     }
 }
