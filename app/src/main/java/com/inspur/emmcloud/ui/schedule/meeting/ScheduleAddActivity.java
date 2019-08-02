@@ -340,7 +340,7 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
         positionEditText.setText(location != null ? location.getBuilding() + " " + location.getDisplayName() : "");
         meetingPositionDelImageView.setVisibility(location != null && !StringUtils.isBlank(location.getId()) ? View.VISIBLE : View.GONE);
         meetingPositionEnterImageView.setVisibility(location != null && !StringUtils.isBlank(location.getId()) ? View.GONE : View.VISIBLE);
-        if ((location != null && !StringUtils.isBlank(location.getId())) || (schedule.getScheduleCalendar().equals(AccountType.APP_MEETING.toString()))) {
+        if ((location != null && !StringUtils.isBlank(location.getId()))) {
             positionEditText.setEnabled(false);
         } else {
             positionEditText.setEnabled(true);
