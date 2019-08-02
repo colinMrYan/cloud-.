@@ -115,10 +115,10 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
     TextView eventTypeText;
     @BindView(R.id.et_meeting_position)
     EditText positionEditText;
-    @BindView(R.id.ll_del_position)
-    LinearLayout delPositionLayout;
-    @BindView(R.id.ll_add_position)
-    LinearLayout addPositionLayout;
+    @BindView(R.id.iv_meeting_position_enter)
+    ImageView meetingPositionEnterImageView;
+    @BindView(R.id.iv_meeting_position_del)
+    ImageView meetingPositionDelImageView;
 
 
 
@@ -338,11 +338,14 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
      */
     private void modifyLocationUI() {
         positionEditText.setText(location != null ? location.getBuilding() + " " + location.getDisplayName() : "");
-        delPositionLayout.setVisibility(location != null ? View.VISIBLE : View.GONE);
-        delPositionLayout.setClickable(location != null);
-        positionEditText.setEnabled(location == null);
-        addPositionLayout.setVisibility(location != null ? View.GONE : View.VISIBLE);
-        addPositionLayout.setClickable(location == null);
+        meetingPositionDelImageView.setVisibility(location != null && !StringUtils.isBlank(location.getId()) ? View.VISIBLE : View.GONE);
+        meetingPositionEnterImageView.setVisibility(location != null && !StringUtils.isBlank(location.getId()) ? View.GONE : View.VISIBLE);
+        if ((location != null && !StringUtils.isBlank(location.getId())) || (schedule.getScheduleCalendar().equals(AccountType.APP_MEETING.toString()))) {
+            positionEditText.setEnabled(false);
+        } else {
+            positionEditText.setEnabled(true);
+        }
+
     }
 
 
@@ -367,7 +370,7 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
             case R.id.ll_end_time:
                 showTimeSelectDialog(false);
                 break;
-            case R.id.ll_add_position:
+            case R.id.iv_meeting_position_enter:
                 Intent intent = new Intent(this, MeetingRoomListActivity.class);
                 intent.putExtra(MeetingRoomListActivity.EXTRA_START_TIME, startTimeCalendar);
                 intent.putExtra(MeetingRoomListActivity.EXTRA_END_TIME, endTimeCalendar);
@@ -390,7 +393,7 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
                 intent3.putExtra(ScheduleTypeSelectActivity.SCHEDULE_AC_TYPE, this.schedule.getScheduleCalendar());
                 startActivityForResult(intent3, REQUEST_SET_SCHEDULE_TYPE);
                 break;
-            case R.id.ll_del_position:
+            case R.id.iv_meeting_position_del:
                 location = null;
                 modifyLocationUI();
                 break;
@@ -590,6 +593,7 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
                     ScheduleCalendar scheduleCalendar = (ScheduleCalendar) data.getSerializableExtra(ScheduleTypeSelectActivity.SCHEDULE_AC_TYPE);
                     eventTypeText.setText(CalendarUtils.getScheduleCalendarShowName(scheduleCalendar));
                     modifyUIByEventType(scheduleCalendar);
+                    modifyLocationUI();
                     break;
             }
         }
@@ -700,7 +704,7 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
         schedule.setStartTime(startTimeCalendar.getTimeInMillis());
         schedule.setEndTime(endTimeCalendar.getTimeInMillis());
         schedule.setNote(notesEdit.getText().toString());
-        schedule.setLocation(location != null ? JSONUtils.toJSONString(location) :
+        schedule.setLocation((location != null && !StringUtils.isBlank(location.getId())) ? JSONUtils.toJSONString(location) :
                 JSONUtils.toJSONString(new Location("", "", positionEditText.getText().toString())));
         JSONArray array = new JSONArray();
         try {
