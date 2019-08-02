@@ -32,6 +32,8 @@ public class MyAppConfig {
             .getExternalStorageDirectory() + "/IMP-Cloud/cache/voice";
     public static final String LOCAL_CACHE_PHOTO_PATH = Environment
             .getExternalStorageDirectory() + "/IMP-Cloud/cache/photo";
+    public static final String LOCAL_OFFLINE_APP_PATH = Environment
+            .getExternalStorageDirectory() + "/IMP-Cloud/offlineApp";
     public static final String LOCAL_DOWNLOAD_PATH = Environment
             .getExternalStorageDirectory() + "/IMP-Cloud/download/";
     public static final String LOCAL_DOWNLOAD_PATH_MAIL_ATTCACHEMENT = Environment
