@@ -65,6 +65,8 @@ public class MeetingAttendees {
             case Participant.CALENDAR_RESPONSE_TYPE_UNKNOWN:
                 name = BaseApplication.getInstance().getString(R.string.meeting_detail_attendee_unknown);
                 break;
+            case Participant.CALENDAR_RESPONSE_TYPE_TENTATIVE:
+                name = BaseApplication.getInstance().getString(R.string.meeting_detail_attendee_tentative);
             default:
                 break;
         }
