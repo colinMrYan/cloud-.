@@ -14,7 +14,6 @@ import android.widget.TextView;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.widget.ScrollViewWithListView;
 import com.inspur.emmcloud.baselib.widget.dialogs.ActionSheetDialog;
@@ -180,7 +179,6 @@ public class CalendarSettingActivity extends BaseActivity {
                             ViewGroup parent) {
             // TODO Auto-generated method stub
             final ScheduleCalendar scheduleCalendar = scheduleCalendarList.get(position);
-            LogUtils.LbcDebug("222222222222222222222222222222222222222222");
             convertView = View.inflate(CalendarSettingActivity.this, R.layout.schedule_calendar_setting_mycalendars, null);
             SwitchCompat switchCompat = convertView.findViewById(R.id.switch_view_calendar_state);
             switchCompat.setChecked(scheduleCalendar.isOpen());
@@ -190,13 +188,12 @@ public class CalendarSettingActivity extends BaseActivity {
                     ScheduleCalendar scheduleCalendar1 = new ScheduleCalendar();
                     scheduleCalendar1 = scheduleCalendarList.get(position);
                     scheduleCalendar1.setOpen(isChecked);
-                    LogUtils.LbcDebug("11111111111111111111111111111111111");
                     ScheduleCalendarCacheUtils.saveScheduleCalendar(BaseApplication.getInstance(), scheduleCalendar1);
                 }
             });
             convertView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
-                public boolean onLongClick(View view) {
+                public boolean onLongClick(View v) {
                     if (scheduleCalendarList.get(position).getAcType().equals(AccountType.EXCHANGE.toString())) {
 
                         String deleteAccount = getString(R.string.schedule_delete_ac);
