@@ -48,7 +48,6 @@ public class ExchangeLoginUtils {
     }
 
     public void login() {
-        LogUtils.LbcDebug("777777777777777777777777777777777777777");
         if (NetUtils.isNetworkConnected(BaseApplication.getInstance(), false) && !StringUtils.isBlank(exchangeAccount) && !StringUtils.isBlank(exchangePassword)) {
             loadingDlg = new LoadingDialog(activity);
             loadingDlg.show(isShowLoadingDlg);

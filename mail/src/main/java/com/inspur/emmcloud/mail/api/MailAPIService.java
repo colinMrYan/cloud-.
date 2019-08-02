@@ -3,6 +3,7 @@ package com.inspur.emmcloud.mail.api;
 import android.content.Context;
 
 import com.inspur.emmcloud.baselib.router.Router;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
 import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
 import com.inspur.emmcloud.basemodule.api.HttpUtils;
@@ -164,6 +165,7 @@ public class MailAPIService {
         params.addParameter("Email", username);
         params.addParameter("Password", password);
         params.setAsJsonContent(true);
+        LogUtils.LbcDebug("completeUrl" + completeUrl + "username" + username + "password" + password);
         HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
