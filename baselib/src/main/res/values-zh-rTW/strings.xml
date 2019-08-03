@@ -369,10 +369,10 @@
     <string name="schedule_setting_view">視圖</string>
     <string name="schedule_calendar_input_content_hint">請輸入日程內容...</string>
     <string name="schedule_calendar_time_alert">結束時間不能早於起始時間</string>
-    <string name="schedule_alert_time_occur">日程當天（上午9時）</string>
-    <string name="schedule_alert_time_before_one_day">1天前（上午9時）</string>
-    <string name="schedule_alert_time_before_two_day">2天前（上午9時）</string>
-    <string name="schedule_alert_time_before_a_week">一周前</string>
+    <string name="schedule_alert_time_occur">日程當天（上午9點）</string>
+    <string name="schedule_alert_time_before_one_day">1天前(上午9點)</string>
+    <string name="schedule_alert_time_before_two_day">2天前(上午9點)</string>
+    <string name="schedule_alert_time_before_a_week">一周前(上午9點)</string>
     <string name="schedule_calendar_modify">修改日程</string>
     <string name="schedule_calendar_delete">刪除日程</string>
     <string name="schedule_calendar_create">新建日程</string>
@@ -923,7 +923,7 @@
     <string name="calendar_thirty_minite_ago">30分鐘前</string>
     <string name="calendar_one_hour_ago">1小時前</string>
     <string name="calendar_two_hours_ago">2小時前</string>
-    <string name="calendar_one_day_ago">1天前</string>
+    <string name="calendar_one_day_ago">24小時前</string>
     <string name="calendar_two_days_ago">2天前</string>
     <string name="calendar_a_week_ago">1周前</string>
     <string name="calendar_add_calendar">添加行事曆</string>
