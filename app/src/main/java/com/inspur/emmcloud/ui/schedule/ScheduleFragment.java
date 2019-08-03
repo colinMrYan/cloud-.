@@ -489,6 +489,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
 
     @Override
     public void onEventTimeUpdate(Event event, int top, int height) {
+        removeEventAddDragScaleView();
         showScheduleEventAddDragView(event, top, height);
     }
 

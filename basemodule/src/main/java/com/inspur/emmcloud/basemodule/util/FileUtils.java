@@ -1358,4 +1358,23 @@ public class FileUtils {
         return isOk;
     }
 
+    /**
+     * 遍历目录
+     *
+     * @param filePath
+     * @return
+     */
+    public static List<File> getSubFileList(String filePath) {
+        List<File> fileList = new ArrayList<>();
+        File rootFile = new File(filePath);
+        if (rootFile.isDirectory()) {
+            File[] files = rootFile.listFiles();
+            for (File file : files) {
+                fileList.add(file);
+            }
+        }
+
+        return fileList;
+    }
+
 }

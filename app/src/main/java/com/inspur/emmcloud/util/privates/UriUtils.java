@@ -67,6 +67,9 @@ public class UriUtils {
                 bundle.putString("ecc-app-react-native", uri);
                 IntentUtils.startActivity(activity, ReactNativeAppActivity.class, bundle);
                 break;
+            case 7:
+                OfflineAppUtil.handleOfflineWeb(activity, app);
+                break;
 
             default:
                 ToastUtils.show(activity,
@@ -98,7 +101,6 @@ public class UriUtils {
 
     }
 
-
     /**
      * 打开url
      *
@@ -106,7 +108,7 @@ public class UriUtils {
      * @param uri
      */
     public static void openUrl(Activity context, String uri) {
-        openUrl(context, uri, "  ",true);
+        openUrl(context, uri, "  ", true);
     }
 
     /**
@@ -115,11 +117,11 @@ public class UriUtils {
      * @param context
      * @param uri
      */
-    public static void openUrl(Activity context, String uri, String appName,boolean isHaveNavBar) {
+    public static void openUrl(Activity context, String uri, String appName, boolean isHaveNavBar) {
         Bundle bundle = new Bundle();
         bundle.putString("uri", uri);
         bundle.putString("appName", appName);
-        bundle.putBoolean(Constant.WEB_FRAGMENT_SHOW_HEADER,isHaveNavBar);
+        bundle.putBoolean(Constant.WEB_FRAGMENT_SHOW_HEADER, isHaveNavBar);
         ARouter.getInstance().build(Constant.AROUTER_CLASS_WEB_MAIN).with(bundle).navigation();
     }
 
