@@ -79,7 +79,7 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
     public static final String EXTRA_SCHEDULE_START_TIME = "extra_schedule_start_time";
     public static final String EXTRA_SCHEDULE_END_TIME = "extra_schedule_end_time";
     public static final int REQUEST_SET_SCHEDULE_TYPE = 6;
-    private static final String EXTRA_SELECT_CALENDAR = "extra_select_calendar";
+    public static final String EXTRA_SELECT_CALENDAR = "extra_select_calendar";
     private static final int REQUEST_SELECT_ATTENDEE = 1;
     private static final int REQUEST_SELECT_RECORDER = 2;
     private static final int REQUEST_SELECT_LIAISON = 3;
@@ -173,6 +173,16 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
                 }
             }
 
+            if (getIntent().hasExtra(EXTRA_SELECT_CALENDAR)) {
+                startTimeCalendar = (Calendar) getIntent().getSerializableExtra(EXTRA_SELECT_CALENDAR);
+                Calendar currentCalendar = TimeUtils.getNextHalfHourTime(Calendar.getInstance());
+                startTimeCalendar.set(Calendar.HOUR_OF_DAY, currentCalendar.get(Calendar.HOUR_OF_DAY));
+                startTimeCalendar.set(Calendar.MINUTE, currentCalendar.get(Calendar.MINUTE));
+                startTimeCalendar.set(Calendar.SECOND, currentCalendar.get(Calendar.SECOND));
+                endTimeCalendar = (Calendar) startTimeCalendar.clone();
+                endTimeCalendar.set(Calendar.HOUR_OF_DAY, startTimeCalendar.get(Calendar.HOUR_OF_DAY) + 2);
+            }
+
             if (getIntent().hasExtra(Constant.EXTRA_SCHEDULE_TITLE_EVENT)) {     //来自沟通长按
                 String title = getIntent().getStringExtra(Constant.EXTRA_SCHEDULE_TITLE_EVENT);
                 schedule.setTitle(title);
@@ -248,6 +258,9 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
         remindEvent = schedule.getRemindEventObj();
         startTimeCalendar = schedule.getStartTimeCalendar();
         endTimeCalendar = schedule.getEndTimeCalendar();
+        if (schedule.getAllDay()) {
+            endTimeCalendar = TimeUtils.getDayEndCalendar(endTimeCalendar);
+        }
         String alertTimeName = ScheduleAlertTimeActivity.getAlertTimeNameByTime(JSONUtils.getInt(schedule.getRemindEvent(), "advanceTimeSpan", -1), schedule.getAllDay());
         remindEvent = new RemindEvent(JSONUtils.getString(schedule.getRemindEvent(), "remindType", "in_app"),
                 JSONUtils.getInt(schedule.getRemindEvent(), "advanceTimeSpan", -1), alertTimeName);
@@ -782,11 +795,12 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
         if (schedule.getAllDay()) {
             startTimeCalendar = TimeUtils.getDayBeginCalendar(startTimeCalendar);
             endTimeCalendar = TimeUtils.getDayEndCalendar(endTimeCalendar);
+        } else {
+            startTimeCalendar.set(Calendar.SECOND, 0);
+            startTimeCalendar.set(Calendar.MILLISECOND, 0);
+            endTimeCalendar.set(Calendar.SECOND, 0);
+            endTimeCalendar.set(Calendar.MILLISECOND, 0);
         }
-        startTimeCalendar.set(Calendar.SECOND, 0);
-        startTimeCalendar.set(Calendar.MILLISECOND, 0);
-        endTimeCalendar.set(Calendar.SECOND, 0);
-        endTimeCalendar.set(Calendar.MILLISECOND, 0);
     }
 
     /**
