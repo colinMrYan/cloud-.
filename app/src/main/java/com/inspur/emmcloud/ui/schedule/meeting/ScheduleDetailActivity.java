@@ -162,7 +162,7 @@ public class ScheduleDetailActivity extends BaseActivity {
     @SuppressLint("StringFormatInvalid")
     private void initViews() {
         initScheduleFrom();
-        isHistorySchedule = System.currentTimeMillis() < scheduleEvent.getEndTime();
+        isHistorySchedule = System.currentTimeMillis() > scheduleEvent.getEndTime();
         headText.setText(getString(isFromCalendar ? R.string.schedule_calendar_detail : R.string.schedule_meeting_booking_detail));
         scheduleTitleText.setText(scheduleEvent.getTitle());
         scheduleTimeText.setText(getString(R.string.meeting_detail_time, getScheduleTime()));
@@ -384,14 +384,31 @@ public class ScheduleDetailActivity extends BaseActivity {
         String duringTime = "";
         long startTime = scheduleEvent.getStartTime();
         long endTime = scheduleEvent.getEndTime();
+
         if (TimeUtils.isSameDay(TimeUtils.timeLong2Calendar(startTime), TimeUtils.timeLong2Calendar(endTime))) {
             duringTime = TimeUtils.calendar2FormatString(this, TimeUtils.timeLong2Calendar(startTime), TimeUtils.FORMAT_MONTH_DAY) + " " +
                     TimeUtils.getWeekDay(this, TimeUtils.timeLong2Calendar(startTime)) + " " +
                     TimeUtils.calendar2FormatString(this, TimeUtils.timeLong2Calendar(startTime), TimeUtils.FORMAT_HOUR_MINUTE) +
                     " - " + TimeUtils.calendar2FormatString(this, TimeUtils.timeLong2Calendar(endTime), TimeUtils.FORMAT_HOUR_MINUTE);
+            if (scheduleEvent.getAllDay()) {
+                duringTime = TimeUtils.calendar2FormatString(this, TimeUtils.timeLong2Calendar(startTime), TimeUtils.FORMAT_MONTH_DAY) + " " +
+                        TimeUtils.getWeekDay(this, TimeUtils.timeLong2Calendar(startTime));
+            }
         } else {
             duringTime = TimeUtils.calendar2FormatString(this, TimeUtils.timeLong2Calendar(startTime), TimeUtils.FORMAT_MONTH_DAY_HOUR_MINUTE) +
                     " - " + TimeUtils.calendar2FormatString(this, TimeUtils.timeLong2Calendar(endTime), TimeUtils.FORMAT_MONTH_DAY_HOUR_MINUTE);
+            if (scheduleEvent.getAllDay()) {
+                long tempStartTime = startTime + 5 * 60 * 1000;
+                long tempEndTime = endTime - 5 * 60 * 1000;
+                long difference = tempEndTime - tempStartTime;
+                if (difference < 24 * 3600 * 1000) {
+                    duringTime = TimeUtils.calendar2FormatString(this, TimeUtils.timeLong2Calendar(startTime), TimeUtils.FORMAT_MONTH_DAY) + " " +
+                            TimeUtils.getWeekDay(this, TimeUtils.timeLong2Calendar(startTime));
+                } else {
+                    duringTime = TimeUtils.calendar2FormatString(this, TimeUtils.timeLong2Calendar(startTime), TimeUtils.FORMAT_MONTH_DAY) +
+                            " - " + TimeUtils.calendar2FormatString(this, TimeUtils.timeLong2Calendar(endTime), TimeUtils.FORMAT_MONTH_DAY);
+                }
+            }
         }
         return duringTime;
     }
