@@ -540,6 +540,8 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
      * 显示开始和结束时间
      */
     private void setMeetingTime() {
+        int minute = endTimeCalendar.get(Calendar.MINUTE);
+        endTimeCalendar.set(Calendar.MINUTE, minute - 1);
         startDateText.setText(TimeUtils.calendar2FormatString(MyApplication.getInstance(), startTimeCalendar, TimeUtils.FORMAT_YEAR_MONTH_DAY));
         endDateText.setText(TimeUtils.calendar2FormatString(MyApplication.getInstance(), endTimeCalendar, TimeUtils.FORMAT_YEAR_MONTH_DAY));
         timeTextChangeByIsAllDay(schedule.getAllDay());

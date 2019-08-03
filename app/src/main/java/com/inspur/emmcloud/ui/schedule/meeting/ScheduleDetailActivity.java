@@ -398,15 +398,15 @@ public class ScheduleDetailActivity extends BaseActivity {
             duringTime = TimeUtils.calendar2FormatString(this, TimeUtils.timeLong2Calendar(startTime), TimeUtils.FORMAT_MONTH_DAY_HOUR_MINUTE) +
                     " - " + TimeUtils.calendar2FormatString(this, TimeUtils.timeLong2Calendar(endTime), TimeUtils.FORMAT_MONTH_DAY_HOUR_MINUTE);
             if (scheduleEvent.getAllDay()) {
-                long tempStartTime = startTime + 5 * 60 * 1000;
-                long tempEndTime = endTime - 5 * 60 * 1000;
+                long tempStartTime = startTime;
+                long tempEndTime = endTime - 1 * 60 * 1000;
                 long difference = tempEndTime - tempStartTime;
                 if (difference < 24 * 3600 * 1000) {
-                    duringTime = TimeUtils.calendar2FormatString(this, TimeUtils.timeLong2Calendar(startTime), TimeUtils.FORMAT_MONTH_DAY) + " " +
-                            TimeUtils.getWeekDay(this, TimeUtils.timeLong2Calendar(startTime));
+                    duringTime = TimeUtils.calendar2FormatString(this, TimeUtils.timeLong2Calendar(tempStartTime), TimeUtils.FORMAT_MONTH_DAY) + " " +
+                            TimeUtils.getWeekDay(this, TimeUtils.timeLong2Calendar(tempStartTime));
                 } else {
-                    duringTime = TimeUtils.calendar2FormatString(this, TimeUtils.timeLong2Calendar(startTime), TimeUtils.FORMAT_MONTH_DAY) +
-                            " - " + TimeUtils.calendar2FormatString(this, TimeUtils.timeLong2Calendar(endTime), TimeUtils.FORMAT_MONTH_DAY);
+                    duringTime = TimeUtils.calendar2FormatString(this, TimeUtils.timeLong2Calendar(tempStartTime), TimeUtils.FORMAT_MONTH_DAY) +
+                            " - " + TimeUtils.calendar2FormatString(this, TimeUtils.timeLong2Calendar(tempEndTime), TimeUtils.FORMAT_MONTH_DAY);
                 }
             }
         }
