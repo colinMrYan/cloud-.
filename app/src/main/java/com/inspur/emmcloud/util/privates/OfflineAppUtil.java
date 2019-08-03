@@ -4,6 +4,7 @@ import android.app.Activity;
 
 import com.github.zafarkhaja.semver.Version;
 import com.hjq.toast.ToastUtils;
+import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.ZipUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.api.APIDownloadCallBack;
@@ -18,101 +19,93 @@ import java.io.IOException;
 import java.util.List;
 
 public class OfflineAppUtil {
-    private static final int TYPE_OFFLINE_APP_ILLEGAL = 0; //不合法
-    private static final int TYPE_OFFLINE_APP_INTEGER = 1;  //int类型
-    private static final int TYPE_OFFLINE_APP_THREE_LEGAL = 2; // “1.0.0” 三段式
+    private static final int OFFLINE_APP_VERSION_TYPE_ILLEGAL = 0; //不合法
+    private static final int OFFLINE_APP_VERSION_TYPE_INTEGER = 1;  //int类型
+    private static final int OFFLINE_APP_VERSION_TYPE_STANDARD = 2; // “1.0.0” 三段式
 
     public static void handleOfflineWeb(final Activity activity, final App app) {
-        LoadingDialog loadingDlg = new LoadingDialog(activity);
-        String versionName = app.getVersion();
-        if (isVersionLegal(versionName) == TYPE_OFFLINE_APP_ILLEGAL) {
-            ToastUtils.show("版本不合法");
-            return;
-        }
         final String userId = BaseApplication.getInstance().getUid();
-
         String preOfflineAppZipFilePath = MyAppConfig.LOCAL_OFFLINE_APP_PATH + "/" + userId + "/" +
                 BaseApplication.getInstance().getTanent() + "/" + app.getAppID() + "/";
-
-        List<File> fileList = FileUtils.getSubFileList(preOfflineAppZipFilePath);
-
-        if (fileList.size() > 0) {      //判断目录是否有离线版本
-            String defaultVersionName = fileList.get(0).getName();
-            //ex:第一次传入整数值  第二次传入三段式
-            if (isVersionLegal(defaultVersionName) != isVersionLegal(app.getVersion())) {
-                ToastUtils.show("版本不合法");
-                return;
-            }
-            switch (isVersionLegal(defaultVersionName)) {   //分情况处理版本类型
-                case TYPE_OFFLINE_APP_INTEGER:
-                    int versionCode = Integer.parseInt(defaultVersionName);
-                    for (int i = 1; i < fileList.size(); i++) {     //取出最新版本
-                        String itemName = fileList.get(i).getName();
-                        if (Integer.parseInt(itemName) > versionCode) {
-                            versionCode = Integer.parseInt(itemName);
-                        }
-                    }
-                    if (versionCode != Integer.parseInt(app.getVersion())) {
-                        downLoadZip(activity, app, loadingDlg);
-                    }
-                    break;
-                case TYPE_OFFLINE_APP_THREE_LEGAL:
-                    Version version = Version.valueOf(defaultVersionName);
-                    for (int i = 1; i < fileList.size(); i++) {     //取出最新版本
-                        String itemName = fileList.get(i).getName();
-                        if (version.compareTo(Version.valueOf(itemName)) > 0) {
-                            version = Version.valueOf(itemName);
-                        }
-                    }
-                    if (!version.getNormalVersion().equals(app.getVersion())) { //如果有版本更新  去下载
-                        downLoadZip(activity, app, loadingDlg);
-                    }
-                    break;
-            }
-
-            UriUtils.openUrl(activity, app.getUri(), app.getAppName(), app.getUserHeader() == 1);  //先打开最新版本
+        List<File> fileFolderList = FileUtils.getSubFileForderList(preOfflineAppZipFilePath);
+        int offlineAppVersionType = getOfflineAppVersionType(app.getVersion());
+        if (offlineAppVersionType == OFFLINE_APP_VERSION_TYPE_ILLEGAL) {
+            ToastUtils.show(R.string.react_native_app_open_failed);
         } else {
-            loadingDlg.show();      //第一次显示loading  其他不显示
-            downLoadZip(activity, app, loadingDlg, true);
+            File file = getMaxVersionAppFile(fileFolderList, offlineAppVersionType);
+            if (file == null) {
+                downLoadZip(activity, app, true);
+            } else {
+                openOfflineApp(activity, app, file.getAbsolutePath());
+                if (compareTo(app.getVersion(), file.getName(), offlineAppVersionType)) {
+                    downLoadZip(activity, app, false);
+                }
+            }
         }
     }
 
+    private static File getMaxVersionAppFile(List<File> fileList, int offlineAppVersionType) {
+        File maxVersionAppFile = null;
+        for (File file : fileList) {
+            if (getOfflineAppVersionType(file.getName()) == offlineAppVersionType) {
+                if (maxVersionAppFile == null) {
+                    maxVersionAppFile = file;
+                } else if (compareTo(file.getName(), maxVersionAppFile.getName(), offlineAppVersionType)) {
+                    maxVersionAppFile = file;
+                }
+            }
+        }
+        return maxVersionAppFile;
+    }
+
     //判断版本号类型  0：非法  1：int值  2：“1.0.0” 类型
-    private static int isVersionLegal(String versionName) {
+    private static int getOfflineAppVersionType(String versionName) {
         try {
             if (versionName.contains(".")) {
                 Version.valueOf(versionName);   //如传入“1.0” 会导致异常
-                return TYPE_OFFLINE_APP_THREE_LEGAL;
+                return OFFLINE_APP_VERSION_TYPE_STANDARD;
             } else {
                 Integer.parseInt(versionName);
-                return TYPE_OFFLINE_APP_INTEGER;
+                return OFFLINE_APP_VERSION_TYPE_INTEGER;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return TYPE_OFFLINE_APP_ILLEGAL;
+        return OFFLINE_APP_VERSION_TYPE_ILLEGAL;
     }
 
-    private static void downLoadZip(final Activity activity, final App app, final LoadingDialog loadingDialog) {
-        downLoadZip(activity, app, loadingDialog, false);
+    /**
+     * 比较两个版本号的大小
+     *
+     * @param version1
+     * @param version2
+     * @param offlineAppVersionType
+     * @return 如果Version1>version2返回true,否则返回false
+     */
+    private static boolean compareTo(String version1, String version2, int offlineAppVersionType) {
+        if (offlineAppVersionType == OFFLINE_APP_VERSION_TYPE_INTEGER) {
+            return Integer.valueOf(version1) > Integer.valueOf(version2);
+        }
+        return (Version.valueOf(version1).compareTo(Version.valueOf(version2)) > 0);
     }
 
-    private static void downLoadZip(final Activity activity, final App app, final LoadingDialog loadingDialog, final boolean isFirst) {
 
+    private static void downLoadZip(final Activity activity, final App app, final boolean isShowLoadingDlg) {
+        final LoadingDialog loadingDlg = new LoadingDialog(activity);
+        loadingDlg.show(isShowLoadingDlg);
         final String userId = BaseApplication.getInstance().getUid();
         final String offlineAppZipFilePath = MyAppConfig.LOCAL_OFFLINE_APP_PATH + "/" + userId + "/" +
                 BaseApplication.getInstance().getTanent() + "/" + app.getAppID() + "/" + app.getVersion();
         APIDownloadCallBack progressCallback = new APIDownloadCallBack(activity, app.getInstallUri()) {
             @Override
             public void callbackSuccess(File file) {
-                loadingDialog.dismiss();
+                LoadingDialog.dimissDlg(loadingDlg);
                 try {
                     ZipUtils.upZipFile(file, offlineAppZipFilePath);
                     FileUtils.deleteFile(file.getAbsolutePath());
-
-                    if (isFirst) {
-                        UriUtils.openUrl(activity, app.getUri(), app.getAppName(), app.getUserHeader() == 1);
+                    if (isShowLoadingDlg) {
+                        openOfflineApp(activity, app, offlineAppZipFilePath);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -126,7 +119,7 @@ public class OfflineAppUtil {
 
             @Override
             public void callbackError(Throwable arg0, boolean arg1) {
-                loadingDialog.dismiss();
+                LoadingDialog.dimissDlg(loadingDlg);
             }
         };
 
@@ -134,5 +127,24 @@ public class OfflineAppUtil {
         String saveZipPath = offlineAppZipFilePath + "app.zip";
         DownLoaderUtils downLoaderUtils = new DownLoaderUtils();
         downLoaderUtils.startDownLoad(app.getInstallUri(), saveZipPath, progressCallback);
+    }
+
+
+    private static void openOfflineApp(Activity activity, App app, String folderPath) {
+        File indexFile = new File(folderPath + "/" + app.getUri());
+        if (indexFile.exists()) {
+            UriUtils.openUrl(activity, "file:" + indexFile.getAbsolutePath(), app.getAppName(), app.getUserHeader() == 1);
+            File[] files = new File(MyAppConfig.LOCAL_OFFLINE_APP_PATH + "/" + BaseApplication.getInstance().getUid() + "/" +
+                    BaseApplication.getInstance().getTanent() + "/" + app.getAppID() + "/").listFiles();
+            for (File file : files) {
+                if (!file.getAbsolutePath().equals(folderPath)) {
+                    FileUtils.deleteFile(file.getAbsolutePath());
+                }
+            }
+        } else {
+            ToastUtils.show(R.string.react_native_app_open_failed);
+        }
+
+
     }
 }

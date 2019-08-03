@@ -1346,6 +1346,46 @@ public class FileUtils {
     }
 
     /**
+     * 遍历目录
+     *
+     * @param filePath
+     * @return
+     */
+    public static List<File> getSubFileList(String filePath) {
+        List<File> fileList = new ArrayList<>();
+        File rootFile = new File(filePath);
+        if (rootFile.exists() && rootFile.isDirectory()) {
+            File[] files = rootFile.listFiles();
+            for (File file : files) {
+                fileList.add(file);
+            }
+        }
+
+        return fileList;
+    }
+
+    /**
+     * 遍历目录
+     *
+     * @param filePath
+     * @return
+     */
+    public static List<File> getSubFileForderList(String filePath) {
+        List<File> fileList = new ArrayList<>();
+        File rootFile = new File(filePath);
+        if (rootFile.exists() && rootFile.isDirectory()) {
+            File[] files = rootFile.listFiles();
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    fileList.add(file);
+                }
+            }
+        }
+
+        return fileList;
+    }
+
+    /**
      * 文件夹改名
      *
      * @param src
@@ -1357,24 +1397,4 @@ public class FileUtils {
         boolean isOk = srcDir.renameTo(new File(dest));
         return isOk;
     }
-
-    /**
-     * 遍历目录
-     *
-     * @param filePath
-     * @return
-     */
-    public static List<File> getSubFileList(String filePath) {
-        List<File> fileList = new ArrayList<>();
-        File rootFile = new File(filePath);
-        if (rootFile.isDirectory()) {
-            File[] files = rootFile.listFiles();
-            for (File file : files) {
-                fileList.add(file);
-            }
-        }
-
-        return fileList;
-    }
-
 }
