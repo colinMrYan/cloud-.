@@ -923,7 +923,7 @@
     <string name="calendar_thirty_minite_ago">30分鐘前</string>
     <string name="calendar_one_hour_ago">1小時前</string>
     <string name="calendar_two_hours_ago">2小時前</string>
-    <string name="calendar_one_day_ago">1天前</string>
+    <string name="calendar_one_day_ago">24小時前</string>
     <string name="calendar_two_days_ago">2天前</string>
     <string name="calendar_a_week_ago">1周前</string>
     <string name="calendar_add_calendar">添加行事曆</string>

@@ -921,9 +921,9 @@
     <string name="calendar_twenty_minite_ago">20 minutes before start</string>
     <string name="calendar_thirty_minite_ago">30 minutes before start</string>
     <string name="calendar_one_hour_ago">1 hour before start</string>
-    <string name="calendar_two_hours_ago">2 hour before start</string>
-    <string name="calendar_one_day_ago">One day before start</string>
-    <string name="calendar_two_days_ago">Two day before start</string>
+    <string name="calendar_two_hours_ago">2 hours before start</string>
+    <string name="calendar_one_day_ago">24 hours before start</string>
+    <string name="calendar_two_days_ago">Two days before start</string>
     <string name="calendar_a_week_ago">1 week before start</string>
     <string name="calendar_add_calendar">Add Calendars</string>
     <string name="calendar_divide_into_groups">Grouping</string>
