@@ -337,7 +337,14 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
      * 地点逻辑修改地点UI
      */
     private void modifyLocationUI() {
-        positionEditText.setText(location != null ? location.getBuilding() + " " + location.getDisplayName() : "");
+        String positionStr = "";
+        if (location != null) {
+            positionStr = location.getBuilding() + " " + location.getDisplayName();
+            positionStr = StringUtils.isBlank(positionStr) ? "" : positionStr;
+        } else {
+            positionStr = "";
+        }
+        positionEditText.setText(positionStr);
         meetingPositionDelImageView.setVisibility(location != null && !StringUtils.isBlank(location.getId()) ? View.VISIBLE : View.GONE);
         meetingPositionEnterImageView.setVisibility(location != null && !StringUtils.isBlank(location.getId()) ? View.GONE : View.VISIBLE);
         if ((location != null && !StringUtils.isBlank(location.getId()))) {
