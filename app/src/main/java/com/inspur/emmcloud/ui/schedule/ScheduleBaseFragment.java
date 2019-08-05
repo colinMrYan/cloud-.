@@ -16,6 +16,7 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
@@ -29,8 +30,10 @@ import com.inspur.emmcloud.bean.schedule.Schedule;
 import com.inspur.emmcloud.bean.schedule.calendar.AccountType;
 import com.inspur.emmcloud.bean.schedule.calendar.GetScheduleBasicDataResult;
 import com.inspur.emmcloud.bean.schedule.calendar.Holiday;
+import com.inspur.emmcloud.bean.schedule.calendar.ScheduleCalendar;
 import com.inspur.emmcloud.ui.schedule.meeting.ScheduleAddActivity;
 import com.inspur.emmcloud.util.privates.cache.HolidayCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ScheduleCalendarCacheUtils;
 import com.inspur.emmcloud.widget.DragScaleView;
 import com.inspur.emmcloud.widget.calendardayview.CalendarDayView;
 import com.inspur.emmcloud.widget.calendardayview.Event;
@@ -257,7 +260,9 @@ public class ScheduleBaseFragment extends BaseLayoutFragment implements View.OnL
                     Bundle bundle = new Bundle();
                     bundle.putSerializable(ScheduleAddActivity.EXTRA_SCHEDULE_START_TIME, calendarDayView.getDragViewStartTime(selectCalendar));
                     bundle.putSerializable(ScheduleAddActivity.EXTRA_SCHEDULE_END_TIME, calendarDayView.getDragViewEndTime(selectCalendar));
-                    bundle.putString(ScheduleAddActivity.EXTRA_SCHEDULE_SCHEDULECALENDAR_TYPE, AccountType.APP_SCHEDULE.toString());
+                    String scheduleCalendar = getExchangeScheduleCalendar();
+                    bundle.putString(ScheduleAddActivity.EXTRA_SCHEDULE_SCHEDULECALENDAR_TYPE,
+                            StringUtils.isBlank(scheduleCalendar) ? AccountType.APP_SCHEDULE.toString() : scheduleCalendar);
                     IntentUtils.startActivity(getActivity(), ScheduleAddActivity.class, bundle);
                     removeEventAddDragScaleView();
                 }
@@ -272,6 +277,15 @@ public class ScheduleBaseFragment extends BaseLayoutFragment implements View.OnL
         });
     }
 
+    private String getExchangeScheduleCalendar() {
+        List<ScheduleCalendar> scheduleCalendars = ScheduleCalendarCacheUtils.getScheduleCalendarList(getActivity());
+        for (int i = 0; i < scheduleCalendars.size(); i++) {
+            if (scheduleCalendars.get(i).getAcType().equals(AccountType.EXCHANGE.toString())) {
+                return scheduleCalendars.get(i).getId();
+            }
+        }
+        return "";
+    }
 
     /**
      * 弹出注销提示框

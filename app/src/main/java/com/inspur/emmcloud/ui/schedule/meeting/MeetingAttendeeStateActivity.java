@@ -135,6 +135,7 @@ public class MeetingAttendeeStateActivity extends BaseActivity implements SwipeR
             for (int j = i + 1; j < participantList.size(); j++) {
                 if (currentParticipant.getId().equals(participantList.get(j).getId())) {
                     participantList.remove(j);
+                    j--;
                 }
             }
         }
