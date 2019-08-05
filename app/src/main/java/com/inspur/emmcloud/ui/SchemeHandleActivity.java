@@ -484,6 +484,8 @@ public class SchemeHandleActivity extends BaseActivity {
                             finish();
                         }
                     });
+                } else {
+                    finish();
                 }
                 break;
             default:
