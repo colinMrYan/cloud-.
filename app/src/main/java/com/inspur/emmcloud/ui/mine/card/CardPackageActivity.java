@@ -3,6 +3,7 @@ package com.inspur.emmcloud.ui.mine.card;
 import android.content.Intent;
 import android.view.View;
 
+import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.CardStackAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -38,6 +39,12 @@ public class CardPackageActivity extends BaseActivity implements RxCardStackView
         ButterKnife.bind(this);
         initViews();
         getCardPackageListFromNet();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ImmersionBar.with(this).navigationBarColor(R.color.white).statusBarColor(R.color.content_bg).navigationBarDarkIcon(true, 1.0f).init();
     }
 
     @Override
