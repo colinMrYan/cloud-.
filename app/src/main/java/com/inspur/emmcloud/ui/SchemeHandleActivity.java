@@ -469,8 +469,8 @@ public class SchemeHandleActivity extends BaseActivity {
                 finish();
                 break;
             case "mail":
-                MailService mailService = Router.getInstance().getService(MailService.class);
-                if (mailService != null) {
+                if (Router.getInstance().getService(MailService.class) != null) {
+                    MailService mailService = Router.getInstance().getService(MailService.class);
                     mailService.exchangeLogin(this, new OnExchangeLoginListener() {
                         @Override
                         public void onMailLoginSuccess() {
