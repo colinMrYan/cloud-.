@@ -18,6 +18,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ScheduleHomeFragmentAdapter;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.ResourceUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.CustomScrollViewPager;
 import com.inspur.emmcloud.baselib.widget.popmenu.DropPopMenu;
 import com.inspur.emmcloud.baselib.widget.popmenu.MenuItem;
@@ -26,6 +27,7 @@ import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseFragment;
 import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.bean.schedule.calendar.AccountType;
+import com.inspur.emmcloud.bean.schedule.calendar.ScheduleCalendar;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarSettingActivity;
 import com.inspur.emmcloud.ui.schedule.meeting.MeetingFragment;
 import com.inspur.emmcloud.ui.schedule.meeting.MeetingHistoryActivity;
@@ -34,6 +36,7 @@ import com.inspur.emmcloud.ui.schedule.meeting.ScheduleAddActivity;
 import com.inspur.emmcloud.ui.schedule.task.TaskAddActivity;
 import com.inspur.emmcloud.ui.schedule.task.TaskFragment;
 import com.inspur.emmcloud.ui.schedule.task.TaskSetActivity;
+import com.inspur.emmcloud.util.privates.cache.ScheduleCalendarCacheUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -240,6 +243,15 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
         textView.setTextColor(ContextCompat.getColor(MyApplication.getInstance(),isSelect?textColorSelect:textColorNormal));
     }
 
+    private String getExchangeScheduleCalendar() {
+        List<ScheduleCalendar> scheduleCalendars = ScheduleCalendarCacheUtils.getScheduleCalendarList(getActivity());
+        for (int i = 0; i < scheduleCalendars.size(); i++) {
+            if (scheduleCalendars.get(i).getAcType().equals(AccountType.EXCHANGE.toString())) {
+                return scheduleCalendars.get(i).getId();
+            }
+        }
+        return "";
+    }
 
     private void showAddPopMenu(View view) {
         DropPopMenu dropPopMenu = new DropPopMenu(getActivity());
@@ -248,11 +260,14 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id, MenuItem menuItem) {
                 Bundle bundle = new Bundle();
+                String calendarType;
                 bundle.putSerializable(ScheduleAddActivity.EXTRA_SELECT_CALENDAR, scheduleFragment.getSelectCalendar());
                 switch (menuItem.getItemId()) {
                     case 1:
                         recordUserClickWorkFunction(PV_COLLECTION_CAL);
-                        bundle.putBoolean(ScheduleAddActivity.EXTRA_SCHEDULE_SCHEDULECALENDAR_TYPE, false);
+                        calendarType = getExchangeScheduleCalendar();
+                        bundle.putString(ScheduleAddActivity.EXTRA_SCHEDULE_SCHEDULECALENDAR_TYPE,
+                                StringUtils.isBlank(calendarType) ? AccountType.APP_SCHEDULE.toString() : calendarType);
                         IntentUtils.startActivity(getActivity(), ScheduleAddActivity.class, bundle);
                         break;
                     case 2:
@@ -261,7 +276,9 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
                             IntentUtils.startActivity(getActivity(), TaskAddActivity.class);
                         }else{
                             recordUserClickWorkFunction(PV_COLLECTION_MEETING);
-                            bundle.putString(ScheduleAddActivity.EXTRA_SCHEDULE_SCHEDULECALENDAR_TYPE, AccountType.APP_MEETING.toString());
+                            calendarType = getExchangeScheduleCalendar();
+                            bundle.putString(ScheduleAddActivity.EXTRA_SCHEDULE_SCHEDULECALENDAR_TYPE,
+                                    StringUtils.isBlank(calendarType) ? AccountType.APP_MEETING.toString() : calendarType);
                             IntentUtils.startActivity(getActivity(), ScheduleAddActivity.class, bundle);
                         }
                         break;
@@ -271,7 +288,9 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
                             IntentUtils.startActivity(getActivity(), TaskAddActivity.class);
                         }else if(viewPager.getCurrentItem() == 1){
                             recordUserClickWorkFunction(PV_COLLECTION_MEETING);
-                            bundle.putString(ScheduleAddActivity.EXTRA_SCHEDULE_SCHEDULECALENDAR_TYPE, AccountType.APP_MEETING.toString());
+                            calendarType = getExchangeScheduleCalendar();
+                            bundle.putString(ScheduleAddActivity.EXTRA_SCHEDULE_SCHEDULECALENDAR_TYPE,
+                                    StringUtils.isBlank(calendarType) ? AccountType.APP_MEETING.toString() : calendarType);
                             IntentUtils.startActivity(getActivity(), ScheduleAddActivity.class, bundle);
                         }
                         break;
