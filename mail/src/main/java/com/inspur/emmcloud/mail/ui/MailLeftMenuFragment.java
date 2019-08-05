@@ -47,8 +47,8 @@ public class MailLeftMenuFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         apiService = new MailAPIService(getActivity());
-        ContactService contactService = Router.getInstance().getService(ContactService.class);
-        if (contactService != null) {
+        if (Router.getInstance().getService(ContactService.class) != null) {
+            ContactService contactService = Router.getInstance().getService(ContactService.class);
             contactUser = contactService.getContactUserByUid(BaseApplication.getInstance().getUid());
         }
         apiService.setAPIInterface(new WebService());
@@ -59,7 +59,7 @@ public class MailLeftMenuFragment extends Fragment {
         loadingDialog = new LoadingDialog(getActivity());
         containerLayout = view.findViewById(R.id.rl_container);
         mailAcountText = view.findViewById(R.id.tv_mail_acount);
-        mailAcountText.setText(contactUser.getEmail());
+        mailAcountText.setText(contactUser != null ? contactUser.getEmail() : "");
         addTreeView();
         getMailFolder();
         return view;
