@@ -6,7 +6,7 @@
     <string name="reclick_to_desktop">Clicking again will exit the application</string>
     <string name="Network_Mobile">Connected to Cellular</string>
     <string name="Network_WIFI">Connected to WIFI</string>
-    <string name="ok">Done</string>
+    <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="resolution_valiad">Your device resolution is less than 800*480, unable to run this program</string>
     <string name="retry">Retry</string>
@@ -109,7 +109,7 @@
     <string name="close">Close</string>
     <string name="commoly_use_app">Commonly</string>
     <string name="function_not_implemented">During closed beta, it will not open</string>
-    <string name="app_init">initializing</string>
+    <string name="app_init">Initializing</string>
     <string name="news_content_cant_empty">Content cannot be empty</string>
     <string name="help">Help</string>
     <string name="load_data_failed">Failed to load data</string>
@@ -301,7 +301,7 @@
     <string name="chat_transmit_message_success">successfully sent</string>
     <string name="chat_transmit_message_fail">Failed sent</string>
     <string name="chat_long_click_reply">Reply</string>
-    <string name="chat_group_least_two_person">group chat need two person at least</string>
+    <string name="chat_group_least_two_person">Group Chat requires at least two or more people</string>
     <string name="chat_send_email_too_many_person_tip">Too many recipients will affect the speed of mail delivery, make sure to send？</string>
     <string name="chat_send_email_max_person_tip">There are too many recipients at present, which may cause the mail to send an exception, make sure to send？</string>
 
@@ -362,7 +362,10 @@
     <string name="schedule_alert_time_occur">On day of event(9 AM)</string>
     <string name="schedule_alert_time_before_one_day">1 day before(9 AM)</string>
     <string name="schedule_alert_time_before_two_day">2 day before(9 AM)</string>
-    <string name="schedule_alert_time_before_a_week">1 Week before</string>
+    <string name="schedule_alert_time_before_a_week">1 Week before(9 AM)</string>
+    <string name="schedule_alert_time_before_minutes">%1$s minutes before</string>
+    <string name="schedule_alert_time_before_hours">%1$s hours before</string>
+    <string name="schedule_alert_time_before_days">%1$s days before</string>
     <string name="schedule_calendar_modify">Modify Schedule</string>
     <string name="schedule_calendar_delete">Delete Schedule</string>
     <string name="schedule_calendar_create">New Schedule</string>
@@ -374,6 +377,7 @@
     <string name="schedule_calendar_pm">PM</string>
     <string name="schedule_calendar_so_on">... </string>
     <string name="schedule_calendar_schedules">schedules</string>
+    <string name="schedule_account_select">Account</string>
 
     <string name="schedule_calendar_no_schedule_today">No Schedule</string>
     <string name="schedule_meeting_no_meeting_today">No Meeting</string>
@@ -414,8 +418,7 @@
     <string name="schedule_task_a_person">person</string>
     <string name="schedule_task_tag_name_length">Tag name up to 64 characters</string>
     <string name="schedule_click_to_add_schedule">Click to Add Schedule</string>
-    <string name="schedule_exchange_login_fail">Exchange account login failed, re-login?</string>
-
+    <string name="schedule_exchange_login_fail">%1$s Password has changed.Update it in the schedule settings.</string>
     <string name="schedule_account_type">Calendar</string>
     <string name="schedule_cloud_calendar">Cloud+ Schedule</string>
     <string name="schedule_cloud_meeting">Cloud+ Meeting</string>
@@ -515,7 +518,7 @@
 
     <!--云盘 Cloud Driver-->
     <string name="clouddriver_my_file">My Files</string>
-    <string name="clouddriver_share_volume">Shared Disk</string>
+    <string name="clouddriver_share_volume">Shared Disks</string>
     <string name="clouddriver_input_directory_name">Input folder name</string>
     <string name="clouddriver_input_file_name">Input file name</string>
     <string name="clouddriver_select_all">Select All</string>
@@ -919,9 +922,9 @@
     <string name="calendar_twenty_minite_ago">20 minutes before start</string>
     <string name="calendar_thirty_minite_ago">30 minutes before start</string>
     <string name="calendar_one_hour_ago">1 hour before start</string>
-    <string name="calendar_two_hours_ago">2 hour before start</string>
-    <string name="calendar_one_day_ago">One day before start</string>
-    <string name="calendar_two_days_ago">Two day before start</string>
+    <string name="calendar_two_hours_ago">2 hours before start</string>
+    <string name="calendar_one_day_ago">24 hours before start</string>
+    <string name="calendar_two_days_ago">Two days before start</string>
     <string name="calendar_a_week_ago">1 week before start</string>
     <string name="calendar_add_calendar">Add Calendars</string>
     <string name="calendar_divide_into_groups">Grouping</string>
@@ -1092,7 +1095,7 @@
     <string name="forgetpwd">Forget Password</string>
     <string name="download_fail">Download Failed</string>
     <string name="download_success">Download Success</string>
-    <string name="file_downloading">Download...Please wait</string>
+    <string name="file_downloading">Downloading...Please wait</string>
     <string name="file_download_success">Download succeeded,open now?</string>
     <string name="has_downloaded">Downloaded</string>
     <string name="imp_content">Content</string>

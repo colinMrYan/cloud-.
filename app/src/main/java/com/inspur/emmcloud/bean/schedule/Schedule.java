@@ -106,8 +106,8 @@ public class Schedule implements Serializable {
                 case CALENDAR_TYPE_MEETING:
                     scheduleCalendar = AccountType.APP_MEETING.toString();
                     break;
-                case CALENDAR_TYPE_EXCHANGE:
-                    scheduleCalendar = AccountType.EXCHANGE.toString();
+                default:
+                    scheduleCalendar = AccountType.APP_SCHEDULE.toString();
                     break;
             }
         }
@@ -131,7 +131,12 @@ public class Schedule implements Serializable {
                     scheduleEndTime = dayEndCalendar;
                 }
                 String eventType = schedule.isMeeting() ? Schedule.TYPE_MEETING : Schedule.TYPE_CALENDAR;
-                Event event = new Event(schedule.getId(), eventType, schedule.getTitle(), schedule.getScheduleLocationObj().getDisplayName(), scheduleStartTime, scheduleEndTime, schedule, schedule.getType(), schedule.getOwner());
+                Location locationObj = schedule.getScheduleLocationObj();
+                String location = "";
+                if (!StringUtils.isBlank(locationObj.getBuilding()) || !StringUtils.isBlank(locationObj.getDisplayName())) {
+                    location = locationObj.getBuilding() + " " + locationObj.getDisplayName();
+                }
+                Event event = new Event(schedule.getId(), eventType, schedule.getTitle(), location, scheduleStartTime, scheduleEndTime, schedule, schedule.getType(), schedule.getOwner());
                 event.setAllDay(schedule.getAllDay());
                 eventList.add(event);
             }

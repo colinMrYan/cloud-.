@@ -135,7 +135,7 @@ public class GestureLoginActivity extends BaseActivity {
         CircleTextImageView circleImageView = findViewById(R.id.gesture_login_user_head_img);
         ImageDisplayUtils.getInstance().displayImage(circleImageView,
                 userHeadImgUri, R.drawable.icon_person_default);
-        initFingerPrint();
+        //   initFingerPrint();
     }
 
     /**

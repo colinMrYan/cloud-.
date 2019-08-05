@@ -134,6 +134,7 @@ public class MeetingFragment extends BaseFragment implements MySwipeRefreshLayou
     public void onReceiverSimpleEventMessage(SimpleEventMessage eventMessage) {
         switch (eventMessage.getAction()) {
             case Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED:
+            case Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_SETTING_CHANGED:
                 getMeetingList();
                 break;
         }
@@ -144,7 +145,6 @@ public class MeetingFragment extends BaseFragment implements MySwipeRefreshLayou
         Meeting meeting = uiMeetingList.get(position);
         Bundle bundle = new Bundle();
         bundle.putSerializable(ScheduleDetailActivity.EXTRA_SCHEDULE_ENTITY, meeting);
-        bundle.putBoolean(Constant.EXTRA_IS_HISTORY_MEETING, isHistoryMeeting);
         IntentUtils.startActivity(getActivity(), ScheduleDetailActivity.class, bundle);
     }
 

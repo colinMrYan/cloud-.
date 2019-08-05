@@ -63,14 +63,13 @@
             android:id="@+id/search_edit_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:minHeight="45dp">
+            android:background="@color/white">
 
             <RelativeLayout
                 android:id="@+id/layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
+                android:minHeight="45dp"
                 android:paddingBottom="3dp"
                 android:paddingLeft="5dp"
                 android:paddingRight="10dp"
@@ -80,6 +79,7 @@
                     android:id="@+id/flowlayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
                     android:gravity="center_vertical" />
             </RelativeLayout>
         </com.inspur.emmcloud.baselib.widget.MaxHightScrollView>

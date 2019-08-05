@@ -68,7 +68,7 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
                 MyApplication.getInstance().getString(R.string.schedule_alert_time_before_a_week)};
         String[] returnAlertTimeString = isAllDay ? allDayAlertTimeArray : alertTimeArray;
         int[] returnAlertTimeInt = isAllDay ? alertTimeAllDayIntArray : alertTimeIntArray;
-        if (alertTime == -1) {
+        if (alertTime == -1 || (isAllDay && alertTime == 0)) {
             return MyApplication.getInstance().getString(R.string.calendar_no_alert);
         }
         for (int i = 0; i < returnAlertTimeInt.length; i++) {
@@ -76,7 +76,25 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
                 return returnAlertTimeString[i - 1];
             }
         }
-        return "";
+        if (alertTime > 0) {
+
+            int intDay = 0;
+            int intHour = 0;
+            int intMin = 0;
+            if (0 == alertTime % (24 * 3600)) {
+                intDay = alertTime / (24 * 3600);
+                return MyApplication.getInstance().getString(R.string.schedule_alert_time_before_days, intDay);
+            } else {
+                if (0 == alertTime % (3600)) {
+                    intHour = alertTime / (3600);
+                    return MyApplication.getInstance().getString(R.string.schedule_alert_time_before_hours, intHour);
+                } else {
+                    intMin = alertTime / 60;
+                    return MyApplication.getInstance().getString(R.string.schedule_alert_time_before_minutes, intMin);
+                }
+            }
+        }
+        return MyApplication.getInstance().getString(R.string.calendar_no_alert);
     }
 
     @Override
