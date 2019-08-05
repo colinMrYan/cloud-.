@@ -6,14 +6,13 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
-import com.inspur.emmcloud.componentservice.contact.ContactService;
 import com.inspur.emmcloud.mail.R;
 import com.inspur.emmcloud.mail.R2;
 
@@ -37,15 +36,11 @@ public class MailSettingActivity extends BaseActivity {
     @Override
     public void onCreate() {
         ButterKnife.bind(this);
-        ContactService contactService = Router.getInstance().getService(ContactService.class);
-        if (contactService != null) {
-
-            String mail = PreferencesByUsersUtils.getString(BaseApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, "");
-            String password = PreferencesByUsersUtils.getString(BaseApplication.getInstance(), Constant.PREF_MAIL_PASSWORD, "");
-            mailAccountText.setText(mail);
-            mailPasswrodText.setText(password);
-            mailPasswrodText.setTransformationMethod(PasswordTransformationMethod.getInstance());
-        }
+        String mail = PreferencesByUsersUtils.getString(BaseApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, "");
+        String password = PreferencesByUsersUtils.getString(BaseApplication.getInstance(), Constant.PREF_MAIL_PASSWORD, "");
+        mailAccountText.setText(mail);
+        mailPasswrodText.setText(password);
+        mailPasswrodText.setTransformationMethod(PasswordTransformationMethod.getInstance());
     }
 
     @Override
@@ -62,6 +57,9 @@ public class MailSettingActivity extends BaseActivity {
             finish();
 
         } else if (i == R.id.ibt_mail_password_visible) {
+            String mail = PreferencesByUsersUtils.getString(BaseApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, "");
+            String password = PreferencesByUsersUtils.getString(BaseApplication.getInstance(), Constant.PREF_MAIL_PASSWORD, "");
+            ToastUtils.show("mail" + mail + "password" + password);
             if (mailPasswrodText.getTransformationMethod() instanceof HideReturnsTransformationMethod) {
                 mailPasswrodText.setTransformationMethod(PasswordTransformationMethod.getInstance());
                 mailPasswordVisibleImgBtn.setImageResource(R.drawable.app_edittext_eye_open);
