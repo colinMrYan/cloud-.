@@ -67,6 +67,7 @@ public class ScheduleDetailActivity extends BaseActivity {
     private static final int SCHEDULE_RECORD_HOLDER = 1;  //记录人
     private static final int SCHEDULE_CONTACT = 2;        //联系人
     private static final int SCHEDULE_INVITE = 3;          //邀请人
+    public static final String IS_FROM_MEETING_ROOM = "is_from_meeting_room";  // 是否来自会议室界面
     /**
      * 日程相关
      **/
@@ -108,6 +109,8 @@ public class ScheduleDetailActivity extends BaseActivity {
     RelativeLayout scheduleAttendLayout;
     @BindView(R.id.tv_schedule_invite)
     TextView scheduleInviteText;
+    @BindView(R.id.rl_schedule_calendar)
+    View scheduleCalendarTypeLayout;
     @BindView(R.id.image_schedule_calendar_type)
     ImageView scheduleCalendarTypeImage;
     @BindView(R.id.tv_schedule_calendar_type)
@@ -122,6 +125,7 @@ public class ScheduleDetailActivity extends BaseActivity {
     private ScheduleApiService scheduleApiService;
     private LoadingDialog loadingDlg;
     private boolean isHistorySchedule = false; //是否来自历史会议
+    private boolean isFromMeetingRoom = false; //是否来自会议室列表
     private List<String> moreTextList = new ArrayList<>();
     private String chatGroupId; //群聊ID
     private String scheduleId;   //会议 日程Id
@@ -137,6 +141,7 @@ public class ScheduleDetailActivity extends BaseActivity {
         scheduleApiService.setAPIInterface(new WebService());
         getIsMeetingAdmin();
         scheduleId = getIntent().getStringExtra(Constant.SCHEDULE_QUERY);   //解析通知字段获取id
+        isFromMeetingRoom = getIntent().getBooleanExtra(IS_FROM_MEETING_ROOM, false);
         info.responseType = Participant.CALENDAR_RESPONSE_TYPE_UNKNOWN; //默认参会状态未知
         if (!StringUtils.isBlank(scheduleId)) {
             getScheduleFromId(scheduleId);
@@ -202,10 +207,14 @@ public class ScheduleDetailActivity extends BaseActivity {
                 TimeUtils.timeLong2Calendar(scheduleEvent.getCreationTime()), TimeUtils.FORMAT_MONTH_DAY_HOUR_MINUTE)));
         scheduleMoreImg.setVisibility((PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(), Constant.PREF_IS_MEETING_ADMIN,
                 false) || (scheduleEvent.getOwner().equals(MyApplication.getInstance().getUid())) && System.currentTimeMillis() < scheduleEvent.getEndTime()) ? View.VISIBLE : View.GONE);
-        initScheduleType();
-        initDiffStatus();
         attendStatusLayout.setVisibility((Calendar.getInstance().after(TimeUtils.timeLong2Calendar(scheduleEvent.getEndTime())) ||
                 scheduleEvent.getOwner().equals(BaseApplication.getInstance().getUid())) ? View.GONE : View.VISIBLE);
+        initScheduleType();
+        initDiffStatus();
+        if (isFromMeetingRoom) { //如果来自会议室列表  参会状态跟日程  不显示
+            scheduleCalendarTypeLayout.setVisibility(View.GONE);
+            attendStatusLayout.setVisibility(View.GONE);
+        }
     }
 
     /**
@@ -250,6 +259,15 @@ public class ScheduleDetailActivity extends BaseActivity {
         if (BaseApplication.getInstance().getUid().equals(scheduleEvent.getOwner())) {
             relatedPersonFlag = true;
         }
+
+        isScheduleAdmin = PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(), Constant.PREF_IS_MEETING_ADMIN, false);
+        isScheduleCreater = scheduleEvent.getOwner().equals(MyApplication.getInstance().getUid());
+        if (relatedPersonFlag || isScheduleAdmin) {     //参与状态是否显示
+            attendStatusLayout.setVisibility((isHistorySchedule || isScheduleCreater) ? View.GONE : View.VISIBLE);
+        } else {
+            attendStatusLayout.setVisibility(View.GONE);
+        }
+
         moreTextList.clear();
         if (isFromCalendar) {  //来自日程
             if (scheduleEvent.canModify()) {
@@ -259,19 +277,17 @@ public class ScheduleDetailActivity extends BaseActivity {
                 moreTextList.add(getString(R.string.schedule_calendar_delete));
             }
 
-            if (!relatedPersonFlag && !scheduleEvent.canModify() && !scheduleEvent.canDelete()) {
-                scheduleMoreImg.setVisibility(View.GONE);
-            } else {
+            if (relatedPersonFlag && (scheduleEvent.canModify() || scheduleEvent.canDelete())) {
                 scheduleMoreImg.setVisibility(View.VISIBLE);
+            } else {
+                scheduleMoreImg.setVisibility(View.GONE);
             }
+            scheduleMoreImg.setVisibility(moreTextList.size() > 0 ? View.VISIBLE : View.GONE);
             return;
         }
 
-        isScheduleAdmin = PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(), Constant.PREF_IS_MEETING_ADMIN, false);
-        isScheduleCreater = scheduleEvent.getOwner().equals(MyApplication.getInstance().getUid());
         if (relatedPersonFlag || isScheduleAdmin) {
             scheduleMoreImg.setVisibility(View.VISIBLE);
-            attendStatusLayout.setVisibility((isHistorySchedule || isScheduleCreater) ? View.GONE : View.VISIBLE);
 
             //管理员不显示发起群聊 (创建者跟参会人)
             if (relatedPersonFlag && WebServiceRouterManager.getInstance().isV1xVersionChat()) {
@@ -293,9 +309,9 @@ public class ScheduleDetailActivity extends BaseActivity {
                     moreTextList.add(getString(R.string.schedule_meeting_cancel));
                 }
             }
+            scheduleMoreImg.setVisibility(moreTextList.size() > 0 ? View.VISIBLE : View.GONE);
         } else {
             scheduleMoreImg.setVisibility(View.GONE);
-            attendStatusLayout.setVisibility(View.GONE);
         }
     }
 

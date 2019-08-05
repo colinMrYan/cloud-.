@@ -933,6 +933,7 @@
     <string name="schedule_alert_time_before_minutes">%1$s分鐘前</string>
     <string name="schedule_alert_time_before_hours">%1$s小時前</string>
     <string name="schedule_alert_time_before_days">%1$s天前</string>
+    <string name="schedule_account_select">賬戶</string>
     <!-- 通用 -->
     <string name="save">保存</string>
     <string name="never">永不</string>

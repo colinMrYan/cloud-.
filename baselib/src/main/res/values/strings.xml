@@ -378,7 +378,7 @@
     <string name="schedule_alert_time_before_minutes">%1$s分钟前</string>
     <string name="schedule_alert_time_before_hours">%1$s小时前</string>
     <string name="schedule_alert_time_before_days">%1$s天前</string>
-
+    <string name="schedule_account_select">账户</string>
 
     <string name="schedule_calendar_modify">修改日程</string>
     <string name="schedule_calendar_delete">删除日程</string>
