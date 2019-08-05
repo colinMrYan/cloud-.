@@ -202,10 +202,10 @@ public class ScheduleDetailActivity extends BaseActivity {
                 TimeUtils.timeLong2Calendar(scheduleEvent.getCreationTime()), TimeUtils.FORMAT_MONTH_DAY_HOUR_MINUTE)));
         scheduleMoreImg.setVisibility((PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(), Constant.PREF_IS_MEETING_ADMIN,
                 false) || (scheduleEvent.getOwner().equals(MyApplication.getInstance().getUid())) && System.currentTimeMillis() < scheduleEvent.getEndTime()) ? View.VISIBLE : View.GONE);
-        initScheduleType();
-        initDiffStatus();
         attendStatusLayout.setVisibility((Calendar.getInstance().after(TimeUtils.timeLong2Calendar(scheduleEvent.getEndTime())) ||
                 scheduleEvent.getOwner().equals(BaseApplication.getInstance().getUid())) ? View.GONE : View.VISIBLE);
+        initScheduleType();
+        initDiffStatus();
     }
 
     /**
@@ -250,6 +250,15 @@ public class ScheduleDetailActivity extends BaseActivity {
         if (BaseApplication.getInstance().getUid().equals(scheduleEvent.getOwner())) {
             relatedPersonFlag = true;
         }
+
+        isScheduleAdmin = PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(), Constant.PREF_IS_MEETING_ADMIN, false);
+        isScheduleCreater = scheduleEvent.getOwner().equals(MyApplication.getInstance().getUid());
+        if (relatedPersonFlag || isScheduleAdmin) {     //参与状态是否显示
+            attendStatusLayout.setVisibility((isHistorySchedule || isScheduleCreater) ? View.GONE : View.VISIBLE);
+        } else {
+            attendStatusLayout.setVisibility(View.GONE);
+        }
+
         moreTextList.clear();
         if (isFromCalendar) {  //来自日程
             if (scheduleEvent.canModify()) {
@@ -267,11 +276,8 @@ public class ScheduleDetailActivity extends BaseActivity {
             return;
         }
 
-        isScheduleAdmin = PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(), Constant.PREF_IS_MEETING_ADMIN, false);
-        isScheduleCreater = scheduleEvent.getOwner().equals(MyApplication.getInstance().getUid());
         if (relatedPersonFlag || isScheduleAdmin) {
             scheduleMoreImg.setVisibility(View.VISIBLE);
-            attendStatusLayout.setVisibility((isHistorySchedule || isScheduleCreater) ? View.GONE : View.VISIBLE);
 
             //管理员不显示发起群聊 (创建者跟参会人)
             if (relatedPersonFlag && WebServiceRouterManager.getInstance().isV1xVersionChat()) {
@@ -295,7 +301,6 @@ public class ScheduleDetailActivity extends BaseActivity {
             }
         } else {
             scheduleMoreImg.setVisibility(View.GONE);
-            attendStatusLayout.setVisibility(View.GONE);
         }
     }
 
