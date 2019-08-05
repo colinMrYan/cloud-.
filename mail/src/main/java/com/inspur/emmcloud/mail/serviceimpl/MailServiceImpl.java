@@ -25,7 +25,6 @@ public class MailServiceImpl extends MailAPIInterfaceImpl implements MailService
 
     @Override
     public void exchangeLogin(Activity activity, OnExchangeLoginListener onExchangeLoginListener) {
-
         LogUtils.LbcDebug(" exchangeLogin(Activity activity88888888");
         new ExchangeLoginUtils.Builder(activity)
                 .setShowLoadingDlg(true)

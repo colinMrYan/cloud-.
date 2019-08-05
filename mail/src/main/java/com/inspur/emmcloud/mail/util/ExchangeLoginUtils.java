@@ -60,11 +60,16 @@ public class ExchangeLoginUtils {
     }
 
     private void callbackLoginSuccess() {
+        LogUtils.LbcDebug("callbackLoginSuccess");
         if (isShowLoadingDlg) {
-            LoadingDialog.dimissDlg(loadingDlg);
+            LogUtils.LbcDebug("callbackLoginSuccess isShowLoadingDlg" + isShowLoadingDlg);
+            //LoadingDialog.dimissDlg(loadingDlg);
         }
         if (onExchangeLoginListener != null) {
+            LogUtils.LbcDebug("callbackLoginSuccess onExchangeLoginListener != null");
             onExchangeLoginListener.onMailLoginSuccess();
+        } else {
+            LogUtils.LbcDebug("callbackLoginSuccess onExchangeLoginListener = = null");
         }
     }
 
