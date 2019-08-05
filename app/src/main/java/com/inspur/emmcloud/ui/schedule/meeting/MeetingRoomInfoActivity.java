@@ -261,6 +261,7 @@ public class MeetingRoomInfoActivity extends BaseActivity {
                     } else {
                         Bundle bundle = new Bundle();
                         bundle.putSerializable(ScheduleDetailActivity.EXTRA_SCHEDULE_ENTITY, meeting);
+                        bundle.putBoolean(ScheduleDetailActivity.IS_FROM_MEETING_ROOM, true);
                         IntentUtils.startActivity(MeetingRoomInfoActivity.this, ScheduleDetailActivity.class, bundle);
                     }
                 }
