@@ -14,7 +14,6 @@ import com.inspur.emmcloud.baselib.util.EditTextUtils;
 import com.inspur.emmcloud.baselib.util.FomatUtils;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
-import com.inspur.emmcloud.baselib.widget.ClearEditText;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
@@ -35,7 +34,7 @@ import butterknife.ButterKnife;
 public class MailLoginActivity extends BaseActivity {
 
     @BindView(R.id.et_mail)
-    ClearEditText mailEdit;
+    EditText mailEdit;
     @BindView(R.id.et_password)
     EditText passwordEdit;
     @BindView(R.id.bt_login)
@@ -54,6 +53,9 @@ public class MailLoginActivity extends BaseActivity {
             mail = ContactUserCacheUtils.getUserMail(MyApplication.getInstance().getUid());
         }
         EditTextUtils.setText(mailEdit, mail);
+        if (!StringUtils.isBlank(mail)) {
+            mailEdit.setEnabled(false);
+        }
         mailEdit.addTextChangedListener(watcher);
         passwordEdit.addTextChangedListener(watcher);
         passwordEdit.setTransformationMethod(PasswordTransformationMethod.getInstance());

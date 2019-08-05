@@ -106,8 +106,8 @@ public class Schedule implements Serializable {
                 case CALENDAR_TYPE_MEETING:
                     scheduleCalendar = AccountType.APP_MEETING.toString();
                     break;
-                case CALENDAR_TYPE_EXCHANGE:
-                    scheduleCalendar = AccountType.EXCHANGE.toString();
+                default:
+                    scheduleCalendar = AccountType.APP_SCHEDULE.toString();
                     break;
             }
         }
