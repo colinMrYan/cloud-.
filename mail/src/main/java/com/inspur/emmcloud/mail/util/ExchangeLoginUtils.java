@@ -113,6 +113,7 @@ public class ExchangeLoginUtils {
     private class WebService extends MailAPIInterfaceImpl {
         @Override
         public void returnMailLoginSuccess() {
+            LogUtils.LbcDebug("WebService  returnMailLoginSuccess()");
             PreferencesByUserAndTanentUtils.putString(BaseApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, exchangeAccount);
             PreferencesByUserAndTanentUtils.putString(BaseApplication.getInstance(), Constant.PREF_MAIL_PASSWORD, exchangePassword);
             callbackLoginSuccess();
@@ -121,6 +122,7 @@ public class ExchangeLoginUtils {
 
         @Override
         public void returnMailLoginFail(String error, int errorCode) {
+            LogUtils.LbcDebug("WebService  returnMailLoginFail()");
             callbackLoginFail(error, errorCode);
 
         }

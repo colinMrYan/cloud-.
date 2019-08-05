@@ -2,6 +2,7 @@ package com.inspur.emmcloud.mail.serviceimpl;
 
 import android.app.Activity;
 
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.componentservice.mail.MailService;
 import com.inspur.emmcloud.componentservice.mail.OnExchangeLoginListener;
 import com.inspur.emmcloud.mail.api.MailAPIInterfaceImpl;
@@ -24,6 +25,8 @@ public class MailServiceImpl extends MailAPIInterfaceImpl implements MailService
 
     @Override
     public void exchangeLogin(Activity activity, OnExchangeLoginListener onExchangeLoginListener) {
+
+        LogUtils.LbcDebug(" exchangeLogin(Activity activity88888888");
         new ExchangeLoginUtils.Builder(activity)
                 .setShowLoadingDlg(true)
                 .setOnExchangeLoginListener(onExchangeLoginListener).build().login();
