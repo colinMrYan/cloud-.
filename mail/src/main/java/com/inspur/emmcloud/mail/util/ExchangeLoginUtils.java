@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.util.Base64;
 
 import com.inspur.emmcloud.baselib.util.EncryptUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
@@ -60,21 +59,15 @@ public class ExchangeLoginUtils {
     }
 
     private void callbackLoginSuccess() {
-        LogUtils.LbcDebug("callbackLoginSuccess");
         if (isShowLoadingDlg) {
-            LogUtils.LbcDebug("callbackLoginSuccess isShowLoadingDlg" + isShowLoadingDlg);
-            //LoadingDialog.dimissDlg(loadingDlg);
+            LoadingDialog.dimissDlg(loadingDlg);
         }
         if (onExchangeLoginListener != null) {
-            LogUtils.LbcDebug("callbackLoginSuccess onExchangeLoginListener != null");
             onExchangeLoginListener.onMailLoginSuccess();
-        } else {
-            LogUtils.LbcDebug("callbackLoginSuccess onExchangeLoginListener = = null");
         }
     }
 
     private void callbackLoginFail(String error, int errorCode) {
-        LogUtils.LbcDebug("666666666666666666");
         if (isShowLoadingDlg) {
             LoadingDialog.dimissDlg(loadingDlg);
         }
@@ -118,7 +111,6 @@ public class ExchangeLoginUtils {
     private class WebService extends MailAPIInterfaceImpl {
         @Override
         public void returnMailLoginSuccess() {
-            LogUtils.LbcDebug("WebService  returnMailLoginSuccess()");
             PreferencesByUserAndTanentUtils.putString(BaseApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, exchangeAccount);
             PreferencesByUserAndTanentUtils.putString(BaseApplication.getInstance(), Constant.PREF_MAIL_PASSWORD, exchangePassword);
             callbackLoginSuccess();
@@ -127,7 +119,6 @@ public class ExchangeLoginUtils {
 
         @Override
         public void returnMailLoginFail(String error, int errorCode) {
-            LogUtils.LbcDebug("WebService  returnMailLoginFail()");
             callbackLoginFail(error, errorCode);
 
         }

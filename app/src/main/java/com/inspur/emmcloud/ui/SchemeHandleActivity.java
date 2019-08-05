@@ -13,7 +13,6 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
@@ -472,24 +471,20 @@ public class SchemeHandleActivity extends BaseActivity {
             case "mail":
                 MailService mailService = Router.getInstance().getService(MailService.class);
                 if (mailService != null) {
-                    LogUtils.LbcDebug("mailService != null88888888");
                     mailService.exchangeLogin(this, new OnExchangeLoginListener() {
                         @Override
                         public void onMailLoginSuccess() {
-                            LogUtils.LbcDebug("onMailLoginSuccess()888888888888888888");
                             ARouter.getInstance().build(Constant.AROUTER_CLASS_MAIL_HOME).navigation();
                             finish();
                         }
 
                         @Override
                         public void onMailLoginFail(String error, int errorCode) {
-                            LogUtils.LbcDebug("onMailLoginFail(String error");
                             ARouter.getInstance().build(Constant.AROUTER_CLASS_MAIL_LOGIN).navigation();
                             finish();
                         }
                     });
                 }
-                finish();
                 break;
             default:
                 finish();
