@@ -426,7 +426,7 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
      */
     private boolean isInputValid() {
         String title = titleEdit.getText().toString().trim();
-        String meetingPosition = positionEditText.getText().toString();
+        String meetingPosition = positionEditText.getText().toString().trim();
         if (StringUtils.isBlank(title)) {
             ToastUtils.show(MyApplication.getInstance(), R.string.meeting_room_booking_topic);
             return false;
@@ -446,7 +446,7 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
                     getString(R.string.meeting_topic_too_long));
             return false;
         }
-        String note = notesEdit.getText().toString();
+        String note = notesEdit.getText().toString().trim();
         if (!StringUtils.isBlank(note) && note.length() > 499) {
             ToastUtils.show(getApplicationContext(),
                     getString(R.string.meeting_notice_too_long));
@@ -723,7 +723,7 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
         correctedCalendarTime();
         schedule.setStartTime(startTimeCalendar.getTimeInMillis());
         schedule.setEndTime(endTimeCalendar.getTimeInMillis());
-        schedule.setNote(notesEdit.getText().toString());
+        schedule.setNote(notesEdit.getText().toString().trim());
         schedule.setLocation((location != null && !StringUtils.isBlank(location.getId())) ? JSONUtils.toJSONString(location) :
                 JSONUtils.toJSONString(new Location("", "", positionEditText.getText().toString())));
         JSONArray array = new JSONArray();
