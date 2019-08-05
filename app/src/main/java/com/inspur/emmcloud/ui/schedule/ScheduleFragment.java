@@ -391,11 +391,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
                 calendarLayout.switchStatus();
                 break;
             case R.id.rl_all_day:
-                if (allDayEventList.size() > 1) {
-                    showAllDayEventListDlg();
-                } else {
-                    openEvent(allDayEventList.get(0));
-                }
+                showAllDayEventListDlg();
 
                 break;
             case R.id.iv_close:
@@ -434,8 +430,10 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
 
     @Override
     public void dismissAllDayEventDlg() {
-        myDialog.dismiss();
-        myDialog = null;
+        if (myDialog != null) {
+            myDialog.dismiss();
+            myDialog = null;
+        }
     }
 
     @Override
@@ -489,6 +487,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
 
     @Override
     public void onEventTimeUpdate(Event event, int top, int height) {
+        removeEventAddDragScaleView();
         showScheduleEventAddDragView(event, top, height);
     }
 
@@ -576,14 +575,6 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
             LoadingDialog.dimissDlg(loadingDlg);
             ScheduleCacheUtils.removeSchedule(BaseApplication.getInstance(), scheduleId);
             EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED));
-            //全天弹出框列表刷新
-            if (adapter != null) {
-                adapter.setEventList(allDayEventList);
-                adapter.notifyDataSetChanged();
-                if (allDayEventList.size() < 1) {
-                    myDialog.dismiss();
-                }
-            }
         }
 
         @Override

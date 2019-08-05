@@ -79,7 +79,7 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
     public static final String EXTRA_SCHEDULE_START_TIME = "extra_schedule_start_time";
     public static final String EXTRA_SCHEDULE_END_TIME = "extra_schedule_end_time";
     public static final int REQUEST_SET_SCHEDULE_TYPE = 6;
-    private static final String EXTRA_SELECT_CALENDAR = "extra_select_calendar";
+    public static final String EXTRA_SELECT_CALENDAR = "extra_select_calendar";
     private static final int REQUEST_SELECT_ATTENDEE = 1;
     private static final int REQUEST_SELECT_RECORDER = 2;
     private static final int REQUEST_SELECT_LIAISON = 3;
@@ -115,10 +115,10 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
     TextView eventTypeText;
     @BindView(R.id.et_meeting_position)
     EditText positionEditText;
-    @BindView(R.id.ll_del_position)
-    LinearLayout delPositionLayout;
-    @BindView(R.id.ll_add_position)
-    LinearLayout addPositionLayout;
+    @BindView(R.id.iv_meeting_position_enter)
+    ImageView meetingPositionEnterImageView;
+    @BindView(R.id.iv_meeting_position_del)
+    ImageView meetingPositionDelImageView;
 
 
 
@@ -155,8 +155,8 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
             if (getIntent().hasExtra(EXTRA_SCHEDULE_END_TIME)
                     && getIntent().hasExtra(EXTRA_SCHEDULE_START_TIME)) {
                 //会议室来的数据
-                Calendar startTimeFromRoomCalendar = (Calendar) getIntent().getSerializableExtra(EXTRA_SCHEDULE_END_TIME);
-                Calendar endTimeFromRoomCalendar = (Calendar) getIntent().getSerializableExtra(EXTRA_SCHEDULE_START_TIME);
+                Calendar startTimeFromRoomCalendar = (Calendar) getIntent().getSerializableExtra(EXTRA_SCHEDULE_START_TIME);
+                Calendar endTimeFromRoomCalendar = (Calendar) getIntent().getSerializableExtra(EXTRA_SCHEDULE_END_TIME);
                 if (getIntent().hasExtra(MeetingRoomListActivity.EXTRA_MEETING_ROOM)) {
                     correctMeetingRoomTime(startTimeFromRoomCalendar, endTimeFromRoomCalendar);
                     meetingRoom = (MeetingRoom) getIntent().getSerializableExtra(MeetingRoomListActivity.EXTRA_MEETING_ROOM);
@@ -171,6 +171,16 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
                     endTimeCalendar = (Calendar) endTimeFromRoomCalendar.clone();
                     schedule.setScheduleCalendar(AccountType.APP_SCHEDULE.toString());
                 }
+            }
+
+            if (getIntent().hasExtra(EXTRA_SELECT_CALENDAR)) {
+                startTimeCalendar = (Calendar) getIntent().getSerializableExtra(EXTRA_SELECT_CALENDAR);
+                Calendar currentCalendar = TimeUtils.getNextHalfHourTime(Calendar.getInstance());
+                startTimeCalendar.set(Calendar.HOUR_OF_DAY, currentCalendar.get(Calendar.HOUR_OF_DAY));
+                startTimeCalendar.set(Calendar.MINUTE, currentCalendar.get(Calendar.MINUTE));
+                startTimeCalendar.set(Calendar.SECOND, currentCalendar.get(Calendar.SECOND));
+                endTimeCalendar = (Calendar) startTimeCalendar.clone();
+                endTimeCalendar.set(Calendar.HOUR_OF_DAY, startTimeCalendar.get(Calendar.HOUR_OF_DAY) + 2);
             }
 
             if (getIntent().hasExtra(Constant.EXTRA_SCHEDULE_TITLE_EVENT)) {     //来自沟通长按
@@ -248,6 +258,9 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
         remindEvent = schedule.getRemindEventObj();
         startTimeCalendar = schedule.getStartTimeCalendar();
         endTimeCalendar = schedule.getEndTimeCalendar();
+        if (schedule.getAllDay()) {
+            endTimeCalendar = TimeUtils.getDayEndCalendar(endTimeCalendar);
+        }
         String alertTimeName = ScheduleAlertTimeActivity.getAlertTimeNameByTime(JSONUtils.getInt(schedule.getRemindEvent(), "advanceTimeSpan", -1), schedule.getAllDay());
         remindEvent = new RemindEvent(JSONUtils.getString(schedule.getRemindEvent(), "remindType", "in_app"),
                 JSONUtils.getInt(schedule.getRemindEvent(), "advanceTimeSpan", -1), alertTimeName);
@@ -337,12 +350,22 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
      * 地点逻辑修改地点UI
      */
     private void modifyLocationUI() {
-        positionEditText.setText(location != null ? location.getBuilding() + " " + location.getDisplayName() : "");
-        delPositionLayout.setVisibility(location != null ? View.VISIBLE : View.GONE);
-        delPositionLayout.setClickable(location != null);
-        positionEditText.setEnabled(location == null);
-        addPositionLayout.setVisibility(location != null ? View.GONE : View.VISIBLE);
-        addPositionLayout.setClickable(location == null);
+        String positionStr = "";
+        if (location != null) {
+            positionStr = location.getBuilding() + " " + location.getDisplayName();
+            positionStr = StringUtils.isBlank(positionStr) ? "" : positionStr;
+        } else {
+            positionStr = "";
+        }
+        positionEditText.setText(positionStr);
+        meetingPositionDelImageView.setVisibility(location != null && !StringUtils.isBlank(location.getId()) ? View.VISIBLE : View.GONE);
+        meetingPositionEnterImageView.setVisibility(location != null && !StringUtils.isBlank(location.getId()) ? View.GONE : View.VISIBLE);
+        if ((location != null && !StringUtils.isBlank(location.getId()))) {
+            positionEditText.setEnabled(false);
+        } else {
+            positionEditText.setEnabled(true);
+        }
+
     }
 
 
@@ -367,7 +390,7 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
             case R.id.ll_end_time:
                 showTimeSelectDialog(false);
                 break;
-            case R.id.ll_add_position:
+            case R.id.iv_meeting_position_enter:
                 Intent intent = new Intent(this, MeetingRoomListActivity.class);
                 intent.putExtra(MeetingRoomListActivity.EXTRA_START_TIME, startTimeCalendar);
                 intent.putExtra(MeetingRoomListActivity.EXTRA_END_TIME, endTimeCalendar);
@@ -390,7 +413,7 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
                 intent3.putExtra(ScheduleTypeSelectActivity.SCHEDULE_AC_TYPE, this.schedule.getScheduleCalendar());
                 startActivityForResult(intent3, REQUEST_SET_SCHEDULE_TYPE);
                 break;
-            case R.id.ll_del_position:
+            case R.id.iv_meeting_position_del:
                 location = null;
                 modifyLocationUI();
                 break;
@@ -590,6 +613,7 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
                     ScheduleCalendar scheduleCalendar = (ScheduleCalendar) data.getSerializableExtra(ScheduleTypeSelectActivity.SCHEDULE_AC_TYPE);
                     eventTypeText.setText(CalendarUtils.getScheduleCalendarShowName(scheduleCalendar));
                     modifyUIByEventType(scheduleCalendar);
+                    modifyLocationUI();
                     break;
             }
         }
@@ -700,7 +724,7 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
         schedule.setStartTime(startTimeCalendar.getTimeInMillis());
         schedule.setEndTime(endTimeCalendar.getTimeInMillis());
         schedule.setNote(notesEdit.getText().toString());
-        schedule.setLocation(location != null ? JSONUtils.toJSONString(location) :
+        schedule.setLocation((location != null && !StringUtils.isBlank(location.getId())) ? JSONUtils.toJSONString(location) :
                 JSONUtils.toJSONString(new Location("", "", positionEditText.getText().toString())));
         JSONArray array = new JSONArray();
         try {
@@ -771,11 +795,12 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
         if (schedule.getAllDay()) {
             startTimeCalendar = TimeUtils.getDayBeginCalendar(startTimeCalendar);
             endTimeCalendar = TimeUtils.getDayEndCalendar(endTimeCalendar);
+        } else {
+            startTimeCalendar.set(Calendar.SECOND, 0);
+            startTimeCalendar.set(Calendar.MILLISECOND, 0);
+            endTimeCalendar.set(Calendar.SECOND, 0);
+            endTimeCalendar.set(Calendar.MILLISECOND, 0);
         }
-        startTimeCalendar.set(Calendar.SECOND, 0);
-        startTimeCalendar.set(Calendar.MILLISECOND, 0);
-        endTimeCalendar.set(Calendar.SECOND, 0);
-        endTimeCalendar.set(Calendar.MILLISECOND, 0);
     }
 
     /**

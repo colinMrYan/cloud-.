@@ -570,8 +570,9 @@ public class SettingActivity extends BaseActivity {
                         ((MyApplication) getApplicationContext()).deleteAllDb();
                         String msgCachePath = MyAppConfig.LOCAL_DOWNLOAD_PATH;
                         String imgCachePath = MyAppConfig.LOCAL_CACHE_PATH;
+                        String offlineAppPath = MyAppConfig.LOCAL_OFFLINE_APP_PATH;
                         DataCleanManager.cleanApplicationData(SettingActivity.this,
-                                msgCachePath, imgCachePath);
+                                msgCachePath, imgCachePath, offlineAppPath);
                         MyApplication.getInstance().setIsContactReady(false);
                         //当清除所有缓存的时候清空以db形式存储数据的configVersion
                         ClientConfigUpdateUtils.getInstance().clearDbDataConfigWithClearAllCache();
