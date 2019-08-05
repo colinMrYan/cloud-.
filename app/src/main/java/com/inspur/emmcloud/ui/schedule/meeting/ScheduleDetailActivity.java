@@ -142,6 +142,7 @@ public class ScheduleDetailActivity extends BaseActivity {
             getScheduleFromId(scheduleId);
         } else {
             scheduleEvent = (Schedule) getIntent().getSerializableExtra(EXTRA_SCHEDULE_ENTITY);
+            scheduleId = scheduleEvent.getId();
             initViews();
         }
     }
