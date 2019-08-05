@@ -211,9 +211,10 @@ public class ScheduleDetailActivity extends BaseActivity {
                 scheduleEvent.getOwner().equals(BaseApplication.getInstance().getUid())) ? View.GONE : View.VISIBLE);
         initScheduleType();
         initDiffStatus();
-        if (isFromMeetingRoom) { //如果来自会议室列表  参会状态跟日程  不显示
+        if (isFromMeetingRoom) { //如果来自会议室列表  参会状态跟日程  更多  不显示
             scheduleCalendarTypeLayout.setVisibility(View.GONE);
             attendStatusLayout.setVisibility(View.GONE);
+            scheduleMoreImg.setVisibility(View.GONE);
         }
     }
 
