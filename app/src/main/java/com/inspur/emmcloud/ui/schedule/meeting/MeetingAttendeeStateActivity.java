@@ -22,6 +22,7 @@ import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
@@ -300,6 +301,9 @@ public class MeetingAttendeeStateActivity extends BaseActivity implements SwipeR
         @Override
         public void returnMeetingDataFromIdFail(String error, int errorCode) {
             swipeRefreshLayout.setRefreshing(false);
+            if (!StringUtils.isBlank(error)) {
+                ToastUtils.show(error);
+            }
             super.returnMeetingDataFromIdFail(error, errorCode);
         }
     }
