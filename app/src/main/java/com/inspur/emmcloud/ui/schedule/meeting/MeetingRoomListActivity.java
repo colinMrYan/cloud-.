@@ -65,7 +65,6 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
     //    private LoadingDialog loadingDlg;
     private WebService webService;
     private ScheduleApiService apiService;
-    private List<String> officeIdList = new ArrayList<>();
     private List<MeetingRoomArea> meetingRoomAreaList = new ArrayList<>();
     private ScheduleMeetingRoomAdapter meetingRoomAdapter;
     private MeetingRoom selectMeetingRoom;
@@ -264,16 +263,15 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
         @Override
         public void returnMeetingRoomListSuccess(GetMeetingRoomListResult getMeetingRoomListResult) {
             swipeRefreshLayout.setRefreshing(false);
-            if (getMeetingRoomListResult.getMeetingRoomAreaList().size() > 0) {
-                meetingRoomAreaList.clear();
-                meetingRoomAdapter.setData(meetingRoomAreaList);
-                meetingRoomAreaList = getMeetingRoomListResult.getMeetingRoomAreaList();
-                meetingRoomAdapter.setData(meetingRoomAreaList);
-                for (int i = 0; i < meetingRoomAreaList.size(); i++) {
-                    expandableListView.collapseGroup(i);
-                    expandableListView.expandGroup(i);
-                }
-            } else {
+            meetingRoomAreaList.clear();
+            meetingRoomAdapter.setData(meetingRoomAreaList);
+            meetingRoomAreaList = getMeetingRoomListResult.getMeetingRoomAreaList();
+            meetingRoomAdapter.setData(meetingRoomAreaList);
+            for (int i = 0; i < meetingRoomAreaList.size(); i++) {
+                expandableListView.collapseGroup(i);
+                expandableListView.expandGroup(i);
+            }
+            if (getMeetingRoomListResult.getMeetingRoomAreaList().size() == 0) {
                 setMeetingOffice();
             }
 
