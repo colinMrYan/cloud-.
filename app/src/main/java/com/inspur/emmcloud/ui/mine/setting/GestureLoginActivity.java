@@ -15,10 +15,12 @@ import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
+import com.inspur.emmcloud.baselib.widget.dialogs.MyDialog;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
+import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.ninelock.LockPatternUtil;
 import com.inspur.emmcloud.util.privates.ninelock.LockPatternView;
 import com.wei.android.lib.fingerprintidentify.FingerprintIdentify;
@@ -137,9 +139,17 @@ public class GestureLoginActivity extends BaseActivity {
         CircleTextImageView circleImageView = findViewById(R.id.gesture_login_user_head_img);
         ImageDisplayUtils.getInstance().displayImage(circleImageView,
                 userHeadImgUri, R.drawable.icon_person_default);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        LogUtils.YfcDebug("是否开启指纹开关：" + PreferencesByUserAndTanentUtils.getBoolean(this, Constant.SAFE_CENTER_FINGER_PRINT, false));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && PreferencesByUserAndTanentUtils.getBoolean(this, Constant.SAFE_CENTER_FINGER_PRINT, false)) {
+            LogUtils.YfcDebug("启用指纹识别");
+            showFingerPrintDialog();
             initFingerPrint();
         }
+    }
+
+    private void showFingerPrintDialog() {
+        MyDialog myDialog = new MyDialog(GestureLoginActivity.this, R.layout.safe_finger_print_dialog);
+        myDialog.show();
     }
 
     /**
@@ -151,10 +161,6 @@ public class GestureLoginActivity extends BaseActivity {
             LogUtils.YfcDebug("设备指纹不可用");
             return;
         }
-//        if (!PreferencesByUserAndTanentUtils.getBoolean(GestureLoginActivity.this, "finger_print_state", false)) {
-//            LogUtils.YfcDebug("用户没有开启指纹解锁");
-//            return;
-//        }
         cloudFingerprintIdentify.startIdentify(5, new BaseFingerprint.FingerprintIdentifyListener() {
             @Override
             public void onSucceed() {
@@ -268,16 +274,24 @@ public class GestureLoginActivity extends BaseActivity {
     /**
      * 忘记手势密码（去账号登录界面）
      */
-    @OnClick(R.id.forget_gesture_btn)
-    public void forgetGesturePasswrod() {
-        clearGestureInfo();
-        ((MyApplication) getApplication()).signout();
+    @OnClick({R.id.forget_gesture_btn, R.id.btn_use_finger_print})
+    public void forgetGesturePasswrod(View view) {
+        switch (view.getId()) {
+            case R.id.forget_gesture_btn:
+                clearGestureInfo();
+                ((MyApplication) getApplication()).signout();
+                break;
+            case R.id.btn_use_finger_print:
+                showFingerPrintDialog();
+                break;
+        }
     }
 
     /**
      * 清理手势信息
      */
     private void clearGestureInfo() {
+        CreateGestureActivity.putFingerPrint(GestureLoginActivity.this, false);
         CreateGestureActivity.putGestureCodeByUser(GestureLoginActivity.this, "");
         CreateGestureActivity.putGestureCodeIsOpenByUser(GestureLoginActivity.this, false);
     }
