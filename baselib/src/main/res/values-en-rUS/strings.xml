@@ -109,7 +109,7 @@
     <string name="close">Close</string>
     <string name="commoly_use_app">Commonly</string>
     <string name="function_not_implemented">During closed beta, it will not open</string>
-    <string name="app_init">initializing</string>
+    <string name="app_init">Initializing</string>
     <string name="news_content_cant_empty">Content cannot be empty</string>
     <string name="help">Help</string>
     <string name="load_data_failed">Failed to load data</string>
@@ -1095,7 +1095,7 @@
     <string name="forgetpwd">Forget Password</string>
     <string name="download_fail">Download Failed</string>
     <string name="download_success">Download Success</string>
-    <string name="file_downloading">Download...Please wait</string>
+    <string name="file_downloading">Downloading...Please wait</string>
     <string name="file_download_success">Download succeeded,open now?</string>
     <string name="has_downloaded">Downloaded</string>
     <string name="imp_content">Content</string>

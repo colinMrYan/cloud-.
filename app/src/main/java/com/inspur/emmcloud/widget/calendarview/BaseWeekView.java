@@ -198,12 +198,15 @@ public abstract class BaseWeekView extends BaseView {
     void updateCurrentDate() {
         if (mItems == null)
             return;
-        if (mItems.contains(mDelegate.getCurrentDay())) {
+        if (mItems.contains(mDelegate.getCurrentDay()) || mItems.contains(mDelegate.mSelectedEmmCalendar)) {
             for (EmmCalendar a : mItems) {//添加操作
                 a.setCurrentDay(false);
             }
             int index = mItems.indexOf(mDelegate.getCurrentDay());
-            mItems.get(index).setCurrentDay(true);
+            if (index != -1) {
+                mItems.get(index).setCurrentDay(true);
+            }
+
         }
         invalidate();
     }

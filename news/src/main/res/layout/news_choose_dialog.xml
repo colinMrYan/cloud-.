@@ -83,6 +83,7 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:layout_marginTop="5dp"
+            android:orientation="horizontal"
             android:background="@drawable/app_news_dialog_day_button">
 
             <Button
