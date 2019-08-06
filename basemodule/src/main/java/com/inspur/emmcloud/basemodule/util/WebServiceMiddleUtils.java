@@ -26,7 +26,7 @@ public class WebServiceMiddleUtils {
      * @param errorCode
      */
     public static void hand(Context context, String response, int errorCode) {
-        hand(context, response, errorCode, true);
+        hand(context, response, errorCode, true, "");
     }
 
     /**
@@ -37,7 +37,7 @@ public class WebServiceMiddleUtils {
      * @param errorCode
      */
     public static void hand(Context context, String response,
-                            int errorCode, boolean isShowToast) {
+                            int errorCode, boolean isShowToast, String ewsAccount) {
         String errorMessage = "";
         if (response.equals("time out")) {
             errorMessage = context.getString(R.string.network_timeout);
@@ -49,7 +49,7 @@ public class WebServiceMiddleUtils {
             EMMErrorBean emmErrorBean = new EMMErrorBean(response);
             errorMessage = emmErrorBean.getMsg();
             if (emmErrorBean.getErrCode() == 100401) {
-                EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_EWS_401));
+                EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_EWS_401, ewsAccount));
                 return;
             }
         }

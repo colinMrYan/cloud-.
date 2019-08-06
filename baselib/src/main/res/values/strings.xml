@@ -264,7 +264,7 @@
     <string name="group_member">群成员列表 </string>
     <string name="group_name_cannot_null">请输入群组名称 </string>
     <string name="channel_unknown_text">您的%1$s暂不支持该消息，请【升级】%1$s最新版本查看</string>
-    <string name="comment_hallcomment_text">评论了:</string>
+    <string name="comment_hallcomment_text">评论了：</string>
     <string name="channel_info">频道详情</string>
     <string name="comment_text">评论：</string>
     <string name="administrators_of_channel">(管理员)</string>
@@ -371,10 +371,15 @@
     <string name="schedule_setting_view">视图</string>
     <string name="schedule_calendar_input_content_hint">请输入日程内容...</string>
     <string name="schedule_calendar_time_alert">结束时间应该晚于起始时间</string>
-    <string name="schedule_alert_time_occur">日程当天 (上午9时)</string>
-    <string name="schedule_alert_time_before_one_day">1天前（上午9时）</string>
-    <string name="schedule_alert_time_before_two_day">2天前（上午9时）</string>
-    <string name="schedule_alert_time_before_a_week">一周前</string>
+    <string name="schedule_alert_time_occur">日程当天(上午9点)</string>
+    <string name="schedule_alert_time_before_one_day">1天前(上午9点)</string>
+    <string name="schedule_alert_time_before_two_day">2天前(上午9点)</string>
+    <string name="schedule_alert_time_before_a_week">一周前(上午9点)</string>
+    <string name="schedule_alert_time_before_minutes">%1$s分钟前</string>
+    <string name="schedule_alert_time_before_hours">%1$s小时前</string>
+    <string name="schedule_alert_time_before_days">%1$s天前</string>
+    <string name="schedule_account_select">账户</string>
+
     <string name="schedule_calendar_modify">修改日程</string>
     <string name="schedule_calendar_delete">删除日程</string>
     <string name="schedule_calendar_create">新建日程</string>
@@ -390,8 +395,7 @@
     <string name="schedule_meeting_no_meeting_today">暂无会议安排</string>
     <string name="schedule_task_no_task_today">暂无任务安排</string>
     <string name="schedule_click_to_add_schedule">再次点击新建日程</string>
-    <string name="schedule_exchange_login_fail">Exchange账户登录失败，是否重新登录？</string>
-
+    <string name="schedule_exchange_login_fail">%1$s 密码已更改，请到日程设置中更新</string>
     <string name="schedule_account_type">日历</string>
     <string name="schedule_cloud_calendar">云+日程</string>
     <string name="schedule_cloud_meeting">云+会议</string>
@@ -443,7 +447,7 @@
     <string name="schedule_meeting_select_conference_title">选择会议联络人</string>
     <string name="schedule_meeting_add_note">备注</string>
     <string name="schedule_meeting_add_alert_time">提醒</string>
-    <string name="schedule_meeting_detail_location">会议地点:</string>
+    <string name="schedule_meeting_detail_location">会议地点：</string>
     <string name="schedule_meeting_booking_detail">会议详情</string>
     <string name="schedule_meeting_history">历史会议</string>
     <string name="schedule_choose_common_office">常用办公地点</string>
@@ -453,7 +457,7 @@
     <string name="schedule_meeting_booking_room">预定会议室</string>
     <string name="schedule_meeting_in_meeting">会议中</string>
     <string name="schedule_meeting_be_free">空闲</string>
-    <string name="meeting_detail_location">地点:</string>
+    <string name="meeting_detail_location">地点：</string>
     <string name="schedule_meeting_change">修改会议</string>
     <string name="schedule_meeting_cancel">取消会议</string>
     <string name="schedule_meeting_my_create">我创建的：</string>
@@ -682,7 +686,7 @@
     <string name="current_device">当前设备</string>
     <string name="history_device">历史设备</string>
     <string name="device_history_use">历史使用</string>
-    <string name="device_bind_time_title">绑定时间: </string>
+    <string name="device_bind_time_title">绑定时间：</string>
     <string name="device_bind_time">绑定时间</string>
     <string name="device_info">设备详情</string>
     <string name="device_id">设备ID</string>
@@ -874,14 +878,14 @@
     <string name="meeting_detail_time">时间：%1$s</string>
     <string name="meeting_detail_remind">提醒：%1$s</string>
     <string name="meeting_detail_create">%1$s 创建</string>
-    <string name="meeting_detail_inviter">邀请人:%1$s</string>
-    <string name="meeting_detail_attendee">参会人:%1$s</string>
-    <string name="meeting_detail_record_holder">会议记录人:%1$s</string>
-    <string name="meeting_detail_conference">会议联络人:%1$s</string>
+    <string name="meeting_detail_inviter">邀请人：%1$s</string>
+    <string name="meeting_detail_attendee">参与人：%1$s</string>
+    <string name="meeting_detail_record_holder">会议记录人：%1$s</string>
+    <string name="meeting_detail_conference">会议联络人：%1$s</string>
     <string name="meeting_detail_record_title">会议记录人</string>
     <string name="meeting_detail_conference_title">会议联络人</string>
     <string name="meeting_detail_invite">邀请者</string>
-    <string name="meeting_detail_note">着装要求:%1$s</string>
+    <string name="meeting_detail_note">着装要求：%1$s</string>
     <string name="meeting_detail_sign">会议签到</string>
     <string name="meeting_detail_summary">十 添加会议摘要</string>
     <string name="meeting_detail_change_meeting">修改会议</string>
@@ -894,7 +898,7 @@
     <string name="meeting_detail_one_hour">提前一个小时</string>
     <string name="meeting_detail_one_day">提前一天</string>
     <string name="meeting_detail_attendee_num">%1$s等%2$d人</string>
-    <string name="meeting_detail_attendee_accept">接收</string>
+    <string name="meeting_detail_attendee_accept">接受</string>
     <string name="meeting_detail_attendee_decline">拒绝</string>
     <string name="meeting_detail_attendee_unknown">无响应</string>
     <string name="meeting_detail_attendee_tentative">暂定</string>
@@ -940,7 +944,7 @@
     <string name="calendar_thirty_minite_ago">30分钟前</string>
     <string name="calendar_one_hour_ago">1小时前</string>
     <string name="calendar_two_hours_ago">2小时前</string>
-    <string name="calendar_one_day_ago">1天前</string>
+    <string name="calendar_one_day_ago">24小时前</string>
     <string name="calendar_two_days_ago">2天前</string>
     <string name="calendar_a_week_ago">1周前</string>
     <string name="calendar_add_calendar">添加日历</string>
@@ -1041,7 +1045,7 @@
     <string name="battery_tip_cancel">取消</string>
     <string name="battery_tip_toset">去设置</string>
     <!-- ListView自定义控件部分 -->
-    <string name="xlistview_header_last_time">上次更新时间:</string>
+    <string name="xlistview_header_last_time">上次更新时间：</string>
     <string name="release_to_refresh">释放立即刷新</string>
     <string name="pull_down_refresh">下拉刷新</string>
     <string name="refreshing">正在刷新...</string>
@@ -1567,46 +1571,6 @@
         <item>中</item>
         <item>高</item>
     </string-array>
-
-
-    <string name="webex_meeting_title">%1$s的会议</string>
-    <string name="webex_input_invitee_emails_hint">添加参会人含后缀邮箱</string>
-    <string name="webex_input_invitee_emails">请输入参会人的电子邮箱地址</string>
-    <string name="webex_input_correct_invitee_emails">请输入正确的的电子邮箱地址</string>
-    <string name="webex_not_add_repeated">不能重复添加</string>
-    <string name="webex_start">开始</string>
-    <string name="webex_meeting_info">会议信息</string>
-    <string name="webex_host">主持人</string>
-    <string name="webex_when">时间</string>
-    <string name="webex_meeting_number">会议号</string>
-    <string name="webex_meeting_password">会议密码</string>
-    <string name="webex_host_password">主持人密钥</string>
-    <string name="webex_meeting_ended">会议已结束</string>
-    <string name="webex_start_time_error">开始时间不正确</string>
-    <string name="webex_start_time_error_info">您指定的会议开始时间在当前时间之前。请指定其他开始时间</string>
-    <string name="webex_enter_meeting_name">请输入会议名称</string>
-    <string name="webex_enter_meeting_password">请输入会议密码</string>
-    <string name="webex_set_duration_correct">请设置正确的会议持续时间</string>
-    <string name="webex_meeting_duration">会议持续时间</string>
-    <string name="webex_remove_meeting_warning_title">删除会议</string>
-    <string name="webex_remove_meeting_warning_info">您确定要删除该会议吗？</string>
-    <string name="webex_password_length_error">密码长度不符合规则（6-10位）</string>
-    <string name="webex_install_tips">使用此功能需要先安装 webex 客户端，现在安装？</string>
-    <string name="webex_add_invitee_from_contact">从通讯录添加</string>
-    <string name="webex_add_invitee_num">已邀请%1$d人/还可邀请%2$d人</string>
-    <string name="webex_internal_attendees">内部参会人</string>
-    <string name="webex_external_attendees">外部参会人</string>
-    <string name="webex_internal_share">内部分享</string>
-    <string name="webex_time">时间：</string>
-    <string name="webex_meeting_code">会议号：</string>
-    <string name="webex_meeting_password_tip">会议密码：</string>
-    <string name="webex_add_external_attendees">添加外部参会人</string>
-    <string name="webex_no_meeting_tips">%1$s<Data><![CDATA[<font color=\'#999999\'>前无会议</font>]]></Data></string>
-    <string name="webex_participant">参会人员</string>
-    <string name="webex_password_invalid">密码只允许包含数字和字母</string>
-    <string name="webex_duration_time">持续时间</string>
-    <string name="webex_schedule_meeting">安排会议</string>
-    <string name="webex_my_meeting">我的会议</string>
 
 
 </resources>

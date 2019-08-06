@@ -70,6 +70,7 @@ public class MeetingRoomInfoActivity extends BaseActivity {
     LinearLayout equipmentLayout;
     @BindView(R.id.tl_meeting_tab)
     TabLayout tabLayout;
+    private long MINI_INTER_BETWEEN_MEETING = 60000;
     private MeetingRoom meetingRoom;
     private ScheduleApiService apiService;
     private LoadingDialog loadingDlg;
@@ -260,6 +261,7 @@ public class MeetingRoomInfoActivity extends BaseActivity {
                     } else {
                         Bundle bundle = new Bundle();
                         bundle.putSerializable(ScheduleDetailActivity.EXTRA_SCHEDULE_ENTITY, meeting);
+                        bundle.putBoolean(ScheduleDetailActivity.IS_FROM_MEETING_ROOM, true);
                         IntentUtils.startActivity(MeetingRoomInfoActivity.this, ScheduleDetailActivity.class, bundle);
                     }
                 }
@@ -344,7 +346,6 @@ public class MeetingRoomInfoActivity extends BaseActivity {
     public void onReceiverSimpleEventMessage(SimpleEventMessage eventMessage) {
         switch (eventMessage.getAction()) {
             case Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED:
-            case Constant.EVENTBUS_TAG_SCHEDULE_MEETING_DATA_CHANGED:
                 getMeetingListByMeetingRoom();
                 break;
         }
@@ -417,7 +418,7 @@ public class MeetingRoomInfoActivity extends BaseActivity {
                 long meetingDayStartTime = meeting.getDayStartTime(calendar);
                 long meetingDayEndTime = meeting.getDayEndTime(calendar);
                 long LastMeetingEnd = (j > 0) ? dayMeetingList.get(j - 1).getDayEndTime(calendar) : dayStartTimeLong;
-                if (meetingDayStartTime > LastMeetingEnd && (meetingDayStartTime > System.currentTimeMillis())) {
+                if (meetingDayStartTime - LastMeetingEnd > MINI_INTER_BETWEEN_MEETING && (meetingDayStartTime > System.currentTimeMillis())) {
                     MeetingSchedule meetingSchedule = new MeetingSchedule((i == 0 && (LastMeetingEnd < System.currentTimeMillis())) ? System.currentTimeMillis() : LastMeetingEnd, meetingDayStartTime, null);
                     dayMeetingScheduleList.add(meetingSchedule);
                 }

@@ -98,6 +98,22 @@ public class Schedule implements Serializable {
         location = JSONUtils.getString(object, "location", "");
         participants = JSONUtils.getString(object, "participants", "");
         note = JSONUtils.getString(object, "note", "");
+        if (!StringUtils.isBlank(type)) {
+            switch (type) {
+                case CALENDAR_TYPE_MY_CALENDAR:
+                    scheduleCalendar = AccountType.APP_SCHEDULE.toString();
+                    break;
+                case CALENDAR_TYPE_MEETING:
+                    scheduleCalendar = AccountType.APP_MEETING.toString();
+                    break;
+                default:
+                    scheduleCalendar = AccountType.APP_SCHEDULE.toString();
+                    break;
+            }
+        }
+        if (StringUtils.isBlank(scheduleCalendar)) {
+            scheduleCalendar = AccountType.APP_SCHEDULE.toString();
+        }
     }
 
     public static List<Event> calendarEvent2EventList(List<Schedule> scheduleList, Calendar selectCalendar) {
@@ -115,7 +131,12 @@ public class Schedule implements Serializable {
                     scheduleEndTime = dayEndCalendar;
                 }
                 String eventType = schedule.isMeeting() ? Schedule.TYPE_MEETING : Schedule.TYPE_CALENDAR;
-                Event event = new Event(schedule.getId(), eventType, schedule.getTitle(), schedule.getScheduleLocationObj().getDisplayName(), scheduleStartTime, scheduleEndTime, schedule, schedule.getType(), schedule.getOwner());
+                Location locationObj = schedule.getScheduleLocationObj();
+                String location = "";
+                if (!StringUtils.isBlank(locationObj.getBuilding()) || !StringUtils.isBlank(locationObj.getDisplayName())) {
+                    location = locationObj.getBuilding() + " " + locationObj.getDisplayName();
+                }
+                Event event = new Event(schedule.getId(), eventType, schedule.getTitle(), location, scheduleStartTime, scheduleEndTime, schedule, schedule.getType(), schedule.getOwner());
                 event.setAllDay(schedule.getAllDay());
                 eventList.add(event);
             }
@@ -456,7 +477,7 @@ public class Schedule implements Serializable {
                 break;
             case EXCHANGE:
             case APP_SCHEDULE:
-                canDelete = true;
+                canDelete = getOwner().equals(BaseApplication.getInstance().getUid());
                 break;
         }
         return canDelete;
@@ -474,7 +495,7 @@ public class Schedule implements Serializable {
                 canModify = getOwner().equals(BaseApplication.getInstance().getUid()) && getEndTimeCalendar().after(Calendar.getInstance());
                 break;
             case APP_SCHEDULE:
-                canModify = true;
+                canModify = getOwner().equals(BaseApplication.getInstance().getUid());
                 break;
         }
         return canModify;

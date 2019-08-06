@@ -40,12 +40,16 @@ public class LogUtils {
 
     public static String getTraceInfo() {
         StringBuffer sb = new StringBuffer();
-        StackTraceElement[] stacks = new Throwable().getStackTrace();
-        int stacksLen = stacks.length;
-        if (stacksLen > 3) {
-            sb.append(stacks[2].getFileName().split("\\.")[0])
-                    .append("---line: ").append(stacks[2].getLineNumber())
-                    .append(": ");
+        try {
+            StackTraceElement[] stacks = new Throwable().getStackTrace();
+            int stacksLen = stacks.length;
+            if (stacksLen > 3) {
+                sb.append(stacks[2].getFileName().split("\\.")[0])
+                        .append("---line: ").append(stacks[2].getLineNumber())
+                        .append(": ");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return sb.toString();
     }

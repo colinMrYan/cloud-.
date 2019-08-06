@@ -6,16 +6,26 @@ import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.Conversation;
+import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
+import com.inspur.emmcloud.bean.chat.GetSendMsgResult;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.componentservice.communication.ShareToConversationListener;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
+import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
@@ -34,6 +44,8 @@ import java.util.HashMap;
 public class ShareToConversationBlankActivity extends BaseActivity {
     private static final int REQUEST_SELECT_CONTACT = 1;
     private static ShareToConversationListener listener;
+    private LoadingDialog loadingDlg;
+    private String cid = "";
 
     public static void startActivity(Context context, Intent intent, ShareToConversationListener listener) {
         ShareToConversationBlankActivity.listener = listener;
@@ -43,6 +55,7 @@ public class ShareToConversationBlankActivity extends BaseActivity {
 
     @Override
     public void onCreate() {
+        loadingDlg = new LoadingDialog(this);
         selectContact();
     }
 
@@ -63,6 +76,7 @@ public class ShareToConversationBlankActivity extends BaseActivity {
         ArrayList<String> uidList = new ArrayList<>();
         uidList.add(BaseApplication.getInstance().getUid());
         bundle.putString(ContactSearchFragment.EXTRA_TITLE, getString(R.string.baselib_share_to));
+        bundle.putStringArrayList(ContactSearchFragment.EXTRA_EXCLUDE_SELECT, uidList);
         ARouter.getInstance().build(Constant.AROUTER_CLASS_CONTACT_SEARCH).with(bundle).navigation(this, REQUEST_SELECT_CONTACT);
     }
 
@@ -82,7 +96,8 @@ public class ShareToConversationBlankActivity extends BaseActivity {
                     if (conversation == null) {
                         createDirectChannel(uid);
                     } else {
-                        sendMessage(conversation.getId());
+                        cid = conversation.getId();
+                        sendMessage();
                     }
 
                 }
@@ -91,8 +106,8 @@ public class ShareToConversationBlankActivity extends BaseActivity {
                 JSONArray channelGroupArray = JSONUtils.getJSONArray(jsonObject, "channelGroup", new JSONArray());
                 if (channelGroupArray.length() > 0) {
                     JSONObject cidObj = JSONUtils.getJSONObject(channelGroupArray, 0, new JSONObject());
-                    String cid = JSONUtils.getString(cidObj, "cid", "");
-                    sendMessage(cid);
+                    cid = JSONUtils.getString(cidObj, "cid", "");
+                    sendMessage();
                 }
             }
         } else {
@@ -107,52 +122,127 @@ public class ShareToConversationBlankActivity extends BaseActivity {
      * @param uid
      */
     private void createDirectChannel(String uid) {
-        new ConversationCreateUtils().createDirectConversation(ShareToConversationBlankActivity.this, uid,
-                new ConversationCreateUtils.OnCreateDirectConversationListener() {
-                    @Override
-                    public void createDirectConversationSuccess(Conversation conversation) {
-                        sendMessage(conversation.getId());
-                    }
+        if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
+            new ConversationCreateUtils().createDirectConversation(ShareToConversationBlankActivity.this, uid,
+                    new ConversationCreateUtils.OnCreateDirectConversationListener() {
+                        @Override
+                        public void createDirectConversationSuccess(Conversation conversation) {
+                            cid = conversation.getId();
+                            sendMessage();
+                        }
 
-                    @Override
-                    public void createDirectConversationFail() {
-                        callbackFail();
+                        @Override
+                        public void createDirectConversationFail() {
+                            callbackFail();
 
-                    }
-                }, false);
+                        }
+                    }, false);
+        } else if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
+            new ChatCreateUtils().createDirectChannel(ShareToConversationBlankActivity.this, uid,
+                    new ChatCreateUtils.OnCreateDirectChannelListener() {
+                        @Override
+                        public void createDirectChannelSuccess(GetCreateSingleChannelResult getCreateSingleChannelResult) {
+                            cid = getCreateSingleChannelResult.getCid();
+                            sendMessage();
+                        }
+
+                        @Override
+                        public void createDirectChannelFail() {
+                        }
+                    });
+        }
+
     }
 
 
     /**
      * 发送消息
      *
-     * @param cid
      */
-    private void sendMessage(String cid) {
+    private void sendMessage() {
         String type = getIntent().getStringExtra("type");
         switch (type) {
             case Message.MESSAGE_TYPE_EXTENDED_LINKS:
+                sendExtendedLinksMessage();
                 break;
             case Message.MESSAGE_TYPE_TEXT_PLAIN:
-                sendTxtPlainMessage(cid);
+                sendTxtPlainMessage();
                 break;
         }
     }
 
-    private void sendTxtPlainMessage(String cid) {
+    private void sendTxtPlainMessage() {
         String content = getIntent().getStringExtra("content");
-        Message message = CommunicationUtils.combinLocalTextPlainMessage(content, cid, new HashMap<String, String>());
-        message.setSendStatus(Message.MESSAGE_SEND_ING);
-        MessageCacheUtil.saveMessage(ShareToConversationBlankActivity.this, message);
-        WSAPIService.getInstance().sendChatTextPlainMsg(message);
+        if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
+            Message message = CommunicationUtils.combinLocalTextPlainMessage(content, cid, new HashMap<String, String>());
+            message.setSendStatus(Message.MESSAGE_SEND_ING);
+            MessageCacheUtil.saveMessage(ShareToConversationBlankActivity.this, message);
+            WSAPIService.getInstance().sendChatTextPlainMsg(message);
+            notifyMessageDataChanged();
+            callbackSuccess();
+        } else if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
+            if (NetUtils.isNetworkConnected(BaseApplication.getInstance())) {
+                ChatAPIService apiService = new ChatAPIService(ShareToConversationBlankActivity.this);
+                apiService.setAPIInterface(new WebService());
+                JSONObject jsonObject = new JSONObject();
+                try {
+                    jsonObject.put("source", content);
+                    jsonObject.put("mentions", new JSONArray());
+                    jsonObject.put("urls", new JSONArray());
+                    jsonObject.put("tmpId", AppUtils.getMyUUID(MyApplication.getInstance()));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                apiService.sendMsg(cid, jsonObject.toString(), "txt_rich", System.currentTimeMillis() + "");
+            } else {
+                callbackFail();
+            }
+        }
+
+    }
+
+    private void sendExtendedLinksMessage() {
+        String poster = getIntent().getStringExtra("poster");
+        String title = getIntent().getStringExtra("title");
+        String subTitle = getIntent().getStringExtra("subTitle");
+        String url = getIntent().getStringExtra("url");
+        if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
+            Message message = CommunicationUtils.combinLocalExtendedLinksMessage(cid, poster, title, subTitle, url);
+            message.setSendStatus(Message.MESSAGE_SEND_ING);
+            MessageCacheUtil.saveMessage(ShareToConversationBlankActivity.this, message);
+            WSAPIService.getInstance().sendChatExtendedLinksMsg(message);
+            notifyMessageDataChanged();
+            callbackSuccess();
+        } else if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
+            if (NetUtils.isNetworkConnected(BaseApplication.getInstance())) {
+                ChatAPIService apiService = new ChatAPIService(ShareToConversationBlankActivity.this);
+                apiService.setAPIInterface(new WebService());
+                JSONObject jsonObject = new JSONObject();
+                try {
+                    jsonObject.put("url", url);
+                    jsonObject.put("poster", poster);
+                    jsonObject.put("digest", subTitle);
+                    jsonObject.put("res_link", title);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                apiService.sendMsg(cid, jsonObject.toString(), "txt_rich", System.currentTimeMillis() + "");
+            } else {
+                callbackFail();
+            }
+        }
+
+
+    }
+
+    private void notifyMessageDataChanged() {
         // 通知沟通页面更新列表状态
         Intent intent = new Intent("message_notify");
         intent.putExtra("command", "sort_session_list");
         LocalBroadcastManager.getInstance(ShareToConversationBlankActivity.this).sendBroadcast(intent);
-        callbackSuccess(cid);
     }
 
-    private void callbackSuccess(String cid) {
+    private void callbackSuccess() {
         if (listener != null) {
             listener.shareSuccess(cid);
         }
@@ -174,5 +264,20 @@ public class ShareToConversationBlankActivity extends BaseActivity {
         }
         finish();
         listener = null;
+    }
+
+    class WebService extends APIInterfaceInstance {
+        @Override
+        public void returnSendMsgSuccess(GetSendMsgResult getSendMsgResult,
+                                         String fakeMessageId) {
+            LoadingDialog.dimissDlg(loadingDlg);
+            callbackSuccess();
+        }
+
+        @Override
+        public void returnSendMsgFail(String error, String fakeMessageId, int errorCode) {
+            LoadingDialog.dimissDlg(loadingDlg);
+            callbackFail();
+        }
     }
 }

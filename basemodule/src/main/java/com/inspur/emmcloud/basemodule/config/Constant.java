@@ -119,7 +119,6 @@ public class Constant {
     public static final String EVENTBUS_TAG_MAIL_LOGIN_FAIL = "tag_mail_login_fail";
     public static final String EVENTBUS_TAG_MAIL_REMOVE = "tag_mail_remove";
     public static final String EVENTBUS_TAG_SCHEDULE_CALENDAR_SETTING_CHANGED = "tag_schedule_calendar_setting_changed";
-    public static final String EVENTBUS_TAG_SCHEDULE_MEETING_DATA_CHANGED = "tag_schedule_meeting_data_changed";
     public static final String EVENTBUS_TAG_SCHEDULE_TASK_DATA_CHANGED = "tag_schedule_task_data_changed";
     public static final String EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED = "tag_schedule_calendar_data_changed";
     public static final String EVENTBUS_TASK_ORDER_CHANGE = "task_order_change";
@@ -192,7 +191,8 @@ public class Constant {
     public static final String SF_OPEN_URL = "open-url";
 
     //沟通文本消息长按至日程
-    public static final String COMMUNICATION_LONG_CLICK_TO_SCHEDULE = "message_long_click_to_schedule";
+    public static final String EXTRA_SCHEDULE_TITLE_EVENT = "schedule_title_event";
+    //COMMUNICATION_LONG_CLICK_TO_SCHEDULE
 
     public static final String SCHEDULE_QUERY = "schedule_query";
     public static final String SCHEDULE_DETAIL = "schedule_detail";
@@ -200,7 +200,6 @@ public class Constant {
 
     public static final String SMS_LOGIN_START_TIME = "sms_login_start_time";
     public static final String EXTRA_IS_HISTORY_MEETING = "is_history_meeting"; //来源  历史会议
-    public static final String EXTRA_IS_FROM_CALENDAR = "is_from_calendar";     //来源  日程
 
     public static final String AROUTER_CLASS_COMMUNICATION_MEMBER = "/communication/MembersActivity";
     public static final String AROUTER_CLASS_LOGIN_MAIN = "/login/LoginActivity";

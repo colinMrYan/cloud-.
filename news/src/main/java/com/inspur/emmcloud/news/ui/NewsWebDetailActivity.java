@@ -54,6 +54,9 @@ import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
+import com.inspur.emmcloud.componentservice.communication.CommunicationService;
+import com.inspur.emmcloud.componentservice.communication.ShareToConversationListener;
 import com.inspur.emmcloud.news.R;
 import com.inspur.emmcloud.news.api.NewsAPIInsterfaceImpl;
 import com.inspur.emmcloud.news.api.NewsAPIUri;
@@ -495,8 +498,9 @@ public class NewsWebDetailActivity extends BaseActivity {
                 : ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_day_background_layout));
         (dialog.findViewById(R.id.app_news_dialog)).setBackground(drawable);
         GradientDrawable drawableBtn = new GradientDrawable();
-        drawableBtn.setCornerRadius(DensityUtil.dip2px(NewsWebDetailActivity.this, 5));
-        drawableBtn.setColor(model.equals(darkMode) ? ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_night_background_btn) : ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_day_background_btn));
+        setDrawProperty(drawableBtn, model);
+        GradientDrawable drawableFontBtn = new GradientDrawable();
+        setDrawProperty(drawableFontBtn, model);
         (dialog.findViewById(R.id.app_news_mode_layout)).setBackground(drawableBtn);
         setDayBtn(model.equals(darkMode) ? 1 : 2);
         Button shareBtn = (dialog.findViewById(R.id.app_news_share_btn));
@@ -516,10 +520,10 @@ public class NewsWebDetailActivity extends BaseActivity {
         dayOrNightModeText.setTextColor(model.equals(darkMode) ? ContextCompat.getColor(NewsWebDetailActivity.this, R.color.white) : ContextCompat.getColor(NewsWebDetailActivity.this, R.color.black));
         ((ImageView) dialog.findViewById(R.id.app_news_mode_sun_img)).setImageResource(model.equals(darkMode) ? R.drawable.app_news_mode_day_light : R.drawable.app_news_mode_day_dark);
         ((ImageView) dialog.findViewById(R.id.app_news_mode_moon_img)).setImageResource(model.equals(darkMode) ? R.drawable.app_news_mode_light : R.drawable.app_news_mode_dark);
-        smallerBtn.setBackground(drawableBtn);
-        normalBtn.setBackground(drawableBtn);
-        largerBtn.setBackground(drawableBtn);
-        largestBtn.setBackground(drawableBtn);
+        smallerBtn.setBackground(drawableFontBtn);
+        normalBtn.setBackground(drawableFontBtn);
+        largerBtn.setBackground(drawableFontBtn);
+        largestBtn.setBackground(drawableFontBtn);
         setFontSizeBtn();
         dialog.findViewById(R.id.app_news_mode_line).setBackgroundColor(model.equals(darkMode) ? ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_night_line_color)
                 : ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_day_line_color));
@@ -527,6 +531,18 @@ public class NewsWebDetailActivity extends BaseActivity {
                 : ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_day_line_color));
         ((TextView) dialog.findViewById(R.id.app_news_font_text)).setTextColor(model.equals(darkMode) ? ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_night_font_size_color)
                 : ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_night_font_size_color));
+    }
+
+    /**
+     * 为drawable设置属性
+     *
+     * @param drawableBtn
+     * @param model
+     */
+    private void setDrawProperty(GradientDrawable drawableBtn, String model) {
+        drawableBtn.setCornerRadius(DensityUtil.dip2px(NewsWebDetailActivity.this, 5));
+        drawableBtn.setColor(model.equals(darkMode) ? ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_night_background_btn) : ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_day_background_btn));
+
     }
 
     /**
@@ -607,7 +623,7 @@ public class NewsWebDetailActivity extends BaseActivity {
             setDialogModel(darkMode);
 
         } else if (i == R.id.app_news_share_btn) {
-            //                shareNewsToFrinds();
+            shareNewsToConversation();
         } else if (i == R.id.app_news_instructions_btn) {//批示逻辑
             dialog.dismiss();
             if (!StringUtils.isBlank(groupNews.getApprovedDate())) {
@@ -834,22 +850,46 @@ public class NewsWebDetailActivity extends BaseActivity {
         ((Button) dialog.findViewById(R.id.app_news_instructions_btn)).setCompoundDrawables(instructionIcon, null, null, null);
     }
 
-//    /**
-//     * 给朋友分享新闻
-//     */
-//    private void shareNewsToFrinds() {
-//        Intent intent = new Intent();
-//        intent.putExtra(ContactSearchFragment.EXTRA_TYPE, 0);
-//        intent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, false);
-//        ArrayList<String> uidList = new ArrayList<>();
-//        uidList.add(BaseApplication.getInstance().getUid());
-//        intent.putStringArrayListExtra(ContactSearchFragment.EXTRA_EXCLUDE_SELECT, uidList);
-//        intent.putExtra(ContactSearchFragment.EXTRA_TITLE, getString(R.string.news_share));
-//        intent.setClass(getApplicationContext(),
-//                ContactSearchActivity.class);
-//        startActivityForResult(intent, SHARE_SEARCH_RUEST_CODE);
-//        dialog.dismiss();
-//    }
+    /**
+     * 给朋友分享新闻
+     */
+    private void shareNewsToConversation() {
+        Router router = Router.getInstance();
+        if (router.getService(CommunicationService.class) != null) {
+            CommunicationService service = router.getService(CommunicationService.class);
+            String poster = null;
+            if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
+                poster = groupNews.getPoster();
+            } else {
+                poster = StringUtils.isBlank(groupNews.getPoster()) ? "" : NewsAPIUri.getPreviewUrl(groupNews.getPoster());
+            }
+
+            service.shareExtendedLinksToConversation(poster, groupNews.getTitle(), groupNews.getSummary(), url, new ShareToConversationListener() {
+                @Override
+                public void shareSuccess(String cid) {
+                    ToastUtils.show(R.string.baselib_share_success);
+                    dismissShareDialog();
+                }
+
+                @Override
+                public void shareFail() {
+                    ToastUtils.show(R.string.baselib_share_fail);
+                    dismissShareDialog();
+                }
+
+                @Override
+                public void shareCancel() {
+
+                }
+            });
+        }
+    }
+
+    private void dismissShareDialog() {
+        if (dialog != null) {
+            dialog.dismiss();
+        }
+    }
 
 //    @Override
 //    protected void onActivityResult(int requestCode, int resultCode, Intent data) {

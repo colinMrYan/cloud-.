@@ -825,7 +825,6 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
         if (tabId.equals(Constant.APP_TAB_BAR_WORK)) {
             EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED));
         }
-
     }
 
     @Override
