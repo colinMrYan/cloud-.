@@ -72,20 +72,22 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/rl_finger_print"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
+            android:visibility="gone"
             android:background="@drawable/text_layout_selector"
             android:paddingLeft="16dp">
 
             <TextView
-                android:id="@+id/tv_setting_safe_start_face"
+                android:id="@+id/tv_setting_safe_start_finger_print"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:paddingBottom="11dp"
                 android:paddingTop="11dp"
-                android:text="@string/face_enter"
+                android:text="@string/safe_center_finger_print"
                 android:textColor="#333333"
                 android:textSize="16sp" />
 
@@ -100,7 +102,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5px"
-                android:layout_below="@id/tv_setting_safe_start_face"
+                android:layout_below="@id/tv_setting_safe_start_finger_print"
                 android:background="@color/color_list_divider" />
         </RelativeLayout>
 
