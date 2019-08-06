@@ -134,16 +134,8 @@ public class MeetingRoomInfoActivity extends BaseActivity {
     }
 
     private List<String> getTabTitleList() {
-        if (meetingRoom.getMaxAhead() > 2) {
-            return createTabDay(7);
-        } else {
-            return createTabDay(2);
-        }
-    }
-
-    private List<String> createTabDay(int count) {
         ArrayList<String> tabTitleList = new ArrayList<>();
-        for (int i = 0; i < count; i++) {
+        for (int i = 0; i < meetingRoom.getMaxAhead(); i++) {
             tabTitleList.add(TimeUtils.getFormatStringFromTargetTime(
                     MeetingRoomInfoActivity.this, currentCalendar, i));
         }
@@ -274,7 +266,7 @@ public class MeetingRoomInfoActivity extends BaseActivity {
             @Override
             public void onPageSelected(int arg0) {
                 // TODO Auto-generated method stub
-                if (tabLayout != null) {
+                if (tabLayout != null && tabLayout.getTabAt(arg0) != null) {
                     tabLayout.getTabAt(arg0).select();
                     currentPagerIndex = arg0;
                 }
