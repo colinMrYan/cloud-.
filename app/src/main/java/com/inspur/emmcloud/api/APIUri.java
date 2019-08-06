@@ -1659,8 +1659,22 @@ public class APIUri {
     /**
      * 通过id获取会议详情
      */
-    public static String getMeetingUrlFromId(String id) {
-        return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/Get/" + id;
+    public static String getMeetingUrlFromId(String id, ScheduleCalendar scheduleCalendar) {
+        //return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/Get/" + id;
+        String url = getScheduleBaseUrl() + ("api/schedule/v6.0/calendar/Get/");
+        if (scheduleCalendar != null) {
+            AccountType accountType = AccountType.getAccountType(scheduleCalendar.getAcType());
+            switch (accountType) {
+                case EXCHANGE:
+                    url = getScheduleBaseUrl() + "api/schedule/v6.0/ews/Get/";
+                    break;
+                default:
+                    break;
+            }
+        }
+        url = url + id;
+        return url;
+
     }
 
     /**
