@@ -76,6 +76,7 @@ public class ShareToConversationBlankActivity extends BaseActivity {
         ArrayList<String> uidList = new ArrayList<>();
         uidList.add(BaseApplication.getInstance().getUid());
         bundle.putString(ContactSearchFragment.EXTRA_TITLE, getString(R.string.baselib_share_to));
+        bundle.putStringArrayList(ContactSearchFragment.EXTRA_EXCLUDE_SELECT, uidList);
         ARouter.getInstance().build(Constant.AROUTER_CLASS_CONTACT_SEARCH).with(bundle).navigation(this, REQUEST_SELECT_CONTACT);
     }
 
@@ -209,7 +210,7 @@ public class ShareToConversationBlankActivity extends BaseActivity {
             Message message = CommunicationUtils.combinLocalExtendedLinksMessage(cid, poster, title, subTitle, url);
             message.setSendStatus(Message.MESSAGE_SEND_ING);
             MessageCacheUtil.saveMessage(ShareToConversationBlankActivity.this, message);
-            WSAPIService.getInstance().sendChatTextPlainMsg(message);
+            WSAPIService.getInstance().sendChatExtendedLinksMsg(message);
             notifyMessageDataChanged();
             callbackSuccess();
         } else if (WebServiceRouterManager.getInstance().isV0VersionChat()) {

@@ -3,21 +3,26 @@ package com.inspur.emmcloud.ui.mine.setting;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
+import android.support.v4.content.FileProvider;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.SwitchCompat;
+import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -43,6 +48,9 @@ import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
+import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
+import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.bean.mine.GetExperienceUpgradeFlagResult;
 import com.inspur.emmcloud.bean.system.AppConfig;
 import com.inspur.emmcloud.bean.system.EventMessage;
@@ -61,6 +69,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import butterknife.BindView;
@@ -334,6 +344,9 @@ public class SettingActivity extends BaseActivity {
         };
     }
 
+    int REQUEST_CODE_CAMERA = 10002;
+    Uri fileUri = null;
+
     public void onClick(View v) {
         // TODO Auto-generated method stub
         switch (v.getId()) {
@@ -352,7 +365,33 @@ public class SettingActivity extends BaseActivity {
                 break;
             case R.id.rl_setting_self_start: //TODO zyj
 //                UriUtils.openUrl(this, "http://www.baidu.com");
-                ARouter.getInstance().build("/meeting/history").navigation();
+//                ARouter.getInstance().build("/meeting/history").navigation();
+                if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+                    PermissionRequestManagerUtils.getInstance().requestRuntimePermission(this, Permissions.CAMERA,
+                            new PermissionRequestCallback() {
+                                @Override
+                                public void onPermissionRequestSuccess(List<String> permissions) {
+                                    Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+                                    try {
+                                        fileUri = FileProvider.getUriForFile(SettingActivity.this,
+                                                getApplicationContext().getPackageName() + ".provider", createMediaFile());//这是正确的写法
+
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                    intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+                                    intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+                                    intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 3);
+                                    startActivityForResult(intent, 1);
+                                }
+
+                                @Override
+                                public void onPermissionRequestFail(List<String> permissions) {
+
+                                }
+                            });
+                }
+
                 break;
             case R.id.rl_setting_account_safe:
                 IntentUtils.startActivity(SettingActivity.this, SafeCenterActivity.class);
@@ -366,6 +405,49 @@ public class SettingActivity extends BaseActivity {
             default:
                 break;
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                Toast.makeText(this, "Video saved to:\n" +
+                        data.getData(), Toast.LENGTH_LONG).show();
+                Log.d("zhang", "onActivityResult: url = " + data.getData());
+                Intent intent = new Intent(this, PlayVideoActivity.class);
+                intent.setData(data.getData());
+                startActivity(intent);
+//                vv_play.setVideoURI(fileUri);
+//                vv_play.requestFocus();
+            }
+        }
+    }
+
+    private File createMediaFile() throws IOException {
+        if (AppUtils.isHasSDCard(this)) {
+            if ((Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))) {
+                // 选择自己的文件夹
+                String path = Environment.getExternalStorageDirectory().getPath() + "/myvideo/";
+                // Constants.video_url 是一个常量，代表存放视频的文件夹
+                File mediaStorageDir = new File(path);
+                if (!mediaStorageDir.exists()) {
+                    if (!mediaStorageDir.mkdirs()) {
+                        Log.e("TAG", "文件夹创建失败");
+                        return null;
+                    }
+                }
+
+                // 文件根据当前的毫秒数给自己命名
+                String timeStamp = String.valueOf(System.currentTimeMillis());
+                timeStamp = timeStamp.substring(7);
+                String imageFileName = "V" + timeStamp;
+                String suffix = ".mp4";
+                File mediaFile = new File(mediaStorageDir + File.separator + imageFileName + suffix);
+                return mediaFile;
+            }
+        }
+        return null;
     }
 
     /**
@@ -488,8 +570,9 @@ public class SettingActivity extends BaseActivity {
                         ((MyApplication) getApplicationContext()).deleteAllDb();
                         String msgCachePath = MyAppConfig.LOCAL_DOWNLOAD_PATH;
                         String imgCachePath = MyAppConfig.LOCAL_CACHE_PATH;
+                        String offlineAppPath = MyAppConfig.LOCAL_OFFLINE_APP_PATH;
                         DataCleanManager.cleanApplicationData(SettingActivity.this,
-                                msgCachePath, imgCachePath);
+                                msgCachePath, imgCachePath, offlineAppPath);
                         MyApplication.getInstance().setIsContactReady(false);
                         //当清除所有缓存的时候清空以db形式存储数据的configVersion
                         ClientConfigUpdateUtils.getInstance().clearDbDataConfigWithClearAllCache();

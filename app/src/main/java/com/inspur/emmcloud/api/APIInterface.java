@@ -731,7 +731,7 @@ public interface APIInterface {
 
     void returnScheduleListSuccess(GetScheduleListResult getScheduleListResult, Calendar startCalendar, Calendar endCalendar, ScheduleCalendar scheduleCalendar);
 
-    void returnScheduleListFail(String error, int errorCode);
+    void returnScheduleListFail(String error, int errorCode, ScheduleCalendar scheduleCalendar);
 
     void returnAddScheduleSuccess(GetIDResult getIDResult);
 

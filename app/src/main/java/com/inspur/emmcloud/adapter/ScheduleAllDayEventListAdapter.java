@@ -66,6 +66,7 @@ public class ScheduleAllDayEventListAdapter extends BaseAdapter {
                         dialog.dismiss();
                         if (onEventClickListener != null) {
                             onEventClickListener.onEventDelete(event);
+                            onEventClickListener.dismissAllDayEventDlg();
                         }
                     }
                 })

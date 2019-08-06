@@ -893,7 +893,7 @@ public class MyAppFragment extends BaseFragment {
                                         int position, long id) {
                     if (!canEdit) {
                         App app = appGroupItemList.get(position);
-                        if (NetUtils.isNetworkConnected(getActivity()) && !isFastDoubleClick()) {
+                        if (!isFastDoubleClick()) {
                             if (app.getSubAppList().size() > 0) {
                                 Intent intent = new Intent();
                                 intent.setClass(getActivity(), AppGroupActivity.class);
