@@ -12,6 +12,7 @@ import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.mail.R;
 import com.inspur.emmcloud.mail.R2;
@@ -36,8 +37,8 @@ public class MailSettingActivity extends BaseActivity {
     @Override
     public void onCreate() {
         ButterKnife.bind(this);
-        String mail = PreferencesByUsersUtils.getString(BaseApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, "");
-        String password = PreferencesByUsersUtils.getString(BaseApplication.getInstance(), Constant.PREF_MAIL_PASSWORD, "");
+        String mail = PreferencesByUserAndTanentUtils.getString(BaseApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, "");
+        String password = PreferencesByUserAndTanentUtils.getString(BaseApplication.getInstance(), Constant.PREF_MAIL_PASSWORD, "");
         mailAccountText.setText(mail);
         mailPasswrodText.setText(password);
         mailPasswrodText.setTransformationMethod(PasswordTransformationMethod.getInstance());
@@ -57,8 +58,8 @@ public class MailSettingActivity extends BaseActivity {
             finish();
 
         } else if (i == R.id.ibt_mail_password_visible) {
-            String mail = PreferencesByUsersUtils.getString(BaseApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, "");
-            String password = PreferencesByUsersUtils.getString(BaseApplication.getInstance(), Constant.PREF_MAIL_PASSWORD, "");
+            String mail = PreferencesByUserAndTanentUtils.getString(BaseApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, "");
+            String password = PreferencesByUserAndTanentUtils.getString(BaseApplication.getInstance(), Constant.PREF_MAIL_PASSWORD, "");
             ToastUtils.show("mail" + mail + "password" + password);
             if (mailPasswrodText.getTransformationMethod() instanceof HideReturnsTransformationMethod) {
                 mailPasswrodText.setTransformationMethod(PasswordTransformationMethod.getInstance());
