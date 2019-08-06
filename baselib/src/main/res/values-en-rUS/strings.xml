@@ -1132,11 +1132,13 @@
     <string name="splash_skip">Enter immediately</string>
 
     <!--安全中心-->
-    <string name="setting_safe_gesture_face">Face ID and Gesture Password</string>
+    <string name="setting_safe_gesture_face">Fingerprint and Gesture Password</string>
+    <string name="setting_safe_face_id_unlock">Face ID</string>
     <string name="setting_safe_gesture_face_setting">Face ID and Gesture Password Settings</string>
     <string name="setting_safe_center">Account,Device Security</string>
     <string name="safe_center_gesture">Gesture Password</string>
     <string name="safe_center_finger_print">Fingerprint</string>
+    <string name="safe_center_use_finger_print_unlock">Fingerprint unlocking</string>
     <string name="switch_gesture_unlock">Pattern Unlock</string>
     <string name="switch_gesture_reset_unlock">Reset gesture unlock</string>
     <string name="put_face_in_frame">Put your face into the frame</string>
