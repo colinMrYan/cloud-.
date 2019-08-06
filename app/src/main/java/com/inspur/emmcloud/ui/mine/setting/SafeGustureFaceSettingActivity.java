@@ -30,6 +30,8 @@ public class SafeGustureFaceSettingActivity extends BaseActivity {
     RelativeLayout resetGuestureLayout;
     @BindView(R.id.rl_setting_safe_reset_face)
     RelativeLayout resetFaceLayout;
+    @BindView(R.id.rl_finger_print)
+    RelativeLayout fingerPrintLayout;
 
     @Override
     public void onCreate() {
@@ -62,14 +64,17 @@ public class SafeGustureFaceSettingActivity extends BaseActivity {
                         ToastUtils.show(SafeGustureFaceSettingActivity.this, R.string.setting_gesture_force_open);
                     }
                 }
+
             }
         });
 
         faceSwitchView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                PreferencesByUserAndTanentUtils.putBoolean(SafeGustureFaceSettingActivity.this, Constant.SAFE_CENTER_FINGER_PRINT, b);
                 if (FaceVerifyActivity.getFaceVerifyIsOpenByUser(getApplication()) != b) {
-                    intentFaceVerifyActivity(b);
+//                    intentFaceVerifyActivity(b);
+                    faceSwitchView.setChecked(b);
                 }
             }
         });
@@ -79,6 +84,7 @@ public class SafeGustureFaceSettingActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         boolean isGestureOpen = isGestureOpen();
+        fingerPrintLayout.setVisibility(isGestureOpen ? View.VISIBLE : View.GONE);
         if (guestureSwitchView.isChecked() != isGestureOpen) {
             guestureSwitchView.setChecked(isGestureOpen);
         }
