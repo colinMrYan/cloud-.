@@ -754,7 +754,7 @@ public interface APIInterface {
     void returnDelMeetingFail(String error, int errorCode);
 
     //会议-通过id获取
-    void returnMeetingDataFromIdSuccess(Meeting meeting);
+    void returnMeetingDataFromIdSuccess(Schedule meeting);
 
     void returnMeetingDataFromIdFail(String error, int errorCode);
 
