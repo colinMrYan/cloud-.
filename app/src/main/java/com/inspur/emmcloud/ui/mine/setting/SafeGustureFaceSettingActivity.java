@@ -25,11 +25,9 @@ public class SafeGustureFaceSettingActivity extends BaseActivity {
     @BindView(R.id.switch_view_setting_safe_start_guesture)
     SwitchCompat guestureSwitchView;
     @BindView(R.id.switch_view_setting_safe_start_face)
-    SwitchCompat faceSwitchView;
+    SwitchCompat fingerPrintSwitchView;
     @BindView(R.id.rl_setting_safe_reset_guesture)
     RelativeLayout resetGuestureLayout;
-    @BindView(R.id.rl_setting_safe_reset_face)
-    RelativeLayout resetFaceLayout;
     @BindView(R.id.rl_finger_print)
     RelativeLayout fingerPrintLayout;
 
@@ -68,13 +66,13 @@ public class SafeGustureFaceSettingActivity extends BaseActivity {
             }
         });
 
-        faceSwitchView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        fingerPrintSwitchView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 PreferencesByUserAndTanentUtils.putBoolean(SafeGustureFaceSettingActivity.this, Constant.SAFE_CENTER_FINGER_PRINT, b);
                 if (FaceVerifyActivity.getFaceVerifyIsOpenByUser(getApplication()) != b) {
 //                    intentFaceVerifyActivity(b);
-                    faceSwitchView.setChecked(b);
+                    fingerPrintSwitchView.setChecked(b);
                 }
             }
         });
@@ -89,9 +87,7 @@ public class SafeGustureFaceSettingActivity extends BaseActivity {
             guestureSwitchView.setChecked(isGestureOpen);
         }
         resetGuestureLayout.setVisibility(isGestureOpen() ? View.VISIBLE : View.GONE);
-
-        faceSwitchView.setChecked(FaceVerifyActivity.getFaceVerifyIsOpenByUser(this));
-        resetFaceLayout.setVisibility(FaceVerifyActivity.getFaceVerifyIsOpenByUser(this) ? View.VISIBLE : View.GONE);
+        fingerPrintSwitchView.setChecked(PreferencesByUserAndTanentUtils.getBoolean(SafeGustureFaceSettingActivity.this, Constant.SAFE_CENTER_FINGER_PRINT, false));
     }
 
     public boolean isGestureOpen() {
