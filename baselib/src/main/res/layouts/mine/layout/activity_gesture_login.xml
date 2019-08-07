@@ -68,6 +68,7 @@
             android:drawableLeft="@drawable/ic_finger_print_btn"
             android:drawablePadding="5dp"
             android:focusable="false"
+            android:onClick="onClick"
             android:padding="20dp"
             android:text="@string/safe_center_use_finger_print_unlock"
             android:textColor="#36A5F6"
