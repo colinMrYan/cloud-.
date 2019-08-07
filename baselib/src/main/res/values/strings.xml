@@ -1180,6 +1180,7 @@
     <string name="setting_safe_center">账号、设备安全</string>
     <string name="safe_center_gesture">手势密码</string>
     <string name="safe_center_finger_print">指纹</string>
+    <string name="safe_cloud_touch_id">%1$s </string>
     <string name="safe_center_use_finger_print_unlock">指纹解锁</string>
     <string name="switch_gesture_unlock">手势解锁</string>
     <string name="switch_gesture_reset_unlock">重置手势解锁</string>
