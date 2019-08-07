@@ -6,7 +6,7 @@
     <!--android:angle="90"-->
     <!--android:endColor="#268E8E8E"-->
     <!--android:startColor="#268E8E8E" />-->
-    <solid android:color="#8E8E8E" />
+    <solid android:color="#268E8E8E" />
     <!--
     <stroke
         android:dashGap="2dp"
