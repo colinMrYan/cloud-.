@@ -54,6 +54,7 @@ public class GestureLoginActivity extends BaseActivity {
     private String gesturePassword;
     private boolean isLogin = false;
     private int errorTime = 0;
+    private FingerprintIdentify cloudFingerprintIdentify;
     private LockPatternView.OnPatternListener patternListener = new LockPatternView.OnPatternListener() {
 
         @Override
@@ -141,14 +142,30 @@ public class GestureLoginActivity extends BaseActivity {
                 userHeadImgUri, R.drawable.icon_person_default);
         LogUtils.YfcDebug("是否开启指纹开关：" + PreferencesByUserAndTanentUtils.getBoolean(this, Constant.SAFE_CENTER_FINGER_PRINT, false));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && PreferencesByUserAndTanentUtils.getBoolean(this, Constant.SAFE_CENTER_FINGER_PRINT, false)) {
+            cloudFingerprintIdentify = new FingerprintIdentify(this);
             LogUtils.YfcDebug("启用指纹识别");
-            showFingerPrintDialog();
             initFingerPrint();
         }
     }
 
     private void showFingerPrintDialog() {
-        MyDialog myDialog = new MyDialog(GestureLoginActivity.this, R.layout.safe_finger_print_dialog);
+//        if(cloudFingerprintIdentify != null && cloudFingerprintIdentify.isRegisteredFingerprint()){
+//            LogUtils.YfcDebug("恢复指纹识别功能");
+//            cloudFingerprintIdentify.resumeIdentify();
+//        }
+        final MyDialog myDialog = new MyDialog(GestureLoginActivity.this, R.layout.safe_finger_print_dialog);
+        myDialog.setCancelable(false);
+        TextView cancelBtn = myDialog.findViewById(R.id.tv_finger_print_cancel);
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myDialog.dismiss();
+                if (cloudFingerprintIdentify != null) {
+                    LogUtils.YfcDebug("关闭指纹识别功能");
+                    cloudFingerprintIdentify.cancelIdentify();
+                }
+            }
+        });
         myDialog.show();
     }
 
@@ -156,7 +173,7 @@ public class GestureLoginActivity extends BaseActivity {
      * 初始化指纹识别
      */
     private void initFingerPrint() {
-        FingerprintIdentify cloudFingerprintIdentify = new FingerprintIdentify(this);
+
         if (!isFingerPrintAvaiable(cloudFingerprintIdentify)) {
             LogUtils.YfcDebug("设备指纹不可用");
             return;
@@ -185,7 +202,6 @@ public class GestureLoginActivity extends BaseActivity {
                 // 错误次数达到上限或者API报错停止了验证，自动结束指纹识别
                 // isDeviceLocked 表示指纹硬件是否被暂时锁定
                 // 通常情况错误五次后会锁定三十秒，不同硬件也不一定完全如此，有资料介绍有的硬件也会锁定长达两分钟
-                ToastUtils.show(GestureLoginActivity.this, "您的识别次数用尽，请尝试手势解锁，或者一段时间后重试");
                 LogUtils.YfcDebug("isDeviceLocked:" + isDeviceLocked);
             }
 
@@ -196,6 +212,7 @@ public class GestureLoginActivity extends BaseActivity {
             }
 
         });
+        showFingerPrintDialog();
     }
 
     /**
@@ -282,7 +299,7 @@ public class GestureLoginActivity extends BaseActivity {
                 ((MyApplication) getApplication()).signout();
                 break;
             case R.id.btn_use_finger_print:
-                showFingerPrintDialog();
+                initFingerPrint();
                 break;
         }
     }
