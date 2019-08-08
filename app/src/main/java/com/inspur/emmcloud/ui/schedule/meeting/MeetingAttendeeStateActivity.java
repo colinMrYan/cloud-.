@@ -74,7 +74,10 @@ public class MeetingAttendeeStateActivity extends BaseActivity implements SwipeR
 
     private void getMeetingData() {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-            apiService.getMeetingDataFromId(schedule.getId(), ScheduleCalendarCacheUtils.getScheduleCalendar(this, schedule.getScheduleCalendar()));
+            if (!(schedule.getType().equals(Schedule.CALENDAR_TYPE_EXCHANGE) &&
+                    !ScheduleCalendarCacheUtils.getScheduleCalendar(this, schedule.getScheduleCalendar()).getAcType().equals(Schedule.CALENDAR_TYPE_EXCHANGE))) {
+                apiService.getMeetingDataFromId(schedule.getId(), ScheduleCalendarCacheUtils.getScheduleCalendar(this, schedule.getScheduleCalendar()));
+            }
         }
     }
 
