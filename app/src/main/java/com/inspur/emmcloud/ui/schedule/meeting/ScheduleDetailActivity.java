@@ -63,11 +63,11 @@ import butterknife.ButterKnife;
 public class ScheduleDetailActivity extends BaseActivity {
 
     public static final String EXTRA_SCHEDULE_ENTITY = "extra_schedule_entity";
+    public static final String IS_FROM_MEETING_ROOM = "is_from_meeting_room";  // 是否来自会议室界面
     private static final int SCHEDULE_ATTENDEE = 0;  //参与人
     private static final int SCHEDULE_RECORD_HOLDER = 1;  //记录人
     private static final int SCHEDULE_CONTACT = 2;        //联系人
     private static final int SCHEDULE_INVITE = 3;          //邀请人
-    public static final String IS_FROM_MEETING_ROOM = "is_from_meeting_room";  // 是否来自会议室界面
     /**
      * 日程相关
      **/
@@ -579,7 +579,6 @@ public class ScheduleDetailActivity extends BaseActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                         delSchedule();
-                        finish();
                     }
                 })
                 .show();
