@@ -139,6 +139,25 @@ public class ImpFragment extends ImpBaseFragment {
         return rootView;
     }
 
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        webView.onActivityStart();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        webView.onActivityResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        webView.onActivityPause();
+    }
+
     /**
      * 初始化Views
      */
@@ -496,6 +515,7 @@ public class ImpFragment extends ImpBaseFragment {
                 service.setMDMStatusNoPass();
             }
         }
+        webView.onActivityDestroy();
         getActivity().finish();// 退出程序
     }
 

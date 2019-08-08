@@ -21,6 +21,7 @@ import com.inspur.emmcloud.web.plugin.gps.GpsService;
 import com.inspur.emmcloud.web.plugin.loadingdialog.LoadingDialogService;
 import com.inspur.emmcloud.web.plugin.map.MapService;
 import com.inspur.emmcloud.web.plugin.network.NetworkService;
+import com.inspur.emmcloud.web.plugin.nfc.NFCService;
 import com.inspur.emmcloud.web.plugin.photo.PhotoService;
 import com.inspur.emmcloud.web.plugin.sms.SmsService;
 import com.inspur.emmcloud.web.plugin.staff.SelectStaffService;
@@ -115,7 +116,7 @@ public class PluginMgr {
             }
             // 执行接口的execute方法
             if (plugin != null) {
-                plugin.execute(action, jo);
+                plugin.execute("getNFCInfo", jo);
             } else {
                 if (impCallBackInterface != null) {
                     impCallBackInterface.onShowImpDialog();
@@ -246,6 +247,7 @@ public class PluginMgr {
             }
             LogUtils.jasonDebug("serviceName==" + serviceName);
         }
+        serviceName = NFCService.class.getCanonicalName();
         return serviceName;
     }
 
@@ -346,4 +348,16 @@ public class PluginMgr {
             }
         }
     }
+
+    /**
+     * activity onResume事件
+     */
+    public void onStar() {
+        for (IPlugin plugin : entries.values()) {
+            if (plugin != null) {
+                plugin.onActivityStart();
+            }
+        }
+    }
+
 }

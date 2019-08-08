@@ -140,6 +140,11 @@ public abstract class ImpPlugin implements IPlugin {
 
     }
 
+    @Override
+    public void onActivityStart() {
+
+    }
+
     public ImpCallBackInterface getImpCallBackInterface() {
         return impCallBackInterface;
     }

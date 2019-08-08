@@ -138,6 +138,30 @@ public class ImpWebView extends WebView {
         pluginMgr.setImpCallBackInterface(impCallBackInterface);
     }
 
+    public void onActivityStart() {
+        if (pluginMgr != null) {
+            pluginMgr.onStar();
+        }
+    }
+
+    public void onActivityDestroy() {
+        if (pluginMgr != null) {
+            pluginMgr.onDestroy();
+        }
+    }
+
+    public void onActivityResume() {
+        if (pluginMgr != null) {
+            pluginMgr.onResume();
+        }
+    }
+
+    public void onActivityPause() {
+        if (pluginMgr != null) {
+            pluginMgr.onPause();
+        }
+    }
+
     public ImpCallBackInterface getImpCallBackInterface() {
         return impCallBackInterface;
     }
