@@ -335,7 +335,7 @@
             </intent-filter>
 
             <!--ics文件识别 excel-->
-            <!--<intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
 
@@ -344,7 +344,7 @@
                 <data android:mimeType="application/vnd.ms-excel" />
                 <data android:mimeType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
                 <data android:mimeType="text/calendar" />
-            </intent-filter>-->
+            </intent-filter>
 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

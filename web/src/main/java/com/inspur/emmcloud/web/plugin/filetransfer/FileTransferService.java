@@ -308,7 +308,7 @@ public class FileTransferService extends ImpPlugin {
                     jsonObject.put("url", key);
                     jsonObject.put("filePath", "/IMP-Cloud/download/");
                     execute("download", jsonObject);
-                } catch (JSONException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                     handler.sendEmptyMessage(1);
                 }
@@ -322,18 +322,33 @@ public class FileTransferService extends ImpPlugin {
     // 下载
     private void download(JSONObject jsonObject) {
         try {
-            if (!jsonObject.isNull("url"))
+            if (!jsonObject.isNull("url")) {
                 loadUrl = jsonObject.getString("url");
-            if (!jsonObject.isNull("filePath"))
+            }
+            if (!jsonObject.isNull("filePath")) {
                 filepath = jsonObject.getString("filePath");
-            if (!jsonObject.isNull("fileName"))
+            }
+            if (!jsonObject.isNull("fileName") || jsonObject.isNull("saveName")) {
                 fileName = jsonObject.getString("fileName");
-            if (!jsonObject.isNull("flag"))
+                if (StringUtils.isBlank(fileName)) {
+                    fileName = jsonObject.getString("saveName");
+                }
+            }
+            if (!jsonObject.isNull("flag")) {
                 flag = jsonObject.getBoolean("flag");
-            if (!jsonObject.isNull("successCallback"))
+            }
+            if (!jsonObject.isNull("successCallback") || !jsonObject.isNull("success")) {
                 downloadSucCB = jsonObject.getString("successCallback");
-            if (!jsonObject.isNull("errorCallback"))
+                if (StringUtils.isBlank(downloadSucCB)) {
+                    downloadSucCB = jsonObject.getString("success");
+                }
+            }
+            if (!jsonObject.isNull("errorCallback") || !jsonObject.isNull("fail")) {
                 downloadFailCB = jsonObject.getString("errorCallback");
+                if (StringUtils.isBlank(downloadFailCB)) {
+                    downloadFailCB = jsonObject.getString("fail");
+                }
+            }
             filepath = "/IMP-Cloud/download/";
         } catch (JSONException e) {
             e.printStackTrace();
