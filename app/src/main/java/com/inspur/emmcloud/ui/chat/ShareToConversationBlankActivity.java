@@ -210,7 +210,7 @@ public class ShareToConversationBlankActivity extends BaseActivity {
             Message message = CommunicationUtils.combinLocalExtendedLinksMessage(cid, poster, title, subTitle, url);
             message.setSendStatus(Message.MESSAGE_SEND_ING);
             MessageCacheUtil.saveMessage(ShareToConversationBlankActivity.this, message);
-            WSAPIService.getInstance().sendChatTextPlainMsg(message);
+            WSAPIService.getInstance().sendChatExtendedLinksMsg(message);
             notifyMessageDataChanged();
             callbackSuccess();
         } else if (WebServiceRouterManager.getInstance().isV0VersionChat()) {

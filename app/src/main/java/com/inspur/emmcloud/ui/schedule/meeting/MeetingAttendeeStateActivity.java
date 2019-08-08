@@ -31,10 +31,10 @@ import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.bean.schedule.MeetingAttendees;
 import com.inspur.emmcloud.bean.schedule.Participant;
 import com.inspur.emmcloud.bean.schedule.Schedule;
-import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ScheduleCalendarCacheUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +53,7 @@ public class MeetingAttendeeStateActivity extends BaseActivity implements SwipeR
     @BindView(R.id.swipe_refresh_layout)
     MySwipeRefreshLayout swipeRefreshLayout;
     MeetingAttendeeStateAdapter meetingAttendeeStateAdapter;
-    Schedule meeting;
+    Schedule schedule;
     private List<MeetingAttendees> meetingAttendeesList = new ArrayList<>();
     private List<Participant> recordParticipants = new ArrayList<>();
     private List<Participant> contactParticipants = new ArrayList<>();
@@ -62,7 +62,7 @@ public class MeetingAttendeeStateActivity extends BaseActivity implements SwipeR
     @Override
     public void onCreate() {
         ButterKnife.bind(this);
-        meeting = (Schedule) getIntent().getSerializableExtra(ScheduleDetailActivity.EXTRA_SCHEDULE_ENTITY); //来自列表
+        schedule = (Schedule) getIntent().getSerializableExtra(ScheduleDetailActivity.EXTRA_SCHEDULE_ENTITY); //来自列表
         init();
     }
 
@@ -74,7 +74,10 @@ public class MeetingAttendeeStateActivity extends BaseActivity implements SwipeR
 
     private void getMeetingData() {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-            apiService.getMeetingDataFromId(meeting.getId());
+            if (!(schedule.getType().equals(Schedule.CALENDAR_TYPE_EXCHANGE) &&
+                    !ScheduleCalendarCacheUtils.getScheduleCalendar(this, schedule.getScheduleCalendar()).getAcType().equals(Schedule.CALENDAR_TYPE_EXCHANGE))) {
+                apiService.getMeetingDataFromId(schedule.getId(), ScheduleCalendarCacheUtils.getScheduleCalendar(this, schedule.getScheduleCalendar()));
+            }
         }
     }
 
@@ -86,8 +89,8 @@ public class MeetingAttendeeStateActivity extends BaseActivity implements SwipeR
         expandableListView.setOnChildClickListener(this);
         meetingAttendeeStateAdapter = new MeetingAttendeeStateAdapter(this);
         expandableListView.setAdapter(meetingAttendeeStateAdapter);
-        recordParticipants = meeting.getRecorderParticipantList();
-        contactParticipants = meeting.getRoleParticipantList();
+        recordParticipants = schedule.getRecorderParticipantList();
+        contactParticipants = schedule.getRoleParticipantList();
         divideAttendeeGroup();
         apiService = new ScheduleApiService(this);
         apiService.setAPIInterface(new WebService());
@@ -113,8 +116,8 @@ public class MeetingAttendeeStateActivity extends BaseActivity implements SwipeR
 
         //考虑Owner ID无法查询的情况
         Participant participant = new Participant();
-        if (!StringUtils.isBlank(meeting.getOwner())) {
-            ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(meeting.getOwner());
+        if (!StringUtils.isBlank(schedule.getOwner())) {
+            ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(schedule.getOwner());
             if (contactUser != null) {
                 participant.setId(contactUser.getId());
                 participant.setName(contactUser.getName());
@@ -122,14 +125,14 @@ public class MeetingAttendeeStateActivity extends BaseActivity implements SwipeR
                 participant.setRole(Participant.TYPE_INVITE);
             } else {
                 participant.setId("");
-                participant.setName(meeting.getOwner());
-                participant.setEmail(meeting.getOwner());
+                participant.setName(schedule.getOwner());
+                participant.setEmail(schedule.getOwner());
                 participant.setRole(Participant.TYPE_INVITE);
             }
             meetingInvite.getMeetingAttendeesList().add(participant);
         }
         //其他人员放在无响应里去重+转化
-        List<Participant> participantList = meeting.getAllParticipantList();
+        List<Participant> participantList = schedule.getAllParticipantList();
         for (int i = 0; i < participantList.size(); i++) {
             Participant currentParticipant = participantList.get(i);
             for (int j = i + 1; j < participantList.size(); j++) {
@@ -141,7 +144,7 @@ public class MeetingAttendeeStateActivity extends BaseActivity implements SwipeR
         }
         //清除Owner, 并组装
         for (int m = 0; m < participantList.size(); m++) {
-            if (participantList.get(m).getId().equals(meeting.getOwner())) {
+            if (participantList.get(m).getId().equals(schedule.getOwner())) {
                 participantList.remove(m);
                 m = m - 1;
             } else {
@@ -293,9 +296,11 @@ public class MeetingAttendeeStateActivity extends BaseActivity implements SwipeR
     //更新个人信息状态
     class WebService extends APIInterfaceInstance {
         @Override
-        public void returnMeetingDataFromIdSuccess(Meeting newMeeting) {
+        public void returnMeetingDataFromIdSuccess(Schedule newMeeting) {
             swipeRefreshLayout.setRefreshing(false);
-            meeting = newMeeting;
+            String scheduleCalendarStr = schedule.getScheduleCalendar();
+            schedule = newMeeting;
+            schedule.setScheduleCalendar(scheduleCalendarStr);
             divideAttendeeGroup();
         }
 

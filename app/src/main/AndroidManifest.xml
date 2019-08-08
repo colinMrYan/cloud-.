@@ -208,7 +208,6 @@
             android:name=".ui.SchemeHandleActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:label="发送到云+"
             android:theme="@style/AppTheme_Transparent">
 
             <intent-filter>
@@ -336,17 +335,16 @@
             </intent-filter>
 
             <!--ics文件识别 excel-->
-            <intent-filter>
+            <!--<intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
 
                 <data android:scheme="content" />
                 <data android:scheme="file" />
-                <data android:mimeType="application/*" />
-                <!--<data android:mimeType="application/vnd.ms-excel" />
+                <data android:mimeType="application/vnd.ms-excel" />
                 <data android:mimeType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
-                <data android:mimeType="text/calendar" />-->
-            </intent-filter>
+                <data android:mimeType="text/calendar" />
+            </intent-filter>-->
 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

@@ -129,6 +129,7 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
     private List<SearchModel> attendeeSearchModelList = new ArrayList<>();  //参会人
     private List<SearchModel> recorderSearchModelList = new ArrayList<>();  //记录人
     private List<SearchModel> liaisonSearchModelList = new ArrayList<>();   //联系人
+    private List<SearchModel> originalSearchModelList = new ArrayList<>();   //组织者
     private MeetingRoom meetingRoom;    //会议室
     private Location location;          // 地点
     private RemindEvent remindEvent = new RemindEvent();    // 提醒
@@ -247,19 +248,21 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
             String uid = JSONUtils.getString(jsonObject, "id", "");
             SearchModel searchModel = getSearchModel(uid);
             String role = JSONUtils.getString(jsonObject, "role", "");
-            if (Participant.TYPE_COMMON.equals(role)) {
+            if (Participant.TYPE_COMMON.equals(role) || Participant.TYPE_ORGANIZER.equals(role)) {
                 attendeeSearchModelList.add(searchModel);
             } else if (Participant.TYPE_CONTACT.equals(role)) {
                 liaisonSearchModelList.add(searchModel);
             } else if (Participant.TYPE_RECORDER.equals(role)) {
                 recorderSearchModelList.add(searchModel);
+            } else if (Participant.TYPE_ORGANIZER.equals(role)) {
+                originalSearchModelList.add(searchModel);
             }
         }
         remindEvent = schedule.getRemindEventObj();
         startTimeCalendar = schedule.getStartTimeCalendar();
         endTimeCalendar = schedule.getEndTimeCalendar();
         if (schedule.getAllDay()) {
-            endTimeCalendar = TimeUtils.getDayEndCalendar(endTimeCalendar);
+            endTimeCalendar.add(Calendar.MILLISECOND, -1);
         }
         String alertTimeName = ScheduleAlertTimeActivity.getAlertTimeNameByTime(JSONUtils.getInt(schedule.getRemindEvent(), "advanceTimeSpan", -1), schedule.getAllDay());
         remindEvent = new RemindEvent(JSONUtils.getString(schedule.getRemindEvent(), "remindType", "in_app"),
@@ -730,6 +733,11 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
         try {
             for (SearchModel searchModel : attendeeSearchModelList) {
                 JSONObject obj = new JSONObject();
+//                for(SearchModel searchSubModel:originalSearchModelList){
+//                    if(searchModel.getId().equals(searchSubModel.getId())){
+//
+//                    }
+//                }
                 obj.put("id", searchModel.getId());
                 obj.put("name", searchModel.getName());
                 obj.put("role", Participant.TYPE_COMMON);
