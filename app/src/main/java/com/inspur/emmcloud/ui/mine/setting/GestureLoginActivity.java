@@ -184,6 +184,7 @@ public class GestureLoginActivity extends BaseActivity {
                 // 验证成功，自动结束指纹识别
                 afterUnLockSuccess();
                 LogUtils.YfcDebug("指纹识别成功");
+
             }
 
             @Override
