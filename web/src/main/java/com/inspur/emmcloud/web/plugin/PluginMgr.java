@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.web.plugin;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -356,6 +357,14 @@ public class PluginMgr {
         for (IPlugin plugin : entries.values()) {
             if (plugin != null) {
                 plugin.onActivityStart();
+            }
+        }
+    }
+
+    public void onNewIntent(Intent intent) {
+        for (IPlugin plugin : entries.values()) {
+            if (plugin != null) {
+                plugin.onActivityNewIntent(intent);
             }
         }
     }

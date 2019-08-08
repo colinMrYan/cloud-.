@@ -158,6 +158,9 @@ public class ImpFragment extends ImpBaseFragment {
         webView.onActivityPause();
     }
 
+    protected void onNewIntent(Intent intent) {
+        webView.onActivityNewIntent(intent);
+    }
     /**
      * 初始化Views
      */

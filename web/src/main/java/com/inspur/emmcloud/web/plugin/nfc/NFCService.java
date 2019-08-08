@@ -22,9 +22,12 @@ import org.json.JSONObject;
  */
 
 public class NFCService extends ImpPlugin {
+    public static IntentFilter[] mIntentFilter = null;
+    public static String[][] mTechList = null;
     public String successCb, failCb; // 回调方法
     private boolean isListenActivityStart = false;
-
+    private PendingIntent mPendingIntent;
+    private NfcAdapter NFCAdapter;
 
     @Override
     public void execute(String action, JSONObject paramsObject) {
@@ -48,6 +51,22 @@ public class NFCService extends ImpPlugin {
             checkNFCStatus();
         }
     }
+
+    @Override
+    public void onActivityNewIntent(Intent intent) {
+        super.onActivityNewIntent(intent);
+        if (isListenActivityStart) {
+            if (NFCAdapter != null) { //有nfc功能
+                if (NFCAdapter.isEnabled()) {//nfc功能打开了
+                    //   resolveIntent(intent);
+                } else {
+                    showToSetNFCDlg();
+                }
+            }
+        }
+    }
+
+
 
     private void callbackSuccess() {
         if (!StringUtils.isBlank(successCb)) {
@@ -83,7 +102,7 @@ public class NFCService extends ImpPlugin {
     private void initNFC() {
         Intent intent = new Intent(getActivity(), getActivity().getClass());
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        PendingIntent mPendingIntent = PendingIntent.getActivity(getActivity(), 0, intent, 0);
+        mPendingIntent = PendingIntent.getActivity(getActivity(), 0, intent, 0);
         //做一个IntentFilter过滤你想要的action 这里过滤的是ndef
         IntentFilter filter = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
         try {
@@ -95,6 +114,7 @@ public class NFCService extends ImpPlugin {
                 {NfcA.class.getName()}};
         //生成intentFilter
         mIntentFilter = new IntentFilter[]{filter};
+        NFCAdapter.enableForegroundDispatch(getActivity(), mPendingIntent, mIntentFilter, mTechList);
     }
 
     private void showToSetNFCDlg() {

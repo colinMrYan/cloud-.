@@ -78,4 +78,6 @@ public interface IPlugin {
     void onActivityStart();
 
     void onActivityResult(int requestCode, int resultCode, Intent data);
+
+    void onActivityNewIntent(Intent intent);
 }

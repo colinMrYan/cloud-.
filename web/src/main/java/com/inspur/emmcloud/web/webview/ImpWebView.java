@@ -3,6 +3,7 @@ package com.inspur.emmcloud.web.webview;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Handler;
@@ -159,6 +160,12 @@ public class ImpWebView extends WebView {
     public void onActivityPause() {
         if (pluginMgr != null) {
             pluginMgr.onPause();
+        }
+    }
+
+    public void onActivityNewIntent(Intent intent) {
+        if (pluginMgr != null) {
+            pluginMgr.onNewIntent(intent);
         }
     }
 
