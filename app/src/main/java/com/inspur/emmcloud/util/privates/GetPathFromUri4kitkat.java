@@ -325,6 +325,10 @@ public class GetPathFromUri4kitkat {
             if (inputStream != null) {
                 int read;
                 byte[] buffer = new byte[8 * 1024];
+                File dir = new File(MyAppConfig.LOCAL_SHARE_FILE_PATH);
+                if (!dir.exists()) {
+                    dir.mkdirs();
+                }
                 //自己定义拷贝文件路径
                 targetFile = new File(MyAppConfig.LOCAL_SHARE_FILE_PATH, fileName);
                 if (targetFile.exists()) {
