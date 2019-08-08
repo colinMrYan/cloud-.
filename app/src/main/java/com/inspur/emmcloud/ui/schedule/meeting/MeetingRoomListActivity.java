@@ -25,6 +25,7 @@ import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.bean.schedule.calendar.AccountType;
 import com.inspur.emmcloud.bean.schedule.calendar.ScheduleCalendar;
+import com.inspur.emmcloud.bean.schedule.meeting.Building;
 import com.inspur.emmcloud.bean.schedule.meeting.GetMeetingRoomListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.MeetingRoom;
 import com.inspur.emmcloud.bean.schedule.meeting.MeetingRoomArea;
@@ -109,6 +110,11 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
     @Override
     public boolean onChildClick(ExpandableListView expandableListView, View view, int groupPosition, int childPosition, long id) {
         selectMeetingRoom = meetingRoomAreaList.get(groupPosition).getMeetingRoomList().get(childPosition);
+        //selectMeetingRoom.setBuilding(mee);
+        Building building = new Building();
+        building.setName(meetingRoomAreaList.get(groupPosition).getName());
+        building.setId(meetingRoomAreaList.get(groupPosition).getId());
+        selectMeetingRoom.setBuilding(building);
         Intent intent = new Intent(MeetingRoomListActivity.this, MeetingRoomInfoActivity.class);
         intent.putExtra(MeetingRoomInfoActivity.EXTRA_MEETING_ROOM, selectMeetingRoom);
         startActivityForResult(intent, REQUEST_ENTER_MEETING_ROOM_INFO);
