@@ -57,7 +57,7 @@ public class NetworkService extends ImpPlugin {
     public String executeAndReturn(String action, JSONObject paramsObject) {
         String res = "";
         // 打开系统发送短信的界面，根据传入参数自动填写好相关信息
-        if ("getConnInfo".equals(action)) {
+        if ("getNetWorkType".equals(action)) {
             //检查网络连接
             res = getConnInfo(paramsObject);
             return res;
@@ -68,24 +68,6 @@ public class NetworkService extends ImpPlugin {
         } else if ("getMobileRxBytes".equals(action)) {
             data = getMobileRxBytes();
         }
-//		else if ("getAppRecive".equals(action)){
-//			try {
-//				data = getAppRecive(paramsObject);
-//			} catch (NameNotFoundException e) {
-//				e.printStackTrace();
-//			} catch (JSONException e) {
-//				e.printStackTrace();
-//			}
-//		}
-//		else if("getAppSend".equals(action)){
-//			try {
-//				data = (paramsObject);
-//			} catch (NameNotFoundException e) {
-//				e.printStackTrace();
-//			} catch (JSONException e) {
-//				e.printStackTrace();
-//			}
-//		}
         else {
             showCallIMPMethodErrorDlg();
         }
@@ -163,40 +145,6 @@ public class NetworkService extends ImpPlugin {
         }
         return netWorkType;
     }
-
-
-//    private String getType(NetworkInfo info) {
-//        if (info != null) {
-//            String type = info.getTypeName();
-//
-//            if (type.toLowerCase().equals(WIFI)) {
-//                return TYPE_WIFI;
-//            } else if (type.toLowerCase().equals(MOBILE)) {
-//                type = info.getSubtypeName();
-//                if (type.toLowerCase().equals(GSM) ||
-//                        type.toLowerCase().equals(GPRS) ||
-//                        type.toLowerCase().equals(EDGE)) {
-//                    return TYPE_2G;
-//                } else if (type.toLowerCase().startsWith(CDMA) ||
-//                        type.toLowerCase().equals(UMTS) ||
-//                        type.toLowerCase().equals(ONEXRTT) ||
-//                        type.toLowerCase().equals(EHRPD) ||
-//                        type.toLowerCase().equals(HSUPA) ||
-//                        type.toLowerCase().equals(HSDPA) ||
-//                        type.toLowerCase().equals(HSPA)) {
-//                    return TYPE_3G;
-//                } else if (type.toLowerCase().equals(LTE) ||
-//                        type.toLowerCase().equals(UMB) ||
-//                        type.toLowerCase().equals(HSPA_PLUS)) {
-//                    return TYPE_4G;
-//                }
-//            }
-//        } else {
-//            return TYPE_NONE;
-//        }
-//        return TYPE_UNKNOWN;
-//    }
-
 
 
     /**
