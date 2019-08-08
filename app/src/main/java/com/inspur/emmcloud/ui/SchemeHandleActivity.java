@@ -18,7 +18,6 @@ import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
-import com.inspur.emmcloud.basemodule.util.IcsFileUtil;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.schedule.calendar.CalendarEvent;
@@ -229,17 +228,14 @@ public class SchemeHandleActivity extends BaseActivity {
                                 openNativeSchemeByHost(host, uri, getIntent());
                                 break;
                             case "content":
-                                if (getIntent().getType() != null) {
-                                    switch (getIntent().getType()) {
-                                        case "text/calendar":
-                                            IcsFileUtil.parseIcsFile(SchemeHandleActivity.this, uri);
-                                            break;
-                                        case "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
-                                        case "application/vnd.ms-excel":
-                                            ToastUtils.show(getIntent().getDataString());
-                                            break;
-                                    }
+                                List<String> urlList = new ArrayList<>();
+                                String filePath = GetPathFromUri4kitkat.getPathByUri(MyApplication.getInstance(), uri);
+                                if (StringUtils.isBlank(filePath) || !FileUtils.isFileExist(filePath)) {
+                                    ToastUtils.show(SchemeHandleActivity.this, getString(R.string.share_not_support));
+                                    finish();
                                 }
+                                urlList.add(filePath);
+                                startVolumeShareActivity(urlList);
                                 break;
                             case "ecc-cmd":
                                 startVoiceCall(uri.toString());
@@ -285,7 +281,6 @@ public class SchemeHandleActivity extends BaseActivity {
             Uri uri = FileUtils.getShareFileUri(getIntent());
             if (isLinkShare()) {
                 handleLinkShare(getShareLinkContent());
-                return;
             } else if (uri != null) {
                 uriList.add(GetPathFromUri4kitkat.getPathByUri(MyApplication.getInstance(), uri));
             }

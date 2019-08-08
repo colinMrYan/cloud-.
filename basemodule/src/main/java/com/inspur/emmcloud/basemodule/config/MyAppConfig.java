@@ -42,6 +42,9 @@ public class MyAppConfig {
             .getExternalStorageDirectory() + "/IMP-Cloud/cache/Markdown/";
     public static final String LOCAL_CACHE_CHAT_PATH = Environment
             .getExternalStorageDirectory() + "/IMP-Cloud/cache/chat/";
+
+    public static final String LOCAL_SHARE_FILE_PATH = Environment
+            .getExternalStorageDirectory() + "/IMP-Cloud/cache/share_file/";
     public static final int UPLOAD_ORIGIN_IMG_MAX_SIZE = 2600;
     public static final int UPLOAD_ORIGIN_IMG_DEFAULT_SIZE = 1280;
     public static final int UPLOAD_THUMBNAIL_IMG_MAX_SIZE = 600;
