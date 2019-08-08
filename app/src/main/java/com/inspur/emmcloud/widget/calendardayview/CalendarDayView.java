@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -207,9 +208,7 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
         this.eventList = eventList;
         sortEventList();
         setEventIntersectionGroup();
-        setEventMinWidth();
         showEventLayout();
-
     }
 
     /**
@@ -235,48 +234,42 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
 
 
     /**
-     * 找出每个Event的时间有重叠的Event组（包含自己），组成一个二维数组
+     * 找出所有相交的Event并进行分组，不同组之间不相交，同组之间会有相交
      */
     private void setEventIntersectionGroup() {
+        List<Event> copyEventList = new ArrayList<>();
+        copyEventList.addAll(eventList);
         intersectionGroupList.clear();
-        for (Event event : eventList) {
-            List<Event> intersectionGroup = new ArrayList<>();
-            MatheSet matheSetI = new MatheSet(((Schedule) event.getEventObj()).getStartTime(), ((Schedule) event.getEventObj()).getEndTime());
-            for (Event eventJ : eventList) {
-                if (!eventJ.getEventId().equals(event.getEventId())) {
-                    MatheSet matheSetJ = new MatheSet(((Schedule) eventJ.getEventObj()).getStartTime(), ((Schedule) eventJ.getEventObj()).getEndTime());
-                    if (MatheSet.isIntersectionWithoutBoundary(matheSetI, matheSetJ)) {
-                        intersectionGroup.add(eventJ);
+        while (copyEventList.size() > 0) {
+            List<Event> eventGroup = new ArrayList<>();
+            Iterator<Event> it = copyEventList.iterator();
+            while (it.hasNext()) {
+                Event event = it.next();
+                if (eventGroup.size() == 0) {
+                    eventGroup.add(event);
+                    it.remove();
+                    continue;
+                }
+                MatheSet matheSet = new MatheSet(((Schedule) event.getEventObj()).getStartTime(), ((Schedule) event.getEventObj()).getEndTime());
+                for (Event eventK : eventGroup) {
+                    MatheSet matheSetK = new MatheSet(((Schedule) eventK.getEventObj()).getStartTime(), ((Schedule) eventK.getEventObj()).getEndTime());
+                    if (MatheSet.isIntersectionWithoutBoundary(matheSet, matheSetK)) {
+                        eventGroup.add(event);
+                        it.remove();
+                        break;
                     }
-                } else {
-                    intersectionGroup.add(event);
-                }
 
+                }
             }
-            intersectionGroupList.add(intersectionGroup);
-        }
-
-    }
-
-    /**
-     * 设置每个Event的最小宽度
-     * 找出二维数组中所有包含Event的组中的最小宽度，并以在此组中次序制定Event的次序
-     */
-    private void setEventMinWidth() {
-        for (Event event : eventList) {
-            int intersectionSize = 1;
-            for (List<Event> intersectionGroup : intersectionGroupList) {
-                int index = intersectionGroup.indexOf(event);
-                if (index == -1) {
-                    continue;
-                }
-                if (intersectionGroup.size() <= intersectionSize) {
-                    continue;
-                }
-                intersectionSize = intersectionGroup.size();
-                event.setIndex(index);
+            int intersectionSize = eventGroup.size();
+            int eventWidth = (eventLayout.getWidth() - (intersectionSize - 1) * EVENT_GAP) / intersectionSize;
+            for (int i = 0; i < eventGroup.size(); i++) {
+                Event event = eventGroup.get(i);
+                int index = eventList.indexOf(event);
+                eventList.get(index).setIndex(i);
+                eventList.get(index).setMinWidth(eventWidth);
             }
-            event.setMinWidth((eventLayout.getWidth() - (intersectionSize - 1) * EVENT_GAP) / intersectionSize);
+            intersectionGroupList.add(eventGroup);
         }
     }
 
