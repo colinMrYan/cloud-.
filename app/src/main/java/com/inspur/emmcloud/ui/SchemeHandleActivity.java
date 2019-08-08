@@ -228,6 +228,7 @@ public class SchemeHandleActivity extends BaseActivity {
                                 openNativeSchemeByHost(host, uri, getIntent());
                                 break;
                             case "content":
+                            case "file":
                                 List<String> urlList = new ArrayList<>();
                                 String filePath = GetPathFromUri4kitkat.getPathByUri(MyApplication.getInstance(), uri);
                                 if (StringUtils.isBlank(filePath) || !FileUtils.isFileExist(filePath)) {
