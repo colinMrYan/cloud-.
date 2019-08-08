@@ -191,11 +191,10 @@ public class CalendarSettingActivity extends BaseActivity {
                     ScheduleCalendarCacheUtils.saveScheduleCalendar(BaseApplication.getInstance(), scheduleCalendar1);
                 }
             });
-            convertView.setOnLongClickListener(new View.OnLongClickListener() {
+            convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public boolean onLongClick(View v) {
+                public void onClick(View view) {
                     if (scheduleCalendarList.get(position).getAcType().equals(AccountType.EXCHANGE.toString())) {
-
                         String deleteAccount = getString(R.string.schedule_delete_ac);
                         String modifyAccount = getString(R.string.schedule_modify_ac);
                         new ActionSheetDialog.ActionListSheetBuilder(CalendarSettingActivity.this)
@@ -213,7 +212,6 @@ public class CalendarSettingActivity extends BaseActivity {
                                 .show();
 
                     }
-                    return true;
                 }
             });
             CalendarColor calendarColor = CalendarColor.getCalendarColor(scheduleCalendar.getColor());

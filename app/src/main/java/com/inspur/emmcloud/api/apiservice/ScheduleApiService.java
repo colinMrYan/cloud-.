@@ -688,10 +688,11 @@ public class ScheduleApiService {
      *
      * @param id
      */
-    public void getMeetingDataFromId(final String id) {
-        final String completeUrl = APIUri.getMeetingUrlFromId(id);
-        RequestParams params = MyApplication.getInstance()
-                .getHttpRequestParams(completeUrl);
+    public void getMeetingDataFromId(final String id, final ScheduleCalendar scheduleCalendar) {
+        final String completeUrl = APIUri.getMeetingUrlFromId(id, scheduleCalendar);
+        String headerExtraKey = CalendarUtils.getHttpHeaderExtraKey(scheduleCalendar);
+        String headerExtraValue = CalendarUtils.getHttpHeaderExtraValue(scheduleCalendar);
+        RequestParams params = BaseApplication.getInstance().getHttpRequestParams(completeUrl, headerExtraKey, headerExtraValue);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
@@ -699,7 +700,7 @@ public class ScheduleApiService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        getMeetingDataFromId(id);
+                        getMeetingDataFromId(id, scheduleCalendar);
                     }
 
                     @Override

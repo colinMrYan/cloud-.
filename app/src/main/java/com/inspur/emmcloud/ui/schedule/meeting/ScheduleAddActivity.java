@@ -259,7 +259,7 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
         startTimeCalendar = schedule.getStartTimeCalendar();
         endTimeCalendar = schedule.getEndTimeCalendar();
         if (schedule.getAllDay()) {
-            endTimeCalendar = TimeUtils.getDayEndCalendar(endTimeCalendar);
+            endTimeCalendar.add(Calendar.MILLISECOND, -1);
         }
         String alertTimeName = ScheduleAlertTimeActivity.getAlertTimeNameByTime(JSONUtils.getInt(schedule.getRemindEvent(), "advanceTimeSpan", -1), schedule.getAllDay());
         remindEvent = new RemindEvent(JSONUtils.getString(schedule.getRemindEvent(), "remindType", "in_app"),

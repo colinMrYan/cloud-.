@@ -32,7 +32,6 @@ public class DragScaleView extends View {
     private int dragDirection;
     private int offset = DensityUtil.dip2px(4);
     private OnMoveListener onMoveListener;
-    private int mParentHeight;
     private int mParentContentHeight;
     private ScrollView scrollView;
     private int mRadius = 8;
@@ -109,7 +108,6 @@ public class DragScaleView extends View {
 
     public void setParentView(ScrollView scrollView) {
         this.scrollView = scrollView;
-        mParentHeight = scrollView.getHeight();
         mParentContentHeight = scrollView.getChildAt(0).getHeight();
     }
 
@@ -177,7 +175,7 @@ public class DragScaleView extends View {
                 }
                 if (onMoveListener != null) {
                     boolean isNeedScroll = (dy < 0 && oriTop < scrollView.getScrollY() + scrollOffset) ||
-                            (dy > 0 && oriBottom > (scrollView.getScrollY() + mParentHeight - scrollOffset));
+                            (dy > 0 && oriBottom > (scrollView.getScrollY() + scrollView.getHeight() - scrollOffset));
 
                     onMoveListener.moveTo(isNeedScroll, dy, oriTop, getHeight() - 2 * offset);
                 }

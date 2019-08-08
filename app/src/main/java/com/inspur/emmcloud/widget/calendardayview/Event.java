@@ -31,11 +31,12 @@ public class Event {
     public String eventSubTitle;
     public Calendar eventStartTime;
     public Calendar eventEndTime;
-    private int index = -1;
+    private int index = 0;
     private boolean isAllDay = false;
     private Object eventObj;
     private String calendarType;
     private String owner = "";
+    private int minWidth;
 
     public Event(String eventId, String eventType, String eventTitle, String eventSubTitle, Calendar eventStartTime, Calendar eventEndTime, Object eventObj, String calendarType) {
         this.eventId = eventId;
@@ -145,6 +146,14 @@ public class Event {
             return TimeUtils.getDayEndCalendar(selectCalendar);
         }
         return eventEndTime;
+    }
+
+    public int getMinWidth() {
+        return minWidth;
+    }
+
+    public void setMinWidth(int minWidth) {
+        this.minWidth = minWidth;
     }
 
     public boolean canDelete() {
@@ -285,5 +294,19 @@ public class Event {
             return ContextCompat.getColor(BaseApplication.getInstance(), calendarColor.getColor());
         }
         return color;
+    }
+
+
+    public boolean equals(Object other) { // 重写equals方法，后面最好重写hashCode方法
+
+        if (this == other) // 先检查是否其自反性，后比较other是否为空。这样效率高
+            return true;
+        if (other == null)
+            return false;
+        if (!(other instanceof Event))
+            return false;
+
+        final Event otherEvent = (Event) other;
+        return getEventId().equals(otherEvent.getEventId());
     }
 }
