@@ -24,9 +24,12 @@ import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.bean.schedule.calendar.AccountType;
+import com.inspur.emmcloud.bean.schedule.calendar.ScheduleCalendar;
+import com.inspur.emmcloud.bean.schedule.meeting.Building;
 import com.inspur.emmcloud.bean.schedule.meeting.GetMeetingRoomListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.MeetingRoom;
 import com.inspur.emmcloud.bean.schedule.meeting.MeetingRoomArea;
+import com.inspur.emmcloud.util.privates.cache.ScheduleCalendarCacheUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -107,6 +110,11 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
     @Override
     public boolean onChildClick(ExpandableListView expandableListView, View view, int groupPosition, int childPosition, long id) {
         selectMeetingRoom = meetingRoomAreaList.get(groupPosition).getMeetingRoomList().get(childPosition);
+        //selectMeetingRoom.setBuilding(mee);
+        Building building = new Building();
+        building.setName(meetingRoomAreaList.get(groupPosition).getName());
+        building.setId(meetingRoomAreaList.get(groupPosition).getId());
+        selectMeetingRoom.setBuilding(building);
         Intent intent = new Intent(MeetingRoomListActivity.this, MeetingRoomInfoActivity.class);
         intent.putExtra(MeetingRoomInfoActivity.EXTRA_MEETING_ROOM, selectMeetingRoom);
         startActivityForResult(intent, REQUEST_ENTER_MEETING_ROOM_INFO);
@@ -212,11 +220,21 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
                     bundle.putSerializable(ScheduleAddActivity.EXTRA_SCHEDULE_START_TIME, data.getSerializableExtra(EXTRA_START_TIME));
                     bundle.putSerializable(ScheduleAddActivity.EXTRA_SCHEDULE_END_TIME, data.getSerializableExtra(EXTRA_END_TIME));
                     bundle.putSerializable(MeetingRoomInfoActivity.EXTRA_MEETING_ROOM, selectMeetingRoom);
-                    bundle.putString(ScheduleAddActivity.EXTRA_SCHEDULE_SCHEDULECALENDAR_TYPE, AccountType.APP_MEETING.toString());
+                    bundle.putString(ScheduleAddActivity.EXTRA_SCHEDULE_SCHEDULECALENDAR_TYPE, getExchangeScheduleCalendar());
                     IntentUtils.startActivity(this, ScheduleAddActivity.class, bundle, true);
                 }
             }
         }
+    }
+
+    private String getExchangeScheduleCalendar() {
+        List<ScheduleCalendar> scheduleCalendars = ScheduleCalendarCacheUtils.getScheduleCalendarList(this);
+        for (int i = 0; i < scheduleCalendars.size(); i++) {
+            if (scheduleCalendars.get(i).getAcType().equals(AccountType.EXCHANGE.toString())) {
+                return scheduleCalendars.get(i).getId();
+            }
+        }
+        return AccountType.APP_MEETING.toString();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

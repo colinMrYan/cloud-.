@@ -28,11 +28,15 @@
             android:supportsRtl="true" />
 
         <activity
+            android:name=".plugin.video.VideoPlayActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait" />
+
+        <activity
             android:name=".plugin.photo.ImageGalleryActivity"
             android:label="@string/app_name"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
-
 
         <activity
             android:name=".plugin.filetransfer.TextFileShowActivity"
@@ -55,6 +59,4 @@
             android:value="6fec0bde62bb59a08712ac15d02f8774" />
 
     </application>
-
-
 </manifest>
