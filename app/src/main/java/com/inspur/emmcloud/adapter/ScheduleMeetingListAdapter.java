@@ -76,7 +76,7 @@ public class ScheduleMeetingListAdapter extends BaseAdapter {
         holder.titleText.setText(meeting.getTitle());
         String startTime = TimeUtils.Calendar2TimeString(startCalendar, TimeUtils.getFormat(context, TimeUtils.FORMAT_HOUR_MINUTE));
         String endTime = TimeUtils.Calendar2TimeString(endCalendar, TimeUtils.getFormat(context, TimeUtils.FORMAT_HOUR_MINUTE));
-        holder.timeText.setText(startTime + "-" + endTime);
+        holder.timeText.setText(startTime + " - " + endTime);
         holder.displayNameText.setText(meeting.getScheduleLocationObj().getDisplayName());
         StringBuilder dateBuilder = new StringBuilder();
         dateBuilder.append(TimeUtils.Calendar2TimeString(startCalendar, TimeUtils.getFormat(context, TimeUtils.FORMAT_MONTH_DAY)));
