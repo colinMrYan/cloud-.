@@ -57,7 +57,6 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
     private TextView dragViewStartTmeText;
     private TextView dragViewEndTimeText;
     private int earliestEventOffset = -1;
-    private List<List<Event>> intersectionGroupList = new ArrayList<>();
 
     public CalendarDayView(Context context) {
         this(context, null);
@@ -235,11 +234,11 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
 
     /**
      * 找出所有相交的Event并进行分组，不同组之间不相交，同组之间会有相交
+     * 根据组内个数和次序算出每个Event的宽度和次序
      */
     private void setEventIntersectionGroup() {
         List<Event> copyEventList = new ArrayList<>();
         copyEventList.addAll(eventList);
-        intersectionGroupList.clear();
         while (copyEventList.size() > 0) {
             List<Event> eventGroup = new ArrayList<>();
             Iterator<Event> it = copyEventList.iterator();
@@ -269,7 +268,6 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
                 eventList.get(index).setIndex(i);
                 eventList.get(index).setMinWidth(eventWidth);
             }
-            intersectionGroupList.add(eventGroup);
         }
     }
 
