@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="web_CustomMediaController">
+        <attr name="web_video_scalable" format="boolean" />
+    </declare-styleable>
+
+
+    <declare-styleable name="web_CustomVideoView">
+        <attr name="web_video_fitXY" format="boolean" />
+        <attr name="web_video_autoRotation" format="boolean" />
+    </declare-styleable>
+
+</resources>
