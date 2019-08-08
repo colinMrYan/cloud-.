@@ -2,15 +2,12 @@ package com.inspur.emmcloud.web.plugin.sql;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Build;
-import android.webkit.ValueCallback;
 
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.web.plugin.ImpPlugin;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 
@@ -74,7 +71,6 @@ public class SqlService extends ImpPlugin {
      */
     private void executeSql(JSONObject jsonObject) {
         String sql = JSONUtils.getString(jsonObject, "sql", "");
-        String txId = JSONUtils.getString(jsonObject, "txId", "");
 //        sql = "INSERT INTO Robot ('id','avatar','mode','name','support','title') VALUES('BOT6005','A8GJ2B6A4JB.png','','云+客服1111','yisiqi@inspur.com','投诉建议专用');";
 //        sql = "update Robot set name='yunjiakefu' where name like '%云%';";
 //        sql = "select * from Robot";
@@ -83,69 +79,23 @@ public class SqlService extends ImpPlugin {
 //        sql = "drop table testTable";
 //        sql = "alter table testTable  add address varchar(40)";
 //        sql = "alter table testTable drop column address";//目前sqlite不支持drop column方法
-//        sql = "create database myDatabase";    //不支持Sql语句创建数据库  只支持命令创建数据库
+//        sql = "create database myDatabase";    //sqlite不支持Sql语句创建数据库  只支持命令创建数据库
         try {
             if (isSelectSql(sql)) {
                 Cursor myCursor = this.database.rawQuery(sql,null);
-                this.processResults(myCursor, txId);
+                this.processResults(myCursor);
                 myCursor.close();
             } else {
                 this.database.execSQL(sql);
                 // 将查询结果传回前台
-                jsCallback(successCb, getResultJsonObj("success", "", ""));
+                jsCallback(successCb, "");
             }
         } catch (Exception e) {
             e.printStackTrace();
             // 将错误信息反馈回前台
-            jsCallback(failCb, getResultJsonObj("fail", "", e.getMessage()));
+            jsCallback(failCb, e.getMessage());
         }
     }
-
-    /**
-     * 回调JavaScript方法，回调参数是字符串
-     *
-     * @param functionName
-     * @param params
-     */
-    @Override
-    public void jsCallback(String functionName, String params) {
-        String script = "javascript: " + functionName + "('" + params + "')";
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            this.webview.evaluateJavascript(script, new ValueCallback<String>() {
-                @Override
-                public void onReceiveValue(String value) {
-                }
-            });
-        } else {
-            this.webview.loadUrl(script);
-        }
-    }
-
-    /**
-     * 回调JavaScript方法，回调参数是字符串数组
-     *
-     * @param functionName
-     * @param params
-     */
-    @Override
-    public void jsCallback(String functionName, String[] params) {
-        JSONArray jsonArray = new JSONArray();
-        for (int i = 0; i < params.length; i++) {
-            jsonArray.put(params[i]);
-        }
-        String script = "javascript: " + functionName + "("
-                + jsonArray.toString() + ")";
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            this.webview.evaluateJavascript(script, new ValueCallback<String>() {
-                @Override
-                public void onReceiveValue(String value) {
-                }
-            });
-        } else {
-            this.webview.loadUrl(script);
-        }
-    }
-
 
     /**
      * 判断是否查询SQL语句
@@ -165,9 +115,8 @@ public class SqlService extends ImpPlugin {
      * 解析结果，把条查询到的记录包装成一个json对象
      *
      * @param cursor
-     * @param txId
      */
-    private void processResults(Cursor cursor, String txId) {
+    private void processResults(Cursor cursor) {
         JSONArray result = new JSONArray();
         if (cursor.moveToFirst()) {
             String key = "";
@@ -192,28 +141,7 @@ public class SqlService extends ImpPlugin {
             } while (cursor.moveToNext());
         }
         // 将查询结果传回前台
-        String jsonResult = getResultJsonObj("success", result.toString(), "");
-        jsCallback(successCb, jsonResult);
-    }
-
-    /**
-     * 组装JSON字符串
-     *
-     * @param success
-     * @param content
-     * @param errorMessage
-     * @return
-     */
-    private String getResultJsonObj(String success, String content, String errorMessage) {
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("status", "success");
-            jsonObject.put("result", content);
-            jsonObject.put("errormessage", "");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return jsonObject.toString();
+        jsCallback(successCb, result.toString());
     }
 
     @Override
