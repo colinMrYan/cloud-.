@@ -38,13 +38,13 @@ public class NetworkService extends ImpPlugin {
     public static final String UMB = "umb";
     public static final String HSPA_PLUS = "hspa+";
     // return type
-    public static final String TYPE_UNKNOWN = "unknown";
+    public static final String TYPE_UNKNOWN = "0";
     public static final String TYPE_ETHERNET = "ethernet";
-    public static final String TYPE_WIFI = "wifi";
-    public static final String TYPE_2G = "2g";
-    public static final String TYPE_3G = "3g";
-    public static final String TYPE_4G = "4g";
-    public static final String TYPE_NONE = "无网络";
+    public static final String TYPE_WIFI = "1";
+    public static final String TYPE_2G = "2";
+    public static final String TYPE_3G = "3";
+    public static final String TYPE_4G = "4";
+    public static final String TYPE_NONE = "-1";
     public static int NOT_REACHABLE = 0;
     public static int REACHABLE_VIA_CARRIER_DATA_NETWORK = 1;
     public static int REACHABLE_VIA_WIFI_NETWORK = 2;
@@ -152,11 +152,10 @@ public class NetworkService extends ImpPlugin {
                         netWorkType = TYPE_4G;
                         break;
                     default:
-                        // http://baike.baidu.com/item/TD-SCDMA 中国移动 联通 电信 三种3G制式
                         if (_strSubTypeName.equalsIgnoreCase("TD-SCDMA") || _strSubTypeName.equalsIgnoreCase("WCDMA") || _strSubTypeName.equalsIgnoreCase("CDMA2000")) {
-                            netWorkType = "3G";
+                            netWorkType = TYPE_3G;
                         } else {
-                            netWorkType = "Mobile Networks";
+                            netWorkType = TYPE_UNKNOWN;
                         }
                         break;
                 }
