@@ -57,6 +57,7 @@
             android:layout_marginBottom="4dp"
             android:layout_marginTop="8dp"
             android:ellipsize="middle"
+            android:gravity="center"
             android:maxLines="5"
             android:maxWidth="300dp"
             android:scaleType="fitXY"
