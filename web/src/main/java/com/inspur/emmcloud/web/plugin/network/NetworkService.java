@@ -59,7 +59,6 @@ public class NetworkService extends ImpPlugin {
         // 打开系统发送短信的界面，根据传入参数自动填写好相关信息
         if ("getNetWorkType".equals(action)) {               //检查网络连接
             res = getConnInfo(paramsObject);
-            //jsCallback("success",res);
             return res;
         } else if ("getTotalRxBytes".equals(action)) {    //流量监测服务
             data = getTotalRxBytes();
