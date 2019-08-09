@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.util.privates;
 
 import android.annotation.SuppressLint;
+import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
@@ -12,7 +13,13 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 
 public class GetPathFromUri4kitkat {
@@ -35,6 +42,7 @@ public class GetPathFromUri4kitkat {
      */
     @SuppressLint("NewApi")
     private static String getPath(final Context context, final Uri uri) {
+        String filePath = "";
         final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
         // DocumentProvider
         if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
@@ -44,7 +52,7 @@ public class GetPathFromUri4kitkat {
                 final String[] split = docId.split(":");
                 final String type = split[0];
                 if ("primary".equalsIgnoreCase(type)) {
-                    return Environment.getExternalStorageDirectory() + "/"
+                    filePath = Environment.getExternalStorageDirectory() + "/"
                             + split[1];
                 }
             }
@@ -52,12 +60,13 @@ public class GetPathFromUri4kitkat {
             else if (isDownloadsDocument(uri)) {
                 final String id = DocumentsContract.getDocumentId(uri);
                 if (!StringUtils.isNumeric(id)) {
-                    return getFilePath(id);
+                    filePath = getFilePath(id);
+                } else {
+                    final Uri contentUri = ContentUris.withAppendedId(
+                            Uri.parse("content://downloads/public_downloads"),
+                            Long.valueOf(id));
+                    filePath = getDataColumn(context, contentUri, null, null);
                 }
-                final Uri contentUri = ContentUris.withAppendedId(
-                        Uri.parse("content://downloads/public_downloads"),
-                        Long.valueOf(id));
-                return getDataColumn(context, contentUri, null, null);
             }
             // MediaProvider
             else if (isMediaDocument(uri)) {
@@ -74,28 +83,31 @@ public class GetPathFromUri4kitkat {
                 }
                 final String selection = "_id=?";
                 final String[] selectionArgs = new String[]{split[1]};
-                return getDataColumn(context, contentUri, selection,
+                filePath = getDataColumn(context, contentUri, selection,
                         selectionArgs);
             }
             //特殊机型
             else if (isSamsungDocument(uri)) {
-                return getSamsungDataColumn(context, uri, null, null);
+                filePath = getSamsungDataColumn(context, uri, null, null);
             }
         }
         // MediaStore (and general)
         else if ("content".equalsIgnoreCase(uri.getScheme())) {
             if (isGooglePhotosUri(uri)) {
-                return uri.getLastPathSegment();
+                filePath = uri.getLastPathSegment();
             } else if (isHuaweiUri(uri)) {
-                return getHuaweiRealPath(uri);
+                filePath = getHuaweiRealPath(uri);
             }
-            return getDataColumn(context, uri, null, null);
+            filePath = getDataColumn(context, uri, null, null);
         }
         // File
         else if ("file".equalsIgnoreCase(uri.getScheme())) {
-            return uri.getPath();
+            filePath = uri.getPath();
         }
-        return null;
+        if (!FileUtils.isFileExist(filePath)) {
+            filePath = getFilePathFromContentUri(uri, context);
+        }
+        return filePath;
     }
 
     /**
@@ -239,6 +251,100 @@ public class GetPathFromUri4kitkat {
         }
         cursor.close();
         return res;
+    }
+
+    /**
+     * 在通过前面的方式都获取不到文件路径的情况下通过复制一个临时文件来完成分享
+     *
+     * @param contentUri
+     * @param context
+     * @return
+     */
+    private static String getFilePathFromContentUri(Uri contentUri, Context context) {
+        if (contentUri == null) {
+            return null;
+        }
+        String filePath = null;
+        String fileName;
+        String[] filePathColumn = {MediaStore.MediaColumns.DATA, MediaStore.MediaColumns.DISPLAY_NAME};
+        ContentResolver contentResolver = context.getContentResolver();
+        Cursor cursor = contentResolver.query(contentUri, filePathColumn, null,
+                null, null);
+        if (cursor != null) {
+            cursor.moveToFirst();
+            fileName = cursor.getString(cursor.getColumnIndex(filePathColumn[1]));
+            cursor.close();
+            filePath = getFilePathFromInputStreamUri(context, contentUri, fileName);
+        }
+        return filePath;
+    }
+
+
+    /**
+     * 用流拷贝文件一份到自己APP目录下
+     *
+     * @param context
+     * @param uri
+     * @param fileName
+     * @return
+     */
+    private static String getFilePathFromInputStreamUri(Context context, Uri uri, String fileName) {
+        InputStream inputStream = null;
+        String filePath = null;
+        if (uri.getAuthority() != null) {
+            try {
+                inputStream = context.getContentResolver().openInputStream(uri);
+                File file = createTemporalFileFrom(context, inputStream, fileName);
+                filePath = file.getPath();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    if (inputStream != null) {
+                        inputStream.close();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return filePath;
+    }
+
+    /**
+     * 在应用内创建一个临时文件用来存放需要分享的临时文件
+     *
+     * @param context
+     * @param inputStream
+     * @param fileName
+     * @return
+     */
+    private static File createTemporalFileFrom(Context context, InputStream inputStream, String fileName) {
+        File targetFile = null;
+        try {
+            if (inputStream != null) {
+                int read;
+                byte[] buffer = new byte[8 * 1024];
+                File dir = new File(MyAppConfig.LOCAL_SHARE_FILE_PATH);
+                if (!dir.exists()) {
+                    dir.mkdirs();
+                }
+                //自己定义拷贝文件路径
+                targetFile = new File(MyAppConfig.LOCAL_SHARE_FILE_PATH, fileName);
+                if (targetFile.exists()) {
+                    targetFile.delete();
+                }
+                OutputStream outputStream = new FileOutputStream(targetFile);
+                while ((read = inputStream.read(buffer)) != -1) {
+                    outputStream.write(buffer, 0, read);
+                }
+                outputStream.flush();
+                outputStream.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return targetFile;
     }
 
 }

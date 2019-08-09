@@ -23,14 +23,13 @@ import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout;
-import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
-import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.bean.schedule.MeetingAttendees;
 import com.inspur.emmcloud.bean.schedule.Participant;
 import com.inspur.emmcloud.bean.schedule.Schedule;
+import com.inspur.emmcloud.bean.schedule.calendar.AccountType;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
@@ -74,8 +73,12 @@ public class MeetingAttendeeStateActivity extends BaseActivity implements SwipeR
 
     private void getMeetingData() {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-            apiService.getMeetingDataFromId(schedule.getId(), ScheduleCalendarCacheUtils.getScheduleCalendar(this, schedule.getScheduleCalendar()));
+            if (!(schedule.getType().equals(Schedule.CALENDAR_TYPE_EXCHANGE) && schedule.getScheduleCalendar().equals(AccountType.APP_SCHEDULE.toString()))) {
+                apiService.getMeetingDataFromId(schedule.getId(), ScheduleCalendarCacheUtils.getScheduleCalendar(this, schedule.getScheduleCalendar()));
+                return;
+            }
         }
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     private void init() {
@@ -304,10 +307,6 @@ public class MeetingAttendeeStateActivity extends BaseActivity implements SwipeR
         @Override
         public void returnMeetingDataFromIdFail(String error, int errorCode) {
             swipeRefreshLayout.setRefreshing(false);
-            if (!StringUtils.isBlank(error)) {
-                WebServiceMiddleUtils.hand(BaseApplication.getInstance(), error, errorCode);
-            }
-            super.returnMeetingDataFromIdFail(error, errorCode);
         }
     }
 

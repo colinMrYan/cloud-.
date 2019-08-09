@@ -9,9 +9,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
-import android.support.v4.content.FileProvider;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.SwitchCompat;
@@ -23,6 +21,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -48,9 +47,6 @@ import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
-import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
-import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
-import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.bean.mine.GetExperienceUpgradeFlagResult;
 import com.inspur.emmcloud.bean.system.AppConfig;
 import com.inspur.emmcloud.bean.system.EventMessage;
@@ -366,31 +362,32 @@ public class SettingActivity extends BaseActivity {
             case R.id.rl_setting_self_start: //TODO zyj
 //                UriUtils.openUrl(this, "http://www.baidu.com");
 //                ARouter.getInstance().build("/meeting/history").navigation();
-                if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-                    PermissionRequestManagerUtils.getInstance().requestRuntimePermission(this, Permissions.CAMERA,
-                            new PermissionRequestCallback() {
-                                @Override
-                                public void onPermissionRequestSuccess(List<String> permissions) {
-                                    Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-                                    try {
-                                        fileUri = FileProvider.getUriForFile(SettingActivity.this,
-                                                getApplicationContext().getPackageName() + ".provider", createMediaFile());//这是正确的写法
-
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
-                                    intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-                                    intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-                                    intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 3);
-                                    startActivityForResult(intent, 1);
-                                }
-
-                                @Override
-                                public void onPermissionRequestFail(List<String> permissions) {
-
-                                }
-                            });
-                }
+                ARouter.getInstance().build("/web/VideoActivity").navigation();
+//                if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+//                    PermissionRequestManagerUtils.getInstance().requestRuntimePermission(this, Permissions.CAMERA,
+//                            new PermissionRequestCallback() {
+//                                @Override
+//                                public void onPermissionRequestSuccess(List<String> permissions) {
+//                                    Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+//                                    try {
+//                                        fileUri = FileProvider.getUriForFile(SettingActivity.this,
+//                                                getApplicationContext().getPackageName() + ".provider", createMediaFile());//这是正确的写法
+//
+//                                    } catch (IOException e) {
+//                                        e.printStackTrace();
+//                                    }
+//                                    intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+//                                    intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+//                                    intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 15);
+//                                    startActivityForResult(intent, 1);
+//                                }
+//
+//                                @Override
+//                                public void onPermissionRequestFail(List<String> permissions) {
+//
+//                                }
+//                            });
+//                }
 
                 break;
             case R.id.rl_setting_account_safe:
@@ -415,11 +412,9 @@ public class SettingActivity extends BaseActivity {
                 Toast.makeText(this, "Video saved to:\n" +
                         data.getData(), Toast.LENGTH_LONG).show();
                 Log.d("zhang", "onActivityResult: url = " + data.getData());
-                Intent intent = new Intent(this, PlayVideoActivity.class);
+                Intent intent = new Intent();
                 intent.setData(data.getData());
-                startActivity(intent);
-//                vv_play.setVideoURI(fileUri);
-//                vv_play.requestFocus();
+//                startActivity(intent);
             }
         }
     }
