@@ -18,7 +18,6 @@ import android.widget.TextView;
 
 import com.inspur.baselib.R;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
-import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.TimePicker.TimePicker;
 import com.inspur.emmcloud.baselib.widget.TimePicker.Utils.ConvertUtils;
 
@@ -71,33 +70,27 @@ public class DateTimePickerDialog {
         relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                new com.inspur.emmcloud.baselib.widget.TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
-//                    @Override
-//                    public void onTimeSet(TimePicker timePicker, int hourOfDay, int minute) {
-//                        resultCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-//                        resultCalendar.set(Calendar.MINUTE, minute);
-//                        String sHour = hourOfDay < 10 ? "0" + hourOfDay : "" + hourOfDay;
-//                        String sMinute = minute < 10 ? "0" + minute : "" + minute;
-//                        String time = sHour + ":" + sMinute;
-//                        timeTextView.setText(time);
-//                    }
-//                }, resultCalendar.get(Calendar.HOUR_OF_DAY), resultCalendar.get(Calendar.MINUTE), true).showTimePickerDialog();
-//
                 TimePicker picker = new TimePicker((Activity) context, TimePicker.HOUR_24);
                 picker.setUseWeight(false);
                 picker.setCycleDisable(false);
                 picker.setRangeStart(0, 0);//00:00
                 picker.setRangeEnd(23, 59);//23:59
                 picker.setGravity(Gravity.CENTER);//弹框居中
-                int currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-                int currentMinute = Calendar.getInstance().get(Calendar.MINUTE);
-                picker.setSelectedItem(currentHour, currentMinute);
+                picker.setContentPadding(0, 5);
+                picker.setSelectedItem(resultCalendar.get(Calendar.HOUR_OF_DAY), resultCalendar.get(Calendar.MINUTE));
                 picker.setTopLineVisible(false);
                 picker.setTextPadding(ConvertUtils.toPx((Activity) context, 15));
                 picker.setOnTimePickListener(new TimePicker.OnTimePickListener() {
                     @Override
                     public void onTimePicked(String hour, String minute) {
-                        ToastUtils.show("hour" + hour + "minutes" + minute);
+                        int hourOfDay = Integer.parseInt(hour);
+                        int minutes = Integer.parseInt(minute);
+                        resultCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                        resultCalendar.set(Calendar.MINUTE, minutes);
+                        String sHour = hourOfDay < 10 ? "0" + hourOfDay : "" + hourOfDay;
+                        String sMinute = minutes < 10 ? "0" + minutes : "" + minutes;
+                        String time = sHour + ":" + sMinute;
+                        timeTextView.setText(time);
                     }
                 });
                 picker.show();

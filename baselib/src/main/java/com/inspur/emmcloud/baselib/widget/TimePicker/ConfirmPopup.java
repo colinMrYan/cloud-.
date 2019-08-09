@@ -282,10 +282,6 @@ public abstract class ConfirmPopup<V extends View> extends BasicPopup<View> {
         rootLayout.setGravity(Gravity.CENTER);
         rootLayout.setPadding(0, 0, 0, 0);
         rootLayout.setClipToPadding(false);
-        View headerView = makeHeaderView();
-        if (headerView != null) {
-            rootLayout.addView(headerView);
-        }
         if (topLineVisible) {
             View lineView = new View(activity);
             lineView.setLayoutParams(new LinearLayout.LayoutParams(MATCH_PARENT, topLineHeightPixels));
@@ -313,6 +309,10 @@ public abstract class ConfirmPopup<V extends View> extends BasicPopup<View> {
         View footerView = makeFooterView();
         if (footerView != null) {
             rootLayout.addView(footerView);
+        }
+        View headerView = makeHeaderView();
+        if (headerView != null) {
+            rootLayout.addView(headerView);
         }
         return rootLayout;
     }
