@@ -282,8 +282,12 @@ public class SchemeHandleActivity extends BaseActivity {
             Uri uri = FileUtils.getShareFileUri(getIntent());
             if (isLinkShare()) {
                 handleLinkShare(getShareLinkContent());
+                return;
             } else if (uri != null) {
                 uriList.add(GetPathFromUri4kitkat.getPathByUri(MyApplication.getInstance(), uri));
+            } else {
+                ToastUtils.show(SchemeHandleActivity.this, getString(R.string.share_not_support));
+                finish();
             }
         } else if (Intent.ACTION_SEND_MULTIPLE.equals(action)) {
             List<Uri> fileUriList = FileUtils.getShareFileUriList(getIntent());
@@ -301,6 +305,8 @@ public class SchemeHandleActivity extends BaseActivity {
 
     /**
      * 获取title和url
+     * 此处验证过在不同手机不同系统，不同浏览器上Intent的extras有不同，字段名称可能不一样，个数可能不一样
+     * 唯一能确定的是必定含有Intent.EXTRA_TEXT 在华为Mate20 系统9.0 华为原生浏览器上就只有此字段
      *
      * @return
      */
@@ -313,12 +319,13 @@ public class SchemeHandleActivity extends BaseActivity {
         if (intent != null) {
             String text = intent.getExtras().getString(Intent.EXTRA_TEXT);
             String subject = intent.getExtras().getString(Intent.EXTRA_SUBJECT);
+            String url = getContentUrl(intent);
             if (text != null && subject != null) {
-                urlStr = getShareUrl(text);
+                urlStr = !StringUtils.isBlank(url) ? url : getShareUrl(text);
                 titleStr = subject;
                 digest = text.replace(getShareUrl(text), "");
             } else if (text != null && subject == null) {
-                urlStr = getShareUrl(text);
+                urlStr = !StringUtils.isBlank(url) ? url : getShareUrl(text);
                 titleStr = text.replace(urlStr, "");
             } else if (text == null && subject == null) {
                 return shareLinkMap;
@@ -328,6 +335,24 @@ public class SchemeHandleActivity extends BaseActivity {
             shareLinkMap.put("digest", digest);
         }
         return shareLinkMap;
+    }
+
+    /**
+     * 如果包含url，则取出这个url
+     *
+     * @param intent
+     * @return
+     */
+    private String getContentUrl(Intent intent) {
+        Bundle bundle = intent.getExtras();
+        String urlKey = "";
+        for (String key : bundle.keySet()) {
+            if (key.equals("url") || key.endsWith("url")) {
+                urlKey = key;
+                break;
+            }
+        }
+        return bundle.getString(urlKey);
     }
 
     /**
@@ -350,7 +375,8 @@ public class SchemeHandleActivity extends BaseActivity {
      */
     private boolean isLinkShare() {
         Intent intent = getIntent();
-        return intent.getExtras() != null && !StringUtils.isBlank(intent.getExtras().getString(Intent.EXTRA_TEXT));
+        String extraText = intent.getExtras().getString(Intent.EXTRA_TEXT);
+        return intent.getExtras() != null && !StringUtils.isBlank(extraText) && extraText.contains("http");
     }
 
     /**
