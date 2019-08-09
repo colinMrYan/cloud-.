@@ -6,8 +6,10 @@ import android.net.NetworkInfo;
 import android.net.TrafficStats;
 import android.telephony.TelephonyManager;
 
+import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.web.plugin.ImpPlugin;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -205,6 +207,17 @@ public class NetworkService extends ImpPlugin {
 
     @Override
     public void execute(String action, JSONObject paramsObject) {
-        showCallIMPMethodErrorDlg();
+        if ("getNetWorkType".equals(action)) {
+            String res = getConnInfo(paramsObject);
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("value", res);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            jsCallback(JSONUtils.getString(paramsObject, "success", ""), jsonObject.toString());
+        } else {
+            showCallIMPMethodErrorDlg();
+        }
     }
 }

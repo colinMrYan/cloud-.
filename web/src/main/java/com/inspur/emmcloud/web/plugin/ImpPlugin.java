@@ -146,8 +146,6 @@ public abstract class ImpPlugin implements IPlugin {
 
     public void showCallIMPMethodErrorDlg() {
         if (impCallBackInterface != null) {
-//            impCallBackInterface.onShowImpDialog();
-            //暂改为toast提示
             ToastUtils.show(getFragmentContext(), R.string.imp_function_error);
         }
     }
