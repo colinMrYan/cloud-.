@@ -341,11 +341,16 @@
 
                 <data android:scheme="content" />
                 <data android:scheme="file" />
-                <data android:mimeType="application/*" />
-                <data android:mimeType="text/*" />
-                <!--<data android:mimeType="application/vnd.ms-excel" />
+                <!--<data android:mimeType="application/*" />-->
+                <data android:mimeType="text/plain" />
+                <data android:mimeType="application/pdf" />
+                <data android:mimeType="application/application/msword" />
+                <data android:mimeType="application/msword" />
+                <data android:mimeType="application/vnd.ms-excel" />
                 <data android:mimeType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
-                <data android:mimeType="text/calendar" />-->
+                <data android:mimeType="application/vnd.ms-powerpoint" />
+                <data android:mimeType="application/vnd.ms-powerpoint" />
+                <!--<data android:mimeType="text/calendar" />-->
             </intent-filter>
 
             <intent-filter>
