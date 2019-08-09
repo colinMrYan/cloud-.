@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.FrameLayout;
 
-import com.inspur.emmcloud.baselib.widget.TimePicker.Utils.LogUtils;
 import com.inspur.emmcloud.baselib.widget.TimePicker.Utils.ScreenUtils;
 
 /**
@@ -156,7 +155,7 @@ public abstract class BasicPopup<V extends View> implements DialogInterface.OnKe
                 onDismissListener.onDismiss(dialog);
             }
         });
-        LogUtils.verbose(this, "popup setOnDismissListener");
+        // LogUtils.verbose(this, "popup setOnDismissListener");
     }
 
     public void setOnKeyListener(final DialogInterface.OnKeyListener onKeyListener) {
@@ -167,7 +166,7 @@ public abstract class BasicPopup<V extends View> implements DialogInterface.OnKe
                 return onKeyListener.onKey(dialog, keyCode, event);
             }
         });
-        LogUtils.verbose(this, "popup setOnKeyListener");
+        // LogUtils.verbose(this, "popup setOnKeyListener");
     }
 
     /**
@@ -189,7 +188,7 @@ public abstract class BasicPopup<V extends View> implements DialogInterface.OnKe
         } else if (height == 0) {
             height = WRAP_CONTENT;
         }
-        LogUtils.verbose(this, String.format("will set popup width/height to: %s/%s", width, height));
+        //LogUtils.verbose(this, String.format("will set popup width/height to: %s/%s", width, height));
         ViewGroup.LayoutParams params = contentLayout.getLayoutParams();
         if (params == null) {
             params = new ViewGroup.LayoutParams(width, height);
@@ -237,7 +236,7 @@ public abstract class BasicPopup<V extends View> implements DialogInterface.OnKe
             showAfter();
             return;
         }
-        LogUtils.verbose(this, "do something before popup show");
+        //LogUtils.verbose(this, "do something before popup show");
         setContentViewBefore();
         V view = makeContentView();
         setContentView(view);// 设置弹出窗体的布局
@@ -248,7 +247,7 @@ public abstract class BasicPopup<V extends View> implements DialogInterface.OnKe
     }
 
     protected void showAfter() {
-        LogUtils.verbose(this, "popup show");
+        // LogUtils.verbose(this, "popup show");
     }
 
     public void dismiss() {
@@ -257,7 +256,7 @@ public abstract class BasicPopup<V extends View> implements DialogInterface.OnKe
 
     protected final void dismissImmediately() {
         dialog.dismiss();
-        LogUtils.verbose(this, "popup dismiss");
+        // LogUtils.verbose(this, "popup dismiss");
     }
 
     public boolean onBackPress() {

@@ -21,7 +21,6 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 
 import com.inspur.emmcloud.baselib.widget.TimePicker.Utils.ConvertUtils;
-import com.inspur.emmcloud.baselib.widget.TimePicker.Utils.LogUtils;
 import com.inspur.emmcloud.baselib.widget.TimePicker.entitiy.WheelItem;
 
 import java.util.ArrayList;
@@ -425,7 +424,6 @@ public class WheelView extends View {
                 measuredWidth += obtainTextWidth(paintCenterText, label);
             }
         }
-        LogUtils.debug("measuredWidth=" + measuredWidth + ",measuredHeight=" + measuredHeight);
         //计算两条横线 和 选中项画笔的基线Y位置
         firstLineY = (measuredHeight - itemHeight) / 2.0F;
         secondLineY = (measuredHeight + itemHeight) / 2.0F;

@@ -96,8 +96,8 @@ public class DateUtils extends android.text.format.DateUtils {
         long elapsedMinutes = differentMilliSeconds / minutesInMilli;
         differentMilliSeconds = differentMilliSeconds % minutesInMilli;
         long elapsedSeconds = differentMilliSeconds / secondsInMilli;
-        LogUtils.verbose(String.format(Locale.CHINA, "different: %d ms, %d days, %d hours, %d minutes, %d seconds",
-                differentMilliSeconds, elapsedDays, elapsedHours, elapsedMinutes, elapsedSeconds));
+//        LogUtils.verbose(String.format(Locale.CHINA, "different: %d ms, %d days, %d hours, %d minutes, %d seconds",
+//                differentMilliSeconds, elapsedDays, elapsedHours, elapsedMinutes, elapsedSeconds));
         return new long[]{elapsedDays, elapsedHours, elapsedMinutes, elapsedSeconds};
     }
 
@@ -155,7 +155,7 @@ public class DateUtils extends android.text.format.DateUtils {
             }
             return Integer.parseInt(text);
         } catch (NumberFormatException e) {
-            LogUtils.warn(e);
+            // LogUtils.warn(e);
             return 0;
         }
     }
@@ -192,7 +192,7 @@ public class DateUtils extends android.text.format.DateUtils {
             Date date = dateFormat.parse(dateStr);
             return new Date(date.getTime());
         } catch (ParseException e) {
-            LogUtils.warn(e);
+            // LogUtils.warn(e);
             return null;
         }
     }
