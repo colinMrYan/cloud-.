@@ -386,7 +386,6 @@ public class DateTimePicker extends WheelPicker {
             initHourData();
         }
         if (timeMode != NONE && minutes.size() == 0) {
-            //LogUtils.verbose(this, "init minutes before make view");
             changeMinuteData(DateUtils.trimZero(selectedHour));
         }
 
@@ -411,7 +410,6 @@ public class DateTimePicker extends WheelPicker {
                     if (onWheelListener != null) {
                         onWheelListener.onYearWheeled(selectedYearIndex, selectedYearStr);
                     }
-                    // LogUtils.verbose(this, "change months after year wheeled");
                     if (resetWhileWheel) {
                         selectedMonthIndex = 0;//重置月份索引
                         selectedDayIndex = 0;//重置日子索引
@@ -451,7 +449,6 @@ public class DateTimePicker extends WheelPicker {
                         onWheelListener.onMonthWheeled(selectedMonthIndex, selectedMonthStr);
                     }
                     if (dateMode == YEAR_MONTH_DAY || dateMode == MONTH_DAY) {
-                        // LogUtils.verbose(this, "change days after month wheeled");
                         if (resetWhileWheel) {
                             selectedDayIndex = 0;//重置日子索引
                         }
@@ -509,7 +506,6 @@ public class DateTimePicker extends WheelPicker {
                     if (onWheelListener != null) {
                         onWheelListener.onHourWheeled(index, selectedHour);
                     }
-                    // LogUtils.verbose(this, "change minutes after hour wheeled");
                     changeMinuteData(DateUtils.trimZero(selectedHour));
                     minuteView.setItems(minutes, selectedMinute);
                 }
@@ -630,7 +626,6 @@ public class DateTimePicker extends WheelPicker {
             } else {
                 preSelectMonth = DateUtils.fillZero(Calendar.getInstance().get(Calendar.MONTH) + 1);
             }
-            // LogUtils.verbose(this, "preSelectMonth=" + preSelectMonth);
         }
         months.clear();
         if (startMonth < 1 || endMonth < 1 || startMonth > 12 || endMonth > 12) {
@@ -680,7 +675,6 @@ public class DateTimePicker extends WheelPicker {
             } else {
                 preSelectDay = DateUtils.fillZero(Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
             }
-            //  LogUtils.verbose(this, "maxDays=" + maxDays + ", preSelectDay=" + preSelectDay);
         }
         days.clear();
         if (selectedYear == startYear && selectedMonth == startMonth

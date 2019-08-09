@@ -261,7 +261,7 @@ public class ConvertUtils {
             is.close();
             return bytes;
         } catch (IOException e) {
-            //  LogUtils.warn(e);
+            e.printStackTrace();
         }
         return null;
     }
@@ -277,7 +277,7 @@ public class ConvertUtils {
         try {
             os.close();
         } catch (IOException e) {
-            // LogUtils.warn(e);
+            e.printStackTrace();
         }
         return bytes;
     }
@@ -298,7 +298,7 @@ public class ConvertUtils {
                 bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);
                 bitmap.setDensity(96);// 96 dpi
             } catch (Exception e) {
-                //  LogUtils.error(e);
+                e.printStackTrace();
             }
         }
         return bitmap;
@@ -340,10 +340,8 @@ public class ConvertUtils {
     @TargetApi(Build.VERSION_CODES.KITKAT)
     public static String toPath(Context context, Uri uri) {
         if (uri == null) {
-            // LogUtils.verbose("uri is null");
             return "";
         }
-        //  LogUtils.verbose("uri: " + uri.toString());
         String path = uri.getPath();
         String scheme = uri.getScheme();
         String authority = uri.getAuthority();
@@ -395,7 +393,6 @@ public class ConvertUtils {
                 return uri.getPath();
             }
         }
-        // LogUtils.verbose("uri to path: " + path);
         return path;
     }
 
@@ -411,7 +408,7 @@ public class ConvertUtils {
                 cursor.close();
             }
         } catch (IllegalArgumentException e) {
-            // LogUtils.error(e);
+            e.printStackTrace();
         }
         return filePath;
     }
@@ -460,7 +457,6 @@ public class ConvertUtils {
         canvas.save();
         canvas.restore();
         if (!bitmap.isRecycled()) {
-            // LogUtils.verbose("recycle bitmap: " + bitmap.toString());
             bitmap.recycle();
         }
         // Restore the view
@@ -488,7 +484,6 @@ public class ConvertUtils {
     public static int toPx(Context context, float dpValue) {
         final float scale = context.getResources().getDisplayMetrics().density;
         int pxValue = (int) (dpValue * scale + 0.5f);
-        //  LogUtils.verbose(dpValue + " dp == " + pxValue + " px");
         return pxValue;
     }
 
@@ -498,7 +493,6 @@ public class ConvertUtils {
     public static int toDp(Context context, float pxValue) {
         final float scale = context.getResources().getDisplayMetrics().density;
         int dpValue = (int) (pxValue / scale + 0.5f);
-        //LogUtils.verbose(pxValue + " px == " + dpValue + " dp");
         return dpValue;
     }
 
@@ -508,7 +502,6 @@ public class ConvertUtils {
     public static int toSp(Context context, float pxValue) {
         final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
         int spValue = (int) (pxValue / fontScale + 0.5f);
-        // LogUtils.verbose(pxValue + " px == " + spValue + " sp");
         return spValue;
     }
 
@@ -516,7 +509,7 @@ public class ConvertUtils {
         try {
             return new String(str.getBytes("utf-8"), "gbk");
         } catch (UnsupportedEncodingException e) {
-            //  LogUtils.warn(e);
+            e.printStackTrace();
             return str;
         }
     }
@@ -551,7 +544,7 @@ public class ConvertUtils {
             reader.close();
             is.close();
         } catch (IOException e) {
-            // LogUtils.error(e);
+            e.printStackTrace();
         }
         return sb.toString();
     }
@@ -601,10 +594,8 @@ public class ConvertUtils {
         String colorString;
         if (includeAlpha) {
             colorString = alpha + red + green + blue;
-            // LogUtils.verbose(String.format(Locale.CHINA, "%d to color string is %s", color, colorString));
         } else {
             colorString = red + green + blue;
-            //  LogUtils.verbose(String.format(Locale.CHINA, "%d to color string is %s%s%s%s, exclude alpha is %s", color, alpha, red, green, blue, colorString));
         }
         return colorString;
     }

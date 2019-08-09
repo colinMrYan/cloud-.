@@ -155,7 +155,7 @@ public class DateUtils extends android.text.format.DateUtils {
             }
             return Integer.parseInt(text);
         } catch (NumberFormatException e) {
-            // LogUtils.warn(e);
+            e.printStackTrace();
             return 0;
         }
     }
@@ -192,7 +192,7 @@ public class DateUtils extends android.text.format.DateUtils {
             Date date = dateFormat.parse(dateStr);
             return new Date(date.getTime());
         } catch (ParseException e) {
-            // LogUtils.warn(e);
+            e.printStackTrace();
             return null;
         }
     }
