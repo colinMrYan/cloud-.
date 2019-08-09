@@ -44,7 +44,7 @@ public class ScheduleTypeSelectActivity extends BaseActivity {
     public void onCreate() {
         ButterKnife.bind(this);
         boolean isEnableExchange = PreferencesByUserAndTanentUtils.getBoolean(BaseApplication.getInstance(), Constant.PREF_SCHEDULE_ENABLE_EXCHANGE, false);
-        scheduleTypeList = ScheduleCalendarCacheUtils.getScheduleCalendarList(BaseApplication.getInstance(), isEnableExchange);
+        scheduleTypeList = ScheduleCalendarCacheUtils.getScheduleCalendarList(BaseApplication.getInstance());
         cleanState();
         scheduleTypeAdapter = new ScheduleTypeAdapter();
         scheduleTypesListView.setAdapter(scheduleTypeAdapter);
