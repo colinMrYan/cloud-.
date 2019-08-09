@@ -56,6 +56,7 @@ public class CommunicationSearchContactActivity extends BaseActivity implements 
     ListView searchGroupListView;
     private Runnable searchRunnable;
     private List<SearchModel> searchChannelGroupList = new ArrayList<>(); // 群组搜索结果
+    private List<SearchModel> searchContactlList = new ArrayList<>(); // 人员搜索结果
     private List<Contact> excludeContactList = new ArrayList<>();//不显示某些数据
     private String searchArea = SEARCH_GROUP;
     private String searchText;
@@ -152,7 +153,8 @@ public class CommunicationSearchContactActivity extends BaseActivity implements 
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_cancel:
-                finish();
+                //  finish();
+
                 break;
         }
     }
