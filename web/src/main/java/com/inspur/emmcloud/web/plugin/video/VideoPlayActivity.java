@@ -23,7 +23,7 @@ import butterknife.ButterKnife;
 public class VideoPlayActivity extends Activity implements CustomVideoView.VideoViewCallback {
     private static final String SEEK_POSITION_KEY = "SEEK_POSITION_KEY";
     //    private static final String VIDEO_URL = "https://vdse.bdstatic.com//ce44ed85d9608aaf01970e496fbc63f2?authorization=bce-auth-v1%2Ffb297a5cc0fb434c971b8fa103e8dd7b%2F2017-05-11T09%3A02%3A31Z%2F-1%2F%2F1a46fa9e9c912d194a415dc7269541e05105a0aab7777de5a9e96b8a7bdb4997";
-    private static final String VIDEO_URL = Environment.getExternalStorageDirectory().getPath() + "/myvideo/V096752.mp4";
+    private String VIDEO_URL = Environment.getExternalStorageDirectory().getPath() + "/myvideo/V096752.mp4";
     CustomVideoView mVideoView;
     CustomMediaController mMediaController;
     View mVideoLayout;
@@ -43,6 +43,7 @@ public class VideoPlayActivity extends Activity implements CustomVideoView.Video
     }
 
     private void init() {
+        VIDEO_URL = getIntent().getStringExtra("path");
         mVideoLayout = findViewById(R.id.video_layout);
         mVideoView = (CustomVideoView) findViewById(R.id.videoView);
         mMediaController = (CustomMediaController) findViewById(R.id.media_controller);

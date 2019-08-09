@@ -8,16 +8,24 @@ import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
+import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
+import com.inspur.emmcloud.basemodule.api.HttpUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
+import com.inspur.emmcloud.componentservice.login.OauthCallBack;
 import com.inspur.emmcloud.web.plugin.ImpPlugin;
 import com.inspur.emmcloud.web.ui.ImpFragment;
 
 import org.json.JSONObject;
+import org.xutils.http.RequestParams;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,9 +36,37 @@ import java.util.List;
  */
 public class VideoRecordService extends ImpPlugin {
 
+    private String successCb, failCb;
+
     @Override
     public void execute(String action, JSONObject paramsObject) {
-        startRecordVideo(paramsObject);
+        successCb = JSONUtils.getString(paramsObject, "success", "");
+        failCb = JSONUtils.getString(paramsObject, "fail", "");
+
+        switch (action) {
+            case "open":
+                startRecordVideo(paramsObject);
+                break;
+            case "setTitles":
+                break;
+            case "setMenus":
+                break;
+            case "onBackKeyDown":
+                break;
+        }
+
+        if (action.equals("recordVideo")) {
+            startRecordVideo(paramsObject);
+
+            String path = "";
+            jsCallback(successCb, path);
+            jsCallback(failCb);
+        } else if (action.equals("playVideo")) {
+            String path = paramsObject.optString("path");
+            Intent intent = new Intent(getActivity(), VideoPlayActivity.class);
+            intent.putExtra("path", path);
+            getActivity().startActivity(intent);
+        }
     }
 
     private void startRecordVideo(final JSONObject paramsObject) {
@@ -52,7 +88,10 @@ public class VideoRecordService extends ImpPlugin {
                             intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
                             intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
 
-                            getActivity().startActivityForResult(intent, ImpFragment.REQUEST_CODE_RECORD_VIDEO);
+                            if (getImpCallBackInterface() != null) {
+                                getImpCallBackInterface().onStartActivityForResult(intent, ImpFragment.REQUEST_CODE_RECORD_VIDEO);
+                            }
+//                            getActivity().startActivityForResult(intent, ImpFragment.REQUEST_CODE_RECORD_VIDEO);
                         }
 
                         @Override
@@ -105,9 +144,54 @@ public class VideoRecordService extends ImpPlugin {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == ImpFragment.REQUEST_CODE_RECORD_VIDEO && resultCode == 0) {
+        if (requestCode == ImpFragment.REQUEST_CODE_RECORD_VIDEO) {
             Toast.makeText(getActivity(), "Video saved to:\n" +
                     data.getData(), Toast.LENGTH_LONG).show();
+            Log.d("zhang", "onActivityResult: " + data.getData());
+            //上传文件
+            File file = FileUtils.uri2File(getFragmentContext(), data.getData());
+
         }
+    }
+
+    private void uploadFile(String filePath) {
+        final String completeUrl = "";//APIUri.getUpdateUserHeadUrl();
+        RequestParams params = BaseApplication.getInstance()
+                .getHttpRequestParams(completeUrl);
+        File file = new File(filePath);
+        params.setMultipart(true);// 有上传文件时使用multipart表单, 否则上传原始文件流.
+        params.addBodyParameter("head", file);
+        HttpUtils.request(getFragmentContext(), CloudHttpMethod.POST, params, new BaseModuleAPICallback(getFragmentContext(), completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+//                refreshToken(
+//                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+//                apiInterface
+//                        .returnUploadMyHeadSuccess(new GetUploadMyHeadResult(new String(arg0)), filePath);
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+//                apiInterface.returnUploadMyHeadFail(error, responseCode);
+            }
+        });
     }
 }
