@@ -205,7 +205,7 @@
             android:theme="@style/AppTheme_Transparent" />
 
         <activity
-            android:name=".ui.SchemeHandleActivity"
+            android:name=".ui.AppSchemeHandleActivity"
             android:label="@string/send_to_app"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
