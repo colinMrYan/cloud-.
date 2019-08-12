@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.bean.schedule.Schedule;
 import com.inspur.emmcloud.widget.calendardayview.Event;
 
@@ -79,8 +80,8 @@ public class ScheduleEventListAdapter extends RecyclerView.Adapter<ScheduleEvent
         }
         holder.eventImg.setImageResource(event.getEventIconResId(false));
         holder.eventColorImage.setImageResource(event.getCalendarIconResId());
-        holder.eventStartTimeText.setText(startTime);
-        holder.eventEndTimeText.setText(endTime);
+        holder.eventStartTimeText.setText(eventList.get(position).isAllDay() ? BaseApplication.getInstance().getString(R.string.all_day) : startTime);
+        holder.eventEndTimeText.setText(eventList.get(position).isAllDay() ? "" : endTime);
     }
 
 

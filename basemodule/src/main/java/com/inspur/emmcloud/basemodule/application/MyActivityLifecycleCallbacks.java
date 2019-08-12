@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import com.inspur.emmcloud.baselib.router.Router;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.service.PVCollectService;
@@ -69,8 +68,20 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
     public void onActivityStopped(Activity activity) {
         count--;
         if (count == 0) { // app 进入后台
-            LogUtils.jasonDebug("进入后台====================");
-            PreferencesUtils.putLong(BaseApplication.getInstance(), Constant.PREF_APP_BACKGROUND_TIME, System.currentTimeMillis());
+            if (BaseApplication.getInstance().isSafeLock()) {
+                BaseApplication.getInstance().setSafeLock(false);
+                Router router = Router.getInstance();
+                if (router.getService(SettingService.class) != null) {
+                    SettingService settingService = router.getService(SettingService.class);
+                    boolean isSetFaceOrGestureLock = settingService.isSetFaceOrGestureLock();
+                    if (isSetFaceOrGestureLock) {
+                        settingService.closeOriginLockPage();
+                    }
+
+                }
+            } else {
+                PreferencesUtils.putLong(BaseApplication.getInstance(), Constant.PREF_APP_BACKGROUND_TIME, System.currentTimeMillis());
+            }
             BaseApplication.getInstance().setIsActive(false);
             if (BaseApplication.getInstance().isHaveLogin()) {
                 startUploadPVCollectService(BaseApplication.getInstance());
@@ -106,6 +117,7 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
             boolean isSetFaceOrGestureLock = settingService.isSetFaceOrGestureLock();
             if (isSetFaceOrGestureLock) {
                 BaseApplication.getInstance().setSafeLock(true);
+                settingService.closeOriginLockPage();
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
