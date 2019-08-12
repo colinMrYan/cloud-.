@@ -6,15 +6,19 @@
         <activity
             android:name=".ui.ImpActivity"
             android:configChanges="orientation|screenSize"
-            android:resizeableActivity="true" />
-
+            android:resizeableActivity="true">
+            <intent-filter>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="*/*" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".plugin.barcode.scan.CaptureActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:stateNotNeeded="true"
             android:supportsRtl="true" />
-
         <activity
             android:name=".plugin.barcode.decoder.PreviewDecodeActivity"
             android:resizeableActivity="true"

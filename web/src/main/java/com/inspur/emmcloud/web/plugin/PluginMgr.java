@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.web.plugin;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -21,6 +22,7 @@ import com.inspur.emmcloud.web.plugin.gps.GpsService;
 import com.inspur.emmcloud.web.plugin.loadingdialog.LoadingDialogService;
 import com.inspur.emmcloud.web.plugin.map.MapService;
 import com.inspur.emmcloud.web.plugin.network.NetworkService;
+import com.inspur.emmcloud.web.plugin.nfc.NFCService;
 import com.inspur.emmcloud.web.plugin.photo.PhotoService;
 import com.inspur.emmcloud.web.plugin.sms.SmsService;
 import com.inspur.emmcloud.web.plugin.sql.SqlService;
@@ -246,6 +248,8 @@ public class PluginMgr {
                 serviceName = SqlService.class.getCanonicalName();
             } else if (serviceName.endsWith("VideoService")) {
                 serviceName = VideoService.class.getCanonicalName();
+            } else if (serviceName.endsWith("NFCService")) {
+                serviceName = NFCService.class.getCanonicalName();
             }
             LogUtils.jasonDebug("serviceName==" + serviceName);
         }
@@ -349,4 +353,24 @@ public class PluginMgr {
             }
         }
     }
+
+    /**
+     * activity onResume事件
+     */
+    public void onStar() {
+        for (IPlugin plugin : entries.values()) {
+            if (plugin != null) {
+                plugin.onActivityStart();
+            }
+        }
+    }
+
+    public void onNewIntent(Intent intent) {
+        for (IPlugin plugin : entries.values()) {
+            if (plugin != null) {
+                plugin.onActivityNewIntent(intent);
+            }
+        }
+    }
+
 }

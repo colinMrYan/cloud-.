@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.web.ui;
 
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.view.KeyEvent;
 import android.view.WindowManager;
@@ -45,4 +46,9 @@ public class ImpActivity extends ImpFragmentBaseActivity {
         return super.onKeyDown(keyCode, event);
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        fragment.onNewIntent(intent);
+    }
 }
