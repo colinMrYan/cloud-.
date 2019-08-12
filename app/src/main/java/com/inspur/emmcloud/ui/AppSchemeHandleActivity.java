@@ -62,7 +62,7 @@ import java.util.regex.Pattern;
  * scheme统一处理类
  */
 
-public class SchemeHandleActivity extends BaseActivity {
+public class AppSchemeHandleActivity extends BaseActivity {
     private boolean isFirst = true;
 
     @Override
@@ -114,7 +114,7 @@ public class SchemeHandleActivity extends BaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveSafeUnLockMessage(SimpleEventMessage eventMessage) {
         if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_SAFE_UNLOCK)) {
-            new ProfileUtils(SchemeHandleActivity.this, new CommonCallBack() {
+            new ProfileUtils(AppSchemeHandleActivity.this, new CommonCallBack() {
                 @Override
                 public void execute() {
                     openScheme();
@@ -158,9 +158,9 @@ public class SchemeHandleActivity extends BaseActivity {
                             case "ecm-contact":
                                 bundle.putString("uid", host);
                                 if (host.startsWith("BOT")) {
-                                    IntentUtils.startActivity(SchemeHandleActivity.this, RobotInfoActivity.class, bundle, true);
+                                    IntentUtils.startActivity(AppSchemeHandleActivity.this, RobotInfoActivity.class, bundle, true);
                                 } else {
-                                    IntentUtils.startActivity(SchemeHandleActivity.this, UserInfoActivity.class, bundle, true);
+                                    IntentUtils.startActivity(AppSchemeHandleActivity.this, UserInfoActivity.class, bundle, true);
                                 }
                                 break;
                             case "ecc-component":
@@ -168,10 +168,10 @@ public class SchemeHandleActivity extends BaseActivity {
                                 break;
                             case "ecc-app-react-native":
                                 bundle.putString(scheme, uri.toString());
-                                IntentUtils.startActivity(SchemeHandleActivity.this, ReactNativeAppActivity.class, bundle, true);
+                                IntentUtils.startActivity(AppSchemeHandleActivity.this, ReactNativeAppActivity.class, bundle, true);
                                 break;
                             case "gs-msg":
-                                if (!NetUtils.isNetworkConnected(SchemeHandleActivity.this)) {
+                                if (!NetUtils.isNetworkConnected(AppSchemeHandleActivity.this)) {
                                     finish();
                                     break;
                                 }
@@ -182,15 +182,15 @@ public class SchemeHandleActivity extends BaseActivity {
                                 bundle.putString("cid", host);
                                 bundle.putBoolean(ConversationActivity.EXTRA_NEED_GET_NEW_MESSAGE, true);
                                 if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
-                                    IntentUtils.startActivity(SchemeHandleActivity.this,
+                                    IntentUtils.startActivity(AppSchemeHandleActivity.this,
                                             ChannelV0Activity.class, bundle, true);
                                 } else {
-                                    IntentUtils.startActivity(SchemeHandleActivity.this,
+                                    IntentUtils.startActivity(AppSchemeHandleActivity.this,
                                             ConversationActivity.class, bundle, true);
                                 }
                                 break;
                             case "ecc-app":
-                                AppId2AppAndOpenAppUtils appId2AppAndOpenAppUtils = new AppId2AppAndOpenAppUtils(SchemeHandleActivity.this);
+                                AppId2AppAndOpenAppUtils appId2AppAndOpenAppUtils = new AppId2AppAndOpenAppUtils(AppSchemeHandleActivity.this);
                                 appId2AppAndOpenAppUtils.setOnFinishActivityListener(new AppId2AppAndOpenAppUtils.OnFinishActivityListener() {
                                     @Override
                                     public void onFinishActivity() {
@@ -205,7 +205,7 @@ public class SchemeHandleActivity extends BaseActivity {
                                 if (content != null) {
                                     JSONObject calEventObj = JSONUtils.getJSONObject(content);
                                     CalendarEvent calendarEvent = new CalendarEvent(calEventObj);
-                                    Intent intent = new Intent(SchemeHandleActivity.this, ScheduleDetailActivity.class);
+                                    Intent intent = new Intent(AppSchemeHandleActivity.this, ScheduleDetailActivity.class);
                                     intent.putExtra("calEvent", calendarEvent);
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                     startActivity(intent);
@@ -221,7 +221,7 @@ public class SchemeHandleActivity extends BaseActivity {
                                     finish();
 //                                    IntentUtils.startActivity(SchemeHandleActivity.this, GroupNewsActivity.class, true);
                                 } else if (host.equals("volume")) {
-                                    IntentUtils.startActivity(SchemeHandleActivity.this, VolumeHomePageActivity.class, true);
+                                    IntentUtils.startActivity(AppSchemeHandleActivity.this, VolumeHomePageActivity.class, true);
                                 }
                                 break;
                             case "inspur-ecc-native":
@@ -232,7 +232,7 @@ public class SchemeHandleActivity extends BaseActivity {
                                 List<String> urlList = new ArrayList<>();
                                 String filePath = GetPathFromUri4kitkat.getPathByUri(MyApplication.getInstance(), uri);
                                 if (StringUtils.isBlank(filePath) || !FileUtils.isFileExist(filePath)) {
-                                    ToastUtils.show(SchemeHandleActivity.this, getString(R.string.share_not_support));
+                                    ToastUtils.show(AppSchemeHandleActivity.this, getString(R.string.share_not_support));
                                     finish();
                                 }
                                 urlList.add(filePath);
@@ -265,7 +265,7 @@ public class SchemeHandleActivity extends BaseActivity {
         CustomProtocol customProtocol = new CustomProtocol(content);
         if (customProtocol != null) {
             Intent intent = new Intent();
-            intent.setClass(SchemeHandleActivity.this, ChannelVoiceCommunicationActivity.class);
+            intent.setClass(AppSchemeHandleActivity.this, ChannelVoiceCommunicationActivity.class);
             intent.putExtra("channelId", customProtocol.getParamMap().get("id"));
             intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.INVITEE_LAYOUT_STATE);
             startActivity(intent);
@@ -282,8 +282,12 @@ public class SchemeHandleActivity extends BaseActivity {
             Uri uri = FileUtils.getShareFileUri(getIntent());
             if (isLinkShare()) {
                 handleLinkShare(getShareLinkContent());
+                return;
             } else if (uri != null) {
                 uriList.add(GetPathFromUri4kitkat.getPathByUri(MyApplication.getInstance(), uri));
+            } else {
+                ToastUtils.show(AppSchemeHandleActivity.this, getString(R.string.share_not_support));
+                finish();
             }
         } else if (Intent.ACTION_SEND_MULTIPLE.equals(action)) {
             List<Uri> fileUriList = FileUtils.getShareFileUriList(getIntent());
@@ -294,13 +298,15 @@ public class SchemeHandleActivity extends BaseActivity {
         if (uriList.size() > 0) {
             startVolumeShareActivity(uriList);
         } else {
-            ToastUtils.show(SchemeHandleActivity.this, getString(R.string.share_not_support));
+            ToastUtils.show(AppSchemeHandleActivity.this, getString(R.string.share_not_support));
             finish();
         }
     }
 
     /**
      * 获取title和url
+     * 此处验证过在不同手机不同系统，不同浏览器上Intent的extras有不同，字段名称可能不一样，个数可能不一样
+     * 唯一能确定的是必定含有Intent.EXTRA_TEXT 在华为Mate20 系统9.0 华为原生浏览器上就只有此字段
      *
      * @return
      */
@@ -313,12 +319,13 @@ public class SchemeHandleActivity extends BaseActivity {
         if (intent != null) {
             String text = intent.getExtras().getString(Intent.EXTRA_TEXT);
             String subject = intent.getExtras().getString(Intent.EXTRA_SUBJECT);
+            String url = getContentUrl(intent);
             if (text != null && subject != null) {
-                urlStr = getShareUrl(text);
+                urlStr = !StringUtils.isBlank(url) ? url : getShareUrl(text);
                 titleStr = subject;
                 digest = text.replace(getShareUrl(text), "");
             } else if (text != null && subject == null) {
-                urlStr = getShareUrl(text);
+                urlStr = !StringUtils.isBlank(url) ? url : getShareUrl(text);
                 titleStr = text.replace(urlStr, "");
             } else if (text == null && subject == null) {
                 return shareLinkMap;
@@ -328,6 +335,24 @@ public class SchemeHandleActivity extends BaseActivity {
             shareLinkMap.put("digest", digest);
         }
         return shareLinkMap;
+    }
+
+    /**
+     * 如果包含url，则取出这个url
+     *
+     * @param intent
+     * @return
+     */
+    private String getContentUrl(Intent intent) {
+        Bundle bundle = intent.getExtras();
+        String urlKey = "";
+        for (String key : bundle.keySet()) {
+            if (key.equals("url") || key.endsWith("url")) {
+                urlKey = key;
+                break;
+            }
+        }
+        return bundle.getString(urlKey);
     }
 
     /**
@@ -350,7 +375,8 @@ public class SchemeHandleActivity extends BaseActivity {
      */
     private boolean isLinkShare() {
         Intent intent = getIntent();
-        return intent.getExtras() != null && !StringUtils.isBlank(intent.getExtras().getString(Intent.EXTRA_TEXT));
+        String extraText = intent.getExtras().getString(Intent.EXTRA_TEXT);
+        return intent.getExtras() != null && !StringUtils.isBlank(extraText) && extraText.contains("http");
     }
 
     /**
@@ -367,7 +393,7 @@ public class SchemeHandleActivity extends BaseActivity {
             e.printStackTrace();
         }
         Intent intent = new Intent();
-        intent.setClass(SchemeHandleActivity.this, ShareLinkActivity.class);
+        intent.setClass(AppSchemeHandleActivity.this, ShareLinkActivity.class);
         intent.putExtra(Constant.SHARE_LINK, jsonObject.toString());
         startActivity(intent);
         finish();
@@ -378,7 +404,7 @@ public class SchemeHandleActivity extends BaseActivity {
      */
     private void startVolumeShareActivity(List<String> uriList) {
         Intent intent = new Intent();
-        intent.setClass(SchemeHandleActivity.this, ShareFilesActivity.class);
+        intent.setClass(AppSchemeHandleActivity.this, ShareFilesActivity.class);
         intent.putExtra(Constant.SHARE_FILE_URI_LIST, (Serializable) uriList);
         startActivity(intent);
         finish();
@@ -393,7 +419,7 @@ public class SchemeHandleActivity extends BaseActivity {
      */
     private void openWebApp(String host, final String openMode) {
         String url = APIUri.getGSMsgSchemeUrl(host);
-        new WebAppUtils(SchemeHandleActivity.this, new WebAppUtils.OnGetWebAppRealUrlListener() {
+        new WebAppUtils(AppSchemeHandleActivity.this, new WebAppUtils.OnGetWebAppRealUrlListener() {
             @Override
             public void getWebAppRealUrlSuccess(String webAppUrl) {
                 boolean isUriHasTitle = (openMode != null && openMode.equals("1"));
@@ -401,12 +427,12 @@ public class SchemeHandleActivity extends BaseActivity {
                 bundle.putString("uri", webAppUrl);
                 bundle.putBoolean(Constant.WEB_FRAGMENT_SHOW_HEADER, isUriHasTitle);
                 ARouter.getInstance().build(Constant.AROUTER_CLASS_WEB_MAIN).with(bundle).navigation();
-                SchemeHandleActivity.this.finish();
+                AppSchemeHandleActivity.this.finish();
             }
 
             @Override
             public void getWebAppRealUrlFail() {
-                ToastUtils.show(SchemeHandleActivity.this, R.string.react_native_app_open_failed);
+                ToastUtils.show(AppSchemeHandleActivity.this, R.string.react_native_app_open_failed);
                 finish();
             }
         }).getWebAppRealUrl(url);
@@ -462,7 +488,7 @@ public class SchemeHandleActivity extends BaseActivity {
                 String installUri = intent.getExtras().getString("installUri", "");
                 Bundle bundle = new Bundle();
                 bundle.putString("installUri", installUri);
-                ARouter.getInstance().build(Constant.AROUTER_CLASS_WEBEX_MAIN).with(bundle).navigation(SchemeHandleActivity.this);
+                ARouter.getInstance().build(Constant.AROUTER_CLASS_WEBEX_MAIN).with(bundle).navigation(AppSchemeHandleActivity.this);
                 finish();
                 break;
             case "mail":
@@ -471,12 +497,12 @@ public class SchemeHandleActivity extends BaseActivity {
                         .setOnExchangeLoginListener(new OnExchangeLoginListener() {
                             @Override
                             public void onMailLoginSuccess() {
-                                IntentUtils.startActivity(SchemeHandleActivity.this, MailHomeActivity.class, true);
+                                IntentUtils.startActivity(AppSchemeHandleActivity.this, MailHomeActivity.class, true);
                             }
 
                             @Override
                             public void onMailLoginFail(String error, int errorCode) {
-                                IntentUtils.startActivity(SchemeHandleActivity.this, MailLoginActivity.class, true);
+                                IntentUtils.startActivity(AppSchemeHandleActivity.this, MailLoginActivity.class, true);
                             }
                         }).build().login();
                 break;
@@ -495,7 +521,7 @@ public class SchemeHandleActivity extends BaseActivity {
     private void openScheduleActivity(String query, Class scheduleActivity) {
         Bundle bundle = new Bundle();
         bundle.putString(Constant.SCHEDULE_QUERY, query);
-        IntentUtils.startActivity(SchemeHandleActivity.this, scheduleActivity, bundle);
+        IntentUtils.startActivity(AppSchemeHandleActivity.this, scheduleActivity, bundle);
     }
 
     private void openComponentScheme(Uri uri, String host) {
