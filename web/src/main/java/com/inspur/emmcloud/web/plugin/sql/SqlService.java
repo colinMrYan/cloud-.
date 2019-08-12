@@ -34,7 +34,6 @@ public class SqlService extends ImpPlugin {
 
     @Override
     public String executeAndReturn(String action, JSONObject paramsObject) {
-        operateDataBase(action, paramsObject);
         return "";
     }
 
@@ -82,7 +81,7 @@ public class SqlService extends ImpPlugin {
 //        sql = "create database myDatabase";    //sqlite不支持Sql语句创建数据库  只支持命令创建数据库
         try {
             if (isSelectSql(sql)) {
-                Cursor myCursor = this.database.rawQuery(sql,null);
+                Cursor myCursor = this.database.rawQuery(sql, null);
                 this.processResults(myCursor);
                 myCursor.close();
             } else {
@@ -93,7 +92,13 @@ public class SqlService extends ImpPlugin {
         } catch (Exception e) {
             e.printStackTrace();
             // 将错误信息反馈回前台
-            jsCallback(failCb, e.getMessage());
+            JSONObject errorMessageJsonObject = new JSONObject();
+            try {
+                errorMessageJsonObject.put("errorMessage", e.getMessage());
+                jsCallback(failCb, errorMessageJsonObject.toString());
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
         }
     }
 
@@ -118,15 +123,17 @@ public class SqlService extends ImpPlugin {
      */
     private void processResults(Cursor cursor) {
         JSONArray result = new JSONArray();
-        if (cursor.moveToFirst()) {
-            String key = "";
-            String value = "";
-            //一共有多少条记录
-            int colCount = cursor.getColumnCount();
-            //第一层循环取出每条记录
-            do {
-                JSONObject row = new JSONObject();
-                try {
+        JSONObject resultJsonObject = new JSONObject();
+        try {
+            if (cursor.moveToFirst()) {
+                String key = "";
+                String value = "";
+                //一共有多少条记录
+                int colCount = cursor.getColumnCount();
+                //第一层循环取出每条记录
+                do {
+                    JSONObject row = new JSONObject();
+
                     //第二层循环取出记录中的字段名和字段值包装成json
                     for (int i = 0; i < colCount; ++i) {
                         key = cursor.getColumnName(i);
@@ -135,13 +142,15 @@ public class SqlService extends ImpPlugin {
                     }
                     //每个json是一条记录，result是整个结果
                     result.put(row);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            } while (cursor.moveToNext());
+
+                } while (cursor.moveToNext());
+            }
+            resultJsonObject.put("result", result);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         // 将查询结果传回前台
-        jsCallback(successCb, result.toString());
+        jsCallback(successCb, resultJsonObject.toString());
     }
 
     @Override
