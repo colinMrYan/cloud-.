@@ -13,7 +13,6 @@
                 <data android:mimeType="*/*" />
             </intent-filter>
         </activity>
-        >
         <activity
             android:name=".plugin.barcode.scan.CaptureActivity"
             android:resizeableActivity="true"
