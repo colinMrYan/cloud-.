@@ -106,7 +106,7 @@ public class MapService extends ImpPlugin {
             Double fromLatitude = JSONUtils.getDouble(jsonObject, "srclat", null);
             Double toLongitude = JSONUtils.getDouble(jsonObject, "dstlng", 0);
             Double toLatitude = JSONUtils.getDouble(jsonObject, "dstlat", 0);
-            String coordType = JSONUtils.getString(jsonObject, "coordtype", "WGS84");
+            String coordType = JSONUtils.getString(jsonObject, "coordType", "WGS84");
             if (coordType.equals("WGS84")) {
                 if (fromLatitude != null && fromLatitude != null) {
                     double[] fromLocation = ECMLoactionTransformUtils.wgs84togcj02(fromLongitude, fromLatitude);
