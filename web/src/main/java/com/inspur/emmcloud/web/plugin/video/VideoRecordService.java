@@ -10,6 +10,8 @@ import android.widget.Toast;
 
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
 import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
 import com.inspur.emmcloud.basemodule.api.HttpUtils;
@@ -37,6 +39,7 @@ import java.util.List;
 public class VideoRecordService extends ImpPlugin {
 
     private String successCb, failCb;
+    private String uploadUrl;
 
     @Override
     public void execute(String action, JSONObject paramsObject) {
@@ -70,6 +73,7 @@ public class VideoRecordService extends ImpPlugin {
     }
 
     private void startRecordVideo(final JSONObject paramsObject) {
+        uploadUrl = paramsObject.optString("url");
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getActivity(), Permissions.CAMERA,
                     new PermissionRequestCallback() {
@@ -150,17 +154,20 @@ public class VideoRecordService extends ImpPlugin {
             Log.d("zhang", "onActivityResult: " + data.getData());
             //上传文件
             File file = FileUtils.uri2File(getFragmentContext(), data.getData());
-
+            uploadFile(file.getPath());
         }
     }
 
     private void uploadFile(String filePath) {
-        final String completeUrl = "";//APIUri.getUpdateUserHeadUrl();
+        final String completeUrl = uploadUrl;
         RequestParams params = BaseApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
         File file = new File(filePath);
         params.setMultipart(true);// 有上传文件时使用multipart表单, 否则上传原始文件流.
-        params.addBodyParameter("head", file);
+        params.addBodyParameter("video", file);
+        final LoadingDialog loadingDlg = new LoadingDialog(getFragmentContext());
+        loadingDlg.setText("上传中。。。");
+        loadingDlg.show();
         HttpUtils.request(getFragmentContext(), CloudHttpMethod.POST, params, new BaseModuleAPICallback(getFragmentContext(), completeUrl) {
 
             @Override
@@ -174,6 +181,7 @@ public class VideoRecordService extends ImpPlugin {
                     @Override
                     public void executeFailCallback() {
                         callbackFail("", -1);
+                        LoadingDialog.dimissDlg(loadingDlg);
                     }
                 };
 //                refreshToken(
@@ -183,6 +191,8 @@ public class VideoRecordService extends ImpPlugin {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
+                ToastUtils.show("上传成功");
+                LoadingDialog.dimissDlg(loadingDlg);
 //                apiInterface
 //                        .returnUploadMyHeadSuccess(new GetUploadMyHeadResult(new String(arg0)), filePath);
             }
@@ -190,6 +200,8 @@ public class VideoRecordService extends ImpPlugin {
             @Override
             public void callbackFail(String error, int responseCode) {
                 // TODO Auto-generated method stub
+                ToastUtils.show("上传失败");
+                LoadingDialog.dimissDlg(loadingDlg);
 //                apiInterface.returnUploadMyHeadFail(error, responseCode);
             }
         });
