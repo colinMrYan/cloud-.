@@ -1397,4 +1397,28 @@ public class FileUtils {
         boolean isOk = srcDir.renameTo(new File(dest));
         return isOk;
     }
+
+    /**
+     * 读取指定文件目录下的文件名列表
+     *
+     * @param dicName                         目录名称
+     * @param listFileNamesIncludeChildForder 是否需要读取子目录下的文件名
+     * @return
+     */
+    public static List<String> getFileNamesInFolder(String dicName, boolean listFileNamesIncludeChildForder) {
+        ArrayList arrayList = new ArrayList();
+        if (!StringUtils.isBlank(dicName)) {
+            File file = new File(dicName);
+            if (file.isDirectory()) {
+                for (File fileInPath : file.listFiles()) {
+                    if (fileInPath.isFile()) {
+                        arrayList.add(fileInPath.getAbsolutePath());
+                    } else if (listFileNamesIncludeChildForder && fileInPath.isDirectory()) {
+                        getFileNamesInFolder(fileInPath.getAbsolutePath(), listFileNamesIncludeChildForder);
+                    }
+                }
+            }
+        }
+        return arrayList;
+    }
 }

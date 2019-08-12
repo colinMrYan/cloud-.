@@ -23,6 +23,7 @@ import com.inspur.emmcloud.web.plugin.map.MapService;
 import com.inspur.emmcloud.web.plugin.network.NetworkService;
 import com.inspur.emmcloud.web.plugin.photo.PhotoService;
 import com.inspur.emmcloud.web.plugin.sms.SmsService;
+import com.inspur.emmcloud.web.plugin.sql.SqlService;
 import com.inspur.emmcloud.web.plugin.staff.SelectStaffService;
 import com.inspur.emmcloud.web.plugin.staff.StuffInformationService;
 import com.inspur.emmcloud.web.plugin.startapp.StartAppService;
@@ -241,6 +242,8 @@ public class PluginMgr {
                 serviceName = StuffInformationService.class.getCanonicalName();
             } else if (serviceName.endsWith("TelephoneService")) {
                 serviceName = TelephoneService.class.getCanonicalName();
+            } else if (serviceName.endsWith("SqlService")) {
+                serviceName = SqlService.class.getCanonicalName();
             } else if (serviceName.endsWith("VideoRecordService")) {
                 serviceName = VideoRecordService.class.getCanonicalName();
             }
