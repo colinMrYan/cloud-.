@@ -117,7 +117,7 @@ public class PluginMgr {
             }
             // 执行接口的execute方法
             if (plugin != null) {
-                plugin.execute("getNFCInfo", jo);
+                plugin.execute(action, jo);
             } else {
                 if (impCallBackInterface != null) {
                     impCallBackInterface.onShowImpDialog();
@@ -245,10 +245,11 @@ public class PluginMgr {
                 serviceName = TelephoneService.class.getCanonicalName();
             } else if (serviceName.endsWith("VideoRecordService")) {
                 serviceName = VideoRecordService.class.getCanonicalName();
+            } else if (serviceName.endsWith("NFCService")) {
+                serviceName = NFCService.class.getCanonicalName();
             }
             LogUtils.jasonDebug("serviceName==" + serviceName);
         }
-        serviceName = NFCService.class.getCanonicalName();
         return serviceName;
     }
 
