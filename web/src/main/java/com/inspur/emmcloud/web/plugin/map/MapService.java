@@ -43,7 +43,7 @@ public class MapService extends ImpPlugin {
             case "doNaviByMapId":
                 navigationToDestination(jsonObject);
                 break;
-            case "navigationByAutonavi":
+            case "navigationByAutoNavi":
                 navigationByAutonavi(jsonObject);
                 break;
             default:
@@ -155,7 +155,13 @@ public class MapService extends ImpPlugin {
 
     private void callbackFail(String errorMessage) {
         if (!StringUtils.isBlank(failCb)) {
-            this.jsCallback(failCb, errorMessage);
+            JSONObject object = new JSONObject();
+            try {
+                object.put("errorMessage", errorMessage);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            this.jsCallback(failCb, object.toString());
         }
 
     }
