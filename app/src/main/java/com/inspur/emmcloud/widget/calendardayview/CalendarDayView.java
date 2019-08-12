@@ -101,12 +101,6 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
         return false;
     }
 
-    public void setEventList(List<Event> eventList, Calendar selectCalendar) {
-        this.selectCalendar = selectCalendar;
-        this.eventList = eventList;
-        initTimeHourRow();
-        showEventList();
-    }
 
     /**
      * 显示添加日程Event的DragView的时间
@@ -207,130 +201,96 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
 
     }
 
-    /**
-     * 初始化每个小时时间段，将所有有交集的时间段整合起来，这些事件段汇总event的宽度是一致的。
-     */
-    private void initTimeHourRow() {
-        timeHourRowList.clear();
-        int parentWidth = this.getWidth();
-        for (int i = 0; i < 24; i++) {
-            timeHourRowList.add(new TimeHourRow(i, parentWidth));
-        }
-        List<MatheSet> matheSetList = new ArrayList<>();
 
-        for (Event event : eventList) {
-            int startHour = event.getDayEventStartTime(selectCalendar).get(Calendar.HOUR_OF_DAY);
-            int endHour = event.getDayEventEndTime(selectCalendar).get(Calendar.HOUR_OF_DAY);
-            int endMin = event.getDayEventEndTime(selectCalendar).get(Calendar.MINUTE);
-            if (endMin == 0) {
-                endHour = endHour - 1;
+    public void setEventList(List<Event> eventList, final Calendar selectCalendar) {
+        this.selectCalendar = selectCalendar;
+        this.eventList = eventList;
+        sortEventList();
+        setEventIntersectionGroup();
+        showEventLayout();
+    }
+
+    /**
+     * 按开始时间排序，便于按次序显示
+     */
+    private void sortEventList() {
+        Collections.sort(eventList, new Comparator<Event>() {
+            @Override
+            public int compare(Event event1, Event event2) {
+                long eventStartTime1 = event1.getEventStartTime().getTimeInMillis();
+                long eventStartTime2 = event2.getEventStartTime().getTimeInMillis();
+                if (eventStartTime1 > eventStartTime2) {
+                    return 1;
+                }
+
+                if (eventStartTime1 < eventStartTime2) {
+                    return -1;
+                }
+                return 0;
             }
-            for (int i = startHour; i <= endHour; i++) {
-                timeHourRowList.get(i).getEventList().add(event);
-            }
-            MatheSet matheSet = new MatheSet((long) startHour, (long) endHour);
-            Iterator<MatheSet> it = matheSetList.iterator();
+        });
+    }
+
+
+    /**
+     * 找出所有相交的Event并进行分组，不同组之间不相交，同组之间会有相交
+     * 根据组内个数和次序算出每个Event的宽度和次序
+     */
+    private void setEventIntersectionGroup() {
+        List<Event> copyEventList = new ArrayList<>();
+        copyEventList.addAll(eventList);
+        while (copyEventList.size() > 0) {
+            List<Event> eventGroup = new ArrayList<>();
+            Iterator<Event> it = copyEventList.iterator();
             while (it.hasNext()) {
-                MatheSet temp = it.next();
-                if (MatheSet.isIntersection(temp, matheSet)) {
-                    matheSet.merge(temp);
+                Event event = it.next();
+                if (eventGroup.size() == 0) {
+                    eventGroup.add(event);
                     it.remove();
+                    continue;
+                }
+                MatheSet matheSet = new MatheSet(((Schedule) event.getEventObj()).getStartTime(), ((Schedule) event.getEventObj()).getEndTime());
+                for (Event eventK : eventGroup) {
+                    MatheSet matheSetK = new MatheSet(((Schedule) eventK.getEventObj()).getStartTime(), ((Schedule) eventK.getEventObj()).getEndTime());
+                    if (MatheSet.isIntersectionWithoutBoundary(matheSet, matheSetK)) {
+                        eventGroup.add(event);
+                        it.remove();
+                        break;
+                    }
+
                 }
             }
-            matheSetList.add(matheSet);
-        }
-        setEventMaxWidth(matheSetList);
-    }
-
-
-    /**
-     * 设置每个时间段event最大宽度
-     *
-     * @param matheSetList
-     */
-    private void setEventMaxWidth(List<MatheSet> matheSetList) {
-        for (TimeHourRow timeHourRow : timeHourRowList) {
-            int timeHourRowEventSize = timeHourRow.getEventList().size();
-            if (timeHourRowEventSize > 1) {
-                timeHourRow.setEventWidth((eventLayout.getWidth() - timeHourRowEventSize * EVENT_GAP) / timeHourRowEventSize);
+            int intersectionSize = eventGroup.size();
+            int eventWidth = (eventLayout.getWidth() - (intersectionSize - 1) * EVENT_GAP) / intersectionSize;
+            for (int i = 0; i < eventGroup.size(); i++) {
+                Event event = eventGroup.get(i);
+                int index = eventList.indexOf(event);
+                eventList.get(index).setIndex(i);
+                eventList.get(index).setMinWidth(eventWidth);
             }
-        }
-
-        for (MatheSet matheSet : matheSetList) {
-            int minChildWidth = eventLayout.getWidth();
-            for (int i = (int) matheSet.getStart(); i <= matheSet.getEnd(); i++) {
-                if (minChildWidth > timeHourRowList.get(i).getEventWidth()) {
-                    minChildWidth = timeHourRowList.get(i).getEventWidth();
-                }
-            }
-            for (int i = (int) matheSet.getStart(); i <= matheSet.getEnd(); i++) {
-                timeHourRowList.get(i).setEventWidth(minChildWidth);
-            }
-
         }
     }
 
-    private void showEventList() {
+    private void showEventLayout() {
         earliestEventOffset = -1;
         eventLayout.removeAllViews();
-        for (TimeHourRow timeHourRow : timeHourRowList) {
-            List<Event> eventList = timeHourRow.getEventList();
-            Collections.sort(eventList, new Comparator<Event>() {
-                @Override
-                public int compare(Event event1, Event event2) {
-                    if (event1.getIndex() >= 0 && event2.getIndex() >= 0) {
-                        return (event1.getIndex() - event2.getIndex());
-                    }
-
-                    if (event1.getIndex() >= 0 && event2.getIndex() < 0) {
-                        return -1;
-                    }
-
-                    if (event1.getIndex() < 0 && event2.getIndex() >= 0) {
-                        return 1;
-                    }
-                    return event2.getDayDurationInMillSeconds(selectCalendar) >= event1.getDayDurationInMillSeconds(selectCalendar) ? 1 : 0;
-                }
-            });
-            List<Event> currentHourStartEventList = new ArrayList<>();
-            List<Event> currentOtherEventList = new ArrayList<>();
-            for (Event event : eventList) {
-                if (event.getIndex() < 0) {
-                    currentHourStartEventList.add(event);
-                } else {
-                    currentOtherEventList.add(event);
-                }
+        for (Event event : eventList) {
+            int eventWidth = event.getMinWidth();
+            int eventHeight = (int) (event.getDayDurationInMillSeconds(selectCalendar) * TIME_HOUR_HEIGHT / 3600000);
+            int marginLeft = (EVENT_GAP + eventWidth) * event.getIndex();
+            Calendar startTime = event.getDayEventStartTime(selectCalendar);
+            Calendar dayStartTime = (Calendar) startTime.clone();
+            dayStartTime.set(Calendar.HOUR_OF_DAY, 0);
+            dayStartTime.set(Calendar.MINUTE, 0);
+            int marginTop = (int) ((startTime.getTimeInMillis() - dayStartTime.getTimeInMillis()) * TIME_HOUR_HEIGHT / 3600000);
+            //为了在打开当天日程时滚动到相应的位置
+            if (earliestEventOffset == -1 || marginTop < earliestEventOffset) {
+                earliestEventOffset = marginTop;
             }
-            eventList.clear();
-            eventList.addAll(currentHourStartEventList);
-            for (Event event : currentOtherEventList) {
-                if (event.getIndex() <= eventList.size()) {
-                    eventList.add(event.getIndex(), event);
-                }
-            }
-            for (int i = 0; i < eventList.size(); i++) {
-                Event event = eventList.get(i);
-                if (event.getIndex() < 0) {
-                    event.setIndex(i);
-                    int eventWidth = timeHourRow.getEventWidth();
-                    int eventHeight = (int) (event.getDayDurationInMillSeconds(selectCalendar) * TIME_HOUR_HEIGHT / 3600000);
-                    int marginLeft = EVENT_GAP * i + eventWidth * i;
-                    Calendar startTime = event.getDayEventStartTime(selectCalendar);
-                    Calendar dayStartTime = (Calendar) startTime.clone();
-                    dayStartTime.set(Calendar.HOUR_OF_DAY, 0);
-                    dayStartTime.set(Calendar.MINUTE, 0);
-                    int marginTop = (int) ((startTime.getTimeInMillis() - dayStartTime.getTimeInMillis()) * TIME_HOUR_HEIGHT / 3600000);
-                    //为了在打开当天日程时滚动到相应的位置
-                    if (earliestEventOffset == -1 || marginTop < earliestEventOffset) {
-                        earliestEventOffset = marginTop;
-                    }
-                    RelativeLayout.LayoutParams eventLayoutParams = new RelativeLayout.LayoutParams(eventWidth,
-                            eventHeight);
-                    eventLayoutParams.setMargins(marginLeft, marginTop, 0, 0);
-                    setEventLayout(event, eventLayoutParams);
-                }
-
-            }
+            RelativeLayout.LayoutParams eventLayoutParams = new RelativeLayout.LayoutParams(eventWidth,
+                    eventHeight);
+            eventLayoutParams.setMargins(marginLeft, marginTop, 0, 0);
+            setEventLayout(event, eventLayoutParams);
         }
     }
 
@@ -342,13 +302,8 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
         TextView eventTitleEvent = eventView.findViewById(R.id.tv_event_title);
         TextView eventSubtitleEvent = eventView.findViewById(R.id.tv_event_subtitle);
         if (eventLayoutParams.height >= DensityUtil.dip2px(MyApplication.getInstance(), 20)) {
-            if (eventLayoutParams.height < DensityUtil.dip2px(MyApplication.getInstance(), 26)) {
-                eventTitleEvent.setPadding(0, 0, 0, 0);
-            }
             eventTitleEvent.setVisibility(VISIBLE);
             eventTitleEvent.setText(event.getEventTitle());
-        }
-        if (eventLayoutParams.height >= DensityUtil.dip2px(MyApplication.getInstance(), 26)) {
             eventImg.setVisibility(VISIBLE);
             eventSubtitleEvent.setVisibility(VISIBLE);
             eventImg.setImageResource(event.getEventIconResId(false));
@@ -357,6 +312,9 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
                 subTitle += "截止";
             }
             eventSubtitleEvent.setText(subTitle);
+        }
+        if (event.getEventType().equals(Schedule.TYPE_CALENDAR)) {
+            eventSubtitleEvent.setVisibility(GONE);
         }
         eventLayout.addView(eventView, eventLayoutParams);
         eventView.setOnClickListener(new OnClickListener() {

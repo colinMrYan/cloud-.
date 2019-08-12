@@ -76,6 +76,7 @@ public class ScheduleBaseFragment extends BaseLayoutFragment implements View.OnL
     private float contentLayoutTouchY = -1;
     private ScheduleApiService apiService;
     private Event modifyEvent;
+    private Calendar currentCalendar = Calendar.getInstance();
 
     @Override
     protected void onCreate() {
@@ -93,6 +94,21 @@ public class ScheduleBaseFragment extends BaseLayoutFragment implements View.OnL
 
     }
 
+    /**
+     * 同步一下当天的时间
+     */
+    public void updateCurrentDate() {
+        if (calendarView != null) {
+            Calendar newCalendar = Calendar.getInstance();
+            if ((newCalendar.get(Calendar.YEAR) != currentCalendar.get(Calendar.YEAR)) ||
+                    (newCalendar.get(Calendar.MONTH) != currentCalendar.get(Calendar.MONTH)) ||
+                    (newCalendar.get(Calendar.DAY_OF_MONTH) != currentCalendar.get(Calendar.DAY_OF_MONTH))) {
+                currentCalendar = newCalendar;
+                calendarView.updateCurrentDate();
+            }
+        }
+
+    }
     protected void showCalendarEvent(boolean isForceUpdate) {
 
     }
@@ -102,7 +118,9 @@ public class ScheduleBaseFragment extends BaseLayoutFragment implements View.OnL
      */
     public void setScheduleBackToToday() {
         if (calendarView != null) {
-            calendarView.scrollToCurrent();
+            updateCurrentDate();
+            //calendarView.scrollToCurrent();存在bug，导致本地日期更改时mDelegate.mSelectedEmmCalendar也随之更改
+            calendarView.scrollToCalendar(currentCalendar.get(Calendar.YEAR), currentCalendar.get(Calendar.MONTH) + 1, currentCalendar.get(Calendar.DAY_OF_MONTH));
         }
     }
 

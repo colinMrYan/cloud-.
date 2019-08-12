@@ -205,7 +205,8 @@
             android:theme="@style/AppTheme_Transparent" />
 
         <activity
-            android:name=".ui.SchemeHandleActivity"
+            android:name=".ui.AppSchemeHandleActivity"
+            android:label="@string/send_to_app"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:theme="@style/AppTheme_Transparent">
@@ -335,16 +336,23 @@
             </intent-filter>
 
             <!--ics文件识别 excel-->
-            <!--<intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
 
                 <data android:scheme="content" />
                 <data android:scheme="file" />
+                <!--<data android:mimeType="application/*" />-->
+                <data android:mimeType="text/plain" />
+                <data android:mimeType="application/pdf" />
+                <data android:mimeType="application/application/msword" />
+                <data android:mimeType="application/msword" />
                 <data android:mimeType="application/vnd.ms-excel" />
                 <data android:mimeType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
-                <data android:mimeType="text/calendar" />
-            </intent-filter>-->
+                <data android:mimeType="application/vnd.ms-powerpoint" />
+                <data android:mimeType="application/vnd.ms-powerpoint" />
+                <!--<data android:mimeType="text/calendar" />-->
+            </intent-filter>
 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -449,12 +457,6 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".ui.mine.setting.PlayVideoActivity"
-            android:launchMode="singleTask"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-
-        <activity
             android:name=".ui.mine.setting.SettingActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
@@ -516,15 +518,6 @@
             android:name=".ui.mine.setting.RecommendAppActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
-
-        <activity
-            android:name=".ui.appcenter.groupnews.NewsWebDetailActivity"
-            android:launchMode="singleTask"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan">
-
-        </activity>
         <activity
             android:name=".ui.appcenter.AppGroupActivity"
             android:launchMode="singleTask"
@@ -611,10 +604,6 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
-            android:name=".ui.appcenter.groupnews.GroupNewsActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".ui.schedule.meeting.MeetingRoomInfoActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
@@ -658,15 +647,7 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".ui.schedule.calendar.CalendarAddActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".ui.schedule.ScheduleAlertTimeActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.schedule.calendar.CalendarTypeSelectActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity

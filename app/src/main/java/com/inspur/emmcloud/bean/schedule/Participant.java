@@ -13,6 +13,7 @@ public class Participant {
     public static final String TYPE_RECORDER = "recorder";
     public static final String TYPE_CONTACT = "contact";
     public static final String TYPE_INVITE = "invite";
+    public static final String TYPE_ORGANIZER = "organizer";
     public static final String CALENDAR_RESPONSE_TYPE_UNKNOWN = "unknown"; //未知
     public static final String CALENDAR_RESPONSE_TYPE_TENTATIVE = "tentative";//暂定
     public static final String CALENDAR_RESPONSE_TYPE_ACCEPT = "accept";//接受

@@ -45,6 +45,21 @@ public class MatheSet {
         return one.isInMatheSet(other.start) || one.isInMatheSet(other.end);
     }
 
+    /**
+     * 判断两个集合是否有交集忽略边界[5,7]和[7,8]不相交
+     *
+     * @param one
+     * @param other
+     * @return
+     */
+    public static boolean isIntersectionWithoutBoundary(MatheSet one, MatheSet other) {
+        if (one == null || other == null) {
+            return false;
+        }
+
+        return !(one.end <= other.start || one.start >= other.end);
+    }
+
     @Override
     public String toString() {
         return "{" + start + ":" + end + "}";

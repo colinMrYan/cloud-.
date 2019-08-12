@@ -76,6 +76,8 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
     public void onResume() {
         super.onResume();
         isRunForeground = true;
+        dateText.setText(Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "");
+        scheduleFragment.updateCurrentDate();
     }
 
     @Override
@@ -154,7 +156,6 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
         rootView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_schedule_home, null);
         dateText = rootView.findViewById(R.id.tv_date);
         todayImgBtn = rootView.findViewById(R.id.ibt_today);
-        dateText.setText(Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "");
         todayImgBtn.setOnClickListener(this);
         rootView.findViewById(R.id.ibt_add).setOnClickListener(this);
         initTabLayout();

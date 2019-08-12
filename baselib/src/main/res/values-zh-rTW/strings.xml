@@ -9,6 +9,7 @@
     <string name="reclick_to_desktop">再按一次退出程式</string>
     <string name="Network_Mobile">已經連接到移動網路</string>
     <string name="Network_WIFI">已經連接到WIFI</string>
+    <string name="send_to_app">發送到雲+</string>
     <string name="ok">確定</string>
     <string name="cancel">取消</string>
     <string name="resolution_warning">您的設備解析度小於800*480，無法運行此程式</string>

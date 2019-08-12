@@ -3,6 +3,7 @@ package com.inspur.emmcloud.servcieimpl;
 import android.content.Intent;
 
 import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.componentservice.setting.SettingService;
 import com.inspur.emmcloud.ui.mine.setting.CreateGestureActivity;
 import com.inspur.emmcloud.ui.mine.setting.FaceVerifyActivity;
@@ -33,6 +34,14 @@ public class SettingServiceImpl implements SettingService {
         }
     }
 
+    @Override
+    public void closeOriginLockPage() {
+        if (isSetFaceLock()) {
+            BaseApplication.getInstance().closeActivity(FaceVerifyActivity.class.getSimpleName());
+        } else if (isSetGestureLock()) {
+            BaseApplication.getInstance().closeActivity(GestureLoginActivity.class.getSimpleName());
+        }
+    }
 
 
     private boolean isSetFaceLock() {
