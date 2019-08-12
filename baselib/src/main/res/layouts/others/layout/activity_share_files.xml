@@ -47,7 +47,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true">
+            android:layout_centerVertical="true"
+            android:paddingTop="10dp">
 
             <ImageView
                 android:id="@+id/img_file_icon"
@@ -65,9 +66,11 @@
                 android:layout_below="@+id/img_file_icon"
                 android:layout_centerHorizontal="true"
                 android:maxWidth="170dp"
-                android:paddingBottom="15dp"
-                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:paddingTop="5dp"
                 android:singleLine="true"
+                android:textColor="#333333"
+                android:textSize="16sp"
                 android:visibility="gone" />
         </RelativeLayout>
 

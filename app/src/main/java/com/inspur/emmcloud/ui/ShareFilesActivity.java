@@ -118,6 +118,7 @@ public class ShareFilesActivity extends BaseActivity {
                 break;
             case 1:
                 imageView.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
                 String filePath = uriList.get(0);
                 if (!StringUtils.isBlank(filePath) && filePath.contains("/")) {
                     String fileName = filePath.substring(filePath.lastIndexOf("/") + 1, filePath.length());
@@ -134,6 +135,7 @@ public class ShareFilesActivity extends BaseActivity {
                 }
                 break;
             default:
+                recyclerView.setVisibility(View.VISIBLE);
                 recyclerView.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(MyApplication.getInstance(), 11)));
                 GridLayoutManager gridLayoutManager = new GridLayoutManager(MyApplication.getInstance(), 3);
                 recyclerView.setLayoutManager(gridLayoutManager);
