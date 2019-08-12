@@ -28,7 +28,7 @@ import com.inspur.emmcloud.web.plugin.staff.SelectStaffService;
 import com.inspur.emmcloud.web.plugin.staff.StuffInformationService;
 import com.inspur.emmcloud.web.plugin.startapp.StartAppService;
 import com.inspur.emmcloud.web.plugin.telephone.TelephoneService;
-import com.inspur.emmcloud.web.plugin.video.VideoRecordService;
+import com.inspur.emmcloud.web.plugin.video.VideoService;
 import com.inspur.emmcloud.web.plugin.window.WindowService;
 import com.inspur.emmcloud.web.ui.ImpCallBackInterface;
 import com.inspur.emmcloud.web.ui.iLog;
@@ -244,8 +244,8 @@ public class PluginMgr {
                 serviceName = TelephoneService.class.getCanonicalName();
             } else if (serviceName.endsWith("SqlService")) {
                 serviceName = SqlService.class.getCanonicalName();
-            } else if (serviceName.endsWith("VideoRecordService")) {
-                serviceName = VideoRecordService.class.getCanonicalName();
+            } else if (serviceName.endsWith("VideoService")) {
+                serviceName = VideoService.class.getCanonicalName();
             }
             LogUtils.jasonDebug("serviceName==" + serviceName);
         }
