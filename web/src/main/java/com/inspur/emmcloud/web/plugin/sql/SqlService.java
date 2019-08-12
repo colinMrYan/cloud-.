@@ -34,6 +34,7 @@ public class SqlService extends ImpPlugin {
 
     @Override
     public String executeAndReturn(String action, JSONObject paramsObject) {
+        showCallIMPMethodErrorDlg();
         return "";
     }
 
@@ -49,6 +50,8 @@ public class SqlService extends ImpPlugin {
             successCb = JSONUtils.getString(paramsObject, "success", "");
             failCb = JSONUtils.getString(paramsObject, "fail", "");
             executeSql(paramsObject);
+        } else {
+            showCallIMPMethodErrorDlg();
         }
     }
 

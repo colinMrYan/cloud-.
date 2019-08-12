@@ -323,54 +323,69 @@ public class PluginMgr {
      * activity关闭之前调用方法关闭相应的空间
      */
     public void onDestroy() {
-        for (IPlugin plugin : entries.values()) {
-            if (plugin != null) {
-                plugin.onDestroy();
+        if (entries != null) {
+            for (IPlugin plugin : entries.values()) {
+                if (plugin != null) {
+                    plugin.onDestroy();
+                }
             }
+            entries.clear();
+            entries = null;
         }
-        entries.clear();
-        entries = null;
+
     }
 
     /**
      * activity onResume事件
      */
     public void onResume() {
-        for (IPlugin plugin : entries.values()) {
-            if (plugin != null) {
-                plugin.onActivityResume();
+        if (entries != null) {
+            for (IPlugin plugin : entries.values()) {
+                if (plugin != null) {
+                    plugin.onActivityResume();
+                }
             }
         }
+
     }
 
     /**
      * activity onPause事件
      */
     public void onPause() {
-        for (IPlugin plugin : entries.values()) {
-            if (plugin != null) {
-                plugin.onActivityPause();
+        if (entries != null) {
+            for (IPlugin plugin : entries.values()) {
+                if (plugin != null) {
+                    plugin.onActivityPause();
+                }
             }
         }
+
     }
 
     /**
      * activity onResume事件
      */
     public void onStar() {
-        for (IPlugin plugin : entries.values()) {
-            if (plugin != null) {
-                plugin.onActivityStart();
+        if (entries != null) {
+            for (IPlugin plugin : entries.values()) {
+                if (plugin != null) {
+                    plugin.onActivityStart();
+                }
             }
         }
+
     }
 
     public void onNewIntent(Intent intent) {
-        for (IPlugin plugin : entries.values()) {
-            if (plugin != null) {
-                plugin.onActivityNewIntent(intent);
+        if (entries != null) {
+            for (IPlugin plugin : entries.values()) {
+                if (plugin != null) {
+                    plugin.onActivityNewIntent(intent);
+                }
             }
         }
+
     }
 
 }
