@@ -43,12 +43,34 @@
             android:layout_width="match_parent"
             android:layout_height="300dp" />
 
-        <ImageView
-            android:id="@+id/img_file_icon"
-            android:layout_width="150dp"
-            android:layout_height="300dp"
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:visibility="gone" />
+            android:layout_centerVertical="true">
+
+            <ImageView
+                android:id="@+id/img_file_icon"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:minHeight="150dp"
+                android:scaleType="fitCenter"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/tv_img_file_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/img_file_icon"
+                android:layout_centerHorizontal="true"
+                android:maxWidth="170dp"
+                android:paddingBottom="15dp"
+                android:paddingTop="10dp"
+                android:singleLine="true"
+                android:visibility="gone" />
+        </RelativeLayout>
+
     </RelativeLayout>
 
     <View
@@ -74,7 +96,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_centerVertical="true"
-            android:src="@drawable/icon_share_to_channel" />
+            android:src="@drawable/icon_share_to_channel_from_out" />
 
         <TextView
             android:id="@+id/tv_channel_share_to_channel"
@@ -120,7 +142,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_centerVertical="true"
-            android:src="@drawable/ic_app_default" />
+            android:src="@drawable/icon_share_to_cloud_from_out" />
 
         <TextView
             android:id="@+id/tv_volume_share_to_channel"

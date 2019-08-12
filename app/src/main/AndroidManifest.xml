@@ -187,7 +187,7 @@
 
         <activity
             android:name=".ui.ShareFilesActivity"
-            android:launchMode="singleTask"
+            android:launchMode="singleInstance"
             android:resizeableActivity="true"
             android:screenOrientation="portrait">
 

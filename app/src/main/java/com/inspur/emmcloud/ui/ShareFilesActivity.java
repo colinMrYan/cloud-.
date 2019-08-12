@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -61,6 +62,8 @@ public class ShareFilesActivity extends BaseActivity {
     RelativeLayout volumeRelativeLayout;
     @BindView(R.id.view_line_volume)
     View viewLineVolume;
+    @BindView(R.id.tv_img_file_name)
+    TextView fileNameTextView;
     private List<String> uriList = new ArrayList<>();
 
     @Override
@@ -115,8 +118,16 @@ public class ShareFilesActivity extends BaseActivity {
                 break;
             case 1:
                 imageView.setVisibility(View.VISIBLE);
+                String filePath = uriList.get(0);
+                if (!StringUtils.isBlank(filePath) && filePath.contains("/")) {
+                    String fileName = filePath.substring(filePath.lastIndexOf("/") + 1, filePath.length());
+                    fileNameTextView.setText(fileName);
+                    fileNameTextView.setVisibility(View.VISIBLE);
+                } else {
+                    fileNameTextView.setVisibility(View.GONE);
+                }
                 if (!isImageUriList(uriList)) {
-                    String filePath = uriList.get(0);
+                    filePath = uriList.get(0);
                     ImageDisplayUtils.getInstance().displayImage(imageView, "drawable://" + FileUtils.getRegularFileIconResId(filePath));
                 } else {
                     ImageDisplayUtils.getInstance().displayImage(imageView, uriList.get(0).toString(), R.drawable.ic_app_default);
