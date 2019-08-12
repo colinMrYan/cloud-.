@@ -10,7 +10,6 @@ import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.os.Parcelable;
 import android.provider.Settings;
-import android.util.Log;
 
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
@@ -21,6 +20,7 @@ import com.inspur.emmcloud.web.plugin.ImpPlugin;
 
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
 /**
@@ -34,7 +34,7 @@ public class NFCService extends ImpPlugin {
     private PendingIntent mPendingIntent;
     private NfcAdapter NFCAdapter;
 
-    public static String readNfcTag(Intent intent) {
+    public static NdefMessage[] getNdefMsg(Intent intent) {
         if (intent == null)
             return null;
 
@@ -42,7 +42,7 @@ public class NFCService extends ImpPlugin {
         Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
         String[] temp = tag.getTechList();
         for (String s : temp) {
-            Log.i(TAG, "resolveIntent tag: " + s);
+            LogUtils.jasonDebug("resolveIntent tag: " + s);
         }
 
 
@@ -52,18 +52,18 @@ public class NFCService extends ImpPlugin {
                 NfcAdapter.ACTION_TECH_DISCOVERED.equals(action) ||
                 NfcAdapter.ACTION_TAG_DISCOVERED.equals(action)) {
             Parcelable[] rawMessage = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
-            NdefMessage[] ndefMessages;
+            NdefMessage[] ndefMessages = null;
 
             // 判断是哪种类型的数据 默认为NDEF格式
             if (rawMessage != null) {
-                Log.i(TAG, "getNdefMsg: ndef格式 ");
+                LogUtils.jasonDebug("getNdefMsg: ndef格式 ");
                 ndefMessages = new NdefMessage[rawMessage.length];
                 for (int i = 0; i < rawMessage.length; i++) {
                     ndefMessages[i] = (NdefMessage) rawMessage[i];
                 }
             } else {
                 //未知类型 (公交卡类型)
-                Log.i(TAG, "getNdefMsg: 未知类型");
+                LogUtils.jasonDebug("getNdefMsg: 未知类型");
                 //对应的解析操作，在Github上有
             }
 
@@ -112,6 +112,21 @@ public class NFCService extends ImpPlugin {
         }
     }
 
+    private void readNfcTag(Intent intent) {
+        Parcelable[] rawArray = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
+        NdefMessage mNdefMsg = (NdefMessage) rawArray[0];
+        NdefRecord mNdefRecord = mNdefMsg.getRecords()[0];
+        try {
+            if (mNdefRecord != null) {
+                String readResult = new String(mNdefRecord.getPayload(), "UTF-8");
+                LogUtils.jasonDebug("readResult===" + readResult);
+            }
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        ;
+    }
+
     @Override
     public void execute(String action, JSONObject paramsObject) {
         if (action.equals("getNFCInfo")) {
@@ -150,9 +165,16 @@ public class NFCService extends ImpPlugin {
             }
     }
 
-    private void callbackSuccess() {
+
+    private void callbackSuccess(String result) {
         if (!StringUtils.isBlank(successCb)) {
-            this.jsCallback(successCb, "");
+            JSONObject obj = new JSONObject();
+            try {
+                obj.put("value", result);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            this.jsCallback(successCb, obj.toString());
         }
     }
 
