@@ -339,7 +339,7 @@ public class WebexMeetingDetailActivity extends BaseActivity {
                     }
                 });
         if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
-            shareAction = shareAction.addButton(getString(R.string.webex_internal_share), "app_name", "ic_launcher", "ic_launcher");
+            shareAction = shareAction.addButton(getString(R.string.baselib_internal_share), "app_name", "ic_launcher", "ic_launcher");
         }
         shareAction.open();
     }
