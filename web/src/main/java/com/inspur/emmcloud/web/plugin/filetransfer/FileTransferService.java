@@ -135,6 +135,17 @@ public class FileTransferService extends ImpPlugin {
                         public void run() {
                             if (StrUtil.strIsNotNull(downloadFailCB)) {
                                 jsCallback(downloadFailCB, fileName);
+                            } else if (downloadFileType.equals(SAVE_FILE) && StrUtil.strIsNotNull(saveFileCallBack)) {
+                                try {
+                                    if (downloadFileType.equals(SAVE_FILE)) {
+                                        JSONObject jsonObject = new JSONObject();
+                                        jsonObject.put("path", reallyPath);
+                                        jsonObject.put("status", 0);
+                                        jsCallback(saveFileCallBack, jsonObject.toString());
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                             }
 
                         }
@@ -157,6 +168,15 @@ public class FileTransferService extends ImpPlugin {
                             if (StrUtil.strIsNotNull(downloadSucCB)) {
                                 String[] return_param = {fileInfo, fileName};
                                 jsCallback(downloadSucCB, return_param);
+                            } else if (downloadFileType.equals(SAVE_FILE) && StrUtil.strIsNotNull(saveFileCallBack)) {
+                                JSONObject jsonObject = new JSONObject();
+                                try {
+                                    jsonObject.put("status", 1);
+                                    jsonObject.put("errorMessage", "");
+                                } catch (Exception e1) {
+                                    e1.printStackTrace();
+                                }
+                                jsCallback(saveFileCallBack, jsonObject.toString());
                             }
                         }
                     });
@@ -623,24 +643,10 @@ public class FileTransferService extends ImpPlugin {
                 }
             }
 
-            if (downloadFileType.equals(SAVE_FILE)) {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("path", reallyPath);
-                jsonObject.put("status", 1);
-                jsCallback(saveFileCallBack, jsonObject.toString());
-            }
+
         } catch (Exception e) {
+            LogUtils.YfcDebug("下载异常：" + e.getMessage());
             e.printStackTrace();
-            if (downloadFileType.equals(SAVE_FILE)) {
-                JSONObject jsonObject = new JSONObject();
-                try {
-                    jsonObject.put("status", 0);
-                    jsonObject.put("errorMessage", e.getMessage());
-                } catch (Exception e1) {
-                    e1.printStackTrace();
-                }
-                jsCallback(saveFileCallBack, jsonObject.toString());
-            }
             handler.sendEmptyMessage(1);
         } finally {
             try {
@@ -882,6 +888,7 @@ public class FileTransferService extends ImpPlugin {
         public void run() {
             Looper.prepare();
             try {
+                LogUtils.YfcDebug("异步下载");
                 downLoadFile(downloadUrl);
             } catch (Exception e) {
                 e.printStackTrace();
