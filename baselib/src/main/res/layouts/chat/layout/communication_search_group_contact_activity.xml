@@ -153,8 +153,10 @@
             android:layout_height="wrap_content"></ListView>
 
         <RelativeLayout
+            android:id="@+id/rl_search_more_group"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:onClick="onClick"
             android:paddingLeft="16dp">
 
             <ImageView
