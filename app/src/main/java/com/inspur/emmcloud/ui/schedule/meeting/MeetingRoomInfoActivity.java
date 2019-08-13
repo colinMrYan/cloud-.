@@ -70,7 +70,7 @@ public class MeetingRoomInfoActivity extends BaseActivity {
     LinearLayout equipmentLayout;
     @BindView(R.id.tl_meeting_tab)
     TabLayout tabLayout;
-    private long MINI_INTER_BETWEEN_MEETING = 60000;
+    private long MINI_INTER_BETWEEN_MEETING = 900000;
     private MeetingRoom meetingRoom;
     private ScheduleApiService apiService;
     private LoadingDialog loadingDlg;
