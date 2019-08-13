@@ -20,7 +20,6 @@ import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
-import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.Res;
@@ -330,8 +329,8 @@ public class FileTransferService extends ImpPlugin {
      */
     private void writeFile(JSONObject paramsObject) {
         JSONObject optionsJsonObject = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
-        String fileSavePath = JSONUtils.getString(optionsJsonObject, "directory", MyAppConfig.LOCAL_CACHE_PATH)
-                + JSONUtils.getString(optionsJsonObject, "fileName", "default.txt");
+        String fileSavePath = JSONUtils.getString(optionsJsonObject, "directory", "")
+                + JSONUtils.getString(optionsJsonObject, "fileName", "");
         FileUtils.writeFile(fileSavePath
                 , JSONUtils.getString(optionsJsonObject, "content", ""),
                 JSONUtils.getBoolean(optionsJsonObject, "append", true));
