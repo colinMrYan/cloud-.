@@ -271,7 +271,7 @@ public class FileTransferService extends ImpPlugin {
      */
     private void listFile(JSONObject paramsObject) {
         JSONObject optionsJsonObject = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
-        String fileDicPath = JSONUtils.getString(optionsJsonObject, "directory", MyAppConfig.LOCAL_CACHE_PATH);
+        String fileDicPath = JSONUtils.getString(optionsJsonObject, "directory", "");
         List<String> fileArrayList = FileUtils.getFileNamesInFolder(fileDicPath, false);
         List<String> folderArrayList = FileUtils.getFileFolderNamesInFolder(fileDicPath);
         JSONObject jsonObject = new JSONObject();
@@ -292,11 +292,15 @@ public class FileTransferService extends ImpPlugin {
      */
     private void deleteFile(JSONObject paramsObject) {
         JSONObject optionsJsonObject = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
-        String fileDeletePath = JSONUtils.getString(optionsJsonObject, "directory", MyAppConfig.LOCAL_DOWNLOAD_PATH)
-                + JSONUtils.getString(optionsJsonObject, "fileName", "default.txt");
-        boolean isDel = FileUtils.deleteFile(fileDeletePath);
-        jsCallback(isDel ? JSONUtils.getString(paramsObject, "success", "") :
-                JSONUtils.getString(paramsObject, "fail", ""));
+        String fileDeletePath = JSONUtils.getString(optionsJsonObject, "directory", "")
+                + JSONUtils.getString(optionsJsonObject, "fileName", "");
+        if (StrUtil.strIsNotNull(fileDeletePath)) {
+            boolean isDel = FileUtils.deleteFile(fileDeletePath);
+            jsCallback(isDel ? JSONUtils.getString(paramsObject, "success", "") :
+                    JSONUtils.getString(paramsObject, "fail", ""));
+        } else {
+            jsCallback(JSONUtils.getString(paramsObject, "fail", ""));
+        }
     }
 
     /**
@@ -306,8 +310,8 @@ public class FileTransferService extends ImpPlugin {
      */
     private void readFile(JSONObject paramsObject) {
         JSONObject optionsJsonObject = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
-        String fileReadPath = JSONUtils.getString(optionsJsonObject, "directory", MyAppConfig.LOCAL_CACHE_PATH)
-                + JSONUtils.getString(optionsJsonObject, "fileName", "default.txt");
+        String fileReadPath = JSONUtils.getString(optionsJsonObject, "directory", "")
+                + JSONUtils.getString(optionsJsonObject, "fileName", "");
         String readContent = FileUtils.readFile(fileReadPath, "utf-8").toString();
         JSONObject jsonObject = new JSONObject();
         try {
@@ -577,6 +581,7 @@ public class FileTransferService extends ImpPlugin {
 
     /**
      * 下载文件
+     * 文件名先以指定的文件名为准，如果没有指定文件名则以getFileName方法里返回的为准
      *
      * @param urlString 下载的url
      * @return 返回文件下载的详细路径
@@ -664,7 +669,15 @@ public class FileTransferService extends ImpPlugin {
         }
     }
 
-    // 在url中获取文件名
+    /**
+     * url里获取文件名
+     * 先以头部filename为准
+     * 没有则取connection里的名字
+     * 再没有则生成一个.tmp名字
+     *
+     * @param urlConnection
+     * @return
+     */
     private String getFileName(HttpURLConnection urlConnection) {
         String filename = null;
         String headField = urlConnection.getHeaderField("Content-Disposition");
