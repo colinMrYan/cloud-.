@@ -31,12 +31,10 @@ public class Event {
     public String eventSubTitle;
     public Calendar eventStartTime;
     public Calendar eventEndTime;
-    private int index = 0;
     private boolean isAllDay = false;
     private Object eventObj;
     private String calendarType;
     private String owner = "";
-    private int minWidth;
 
     public Event(String eventId, String eventType, String eventTitle, String eventSubTitle, Calendar eventStartTime, Calendar eventEndTime, Object eventObj, String calendarType) {
         this.eventId = eventId;
@@ -74,13 +72,13 @@ public class Event {
         return eventList;
     }
 
-    public int getIndex() {
-        return index;
-    }
-
-    public void setIndex(int index) {
-        this.index = index;
-    }
+//    public int getIndex() {
+//        return index;
+//    }
+//
+//    public void setIndex(int index) {
+//        this.index = index;
+//    }
 
     public String getEventId() {
         return eventId;
@@ -148,37 +146,12 @@ public class Event {
         return eventEndTime;
     }
 
-    public int getMinWidth() {
-        return minWidth;
-    }
-
-    public void setMinWidth(int minWidth) {
-        this.minWidth = minWidth;
-    }
-
     public boolean canDelete() {
-//        if (getEventType().equals(Schedule.TYPE_CALENDAR)) {
-//            return true;
-//        }
-//        if (getEventType().equals(Schedule.TYPE_MEETING)) {
-//            boolean isAdmin = PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(), Constant.PREF_IS_MEETING_ADMIN,
-//                    false);
-//            if (isAdmin || (getOwner().equals(BaseApplication.getInstance().getUid()) && getEventEndTime().after(Calendar.getInstance()))) {
-//                return true;
-//            }
-//        }
         Schedule schedule = (Schedule) getEventObj();
         return schedule.canDelete();
     }
 
     public boolean canModify() {
-//        boolean isOwner = getOwner().equals(BaseApplication.getInstance().getUid());
-//        if (getEventType().equals(Schedule.TYPE_CALENDAR) && isOwner) {
-//            return true;
-//        }
-//        if (getEventType().equals(Schedule.TYPE_MEETING) && isOwner && getEventEndTime().after(Calendar.getInstance())) {
-//            return true;
-//        }
         Schedule schedule = (Schedule) getEventObj();
         return schedule.canModify();
     }
