@@ -190,7 +190,13 @@ public class VideoService extends ImpPlugin {
                 // TODO Auto-generated method stub
                 ToastUtils.show("上传成功");
                 LoadingDialog.dimissDlg(loadingDlg);
-                jsCallback(successCb, filePath);
+                JSONObject json = new JSONObject();
+                try {
+                    json.put("path", filePath);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                jsCallback(successCb, json.toString());
 //                apiInterface
 //                        .returnUploadMyHeadSuccess(new GetUploadMyHeadResult(new String(arg0)), filePath);
             }
