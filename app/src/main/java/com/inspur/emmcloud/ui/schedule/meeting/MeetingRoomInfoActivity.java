@@ -410,7 +410,7 @@ public class MeetingRoomInfoActivity extends BaseActivity {
                 long meetingDayStartTime = meeting.getDayStartTime(calendar);
                 long meetingDayEndTime = meeting.getDayEndTime(calendar);
                 long LastMeetingEnd = (j > 0) ? dayMeetingList.get(j - 1).getDayEndTime(calendar) : dayStartTimeLong;
-                if (meetingDayStartTime - LastMeetingEnd > MINI_INTER_BETWEEN_MEETING && (meetingDayStartTime > System.currentTimeMillis())) {
+                if (meetingDayStartTime - LastMeetingEnd >= MINI_INTER_BETWEEN_MEETING && (meetingDayStartTime > System.currentTimeMillis())) {
                     MeetingSchedule meetingSchedule = new MeetingSchedule((i == 0 && (LastMeetingEnd < System.currentTimeMillis())) ? System.currentTimeMillis() : LastMeetingEnd, meetingDayStartTime, null);
                     dayMeetingScheduleList.add(meetingSchedule);
                 }
