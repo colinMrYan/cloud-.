@@ -52,11 +52,13 @@
 
             <ImageView
                 android:id="@+id/img_file_icon"
-                android:layout_width="150dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:adjustViewBounds="true"
-                android:minHeight="150dp"
+                android:maxWidth="150dp"
+                android:minHeight="76dp"
+                android:minWidth="76dp"
                 android:scaleType="fitCenter"
                 android:visibility="gone" />
 
