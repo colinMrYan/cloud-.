@@ -645,7 +645,6 @@ public class FileTransferService extends ImpPlugin {
 
 
         } catch (Exception e) {
-            LogUtils.YfcDebug("下载异常：" + e.getMessage());
             e.printStackTrace();
             handler.sendEmptyMessage(1);
         } finally {
@@ -888,7 +887,6 @@ public class FileTransferService extends ImpPlugin {
         public void run() {
             Looper.prepare();
             try {
-                LogUtils.YfcDebug("异步下载");
                 downLoadFile(downloadUrl);
             } catch (Exception e) {
                 e.printStackTrace();
