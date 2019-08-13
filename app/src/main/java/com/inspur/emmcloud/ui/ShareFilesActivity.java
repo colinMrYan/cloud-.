@@ -63,7 +63,15 @@ public class ShareFilesActivity extends BaseActivity {
     @BindView(R.id.view_line_volume)
     View viewLineVolume;
     @BindView(R.id.tv_img_file_name)
-    TextView fileNameTextView;
+    TextView imagefileNameTextView;
+    @BindView(R.id.rl_file)
+    RelativeLayout fileLayout;
+    @BindView(R.id.rl_image)
+    RelativeLayout imageLayout;
+    @BindView(R.id.iv_file_icon)
+    ImageView fileImageView;
+    @BindView(R.id.tv_file_name)
+    TextView fileTextView;
     private List<String> uriList = new ArrayList<>();
 
     @Override
@@ -107,6 +115,33 @@ public class ShareFilesActivity extends BaseActivity {
         }
     }
 
+    private void showImageLayout(String filePath) {
+        imageLayout.setVisibility(View.VISIBLE);
+        fileLayout.setVisibility(View.GONE);
+//        if (!StringUtils.isBlank(filePath) && filePath.contains("/")) {
+//            String fileName = filePath.substring(filePath.lastIndexOf("/") + 1, filePath.length());
+//            imagefileNameTextView.setText(fileName);
+//            imagefileNameTextView.setVisibility(View.VISIBLE);
+//        } else {
+//            imagefileNameTextView.setVisibility(View.GONE);
+//        }
+        ImageDisplayUtils.getInstance().displayImage(imageView, uriList.get(0).toString(), R.drawable.ic_app_default);
+    }
+
+    private void showFileLayout(String filePath) {
+        fileLayout.setVisibility(View.VISIBLE);
+        imageLayout.setVisibility(View.GONE);
+        if (!StringUtils.isBlank(filePath) && filePath.contains("/")) {
+            String fileName = filePath.substring(filePath.lastIndexOf("/") + 1, filePath.length());
+            fileTextView.setText(fileName);
+            fileTextView.setVisibility(View.VISIBLE);
+        } else {
+            fileTextView.setVisibility(View.GONE);
+        }
+        ImageDisplayUtils.getInstance().displayImage(fileImageView, "drawable://" + FileUtils.getRegularFileIconResId(filePath));
+    }
+
+    /***/
     private void initViews() {
         initSharingMode();
         ImageDisplayUtils.getInstance().displayImage(imageView, TabAndAppExistUtils.getVolumeIconUrl(MyApplication.getInstance(),
@@ -117,21 +152,12 @@ public class ShareFilesActivity extends BaseActivity {
                 finish();
                 break;
             case 1:
-                imageView.setVisibility(View.VISIBLE);
                 recyclerView.setVisibility(View.GONE);
                 String filePath = uriList.get(0);
-                if (!StringUtils.isBlank(filePath) && filePath.contains("/")) {
-                    String fileName = filePath.substring(filePath.lastIndexOf("/") + 1, filePath.length());
-                    fileNameTextView.setText(fileName);
-                    fileNameTextView.setVisibility(View.VISIBLE);
-                } else {
-                    fileNameTextView.setVisibility(View.GONE);
-                }
                 if (!isImageUriList(uriList)) {
-                    filePath = uriList.get(0);
-                    ImageDisplayUtils.getInstance().displayImage(imageView, "drawable://" + FileUtils.getRegularFileIconResId(filePath));
+                    showFileLayout(filePath);
                 } else {
-                    ImageDisplayUtils.getInstance().displayImage(imageView, uriList.get(0).toString(), R.drawable.ic_app_default);
+                    showImageLayout(filePath);
                 }
                 break;
             default:
