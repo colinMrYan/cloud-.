@@ -124,7 +124,6 @@ public class NFCService extends ImpPlugin {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        ;
     }
 
     @Override

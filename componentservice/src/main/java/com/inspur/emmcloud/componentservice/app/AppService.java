@@ -12,4 +12,6 @@ public interface AppService extends CoreService {
 
     String getAppConfig(String configId, String defaultValue);
 
+    boolean isTabExist(String tabId);
+
 }

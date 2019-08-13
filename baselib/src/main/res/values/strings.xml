@@ -73,6 +73,7 @@
     <string name="no_search_term">没有更多的搜索结果</string>
     <string name="function_load_fail">加载出错，轻触屏幕重新加载</string>
     <string name="function_reload">网络诊断</string>
+    <string name="baselib_internal_share">内部分享</string>
 
     <!-- 公共部分 -->
     <string name="year">年</string>
