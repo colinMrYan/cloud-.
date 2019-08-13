@@ -316,7 +316,7 @@ public class FileTransferService extends ImpPlugin {
             jsCallback(JSONUtils.getString(paramsObject, "fail", ""), e.getMessage());
             e.printStackTrace();
         }
-        jsCallback(JSONUtils.getString(paramsObject, "success", ""), jsonObject.toString());
+        jsCallback(JSONUtils.getString(paramsObject, "success", ""), jsonObject);
     }
 
     /**
