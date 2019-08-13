@@ -161,7 +161,14 @@ public class AmapLocateService extends ImpPlugin implements
             try {
                 jsonObject.put("longitude", longtitude);
                 jsonObject.put("latitude", latitude);
-            } catch (JSONException e) {
+                jsonObject.put("addr", amapLocation.getAddress());
+                jsonObject.put("country", amapLocation.getCountry());
+                jsonObject.put("province", amapLocation.getProvince());
+                jsonObject.put("city", amapLocation.getCity());
+                jsonObject.put("district", amapLocation.getDistrict());
+                jsonObject.put("street", amapLocation.getStreet());
+                jsonObject.put("streetNum", amapLocation.getStreetNum());
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             jsCallback(functName, jsonObject.toString());

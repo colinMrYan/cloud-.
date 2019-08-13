@@ -6,8 +6,10 @@ import android.net.NetworkInfo;
 import android.net.TrafficStats;
 import android.telephony.TelephonyManager;
 
+import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.web.plugin.ImpPlugin;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -37,14 +39,14 @@ public class NetworkService extends ImpPlugin {
     public static final String LTE = "lte";
     public static final String UMB = "umb";
     public static final String HSPA_PLUS = "hspa+";
-    // return type
-    public static final String TYPE_UNKNOWN = "unknown";
+    public static final String TYPE_UNKNOWN = "other";
     public static final String TYPE_ETHERNET = "ethernet";
-    public static final String TYPE_WIFI = "wifi";
-    public static final String TYPE_2G = "2g";
-    public static final String TYPE_3G = "3g";
-    public static final String TYPE_4G = "4g";
-    public static final String TYPE_NONE = "无网络";
+    public static final String TYPE_WIFI = "WIFI";
+    public static final String TYPE_2G = "2G";
+    public static final String TYPE_3G = "3G";
+    public static final String TYPE_4G = "4G";
+    public static final String TYPE_NONE = "-1";
+    // return type
     public static int NOT_REACHABLE = 0;
     public static int REACHABLE_VIA_CARRIER_DATA_NETWORK = 1;
     public static int REACHABLE_VIA_WIFI_NETWORK = 2;
@@ -57,36 +59,14 @@ public class NetworkService extends ImpPlugin {
     public String executeAndReturn(String action, JSONObject paramsObject) {
         String res = "";
         // 打开系统发送短信的界面，根据传入参数自动填写好相关信息
-        if ("getConnInfo".equals(action)) {
-            //检查网络连接
+        if ("getNetWorkType".equals(action)) {               //检查网络连接
             res = getConnInfo(paramsObject);
             return res;
-        }
-        //流量监测服务
-        else if ("getTotalRxBytes".equals(action)) {
+        } else if ("getTotalRxBytes".equals(action)) {    //流量监测服务
             data = getTotalRxBytes();
         } else if ("getMobileRxBytes".equals(action)) {
             data = getMobileRxBytes();
-        }
-//		else if ("getAppRecive".equals(action)){
-//			try {
-//				data = getAppRecive(paramsObject);
-//			} catch (NameNotFoundException e) {
-//				e.printStackTrace();
-//			} catch (JSONException e) {
-//				e.printStackTrace();
-//			}
-//		}
-//		else if("getAppSend".equals(action)){
-//			try {
-//				data = (paramsObject);
-//			} catch (NameNotFoundException e) {
-//				e.printStackTrace();
-//			} catch (JSONException e) {
-//				e.printStackTrace();
-//			}
-//		}
-        else {
+        } else {
             showCallIMPMethodErrorDlg();
         }
         return Long.toString(data) + "MB";
@@ -107,11 +87,7 @@ public class NetworkService extends ImpPlugin {
     private String getConnectionInfo(NetworkInfo info) {
         String type = TYPE_NONE;
         if (info != null) {
-            if (!info.isConnected()) {
-                type = TYPE_NONE;
-            } else {
-                type = getType(info);
-            }
+            type = info.isConnected() ? getType(info) : TYPE_NONE;
         }
         return type;
     }
@@ -121,7 +97,7 @@ public class NetworkService extends ImpPlugin {
      * 获取网络2G/3G/4G/wifi
      */
     private String getType(NetworkInfo networkInfo) {
-        String netWorkType = null;
+        String netWorkType = TYPE_NONE;
         if (networkInfo != null && networkInfo.isConnected()) {
             if (networkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
                 netWorkType = TYPE_WIFI;
@@ -152,53 +128,19 @@ public class NetworkService extends ImpPlugin {
                         netWorkType = TYPE_4G;
                         break;
                     default:
-                        // http://baike.baidu.com/item/TD-SCDMA 中国移动 联通 电信 三种3G制式
                         if (_strSubTypeName.equalsIgnoreCase("TD-SCDMA") || _strSubTypeName.equalsIgnoreCase("WCDMA") || _strSubTypeName.equalsIgnoreCase("CDMA2000")) {
-                            netWorkType = "3G";
+                            netWorkType = TYPE_3G;
                         } else {
-                            netWorkType = "Mobile Networks";
+                            netWorkType = TYPE_UNKNOWN;
                         }
                         break;
                 }
+            } else {
+                netWorkType = TYPE_UNKNOWN;
             }
         }
         return netWorkType;
     }
-
-
-//    private String getType(NetworkInfo info) {
-//        if (info != null) {
-//            String type = info.getTypeName();
-//
-//            if (type.toLowerCase().equals(WIFI)) {
-//                return TYPE_WIFI;
-//            } else if (type.toLowerCase().equals(MOBILE)) {
-//                type = info.getSubtypeName();
-//                if (type.toLowerCase().equals(GSM) ||
-//                        type.toLowerCase().equals(GPRS) ||
-//                        type.toLowerCase().equals(EDGE)) {
-//                    return TYPE_2G;
-//                } else if (type.toLowerCase().startsWith(CDMA) ||
-//                        type.toLowerCase().equals(UMTS) ||
-//                        type.toLowerCase().equals(ONEXRTT) ||
-//                        type.toLowerCase().equals(EHRPD) ||
-//                        type.toLowerCase().equals(HSUPA) ||
-//                        type.toLowerCase().equals(HSDPA) ||
-//                        type.toLowerCase().equals(HSPA)) {
-//                    return TYPE_3G;
-//                } else if (type.toLowerCase().equals(LTE) ||
-//                        type.toLowerCase().equals(UMB) ||
-//                        type.toLowerCase().equals(HSPA_PLUS)) {
-//                    return TYPE_4G;
-//                }
-//            }
-//        } else {
-//            return TYPE_NONE;
-//        }
-//        return TYPE_UNKNOWN;
-//    }
-
-
 
     /**
      * 获得系统传入的总流量
@@ -265,6 +207,17 @@ public class NetworkService extends ImpPlugin {
 
     @Override
     public void execute(String action, JSONObject paramsObject) {
-        showCallIMPMethodErrorDlg();
+        if ("getNetWorkType".equals(action)) {
+            String res = getConnInfo(paramsObject);
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("value", res);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            jsCallback(JSONUtils.getString(paramsObject, "success", ""), jsonObject.toString());
+        } else {
+            showCallIMPMethodErrorDlg();
+        }
     }
 }
