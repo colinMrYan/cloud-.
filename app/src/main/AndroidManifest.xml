@@ -210,7 +210,7 @@
             android:resizeableActivity="true"
             android:theme="@style/AppTheme_Transparent">
 
-            <intent-filter>
+            <intent-filter android:label="@string/send_to_app">
                 <action android:name="android.intent.action.SEND_MULTIPLE" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -218,7 +218,7 @@
                 <data android:mimeType="image/*" />
             </intent-filter>
 
-            <intent-filter>
+            <intent-filter android:label="@string/send_to_app">
                 <action android:name="android.intent.action.SEND" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -335,7 +335,7 @@
             </intent-filter>
 
             <!--ics文件识别 excel-->
-            <intent-filter>
+            <intent-filter android:label="@string/send_to_app">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
 
