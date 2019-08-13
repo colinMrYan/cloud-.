@@ -669,9 +669,11 @@ public class FileUtils {
 
         File file = new File(path);
         if (!file.exists()) {
+            LogUtils.YfcDebug("文件不存在");
             return true;
         }
         if (file.isFile()) {
+            LogUtils.YfcDebug("文件被删除");
             return file.delete();
         }
         if (!file.isDirectory()) {
@@ -1415,6 +1417,27 @@ public class FileUtils {
                         arrayList.add(fileInPath.getAbsolutePath());
                     } else if (listFileNamesIncludeChildForder && fileInPath.isDirectory()) {
                         getFileNamesInFolder(fileInPath.getAbsolutePath(), listFileNamesIncludeChildForder);
+                    }
+                }
+            }
+        }
+        return arrayList;
+    }
+
+    /**
+     * 读取指定文件目录下的所有目录
+     *
+     * @param dicName
+     * @return
+     */
+    public static List<String> getFileFolderNamesInFolder(String dicName) {
+        ArrayList arrayList = new ArrayList();
+        if (!StringUtils.isBlank(dicName)) {
+            File file = new File(dicName);
+            if (file.isDirectory()) {
+                for (File fileInPath : file.listFiles()) {
+                    if (fileInPath.isDirectory()) {
+                        arrayList.add(fileInPath.getAbsolutePath());
                     }
                 }
             }
