@@ -135,6 +135,17 @@ public class FileTransferService extends ImpPlugin {
                         public void run() {
                             if (StrUtil.strIsNotNull(downloadFailCB)) {
                                 jsCallback(downloadFailCB, fileName);
+                            } else if (downloadFileType.equals(SAVE_FILE) && StrUtil.strIsNotNull(saveFileCallBack)) {
+                                try {
+                                    if (downloadFileType.equals(SAVE_FILE)) {
+                                        JSONObject jsonObject = new JSONObject();
+                                        jsonObject.put("path", reallyPath);
+                                        jsonObject.put("status", 0);
+                                        jsCallback(saveFileCallBack, jsonObject.toString());
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                             }
 
                         }
@@ -157,6 +168,15 @@ public class FileTransferService extends ImpPlugin {
                             if (StrUtil.strIsNotNull(downloadSucCB)) {
                                 String[] return_param = {fileInfo, fileName};
                                 jsCallback(downloadSucCB, return_param);
+                            } else if (downloadFileType.equals(SAVE_FILE) && StrUtil.strIsNotNull(saveFileCallBack)) {
+                                JSONObject jsonObject = new JSONObject();
+                                try {
+                                    jsonObject.put("status", 1);
+                                    jsonObject.put("errorMessage", "");
+                                } catch (Exception e1) {
+                                    e1.printStackTrace();
+                                }
+                                jsCallback(saveFileCallBack, jsonObject.toString());
                             }
                         }
                     });
@@ -223,19 +243,25 @@ public class FileTransferService extends ImpPlugin {
     }
 
     /**
-     * 经过商议，下载文件插件为新加一个方法
+     * 下载文件插件为新加一个方法
      *
      * @param paramsObject
      */
     private void saveFile(JSONObject paramsObject) {
         downloadFileType = SAVE_FILE;
         saveFileCallBack = JSONUtils.getString(paramsObject, "success", "");
-//        downloadFailCB = JSONUtils.getString(paramsObject,"fail","");
         JSONObject jsonObject = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
         downloadUrl = JSONUtils.getString(jsonObject, "url", "");
         fileName = JSONUtils.getString(jsonObject, "saveName", "");
-        filepath = "/IMP-Cloud/download/";
-        downLoadFile(downloadUrl);
+        try {
+            JSONObject jsonObjectParam = new JSONObject();
+            jsonObject.put("url", downloadUrl);
+            jsonObject.put("filePath", "/IMP-Cloud/download/");
+            execute("download", jsonObjectParam);
+        } catch (Exception e) {
+            e.printStackTrace();
+            handler.sendEmptyMessage(1);
+        }
     }
 
     /**
@@ -246,11 +272,14 @@ public class FileTransferService extends ImpPlugin {
     private void listFile(JSONObject paramsObject) {
         JSONObject optionsJsonObject = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
         String fileDicPath = JSONUtils.getString(optionsJsonObject, "directory", MyAppConfig.LOCAL_CACHE_PATH);
-        List<String> arrayList = FileUtils.getFileNamesInFolder(fileDicPath, false);
+        List<String> fileArrayList = FileUtils.getFileNamesInFolder(fileDicPath, false);
+        List<String> folderArrayList = FileUtils.getFileFolderNamesInFolder(fileDicPath);
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("files", arrayList.toArray());
+            jsonObject.put("folders", new JSONArray(folderArrayList));
+            jsonObject.put("files", new JSONArray(fileArrayList));
         } catch (Exception e) {
+            jsCallback(JSONUtils.getString(paramsObject, "fail", ""), e.getMessage());
             e.printStackTrace();
         }
         jsCallback(JSONUtils.getString(paramsObject, "success", ""), jsonObject.toString());
@@ -263,17 +292,11 @@ public class FileTransferService extends ImpPlugin {
      */
     private void deleteFile(JSONObject paramsObject) {
         JSONObject optionsJsonObject = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
-        String fileDeletePath = JSONUtils.getString(paramsObject, "directory", MyAppConfig.LOCAL_CACHE_PATH)
+        String fileDeletePath = JSONUtils.getString(optionsJsonObject, "directory", MyAppConfig.LOCAL_DOWNLOAD_PATH)
                 + JSONUtils.getString(optionsJsonObject, "fileName", "default.txt");
-        JSONObject jsonObject = new JSONObject();
         boolean isDel = FileUtils.deleteFile(fileDeletePath);
-        try {
-            jsonObject.put("status", isDel);
-            jsonObject.put("errorMessage", "");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        jsCallback(JSONUtils.getString(paramsObject, "success", ""), jsonObject.toString());
+        jsCallback(isDel ? JSONUtils.getString(paramsObject, "success", "") :
+                JSONUtils.getString(paramsObject, "fail", ""));
     }
 
     /**
@@ -290,9 +313,10 @@ public class FileTransferService extends ImpPlugin {
         try {
             jsonObject.put("content", readContent);
         } catch (Exception e) {
+            jsCallback(JSONUtils.getString(paramsObject, "fail", ""), e.getMessage());
             e.printStackTrace();
         }
-        jsCallback(JSONUtils.getString(paramsObject, "success", ""), jsonObject.toString());
+        jsCallback(JSONUtils.getString(paramsObject, "success", ""), jsonObject);
     }
 
     /**
@@ -303,7 +327,7 @@ public class FileTransferService extends ImpPlugin {
     private void writeFile(JSONObject paramsObject) {
         JSONObject optionsJsonObject = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
         String fileSavePath = JSONUtils.getString(optionsJsonObject, "directory", MyAppConfig.LOCAL_CACHE_PATH)
-                + JSONUtils.getString(optionsJsonObject, "filename", "default.txt");
+                + JSONUtils.getString(optionsJsonObject, "fileName", "default.txt");
         FileUtils.writeFile(fileSavePath
                 , JSONUtils.getString(optionsJsonObject, "content", ""),
                 JSONUtils.getBoolean(optionsJsonObject, "append", true));
@@ -311,6 +335,7 @@ public class FileTransferService extends ImpPlugin {
         try {
             jsonObject.put("path", fileSavePath);
         } catch (Exception e) {
+            jsCallback(JSONUtils.getString(paramsObject, "fail", ""), e.getMessage());
             e.printStackTrace();
         }
         jsCallback(JSONUtils.getString(paramsObject, "success", ""), jsonObject.toString());
@@ -352,26 +377,17 @@ public class FileTransferService extends ImpPlugin {
             if (!jsonObject.isNull("filePath")) {
                 filepath = jsonObject.getString("filePath");
             }
-            if (!jsonObject.isNull("fileName") /**|| jsonObject.isNull("saveName")**/) {
+            if (!jsonObject.isNull("fileName")) {
                 fileName = jsonObject.getString("fileName");
-//                if (StringUtils.isBlank(fileName)) {
-//                    fileName = jsonObject.getString("saveName");
-//                }
             }
             if (!jsonObject.isNull("flag")) {
                 flag = jsonObject.getBoolean("flag");
             }
-            if (!jsonObject.isNull("successCallback") /**|| !jsonObject.isNull("success")**/) {
+            if (!jsonObject.isNull("successCallback")) {
                 downloadSucCB = jsonObject.getString("successCallback");
-//                if (StringUtils.isBlank(downloadSucCB)) {
-//                    downloadSucCB = jsonObject.getString("success");
-//                }
             }
-            if (!jsonObject.isNull("errorCallback")/** || !jsonObject.isNull("fail")**/) {
+            if (!jsonObject.isNull("errorCallback")) {
                 downloadFailCB = jsonObject.getString("errorCallback");
-//                if (StringUtils.isBlank(downloadFailCB)) {
-//                    downloadFailCB = jsonObject.getString("fail");
-//                }
             }
             filepath = "/IMP-Cloud/download/";
         } catch (JSONException e) {
@@ -555,7 +571,7 @@ public class FileTransferService extends ImpPlugin {
                 android.R.color.transparent);
         fileDownloadDlg.show();
         // 下载文件
-        Thread thread = new Thread(new updateRunnable());
+        Thread thread = new Thread(new UpdateRunnable());
         thread.start();
     }
 
@@ -627,24 +643,9 @@ public class FileTransferService extends ImpPlugin {
                 }
             }
 
-            if (downloadFileType.equals(SAVE_FILE)) {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("path", reallyPath);
-                jsonObject.put("status", 1);
-                jsCallback(saveFileCallBack, jsonObject.toString());
-            }
+
         } catch (Exception e) {
             e.printStackTrace();
-            if (downloadFileType.equals(SAVE_FILE)) {
-                JSONObject jsonObject = new JSONObject();
-                try {
-                    jsonObject.put("status", 0);
-                    jsonObject.put("errorMessage", e.getMessage());
-                } catch (Exception e1) {
-                    e1.printStackTrace();
-                }
-                jsCallback(saveFileCallBack, jsonObject.toString());
-            }
             handler.sendEmptyMessage(1);
         } finally {
             try {
@@ -880,11 +881,7 @@ public class FileTransferService extends ImpPlugin {
     /**
      * 下载文件线程
      */
-    class updateRunnable implements Runnable {
-        // 已下载的大小
-        int downnum = 0;
-        // 下载百分比
-        int downcount = 0;
+    class UpdateRunnable implements Runnable {
 
         @Override
         public void run() {
