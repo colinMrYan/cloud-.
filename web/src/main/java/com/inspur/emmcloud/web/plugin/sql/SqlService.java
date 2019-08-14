@@ -4,6 +4,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.web.plugin.ImpPlugin;
 
@@ -46,10 +48,15 @@ public class SqlService extends ImpPlugin {
      */
     private void operateDataBase(String action, JSONObject paramsObject) {
         if ("executeSql".equals(action)) {
-            this.database = getSQLiteDatabase(JSONUtils.getString(paramsObject, "dbName", ""));
-            successCb = JSONUtils.getString(paramsObject, "success", "");
-            failCb = JSONUtils.getString(paramsObject, "fail", "");
-            executeSql(paramsObject);
+            JSONObject options = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
+            this.database = getSQLiteDatabase(JSONUtils.getString(options, "dbName", ""));
+            if (database != null) {
+                successCb = JSONUtils.getString(paramsObject, "success", "");
+                failCb = JSONUtils.getString(paramsObject, "fail", "");
+                executeSql(paramsObject);
+            } else {
+                ToastUtils.show("database connect error");
+            }
         } else {
             showCallIMPMethodErrorDlg();
         }
@@ -62,8 +69,14 @@ public class SqlService extends ImpPlugin {
      * @return
      */
     private SQLiteDatabase getSQLiteDatabase(String dbName) {
-        String dbPath = MyAppConfig.LOCAL_DOWNLOAD_PATH + dbName;
-        return SQLiteDatabase.openOrCreateDatabase(dbPath, null);
+        String dbPath = MyAppConfig.LOCAL_IMP_USER_OPERATE_DIC + dbName;
+        try {
+            return SQLiteDatabase.openOrCreateDatabase(dbPath, null);
+        } catch (Exception e) {
+            LogUtils.YfcDebug("异常信息：" + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
     }
 
     /**
@@ -72,7 +85,8 @@ public class SqlService extends ImpPlugin {
      * @param jsonObject
      */
     private void executeSql(JSONObject jsonObject) {
-        String sql = JSONUtils.getString(jsonObject, "sql", "");
+        JSONObject optionsJsonObject = JSONUtils.getJSONObject(jsonObject, "options", new JSONObject());
+        String sql = JSONUtils.getString(optionsJsonObject, "sql", "");
 //        sql = "INSERT INTO Robot ('id','avatar','mode','name','support','title') VALUES('BOT6005','A8GJ2B6A4JB.png','','云+客服1111','yisiqi@inspur.com','投诉建议专用');";
 //        sql = "update Robot set name='yunjiakefu' where name like '%云%';";
 //        sql = "select * from Robot";
