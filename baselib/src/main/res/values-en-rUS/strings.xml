@@ -66,6 +66,10 @@
     <string name="unsupport_type">Unsupported Type</string>
     <string name="function_load_fail">Load failed,Touch the screen to reload </string>
     <string name="function_reload">Network Diagnosis</string>
+    <string name="upgrade_download">Update</string>
+    <string name="upgrade_later">Skip</string>
+    <string name="upgrade_install_now">Install</string>
+    <string name="upgrade_install_next_time">Next Time</string>
 
     <!-- 公共部分 -->
     <string name="year">Year</string>

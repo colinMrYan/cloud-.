@@ -53,10 +53,13 @@ android {
     }
     defaultConfig {
         applicationId "com.inspur.emmcloud"
+
+
+
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
-        versionCode 94
-        versionName "4.1.0"
+        versionCode 89
+        versionName "4.0.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             abiFilters "armeabi-v7a", "x86"

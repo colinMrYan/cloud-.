@@ -2,12 +2,20 @@ package com.inspur.emmcloud.util.privates;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.net.NetworkInfo;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -16,6 +24,7 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
@@ -23,6 +32,7 @@ import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.MyDialog;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
+import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.system.GetUpgradeResult;
 
@@ -33,6 +43,8 @@ import org.xutils.x;
 
 import java.io.File;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by libaochao on 2019/5/9.
@@ -74,6 +86,9 @@ public class NotificationUpgradeUtils extends APIInterfaceInstance {
     private boolean isManualCheck;
     private ProgressBar downloadProgressBar;
     private TextView percentText;
+    private List<String> updateMsgList = new ArrayList<>();
+    private List<String> updateImageUriList = new ArrayList<>();
+    private UpdateContentPagerAdapter updateContentPagerAdapter;
 
     private UpgradeNotificationUtils notificationUtils;
 
@@ -83,6 +98,12 @@ public class NotificationUpgradeUtils extends APIInterfaceInstance {
         this.handler = handler;
         this.isManualCheck = isManualCheck;
         loadingDlg = new LoadingDialog(context);
+        updateMsgList.add("测试条目1");
+        updateMsgList.add("测试条目2");
+        updateMsgList.add("测试条目3");
+        updateImageUriList.add("ceshitiaomu1");
+        updateImageUriList.add("ceshitiaomu2");
+        updateImageUriList.add("ceshitiaomu3");
         handMessage();
     }
 
@@ -165,6 +186,8 @@ public class NotificationUpgradeUtils extends APIInterfaceInstance {
         // TODO Auto-generated method stub
         upgradeCode = getUpgradeResult.getUpgradeCode();
         upgradeMsg = getUpgradeResult.getUpgradeMsg();
+        //updateImageUriList = getUpgradeResult.getUpgradeImageUriList();
+        // updateMsgList = getUpgradeResult.getUpgradeMsgList();
         String changeLog = getUpgradeResult.getChangeLog();
         if (!StringUtils.isBlank(changeLog)) {
             upgradeMsg = changeLog;
@@ -180,6 +203,13 @@ public class NotificationUpgradeUtils extends APIInterfaceInstance {
                 long appNotUpdateTime = PreferencesUtils.getLong(context, "appNotUpdateTime");
                 if (isManualCheck || System.currentTimeMillis() - appNotUpdateTime > notUpdateInterval) {
                     showSelectUpgradeDlg();
+                } else if (System.currentTimeMillis() - appNotUpdateTime <= notUpdateInterval && !isDownloadedLatestVersion()) {
+                    NetworkInfo.State networkInfoState = NetUtils.getNetworkWifiState(context);
+                    if (networkInfoState == NetworkInfo.State.CONNECTED) {
+                        LogUtils.LbcDebug("静默下载");
+                        downloadApk(true);
+                        handler.sendEmptyMessage(NO_NEED_UPGRADE);
+                    }
                 } else if (handler != null) {
                     handler.sendEmptyMessage(NO_NEED_UPGRADE);
                 }
@@ -199,39 +229,41 @@ public class NotificationUpgradeUtils extends APIInterfaceInstance {
 
     private void showSelectUpgradeDlg() {
         final MyDialog dialog = new MyDialog(context,
-                R.layout.basewidget_dialog_two_buttons);
+                R.layout.basewidget_dialog_update);
         dialog.setCancelable(false);
-        Button okBtn = dialog.findViewById(R.id.ok_btn);
-        okBtn.setText(context.getString(R.string.upgrade));
-        TextView appUpdateContentText = dialog.findViewById(R.id.text);
-        appUpdateContentText.setMovementMethod(ScrollingMovementMethod.getInstance());
-        appUpdateContentText.setText(upgradeMsg);
-        TextView appUpdateTitle = dialog.findViewById(R.id.app_update_title);
-        TextView appUpdateVersion = dialog.findViewById(R.id.app_update_version);
-        appUpdateTitle.setText(context.getString(R.string.app_update_remind));
-        appUpdateVersion.setText(context.getString(R.string.app_last_version) + "(" + getUpgradeResult.getLatestVersion() + ")");
+        Button okBtn = dialog.findViewById(R.id.btn_update);
+        ViewPager viewPager = dialog.findViewById(R.id.viewpager_update_content);
+        updateContentPagerAdapter = new UpdateContentPagerAdapter();
+        viewPager.setAdapter(updateContentPagerAdapter);
+        String okBtnContent = isDownloadedLatestVersion() ? context.getString(R.string.upgrade_install_now) : context.getString(R.string.upgrade_download);
+        okBtn.setText(okBtnContent + "(" + getUpgradeResult.getLatestVersion() + ")");
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                if (context != null) {
-                    if (null == notificationUtils) {
-                        notificationUtils = new UpgradeNotificationUtils(context, 10000);
+                if (!isDownloadedLatestVersion()) {
+                    if (context != null) {
+                        if (null == notificationUtils) {
+                            notificationUtils = new UpgradeNotificationUtils(context, 10000);
+                        }
+                        downloadApk(false);        //下载文件
+                        if (handler != null) {
+                            handler.sendEmptyMessage(NO_NEED_UPGRADE);
+                        }
                     }
-                    // 下载文件
-                    downloadApk();
-                    if (handler != null) {
-                        handler.sendEmptyMessage(NO_NEED_UPGRADE);
-                    }
+                } else {
+                    upgradeHandler.sendEmptyMessage(DOWNLOAD_FINISH);       //有已经下载好的直接安装
                 }
+
             }
         });
-        Button cancelBt = dialog.findViewById(R.id.cancel_btn);
-        cancelBt.setText(context.getString(R.string.not_upgrade));
+        TextView cancelBt = dialog.findViewById(R.id.tv_update_state);
+        cancelBt.setText(isDownloadedLatestVersion() ? context.getString(R.string.upgrade_install_next_time) : context.getString(R.string.upgrade_later));
         cancelBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
+                //判定当前是下载完了还是未下载完成
                 PreferencesUtils.putLong(context, "appNotUpdateTime", System.currentTimeMillis());
                 if (handler != null) {
                     handler.sendEmptyMessage(DONOT_UPGRADE);
@@ -243,6 +275,33 @@ public class NotificationUpgradeUtils extends APIInterfaceInstance {
         }
 
     }
+
+    /**
+     * 判断下载的是否为最新版本
+     * 判别方式为Md5
+     */
+    private boolean isDownloadedLatestVersion() {
+        String apkName = DOWNLOAD_PATH + "update.apk";
+        File file = new File(apkName);
+        if (file.exists()) {
+            String currentApkMd5 = FileUtils.getFileMD5(file);
+            String upgradeMd5 = getUpgradeResult.getApkMd5();
+            if (StringUtils.isBlank(upgradeMd5)) {
+                final PackageManager pm = context.getPackageManager();
+                PackageInfo info = pm.getPackageArchiveInfo(apkName, 0);
+                LogUtils.LbcDebug("info.versionCode" + info.versionCode);
+                if (Integer.parseInt(AppUtils.getVersion(context)) < info.versionCode) {
+                    return true;
+                }
+            } else {
+                if (currentApkMd5.equals(upgradeMd5)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
 
     private void showForceUpgradeDlg() {
         // TODO Auto-generated method stub
@@ -350,6 +409,9 @@ public class NotificationUpgradeUtils extends APIInterfaceInstance {
                         public void onSuccess(File arg0) {
                             // TODO Auto-generated method stub
                             upgradeHandler.sendEmptyMessage(DOWNLOAD_FINISH);
+                            String apkName = DOWNLOAD_PATH + "update.apk";
+                            String currentApkMd5 = FileUtils.getFileMD5(new File(apkName));
+                            LogUtils.LbcDebug("currentApkMd5::" + currentApkMd5);
                             if (null != notificationUtils) {
                                 notificationUtils.deleteNotification();
                             }
@@ -396,6 +458,111 @@ public class NotificationUpgradeUtils extends APIInterfaceInstance {
 
     }
 
+    /**
+     * 下载apk文件 判断是否静默
+     *
+     * @param isSilentDownLoad 是否静默
+     */
+    private void downloadApk(final boolean isSilentDownLoad) {
+        // 判断SD卡是否存在，并且是否具有读写权限
+        if (Environment.getExternalStorageState().equals(
+                Environment.MEDIA_MOUNTED)) {
+            RequestParams params = new RequestParams(upgradeUrl);
+            params.setSaveFilePath(DOWNLOAD_PATH + "update.apk");
+            cancelable = x.http().get(params,
+                    new Callback.ProgressCallback<File>() {
+
+                        @Override
+                        public void onCancelled(CancelledException arg0) {
+                            // TODO Auto-generated method stub
+                        }
+
+                        @Override
+                        public void onError(Throwable arg0, boolean arg1) {
+                            // TODO Auto-generated method stub
+                            if (isSilentDownLoad) {
+                                LogUtils.LbcDebug("静默下载失败");
+                            } else {
+                                upgradeHandler.sendEmptyMessage(DOWNLOAD_FAIL);
+                                if (null != notificationUtils) {
+                                    notificationUtils.updateNotification(context.getResources().getString(R.string.app_update_error), false);
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFinished() {
+                            // TODO Auto-generated method stub
+
+                        }
+
+                        @Override
+                        public void onSuccess(File arg0) {
+                            // TODO Auto-generated method stub
+                            if (isSilentDownLoad) {  //静默下载 不跳转安装
+                                final PackageManager pm = context.getPackageManager();
+                                String fullPath = DOWNLOAD_PATH + "update.apk";
+                                PackageInfo info = pm.getPackageArchiveInfo(fullPath, 0);
+                                LogUtils.LbcDebug("静默状态" + isSilentDownLoad + "versionCode:" + info.versionCode + "versionName:" + info.versionName);
+                            } else {
+                                upgradeHandler.sendEmptyMessage(DOWNLOAD_FINISH);
+                                String apkName = DOWNLOAD_PATH + "update.apk";
+                                String currentApkMd5 = FileUtils.getFileMD5(new File(apkName));
+                                LogUtils.LbcDebug("currentApkMd5::" + currentApkMd5);
+                            }
+                            if (null != notificationUtils) {
+                                notificationUtils.deleteNotification();
+                            }
+                        }
+
+                        @Override
+                        public void onLoading(long arg0, long arg1, boolean arg2) {
+                            // TODO Auto-generated method stub
+                            totalSize = arg0;
+                            downloadSize = arg1;
+                            progress = (int) (((float) arg1 / arg0) * 100);
+                            LogUtils.LbcDebug("静默下载进度：：" + progress);
+                            // 更新进度
+                            if (progressDownloadDialog != null
+                                    && progressDownloadDialog.isShowing()) {
+                                upgradeHandler.sendEmptyMessage(DOWNLOAD);
+                            }
+                            if (null != notificationUtils) {
+                                String data = context.getResources().getString(R.string.app_update_loaded) +
+                                        FileUtils.formatFileSize(downloadSize) + "/" + FileUtils.formatFileSize(totalSize);
+                                notificationUtils.updateNotification(data, true);
+                            }
+                        }
+
+                        @Override
+                        public void onStarted() {
+                            // TODO Auto-generated method stub
+                            if (isSilentDownLoad) {
+                                LogUtils.LbcDebug("静默下载开始");
+                            } else {
+                                upgradeHandler.sendEmptyMessage(SHOW_PEOGRESS_LAODING_DLG);
+                                if (null != notificationUtils) {
+                                    notificationUtils.initNotification();
+                                    ToastUtils.show(context,
+                                            context.getString(R.string.app_update_prepare));
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onWaiting() {
+                            // TODO Auto-generated method stub
+
+                        }
+                    });
+        } else {
+            if (isSilentDownLoad) {
+
+            } else {
+                upgradeHandler.sendEmptyMessage(DOWNLOAD_FAIL);
+            }
+        }
+    }
 
     /**
      * 获取百分率
@@ -440,5 +607,43 @@ public class NotificationUpgradeUtils extends APIInterfaceInstance {
 //        WebServiceMiddleUtils.hand(context, error, errorCode);
 //		WebServiceMiddleUtils.hand(context, error, upgradeHandler,
 //				UPGRADE_FAIL);
+    }
+
+    /**
+     * 更新内容
+     */
+    private class UpdateContentPagerAdapter extends PagerAdapter {
+
+
+        @Override
+        public int getCount() {
+            return updateMsgList.size();
+        }
+
+        @Override
+        public boolean isViewFromObject(@NonNull View view, @NonNull Object o) {
+            return o == view;
+        }
+
+        @NonNull
+        @Override
+        public Object instantiateItem(@NonNull ViewGroup container, int position) {
+            LogUtils.LbcDebug("22222222222222222222222");
+            View rootView = View.inflate(context, R.layout.basewiget_update_content_viewpager_item, null);
+            TextView versionTextView = rootView.findViewById(R.id.tv_update_version);
+            TextView updateContentTextView = rootView.findViewById(R.id.tv_update_content);
+            ImageView updateImageView = rootView.findViewById(R.id.iv_update_content);
+            ImageDisplayUtils.getInstance().displayImage(updateImageView, updateImageUriList.get(position), R.drawable.ic_update_default);
+            versionTextView.setText(getUpgradeResult.getLatestVersion());
+            updateContentTextView.setText(updateMsgList.get(position));
+            container.addView(rootView);
+            return rootView;
+        }
+
+        @Override
+        public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
+            LogUtils.LbcDebug("333333333333333333");
+            container.removeView((View) object);
+        }
     }
 }
