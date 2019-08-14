@@ -154,7 +154,7 @@
     <View
         android:id="@+id/view_line_volume"
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"
+        android:layout_height="0.5px"
         android:layout_below="@id/rl_channel_share"
         android:layout_marginLeft="20dp"
         android:background="@color/color_list_divider" />
@@ -199,8 +199,9 @@
     <View
         android:id="@+id/view_line_bottom"
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"
+        android:layout_height="0.5px"
         android:layout_below="@id/rl_volume_share"
+        android:layout_marginLeft="20dp"
         android:background="@color/color_list_divider" />
 
 </RelativeLayout>

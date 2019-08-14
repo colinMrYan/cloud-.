@@ -211,9 +211,9 @@ public class NotificationUpgradeUtils extends APIInterfaceInstance {
                         handler.sendEmptyMessage(NO_NEED_UPGRADE);
                     }
                 } else if (handler != null) {
+                    LogUtils.LbcDebug("111111111111111111");
                     handler.sendEmptyMessage(NO_NEED_UPGRADE);
                 }
-
                 break;
             case 2: // 必须升级
                 showForceUpgradeDlg();
@@ -290,7 +290,15 @@ public class NotificationUpgradeUtils extends APIInterfaceInstance {
                 final PackageManager pm = context.getPackageManager();
                 PackageInfo info = pm.getPackageArchiveInfo(apkName, 0);
                 LogUtils.LbcDebug("info.versionCode" + info.versionCode);
-                if (Integer.parseInt(AppUtils.getVersion(context)) < info.versionCode) {
+                int currentVersionCode = 0;
+                try {
+                    PackageManager manager = context.getPackageManager();
+                    PackageInfo currentInfo = manager.getPackageInfo(context.getPackageName(), 0);
+                    currentVersionCode = currentInfo.versionCode;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                if (currentVersionCode < info.versionCode) {
                     return true;
                 }
             } else {
