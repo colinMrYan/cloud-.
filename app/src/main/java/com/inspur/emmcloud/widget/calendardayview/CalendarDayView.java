@@ -24,7 +24,6 @@ import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButtonDrawable;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
-import com.inspur.emmcloud.bean.chat.MatheSet;
 import com.inspur.emmcloud.bean.schedule.Schedule;
 import com.inspur.emmcloud.interf.ScheduleEventListener;
 import com.inspur.emmcloud.util.privates.CalendarUtils;
@@ -35,11 +34,16 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 
 /**
  * Created by chenmch on 2019/3/29.
+ * 日视图Event排列原理（关键在于计算Event的宽度和X坐标，y坐标和高度很容易计算）
+ * 1.将所有日程按开始时间进行排序
+ * 2.将所有日程按是否有交集分组（每一组中的日程或直接有交集或同时与另外一个有交集）
+ * 3.将每组日程分列（每一列中的日程不相交），
+ * 4.通过列数计算出本组日程最大宽度 （总宽度/组中日程总列数 = 组中日程最大宽度）
+ * 5.通过列的顺序决定Event的X坐标（列的顺序*组中日程最大宽度=x坐标）
  */
 
 public class CalendarDayView extends RelativeLayout implements View.OnLongClickListener {
@@ -47,7 +51,6 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
     private static final int EVENT_GAP = DensityUtil.dip2px(MyApplication.getInstance(), 2);
     private String[] dayHourTimes = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15",
             "16", "17", "18", "19", "20", "21", "22", "23"};
-    private List<TimeHourRow> timeHourRowList = new ArrayList<>();
     private List<Event> eventList = new ArrayList<>();
     private RelativeLayout eventLayout;
     private ScheduleEventListener onEventClickListener;
@@ -206,8 +209,8 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
         this.selectCalendar = selectCalendar;
         this.eventList = eventList;
         sortEventList();
-        setEventIntersectionGroup();
-        showEventLayout();
+        List<List<Event>> eventCollisionGroupList = getEventGroupListByCollision();
+        showEvent(eventCollisionGroupList);
     }
 
     /**
@@ -231,67 +234,102 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
         });
     }
 
-
     /**
      * 找出所有相交的Event并进行分组，不同组之间不相交，同组之间会有相交
-     * 根据组内个数和次序算出每个Event的宽度和次序
+     *
+     * @return
      */
-    private void setEventIntersectionGroup() {
-        List<Event> copyEventList = new ArrayList<>();
-        copyEventList.addAll(eventList);
-        while (copyEventList.size() > 0) {
-            List<Event> eventGroup = new ArrayList<>();
-            Iterator<Event> it = copyEventList.iterator();
-            while (it.hasNext()) {
-                Event event = it.next();
-                if (eventGroup.size() == 0) {
-                    eventGroup.add(event);
-                    it.remove();
-                    continue;
+    private List<List<Event>> getEventGroupListByCollision() {
+        List<List<Event>> eventCollisionGroupList = new ArrayList<>();
+        for (Event event : eventList) {
+            boolean isPlaced = false;
+            outerLoop:
+            for (List<Event> eventCollisionGroup : eventCollisionGroupList) {
+                for (Event groupEvent : eventCollisionGroup) {
+                    if (isEventsCollide(groupEvent, event)) {
+                        eventCollisionGroup.add(event);
+                        isPlaced = true;
+                        break outerLoop;
+                    }
                 }
-                MatheSet matheSet = new MatheSet(((Schedule) event.getEventObj()).getStartTime(), ((Schedule) event.getEventObj()).getEndTime());
-                for (Event eventK : eventGroup) {
-                    MatheSet matheSetK = new MatheSet(((Schedule) eventK.getEventObj()).getStartTime(), ((Schedule) eventK.getEventObj()).getEndTime());
-                    if (MatheSet.isIntersectionWithoutBoundary(matheSet, matheSetK)) {
-                        eventGroup.add(event);
-                        it.remove();
+            }
+
+            if (!isPlaced) {
+                List<Event> newGroup = new ArrayList<>();
+                newGroup.add(event);
+                eventCollisionGroupList.add(newGroup);
+            }
+        }
+        return eventCollisionGroupList;
+    }
+
+    /**
+     * 将所有有交集的Event，纵向分列（每列中Event纵向排列无交集）
+     *
+     * @param eventCollisionGroupList
+     */
+    private void showEvent(List<List<Event>> eventCollisionGroupList) {
+        earliestEventOffset = -1;
+        eventLayout.removeAllViews();
+        for (List<Event> collisionGroup : eventCollisionGroupList) {
+            List<List<Event>> columns = new ArrayList<>();
+            columns.add(new ArrayList<Event>());
+            for (Event event : collisionGroup) {
+                boolean isPlaced = false;
+                for (List<Event> column : columns) {
+                    if (column.size() == 0) {
+                        column.add(event);
+                        isPlaced = true;
+                        //只需要将Event和本列的最后一个Event判断是否有交集即可（因为是按时间降序排列的）
+                        //只有无交集的两个Event才能成一列
+                    } else if (!isEventsCollide(event, column.get(column.size() - 1))) {
+                        column.add(event);
+                        isPlaced = true;
                         break;
                     }
-
+                }
+                if (!isPlaced) {
+                    List<Event> newColumn = new ArrayList<>();
+                    newColumn.add(event);
+                    columns.add(newColumn);
                 }
             }
-            int intersectionSize = eventGroup.size();
-            int eventWidth = (eventLayout.getWidth() - (intersectionSize - 1) * EVENT_GAP) / intersectionSize;
-            for (int i = 0; i < eventGroup.size(); i++) {
-                Event event = eventGroup.get(i);
-                int index = eventList.indexOf(event);
-                eventList.get(index).setIndex(i);
-                eventList.get(index).setMinWidth(eventWidth);
+
+            int maxRowCount = columns.size();
+            int eventWidth = (eventLayout.getWidth() - (maxRowCount - 1) * EVENT_GAP) / maxRowCount;
+            for (int i = 0; i < columns.size(); i++) {
+                List<Event> column = columns.get(i);
+                for (Event event : column) {
+                    int eventIndex = i;
+                    int eventHeight = (int) (event.getDayDurationInMillSeconds(selectCalendar) * TIME_HOUR_HEIGHT / 3600000);
+                    int marginLeft = (EVENT_GAP + eventWidth) * eventIndex;
+                    Calendar startTime = event.getDayEventStartTime(selectCalendar);
+                    Calendar dayStartTime = (Calendar) startTime.clone();
+                    dayStartTime.set(Calendar.HOUR_OF_DAY, 0);
+                    dayStartTime.set(Calendar.MINUTE, 0);
+                    int marginTop = (int) ((startTime.getTimeInMillis() - dayStartTime.getTimeInMillis()) * TIME_HOUR_HEIGHT / 3600000);
+                    //为了在打开当天日程时滚动到相应的位置
+                    if (earliestEventOffset == -1 || marginTop < earliestEventOffset) {
+                        earliestEventOffset = marginTop;
+                    }
+                    RelativeLayout.LayoutParams eventLayoutParams = new RelativeLayout.LayoutParams(eventWidth,
+                            eventHeight);
+                    eventLayoutParams.setMargins(marginLeft, marginTop, 0, 0);
+                    setEventLayout(event, eventLayoutParams);
+                }
+
             }
+
         }
     }
 
-    private void showEventLayout() {
-        earliestEventOffset = -1;
-        eventLayout.removeAllViews();
-        for (Event event : eventList) {
-            int eventWidth = event.getMinWidth();
-            int eventHeight = (int) (event.getDayDurationInMillSeconds(selectCalendar) * TIME_HOUR_HEIGHT / 3600000);
-            int marginLeft = (EVENT_GAP + eventWidth) * event.getIndex();
-            Calendar startTime = event.getDayEventStartTime(selectCalendar);
-            Calendar dayStartTime = (Calendar) startTime.clone();
-            dayStartTime.set(Calendar.HOUR_OF_DAY, 0);
-            dayStartTime.set(Calendar.MINUTE, 0);
-            int marginTop = (int) ((startTime.getTimeInMillis() - dayStartTime.getTimeInMillis()) * TIME_HOUR_HEIGHT / 3600000);
-            //为了在打开当天日程时滚动到相应的位置
-            if (earliestEventOffset == -1 || marginTop < earliestEventOffset) {
-                earliestEventOffset = marginTop;
-            }
-            RelativeLayout.LayoutParams eventLayoutParams = new RelativeLayout.LayoutParams(eventWidth,
-                    eventHeight);
-            eventLayoutParams.setMargins(marginLeft, marginTop, 0, 0);
-            setEventLayout(event, eventLayoutParams);
-        }
+
+    private boolean isEventsCollide(Event event1, Event event2) {
+        long start1 = event1.getEventStartTime().getTimeInMillis();
+        long end1 = event1.getEventEndTime().getTimeInMillis();
+        long start2 = event2.getEventStartTime().getTimeInMillis();
+        long end2 = event2.getEventEndTime().getTimeInMillis();
+        return !((start1 >= end2) || (end1 <= start2));
     }
 
     private void setEventLayout(final Event event, final RelativeLayout.LayoutParams eventLayoutParams) {
