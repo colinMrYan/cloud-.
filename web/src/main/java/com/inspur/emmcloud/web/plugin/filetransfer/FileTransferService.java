@@ -20,6 +20,7 @@ import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
@@ -56,6 +57,10 @@ import javax.net.ssl.X509TrustManager;
 
 import static android.app.Activity.RESULT_OK;
 
+/**
+ * FileTransferService中下载，读取，写入内容，列出文件列表，删除文件等新加插件传的路径都认为是相对路径
+ * 相对路径前无“/”
+ */
 public class FileTransferService extends ImpPlugin {
     public static final String SUCCESS = "1";
     public static final String FAILURE = "0";
@@ -102,6 +107,10 @@ public class FileTransferService extends ImpPlugin {
     private int progress;
     private ProgressBar progressBar;
     private String downloadFileType = "";
+    private String basePath = MyAppConfig.LOCAL_IMP_USER_OPERATE_DIC +
+            BaseApplication.getInstance().getTanent() + "/"
+            + BaseApplication.getInstance().getUid() + "/";
+    private String successCb, failCb;
     // 回传下载结果
     Handler handler = new Handler() {
 
@@ -139,8 +148,8 @@ public class FileTransferService extends ImpPlugin {
                                 try {
                                     if (downloadFileType.equals(SAVE_FILE)) {
                                         JSONObject jsonObject = new JSONObject();
-                                        jsonObject.put("path", reallyPath);
                                         jsonObject.put("status", 0);
+                                        jsonObject.put("errorMessage", "");
                                         jsCallback(saveFileCallBack, jsonObject.toString());
                                     }
                                 } catch (Exception e) {
@@ -171,8 +180,8 @@ public class FileTransferService extends ImpPlugin {
                             } else if (downloadFileType.equals(SAVE_FILE) && StrUtil.strIsNotNull(saveFileCallBack)) {
                                 JSONObject jsonObject = new JSONObject();
                                 try {
+                                    jsonObject.put("path", reallyPath.replace(basePath, ""));
                                     jsonObject.put("status", 1);
-                                    jsonObject.put("errorMessage", "");
                                 } catch (Exception e1) {
                                     e1.printStackTrace();
                                 }
@@ -200,13 +209,16 @@ public class FileTransferService extends ImpPlugin {
         }
 
     };
-    private String successCb, failCb;
 
     @Override
     public void execute(String action, JSONObject paramsObject) {
         switch (action) {
             case "upload":   // 上传文件
                 upload(paramsObject);
+                break;
+            case "uploadFile":
+                uploadFiles(paramsObject);
+                LogUtils.YfcDebug("paramsObject:" + paramsObject.toString());
                 break;
             case "download": // 下载文件
                 download(paramsObject);
@@ -243,6 +255,22 @@ public class FileTransferService extends ImpPlugin {
     }
 
     /**
+     * 上传文件
+     *
+     * @param paramsObject
+     */
+    private void uploadFiles(JSONObject paramsObject) {
+        uploadSucCB = JSONUtils.getString(paramsObject, "success", "");
+        uploadFailCB = JSONUtils.getString(paramsObject, "fail", "");
+        JSONObject options = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
+        String uploadUrl = JSONUtils.getString(options, "url", "");
+        JSONArray fileJsonArray = JSONUtils.getJSONArray(options, "files", new JSONArray());
+        JSONObject dataJsonObject = JSONUtils.getJSONObject(options, "data", new JSONObject());
+        boolean showProgress = JSONUtils.getBoolean(options, "showProgress", true);
+
+    }
+
+    /**
      * 下载文件插件为新加一个方法
      *
      * @param paramsObject
@@ -256,7 +284,7 @@ public class FileTransferService extends ImpPlugin {
         try {
             JSONObject jsonObjectParam = new JSONObject();
             jsonObject.put("url", downloadUrl);
-            jsonObject.put("filePath", "/IMP-Cloud/download/");
+            jsonObject.put("filePath", basePath);
             execute("download", jsonObjectParam);
         } catch (Exception e) {
             e.printStackTrace();
@@ -271,13 +299,21 @@ public class FileTransferService extends ImpPlugin {
      */
     private void listFile(JSONObject paramsObject) {
         JSONObject optionsJsonObject = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
-        String fileDicPath = JSONUtils.getString(optionsJsonObject, "directory", MyAppConfig.LOCAL_CACHE_PATH);
+        String fileDicPath = basePath + JSONUtils.getString(optionsJsonObject, "directory", "");
         List<String> fileArrayList = FileUtils.getFileNamesInFolder(fileDicPath, false);
         List<String> folderArrayList = FileUtils.getFileFolderNamesInFolder(fileDicPath);
         JSONObject jsonObject = new JSONObject();
+        List<String> fileArrayListFilter = new ArrayList<>();
+        List<String> folderArrayListFilter = new ArrayList<>();
+        for (int i = 0; i < fileArrayList.size(); i++) {
+            fileArrayListFilter.add(fileArrayList.get(i).replace(basePath, ""));
+        }
+        for (int i = 0; i < folderArrayList.size(); i++) {
+            folderArrayListFilter.add(folderArrayList.get(i).replace(basePath, ""));
+        }
         try {
-            jsonObject.put("folders", new JSONArray(folderArrayList));
-            jsonObject.put("files", new JSONArray(fileArrayList));
+            jsonObject.put("folders", new JSONArray(folderArrayListFilter));
+            jsonObject.put("files", new JSONArray(fileArrayListFilter));
         } catch (Exception e) {
             jsCallback(JSONUtils.getString(paramsObject, "fail", ""), e.getMessage());
             e.printStackTrace();
@@ -292,11 +328,15 @@ public class FileTransferService extends ImpPlugin {
      */
     private void deleteFile(JSONObject paramsObject) {
         JSONObject optionsJsonObject = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
-        String fileDeletePath = JSONUtils.getString(optionsJsonObject, "directory", MyAppConfig.LOCAL_DOWNLOAD_PATH)
-                + JSONUtils.getString(optionsJsonObject, "fileName", "default.txt");
-        boolean isDel = FileUtils.deleteFile(fileDeletePath);
-        jsCallback(isDel ? JSONUtils.getString(paramsObject, "success", "") :
-                JSONUtils.getString(paramsObject, "fail", ""));
+        String fileDeletePath = basePath + JSONUtils.getString(optionsJsonObject, "directory", "")
+                + JSONUtils.getString(optionsJsonObject, "fileName", "");
+        if (StrUtil.strIsNotNull(fileDeletePath)) {
+            boolean isDel = FileUtils.deleteFile(fileDeletePath);
+            jsCallback(isDel ? JSONUtils.getString(paramsObject, "success", "") :
+                    JSONUtils.getString(paramsObject, "fail", ""));
+        } else {
+            jsCallback(JSONUtils.getString(paramsObject, "fail", ""));
+        }
     }
 
     /**
@@ -306,8 +346,8 @@ public class FileTransferService extends ImpPlugin {
      */
     private void readFile(JSONObject paramsObject) {
         JSONObject optionsJsonObject = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
-        String fileReadPath = JSONUtils.getString(optionsJsonObject, "directory", MyAppConfig.LOCAL_CACHE_PATH)
-                + JSONUtils.getString(optionsJsonObject, "fileName", "default.txt");
+        String fileReadPath = basePath + JSONUtils.getString(optionsJsonObject, "directory", "")
+                + JSONUtils.getString(optionsJsonObject, "fileName", "");
         String readContent = FileUtils.readFile(fileReadPath, "utf-8").toString();
         JSONObject jsonObject = new JSONObject();
         try {
@@ -326,14 +366,15 @@ public class FileTransferService extends ImpPlugin {
      */
     private void writeFile(JSONObject paramsObject) {
         JSONObject optionsJsonObject = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
-        String fileSavePath = JSONUtils.getString(optionsJsonObject, "directory", MyAppConfig.LOCAL_CACHE_PATH)
-                + JSONUtils.getString(optionsJsonObject, "fileName", "default.txt");
+        String fileSavePath = basePath + JSONUtils.getString(optionsJsonObject, "directory", "")
+                + JSONUtils.getString(optionsJsonObject, "fileName", "");
         FileUtils.writeFile(fileSavePath
                 , JSONUtils.getString(optionsJsonObject, "content", ""),
                 JSONUtils.getBoolean(optionsJsonObject, "append", true));
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("path", fileSavePath);
+            jsonObject.put("path", JSONUtils.getString(optionsJsonObject, "directory", "")
+                    + JSONUtils.getString(optionsJsonObject, "fileName", ""));
         } catch (Exception e) {
             jsCallback(JSONUtils.getString(paramsObject, "fail", ""), e.getMessage());
             e.printStackTrace();
@@ -354,7 +395,7 @@ public class FileTransferService extends ImpPlugin {
                     //key = "http://10.24.14.63:8080/test/inspur_cloud_mobileclient_1.0.0.apk";
                     JSONObject jsonObject = new JSONObject();
                     jsonObject.put("url", key);
-                    jsonObject.put("filePath", "/IMP-Cloud/download/");
+                    jsonObject.put("filePath", basePath);
                     execute("download", jsonObject);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -389,7 +430,8 @@ public class FileTransferService extends ImpPlugin {
             if (!jsonObject.isNull("errorCallback")) {
                 downloadFailCB = jsonObject.getString("errorCallback");
             }
-            filepath = "/IMP-Cloud/download/";
+//            filepath = "/IMP-Cloud/download/";
+            filepath = basePath;
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -405,7 +447,7 @@ public class FileTransferService extends ImpPlugin {
             return;
         }
         // 文件存放路径
-        filepath = sdcard + filepath;
+//        filepath = sdcard + filepath;
         File tmpFile = new File(filepath);
         if (!tmpFile.exists()) {
             tmpFile.mkdirs();
@@ -577,6 +619,7 @@ public class FileTransferService extends ImpPlugin {
 
     /**
      * 下载文件
+     * 文件名先以指定的文件名为准，如果没有指定文件名则以getFileName方法里返回的为准
      *
      * @param urlString 下载的url
      * @return 返回文件下载的详细路径
@@ -664,7 +707,15 @@ public class FileTransferService extends ImpPlugin {
         }
     }
 
-    // 在url中获取文件名
+    /**
+     * url里获取文件名
+     * 先以头部filename为准
+     * 没有则取connection里的名字
+     * 再没有则生成一个.tmp名字
+     *
+     * @param urlConnection
+     * @return
+     */
     private String getFileName(HttpURLConnection urlConnection) {
         String filename = null;
         String headField = urlConnection.getHeaderField("Content-Disposition");
