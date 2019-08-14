@@ -4,10 +4,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.inspur.emmcloud.baselib.util.JSONUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.web.plugin.ImpPlugin;
+import com.inspur.emmcloud.web.util.StrUtil;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -69,13 +69,22 @@ public class SqlService extends ImpPlugin {
      * @return
      */
     private SQLiteDatabase getSQLiteDatabase(String dbName) {
-        String dbPath = MyAppConfig.LOCAL_IMP_USER_OPERATE_DIC + dbName;
-        try {
-            return SQLiteDatabase.openOrCreateDatabase(dbPath, null);
-        } catch (Exception e) {
-            LogUtils.YfcDebug("异常信息：" + e.getMessage());
-            e.printStackTrace();
-            return null;
+        dbName = "";
+        if (StrUtil.strIsNotNull(dbName)) {
+            String dbPath = MyAppConfig.LOCAL_IMP_USER_OPERATE_DIC + dbName;
+            try {
+                return SQLiteDatabase.openOrCreateDatabase(dbPath, null);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        } else {
+            // 初始化，只需要调用一次
+            AssetsDatabaseManager.initManager(getFragmentContext());
+            // 获取管理对象，因为数据库需要通过管理对象才能够获取
+            AssetsDatabaseManager mg = AssetsDatabaseManager.getManager();
+            // 通过管理对象获取数据库
+            return mg.getDatabase("default.db");
         }
     }
 
@@ -112,7 +121,7 @@ public class SqlService extends ImpPlugin {
             JSONObject errorMessageJsonObject = new JSONObject();
             try {
                 errorMessageJsonObject.put("errorMessage", e.getMessage());
-                jsCallback(failCb, errorMessageJsonObject.toString());
+                jsCallback(failCb, errorMessageJsonObject);
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
