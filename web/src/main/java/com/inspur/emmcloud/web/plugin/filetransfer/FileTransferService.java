@@ -229,26 +229,8 @@ public class FileTransferService extends ImpPlugin {
                 writeFile(paramsObject);
                 break;
             case "readFile":
-//                //读文件
-//                readFile(paramsObject);
-
-                JSONObject jsonObject = new JSONObject();
-                try {
-                    jsonObject.put("success", "");
-                    jsonObject.put("fail", "");
-                    JSONObject optionsJsonObject = new JSONObject();
-                    optionsJsonObject.put("directory", "download/");
-                    optionsJsonObject.put("fileName", "wh.txt");
-                    optionsJsonObject.put("content", "这是一个测试文件");
-                    optionsJsonObject.put("append", false);
-                    jsonObject.put("options", optionsJsonObject);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                writeFile(jsonObject);
-                readFile(jsonObject);
-                listFile(jsonObject);
-//            deleteFile(jsonObject);
+                //读文件
+                readFile(paramsObject);
                 break;
             case "deleteFile":
                 //删除指定文件
@@ -340,7 +322,7 @@ public class FileTransferService extends ImpPlugin {
      */
     private void readFile(JSONObject paramsObject) {
         JSONObject optionsJsonObject = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
-        String fileReadPath = MyAppConfig.LOCAL_IMP_USER_OPERATE_DIC + JSONUtils.getString(optionsJsonObject, "directory", MyAppConfig.LOCAL_IMP_USER_OPERATE_DIC)
+        String fileReadPath = MyAppConfig.LOCAL_IMP_USER_OPERATE_DIC + JSONUtils.getString(optionsJsonObject, "directory", "")
                 + JSONUtils.getString(optionsJsonObject, "fileName", "");
         String readContent = FileUtils.readFile(fileReadPath, "utf-8").toString();
         JSONObject jsonObject = new JSONObject();
