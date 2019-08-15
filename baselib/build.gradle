@@ -148,4 +148,5 @@ dependencies {
     api deps.ARouter.arouter_api
     api deps.ical4j
     api deps.fingerprintidentify
+    compile 'org.jetbrains:annotations-java5:15.0'
 }

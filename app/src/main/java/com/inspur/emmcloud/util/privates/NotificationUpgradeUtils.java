@@ -28,7 +28,7 @@ import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
-import com.inspur.emmcloud.baselib.widget.CommonCircleIndicator;
+import com.inspur.emmcloud.baselib.widget.CommonCircleIndicator.CircleIndicator;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.MyDialog;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
@@ -232,8 +232,10 @@ public class NotificationUpgradeUtils extends APIInterfaceInstance {
         final MyDialog dialog = new MyDialog(context,
                 R.layout.basewidget_dialog_update);
         dialog.setCancelable(false);
-        Button okBtn = dialog.findViewById(R.id.btn_update);
+        Button okBtn = dialog.findViewById(R.id.btn_update);   //tv_update_version
         final TextView contentDataTextView = dialog.findViewById(R.id.tv_update_content_data);
+        final TextView versionTextView = dialog.findViewById(R.id.tv_update_version);
+        versionTextView.setText(getUpgradeResult.getLatestVersion());
         ViewPager viewPager = dialog.findViewById(R.id.viewpager_update_content);
         updateContentPagerAdapter = new UpdateContentPagerAdapter();
         viewPager.setAdapter(updateContentPagerAdapter);
@@ -253,7 +255,7 @@ public class NotificationUpgradeUtils extends APIInterfaceInstance {
 
             }
         });
-        CommonCircleIndicator commonCircleIndicator = dialog.findViewById(R.id.cc_index);
+        CircleIndicator commonCircleIndicator = dialog.findViewById(R.id.cc_index);
         commonCircleIndicator.setViewPager(viewPager);
         updateContentPagerAdapter.registerDataSetObserver(commonCircleIndicator.getDataSetObserver());
         String okBtnContent = isDownloadedLatestVersion() ? context.getString(R.string.upgrade_install_now) : context.getString(R.string.upgrade_download);
@@ -658,12 +660,8 @@ public class NotificationUpgradeUtils extends APIInterfaceInstance {
         public Object instantiateItem(@NonNull ViewGroup container, int position) {
             LogUtils.LbcDebug("22222222222222222222222");
             View rootView = View.inflate(context, R.layout.basewiget_update_content_viewpager_item, null);
-            TextView versionTextView = rootView.findViewById(R.id.tv_update_version);
-            TextView updateContentTextView = rootView.findViewById(R.id.tv_update_content);
             ImageView updateImageView = rootView.findViewById(R.id.iv_update_content);
             ImageDisplayUtils.getInstance().displayImage(updateImageView, updateImageUriList.get(position), R.drawable.ic_update_default);
-            versionTextView.setText(getUpgradeResult.getLatestVersion());
-            updateContentTextView.setText(updateMsgList.get(position));
             container.addView(rootView);
             return rootView;
         }
