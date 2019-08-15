@@ -310,7 +310,7 @@ public class AppSchemeHandleActivity extends BaseActivity {
 
                             @Override
                             public void shareCancel() {
-
+                                finish();
                             }
                         });
                     }
