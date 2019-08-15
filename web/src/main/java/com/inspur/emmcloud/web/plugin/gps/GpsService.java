@@ -10,9 +10,12 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
+import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
@@ -22,7 +25,11 @@ import com.inspur.emmcloud.web.plugin.amaplocation.ECMLoactionTransformUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.xutils.http.HttpMethod;
+import org.xutils.http.RequestParams;
+import org.xutils.x;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -37,6 +44,7 @@ import java.util.List;
 public class GpsService extends ImpPlugin implements
         AMapLocationListener {
 
+    public String successCb, failCb;
     // 设置回调函数
     private String functName;
     // 声明LocationManager对象
@@ -50,19 +58,22 @@ public class GpsService extends ImpPlugin implements
 
     @Override
     public void execute(String action, JSONObject paramsObject) {
-        // 开启GPS监控
-        if ("open".equals(action)) {
-            open();
-        }
-        // 关闭GPS监控
-        else if ("close".equals(action)) {
-            close();
-        }
-        // 获取经纬度地址
-        else if ("getInfo".equals(action)) {
-            getInfo(paramsObject);
-        } else {
-            showCallIMPMethodErrorDlg();
+        switch (action) {
+            case "open":
+                open();
+                break;
+            case "close":
+                close();
+                break;
+            case "getInfo":
+                getInfo(paramsObject);
+                break;
+            case "getAddress":
+                getAddress(paramsObject);
+                break;
+            default:
+                showCallIMPMethodErrorDlg();
+                break;
         }
     }
 
@@ -123,6 +134,98 @@ public class GpsService extends ImpPlugin implements
             }
 
         });
+    }
+
+    private void getAddress(JSONObject paramsObject) {
+        successCb = JSONUtils.getString(paramsObject, "success", "");
+        failCb = JSONUtils.getString(paramsObject, "fail", "");
+        if (!NetUtils.isNetworkConnected(getFragmentContext(), false)) {
+            callbackFail("网络异常！");
+            return;
+        }
+        JSONObject optionsObj = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
+        Double latitude = JSONUtils.getDouble(optionsObj, "latitude", null);
+        Double longitude = JSONUtils.getDouble(optionsObj, "longitude", null);
+        if (latitude == null || longitude == null) {
+            callbackFail("参数传递不正确！");
+            return;
+        }
+        String coordType = JSONUtils.getString(optionsObj, "coordType", "GCJ02");
+        if (coordType.equals("WGS84")) {
+            double[] toLocation = ECMLoactionTransformUtils.wgs84togcj02(longitude, latitude);
+            longitude = toLocation[0];
+            latitude = toLocation[1];
+        } else if (coordType.equals("BD09")) {
+            double[] toLocation = ECMLoactionTransformUtils.bd09togcj02(longitude, latitude);
+            longitude = toLocation[0];
+            latitude = toLocation[1];
+        }
+        longitude = new BigDecimal(longitude).setScale(6, BigDecimal.ROUND_HALF_UP).doubleValue();
+        latitude = new BigDecimal(latitude).setScale(6, BigDecimal.ROUND_HALF_UP).doubleValue();
+        getAdressFromNet(longitude, latitude);
+    }
+
+
+    private void getAdressFromNet(Double longitude, Double latitude) {
+        String url = "https://restapi.amap.com/v3/geocode/regeo?parameters";
+        RequestParams params = new RequestParams(url);
+        params.addParameter("key", "cfbacd7a8024980f6b4e6e85c08b0376");
+        params.addParameter("location", longitude + "," + latitude);
+        x.http().request(HttpMethod.GET, params, new BaseModuleAPICallback(getFragmentContext(), url) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                GetRegeoResult getRegeoResult = new GetRegeoResult(new String(arg0));
+                if (getRegeoResult.getStatus() == 0) {
+                    callbackFail(getRegeoResult.getInfo(), -1);
+                } else {
+                    JSONObject resultObject = new JSONObject();
+                    try {
+                        resultObject.put("addr", getRegeoResult.getAddr());
+                        resultObject.put("country", getRegeoResult.getCountry());
+                        resultObject.put("province", getRegeoResult.getProvince());
+                        resultObject.put("city", getRegeoResult.getCity());
+                        resultObject.put("district", getRegeoResult.getDistrict());
+                        resultObject.put("street", getRegeoResult.getStreet());
+                        resultObject.put("streetNum", getRegeoResult.getStreetNum());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    GpsService.this.callbackSuccess(resultObject.toString());
+
+                }
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                GpsService.this.callbackFail("");
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                callbackFail("位置信息获取失败！", -1);
+
+            }
+        });
+    }
+
+    private void callbackSuccess(String result) {
+        if (!StringUtils.isBlank(successCb)) {
+            this.jsCallback(successCb, result);
+        }
+    }
+
+    private void callbackFail(String errorMessage) {
+        if (!StringUtils.isBlank(failCb)) {
+            JSONObject object = new JSONObject();
+            try {
+                object.put("errorMessage", errorMessage);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            this.jsCallback(failCb, object.toString());
+        }
+
     }
 
     /**
