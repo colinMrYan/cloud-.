@@ -123,14 +123,25 @@ public class SqlService extends ImpPlugin {
         } catch (Exception e) {
             e.printStackTrace();
             // 将错误信息反馈回前台
-            JSONObject errorMessageJsonObject = new JSONObject();
-            try {
-                errorMessageJsonObject.put("errorMessage", e.getMessage());
-                jsCallback(failCb, errorMessageJsonObject);
-            } catch (Exception e1) {
-                e1.printStackTrace();
-            }
+            jsCallback(failCb, getErrorJson(e.getMessage()));
         }
+    }
+
+
+    /**
+     * 组装错误信息
+     *
+     * @param message
+     * @return
+     */
+    private JSONObject getErrorJson(String message) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("errorMessage", message);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
     }
 
     /**
