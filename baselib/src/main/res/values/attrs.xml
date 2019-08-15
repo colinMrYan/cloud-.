@@ -415,4 +415,6 @@
         <attr name="loading_color" format="color" />
     </declare-styleable>
     <attr name="CusLoadingStyle" format="reference" />
+
+
 </resources>

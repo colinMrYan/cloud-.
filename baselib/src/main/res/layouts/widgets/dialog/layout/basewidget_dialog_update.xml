@@ -5,23 +5,37 @@
     android:background="#FFFFFF"
     android:orientation="vertical">
 
+
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager_update_content"
         android:layout_width="wrap_content"
-        android:layout_height="280dp"
+        android:layout_height="248dp"
         android:layout_gravity="center"
-        android:layout_marginBottom="9dp"
         android:gravity="center_horizontal"
         android:paddingTop="32dp"></android.support.v4.view.ViewPager>
 
-    <LinearLayout
-        android:id="@+id/ll_viewpager_index"
+    <TextView
+        android:id="@+id/tv_update_content_data"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:orientation="horizontal"
-        android:visibility="gone"></LinearLayout>
+        android:layout_marginBottom="9dp"
+        android:layout_marginTop="4dp"
+        android:text="支持手势创建、修改日程时间"
+        android:textColor="#888888"
+        android:textSize="13sp" />
 
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal">
+
+        <com.inspur.emmcloud.baselib.widget.CommonCircleIndicator
+            android:id="@+id/cc_index"
+            android:layout_width="wrap_content"
+            android:layout_height="12dp"
+            android:layout_centerHorizontal="true"></com.inspur.emmcloud.baselib.widget.CommonCircleIndicator>
+    </RelativeLayout>
     <Button
         android:id="@+id/btn_update"
         android:layout_width="200dp"

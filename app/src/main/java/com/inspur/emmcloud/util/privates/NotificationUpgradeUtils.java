@@ -28,6 +28,7 @@ import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.baselib.widget.CommonCircleIndicator;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.MyDialog;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
@@ -98,7 +99,7 @@ public class NotificationUpgradeUtils extends APIInterfaceInstance {
         this.handler = handler;
         this.isManualCheck = isManualCheck;
         loadingDlg = new LoadingDialog(context);
-        updateMsgList.add("测试条目1");
+        updateMsgList.add("测试条目w1wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww1");
         updateMsgList.add("测试条目2");
         updateMsgList.add("测试条目3");
         updateImageUriList.add("ceshitiaomu1");
@@ -232,9 +233,29 @@ public class NotificationUpgradeUtils extends APIInterfaceInstance {
                 R.layout.basewidget_dialog_update);
         dialog.setCancelable(false);
         Button okBtn = dialog.findViewById(R.id.btn_update);
+        final TextView contentDataTextView = dialog.findViewById(R.id.tv_update_content_data);
         ViewPager viewPager = dialog.findViewById(R.id.viewpager_update_content);
         updateContentPagerAdapter = new UpdateContentPagerAdapter();
         viewPager.setAdapter(updateContentPagerAdapter);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+                contentDataTextView.setText(updateMsgList.get(i));
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });
+        CommonCircleIndicator commonCircleIndicator = dialog.findViewById(R.id.cc_index);
+        commonCircleIndicator.setViewPager(viewPager);
+        updateContentPagerAdapter.registerDataSetObserver(commonCircleIndicator.getDataSetObserver());
         String okBtnContent = isDownloadedLatestVersion() ? context.getString(R.string.upgrade_install_now) : context.getString(R.string.upgrade_download);
         okBtn.setText(okBtnContent + "(" + getUpgradeResult.getLatestVersion() + ")");
         okBtn.setOnClickListener(new View.OnClickListener() {
@@ -621,7 +642,6 @@ public class NotificationUpgradeUtils extends APIInterfaceInstance {
      * 更新内容
      */
     private class UpdateContentPagerAdapter extends PagerAdapter {
-
 
         @Override
         public int getCount() {
