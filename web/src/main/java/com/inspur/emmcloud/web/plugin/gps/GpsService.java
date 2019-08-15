@@ -120,6 +120,7 @@ public class GpsService extends ImpPlugin implements
                 this.coordinateType = paramsObject.getString("coordinateType");
             }
         } catch (JSONException e) {
+            jsCallback(functName, getErrorJson(e.getMessage()));
             e.printStackTrace();
         }
         PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getActivity(), Permissions.LOCATION, new PermissionRequestCallback() {
@@ -134,6 +135,22 @@ public class GpsService extends ImpPlugin implements
             }
 
         });
+    }
+
+    /**
+     * 组装错误信息
+     *
+     * @param message
+     * @return
+     */
+    private JSONObject getErrorJson(String message) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("errorMessage", message);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
     }
 
     private void getAddress(JSONObject paramsObject) {
@@ -304,6 +321,7 @@ public class GpsService extends ImpPlugin implements
                 jsonObject.put("street", amapLocation.getStreet());
                 jsonObject.put("streetNum", amapLocation.getStreetNum());
             } catch (Exception e) {
+                jsCallback(functName, getErrorJson(e.getMessage()));
                 e.printStackTrace();
             }
             jsCallback(functName, jsonObject.toString());

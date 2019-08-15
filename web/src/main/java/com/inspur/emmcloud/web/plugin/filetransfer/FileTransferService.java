@@ -315,7 +315,7 @@ public class FileTransferService extends ImpPlugin {
             jsonObject.put("folders", new JSONArray(folderArrayListFilter));
             jsonObject.put("files", new JSONArray(fileArrayListFilter));
         } catch (Exception e) {
-            jsCallback(JSONUtils.getString(paramsObject, "fail", ""), e.getMessage());
+            jsCallback(JSONUtils.getString(paramsObject, "fail", ""), getErrorJson(e.getMessage()));
             e.printStackTrace();
         }
         jsCallback(JSONUtils.getString(paramsObject, "success", ""), jsonObject.toString());
@@ -333,9 +333,9 @@ public class FileTransferService extends ImpPlugin {
         if (StrUtil.strIsNotNull(fileDeletePath)) {
             boolean isDel = FileUtils.deleteFile(fileDeletePath);
             jsCallback(isDel ? JSONUtils.getString(paramsObject, "success", "") :
-                    JSONUtils.getString(paramsObject, "fail", ""));
+                    JSONUtils.getString(paramsObject, "fail", ""), "");
         } else {
-            jsCallback(JSONUtils.getString(paramsObject, "fail", ""));
+            jsCallback(JSONUtils.getString(paramsObject, "fail", ""), getErrorJson(""));
         }
     }
 
@@ -353,10 +353,26 @@ public class FileTransferService extends ImpPlugin {
         try {
             jsonObject.put("content", readContent);
         } catch (Exception e) {
-            jsCallback(JSONUtils.getString(paramsObject, "fail", ""), e.getMessage());
+            jsCallback(JSONUtils.getString(paramsObject, "fail", ""), getErrorJson(e.getMessage()));
             e.printStackTrace();
         }
         jsCallback(JSONUtils.getString(paramsObject, "success", ""), jsonObject);
+    }
+
+    /**
+     * 组装错误信息
+     *
+     * @param message
+     * @return
+     */
+    private JSONObject getErrorJson(String message) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("errorMessage", message);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
     }
 
     /**
@@ -376,7 +392,7 @@ public class FileTransferService extends ImpPlugin {
             jsonObject.put("path", JSONUtils.getString(optionsJsonObject, "directory", "")
                     + JSONUtils.getString(optionsJsonObject, "fileName", ""));
         } catch (Exception e) {
-            jsCallback(JSONUtils.getString(paramsObject, "fail", ""), e.getMessage());
+            jsCallback(JSONUtils.getString(paramsObject, "fail", ""), getErrorJson(e.getMessage()));
             e.printStackTrace();
         }
         jsCallback(JSONUtils.getString(paramsObject, "success", ""), jsonObject.toString());
