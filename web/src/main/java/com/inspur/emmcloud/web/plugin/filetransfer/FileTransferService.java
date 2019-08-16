@@ -20,8 +20,6 @@ import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
-import com.inspur.emmcloud.basemodule.application.BaseApplication;
-import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.Res;
@@ -72,9 +70,9 @@ public class FileTransferService extends ImpPlugin {
     private static final String TAG = "uploadFile";
     private static final int TIME_OUT = 10 * 10000000; // 超时时间
     private static final String CHARSET = "utf-8"; // 设置编码
-    private static final String SAVE_FILE = "save_file";
     private static double MBDATA = 1048576.0;
     private static double KBDATA = 1024.0;
+    private static final String SAVE_FILE = "save_file";
     // 文件
     private File file;
     private String downloadUrl = "", filepath = "", fileName = "", fileType = "",
@@ -112,9 +110,7 @@ public class FileTransferService extends ImpPlugin {
     private int progress;
     private ProgressBar progressBar;
     private String downloadFileType = "";
-    private String basePath = MyAppConfig.LOCAL_IMP_USER_OPERATE_DIC +
-            BaseApplication.getInstance().getTanent() + "/"
-            + BaseApplication.getInstance().getUid() + "/";
+    private String successCb, failCb;
     // 回传下载结果
     Handler handler = new Handler() {
 
@@ -154,7 +150,7 @@ public class FileTransferService extends ImpPlugin {
                                         JSONObject jsonObject = new JSONObject();
                                         jsonObject.put("status", 0);
                                         jsonObject.put("errorMessage", "");
-                                        jsCallback(saveFileCallBack, jsonObject.toString());
+                                        jsCallback(saveFileCallBack, jsonObject);
                                     }
                                 } catch (Exception e) {
                                     e.printStackTrace();
@@ -184,12 +180,12 @@ public class FileTransferService extends ImpPlugin {
                             } else if (downloadFileType.equals(SAVE_FILE) && StrUtil.strIsNotNull(saveFileCallBack)) {
                                 JSONObject jsonObject = new JSONObject();
                                 try {
-                                    jsonObject.put("path", reallyPath.replace(basePath, ""));
+                                    jsonObject.put("path", reallyPath.replace(FilePathUtils.BASE_PATH, ""));
                                     jsonObject.put("status", 1);
                                 } catch (Exception e1) {
                                     e1.printStackTrace();
                                 }
-                                jsCallback(saveFileCallBack, jsonObject.toString());
+                                jsCallback(saveFileCallBack, jsonObject);
                             }
                         }
                     });
@@ -211,7 +207,6 @@ public class FileTransferService extends ImpPlugin {
         }
 
     };
-    private String successCb, failCb;
 
     @Override
     public void execute(String action, JSONObject paramsObject) {
@@ -268,7 +263,7 @@ public class FileTransferService extends ImpPlugin {
         try {
             JSONObject jsonObjectParam = new JSONObject();
             jsonObject.put("url", downloadUrl);
-            jsonObject.put("filePath", basePath);
+            jsonObject.put("filePath", FilePathUtils.BASE_PATH);
             execute("download", jsonObjectParam);
         } catch (Exception e) {
             e.printStackTrace();
@@ -283,26 +278,27 @@ public class FileTransferService extends ImpPlugin {
      */
     private void listFile(JSONObject paramsObject) {
         JSONObject optionsJsonObject = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
-        String fileDicPath = basePath + JSONUtils.getString(optionsJsonObject, "directory", "");
-        List<String> fileArrayList = FileUtils.getFileNamesInFolder(fileDicPath, false);
-        List<String> folderArrayList = FileUtils.getFileFolderNamesInFolder(fileDicPath);
+//        String fileDicPath = basePath + JSONUtils.getString(optionsJsonObject, "directory", "");
+        String relativePath = JSONUtils.getString(optionsJsonObject, "directory", "");
+        List<String> fileArrayList = FileUtils.getFileNamesInFolder(FilePathUtils.getRealPath(relativePath), false);
+        List<String> folderArrayList = FileUtils.getFileFolderNamesInFolder(FilePathUtils.getRealPath(relativePath));
         JSONObject jsonObject = new JSONObject();
         List<String> fileArrayListFilter = new ArrayList<>();
         List<String> folderArrayListFilter = new ArrayList<>();
         for (int i = 0; i < fileArrayList.size(); i++) {
-            fileArrayListFilter.add(fileArrayList.get(i).replace(basePath, ""));
+            fileArrayListFilter.add(fileArrayList.get(i).replace(FilePathUtils.BASE_PATH, ""));
         }
         for (int i = 0; i < folderArrayList.size(); i++) {
-            folderArrayListFilter.add(folderArrayList.get(i).replace(basePath, ""));
+            folderArrayListFilter.add(folderArrayList.get(i).replace(FilePathUtils.BASE_PATH, ""));
         }
         try {
             jsonObject.put("folders", new JSONArray(folderArrayListFilter));
             jsonObject.put("files", new JSONArray(fileArrayListFilter));
+            jsCallback(JSONUtils.getString(paramsObject, "success", ""), jsonObject);
         } catch (Exception e) {
             jsCallback(JSONUtils.getString(paramsObject, "fail", ""), getErrorJson(e.getMessage()));
             e.printStackTrace();
         }
-        jsCallback(JSONUtils.getString(paramsObject, "success", ""), jsonObject.toString());
     }
 
     /**
@@ -312,9 +308,10 @@ public class FileTransferService extends ImpPlugin {
      */
     private void deleteFile(JSONObject paramsObject) {
         JSONObject optionsJsonObject = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
-        String fileDeletePath = basePath + JSONUtils.getString(optionsJsonObject, "directory", "")
+        String relativePath = JSONUtils.getString(optionsJsonObject, "directory", "")
                 + JSONUtils.getString(optionsJsonObject, "fileName", "");
-        if (StrUtil.strIsNotNull(fileDeletePath)) {
+        String fileDeletePath = FilePathUtils.getRealPath(relativePath);
+        if (FilePathUtils.isSafePath(fileDeletePath)) {
             boolean isDel = FileUtils.deleteFile(fileDeletePath);
             jsCallback(isDel ? JSONUtils.getString(paramsObject, "success", "") :
                     JSONUtils.getString(paramsObject, "fail", ""), "");
@@ -325,22 +322,25 @@ public class FileTransferService extends ImpPlugin {
 
     /**
      * 读文件
+     * 不需要关心是否在相对目录下
      *
      * @param paramsObject
      */
     private void readFile(JSONObject paramsObject) {
         JSONObject optionsJsonObject = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
-        String fileReadPath = basePath + JSONUtils.getString(optionsJsonObject, "directory", "")
+        String relativePath = JSONUtils.getString(optionsJsonObject, "directory", "")
                 + JSONUtils.getString(optionsJsonObject, "fileName", "");
+        String fileReadPath = FilePathUtils.getRealPath(relativePath);
+        LogUtils.YfcDebug("读文件路径：" + fileReadPath);
         String readContent = FileUtils.readFile(fileReadPath, "utf-8").toString();
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("content", readContent);
+            jsCallback(JSONUtils.getString(paramsObject, "success", ""), jsonObject);
         } catch (Exception e) {
             jsCallback(JSONUtils.getString(paramsObject, "fail", ""), getErrorJson(e.getMessage()));
             e.printStackTrace();
         }
-        jsCallback(JSONUtils.getString(paramsObject, "success", ""), jsonObject);
     }
 
     /**
@@ -361,25 +361,30 @@ public class FileTransferService extends ImpPlugin {
 
     /**
      * 写文件
+     * 需要关心文件路径是否在相对目录下
      *
      * @param paramsObject
      */
     private void writeFile(JSONObject paramsObject) {
         JSONObject optionsJsonObject = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
-        String fileSavePath = basePath + JSONUtils.getString(optionsJsonObject, "directory", "")
+        String relativePath = JSONUtils.getString(optionsJsonObject, "directory", "")
                 + JSONUtils.getString(optionsJsonObject, "fileName", "");
-        FileUtils.writeFile(fileSavePath
-                , JSONUtils.getString(optionsJsonObject, "content", ""),
-                JSONUtils.getBoolean(optionsJsonObject, "append", true));
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("path", JSONUtils.getString(optionsJsonObject, "directory", "")
-                    + JSONUtils.getString(optionsJsonObject, "fileName", ""));
-        } catch (Exception e) {
-            jsCallback(JSONUtils.getString(paramsObject, "fail", ""), getErrorJson(e.getMessage()));
-            e.printStackTrace();
+        String fileSavePath = FilePathUtils.getRealPath(relativePath);
+        LogUtils.YfcDebug("写文件路径：" + fileSavePath);
+        if (FilePathUtils.isSafePath(fileSavePath)) {
+            FileUtils.writeFile(fileSavePath, JSONUtils.getString(optionsJsonObject, "content", ""),
+                    JSONUtils.getBoolean(optionsJsonObject, "append", true));
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("path", relativePath);
+                jsCallback(JSONUtils.getString(paramsObject, "success", ""), jsonObject);
+            } catch (Exception e) {
+                jsCallback(JSONUtils.getString(paramsObject, "fail", ""), getErrorJson(e.getMessage()));
+                e.printStackTrace();
+            }
+        } else {
+            jsCallback(JSONUtils.getString(paramsObject, "fail", ""), getErrorJson("file path error"));
         }
-        jsCallback(JSONUtils.getString(paramsObject, "success", ""), jsonObject.toString());
     }
 
     @Override
@@ -389,13 +394,13 @@ public class FileTransferService extends ImpPlugin {
         if ("download".equals(action)) {
             download(paramsObject);
         } else if ("downloadFile".equals(action)) { // 为了兼容自定义的imp插件
-            if (!paramsObject.isNull("key")) {
+            if (!paramsObject.isNull("key")){
                 try {
                     String key = paramsObject.getString("key");
                     //key = "http://10.24.14.63:8080/test/inspur_cloud_mobileclient_1.0.0.apk";
                     JSONObject jsonObject = new JSONObject();
                     jsonObject.put("url", key);
-                    jsonObject.put("filePath", basePath);
+                    jsonObject.put("filePath", FilePathUtils.BASE_PATH);
                     execute("download", jsonObject);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -431,7 +436,7 @@ public class FileTransferService extends ImpPlugin {
                 downloadFailCB = jsonObject.getString("errorCallback");
             }
 //            filepath = "/IMP-Cloud/download/";
-            filepath = basePath;
+            filepath = FilePathUtils.BASE_PATH;
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -490,6 +495,7 @@ public class FileTransferService extends ImpPlugin {
 
     private void getFileBase64(JSONObject jsonObject) {
         successCb = JSONUtils.getString(jsonObject, "success", "");
+        failCb = JSONUtils.getString(jsonObject, "fail", "");
         JSONObject optionsObj = JSONUtils.getJSONObject(jsonObject, "options", new JSONObject());
         String filePath = JSONUtils.getString(optionsObj, "filePath", "");
         if (!StringUtils.isBlank(filePath)) {
@@ -498,9 +504,9 @@ public class FileTransferService extends ImpPlugin {
                 result = FileUtils.encodeBase64File(filePath);
                 callbackSuccess(result);
             } catch (Exception e) {
+                callbackFail(result);
                 e.printStackTrace();
             }
-
         }
     }
 
@@ -519,7 +525,7 @@ public class FileTransferService extends ImpPlugin {
                             try {
                                 object.put("name", file.getName());
                                 object.put("size", FileUtils.getFileSize(path));
-                                object.put("path", path);
+                                object.put("path", FilePathUtils.SDCARD_PREFIX + path);
                                 object.put("md5", FileUtils.getFileMD5(file));
                                 array.put(object);
                             } catch (Exception e) {

@@ -4,10 +4,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
-import com.inspur.emmcloud.basemodule.application.BaseApplication;
-import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.web.plugin.ImpPlugin;
+import com.inspur.emmcloud.web.plugin.filetransfer.FilePathUtils;
 import com.inspur.emmcloud.web.util.StrUtil;
 
 import org.json.JSONArray;
@@ -29,10 +29,6 @@ public class SqlService extends ImpPlugin {
     private String successCb = "";
     // 失败回调
     private String failCb = "";
-
-    private String basePath = MyAppConfig.LOCAL_IMP_USER_OPERATE_DIC +
-            BaseApplication.getInstance().getTanent() + "/"
-            + BaseApplication.getInstance().getUid() + "/";
 
     @Override
     public void execute(String action, JSONObject paramsObject) {
@@ -74,9 +70,9 @@ public class SqlService extends ImpPlugin {
      * @return
      */
     private SQLiteDatabase getSQLiteDatabase(String dbName) {
-        dbName = "";
         if (StrUtil.strIsNotNull(dbName)) {
-            String dbPath = basePath + dbName;
+            String dbPath = FilePathUtils.getRealPath(dbName);
+            LogUtils.YfcDebug("数据库的真是路径：" + dbPath);
             try {
                 return SQLiteDatabase.openOrCreateDatabase(dbPath, null);
             } catch (Exception e) {
@@ -192,7 +188,7 @@ public class SqlService extends ImpPlugin {
             e.printStackTrace();
         }
         // 将查询结果传回前台
-        jsCallback(successCb, resultJsonObject.toString());
+        jsCallback(successCb, resultJsonObject);
     }
 
     @Override
