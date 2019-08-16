@@ -305,13 +305,13 @@ public class AppSchemeHandleActivity extends BaseActivity {
                         service.shareTxtPlainToConversation(getIntent().getExtras().getString(Intent.EXTRA_TEXT), new ShareToConversationListener() {
                             @Override
                             public void shareSuccess(String cid) {
-                                ToastUtils.show(com.inspur.emmcloud.webex.R.string.baselib_share_success);
+                                ToastUtils.show(R.string.baselib_share_success);
                                 finish();
                             }
 
                             @Override
                             public void shareFail() {
-                                ToastUtils.show(com.inspur.emmcloud.webex.R.string.baselib_share_fail);
+                                ToastUtils.show(R.string.baselib_share_fail);
                                 finish();
                             }
 
