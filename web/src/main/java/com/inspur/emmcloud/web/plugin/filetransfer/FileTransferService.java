@@ -270,10 +270,10 @@ public class FileTransferService extends ImpPlugin {
      */
     private void listFile(JSONObject paramsObject) {
         JSONObject optionsJsonObject = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
-//        String fileDicPath = basePath + JSONUtils.getString(optionsJsonObject, "directory", "");
-        String relativePath = JSONUtils.getString(optionsJsonObject, "directory", "");
-        List<String> fileArrayList = FileUtils.getFileNamesInFolder(FilePathUtils.getRealPath(relativePath), false);
-        List<String> folderArrayList = FileUtils.getFileFolderNamesInFolder(FilePathUtils.getRealPath(relativePath));
+        String folderName = JSONUtils.getString(optionsJsonObject, "directory", "");
+        folderName = FilePathUtils.getRealPath(folderName);
+        List<String> fileArrayList = FileUtils.getFileNamesInFolder(folderName, false);
+        List<String> folderArrayList = FileUtils.getFileFolderNamesInFolder(folderName);
         JSONObject jsonObject = new JSONObject();
         List<String> fileArrayListFilter = new ArrayList<>();
         List<String> folderArrayListFilter = new ArrayList<>();
@@ -300,11 +300,12 @@ public class FileTransferService extends ImpPlugin {
      */
     private void deleteFile(JSONObject paramsObject) {
         JSONObject optionsJsonObject = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
-        String relativePath = JSONUtils.getString(optionsJsonObject, "directory", "")
-                + JSONUtils.getString(optionsJsonObject, "fileName", "");
-        String fileDeletePath = FilePathUtils.getRealPath(relativePath);
-        if (FilePathUtils.isSafePath(fileDeletePath)) {
-            boolean isDel = FileUtils.deleteFile(fileDeletePath);
+        String folderName = JSONUtils.getString(optionsJsonObject, "directory", "");
+        String fileName = JSONUtils.getString(optionsJsonObject, "fileName", "");
+        folderName = FilePathUtils.getRealPath(folderName);
+        String relativePath = new File(folderName, fileName).getPath();
+        if (FilePathUtils.isSafePath(relativePath)) {
+            boolean isDel = FileUtils.deleteFile(relativePath);
             jsCallback(isDel ? JSONUtils.getString(paramsObject, "success", "") :
                     JSONUtils.getString(paramsObject, "fail", ""), "");
         } else {
@@ -320,11 +321,11 @@ public class FileTransferService extends ImpPlugin {
      */
     private void readFile(JSONObject paramsObject) {
         JSONObject optionsJsonObject = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
-        String relativePath = JSONUtils.getString(optionsJsonObject, "directory", "")
-                + JSONUtils.getString(optionsJsonObject, "fileName", "");
-        String fileReadPath = FilePathUtils.getRealPath(relativePath);
-        LogUtils.YfcDebug("读文件路径：" + fileReadPath);
-        String readContent = FileUtils.readFile(fileReadPath, "utf-8").toString();
+        String folderName = JSONUtils.getString(optionsJsonObject, "directory", "");
+        String fileName = JSONUtils.getString(optionsJsonObject, "fileName", "");
+        folderName = FilePathUtils.getRealPath(folderName);
+        String relativePath = new File(folderName, fileName).getPath();
+        String readContent = FileUtils.readFile(relativePath, "utf-8").toString();
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("content", readContent);
@@ -359,12 +360,13 @@ public class FileTransferService extends ImpPlugin {
      */
     private void writeFile(JSONObject paramsObject) {
         JSONObject optionsJsonObject = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
-        String relativePath = JSONUtils.getString(optionsJsonObject, "directory", "") + "/"
-                + JSONUtils.getString(optionsJsonObject, "fileName", "");
-        String fileSavePath = FilePathUtils.getRealPath(relativePath);
-        LogUtils.YfcDebug("写文件路径：" + fileSavePath);
-        if (FilePathUtils.isSafePath(fileSavePath)) {
-            FileUtils.writeFile(fileSavePath, JSONUtils.getString(optionsJsonObject, "content", ""),
+
+        String folderName = JSONUtils.getString(optionsJsonObject, "directory", "");
+        String fileName = JSONUtils.getString(optionsJsonObject, "fileName", "");
+        folderName = FilePathUtils.getRealPath(folderName);
+        String relativePath = new File(folderName, fileName).getPath();
+        if (FilePathUtils.isSafePath(relativePath)) {
+            FileUtils.writeFile(relativePath, JSONUtils.getString(optionsJsonObject, "content", ""),
                     JSONUtils.getBoolean(optionsJsonObject, "append", true));
             jsCallback(JSONUtils.getString(paramsObject, "success", ""));
         } else {
