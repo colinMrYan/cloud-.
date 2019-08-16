@@ -236,12 +236,11 @@
                 <!--<data android:mimeType="application/*" />-->
                 <data android:mimeType="text/plain" />
                 <data android:mimeType="application/pdf" />
-                <data android:mimeType="application/application/msword" />
                 <data android:mimeType="application/msword" />
                 <data android:mimeType="application/vnd.ms-excel" />
                 <data android:mimeType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
                 <data android:mimeType="application/vnd.ms-powerpoint" />
-                <data android:mimeType="application/vnd.ms-powerpoint" />
+                <data android:mimeType="application/vnd.openxmlformats-officedocument.presentationml.presentation" />
                 <!--<data android:mimeType="text/calendar" />-->
             </intent-filter>
         </activity>
