@@ -10,6 +10,8 @@ import android.widget.Toast;
 
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
 import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
 import com.inspur.emmcloud.basemodule.api.HttpUtils;
@@ -24,6 +26,7 @@ import com.inspur.emmcloud.componentservice.login.OauthCallBack;
 import com.inspur.emmcloud.web.plugin.ImpPlugin;
 import com.inspur.emmcloud.web.ui.ImpFragment;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.xutils.http.RequestParams;
 
@@ -34,71 +37,67 @@ import java.util.List;
 /**
  * 短视频录制
  */
-public class VideoRecordService extends ImpPlugin {
+public class VideoService extends ImpPlugin {
 
     private String successCb, failCb;
+    private String uploadUrl;
 
     @Override
     public void execute(String action, JSONObject paramsObject) {
         successCb = JSONUtils.getString(paramsObject, "success", "");
         failCb = JSONUtils.getString(paramsObject, "fail", "");
 
-        switch (action) {
-            case "open":
-                startRecordVideo(paramsObject);
-                break;
-            case "setTitles":
-                break;
-            case "setMenus":
-                break;
-            case "onBackKeyDown":
-                break;
-        }
-
         if (action.equals("recordVideo")) {
             startRecordVideo(paramsObject);
-
-            String path = "";
-            jsCallback(successCb, path);
-            jsCallback(failCb);
         } else if (action.equals("playVideo")) {
-            String path = paramsObject.optString("path");
+            JSONObject optionObj = paramsObject.optJSONObject("options");
+            String path = optionObj.optString("path");
             Intent intent = new Intent(getActivity(), VideoPlayActivity.class);
             intent.putExtra("path", path);
             getActivity().startActivity(intent);
+        } else {
+            showCallIMPMethodErrorDlg();
         }
     }
 
     private void startRecordVideo(final JSONObject paramsObject) {
-        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getActivity(), Permissions.CAMERA,
-                    new PermissionRequestCallback() {
-                        @Override
-                        public void onPermissionRequestSuccess(List<String> permissions) {
-                            Uri fileUri = null;
-                            String fileName = paramsObject.optString("id");
-                            Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-                            try {
-                                fileUri = FileProvider.getUriForFile(getActivity(),
-                                        getActivity().getPackageName() + ".provider", createMediaFile(fileName));//这是正确的写法
+        try {
+            final JSONObject optionsObj = paramsObject.getJSONObject("options");
+            uploadUrl = optionsObj.optString("url");
 
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                            intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-                            intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+            if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+                PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getActivity(), Permissions.CAMERA,
+                        new PermissionRequestCallback() {
+                            @Override
+                            public void onPermissionRequestSuccess(List<String> permissions) {
+                                Uri fileUri = null;
+                                Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+                                String fileName = optionsObj.optString("id");
+                                try {
+                                    fileUri = FileProvider.getUriForFile(getActivity(),
+                                            getActivity().getPackageName() + ".provider", createMediaFile(fileName));//这是正确的写法
 
-                            if (getImpCallBackInterface() != null) {
-                                getImpCallBackInterface().onStartActivityForResult(intent, ImpFragment.REQUEST_CODE_RECORD_VIDEO);
-                            }
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+                                intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+
+                                if (getImpCallBackInterface() != null) {
+                                    getImpCallBackInterface().onStartActivityForResult(intent, ImpFragment.REQUEST_CODE_RECORD_VIDEO);
+                                }
 //                            getActivity().startActivityForResult(intent, ImpFragment.REQUEST_CODE_RECORD_VIDEO);
-                        }
+                            }
 
-                        @Override
-                        public void onPermissionRequestFail(List<String> permissions) {
+                            @Override
+                            public void onPermissionRequestFail(List<String> permissions) {
 
-                        }
-                    });
+                            }
+                        });
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 
@@ -132,6 +131,7 @@ public class VideoRecordService extends ImpPlugin {
 
     @Override
     public String executeAndReturn(String action, JSONObject paramsObject) {
+        showCallIMPMethodErrorDlg();
         return null;
     }
 
@@ -150,17 +150,20 @@ public class VideoRecordService extends ImpPlugin {
             Log.d("zhang", "onActivityResult: " + data.getData());
             //上传文件
             File file = FileUtils.uri2File(getFragmentContext(), data.getData());
-
+            uploadFile(file.getPath());
         }
     }
 
-    private void uploadFile(String filePath) {
-        final String completeUrl = "";//APIUri.getUpdateUserHeadUrl();
+    private void uploadFile(final String filePath) {
+        final String completeUrl = uploadUrl;
         RequestParams params = BaseApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
         File file = new File(filePath);
         params.setMultipart(true);// 有上传文件时使用multipart表单, 否则上传原始文件流.
-        params.addBodyParameter("head", file);
+        params.addBodyParameter("video", file);
+        final LoadingDialog loadingDlg = new LoadingDialog(getFragmentContext());
+        loadingDlg.setText("上传中。。。");
+        loadingDlg.show();
         HttpUtils.request(getFragmentContext(), CloudHttpMethod.POST, params, new BaseModuleAPICallback(getFragmentContext(), completeUrl) {
 
             @Override
@@ -174,6 +177,8 @@ public class VideoRecordService extends ImpPlugin {
                     @Override
                     public void executeFailCallback() {
                         callbackFail("", -1);
+                        LoadingDialog.dimissDlg(loadingDlg);
+                        jsCallback(failCb);
                     }
                 };
 //                refreshToken(
@@ -183,6 +188,15 @@ public class VideoRecordService extends ImpPlugin {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
+                ToastUtils.show("上传成功");
+                LoadingDialog.dimissDlg(loadingDlg);
+                JSONObject json = new JSONObject();
+                try {
+                    json.put("path", filePath);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                jsCallback(successCb, json.toString());
 //                apiInterface
 //                        .returnUploadMyHeadSuccess(new GetUploadMyHeadResult(new String(arg0)), filePath);
             }
@@ -190,6 +204,9 @@ public class VideoRecordService extends ImpPlugin {
             @Override
             public void callbackFail(String error, int responseCode) {
                 // TODO Auto-generated method stub
+                ToastUtils.show("上传失败");
+                LoadingDialog.dimissDlg(loadingDlg);
+                jsCallback(failCb);
 //                apiInterface.returnUploadMyHeadFail(error, responseCode);
             }
         });

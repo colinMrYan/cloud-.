@@ -203,15 +203,12 @@
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:theme="@style/AppTheme_Transparent" />
-
         <activity
-            android:name=".ui.AppSchemeHandleActivity"
-            android:label="@string/send_to_app"
+            android:name=".ui.ShareActionActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:theme="@style/AppTheme_Transparent">
-
-            <intent-filter>
+            <intent-filter android:label="@string/send_to_app">
                 <action android:name="android.intent.action.SEND_MULTIPLE" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -219,7 +216,7 @@
                 <data android:mimeType="image/*" />
             </intent-filter>
 
-            <intent-filter>
+            <intent-filter android:label="@string/send_to_app">
                 <action android:name="android.intent.action.SEND" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -229,6 +226,32 @@
                 <data android:mimeType="text/plain" />
             </intent-filter>
 
+            <!--ics文件识别 excel-->
+            <intent-filter android:label="@string/send_to_app">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:scheme="content" />
+                <data android:scheme="file" />
+                <!--<data android:mimeType="application/*" />-->
+                <data android:mimeType="text/plain" />
+                <data android:mimeType="application/pdf" />
+                <data android:mimeType="application/application/msword" />
+                <data android:mimeType="application/msword" />
+                <data android:mimeType="application/vnd.ms-excel" />
+                <data android:mimeType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+                <data android:mimeType="application/vnd.ms-powerpoint" />
+                <data android:mimeType="application/vnd.ms-powerpoint" />
+                <!--<data android:mimeType="text/calendar" />-->
+            </intent-filter>
+        </activity>
+
+
+        <activity
+            android:name=".ui.AppSchemeHandleActivity"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:theme="@style/AppTheme_Transparent">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -333,25 +356,6 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data android:scheme="inspur-ecc-native" />
-            </intent-filter>
-
-            <!--ics文件识别 excel-->
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data android:scheme="content" />
-                <data android:scheme="file" />
-                <!--<data android:mimeType="application/*" />-->
-                <data android:mimeType="text/plain" />
-                <data android:mimeType="application/pdf" />
-                <data android:mimeType="application/application/msword" />
-                <data android:mimeType="application/msword" />
-                <data android:mimeType="application/vnd.ms-excel" />
-                <data android:mimeType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
-                <data android:mimeType="application/vnd.ms-powerpoint" />
-                <data android:mimeType="application/vnd.ms-powerpoint" />
-                <!--<data android:mimeType="text/calendar" />-->
             </intent-filter>
 
             <intent-filter>

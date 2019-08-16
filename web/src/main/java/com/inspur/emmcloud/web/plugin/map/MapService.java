@@ -2,10 +2,11 @@ package com.inspur.emmcloud.web.plugin.map;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.util.Log;
 
-import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.web.plugin.ImpPlugin;
+import com.inspur.emmcloud.web.plugin.amaplocation.ECMLoactionTransformUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,7 +20,8 @@ import java.io.File;
  * @author 浪潮移动应用平台(IMP)产品组
  */
 public class MapService extends ImpPlugin {
-
+    private final String MAP_BAIDU_APPID = "com.baidu.BaiduMap";
+    private final String MAP_AUTONAVI_APPID = "com.autonavi.minimap";
     // 当前地址描述
     public String addressInfo;
     // 经度
@@ -29,56 +31,31 @@ public class MapService extends ImpPlugin {
     // 错误号码
     public String errCode;
 
-    // 回掉方法
+    // 回调方法
     public String successCb, failCb;
     String res = "";
-
     @Override
     public void execute(String action, JSONObject jsonObject) {
-        if (action.equals("openByMapApp")) {
-            String jindu = "";
-            String weidu = "";
-            try {
-                if (!jsonObject.isNull("success"))
-                    successCb = jsonObject.getString("success");
-                if (!jsonObject.isNull("fail"))
-                    failCb = jsonObject.getString("fail");
-                if (!jsonObject.isNull("longitude"))
-                    jindu = jsonObject.getString("longitude");
-                if (!jsonObject.isNull("latitude"))
-                    weidu = jsonObject.getString("latitude");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            openByMapApp(jindu, weidu);
-        } else if (action.equals("doNaviByMapId")) {
-            String address = "";
-            String mapId = "";
-            try {
-                if (!jsonObject.isNull("success"))
-                    successCb = jsonObject.getString("success");
-                if (!jsonObject.isNull("fail"))
-                    failCb = jsonObject.getString("fail");
-                if (!jsonObject.isNull("mapId")) {
-                    mapId = jsonObject.getString("mapId");
-                }
-                if (!jsonObject.isNull("address")) {
-                    address = jsonObject.getString("address");
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            doNaviByMapId(mapId, address);
-        } else {
-            showCallIMPMethodErrorDlg();
-        }
+        switch (action) {
+            case "openByMapApp":
+                openByMapApp(jsonObject);
+                break;
+            case "doNaviByMapId":
+                navigationToDestination(jsonObject);
+                break;
+            case "navigationByAutoNavi":
+                navigationByAutonavi(jsonObject);
+                break;
+            default:
+                showCallIMPMethodErrorDlg();
+                break;
 
+        }
     }
 
     @Override
     public String executeAndReturn(String action, JSONObject paramsObject) {
         // TODO Auto-generated method stub
-        Log.d("jason", "action=" + action);
         if (action.equals("getAllMapApps")) {
             String result = getAllMapApps();
             return result;
@@ -97,14 +74,14 @@ public class MapService extends ImpPlugin {
         // TODO Auto-generated method stub
         JSONArray array = new JSONArray();
         try {
-            if (isInstallByread("com.autonavi.minimap")) {
+            if (isAppInstall(MAP_AUTONAVI_APPID)) {
                 JSONObject object = new JSONObject();
                 object.put("mapId", "map_autonavi");
                 object.put("mapName", "高德地图");
                 array.put(object);
 
             }
-            if (isInstallByread("com.baidu.BaiduMap")) {
+            if (isAppInstall(MAP_BAIDU_APPID)) {
                 JSONObject object = new JSONObject();
                 object.put("mapId", "map_baidu");
                 object.put("mapName", "百度地图");
@@ -117,9 +94,95 @@ public class MapService extends ImpPlugin {
         return array.toString();
     }
 
-    public void doNaviByMapId(String mapId, String destination) {
-        LogUtils.debug("jason", "mapId=" + mapId + "000");
+    public void navigationByAutonavi(JSONObject jsonObject) {
+        successCb = JSONUtils.getString(jsonObject, "success", "");
+        failCb = JSONUtils.getString(jsonObject, "fail", "");
+        if (!isAppInstall(MAP_AUTONAVI_APPID)) {
+            callbackFail("未安装此地图");
+            return;
+        }
         try {
+            JSONObject optionsObj = JSONUtils.getJSONObject(jsonObject, "options", new JSONObject());
+            Double fromLongitude = JSONUtils.getDouble(optionsObj, "srclng", null);
+            Double fromLatitude = JSONUtils.getDouble(optionsObj, "srclat", null);
+            Double toLongitude = JSONUtils.getDouble(optionsObj, "dstlng", 0);
+            Double toLatitude = JSONUtils.getDouble(optionsObj, "dstlat", 0);
+            String coordType = JSONUtils.getString(optionsObj, "coordType", "GCJ02");
+            if (coordType.equals("WGS84")) {
+                if (fromLatitude != null && fromLatitude != null) {
+                    double[] fromLocation = ECMLoactionTransformUtils.wgs84togcj02(fromLongitude, fromLatitude);
+                    fromLongitude = fromLocation[0];
+                    fromLatitude = fromLocation[1];
+                }
+                double[] toLocation = ECMLoactionTransformUtils.wgs84togcj02(toLongitude, toLatitude);
+                toLongitude = toLocation[0];
+                toLatitude = toLocation[1];
+            } else if (coordType.equals("BD09")) {
+                if (fromLatitude != null && fromLatitude != null) {
+                    double[] fromLocation = ECMLoactionTransformUtils.bd09togcj02(fromLongitude, fromLatitude);
+                    fromLongitude = fromLocation[0];
+                    fromLatitude = fromLocation[1];
+                }
+                double[] toLocation = ECMLoactionTransformUtils.bd09togcj02(toLongitude, toLatitude);
+                toLongitude = toLocation[0];
+                toLatitude = toLocation[1];
+            }
+            StringBuilder builder = new StringBuilder("amapuri://route/plan?sourceApplication=");
+            builder.append(getFragmentContext().getPackageName());
+            if (fromLatitude != null && fromLatitude != null) {
+                builder.append("&slat=").append(fromLatitude).append("&slon=").append(fromLongitude);
+            }
+            builder.append("&dlat=").append(toLatitude).append("&dlon=").append(toLongitude).append("&dev=0&t=0");
+            Intent intent = getFragmentContext().getPackageManager()
+                    .getLaunchIntentForPackage("com.autonavi.minimap");
+            intent.addCategory(Intent.CATEGORY_DEFAULT);
+            intent.setAction(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(builder.toString()));
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            getActivity().startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+            callbackFail(e.getMessage());
+        }
+
+    }
+
+    private void callbackSuccess() {
+        if (!StringUtils.isBlank(successCb)) {
+            this.jsCallback(successCb, "");
+        }
+    }
+
+    private void callbackFail(String errorMessage) {
+        if (!StringUtils.isBlank(failCb)) {
+            JSONObject object = new JSONObject();
+            try {
+                object.put("errorMessage", errorMessage);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            this.jsCallback(failCb, object.toString());
+        }
+
+    }
+
+    public void navigationToDestination(JSONObject jsonObject) {
+
+        try {
+            String destination = "";
+            String mapId = "";
+            if (!jsonObject.isNull("success"))
+                successCb = jsonObject.getString("success");
+            if (!jsonObject.isNull("fail"))
+                failCb = jsonObject.getString("fail");
+            if (!jsonObject.isNull("mapId")) {
+                mapId = jsonObject.getString("mapId");
+            } else {
+                mapId = "map_baidu";
+            }
+            if (!jsonObject.isNull("address")) {
+                destination = jsonObject.getString("address");
+            }
             if (mapId.equals("map_baidu")) {
                 String packageName = getFragmentContext().getPackageName();
                 Intent intent = Intent
@@ -177,9 +240,23 @@ public class MapService extends ImpPlugin {
     /**
      * 用地图app打开目前所在地
      */
-    public void openByMapApp(String jindu, String weidu) {
-        if (isInstallByread("com.baidu.BaiduMap")) {
-            Uri uri = Uri.parse("geo:" + jindu + "," + weidu + "");
+    public void openByMapApp(JSONObject jsonObject) {
+        String longitude = "";
+        String latitude = "";
+        try {
+            if (!jsonObject.isNull("success"))
+                successCb = jsonObject.getString("success");
+            if (!jsonObject.isNull("fail"))
+                failCb = jsonObject.getString("fail");
+            if (!jsonObject.isNull("longitude"))
+                longitude = jsonObject.getString("longitude");
+            if (!jsonObject.isNull("latitude"))
+                latitude = jsonObject.getString("latitude");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        if (isAppInstall("com.baidu.BaiduMap")) {
+            Uri uri = Uri.parse("geo:" + longitude + "," + latitude + "");
             Intent it = new Intent(Intent.ACTION_VIEW, uri);
             getActivity().startActivity(it);
         } else {
@@ -200,7 +277,7 @@ public class MapService extends ImpPlugin {
      * @param packageName 目标应用安装后的包名
      * @return 是否已安装目标应用
      */
-    public boolean isInstallByread(String packageName) {
+    public boolean isAppInstall(String packageName) {
         return new File("/data/data/" + packageName).exists();
     }
 

@@ -53,7 +53,7 @@ import com.inspur.emmcloud.web.plugin.camera.CameraService;
 import com.inspur.emmcloud.web.plugin.filetransfer.FileTransferService;
 import com.inspur.emmcloud.web.plugin.photo.PhotoService;
 import com.inspur.emmcloud.web.plugin.staff.SelectStaffService;
-import com.inspur.emmcloud.web.plugin.video.VideoRecordService;
+import com.inspur.emmcloud.web.plugin.video.VideoService;
 import com.inspur.emmcloud.web.plugin.window.DropItemTitle;
 import com.inspur.emmcloud.web.plugin.window.OnKeyDownListener;
 import com.inspur.emmcloud.web.webview.ImpWebView;
@@ -139,6 +139,28 @@ public class ImpFragment extends ImpBaseFragment {
         return rootView;
     }
 
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        webView.onActivityStart();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        webView.onActivityResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        webView.onActivityPause();
+    }
+
+    protected void onNewIntent(Intent intent) {
+        webView.onActivityNewIntent(intent);
+    }
     /**
      * 初始化Views
      */
@@ -496,6 +518,7 @@ public class ImpFragment extends ImpBaseFragment {
                 service.setMDMStatusNoPass();
             }
         }
+        webView.onActivityDestroy();
         getActivity().finish();// 退出程序
     }
 
@@ -721,7 +744,7 @@ public class ImpFragment extends ImpBaseFragment {
                         serviceName = FileTransferService.class.getCanonicalName().trim();
                         break;
                     case REQUEST_CODE_RECORD_VIDEO:
-                        serviceName = VideoRecordService.class.getCanonicalName();
+                        serviceName = VideoService.class.getCanonicalName();
                         break;
                     default:
                         break;

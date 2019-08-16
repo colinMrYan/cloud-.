@@ -66,6 +66,7 @@
     <string name="unsupport_type">Unsupported Type</string>
     <string name="function_load_fail">Load failed,Touch the screen to reload </string>
     <string name="function_reload">Network Diagnosis</string>
+    <string name="baselib_internal_share">Internal</string>
 
     <!-- 公共部分 -->
     <string name="year">Year</string>

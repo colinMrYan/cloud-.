@@ -669,9 +669,11 @@ public class FileUtils {
 
         File file = new File(path);
         if (!file.exists()) {
+            LogUtils.YfcDebug("文件不存在");
             return true;
         }
         if (file.isFile()) {
+            LogUtils.YfcDebug("文件被删除");
             return file.delete();
         }
         if (!file.isDirectory()) {
@@ -1396,5 +1398,50 @@ public class FileUtils {
         File srcDir = new File(src);
         boolean isOk = srcDir.renameTo(new File(dest));
         return isOk;
+    }
+
+    /**
+     * 读取指定文件目录下的文件名列表
+     *
+     * @param dicName                         目录名称
+     * @param listFileNamesIncludeChildForder 是否需要读取子目录下的文件名
+     * @return
+     */
+    public static List<String> getFileNamesInFolder(String dicName, boolean listFileNamesIncludeChildForder) {
+        ArrayList arrayList = new ArrayList();
+        if (!StringUtils.isBlank(dicName)) {
+            File file = new File(dicName);
+            if (file.isDirectory()) {
+                for (File fileInPath : file.listFiles()) {
+                    if (fileInPath.isFile()) {
+                        arrayList.add(fileInPath.getAbsolutePath());
+                    } else if (listFileNamesIncludeChildForder && fileInPath.isDirectory()) {
+                        getFileNamesInFolder(fileInPath.getAbsolutePath(), listFileNamesIncludeChildForder);
+                    }
+                }
+            }
+        }
+        return arrayList;
+    }
+
+    /**
+     * 读取指定文件目录下的所有目录
+     *
+     * @param dicName
+     * @return
+     */
+    public static List<String> getFileFolderNamesInFolder(String dicName) {
+        ArrayList arrayList = new ArrayList();
+        if (!StringUtils.isBlank(dicName)) {
+            File file = new File(dicName);
+            if (file.isDirectory()) {
+                for (File fileInPath : file.listFiles()) {
+                    if (fileInPath.isDirectory()) {
+                        arrayList.add(fileInPath.getAbsolutePath());
+                    }
+                }
+            }
+        }
+        return arrayList;
     }
 }

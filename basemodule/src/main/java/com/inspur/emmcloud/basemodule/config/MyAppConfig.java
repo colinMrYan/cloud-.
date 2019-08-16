@@ -32,6 +32,8 @@ public class MyAppConfig {
             .getExternalStorageDirectory() + "/IMP-Cloud/cache/voice";
     public static final String LOCAL_CACHE_PHOTO_PATH = Environment
             .getExternalStorageDirectory() + "/IMP-Cloud/cache/photo";
+    public static final String LOCAL_CACHE_DEFAULT_DB_PATH = Environment
+            .getExternalStorageDirectory() + "/IMP-Cloud/cache/default_db";
     public static final String LOCAL_OFFLINE_APP_PATH = Environment
             .getExternalStorageDirectory() + "/IMP-Cloud/offlineApp";
     public static final String LOCAL_DOWNLOAD_PATH = Environment
@@ -45,6 +47,12 @@ public class MyAppConfig {
 
     public static final String LOCAL_SHARE_FILE_PATH = Environment
             .getExternalStorageDirectory() + "/IMP-Cloud/cache/share_file/";
+
+    /**
+     * 用户文件操作空间，所有用户文件操作不应超出这个范围，清除全部缓存时应当考虑清除此处
+     */
+    public static final String LOCAL_IMP_USER_OPERATE_DIC = Environment
+            .getExternalStorageDirectory() + "/IMP-Cloud/imp/user_space/";
     public static final int UPLOAD_ORIGIN_IMG_MAX_SIZE = 2600;
     public static final int UPLOAD_ORIGIN_IMG_DEFAULT_SIZE = 1280;
     public static final int UPLOAD_THUMBNAIL_IMG_MAX_SIZE = 600;
