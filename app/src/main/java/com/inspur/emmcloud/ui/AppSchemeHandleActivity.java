@@ -13,7 +13,6 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
@@ -430,8 +429,6 @@ public class AppSchemeHandleActivity extends BaseActivity {
     private boolean isLinkShare() {
         Bundle bundle = getIntent().getExtras();
         String extraText = bundle.getString(Intent.EXTRA_TEXT);
-        LogUtils.YfcDebug("获取到的内容：" + JSONUtils.toJSONString(StringUtils.matchResult(Pattern.compile(Constant.PATTERN_URL,
-                Pattern.CASE_INSENSITIVE), extraText, false)));
         return bundle != null && !StringUtils.isBlank(extraText) &&
                 StringUtils.matchResult(Pattern.compile(Constant.PATTERN_URL,
                         Pattern.CASE_INSENSITIVE), extraText, false).size() > 0;
