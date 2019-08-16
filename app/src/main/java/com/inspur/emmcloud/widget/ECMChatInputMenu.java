@@ -6,20 +6,27 @@
  */
 package com.inspur.emmcloud.widget;
 
+import android.animation.Animator;
+import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.text.Editable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.czt.mp3recorder.MP3Recorder;
 import com.inspur.emmcloud.MyApplication;
@@ -28,10 +35,12 @@ import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.baselib.widget.dialogs.ActionSheetDialog;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
+import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
@@ -46,7 +55,9 @@ import com.inspur.emmcloud.util.privates.Voice2StringMessageUtils;
 import com.inspur.emmcloud.util.privates.audioformat.AndroidMp3ConvertUtils;
 import com.inspur.emmcloud.widget.audiorecord.AudioDialogManager;
 import com.inspur.emmcloud.widget.audiorecord.AudioRecordButton;
+import com.inspur.emmcloud.widget.waveprogress.VoiceCompleteView;
 import com.inspur.emmcloud.widget.waveprogress.WaterWaveProgress;
+import com.itheima.roundedimageview.RoundedImageView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -57,6 +68,7 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnTouch;
 
 
 /**
@@ -98,6 +110,19 @@ public class ECMChatInputMenu extends LinearLayout {
 
     @BindView(R.id.wave_progress_input)
     WaterWaveProgress waterWaveProgress;
+    private static final int VOICE_INPUT_STATUS_NORMAL = 1;
+    private static final int VOICE_INPUT_STATUS_STOP = 2;
+    private static final int VOICE_INPUT_STATUS_SPEAKING = 5;
+    @BindView(R.id.voice_input_language)
+    TextView languageTv;
+    @BindView(R.id.voice_input_edit_text)
+    EditText voiceInputEt;
+    @BindView(R.id.voice_input_close_img)
+    ImageView voiceInputCloseImg;
+    @BindView(R.id.volume_level_img)
+    ImageView voiceInputLevelImg;
+    @BindView(R.id.volume_level_img_shade)
+    RoundedImageView voiceInputLevelImgShade;   //伴随音量大小
 
     private boolean canMentions = false;
     private ChatInputMenuListener chatInputMenuListener;
@@ -115,6 +140,8 @@ public class ECMChatInputMenu extends LinearLayout {
     private Map<String, Boolean> voiceBooleanMap = new HashMap<>();
     private AudioDialogManager audioDialogManager;
     private ECMChatInputMenuCallback inputMenuClickCallback;
+    @BindView(R.id.volume_level_img_complete)
+    VoiceCompleteView voiceInputCompleteView;
 
     public ECMChatInputMenu(Context context) {
         this(context, null);
@@ -244,35 +271,49 @@ public class ECMChatInputMenu extends LinearLayout {
         });
     }
 
+    @BindView(R.id.voice_input_clear)
+    TextView voiceInputClean;
+    @BindView(R.id.voice_input_send)
+    TextView voiceInputSend;
+    private List<String> languageList = new ArrayList<>();
+
     /**
      * 初始化语言输入相关
      */
     private void initVoiceInput() {
-        waterWaveProgress.setShowProgress(false);
-        waterWaveProgress.setShowNumerical(false);
-        waterWaveProgress.setWaveSpeed(0.02F);
-        waterWaveProgress.setAmplitude(5.0F);
-        lastVolumeLevel = 0;
         mediaPlayerUtils = new MediaPlayerUtils(getContext());
         voice2StringMessageUtils = new Voice2StringMessageUtils(getContext());
+        initLanguageData();
+        voiceInputCompleteView.setProgress(50);
+        initVoiceInputView(VOICE_INPUT_STATUS_NORMAL);
+//        waterWaveProgress.setShowProgress(false);
+//        waterWaveProgress.setShowNumerical(false);
+//        waterWaveProgress.setWaveSpeed(0.02F);
+//        waterWaveProgress.setAmplitude(5.0F);
+        lastVolumeLevel = 0;
         voice2StringMessageUtils.setOnVoiceResultCallback(new OnVoiceResultCallback() {
             @Override
             public void onVoiceStart() {
+                Log.d("zhang", "onVoiceStart: ");
+                voiceInputEt.setHint(getContext().getString(R.string.voice_input_hint_speak_now));
             }
 
             @Override
             public void onVoiceResultSuccess(VoiceResult voiceResult, boolean isLast) {
+                Log.d("zhang", "onVoiceResultSuccess: isLast = " + isLast);
                 handleVoiceResult(voiceResult);
             }
 
             @Override
             public void onVoiceFinish() {
-                stopVoiceInput();
+                Log.d("zhang", "onVoiceFinish: ");
+//                stopVoiceInput();
             }
 
             @Override
             public void onVoiceLevelChange(int volume) {
-                setVoiceImageViewLevel(volume);
+                int level = (volume + 2) / 5;
+                setVoiceImageViewLevel(level);
             }
 
             @Override
@@ -280,6 +321,86 @@ public class ECMChatInputMenu extends LinearLayout {
                 handleVoiceResult(errorResult);
             }
         });
+    }
+
+    /**
+     * 初始化语言数据
+     */
+    private void initLanguageData() {
+        languageList.add(getContext().getString(R.string.voice_input_language_mandarin));   //普通話
+        languageList.add(getContext().getString(R.string.voice_input_language_english));    //英語
+        languageList.add(getContext().getString(R.string.voice_input_language_cantonese));  //粵語
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private void initVoiceInputView(int status) {
+        Log.d("zhang", "initVoiceInputView: status = " + status);
+        voiceInputCompleteView.setVisibility(GONE);
+        switch (status) {
+            case VOICE_INPUT_STATUS_NORMAL:
+                voiceInputEt.setHint(getContext().getString(R.string.voice_input_hint_prepare));
+            case VOICE_INPUT_STATUS_STOP:
+                String text = voiceInputEt.getText().toString();
+                Log.d("zhang", "initVoiceInputView: text = " + text);
+                if (StringUtils.isBlank(text)) {
+                    voiceInputEt.setVisibility(INVISIBLE);
+                    languageTv.setVisibility(VISIBLE);
+                    voiceInputClean.setVisibility(INVISIBLE);
+                    voiceInputSend.setVisibility(INVISIBLE);
+                } else {
+                    voiceInputEt.setVisibility(VISIBLE);
+                    languageTv.setVisibility(INVISIBLE);
+                    voiceInputClean.setVisibility(VISIBLE);
+                    voiceInputSend.setVisibility(VISIBLE);
+                    startVoiceCompleteAnim();
+                }
+                voiceInputCloseImg.setVisibility(VISIBLE);
+                voiceInputLevelImgShade.setVisibility(INVISIBLE);
+                break;
+            case VOICE_INPUT_STATUS_SPEAKING:
+                voiceInputEt.setVisibility(VISIBLE);
+                languageTv.setVisibility(INVISIBLE);
+                voiceInputCloseImg.setVisibility(INVISIBLE);
+                voiceInputClean.setVisibility(INVISIBLE);
+                voiceInputSend.setVisibility(INVISIBLE);
+                voiceInputLevelImgShade.setVisibility(VISIBLE);
+                break;
+        }
+    }
+
+    /**
+     * 录音完成动画
+     */
+    private void startVoiceCompleteAnim() {
+        voiceInputCompleteView.setVisibility(VISIBLE);
+        ValueAnimator animator = ValueAnimator.ofFloat(0, 100f);
+        animator.setDuration(1000);         //时间需要优化  TODO fuchang
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float value = (float) animation.getAnimatedValue();
+                voiceInputCompleteView.setProgress((int) value);
+            }
+        });
+        animator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                voiceInputCompleteView.setVisibility(GONE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+            }
+        });
+        animator.start();
     }
 
     /**
@@ -298,7 +419,7 @@ public class ECMChatInputMenu extends LinearLayout {
             }
         } else {
             if (voiceResult.getXunFeiError() == Voice2StringMessageUtils.MSG_XUNFEI_ERROR) {
-                stopVoiceInput();
+//                stopVoiceInput();
                 if (audioDialogManager != null) {
                     audioDialogManager.dismissVoice2WordProgressDialog();
                 }
@@ -312,6 +433,7 @@ public class ECMChatInputMenu extends LinearLayout {
                 results = "";
             }
             if (!StringUtils.isBlank(results)) {
+                Log.d("zhang", "handleVoiceResult: isSpecialUser = " + isSpecialUser);
                 if (isSpecialUser) {
                     inputEdit.clearInsertModelList();
                     if (chatInputMenuListener != null) {
@@ -319,8 +441,11 @@ public class ECMChatInputMenu extends LinearLayout {
                     }
                 } else {
                     int index = inputEdit.getSelectionStart();
-                    Editable editable = inputEdit.getText();
-                    editable.insert(index, results);
+//                    Editable editable = inputEdit.getText();
+//                    editable.insert(index, results);
+                    Editable voiceEditable = voiceInputEt.getText();
+                    voiceEditable.insert(index, results);
+                    Log.d("zhang", "handleVoiceResult: index = " + index + ", results = " + results);
                 }
 
             }
@@ -555,12 +680,13 @@ public class ECMChatInputMenu extends LinearLayout {
         voiceInputLayout.setVisibility(View.VISIBLE);
         lastVolumeLevel = 0;
         waterWaveProgress.setProgress(0);
-        mediaPlayerUtils.playVoiceOn();
-        voice2StringMessageUtils.startVoiceListening();
+//        mediaPlayerUtils.playVoiceOn();
+//        voice2StringMessageUtils.startVoiceListening();
     }
 
     public void setChatDrafts(String drafts) {
         inputEdit.setText(drafts);
+        voiceInputEt.setText(drafts);
     }
 
     /**
@@ -580,7 +706,6 @@ public class ECMChatInputMenu extends LinearLayout {
 
         ((Activity) getContext()).startActivityForResult(intent,
                 MENTIONS_RESULT);
-
     }
 
     /**
@@ -661,7 +786,6 @@ public class ECMChatInputMenu extends LinearLayout {
         }
     }
 
-
     private void setVoiceInputStatus(int tag) {
         if (voiceBtn.getTag() == null || (int) voiceBtn.getTag() != tag) {
             voiceBtn.setTag(tag);
@@ -671,7 +795,8 @@ public class ECMChatInputMenu extends LinearLayout {
         }
     }
 
-    @OnClick({R.id.voice_btn, R.id.send_msg_btn, R.id.add_btn, R.id.voice_input_close_img})
+    @OnClick({R.id.voice_btn, R.id.send_msg_btn, R.id.add_btn, R.id.voice_input_close_img, R.id.voice_input_language,
+            R.id.voice_input_clear, R.id.voice_input_send})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.voice_btn:
@@ -716,9 +841,46 @@ public class ECMChatInputMenu extends LinearLayout {
                 voiceInputLayout.setVisibility(View.GONE);
                 voice2StringMessageUtils.stopListening();
                 break;
+            case R.id.voice_input_language:
+                showLanguageDialog();
+                break;
+            case R.id.voice_input_clear:
+                voiceInputEt.setText("");
+                initVoiceInputView(VOICE_INPUT_STATUS_STOP);
+                stopVoiceInput();
+                break;
+            case R.id.voice_input_send:
+                //需检查chatInputMenuListener 及 results是否为理想值  TODO fuchang
+                voiceInputEt.setText("");
+                initVoiceInputView(VOICE_INPUT_STATUS_STOP);
+                stopVoiceInput();
+                String results = voiceInputEt.getText().toString();
+                if (chatInputMenuListener != null && !StringUtils.isBlank(results)) {
+                    chatInputMenuListener.onSendMsg(results, null, null, null);
+                }
+                break;
             default:
                 break;
         }
+    }
+
+    @OnTouch({R.id.volume_level_img})
+    public boolean onTouch(View v, MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                initVoiceInputView(VOICE_INPUT_STATUS_SPEAKING);
+                voiceInputEt.setHint(getContext().getString(R.string.voice_input_hint_prepare));
+                mediaPlayerUtils.playVoiceOn();
+                voice2StringMessageUtils.startVoiceListening();
+                break;
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+                initVoiceInputView(VOICE_INPUT_STATUS_STOP);
+                mediaPlayerUtils.playVoiceOff();
+                break;
+        }
+
+        return false;
     }
 
     public boolean isVoiceInput() {
@@ -833,43 +995,80 @@ public class ECMChatInputMenu extends LinearLayout {
      * @param volume
      */
     public void setVoiceImageViewLevel(int volume) {
+        if (volume > 5) {
+            volume = 5;
+        }
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) voiceInputLevelImgShade.getLayoutParams();
+        params.height = DensityUtil.dip2px(getContext(), 70) + DensityUtil.dip2px(getContext(), volume * 4);
+        params.width = DensityUtil.dip2px(getContext(), 70) + DensityUtil.dip2px(getContext(), volume * 4);
+        voiceInputLevelImgShade.setLayoutParams(params);
+        voiceInputLevelImgShade.setCornerRadius(params.height / 2);
+
         //回调函数30多毫秒执行一次
-        int currentLevel = 0;
-        if (0 == volume) {
-            currentLevel = 0;
-        } else {
-            currentLevel = volume / 3 + 1;
-        }
-        int showLevel = (currentLevel + lastVolumeLevel) / 2;
-        if (currentLevel >= lastVolumeLevel) {
-            delayTimes = TOPDELY_TIMES;
-            if ((showLevel < 4) && (showLevel > 0)) {
-                waterWaveProgress.setProgress(4);
-            }
-            waterWaveProgress.setProgress(showLevel);
-            lastVolumeLevel = currentLevel;
-        } else {
-            //判断延时时间
-            if (delayTimes > 0) {
-                delayTimes = delayTimes - 1;
-            } else {
-                lastVolumeLevel = lastVolumeLevel - 1;
-            }
-            waterWaveProgress.setProgress(lastVolumeLevel);
-        }
+//        int currentLevel = 0;
+//        if (0 == volume) {
+//            currentLevel = 0;
+//        } else {
+//            currentLevel = volume / 3 + 1;
+//        }
+//        int showLevel = (currentLevel + lastVolumeLevel) / 2;
+//        if (currentLevel >= lastVolumeLevel) {
+//            delayTimes = TOPDELY_TIMES;
+//            if ((showLevel < 4) && (showLevel > 0)) {
+//                waterWaveProgress.setProgress(4);
+//            }
+//            waterWaveProgress.setProgress(showLevel);
+//            lastVolumeLevel = currentLevel;
+//        } else {
+//            //判断延时时间
+//            if (delayTimes > 0) {
+//                delayTimes = delayTimes - 1;
+//            } else {
+//                lastVolumeLevel = lastVolumeLevel - 1;
+//            }
+//            waterWaveProgress.setProgress(lastVolumeLevel);
+//        }
     }
 
     /**
      * 停止识别，并播放停止提示音
      */
     public void stopVoiceInput() {
-        voiceInputLayout.setVisibility(View.GONE);
+//        voiceInputLayout.setVisibility(View.GONE);
         voice2StringMessageUtils.stopListening();
-        mediaPlayerUtils.playVoiceOff();
+        initVoiceInputView(VOICE_INPUT_STATUS_STOP);
+//        mediaPlayerUtils.playVoiceOff();
     }
 
     public String getInputContent() {
         return inputEdit.getText().toString().trim();
+    }
+
+    private void showLanguageDialog() {
+        ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener onSheetItemClickListener = new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {
+            @Override
+            public void onClick(ActionSheetDialog dialog, View itemView, int position) {
+                String tag = (String) itemView.getTag();
+                languageTv.setText(tag);
+                if (tag.equals(getContext().getString(R.string.voice_input_language_mandarin))) {
+                    LanguageManager.getInstance().setVoiceInputLanguage("zh-Hans");
+                } else if (tag.equals(getContext().getString(R.string.voice_input_language_cantonese))) {
+                    LanguageManager.getInstance().setVoiceInputLanguage("zh-Hans-Cantonese");
+                } else if (tag.equals(getContext().getString(R.string.voice_input_language_english))) {
+                    LanguageManager.getInstance().setVoiceInputLanguage("en");
+                }
+                voice2StringMessageUtils.setLanguage(LanguageManager.getInstance().getVoiceInputLanguage());
+                dialog.dismiss();
+            }
+        };
+
+        ActionSheetDialog.ActionListSheetBuilder builder = new ActionSheetDialog.ActionListSheetBuilder(getContext());
+        for (int i = 0; i < languageList.size(); i++) {
+            builder.addItem(languageList.get(i));
+        }
+        builder.setOnSheetItemClickListener(onSheetItemClickListener)
+                .build()
+                .show();
     }
 
     public interface ChatInputMenuListener {

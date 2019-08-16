@@ -3,6 +3,7 @@ package com.inspur.emmcloud.util.privates;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 
 import com.iflytek.cloud.ErrorCode;
 import com.iflytek.cloud.InitListener;
@@ -13,6 +14,7 @@ import com.iflytek.cloud.SpeechError;
 import com.iflytek.cloud.SpeechRecognizer;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.bean.system.VoiceResult;
@@ -66,13 +68,14 @@ public class Voice2StringMessageUtils {
 
     public Voice2StringMessageUtils(Context context) {
         this.context = context;
-        initListeners();
+
     }
 
     /**
      * 启动听写
      */
     public void startVoiceListening() {
+        initListeners();
         // 使用SpeechRecognizer对象，可根据回调消息自定义界面；
         speechRecognizer = SpeechRecognizer.createRecognizer(context, initListener);
         setParam(VOICE_FROM_XUNFEI);
@@ -125,25 +128,11 @@ public class Voice2StringMessageUtils {
 //        //网络转写超时设置
 //        speechRecognizer.setParameter(SpeechConstant.NET_TIMEOUT, "8000");
 
-        String language = LanguageManager.getInstance().getCurrentAppLanguage();
-        switch (language) {
-            case "zh-Hans":
-                // 设置语言
-                speechRecognizer.setParameter(SpeechConstant.LANGUAGE, "zh_cn");
-                // 设置语言区域
-                speechRecognizer.setParameter(SpeechConstant.ACCENT, "mandarin");
-                break;
-            case "en":
-                // 设置语言
-                speechRecognizer.setParameter(SpeechConstant.LANGUAGE, "en_us");
-                break;
-            default:
-                // 设置语言
-                speechRecognizer.setParameter(SpeechConstant.LANGUAGE, "zh_cn");
-                // 设置语言区域
-                speechRecognizer.setParameter(SpeechConstant.ACCENT, "mandarin");
-                break;
+        String language = LanguageManager.getInstance().getVoiceInputLanguage();
+        if (StringUtils.isBlank(language)) {
+            language = LanguageManager.getInstance().getCurrentAppLanguage();
         }
+        setLanguage(language);
         //来自本地录音文件时，前后端时间都设置为60s，其他情况使用默认值
         if (type == VOICE_FROM_LOCAL_FILE) {
             // 设置语音前端点:静音超时时间，即用户多长时间不说话则当做超时处理
@@ -165,6 +154,33 @@ public class Voice2StringMessageUtils {
         speechRecognizer.setParameter(SpeechConstant.ASR_AUDIO_PATH, Environment.getExternalStorageDirectory() + "");
     }
 
+    public void setLanguage(String type) {
+        switch (type) {
+            case "zh-Hans":
+                // 设置语言
+                speechRecognizer.setParameter(SpeechConstant.LANGUAGE, "zh_cn");
+                // 设置语言区域
+                speechRecognizer.setParameter(SpeechConstant.ACCENT, "mandarin");
+                break;
+            case "zh-Hans-Cantonese":
+                // 设置语言
+                speechRecognizer.setParameter(SpeechConstant.LANGUAGE, "zh_cn");
+                // 设置语言区域
+                speechRecognizer.setParameter(SpeechConstant.ACCENT, "contonese");
+                break;
+            case "en":
+                // 设置语言
+                speechRecognizer.setParameter(SpeechConstant.LANGUAGE, "en_us");
+                break;
+            default:
+                // 设置语言
+                speechRecognizer.setParameter(SpeechConstant.LANGUAGE, "zh_cn");
+                // 设置语言区域
+                speechRecognizer.setParameter(SpeechConstant.ACCENT, "mandarin");
+                break;
+        }
+    }
+
     /**
      * 初始化监听器
      */
@@ -183,11 +199,13 @@ public class Voice2StringMessageUtils {
             @Override
             public void onBeginOfSpeech() {
                 // 此回调表示：sdk内部录音机已经准备好了，用户可以开始语音输入
+                Log.d("zhang", "onBeginOfSpeech: ");
                 onVoiceResultCallback.onVoiceStart();
             }
 
             @Override
             public void onError(SpeechError error) {
+                Log.d("zhang", "onError: ");
                 LogUtils.YfcDebug("错误：" + error.getErrorCode() + error.getErrorDescription());
                 VoiceResult voiceResult = new VoiceResult();
                 voiceResult.setXunFeiError(MSG_XUNFEI_ERROR);
@@ -205,12 +223,14 @@ public class Voice2StringMessageUtils {
 
             @Override
             public void onEndOfSpeech() {
+                Log.d("zhang", "onEndOfSpeech: ");
                 // 此回调表示：检测到了语音的尾端点，已经进入识别过程，不再接受语音输入
-                onVoiceResultCallback.onVoiceFinish();
+//                onVoiceResultCallback.onVoiceFinish();
             }
 
             @Override
             public void onResult(RecognizerResult results, boolean isLast) {
+                Log.d("zhang", "onResult: isLast = " + isLast);
                 addListeningResult2Map(results);
                 if (isLast) {
                     String voiceWords = getLastListeningResult();
@@ -232,6 +252,7 @@ public class Voice2StringMessageUtils {
 
             @Override
             public void onEvent(int eventType, int arg1, int arg2, Bundle obj) {
+                Log.d("zhang", "onEvent: ");
                 // 以下代码用于获取与云端的会话id，当业务出错时将会话id提供给技术支持人员，可用于查询会话日志，定位出错原因
                 // 若使用本地能力，会话id为null
                 //	if (SpeechEvent.EVENT_SESSION_ID == eventType) {

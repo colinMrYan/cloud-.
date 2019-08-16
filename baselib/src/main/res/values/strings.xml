@@ -1294,6 +1294,12 @@
     <string name="voice_word_setting">语音自动识别</string>
     <string name="voice_audio_record_unavailiable">当前录音设备不可用，请检查录音权限是否开启</string>
     <string name="voice_to_word">转文字</string>
+    <!--语音输入改造-->
+    <string name="voice_input_language_mandarin">普通话</string>
+    <string name="voice_input_language_cantonese">粤语</string>
+    <string name="voice_input_language_english">英语</string>
+    <string name="voice_input_hint_prepare">准备中...</string>
+    <string name="voice_input_hint_speak_now">请说话...</string>
 
     <string name="notification_switch">新消息通知</string>
     <string name="notification_switch_cant_recive">关闭后，手机将不再接收新消息通知</string>
