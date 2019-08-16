@@ -274,7 +274,7 @@ public class PluginMgr {
         service = service.trim();
         IPlugin plugin = null;
         Log.d("jason", "serviceName=" + service);
-        if (!entries.containsKey(service) || service.equals(FileTransferService.class.getCanonicalName())) {
+        if (!entries.containsKey(service)) {
             plugin = createPlugin(service);
             if (plugin != null) {
                 entries.put(service, plugin);
