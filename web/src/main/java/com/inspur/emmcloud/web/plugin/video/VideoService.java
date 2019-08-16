@@ -1,37 +1,34 @@
 package com.inspur.emmcloud.web.plugin.video;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
-import android.view.View;
-import android.widget.ProgressBar;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
-import com.inspur.emmcloud.baselib.widget.dialogs.MyDialog;
+import com.inspur.emmcloud.baselib.widget.LoadingDialog;
+import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
+import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
+import com.inspur.emmcloud.basemodule.api.HttpUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
-import com.inspur.emmcloud.basemodule.util.UpLoaderUtils;
 import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
-import com.inspur.emmcloud.web.R;
+import com.inspur.emmcloud.componentservice.login.OauthCallBack;
 import com.inspur.emmcloud.web.plugin.ImpPlugin;
 import com.inspur.emmcloud.web.ui.ImpFragment;
-import com.inspur.emmcloud.web.util.WebFormatUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,73 +41,11 @@ public class VideoService extends ImpPlugin {
 
     private String successCb, failCb;
     private String uploadUrl;
-    private static final int RECORD_VIDEO_DURATION_LIMIT = 600; //录制时间限制  10分钟
-    //dialog 相关
-    private static final int UPLOAD_SUCCESS = 1;
-    private static final int UPLOAD_FAIL = 2;
-    private static final int UPLOAD_LOADING = 3;
-    ProgressBar downloadProgressBar;
-    private String filePath;
-    private Callback.Cancelable cancelable;
-    private MyDialog progressDownloadDialog;
-    private TextView ratioText;
-    private TextView percentText;
-    private String downloadPercent;
-    private int progress;
-    private long totalSize;
-    private long downloadSize;
-    @SuppressLint("HandlerLeak")
-    private final Handler upgradeHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what) {
-                case UPLOAD_LOADING:
-                    downloadPercent = progress + "%";
-                    String text = WebFormatUtil.setFormat(downloadSize) + "/"
-                            + WebFormatUtil.setFormat(totalSize);
-                    if (downloadProgressBar != null) {
-                        downloadProgressBar.setProgress(progress);
-                    }
-                    if (ratioText != null) {
-                        ratioText.setText(text);
-                    }
-                    if (percentText != null) {
-                        percentText.setText(downloadPercent);
-                    }
-                    break;
-                case UPLOAD_SUCCESS:
-                    progressDownloadDialog.dismiss();
-                    if (cancelable != null) {
-                        cancelable.cancel();
-                    }
-                    JSONObject json = new JSONObject();
-                    try {
-                        json.put("path", filePath);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    jsCallback(successCb, json.toString());
-                    break;
-                case UPLOAD_FAIL:
-                    progressDownloadDialog.dismiss();
-                    if (cancelable != null) {
-                        cancelable.cancel();
-                    }
-                    jsCallback(failCb, "视频上传失败");
-                    break;
-            }
-        }
-    };
 
     @Override
     public void execute(String action, JSONObject paramsObject) {
         successCb = JSONUtils.getString(paramsObject, "success", "");
         failCb = JSONUtils.getString(paramsObject, "fail", "");
-
-        if (action.equals("open")) {
-            startRecordVideo(paramsObject);
-        }
 
         if (action.equals("recordVideo")) {
             startRecordVideo(paramsObject);
@@ -122,6 +57,47 @@ public class VideoService extends ImpPlugin {
             getActivity().startActivity(intent);
         } else {
             showCallIMPMethodErrorDlg();
+        }
+    }
+
+    private void startRecordVideo(final JSONObject paramsObject) {
+        try {
+            final JSONObject optionsObj = paramsObject.getJSONObject("options");
+            uploadUrl = optionsObj.optString("url");
+
+            if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+                PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getActivity(), Permissions.CAMERA,
+                        new PermissionRequestCallback() {
+                            @Override
+                            public void onPermissionRequestSuccess(List<String> permissions) {
+                                Uri fileUri = null;
+                                Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+                                String fileName = optionsObj.optString("id");
+                                try {
+                                    fileUri = FileProvider.getUriForFile(getActivity(),
+                                            getActivity().getPackageName() + ".provider", createMediaFile(fileName));//这是正确的写法
+
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+                                intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+
+                                if (getImpCallBackInterface() != null) {
+                                    getImpCallBackInterface().onStartActivityForResult(intent, ImpFragment.REQUEST_CODE_RECORD_VIDEO);
+                                }
+//                            getActivity().startActivityForResult(intent, ImpFragment.REQUEST_CODE_RECORD_VIDEO);
+                            }
+
+                            @Override
+                            public void onPermissionRequestFail(List<String> permissions) {
+
+                            }
+                        });
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 
@@ -164,134 +140,75 @@ public class VideoService extends ImpPlugin {
 
     }
 
-    private void startRecordVideo(final JSONObject paramsObject) {
-        try {
-            final JSONObject optionsObj = paramsObject.optJSONObject("options");
-            uploadUrl = optionsObj.optString("url");
-
-            if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-                PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getActivity(), Permissions.CAMERA,
-                        new PermissionRequestCallback() {
-                            @Override
-                            public void onPermissionRequestSuccess(List<String> permissions) {
-                                Uri fileUri = null;
-                                Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-                                String fileName = optionsObj.optString("id");
-                                try {
-                                    fileUri = FileProvider.getUriForFile(getActivity(),
-                                            getActivity().getPackageName() + ".provider", createMediaFile(fileName));//这是正确的写法
-
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                                intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-                                intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-                                intent.putExtra(MediaStore.MediaColumns.WIDTH, 720);
-                                intent.putExtra(MediaStore.MediaColumns.HEIGHT, 1280);
-                                intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, RECORD_VIDEO_DURATION_LIMIT); //最长时间10分钟
-
-                                if (getImpCallBackInterface() != null) {
-                                    getImpCallBackInterface().onStartActivityForResult(intent, ImpFragment.REQUEST_CODE_RECORD_VIDEO);
-                                }
-                            }
-
-                            @Override
-                            public void onPermissionRequestFail(List<String> permissions) {
-
-                            }
-                        });
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == ImpFragment.REQUEST_CODE_RECORD_VIDEO) {
+            Toast.makeText(getActivity(), "Video saved to:\n" +
+                    data.getData(), Toast.LENGTH_LONG).show();
+            Log.d("zhang", "onActivityResult: " + data.getData());
             //上传文件
             File file = FileUtils.uri2File(getFragmentContext(), data.getData());
-            filePath = file.getPath();
-            uploadFile();
+            uploadFile(file.getPath());
         }
     }
 
-    private void uploadFile() {
-        if (StringUtils.isBlank(filePath)) return;
+    private void uploadFile(final String filePath) {
         final String completeUrl = uploadUrl;
+        RequestParams params = BaseApplication.getInstance()
+                .getHttpRequestParams(completeUrl);
         File file = new File(filePath);
+        params.setMultipart(true);// 有上传文件时使用multipart表单, 否则上传原始文件流.
+        params.addBodyParameter("video", file);
+        final LoadingDialog loadingDlg = new LoadingDialog(getFragmentContext());
+        loadingDlg.setText("上传中。。。");
+        loadingDlg.show();
+        HttpUtils.request(getFragmentContext(), CloudHttpMethod.POST, params, new BaseModuleAPICallback(getFragmentContext(), completeUrl) {
 
-        cancelable = UpLoaderUtils.uploadFile(completeUrl, "video", file, new Callback.ProgressCallback() {
             @Override
-            public void onWaiting() {
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
 
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                        LoadingDialog.dimissDlg(loadingDlg);
+                        jsCallback(failCb);
+                    }
+                };
+//                refreshToken(
+//                        oauthCallBack, requestTime);
             }
 
             @Override
-            public void onStarted() {
-
-            }
-
-            @Override
-            public void onLoading(long total, long current, boolean isDownloading) {    //下载中
-                progress = (int) (((float) current / total) * 100);
-                totalSize = total;
-                downloadSize = current;
-                upgradeHandler.sendEmptyMessage(UPLOAD_LOADING);
-            }
-
-            @Override
-            public void onSuccess(Object o) {
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
                 ToastUtils.show("上传成功");
-                upgradeHandler.sendEmptyMessage(UPLOAD_SUCCESS);
-            }
-
-            @Override
-            public void onError(Throwable throwable, boolean b) {
-                ToastUtils.show("上传失败");
-                jsCallback(failCb);
-                upgradeHandler.sendEmptyMessage(UPLOAD_FAIL);
-            }
-
-            @Override
-            public void onCancelled(CancelledException e) {
-
-            }
-
-            @Override
-            public void onFinished() {
-
-            }
-        });
-
-        showUploadDialog();
-    }
-
-    private void showUploadDialog() {
-        progressDownloadDialog = new MyDialog(getFragmentContext(), R.layout.app_dialog_down_progress_one_button);
-        progressDownloadDialog.setDimAmount(0.2f);
-        progressDownloadDialog.setCancelable(false);
-        progressDownloadDialog.setCanceledOnTouchOutside(false);
-        ((TextView) progressDownloadDialog.findViewById(R.id.tv_permission_dialog_title)).
-                setText(getFragmentContext().getString(R.string.app_name));
-        ((TextView) progressDownloadDialog.findViewById(R.id.tv_downloading)).
-                setText("上传中，请稍后。。。");
-        downloadProgressBar = progressDownloadDialog.findViewById(R.id.progress_bar_apk_download);
-        ratioText = progressDownloadDialog.findViewById(R.id.tv_num_progress);
-        percentText = progressDownloadDialog.findViewById(R.id.tv_num_percent);
-        progressDownloadDialog.findViewById(R.id.tv_cancel).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                progressDownloadDialog.dismiss();
-                if (cancelable != null) {
-                    cancelable.cancel();
+                LoadingDialog.dimissDlg(loadingDlg);
+                JSONObject json = new JSONObject();
+                try {
+                    json.put("path", filePath);
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
+                jsCallback(successCb, json.toString());
+//                apiInterface
+//                        .returnUploadMyHeadSuccess(new GetUploadMyHeadResult(new String(arg0)), filePath);
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                ToastUtils.show("上传失败");
+                LoadingDialog.dimissDlg(loadingDlg);
+                jsCallback(failCb);
+//                apiInterface.returnUploadMyHeadFail(error, responseCode);
             }
         });
-        progressDownloadDialog.show();
     }
-
 }

@@ -1,10 +1,13 @@
 package com.inspur.emmcloud.basemodule.util;
 
+import com.inspur.emmcloud.basemodule.api.APIDownloadCallBack;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 
 import org.xutils.common.Callback;
 import org.xutils.common.Callback.Cancelable;
 import org.xutils.http.RequestParams;
+import org.xutils.http.app.RedirectHandler;
+import org.xutils.http.request.UriRequest;
 import org.xutils.x;
 
 import java.io.File;
@@ -14,23 +17,40 @@ import java.io.File;
  */
 public class UpLoaderUtils {
 
-    private static Cancelable cancelable;
+    Cancelable cancelable;
 
     /**
+     * 开始下载方法
      *
-     * @param url
-     * @param upLoadFileKey  上传文件得key
-     * @param file   需要上传得文件
-     * @param callback   进度回调
-     * @return
+     * @param source
+     * @param callback
      */
-    public static Cancelable uploadFile(String url, String upLoadFileKey, File file, Callback.ProgressCallback callback) {
-        RequestParams params = BaseApplication.getInstance()
-                .getHttpRequestParams(url);
-        params.setMultipart(true);  //以表单方式上传
-        params.addBodyParameter(upLoadFileKey, file);  //设置上传文件路径
-        cancelable = x.http().post(params, callback);
+    public Cancelable startUpLoad(String source, Callback.CommonCallback<File> callback) {
 
+        final RequestParams params = BaseApplication.getInstance().getHttpRequestParams(source);
+        params.setAutoResume(true);// 断点下载
+        params.setCancelFast(true);
+        params.setRedirectHandler(new RedirectHandler() {
+            @Override
+            public RequestParams getRedirectParams(UriRequest uriRequest) throws Throwable {
+                String locationUrl = uriRequest.getResponseHeader("Location");
+                params.setUri(locationUrl);
+                return params;
+            }
+        });
+        if (callback == null) {
+            callback = new APIDownloadCallBack(source) {
+
+                @Override
+                public void callbackSuccess(File file) {
+                }
+
+                @Override
+                public void callbackError(Throwable arg0, boolean arg1) {
+                }
+            };
+        }
+        cancelable = x.http().get(params, callback);
         return cancelable;
     }
 }
