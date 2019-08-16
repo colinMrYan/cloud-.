@@ -4,8 +4,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.inspur.emmcloud.baselib.util.JSONUtils;
-import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.web.plugin.ImpPlugin;
+import com.inspur.emmcloud.web.plugin.filetransfer.FilePathUtils;
+import com.inspur.emmcloud.web.util.StrUtil;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -46,10 +49,15 @@ public class SqlService extends ImpPlugin {
      */
     private void operateDataBase(String action, JSONObject paramsObject) {
         if ("executeSql".equals(action)) {
-            this.database = getSQLiteDatabase(JSONUtils.getString(paramsObject, "dbName", ""));
-            successCb = JSONUtils.getString(paramsObject, "success", "");
-            failCb = JSONUtils.getString(paramsObject, "fail", "");
-            executeSql(paramsObject);
+            JSONObject options = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
+            this.database = getSQLiteDatabase(JSONUtils.getString(options, "dbName", ""));
+            if (database != null) {
+                successCb = JSONUtils.getString(paramsObject, "success", "");
+                failCb = JSONUtils.getString(paramsObject, "fail", "");
+                executeSql(paramsObject);
+            } else {
+                ToastUtils.show("database connect error");
+            }
         } else {
             showCallIMPMethodErrorDlg();
         }
@@ -62,8 +70,23 @@ public class SqlService extends ImpPlugin {
      * @return
      */
     private SQLiteDatabase getSQLiteDatabase(String dbName) {
-        String dbPath = MyAppConfig.LOCAL_DOWNLOAD_PATH + dbName;
-        return SQLiteDatabase.openOrCreateDatabase(dbPath, null);
+        if (StrUtil.strIsNotNull(dbName)) {
+            String dbPath = FilePathUtils.getRealPath(dbName);
+            LogUtils.YfcDebug("数据库的真是路径：" + dbPath);
+            try {
+                return SQLiteDatabase.openOrCreateDatabase(dbPath, null);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        } else {
+            // 初始化，只需要调用一次
+            AssetsDatabaseManager.initManager(getFragmentContext());
+            // 获取管理对象，因为数据库需要通过管理对象才能够获取
+            AssetsDatabaseManager mg = AssetsDatabaseManager.getManager();
+            // 通过管理对象获取数据库
+            return mg.getDatabase("default.db");
+        }
     }
 
     /**
@@ -72,7 +95,8 @@ public class SqlService extends ImpPlugin {
      * @param jsonObject
      */
     private void executeSql(JSONObject jsonObject) {
-        String sql = JSONUtils.getString(jsonObject, "sql", "");
+        JSONObject optionsJsonObject = JSONUtils.getJSONObject(jsonObject, "options", new JSONObject());
+        String sql = JSONUtils.getString(optionsJsonObject, "sql", "");
 //        sql = "INSERT INTO Robot ('id','avatar','mode','name','support','title') VALUES('BOT6005','A8GJ2B6A4JB.png','','云+客服1111','yisiqi@inspur.com','投诉建议专用');";
 //        sql = "update Robot set name='yunjiakefu' where name like '%云%';";
 //        sql = "select * from Robot";
@@ -95,14 +119,25 @@ public class SqlService extends ImpPlugin {
         } catch (Exception e) {
             e.printStackTrace();
             // 将错误信息反馈回前台
-            JSONObject errorMessageJsonObject = new JSONObject();
-            try {
-                errorMessageJsonObject.put("errorMessage", e.getMessage());
-                jsCallback(failCb, errorMessageJsonObject.toString());
-            } catch (Exception e1) {
-                e1.printStackTrace();
-            }
+            jsCallback(failCb, getErrorJson(e.getMessage()));
         }
+    }
+
+
+    /**
+     * 组装错误信息
+     *
+     * @param message
+     * @return
+     */
+    private JSONObject getErrorJson(String message) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("errorMessage", message);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
     }
 
     /**
@@ -153,7 +188,7 @@ public class SqlService extends ImpPlugin {
             e.printStackTrace();
         }
         // 将查询结果传回前台
-        jsCallback(successCb, resultJsonObject.toString());
+        jsCallback(successCb, resultJsonObject);
     }
 
     @Override

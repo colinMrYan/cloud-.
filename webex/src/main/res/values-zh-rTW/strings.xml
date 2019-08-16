@@ -27,7 +27,6 @@
     <string name="webex_add_invitee_num">已邀請%1$d人/還可邀請%2$d人</string>
     <string name="webex_internal_attendees">內部參會人</string>
     <string name="webex_external_attendees">外部參會人</string>
-    <string name="webex_internal_share">内部分享</string>
     <string name="webex_time">時間：</string>
     <string name="webex_meeting_code">會議號：</string>
     <string name="webex_meeting_password_tip">會議密碼：</string>
