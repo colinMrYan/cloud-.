@@ -72,6 +72,7 @@
     <string name="unsupport_type">不支援的類型</string>
     <string name="function_load_fail">加載出錯，輕觸屏幕重新加載</string>
     <string name="function_reload">網絡診斷</string>
+    <string name="baselib_internal_share">内部分享</string>
     <string name="upgrade_download">下載更新</string>
     <string name="upgrade_later">稍後再說</string>
     <string name="upgrade_install_now">立即安裝</string>

@@ -73,6 +73,7 @@
     <string name="no_search_term">没有更多的搜索结果</string>
     <string name="function_load_fail">加载出错，轻触屏幕重新加载</string>
     <string name="function_reload">网络诊断</string>
+    <string name="baselib_internal_share">内部分享</string>
     <string name="upgrade_download">下载更新</string>
     <string name="upgrade_later">稍后再说</string>
     <string name="upgrade_install_now">立即安装</string>
