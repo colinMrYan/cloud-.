@@ -150,7 +150,7 @@ public class FileTransferService extends ImpPlugin {
                                         JSONObject jsonObject = new JSONObject();
                                         jsonObject.put("status", 0);
                                         jsonObject.put("errorMessage", "");
-                                        jsCallback(saveFileCallBack, jsonObject.toString());
+                                        jsCallback(saveFileCallBack, jsonObject);
                                     }
                                 } catch (Exception e) {
                                     e.printStackTrace();
@@ -185,7 +185,7 @@ public class FileTransferService extends ImpPlugin {
                                 } catch (Exception e1) {
                                     e1.printStackTrace();
                                 }
-                                jsCallback(saveFileCallBack, jsonObject.toString());
+                                jsCallback(saveFileCallBack, jsonObject);
                             }
                         }
                     });
@@ -267,8 +267,13 @@ public class FileTransferService extends ImpPlugin {
         JSONArray fileJsonArray = JSONUtils.getJSONArray(options, "files", new JSONArray());
         JSONObject dataJsonObject = JSONUtils.getJSONObject(options, "data", new JSONObject());
         boolean showProgress = JSONUtils.getBoolean(options, "showProgress", true);
+//        startUploadFiles(uploadUrl,fileJsonArray,dataJsonObject,showProgress);
 
     }
+
+//    private void startUploadFiles(uploadUrl,fileJsonArray,dataJsonObject,showProgress){
+//
+//    }
 
     /**
      * 下载文件插件为新加一个方法
@@ -314,11 +319,11 @@ public class FileTransferService extends ImpPlugin {
         try {
             jsonObject.put("folders", new JSONArray(folderArrayListFilter));
             jsonObject.put("files", new JSONArray(fileArrayListFilter));
+            jsCallback(JSONUtils.getString(paramsObject, "success", ""), jsonObject);
         } catch (Exception e) {
             jsCallback(JSONUtils.getString(paramsObject, "fail", ""), getErrorJson(e.getMessage()));
             e.printStackTrace();
         }
-        jsCallback(JSONUtils.getString(paramsObject, "success", ""), jsonObject.toString());
     }
 
     /**
@@ -352,11 +357,11 @@ public class FileTransferService extends ImpPlugin {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("content", readContent);
+            jsCallback(JSONUtils.getString(paramsObject, "success", ""), jsonObject);
         } catch (Exception e) {
             jsCallback(JSONUtils.getString(paramsObject, "fail", ""), getErrorJson(e.getMessage()));
             e.printStackTrace();
         }
-        jsCallback(JSONUtils.getString(paramsObject, "success", ""), jsonObject);
     }
 
     /**
@@ -391,11 +396,11 @@ public class FileTransferService extends ImpPlugin {
         try {
             jsonObject.put("path", JSONUtils.getString(optionsJsonObject, "directory", "")
                     + JSONUtils.getString(optionsJsonObject, "fileName", ""));
+            jsCallback(JSONUtils.getString(paramsObject, "success", ""), jsonObject);
         } catch (Exception e) {
             jsCallback(JSONUtils.getString(paramsObject, "fail", ""), getErrorJson(e.getMessage()));
             e.printStackTrace();
         }
-        jsCallback(JSONUtils.getString(paramsObject, "success", ""), jsonObject.toString());
     }
 
     @Override

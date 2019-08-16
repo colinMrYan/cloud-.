@@ -281,6 +281,13 @@ public class AppSchemeHandleActivity extends BaseActivity {
     private void handleShareIntent() {
         String action = getIntent().getAction();
         List<String> uriList = new ArrayList<>();
+        //预留调试代码，后续需要根据Intent字段做调整可解开这里调试，有一个现象需要注意，EXTRA_STREAM字段需要用get方法
+        //取得而不能用日志取得
+//        LogUtils.YfcDebug("Intent："+JSONUtils.toJSONString(getIntent()));
+//        Bundle bundle = getIntent().getExtras();
+//        for (int i = 0; i < bundle.keySet().size(); i++) {
+//            LogUtils.YfcDebug("key："+bundle.keySet().toArray()[i] + "content;"+bundle.get((String) bundle.keySet().toArray()[i]));
+//        }
         if (Intent.ACTION_SEND.equals(action)) {
             Uri uri = FileUtils.getShareFileUri(getIntent());
             //如果是text/plain类型则先拦截这种type再进行进一步处理，否则当做文件分享处理
@@ -422,7 +429,9 @@ public class AppSchemeHandleActivity extends BaseActivity {
     private boolean isLinkShare() {
         Bundle bundle = getIntent().getExtras();
         String extraText = bundle.getString(Intent.EXTRA_TEXT);
-        return bundle != null && !StringUtils.isBlank(extraText) && extraText.contains("http");
+        return bundle != null && !StringUtils.isBlank(extraText) &&
+                StringUtils.matchResult(Pattern.compile(Constant.PATTERN_URL,
+                        Pattern.CASE_INSENSITIVE), extraText, false).size() > 0;
     }
 
     /**
