@@ -192,7 +192,7 @@ public class SqlService extends ImpPlugin {
             e.printStackTrace();
         }
         // 将查询结果传回前台
-        jsCallback(successCb, resultJsonObject.toString());
+        jsCallback(successCb, resultJsonObject);
     }
 
     @Override
