@@ -1098,8 +1098,10 @@
     <string name="download_fail">Download Failed</string>
     <string name="download_success">Download Success</string>
     <string name="file_downloading">Downloading...Please wait</string>
+    <string name="file_uploading">Uploading...Please wait</string>
     <string name="file_download_success">Download succeeded,open now?</string>
     <string name="has_downloaded">Downloaded</string>
+    <string name="has_uploaded">Uploaded</string>
     <string name="imp_content">Content</string>
     <string name="file_ok">Confirm</string>
     <string name="file_cancel">Cancel</string>

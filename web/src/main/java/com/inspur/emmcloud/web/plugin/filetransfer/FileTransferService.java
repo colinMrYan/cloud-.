@@ -33,6 +33,9 @@ import com.inspur.emmcloud.web.util.StrUtil;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
+import org.xutils.x;
 
 import java.io.DataOutputStream;
 import java.io.File;
@@ -48,6 +51,7 @@ import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.text.Format;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
@@ -68,9 +72,9 @@ public class FileTransferService extends ImpPlugin {
     private static final String TAG = "uploadFile";
     private static final int TIME_OUT = 10 * 10000000; // 超时时间
     private static final String CHARSET = "utf-8"; // 设置编码
+    private static final String SAVE_FILE = "save_file";
     private static double MBDATA = 1048576.0;
     private static double KBDATA = 1024.0;
-    private static final String SAVE_FILE = "save_file";
     // 文件
     private File file;
     private String downloadUrl = "", filepath = "", fileName = "", fileType = "",
@@ -78,9 +82,9 @@ public class FileTransferService extends ImpPlugin {
     // 下载回调
     private String downloadSucCB, downloadFailCB, fileInfo, saveFileCallBack;
     // 上传文件参数
-    private String uploadUrl = "", uploadpath = "", uploadName = "";
+    private String uploadUrl = "", uploadName = "";
     // 上传回调
-    private String uploadProgress, uploadSucCB, uploadFailCB;
+    private String uploadSucCB, uploadFailCB;
     // 提示不含有sd卡
     private AlertDialog msgDlg;
     // 获取SDCard根目录
@@ -101,6 +105,7 @@ public class FileTransferService extends ImpPlugin {
     private TextView ratioText;
     private long totalSize;
     private long downloadSize;
+    private AlertDialog fileUploadDlg;
     /**
      * 记录进度条数量*
      */
@@ -110,7 +115,6 @@ public class FileTransferService extends ImpPlugin {
     private String basePath = MyAppConfig.LOCAL_IMP_USER_OPERATE_DIC +
             BaseApplication.getInstance().getTanent() + "/"
             + BaseApplication.getInstance().getUid() + "/";
-    private String successCb, failCb;
     // 回传下载结果
     Handler handler = new Handler() {
 
@@ -192,8 +196,6 @@ public class FileTransferService extends ImpPlugin {
                     break;
                 // 上传进度
                 case 3:
-                    int pro = (Integer) msg.obj;
-                    jsCallback(uploadProgress, pro + "");
                     break;
                 // 上传成功
                 case 4:
@@ -209,16 +211,13 @@ public class FileTransferService extends ImpPlugin {
         }
 
     };
+    private String successCb, failCb;
 
     @Override
     public void execute(String action, JSONObject paramsObject) {
         switch (action) {
             case "upload":   // 上传文件
                 upload(paramsObject);
-                break;
-            case "uploadFile":
-                uploadFiles(paramsObject);
-                LogUtils.YfcDebug("paramsObject:" + paramsObject.toString());
                 break;
             case "download": // 下载文件
                 download(paramsObject);
@@ -254,21 +253,6 @@ public class FileTransferService extends ImpPlugin {
         }
     }
 
-    /**
-     * 上传文件
-     *
-     * @param paramsObject
-     */
-    private void uploadFiles(JSONObject paramsObject) {
-        uploadSucCB = JSONUtils.getString(paramsObject, "success", "");
-        uploadFailCB = JSONUtils.getString(paramsObject, "fail", "");
-        JSONObject options = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
-        String uploadUrl = JSONUtils.getString(options, "url", "");
-        JSONArray fileJsonArray = JSONUtils.getJSONArray(options, "files", new JSONArray());
-        JSONObject dataJsonObject = JSONUtils.getJSONObject(options, "data", new JSONObject());
-        boolean showProgress = JSONUtils.getBoolean(options, "showProgress", true);
-
-    }
 
     /**
      * 下载文件插件为新加一个方法
@@ -405,7 +389,7 @@ public class FileTransferService extends ImpPlugin {
         if ("download".equals(action)) {
             download(paramsObject);
         } else if ("downloadFile".equals(action)) { // 为了兼容自定义的imp插件
-            if (!paramsObject.isNull("key")){
+            if (!paramsObject.isNull("key")) {
                 try {
                     String key = paramsObject.getString("key");
                     //key = "http://10.24.14.63:8080/test/inspur_cloud_mobileclient_1.0.0.apk";
@@ -592,12 +576,9 @@ public class FileTransferService extends ImpPlugin {
         stopConn = false;
         LayoutInflater layoutInflater = LayoutInflater.from(getFragmentContext());
         View view = layoutInflater
-                .inflate(Res.getLayoutID("web_filetransfer_dialog_file_download_progress")
-                        ,
-                        null);
+                .inflate(Res.getLayoutID("web_filetransfer_dialog_file_download_progress"), null);
         ratioText = (TextView) view.findViewById(Res.getWidgetID("ratio_text"));
         progressBar = (ProgressBar) view.findViewById(Res.getWidgetID("update_progress"));
-
         fileDownloadDlg = new AlertDialog.Builder(getActivity(),
                 android.R.style.Theme_Holo_Light_Dialog)
                 .setTitle(Res.getStringID("file_downloading"))
@@ -770,31 +751,147 @@ public class FileTransferService extends ImpPlugin {
      * @param jsonObject
      */
     private void upload(JSONObject jsonObject) {
-        try {
-            if (!jsonObject.isNull("url"))
-                uploadUrl = jsonObject.getString("url");
-            if (!jsonObject.isNull("filePath"))
-                uploadpath = jsonObject.getString("filePath");
-            if (!jsonObject.isNull("fileName"))
-                uploadName = jsonObject.getString("fileName");
-            if (!jsonObject.isNull("progressCallback"))
-                uploadProgress = jsonObject.getString("progressCallback");
-            if (!jsonObject.isNull("successCallback"))
-                uploadSucCB = jsonObject.getString("successCallback");
-            if (!jsonObject.isNull("errorCallback"))
-                uploadFailCB = jsonObject.getString("errorCallback");
-        } catch (JSONException e) {
-            e.printStackTrace();
+        uploadSucCB = JSONUtils.getString(jsonObject, "success", "");
+        uploadFailCB = JSONUtils.getString(jsonObject, "fail", "");
+        JSONObject optionsObj = JSONUtils.getJSONObject(jsonObject, "options", new JSONObject());
+        uploadUrl = JSONUtils.getString(optionsObj, "url", "");
+        boolean isShowProgress = JSONUtils.getBoolean(optionsObj, "showProgress", false);
+        JSONArray fileArray = JSONUtils.getJSONArray(optionsObj, "files", new JSONArray());
+        List<String> uploadPathList = new ArrayList<>();
+        for (int i = 0; i < fileArray.length(); i++) {
+            JSONObject fileObj = JSONUtils.getJSONObject(fileArray, i, new JSONObject());
+            uploadPathList.add(JSONUtils.getString(fileObj, "filePath", ""));
         }
-        // 上传的文件
-        file = new File(uploadpath);
-        new Thread(new Runnable() {
+        JSONObject dataObj = JSONUtils.getJSONObject(optionsObj, "data", null);
+        showFileUploadDlg(uploadPathList, isShowProgress, dataObj);
+
+    }
+
+    private void showFileUploadDlg(List<String> uploadPathList, final boolean isShowProgress, JSONObject dataObj) {
+        RequestParams params = new RequestParams(uploadUrl);
+        params.setConnectTimeout(30000);
+        params.setMultipart(true);
+        if (dataObj != null) {
+            Iterator<String> keys = dataObj.keys();
+            while (keys.hasNext()) {
+                try {
+                    String key = keys.next();
+                    params.addBodyParameter(key, dataObj.getString(key));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
+        for (int i = 0; i < uploadPathList.size(); i++) {
+            File file = new File(uploadPathList.get(i));
+            params.addBodyParameter("" + i, file);
+        }
+        LayoutInflater layoutInflater = LayoutInflater.from(getFragmentContext());
+        View view = layoutInflater
+                .inflate(Res.getLayoutID("web_filetransfer_dialog_file_download_progress"), null);
+        final TextView ratioText = view.findViewById(Res.getWidgetID("ratio_text"));
+        final ProgressBar progressBar = view.findViewById(Res.getWidgetID("update_progress"));
+
+        final Callback.Cancelable cancelable = x.http().post(params, new Callback.ProgressCallback<String>() {
             @Override
-            public void run() {
-                uploadFile(file);
+            public void onWaiting() {
+
             }
 
-        }).start();
+            @Override
+            public void onStarted() {
+
+            }
+
+            @Override
+            public void onLoading(long total, long current, boolean isDownloading) {
+                if (isShowProgress) {
+                    int progress = (int) (current * 100 / total);
+                    progressBar.setProgress(progress);
+                    if (total <= 0) {
+                        ratioText.setText(getFragmentContext().getString(Res.getStringID("has_uploaded"))
+                                + setFormat(current));
+                    } else {
+                        String text = progress + "%" + "," + "  "
+                                + setFormat(current) + "/"
+                                + setFormat(total);
+                        ratioText.setText(text);
+                    }
+                }
+
+            }
+
+            @Override
+            public void onSuccess(String s) {
+                callbackFileUploadSuccess();
+                if (fileDownloadDlg != null) {
+                    fileDownloadDlg.dismiss();
+                }
+            }
+
+            @Override
+            public void onError(Throwable throwable, boolean b) {
+                callbackFileUploadFail(1, throwable.getMessage());
+                if (fileDownloadDlg != null) {
+                    fileDownloadDlg.dismiss();
+                }
+            }
+
+            @Override
+            public void onCancelled(CancelledException e) {
+                callbackFileUploadFail(2, "取消上传！");
+                if (fileDownloadDlg != null) {
+                    fileDownloadDlg.dismiss();
+                }
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        });
+        fileUploadDlg = new AlertDialog.Builder(getActivity(),
+                android.R.style.Theme_Holo_Light_Dialog)
+                .setTitle(Res.getStringID("file_uploading"))
+                .setView(view)
+                .setCancelable(false)
+                .setNegativeButton(Res.getStringID("cancel"),
+                        new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog,
+                                                int which) {
+                                // TODO Auto-generated method stub
+                                dialog.dismiss();
+                                cancelable.cancel();
+                            }
+                        }).create();
+        fileUploadDlg.getWindow().setBackgroundDrawableResource(
+                android.R.color.transparent);
+        if (isShowProgress) {
+            fileUploadDlg.show();
+        }
+    }
+
+    private void callbackFileUploadSuccess() {
+        if (!StringUtils.isBlank(uploadSucCB)) {
+            this.jsCallback(uploadSucCB);
+        }
+    }
+
+    private void callbackFileUploadFail(int status, String errorMessage) {
+        if (!StringUtils.isBlank(uploadFailCB)) {
+            JSONObject obj = new JSONObject();
+            try {
+                obj.put("status", status);
+                obj.put("errorMessage", errorMessage);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            this.jsCallback(uploadFailCB, obj.toString());
+        }
     }
 
     /**
