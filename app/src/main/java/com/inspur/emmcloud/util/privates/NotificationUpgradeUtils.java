@@ -11,7 +11,6 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -229,13 +228,16 @@ public class NotificationUpgradeUtils extends APIInterfaceInstance {
     }
 
     private void showSelectUpgradeDlg() {
+        final boolean isDownloadLatestVersion = isDownloadedLatestVersion();
         final MyDialog dialog = new MyDialog(context,
                 R.layout.basewidget_dialog_update);
         dialog.setCancelable(false);
         Button okBtn = dialog.findViewById(R.id.btn_update);   //tv_update_version
         final TextView contentDataTextView = dialog.findViewById(R.id.tv_update_content_data);
         final TextView versionTextView = dialog.findViewById(R.id.tv_update_version);
+        final TextView updateTipTextView = dialog.findViewById(R.id.tv_wifi_download_hint);
         versionTextView.setText(getUpgradeResult.getLatestVersion());
+        updateTipTextView.setVisibility(isDownloadLatestVersion ? View.VISIBLE : View.GONE);
         ViewPager viewPager = dialog.findViewById(R.id.viewpager_update_content);
         updateContentPagerAdapter = new UpdateContentPagerAdapter();
         viewPager.setAdapter(updateContentPagerAdapter);
@@ -258,13 +260,14 @@ public class NotificationUpgradeUtils extends APIInterfaceInstance {
         CircleIndicator commonCircleIndicator = dialog.findViewById(R.id.cc_index);
         commonCircleIndicator.setViewPager(viewPager);
         updateContentPagerAdapter.registerDataSetObserver(commonCircleIndicator.getDataSetObserver());
-        String okBtnContent = isDownloadedLatestVersion() ? context.getString(R.string.upgrade_install_now) : context.getString(R.string.upgrade_download);
+        contentDataTextView.setText(updateMsgList.size() > 0 ? updateMsgList.get(0) : "云+精彩缤纷呈现");
+        String okBtnContent = isDownloadLatestVersion ? context.getString(R.string.upgrade_install_now) : context.getString(R.string.upgrade_download);
         okBtn.setText(okBtnContent + "(" + getUpgradeResult.getLatestVersion() + ")");
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                if (!isDownloadedLatestVersion()) {
+                if (!isDownloadLatestVersion) {
                     if (context != null) {
                         if (null == notificationUtils) {
                             notificationUtils = new UpgradeNotificationUtils(context, 10000);
@@ -281,7 +284,7 @@ public class NotificationUpgradeUtils extends APIInterfaceInstance {
             }
         });
         TextView cancelBt = dialog.findViewById(R.id.tv_update_state);
-        cancelBt.setText(isDownloadedLatestVersion() ? context.getString(R.string.upgrade_install_next_time) : context.getString(R.string.upgrade_later));
+        cancelBt.setText(isDownloadLatestVersion ? context.getString(R.string.upgrade_install_next_time) : context.getString(R.string.upgrade_later));
         cancelBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -337,26 +340,46 @@ public class NotificationUpgradeUtils extends APIInterfaceInstance {
     private void showForceUpgradeDlg() {
         // TODO Auto-generated method stub
         final MyDialog dialog = new MyDialog(context,
-                R.layout.basewidget_dialog_two_buttons);
+                R.layout.basewidget_dialog_update);
         dialog.setCancelable(false);
-        Button okBtn = dialog.findViewById(R.id.ok_btn);
+        Button okBtn = dialog.findViewById(R.id.btn_update);
         okBtn.setText(context.getString(R.string.upgrade));
-        TextView appUpdateContentText = dialog.findViewById(R.id.text);
-        appUpdateContentText.setMovementMethod(ScrollingMovementMethod.getInstance());
-        appUpdateContentText.setText(upgradeMsg);
-        TextView appUpdateTitle = dialog.findViewById(R.id.app_update_title);
-        appUpdateTitle.setText(context.getString(R.string.app_update_remind));
-        TextView appUpdateVersion = dialog.findViewById(R.id.app_update_version);
-        appUpdateVersion.setText(context.getString(R.string.app_last_version) + "(" + getUpgradeResult.getLatestVersion() + ")");
-        okBtn.setOnClickListener(new View.OnClickListener() {
+        final TextView contentDataTextView = dialog.findViewById(R.id.tv_update_content_data);
+        final TextView versionTextView = dialog.findViewById(R.id.tv_update_version);
+        versionTextView.setText(getUpgradeResult.getLatestVersion());
+        ViewPager viewPager = dialog.findViewById(R.id.viewpager_update_content);
+        updateContentPagerAdapter = new UpdateContentPagerAdapter();
+        viewPager.setAdapter(updateContentPagerAdapter);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
 
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+                contentDataTextView.setText(updateMsgList.get(i));
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });
+        CircleIndicator commonCircleIndicator = dialog.findViewById(R.id.cc_index);
+        commonCircleIndicator.setViewPager(viewPager);
+        updateContentPagerAdapter.registerDataSetObserver(commonCircleIndicator.getDataSetObserver());
+        String okBtnContent = context.getString(R.string.upgrade) + "(" + getUpgradeResult.getLatestVersion() + ")";
+        okBtn.setText(okBtnContent);
+        contentDataTextView.setText(updateMsgList.size() > 0 ? updateMsgList.get(0) : "云+精彩缤纷呈现");
+        okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
                 showDownloadDialog();
             }
         });
-        Button cancelBt = dialog.findViewById(R.id.cancel_btn);
+        TextView cancelBt = dialog.findViewById(R.id.tv_update_state);
         cancelBt.setText(context.getString(R.string.exit));
         cancelBt.setOnClickListener(new View.OnClickListener() {
 
@@ -400,93 +423,8 @@ public class NotificationUpgradeUtils extends APIInterfaceInstance {
         downloadProgressBar = progressDownloadDialog.findViewById(R.id.progress_bar_apk_download);
         if (context != null) {
             // 下载文件
-            downloadApk();
+            downloadApk(false);
         }
-    }
-
-    /**
-     * 下载apk文件
-     */
-    private void downloadApk() {
-        // 判断SD卡是否存在，并且是否具有读写权限
-        if (Environment.getExternalStorageState().equals(
-                Environment.MEDIA_MOUNTED)) {
-            RequestParams params = new RequestParams(upgradeUrl);
-            params.setSaveFilePath(DOWNLOAD_PATH + "update.apk");
-            cancelable = x.http().get(params,
-                    new Callback.ProgressCallback<File>() {
-
-                        @Override
-                        public void onCancelled(CancelledException arg0) {
-                            // TODO Auto-generated method stub
-                        }
-
-                        @Override
-                        public void onError(Throwable arg0, boolean arg1) {
-                            // TODO Auto-generated method stub
-                            upgradeHandler.sendEmptyMessage(DOWNLOAD_FAIL);
-                            if (null != notificationUtils) {
-                                notificationUtils.updateNotification(context.getResources().getString(R.string.app_update_error), false);
-                            }
-                        }
-
-                        @Override
-                        public void onFinished() {
-                            // TODO Auto-generated method stub
-
-                        }
-
-                        @Override
-                        public void onSuccess(File arg0) {
-                            // TODO Auto-generated method stub
-                            upgradeHandler.sendEmptyMessage(DOWNLOAD_FINISH);
-                            String apkName = DOWNLOAD_PATH + "update.apk";
-                            String currentApkMd5 = FileUtils.getFileMD5(new File(apkName));
-                            LogUtils.LbcDebug("currentApkMd5::" + currentApkMd5);
-                            if (null != notificationUtils) {
-                                notificationUtils.deleteNotification();
-                            }
-                        }
-
-                        @Override
-                        public void onLoading(long arg0, long arg1, boolean arg2) {
-                            // TODO Auto-generated method stub
-                            totalSize = arg0;
-                            downloadSize = arg1;
-                            progress = (int) (((float) arg1 / arg0) * 100);
-                            // 更新进度
-                            if (progressDownloadDialog != null
-                                    && progressDownloadDialog.isShowing()) {
-                                upgradeHandler.sendEmptyMessage(DOWNLOAD);
-                            }
-                            if (null != notificationUtils) {
-                                String data = context.getResources().getString(R.string.app_update_loaded) +
-                                        FileUtils.formatFileSize(downloadSize) + "/" + FileUtils.formatFileSize(totalSize);
-                                notificationUtils.updateNotification(data, true);
-                            }
-                        }
-
-                        @Override
-                        public void onStarted() {
-                            // TODO Auto-generated method stub
-                            upgradeHandler.sendEmptyMessage(SHOW_PEOGRESS_LAODING_DLG);
-                            if (null != notificationUtils) {
-                                notificationUtils.initNotification();
-                                ToastUtils.show(context,
-                                        context.getString(R.string.app_update_prepare));
-                            }
-                        }
-
-                        @Override
-                        public void onWaiting() {
-                            // TODO Auto-generated method stub
-
-                        }
-                    });
-        } else {
-            upgradeHandler.sendEmptyMessage(DOWNLOAD_FAIL);
-        }
-
     }
 
     /**

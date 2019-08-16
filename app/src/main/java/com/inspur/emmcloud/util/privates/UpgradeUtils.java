@@ -2,12 +2,18 @@ package com.inspur.emmcloud.util.privates;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.text.method.ScrollingMovementMethod;
+import android.support.annotation.NonNull;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -16,13 +22,16 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.baselib.widget.CommonCircleIndicator.CircleIndicator;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.MyDialog;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
+import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.system.GetUpgradeResult;
 
@@ -33,6 +42,8 @@ import org.xutils.x;
 
 import java.io.File;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UpgradeUtils extends APIInterfaceInstance {
 
@@ -72,6 +83,10 @@ public class UpgradeUtils extends APIInterfaceInstance {
     private ProgressBar downloadProgressBar;
     private TextView percentText;
 
+    private List<String> updateMsgList = new ArrayList<>();
+    private List<String> updateImageUriList = new ArrayList<>();
+    private UpdateContentPagerAdapter updateContentPagerAdapter;
+
     //isManualCheck 是否在关于中手动检查更新
     public UpgradeUtils(Context context, Handler handler, boolean isManualCheck) {
         this.context = context;
@@ -79,6 +94,12 @@ public class UpgradeUtils extends APIInterfaceInstance {
         this.isManualCheck = isManualCheck;
         loadingDlg = new LoadingDialog(context);
         handMessage();
+        updateMsgList.add("测试条目w1wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww1");
+        updateMsgList.add("测试条目2");
+        updateMsgList.add("测试条目3");
+        updateImageUriList.add("ceshitiaomu1");
+        updateImageUriList.add("ceshitiaomu2");
+        updateImageUriList.add("ceshitiaomu3");
     }
 
     private void handMessage() {
@@ -195,18 +216,41 @@ public class UpgradeUtils extends APIInterfaceInstance {
     }
 
     private void showSelectUpgradeDlg() {
+        final boolean isDownloadLatestVersion = isDownloadedLatestVersion();
         final MyDialog dialog = new MyDialog(context,
-                R.layout.basewidget_dialog_two_buttons);
+                R.layout.basewidget_dialog_update);
         dialog.setCancelable(false);
-        Button okBtn = dialog.findViewById(R.id.ok_btn);
-        okBtn.setText(context.getString(R.string.upgrade));
-        TextView appUpdateContentText = dialog.findViewById(R.id.text);
-        appUpdateContentText.setMovementMethod(ScrollingMovementMethod.getInstance());
-        appUpdateContentText.setText(upgradeMsg);
-        TextView appUpdateTitle = dialog.findViewById(R.id.app_update_title);
-        TextView appUpdateVersion = dialog.findViewById(R.id.app_update_version);
-        appUpdateTitle.setText(context.getString(R.string.app_update_remind));
-        appUpdateVersion.setText(context.getString(R.string.app_last_version) + "(" + getUpgradeResult.getLatestVersion() + ")");
+        Button okBtn = dialog.findViewById(R.id.btn_update);   //tv_update_version
+        final TextView contentDataTextView = dialog.findViewById(R.id.tv_update_content_data);
+        final TextView versionTextView = dialog.findViewById(R.id.tv_update_version);
+        final TextView updateTipTextView = dialog.findViewById(R.id.tv_wifi_download_hint);
+        contentDataTextView.setText(updateMsgList.size() > 0 ? updateMsgList.get(0) : "云+精彩缤纷呈现");
+        versionTextView.setText("3.0.0");
+        updateTipTextView.setVisibility(isDownloadLatestVersion ? View.VISIBLE : View.GONE);
+        ViewPager viewPager = dialog.findViewById(R.id.viewpager_update_content);
+        updateContentPagerAdapter = new UpdateContentPagerAdapter();
+        viewPager.setAdapter(updateContentPagerAdapter);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+                contentDataTextView.setText(updateMsgList.get(i));
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });
+        CircleIndicator commonCircleIndicator = dialog.findViewById(R.id.cc_index);
+        commonCircleIndicator.setViewPager(viewPager);
+        updateContentPagerAdapter.registerDataSetObserver(commonCircleIndicator.getDataSetObserver());
+        String okBtnContent = isDownloadLatestVersion ? context.getString(R.string.upgrade_install_now) : context.getString(R.string.upgrade_download);
+        okBtn.setText(okBtnContent + "(" + getUpgradeResult.getLatestVersion() + ")");
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -214,8 +258,8 @@ public class UpgradeUtils extends APIInterfaceInstance {
                 showDownloadDialog();
             }
         });
-        Button cancelBt = dialog.findViewById(R.id.cancel_btn);
-        cancelBt.setText(context.getString(R.string.not_upgrade));
+        TextView cancelBt = dialog.findViewById(R.id.tv_update_state);
+        cancelBt.setText(isDownloadLatestVersion ? context.getString(R.string.upgrade_install_next_time) : context.getString(R.string.upgrade_later));
         cancelBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -235,17 +279,38 @@ public class UpgradeUtils extends APIInterfaceInstance {
     private void showForceUpgradeDlg() {
         // TODO Auto-generated method stub
         final MyDialog dialog = new MyDialog(context,
-                R.layout.basewidget_dialog_two_buttons);
+                R.layout.basewidget_dialog_update);
         dialog.setCancelable(false);
-        Button okBtn = dialog.findViewById(R.id.ok_btn);
+        Button okBtn = dialog.findViewById(R.id.btn_update);
         okBtn.setText(context.getString(R.string.upgrade));
-        TextView appUpdateContentText = dialog.findViewById(R.id.text);
-        appUpdateContentText.setMovementMethod(ScrollingMovementMethod.getInstance());
-        appUpdateContentText.setText(upgradeMsg);
-        TextView appUpdateTitle = dialog.findViewById(R.id.app_update_title);
-        appUpdateTitle.setText(context.getString(R.string.app_update_remind));
-        TextView appUpdateVersion = dialog.findViewById(R.id.app_update_version);
-        appUpdateVersion.setText(context.getString(R.string.app_last_version) + "(" + getUpgradeResult.getLatestVersion() + ")");
+        final TextView contentDataTextView = dialog.findViewById(R.id.tv_update_content_data);
+        final TextView versionTextView = dialog.findViewById(R.id.tv_update_version);
+        versionTextView.setText(getUpgradeResult.getLatestVersion());
+        ViewPager viewPager = dialog.findViewById(R.id.viewpager_update_content);
+        updateContentPagerAdapter = new UpdateContentPagerAdapter();
+        viewPager.setAdapter(updateContentPagerAdapter);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+                contentDataTextView.setText(updateMsgList.get(i));
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });
+        CircleIndicator commonCircleIndicator = dialog.findViewById(R.id.cc_index);
+        commonCircleIndicator.setViewPager(viewPager);
+        updateContentPagerAdapter.registerDataSetObserver(commonCircleIndicator.getDataSetObserver());
+        String okBtnContent = context.getString(R.string.upgrade) + "(" + getUpgradeResult.getLatestVersion() + ")";
+        okBtn.setText(okBtnContent);
+        contentDataTextView.setText(updateMsgList.size() > 0 ? updateMsgList.get(0) : "云+精彩缤纷呈现");
         okBtn.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -254,7 +319,7 @@ public class UpgradeUtils extends APIInterfaceInstance {
                 showDownloadDialog();
             }
         });
-        Button cancelBt = dialog.findViewById(R.id.cancel_btn);
+        TextView cancelBt = dialog.findViewById(R.id.tv_update_state);
         cancelBt.setText(context.getString(R.string.exit));
         cancelBt.setOnClickListener(new View.OnClickListener() {
 
@@ -267,6 +332,40 @@ public class UpgradeUtils extends APIInterfaceInstance {
         if (context != null) {
             dialog.show();
         }
+    }
+
+    /**
+     * 判断下载的是否为最新版本
+     * 判别方式为Md5
+     */
+    private boolean isDownloadedLatestVersion() {
+        String apkName = DOWNLOAD_PATH + "update.apk";
+        File file = new File(apkName);
+        if (file.exists()) {
+            String currentApkMd5 = FileUtils.getFileMD5(file);
+            String upgradeMd5 = getUpgradeResult.getApkMd5();
+            if (StringUtils.isBlank(upgradeMd5)) {
+                final PackageManager pm = context.getPackageManager();
+                PackageInfo info = pm.getPackageArchiveInfo(apkName, 0);
+                LogUtils.LbcDebug("info.versionCode" + info.versionCode);
+                int currentVersionCode = 0;
+                try {
+                    PackageManager manager = context.getPackageManager();
+                    PackageInfo currentInfo = manager.getPackageInfo(context.getPackageName(), 0);
+                    currentVersionCode = currentInfo.versionCode;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                if (currentVersionCode < info.versionCode) {
+                    return true;
+                }
+            } else {
+                if (currentApkMd5.equals(upgradeMd5)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private void showDownloadDialog() {
@@ -412,6 +511,39 @@ public class UpgradeUtils extends APIInterfaceInstance {
 //        WebServiceMiddleUtils.hand(context, error, errorCode);
 //		WebServiceMiddleUtils.hand(context, error, upgradeHandler,
 //				UPGRADE_FAIL);
+    }
+
+    /**
+     * 更新内容
+     */
+    private class UpdateContentPagerAdapter extends PagerAdapter {
+
+        @Override
+        public int getCount() {
+            return updateMsgList.size();
+        }
+
+        @Override
+        public boolean isViewFromObject(@NonNull View view, @NonNull Object o) {
+            return o == view;
+        }
+
+        @NonNull
+        @Override
+        public Object instantiateItem(@NonNull ViewGroup container, int position) {
+            LogUtils.LbcDebug("22222222222222222222222");
+            View rootView = View.inflate(context, R.layout.basewiget_update_content_viewpager_item, null);
+            ImageView updateImageView = rootView.findViewById(R.id.iv_update_content);
+            ImageDisplayUtils.getInstance().displayImage(updateImageView, updateImageUriList.get(position), R.drawable.ic_update_default);
+            container.addView(rootView);
+            return rootView;
+        }
+
+        @Override
+        public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
+            LogUtils.LbcDebug("333333333333333333");
+            container.removeView((View) object);
+        }
     }
 
 }

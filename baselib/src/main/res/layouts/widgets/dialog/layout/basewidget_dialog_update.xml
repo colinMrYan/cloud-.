@@ -20,6 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <TextView
@@ -36,8 +37,6 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="2dp"
             android:background="@drawable/ic_version_code_subscript"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
             android:text="4.0.1"
             android:textColor="#FFFFFF"
             android:textSize="11sp" />
@@ -51,6 +50,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="9dp"
         android:layout_marginTop="4dp"
+        android:ellipsize="end"
         android:gravity="center"
         android:maxLines="2"
         android:minLines="2"
@@ -97,6 +97,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="22dp"
         android:layout_marginTop="18dp"
         android:clickable="true"
         android:onClick="onClick"
@@ -109,7 +110,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="22dp"
         android:paddingBottom="20dp"
         android:text="WIFI下已自动下载安装包"
         android:textColor="#999999"
