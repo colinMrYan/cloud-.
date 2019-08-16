@@ -94,7 +94,7 @@ public class UpgradeUtils extends APIInterfaceInstance {
         this.isManualCheck = isManualCheck;
         loadingDlg = new LoadingDialog(context);
         handMessage();
-        updateMsgList.add("测试条目w1wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww1");
+        updateMsgList.add("测试条目测试测试测试测试测试测试测试学而思测测试测试测试测试测试测试测试123456");
         updateMsgList.add("测试条目2");
         updateMsgList.add("测试条目3");
         updateImageUriList.add("ceshitiaomu1");
@@ -221,31 +221,11 @@ public class UpgradeUtils extends APIInterfaceInstance {
                 R.layout.basewidget_dialog_update);
         dialog.setCancelable(false);
         Button okBtn = dialog.findViewById(R.id.btn_update);   //tv_update_version
-        final TextView contentDataTextView = dialog.findViewById(R.id.tv_update_content_data);
-        final TextView versionTextView = dialog.findViewById(R.id.tv_update_version);
         final TextView updateTipTextView = dialog.findViewById(R.id.tv_wifi_download_hint);
-        contentDataTextView.setText(updateMsgList.size() > 0 ? updateMsgList.get(0) : "云+精彩缤纷呈现");
-        versionTextView.setText("3.0.0");
         updateTipTextView.setVisibility(isDownloadLatestVersion ? View.VISIBLE : View.GONE);
         ViewPager viewPager = dialog.findViewById(R.id.viewpager_update_content);
         updateContentPagerAdapter = new UpdateContentPagerAdapter();
         viewPager.setAdapter(updateContentPagerAdapter);
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int i, float v, int i1) {
-
-            }
-
-            @Override
-            public void onPageSelected(int i) {
-                contentDataTextView.setText(updateMsgList.get(i));
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int i) {
-
-            }
-        });
         CircleIndicator commonCircleIndicator = dialog.findViewById(R.id.cc_index);
         commonCircleIndicator.setViewPager(viewPager);
         updateContentPagerAdapter.registerDataSetObserver(commonCircleIndicator.getDataSetObserver());
@@ -283,34 +263,14 @@ public class UpgradeUtils extends APIInterfaceInstance {
         dialog.setCancelable(false);
         Button okBtn = dialog.findViewById(R.id.btn_update);
         okBtn.setText(context.getString(R.string.upgrade));
-        final TextView contentDataTextView = dialog.findViewById(R.id.tv_update_content_data);
-        final TextView versionTextView = dialog.findViewById(R.id.tv_update_version);
-        versionTextView.setText(getUpgradeResult.getLatestVersion());
         ViewPager viewPager = dialog.findViewById(R.id.viewpager_update_content);
         updateContentPagerAdapter = new UpdateContentPagerAdapter();
         viewPager.setAdapter(updateContentPagerAdapter);
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int i, float v, int i1) {
-
-            }
-
-            @Override
-            public void onPageSelected(int i) {
-                contentDataTextView.setText(updateMsgList.get(i));
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int i) {
-
-            }
-        });
         CircleIndicator commonCircleIndicator = dialog.findViewById(R.id.cc_index);
         commonCircleIndicator.setViewPager(viewPager);
         updateContentPagerAdapter.registerDataSetObserver(commonCircleIndicator.getDataSetObserver());
         String okBtnContent = context.getString(R.string.upgrade) + "(" + getUpgradeResult.getLatestVersion() + ")";
         okBtn.setText(okBtnContent);
-        contentDataTextView.setText(updateMsgList.size() > 0 ? updateMsgList.get(0) : "云+精彩缤纷呈现");
         okBtn.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -534,7 +494,11 @@ public class UpgradeUtils extends APIInterfaceInstance {
             LogUtils.LbcDebug("22222222222222222222222");
             View rootView = View.inflate(context, R.layout.basewiget_update_content_viewpager_item, null);
             ImageView updateImageView = rootView.findViewById(R.id.iv_update_content);
+            TextView versionCodeText = rootView.findViewById(R.id.tv_update_version);
+            TextView updateContentText = rootView.findViewById(R.id.tv_update_content_data);
             ImageDisplayUtils.getInstance().displayImage(updateImageView, updateImageUriList.get(position), R.drawable.ic_update_default);
+            versionCodeText.setText(getUpgradeResult.getLatestVersion());
+            updateContentText.setText(updateMsgList.get(position));
             container.addView(rootView);
             return rootView;
         }

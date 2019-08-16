@@ -20,7 +20,7 @@ import com.inspur.baselib.R;
 
 class BaseCircleIndicator extends LinearLayout {
 
-    private final static int DEFAULT_INDICATOR_WIDTH = 5;
+    private final static int DEFAULT_INDICATOR_WIDTH = 6;
 
     protected int mIndicatorMargin = -1;
     protected int mIndicatorWidth = -1;

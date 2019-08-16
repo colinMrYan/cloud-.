@@ -9,7 +9,51 @@
         android:layout_width="165dp"
         android:layout_height="165dp"
         android:layout_gravity="center_horizontal"
-        android:paddingBottom="3dp"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_update_default" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:layout_marginTop="30dp">
+
+        <TextView
+            android:id="@+id/tv_update_sub_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:text="本次更新"
+            android:textColor="#333333"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_update_version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="2dp"
+            android:layout_toRightOf="@id/tv_update_sub_title"
+            android:background="@drawable/ic_version_code_subscript"
+            android:text="4.0.1"
+            android:textColor="#FFFFFF"
+            android:textSize="11sp" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_update_content_data"
+        android:layout_width="230dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="4dp"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:lines="2"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:text="支持手势创建、修改日程时间"
+        android:textColor="#888888"
+        android:textSize="13sp" />
+
 </LinearLayout>

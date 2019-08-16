@@ -233,34 +233,14 @@ public class NotificationUpgradeUtils extends APIInterfaceInstance {
                 R.layout.basewidget_dialog_update);
         dialog.setCancelable(false);
         Button okBtn = dialog.findViewById(R.id.btn_update);   //tv_update_version
-        final TextView contentDataTextView = dialog.findViewById(R.id.tv_update_content_data);
-        final TextView versionTextView = dialog.findViewById(R.id.tv_update_version);
         final TextView updateTipTextView = dialog.findViewById(R.id.tv_wifi_download_hint);
-        versionTextView.setText(getUpgradeResult.getLatestVersion());
         updateTipTextView.setVisibility(isDownloadLatestVersion ? View.VISIBLE : View.GONE);
         ViewPager viewPager = dialog.findViewById(R.id.viewpager_update_content);
         updateContentPagerAdapter = new UpdateContentPagerAdapter();
         viewPager.setAdapter(updateContentPagerAdapter);
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int i, float v, int i1) {
-
-            }
-
-            @Override
-            public void onPageSelected(int i) {
-                contentDataTextView.setText(updateMsgList.get(i));
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int i) {
-
-            }
-        });
         CircleIndicator commonCircleIndicator = dialog.findViewById(R.id.cc_index);
         commonCircleIndicator.setViewPager(viewPager);
         updateContentPagerAdapter.registerDataSetObserver(commonCircleIndicator.getDataSetObserver());
-        contentDataTextView.setText(updateMsgList.size() > 0 ? updateMsgList.get(0) : "云+精彩缤纷呈现");
         String okBtnContent = isDownloadLatestVersion ? context.getString(R.string.upgrade_install_now) : context.getString(R.string.upgrade_download);
         okBtn.setText(okBtnContent + "(" + getUpgradeResult.getLatestVersion() + ")");
         okBtn.setOnClickListener(new View.OnClickListener() {
@@ -344,34 +324,14 @@ public class NotificationUpgradeUtils extends APIInterfaceInstance {
         dialog.setCancelable(false);
         Button okBtn = dialog.findViewById(R.id.btn_update);
         okBtn.setText(context.getString(R.string.upgrade));
-        final TextView contentDataTextView = dialog.findViewById(R.id.tv_update_content_data);
-        final TextView versionTextView = dialog.findViewById(R.id.tv_update_version);
-        versionTextView.setText(getUpgradeResult.getLatestVersion());
         ViewPager viewPager = dialog.findViewById(R.id.viewpager_update_content);
         updateContentPagerAdapter = new UpdateContentPagerAdapter();
         viewPager.setAdapter(updateContentPagerAdapter);
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int i, float v, int i1) {
-
-            }
-
-            @Override
-            public void onPageSelected(int i) {
-                contentDataTextView.setText(updateMsgList.get(i));
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int i) {
-
-            }
-        });
         CircleIndicator commonCircleIndicator = dialog.findViewById(R.id.cc_index);
         commonCircleIndicator.setViewPager(viewPager);
         updateContentPagerAdapter.registerDataSetObserver(commonCircleIndicator.getDataSetObserver());
         String okBtnContent = context.getString(R.string.upgrade) + "(" + getUpgradeResult.getLatestVersion() + ")";
         okBtn.setText(okBtnContent);
-        contentDataTextView.setText(updateMsgList.size() > 0 ? updateMsgList.get(0) : "云+精彩缤纷呈现");
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -599,7 +559,11 @@ public class NotificationUpgradeUtils extends APIInterfaceInstance {
             LogUtils.LbcDebug("22222222222222222222222");
             View rootView = View.inflate(context, R.layout.basewiget_update_content_viewpager_item, null);
             ImageView updateImageView = rootView.findViewById(R.id.iv_update_content);
+            TextView versionCodeText = rootView.findViewById(R.id.tv_update_version);
+            TextView updateContentText = rootView.findViewById(R.id.tv_update_content_data);
             ImageDisplayUtils.getInstance().displayImage(updateImageView, updateImageUriList.get(position), R.drawable.ic_update_default);
+            versionCodeText.setText(getUpgradeResult.getLatestVersion());
+            updateContentText.setText(updateMsgList.get(position));
             container.addView(rootView);
             return rootView;
         }
