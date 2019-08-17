@@ -31,27 +31,23 @@ import com.inspur.emmcloud.web.util.StrUtil;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
+import org.xutils.x;
 
-import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.text.Format;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
-
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.X509TrustManager;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -66,9 +62,9 @@ public class FileTransferService extends ImpPlugin {
     private static final String TAG = "uploadFile";
     private static final int TIME_OUT = 10 * 10000000; // 超时时间
     private static final String CHARSET = "utf-8"; // 设置编码
+    private static final String SAVE_FILE = "save_file";
     private static double MBDATA = 1048576.0;
     private static double KBDATA = 1024.0;
-    private static final String SAVE_FILE = "save_file";
     // 文件
     private File file;
     private String downloadUrl = "", filepath = "", fileName = "", fileType = "",
@@ -76,9 +72,9 @@ public class FileTransferService extends ImpPlugin {
     // 下载回调
     private String downloadSucCB, downloadFailCB, fileInfo, saveFileCallBack;
     // 上传文件参数
-    private String uploadUrl = "", uploadpath = "", uploadName = "";
+    private String uploadUrl = "", uploadName = "";
     // 上传回调
-    private String uploadProgress, uploadSucCB, uploadFailCB;
+    private String uploadSucCB, uploadFailCB;
     // 提示不含有sd卡
     private AlertDialog msgDlg;
     // 获取SDCard根目录
@@ -99,13 +95,13 @@ public class FileTransferService extends ImpPlugin {
     private TextView ratioText;
     private long totalSize;
     private long downloadSize;
+    private AlertDialog fileUploadDlg;
     /**
      * 记录进度条数量*
      */
     private int progress;
     private ProgressBar progressBar;
     private String downloadFileType = "";
-    private String successCb, failCb;
     // 回传下载结果
     Handler handler = new Handler() {
 
@@ -187,8 +183,6 @@ public class FileTransferService extends ImpPlugin {
                     break;
                 // 上传进度
                 case 3:
-                    int pro = (Integer) msg.obj;
-                    jsCallback(uploadProgress, pro + "");
                     break;
                 // 上传成功
                 case 4:
@@ -204,6 +198,7 @@ public class FileTransferService extends ImpPlugin {
         }
 
     };
+    private String successCb, failCb;
 
     @Override
     public void execute(String action, JSONObject paramsObject) {
@@ -215,7 +210,6 @@ public class FileTransferService extends ImpPlugin {
                 download(paramsObject);
                 break;
             case "saveFile":
-                LogUtils.YfcDebug("params:" + paramsObject.toString());
                 saveFile(paramsObject);
                 break;
             case "selectFile": // 选择文件
@@ -247,7 +241,6 @@ public class FileTransferService extends ImpPlugin {
     }
 
 
-
     /**
      * 下载文件插件为新加一个方法
      *
@@ -277,10 +270,10 @@ public class FileTransferService extends ImpPlugin {
      */
     private void listFile(JSONObject paramsObject) {
         JSONObject optionsJsonObject = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
-//        String fileDicPath = basePath + JSONUtils.getString(optionsJsonObject, "directory", "");
-        String relativePath = JSONUtils.getString(optionsJsonObject, "directory", "");
-        List<String> fileArrayList = FileUtils.getFileNamesInFolder(FilePathUtils.getRealPath(relativePath), false);
-        List<String> folderArrayList = FileUtils.getFileFolderNamesInFolder(FilePathUtils.getRealPath(relativePath));
+        String folderName = JSONUtils.getString(optionsJsonObject, "directory", "");
+        folderName = FilePathUtils.getRealPath(folderName);
+        List<String> fileArrayList = FileUtils.getFileNamesInFolder(folderName, false);
+        List<String> folderArrayList = FileUtils.getFileFolderNamesInFolder(folderName);
         JSONObject jsonObject = new JSONObject();
         List<String> fileArrayListFilter = new ArrayList<>();
         List<String> folderArrayListFilter = new ArrayList<>();
@@ -307,11 +300,12 @@ public class FileTransferService extends ImpPlugin {
      */
     private void deleteFile(JSONObject paramsObject) {
         JSONObject optionsJsonObject = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
-        String relativePath = JSONUtils.getString(optionsJsonObject, "directory", "")
-                + JSONUtils.getString(optionsJsonObject, "fileName", "");
-        String fileDeletePath = FilePathUtils.getRealPath(relativePath);
-        if (FilePathUtils.isSafePath(fileDeletePath)) {
-            boolean isDel = FileUtils.deleteFile(fileDeletePath);
+        String folderName = JSONUtils.getString(optionsJsonObject, "directory", "");
+        String fileName = JSONUtils.getString(optionsJsonObject, "fileName", "");
+        folderName = FilePathUtils.getRealPath(folderName);
+        String relativePath = new File(folderName, fileName).getPath();
+        if (FilePathUtils.isSafePath(relativePath)) {
+            boolean isDel = FileUtils.deleteFile(relativePath);
             jsCallback(isDel ? JSONUtils.getString(paramsObject, "success", "") :
                     JSONUtils.getString(paramsObject, "fail", ""), "");
         } else {
@@ -327,11 +321,11 @@ public class FileTransferService extends ImpPlugin {
      */
     private void readFile(JSONObject paramsObject) {
         JSONObject optionsJsonObject = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
-        String relativePath = JSONUtils.getString(optionsJsonObject, "directory", "")
-                + JSONUtils.getString(optionsJsonObject, "fileName", "");
-        String fileReadPath = FilePathUtils.getRealPath(relativePath);
-        LogUtils.YfcDebug("读文件路径：" + fileReadPath);
-        String readContent = FileUtils.readFile(fileReadPath, "utf-8").toString();
+        String folderName = JSONUtils.getString(optionsJsonObject, "directory", "");
+        String fileName = JSONUtils.getString(optionsJsonObject, "fileName", "");
+        folderName = FilePathUtils.getRealPath(folderName);
+        String relativePath = new File(folderName, fileName).getPath();
+        String readContent = FileUtils.readFile(relativePath, "utf-8").toString();
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("content", readContent);
@@ -366,21 +360,15 @@ public class FileTransferService extends ImpPlugin {
      */
     private void writeFile(JSONObject paramsObject) {
         JSONObject optionsJsonObject = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
-        String relativePath = JSONUtils.getString(optionsJsonObject, "directory", "")
-                + JSONUtils.getString(optionsJsonObject, "fileName", "");
-        String fileSavePath = FilePathUtils.getRealPath(relativePath);
-        LogUtils.YfcDebug("写文件路径：" + fileSavePath);
-        if (FilePathUtils.isSafePath(fileSavePath)) {
-            FileUtils.writeFile(fileSavePath, JSONUtils.getString(optionsJsonObject, "content", ""),
+
+        String folderName = JSONUtils.getString(optionsJsonObject, "directory", "");
+        String fileName = JSONUtils.getString(optionsJsonObject, "fileName", "");
+        folderName = FilePathUtils.getRealPath(folderName);
+        String relativePath = new File(folderName, fileName).getPath();
+        if (FilePathUtils.isSafePath(relativePath)) {
+            FileUtils.writeFile(relativePath, JSONUtils.getString(optionsJsonObject, "content", ""),
                     JSONUtils.getBoolean(optionsJsonObject, "append", true));
-            JSONObject jsonObject = new JSONObject();
-            try {
-                jsonObject.put("path", relativePath);
-                jsCallback(JSONUtils.getString(paramsObject, "success", ""), jsonObject);
-            } catch (Exception e) {
-                jsCallback(JSONUtils.getString(paramsObject, "fail", ""), getErrorJson(e.getMessage()));
-                e.printStackTrace();
-            }
+            jsCallback(JSONUtils.getString(paramsObject, "success", ""));
         } else {
             jsCallback(JSONUtils.getString(paramsObject, "fail", ""), getErrorJson("file path error"));
         }
@@ -581,12 +569,9 @@ public class FileTransferService extends ImpPlugin {
         stopConn = false;
         LayoutInflater layoutInflater = LayoutInflater.from(getFragmentContext());
         View view = layoutInflater
-                .inflate(Res.getLayoutID("web_filetransfer_dialog_file_download_progress")
-                        ,
-                        null);
+                .inflate(Res.getLayoutID("web_filetransfer_dialog_file_download_progress"), null);
         ratioText = (TextView) view.findViewById(Res.getWidgetID("ratio_text"));
         progressBar = (ProgressBar) view.findViewById(Res.getWidgetID("update_progress"));
-
         fileDownloadDlg = new AlertDialog.Builder(getActivity(),
                 android.R.style.Theme_Holo_Light_Dialog)
                 .setTitle(Res.getStringID("file_downloading"))
@@ -759,160 +744,152 @@ public class FileTransferService extends ImpPlugin {
      * @param jsonObject
      */
     private void upload(JSONObject jsonObject) {
-        try {
-            if (!jsonObject.isNull("url"))
-                uploadUrl = jsonObject.getString("url");
-            if (!jsonObject.isNull("filePath"))
-                uploadpath = jsonObject.getString("filePath");
-            if (!jsonObject.isNull("fileName"))
-                uploadName = jsonObject.getString("fileName");
-            if (!jsonObject.isNull("progressCallback"))
-                uploadProgress = jsonObject.getString("progressCallback");
-            if (!jsonObject.isNull("successCallback"))
-                uploadSucCB = jsonObject.getString("successCallback");
-            if (!jsonObject.isNull("errorCallback"))
-                uploadFailCB = jsonObject.getString("errorCallback");
-        } catch (JSONException e) {
-            e.printStackTrace();
+        uploadSucCB = JSONUtils.getString(jsonObject, "success", "");
+        uploadFailCB = JSONUtils.getString(jsonObject, "fail", "");
+        JSONObject optionsObj = JSONUtils.getJSONObject(jsonObject, "options", new JSONObject());
+        uploadUrl = JSONUtils.getString(optionsObj, "url", "");
+        boolean isShowProgress = JSONUtils.getBoolean(optionsObj, "showProgress", false);
+        JSONArray fileArray = JSONUtils.getJSONArray(optionsObj, "files", new JSONArray());
+        List<String> uploadPathList = new ArrayList<>();
+        for (int i = 0; i < fileArray.length(); i++) {
+            JSONObject fileObj = JSONUtils.getJSONObject(fileArray, i, new JSONObject());
+            String filePath = JSONUtils.getString(fileObj, "filePath", "");
+            filePath = FilePathUtils.getRealPath(filePath);
+            uploadPathList.add(filePath);
         }
-        // 上传的文件
-        file = new File(uploadpath);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                uploadFile(file);
-            }
+        JSONObject dataObj = JSONUtils.getJSONObject(optionsObj, "data", null);
+        showFileUploadDlg(uploadPathList, isShowProgress, dataObj);
 
-        }).start();
     }
 
-    /**
-     * 上传文件
-     *
-     * @param
-     * @return 上传结果
-     */
-    private String uploadFile(File uploadfile) {
-        // 上传文件的大小
-        int downnum = 0;
-        // 上传百分比
-        int downcount = 0;
-        // 边界标识 随机生成
-        String BOUNDARY = UUID.randomUUID().toString();
-        // 结束标识
-        String PREFIX = "--", LINE_END = "\r\n";
-        // 内容类型
-        String CONTENT_TYPE = "multipart/form-data";
-        try {
-            URL url = new URL(uploadUrl);
-            HttpURLConnection conn = null;
-            if (url.getProtocol().toLowerCase().equals("https")) {
-                HttpsURLConnection httpsConn = null;
-                httpsConn = (HttpsURLConnection) url
-                        .openConnection();
-                MyX509TrustManager xtm = new MyX509TrustManager();
-
-                MyHostnameVerifier hnv = new MyHostnameVerifier();
-                SSLContext sslContext = null;
-                sslContext = SSLContext.getInstance("TLS"); //或SSL
-                X509TrustManager[] xtmArray = new X509TrustManager[]{xtm};
-                sslContext.init(null, xtmArray, new java.security.SecureRandom());
-                if (sslContext != null) {
-                    HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
+    private void showFileUploadDlg(List<String> uploadPathList, final boolean isShowProgress, JSONObject dataObj) {
+        RequestParams params = new RequestParams(uploadUrl);
+        params.setConnectTimeout(30000);
+        params.setMultipart(true);
+        if (dataObj != null) {
+            Iterator<String> keys = dataObj.keys();
+            while (keys.hasNext()) {
+                try {
+                    String key = keys.next();
+                    params.addBodyParameter(key, dataObj.getString(key));
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                HttpsURLConnection.setDefaultHostnameVerifier(hnv);
-                conn = httpsConn;
-            } else {
-                conn = (HttpURLConnection) url.openConnection();
+
             }
-            conn.setReadTimeout(TIME_OUT);
-            conn.setConnectTimeout(TIME_OUT);
-            // 允许输入流
-            conn.setDoInput(true);
-            // 允许输出流
-            conn.setDoOutput(true);
-            // 不允许使用缓存
-            conn.setUseCaches(false);
-            // 请求方式
-            conn.setRequestMethod("POST");
-            // 设置编码
-            conn.setRequestProperty("Charset", CHARSET);
-            conn.setRequestProperty("connection", "keep-alive");
-            conn.setRequestProperty("Content-Type", CONTENT_TYPE + ";boundary="
-                    + BOUNDARY);
-            if (uploadfile != null) {
-                /**
-                 * 当文件不为空，把文件包装并且上传
-                 */
-                OutputStream outputSteam = conn.getOutputStream();
+        }
+        for (int i = 0; i < uploadPathList.size(); i++) {
+            File file = new File(uploadPathList.get(i));
+            params.addBodyParameter("" + i, file);
+        }
+        LayoutInflater layoutInflater = LayoutInflater.from(getFragmentContext());
+        View view = layoutInflater
+                .inflate(Res.getLayoutID("web_filetransfer_dialog_file_download_progress"), null);
+        final TextView ratioText = view.findViewById(Res.getWidgetID("ratio_text"));
+        final ProgressBar progressBar = view.findViewById(Res.getWidgetID("update_progress"));
 
-                DataOutputStream dos = new DataOutputStream(outputSteam);
-                StringBuffer sb = new StringBuffer();
-                sb.append(PREFIX);
-                sb.append(BOUNDARY);
-                sb.append(LINE_END);
-                /**
-                 * name里面的值为服务器端需要key 只有这个key 才可以得到对应的文件 filename是文件的名字
-                 */
+        final Callback.Cancelable cancelable = x.http().post(params, new Callback.ProgressCallback<String>() {
+            @Override
+            public void onWaiting() {
 
-                sb.append("Content-Disposition: form-data; name=\"img\"; filename=\""
-                        + encode(uploadfile.getName()) + "\"" + LINE_END);
-                sb.append("Content-Type: application/octet-stream; charset="
-                        + CHARSET + LINE_END);
-                sb.append(LINE_END);
-                dos.write(sb.toString().getBytes());
-                InputStream is = new FileInputStream(uploadfile);
-                byte[] bytes = new byte[1024];
-                int len = 0;
-                int fileLength = (int) uploadfile.length();
-                while ((len = is.read(bytes)) != -1) {
-                    dos.write(bytes, 0, len);
-                    downnum += len;
-                    if ((downcount == 0)
-                            || downnum * 100 / fileLength - 1 > downcount) {
-                        downcount += 1;
-                        Message msg = handler.obtainMessage(3);
-                        msg.obj = downnum * 100 / fileLength;
-                        handler.sendMessage(msg);
+            }
+
+            @Override
+            public void onStarted() {
+
+            }
+
+            @Override
+            public void onLoading(long total, long current, boolean isDownloading) {
+                if (isShowProgress) {
+                    int progress = (int) (current * 100 / total);
+                    progressBar.setProgress(progress);
+                    if (total <= 0) {
+                        ratioText.setText(getFragmentContext().getString(Res.getStringID("has_uploaded"))
+                                + setFormat(current));
+                    } else {
+                        String text = progress + "%" + "," + "  "
+                                + setFormat(current) + "/"
+                                + setFormat(total);
+                        ratioText.setText(text);
                     }
                 }
-                is.close();
-                dos.write(LINE_END.getBytes());
-                byte[] end_data = (PREFIX + BOUNDARY + PREFIX + LINE_END)
-                        .getBytes();
-                dos.write(end_data);
-                dos.flush();
-                /**
-                 * 获取响应码 200=成功 当响应成功，获取响应的流
-                 */
-                int res = conn.getResponseCode();
-                if (res == 200) {
-                    // 上传成功
-                    Message msg = handler.obtainMessage(4);
-                    msg.obj = uploadName;
-                    handler.sendMessage(msg);
-                    return SUCCESS;
+
+            }
+
+            @Override
+            public void onSuccess(String result) {
+                callbackFileUploadSuccess(result);
+                if (fileDownloadDlg != null) {
+                    fileDownloadDlg.dismiss();
                 }
             }
-        } catch (Exception e) {
-            // 回调上传失败方法
-            Message msg = handler.obtainMessage(5);
-            msg.obj = uploadName;
-            handler.sendMessage(msg);
-            e.printStackTrace();
+
+            @Override
+            public void onError(Throwable throwable, boolean b) {
+                callbackFileUploadFail(1, throwable.getMessage());
+                if (fileDownloadDlg != null) {
+                    fileDownloadDlg.dismiss();
+                }
+            }
+
+            @Override
+            public void onCancelled(CancelledException e) {
+                callbackFileUploadFail(2, "取消上传！");
+                if (fileDownloadDlg != null) {
+                    fileDownloadDlg.dismiss();
+                }
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        });
+        fileUploadDlg = new AlertDialog.Builder(getActivity(),
+                android.R.style.Theme_Holo_Light_Dialog)
+                .setTitle(Res.getStringID("file_uploading"))
+                .setView(view)
+                .setCancelable(false)
+                .setNegativeButton(Res.getStringID("cancel"),
+                        new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog,
+                                                int which) {
+                                // TODO Auto-generated method stub
+                                dialog.dismiss();
+                                cancelable.cancel();
+                            }
+                        }).create();
+        fileUploadDlg.getWindow().setBackgroundDrawableResource(
+                android.R.color.transparent);
+        if (isShowProgress) {
+            fileUploadDlg.show();
         }
-        return SUCCESS;
     }
 
-    // 对包含中文的字符串进行转码，此为UTF-8。服务器那边要进行一次解码
-    private String encode(String value) {
-        try {
-            return URLEncoder.encode(value, "utf-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            return "";
+    private void callbackFileUploadSuccess(String result) {
+        if (!StringUtils.isBlank(uploadSucCB)) {
+            this.jsCallback(uploadSucCB, result);
         }
     }
+
+    private void callbackFileUploadFail(int status, String errorMessage) {
+        if (!StringUtils.isBlank(uploadFailCB)) {
+            JSONObject obj = new JSONObject();
+            try {
+                obj.put("status", status);
+                obj.put("errorMessage", errorMessage);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            this.jsCallback(uploadFailCB, obj.toString());
+        }
+    }
+
+
 
     /**
      * 格式化数据
