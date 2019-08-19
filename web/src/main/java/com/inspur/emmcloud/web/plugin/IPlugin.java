@@ -59,6 +59,14 @@ public interface IPlugin {
     void jsCallback(String functionName, String param);
 
     /**
+     * 回调JavaScript方法，回调参数是JSON对象
+     *
+     * @param functionName
+     * @param param
+     */
+    void jsCallback(String functionName, JSONObject param);
+
+    /**
      * 回调JavaScript方法,回调参数是字符串数组
      *
      * @param functionName

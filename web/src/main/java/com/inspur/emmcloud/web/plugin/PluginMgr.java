@@ -30,7 +30,7 @@ import com.inspur.emmcloud.web.plugin.staff.SelectStaffService;
 import com.inspur.emmcloud.web.plugin.staff.StuffInformationService;
 import com.inspur.emmcloud.web.plugin.startapp.StartAppService;
 import com.inspur.emmcloud.web.plugin.telephone.TelephoneService;
-import com.inspur.emmcloud.web.plugin.video.VideoRecordService;
+import com.inspur.emmcloud.web.plugin.video.VideoService;
 import com.inspur.emmcloud.web.plugin.window.WindowService;
 import com.inspur.emmcloud.web.ui.ImpCallBackInterface;
 import com.inspur.emmcloud.web.ui.iLog;
@@ -246,8 +246,8 @@ public class PluginMgr {
                 serviceName = TelephoneService.class.getCanonicalName();
             } else if (serviceName.endsWith("SqlService")) {
                 serviceName = SqlService.class.getCanonicalName();
-            } else if (serviceName.endsWith("VideoRecordService")) {
-                serviceName = VideoRecordService.class.getCanonicalName();
+            } else if (serviceName.endsWith("VideoService")) {
+                serviceName = VideoService.class.getCanonicalName();
             } else if (serviceName.endsWith("NFCService")) {
                 serviceName = NFCService.class.getCanonicalName();
             }
@@ -274,7 +274,7 @@ public class PluginMgr {
         service = service.trim();
         IPlugin plugin = null;
         Log.d("jason", "serviceName=" + service);
-        if (!entries.containsKey(service) || service.equals(FileTransferService.class.getCanonicalName())) {
+        if (!entries.containsKey(service)) {
             plugin = createPlugin(service);
             if (plugin != null) {
                 entries.put(service, plugin);
@@ -323,54 +323,69 @@ public class PluginMgr {
      * activity关闭之前调用方法关闭相应的空间
      */
     public void onDestroy() {
-        for (IPlugin plugin : entries.values()) {
-            if (plugin != null) {
-                plugin.onDestroy();
+        if (entries != null) {
+            for (IPlugin plugin : entries.values()) {
+                if (plugin != null) {
+                    plugin.onDestroy();
+                }
             }
+            entries.clear();
+            entries = null;
         }
-        entries.clear();
-        entries = null;
+
     }
 
     /**
      * activity onResume事件
      */
     public void onResume() {
-        for (IPlugin plugin : entries.values()) {
-            if (plugin != null) {
-                plugin.onActivityResume();
+        if (entries != null) {
+            for (IPlugin plugin : entries.values()) {
+                if (plugin != null) {
+                    plugin.onActivityResume();
+                }
             }
         }
+
     }
 
     /**
      * activity onPause事件
      */
     public void onPause() {
-        for (IPlugin plugin : entries.values()) {
-            if (plugin != null) {
-                plugin.onActivityPause();
+        if (entries != null) {
+            for (IPlugin plugin : entries.values()) {
+                if (plugin != null) {
+                    plugin.onActivityPause();
+                }
             }
         }
+
     }
 
     /**
      * activity onResume事件
      */
     public void onStar() {
-        for (IPlugin plugin : entries.values()) {
-            if (plugin != null) {
-                plugin.onActivityStart();
+        if (entries != null) {
+            for (IPlugin plugin : entries.values()) {
+                if (plugin != null) {
+                    plugin.onActivityStart();
+                }
             }
         }
+
     }
 
     public void onNewIntent(Intent intent) {
-        for (IPlugin plugin : entries.values()) {
-            if (plugin != null) {
-                plugin.onActivityNewIntent(intent);
+        if (entries != null) {
+            for (IPlugin plugin : entries.values()) {
+                if (plugin != null) {
+                    plugin.onActivityNewIntent(intent);
+                }
             }
         }
+
     }
 
 }

@@ -43,7 +43,7 @@ public class MapService extends ImpPlugin {
             case "doNaviByMapId":
                 navigationToDestination(jsonObject);
                 break;
-            case "navigationByAutonavi":
+            case "navigationByAutoNavi":
                 navigationByAutonavi(jsonObject);
                 break;
             default:
@@ -102,11 +102,12 @@ public class MapService extends ImpPlugin {
             return;
         }
         try {
-            Double fromLongitude = JSONUtils.getDouble(jsonObject, "srclng", null);
-            Double fromLatitude = JSONUtils.getDouble(jsonObject, "srclat", null);
-            Double toLongitude = JSONUtils.getDouble(jsonObject, "dstlng", 0);
-            Double toLatitude = JSONUtils.getDouble(jsonObject, "dstlat", 0);
-            String coordType = JSONUtils.getString(jsonObject, "coordtype", "WGS84");
+            JSONObject optionsObj = JSONUtils.getJSONObject(jsonObject, "options", new JSONObject());
+            Double fromLongitude = JSONUtils.getDouble(optionsObj, "srclng", null);
+            Double fromLatitude = JSONUtils.getDouble(optionsObj, "srclat", null);
+            Double toLongitude = JSONUtils.getDouble(optionsObj, "dstlng", 0);
+            Double toLatitude = JSONUtils.getDouble(optionsObj, "dstlat", 0);
+            String coordType = JSONUtils.getString(optionsObj, "coordType", "GCJ02");
             if (coordType.equals("WGS84")) {
                 if (fromLatitude != null && fromLatitude != null) {
                     double[] fromLocation = ECMLoactionTransformUtils.wgs84togcj02(fromLongitude, fromLatitude);
@@ -129,9 +130,9 @@ public class MapService extends ImpPlugin {
             StringBuilder builder = new StringBuilder("amapuri://route/plan?sourceApplication=");
             builder.append(getFragmentContext().getPackageName());
             if (fromLatitude != null && fromLatitude != null) {
-                builder.append("&slat=").append(fromLatitude).append("&slon").append(fromLongitude);
+                builder.append("&slat=").append(fromLatitude).append("&slon=").append(fromLongitude);
             }
-            builder.append("&dlat=").append(toLatitude).append("&dlon").append(toLongitude);
+            builder.append("&dlat=").append(toLatitude).append("&dlon=").append(toLongitude).append("&dev=0&t=0");
             Intent intent = getFragmentContext().getPackageManager()
                     .getLaunchIntentForPackage("com.autonavi.minimap");
             intent.addCategory(Intent.CATEGORY_DEFAULT);
@@ -139,7 +140,6 @@ public class MapService extends ImpPlugin {
             intent.setData(Uri.parse(builder.toString()));
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             getActivity().startActivity(intent);
-            callbackSuccess();
         } catch (Exception e) {
             e.printStackTrace();
             callbackFail(e.getMessage());
@@ -155,7 +155,13 @@ public class MapService extends ImpPlugin {
 
     private void callbackFail(String errorMessage) {
         if (!StringUtils.isBlank(failCb)) {
-            this.jsCallback(failCb, errorMessage);
+            JSONObject object = new JSONObject();
+            try {
+                object.put("errorMessage", errorMessage);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            this.jsCallback(failCb, object.toString());
         }
 
     }

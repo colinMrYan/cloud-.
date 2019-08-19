@@ -838,6 +838,21 @@ public class AppUtils {
     }
 
     /**
+     * 获取app图标资源名称
+     *
+     * @param context
+     * @return
+     */
+    public static String getAppIconResName(Context context) {
+        String appIconResName = "ic_launcher";
+        if (!isAppVersionStandard()) {
+            String appFirstLoadAlis =
+                    PreferencesUtils.getString(BaseApplication.getInstance(), Constant.PREF_APP_LOAD_ALIAS);
+            appIconResName = "ic_launcher_" + appFirstLoadAlis;
+        }
+        return appIconResName;
+    }
+    /**
      * 判断权限集合
      * permissions 权限数组
      * return true-表示没有改权限  false-表示权限已开启
