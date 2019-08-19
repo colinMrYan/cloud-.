@@ -872,7 +872,8 @@ public class FileTransferService extends ImpPlugin {
 
     private void callbackFileUploadSuccess(String result) {
         if (!StringUtils.isBlank(uploadSucCB)) {
-            this.jsCallback(uploadSucCB, result);
+            JSONObject obj = JSONUtils.getJSONObject(result);
+            this.jsCallback(uploadSucCB, obj);
         }
     }
 
@@ -886,7 +887,7 @@ public class FileTransferService extends ImpPlugin {
                 e.printStackTrace();
             }
 
-            this.jsCallback(uploadFailCB, obj.toString());
+            this.jsCallback(uploadFailCB, obj);
         }
     }
 
