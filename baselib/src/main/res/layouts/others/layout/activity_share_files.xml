@@ -73,7 +73,7 @@
                 android:paddingTop="5dp"
                 android:singleLine="true"
                 android:textColor="#333333"
-                android:textSize="16sp"
+                android:textSize="17sp"
                 android:visibility="gone" />
         </RelativeLayout>
 

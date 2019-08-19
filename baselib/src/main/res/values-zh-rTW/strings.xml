@@ -219,10 +219,15 @@
     <string name="comment">評論</string>
     <string name="write_comment">寫評論</string>
 
+    <string name="baselib_share_many_picture">等%1$d張圖片</string>
     <string name="news_font_name_text">字體</string>
     <string name="baselib_share_to">分享到</string>
     <string name="baselib_share_success">分享成功</string>
     <string name="baselib_share_fail">分享失敗</string>
+    <string name="baselib_share_image">[圖片]</string>
+    <string name="baselib_share_file">[文件]</string>
+    <string name="baselib_share_link">[鏈接]</string>
+    <string name="baselib_share_send_to">發送給：</string>
     <string name="login_please_input_password"> 請輸入密碼</string>
     <string name="login">登錄</string>
     <string name="login_user_not_bound_enterprise">當前用戶未綁定企業，請聯繫管理員！</string>

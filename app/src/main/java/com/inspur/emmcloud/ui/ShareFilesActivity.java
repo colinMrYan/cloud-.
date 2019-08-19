@@ -7,16 +7,20 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.baselib.widget.dialogs.MyDialog;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
@@ -25,6 +29,7 @@ import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
+import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.ui.appcenter.volume.VolumeHomePageActivity;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
@@ -33,6 +38,7 @@ import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.TabAndAppExistUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
 
 import org.json.JSONArray;
@@ -241,13 +247,16 @@ public class ShareFilesActivity extends BaseActivity {
                 && NetUtils.isNetworkConnected(getApplicationContext())) {
             String result = data.getStringExtra("searchResult");
             try {
+                String userOrChannelId = "";
+                boolean isGroup = false;
                 JSONObject jsonObject = new JSONObject(result);
                 if (jsonObject.has("people")) {
                     JSONArray peopleArray = jsonObject.getJSONArray("people");
                     if (peopleArray.length() > 0) {
                         JSONObject peopleObj = peopleArray.getJSONObject(0);
-                        String uid = peopleObj.getString("pid");
-                        createDirectChannel(uid);
+                        userOrChannelId = peopleObj.getString("pid");
+                        LogUtils.LbcDebug("userOrChannelId:" + userOrChannelId);
+                        isGroup = false;
                     }
                 }
 
@@ -256,15 +265,70 @@ public class ShareFilesActivity extends BaseActivity {
                             .getJSONArray("channelGroup");
                     if (channelGroupArray.length() > 0) {
                         JSONObject cidObj = channelGroupArray.getJSONObject(0);
-                        String cid = cidObj.getString("cid");
-                        startChannelActivity(cid);
+                        userOrChannelId = cidObj.getString("cid");
+                        LogUtils.LbcDebug("userOrChannelId111111:" + userOrChannelId);
+                        isGroup = true;
                     }
+                }
+                if (StringUtils.isBlank(userOrChannelId)) {
+                    ToastUtils.show(MyApplication.getInstance(), getString(R.string.baselib_share_fail));
+                } else {
+                    showSendSureDialog(userOrChannelId, isGroup);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 ToastUtils.show(MyApplication.getInstance(), getString(R.string.baselib_share_fail));
             }
         }
+    }
+
+    /**
+     * 弹出分享确认框
+     */
+    private void showSendSureDialog(final String uid, final boolean isGroup) {
+
+        ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(uid);
+        final MyDialog dialog = new MyDialog(this,
+                R.layout.chat_out_share_sure_dialog);
+        Button okBtn = dialog.findViewById(R.id.ok_btn);
+        okBtn.setText(getString(R.string.ok));
+        ImageView userHeadImage = dialog.findViewById(R.id.iv_share_user_head);
+        TextView fileNameText = dialog.findViewById(R.id.tv_share_file_name);
+        TextView userNameText = dialog.findViewById(R.id.tv_share_user_name);
+        String photoUrl = APIUri.getChannelImgUrl(MyApplication.getInstance(), uid);
+        ImageDisplayUtils.getInstance().displayRoundedImage(userHeadImage, photoUrl, R.drawable.icon_person_default, ShareFilesActivity.this, 32);
+        userNameText.setText(contactUser.getName());
+        String firstFileName = "";
+        if (uriList.get(0).contains("/")) {
+            firstFileName = uriList.get(0).substring((uriList.get(0).lastIndexOf("/")) + 1, uriList.get(0).length());
+        } else {
+            firstFileName = uriList.get(0);
+        }
+        String shareManyPictures = getResources().getString(R.string.baselib_share_many_picture, uriList.size());
+        String fileType = isImageUriList(uriList) ? getString(R.string.baselib_share_image) : getString(R.string.baselib_share_file);
+        fileNameText.setText(fileType + firstFileName + (uriList.size() > 1 ? shareManyPictures : ""));
+        okBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                if (isGroup) {
+                    startChannelActivity(uid);
+                } else {
+                    createDirectChannel(uid);
+                }
+
+            }
+        });
+        Button cancelBt = dialog.findViewById(R.id.cancel_btn);
+        cancelBt.setText(getString(R.string.cancel));
+        cancelBt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+
+            }
+        });
+        dialog.show();
     }
 
     /**

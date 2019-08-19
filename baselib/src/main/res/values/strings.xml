@@ -226,7 +226,11 @@
     <string name="baselib_share_success">分享成功</string>
     <string name="baselib_share_fail">分享失败</string>
 
-
+    <string name="baselib_share_many_picture">等%1$d张图片</string>
+    <string name="baselib_share_image">[图片]</string>
+    <string name="baselib_share_file">[文件]</string>
+    <string name="baselib_share_link">[链接]</string>
+    <string name="baselib_share_send_to">发送给：</string>
     <string name="login_please_input_password"> 请输入密码</string>
     <string name="login">登录</string>
     <string name="login_user_not_bound_enterprise">当前用户未绑定企业，请联系管理员！</string>
