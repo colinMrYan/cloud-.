@@ -1127,8 +1127,10 @@
     <string name="download_fail">下载失败</string>
     <string name="download_success">下载成功</string>
     <string name="file_downloading">文件下载中，请稍候...</string>
+    <string name="file_uploading">文件上传中，请稍候...</string>
     <string name="file_download_success">文件已下载成功，是否打开？</string>
     <string name="has_downloaded">已下载</string>
+    <string name="has_uploaded">已上传</string>
     <string name="imp_content">内容</string>
     <string name="file_ok">确定</string>
     <string name="file_cancel">取消</string>
