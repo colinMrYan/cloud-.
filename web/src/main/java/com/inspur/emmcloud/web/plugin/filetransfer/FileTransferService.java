@@ -102,6 +102,7 @@ public class FileTransferService extends ImpPlugin {
     private int progress;
     private ProgressBar progressBar;
     private String downloadFileType = "";
+    private String replaceBasePath = FilePathUtils.BASE_PATH + "/";
     // 回传下载结果
     Handler handler = new Handler() {
 
@@ -171,7 +172,7 @@ public class FileTransferService extends ImpPlugin {
                             } else if (downloadFileType.equals(SAVE_FILE) && StrUtil.strIsNotNull(saveFileCallBack)) {
                                 JSONObject jsonObject = new JSONObject();
                                 try {
-                                    jsonObject.put("path", reallyPath.replace(FilePathUtils.BASE_PATH, ""));
+                                    jsonObject.put("path", reallyPath.replace(replaceBasePath, ""));
                                     jsonObject.put("status", 1);
                                 } catch (Exception e1) {
                                     e1.printStackTrace();
@@ -278,10 +279,10 @@ public class FileTransferService extends ImpPlugin {
         List<String> fileArrayListFilter = new ArrayList<>();
         List<String> folderArrayListFilter = new ArrayList<>();
         for (int i = 0; i < fileArrayList.size(); i++) {
-            fileArrayListFilter.add(fileArrayList.get(i).replace(FilePathUtils.BASE_PATH, ""));
+            fileArrayListFilter.add(fileArrayList.get(i).replace(replaceBasePath, ""));
         }
         for (int i = 0; i < folderArrayList.size(); i++) {
-            folderArrayListFilter.add(folderArrayList.get(i).replace(FilePathUtils.BASE_PATH, ""));
+            folderArrayListFilter.add(folderArrayList.get(i).replace(replaceBasePath, ""));
         }
         try {
             jsonObject.put("folders", new JSONArray(folderArrayListFilter));

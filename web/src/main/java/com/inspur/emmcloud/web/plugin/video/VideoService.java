@@ -82,6 +82,7 @@ public class VideoService extends ImpPlugin {
                                 }
                                 intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
                                 intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+                                intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 600);
 
                                 if (getImpCallBackInterface() != null) {
                                     getImpCallBackInterface().onStartActivityForResult(intent, ImpFragment.REQUEST_CODE_RECORD_VIDEO);
