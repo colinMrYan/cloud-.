@@ -8,8 +8,10 @@ import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
+import com.inspur.emmcloud.bean.system.MainTabPayLoad;
 import com.inspur.emmcloud.bean.system.MainTabProperty;
 import com.inspur.emmcloud.bean.system.MainTabResult;
+import com.inspur.emmcloud.bean.system.MainTabTitleResult;
 import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
 import com.inspur.emmcloud.bean.system.navibar.NaviBarScheme;
 
@@ -135,8 +137,8 @@ public class AppTabUtils {
      * @param context
      * @return
      */
-    public static List<MainTabResult> getMainTabResultList(Context context) {
-        ArrayList<MainTabResult> mainTabResultList = null;
+    public static ArrayList<MainTabResult> getMainTabResultList(Context context) {
+        ArrayList<MainTabResult> mainTabResultList = new ArrayList<>();
         String currentTabLayoutName = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(),Constant.APP_TAB_LAYOUT_NAME,"");
         NaviBarModel naviBarModel = new NaviBarModel(PreferencesByUserAndTanentUtils.getString(context,Constant.APP_TAB_LAYOUT_DATA,""));
         List<NaviBarScheme> naviBarSchemeList = naviBarModel.getNaviBarPayload().getNaviBarSchemeList();
@@ -159,13 +161,67 @@ public class AppTabUtils {
             }
         }
         //如果前面两个都没有则使用mainTab
-        if(mainTabResultList == null || mainTabResultList.size() == 0){
+        if (mainTabResultList == null || mainTabResultList.size() == 0) {
             String appTabs = PreferencesByUserAndTanentUtils.getString(context,
                     Constant.PREF_APP_TAB_BAR_INFO_CURRENT, "");
             GetAppMainTabResult getAppMainTabResult = new GetAppMainTabResult(appTabs);
             mainTabResultList = getAppMainTabResult.getMainTabPayLoad().getMainTabResultList();
         }
+        //如果MainTab也没有则使用默认
+        if(mainTabResultList == null || mainTabResultList.size() == 0){
+            mainTabResultList.add(getApplicationMainTab());
+            mainTabResultList.add(getMineTab());
+        }
+        //最终得到tab的List之后发送给CommunicationFragment
+        if (mainTabResultList != null) {
+            GetAppMainTabResult getAppMainTabResult = new GetAppMainTabResult();
+            MainTabPayLoad mainTabPayLoad = new MainTabPayLoad();
+            mainTabPayLoad.setMainTabResultList(mainTabResultList);
+            getAppMainTabResult.setMainTabPayLoad(mainTabPayLoad);
+            // 发送到CommunicationFragment
+            EventBus.getDefault().post(getAppMainTabResult);
+        }
         return mainTabResultList;
+    }
+
+    /**
+     * 生成applicationMainTab
+     *
+     * @return
+     */
+    private static MainTabResult getApplicationMainTab() {
+        MainTabResult applicationTabResult = new MainTabResult();
+        applicationTabResult.setIcon("application");
+        applicationTabResult.setName("application");
+        applicationTabResult.setUri(Constant.APP_TAB_BAR_APPLICATION);
+        applicationTabResult.setType("native");
+        applicationTabResult.setSelected(false);
+        MainTabTitleResult applicationTabTitleResult = new MainTabTitleResult();
+        applicationTabTitleResult.setZhHant("應用");
+        applicationTabTitleResult.setZhHans("应用");
+        applicationTabTitleResult.setEnUS("Apps");
+        applicationTabResult.setMainTabTitleResult(applicationTabTitleResult);
+        return applicationTabResult;
+    }
+
+    /**
+     * 生成mainTab
+     *
+     * @return
+     */
+    private static MainTabResult getMineTab() {
+        MainTabResult mineTabResult = new MainTabResult();
+        mineTabResult.setIcon("me");
+        mineTabResult.setName("me");
+        mineTabResult.setUri(Constant.APP_TAB_BAR_PROFILE);
+        mineTabResult.setType("native");
+        mineTabResult.setSelected(false);
+        MainTabTitleResult mainTabTitleResult = new MainTabTitleResult();
+        mainTabTitleResult.setZhHant("我");
+        mainTabTitleResult.setZhHans("我");
+        mainTabTitleResult.setEnUS("Me");
+        mineTabResult.setMainTabTitleResult(mainTabTitleResult);
+        return mineTabResult;
     }
 
 }
