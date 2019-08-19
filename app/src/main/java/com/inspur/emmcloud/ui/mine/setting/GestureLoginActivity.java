@@ -255,7 +255,7 @@ public class GestureLoginActivity extends BaseActivity {
      * @return
      */
     private boolean getIsHardwareEnable(FingerprintIdentify cloudFingerprintIdentify) {
-        return cloudFingerprintIdentify.isHardwareEnable();
+        return cloudFingerprintIdentify == null ? false : cloudFingerprintIdentify.isHardwareEnable();
     }
 
     /**
