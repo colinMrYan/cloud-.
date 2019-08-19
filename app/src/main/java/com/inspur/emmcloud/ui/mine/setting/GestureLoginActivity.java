@@ -2,15 +2,18 @@ package com.inspur.emmcloud.ui.mine.setting;
 
 import android.os.Build;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
@@ -51,6 +54,8 @@ public class GestureLoginActivity extends BaseActivity {
     TextView gestureMessage;
     @BindView(R.id.forget_gesture_btn)
     Button forgetGestureBtn;
+    @BindView(R.id.btn_use_finger_print)
+    Button fingerPrintBtn;
     private String gesturePassword;
     private boolean isLogin = false;
     private int errorTime = 0;
@@ -140,19 +145,22 @@ public class GestureLoginActivity extends BaseActivity {
         CircleTextImageView circleImageView = findViewById(R.id.gesture_login_user_head_img);
         ImageDisplayUtils.getInstance().displayImage(circleImageView,
                 userHeadImgUri, R.drawable.icon_person_default);
-        LogUtils.YfcDebug("是否开启指纹开关：" + PreferencesByUserAndTanentUtils.getBoolean(this, Constant.SAFE_CENTER_FINGER_PRINT, false));
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && PreferencesByUserAndTanentUtils.getBoolean(this, Constant.SAFE_CENTER_FINGER_PRINT, false)) {
+        boolean isFingerPrintOpen = PreferencesByUserAndTanentUtils.getBoolean(this, Constant.SAFE_CENTER_FINGER_PRINT, false);
+        fingerPrintBtn.setVisibility(isFingerPrintOpen ? View.VISIBLE : View.GONE);
+        if (!isFingerPrintOpen) {
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+            layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+            layoutParams.topMargin = DensityUtil.dip2px(56);
+            forgetGestureBtn.setPadding(DensityUtil.dip2px(20), DensityUtil.dip2px(20), DensityUtil.dip2px(20), DensityUtil.dip2px(20));
+            forgetGestureBtn.setLayoutParams(layoutParams);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && isFingerPrintOpen) {
             cloudFingerprintIdentify = new FingerprintIdentify(this);
-            LogUtils.YfcDebug("启用指纹识别");
             initFingerPrint();
         }
     }
 
     private void showFingerPrintDialog() {
-//        if(cloudFingerprintIdentify != null && cloudFingerprintIdentify.isRegisteredFingerprint()){
-//            LogUtils.YfcDebug("恢复指纹识别功能");
-//            cloudFingerprintIdentify.resumeIdentify();
-//        }
         final MyDialog myDialog = new MyDialog(GestureLoginActivity.this, R.layout.safe_finger_print_dialog);
         myDialog.setCancelable(false);
         TextView cancelBtn = myDialog.findViewById(R.id.tv_finger_print_cancel);
