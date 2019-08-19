@@ -715,6 +715,9 @@
     <string name="setting_gesture_force_set">根据企业安全性原则，需要您设置手势密码</string>
     <string name="setting_gesture_force_open">根据企业安全性原则，您不可以关闭手势密码</string>
 
+    <string name="setting_update_this_time_hint">本次更新</string>
+    <string name="setting_update_wifi_download_package_hint">WiFi下已自动下载安装包</string>
+
     <string name="contact">通讯录</string>
     <string name="web">web</string>
     <string name="mine_theme_switch">换肤</string>

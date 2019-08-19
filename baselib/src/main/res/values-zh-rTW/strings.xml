@@ -730,6 +730,8 @@
     <string name="modify_jump">跳過</string>
     <string name="modify_welcom_user_cloud">歡迎使用雲+</string>
     <string name="modify_first_use">這是您第一次使用雲+，是否設置通行證密碼，以方便下次登錄</string>
+    <string name="setting_update_this_time_hint">本次更新</string>
+    <string name="setting_update_wifi_download_package_hint">WiFi下已自動下載安裝包</string>
 
     <!-- 使用者資訊頁面部分 -->
     <string name="user_info_text">個人資訊</string>

@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:gravity="center"
-            android:text="本次更新"
+            android:text="@string/setting_update_this_time_hint"
             android:textColor="#333333"
             android:textSize="16sp" />
 
@@ -52,7 +52,6 @@
         android:lines="2"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
-        android:text="支持手势创建、修改日程时间"
         android:textColor="#888888"
         android:textSize="13sp" />
 
