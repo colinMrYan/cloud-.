@@ -1098,8 +1098,10 @@
     <string name="download_fail">下載失敗</string>
     <string name="download_success">下載成功</string>
     <string name="file_downloading">文件下載中，請稍候...</string>
+    <string name="file_uploading">文件上傳中，請稍候...</string>
     <string name="file_download_success">檔案已下載成功，是否打開？</string>
     <string name="has_downloaded">已下載</string>
+    <string name="has_uploaded">已上傳</string>
     <string name="imp_content">內容</string>
     <string name="file_ok">確定</string>
     <string name="file_cancel">取消</string>
