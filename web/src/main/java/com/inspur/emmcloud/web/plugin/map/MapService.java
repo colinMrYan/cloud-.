@@ -161,7 +161,7 @@ public class MapService extends ImpPlugin {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            this.jsCallback(failCb, object.toString());
+            this.jsCallback(failCb, object);
         }
 
     }

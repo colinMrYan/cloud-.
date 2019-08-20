@@ -21,6 +21,7 @@ import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
 import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
 import com.inspur.emmcloud.basemodule.api.HttpUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.bean.ChatFileUploadInfo;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileUploadTokenResult;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.Conversation;
@@ -1067,21 +1068,23 @@ public class ChatAPIService {
      * 获取聊天文件上传Token
      *
      * @param fileName
-     * @param cid
+     * @param chatFileUploadInfo
      */
-    public void getFileUploadToken(final String fileName, final String cid, final boolean isMediaVoice) {
+    public void getFileUploadToken(final String fileName, final ChatFileUploadInfo chatFileUploadInfo) {
+        String cid = chatFileUploadInfo.getMessage().getChannel();
+        boolean isMediaVoice = chatFileUploadInfo.getMessage().getType().equals(Message.MESSAGE_TYPE_MEDIA_VOICE);
         final String url = isMediaVoice ? APIUri.getUploadMediaVoiceFileTokenUrl(cid) : APIUri.getUploadFileTokenUrl(cid);
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
         params.addParameter("name", fileName);
         HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
-                apiInterface.returnChatFileUploadTokenSuccess(new GetVolumeFileUploadTokenResult(new String(arg0)));
+                apiInterface.returnChatFileUploadTokenSuccess(new GetVolumeFileUploadTokenResult(new String(arg0)), chatFileUploadInfo);
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnChatFileUploadTokenFail(error, responseCode);
+                apiInterface.returnChatFileUploadTokenFail(error, responseCode, chatFileUploadInfo);
             }
 
             @Override
@@ -1089,7 +1092,7 @@ public class ChatAPIService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        getFileUploadToken(fileName, cid, isMediaVoice);
+                        getFileUploadToken(fileName, chatFileUploadInfo);
                     }
 
                     @Override

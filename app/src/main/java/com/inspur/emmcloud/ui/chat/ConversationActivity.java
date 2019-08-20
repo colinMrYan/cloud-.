@@ -75,12 +75,12 @@ import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.ui.schedule.meeting.ScheduleAddActivity;
+import com.inspur.emmcloud.util.privates.ChatFileUploadManagerUtils;
 import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
-import com.inspur.emmcloud.util.privates.MessageRecourceUploadUtils;
 import com.inspur.emmcloud.util.privates.NotificationUpgradeUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
 import com.inspur.emmcloud.util.privates.Voice2StringMessageUtils;
@@ -982,8 +982,7 @@ public class ConversationActivity extends ConversationBaseActivity {
      * @param fakeMessage
      */
     private void sendMessageWithFile(final Message fakeMessage) {
-        MessageRecourceUploadUtils messageRecourceUploadUtils = new MessageRecourceUploadUtils(MyApplication.getInstance(), cid);
-        messageRecourceUploadUtils.setProgressCallback(new ProgressCallback() {
+        ProgressCallback progressCallback = new ProgressCallback() {
             @Override
             public void onSuccess(VolumeFile volumeFile) {
                 switch (fakeMessage.getType()) {
@@ -1031,15 +1030,15 @@ public class ConversationActivity extends ConversationBaseActivity {
 
             @Override
             public void onLoading(int progress) {
-
+                //此处不进行loading进度，因为消息的发送进度不等于资源的发送进度
             }
 
             @Override
             public void onFail() {
                 setMessageSendFailStatus(fakeMessage.getId());
             }
-        });
-        messageRecourceUploadUtils.uploadResFile(fakeMessage);
+        };
+        ChatFileUploadManagerUtils.getInstance().uploadResFile(fakeMessage, progressCallback);
     }
 
 
