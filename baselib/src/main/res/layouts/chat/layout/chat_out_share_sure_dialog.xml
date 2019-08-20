@@ -54,7 +54,6 @@
         android:background="#F6F6F6"
         android:gravity="left"
         android:maxLines="3"
-        android:minHeight="40dp"
         android:padding="5dp" />
 
     <View
