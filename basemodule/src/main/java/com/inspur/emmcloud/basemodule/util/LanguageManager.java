@@ -191,8 +191,6 @@ public class LanguageManager extends BaseModuleAPIInterfaceInstance {
             if (languageName.equals("followSys")) {
                 List<Language> commonLanguageList = getCommonLanguageList(null);
                 boolean isContainDefault = false;
-                LogUtils.jasonDebug("Resources.getSystem().getConfiguration().locale.getCountry())=" + Resources.getSystem().getConfiguration().locale.toString());
-
                 if (currentLocal.contains("zh_CN")) {
                     currentLocal = "zh-CN";
                 } else if (currentLocal.contains("Hant") || currentLocal.contains("zh_TW") || currentLocal.contains("zh_HK")) {
@@ -202,10 +200,8 @@ public class LanguageManager extends BaseModuleAPIInterfaceInstance {
                 } else {
                     currentLocal = Resources.getSystem().getConfiguration().locale.getCountry();
                 }
-                LogUtils.jasonDebug("localSyStemLanguage==" + currentLocal);
                 for (int i = 0; i < commonLanguageList.size(); i++) {
                     Language commonLanguage = commonLanguageList.get(i);
-                    LogUtils.jasonDebug("commonLanguage.getIso()==" + commonLanguage.getIso());
                     if (commonLanguage.getIso().contains(currentLocal)) {
                         setCurrentLanguageJson(commonLanguage.toString());
                         languageJson = commonLanguage.toString();
@@ -214,12 +210,9 @@ public class LanguageManager extends BaseModuleAPIInterfaceInstance {
                         break;
                     }
                 }
-                LogUtils.jasonDebug("isContainDefault==" + isContainDefault);
                 if (!isContainDefault) {
                     setCurrentLanguageJson(commonLanguageList.get(0).toString());
                     languageJson = commonLanguageList.get(0).toString();
-                    LogUtils.jasonDebug("commonLanguageList.get(0).toString()==" + commonLanguageList.get(0).toString());
-                    LogUtils.jasonDebug("languageJson==" + languageJson);
                 }
             }
             PreferencesUtils.putString(BaseApplication.getInstance(), Constant.PREF_LAST_LANGUAGE, languageJson);
