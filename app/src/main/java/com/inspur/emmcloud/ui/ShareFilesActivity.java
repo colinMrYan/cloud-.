@@ -16,11 +16,9 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
-import com.inspur.emmcloud.baselib.util.ImageUtils;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
-import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
 import com.inspur.emmcloud.baselib.widget.dialogs.MyDialog;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
@@ -283,30 +281,21 @@ public class ShareFilesActivity extends BaseActivity {
         final MyDialog dialog = new MyDialog(this,
                 R.layout.chat_out_share_sure_dialog);
         Button okBtn = dialog.findViewById(R.id.ok_btn);
-        CircleTextImageView groupHeadImage = dialog.findViewById(R.id.iv_share_group_head);
         ImageView userHeadImage = dialog.findViewById(R.id.iv_share_user_head);
         TextView fileNameText = dialog.findViewById(R.id.tv_share_file_name);
         TextView userNameText = dialog.findViewById(R.id.tv_share_user_name);
         String contactName = "";
+        String headPath = "";
         if (isGroup) {
             Conversation conversation = ConversationCacheUtils.getConversation(this, uid);
             contactName = conversation.getName();
-            File file = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH + "/" + MyApplication.getInstance().getTanent() + uid + "_100.png1");
-            if (file.exists()) {
-                groupHeadImage.setImageBitmap(ImageUtils.getBitmapByFile(file));
-            } else {
-                groupHeadImage.setImageResource(R.drawable.icon_channel_group_default);
-            }
-            userHeadImage.setVisibility(View.GONE);
-            groupHeadImage.setVisibility(View.VISIBLE);
+            headPath = MyAppConfig.LOCAL_CACHE_PHOTO_PATH + "/" + MyApplication.getInstance().getTanent() + uid + "_100.png1";
         } else {
             ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(uid);
             contactName = contactUser.getName();
-            String photoUrl = APIUri.getChannelImgUrl(MyApplication.getInstance(), uid);
-            ImageDisplayUtils.getInstance().displayRoundedImage(userHeadImage, photoUrl, R.drawable.icon_person_default, ShareFilesActivity.this, 32);
-            userHeadImage.setVisibility(View.VISIBLE);
-            groupHeadImage.setVisibility(View.GONE);
+            headPath = APIUri.getChannelImgUrl(MyApplication.getInstance(), uid);
         }
+        ImageDisplayUtils.getInstance().displayRoundedImage(userHeadImage, headPath, R.drawable.icon_person_default, ShareFilesActivity.this, 32);
         okBtn.setText(getString(R.string.ok));
         userNameText.setText(contactName);
         String firstFileName = "";
