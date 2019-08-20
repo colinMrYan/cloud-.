@@ -1,0 +1,47 @@
+package com.inspur.emmcloud.bean;
+
+import com.inspur.emmcloud.bean.chat.Message;
+import com.inspur.emmcloud.interf.ProgressCallback;
+
+/**
+ * Created by chenmch on 2019/8/20.
+ */
+
+public class ChatFileUploadInfo {
+    private Message message;
+    private ProgressCallback callback;
+
+    public ChatFileUploadInfo(Message message, ProgressCallback callback) {
+        this.message = message;
+        this.callback = callback;
+    }
+
+    public Message getMessage() {
+        return message;
+    }
+
+    public void setMessage(Message message) {
+        this.message = message;
+    }
+
+    public ProgressCallback getCallback() {
+        return callback;
+    }
+
+    public void setCallback(ProgressCallback callback) {
+        this.callback = callback;
+    }
+
+    public boolean equals(Object other) {
+
+        if (this == other)
+            return true;
+        if (other == null)
+            return false;
+        if (!(other instanceof ChatFileUploadInfo))
+            return false;
+
+        final ChatFileUploadInfo otherChatFileUploadInfo = (ChatFileUploadInfo) other;
+        return getMessage().getId().equals(otherChatFileUploadInfo.getMessage().getId());
+    }
+}

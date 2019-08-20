@@ -1,8 +1,12 @@
 package com.inspur.emmcloud.bean.appcenter.volume;
 
 import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 
 import org.json.JSONObject;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by chenmch on 2017/11/20.
@@ -83,6 +87,20 @@ public class GetVolumeFileUploadTokenResult {
     }
 
     public String getCallbackBody() {
+        StringBuffer buffer = new StringBuffer(callbackBody);
+        Pattern pattern = Pattern.compile("x:path=(.*?)\\|\\d+");
+        Matcher matcher = pattern.matcher(callbackBody);
+        if (matcher.find()) {
+            String path = matcher.group(1);
+            if (!StringUtils.isBlank(path)) {
+                int start = matcher.start(1);
+                int end = matcher.end(1);
+                String pathAfterEncode = StringUtils.encodeURIComponent(path);
+                buffer.replace(start, end, pathAfterEncode);
+                return buffer.toString();
+            }
+        }
+
         return callbackBody;
     }
 
