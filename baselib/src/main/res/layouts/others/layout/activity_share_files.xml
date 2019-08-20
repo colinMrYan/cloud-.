@@ -95,11 +95,26 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/iv_file_icon"
+                android:ellipsize="end"
                 android:maxLines="2"
                 android:paddingLeft="10dp"
                 android:paddingRight="15dp"
                 android:textColor="#333333"
                 android:textSize="17sp" />
+
+            <TextView
+                android:id="@+id/tv_file_sub_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_file_name"
+                android:layout_toRightOf="@id/iv_file_icon"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:paddingLeft="10dp"
+                android:paddingRight="15dp"
+                android:paddingTop="4dp"
+                android:textColor="#8F8E94"
+                android:textSize="14sp" />
 
         </RelativeLayout>
 
