@@ -124,13 +124,6 @@ public class ShareFilesActivity extends BaseActivity {
     private void showImageLayout(String filePath) {
         imageLayout.setVisibility(View.VISIBLE);
         fileLayout.setVisibility(View.GONE);
-//        if (!StringUtils.isBlank(filePath) && filePath.contains("/")) {
-//            String fileName = filePath.substring(filePath.lastIndexOf("/") + 1, filePath.length());
-//            imagefileNameTextView.setText(fileName);
-//            imagefileNameTextView.setVisibility(View.VISIBLE);
-//        } else {
-//            imagefileNameTextView.setVisibility(View.GONE);
-//        }
         ImageDisplayUtils.getInstance().displayImage(imageView, uriList.get(0).toString(), R.drawable.ic_app_default);
     }
 
