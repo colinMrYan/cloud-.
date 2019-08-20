@@ -284,7 +284,7 @@ public class ConversationActivity extends ConversationBaseActivity {
      * @return
      */
     private int getInitStatus(Message message) {
-        return Message.MESSAGE_SEND_FAIL;
+        return ChatFileUploadManagerUtils.getInstance().isMessageResourceUploading(message) ? Message.MESSAGE_SEND_ING : Message.MESSAGE_SEND_FAIL;
     }
 
     /**
