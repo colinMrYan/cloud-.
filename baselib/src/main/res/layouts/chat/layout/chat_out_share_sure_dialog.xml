@@ -22,12 +22,28 @@
         android:layout_marginRight="22dp"
         android:layout_marginTop="20dp">
 
-        <ImageView
-            android:id="@+id/iv_share_user_head"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_centerVertical="true"
-            android:layout_gravity="center" />
+        <RelativeLayout
+            android:id="@+id/rl_user_group_head"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <com.inspur.emmcloud.baselib.widget.CircleTextImageView
+                android:id="@+id/iv_share_group_head"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:elevation="10dp"
+                android:onClick="onClick"
+                android:src="@drawable/icon_photo_default" />
+
+            <ImageView
+                android:id="@+id/iv_share_user_head"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center" />
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/tv_share_user_name"
@@ -35,7 +51,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
-            android:layout_toRightOf="@id/iv_share_user_head"
+            android:layout_toRightOf="@id/rl_user_group_head"
             android:ellipsize="end"
             android:maxLines="2"
             android:paddingRight="16dp"

@@ -12,13 +12,15 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.baselib.util.ImageUtils;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
 import com.inspur.emmcloud.baselib.widget.dialogs.MyDialog;
 import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
@@ -32,9 +34,12 @@ import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.io.File;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -60,6 +65,8 @@ public class ShareLinkActivity extends BaseActivity {
     ImageView fileImageView;
     @BindView(R.id.tv_file_name)
     TextView fileTextView;
+    @BindView(R.id.tv_file_sub_name)
+    TextView fileSubNmaeText;
     private String shareLink = "";
 
     @Override
@@ -108,11 +115,13 @@ public class ShareLinkActivity extends BaseActivity {
         imageLayout.setVisibility(View.GONE);
         if (!StringUtils.isBlank(Uri)) {
             String title = JSONUtils.getString(shareLink, "title", shareLink);
+            fileSubNmaeText.setText(title);
             title = getString(R.string.baselib_share_link) + title;
             fileTextView.setText(title);
             fileTextView.setVisibility(View.VISIBLE);
         } else {
             fileTextView.setVisibility(View.GONE);
+            fileSubNmaeText.setVisibility(View.GONE);
         }
         fileImageView.setImageResource(R.drawable.ic_share_link);
     }
@@ -134,8 +143,11 @@ public class ShareLinkActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+
         if (resultCode == RESULT_OK && requestCode == SHARE_LINK
                 && NetUtils.isNetworkConnected(getApplicationContext())) {
+
             String result = data.getStringExtra("searchResult");
             try {
                 JSONObject jsonObject = new JSONObject(result);
@@ -159,10 +171,11 @@ public class ShareLinkActivity extends BaseActivity {
                         JSONObject cidObj = channelGroupArray.getJSONObject(0);
                         String cid = cidObj.getString("cid");
                         userOrGroupId = cid;
-                        isGroup = false;
+                        isGroup = true;
                         //startChannelActivity(cid);
                     }
                 }
+
                 showSendSureDialog(userOrGroupId, isGroup);
 
             } catch (Exception e) {
@@ -180,19 +193,35 @@ public class ShareLinkActivity extends BaseActivity {
      * 弹出分享确认框
      */
     private void showSendSureDialog(final String uid, final boolean isGroup) {
-
-        ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(uid);
         final MyDialog dialog = new MyDialog(this,
                 R.layout.chat_out_share_sure_dialog);
         Button okBtn = dialog.findViewById(R.id.ok_btn);
-        okBtn.setText(getString(R.string.ok));
+        CircleTextImageView groupHeadImage = dialog.findViewById(R.id.iv_share_group_head);
         ImageView userHeadImage = dialog.findViewById(R.id.iv_share_user_head);
         TextView fileNameText = dialog.findViewById(R.id.tv_share_file_name);
         TextView userNameText = dialog.findViewById(R.id.tv_share_user_name);
-        String photoUrl = APIUri.getChannelImgUrl(MyApplication.getInstance(), uid);
-        ImageDisplayUtils.getInstance().displayRoundedImage(userHeadImage, photoUrl, R.drawable.icon_person_default, this, 32);
-        userNameText.setText(contactUser.getName());
-        LogUtils.LbcDebug("shareLink::" + shareLink);
+        String contactName = "";
+        if (isGroup) {
+            Conversation conversation = ConversationCacheUtils.getConversation(this, uid);
+            contactName = conversation.getName();
+            File file = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH + "/" + MyApplication.getInstance().getTanent() + uid + "_100.png1");
+            if (file.exists()) {
+                groupHeadImage.setImageBitmap(ImageUtils.getBitmapByFile(file));
+            } else {
+                groupHeadImage.setImageResource(R.drawable.icon_channel_group_default);
+            }
+            userHeadImage.setVisibility(View.GONE);
+            groupHeadImage.setVisibility(View.VISIBLE);
+        } else {
+            ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(uid);
+            contactName = contactUser.getName();
+            String photoUrl = APIUri.getChannelImgUrl(MyApplication.getInstance(), uid);
+            ImageDisplayUtils.getInstance().displayRoundedImage(userHeadImage, photoUrl, R.drawable.icon_person_default, this, 32);
+            userHeadImage.setVisibility(View.VISIBLE);
+            groupHeadImage.setVisibility(View.GONE);
+        }
+        okBtn.setText(getString(R.string.ok));
+        userNameText.setText(contactName);
         String title = JSONUtils.getString(shareLink, "title", shareLink);
         title = getString(R.string.baselib_share_link) + title;
         fileNameText.setText(title);
