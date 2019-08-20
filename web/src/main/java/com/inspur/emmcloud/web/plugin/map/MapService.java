@@ -108,6 +108,8 @@ public class MapService extends ImpPlugin {
             Double toLongitude = JSONUtils.getDouble(optionsObj, "dstlng", 0);
             Double toLatitude = JSONUtils.getDouble(optionsObj, "dstlat", 0);
             String coordType = JSONUtils.getString(optionsObj, "coordType", "GCJ02");
+            String fromName = JSONUtils.getString(optionsObj, "sName", "");
+            String toName = JSONUtils.getString(optionsObj, "dName", "");
             if (coordType.equals("WGS84")) {
                 if (fromLatitude != null && fromLatitude != null) {
                     double[] fromLocation = ECMLoactionTransformUtils.wgs84togcj02(fromLongitude, fromLatitude);
@@ -132,7 +134,14 @@ public class MapService extends ImpPlugin {
             if (fromLatitude != null && fromLatitude != null) {
                 builder.append("&slat=").append(fromLatitude).append("&slon=").append(fromLongitude);
             }
-            builder.append("&dlat=").append(toLatitude).append("&dlon=").append(toLongitude).append("&dev=0&t=0");
+            if (!StringUtils.isBlank(fromName)) {
+                builder.append("&sname=").append(fromName);
+            }
+            builder.append("&dlat=").append(toLatitude).append("&dlon=").append(toLongitude);
+            if (!StringUtils.isBlank(toName)) {
+                builder.append("&dname=").append(toName);
+            }
+            builder.append("&dev=0&t=0");
             Intent intent = getFragmentContext().getPackageManager()
                     .getLaunchIntentForPackage("com.autonavi.minimap");
             intent.addCategory(Intent.CATEGORY_DEFAULT);
