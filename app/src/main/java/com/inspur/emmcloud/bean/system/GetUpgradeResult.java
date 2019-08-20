@@ -3,6 +3,8 @@ package com.inspur.emmcloud.bean.system;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -18,6 +20,9 @@ public class GetUpgradeResult implements Serializable {
     private String upgradeMsg = "";
     private String changeLog = "";
     private String latestVersion = "";
+    private List<String> upgradeMsgList = new ArrayList<>();
+    private List<String> upgradeImageUriList = new ArrayList<>();
+    private String apkMd5 = "";
 
     public GetUpgradeResult(String response) {
         try {
@@ -72,4 +77,27 @@ public class GetUpgradeResult implements Serializable {
         return resultMap;
     }
 
+    public List<String> getUpgradeMsgList() {
+        return upgradeMsgList;
+    }
+
+    public void setUpgradeMsgList(List<String> upgradeMsgList) {
+        this.upgradeMsgList = upgradeMsgList;
+    }
+
+    public List<String> getUpgradeImageUriList() {
+        return upgradeImageUriList;
+    }
+
+    public void setUpgradeImageUriList(List<String> upgradeImageUriList) {
+        this.upgradeImageUriList = upgradeImageUriList;
+    }
+
+    public String getApkMd5() {
+        return apkMd5;
+    }
+
+    public void setApkMd5(String apkMd5) {
+        this.apkMd5 = apkMd5;
+    }
 }

@@ -73,6 +73,10 @@
     <string name="function_load_fail">加載出錯，輕觸屏幕重新加載</string>
     <string name="function_reload">網絡診斷</string>
     <string name="baselib_internal_share">内部分享</string>
+    <string name="upgrade_download">下載更新</string>
+    <string name="upgrade_later">稍後再說</string>
+    <string name="upgrade_install_now">立即安裝</string>
+    <string name="upgrade_install_next_time">下次安裝</string>
 
 
     <!-- 公共部分 -->
@@ -215,10 +219,15 @@
     <string name="comment">評論</string>
     <string name="write_comment">寫評論</string>
 
+    <string name="baselib_share_many_picture">等%1$d張圖片</string>
     <string name="news_font_name_text">字體</string>
     <string name="baselib_share_to">分享到</string>
     <string name="baselib_share_success">分享成功</string>
     <string name="baselib_share_fail">分享失敗</string>
+    <string name="baselib_share_image">[圖片]</string>
+    <string name="baselib_share_file">[文件]</string>
+    <string name="baselib_share_link">[鏈接]</string>
+    <string name="baselib_share_send_to">發送給：</string>
     <string name="login_please_input_password"> 請輸入密碼</string>
     <string name="login">登錄</string>
     <string name="login_user_not_bound_enterprise">當前用戶未綁定企業，請聯繫管理員！</string>
@@ -721,6 +730,8 @@
     <string name="modify_jump">跳過</string>
     <string name="modify_welcom_user_cloud">歡迎使用雲+</string>
     <string name="modify_first_use">這是您第一次使用雲+，是否設置通行證密碼，以方便下次登錄</string>
+    <string name="setting_update_this_time_hint">本次更新</string>
+    <string name="setting_update_wifi_download_package_hint">WiFi下已自動下載安裝包</string>
 
     <!-- 使用者資訊頁面部分 -->
     <string name="user_info_text">個人資訊</string>
