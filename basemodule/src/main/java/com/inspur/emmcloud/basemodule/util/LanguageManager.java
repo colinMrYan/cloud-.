@@ -14,7 +14,6 @@ import android.content.res.Resources;
 import android.os.Build;
 import android.os.LocaleList;
 
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.api.BaseModuleAPIInterfaceInstance;
@@ -206,7 +205,6 @@ public class LanguageManager extends BaseModuleAPIInterfaceInstance {
                         setCurrentLanguageJson(commonLanguage.toString());
                         languageJson = commonLanguage.toString();
                         isContainDefault = true;
-                        LogUtils.jasonDebug("languageJson==" + languageJson);
                         break;
                     }
                 }
@@ -227,8 +225,6 @@ public class LanguageManager extends BaseModuleAPIInterfaceInstance {
                 // TODO: handle exception
                 e.printStackTrace();
             }
-            LogUtils.jasonDebug("country==" + country);
-            LogUtils.jasonDebug("variant==" + variant);
             Locale locale = new Locale(country, variant);
             Locale.setDefault(locale);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
