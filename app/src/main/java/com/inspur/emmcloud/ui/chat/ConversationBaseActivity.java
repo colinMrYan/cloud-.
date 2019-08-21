@@ -51,6 +51,7 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity {
     public int getLayoutResId() {
         return R.layout.activity_channel;
     }
+
     protected void initConversationInfo() {
         if (getIntent().hasExtra(EXTRA_CONVERSATION)) {
             conversation = (Conversation) getIntent().getExtras().getSerializable(EXTRA_CONVERSATION);

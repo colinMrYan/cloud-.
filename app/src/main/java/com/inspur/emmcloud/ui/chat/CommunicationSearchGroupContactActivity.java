@@ -110,6 +110,7 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
         searchMoreGroupListView.setVisibility(View.GONE);
         groupTitleText.setVisibility(View.GONE);
         contactsTitleText.setVisibility(View.GONE);
+        InputMethodUtils.display(this, searchEdit);
     }
 
     @Override
@@ -148,14 +149,23 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
 
     @Override
     public void onClick(View view) {
+        Bundle bundle;
         switch (view.getId()) {
             case R.id.tv_cancel:
                 finish();
                 break;
             case R.id.rl_search_more_group:
+                bundle = new Bundle();
+                bundle.putBoolean("is_group", true);
+                bundle.putString("search_content", searchText);
+                IntentUtils.startActivity(this, CommunicationSearchModelMoreActivity.class, bundle, true);
                 //跳转到群组列表页面
                 break;
             case R.id.rl_search_more_contact:
+                bundle = new Bundle();
+                bundle.putBoolean("is_group", false);
+                bundle.putString("search_content", searchText);
+                IntentUtils.startActivity(this, CommunicationSearchModelMoreActivity.class, bundle, true);
                 //跳转到查找人列表
                 break;
         }

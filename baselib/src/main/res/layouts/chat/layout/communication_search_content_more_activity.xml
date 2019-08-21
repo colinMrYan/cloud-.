@@ -99,7 +99,7 @@
             android:layout_below="@id/v_line_mid_group">
 
             <ListView
-                android:id="@+id/lv_search_group_show"
+                android:id="@+id/lv_search_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
