@@ -17,8 +17,6 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
-import com.inspur.emmcloud.baselib.util.JSONUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.dialogs.MyDialog;
@@ -60,6 +58,7 @@ import butterknife.ButterKnife;
 public class ShareFilesActivity extends BaseActivity {
 
     private final static int SHARE_IMAGE_OR_FILES = 0;
+    private final static int SHARE_FILES_LIMIT = 5;
     @BindView(R.id.rv_file_list)
     RecyclerView recyclerView;
     @BindView(R.id.img_file_icon)
@@ -86,7 +85,6 @@ public class ShareFilesActivity extends BaseActivity {
     public void onCreate() {
         ButterKnife.bind(this);
         this.uriList.addAll((List<String>) getIntent().getSerializableExtra(Constant.SHARE_FILE_URI_LIST));
-        LogUtils.YfcDebug("文件路径：" + JSONUtils.toJSONString(uriList));
 //        if (!isImageUriList(uriList)) {
 //            if (uriList.size() <= 1) {
 //                File file = new File(uriList.get(0));
@@ -102,7 +100,11 @@ public class ShareFilesActivity extends BaseActivity {
 //            ToastUtils.show(ShareFilesActivity.this, getString(R.string.share_no_more_than_five));
 //            finish();
 //        }
-        if (uriList == null || uriList.size() > 5) {
+        if (uriList == null || uriList.size() == 0) {
+            ToastUtils.show(ShareFilesActivity.this, getString(R.string.baselib_share_fail));
+            finish();
+        }
+        if (uriList.size() > SHARE_FILES_LIMIT) {
             ToastUtils.show(ShareFilesActivity.this, getString(R.string.share_no_more_than_five));
             finish();
         }
