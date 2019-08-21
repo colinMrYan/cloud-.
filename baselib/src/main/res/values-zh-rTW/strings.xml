@@ -1207,7 +1207,7 @@
     <string name="cluster_no_permission">當前功能缺少有效的授權資訊。</string>
 
     <string name="share_mutil_only_support_image">多檔案分享僅支持照片格式</string>
-    <string name="share_no_more_than_five">不能上傳多於5個圖片</string>
+    <string name="share_no_more_than_five">不能上傳多於5個文件</string>
     <string name="share_no_share_way">沒有能够分享的管道</string>
     <string name="share_to_channel">發送到頻道</string>
     <string name="share_upload_volume">上傳到雲盤</string>
