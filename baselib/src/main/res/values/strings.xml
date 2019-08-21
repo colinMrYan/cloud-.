@@ -74,6 +74,10 @@
     <string name="function_load_fail">加载出错，轻触屏幕重新加载</string>
     <string name="function_reload">网络诊断</string>
     <string name="baselib_internal_share">内部分享</string>
+    <string name="upgrade_download">下载更新</string>
+    <string name="upgrade_later">稍后再说</string>
+    <string name="upgrade_install_now">立即安装</string>
+    <string name="upgrade_install_next_time">下次安装</string>
 
     <!-- 公共部分 -->
     <string name="year">年</string>
@@ -222,7 +226,11 @@
     <string name="baselib_share_success">分享成功</string>
     <string name="baselib_share_fail">分享失败</string>
 
-
+    <string name="baselib_share_many_picture">等%1$d张图片</string>
+    <string name="baselib_share_image">[图片]</string>
+    <string name="baselib_share_file">[文件]</string>
+    <string name="baselib_share_link">[链接]</string>
+    <string name="baselib_share_send_to">发送给：</string>
     <string name="login_please_input_password"> 请输入密码</string>
     <string name="login">登录</string>
     <string name="login_user_not_bound_enterprise">当前用户未绑定企业，请联系管理员！</string>
@@ -706,6 +714,9 @@
     <string name="setting_join_experience_plan">加入升级体验计划</string>
     <string name="setting_gesture_force_set">根据企业安全性原则，需要您设置手势密码</string>
     <string name="setting_gesture_force_open">根据企业安全性原则，您不可以关闭手势密码</string>
+
+    <string name="setting_update_this_time_hint">本次更新</string>
+    <string name="setting_update_wifi_download_package_hint">WiFi下已自动下载安装包</string>
 
     <string name="contact">通讯录</string>
     <string name="web">web</string>
