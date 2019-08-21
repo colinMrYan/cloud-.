@@ -265,7 +265,7 @@
     <string name="join_discuss">Join discussion</string>
     <string name="add_new_comment">Add new comments</string>
     <string name="socket_connecting">Connecting</string>
-    <string name="socket_close">Disconnect</string>
+    <string name="socket_close">Disconnected</string>
     <string name="chat_file_download_success">File has been downloaded successfully, click again to open</string>
     <string name="group_name_longth_valid">Group name, word overrun (no more than 40 characters)</string>
     <string name="message_create_group">New Chat</string>
@@ -351,7 +351,7 @@
     <!-- 日程 （新）-->
     <string name="schedule_event_alert">Alert</string>
     <string name="schedule_calendar_add">Add Schedule</string>
-    <string name="schedule_calendar_detail">Schedule Detail</string>
+    <string name="schedule_calendar_detail">Schedule Details</string>
     <string name="schedule_setting_list_view">List View</string>
     <string name="schedule_setting_day_view">Day View</string>
     <string name="schedule_calendar_company">My Schedule</string>
@@ -435,7 +435,7 @@
     <string name="schedule_meeting_add_record_holder_title">Recorder</string>
     <string name="schedule_meeting_add_conference_title">Contact</string>
     <string name="schedule_meeting_select_attendee_title">Select attendee</string>
-    <string name="schedule_meeting_booking_detail">Meeting Detail</string>
+    <string name="schedule_meeting_booking_detail">Meeting Details</string>
     <string name="schedule_meeting_select_record_holder_title">Select Recorder</string>
     <string name="schedule_meeting_select_conference_title">Select Contact</string>
     <string name="schedule_meeting_add_note">Note</string>
@@ -535,13 +535,13 @@
     <string name="clouddriver_select_copy_position">Select the copy position</string>
     <string name="clouddriver_select_move_position">Select a target directory</string>
     <string name="clouddriver_file_open_fail">failed to open file!</string>
-    <string name="clouddriver_file_dpwnload">Download</string>
+    <string name="clouddriver_file_detail">Details</string>
     <string name="clouddriver_create_folder">Create Folder</string>
     <string name="clouddriver_file_filter">Filter</string>
-    <string name="clouddriver_sort_by_time_asc">Sort by Time Asc</string>
-    <string name="clouddriver_sort_by_time_dasc">Sort by Time Desc</string>
-    <string name="clouddriver_sort_by_name_asc">Sort by Name Asc</string>
-    <string name="clouddriver_sort_by_name_dasc">Sort by Name Desc</string>
+    <string name="clouddriver_sort_by_time_asc">Time Asc</string>
+    <string name="clouddriver_sort_by_time_dasc">Time Desc</string>
+    <string name="clouddriver_sort_by_name_asc">Name Asc</string>
+    <string name="clouddriver_sort_by_name_dasc">Name Desc</string>
     <string name="clouddriver_current_directory_hint">Current Directory：%1$s</string>
     <string name="clouddriver_upload_waiting">Waiting for Uploading</string>
     <string name="clouddriver_upload_fail">Failed to Upload</string>

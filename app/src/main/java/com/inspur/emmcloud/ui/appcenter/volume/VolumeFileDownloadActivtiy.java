@@ -10,7 +10,6 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.api.APIDownloadCallBack;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
@@ -29,7 +28,6 @@ import org.xutils.http.request.UriRequest;
 import org.xutils.x;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -52,8 +50,8 @@ public class VolumeFileDownloadActivtiy extends BaseActivity {
     TextView fileNameText;
     @BindView(R.id.file_type_img)
     ImageView fileTypeImg;
-    @BindView(R.id.file_time_text)
-    TextView fileTimeText;
+    @BindView(R.id.tv_file_size)
+    TextView fileSizeText;
     private String fileSavePath = "";
     private Callback.Cancelable cancelable;
     private VolumeFile volumeFile;
@@ -65,8 +63,7 @@ public class VolumeFileDownloadActivtiy extends BaseActivity {
         volumeFile = (VolumeFile) getIntent().getSerializableExtra("volumeFile");
         fileNameText.setText(volumeFile.getName());
         fileTypeImg.setImageResource(VolumeFileIconUtils.getIconResId(volumeFile));
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        fileTimeText.setText(TimeUtils.getTime(volumeFile.getCreationDate(), format));
+        fileSizeText.setText(FileUtils.formatFileSize(volumeFile.getSize()));
         fileSavePath = MyAppConfig.LOCAL_DOWNLOAD_PATH + volumeFile.getName();
         if (FileUtils.isFileExist(fileSavePath)) {
             downloadBtn.setText(R.string.open);

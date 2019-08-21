@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.chat;
 
+import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -9,7 +10,6 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.api.APIDownloadCallBack;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
@@ -24,7 +24,7 @@ import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
 import org.xutils.common.Callback;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,8 +46,8 @@ public class ChatFileDownloadActivtiy extends BaseActivity {
     TextView fileNameText;
     @BindView(R.id.file_type_img)
     ImageView fileTypeImg;
-    @BindView(R.id.file_time_text)
-    TextView fileTimeText;
+    @BindView(R.id.tv_file_size)
+    TextView fileSizeText;
     private String fileSavePath = "";
     private Callback.Cancelable cancelable;
     private Message message;
@@ -59,8 +59,7 @@ public class ChatFileDownloadActivtiy extends BaseActivity {
         MsgContentRegularFile msgContentFile = message.getMsgContentAttachmentFile();
         fileNameText.setText(msgContentFile.getName());
         fileTypeImg.setImageResource(FileUtils.getRegularFileIconResId(msgContentFile.getName()));
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        fileTimeText.setText(TimeUtils.getTime(message.getCreationDate(), format));
+        fileSizeText.setText(FileUtils.formatFileSize(msgContentFile.getSize()));
         fileSavePath = MyAppConfig.LOCAL_DOWNLOAD_PATH + msgContentFile.getName();
         if (FileUtils.isFileExist(fileSavePath)) {
             downloadBtn.setText(R.string.open);
@@ -85,7 +84,7 @@ public class ChatFileDownloadActivtiy extends BaseActivity {
                 break;
             case R.id.download_btn:
                 if (downloadBtn.getText().equals(getString(R.string.open))) {
-                    FileUtils.openFile(getApplicationContext(), fileSavePath);
+                    openFile();
                 } else {
                     downloadFile();
                 }
@@ -100,6 +99,22 @@ public class ChatFileDownloadActivtiy extends BaseActivity {
             default:
                 break;
         }
+    }
+
+    private void openFile() {
+        String suffix = FileUtils.getSuffix(fileSavePath);
+        if (suffix.toLowerCase().equals("jpg") || suffix.toLowerCase().equals("png")) {
+            Intent intent = new Intent();
+            intent.setClass(getApplicationContext(), ImagePagerActivity.class);
+            intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_INDEX, 0);
+            ArrayList<String> urlList = new ArrayList<>();
+            urlList.add("file://" + fileSavePath);
+            intent.putStringArrayListExtra(ImagePagerActivity.EXTRA_IMAGE_URLS, urlList);
+            startActivity(intent);
+        } else {
+            FileUtils.openFile(getApplicationContext(), fileSavePath);
+        }
+
     }
 
 

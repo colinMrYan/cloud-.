@@ -532,7 +532,7 @@
     <string name="clouddriver_select_copy_position">選擇複製位置</string>
     <string name="clouddriver_select_move_position">選擇目的檔案夾</string>
     <string name="clouddriver_file_open_fail">檔打開失敗！</string>
-    <string name="clouddriver_file_dpwnload">文件下載</string>
+    <string name="clouddriver_file_detail">檔案詳情</string>
     <string name="clouddriver_create_folder">新建資料夾</string>
     <string name="clouddriver_file_filter">分類篩選</string>
     <string name="clouddriver_sort_by_time_asc">時間昇冪</string>

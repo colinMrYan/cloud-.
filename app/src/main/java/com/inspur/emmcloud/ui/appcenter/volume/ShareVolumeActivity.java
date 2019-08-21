@@ -46,6 +46,8 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -303,6 +305,24 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
         EventBus.getDefault().unregister(this);
     }
 
+    private void sortShareVolumeList() {
+        Collections.sort(shareVolumeList, new Comparator<Volume>() {
+            @Override
+            public int compare(Volume volume1, Volume volume2) {
+                long creationDate1 = volume1.getCreationDate();
+                long creationDate2 = volume2.getCreationDate();
+                if (creationDate1 > creationDate2) {
+                    return 1;
+                }
+
+                if (creationDate1 < creationDate2) {
+                    return -1;
+                }
+                return 0;
+            }
+        });
+    }
+
     @Override
     public void onRefresh() {
         getVolumeList(false);
@@ -393,6 +413,7 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
             LoadingDialog.dimissDlg(loadingDlg);
             swipeRefreshLayout.setRefreshing(false);
             shareVolumeList = getVolumeListResult.getShareVolumeList();
+            sortShareVolumeList();
             adapter.notifyDataSetChanged();
         }
 
@@ -449,7 +470,7 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
         }
 
         @Override
-        public void retrunRemoveShareVolumeSuccess(Volume volume) {
+        public void returnRemoveShareVolumeSuccess(Volume volume) {
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }

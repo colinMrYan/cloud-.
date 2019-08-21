@@ -30,6 +30,7 @@ import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.ActionSheetDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.MyDialog;
+import com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButton;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
@@ -85,6 +86,8 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.data_blank_layout)
     LinearLayout dataBlankLayout;
+    @BindView(R.id.btn_upload_file)
+    CustomRoundButton uploadFileBtn;
     String deleteAction, downloadAction, renameAction, moveToAction, copyAction, permissionAction; //弹框点击状态
     private List<VolumeFile> moveVolumeFileList = new ArrayList<>();//移动的云盘文件列表
     private MyAppAPIService apiServiceBase;

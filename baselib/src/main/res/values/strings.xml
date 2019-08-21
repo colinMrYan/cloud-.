@@ -550,7 +550,7 @@
     <string name="clouddriver_select_copy_position">选择复制位置</string>
     <string name="clouddriver_select_move_position">选择目标文件夹</string>
     <string name="clouddriver_file_open_fail">文件打开失败！</string>
-    <string name="clouddriver_file_dpwnload">文件下载</string>
+    <string name="clouddriver_file_detail">文件详情</string>
     <string name="clouddriver_create_folder">新建文件夹</string>
     <string name="clouddriver_file_filter">分类筛选</string>
     <string name="clouddriver_sort_by_time_asc">时间升序</string>

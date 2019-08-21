@@ -189,9 +189,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
             case R.id.new_forder_img:
                 showCreateFolderDlg();
                 break;
-            case R.id.refresh_btn:
-                getVolumeFileList(true);
-                break;
+            case R.id.btn_upload_file:
             case R.id.upload_img:
                 showUploadFileDlg();
                 break;

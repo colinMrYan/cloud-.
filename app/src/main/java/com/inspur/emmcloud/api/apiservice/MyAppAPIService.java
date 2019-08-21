@@ -911,7 +911,7 @@ public class MyAppAPIService {
         HttpUtils.request(context, CloudHttpMethod.DELETE, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
-                apiInterface.retrunRemoveShareVolumeSuccess(volume);
+                apiInterface.returnRemoveShareVolumeSuccess(volume);
             }
 
             @Override

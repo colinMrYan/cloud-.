@@ -67,6 +67,7 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
     private void initViews() {
         apiService = new MyAppAPIService(this);
         apiService.setAPIInterface(new WebService());
+        uploadFileBtn.setVisibility(View.GONE);
         locationSelectToText.setText(isFunctionCopy ? R.string.clouddriver_copy2_current_directory : R.string.clouddriver_move2_current_directory);
         headerOperationLayout.setVisibility(View.GONE);
         locationSelectCancelText.setVisibility(View.VISIBLE);
@@ -108,9 +109,6 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
                 break;
             case R.id.new_forder_img:
                 showCreateFolderDlg();
-                break;
-            case R.id.refresh_btn:
-                getVolumeFileList(true);
                 break;
 
             case R.id.location_select_cancel_text:
