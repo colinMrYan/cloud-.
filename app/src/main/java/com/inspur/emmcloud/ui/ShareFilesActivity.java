@@ -149,7 +149,9 @@ public class ShareFilesActivity extends BaseActivity {
         ImageDisplayUtils.getInstance().displayImage(fileImageView, "drawable://" + FileUtils.getRegularFileIconResId(filePath));
     }
 
-    /***/
+    /**
+     * 初始化
+     */
     private void initViews() {
         initSharingMode();
         ImageDisplayUtils.getInstance().displayImage(imageView, TabAndAppExistUtils.getVolumeIconUrl(MyApplication.getInstance(),
@@ -183,7 +185,6 @@ public class ShareFilesActivity extends BaseActivity {
 
     }
 
-
     /**
      * 根据文件列数修改
      */
@@ -200,10 +201,10 @@ public class ShareFilesActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.rl_channel_share:
-                shareFilesToFriends();
+                shareFilesToFriends(); //分享到聊天
                 break;
             case R.id.rl_volume_share:
-                startVolumeShareActivity(uriList);
+                startVolumeShareActivity(uriList); //分享到网盘
                 break;
         }
     }
@@ -401,7 +402,8 @@ public class ShareFilesActivity extends BaseActivity {
 
     }
 
-
+    /**
+     * 多图片适配器*/
     class ShareImagesAdapter extends RecyclerView.Adapter<FileHolder> {
         LayoutInflater inflater;
 
@@ -428,6 +430,8 @@ public class ShareFilesActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 多文件适配器*/
     class ShareFilesAdapter extends RecyclerView.Adapter<FileHolder> {
         LayoutInflater inflater;
 
