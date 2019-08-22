@@ -19,6 +19,7 @@ import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
@@ -32,6 +33,7 @@ import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.bean.schedule.GetScheduleListResult;
 import com.inspur.emmcloud.bean.schedule.Schedule;
@@ -108,6 +110,11 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
                 setEventShowType();
                 showCalendarEvent(true);
                 break;
+            case Constant.EVENTBUS_TAG_SCHEDULE_HOLIDAY_CHANGE:
+                boolean holidayState = PreferencesByUserAndTanentUtils.getBoolean(getActivity(), Constant.PREF_SCHEDULE_HOLIDAY_STATE, true);
+                LogUtils.LbcDebug("111111111111111111111111111111::" + holidayState);
+                holidayStateChange(holidayState);
+                break;
             case Constant.EVENTBUS_TAG_SCHEDULE_TASK_DATA_CHANGED:
             case Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED:
                 showCalendarEvent(true);
@@ -157,7 +164,8 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         switch (LanguageManager.getInstance().getCurrentAppLanguage()) {
             case "zh-Hans":
             case "zh-hant":
-                calendarView.setIsLunarAndFestivalShow(true);
+                boolean holidayState = PreferencesByUserAndTanentUtils.getBoolean(getActivity(), Constant.PREF_SCHEDULE_HOLIDAY_STATE, true);
+                calendarView.setIsLunarAndFestivalShow(holidayState);
                 break;
             default:
                 calendarView.setIsLunarAndFestivalShow(false);
@@ -240,6 +248,11 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
                 }
             });
         }
+    }
+
+    private void holidayStateChange(boolean isShowHoliday) {
+        calendarView.setIsLunarAndFestivalShow(isShowHoliday);
+        calendarView.update();
     }
 
     private EmmCalendar getSchemeCalendar(int year, int month, int day, String holidayName, String holidayColor, String badge, String badgeColor, boolean isShowSchemePoint) {

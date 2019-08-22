@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.text.TextUtils;
 import android.view.View;
 
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.widget.calendarview.EmmCalendar;
 import com.inspur.emmcloud.widget.calendarview.MonthView;
 
@@ -150,6 +151,7 @@ public class CustomMonthView extends MonthView {
 
     @Override
     protected void onDrawText(Canvas canvas, EmmCalendar calendar, int x, int y, boolean hasScheme, boolean isSelected) {
+        LogUtils.LbcDebug("onDrawText-----------" + isLunarAndFestivalShow());
         int cx = x + mItemWidth / 2;
         int top = y - (int) (mItemHeight / 5.5);
         String day = (calendar.isCurrentDay() && isLunarAndFestivalShow()) ? "今" : String.valueOf(calendar.getDay());

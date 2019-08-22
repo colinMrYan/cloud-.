@@ -57,7 +57,48 @@
                 android:textColor="#999999"
                 android:textSize="13sp" />
 
+            <RelativeLayout
+                android:id="@+id/rl_holiday"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:background="#FFFFFF"
+                android:paddingLeft="16dp">
 
+                <ImageView
+                    android:id="@+id/iv_holiday_color"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/schedule_calendar_type_brown" />
+
+                <TextView
+                    android:id="@+id/tv_holiday_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_toRightOf="@id/iv_holiday_color"
+                    android:text="法定节假日"
+                    android:textColor="#333333"
+                    android:textSize="16sp" />
+
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/switch_view_holiday_state"
+                    android:layout_width="51dp"
+                    android:layout_height="31dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginBottom="6dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="7dp"
+                    android:checked="true" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5px"
+                    android:divider="@color/color_list_divider" />
+            </RelativeLayout>
             <com.inspur.emmcloud.baselib.widget.ScrollViewWithListView
                 android:id="@+id/listview_list_calendars"
                 android:layout_width="match_parent"
