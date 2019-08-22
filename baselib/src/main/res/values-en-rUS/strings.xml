@@ -1208,7 +1208,7 @@
     <string name="cluster_no_permission">The current function lacks effective authorization information.</string>
 
     <string name="share_mutil_only_support_image">Multi file sharing only supports Photo format</string>
-    <string name="share_no_more_than_five">No more than 5 pictures can\'t be uploaded</string>
+    <string name="share_no_more_than_five">No more than 5 Files can\'t be uploaded</string>
     <string name="share_no_share_way">There is no way to share it</string>
     <string name="share_to_channel">Send to the channel</string>
     <string name="share_upload_volume">Upload to the cloud volume</string>
