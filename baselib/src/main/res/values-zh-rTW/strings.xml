@@ -220,6 +220,7 @@
     <string name="write_comment">寫評論</string>
 
     <string name="baselib_share_many_picture">等%1$d張圖片</string>
+    <string name="baselib_share_many_files">等%1$d個文件</string>
     <string name="news_font_name_text">字體</string>
     <string name="baselib_share_to">分享到</string>
     <string name="baselib_share_success">分享成功</string>

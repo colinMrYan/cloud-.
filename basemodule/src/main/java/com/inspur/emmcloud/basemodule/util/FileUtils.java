@@ -1062,7 +1062,7 @@ public class FileUtils {
             imageIconId = R.drawable.ic_volume_file_typ_zip;
         } else if (fileName.endsWith("rar")) {
             imageIconId = R.drawable.ic_volume_file_typ_zip;
-        } else if (fileName.contains("jpg") || fileName.contains("png")) {
+        } else if (fileName.endsWith("jpg") || fileName.endsWith("png") || fileName.endsWith("jpeg") || fileName.endsWith("dng")) {
             imageIconId = R.drawable.ic_volume_file_typ_img;
         }
         return imageIconId;
@@ -1388,19 +1388,6 @@ public class FileUtils {
     }
 
     /**
-     * 文件夹改名
-     *
-     * @param src
-     * @param dest
-     * @return
-     */
-    private boolean renameToNewFile(String src, String dest) {
-        File srcDir = new File(src);
-        boolean isOk = srcDir.renameTo(new File(dest));
-        return isOk;
-    }
-
-    /**
      * 读取指定文件目录下的文件名列表
      *
      * @param dicName                         目录名称
@@ -1443,5 +1430,18 @@ public class FileUtils {
             }
         }
         return arrayList;
+    }
+
+    /**
+     * 文件夹改名
+     *
+     * @param src
+     * @param dest
+     * @return
+     */
+    private boolean renameToNewFile(String src, String dest) {
+        File srcDir = new File(src);
+        boolean isOk = srcDir.renameTo(new File(dest));
+        return isOk;
     }
 }

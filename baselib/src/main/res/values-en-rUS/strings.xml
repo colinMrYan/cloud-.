@@ -217,6 +217,7 @@
     <string name="baselib_share_success">Sharing Successfully</string>
     <string name="baselib_share_fail">Sharing unsuccessfully</string>
     <string name="baselib_share_many_picture">等%1$d pictures</string>
+    <string name="baselib_share_many_files">等%1$d files</string>
     <string name="baselib_share_image">[Image]</string>
     <string name="baselib_share_file">[File]</string>
     <string name="baselib_share_link">[Link]</string>

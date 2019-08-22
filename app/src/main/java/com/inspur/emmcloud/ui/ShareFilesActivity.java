@@ -173,7 +173,11 @@ public class ShareFilesActivity extends BaseActivity {
                 recyclerView.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(MyApplication.getInstance(), 11)));
                 GridLayoutManager gridLayoutManager = new GridLayoutManager(MyApplication.getInstance(), 3);
                 recyclerView.setLayoutManager(gridLayoutManager);
-                recyclerView.setAdapter(new ShareFilesAdapter());
+                if (isImageUriList(uriList)) {
+                    recyclerView.setAdapter(new ShareImagesAdapter());
+                } else {
+                    recyclerView.setAdapter(new ShareFilessAdapter());
+                }
                 break;
         }
 
@@ -202,7 +206,7 @@ public class ShareFilesActivity extends BaseActivity {
     private boolean isImageUriList(List<String> uriList) {
         for (int i = 0; i < uriList.size(); i++) {
             String uriString = uriList.get(i).toString().toLowerCase();
-            if (!uriString.endsWith("png") && !uriString.endsWith("jpg") && !uriString.endsWith("jpeg")) {
+            if (!uriString.endsWith("png") && !uriString.endsWith("jpg") && !uriString.endsWith("jpeg") && !uriString.endsWith("dng")) {
                 return false;
             }
         }
@@ -312,7 +316,7 @@ public class ShareFilesActivity extends BaseActivity {
         } else {
             firstFileName = uriList.get(0);
         }
-        String shareManyPictures = getResources().getString(R.string.baselib_share_many_picture, uriList.size());
+        String shareManyPictures = getResources().getString(isImageUriList(uriList) ? R.string.baselib_share_many_picture : R.string.baselib_share_many_files, uriList.size());
         String fileType = isImageUriList(uriList) ? getString(R.string.baselib_share_image) : getString(R.string.baselib_share_file);
         fileNameText.setText(fileType + firstFileName + (uriList.size() > 1 ? shareManyPictures : ""));
         okBtn.setOnClickListener(new View.OnClickListener() {
@@ -387,10 +391,36 @@ public class ShareFilesActivity extends BaseActivity {
     }
 
 
-    class ShareFilesAdapter extends RecyclerView.Adapter<FileHolder> {
+    class ShareImagesAdapter extends RecyclerView.Adapter<FileHolder> {
         LayoutInflater inflater;
 
-        public ShareFilesAdapter() {
+        public ShareImagesAdapter() {
+            inflater = LayoutInflater.from(ShareFilesActivity.this);
+        }
+
+        @Override
+        public FileHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = inflater.inflate(R.layout.share_image_item, null);
+            FileHolder holder = new FileHolder(view);
+            holder.imageView = view.findViewById(R.id.img_share_file);
+            return holder;
+        }
+
+        @Override
+        public void onBindViewHolder(FileHolder holder, int position) {
+            ImageDisplayUtils.getInstance().displayImage(holder.imageView, uriList.get(position).toString(), R.drawable.default_image);
+        }
+
+        @Override
+        public int getItemCount() {
+            return uriList.size();
+        }
+    }
+
+    class ShareFilessAdapter extends RecyclerView.Adapter<FileHolder> {
+        LayoutInflater inflater;
+
+        public ShareFilessAdapter() {
             inflater = LayoutInflater.from(ShareFilesActivity.this);
         }
 
@@ -398,13 +428,21 @@ public class ShareFilesActivity extends BaseActivity {
         public FileHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = inflater.inflate(R.layout.share_file_item, null);
             FileHolder holder = new FileHolder(view);
-            holder.imageView = (ImageView) view.findViewById(R.id.img_share_file);
+            holder.imageView = view.findViewById(R.id.iv_file_ic);
+            holder.textView = view.findViewById(R.id.tv_file_name);
             return holder;
         }
 
         @Override
         public void onBindViewHolder(FileHolder holder, int position) {
-            ImageDisplayUtils.getInstance().displayImage(holder.imageView, "drawable://" + FileUtils.getRegularFileIconResId(uriList.get(position)), R.drawable.ic_app_default);
+            ImageDisplayUtils.getInstance().displayImage(holder.imageView, "drawable://" + FileUtils.getRegularFileIconResId(uriList.get(position)), R.drawable.default_image);
+            String filePath = uriList.get(position);
+            if (!StringUtils.isBlank(filePath) && filePath.contains("/")) {
+                String fileName = filePath.substring(filePath.lastIndexOf("/") + 1, filePath.length());
+                holder.textView.setText(fileName);
+            } else {
+                holder.textView.setText("未知名称");
+            }
         }
 
         @Override
@@ -415,6 +453,7 @@ public class ShareFilesActivity extends BaseActivity {
 
     class FileHolder extends RecyclerView.ViewHolder {
         private ImageView imageView;
+        private TextView textView;
 
         public FileHolder(View itemView) {
             super(itemView);
