@@ -108,6 +108,16 @@ public class GetVolumeFileUploadTokenResult {
         this.callbackBody = callbackBody;
     }
 
+    public String getXPath() {
+        String xPath = "";
+        Pattern pattern = Pattern.compile("x:path=(.*?\\|\\d+)");
+        Matcher matcher = pattern.matcher(callbackBody);
+        if (matcher.find()) {
+            xPath = matcher.group(1);
+        }
+        return xPath;
+    }
+
     public String getStorage() {
         return storage;
     }

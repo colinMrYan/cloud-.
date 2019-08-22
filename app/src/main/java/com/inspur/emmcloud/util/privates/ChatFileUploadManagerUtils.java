@@ -135,7 +135,6 @@ public class ChatFileUploadManagerUtils extends APIInterfaceInstance {
 
             }
         });
-
         volumeFileUploadService.uploadFile(getVolumeFileUploadTokenResult.getFileName(), getFilePath(chatFileUploadInfo.getMessage()));
     }
 

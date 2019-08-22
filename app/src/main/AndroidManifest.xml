@@ -718,7 +718,7 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.appcenter.volume.VolumeFileDownloadActivtiy"
+            android:name=".ui.appcenter.volume.VolumeFileDownloadActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />

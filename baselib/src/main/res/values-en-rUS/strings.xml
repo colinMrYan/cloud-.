@@ -67,6 +67,8 @@
     <string name="function_load_fail">Load failed,Touch the screen to reload </string>
     <string name="function_reload">Network Diagnosis</string>
     <string name="baselib_internal_share">Internal</string>
+    <string name="file_open_by_other_app">Open with App</string>
+    <string name="file_open_by_other_app_tips">%1$s cannot open this file. Please try opening with another application.</string>
 
     <!-- 公共部分 -->
     <string name="year">Year</string>
@@ -581,10 +583,10 @@
     <string name="clouddriver_volume_file_filter">Filter</string>
     <string name="clouddriver_volume_group_name">Group Name</string>
     <string name="clouddriver_volume_upload_file">Upload File</string>
-    <string name="clouddriver_upload_file_to_volume">Upload file to volume</string>
-    <string name="clouddriver_file_permission_manager">Permission manager</string>
+    <string name="clouddriver_file_permission_manager">Permissions</string>
+    <string name="volume_upload_to_current_directory">Upload to Current Directory</string>
     <string name="create">Create</string>
-    <string name="disk">Disk</string>
+    <string name="cloud_drive">Cloud Drive</string>
     <string name="video">Video</string>
     <string name="audio">Audio</string>
     <string name="other">Other</string>
@@ -595,7 +597,7 @@
     <string name="upload_cancel">Cancel</string>
     <string name="no_file">No Files</string>
     <string name="group">Group</string>
-    <string name="people_num">%1$dpeople</string>
+    <string name="people_num">%1$d</string>
     <string name="file_rename">File Rename</string>
     <string name="folder_rename">Folder Rename</string>
     <string name="refresh">Refresh</string>

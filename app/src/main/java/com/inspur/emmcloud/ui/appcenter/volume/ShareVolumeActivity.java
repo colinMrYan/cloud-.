@@ -146,7 +146,7 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
      */
     protected void showCreateShareVolumeDlg() {
         createShareVolumeDlg = new MyDialog(ShareVolumeActivity.this,
-                R.layout.volume_dialog_update_name_input, R.style.userhead_dialog_bg);
+                R.layout.volume_dialog_update_name_input);
         createShareVolumeDlg.setCancelable(false);
         final EditText inputEdit = (EditText) createShareVolumeDlg.findViewById(R.id.edit);
         inputEdit.setHint(R.string.clouddriver_input_volume_name);
@@ -251,14 +251,14 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
      */
     private void showUpdateShareVolumeNameDlg(final Volume volume) {
         updateShareVolumeNameDlg = new MyDialog(ShareVolumeActivity.this,
-                R.layout.volume_dialog_update_name_input, R.style.userhead_dialog_bg);
+                R.layout.volume_dialog_update_name_input);
         updateShareVolumeNameDlg.setCancelable(false);
         final EditText inputEdit = (EditText) updateShareVolumeNameDlg.findViewById(R.id.edit);
         inputEdit.setText(volume.getName());
         inputEdit.setSelectAllOnFocus(true);
         inputEdit.setInputType(InputType.TYPE_CLASS_TEXT);
         inputEdit.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MyAppConfig.VOLUME_MAX_FILE_NAME_LENGTH)});
-        ((TextView) updateShareVolumeNameDlg.findViewById(R.id.app_update_title)).setText(R.string.clouddriver_create_volume);
+        ((TextView) updateShareVolumeNameDlg.findViewById(R.id.app_update_title)).setText(R.string.rename);
         Button okBtn = (Button) updateShareVolumeNameDlg.findViewById(R.id.ok_btn);
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -309,16 +309,7 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
         Collections.sort(shareVolumeList, new Comparator<Volume>() {
             @Override
             public int compare(Volume volume1, Volume volume2) {
-                long creationDate1 = volume1.getCreationDate();
-                long creationDate2 = volume2.getCreationDate();
-                if (creationDate1 > creationDate2) {
-                    return 1;
-                }
-
-                if (creationDate1 < creationDate2) {
-                    return -1;
-                }
-                return 0;
+                return volume1.getName().toLowerCase().compareTo(volume2.getName().toLowerCase().toString());
             }
         });
     }
@@ -457,6 +448,7 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
             int position = shareVolumeList.indexOf(volume);
             if (position != -1) {
                 shareVolumeList.get(position).setName(name);
+                sortShareVolumeList();
                 adapter.notifyDataSetChanged();
             }
         }

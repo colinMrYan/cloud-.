@@ -16,6 +16,7 @@ import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
+import com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButton;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
@@ -41,10 +42,10 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
 
     @BindView(R.id.location_select_bar_layout)
     RelativeLayout locationSelectBarLayout;
-    @BindView(R.id.location_select_to_text)
-    TextView locationSelectToText;
-    @BindView(R.id.tv_location_select_upload_to)
-    TextView locationSelectUploadToText;
+    @BindView(R.id.btn_location_select_to)
+    CustomRoundButton locationSelectToBtn;
+    @BindView(R.id.btn_location_select_upload_to)
+    CustomRoundButton locationSelectUploadToBtn;
     @BindView(R.id.header_operation_layout)
     RelativeLayout headerOperationLayout;
     @BindView(R.id.location_select_cancel_text)
@@ -68,7 +69,7 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
         apiService = new MyAppAPIService(this);
         apiService.setAPIInterface(new WebService());
         uploadFileBtn.setVisibility(View.GONE);
-        locationSelectToText.setText(isFunctionCopy ? R.string.clouddriver_copy2_current_directory : R.string.clouddriver_move2_current_directory);
+        locationSelectToBtn.setText(isFunctionCopy ? R.string.clouddriver_copy2_current_directory : R.string.clouddriver_move2_current_directory);
         headerOperationLayout.setVisibility(View.GONE);
         locationSelectCancelText.setVisibility(View.VISIBLE);
         locationSelectBarLayout.setVisibility(View.VISIBLE);
@@ -98,8 +99,8 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
         if (fileShareUriList != null) {
             shareUriList.addAll(fileShareUriList);
         }
-        locationSelectUploadToText.setVisibility(shareUriList.size() > 0 ? View.VISIBLE : View.GONE);
-        locationSelectToText.setVisibility(shareUriList.size() > 0 ? View.GONE : View.VISIBLE);
+        locationSelectUploadToBtn.setVisibility(shareUriList.size() > 0 ? View.VISIBLE : View.GONE);
+        locationSelectToBtn.setVisibility(shareUriList.size() > 0 ? View.GONE : View.VISIBLE);
     }
 
     public void onClick(View v) {
@@ -117,7 +118,7 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
             case R.id.location_select_new_forder_text:
                 showCreateFolderDlg();
                 break;
-            case R.id.location_select_to_text:
+            case R.id.btn_location_select_to:
                 String operationFileAbsolutePath = getIntent().getStringExtra("operationFileDirAbsolutePath");
                 if (operationFileAbsolutePath.equals(currentDirAbsolutePath)) {
                     ToastUtils.show(getApplicationContext(), R.string.file_exist_current_directory);
@@ -138,7 +139,7 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
                     moveFile(operationFileAbsolutePath);
                 }
                 break;
-            case R.id.tv_location_select_upload_to:
+            case R.id.btn_location_select_upload_to:
                 goUploadPage();
                 break;
             default:

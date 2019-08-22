@@ -42,12 +42,10 @@ import com.inspur.emmcloud.util.privates.VolumeFilePrivilegeUtils;
 import com.inspur.emmcloud.util.privates.VolumeFileUploadManagerUtils;
 
 import java.io.File;
-import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
 
 import butterknife.BindView;
 
@@ -552,11 +550,9 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         super.onDestroy();
     }
 
-    private class FileSortComparable implements Comparator {
+    private class FileSortComparable implements Comparator<VolumeFile> {
         @Override
-        public int compare(Object o1, Object o2) {
-            VolumeFile volumeFileA = (VolumeFile) o1;
-            VolumeFile volumeFileB = (VolumeFile) o2;
+        public int compare(VolumeFile volumeFileA, VolumeFile volumeFileB) {
             int sortResult = 0;
             if (volumeFileA.getType().equals(VolumeFile.FILE_TYPE_DIRECTORY) && volumeFileB.getType().equals(VolumeFile.FILE_TYPE_REGULAR)) {
                 sortResult = -1;
@@ -565,10 +561,10 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
             } else {
                 switch (sortType) {
                     case SORT_BY_NAME_UP:
-                        sortResult = Collator.getInstance(Locale.CHINA).compare(volumeFileA.getName(), volumeFileB.getName());
+                        sortResult = volumeFileA.getName().toLowerCase().compareTo(volumeFileB.getName().toLowerCase().toString());
                         break;
                     case SORT_BY_NAME_DOWN:
-                        sortResult = 0 - Collator.getInstance(Locale.CHINA).compare(volumeFileA.getName(), volumeFileB.getName());
+                        sortResult = 0 - volumeFileA.getName().toLowerCase().compareTo(volumeFileB.getName().toLowerCase().toString());
                         break;
                     case SORT_BY_TIME_DOWN:
                         if (volumeFileA.getCreationDate() == volumeFileB.getCreationDate()) {
@@ -595,6 +591,4 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
             return sortResult;
         }
     }
-
-
 }

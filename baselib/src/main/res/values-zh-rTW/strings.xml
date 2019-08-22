@@ -73,7 +73,8 @@
     <string name="function_load_fail">加載出錯，輕觸屏幕重新加載</string>
     <string name="function_reload">網絡診斷</string>
     <string name="baselib_internal_share">内部分享</string>
-
+    <string name="file_open_by_other_app">用其他應用打開</string>
+    <string name="file_open_by_other_app_tips">%1$s暫時不能打開改檔案請使用其他應用打開</string>
 
     <!-- 公共部分 -->
     <string name="year">年</string>
@@ -579,12 +580,12 @@
     <string name="file_cannot_copy_here">不能將檔複製到自身或其子目錄下</string>
     <string name="file_cannot_move_here">不能將檔移動到自身或其子目錄下</string>
     <string name="refresh">刷新</string>
-    <string name="disk">網盤</string>
+    <string name="cloud_drive">雲盤</string>
     <string name="clouddriver_volume_file_filter">分類篩選</string>
     <string name="clouddriver_volume_group_name">組名稱</string>
     <string name="clouddriver_volume_upload_file">上傳文件</string>
-    <string name="clouddriver_upload_file_to_volume">上傳到網盤</string>
     <string name="clouddriver_file_permission_manager">許可權管理</string>
+    <string name="volume_upload_to_current_directory">上傳到目前的目錄</string>
     <string name="rename">重命名</string>
     <string name="move_to">移動到</string>
     <string name="copy">複製</string>
