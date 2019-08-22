@@ -171,16 +171,27 @@ public class ShareFilesActivity extends BaseActivity {
             default:
                 recyclerView.setVisibility(View.VISIBLE);
                 recyclerView.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(MyApplication.getInstance(), 11)));
-                GridLayoutManager gridLayoutManager = new GridLayoutManager(MyApplication.getInstance(), 3);
+                GridLayoutManager gridLayoutManager = new GridLayoutManager(MyApplication.getInstance(), getGridViewColumn());
                 recyclerView.setLayoutManager(gridLayoutManager);
                 if (isImageUriList(uriList)) {
                     recyclerView.setAdapter(new ShareImagesAdapter());
                 } else {
-                    recyclerView.setAdapter(new ShareFilessAdapter());
+                    recyclerView.setAdapter(new ShareFilesAdapter());
                 }
                 break;
         }
 
+    }
+
+
+    /**
+     * 根据文件列数修改
+     */
+    private int getGridViewColumn() {
+        if (uriList.size() == 2 || uriList.size() == 4) {
+            return 2;
+        }
+        return 3;
     }
 
     public void onClick(View view) {
@@ -417,10 +428,10 @@ public class ShareFilesActivity extends BaseActivity {
         }
     }
 
-    class ShareFilessAdapter extends RecyclerView.Adapter<FileHolder> {
+    class ShareFilesAdapter extends RecyclerView.Adapter<FileHolder> {
         LayoutInflater inflater;
 
-        public ShareFilessAdapter() {
+        public ShareFilesAdapter() {
             inflater = LayoutInflater.from(ShareFilesActivity.this);
         }
 
