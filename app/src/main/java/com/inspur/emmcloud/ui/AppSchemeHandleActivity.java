@@ -403,6 +403,9 @@ public class AppSchemeHandleActivity extends BaseActivity {
      * @param text
      */
     private String getShareUrl(String text) {
+        int begin = text.indexOf("http");
+        int last = text.length();
+        text = text.substring(begin, last);
 //        Pattern p = Pattern.compile("((http|ftp|https)://)(([a-zA-Z0-9\\._-]+\\.[a-zA-Z]{2,6})|([0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}))(:[0-9]{1,4})*(/[a-zA-Z0-9\\&%_\\./-~-]*)?", Pattern.CASE_INSENSITIVE);
         Pattern p = Pattern.compile(Constant.PATTERN_URL, Pattern.CASE_INSENSITIVE);
         Matcher matcher = p.matcher(text);

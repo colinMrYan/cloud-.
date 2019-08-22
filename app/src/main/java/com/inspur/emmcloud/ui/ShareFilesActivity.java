@@ -45,7 +45,6 @@ import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +58,7 @@ import butterknife.ButterKnife;
 public class ShareFilesActivity extends BaseActivity {
 
     private final static int SHARE_IMAGE_OR_FILES = 0;
+    private final static int SHARE_FILES_LIMIT = 5;
     @BindView(R.id.rv_file_list)
     RecyclerView recyclerView;
     @BindView(R.id.img_file_icon)
@@ -85,18 +85,26 @@ public class ShareFilesActivity extends BaseActivity {
     public void onCreate() {
         ButterKnife.bind(this);
         this.uriList.addAll((List<String>) getIntent().getSerializableExtra(Constant.SHARE_FILE_URI_LIST));
-        if (!isImageUriList(uriList)) {
-            if (uriList.size() <= 1) {
-                File file = new File(uriList.get(0));
-                if (StringUtils.isBlank(FileUtils.getSuffix(file))) {
-                    ToastUtils.show(ShareFilesActivity.this, getString(R.string.share_no_suffix));
-                    finish();
-                }
-            } else {
-                ToastUtils.show(ShareFilesActivity.this, getString(R.string.share_mutil_only_support_image));
-                finish();
-            }
-        } else if (isImageUriList(uriList) && uriList.size() > 5) {
+//        if (!isImageUriList(uriList)) {
+//            if (uriList.size() <= 1) {
+//                File file = new File(uriList.get(0));
+//                if (StringUtils.isBlank(FileUtils.getSuffix(file))) {
+//                    ToastUtils.show(ShareFilesActivity.this, getString(R.string.share_no_suffix));
+//                    finish();
+//                }
+//            } else {
+//                ToastUtils.show(ShareFilesActivity.this, getString(R.string.share_mutil_only_support_image));
+//                finish();
+//            }
+//        } else if (isImageUriList(uriList) && uriList.size() > 5) {
+//            ToastUtils.show(ShareFilesActivity.this, getString(R.string.share_no_more_than_five));
+//            finish();
+//        }
+        if (uriList == null || uriList.size() == 0) {
+            ToastUtils.show(ShareFilesActivity.this, getString(R.string.baselib_share_fail));
+            finish();
+        }
+        if (uriList.size() > SHARE_FILES_LIMIT) {
             ToastUtils.show(ShareFilesActivity.this, getString(R.string.share_no_more_than_five));
             finish();
         }
@@ -396,7 +404,7 @@ public class ShareFilesActivity extends BaseActivity {
 
         @Override
         public void onBindViewHolder(FileHolder holder, int position) {
-            ImageDisplayUtils.getInstance().displayImage(holder.imageView, uriList.get(position).toString(), R.drawable.ic_app_default);
+            ImageDisplayUtils.getInstance().displayImage(holder.imageView, "drawable://" + FileUtils.getRegularFileIconResId(uriList.get(position)), R.drawable.ic_app_default);
         }
 
         @Override
