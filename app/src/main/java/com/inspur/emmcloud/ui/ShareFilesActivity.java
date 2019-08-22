@@ -70,7 +70,7 @@ public class ShareFilesActivity extends BaseActivity {
     @BindView(R.id.view_line_volume)
     View viewLineVolume;
     @BindView(R.id.tv_img_file_name)
-    TextView imagefileNameTextView;
+    TextView imageFileNameTextView;
     @BindView(R.id.rl_file)
     RelativeLayout fileLayout;
     @BindView(R.id.rl_image)
