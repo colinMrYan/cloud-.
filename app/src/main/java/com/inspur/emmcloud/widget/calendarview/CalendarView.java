@@ -1757,9 +1757,27 @@ public class CalendarView extends FrameLayout {
         void onCalendarInterceptClick(EmmCalendar emmCalendar, boolean isClick);
     }
 
+    /**
+     * 控制是否显示农历
+     *
+     * @param isLunarAndFestivalShow
+     */
     public void setIsLunarAndFestivalShow(boolean isLunarAndFestivalShow){
         if(mDelegate != null){
             mDelegate.setLunarAndFestivalShow(isLunarAndFestivalShow);
+        }
+
+
+    }
+
+    /**
+     * 控制是否显示休假
+     *
+     * @param isShowRest
+     */
+    public void setIsShowRest(boolean isShowRest) {
+        if (mDelegate != null) {
+            mDelegate.setRestShow(isShowRest);
         }
     }
 }
