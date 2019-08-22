@@ -249,10 +249,18 @@ public class ConversationActivity extends ConversationBaseActivity {
             cacheMessageList = new ArrayList<>();
         }
         List<Message> messageSendingList = new ArrayList<>();
+//        for (int i = 0; i < cacheMessageList.size(); i++) {
+//            if (cacheMessageList.get(i).getSendStatus() == Message.MESSAGE_SEND_ING && ((System.currentTimeMillis() - cacheMessageList.get(i).getCreationDate()) > 16 * 1000)) {
+//                cacheMessageList.get(i).setSendStatus(Message.MESSAGE_SEND_FAIL);
+//                messageSendingList.add(cacheMessageList.get(i));
+//            }
+//        }
+
         for (int i = 0; i < cacheMessageList.size(); i++) {
-            if (cacheMessageList.get(i).getSendStatus() == Message.MESSAGE_SEND_ING && ((System.currentTimeMillis() - cacheMessageList.get(i).getCreationDate()) > 16 * 1000)) {
-                cacheMessageList.get(i).setSendStatus(Message.MESSAGE_SEND_FAIL);
-                messageSendingList.add(cacheMessageList.get(i));
+            Message message = cacheMessageList.get(i);
+            if (message.getSendStatus() == Message.MESSAGE_SEND_ING || message.getSendStatus() == Message.MESSAGE_SEND_FAIL) {
+                message.setSendStatus(getInitStatus(message));
+                messageSendingList.add(message);
             }
         }
         persistenceMessageSendStatus(messageSendingList);
@@ -267,6 +275,16 @@ public class ConversationActivity extends ConversationBaseActivity {
                 msgListView.scrollToPosition(position);
             }
         }
+    }
+
+    /**
+     * 获取当前发送状态，需要OSS接口支持
+     *
+     * @param message
+     * @return
+     */
+    private int getInitStatus(Message message) {
+        return ChatFileUploadManagerUtils.getInstance().isMessageResourceUploading(message) ? Message.MESSAGE_SEND_ING : Message.MESSAGE_SEND_FAIL;
     }
 
     /**
