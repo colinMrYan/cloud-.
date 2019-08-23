@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.chat;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -45,6 +46,7 @@ import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -177,17 +179,14 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
                                 break;
                             case SEARCH_GROUP:
                                 if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
-                                    groupsSearchList = ChannelGroupCacheUtils
+                                    searchModelsList = ChannelGroupCacheUtils
                                             .getSearchChannelGroupSearchModelList(MyApplication.getInstance(),
                                                     searchText);
                                 } else {
-                                    groupsSearchList = ConversationCacheUtils.getSearchConversationSearchModelList(MyApplication.getInstance(), searchText);
+                                    searchModelsList = ConversationCacheUtils.getSearchConversationSearchModelList(MyApplication.getInstance(), searchText);
                                 }
-                                if (groupsSearchList.size() > 3) {
+                                if (searchModelsList == null) {
                                     searchModelsList = new ArrayList<>();
-                                    for (int i = 0; i < 3; i++) {
-                                        searchModelsList.add(groupsSearchList.get(i));
-                                    }
                                 }
                                 break;
                             case SEARCH_CONTACT:
@@ -278,11 +277,9 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
                     createDirectChannel(searchModelsList.get(i).getId());
                     break;
                 case SEARCH_ALL_FROM_CHAT:
-                    if (conversationFromChatContentList.get(i).getConversation().getType().equals(Conversation.TYPE_GROUP)) {
-                        startChannelActivity(conversationFromChatContentList.get(i).getConversation().getId());
-                    } else {
-                        createDirectChannel(conversationFromChatContentList.get(i).getSingleChatContactUser().getId());
-                    }
+                    Intent intent = new Intent(CommunicationSearchModelMoreActivity.this, CommunicationSearchMessagesActivity.class);
+                    intent.putExtra(SEARCH_ALL_FROM_CHAT, (Serializable) conversationFromChatContentList.get(i));
+                    startActivity(intent);
                     break;
                 default:
                     break;

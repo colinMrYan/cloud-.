@@ -79,6 +79,7 @@
             android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/ll_all_contact"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
@@ -149,6 +150,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/ll_all_group"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -221,6 +223,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/ll_all_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"

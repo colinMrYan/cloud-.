@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -73,14 +74,14 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
     RelativeLayout searchMoreContactFromChatLayout;
     @BindView(R.id.rl_search_more_contact)
     RelativeLayout searchMoreContentLayout;
+    @BindView(R.id.ll_all_contact)
+    LinearLayout allContactLayout;
+    @BindView(R.id.ll_all_group)
+    LinearLayout allGroupLayout;
+    @BindView(R.id.ll_all_content)
+    LinearLayout allContentLayout;
     @BindView(R.id.ev_search_input)
     ClearEditText searchEdit;
-    @BindView(R.id.tv_group_title)
-    TextView groupTitleText;
-    @BindView(R.id.tv_contacts_title)
-    TextView contactsTitleText;
-    @BindView(R.id.tv_chat_content_title)
-    TextView chatContentTitleText;
     private List<SearchModel> contactsList = new ArrayList<>();
     private List<SearchModel> groupsList = new ArrayList<>();
     private List<ConversationFromChatContent> conversationFromChatContentList = new ArrayList<>();
@@ -124,9 +125,9 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
         searchMoreContentLayout.setVisibility(View.GONE);
         searchMoreGroupLayout.setVisibility(View.GONE);
         searchMoreContactFromChatLayout.setVisibility(View.GONE);
-        groupTitleText.setVisibility(View.GONE);
-        contactsTitleText.setVisibility(View.GONE);
-        chatContentTitleText.setVisibility(View.GONE);
+        allContactLayout.setVisibility(View.GONE);
+        allContentLayout.setVisibility(View.GONE);
+        allGroupLayout.setVisibility(View.GONE);
         InputMethodUtils.display(this, searchEdit);
     }
 
@@ -151,9 +152,9 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
                         searchMoreContentLayout.setVisibility(contactsList.size() > 2 ? View.VISIBLE : View.GONE);
                         searchMoreGroupLayout.setVisibility(groupsList.size() > 2 ? View.VISIBLE : View.GONE);
                         searchMoreContactFromChatLayout.setVisibility(conversationFromChatContentList.size() > 2 ? View.VISIBLE : View.GONE);
-                        groupTitleText.setVisibility(contactsList.size() > 0 ? View.VISIBLE : View.GONE);
-                        contactsTitleText.setVisibility(groupsList.size() > 0 ? View.VISIBLE : View.GONE);
-                        chatContentTitleText.setVisibility(conversationFromChatContentList.size() > 0 ? View.VISIBLE : View.GONE);
+                        allGroupLayout.setVisibility(groupsList.size() > 0 ? View.VISIBLE : View.GONE);
+                        allContactLayout.setVisibility(contactsList.size() > 0 ? View.VISIBLE : View.GONE);
+                        allContentLayout.setVisibility(conversationFromChatContentList.size() > 0 ? View.VISIBLE : View.GONE);
                         groupAdapter.setContentList(groupsList);
                         contactAdapter.setContentList(contactsList);
                         groupAdapter.notifyDataSetChanged();
