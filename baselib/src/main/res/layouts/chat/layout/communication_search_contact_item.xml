@@ -20,15 +20,17 @@
             android:id="@+id/tv_contact_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingRight="10dp"
             android:singleLine="true"
             android:text="测试名称"
-            android:textColor="#151515"
+            android:textColor="#333333"
             android:textSize="16sp" />
         <TextView
             android:id="@+id/tv_contact_detail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_contact_name"
+            android:paddingRight="10dp"
             android:singleLine="true"
             android:textColor="#888888"
             android:textSize="13sp"
