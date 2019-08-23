@@ -126,6 +126,8 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                         adapter.setVolumeFileSelect(position);
                         batchOprationHeaderText.setText(getString(R.string.clouddriver_has_selected, adapter.getSelectVolumeFileList().size()));
                         setBatchOprationLayoutByPrivilege();
+                        getBatchOprationSelectAllText.setText((volumeFileList.size() == adapter.getSelectVolumeFileList().size()) ? R.string.clouddriver_select_nothing : R.string.clouddriver_select_all);
+                        batchOprationHeaderText.setText(getString(R.string.clouddriver_has_selected, adapter.getSelectVolumeFileList().size()));
                     }
                 }
 
