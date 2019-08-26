@@ -97,6 +97,8 @@ public class SettingActivity extends BaseActivity {
     TextView tabName;
     @BindView(R.id.switch_view_setting_notification)
     SwitchCompat notificationSwitch;
+    int REQUEST_CODE_CAMERA = 10002;
+    Uri fileUri = null;
     private Handler handler;
     private MineAPIService apiService;
     private LoadingDialog loadingDlg;
@@ -194,18 +196,27 @@ public class SettingActivity extends BaseActivity {
             voice2WordSwitch.setOnCheckedChangeListener(onCheckedChangeListener);
         }
         notificationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                        showNotificationDlg();
+                boolean pushSwitchFlag = PreferencesByUserAndTanentUtils.getBoolean(SettingActivity.this, Constant.PUSH_SWITCH_FLAG, true);
+                if (isChecked != pushSwitchFlag) {
+                    if (isChecked) {    //代表上升沿 先检测
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                            showNotificationDlg(isChecked);
+                        } else {
+                            PreferencesByUserAndTanentUtils.putBoolean(SettingActivity.this, Constant.PUSH_SWITCH_FLAG, true);
+                            switchPush();
+                            notificationSwitch.setChecked(true);
+                        }
+                    } else {
+                        if (NotificationSetUtils.isNotificationEnabled(SettingActivity.this)) {
+                            showNotificationCloseDlg();
+                        } else {
+                            PreferencesByUserAndTanentUtils.putBoolean(SettingActivity.this, Constant.PUSH_SWITCH_FLAG, false);
+                            notificationSwitch.setChecked(false);
+                        }
                     }
-                    notificationSwitch.setChecked(true);
-                    PreferencesByUserAndTanentUtils.putBoolean(SettingActivity.this, Constant.PUSH_SWITCH_FLAG, true);
-                    switchPush();
-                } else {
-                    showNotificationCloseDlg();
-
                 }
             }
         });
@@ -226,6 +237,7 @@ public class SettingActivity extends BaseActivity {
     private void showNotificationCloseDlg() {
         new CustomDialog.MessageDialogBuilder(SettingActivity.this)
                 .setMessage(R.string.notification_switch_cant_recive)
+                .setCancelable(false)
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -320,7 +332,6 @@ public class SettingActivity extends BaseActivity {
         }
     }
 
-
     private void handMessage() {
         // TODO Auto-generated method stub
         handler = new Handler() {
@@ -339,9 +350,6 @@ public class SettingActivity extends BaseActivity {
 
         };
     }
-
-    int REQUEST_CODE_CAMERA = 10002;
-    Uri fileUri = null;
 
     public void onClick(View v) {
         // TODO Auto-generated method stub
@@ -449,14 +457,16 @@ public class SettingActivity extends BaseActivity {
      * 弹出注销提示框
      */
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    private void showNotificationDlg() {
+    private void showNotificationDlg(boolean isChecked) {
         if (!NotificationSetUtils.isNotificationEnabled(SettingActivity.this)) {
             new CustomDialog.MessageDialogBuilder(SettingActivity.this)
+                    .setCancelable(false)
                     .setMessage(getString(R.string.notification_switch_open_setting))
                     .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
+                            PreferencesByUserAndTanentUtils.putBoolean(SettingActivity.this, Constant.PUSH_SWITCH_FLAG, false);
                             notificationSwitch.setChecked(false);
                         }
                     })
@@ -465,9 +475,14 @@ public class SettingActivity extends BaseActivity {
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
                             NotificationSetUtils.openNotificationSetting(SettingActivity.this);
+                            PreferencesByUserAndTanentUtils.putBoolean(SettingActivity.this, Constant.PUSH_SWITCH_FLAG, false);
+                            notificationSwitch.setChecked(false);
                         }
                     })
                     .show();
+        } else {
+            PreferencesByUserAndTanentUtils.putBoolean(SettingActivity.this, Constant.PUSH_SWITCH_FLAG, isChecked);
+            notificationSwitch.setChecked(isChecked);
         }
     }
 
