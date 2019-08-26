@@ -233,6 +233,7 @@ public class SettingActivity extends BaseActivity {
     private void showNotificationCloseDlg() {
         new CustomDialog.MessageDialogBuilder(SettingActivity.this)
                 .setMessage(R.string.notification_switch_cant_recive)
+                .setCancelable(false)
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -455,6 +456,7 @@ public class SettingActivity extends BaseActivity {
     private void showNotificationDlg(boolean isChecked) {
         if (!NotificationSetUtils.isNotificationEnabled(SettingActivity.this)) {
             new CustomDialog.MessageDialogBuilder(SettingActivity.this)
+                    .setCancelable(false)
                     .setMessage(getString(R.string.notification_switch_open_setting))
                     .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                         @Override
