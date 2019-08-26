@@ -19,6 +19,7 @@
             android:layout_centerVertical="true"
             android:clickable="true"
             android:gravity="center"
+            android:onClick="onClick"
             android:paddingLeft="4dp"
             android:paddingRight="15dp"
             android:text="@string/cancel"
@@ -44,15 +45,22 @@
                 android:background="@drawable/ic_search_members" />
 
             <TextView
+                android:id="@+id/tv_static_name"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/iv_search_members"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:textColor="#36A5F6"
+                android:textSize="14sp" />
 
             <com.inspur.emmcloud.baselib.widget.ClearEditText
                 android:id="@+id/ev_search_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_toRightOf="@id/iv_search_members"
+                android:layout_toRightOf="@id/tv_static_name"
                 android:background="@color/white"
                 android:drawableRight="@drawable/ic_edit_text_delbtn"
                 android:freezesText="true"
@@ -70,46 +78,44 @@
         </RelativeLayout>
     </RelativeLayout>
 
-    <RelativeLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/content_bg">
+        android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/tv_group_name_hint"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/pop_second_group_more_text"
-            android:gravity="center_vertical"
-            android:paddingBottom="12dp"
-            android:paddingLeft="16dp"
-            android:paddingTop="12dp"
-            android:text="群组"
-            android:textColor="#999999"
-            android:textSize="13sp"
-            android:visibility="gone"></TextView>
+            android:orientation="vertical"
+            android:padding="11dp">
 
-        <View
-            android:id="@+id/v_line_mid_group"
-            android:layout_width="match_parent"
-            android:layout_height="0.5px"
-            android:layout_below="@id/tv_group_name_hint"
-            android:background="@color/color_list_divider"
-            android:visibility="gone" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/v_line_mid_group">
+                <com.inspur.emmcloud.baselib.widget.CircleTextImageView
+                    android:id="@+id/iv_search_model_head"
+                    android:layout_width="46dp"
+                    android:layout_height="46dp" />
 
-            <ListView
-                android:id="@+id/lv_search_group_show"
+                <TextView
+                    android:id="@+id/tv_search_model_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@id/iv_search_model_head"
+                    android:ellipsize="end"
+                    android:paddingLeft="10dp"
+                    android:singleLine="true"
+                    android:textColor="#333333"
+                    android:textSize="17sp" />
+            </RelativeLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_group_message_search"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:divider="#ffffff"
-                android:dividerHeight="0dp"></ListView>
-        </RelativeLayout>
-    </RelativeLayout>
+                android:layout_below="@id/rl_header" />
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

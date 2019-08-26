@@ -2,31 +2,38 @@ package com.inspur.emmcloud.ui.chat;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ListView;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.GroupMessageSearchAdapter;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
 import com.inspur.emmcloud.baselib.widget.ClearEditText;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.SearchModel;
+import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
 import com.inspur.emmcloud.bean.chat.Conversation;
-import com.inspur.emmcloud.bean.chat.ConversationFromChatContent;
 import com.inspur.emmcloud.bean.chat.UIMessage;
-import com.inspur.emmcloud.bean.contact.Contact;
+import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
+import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +48,7 @@ public class CommunicationSearchMessagesActivity extends BaseActivity {
     public static final String SEARCH_CONTACT = "search_contact";
     public static final String SEARCH_GROUP = "search_group";
     public static final String SEARCH_ALL_FROM_CHAT = "search_all_from_chat";
+    public static final String SEARCH_CONTENT = "search_content";
     public static final int REFRESH_DATA = 1;
     public static final int CLEAR_DATA = 2;
 
@@ -48,16 +56,20 @@ public class CommunicationSearchMessagesActivity extends BaseActivity {
     ClearEditText searchEdit;
     @BindView(R.id.tv_cancel)
     TextView cancelTextView;
-    @BindView(R.id.lv_search_group_show)
-    ListView searchGroupListView;
-    private Runnable searchRunnable;
-    private List<Message> searchMessagesList = new ArrayList<>(); // 群组搜索结果
-    private ConversationFromChatContent conversationFromChatContent;
+    @BindView(R.id.rv_group_message_search)
+    RecyclerView messagesDetailRecycleView;
+    @BindView(R.id.iv_search_model_head)
+    CircleTextImageView searchModelHeadImage;
+    @BindView(R.id.tv_search_model_name)
+    TextView searchModelNameText;
+    @BindView(R.id.tv_static_name)
+    TextView staticNameText;
+
+
+    private List<com.inspur.emmcloud.bean.chat.Message> searchMessagesList = new ArrayList<>(); // 群组搜索结果
+    private Conversation conversationFromChatContent;
     private GroupMessageSearchAdapter groupMessageSearchAdapter;
-    private String searchArea = SEARCH_GROUP;
     private String searchText;
-    private Handler handler;
-    private long lastSearchTime = 0;
     private TextView.OnEditorActionListener onEditorActionListener = new TextView.OnEditorActionListener() {
         @Override
         public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -74,18 +86,24 @@ public class CommunicationSearchMessagesActivity extends BaseActivity {
     public void onCreate() {
         ButterKnife.bind(this);
         if (getIntent().hasExtra(SEARCH_ALL_FROM_CHAT)) {
-            conversationFromChatContent = (ConversationFromChatContent) getIntent().getSerializableExtra(SEARCH_ALL_FROM_CHAT);
+            conversationFromChatContent = (Conversation) getIntent().getSerializableExtra(SEARCH_ALL_FROM_CHAT);
+            displayImg(conversationFromChatContent.conversation2SearchModel(), searchModelHeadImage);
+            searchModelNameText.setText("“" + conversationFromChatContent.getName() + "”" + " 的记录");
+            staticNameText.setText(conversationFromChatContent.getName());
+            LogUtils.LbcDebug("111111111111111111111111111");
         }
-        initSearchRunnable();
-        handMessage();
         groupMessageSearchAdapter = new GroupMessageSearchAdapter(this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        messagesDetailRecycleView.setLayoutManager(layoutManager);
+        messagesDetailRecycleView.setAdapter(groupMessageSearchAdapter);
         groupMessageSearchAdapter.setGroupMessageSearchListener(new GroupMessageSearchAdapter.GroupMessageSearchListener() {
             @Override
             public void onItemClick(UIMessage uiMessage) {
                 if (conversationFromChatContent != null) {
-                    if (conversationFromChatContent.getConversation().getType().equals(Conversation.TYPE_GROUP)) {
+                    if (conversationFromChatContent.getType().equals(Conversation.TYPE_GROUP)) {
                         Bundle bundle = new Bundle();
-                        bundle.putString(ConversationActivity.EXTRA_CID, conversationFromChatContent.getConversation().getId());
+                        bundle.putString(ConversationActivity.EXTRA_CID, conversationFromChatContent.getId());
                         bundle.putSerializable(ConversationActivity.EXTRA_UIMESSAGE, uiMessage);
                         dismissSoftKeyboard();
                         IntentUtils.startActivity(CommunicationSearchMessagesActivity.this, ConversationActivity.class, bundle, true);
@@ -93,12 +111,76 @@ public class CommunicationSearchMessagesActivity extends BaseActivity {
                         ToastUtils.show("这是个人信息");
                     }
                 }
-
             }
         });
         searchEdit.setOnEditorActionListener(onEditorActionListener);
-        searchEdit.addTextChangedListener(new SearchWatcher());
 
+        final List<com.inspur.emmcloud.bean.chat.Message> messageList = MessageCacheUtil.getGroupMessageWithType(BaseApplication.getInstance(), conversationFromChatContent.getId());
+        final List<String> messageContentList = getMessageContentList(messageList);
+        searchEdit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                searchMessagesList.clear();
+                String keyWords = s.toString();
+                for (int i = 0; i < messageContentList.size(); i++) {
+                    if (!StringUtils.isBlank(keyWords) && messageContentList.get(i).contains(keyWords)) {
+                        searchMessagesList.add(messageList.get(i));
+                    }
+                }
+                groupMessageSearchAdapter.setAndRefreshAdapter(searchMessagesList, keyWords);
+            }
+        });
+        if (getIntent().hasExtra(SEARCH_CONTENT)) {
+            searchText = getIntent().getStringExtra(SEARCH_CONTENT);
+            searchEdit.setText(searchText);
+            searchEdit.setSelection(searchText.length());
+            LogUtils.LbcDebug("222222222222222222222222222");
+        }
+    }
+
+    /**
+     * 中间转化步骤便于搜索，防止搜索数字搜出@的人
+     *
+     * @param messageList
+     * @return
+     */
+    private List<String> getMessageContentList(List<com.inspur.emmcloud.bean.chat.Message> messageList) {
+        List<String> messageContentList = new ArrayList<>();
+        for (com.inspur.emmcloud.bean.chat.Message message : messageList) {
+            String type = message.getType();
+            switch (type) {
+                case com.inspur.emmcloud.bean.chat.Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
+                    messageContentList.add(ChatMsgContentUtils.mentionsAndUrl2Span(CommunicationSearchMessagesActivity.this,
+                            message.getMsgContentComment().getText(), message.getMsgContentComment().getMentionsMap()).toString());
+                    break;
+                case com.inspur.emmcloud.bean.chat.Message.MESSAGE_TYPE_TEXT_PLAIN:
+                    messageContentList.add(ChatMsgContentUtils.mentionsAndUrl2Span(CommunicationSearchMessagesActivity.this,
+                            message.getMsgContentTextPlain().getText(), message.getMsgContentTextPlain().getMentionsMap()).toString());
+                    break;
+                case com.inspur.emmcloud.bean.chat.Message.MESSAGE_TYPE_TEXT_MARKDOWN:
+                    messageContentList.add(ChatMsgContentUtils.mentionsAndUrl2Span(CommunicationSearchMessagesActivity.this,
+                            message.getMsgContentTextMarkdown().getText(), message.getMsgContentTextMarkdown().getMentionsMap()).toString());
+                    break;
+            }
+        }
+        return messageContentList;
+    }
+
+
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.tv_cancel:
+                finish();
+                break;
+        }
     }
 
     private void dismissSoftKeyboard() {
@@ -111,86 +193,37 @@ public class CommunicationSearchMessagesActivity extends BaseActivity {
         return R.layout.communication_search_messages_activity;
     }
 
-    private void handMessage() {
-        handler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                switch (msg.what) {
-                    case REFRESH_DATA:
-                        /**刷新Ui*/
-
-                        break;
-                    case CLEAR_DATA:
-                        break;
-                }
+    /**
+     * 统一显示图片
+     *
+     * @param searchModel
+     * @param photoImg
+     */
+    private void displayImg(SearchModel searchModel, CircleTextImageView photoImg) {
+        Integer defaultIcon = null; // 默认显示图标
+        String icon = null;
+        String type = searchModel.getType();
+        if (type.equals(SearchModel.TYPE_GROUP)) {
+            defaultIcon = R.drawable.icon_channel_group_default;
+            File file = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH,
+                    MyApplication.getInstance().getTanent() + searchModel.getId() + "_100.png1");
+            if (file.exists()) {
+                icon = "file://" + file.getAbsolutePath();
+                ImageDisplayUtils.getInstance().displayImageNoCache(photoImg, icon, defaultIcon);
+                return;
             }
-        };
-    }
-
-    private void initSearchRunnable() {
-        searchRunnable = new Runnable() {
-            @Override
-            public void run() {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        List<SearchModel> groupsSearchList;
-                        List<Contact> contactsSearchList;
-                        switch (searchArea) {
-                            case SEARCH_GROUP:
-
-                                break;
-                            case SEARCH_CONTACT:
-
-                                break;
-                            default:
-                                break;
-                        }
-                        if (handler != null) {
-                            handler.sendEmptyMessage(REFRESH_DATA);
-                        }
-                    }
-                }).start();
+        } else if (type.equals(SearchModel.TYPE_STRUCT)) {
+            defaultIcon = R.drawable.ic_contact_sub_struct;
+        } else {
+            defaultIcon = R.drawable.icon_person_default;
+            if (!searchModel.getId().equals("null")) {
+                icon = APIUri.getChannelImgUrl(MyApplication.getInstance(), searchModel.getId());
             }
-        };
-    }
-
-    class SearchWatcher implements TextWatcher {
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int statr, int count, int after) {
 
         }
+        ImageDisplayUtils.getInstance().displayImage(
+                photoImg, icon, defaultIcon);
 
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            //handleSearchApp(s);
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            searchText = searchEdit.getText().toString().trim();
-            if (!StringUtils.isBlank(searchText)) {
-                long currentTime = System.currentTimeMillis();
-                if (currentTime - lastSearchTime > 500) {
-                    handler.post(searchRunnable);
-                } else {
-                    handler.removeCallbacks(searchRunnable);
-                    handler.postDelayed(searchRunnable, 500);
-                }
-                lastSearchTime = System.currentTimeMillis();
-            } else {
-                lastSearchTime = 0;
-                handler.removeCallbacks(searchRunnable);
-                handler.sendEmptyMessage(REFRESH_DATA);
-            }
-        }
-    }
-
-    class SearchHolder {
-        public CircleTextImageView headImageView;
-        public TextView nameTextView;
-        public TextView detailTextView;
     }
 
 

@@ -736,17 +736,17 @@ public class MessageCacheUtil {
         try {
             List<Message> messageList;
             List<String> conversationIdList = new ArrayList<>();
-            String searchStr = "";
-            for (int i = 0; i < content.length(); i++) {
-                if (i < content.length() - 1) {
-                    searchStr += "%" + content.charAt(i);
-                } else {
-                    searchStr += "%" + content.charAt(i) + "%";
-                }
-            }
+//            String searchStr = "";
+//            for (int i = 0; i < content.length(); i++) {
+//                if (i < content.length() - 1) {
+//                    searchStr += "%" + content.charAt(i);
+//                } else {
+//                    searchStr += "%" + content.charAt(i) + "%";
+//                }
+//            }
             messageList = DbCacheUtils.getDb(context).selector(Message.class)
                     .where("type", "=", Message.MESSAGE_TYPE_TEXT_PLAIN)
-                    .and(WhereBuilder.b("content", "like", searchStr))
+                    .and(WhereBuilder.b("content", "like", "%" + content + "%"))
                     .findAll();
             if (messageList != null) {
                 for (int i = 0; i < messageList.size(); i++) {
@@ -784,5 +784,29 @@ public class MessageCacheUtil {
         return conversationFromChatContentList;
     }
 
+
+    /**
+     * 查找所有文本类型的消息
+     *
+     * @param context
+     * @param cid
+     * @return
+     */
+    public static List<Message> getGroupMessageWithTypeAndKeywords(Context context, String cid) {
+        List<Message> messageList = new ArrayList<>();
+        try {
+            messageList = DbCacheUtils.getDb(context).selector(Message.class)
+                    .where("channel", "=", cid)
+                    .and(WhereBuilder.b("type", "=", Message.MESSAGE_TYPE_TEXT_PLAIN))
+                    .orderBy("creationDate", true)
+                    .findAll();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (messageList == null) {
+            messageList = new ArrayList<>();
+        }
+        return messageList;
+    }
 
 }

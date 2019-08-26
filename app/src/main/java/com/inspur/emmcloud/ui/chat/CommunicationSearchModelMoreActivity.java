@@ -46,7 +46,6 @@ import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 
 import java.io.File;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,6 +62,7 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
     public static final String SEARCH_CONTACT = "search_contact";
     public static final String SEARCH_GROUP = "search_group";
     public static final String SEARCH_ALL_FROM_CHAT = "search_all_from_chat";
+    public static final String SEARCH_CONTENT = "search_content";
     public static final int REFRESH_DATA = 1;
     public static final int CLEAR_DATA = 2;
 
@@ -268,26 +268,26 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        if (!searchModelsList.get(i).getId().equals(BaseApplication.getInstance().getUid())) {
-            switch (searchArea) {
-                case SEARCH_GROUP:
-                    startChannelActivity(searchModelsList.get(i).getId());
-                    break;
-                case SEARCH_CONTACT:
-                    createDirectChannel(searchModelsList.get(i).getId());
-                    break;
-                case SEARCH_ALL_FROM_CHAT:
-                    Intent intent = new Intent(CommunicationSearchModelMoreActivity.this, CommunicationSearchMessagesActivity.class);
-                    intent.putExtra(SEARCH_ALL_FROM_CHAT, (Serializable) conversationFromChatContentList.get(i));
-                    startActivity(intent);
-                    break;
-                default:
-                    break;
-            }
+        if (searchArea.equals(SEARCH_ALL_FROM_CHAT)) {
+            Intent intent = new Intent(CommunicationSearchModelMoreActivity.this, CommunicationSearchMessagesActivity.class);
+            intent.putExtra(SEARCH_ALL_FROM_CHAT, conversationFromChatContentList.get(i).getConversation());
+            intent.putExtra(SEARCH_CONTENT, searchText);
+            startActivity(intent);
         } else {
-            Bundle bundle = new Bundle();
-            bundle.putString("uid", searchModelsList.get(i).getId());
-            IntentUtils.startActivity(this, UserInfoActivity.class, bundle);
+            if (!searchModelsList.get(i).getId().equals(BaseApplication.getInstance().getUid())) {
+                switch (searchArea) {
+                    case SEARCH_GROUP:
+                        startChannelActivity(searchModelsList.get(i).getId());
+                        break;
+                    case SEARCH_CONTACT:
+                        createDirectChannel(searchModelsList.get(i).getId());
+                        break;
+                }
+            } else {
+                Bundle bundle = new Bundle();
+                bundle.putString("uid", searchModelsList.get(i).getId());
+                IntentUtils.startActivity(this, UserInfoActivity.class, bundle);
+            }
         }
     }
 
