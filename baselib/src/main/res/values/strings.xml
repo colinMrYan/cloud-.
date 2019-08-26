@@ -968,6 +968,7 @@
     <string name="calendar_no_alert">无提醒</string>
     <string name="calendar_when_event_finished">结束时</string>
     <string name="calendar_cancel_the_schedule">确定取消日程？</string>
+    <string name="calendar_china_holiday">中国节假日</string>
 
     <!-- 通用 -->
     <string name="save">保存</string>

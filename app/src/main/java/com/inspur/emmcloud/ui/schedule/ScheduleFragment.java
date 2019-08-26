@@ -32,6 +32,7 @@ import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.bean.schedule.GetScheduleListResult;
 import com.inspur.emmcloud.bean.schedule.Schedule;
@@ -108,6 +109,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
                 setEventShowType();
                 showCalendarEvent(true);
                 break;
+            case Constant.EVENTBUS_TAG_SCHEDULE_HOLIDAY_CHANGE:
             case Constant.EVENTBUS_TAG_SCHEDULE_TASK_DATA_CHANGED:
             case Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED:
                 showCalendarEvent(true);
@@ -304,10 +306,13 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
                 holidayList.addAll(endYearHolidayList);
             }
         }
-        for (Holiday holiday : holidayList) {
-            EmmCalendar schemeCalendar = getSchemeCalendar(holiday.getYear(), holiday.getMonth(), holiday.getDay(), holiday.getName()
-                    , holiday.getColor(), holiday.getBadge(), holiday.getBadgeColor(), false);
-            map.put(schemeCalendar.toString(), schemeCalendar);
+        boolean holidayState = PreferencesByUserAndTanentUtils.getBoolean(getActivity(), Constant.PREF_SCHEDULE_HOLIDAY_STATE, true);
+        if (holidayState) {
+            for (Holiday holiday : holidayList) {
+                EmmCalendar schemeCalendar = getSchemeCalendar(holiday.getYear(), holiday.getMonth(), holiday.getDay(), holiday.getName()
+                        , holiday.getColor(), holiday.getBadge(), holiday.getBadgeColor(), false);
+                map.put(schemeCalendar.toString(), schemeCalendar);
+            }
         }
         for (Schedule schedule : scheduleList) {
             showScheduleEventCalendarViewMark(schedule.getStartTimeCalendar(), schedule.getEndTimeCalendar(), map);
