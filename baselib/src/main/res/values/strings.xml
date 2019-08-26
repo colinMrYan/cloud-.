@@ -1265,7 +1265,7 @@
     <string name="cluster_no_permission">当前功能缺少有效的授权信息。</string>
 
     <string name="share_mutil_only_support_image">多文件分享仅支持照片格式</string>
-    <string name="share_no_more_than_five">不能上传多于5个图片</string>
+    <string name="share_no_more_than_five">不能上传多于5个文件</string>
     <string name="share_no_share_way">没有能够分享的方式</string>
     <string name="share_to_channel">发送到频道</string>
     <string name="share_upload_volume">上传到云盘</string>

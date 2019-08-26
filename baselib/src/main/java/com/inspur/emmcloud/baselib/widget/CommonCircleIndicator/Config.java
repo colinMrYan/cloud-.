@@ -14,7 +14,7 @@ public class Config {
     int height = -1;
     int margin = -1;
     @AnimatorRes
-    int animatorResId = R.anim.scale_with_alpha;
+    int animatorResId = R.animator.scale_with_alpha;
     @AnimatorRes
     int animatorReverseResId = 0;
     @DrawableRes
