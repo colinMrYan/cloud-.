@@ -32,6 +32,7 @@ import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeResultWithPermissionRe
 import com.inspur.emmcloud.bean.appcenter.volume.Volume;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeDetail;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
+import com.inspur.emmcloud.bean.appcenter.volume.VolumeFileUploadInfo;
 import com.inspur.emmcloud.componentservice.login.LoginService;
 import com.inspur.emmcloud.componentservice.login.OauthCallBack;
 
@@ -519,15 +520,33 @@ public class MyAppAPIService {
     /**
      * 获取文件上传Token
      * @param fileName
-     * @param volumeFilePath
-     * @param localFilePath
+     * @param volumeFileUploadInfo
      * @param mockVolumeFile
      */
-    public void getVolumeFileUploadToken(final String fileName, final String volumeFilePath, final String localFilePath, final VolumeFile mockVolumeFile) {
+    public void getVolumeFileUploadToken(final String fileName, final VolumeFileUploadInfo volumeFileUploadInfo, final VolumeFile mockVolumeFile) {
         final String url = APIUri.getVolumeFileUploadSTSTokenUrl(mockVolumeFile.getVolume());
+        String volumeFilePath = volumeFileUploadInfo.getVolumeFileParentPath();
+        final String localFilePath = volumeFileUploadInfo.getLocalFilePath();
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
-        params.addParameter("name", fileName);
-        params.addParameter("path", volumeFilePath + fileName);
+        JSONObject bodyObj = new JSONObject();
+        try {
+            bodyObj.put("name", fileName);
+            bodyObj.put("path", volumeFilePath + fileName);
+            JSONObject baseObj = new JSONObject();
+            baseObj.put("path", volumeFileUploadInfo.getGetVolumeFileUploadTokenResult().getXPath());
+            baseObj.put("id", volumeFileUploadInfo.getGetVolumeFileUploadTokenResult().getFileName());
+            params.addQueryStringParameter("strategy", "multipart");
+            bodyObj.put("base", baseObj);
+            params.setAsJsonContent(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        params.setBodyContent(bodyObj.toString());
+        params.setAsJsonContent(true);
+        if (volumeFileUploadInfo.getGetVolumeFileUploadTokenResult() != null) {
+
+
+        }
         HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
@@ -544,7 +563,7 @@ public class MyAppAPIService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        getVolumeFileUploadToken(fileName, volumeFilePath, localFilePath, mockVolumeFile);
+                        getVolumeFileUploadToken(fileName, volumeFileUploadInfo, mockVolumeFile);
                     }
 
                     @Override
@@ -911,7 +930,7 @@ public class MyAppAPIService {
         HttpUtils.request(context, CloudHttpMethod.DELETE, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
-                apiInterface.retrunRemoveShareVolumeSuccess(volume);
+                apiInterface.returnRemoveShareVolumeSuccess(volume);
             }
 
             @Override
