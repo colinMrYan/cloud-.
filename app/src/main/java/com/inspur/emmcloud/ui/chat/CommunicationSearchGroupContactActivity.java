@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.chat;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -34,7 +35,6 @@ import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.ConversationFromChatContent;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.contact.Contact;
-import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
@@ -59,6 +59,7 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
     public static final String SEARCH_CONTACT = "search_contact";
     public static final String SEARCH_GROUP = "search_group";
     public static final String SEARCH_ALL_FROM_CHAT = "search_all_from_chat";
+    public static final String SEARCH_CONTENT = "search_content";
     public static final int REFRESH_DATA = 1;
     public static final int CLEAR_DATA = 2;
 
@@ -211,11 +212,10 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
                 createDirectChannel(contactsList.get(i).getId());
                 break;
             case R.id.lv_search_contact_from_chat:
-                if (conversationFromChatContentList.get(i).getConversation().getType().equals(Conversation.TYPE_GROUP)) {
-                    startChannelActivity(conversationFromChatContentList.get(i).getConversation().getId());
-                } else {
-                    createDirectChannel(conversationFromChatContentList.get(i).getSingleChatContactUser().getId());
-                }
+                Intent intent = new Intent(CommunicationSearchGroupContactActivity.this, CommunicationSearchMessagesActivity.class);
+                intent.putExtra(SEARCH_ALL_FROM_CHAT, conversationFromChatContentList.get(i));
+                intent.putExtra(SEARCH_CONTENT, searchText);
+                startActivity(intent);
                 break;
             default:
                 break;
@@ -499,9 +499,8 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
                 searchHolder.detailTextView.setText(conversationFromChatContentList.get(i).getMessageNum() + "条相关消息记录");
                 searchHolder.detailTextView.setVisibility(View.VISIBLE);
             }
-            ContactUser contactUser = conversationFromChatContentList.get(i).getSingleChatContactUser();
-            if (contactUser != null && conversation.getType().equals(Conversation.TYPE_DIRECT)) {
-                Contact contact = new Contact(contactUser);
+            Contact contact = conversationFromChatContentList.get(i).getSingleChatContactUser();
+            if (contact != null && conversation.getType().equals(Conversation.TYPE_DIRECT)) {
                 SearchModel searchModel = contact.contact2SearchModel();
                 displayImg(searchModel, searchHolder.headImageView);
                 searchHolder.nameTextView.setText(searchModel.getName().toString());

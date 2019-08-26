@@ -36,7 +36,6 @@ import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.ConversationFromChatContent;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.contact.Contact;
-import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
@@ -270,7 +269,7 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         if (searchArea.equals(SEARCH_ALL_FROM_CHAT)) {
             Intent intent = new Intent(CommunicationSearchModelMoreActivity.this, CommunicationSearchMessagesActivity.class);
-            intent.putExtra(SEARCH_ALL_FROM_CHAT, conversationFromChatContentList.get(i).getConversation());
+            intent.putExtra(SEARCH_ALL_FROM_CHAT, conversationFromChatContentList.get(i));
             intent.putExtra(SEARCH_CONTENT, searchText);
             startActivity(intent);
         } else {
@@ -450,9 +449,8 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
                 searchHolder.detailTextView.setText(conversationFromChatContentList.get(i).getMessageNum() + "条相关消息记录");
                 searchHolder.detailTextView.setVisibility(View.VISIBLE);
             }
-            ContactUser contactUser = conversationFromChatContentList.get(i).getSingleChatContactUser();
-            if (contactUser != null && conversation.getType().equals(Conversation.TYPE_DIRECT)) {
-                Contact contact = new Contact(contactUser);
+            Contact contact = conversationFromChatContentList.get(i).getSingleChatContactUser();
+            if (contact != null && conversation.getType().equals(Conversation.TYPE_DIRECT)) {
                 SearchModel searchModel = contact.contact2SearchModel();
                 displayImg(searchModel, searchHolder.headImageView);
                 searchHolder.nameTextView.setText(searchModel.getName().toString());

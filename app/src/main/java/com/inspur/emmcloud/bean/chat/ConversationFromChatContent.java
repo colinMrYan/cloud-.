@@ -1,23 +1,24 @@
 package com.inspur.emmcloud.bean.chat;
 
 import com.inspur.emmcloud.baselib.util.JSONUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 
 import org.json.JSONArray;
 
+import java.io.Serializable;
+
 /**
  * Created by libaochao on 2019/8/23.
  */
 
-public class ConversationFromChatContent {
+public class ConversationFromChatContent implements Serializable {
 
     private Conversation conversation = new Conversation();
     private int messageNum = 0;
-    private ContactUser singleChatContactUser;
-
+    private Contact singleChatContactUser;
     public ConversationFromChatContent(Conversation conversation, int messageNum) {
         this.conversation = conversation;
         this.messageNum = messageNum;
@@ -39,11 +40,11 @@ public class ConversationFromChatContent {
         this.messageNum = messageNum;
     }
 
-    public ContactUser getSingleChatContactUser() {
+    public Contact getSingleChatContactUser() {
         return singleChatContactUser;
     }
 
-    public void setSingleChatContactUser(ContactUser singleChatContactUser) {
+    public void setSingleChatContactUser(Contact singleChatContactUser) {
         this.singleChatContactUser = singleChatContactUser;
     }
 
@@ -52,16 +53,12 @@ public class ConversationFromChatContent {
             String ownerUid = BaseApplication.getInstance().getUid();
             JSONArray members = JSONUtils.getJSONArray(conversation.getMembers(), null);
             try {
-
-                LogUtils.LbcDebug("members" + conversation.getMembers());
-                LogUtils.LbcDebug("members0" + members.getString(0));
-                LogUtils.LbcDebug("members1" + members.getString(1));
                 if (ownerUid.equals(members.getString(0))) {
-                    singleChatContactUser = ContactUserCacheUtils.getContactUserByUid(members.getString(1));
-                    LogUtils.LbcDebug("11111111111111111111111111111");
+                    ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(members.getString(1));
+                    singleChatContactUser = new Contact(contactUser);
                 } else {
-                    singleChatContactUser = ContactUserCacheUtils.getContactUserByUid(members.getString(0));
-                    LogUtils.LbcDebug("33333333333322222222222333333333");
+                    ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(members.getString(0));
+                    singleChatContactUser = new Contact(contactUser);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

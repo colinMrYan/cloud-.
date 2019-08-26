@@ -273,6 +273,10 @@ public class ConversationActivity extends ConversationBaseActivity {
             int position = uiMessageList.indexOf(uiMessage);
             if (position != -1) {
                 msgListView.scrollToPosition(position);
+
+            }
+            if (getIntent().hasExtra(EXTRA_FROM_SERCH)) {
+
             }
         }
     }

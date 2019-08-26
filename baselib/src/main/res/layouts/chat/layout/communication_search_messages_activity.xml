@@ -50,6 +50,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@id/iv_search_members"
+                android:maxWidth="120dp"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
                 android:textColor="#36A5F6"

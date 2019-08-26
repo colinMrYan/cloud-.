@@ -3,7 +3,6 @@ package com.inspur.emmcloud.util.privates.cache;
 import android.content.Context;
 
 import com.inspur.emmcloud.baselib.util.ListUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.DbCacheUtils;
@@ -773,9 +772,7 @@ public class MessageCacheUtil {
                     conversationFromChatContentList.add(conversationFromChatContent);
                 }
             }
-            LogUtils.LbcDebug("55555555555555555555555 cidNumMap.size:: " + conversationFromChatContentList.size());
         } catch (Exception e) {
-            LogUtils.LbcDebug("444444444444444444444444444444");
             e.printStackTrace();
         }
         if (conversationFromChatContentList == null) {

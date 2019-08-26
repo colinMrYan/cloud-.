@@ -17,9 +17,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.GroupMessageSearchAdapter;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
-import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
 import com.inspur.emmcloud.baselib.widget.ClearEditText;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
@@ -29,7 +27,9 @@ import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
 import com.inspur.emmcloud.bean.chat.Conversation;
+import com.inspur.emmcloud.bean.chat.ConversationFromChatContent;
 import com.inspur.emmcloud.bean.chat.UIMessage;
+import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 
@@ -67,7 +67,7 @@ public class CommunicationSearchMessagesActivity extends BaseActivity {
 
 
     private List<com.inspur.emmcloud.bean.chat.Message> searchMessagesList = new ArrayList<>(); // 群组搜索结果
-    private Conversation conversationFromChatContent;
+    private ConversationFromChatContent conversationFromChatContent;
     private GroupMessageSearchAdapter groupMessageSearchAdapter;
     private String searchText;
     private TextView.OnEditorActionListener onEditorActionListener = new TextView.OnEditorActionListener() {
@@ -86,11 +86,20 @@ public class CommunicationSearchMessagesActivity extends BaseActivity {
     public void onCreate() {
         ButterKnife.bind(this);
         if (getIntent().hasExtra(SEARCH_ALL_FROM_CHAT)) {
-            conversationFromChatContent = (Conversation) getIntent().getSerializableExtra(SEARCH_ALL_FROM_CHAT);
-            displayImg(conversationFromChatContent.conversation2SearchModel(), searchModelHeadImage);
-            searchModelNameText.setText("“" + conversationFromChatContent.getName() + "”" + " 的记录");
-            staticNameText.setText(conversationFromChatContent.getName());
-            LogUtils.LbcDebug("111111111111111111111111111");
+            conversationFromChatContent = (ConversationFromChatContent) getIntent().getSerializableExtra(SEARCH_ALL_FROM_CHAT);
+            if (conversationFromChatContent.getConversation().getType().equals(Conversation.TYPE_GROUP)) {
+                displayImg(conversationFromChatContent.getConversation().conversation2SearchModel(), searchModelHeadImage);
+                searchModelNameText.setText("“" + conversationFromChatContent.getConversation().getName() + "”" + " 的记录"); //Record(s) for
+                staticNameText.setText(conversationFromChatContent.getConversation().getName());
+            } else {
+                if (conversationFromChatContent.getSingleChatContactUser() != null) {
+                    Contact contact = conversationFromChatContent.getSingleChatContactUser();
+                    SearchModel searchModel = contact.contact2SearchModel();
+                    displayImg(searchModel, searchModelHeadImage);
+                    searchModelNameText.setText("“" + searchModel.getName() + "”" + " 的记录");
+                    staticNameText.setText(searchModel.getName());
+                }
+            }
         }
         groupMessageSearchAdapter = new GroupMessageSearchAdapter(this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -101,21 +110,26 @@ public class CommunicationSearchMessagesActivity extends BaseActivity {
             @Override
             public void onItemClick(UIMessage uiMessage) {
                 if (conversationFromChatContent != null) {
-                    if (conversationFromChatContent.getType().equals(Conversation.TYPE_GROUP)) {
+                    if (conversationFromChatContent.getConversation().getType().equals(Conversation.TYPE_GROUP)) {
                         Bundle bundle = new Bundle();
-                        bundle.putString(ConversationActivity.EXTRA_CID, conversationFromChatContent.getId());
+                        bundle.putString(ConversationActivity.EXTRA_CID, conversationFromChatContent.getConversation().getId());
                         bundle.putSerializable(ConversationActivity.EXTRA_UIMESSAGE, uiMessage);
+                        bundle.putSerializable(ConversationActivity.EXTRA_FROM_SERCH, "1111");
                         dismissSoftKeyboard();
                         IntentUtils.startActivity(CommunicationSearchMessagesActivity.this, ConversationActivity.class, bundle, true);
                     } else {
-                        ToastUtils.show("这是个人信息");
+                        Bundle bundle = new Bundle();
+                        bundle.putString(ConversationActivity.EXTRA_CID, conversationFromChatContent.getConversation().getId());
+                        bundle.putSerializable(ConversationActivity.EXTRA_UIMESSAGE, uiMessage);
+                        bundle.putSerializable(ConversationActivity.EXTRA_FROM_SERCH, "1111");
+                        dismissSoftKeyboard();
+                        IntentUtils.startActivity(CommunicationSearchMessagesActivity.this, ConversationActivity.class, bundle, true);
                     }
                 }
             }
         });
         searchEdit.setOnEditorActionListener(onEditorActionListener);
-
-        final List<com.inspur.emmcloud.bean.chat.Message> messageList = MessageCacheUtil.getGroupMessageWithType(BaseApplication.getInstance(), conversationFromChatContent.getId());
+        final List<com.inspur.emmcloud.bean.chat.Message> messageList = MessageCacheUtil.getGroupMessageWithType(BaseApplication.getInstance(), conversationFromChatContent.getConversation().getId());
         final List<String> messageContentList = getMessageContentList(messageList);
         searchEdit.addTextChangedListener(new TextWatcher() {
             @Override
@@ -142,7 +156,6 @@ public class CommunicationSearchMessagesActivity extends BaseActivity {
             searchText = getIntent().getStringExtra(SEARCH_CONTENT);
             searchEdit.setText(searchText);
             searchEdit.setSelection(searchText.length());
-            LogUtils.LbcDebug("222222222222222222222222222");
         }
     }
 

@@ -8,6 +8,7 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
@@ -27,6 +28,7 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity {
     public static final String EXTRA_NEED_GET_NEW_MESSAGE = "get_new_msg";
     public static final String EXTRA_UNREAD_MESSAGE = "unread_count";
     public static final String EXTRA_UIMESSAGE = "uimessage";
+    public static final String EXTRA_FROM_SERCH = "from_search";
 
     protected String cid;
     protected LoadingDialog loadingDlg;
@@ -42,6 +44,7 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity {
         super.onCreate();
         ButterKnife.bind(this);
         loadingDlg = new LoadingDialog(this);
+        LogUtils.LbcDebug("onCreate");
         initConversationInfo();
         recordUserClickChannel();
         setConversationUnHide();
@@ -51,7 +54,6 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity {
     public int getLayoutResId() {
         return R.layout.activity_channel;
     }
-
     protected void initConversationInfo() {
         if (getIntent().hasExtra(EXTRA_CONVERSATION)) {
             conversation = (Conversation) getIntent().getExtras().getSerializable(EXTRA_CONVERSATION);
@@ -61,8 +63,10 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity {
             conversation = ConversationCacheUtils.getConversation(MyApplication.getInstance(), cid);
         }
         if (conversation == null) {
+            LogUtils.LbcDebug("initConversationInfo");
             getConversationInfo();
         } else {
+            LogUtils.LbcDebug("initChannelMessage1111111111111111111");
             initChannelMessage();
         }
 
@@ -115,6 +119,7 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity {
             ChatAPIService apiService = new ChatAPIService(this);
             apiService.setAPIInterface(new Webservice());
             apiService.getConversationInfo(cid);
+            LogUtils.LbcDebug("111111111111111111111111111111111111getConversationInfo");
         } else {
             finish();
         }
@@ -127,6 +132,7 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity {
         public void returnConversationInfoSuccess(Conversation conversation) {
             LoadingDialog.dimissDlg(loadingDlg);
             ConversationBaseActivity.this.conversation = conversation;
+            LogUtils.LbcDebug("222222222222222222222222222222222222222");
             initChannelMessage();
         }
 
