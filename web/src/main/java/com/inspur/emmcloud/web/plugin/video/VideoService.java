@@ -14,6 +14,7 @@ import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
+import com.inspur.emmcloud.web.R;
 import com.inspur.emmcloud.web.plugin.ImpPlugin;
 import com.inspur.emmcloud.web.ui.ImpFragment;
 
@@ -137,9 +138,22 @@ public class VideoService extends ImpPlugin {
 
         if (requestCode == ImpFragment.REQUEST_CODE_RECORD_VIDEO) {
             if (data != null && data.getData() != null) {
-                jsCallback(successCb, recordVideoFilePath);
+                try {
+                    JSONObject json = new JSONObject();
+                    json.put("path", recordVideoFilePath);
+                    jsCallback(successCb, json.toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             } else {
-                jsCallback(failCb);
+                try {
+                    JSONObject json = new JSONObject();
+                    json.put("errorMessage", getFragmentContext().getString(R.string.web_video_record_fail));
+                    jsCallback(failCb, json.toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
             }
         }
     }

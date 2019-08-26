@@ -8,6 +8,8 @@
     <!-- GPS -->
     <string name="web_gps_opened">GPS已经开启</string>
     <string name="web_gps_closed">GPS已经关闭</string>
+    <!--短视频录制-->
+    <string name="web_video_record_fail">录制失败</string>
 
 </resources>
 
