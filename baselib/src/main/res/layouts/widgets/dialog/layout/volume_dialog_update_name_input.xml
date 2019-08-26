@@ -25,6 +25,7 @@
         android:layout_marginRight="20dp"
         android:layout_marginTop="20dp"
         android:background="@drawable/bg_corner_fill_white_no_border_chat"
+        android:imeOptions="normal"
         android:paddingBottom="8dp"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"

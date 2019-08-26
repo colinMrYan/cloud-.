@@ -90,7 +90,7 @@ class BaseCircleIndicator extends LinearLayout {
         config.margin =
                 typedArray.getDimensionPixelSize(R.styleable.BaseCircleIndicator_ci_margin, -1);
         config.animatorResId = typedArray.getResourceId(R.styleable.BaseCircleIndicator_ci_animator,
-                R.anim.scale_with_alpha);
+                R.animator.scale_with_alpha);
         config.animatorReverseResId =
                 typedArray.getResourceId(R.styleable.BaseCircleIndicator_ci_animator_reverse, 0);
         config.backgroundResId =

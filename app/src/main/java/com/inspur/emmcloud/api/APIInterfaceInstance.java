@@ -1206,7 +1206,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void retrunRemoveShareVolumeSuccess(Volume volume) {
+    public void returnRemoveShareVolumeSuccess(Volume volume) {
     }
 
     @Override

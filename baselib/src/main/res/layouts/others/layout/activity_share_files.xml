@@ -41,7 +41,10 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_file_list"
             android:layout_width="match_parent"
-            android:layout_height="300dp" />
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:minHeight="150dp"
+            android:paddingBottom="16dp" />
 
         <RelativeLayout
             android:id="@+id/rl_image"
@@ -116,6 +119,20 @@
                 android:textColor="#8F8E94"
                 android:textSize="14sp" />
 
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_file_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="30dp"
+            android:paddingLeft="15dp"
+            android:paddingTop="15dp">
+
+            <ListView
+                android:id="@+id/lv_files_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"></ListView>
         </RelativeLayout>
 
     </RelativeLayout>
