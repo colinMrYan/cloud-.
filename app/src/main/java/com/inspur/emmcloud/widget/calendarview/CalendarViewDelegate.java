@@ -306,6 +306,7 @@ final class CalendarViewDelegate {
     private int mMinSelectRange, mMaxSelectRange;
 
     boolean isLunarAndFestivalShow = true;
+    boolean isRestShow = true;
 
     CalendarViewDelegate(Context context, @Nullable AttributeSet attrs) {
         TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.CalendarView);
@@ -450,6 +451,14 @@ final class CalendarViewDelegate {
 
     public void setLunarAndFestivalShow(boolean lunarAndFestivalShow) {
         isLunarAndFestivalShow = lunarAndFestivalShow;
+    }
+
+    public boolean isRestShow() {
+        return isRestShow;
+    }
+
+    public void setRestShow(boolean restShow) {
+        isRestShow = restShow;
     }
 
     private void setRange(int minYear, int minYearMonth,

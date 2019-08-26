@@ -14,7 +14,7 @@ public class FilePathUtils {
 
     public static String BASE_PATH = MyAppConfig.LOCAL_IMP_USER_OPERATE_DIC +
             BaseApplication.getInstance().getTanent() + "/"
-            + BaseApplication.getInstance().getUid() + "/";
+            + BaseApplication.getInstance().getUid();
     public static String SDCARD_PREFIX = "sdcard:";
 
     public static String getRealPath(String filePath) {
@@ -22,7 +22,7 @@ public class FilePathUtils {
             String path = filePath.replace(SDCARD_PREFIX, "");
             return path;
         } else {
-            return BASE_PATH + filePath;
+            return filePath.startsWith("/") ? (BASE_PATH + filePath) : (BASE_PATH + "/" + filePath);
         }
     }
 

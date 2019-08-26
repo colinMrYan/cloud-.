@@ -187,7 +187,7 @@
 
         <activity
             android:name=".ui.ShareFilesActivity"
-            android:launchMode="singleTask"
+            android:launchMode="standard"
             android:resizeableActivity="true"
             android:screenOrientation="portrait">
 
@@ -195,7 +195,7 @@
 
         <activity
             android:name=".ui.ShareLinkActivity"
-            android:launchMode="singleTask"
+            android:launchMode="standard"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
@@ -232,18 +232,35 @@
             <intent-filter android:label="@string/send_to_app">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
-
                 <data android:scheme="content" />
                 <data android:scheme="file" />
-                <!--<data android:mimeType="application/*" />-->
-                <data android:mimeType="text/plain" />
-                <data android:mimeType="application/pdf" />
-                <data android:mimeType="application/msword" />
-                <data android:mimeType="application/vnd.ms-excel" />
-                <data android:mimeType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
-                <data android:mimeType="application/vnd.ms-powerpoint" />
-                <data android:mimeType="application/vnd.openxmlformats-officedocument.presentationml.presentation" />
-                <!--<data android:mimeType="text/calendar" />-->
+                <data android:mimeType="video/*"></data>
+                <data android:mimeType="image/*"></data>
+                <data android:mimeType="text/*"></data>
+                <data android:mimeType="audio/*"></data>
+                <data android:mimeType="application/octet-stream"></data>
+                <data android:mimeType="application/msword"></data>
+                <data android:mimeType="application/pdf"></data>
+                <data android:mimeType="application/vnd.truedoc"></data>
+                <data android:mimeType="application/vnd.ms-excel"></data>
+                <data android:mimeType="application/vnd.ms-powerpoint"></data>
+                <data android:mimeType="application/x-gtar"></data>
+                <data android:mimeType="application/x-gzip"></data>
+                <data android:mimeType="application/java-archive"></data>
+                <data android:mimeType="application/x-javascript"></data>
+                <data android:mimeType="application/x-rar-compressed"></data>
+                <data android:mimeType="application/x-tar"></data>
+                <data android:mimeType="application/x-compressed"></data>
+                <data android:mimeType="application/x-compress"></data>
+                <data android:mimeType="application/x-7z-compressed"></data>
+                <data android:mimeType="application/zip"></data>
+                <data android:mimeType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"></data>
+                <data android:mimeType="application/vnd.openxmlformats-officedocument.spreadsheetml.template"></data>
+                <data android:mimeType="application/vnd.openxmlformats-officedocument.wordprocessingml.document"></data>
+                <data android:mimeType="application/vnd.openxmlformats-officedocument.wordprocessingml.template"></data>
+                <data android:mimeType="application/vnd.openxmlformats-officedocument.presentationml.template"></data>
+                <data android:mimeType="application/vnd.openxmlformats-officedocument.presentationml.slideshow"></data>
+                <data android:mimeType="application/vnd.openxmlformats-officedocument.presentationml.presentation"></data>
             </intent-filter>
         </activity>
 
@@ -701,7 +718,7 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.appcenter.volume.VolumeFileDownloadActivtiy"
+            android:name=".ui.appcenter.volume.VolumeFileDownloadActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />

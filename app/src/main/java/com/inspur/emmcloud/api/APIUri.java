@@ -419,8 +419,8 @@ public class APIUri {
      * @return
      */
     public static String getChatFileResouceUrl(String cid, String path) {
-        String url = getECMChatUrl() + "/api/v1/channel/" + cid + "/file/request?path=" + path;
-        return url.replaceAll("\\+", "%2B");
+        String url = getECMChatUrl() + "/api/v1/channel/" + cid + "/file/request?path=" + StringUtils.encodeURIComponent(path);
+        return url;
     }
 
     /**
@@ -431,8 +431,8 @@ public class APIUri {
      * @return
      */
     public static String getChatVoiceFileResouceUrl(String cid, String path) {
-        String url = getECMChatUrl() + "/api/v1/channel/" + cid + "/voice/request?path=" + path;
-        return url.replaceAll("\\+", "%2B");
+        String url = getECMChatUrl() + "/api/v1/channel/" + cid + "/voice/request?path=" + StringUtils.encodeURIComponent(path);
+        return url;
     }
 
     /**
