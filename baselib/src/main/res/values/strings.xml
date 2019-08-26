@@ -227,6 +227,7 @@
     <string name="baselib_share_fail">分享失败</string>
 
     <string name="baselib_share_many_picture">等%1$d张图片</string>
+    <string name="baselib_share_many_files">等%1$d个文件</string>
     <string name="baselib_share_image">[图片]</string>
     <string name="baselib_share_file">[文件]</string>
     <string name="baselib_share_link">[链接]</string>
