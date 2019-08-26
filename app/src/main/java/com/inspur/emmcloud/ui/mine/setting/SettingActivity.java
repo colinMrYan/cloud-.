@@ -196,6 +196,7 @@ public class SettingActivity extends BaseActivity {
             voice2WordSwitch.setOnCheckedChangeListener(onCheckedChangeListener);
         }
         notificationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 boolean pushSwitchFlag = PreferencesByUserAndTanentUtils.getBoolean(SettingActivity.this, Constant.PUSH_SWITCH_FLAG, true);
@@ -209,11 +210,14 @@ public class SettingActivity extends BaseActivity {
                             notificationSwitch.setChecked(true);
                         }
                     } else {
-                        showNotificationCloseDlg();
-
+                        if (NotificationSetUtils.isNotificationEnabled(SettingActivity.this)) {
+                            showNotificationCloseDlg();
+                        } else {
+                            PreferencesByUserAndTanentUtils.putBoolean(SettingActivity.this, Constant.PUSH_SWITCH_FLAG, false);
+                            notificationSwitch.setChecked(false);
+                        }
                     }
                 }
-
             }
         });
         if (AppUtils.isAppVersionStandard()) {
