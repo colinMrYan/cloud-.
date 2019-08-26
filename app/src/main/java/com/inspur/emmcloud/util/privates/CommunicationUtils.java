@@ -202,6 +202,9 @@ public class CommunicationUtils {
         message.setLocalPath(localFilePath);
         File file = new File(localFilePath);
         Bitmap bitmap = BitmapFactory.decodeFile(localFilePath);
+        if (bitmap == null) {
+            return null;
+        }
         int imgHeight = bitmap.getHeight();
         int imgWidth = bitmap.getWidth();
         long fileSize = FileUtils.getFileSize(localFilePath);
