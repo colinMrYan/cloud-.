@@ -335,7 +335,7 @@ public class ECMChatInputMenu extends LinearLayout {
     @SuppressLint("ClickableViewAccessibility")
     private void initVoiceInputView(int status) {
         Log.d("zhang", "initVoiceInputView: status = " + status);
-        voiceInputCompleteView.setVisibility(GONE);
+        voiceInputCompleteView.setVisibility(INVISIBLE);
         switch (status) {
             case VOICE_INPUT_STATUS_NORMAL:
                 voiceInputEt.setHint(getContext().getString(R.string.voice_input_hint_prepare));
@@ -389,7 +389,7 @@ public class ECMChatInputMenu extends LinearLayout {
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                voiceInputCompleteView.setVisibility(GONE);
+                voiceInputCompleteView.setVisibility(INVISIBLE);
             }
 
             @Override
@@ -618,7 +618,7 @@ public class ECMChatInputMenu extends LinearLayout {
                         case "mention":
                             openMentionPage(false);
                             break;
-                        case "voice_input":
+                        case "voice_input":     //语音输入
                             if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
                                 PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getContext(), Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
                                     @Override
@@ -676,6 +676,7 @@ public class ECMChatInputMenu extends LinearLayout {
     }
 
     private void startVoice2Word() {
+        inputEdit.setVisibility(INVISIBLE);
         addMenuLayout.setVisibility(GONE);
         voiceInputLayout.setVisibility(View.VISIBLE);
         lastVolumeLevel = 0;
@@ -838,6 +839,7 @@ public class ECMChatInputMenu extends LinearLayout {
                 setVoiceInputStatus(TAG_KEYBOARD_INPUT);
                 break;
             case R.id.voice_input_close_img:
+                inputEdit.setVisibility(VISIBLE);
                 voiceInputLayout.setVisibility(View.GONE);
                 voice2StringMessageUtils.stopListening();
                 break;
@@ -851,6 +853,7 @@ public class ECMChatInputMenu extends LinearLayout {
                 break;
             case R.id.voice_input_send:
                 //需检查chatInputMenuListener 及 results是否为理想值  TODO fuchang
+                inputEdit.setVisibility(VISIBLE);
                 voiceInputEt.setText("");
                 initVoiceInputView(VOICE_INPUT_STATUS_STOP);
                 stopVoiceInput();
