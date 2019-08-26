@@ -589,7 +589,7 @@
     <string name="file_cannot_copy_here">不能將檔複製到自身或其子目錄下</string>
     <string name="file_cannot_move_here">不能將檔移動到自身或其子目錄下</string>
     <string name="refresh">刷新</string>
-    <string name="disk">網盤</string>
+    <string name="disk">雲盤</string>
     <string name="clouddriver_volume_file_filter">分類篩選</string>
     <string name="clouddriver_volume_group_name">組名稱</string>
     <string name="clouddriver_volume_upload_file">上傳文件</string>
