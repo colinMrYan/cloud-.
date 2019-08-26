@@ -158,7 +158,9 @@ public class CalendarSettingActivity extends BaseActivity {
                 ScheduleCalendarCacheUtils.saveScheduleCalendar(BaseApplication.getInstance(), scheduleCalendar);
                 calendarAdapter.notifyDataSetChanged();
             }
+
         }
+
     }
 
     //处理弹框点击事件

@@ -159,8 +159,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         switch (LanguageManager.getInstance().getCurrentAppLanguage()) {
             case "zh-Hans":
             case "zh-hant":
-                boolean holidayState = PreferencesByUserAndTanentUtils.getBoolean(getActivity(), Constant.PREF_SCHEDULE_HOLIDAY_STATE, true);
-                calendarView.setIsLunarAndFestivalShow(holidayState);
+                calendarView.setIsLunarAndFestivalShow(true);
                 break;
             default:
                 calendarView.setIsLunarAndFestivalShow(false);
@@ -315,7 +314,6 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
                 map.put(schemeCalendar.toString(), schemeCalendar);
             }
         }
-
         for (Schedule schedule : scheduleList) {
             showScheduleEventCalendarViewMark(schedule.getStartTimeCalendar(), schedule.getEndTimeCalendar(), map);
         }

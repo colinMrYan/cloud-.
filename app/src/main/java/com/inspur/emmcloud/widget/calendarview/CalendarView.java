@@ -1580,6 +1580,30 @@ public class CalendarView extends FrameLayout {
         return mDelegate != null && CalendarUtil.isCalendarInRange(emmCalendar, mDelegate);
     }
 
+    /**
+     * 控制是否显示农历
+     *
+     * @param isLunarAndFestivalShow
+     */
+    public void setIsLunarAndFestivalShow(boolean isLunarAndFestivalShow) {
+        if (mDelegate != null) {
+            mDelegate.setLunarAndFestivalShow(isLunarAndFestivalShow);
+        }
+
+
+    }
+
+    /**
+     * 控制是否显示休假
+     *
+     * @param isShowRest
+     */
+    public void setIsShowRest(boolean isShowRest) {
+        if (mDelegate != null) {
+            mDelegate.setRestShow(isShowRest);
+        }
+    }
+
 
     /**
      * 年份视图切换事件，快速年份切换
@@ -1594,6 +1618,7 @@ public class CalendarView extends FrameLayout {
     public interface OnMonthChangeListener {
         void onMonthChange(int year, int month);
     }
+
 
     /**
      * 周视图切换事件
@@ -1624,7 +1649,6 @@ public class CalendarView extends FrameLayout {
          */
         void onWeekDateSelected(EmmCalendar emmCalendar, boolean isClick);
     }
-
 
     /**
      * 日历范围选择事件
@@ -1754,29 +1778,5 @@ public class CalendarView extends FrameLayout {
         boolean onCalendarIntercept(EmmCalendar emmCalendar);
 
         void onCalendarInterceptClick(EmmCalendar emmCalendar, boolean isClick);
-    }
-
-    /**
-     * 控制是否显示农历
-     *
-     * @param isLunarAndFestivalShow
-     */
-    public void setIsLunarAndFestivalShow(boolean isLunarAndFestivalShow){
-        if(mDelegate != null){
-            mDelegate.setLunarAndFestivalShow(isLunarAndFestivalShow);
-        }
-
-
-    }
-
-    /**
-     * 控制是否显示休假
-     *
-     * @param isShowRest
-     */
-    public void setIsShowRest(boolean isShowRest) {
-        if (mDelegate != null) {
-            mDelegate.setRestShow(isShowRest);
-        }
     }
 }
