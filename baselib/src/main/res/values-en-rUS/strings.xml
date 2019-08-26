@@ -595,6 +595,8 @@
     <string name="clouddriver_volume_upload_file">Upload File</string>
     <string name="clouddriver_file_permission_manager">Permissions</string>
     <string name="volume_upload_to_current_directory">Upload to Current Directory</string>
+    <string name="volume_file_upload_network_type_warning">Currently not connected to Wi-Fi,uploading will use mobile traffic,continue?</string>
+    <string name="volume_file_download_network_type_warning">Currently not connected to Wi-Fi,downloading will use mobile traffic,continue?</string>
     <string name="create">Create</string>
     <string name="cloud_drive">Cloud Drive</string>
     <string name="video">Video</string>
