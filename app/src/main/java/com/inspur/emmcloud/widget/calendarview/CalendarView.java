@@ -73,6 +73,8 @@ public class CalendarView extends FrameLayout {
      */
     private WeekBar mWeekBar;
 
+    private boolean isShowHoliday = true;
+
 
     public CalendarView(@NonNull Context context) {
         this(context, null);
@@ -1580,6 +1582,11 @@ public class CalendarView extends FrameLayout {
         return mDelegate != null && CalendarUtil.isCalendarInRange(emmCalendar, mDelegate);
     }
 
+    public void setIsLunarAndFestivalShow(boolean isLunarAndFestivalShow) {
+        if (mDelegate != null) {
+            mDelegate.setLunarAndFestivalShow(isLunarAndFestivalShow);
+        }
+    }
 
     /**
      * 年份视图切换事件，快速年份切换
@@ -1588,6 +1595,7 @@ public class CalendarView extends FrameLayout {
         void onYearChange(int year);
     }
 
+
     /**
      * 月份切换事件
      */
@@ -1595,13 +1603,13 @@ public class CalendarView extends FrameLayout {
         void onMonthChange(int year, int month);
     }
 
-
     /**
      * 周视图切换事件
      */
     public interface OnWeekChangeListener {
         void onWeekChange(List<EmmCalendar> weekEmmCalendars);
     }
+
 
     /**
      * 内部日期选择，不暴露外部使用
@@ -1654,7 +1662,6 @@ public class CalendarView extends FrameLayout {
          */
         void onCalendarRangeSelect(EmmCalendar emmCalendar, boolean isEnd);
     }
-
 
     /**
      * 日历多选事件
@@ -1755,11 +1762,5 @@ public class CalendarView extends FrameLayout {
         boolean onCalendarIntercept(EmmCalendar emmCalendar);
 
         void onCalendarInterceptClick(EmmCalendar emmCalendar, boolean isClick);
-    }
-
-    public void setIsLunarAndFestivalShow(boolean isLunarAndFestivalShow){
-        if(mDelegate != null){
-            mDelegate.setLunarAndFestivalShow(isLunarAndFestivalShow);
-        }
     }
 }

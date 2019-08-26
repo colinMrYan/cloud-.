@@ -944,6 +944,7 @@
     <string name="calendar_no_alert">None</string>
     <string name="calendar_when_event_finished">Finished</string>
     <string name="calendar_cancel_the_schedule">Are you sure to cancel the schedule?</string>
+    <string name="calendar_china_holiday">Holiday</string>
 
     <!-- 通用 -->
     <string name="save">Save</string>

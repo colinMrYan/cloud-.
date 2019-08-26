@@ -19,7 +19,6 @@ import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
@@ -111,10 +110,6 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
                 showCalendarEvent(true);
                 break;
             case Constant.EVENTBUS_TAG_SCHEDULE_HOLIDAY_CHANGE:
-                boolean holidayState = PreferencesByUserAndTanentUtils.getBoolean(getActivity(), Constant.PREF_SCHEDULE_HOLIDAY_STATE, true);
-                LogUtils.LbcDebug("111111111111111111111111111111::" + holidayState);
-                holidayStateChange(holidayState);
-                break;
             case Constant.EVENTBUS_TAG_SCHEDULE_TASK_DATA_CHANGED:
             case Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED:
                 showCalendarEvent(true);
@@ -250,11 +245,6 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         }
     }
 
-    private void holidayStateChange(boolean isShowHoliday) {
-        calendarView.setIsLunarAndFestivalShow(isShowHoliday);
-        calendarView.update();
-    }
-
     private EmmCalendar getSchemeCalendar(int year, int month, int day, String holidayName, String holidayColor, String badge, String badgeColor, boolean isShowSchemePoint) {
         EmmCalendar emmCalendar = new EmmCalendar();
         emmCalendar.setYear(year);
@@ -317,11 +307,15 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
                 holidayList.addAll(endYearHolidayList);
             }
         }
-        for (Holiday holiday : holidayList) {
-            EmmCalendar schemeCalendar = getSchemeCalendar(holiday.getYear(), holiday.getMonth(), holiday.getDay(), holiday.getName()
-                    , holiday.getColor(), holiday.getBadge(), holiday.getBadgeColor(), false);
-            map.put(schemeCalendar.toString(), schemeCalendar);
+        boolean holidayState = PreferencesByUserAndTanentUtils.getBoolean(getActivity(), Constant.PREF_SCHEDULE_HOLIDAY_STATE, true);
+        if (holidayState) {
+            for (Holiday holiday : holidayList) {
+                EmmCalendar schemeCalendar = getSchemeCalendar(holiday.getYear(), holiday.getMonth(), holiday.getDay(), holiday.getName()
+                        , holiday.getColor(), holiday.getBadge(), holiday.getBadgeColor(), false);
+                map.put(schemeCalendar.toString(), schemeCalendar);
+            }
         }
+
         for (Schedule schedule : scheduleList) {
             showScheduleEventCalendarViewMark(schedule.getStartTimeCalendar(), schedule.getEndTimeCalendar(), map);
         }
