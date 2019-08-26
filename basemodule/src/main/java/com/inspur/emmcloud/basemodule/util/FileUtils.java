@@ -1095,7 +1095,7 @@ public class FileUtils {
             imageIconId = R.drawable.ic_volume_file_typ_zip;
         } else if (fileName.endsWith("rar")) {
             imageIconId = R.drawable.ic_volume_file_typ_zip;
-        } else if (fileName.contains("jpg") || fileName.contains("png")) {
+        } else if (fileName.endsWith("jpg") || fileName.endsWith("png") || fileName.endsWith("jpeg") || fileName.endsWith("dng")) {
             imageIconId = R.drawable.ic_volume_file_typ_img;
         }
         return imageIconId;

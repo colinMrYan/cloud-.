@@ -69,6 +69,10 @@
     <string name="baselib_internal_share">Internal</string>
     <string name="file_open_by_other_app">Open with App</string>
     <string name="file_open_by_other_app_tips">%1$s cannot open this file. Please try opening with another application.</string>
+    <string name="upgrade_download">Update</string>
+    <string name="upgrade_later">Skip</string>
+    <string name="upgrade_install_now">Install</string>
+    <string name="upgrade_install_next_time">Next Time</string>
 
     <!-- 公共部分 -->
     <string name="year">Year</string>
@@ -214,6 +218,12 @@
     <string name="baselib_share_to">Share to</string>
     <string name="baselib_share_success">Sharing Successfully</string>
     <string name="baselib_share_fail">Sharing unsuccessfully</string>
+    <string name="baselib_share_many_picture">等%1$d pictures</string>
+    <string name="baselib_share_many_files">等%1$d files</string>
+    <string name="baselib_share_image">[Image]</string>
+    <string name="baselib_share_file">[File]</string>
+    <string name="baselib_share_link">[Link]</string>
+    <string name="baselib_share_send_to">Send to:</string>
     <string name="login_please_input_password">Enter a new password</string>
     <string name="login">Log In</string>
     <string name="login_user_not_bound_enterprise">The current user is not bound to the enterprise, please contact the administrator!</string>
@@ -724,6 +734,8 @@
     <string name="modify_jump">Skip</string>
     <string name="modify_welcom_user_cloud">Welcome to the inspur of cloud +</string>
     <string name="modify_first_use">This is the first time you use the cloud + , the inspur passes is set password to login next time</string>
+    <string name="setting_update_this_time_hint">Update</string>
+    <string name="setting_update_wifi_download_package_hint">The package has been automatically downloaded under WiFi</string>
 
     <!-- 用户信息页面部分 -->
     <string name="user_info_text">Profile</string>
@@ -1199,7 +1211,7 @@
     <string name="cluster_no_permission">The current function lacks effective authorization information.</string>
 
     <string name="share_mutil_only_support_image">Multi file sharing only supports Photo format</string>
-    <string name="share_no_more_than_five">No more than 5 pictures can\'t be uploaded</string>
+    <string name="share_no_more_than_five">No more than 5 Files can\'t be uploaded</string>
     <string name="share_no_share_way">There is no way to share it</string>
     <string name="share_to_channel">Send to the channel</string>
     <string name="share_upload_volume">Upload to the cloud volume</string>

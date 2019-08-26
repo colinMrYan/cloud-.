@@ -153,7 +153,7 @@ public class CustomWeekView extends WeekView {
         String lunar = TextUtils.isEmpty(calendar.getSchemeLunar()) ? calendar.getLunar() : calendar.getSchemeLunar();
         if (hasScheme) {
             mTextPaint.setColor(calendar.getSchemeColor());
-            if(isLunarAndFestivalShow()){
+            if (isLunarAndFestivalShow() && isRestShow()) {
                 canvas.drawText(calendar.getScheme(), x + mItemWidth - mPadding - mCircleRadius-dipToPx(getContext(), 1.5f), mPadding + mSchemeBaseLine + dipToPx(getContext(), 6), mTextPaint);
             }
         }

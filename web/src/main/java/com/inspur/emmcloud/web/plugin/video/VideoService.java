@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.web.plugin.video;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
@@ -145,7 +146,7 @@ public class VideoService extends ImpPlugin {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == ImpFragment.REQUEST_CODE_RECORD_VIDEO) {
+        if (requestCode == ImpFragment.REQUEST_CODE_RECORD_VIDEO && resultCode == Activity.RESULT_OK) {
             Toast.makeText(getActivity(), "Video saved to:\n" +
                     data.getData(), Toast.LENGTH_LONG).show();
             Log.d("zhang", "onActivityResult: " + data.getData());

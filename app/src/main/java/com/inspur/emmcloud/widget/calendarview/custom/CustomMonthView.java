@@ -156,7 +156,7 @@ public class CustomMonthView extends MonthView {
         String lunar = TextUtils.isEmpty(calendar.getSchemeLunar()) ? calendar.getLunar() : calendar.getSchemeLunar();
         if (hasScheme) {
             mTextPaint.setColor(calendar.getSchemeColor());
-            if(isLunarAndFestivalShow()){
+            if (isLunarAndFestivalShow() && isRestShow()) {
                 canvas.drawText(calendar.getScheme(), x + mItemWidth - mPadding - mCircleRadius - dipToPx(getContext(), 1.5f), y + mPadding + mSchemeBaseLine + dipToPx(getContext(), 6), mTextPaint);
             }
         }
@@ -198,6 +198,7 @@ public class CustomMonthView extends MonthView {
             canvas.drawText(calendar.getMonth() + "", getBackgroundX(), getBackgroundY(), mMonthViewBackGroundTextPaint);
         }
     }
+
 
     /**
      * 背景月份数字的横坐标
