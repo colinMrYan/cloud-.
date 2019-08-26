@@ -19,6 +19,7 @@ public class Volume implements Serializable {
     private long quotaTotal;
     private long quotaUsed;
     private long lastUpdate;
+    private long creationDate;
 
     public Volume() {
     }
@@ -36,6 +37,7 @@ public class Volume implements Serializable {
         quotaTotal = JSONUtils.getLong(quotaObj, "total", 0L);
         quotaUsed = JSONUtils.getLong(quotaObj, "used", 0L);
         lastUpdate = JSONUtils.getLong(obj, "lastUpdate", 0L);
+        creationDate = JSONUtils.getLong(obj, "creationDate", 0L);
     }
 
     public String getId() {
@@ -96,6 +98,14 @@ public class Volume implements Serializable {
 
     public void setLastUpdate(long lastUpdate) {
         this.lastUpdate = lastUpdate;
+    }
+
+    public long getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(long creationDate) {
+        this.creationDate = creationDate;
     }
 
     public boolean equals(Object other) { // 重写equals方法，后面最好重写hashCode方法

@@ -309,7 +309,15 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
         Collections.sort(shareVolumeList, new Comparator<Volume>() {
             @Override
             public int compare(Volume volume1, Volume volume2) {
-                return volume1.getName().toLowerCase().compareTo(volume2.getName().toLowerCase().toString());
+                long creationDate1 = volume1.getCreationDate();
+                long creationDate2 = volume2.getCreationDate();
+                if (creationDate1 < creationDate2) {
+                    return 1;
+                }
+                if (creationDate1 > creationDate2) {
+                    return -1;
+                }
+                return 0;
             }
         });
     }
@@ -424,7 +432,7 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
                 createShareVolumeDlg.dismiss();
 
             }
-            shareVolumeList.add(volume);
+            shareVolumeList.add(0, volume);
             adapter.notifyDataSetChanged();
         }
 
