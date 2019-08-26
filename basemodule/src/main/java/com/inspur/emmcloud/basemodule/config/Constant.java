@@ -204,6 +204,8 @@ public class Constant {
     public static final String EXTRA_IS_HISTORY_MEETING = "is_history_meeting"; //来源  历史会议
 
     public static final String AROUTER_CLASS_COMMUNICATION_MEMBER = "/communication/MembersActivity";
+    public static final String AROUTER_CLASS_COMMUNICATION_IMAGEPAGER = "/communication/ImagePagerActivity";
+
     public static final String AROUTER_CLASS_LOGIN_MAIN = "/login/LoginActivity";
     public static final String AROUTER_CLASS_LOGIN_PASSWORD_MODIFY = "/login/PasswordModifyActivity";
     public static final String AROUTER_CLASS_LOGIN_GS = "/login/ScanQrCodeLoginGSActivity";

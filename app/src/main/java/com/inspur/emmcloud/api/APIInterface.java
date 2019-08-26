@@ -530,7 +530,7 @@ public interface APIInterface {
 
     void returnUpdateShareVolumeNameFail(String error, int errorCode);
 
-    void retrunRemoveShareVolumeSuccess(Volume volume);
+    void returnRemoveShareVolumeSuccess(Volume volume);
 
     void returnRemoveShareVolumeFail(String error, int errorCode);
 

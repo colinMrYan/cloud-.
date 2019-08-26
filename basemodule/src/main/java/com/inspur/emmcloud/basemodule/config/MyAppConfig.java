@@ -44,7 +44,8 @@ public class MyAppConfig {
             .getExternalStorageDirectory() + "/IMP-Cloud/cache/Markdown/";
     public static final String LOCAL_CACHE_CHAT_PATH = Environment
             .getExternalStorageDirectory() + "/IMP-Cloud/cache/chat/";
-
+    public static final String LOCAL_CACHE_OSS_RECORD_PATH = Environment
+            .getExternalStorageDirectory() + "/IMP-Cloud/oss/";
     public static final String LOCAL_SHARE_FILE_PATH = Environment
             .getExternalStorageDirectory() + "/IMP-Cloud/cache/share_file/";
 
@@ -110,6 +111,10 @@ public class MyAppConfig {
      */
     public static String getReactTempFilePath(Context context, String userId) {
         return context.getDir("ReactResource_046", MODE_PRIVATE).getPath() + "/" + BaseApplication.getInstance().getTanent() + "/" + userId + "/Pre";
+    }
+
+    public static String getVolumeFileDownloadDirPath() {
+        return LOCAL_DOWNLOAD_PATH + BaseApplication.getInstance().getUid() + "/" + BaseApplication.getInstance().getTanent() + "/";
     }
 
     /**

@@ -139,7 +139,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"
+        android:layout_height="0.5px"
         android:layout_below="@id/file_type_img"
         android:layout_marginLeft="26dp"
         android:background="@color/color_list_divider" />

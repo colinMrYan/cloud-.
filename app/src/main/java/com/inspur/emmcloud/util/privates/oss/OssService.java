@@ -11,18 +11,21 @@ import com.alibaba.sdk.android.oss.OSSClient;
 import com.alibaba.sdk.android.oss.ServiceException;
 import com.alibaba.sdk.android.oss.callback.OSSCompletedCallback;
 import com.alibaba.sdk.android.oss.callback.OSSProgressCallback;
+import com.alibaba.sdk.android.oss.common.OSSLog;
 import com.alibaba.sdk.android.oss.common.auth.OSSCredentialProvider;
 import com.alibaba.sdk.android.oss.internal.OSSAsyncTask;
-import com.alibaba.sdk.android.oss.model.PutObjectRequest;
-import com.alibaba.sdk.android.oss.model.PutObjectResult;
+import com.alibaba.sdk.android.oss.model.ResumableUploadRequest;
+import com.alibaba.sdk.android.oss.model.ResumableUploadResult;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileUploadTokenResult;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.interf.ProgressCallback;
 import com.inspur.emmcloud.interf.VolumeFileUploadService;
 import com.inspur.emmcloud.util.privates.VolumeFileUploadManagerUtils;
 
+import java.io.File;
 import java.util.HashMap;
 
 /**
@@ -34,6 +37,7 @@ public class OssService implements VolumeFileUploadService {
     private static final int SUCCESS = 0;
     private static final int PROGRESS = 1;
     private static final int FAIL = 2;
+    private final static int partSize = 10 * 1024 * 1024;
     private OSS oss;
     private GetVolumeFileUploadTokenResult getVolumeFileUploadTokenResult;
     private OSSAsyncTask task;
@@ -59,6 +63,7 @@ public class OssService implements VolumeFileUploadService {
         conf.setSocketTimeout(15 * 1000); // socket超时，默认15秒
         //conf.setMaxConcurrentRequest(5); // 最大并发请求书，默认5个
         conf.setMaxErrorRetry(2); // 失败后最大重试次数，默认2次
+        OSSLog.enableLog();
         try {
             //此语句根据阿里云api文档需要放进主线程，此处应该是一个线程
             oss = new OSSClient(MyApplication.getInstance(), getVolumeFileUploadTokenResult.getEndpoint(), credentialProvider, conf);
@@ -111,17 +116,18 @@ public class OssService implements VolumeFileUploadService {
 
 
     @Override
-    public void uploadFile(String fileName, String localFile) {
+    public void uploadFile(String fileName, final String localFile) {
         handMessage();
-        // 构造上传请求
-        PutObjectRequest put = new PutObjectRequest(getVolumeFileUploadTokenResult.getBucket(), fileName, localFile);
-
-
+        File file = new File(MyAppConfig.LOCAL_CACHE_OSS_RECORD_PATH);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        ResumableUploadRequest request = new ResumableUploadRequest(getVolumeFileUploadTokenResult.getBucket(), fileName, localFile, MyAppConfig.LOCAL_CACHE_OSS_RECORD_PATH);
         /**
          * 设置callback address
          */
         // 传入对应的上传回调参数，这里默认使用OSS提供的公共测试回调服务器地址
-        put.setCallbackParam(new HashMap<String, String>() {
+        request.setCallbackParam(new HashMap<String, String>() {
             {
                 put("callbackUrl", getVolumeFileUploadTokenResult.getCallbackUrl());
                 //callbackBody可以自定义传入的信息
@@ -129,12 +135,9 @@ public class OssService implements VolumeFileUploadService {
             }
         });
 
-
-        // 异步上传时可以设置进度回调
-        put.setProgressCallback(new OSSProgressCallback<PutObjectRequest>() {
+        request.setProgressCallback(new OSSProgressCallback() {
             @Override
-            public void onProgress(PutObjectRequest request, long currentSize, long totalSize) {
-                //Log.d("PutObject", "currentSize: " + currentSize + " totalSize: " + totalSize);
+            public void onProgress(Object request, long currentSize, long totalSize) {
                 progress = (int) (100 * currentSize / totalSize);
                 LogUtils.jasonDebug("progress=" + progress);
                 Message msg = new Message();
@@ -145,16 +148,15 @@ public class OssService implements VolumeFileUploadService {
                 }
             }
         });
-
-        task = oss.asyncPutObject(put, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
+        task = oss.asyncResumableUpload(request, new OSSCompletedCallback<ResumableUploadRequest, ResumableUploadResult>() {
             @Override
-            public void onSuccess(PutObjectRequest request, PutObjectResult result) {
+            public void onSuccess(ResumableUploadRequest request, ResumableUploadResult result) {
                 LogUtils.jasonDebug("onSuccess");
-                Log.d("PutObject", "UploadSuccess");
-
-                Log.d("ETag", result.getETag());
-                Log.d("RequestId", result.getRequestId());
-                Log.d("PutObjectResult", result.getServerCallbackReturnBody());
+//                Log.d("PutObject", "UploadSuccess");
+//
+//                Log.d("ETag", result.getETag());
+//                Log.d("RequestId", result.getRequestId());
+//                Log.d("PutObjectResult", result.getServerCallbackReturnBody());
                 Message msg = new Message();
                 msg.what = SUCCESS;
                 msg.obj = result.getServerCallbackReturnBody();
@@ -162,18 +164,17 @@ public class OssService implements VolumeFileUploadService {
                     handler.sendMessage(msg);
                 }
 
-
             }
 
             @Override
-            public void onFailure(PutObjectRequest request, ClientException clientExcepion, ServiceException serviceException) {
+            public void onFailure(ResumableUploadRequest request, ClientException clientException, ServiceException serviceException) {
                 LogUtils.jasonDebug("onFailure");
                 String info = "";
                 // 请求异常
-                if (clientExcepion != null) {
+                if (clientException != null) {
                     // 本地异常如网络异常等
-                    clientExcepion.printStackTrace();
-                    info = clientExcepion.toString();
+                    clientException.printStackTrace();
+                    info = clientException.toString();
                 }
                 if (serviceException != null) {
                     // 服务异常
