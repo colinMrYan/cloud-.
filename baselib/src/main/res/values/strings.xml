@@ -79,7 +79,7 @@
     <string name="upgrade_install_now">立即安装</string>
     <string name="upgrade_install_next_time">下次安装</string>
     <string name="file_open_by_other_app">用其他应用打开</string>
-    <string name="file_open_by_other_app_tips">%1$s暂时不能打开改文件请使用其他应用打开</string>
+    <string name="file_open_by_other_app_tips">%1$s暂时不能打开该文件请使用其他应用打开</string>
 
     <!-- 公共部分 -->
     <string name="year">年</string>
@@ -609,7 +609,6 @@
     <string name="clouddriver_file_permission_manager">权限管理</string>
     <string name="clouddriver_volume_upload_file">上传文件</string>
     <string name="volume_upload_to_current_directory">上传到当前目录</string>
-
     <string name="rename">重命名</string>
     <string name="move_to">移动到</string>
     <string name="copy">复制</string>
@@ -626,7 +625,8 @@
     <string name="file_rename">文件重命名</string>
     <string name="folder_rename">文件夹重命名</string>
     <string name="cloud_drive">云盘</string>
-
+    <string name="volume_file_upload_network_type_warning">当前处于非Wi-Fi环境，继续上传将消耗运营商流量，请确认是否继续</string>
+    <string name="volume_file_download_network_type_warning">当前处于非Wi-Fi环境，继续下载将消耗运营商流量，请确认是否继续</string>
 
     <!--Webex 邮箱-->
     <string name="mail_install_cert"><u>安装数字证书</u></string>
