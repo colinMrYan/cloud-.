@@ -820,12 +820,8 @@ public class ConversationActivity extends ConversationBaseActivity {
                     List<String> pathList = getIntent().getStringArrayListExtra("share_paths");
                     for (String url : pathList) {
                         String urlLowerCase = url.toLowerCase();
-                        if (!urlLowerCase.endsWith("png") && !urlLowerCase.endsWith("jpg") && !urlLowerCase.endsWith("jpeg") && !urlLowerCase.endsWith("dng")) {
-                            type = "file";
-                        } else {
-                            type = "image";
-                        }
-                        combinAndSendMessageWithFile(type.equals("image") ? getCompressorUrl(url) : url, type.equals("file") ? Message.MESSAGE_TYPE_FILE_REGULAR_FILE : Message.MESSAGE_TYPE_MEDIA_IMAGE, null);
+                        boolean isImage = urlLowerCase.endsWith("png") || urlLowerCase.endsWith("jpg") || urlLowerCase.endsWith("jpeg") || urlLowerCase.endsWith("dng");
+                        combinAndSendMessageWithFile(isImage ? getCompressorUrl(url) : url, isImage ? Message.MESSAGE_TYPE_MEDIA_IMAGE : Message.MESSAGE_TYPE_FILE_REGULAR_FILE, null);
                     }
                     break;
                 case "link":
