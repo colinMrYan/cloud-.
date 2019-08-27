@@ -24,6 +24,7 @@ import com.inspur.emmcloud.web.plugin.map.MapService;
 import com.inspur.emmcloud.web.plugin.network.NetworkService;
 import com.inspur.emmcloud.web.plugin.nfc.NFCService;
 import com.inspur.emmcloud.web.plugin.photo.PhotoService;
+import com.inspur.emmcloud.web.plugin.share.ShareSocialService;
 import com.inspur.emmcloud.web.plugin.sms.SmsService;
 import com.inspur.emmcloud.web.plugin.sql.SqlService;
 import com.inspur.emmcloud.web.plugin.staff.SelectStaffService;
@@ -250,6 +251,8 @@ public class PluginMgr {
                 serviceName = VideoService.class.getCanonicalName();
             } else if (serviceName.endsWith("NFCService")) {
                 serviceName = NFCService.class.getCanonicalName();
+            } else if (serviceName.endsWith("ShareSocialService")) {
+                serviceName = ShareSocialService.class.getCanonicalName();
             }
             LogUtils.jasonDebug("serviceName==" + serviceName);
         }

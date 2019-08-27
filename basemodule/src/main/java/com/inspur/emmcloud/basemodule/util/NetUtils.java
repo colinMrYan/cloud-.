@@ -118,6 +118,23 @@ public class NetUtils {
         return mobile;
     }
 
+    /**
+     * 判断当前连接的是否是移动网络
+     *
+     * @param context
+     * @return
+     */
+    public static boolean isNetworkTypeMobile(Context context) {
+        ConnectivityManager mConnectivityManager = (ConnectivityManager) context
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo mNetworkInfo = mConnectivityManager
+                .getActiveNetworkInfo();
+        if (mNetworkInfo != null && mNetworkInfo.getType() == ConnectivityManager.TYPE_MOBILE) {
+            return true;
+        }
+        return false;
+    }
+
 
 
     /**

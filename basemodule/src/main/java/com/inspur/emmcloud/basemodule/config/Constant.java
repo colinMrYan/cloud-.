@@ -76,6 +76,7 @@ public class Constant {
     public static final String PREF_APP_BACKGROUND_TIME = "app_background_time";
     public static final String PREF_SCHEDULE_ENABLE_EXCHANGE = "schedule_enable_exchange";
     public static final String PREF_SCHEDULE_BASIC_DATA_VERSION = "schedule_basic_data_version";
+    public static final String PREF_SCHEDULE_HOLIDAY_STATE = "schedule_holiday_state";
 
     public static final String ACTION_MEETING = "com.inspur.meeting";
     public static final String ACTION_TASK = "com.inspur.task";
@@ -120,6 +121,7 @@ public class Constant {
     public static final String EVENTBUS_TAG_MAIL_LOGIN_FAIL = "tag_mail_login_fail";
     public static final String EVENTBUS_TAG_MAIL_REMOVE = "tag_mail_remove";
     public static final String EVENTBUS_TAG_SCHEDULE_CALENDAR_SETTING_CHANGED = "tag_schedule_calendar_setting_changed";
+    public static final String EVENTBUS_TAG_SCHEDULE_HOLIDAY_CHANGE = "tag_schedule_holiday_changed";
     public static final String EVENTBUS_TAG_SCHEDULE_TASK_DATA_CHANGED = "tag_schedule_task_data_changed";
     public static final String EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED = "tag_schedule_calendar_data_changed";
     public static final String EVENTBUS_TASK_ORDER_CHANGE = "task_order_change";
@@ -203,6 +205,8 @@ public class Constant {
     public static final String EXTRA_IS_HISTORY_MEETING = "is_history_meeting"; //来源  历史会议
 
     public static final String AROUTER_CLASS_COMMUNICATION_MEMBER = "/communication/MembersActivity";
+    public static final String AROUTER_CLASS_COMMUNICATION_IMAGEPAGER = "/communication/ImagePagerActivity";
+
     public static final String AROUTER_CLASS_LOGIN_MAIN = "/login/LoginActivity";
     public static final String AROUTER_CLASS_LOGIN_PASSWORD_MODIFY = "/login/PasswordModifyActivity";
     public static final String AROUTER_CLASS_LOGIN_GS = "/login/ScanQrCodeLoginGSActivity";

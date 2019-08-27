@@ -23,6 +23,7 @@ import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.UIConversation;
+import com.inspur.emmcloud.util.privates.ChatFileUploadManagerUtils;
 import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
 
 import java.io.File;
@@ -195,7 +196,15 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
     private void setConversationLastMessageSendStatus(ViewHolder holder, UIConversation uiConversation) {
         List<Message> messageList = uiConversation.getMessageList();
         if (messageList != null && messageList.size() > 0) {
-            switch (messageList.get(messageList.size() - 1).getSendStatus()) {
+            Message message = messageList.get(messageList.size() - 1);
+            int status;
+            if (message.getSendStatus() == Message.MESSAGE_SEND_ING) {
+                status = ChatFileUploadManagerUtils.getInstance().isMessageResourceUploading(
+                        message) ? Message.MESSAGE_SEND_ING : Message.MESSAGE_SEND_FAIL;
+            } else {
+                status = message.getSendStatus();
+            }
+            switch (status) {
                 case Message.MESSAGE_SEND_ING:
                     holder.sendStatusImg.setVisibility(View.VISIBLE);
                     holder.sendStatusImg.setImageResource(R.drawable.icon_message_sending);

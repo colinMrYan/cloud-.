@@ -9,9 +9,9 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.api.APIDownloadCallBack;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
@@ -24,7 +24,6 @@ import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
 import org.xutils.common.Callback;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,8 +45,10 @@ public class ChatFileDownloadActivtiy extends BaseActivity {
     TextView fileNameText;
     @BindView(R.id.file_type_img)
     ImageView fileTypeImg;
-    @BindView(R.id.file_time_text)
-    TextView fileTimeText;
+    @BindView(R.id.tv_file_size)
+    TextView fileSizeText;
+    @BindView(R.id.tv_file_open_tips)
+    TextView fileOpenTipsText;
     private String fileSavePath = "";
     private Callback.Cancelable cancelable;
     private Message message;
@@ -59,17 +60,33 @@ public class ChatFileDownloadActivtiy extends BaseActivity {
         MsgContentRegularFile msgContentFile = message.getMsgContentAttachmentFile();
         fileNameText.setText(msgContentFile.getName());
         fileTypeImg.setImageResource(FileUtils.getRegularFileIconResId(msgContentFile.getName()));
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        fileTimeText.setText(TimeUtils.getTime(message.getCreationDate(), format));
+        fileSizeText.setText(FileUtils.formatFileSize(msgContentFile.getSize()));
         fileSavePath = MyAppConfig.LOCAL_DOWNLOAD_PATH + msgContentFile.getName();
         if (FileUtils.isFileExist(fileSavePath)) {
-            downloadBtn.setText(R.string.open);
+            setDownloadingStatus(true);
         } else {
-            downloadBtn.setText(getString(R.string.clouddriver_download_size, FileUtils.formatFileSize(msgContentFile.getSize())));
+            setDownloadingStatus(false);
             boolean isStartDownload = getIntent().getBooleanExtra("isStartDownload", false);
             if (isStartDownload) {
                 downloadFile();
             }
+        }
+    }
+
+    private void setDownloadingStatus(boolean isDownloaded) {
+        if (isDownloaded) {
+            if (FileUtils.canFileOpenByApp(fileSavePath)) {
+                downloadBtn.setText(R.string.open);
+                fileOpenTipsText.setVisibility(View.GONE);
+            } else {
+                downloadBtn.setText(R.string.file_open_by_other_app);
+                fileOpenTipsText.setText(getString(R.string.file_open_by_other_app_tips, AppUtils.getAppName(this)));
+                fileOpenTipsText.setVisibility(View.VISIBLE);
+
+            }
+        } else {
+            downloadBtn.setText(R.string.download);
+            fileOpenTipsText.setVisibility(View.GONE);
         }
     }
 
@@ -84,8 +101,8 @@ public class ChatFileDownloadActivtiy extends BaseActivity {
                 finish();
                 break;
             case R.id.download_btn:
-                if (downloadBtn.getText().equals(getString(R.string.open))) {
-                    FileUtils.openFile(getApplicationContext(), fileSavePath);
+                if (FileUtils.isFileExist(fileSavePath)) {
+                    FileUtils.openFile(BaseApplication.getInstance(), fileSavePath);
                 } else {
                     downloadFile();
                 }
@@ -101,7 +118,6 @@ public class ChatFileDownloadActivtiy extends BaseActivity {
                 break;
         }
     }
-
 
     /**
      * 下载文件
@@ -137,7 +153,7 @@ public class ChatFileDownloadActivtiy extends BaseActivity {
                 progressBar.setProgress(0);
                 progressText.setText("");
                 downloadBtn.setVisibility(View.VISIBLE);
-                downloadBtn.setText(R.string.open);
+                setDownloadingStatus(true);
             }
 
             @Override
@@ -148,6 +164,7 @@ public class ChatFileDownloadActivtiy extends BaseActivity {
                     progressBar.setProgress(0);
                     progressText.setText("");
                     downloadBtn.setVisibility(View.VISIBLE);
+                    setDownloadingStatus(false);
                 }
             }
 

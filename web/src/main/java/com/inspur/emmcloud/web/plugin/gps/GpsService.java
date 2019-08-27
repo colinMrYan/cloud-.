@@ -207,7 +207,7 @@ public class GpsService extends ImpPlugin implements
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    GpsService.this.callbackSuccess(resultObject.toString());
+                    GpsService.this.callbackSuccess(resultObject);
 
                 }
             }
@@ -225,9 +225,9 @@ public class GpsService extends ImpPlugin implements
         });
     }
 
-    private void callbackSuccess(String result) {
+    private void callbackSuccess(JSONObject resultObject) {
         if (!StringUtils.isBlank(successCb)) {
-            this.jsCallback(successCb, result);
+            this.jsCallback(successCb, resultObject);
         }
     }
 
@@ -240,7 +240,7 @@ public class GpsService extends ImpPlugin implements
                 e.printStackTrace();
             }
 
-            this.jsCallback(failCb, object.toString());
+            this.jsCallback(failCb, object);
         }
 
     }

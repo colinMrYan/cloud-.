@@ -9,4 +9,6 @@
     <!-- GPS -->
     <string name="web_gps_opened">GPS has been turned on</string>
     <string name="web_gps_closed">GPS has been turned off</string>
+    <!--短视频录制-->
+    <string name="web_video_record_fail">record failed</string>
 </resources>
