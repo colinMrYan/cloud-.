@@ -1,35 +1,25 @@
 package com.inspur.emmcloud.web.plugin.video;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
-import com.inspur.emmcloud.baselib.util.ToastUtils;
-import com.inspur.emmcloud.baselib.widget.LoadingDialog;
-import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
-import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
-import com.inspur.emmcloud.basemodule.api.HttpUtils;
-import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
-import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
-import com.inspur.emmcloud.componentservice.login.OauthCallBack;
+import com.inspur.emmcloud.web.R;
 import com.inspur.emmcloud.web.plugin.ImpPlugin;
 import com.inspur.emmcloud.web.ui.ImpFragment;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.xutils.http.RequestParams;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,6 +32,7 @@ public class VideoService extends ImpPlugin {
 
     private String successCb, failCb;
     private String uploadUrl;
+    private String recordVideoFilePath;
 
     @Override
     public void execute(String action, JSONObject paramsObject) {
@@ -82,13 +73,11 @@ public class VideoService extends ImpPlugin {
                                     e.printStackTrace();
                                 }
                                 intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-                                intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
                                 intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 600);
 
                                 if (getImpCallBackInterface() != null) {
                                     getImpCallBackInterface().onStartActivityForResult(intent, ImpFragment.REQUEST_CODE_RECORD_VIDEO);
                                 }
-//                            getActivity().startActivityForResult(intent, ImpFragment.REQUEST_CODE_RECORD_VIDEO);
                             }
 
                             @Override
@@ -125,6 +114,7 @@ public class VideoService extends ImpPlugin {
                 }
                 String suffix = ".mp4";
                 File mediaFile = new File(mediaStorageDir + File.separator + fileName + suffix);
+                recordVideoFilePath = mediaStorageDir + File.separator + fileName + suffix;
                 return mediaFile;
             }
         }
@@ -146,71 +136,25 @@ public class VideoService extends ImpPlugin {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == ImpFragment.REQUEST_CODE_RECORD_VIDEO && resultCode == Activity.RESULT_OK) {
-            Toast.makeText(getActivity(), "Video saved to:\n" +
-                    data.getData(), Toast.LENGTH_LONG).show();
-            Log.d("zhang", "onActivityResult: " + data.getData());
-            //上传文件
-            File file = FileUtils.uri2File(getFragmentContext(), data.getData());
-            uploadFile(file.getPath());
-        }
-    }
-
-    private void uploadFile(final String filePath) {
-        final String completeUrl = uploadUrl;
-        RequestParams params = BaseApplication.getInstance()
-                .getHttpRequestParams(completeUrl);
-        File file = new File(filePath);
-        params.setMultipart(true);// 有上传文件时使用multipart表单, 否则上传原始文件流.
-        params.addBodyParameter("video", file);
-        final LoadingDialog loadingDlg = new LoadingDialog(getFragmentContext());
-        loadingDlg.setText("上传中。。。");
-        loadingDlg.show();
-        HttpUtils.request(getFragmentContext(), CloudHttpMethod.POST, params, new BaseModuleAPICallback(getFragmentContext(), completeUrl) {
-
-            @Override
-            public void callbackTokenExpire(long requestTime) {
-                OauthCallBack oauthCallBack = new OauthCallBack() {
-                    @Override
-                    public void reExecute() {
-
-                    }
-
-                    @Override
-                    public void executeFailCallback() {
-                        callbackFail("", -1);
-                        LoadingDialog.dimissDlg(loadingDlg);
-                        jsCallback(failCb);
-                    }
-                };
-//                refreshToken(
-//                        oauthCallBack, requestTime);
-            }
-
-            @Override
-            public void callbackSuccess(byte[] arg0) {
-                // TODO Auto-generated method stub
-                ToastUtils.show("上传成功");
-                LoadingDialog.dimissDlg(loadingDlg);
-                JSONObject json = new JSONObject();
+        if (requestCode == ImpFragment.REQUEST_CODE_RECORD_VIDEO) {
+            if (data != null && data.getData() != null) {
                 try {
-                    json.put("path", filePath);
+                    JSONObject json = new JSONObject();
+                    json.put("path", recordVideoFilePath);
+                    jsCallback(successCb, json.toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                jsCallback(successCb, json.toString());
-//                apiInterface
-//                        .returnUploadMyHeadSuccess(new GetUploadMyHeadResult(new String(arg0)), filePath);
-            }
+            } else {
+                try {
+                    JSONObject json = new JSONObject();
+                    json.put("errorMessage", getFragmentContext().getString(R.string.web_video_record_fail));
+                    jsCallback(failCb, json.toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
-            @Override
-            public void callbackFail(String error, int responseCode) {
-                // TODO Auto-generated method stub
-                ToastUtils.show("上传失败");
-                LoadingDialog.dimissDlg(loadingDlg);
-                jsCallback(failCb);
-//                apiInterface.returnUploadMyHeadFail(error, responseCode);
             }
-        });
+        }
     }
 }
