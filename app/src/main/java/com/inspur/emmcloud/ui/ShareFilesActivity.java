@@ -15,7 +15,6 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
@@ -40,7 +39,7 @@ import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.TabAndAppExistUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
-import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
+import com.itheima.roundedimageview.RoundedImageView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -100,6 +99,23 @@ public class ShareFilesActivity extends BaseActivity {
 //            ToastUtils.show(ShareFilesActivity.this, getString(R.string.share_no_more_than_five));
 //            finish();
 //        }
+        if (uriList == null || uriList.size() == 0) {
+            ToastUtils.show(ShareFilesActivity.this, getString(R.string.baselib_share_fail));
+            finish();
+        }
+        if (uriList.size() > SHARE_FILES_LIMIT) {
+            ToastUtils.show(ShareFilesActivity.this, getString(R.string.share_no_more_than_five));
+            finish();
+        }
+        initViews();
+    }
+
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        this.uriList.clear();
+        this.uriList.addAll((List<String>) intent.getSerializableExtra(Constant.SHARE_FILE_URI_LIST));
         if (uriList == null || uriList.size() == 0) {
             ToastUtils.show(ShareFilesActivity.this, getString(R.string.baselib_share_fail));
             finish();
@@ -172,7 +188,6 @@ public class ShareFilesActivity extends BaseActivity {
                 break;
             default:
                 recyclerView.setVisibility(View.VISIBLE);
-                recyclerView.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(MyApplication.getInstance(), 11)));
                 GridLayoutManager gridLayoutManager = new GridLayoutManager(MyApplication.getInstance(), getGridViewColumn());
                 recyclerView.setLayoutManager(gridLayoutManager);
                 if (isImageUriList(uriList)) {
@@ -433,7 +448,7 @@ public class ShareFilesActivity extends BaseActivity {
 
         @Override
         public void onBindViewHolder(FileHolder holder, int position) {
-            ImageDisplayUtils.getInstance().displayRoundedImage(holder.imageView, uriList.get(position).toString(), R.drawable.default_image, getBaseContext(), 4);
+            ImageDisplayUtils.getInstance().displayImage(holder.imageView, getFileIcon(uriList.get(position)), R.drawable.default_image);
         }
 
         @Override
@@ -462,7 +477,10 @@ public class ShareFilesActivity extends BaseActivity {
 
         @Override
         public void onBindViewHolder(FileHolder holder, int position) {
-            ImageDisplayUtils.getInstance().displayRoundedImage(holder.imageView, getFileIcon(uriList.get(position)), R.drawable.default_image, getBaseContext(), 4);
+            ImageDisplayUtils.getInstance().displayImage(holder.imageView, getFileIcon(uriList.get(position)), R.drawable.default_image);
+            // holder.imageView.setImageResource(R.drawable.default_image);
+            // Bitmap bm = BitmapFactory.decodeFile(path);
+            // image2.setImageBitmap(bm);//不会变形
             String filePath = uriList.get(position);
             if (!StringUtils.isBlank(filePath) && filePath.contains("/")) {
                 String fileName = filePath.substring(filePath.lastIndexOf("/") + 1, filePath.length());
@@ -479,7 +497,7 @@ public class ShareFilesActivity extends BaseActivity {
     }
 
     class FileHolder extends RecyclerView.ViewHolder {
-        private ImageView imageView;
+        private RoundedImageView imageView;
         private TextView textView;
 
         public FileHolder(View itemView) {
