@@ -15,7 +15,6 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.ContactAPIService;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.NotificationSetUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
@@ -182,11 +181,9 @@ public class IndexActivity extends IndexBaseActivity {
      * 打开位置收集服务
      */
     private void startLocationService() {
-        LogUtils.jasonDebug("0000000000000000");
         new AppConfigUtils(IndexActivity.this, new CommonCallBack() {
             @Override
             public void execute() {
-                LogUtils.jasonDebug("111111111111111");
                 Intent intent = new Intent();
                 intent.setClass(IndexActivity.this, LocationService.class);
                 startService(intent);

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="280dp"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:background="#FFFFFF"
+    android:orientation="vertical">
+
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager_update_content"
+        android:layout_width="wrap_content"
+        android:layout_height="288dp"
+        android:layout_gravity="center"
+        android:gravity="center_horizontal"
+        android:paddingTop="32dp"></android.support.v4.view.ViewPager>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="9dp">
+
+        <com.inspur.emmcloud.baselib.widget.CommonCircleIndicator.CircleIndicator
+            android:id="@+id/cc_index"
+            android:layout_width="wrap_content"
+            android:layout_height="15dp"
+            android:layout_centerHorizontal="true"
+            app:ci_drawable="@drawable/ic_update_select_index"
+            app:ci_drawable_unselected="@drawable/ic_update_unselect_index"
+            app:ci_height="8dp"
+            app:ci_width="8dp"></com.inspur.emmcloud.baselib.widget.CommonCircleIndicator.CircleIndicator>
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/btn_update"
+        android:layout_width="200dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginTop="9dp"
+        android:background="@drawable/bg_update_btn_sure"
+        android:clickable="true"
+        android:gravity="center"
+        android:onClick="onClick"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="17sp" />
+
+    <TextView
+        android:id="@+id/tv_update_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="22dp"
+        android:layout_marginTop="18dp"
+        android:clickable="true"
+        android:onClick="onClick"
+        android:textColor="#36A5F6"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/tv_wifi_download_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:gravity="center"
+        android:paddingBottom="20dp"
+        android:text="@string/setting_update_wifi_download_package_hint"
+        android:textColor="#999999"
+        android:textSize="16sp" />
+
+</LinearLayout>

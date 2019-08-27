@@ -6,8 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
+import com.inspur.emmcloud.baselib.widget.CommonCircleIndicator.CircleIndicator;
 import com.inspur.emmcloud.web.plugin.photo.style.IIndexIndicator;
-import com.inspur.emmcloud.web.plugin.photo.view.CircleIndicator;
 
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 

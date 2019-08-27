@@ -13,6 +13,7 @@ public class VolumeFileUploadInfo {
     private String volumeFileParentPath;
     private ProgressCallback progressCallback;
     private String localFilePath;
+    private GetVolumeFileUploadTokenResult getVolumeFileUploadTokenResult;
 
     public VolumeFileUploadInfo(VolumeFileUploadService volumeFileUploadService, VolumeFile volumeFile, String volumeFileParentPath, ProgressCallback progressCallback, String localFilePath) {
         this.volumeFileUploadService = volumeFileUploadService;
@@ -60,5 +61,13 @@ public class VolumeFileUploadInfo {
 
     public void setLocalFilePath(String localFilePath) {
         this.localFilePath = localFilePath;
+    }
+
+    public GetVolumeFileUploadTokenResult getGetVolumeFileUploadTokenResult() {
+        return getVolumeFileUploadTokenResult;
+    }
+
+    public void setGetVolumeFileUploadTokenResult(GetVolumeFileUploadTokenResult getVolumeFileUploadTokenResult) {
+        this.getVolumeFileUploadTokenResult = getVolumeFileUploadTokenResult;
     }
 }

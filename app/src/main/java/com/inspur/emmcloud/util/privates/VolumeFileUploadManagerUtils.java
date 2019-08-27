@@ -3,6 +3,7 @@ package com.inspur.emmcloud.util.privates;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileUploadTokenResult;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFileUploadInfo;
@@ -50,7 +51,7 @@ public class VolumeFileUploadManagerUtils {
         File file = new File(localFilePath);
         VolumeFileUploadInfo volumeFileUploadInfo = new VolumeFileUploadInfo(null, mockVolumeFile, volumeFileParentPath, null, localFilePath);
         volumeFileUploadInfoList.add(volumeFileUploadInfo);
-        apiService.getVolumeFileUploadToken(file.getName(), volumeFileParentPath, localFilePath, mockVolumeFile);
+        apiService.getVolumeFileUploadToken(file.getName(), volumeFileUploadInfo, mockVolumeFile);
     }
 
     /**
@@ -66,7 +67,7 @@ public class VolumeFileUploadManagerUtils {
             if (volumeFile == mockVolumeFile) {
                 targetVolumeFileUploadInfo = volumeFileUploadInfo;
                 //上传文件
-                apiService.getVolumeFileUploadToken(mockVolumeFile.getName(), targetVolumeFileUploadInfo.getVolumeFileParentPath(), targetVolumeFileUploadInfo.getLocalFilePath(), mockVolumeFile);
+                apiService.getVolumeFileUploadToken(mockVolumeFile.getName(), targetVolumeFileUploadInfo, mockVolumeFile);
                 break;
             }
         }
@@ -76,7 +77,7 @@ public class VolumeFileUploadManagerUtils {
      * 获取云盘此文件夹目录下正在上传的云盘文件
      *
      * @param volumeId
-     * @param dirPath
+     * @param volumeFileParentPath
      * @return
      */
     public List<VolumeFile> getCurrentForderUploadingVolumeFile(String volumeId, String volumeFileParentPath) {
@@ -160,6 +161,7 @@ public class VolumeFileUploadManagerUtils {
 
         @Override
         public void returnVolumeFileUploadTokenSuccess(GetVolumeFileUploadTokenResult getVolumeFileUploadTokenResult, String fileLocalPath, VolumeFile mockVolumeFile) {
+            LogUtils.jasonDebug("getXPath()==" + getVolumeFileUploadTokenResult.getXPath());
             VolumeFileUploadService volumeFileUploadService = getVolumeFileUploadService(getVolumeFileUploadTokenResult, mockVolumeFile);
             for (int i = 0; i < volumeFileUploadInfoList.size(); i++) {
                 VolumeFileUploadInfo volumeFileUploadInfo = volumeFileUploadInfoList.get(i);
@@ -170,6 +172,7 @@ public class VolumeFileUploadManagerUtils {
                             volumeFileUploadService.setProgressCallback(progressCallback);   //如果ProgressCallback已经从ui传递进来，则给volumeFileUploadService设置ProgressCallback
                         }
                         volumeFileUploadInfo.setVolumeFileUploadService(volumeFileUploadService);
+                        volumeFileUploadInfo.setGetVolumeFileUploadTokenResult(getVolumeFileUploadTokenResult);
                         volumeFileUploadService.uploadFile(getVolumeFileUploadTokenResult.getFileName(), fileLocalPath);
                     } else {  //如果没有获取相应的上传服务 返回上传失败
                         volumeFileUploadInfo.getVolumeFile().setStatus(VolumeFile.STATUS_UPLOADIND_FAIL);
