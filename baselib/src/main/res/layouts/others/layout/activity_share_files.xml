@@ -45,7 +45,9 @@
             android:layout_centerHorizontal="true"
             android:background="#FFFFFF"
             android:minHeight="150dp"
-            android:paddingBottom="16dp" />
+            android:paddingBottom="16dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp" />
 
         <RelativeLayout
             android:id="@+id/rl_image"
