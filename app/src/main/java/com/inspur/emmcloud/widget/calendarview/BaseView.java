@@ -138,6 +138,7 @@ public abstract class BaseView extends View implements View.OnClickListener, Vie
     int mCurrentItem = -1;
 
     boolean isLunarAndFestivalShow = true;
+    boolean isRestShow = true;
 
     public BaseView(Context context) {
         this(context, null);
@@ -154,6 +155,14 @@ public abstract class BaseView extends View implements View.OnClickListener, Vie
 
     public void setLunarAndFestivalShow(boolean lunarAndFestivalShow) {
         isLunarAndFestivalShow = lunarAndFestivalShow;
+    }
+
+    public boolean isRestShow() {
+        return isRestShow;
+    }
+
+    public void setRestShow(boolean restShow) {
+        isRestShow = restShow;
     }
 
     /**

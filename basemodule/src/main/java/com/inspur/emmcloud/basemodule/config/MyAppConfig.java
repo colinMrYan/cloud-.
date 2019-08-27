@@ -44,7 +44,8 @@ public class MyAppConfig {
             .getExternalStorageDirectory() + "/IMP-Cloud/cache/Markdown/";
     public static final String LOCAL_CACHE_CHAT_PATH = Environment
             .getExternalStorageDirectory() + "/IMP-Cloud/cache/chat/";
-
+    public static final String LOCAL_CACHE_OSS_RECORD_PATH = Environment
+            .getExternalStorageDirectory() + "/IMP-Cloud/oss/";
     public static final String LOCAL_SHARE_FILE_PATH = Environment
             .getExternalStorageDirectory() + "/IMP-Cloud/cache/share_file/";
 
@@ -58,7 +59,7 @@ public class MyAppConfig {
     public static final int UPLOAD_THUMBNAIL_IMG_MAX_SIZE = 600;
     public static final int VOLUME_MAX_FILE_NAME_LENGTH = 40;
     public static final int WEBSOCKET_QEQUEST_TIMEOUT = 16;
-    public static Boolean test = true;
+    public static int NETWORK_MOBILE_MAX_SIZE_ALERT = 1021 * 1021 * 50;
 
 
     public static Map<String, String> getLocalLanguageMap() {
@@ -110,6 +111,10 @@ public class MyAppConfig {
      */
     public static String getReactTempFilePath(Context context, String userId) {
         return context.getDir("ReactResource_046", MODE_PRIVATE).getPath() + "/" + BaseApplication.getInstance().getTanent() + "/" + userId + "/Pre";
+    }
+
+    public static String getVolumeFileDownloadDirPath() {
+        return LOCAL_DOWNLOAD_PATH + BaseApplication.getInstance().getUid() + "/" + BaseApplication.getInstance().getTanent() + "/";
     }
 
     /**

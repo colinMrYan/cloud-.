@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="@string/clouddriver_file_dpwnload"
+            android:text="@string/clouddriver_file_detail"
             android:textColor="?attr/header_text_color"
             android:textSize="@dimen/header_textsize" />
     </RelativeLayout>
@@ -55,7 +55,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="10dp"
             android:ellipsize="middle"
             android:gravity="center"
             android:maxLines="5"
@@ -65,10 +65,10 @@
             android:textSize="20sp" />
 
         <TextView
-            android:id="@+id/file_time_text"
+            android:id="@+id/tv_file_size"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="34dp"
+            android:layout_marginBottom="36dp"
             android:ellipsize="end"
             android:maxLines="1"
             android:scaleType="fitXY"
@@ -79,7 +79,6 @@
             android:id="@+id/download_btn"
             android:layout_width="match_parent"
             android:layout_height="46dp"
-            android:layout_marginBottom="150dp"
             android:layout_marginLeft="35dp"
             android:layout_marginRight="35dp"
             android:background="@drawable/shape_volume_file_download_btn"
@@ -89,6 +88,17 @@
             android:textColor="#ffffff"
             android:textSize="17sp" />
 
+        <TextView
+            android:id="@+id/tv_file_open_tips"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="35dp"
+            android:layout_marginRight="35dp"
+            android:layout_marginTop="14dp"
+            android:gravity="center_horizontal"
+            android:textColor="#888888"
+            android:textSize="14sp"
+            android:visibility="gone" />
         <LinearLayout
             android:id="@+id/download_status_layout"
             android:layout_width="match_parent"

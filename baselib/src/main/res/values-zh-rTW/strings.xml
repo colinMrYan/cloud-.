@@ -73,6 +73,8 @@
     <string name="function_load_fail">加載出錯，輕觸屏幕重新加載</string>
     <string name="function_reload">網絡診斷</string>
     <string name="baselib_internal_share">内部分享</string>
+    <string name="file_open_by_other_app">用其他應用打開</string>
+    <string name="file_open_by_other_app_tips">%1$s暫時不能打開該檔案請使用其他應用打開</string>
     <string name="upgrade_download">下載更新</string>
     <string name="upgrade_later">稍後再說</string>
     <string name="upgrade_install_now">立即安裝</string>
@@ -220,6 +222,7 @@
     <string name="write_comment">寫評論</string>
 
     <string name="baselib_share_many_picture">等%1$d張圖片</string>
+    <string name="baselib_share_many_files">等%1$d個文件</string>
     <string name="news_font_name_text">字體</string>
     <string name="baselib_share_to">分享到</string>
     <string name="baselib_share_success">分享成功</string>
@@ -541,7 +544,7 @@
     <string name="clouddriver_select_copy_position">選擇複製位置</string>
     <string name="clouddriver_select_move_position">選擇目的檔案夾</string>
     <string name="clouddriver_file_open_fail">檔打開失敗！</string>
-    <string name="clouddriver_file_dpwnload">文件下載</string>
+    <string name="clouddriver_file_detail">檔案詳情</string>
     <string name="clouddriver_create_folder">新建資料夾</string>
     <string name="clouddriver_file_filter">分類篩選</string>
     <string name="clouddriver_sort_by_time_asc">時間昇冪</string>
@@ -588,12 +591,14 @@
     <string name="file_cannot_copy_here">不能將檔複製到自身或其子目錄下</string>
     <string name="file_cannot_move_here">不能將檔移動到自身或其子目錄下</string>
     <string name="refresh">刷新</string>
-    <string name="disk">網盤</string>
+    <string name="cloud_drive">雲盤</string>
     <string name="clouddriver_volume_file_filter">分類篩選</string>
     <string name="clouddriver_volume_group_name">組名稱</string>
     <string name="clouddriver_volume_upload_file">上傳文件</string>
-    <string name="clouddriver_upload_file_to_volume">上傳到網盤</string>
     <string name="clouddriver_file_permission_manager">許可權管理</string>
+    <string name="volume_upload_to_current_directory">上傳到目前的目錄</string>
+    <string name="volume_file_upload_network_type_warning">當前處於非Wi-Fi環境，繼續上傳將消耗運營商流量，請確認是否繼續</string>
+    <string name="volume_file_download_network_type_warning">當前處於非Wi-Fi環境，繼續下載將消耗運營商流量，請確認是否繼續</string>
     <string name="rename">重命名</string>
     <string name="move_to">移動到</string>
     <string name="copy">複製</string>
@@ -947,6 +952,8 @@
     <string name="schedule_alert_time_before_hours">%1$s小時前</string>
     <string name="schedule_alert_time_before_days">%1$s天前</string>
     <string name="schedule_account_select">賬戶</string>
+    <string name="calendar_china_holiday">中國節假日</string>
+
     <!-- 通用 -->
     <string name="save">保存</string>
     <string name="never">永不</string>

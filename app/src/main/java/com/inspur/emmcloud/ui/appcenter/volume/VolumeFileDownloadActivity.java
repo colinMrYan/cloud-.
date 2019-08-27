@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.appcenter.volume;
 
+import android.content.DialogInterface;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -10,9 +11,10 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.api.APIDownloadCallBack;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
@@ -29,7 +31,6 @@ import org.xutils.http.request.UriRequest;
 import org.xutils.x;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,7 +39,7 @@ import butterknife.ButterKnife;
 /**
  * 云盘下载
  */
-public class VolumeFileDownloadActivtiy extends BaseActivity {
+public class VolumeFileDownloadActivity extends BaseActivity {
 
     @BindView(R.id.download_status_layout)
     LinearLayout downloadStatusLayout;
@@ -52,8 +53,10 @@ public class VolumeFileDownloadActivtiy extends BaseActivity {
     TextView fileNameText;
     @BindView(R.id.file_type_img)
     ImageView fileTypeImg;
-    @BindView(R.id.file_time_text)
-    TextView fileTimeText;
+    @BindView(R.id.tv_file_size)
+    TextView fileSizeText;
+    @BindView(R.id.tv_file_open_tips)
+    TextView fileOpenTipsText;
     private String fileSavePath = "";
     private Callback.Cancelable cancelable;
     private VolumeFile volumeFile;
@@ -65,17 +68,33 @@ public class VolumeFileDownloadActivtiy extends BaseActivity {
         volumeFile = (VolumeFile) getIntent().getSerializableExtra("volumeFile");
         fileNameText.setText(volumeFile.getName());
         fileTypeImg.setImageResource(VolumeFileIconUtils.getIconResId(volumeFile));
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        fileTimeText.setText(TimeUtils.getTime(volumeFile.getCreationDate(), format));
-        fileSavePath = MyAppConfig.LOCAL_DOWNLOAD_PATH + volumeFile.getName();
+        fileSizeText.setText(FileUtils.formatFileSize(volumeFile.getSize()));
+        fileSavePath = MyAppConfig.getVolumeFileDownloadDirPath() + volumeFile.getName();
         if (FileUtils.isFileExist(fileSavePath)) {
-            downloadBtn.setText(R.string.open);
+            setDownloadingStatus(true);
         } else {
-            downloadBtn.setText(getString(R.string.clouddriver_download_size, FileUtils.formatFileSize(volumeFile.getSize())));
+            setDownloadingStatus(false);
             boolean isStartDownload = getIntent().getBooleanExtra("isStartDownload", false);
             if (isStartDownload) {
                 downloadFile();
             }
+        }
+    }
+
+    private void setDownloadingStatus(boolean isDownloaded) {
+        if (isDownloaded) {
+            if (FileUtils.canFileOpenByApp(fileSavePath)) {
+                downloadBtn.setText(R.string.open);
+                fileOpenTipsText.setVisibility(View.GONE);
+            } else {
+                downloadBtn.setText(R.string.file_open_by_other_app);
+                fileOpenTipsText.setText(getString(R.string.file_open_by_other_app_tips, AppUtils.getAppName(this)));
+                fileOpenTipsText.setVisibility(View.VISIBLE);
+
+            }
+        } else {
+            downloadBtn.setText(R.string.download);
+            fileOpenTipsText.setVisibility(View.GONE);
         }
     }
 
@@ -90,10 +109,13 @@ public class VolumeFileDownloadActivtiy extends BaseActivity {
                 finish();
                 break;
             case R.id.download_btn:
-                if (downloadBtn.getText().equals(getString(R.string.open))) {
-                    FileUtils.openFile(getApplicationContext(), fileSavePath);
+                if (FileUtils.isFileExist(fileSavePath)) {
+                    FileUtils.openFile(BaseApplication.getInstance(), fileSavePath);
                 } else {
-                    downloadFile();
+                    if (checkDownloadEnvironment()) {
+                        downloadFile();
+                    }
+
                 }
                 break;
             case R.id.file_download_close_img:
@@ -108,14 +130,41 @@ public class VolumeFileDownloadActivtiy extends BaseActivity {
         }
     }
 
+    private boolean checkDownloadEnvironment() {
+        if (!NetUtils.isNetworkConnected(getApplicationContext()) || !AppUtils.isHasSDCard(getApplicationContext())) {
+            return false;
+        }
+        if (volumeFile.getSize() >= MyAppConfig.NETWORK_MOBILE_MAX_SIZE_ALERT && NetUtils.isNetworkTypeMobile(getApplicationContext())) {
+            showNetworkMobileAlert();
+            return false;
+        }
+        return true;
+    }
+
+
+    private void showNetworkMobileAlert() {
+        new CustomDialog.MessageDialogBuilder(VolumeFileDownloadActivity.this)
+                .setMessage(R.string.volume_file_upload_network_type_warning)
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        downloadFile();
+                    }
+                })
+                .show();
+    }
 
     /**
      * 下载文件
      */
     private void downloadFile() {
-        if (!NetUtils.isNetworkConnected(getApplicationContext()) || !AppUtils.isHasSDCard(getApplicationContext())) {
-            return;
-        }
         downloadBtn.setVisibility(View.GONE);
         downloadStatusLayout.setVisibility(View.VISIBLE);
         String volumeId = getIntent().getStringExtra("volumeId");
@@ -132,9 +181,9 @@ public class VolumeFileDownloadActivtiy extends BaseActivity {
             public void callbackLoading(long total, long current, boolean isUploading) {
                 int progress = (int) (current * 100.0 / total);
                 progressBar.setProgress(progress);
-                String totleSize = FileUtils.formatFileSize(total);
+                String totalSize = FileUtils.formatFileSize(total);
                 String currentSize = FileUtils.formatFileSize(current);
-                progressText.setText(getString(R.string.clouddriver_downloading_status, currentSize, totleSize));
+                progressText.setText(getString(R.string.clouddriver_downloading_status, currentSize, totalSize));
 
             }
 
@@ -145,7 +194,7 @@ public class VolumeFileDownloadActivtiy extends BaseActivity {
                 progressBar.setProgress(0);
                 progressText.setText("");
                 downloadBtn.setVisibility(View.VISIBLE);
-                downloadBtn.setText(R.string.open);
+                setDownloadingStatus(true);
             }
 
             @Override
@@ -156,6 +205,7 @@ public class VolumeFileDownloadActivtiy extends BaseActivity {
                     progressBar.setProgress(0);
                     progressText.setText("");
                     downloadBtn.setVisibility(View.VISIBLE);
+                    setDownloadingStatus(false);
                 }
             }
 
