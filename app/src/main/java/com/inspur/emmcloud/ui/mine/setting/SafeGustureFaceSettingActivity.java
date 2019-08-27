@@ -5,6 +5,7 @@ import android.support.v7.widget.SwitchCompat;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -13,6 +14,7 @@ import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.util.privates.FingerPrintUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,6 +32,8 @@ public class SafeGustureFaceSettingActivity extends BaseActivity {
     RelativeLayout resetGuestureLayout;
     @BindView(R.id.rl_finger_print)
     RelativeLayout fingerPrintLayout;
+    @BindView(R.id.tv_fingerprint_face_unlock)
+    TextView fingerPrintFaceText;
 
     @Override
     public void onCreate() {
@@ -65,6 +69,8 @@ public class SafeGustureFaceSettingActivity extends BaseActivity {
 
             }
         });
+        fingerPrintFaceText.setText(FingerPrintUtils.getFingerPrintInstance().isFingerPrintAvaiable(this) ?
+                R.string.setting_safe_gesture_face : R.string.safe_center_gesture);
 
         fingerPrintSwitchView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -82,7 +88,7 @@ public class SafeGustureFaceSettingActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         boolean isGestureOpen = isGestureOpen();
-        fingerPrintLayout.setVisibility(isGestureOpen ? View.VISIBLE : View.GONE);
+        fingerPrintLayout.setVisibility(FingerPrintUtils.getFingerPrintInstance().isFingerPrintAvaiable(this) && isGestureOpen ? View.VISIBLE : View.GONE);
         if (guestureSwitchView.isChecked() != isGestureOpen) {
             guestureSwitchView.setChecked(isGestureOpen);
         }
@@ -90,6 +96,11 @@ public class SafeGustureFaceSettingActivity extends BaseActivity {
         fingerPrintSwitchView.setChecked(PreferencesByUserAndTanentUtils.getBoolean(SafeGustureFaceSettingActivity.this, Constant.SAFE_CENTER_FINGER_PRINT, false));
     }
 
+    /**
+     * 判断是否能显示指纹解锁
+     *
+     * @return
+     */
     public boolean isGestureOpen() {
         return CreateGestureActivity.getGestureCodeIsOpenByUser(SafeGustureFaceSettingActivity.this);
     }
