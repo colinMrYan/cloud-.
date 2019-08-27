@@ -23,6 +23,8 @@
                 android:layout_height="56dp"
                 android:gravity="center"
                 android:textColor="#333333"
+                android:ellipsize="end"
+                android:maxLines="2"
                 android:textSize="17sp" />
 
             <View
