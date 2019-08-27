@@ -396,6 +396,7 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
                 handler.sendEmptyMessage(REFRESH_DATA);
                 contactsList.clear();
                 groupsList.clear();
+                conversationFromChatContentList.clear();
             }
         }
     }

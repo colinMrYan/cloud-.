@@ -12,7 +12,6 @@ import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.view.ContextThemeWrapper;
 import android.view.Gravity;
@@ -272,20 +271,21 @@ public class ConversationActivity extends ConversationBaseActivity {
             getNewMessageOfChannel();
         }
         if (uiMessage != null) {
-            int position = uiMessageList.indexOf(uiMessage);
+            final int position = uiMessageList.indexOf(uiMessage);
             if (position != -1) {
-                if (getIntent().hasExtra(EXTRA_FROM_SERCH)) {
-                    RecyclerView.LayoutManager layoutManager = msgListView.getLayoutManager();
-                    layoutManager.scrollToPosition(position);
-                    msgListView.setLayoutManager(layoutManager);
-                    LogUtils.LbcDebug("33333333333333333333333333333");
-                } else {
-                    msgListView.scrollToPosition(position);
-                    LogUtils.LbcDebug("444444444444444444444444444444");
+                LogUtils.LbcDebug("33333333333333333333333333333::" + position + "  ::uimessage:" + uiMessage.getMessage().getContent());
+                LogUtils.LbcDebug("444444444444444444444::adapter.getItemCount()" + adapter.getItemCount());
+                LogUtils.LbcDebug("444444444444444444444::amsgListView.getChildCount()" + msgListView.getHeight());
+                msgListView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        msgListView.MoveToPosition(position);
+                    }
+                });
+
+//                    msgListView.smoothScrollToPosition(position);
                 }
-                    LogUtils.LbcDebug("  msgListView.scrollToPosition(position);");
             }
-        }
     }
 
     /**

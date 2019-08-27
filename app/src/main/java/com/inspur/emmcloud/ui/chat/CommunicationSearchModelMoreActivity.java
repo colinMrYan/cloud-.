@@ -356,6 +356,7 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
                 lastSearchTime = 0;
                 handler.removeCallbacks(searchRunnable);
                 searchModelsList.clear();
+                conversationFromChatContentList.clear();
                 handler.sendEmptyMessage(REFRESH_DATA);
             }
         }
