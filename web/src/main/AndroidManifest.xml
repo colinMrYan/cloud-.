@@ -45,6 +45,10 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name="com.inspur.emmcloud.wxapi.WXEntryActivity"
+            android:exported="true" />
+
         <!-- 高德定位需要的服务 -->
         <service android:name="com.amap.api.location.APSService"></service>
 
