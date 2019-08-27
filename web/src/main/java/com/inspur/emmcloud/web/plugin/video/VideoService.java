@@ -141,7 +141,7 @@ public class VideoService extends ImpPlugin {
                 try {
                     JSONObject json = new JSONObject();
                     json.put("path", recordVideoFilePath);
-                    jsCallback(successCb, json.toString());
+                    jsCallback(successCb, json);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -149,7 +149,7 @@ public class VideoService extends ImpPlugin {
                 try {
                     JSONObject json = new JSONObject();
                     json.put("errorMessage", getFragmentContext().getString(R.string.web_video_record_fail));
-                    jsCallback(failCb, json.toString());
+                    jsCallback(failCb, json);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
