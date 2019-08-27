@@ -17,6 +17,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.GroupMessageSearchAdapter;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
 import com.inspur.emmcloud.baselib.widget.ClearEditText;
@@ -130,6 +131,7 @@ public class CommunicationSearchMessagesActivity extends BaseActivity {
         });
         searchEdit.setOnEditorActionListener(onEditorActionListener);
         final List<com.inspur.emmcloud.bean.chat.Message> messageList = MessageCacheUtil.getGroupMessageWithType(BaseApplication.getInstance(), conversationFromChatContent.getConversation().getId());
+        LogUtils.LbcDebug("messageList:::::::" + messageList.size());
         final List<String> messageContentList = getMessageContentList(messageList);
         searchEdit.addTextChangedListener(new TextWatcher() {
             @Override
@@ -149,6 +151,7 @@ public class CommunicationSearchMessagesActivity extends BaseActivity {
                         searchMessagesList.add(messageList.get(i));
                     }
                 }
+                LogUtils.LbcDebug("searchMessagesList" + searchMessagesList.size() + "keyWords" + keyWords);
                 groupMessageSearchAdapter.setAndRefreshAdapter(searchMessagesList, keyWords);
             }
         });

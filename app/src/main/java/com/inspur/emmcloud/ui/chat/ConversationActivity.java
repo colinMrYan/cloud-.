@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.view.ContextThemeWrapper;
 import android.view.Gravity;
@@ -273,14 +274,16 @@ public class ConversationActivity extends ConversationBaseActivity {
         if (uiMessage != null) {
             int position = uiMessageList.indexOf(uiMessage);
             if (position != -1) {
-                try {
+                if (getIntent().hasExtra(EXTRA_FROM_SERCH)) {
+                    RecyclerView.LayoutManager layoutManager = msgListView.getLayoutManager();
+                    layoutManager.scrollToPosition(position);
+                    msgListView.setLayoutManager(layoutManager);
+                    LogUtils.LbcDebug("33333333333333333333333333333");
+                } else {
                     msgListView.scrollToPosition(position);
-                    LogUtils.LbcDebug("  msgListView.scrollToPosition(position);");
-                } catch (Exception e) {
-                    LogUtils.LbcDebug("Exception e" + e.getMessage());
-                    e.printStackTrace();
+                    LogUtils.LbcDebug("444444444444444444444444444444");
                 }
-
+                    LogUtils.LbcDebug("  msgListView.scrollToPosition(position);");
             }
         }
     }
