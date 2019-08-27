@@ -33,7 +33,6 @@ import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.CustomLoadingView;
@@ -273,17 +272,12 @@ public class ConversationActivity extends ConversationBaseActivity {
         if (uiMessage != null) {
             final int position = uiMessageList.indexOf(uiMessage);
             if (position != -1) {
-                LogUtils.LbcDebug("33333333333333333333333333333::" + position + "  ::uimessage:" + uiMessage.getMessage().getContent());
-                LogUtils.LbcDebug("444444444444444444444::adapter.getItemCount()" + adapter.getItemCount());
-                LogUtils.LbcDebug("444444444444444444444::amsgListView.getChildCount()" + msgListView.getHeight());
                 msgListView.post(new Runnable() {
                     @Override
                     public void run() {
                         msgListView.MoveToPosition(position);
                     }
                 });
-
-//                    msgListView.smoothScrollToPosition(position);
                 }
             }
     }

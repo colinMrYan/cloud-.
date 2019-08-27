@@ -41,6 +41,7 @@ import com.inspur.emmcloud.bean.chat.InputTypeBean;
 import com.inspur.emmcloud.bean.system.VoiceResult;
 import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
+import com.inspur.emmcloud.util.privates.MediaPlayerUtils;
 import com.inspur.emmcloud.util.privates.Voice2StringMessageUtils;
 import com.inspur.emmcloud.util.privates.audioformat.AndroidMp3ConvertUtils;
 import com.inspur.emmcloud.widget.audiorecord.AudioDialogManager;
@@ -103,7 +104,7 @@ public class ECMChatInputMenu extends LinearLayout {
     private List<InputTypeBean> inputTypeBeanList = new ArrayList<>();
     private View otherLayoutView;
     private Voice2StringMessageUtils voice2StringMessageUtils;
-    // private MediaPlayerUtils mediaPlayerUtils;
+    private MediaPlayerUtils mediaPlayerUtils;
     private String cid = "";
     private String inputs = "";
     private boolean isSpecialUser = false; //小智机器人进行特殊处理
@@ -252,7 +253,7 @@ public class ECMChatInputMenu extends LinearLayout {
         waterWaveProgress.setWaveSpeed(0.02F);
         waterWaveProgress.setAmplitude(5.0F);
         lastVolumeLevel = 0;
-        //  mediaPlayerUtils = new MediaPlayerUtils(getContext());
+        mediaPlayerUtils = new MediaPlayerUtils(getContext());
         voice2StringMessageUtils = new Voice2StringMessageUtils(getContext());
         voice2StringMessageUtils.setOnVoiceResultCallback(new OnVoiceResultCallback() {
             @Override
@@ -554,7 +555,7 @@ public class ECMChatInputMenu extends LinearLayout {
         voiceInputLayout.setVisibility(View.VISIBLE);
         lastVolumeLevel = 0;
         waterWaveProgress.setProgress(0);
-        //mediaPlayerUtils.playVoiceOn();
+        mediaPlayerUtils.playVoiceOn();
         voice2StringMessageUtils.startVoiceListening();
     }
 
@@ -817,7 +818,7 @@ public class ECMChatInputMenu extends LinearLayout {
      */
     public void releaseVoliceInput() {
         if (voice2StringMessageUtils.getSpeechRecognizer() != null) {
-            // mediaPlayerUtils.release();
+            mediaPlayerUtils.release();
             voice2StringMessageUtils.getSpeechRecognizer().cancel();
             voice2StringMessageUtils.getSpeechRecognizer().destroy();
         }
@@ -864,7 +865,7 @@ public class ECMChatInputMenu extends LinearLayout {
     public void stopVoiceInput() {
         voiceInputLayout.setVisibility(View.GONE);
         voice2StringMessageUtils.stopListening();
-        //  mediaPlayerUtils.playVoiceOff();
+        mediaPlayerUtils.playVoiceOff();
     }
 
     public String getInputContent() {

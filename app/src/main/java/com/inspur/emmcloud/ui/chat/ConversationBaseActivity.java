@@ -8,7 +8,6 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
@@ -44,7 +43,6 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity {
         super.onCreate();
         ButterKnife.bind(this);
         loadingDlg = new LoadingDialog(this);
-        LogUtils.LbcDebug("onCreate");
         initConversationInfo();
         recordUserClickChannel();
         setConversationUnHide();
@@ -63,10 +61,8 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity {
             conversation = ConversationCacheUtils.getConversation(MyApplication.getInstance(), cid);
         }
         if (conversation == null) {
-            LogUtils.LbcDebug("initConversationInfo");
             getConversationInfo();
         } else {
-            LogUtils.LbcDebug("initChannelMessage1111111111111111111");
             initChannelMessage();
         }
 
@@ -119,7 +115,6 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity {
             ChatAPIService apiService = new ChatAPIService(this);
             apiService.setAPIInterface(new Webservice());
             apiService.getConversationInfo(cid);
-            LogUtils.LbcDebug("111111111111111111111111111111111111getConversationInfo");
         } else {
             finish();
         }
@@ -132,7 +127,6 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity {
         public void returnConversationInfoSuccess(Conversation conversation) {
             LoadingDialog.dimissDlg(loadingDlg);
             ConversationBaseActivity.this.conversation = conversation;
-            LogUtils.LbcDebug("222222222222222222222222222222222222222");
             initChannelMessage();
         }
 
