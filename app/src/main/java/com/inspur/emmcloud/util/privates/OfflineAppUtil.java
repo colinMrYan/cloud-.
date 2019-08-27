@@ -4,7 +4,6 @@ import android.app.Activity;
 
 import com.hjq.toast.ToastUtils;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ZipUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.api.APIDownloadCallBack;
@@ -69,12 +68,13 @@ public class OfflineAppUtil {
                     if (FileUtils.isFileExist(offlineAppZipFileDirPath)) {
                         FileUtils.deleteFile(offlineAppZipFileDirPath);
                     }
-                    LogUtils.jasonDebug("" + offlineAppZipFileTempDir.renameTo(new File(offlineAppZipFileDirPath)));
+                    offlineAppZipFileTempDir.renameTo(new File(offlineAppZipFileDirPath));
                     if (isShowLoadingDlg) {
                         openOfflineApp(activity, app, offlineAppZipFileDirPath);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
+                    ToastUtils.show(R.string.react_native_app_open_failed);
                 }
             }
 

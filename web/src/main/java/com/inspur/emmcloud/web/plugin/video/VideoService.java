@@ -44,14 +44,20 @@ public class VideoService extends ImpPlugin {
         } else if (action.equals("playVideo")) {
             JSONObject optionObj = paramsObject.optJSONObject("options");
             String path = optionObj.optString("path");
+            if (StringUtils.isBlank(path)) {
+                return;
+            }
             //识别真实路径
             path = FilePathUtils.getRealPath(path);
-
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            String type = "video/*";
-            Uri uri = Uri.parse(path);
-            intent.setDataAndType(uri, type);
-            getFragmentContext().startActivity(intent);
+            try {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                String type = "video/*";
+                Uri uri = Uri.parse(path);
+                intent.setDataAndType(uri, type);
+                getFragmentContext().startActivity(intent);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         } else {
             showCallIMPMethodErrorDlg();
         }

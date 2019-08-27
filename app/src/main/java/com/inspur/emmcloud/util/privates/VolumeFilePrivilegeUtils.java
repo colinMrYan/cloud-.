@@ -22,7 +22,7 @@ import java.util.Map;
 public class VolumeFilePrivilegeUtils {
 
     public static boolean canGetVolumeFilePrivilege(Context context, Volume volume) {
-        return (volume.getType().equals("public") || VolumeGroupContainMeCacheUtils.getVolumeGroupContainMe(context, volume.getId()) != null);
+        return (!volume.getType().equals("public") || VolumeGroupContainMeCacheUtils.getVolumeGroupContainMe(context, volume.getId()) != null);
     }
 
     /**
@@ -99,8 +99,10 @@ public class VolumeFilePrivilegeUtils {
                     }
                 }
                 privilege = Collections.max(privilegeList);
+                LogUtils.YfcDebug("privilege:" + privilege);
             } else {
                 privilege = getVolumeFileListResult.getOthersPrivilege();
+                LogUtils.YfcDebug("privilege:" + privilege);
             }
         }
         return (privilege > 4);
