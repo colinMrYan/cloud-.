@@ -240,6 +240,7 @@
                 <data android:mimeType="audio/*"></data>
                 <data android:mimeType="application/octet-stream"></data>
                 <data android:mimeType="application/msword"></data>
+                <data android:mimeType="application/vnd.ms-works"></data>
                 <data android:mimeType="application/pdf"></data>
                 <data android:mimeType="application/vnd.truedoc"></data>
                 <data android:mimeType="application/vnd.ms-excel"></data>

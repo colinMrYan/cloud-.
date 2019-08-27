@@ -149,7 +149,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
                 .addItem(downloadAction, !isVolumeFileDirectory)
                 .addItem(renameAction, isVolumeFileWriteable)
                 .addItem(moveToAction, isVolumeFileWriteable)
-                .addItem(copyAction)
+                .addItem(copyAction, isVolumeFileWriteable)
                 .addItem(permissionAction, isVolumeFileDirectory)
                 // .addItem("分享", !isVolumeFileDirectory)
                 .setOnSheetItemClickListener(new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {

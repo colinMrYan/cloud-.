@@ -168,7 +168,7 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
         holder.fileTypeImg.setImageResource(fileTypeImgResId);
         holder.fileNameText.setText(volumeFile.getName());
         holder.fileSizeText.setText(FileUtils.formatFileSize(volumeFile.getSize()));
-        String fileTime = TimeUtils.getTime(volumeFile.getCreationDate(), format);
+        String fileTime = TimeUtils.getTime(volumeFile.getLastUpdate(), format);
         holder.fileTimeText.setText(fileTime);
         if (!isStatusNomal) {
             boolean isStutasUploading = volumeFileStatus.equals(VolumeFile.STATUS_UPLOADIND);
