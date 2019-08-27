@@ -30,6 +30,7 @@ import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.ActionSheetDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.MyDialog;
+import com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButton;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
@@ -85,6 +86,8 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.data_blank_layout)
     LinearLayout dataBlankLayout;
+    @BindView(R.id.btn_upload_file)
+    CustomRoundButton uploadFileBtn;
     String deleteAction, downloadAction, renameAction, moveToAction, copyAction, permissionAction; //弹框点击状态
     private List<VolumeFile> moveVolumeFileList = new ArrayList<>();//移动的云盘文件列表
     private MyAppAPIService apiServiceBase;
@@ -146,7 +149,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
                 .addItem(downloadAction, !isVolumeFileDirectory)
                 .addItem(renameAction, isVolumeFileWriteable)
                 .addItem(moveToAction, isVolumeFileWriteable)
-                .addItem(copyAction)
+                .addItem(copyAction, isVolumeFileWriteable)
                 .addItem(permissionAction, isVolumeFileDirectory)
                 // .addItem("分享", !isVolumeFileDirectory)
                 .setOnSheetItemClickListener(new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {
@@ -224,7 +227,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
      */
     protected void showCreateFolderDlg() {
         createFolderDlg = new MyDialog(VolumeFileBaseActivity.this,
-                R.layout.volume_dialog_update_name_input, R.style.userhead_dialog_bg);
+                R.layout.volume_dialog_update_name_input);
         createFolderDlg.setCancelable(false);
         final EditText inputEdit = (EditText) createFolderDlg.findViewById(R.id.edit);
         inputEdit.setHint(getString(R.string.clouddriver_input_directory_name));
@@ -275,7 +278,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         final String fileNameNoEx = volumeFile.getType().equals(VolumeFile.FILE_TYPE_REGULAR) ? FileUtils.getFileNameWithoutExtension(fileName) : fileName;
         final String fileExtension = fileName.replace(fileNameNoEx, "");
         fileRenameDlg = new MyDialog(VolumeFileBaseActivity.this,
-                R.layout.volume_dialog_update_name_input, R.style.userhead_dialog_bg);
+                R.layout.volume_dialog_update_name_input);
         fileRenameDlg.setCancelable(false);
         final EditText inputEdit = (EditText) fileRenameDlg.findViewById(R.id.edit);
         inputEdit.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MyAppConfig.VOLUME_MAX_FILE_NAME_LENGTH)});
@@ -339,7 +342,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
      * @param volumeFile
      */
     protected void downloadOrOpenVolumeFile(VolumeFile volumeFile) {
-        String fileSavePath = MyAppConfig.LOCAL_DOWNLOAD_PATH + volumeFile.getName();
+        String fileSavePath = MyAppConfig.getVolumeFileDownloadDirPath() + volumeFile.getName();
         if (FileUtils.isFileExist(fileSavePath)) {
             FileUtils.openFile(getApplicationContext(), fileSavePath);
         } else {
@@ -347,7 +350,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
             bundle.putSerializable("volumeId", volume.getId());
             bundle.putSerializable("volumeFile", volumeFile);
             bundle.putSerializable("currentDirAbsolutePath", currentDirAbsolutePath + volumeFile.getName());
-            IntentUtils.startActivity(VolumeFileBaseActivity.this, VolumeFileDownloadActivtiy.class, bundle);
+            IntentUtils.startActivity(VolumeFileBaseActivity.this, VolumeFileDownloadActivity.class, bundle);
         }
     }
 
@@ -399,7 +402,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         bundle.putSerializable("volumeFile", volumeFile);
         bundle.putString("currentDirAbsolutePath", currentDirAbsolutePath + volumeFile.getName());
         bundle.putBoolean("isStartDownload", true);
-        IntentUtils.startActivity(VolumeFileBaseActivity.this, VolumeFileDownloadActivtiy.class, bundle);
+        IntentUtils.startActivity(VolumeFileBaseActivity.this, VolumeFileDownloadActivity.class, bundle);
     }
 
 

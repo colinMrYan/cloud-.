@@ -240,6 +240,7 @@
                 <data android:mimeType="audio/*"></data>
                 <data android:mimeType="application/octet-stream"></data>
                 <data android:mimeType="application/msword"></data>
+                <data android:mimeType="application/vnd.ms-works"></data>
                 <data android:mimeType="application/pdf"></data>
                 <data android:mimeType="application/vnd.truedoc"></data>
                 <data android:mimeType="application/vnd.ms-excel"></data>
@@ -718,7 +719,7 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.appcenter.volume.VolumeFileDownloadActivtiy"
+            android:name=".ui.appcenter.volume.VolumeFileDownloadActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />

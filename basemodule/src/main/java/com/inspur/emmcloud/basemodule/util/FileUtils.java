@@ -15,10 +15,14 @@ import android.text.TextUtils;
 import android.util.Base64;
 import android.webkit.MimeTypeMap;
 
+import com.alibaba.android.arouter.launcher.ARouter;
+import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.R;
+import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.componentservice.communication.CommunicationService;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -894,12 +898,48 @@ public class FileUtils {
     }
 
     /**
+     * 文件是否可以用云+本身打开
+     *
+     * @param path
+     * @return
+     */
+    public static boolean canFileOpenByApp(String path) {
+        return canFileOpenByApp(new File(path));
+    }
+
+    /**
+     * 文件是否可以用云+本身打开
+     *
+     * @param file
+     * @return
+     */
+    public static boolean canFileOpenByApp(File file) {
+        Router router = Router.getInstance();
+        if (router.getService(CommunicationService.class) != null) {
+            String suffix = getSuffix(file);
+            if (suffix.toLowerCase().equals("png") || suffix.toLowerCase().equals("jpg") || suffix.toLowerCase().equals("jpeg")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * 打开文件
      *
      * @param context
      * @param mime
      */
     public static void openFile(Activity context, File file, String mime, boolean isNeedStartActivityForResult) {
+        if (canFileOpenByApp(file)) {
+            Bundle bundle = new Bundle();
+            bundle.putInt("image_index", 0);
+            ArrayList<String> urlList = new ArrayList<>();
+            urlList.add("file://" + file.getAbsolutePath());
+            bundle.putStringArrayList("image_urls", urlList);
+            ARouter.getInstance().build(Constant.AROUTER_CLASS_COMMUNICATION_IMAGEPAGER).with(bundle);
+            return;
+        }
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         //判断是否是AndroidN以及更高的版本
@@ -929,23 +969,16 @@ public class FileUtils {
      * @param mime
      */
     public static void openFile(Context context, String path, String mime) {
-        //可用，但不是最好的方法
-//        Intent intent = new Intent();
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-//            StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-//            StrictMode.setVmPolicy(builder.build());
-//        }
-//        File file = new File(path);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);//设置标记
-//        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-//        intent.setAction(Intent.ACTION_VIEW);//动作，查看
-//        intent.setDataAndType(Uri.fromFile(file), mime);//设置类型
-//        if (context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
-//            context.startActivity(intent);
-//        }
-
-
         File file = new File(path);
+        if (canFileOpenByApp(file)) {
+            Bundle bundle = new Bundle();
+            bundle.putInt("image_index", 0);
+            ArrayList<String> urlList = new ArrayList<>();
+            urlList.add("file://" + file.getAbsolutePath());
+            bundle.putStringArrayList("image_urls", urlList);
+            ARouter.getInstance().build(Constant.AROUTER_CLASS_COMMUNICATION_IMAGEPAGER).with(bundle).navigation();
+            return;
+        }
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         //判断是否是AndroidN以及更高的版本

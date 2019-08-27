@@ -18,6 +18,7 @@ import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
@@ -54,6 +55,7 @@ import java.util.Map;
 /**
  * 图片查看器
  */
+@Route(path = Constant.AROUTER_CLASS_COMMUNICATION_IMAGEPAGER)
 public class ImagePagerActivity extends BaseFragmentActivity {
     public static final String EXTRA_IMAGE_INDEX = "image_index";
     public static final String EXTRA_IMAGE_URLS = "image_urls";
