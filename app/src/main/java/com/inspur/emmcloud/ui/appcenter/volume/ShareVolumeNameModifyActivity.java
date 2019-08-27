@@ -34,8 +34,6 @@ public class ShareVolumeNameModifyActivity extends BaseActivity {
 
     @BindView(R.id.header_text)
     TextView headerText;
-    @BindView(R.id.tv_edit_gropName_tip)
-    TextView groupTitleText;
 
     @BindView(R.id.tv_edit_gropName_tip)
     TextView editGroupNameTipsText;
@@ -59,7 +57,6 @@ public class ShareVolumeNameModifyActivity extends BaseActivity {
         EditTextUtils.setText(editText, isVolumeNameModify ? volume.getName() : group.getName());
         editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MyAppConfig.VOLUME_MAX_FILE_NAME_LENGTH)});
         loadingDlg = new LoadingDialog(ShareVolumeNameModifyActivity.this);
-        groupTitleText.setText(R.string.clouddriver_volume_group_name);
     }
 
     @Override
