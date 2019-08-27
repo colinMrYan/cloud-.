@@ -6,7 +6,6 @@
  */
 package com.inspur.emmcloud.widget;
 
-import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -19,6 +18,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -112,6 +112,7 @@ public class ECMChatInputMenu extends LinearLayout {
     WaterWaveProgress waterWaveProgress;
     private static final int VOICE_INPUT_STATUS_NORMAL = 1;
     private static final int VOICE_INPUT_STATUS_STOP = 2;
+    private static final int VOICE_INPUT_STATUS_ACTION_UP = 3;
     private static final int VOICE_INPUT_STATUS_SPEAKING = 5;
     @BindView(R.id.voice_input_language)
     TextView languageTv;
@@ -332,14 +333,17 @@ public class ECMChatInputMenu extends LinearLayout {
         languageList.add(getContext().getString(R.string.voice_input_language_cantonese));  //粵語
     }
 
+    private ValueAnimator animator;
+
     @SuppressLint("ClickableViewAccessibility")
     private void initVoiceInputView(int status) {
         Log.d("zhang", "initVoiceInputView: status = " + status);
-        voiceInputCompleteView.setVisibility(INVISIBLE);
         switch (status) {
             case VOICE_INPUT_STATUS_NORMAL:
                 voiceInputEt.setHint(getContext().getString(R.string.voice_input_hint_prepare));
             case VOICE_INPUT_STATUS_STOP:
+                stopVoiceCompleteAnim();
+                voiceInputCompleteView.setVisibility(INVISIBLE);
                 String text = voiceInputEt.getText().toString();
                 Log.d("zhang", "initVoiceInputView: text = " + text);
                 if (StringUtils.isBlank(text)) {
@@ -352,9 +356,11 @@ public class ECMChatInputMenu extends LinearLayout {
                     languageTv.setVisibility(INVISIBLE);
                     voiceInputClean.setVisibility(VISIBLE);
                     voiceInputSend.setVisibility(VISIBLE);
-                    startVoiceCompleteAnim();
                 }
                 voiceInputCloseImg.setVisibility(VISIBLE);
+                voiceInputLevelImgShade.setVisibility(INVISIBLE);
+                break;
+            case VOICE_INPUT_STATUS_ACTION_UP:
                 voiceInputLevelImgShade.setVisibility(INVISIBLE);
                 break;
             case VOICE_INPUT_STATUS_SPEAKING:
@@ -373,8 +379,11 @@ public class ECMChatInputMenu extends LinearLayout {
      */
     private void startVoiceCompleteAnim() {
         voiceInputCompleteView.setVisibility(VISIBLE);
-        ValueAnimator animator = ValueAnimator.ofFloat(0, 100f);
-        animator.setDuration(1000);         //时间需要优化  TODO fuchang
+        animator = ValueAnimator.ofFloat(0, 100f);
+        animator.setDuration(3000);
+        animator.setInterpolator(new AccelerateDecelerateInterpolator());
+        animator.setRepeatMode(ValueAnimator.RESTART);
+        animator.setRepeatCount(-1);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
@@ -382,25 +391,18 @@ public class ECMChatInputMenu extends LinearLayout {
                 voiceInputCompleteView.setProgress((int) value);
             }
         });
-        animator.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                voiceInputCompleteView.setVisibility(INVISIBLE);
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-            }
-        });
         animator.start();
+    }
+
+    /**
+     * 录音结束动画
+     */
+    private void stopVoiceCompleteAnim() {
+        if (animator != null) {
+            animator.cancel();
+            animator = null;
+        }
+        voiceInputCompleteView.setVisibility(INVISIBLE);
     }
 
     /**
@@ -426,6 +428,7 @@ public class ECMChatInputMenu extends LinearLayout {
                 if (voiceResult.getXunFeiPermissionError() == Voice2StringMessageUtils.MSG_XUNFEI_PERMISSION_ERROR) {
                     ToastUtils.show(MyApplication.getInstance(), getContext().getString(R.string.voice_audio_record_unavailiable));
                 }
+                initVoiceInputView(VOICE_INPUT_STATUS_STOP);
                 return;
             }
             String results = voiceResult.getResults();
@@ -440,9 +443,7 @@ public class ECMChatInputMenu extends LinearLayout {
                         chatInputMenuListener.onSendMsg(results, null, null, null);
                     }
                 } else {
-                    int index = inputEdit.getSelectionStart();
-//                    Editable editable = inputEdit.getText();
-//                    editable.insert(index, results);
+                    int index = voiceInputEt.getSelectionEnd();
                     Editable voiceEditable = voiceInputEt.getText();
                     voiceEditable.insert(index, results);
                     Log.d("zhang", "handleVoiceResult: index = " + index + ", results = " + results);
@@ -450,6 +451,7 @@ public class ECMChatInputMenu extends LinearLayout {
 
             }
         }
+        initVoiceInputView(VOICE_INPUT_STATUS_STOP);
     }
 
     /**
@@ -679,6 +681,7 @@ public class ECMChatInputMenu extends LinearLayout {
         inputEdit.setVisibility(INVISIBLE);
         addMenuLayout.setVisibility(GONE);
         voiceInputLayout.setVisibility(View.VISIBLE);
+        voiceInputEt.setText("");
         lastVolumeLevel = 0;
         waterWaveProgress.setProgress(0);
 //        mediaPlayerUtils.playVoiceOn();
@@ -848,19 +851,16 @@ public class ECMChatInputMenu extends LinearLayout {
                 break;
             case R.id.voice_input_clear:
                 voiceInputEt.setText("");
-                initVoiceInputView(VOICE_INPUT_STATUS_STOP);
                 stopVoiceInput();
                 break;
             case R.id.voice_input_send:
-                //需检查chatInputMenuListener 及 results是否为理想值  TODO fuchang
                 inputEdit.setVisibility(VISIBLE);
-                voiceInputEt.setText("");
-                initVoiceInputView(VOICE_INPUT_STATUS_STOP);
-                stopVoiceInput();
                 String results = voiceInputEt.getText().toString();
                 if (chatInputMenuListener != null && !StringUtils.isBlank(results)) {
                     chatInputMenuListener.onSendMsg(results, null, null, null);
                 }
+                voiceInputEt.setText("");
+                stopVoiceInput();
                 break;
             default:
                 break;
@@ -878,8 +878,10 @@ public class ECMChatInputMenu extends LinearLayout {
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
-                initVoiceInputView(VOICE_INPUT_STATUS_STOP);
                 mediaPlayerUtils.playVoiceOff();
+                voice2StringMessageUtils.stopListening();
+                initVoiceInputView(VOICE_INPUT_STATUS_ACTION_UP);
+                startVoiceCompleteAnim();
                 break;
         }
 
@@ -991,9 +993,6 @@ public class ECMChatInputMenu extends LinearLayout {
 
     /**
      * 设置音量
-     * 功能描述：采用十级，新采样数据比当前数据小时，
-     * 延迟预定周期以一定速度下降，
-     * 下降过程中新采样数据大于下降当前值时继续上升
      *
      * @param volume
      */
