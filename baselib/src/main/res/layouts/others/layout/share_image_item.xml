@@ -7,11 +7,11 @@
     <ImageView
         android:id="@+id/img_share_file"
         android:layout_width="110dp"
-        android:layout_height="100dp"
+        android:layout_height="110dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp"
-        android:paddingTop="10dp"
-        android:scaleType="fitXY"
+        android:background="@drawable/bg_corner"
+        android:scaleType="centerCrop"
         android:src="@drawable/ic_launcher" />
 
 </RelativeLayout>

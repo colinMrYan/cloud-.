@@ -1064,6 +1064,12 @@ public class FileUtils {
             imageIconId = R.drawable.ic_volume_file_typ_zip;
         } else if (fileName.endsWith("jpg") || fileName.endsWith("png") || fileName.endsWith("jpeg") || fileName.endsWith("dng")) {
             imageIconId = R.drawable.ic_volume_file_typ_img;
+        } else if (fileName.endsWith("mp4") || fileName.endsWith("avi") || fileName.endsWith("wma") || fileName.endsWith("rmvb") || fileName.endsWith("3gp")
+                || fileName.endsWith("mid") || fileName.endsWith("flash") || fileName.endsWith("rm")) {
+            imageIconId = R.drawable.ic_volume_file_typ_video;
+        } else if (fileName.endsWith("wave") || fileName.endsWith("aiff") || fileName.endsWith("mpeg") || fileName.endsWith("mp3") || fileName.endsWith("mpeg-4")
+                || fileName.endsWith("midi") || fileName.endsWith("amr") || fileName.endsWith("ape") || fileName.endsWith("flac") || fileName.endsWith("aac")) {
+            imageIconId = R.drawable.ic_volume_file_typ_audio;
         }
         return imageIconId;
     }

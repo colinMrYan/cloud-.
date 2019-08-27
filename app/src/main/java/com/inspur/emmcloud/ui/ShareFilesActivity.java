@@ -402,6 +402,18 @@ public class ShareFilesActivity extends BaseActivity {
 
     }
 
+    private String getFileIcon(String filePath) {
+        String iconPath = "";
+        int iconId = FileUtils.getRegularFileIconResId(filePath);
+        if (iconId == R.drawable.ic_volume_file_typ_img) {
+            iconPath = filePath;
+        } else {
+            iconPath = "drawable://" + iconId;
+        }
+        return iconPath;
+    }
+
+
     /**
      * 多图片适配器*/
     class ShareImagesAdapter extends RecyclerView.Adapter<FileHolder> {
@@ -421,7 +433,7 @@ public class ShareFilesActivity extends BaseActivity {
 
         @Override
         public void onBindViewHolder(FileHolder holder, int position) {
-            ImageDisplayUtils.getInstance().displayImage(holder.imageView, uriList.get(position).toString(), R.drawable.default_image);
+            ImageDisplayUtils.getInstance().displayRoundedImage(holder.imageView, uriList.get(position).toString(), R.drawable.default_image, getBaseContext(), 4);
         }
 
         @Override
@@ -450,13 +462,13 @@ public class ShareFilesActivity extends BaseActivity {
 
         @Override
         public void onBindViewHolder(FileHolder holder, int position) {
-            ImageDisplayUtils.getInstance().displayImage(holder.imageView, "drawable://" + FileUtils.getRegularFileIconResId(uriList.get(position)), R.drawable.default_image);
+            ImageDisplayUtils.getInstance().displayRoundedImage(holder.imageView, getFileIcon(uriList.get(position)), R.drawable.default_image, getBaseContext(), 4);
             String filePath = uriList.get(position);
             if (!StringUtils.isBlank(filePath) && filePath.contains("/")) {
                 String fileName = filePath.substring(filePath.lastIndexOf("/") + 1, filePath.length());
                 holder.textView.setText(fileName);
             } else {
-                holder.textView.setText("未知名称");
+                holder.textView.setText(R.string.no_file);
             }
         }
 
