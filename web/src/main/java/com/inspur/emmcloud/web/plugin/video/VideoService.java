@@ -44,9 +44,18 @@ public class VideoService extends ImpPlugin {
         } else if (action.equals("playVideo")) {
             JSONObject optionObj = paramsObject.optJSONObject("options");
             String path = optionObj.optString("path");
-            Intent intent = new Intent(getActivity(), VideoPlayActivity.class);
-            intent.putExtra("path", path);
-            getActivity().startActivity(intent);
+            if (StringUtils.isBlank(path)) {
+                return;
+            }
+            try {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                String type = "video/*";
+                Uri uri = Uri.parse(path);
+                intent.setDataAndType(uri, type);
+                getFragmentContext().startActivity(intent);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         } else {
             showCallIMPMethodErrorDlg();
         }
@@ -70,6 +79,13 @@ public class VideoService extends ImpPlugin {
                                             getActivity().getPackageName() + ".provider", createMediaFile(fileName));//这是正确的写法
 
                                 } catch (IOException e) {
+                                    try {
+                                        JSONObject json = new JSONObject();
+                                        json.put("errorMessage", "文件操作异常");
+                                        jsCallback(failCb, json);
+                                    } catch (JSONException e1) {
+                                        e1.printStackTrace();
+                                    }
                                     e.printStackTrace();
                                 }
                                 intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
@@ -82,7 +98,13 @@ public class VideoService extends ImpPlugin {
 
                             @Override
                             public void onPermissionRequestFail(List<String> permissions) {
-
+                                try {
+                                    JSONObject json = new JSONObject();
+                                    json.put("errorMessage", "暂时无操作权限");
+                                    jsCallback(failCb, json);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
                             }
                         });
             }
@@ -102,6 +124,13 @@ public class VideoService extends ImpPlugin {
                 if (!mediaStorageDir.exists()) {
                     if (!mediaStorageDir.mkdirs()) {
                         Log.e("TAG", "文件夹创建失败");
+                        try {
+                            JSONObject json = new JSONObject();
+                            json.put("errorMessage", "文件夹创建失败");
+                            jsCallback(failCb, json);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                         return null;
                     }
                 }
@@ -117,6 +146,13 @@ public class VideoService extends ImpPlugin {
                 recordVideoFilePath = mediaStorageDir + File.separator + fileName + suffix;
                 return mediaFile;
             }
+        }
+        try {
+            JSONObject json = new JSONObject();
+            json.put("errorMessage", "文件操作失败");
+            jsCallback(failCb, json);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -141,7 +177,7 @@ public class VideoService extends ImpPlugin {
                 try {
                     JSONObject json = new JSONObject();
                     json.put("path", recordVideoFilePath);
-                    jsCallback(successCb, json.toString());
+                    jsCallback(successCb, json);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -149,11 +185,10 @@ public class VideoService extends ImpPlugin {
                 try {
                     JSONObject json = new JSONObject();
                     json.put("errorMessage", getFragmentContext().getString(R.string.web_video_record_fail));
-                    jsCallback(failCb, json.toString());
+                    jsCallback(failCb, json);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
             }
         }
     }
