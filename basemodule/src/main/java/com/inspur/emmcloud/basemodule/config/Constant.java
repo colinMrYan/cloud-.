@@ -238,5 +238,7 @@ public class Constant {
     public static final int ATTEND_MEETING_STATUS_TENTATIVE = 3;
     public static final String APP_MYAPP_LIST_FROM_NET = "my_app_list_from_net";
 
+    public static final String SAFE_CENTER_FINGER_PRINT = "safe_center_finger_print";
+
 
 }

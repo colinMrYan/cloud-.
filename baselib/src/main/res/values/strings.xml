@@ -1194,11 +1194,15 @@
     <string name="hwpush_ability_value" translatable="false">successRateAnalytics</string>
 
     <!--安全中心-->
-    <string name="setting_safe_gesture_face">面容ID、手势密码</string>
+    <string name="setting_safe_gesture_face">指纹、手势密码</string>
+    <string name="setting_face_unlock">刷脸解锁设置</string>
     <string name="setting_safe_gesture_face_setting">面容ID、手势密码设置</string>
+    <string name="setting_safe_face_id_unlock">刷脸解锁</string>
     <string name="setting_safe_center">账号、设备安全</string>
     <string name="safe_center_gesture">手势密码</string>
     <string name="safe_center_finger_print">指纹</string>
+    <string name="safe_cloud_touch_id">%1$s </string>
+    <string name="safe_center_use_finger_print_unlock">指纹解锁</string>
     <string name="switch_gesture_unlock">手势解锁</string>
     <string name="switch_gesture_reset_unlock">重置手势解锁</string>
     <string name="put_face_in_frame">请把脸放入框内保持不动</string>
