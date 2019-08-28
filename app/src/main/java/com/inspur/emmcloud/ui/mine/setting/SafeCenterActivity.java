@@ -54,6 +54,7 @@ public class SafeCenterActivity extends BaseActivity {
     private void intentFaceVerifyActivity(boolean isFaceSettingOpen) {
         Bundle bundle = new Bundle();
         bundle.putBoolean("isFaceSettingOpen", isFaceSettingOpen);
-        IntentUtils.startActivity(SafeCenterActivity.this, FaceVerifyActivity.class, bundle);
+//        IntentUtils.startActivity(SafeCenterActivity.this, FaceVerifyActivity.class, bundle);
+        IntentUtils.startActivity(SafeCenterActivity.this, FaceSettingActivity.class, bundle);
     }
 }

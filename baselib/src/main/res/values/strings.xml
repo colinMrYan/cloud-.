@@ -1195,6 +1195,7 @@
 
     <!--安全中心-->
     <string name="setting_safe_gesture_face">指纹、手势密码</string>
+    <string name="setting_face_unlock">刷脸解锁设置</string>
     <string name="setting_safe_gesture_face_setting">面容ID、手势密码设置</string>
     <string name="setting_safe_face_id_unlock">刷脸解锁</string>
     <string name="setting_safe_center">账号、设备安全</string>
