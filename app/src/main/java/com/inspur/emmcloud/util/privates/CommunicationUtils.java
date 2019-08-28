@@ -280,6 +280,24 @@ public class CommunicationUtils {
         return message;
     }
 
+    public static Message combineTransmitRegularFileMessage(String cid, String localFilePath, MsgContentRegularFile orgMsgContentRegularFile) {
+        String tracer = getTracer();
+        Message message = combinLocalMessageCommon();
+        message.setChannel(cid);
+        message.setId(tracer);
+        message.setTmpId(tracer);
+        message.setType("file/regular-file");
+        message.setLocalPath(localFilePath);
+
+        MsgContentRegularFile msgContentRegularFile = new MsgContentRegularFile();
+        msgContentRegularFile.setCategory(orgMsgContentRegularFile.getCategory());
+        msgContentRegularFile.setName(orgMsgContentRegularFile.getName());
+        msgContentRegularFile.setSize(orgMsgContentRegularFile.getSize());
+        msgContentRegularFile.setMedia(localFilePath);
+        message.setContent(msgContentRegularFile.toString());
+        return message;
+    }
+
 
     public static Message combinLocalExtendedLinksMessage(String cid, String poster, String title, String subTitle, String url) {
         String tracer = getTracer();
