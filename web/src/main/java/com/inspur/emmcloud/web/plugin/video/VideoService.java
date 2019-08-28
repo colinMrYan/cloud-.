@@ -2,10 +2,12 @@ package com.inspur.emmcloud.web.plugin.video;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
+import android.webkit.MimeTypeMap;
 
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
@@ -51,7 +53,22 @@ public class VideoService extends ImpPlugin {
             try {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 String type = "video/*";
-                Uri uri = Uri.parse(path);
+                Uri uri;
+                if (path.startsWith("http")) {
+                    String extension = MimeTypeMap.getFileExtensionFromUrl(path);
+                    type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+                    uri = Uri.parse(path);
+                } else {
+                    File file = new File(path);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        uri = FileProvider.getUriForFile(getFragmentContext(), getFragmentContext().getPackageName() + ".provider", file);
+                    } else {
+                        uri = Uri.fromFile(file);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    }
+                }
+
                 intent.setDataAndType(uri, type);
                 getFragmentContext().startActivity(intent);
             } catch (Exception e) {
