@@ -43,8 +43,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
+            android:background="#FFFFFF"
             android:minHeight="150dp"
-            android:paddingBottom="16dp" />
+            android:paddingBottom="16dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp" />
 
         <RelativeLayout
             android:id="@+id/rl_image"
@@ -175,8 +178,8 @@
 
         <ImageView
             android:id="@+id/img_channel_arrow_right"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="17dp"
+            android:layout_height="17dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
@@ -220,8 +223,8 @@
 
         <ImageView
             android:id="@+id/img_arrow_right"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="17dp"
+            android:layout_height="17dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
