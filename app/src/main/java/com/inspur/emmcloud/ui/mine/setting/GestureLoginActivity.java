@@ -22,6 +22,7 @@ import com.inspur.emmcloud.baselib.widget.dialogs.MyDialog;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.ninelock.LockPatternUtil;
@@ -166,6 +167,8 @@ public class GestureLoginActivity extends BaseActivity {
     private void showFingerPrintDialog() {
         myDialog = new MyDialog(GestureLoginActivity.this, R.layout.safe_finger_print_dialog);
         myDialog.setCancelable(false);
+        ((TextView) myDialog.findViewById(R.id.tv_touch_id)).setText(getString(R.string.finger_print_id, AppUtils.getAppName(this)));
+        ((TextView) myDialog.findViewById(R.id.tv_unlock_by_touch_id)).setText(getString(R.string.finger_print_by_finger_print, AppUtils.getAppName(this)));
         TextView cancelBtn = myDialog.findViewById(R.id.tv_finger_print_cancel);
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -202,18 +205,12 @@ public class GestureLoginActivity extends BaseActivity {
             public void onNotMatch(int availableTimes) {
                 // 指纹不匹配，并返回可用剩余次数并自动继续验证
                 LogUtils.YfcDebug("指纹识别剩余次数：" + availableTimes);
-                if (availableTimes <= 0) {
-                    if (myDialog != null && myDialog.isShowing()) {
-                        myDialog.dismiss();
-                    }
-                    ToastUtils.show(GestureLoginActivity.this, "您的识别次数用尽，请尝试手势解锁，或者一段时间后重试");
-                } else {
-                    ToastUtils.show(GestureLoginActivity.this, "指纹认证失败，您还可以尝试" + availableTimes + "次");
-                }
+                ToastUtils.show(GestureLoginActivity.this, getString(R.string.finger_print_try_times, availableTimes));
             }
 
             @Override
             public void onFailed(boolean isDeviceLocked) {
+                dismisDialog();
                 // 错误次数达到上限或者API报错停止了验证，自动结束指纹识别
                 // isDeviceLocked 表示指纹硬件是否被暂时锁定
                 // 通常情况错误五次后会锁定三十秒，不同硬件也不一定完全如此，有资料介绍有的硬件也会锁定长达两分钟
@@ -222,12 +219,23 @@ public class GestureLoginActivity extends BaseActivity {
 
             @Override
             public void onStartFailedByDeviceLocked() {
+                dismisDialog();
                 // 第一次调用startIdentify失败，因为设备被暂时锁定
                 LogUtils.YfcDebug("设备被锁定");
             }
 
         });
         showFingerPrintDialog();
+    }
+
+    /**
+     * 识别次数用尽或者第一次调用设备被锁定时取消并提示
+     */
+    private void dismisDialog() {
+        if (myDialog != null && myDialog.isShowing()) {
+            myDialog.dismiss();
+        }
+        ToastUtils.show(GestureLoginActivity.this, getString(R.string.finger_print_times_use_up));
     }
 
     /**
@@ -249,7 +257,7 @@ public class GestureLoginActivity extends BaseActivity {
      * @return
      */
     private boolean getIsFingerprintEnable(FingerprintIdentify cloudFingerprintIdentify) {
-        return cloudFingerprintIdentify.isFingerprintEnable();
+        return cloudFingerprintIdentify != null && cloudFingerprintIdentify.isFingerprintEnable();
     }
 
 

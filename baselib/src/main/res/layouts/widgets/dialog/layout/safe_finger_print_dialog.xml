@@ -21,22 +21,22 @@
             android:src="@drawable/ic_finger_print_dialog" />
 
         <TextView
+            android:id="@+id/tv_touch_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="10dp"
-            android:text="云+的触控ID"
             android:textColor="#030303"
             android:textSize="17sp"
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/tv_unlock_by_touch_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="2dp"
             android:layout_marginBottom="18dp"
-            android:text="通过指纹验证解锁云+"
             android:textColor="#030303"
             android:textSize="13sp" />
 
