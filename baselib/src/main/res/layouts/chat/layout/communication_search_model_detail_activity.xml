@@ -93,7 +93,8 @@
             android:background="@color/color_list_divider"
             android:visibility="gone" />
 
-        <RelativeLayout
+        <com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout
+            android:id="@+id/refresh_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/v_line_mid_group">
@@ -105,7 +106,7 @@
                 android:background="@color/white"
                 android:divider="#ffffff"
                 android:dividerHeight="0dp"></ListView>
-        </RelativeLayout>
+        </com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout>
     </RelativeLayout>
 
 </LinearLayout>

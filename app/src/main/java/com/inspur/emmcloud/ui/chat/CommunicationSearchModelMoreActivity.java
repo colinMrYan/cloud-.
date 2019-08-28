@@ -25,6 +25,7 @@ import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
 import com.inspur.emmcloud.baselib.widget.ClearEditText;
+import com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
@@ -36,7 +37,6 @@ import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.ConversationFromChatContent;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.contact.Contact;
-import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
@@ -55,7 +55,7 @@ import butterknife.ButterKnife;
  * Created by libaochao on 2019/8/20.
  */
 
-public class CommunicationSearchModelMoreActivity extends BaseActivity implements View.OnClickListener, ListView.OnItemClickListener {
+public class CommunicationSearchModelMoreActivity extends BaseActivity implements View.OnClickListener, ListView.OnItemClickListener, MySwipeRefreshLayout.OnLoadListener {
 
     public static final String SEARCH_ALL = "search_all";
     public static final String SEARCH_CONTACT = "search_contact";
@@ -71,16 +71,19 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
     TextView cancelTextView;
     @BindView(R.id.lv_search_group_show)
     ListView searchGroupListView;
+    @BindView(R.id.refresh_layout)
+    MySwipeRefreshLayout mySwipeRefreshLayout;
     private Runnable searchRunnable;
-    private List<SearchModel> searchModelsList = new ArrayList<>(); // 群组搜索结果
-    private List<ConversationFromChatContent> conversationFromChatContentList = new ArrayList<>();
+    private List<SearchModel> searchGroupList = new ArrayList<>(); // 群组搜索结果
+    private List<Contact> searchContactList = new ArrayList<>(); // 人员搜索结果
+    private List<ConversationFromChatContent> conversationFromChatContentList = new ArrayList<>();//搜索消息
     private String searchArea = SEARCH_GROUP;
     private String searchText;
     private Handler handler;
     private long lastSearchTime = 0;
     private GroupAdapter groupAdapter;
+    private ContactAdapter contactAdapter;
     private ConversationFromChatContentAdapter conversationFromChatContentAdapter;
-    private boolean isGroup = false;
 
     private TextView.OnEditorActionListener onEditorActionListener = new TextView.OnEditorActionListener() {
         @Override
@@ -108,16 +111,21 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
         cancelTextView.setOnClickListener(this);
         handMessage();
         initSearchRunnable();
-        if (searchArea.equals(SEARCH_ALL_FROM_CHAT)) {
+        if (searchArea.equals(SEARCH_ALL_FROM_CHAT)) {          //不同类型加载不同Adapter
             conversationFromChatContentAdapter = new ConversationFromChatContentAdapter();
             searchGroupListView.setAdapter(conversationFromChatContentAdapter);
-        } else {
+        } else if (searchArea.equals(SEARCH_GROUP)) {
             groupAdapter = new GroupAdapter();
             searchGroupListView.setAdapter(groupAdapter);
+        } else if (searchArea.equals(SEARCH_CONTACT)) {
+            contactAdapter = new ContactAdapter();
+            searchGroupListView.setAdapter(contactAdapter);
         }
         searchGroupListView.setOnItemClickListener(this);
         searchEdit.setText(searchText);
         searchEdit.setSelection(searchText.length());
+        mySwipeRefreshLayout.setOnLoadListener(this);
+        mySwipeRefreshLayout.setEnabled(true);
     }
 
     @Override
@@ -125,6 +133,22 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
         return R.layout.communication_search_model_detail_activity;
     }
 
+    @Override
+    public void onLoadMore() {
+        mySwipeRefreshLayout.setLoading(false);
+        switch (searchArea) {
+            case SEARCH_GROUP:
+                mySwipeRefreshLayout.setCanLoadMore(false);
+                break;
+            case SEARCH_CONTACT:
+                List<Contact> moreContactList = ContactUserCacheUtils.getSearchContact(searchText, searchContactList, 25);
+                mySwipeRefreshLayout.setCanLoadMore((moreContactList.size() == 25));
+                searchContactList.addAll(searchContactList.size(), moreContactList);
+                contactAdapter.notifyDataSetChanged();
+                break;
+        }
+
+    }
 
     private void handMessage() {
         handler = new Handler() {
@@ -135,8 +159,11 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
                         /**刷新Ui*/
                         if (searchArea.equals(SEARCH_ALL_FROM_CHAT)) {
                             conversationFromChatContentAdapter.notifyDataSetChanged();
-                        } else {
+                        } else if (searchArea.equals(SEARCH_GROUP)) {
                             groupAdapter.notifyDataSetChanged();
+                        } else {
+                            mySwipeRefreshLayout.setCanLoadMore((searchContactList.size() == 25));
+                            contactAdapter.notifyDataSetChanged();
                         }
                         break;
                     case CLEAR_DATA:
@@ -156,44 +183,21 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
                         List<SearchModel> groupsSearchList;
                         List<Contact> contactsSearchList;
                         switch (searchArea) {
-                            case SEARCH_ALL:
-                                if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
-                                    groupsSearchList = ChannelGroupCacheUtils
-                                            .getSearchChannelGroupSearchModelList(MyApplication.getInstance(),
-                                                    searchText);
-                                } else {
-                                    groupsSearchList = ConversationCacheUtils.getSearchConversationSearchModelList(MyApplication.getInstance(), searchText);
-                                }
-                                if (groupsSearchList.size() > 3) {
-                                    searchModelsList = new ArrayList<>();
-                                    for (int i = 0; i < 3; i++) {
-                                        searchModelsList.add(groupsSearchList.get(i));
-                                    }
-                                }
-                                contactsSearchList = ContactUserCacheUtils.getSearchContact(searchText, null, 1000);
-                                searchModelsList = new ArrayList<>();
-                                for (int j = 0; j < contactsSearchList.size(); j++) {
-                                    searchModelsList.add(contactsSearchList.get(j).contact2SearchModel());
-                                }
-                                break;
                             case SEARCH_GROUP:
+                                searchGroupList.clear();
                                 if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
-                                    searchModelsList = ChannelGroupCacheUtils
+                                    searchGroupList = ChannelGroupCacheUtils
                                             .getSearchChannelGroupSearchModelList(MyApplication.getInstance(),
                                                     searchText);
                                 } else {
-                                    searchModelsList = ConversationCacheUtils.getSearchConversationSearchModelList(MyApplication.getInstance(), searchText);
+                                    searchGroupList = ConversationCacheUtils.getSearchConversationSearchModelList(MyApplication.getInstance(), searchText);
                                 }
-                                if (searchModelsList == null) {
-                                    searchModelsList = new ArrayList<>();
+                                if (searchGroupList == null) {
+                                    searchGroupList = new ArrayList<>();
                                 }
                                 break;
                             case SEARCH_CONTACT:
-                                contactsSearchList = ContactUserCacheUtils.getSearchContact(searchText, null, 1000);
-                                searchModelsList = new ArrayList<>();
-                                for (int j = 0; j < contactsSearchList.size(); j++) {
-                                    searchModelsList.add(contactsSearchList.get(j).contact2SearchModel());
-                                }
+                                searchContactList = ContactUserCacheUtils.getSearchContact(searchText, null, 25);
                                 break;
                             case SEARCH_ALL_FROM_CHAT:
                                 conversationFromChatContentList = new ArrayList<>();
@@ -273,19 +277,17 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
             intent.putExtra(SEARCH_CONTENT, searchText);
             startActivity(intent);
         } else {
-            if (!searchModelsList.get(i).getId().equals(BaseApplication.getInstance().getUid())) {
-                switch (searchArea) {
-                    case SEARCH_GROUP:
-                        startChannelActivity(searchModelsList.get(i).getId());
-                        break;
-                    case SEARCH_CONTACT:
-                        createDirectChannel(searchModelsList.get(i).getId());
-                        break;
-                }
-            } else {
-                Bundle bundle = new Bundle();
-                bundle.putString("uid", searchModelsList.get(i).getId());
-                IntentUtils.startActivity(this, UserInfoActivity.class, bundle);
+            switch (searchArea) {
+                case SEARCH_GROUP:
+                    if (!searchGroupList.get(i).getId().equals(BaseApplication.getInstance().getUid())) {
+                        startChannelActivity(searchGroupList.get(i).getId());
+                    }
+                    break;
+                case SEARCH_CONTACT:
+                    if (!searchContactList.get(i).getId().equals(BaseApplication.getInstance().getUid())) {
+                        createDirectChannel(searchContactList.get(i).getId());
+                    }
+                    break;
             }
         }
     }
@@ -355,7 +357,8 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
             } else {
                 lastSearchTime = 0;
                 handler.removeCallbacks(searchRunnable);
-                searchModelsList.clear();
+                searchContactList.clear();
+                searchGroupList.clear();
                 conversationFromChatContentList.clear();
                 handler.sendEmptyMessage(REFRESH_DATA);
             }
@@ -369,13 +372,13 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
     }
 
     /**
-     * 群组Adapter
+     * 个人Adapter
      */
-    class GroupAdapter extends BaseAdapter {
+    class ContactAdapter extends BaseAdapter {
 
         @Override
         public int getCount() {
-            return searchModelsList.size();
+            return searchContactList.size();
         }
 
         @Override
@@ -400,7 +403,49 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
             } else {
                 searchHolder = (SearchHolder) view.getTag();
             }
-            SearchModel searchModel = searchModelsList.get(i);
+            SearchModel searchModel = searchContactList.get(i).contact2SearchModel();
+            if (searchModel != null) {
+                displayImg(searchModel, searchHolder.headImageView);
+                searchHolder.nameTextView.setText(searchModel.getName().toString());
+            }
+            //刷新数据
+            return view;
+        }
+    }
+
+    /**
+     * 群组Adapter
+     */
+    class GroupAdapter extends BaseAdapter {
+
+        @Override
+        public int getCount() {
+            return searchGroupList.size();
+        }
+
+        @Override
+        public Object getItem(int i) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int i, View view, ViewGroup viewGroup) {
+            SearchHolder searchHolder = new SearchHolder();
+            if (view == null) {
+                view = LayoutInflater.from(CommunicationSearchModelMoreActivity.this).inflate(R.layout.communication_search_contact_item, null);
+                searchHolder.headImageView = view.findViewById(R.id.iv_contact_head);
+                searchHolder.nameTextView = view.findViewById(R.id.tv_contact_name);
+                searchHolder.detailTextView = view.findViewById(R.id.tv_contact_detail);
+                view.setTag(searchHolder);
+            } else {
+                searchHolder = (SearchHolder) view.getTag();
+            }
+            SearchModel searchModel = searchGroupList.get(i);
             if (searchModel != null) {
                 displayImg(searchModel, searchHolder.headImageView);
                 searchHolder.nameTextView.setText(searchModel.getName().toString());
