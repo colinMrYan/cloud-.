@@ -55,6 +55,11 @@ public class SafeCenterActivity extends BaseActivity {
         Bundle bundle = new Bundle();
         bundle.putBoolean("isFaceSettingOpen", isFaceSettingOpen);
 //        IntentUtils.startActivity(SafeCenterActivity.this, FaceVerifyActivity.class, bundle);
-        IntentUtils.startActivity(SafeCenterActivity.this, FaceSettingActivity.class, bundle);
+        if (CreateGestureActivity.getGestureCodeIsOpenByUser(this)) {
+            IntentUtils.startActivity(SafeCenterActivity.this, FaceSettingActivity.class, bundle);
+        } else {
+            IntentUtils.startActivity(SafeCenterActivity.this, CreateGestureActivity.class, bundle);
+        }
+
     }
 }
