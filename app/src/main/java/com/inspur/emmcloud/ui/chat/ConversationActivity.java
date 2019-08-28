@@ -818,11 +818,18 @@ public class ConversationActivity extends ConversationBaseActivity {
             switch (type) {
                 case "image":
                 case "file":
-                    List<String> pathList = getIntent().getStringArrayListExtra("share_paths");
-                    for (String url : pathList) {
-                        String urlLowerCase = url.toLowerCase();
-                        boolean isImage = urlLowerCase.endsWith("png") || urlLowerCase.endsWith("jpg") || urlLowerCase.endsWith("jpeg") || urlLowerCase.endsWith("dng");
-                        combinAndSendMessageWithFile(isImage ? getCompressorUrl(url) : url, isImage ? Message.MESSAGE_TYPE_MEDIA_IMAGE : Message.MESSAGE_TYPE_FILE_REGULAR_FILE, null);
+                    if (getIntent().hasExtra("share_obj_form_volume")) {
+                        String cid = getIntent().getExtras().getString("cid");
+                        String path = getIntent().getExtras().getString("path");
+                        VolumeFile volumeFile = (VolumeFile) getIntent().getSerializableExtra("share_obj_form_volume");
+                        transmitMsgFromVolume(cid, volumeFile, path);
+                    } else {
+                        List<String> pathList = getIntent().getStringArrayListExtra("share_paths");
+                        for (String url : pathList) {
+                            String urlLowerCase = url.toLowerCase();
+                            boolean isImage = urlLowerCase.endsWith("png") || urlLowerCase.endsWith("jpg") || urlLowerCase.endsWith("jpeg") || urlLowerCase.endsWith("dng");
+                            combinAndSendMessageWithFile(isImage ? getCompressorUrl(url) : url, isImage ? Message.MESSAGE_TYPE_MEDIA_IMAGE : Message.MESSAGE_TYPE_FILE_REGULAR_FILE, null);
+                        }
                     }
                     break;
                 case "link":
@@ -1498,6 +1505,17 @@ public class ConversationActivity extends ConversationBaseActivity {
     }
 
     /**
+     * 转发来自网盘
+     */
+    private void transmitMsgFromVolume(String cid, VolumeFile volumeFile, String path) {
+        if (NetUtils.isNetworkConnected(getApplicationContext())) {
+            ChatAPIService apiService = new ChatAPIService(this);
+            apiService.setAPIInterface(new WebService());
+            apiService.shareFileToFriendsFromVolume(volumeFile.getVolume(), cid, path);
+        }
+    }
+
+    /**
      * 转发文本消息
      *
      * @param cid
@@ -1895,6 +1913,23 @@ public class ConversationActivity extends ConversationBaseActivity {
         @Override
         public void returnTransmitPictureError(String error, int errorCode) {
             ToastUtils.show(R.string.chat_transmit_message_fail);
+        }
+
+        @Override
+        public void returnShareFileToFriendsFromVolumeSuccess(String newPath, VolumeFile volumeFile) {
+            MsgContentRegularFile msgContentRegularFile = new MsgContentRegularFile();
+            msgContentRegularFile.setCategory(Message.MESSAGE_TYPE_FILE_REGULAR_FILE);
+            msgContentRegularFile.setName(volumeFile.getName());
+            msgContentRegularFile.setSize(volumeFile.getSize());
+            msgContentRegularFile.setMedia(newPath);
+            Message combineMessage = CommunicationUtils.combineTransmitRegularFileMessage(cid, newPath, msgContentRegularFile);
+            WSAPIService.getInstance().sendChatRegularFileMsg(combineMessage);
+            super.returnShareFileToFriendsFromVolumeSuccess(newPath, volumeFile);
+        }
+
+        @Override
+        public void returnShareFileToFriendsFromVolumeFail(String error, int errorCode) {
+            super.returnShareFileToFriendsFromVolumeFail(error, errorCode);
         }
     }
 }

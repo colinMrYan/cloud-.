@@ -1780,4 +1780,39 @@ public class ChatAPIService {
         });
     }
 
+    public void shareFileToFriendsFromVolume(final String volume, final String channel, final String path) {
+        String url = APIUri.getVolumeShareFileUrl(volume, channel);
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
+        params.addQueryStringParameter("path", path);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, url) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnShareFileToFriendsFromVolumeSuccess(arg0.toString());
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnShareFileToFriendsFromVolumeFail(error, responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        shareFileToFriendsFromVolume(volume, channel, path);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                refreshToken(
+                        oauthCallBack, requestTime);
+            }
+        });
+    }
+
+
 }
