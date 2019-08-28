@@ -53,6 +53,7 @@
                 android:maxWidth="120dp"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
+                android:singleLine="true"
                 android:textColor="#36A5F6"
                 android:textSize="14sp" />
 
