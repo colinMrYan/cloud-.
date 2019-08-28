@@ -31,7 +31,6 @@ import java.util.List;
 public class VideoService extends ImpPlugin {
 
     private String successCb, failCb;
-    private String uploadUrl;
     private String recordVideoFilePath;
 
     @Override
@@ -66,7 +65,6 @@ public class VideoService extends ImpPlugin {
     private void startRecordVideo(final JSONObject paramsObject) {
         try {
             final JSONObject optionsObj = paramsObject.getJSONObject("options");
-            uploadUrl = optionsObj.optString("url");
 
             if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
                 PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getActivity(), Permissions.CAMERA,
@@ -100,13 +98,6 @@ public class VideoService extends ImpPlugin {
 
                             @Override
                             public void onPermissionRequestFail(List<String> permissions) {
-                                try {
-                                    JSONObject json = new JSONObject();
-                                    json.put("errorMessage", "暂时无操作权限");
-                                    jsCallback(failCb, json);
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
                             }
                         });
             }
