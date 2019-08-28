@@ -23,6 +23,7 @@ import com.inspur.emmcloud.basemodule.api.HttpUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.bean.ChatFileUploadInfo;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileUploadTokenResult;
+import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetChannelListResult;
@@ -1780,14 +1781,14 @@ public class ChatAPIService {
         });
     }
 
-    public void shareFileToFriendsFromVolume(final String volume, final String channel, final String path) {
+    public void shareFileToFriendsFromVolume(final String volume, final String channel, final String path, final VolumeFile volumeFile) {
         String url = APIUri.getVolumeShareFileUrl(volume, channel);
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
         params.addQueryStringParameter("path", path);
         HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
-                apiInterface.returnShareFileToFriendsFromVolumeSuccess(arg0.toString());
+                apiInterface.returnShareFileToFriendsFromVolumeSuccess(arg0.toString(), volumeFile);
             }
 
             @Override
@@ -1800,7 +1801,7 @@ public class ChatAPIService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        shareFileToFriendsFromVolume(volume, channel, path);
+                        shareFileToFriendsFromVolume(volume, channel, path, volumeFile);
                     }
 
                     @Override

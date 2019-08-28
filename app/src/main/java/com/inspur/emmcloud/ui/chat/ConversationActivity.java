@@ -1511,7 +1511,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
             ChatAPIService apiService = new ChatAPIService(this);
             apiService.setAPIInterface(new WebService());
-            apiService.shareFileToFriendsFromVolume(volumeFile.getVolume(), cid, path);
+            apiService.shareFileToFriendsFromVolume(volumeFile.getVolume(), cid, path, volumeFile);
         }
     }
 

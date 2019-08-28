@@ -148,7 +148,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         moveToAction = getString(R.string.move_to);
         copyAction = getString(R.string.copy);
         permissionAction = getString(R.string.clouddriver_file_permission_manager);
-        shareTo = getString(R.string.baselib_share_to);
+        // shareTo = getString(R.string.baselib_share_to);
         new ActionSheetDialog.ActionListSheetBuilder(VolumeFileBaseActivity.this)
                 .setTitle(volumeFile.getName())
                 .addItem(deleteAction, isVolumeFileWriteable)
@@ -157,7 +157,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
                 .addItem(moveToAction, isVolumeFileWriteable)
                 .addItem(copyAction, isVolumeFileWriteable)
                 .addItem(permissionAction, isVolumeFileDirectory)
-                .addItem(shareTo, !isVolumeFileDirectory)
+                //.addItem(shareTo, !isVolumeFileDirectory)
                 // .addItem("分享", !isVolumeFileDirectory)
                 .setOnSheetItemClickListener(new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {
                     @Override
@@ -189,9 +189,10 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
             copyFile(copyVolumeFileList);
         } else if (action.equals(permissionAction)) {
             startVolumeFilePermissionManager(volumeFile);
-        } else if (action.equals(shareTo)) {
-            shareToFriends(volumeFile);
         }
+//        else if (action.equals(shareTo)) {
+//            shareToFriends(volumeFile);
+//        }
     }
 
     private void shareToFriends(VolumeFile volumeFile) {
