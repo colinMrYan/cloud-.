@@ -527,7 +527,7 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
                             Intent intent = new Intent(FaceVerifyActivity.this, GestureLoginActivity.class);
-                            intent.putExtra("gesture_code_change", "login");
+                            intent.putExtra(GestureLoginActivity.GESTURE_CODE_CHANGE, "login");
                             startActivity(intent);
                             finish();
                         }

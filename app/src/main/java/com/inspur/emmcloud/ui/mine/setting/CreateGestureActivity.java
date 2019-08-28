@@ -8,7 +8,9 @@ import android.widget.TextView;
 import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.privates.ninelock.LockPatternIndicator;
 import com.inspur.emmcloud.util.privates.ninelock.LockPatternUtil;
@@ -112,6 +114,16 @@ public class CreateGestureActivity extends BaseActivity {
      */
     public static void putGestureCodeIsOpenByUser(Context context, boolean isGestureCodeOpen) {
         PreferencesByUsersUtils.putBoolean(context, GESTURE_CODE_ISOPEN, isGestureCodeOpen);
+    }
+
+    /**
+     * 存储用户是否打开指纹识别
+     *
+     * @param context
+     * @param isFingerPrintOpen
+     */
+    public static void putFingerPrint(Context context, boolean isFingerPrintOpen) {
+        PreferencesByUserAndTanentUtils.putBoolean(context, Constant.SAFE_CENTER_FINGER_PRINT, isFingerPrintOpen);
     }
 
     @Override
