@@ -1154,6 +1154,7 @@
 
     <!--安全中心-->
     <string name="setting_safe_gesture_face">Fingerprint and Gesture Password</string>
+    <string name="setting_face_unlock">刷脸解锁设置</string>
     <string name="setting_safe_face_id_unlock">Face ID</string>
     <string name="setting_safe_gesture_face_setting">Face ID and Gesture Password Settings</string>
     <string name="setting_safe_center">Account,Device Security</string>

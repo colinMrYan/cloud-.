@@ -1155,6 +1155,7 @@
 
     <!--安全中心-->
     <string name="setting_safe_gesture_face">指紋、手勢密碼</string>
+    <string name="setting_face_unlock">刷臉解鎖設定</string>
     <string name="setting_safe_face_id_unlock">刷臉解鎖</string>
     <string name="setting_safe_gesture_face_setting">面容ID、手勢密碼設定</string>
     <string name="setting_safe_center">帳號、設備安全</string>
