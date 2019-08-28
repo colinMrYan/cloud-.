@@ -125,6 +125,12 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".ui.mine.setting.FaceSettingActivity"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+
+        <activity
             android:name=".ui.mine.setting.CreateGestureActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
