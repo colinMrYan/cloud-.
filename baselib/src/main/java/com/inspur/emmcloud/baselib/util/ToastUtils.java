@@ -22,7 +22,7 @@ public class ToastUtils {
 
     public static void init(Application application) {
         com.hjq.toast.ToastUtils.init(application, new ToastBlackStyle());
-        com.hjq.toast.ToastUtils.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM, 0, DensityUtil.dip2px(30));
+        com.hjq.toast.ToastUtils.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM, 0, DensityUtil.dip2px(50));
         com.hjq.toast.ToastUtils.setView(com.inspur.emmcloud.baselib.util.ToastUtils.createTextView(application));
     }
 

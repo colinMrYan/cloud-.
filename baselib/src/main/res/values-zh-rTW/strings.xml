@@ -1154,11 +1154,14 @@
 
 
     <!--安全中心-->
-    <string name="setting_safe_gesture_face">面容ID、手勢密碼</string>
+    <string name="setting_safe_gesture_face">指紋、手勢密碼</string>
+    <string name="setting_face_unlock">刷臉解鎖設定</string>
+    <string name="setting_safe_face_id_unlock">刷臉解鎖</string>
     <string name="setting_safe_gesture_face_setting">面容ID、手勢密碼設定</string>
     <string name="setting_safe_center">帳號、設備安全</string>
     <string name="safe_center_gesture">手勢密碼</string>
     <string name="safe_center_finger_print">指紋</string>
+    <string name="safe_center_use_finger_print_unlock">指紋解鎖</string>
     <string name="switch_gesture_unlock">手勢解鎖</string>
     <string name="switch_gesture_reset_unlock">重置手勢解鎖</string>
     <string name="put_face_in_frame">請把臉放入框內保持不動</string>
