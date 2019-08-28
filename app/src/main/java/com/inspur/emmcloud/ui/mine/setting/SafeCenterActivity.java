@@ -33,7 +33,12 @@ public class SafeCenterActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.rl_setting_safe_gesture_face:
-                IntentUtils.startActivity(this, SafeGustureFaceSettingActivity.class);
+                if (CreateGestureActivity.getGestureCodeIsOpenByUser(this)) {
+                    IntentUtils.startActivity(this, SafeGustureFaceSettingActivity.class);
+                } else {
+                    IntentUtils.startActivity(SafeCenterActivity.this, CreateGestureActivity.class);
+                }
+
                 break;
             case R.id.rl_setting_face_unlock:
                 intentFaceVerifyActivity(true);
@@ -55,11 +60,7 @@ public class SafeCenterActivity extends BaseActivity {
         Bundle bundle = new Bundle();
         bundle.putBoolean("isFaceSettingOpen", isFaceSettingOpen);
 //        IntentUtils.startActivity(SafeCenterActivity.this, FaceVerifyActivity.class, bundle);
-        if (CreateGestureActivity.getGestureCodeIsOpenByUser(this)) {
-            IntentUtils.startActivity(SafeCenterActivity.this, FaceSettingActivity.class, bundle);
-        } else {
-            IntentUtils.startActivity(SafeCenterActivity.this, CreateGestureActivity.class, bundle);
-        }
+        IntentUtils.startActivity(SafeCenterActivity.this, FaceSettingActivity.class, bundle);
 
     }
 }
