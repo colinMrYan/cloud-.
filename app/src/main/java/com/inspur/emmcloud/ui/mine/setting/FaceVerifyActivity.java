@@ -548,8 +548,8 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
                     .setPositiveButton(R.string.off_face_verify_relogin, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            ((MyApplication) getApplication()).signout();
                             PreferencesByUsersUtils.putBoolean(FaceVerifyActivity.this, FaceVerifyActivity.FACE_VERIFT_IS_OPEN, false);
+                            ((MyApplication) getApplication()).signout();
                         }
                     })
                     .setCancelable(false)

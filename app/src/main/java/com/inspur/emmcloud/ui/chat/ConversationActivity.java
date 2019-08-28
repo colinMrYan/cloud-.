@@ -824,7 +824,9 @@ public class ConversationActivity extends ConversationBaseActivity {
                 case "file":
                     List<String> pathList = getIntent().getStringArrayListExtra("share_paths");
                     for (String url : pathList) {
-                        combinAndSendMessageWithFile(type.equals("image") ? getCompressorUrl(url) : url, type.equals("file") ? Message.MESSAGE_TYPE_FILE_REGULAR_FILE : Message.MESSAGE_TYPE_MEDIA_IMAGE, null);
+                        String urlLowerCase = url.toLowerCase();
+                        boolean isImage = urlLowerCase.endsWith("png") || urlLowerCase.endsWith("jpg") || urlLowerCase.endsWith("jpeg") || urlLowerCase.endsWith("dng");
+                        combinAndSendMessageWithFile(isImage ? getCompressorUrl(url) : url, isImage ? Message.MESSAGE_TYPE_MEDIA_IMAGE : Message.MESSAGE_TYPE_FILE_REGULAR_FILE, null);
                     }
                     break;
                 case "link":
