@@ -15,7 +15,6 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
 import com.inspur.emmcloud.baselib.widget.dialogs.MyDialog;
@@ -175,7 +174,6 @@ public class GestureLoginActivity extends BaseActivity {
             public void onClick(View v) {
                 myDialog.dismiss();
                 if (cloudFingerprintIdentify != null) {
-                    LogUtils.YfcDebug("关闭指纹识别功能");
                     cloudFingerprintIdentify.cancelIdentify();
                 }
             }
@@ -189,7 +187,6 @@ public class GestureLoginActivity extends BaseActivity {
     private void initFingerPrint() {
 
         if (!isFingerPrintAvaiable(cloudFingerprintIdentify)) {
-            LogUtils.YfcDebug("设备指纹不可用");
             return;
         }
         cloudFingerprintIdentify.startIdentify(5, new BaseFingerprint.FingerprintIdentifyListener() {
@@ -197,14 +194,12 @@ public class GestureLoginActivity extends BaseActivity {
             public void onSucceed() {
                 // 验证成功，自动结束指纹识别
                 afterUnLockSuccess();
-                LogUtils.YfcDebug("指纹识别成功");
 
             }
 
             @Override
             public void onNotMatch(int availableTimes) {
                 // 指纹不匹配，并返回可用剩余次数并自动继续验证
-                LogUtils.YfcDebug("指纹识别剩余次数：" + availableTimes);
                 ToastUtils.show(GestureLoginActivity.this, getString(R.string.finger_print_try_times, availableTimes));
             }
 
@@ -214,14 +209,12 @@ public class GestureLoginActivity extends BaseActivity {
                 // 错误次数达到上限或者API报错停止了验证，自动结束指纹识别
                 // isDeviceLocked 表示指纹硬件是否被暂时锁定
                 // 通常情况错误五次后会锁定三十秒，不同硬件也不一定完全如此，有资料介绍有的硬件也会锁定长达两分钟
-                LogUtils.YfcDebug("isDeviceLocked:" + isDeviceLocked);
             }
 
             @Override
             public void onStartFailedByDeviceLocked() {
                 dismisDialog();
                 // 第一次调用startIdentify失败，因为设备被暂时锁定
-                LogUtils.YfcDebug("设备被锁定");
             }
 
         });
