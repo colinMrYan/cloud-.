@@ -2,6 +2,7 @@ package com.inspur.emmcloud.api;
 
 import com.inspur.emmcloud.basemodule.bean.AppException;
 import com.inspur.emmcloud.basemodule.bean.GetUploadPushInfoResult;
+import com.inspur.emmcloud.bean.ChatFileUploadInfo;
 import com.inspur.emmcloud.bean.appcenter.App;
 import com.inspur.emmcloud.bean.appcenter.GetAddAppResult;
 import com.inspur.emmcloud.bean.appcenter.GetAllAppResult;
@@ -493,9 +494,9 @@ public interface APIInterface {
 
     void returnVolumeFileUploadTokenFail(VolumeFile mockVolumeFile, String error, int errorCode, String filePath);
 
-    void returnChatFileUploadTokenSuccess(GetVolumeFileUploadTokenResult getVolumeFileUploadTokenResult);
+    void returnChatFileUploadTokenSuccess(GetVolumeFileUploadTokenResult getVolumeFileUploadTokenResult, ChatFileUploadInfo chatFileUploadInfo);
 
-    void returnChatFileUploadTokenFail(String error, int errorCode);
+    void returnChatFileUploadTokenFail(String error, int errorCode, ChatFileUploadInfo chatFileUploadInfo);
 
     void returnCreateForderSuccess(VolumeFile volumeFile);
 
@@ -529,7 +530,7 @@ public interface APIInterface {
 
     void returnUpdateShareVolumeNameFail(String error, int errorCode);
 
-    void retrunRemoveShareVolumeSuccess(Volume volume);
+    void returnRemoveShareVolumeSuccess(Volume volume);
 
     void returnRemoveShareVolumeFail(String error, int errorCode);
 
@@ -801,5 +802,10 @@ public interface APIInterface {
     void returnAttendMeetingStatusSuccess(String result, String responseType);
 
     void returnAttendMeetingStatusFail(String error, int errorCode);
+
+    void returnShareFileToFriendsFromVolumeSuccess(String newPath, VolumeFile volumeFile);
+
+    void returnShareFileToFriendsFromVolumeFail(String error, int errorCode);
+
 
 }

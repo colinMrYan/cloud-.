@@ -9,6 +9,7 @@
     <string name="reclick_to_desktop">再按一次退出程式</string>
     <string name="Network_Mobile">已經連接到移動網路</string>
     <string name="Network_WIFI">已經連接到WIFI</string>
+    <string name="send_to_app">發送到雲+</string>
     <string name="ok">確定</string>
     <string name="cancel">取消</string>
     <string name="resolution_warning">您的設備解析度小於800*480，無法運行此程式</string>
@@ -71,6 +72,13 @@
     <string name="unsupport_type">不支援的類型</string>
     <string name="function_load_fail">加載出錯，輕觸屏幕重新加載</string>
     <string name="function_reload">網絡診斷</string>
+    <string name="baselib_internal_share">内部分享</string>
+    <string name="file_open_by_other_app">用其他應用打開</string>
+    <string name="file_open_by_other_app_tips">%1$s暫時不能打開該檔案請使用其他應用打開</string>
+    <string name="upgrade_download">下載更新</string>
+    <string name="upgrade_later">稍後再說</string>
+    <string name="upgrade_install_now">立即安裝</string>
+    <string name="upgrade_install_next_time">下次安裝</string>
 
 
     <!-- 公共部分 -->
@@ -213,10 +221,16 @@
     <string name="comment">評論</string>
     <string name="write_comment">寫評論</string>
 
+    <string name="baselib_share_many_picture">等%1$d張圖片</string>
+    <string name="baselib_share_many_files">等%1$d個文件</string>
     <string name="news_font_name_text">字體</string>
     <string name="baselib_share_to">分享到</string>
     <string name="baselib_share_success">分享成功</string>
     <string name="baselib_share_fail">分享失敗</string>
+    <string name="baselib_share_image">[圖片]</string>
+    <string name="baselib_share_file">[文件]</string>
+    <string name="baselib_share_link">[鏈接]</string>
+    <string name="baselib_share_send_to">發送給：</string>
     <string name="login_please_input_password"> 請輸入密碼</string>
     <string name="login">登錄</string>
     <string name="login_user_not_bound_enterprise">當前用戶未綁定企業，請聯繫管理員！</string>
@@ -530,7 +544,7 @@
     <string name="clouddriver_select_copy_position">選擇複製位置</string>
     <string name="clouddriver_select_move_position">選擇目的檔案夾</string>
     <string name="clouddriver_file_open_fail">檔打開失敗！</string>
-    <string name="clouddriver_file_dpwnload">文件下載</string>
+    <string name="clouddriver_file_detail">檔案詳情</string>
     <string name="clouddriver_create_folder">新建資料夾</string>
     <string name="clouddriver_file_filter">分類篩選</string>
     <string name="clouddriver_sort_by_time_asc">時間昇冪</string>
@@ -577,12 +591,14 @@
     <string name="file_cannot_copy_here">不能將檔複製到自身或其子目錄下</string>
     <string name="file_cannot_move_here">不能將檔移動到自身或其子目錄下</string>
     <string name="refresh">刷新</string>
-    <string name="disk">網盤</string>
+    <string name="cloud_drive">雲盤</string>
     <string name="clouddriver_volume_file_filter">分類篩選</string>
     <string name="clouddriver_volume_group_name">組名稱</string>
     <string name="clouddriver_volume_upload_file">上傳文件</string>
-    <string name="clouddriver_upload_file_to_volume">上傳到網盤</string>
     <string name="clouddriver_file_permission_manager">許可權管理</string>
+    <string name="volume_upload_to_current_directory">上傳到目前的目錄</string>
+    <string name="volume_file_upload_network_type_warning">當前處於非Wi-Fi環境，繼續上傳將消耗運營商流量，請確認是否繼續</string>
+    <string name="volume_file_download_network_type_warning">當前處於非Wi-Fi環境，繼續下載將消耗運營商流量，請確認是否繼續</string>
     <string name="rename">重命名</string>
     <string name="move_to">移動到</string>
     <string name="copy">複製</string>
@@ -719,6 +735,8 @@
     <string name="modify_jump">跳過</string>
     <string name="modify_welcom_user_cloud">歡迎使用雲+</string>
     <string name="modify_first_use">這是您第一次使用雲+，是否設置通行證密碼，以方便下次登錄</string>
+    <string name="setting_update_this_time_hint">本次更新</string>
+    <string name="setting_update_wifi_download_package_hint">WiFi下已自動下載安裝包</string>
 
     <!-- 使用者資訊頁面部分 -->
     <string name="user_info_text">個人資訊</string>
@@ -934,6 +952,8 @@
     <string name="schedule_alert_time_before_hours">%1$s小時前</string>
     <string name="schedule_alert_time_before_days">%1$s天前</string>
     <string name="schedule_account_select">賬戶</string>
+    <string name="calendar_china_holiday">中國節假日</string>
+
     <!-- 通用 -->
     <string name="save">保存</string>
     <string name="never">永不</string>
@@ -1096,8 +1116,10 @@
     <string name="download_fail">下載失敗</string>
     <string name="download_success">下載成功</string>
     <string name="file_downloading">文件下載中，請稍候...</string>
+    <string name="file_uploading">文件上傳中，請稍候...</string>
     <string name="file_download_success">檔案已下載成功，是否打開？</string>
     <string name="has_downloaded">已下載</string>
+    <string name="has_uploaded">已上傳</string>
     <string name="imp_content">內容</string>
     <string name="file_ok">確定</string>
     <string name="file_cancel">取消</string>
@@ -1132,11 +1154,14 @@
 
 
     <!--安全中心-->
-    <string name="setting_safe_gesture_face">面容ID、手勢密碼</string>
+    <string name="setting_safe_gesture_face">指紋、手勢密碼</string>
+    <string name="setting_face_unlock">刷臉解鎖設定</string>
+    <string name="setting_safe_face_id_unlock">刷臉解鎖</string>
     <string name="setting_safe_gesture_face_setting">面容ID、手勢密碼設定</string>
     <string name="setting_safe_center">帳號、設備安全</string>
     <string name="safe_center_gesture">手勢密碼</string>
     <string name="safe_center_finger_print">指紋</string>
+    <string name="safe_center_use_finger_print_unlock">指紋解鎖</string>
     <string name="switch_gesture_unlock">手勢解鎖</string>
     <string name="switch_gesture_reset_unlock">重置手勢解鎖</string>
     <string name="put_face_in_frame">請把臉放入框內保持不動</string>
@@ -1151,6 +1176,10 @@
     <string name="face_login">刷臉登錄</string>
     <string name="off_face_verify_relogin">關閉刷臉，重新登錄</string>
     <string name="face_verifying">驗證中</string>
+    <string name="finger_print_times_use_up">您的識別次數用盡，請嘗試手勢解鎖，或者一段時間後重試</string>
+    <string name="finger_print_try_times">指紋認證失敗，您還可以嘗試%1$d次</string>
+    <string name="finger_print_id">%1$s的觸控ID</string>
+    <string name="finger_print_by_finger_print">通過指紋驗證解鎖%1$s</string>
 
     <!--九宮格-->
     <!-- Gesture login activity -->
@@ -1192,7 +1221,7 @@
     <string name="cluster_no_permission">當前功能缺少有效的授權資訊。</string>
 
     <string name="share_mutil_only_support_image">多檔案分享僅支持照片格式</string>
-    <string name="share_no_more_than_five">不能上傳多於5個圖片</string>
+    <string name="share_no_more_than_five">不能上傳多於5個文件</string>
     <string name="share_no_share_way">沒有能够分享的管道</string>
     <string name="share_to_channel">發送到頻道</string>
     <string name="share_upload_volume">上傳到雲盤</string>

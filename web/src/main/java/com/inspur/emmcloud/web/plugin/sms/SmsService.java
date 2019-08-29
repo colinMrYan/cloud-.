@@ -8,9 +8,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
+import android.os.Build;
+import android.provider.Telephony;
 import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.SmsManager;
+import android.text.TextUtils;
 
+import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
@@ -43,25 +48,70 @@ public class SmsService extends ImpPlugin {
     private JSONArray tels;// 电话号码
     private String successFunt;
     private String errorFunt;
+    private String failCallback;
     private BroadcastReceiver sendmessage;
 
     @Override
     public void execute(String action, final JSONObject paramsObject) {
-        // 打开系统发送短信的界面，根据传入参数自动填写好相关信息
-        if ("open".equals(action)) {
-            open(paramsObject);
+        switch (action) {
+            case "open":
+                open(paramsObject);
+                break;
+            case "send":
+                checkSendSMSPermissionAndSendSMS("send", paramsObject);
+                break;
+            case "batchSend":
+                checkSendSMSPermissionAndSendSMS("batchSend", paramsObject);
+                break;
+            case "sendSMS":
+                sendSMS(paramsObject);
+                break;
+            default:
+                showCallIMPMethodErrorDlg();
+                break;
         }
-        // 直接发送短
-        else if ("send".equals(action)) {
-            checkSendSMSPermissionAndSendSMS("send", paramsObject);
-        }
-        // 直接发送短
-        else if ("batchSend".equals(action)) {
-            checkSendSMSPermissionAndSendSMS("batchSend", paramsObject);
-        } else {
-            showCallIMPMethodErrorDlg();
-        }
+    }
 
+    private void sendSMS(JSONObject paramsObject) {
+        JSONObject optionsObj = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
+        failCallback = JSONUtils.getString(paramsObject, "fail", "");
+        String content = JSONUtils.getString(optionsObj, "content", "");
+        List<String> numberList = JSONUtils.getStringList(optionsObj, "numbers", new ArrayList<String>());
+        String numbersStr = "";
+        String symbol = "Samsung".equalsIgnoreCase(Build.MANUFACTURER) ? "," : ";";
+        if (numberList != null && !numberList.isEmpty()) {
+            numbersStr = TextUtils.join(symbol, numberList);
+        }
+        Uri uri = Uri.parse("smsto:" + numbersStr);
+
+        Intent intent = new Intent();
+        intent.setData(uri);
+        intent.putExtra("sms_body", content);
+        intent.setAction(Intent.ACTION_SENDTO);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            String defaultSmsPackageName = Telephony.Sms.getDefaultSmsPackage(getFragmentContext());
+            if (defaultSmsPackageName != null) {
+                intent.setPackage(defaultSmsPackageName);
+            }
+        }
+        try {
+            getActivity().startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+            callbackFail(e.getMessage());
+        }
+    }
+
+    private void callbackFail(String errorMessage) {
+        if (!StringUtils.isBlank(failCallback)) {
+            JSONObject errorMessageObj = new JSONObject();
+            try {
+                errorMessageObj.put("errorMessage", errorMessage);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            this.jsCallback(failCallback, errorMessageObj);
+        }
     }
 
     /**

@@ -14,17 +14,20 @@
         android:layout_centerVertical="true"
         android:paddingBottom="10dp"
         android:paddingTop="10dp"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@+id/num_text"
+        android:ellipsize="middle"
+        android:singleLine="true"
         android:textColor="#FF333333"
         android:textSize="@dimen/content_title_textsize" />
 
     <TextView
         android:id="@+id/num_text"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginLeft="20dp"
+        android:layout_marginLeft="12dp"
         android:layout_toLeftOf="@+id/arrow"
-        android:layout_toRightOf="@id/tv_name"
         android:ellipsize="end"
         android:gravity="right"
         android:paddingBottom="10dp"

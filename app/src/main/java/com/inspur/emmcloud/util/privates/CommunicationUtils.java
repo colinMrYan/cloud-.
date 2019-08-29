@@ -202,6 +202,9 @@ public class CommunicationUtils {
         message.setLocalPath(localFilePath);
         File file = new File(localFilePath);
         Bitmap bitmap = BitmapFactory.decodeFile(localFilePath);
+        if (bitmap == null) {
+            return null;
+        }
         int imgHeight = bitmap.getHeight();
         int imgWidth = bitmap.getWidth();
         long fileSize = FileUtils.getFileSize(localFilePath);
@@ -274,6 +277,24 @@ public class CommunicationUtils {
         contentMediaImage.setThumbnailMedia(filePath);
         contentMediaImage.setTmpId(tracer);
         message.setContent(contentMediaImage.toString());
+        return message;
+    }
+
+    public static Message combineTransmitRegularFileMessage(String cid, String localFilePath, MsgContentRegularFile orgMsgContentRegularFile) {
+        String tracer = getTracer();
+        Message message = combinLocalMessageCommon();
+        message.setChannel(cid);
+        message.setId(tracer);
+        message.setTmpId(tracer);
+        message.setType("file/regular-file");
+        message.setLocalPath(localFilePath);
+
+        MsgContentRegularFile msgContentRegularFile = new MsgContentRegularFile();
+        msgContentRegularFile.setCategory(orgMsgContentRegularFile.getCategory());
+        msgContentRegularFile.setName(orgMsgContentRegularFile.getName());
+        msgContentRegularFile.setSize(orgMsgContentRegularFile.getSize());
+        msgContentRegularFile.setMedia(localFilePath);
+        message.setContent(msgContentRegularFile.toString());
         return message;
     }
 

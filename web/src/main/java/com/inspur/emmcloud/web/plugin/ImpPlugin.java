@@ -84,6 +84,28 @@ public abstract class ImpPlugin implements IPlugin {
     }
 
     /**
+     * 回调JavaScript方法，回调参数是JSON对象
+     * 这个方法避免了添加以JSON对象为参数的内容回调时产生的解析问题，如需传递JSON对象可使用此方法
+     *
+     * @param functionName
+     * @param params
+     */
+    @Override
+    public void jsCallback(String functionName, JSONObject params) {
+        String script = "javascript: " + functionName + "(" + params.toString() + ")";
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            this.webview.evaluateJavascript(script, new ValueCallback<String>() {
+                @Override
+                public void onReceiveValue(String value) {
+                }
+            });
+        } else {
+            this.webview.loadUrl(script);
+        }
+
+    }
+
+    /**
      * 回调JavaScript方法，回调参数是字符串
      *
      * @param functionName
@@ -137,6 +159,16 @@ public abstract class ImpPlugin implements IPlugin {
 
     @Override
     public void onActivityPause() {
+
+    }
+
+    @Override
+    public void onActivityStart() {
+
+    }
+
+    @Override
+    public void onActivityNewIntent(Intent intent) {
 
     }
 

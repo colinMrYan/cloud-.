@@ -6,26 +6,20 @@
         <activity
             android:name=".ui.ImpActivity"
             android:configChanges="orientation|screenSize"
-            android:resizeableActivity="true" />
-
+            android:resizeableActivity="true">
+        </activity>
         <activity
             android:name=".plugin.barcode.scan.CaptureActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:stateNotNeeded="true"
             android:supportsRtl="true" />
-
         <activity
             android:name=".plugin.barcode.decoder.PreviewDecodeActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:stateNotNeeded="true"
             android:supportsRtl="true" />
-
-        <activity
-            android:name=".plugin.video.VideoPlayActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait" />
 
         <activity
             android:name=".plugin.photo.ImageGalleryActivity"

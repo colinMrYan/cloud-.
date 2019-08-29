@@ -698,5 +698,29 @@ public class MessageCacheUtil {
         return messageList;
     }
 
+    /**
+     * 获取发送中和发送失败的消息
+     * @param context
+     * @param cid
+     * @return
+     */
+    public static List<Message> getGroupMessageWithStatus(Context context, String cid) {
+        List<Message> messageList = new ArrayList<>();
+        try {
+            messageList = DbCacheUtils.getDb(context).selector(Message.class)
+                    .where("channel", "=", cid)
+                    .and(WhereBuilder.b("sendStatus", "=", Message.MESSAGE_SEND_ING)
+                            .or("sendStatus", "=", Message.MESSAGE_SEND_FAIL))
+                    .orderBy("creationDate", true)
+                    .findAll();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (messageList == null) {
+            messageList = new ArrayList<>();
+        }
+        return messageList;
+    }
+
 
 }

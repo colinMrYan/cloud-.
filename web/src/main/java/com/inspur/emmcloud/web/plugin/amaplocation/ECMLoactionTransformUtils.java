@@ -76,6 +76,10 @@ public class ECMLoactionTransformUtils {
         return new double[]{gg_lng, gg_lat};
     }
 
+    public static double[] bd09togcj02(double[] location) {
+        return bd09togcj02(location[0], location[1]);
+    }
+
     /**
      * WGS84转GCJ02(火星坐标系)
      *
@@ -98,6 +102,10 @@ public class ECMLoactionTransformUtils {
         double mglat = lat + dlat;
         double mglng = lng + dlng;
         return new double[]{mglng, mglat};
+    }
+
+    public static double[] wgs84togcj02(double[] location) {
+        return wgs84togcj02(location[0], location[1]);
     }
 
     /**
@@ -123,6 +131,7 @@ public class ECMLoactionTransformUtils {
         double mglng = lng + dlng;
         return new double[]{lng * 2 - mglng, lat * 2 - mglat};
     }
+
 
     /**
      * 纬度转换

@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.VolumeFileAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -30,6 +31,7 @@ import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.ActionSheetDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.MyDialog;
+import com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButton;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
@@ -41,6 +43,8 @@ import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeGroupResult;
 import com.inspur.emmcloud.bean.appcenter.volume.Volume;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeGroupContainMe;
+import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
+import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.util.privates.VolumeFilePrivilegeUtils;
 import com.inspur.emmcloud.util.privates.VolumeFileUploadManagerUtils;
 import com.inspur.emmcloud.util.privates.cache.VolumeGroupContainMeCacheUtils;
@@ -61,10 +65,12 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
 
     protected static final int REQUEST_MOVE_FILE = 5;
     protected static final int REQUEST_COPY_FILE = 6;
+    protected static final int SHARE_IMAGE_OR_FILES = 7;
     protected static final String SORT_BY_NAME_UP = "sort_by_name_up";
     protected static final String SORT_BY_NAME_DOWN = "sort_by_name_down";
     protected static final String SORT_BY_TIME_UP = "sort_by_time_up";
     protected static final String SORT_BY_TIME_DOWN = "sort_by_time_down";
+    public VolumeFile shareToVolumeFile;
     protected LoadingDialog loadingDlg;
     protected VolumeFileAdapter adapter;
     protected List<VolumeFile> volumeFileList = new ArrayList<>();//云盘列表
@@ -85,7 +91,9 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.data_blank_layout)
     LinearLayout dataBlankLayout;
-    String deleteAction, downloadAction, renameAction, moveToAction, copyAction, permissionAction; //弹框点击状态
+    @BindView(R.id.btn_upload_file)
+    CustomRoundButton uploadFileBtn;
+    String deleteAction, downloadAction, renameAction, moveToAction, copyAction, permissionAction, shareTo; //弹框点击状态
     private List<VolumeFile> moveVolumeFileList = new ArrayList<>();//移动的云盘文件列表
     private MyAppAPIService apiServiceBase;
     private Dialog fileRenameDlg, createFolderDlg;
@@ -140,14 +148,16 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         moveToAction = getString(R.string.move_to);
         copyAction = getString(R.string.copy);
         permissionAction = getString(R.string.clouddriver_file_permission_manager);
+        // shareTo = getString(R.string.baselib_share_to);
         new ActionSheetDialog.ActionListSheetBuilder(VolumeFileBaseActivity.this)
                 .setTitle(volumeFile.getName())
                 .addItem(deleteAction, isVolumeFileWriteable)
                 .addItem(downloadAction, !isVolumeFileDirectory)
                 .addItem(renameAction, isVolumeFileWriteable)
                 .addItem(moveToAction, isVolumeFileWriteable)
-                .addItem(copyAction)
+                .addItem(copyAction, isVolumeFileWriteable)
                 .addItem(permissionAction, isVolumeFileDirectory)
+                //.addItem(shareTo, !isVolumeFileDirectory)
                 // .addItem("分享", !isVolumeFileDirectory)
                 .setOnSheetItemClickListener(new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {
                     @Override
@@ -180,6 +190,25 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         } else if (action.equals(permissionAction)) {
             startVolumeFilePermissionManager(volumeFile);
         }
+//        else if (action.equals(shareTo)) {
+//            shareToFriends(volumeFile);
+//        }
+    }
+
+    private void shareToFriends(VolumeFile volumeFile) {
+        Intent intent = new Intent();
+        shareToVolumeFile = volumeFile;
+        intent.putExtra(ContactSearchFragment.EXTRA_TYPE, 0);
+        intent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, false);
+        intent.putExtra(ContactSearchFragment.EXTRA_SHOW_COMFIRM_DIALOG_WITH_MESSAGE, volumeFile.getName());
+        intent.putExtra(ContactSearchFragment.EXTRA_SHOW_COMFIRM_DIALOG, true);
+        ArrayList<String> uidList = new ArrayList<>();
+        uidList.add(MyApplication.getInstance().getUid());
+        intent.putStringArrayListExtra(ContactSearchFragment.EXTRA_EXCLUDE_SELECT, uidList);
+        intent.putExtra(ContactSearchFragment.EXTRA_TITLE, getString(R.string.baselib_share_to));
+        intent.setClass(getApplicationContext(),
+                ContactSearchActivity.class);
+        startActivityForResult(intent, SHARE_IMAGE_OR_FILES);
     }
 
     /**
@@ -224,7 +253,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
      */
     protected void showCreateFolderDlg() {
         createFolderDlg = new MyDialog(VolumeFileBaseActivity.this,
-                R.layout.volume_dialog_update_name_input, R.style.userhead_dialog_bg);
+                R.layout.volume_dialog_update_name_input);
         createFolderDlg.setCancelable(false);
         final EditText inputEdit = (EditText) createFolderDlg.findViewById(R.id.edit);
         inputEdit.setHint(getString(R.string.clouddriver_input_directory_name));
@@ -275,7 +304,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         final String fileNameNoEx = volumeFile.getType().equals(VolumeFile.FILE_TYPE_REGULAR) ? FileUtils.getFileNameWithoutExtension(fileName) : fileName;
         final String fileExtension = fileName.replace(fileNameNoEx, "");
         fileRenameDlg = new MyDialog(VolumeFileBaseActivity.this,
-                R.layout.volume_dialog_update_name_input, R.style.userhead_dialog_bg);
+                R.layout.volume_dialog_update_name_input);
         fileRenameDlg.setCancelable(false);
         final EditText inputEdit = (EditText) fileRenameDlg.findViewById(R.id.edit);
         inputEdit.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MyAppConfig.VOLUME_MAX_FILE_NAME_LENGTH)});
@@ -339,7 +368,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
      * @param volumeFile
      */
     protected void downloadOrOpenVolumeFile(VolumeFile volumeFile) {
-        String fileSavePath = MyAppConfig.LOCAL_DOWNLOAD_PATH + volumeFile.getName();
+        String fileSavePath = MyAppConfig.getVolumeFileDownloadDirPath() + volumeFile.getName();
         if (FileUtils.isFileExist(fileSavePath)) {
             FileUtils.openFile(getApplicationContext(), fileSavePath);
         } else {
@@ -347,7 +376,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
             bundle.putSerializable("volumeId", volume.getId());
             bundle.putSerializable("volumeFile", volumeFile);
             bundle.putSerializable("currentDirAbsolutePath", currentDirAbsolutePath + volumeFile.getName());
-            IntentUtils.startActivity(VolumeFileBaseActivity.this, VolumeFileDownloadActivtiy.class, bundle);
+            IntentUtils.startActivity(VolumeFileBaseActivity.this, VolumeFileDownloadActivity.class, bundle);
         }
     }
 
@@ -399,7 +428,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         bundle.putSerializable("volumeFile", volumeFile);
         bundle.putString("currentDirAbsolutePath", currentDirAbsolutePath + volumeFile.getName());
         bundle.putBoolean("isStartDownload", true);
-        IntentUtils.startActivity(VolumeFileBaseActivity.this, VolumeFileDownloadActivtiy.class, bundle);
+        IntentUtils.startActivity(VolumeFileBaseActivity.this, VolumeFileDownloadActivity.class, bundle);
     }
 
 

@@ -1,15 +1,15 @@
 package com.inspur.emmcloud.ui.appcenter.volume;
 
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.adapter.VolumeFileAdapter;
-import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
+
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.adapter.VolumeFileAdapter;
+import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 
 /**
  * 云盘文件分类展示
@@ -23,6 +23,7 @@ public class VolumeFileFilterActvity extends VolumeFileBaseActivity {
     @Override
     public void onCreate() {
         super.onCreate();
+        uploadFileBtn.setVisibility(View.GONE);
         headerOperationLayout.setVisibility(View.INVISIBLE);
         setListIemClick();
         registerReceiver();
@@ -71,10 +72,6 @@ public class VolumeFileFilterActvity extends VolumeFileBaseActivity {
             case R.id.ibt_back:
                 finishActivity();
                 break;
-            case R.id.refresh_btn:
-                getVolumeFileList(true);
-                break;
-
             default:
                 break;
         }

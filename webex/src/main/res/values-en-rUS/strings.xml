@@ -27,7 +27,6 @@
     <string name="webex_add_invitee_num">Joined: %1$d Member(s) / Up to %2$d Members</string>
     <string name="webex_internal_attendees">Internal</string>
     <string name="webex_external_attendees">External</string>
-    <string name="webex_internal_share">Internal</string>
     <string name="webex_time">Time：</string>
     <string name="webex_meeting_code">Meeting number：</string>
     <string name="webex_meeting_password_tip">Meeting password：</string>
