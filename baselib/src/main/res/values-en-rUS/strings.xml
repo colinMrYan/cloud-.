@@ -1129,7 +1129,7 @@
     <string name="turn_on_light">Turn on the light</string>
     <string name="turn_off_light">Turn off the light</string>
     <string name="imp_function_error">Function call error. Please check if Cloud + has been upgraded to the latest version.</string>
-    <string name="file_select_limit_warning">The maximum number of optional files has been reached</string>
+    <string name="file_select_limit_warning">You can select up to %1$d files</string>
     <string name="select_file">Choose files</string>
     <string name="internal_shared_storage">Internal shared storage</string>
 
