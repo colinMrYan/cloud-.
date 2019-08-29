@@ -75,12 +75,23 @@ public class Voice2StringMessageUtils {
      * 启动听写
      */
     public void startVoiceListening() {
+        if (initListener == null) {
+            initListeners();
+        }
+        // 使用SpeechRecognizer对象，可根据回调消息自定义界面；
+        if (speechRecognizer == null) {
+            speechRecognizer = SpeechRecognizer.createRecognizer(context, initListener);
+            setParam(VOICE_FROM_XUNFEI);
+        }
+        speechRecognizer.startListening(recognizerListener);
+        voiceState = MSG_FROM_XUNFEI;
+    }
+
+    public void initVoiceParam() {
         initListeners();
         // 使用SpeechRecognizer对象，可根据回调消息自定义界面；
         speechRecognizer = SpeechRecognizer.createRecognizer(context, initListener);
         setParam(VOICE_FROM_XUNFEI);
-        speechRecognizer.startListening(recognizerListener);
-        voiceState = MSG_FROM_XUNFEI;
     }
 
     public void setAudioSimpleRate(int audioSimpleRate) {

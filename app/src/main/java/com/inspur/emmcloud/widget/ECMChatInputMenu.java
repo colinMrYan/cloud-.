@@ -313,7 +313,8 @@ public class ECMChatInputMenu extends LinearLayout {
 
             @Override
             public void onVoiceLevelChange(int volume) {
-                int level = (volume + 2) / 5;
+                Log.d("zhang", "onVoiceLevelChange: volume = " + volume);
+                int level = (volume + 2) / 7;
                 setVoiceImageViewLevel(level);
             }
 
@@ -681,7 +682,7 @@ public class ECMChatInputMenu extends LinearLayout {
         lastVolumeLevel = 0;
         waterWaveProgress.setProgress(0);
 //        mediaPlayerUtils.playVoiceOn();
-        voice2StringMessageUtils.startVoiceListening();
+        voice2StringMessageUtils.initVoiceParam();
     }
 
     public void setChatDrafts(String drafts) {
@@ -997,12 +998,12 @@ public class ECMChatInputMenu extends LinearLayout {
      * @param volume
      */
     public void setVoiceImageViewLevel(int volume) {
-        if (volume > 5) {
-            volume = 5;
+        if (volume > 7) {
+            volume = 7;
         }
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) voiceInputLevelImgShade.getLayoutParams();
-        params.height = DensityUtil.dip2px(getContext(), 70) + DensityUtil.dip2px(getContext(), volume * 4);
-        params.width = DensityUtil.dip2px(getContext(), 70) + DensityUtil.dip2px(getContext(), volume * 4);
+        params.height = DensityUtil.dip2px(getContext(), 70) + DensityUtil.dip2px(getContext(), volume * 3);
+        params.width = DensityUtil.dip2px(getContext(), 70) + DensityUtil.dip2px(getContext(), volume * 3);
         voiceInputLevelImgShade.setLayoutParams(params);
         voiceInputLevelImgShade.setCornerRadius(params.height / 2);
 
