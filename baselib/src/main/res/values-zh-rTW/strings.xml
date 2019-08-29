@@ -387,8 +387,8 @@
     <string name="schedule_alert_time_before_one_day">1天前(上午9點)</string>
     <string name="schedule_alert_time_before_two_day">2天前(上午9點)</string>
     <string name="schedule_alert_time_before_a_week">一周前(上午9點)</string>
-    <string name="schedule_calendar_modify">修改日程</string>
-    <string name="schedule_calendar_delete">刪除日程</string>
+    <string name="schedule_calendar_modify">變更日程</string>
+    <string name="schedule_calendar_delete">取消日程</string>
     <string name="schedule_calendar_create">新建日程</string>
     <string name="schedule_calendar_my_schedule">日程</string>
     <string name="schedule_calendar_my_meeting">會議</string>
@@ -441,7 +441,7 @@
     <string name="schedule_meeting_add_attendee_title">參与人</string>
     <string name="schedule_meeting_add_record_holder_title">會議記錄人</string>
     <string name="schedule_meeting_add_conference_title">會議聯絡人</string>
-    <string name="schedule_meeting_select_attendee_title">選擇參會人</string>
+    <string name="schedule_meeting_select_attendee_title">選擇參與人</string>
     <string name="schedule_meeting_select_record_holder_title">選擇會議記錄人</string>
     <string name="schedule_meeting_select_conference_title">選擇會議聯絡人</string>
     <string name="schedule_meeting_add_note">備註</string>

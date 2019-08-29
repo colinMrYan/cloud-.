@@ -393,8 +393,8 @@
     <string name="schedule_alert_time_before_days">%1$s天前</string>
     <string name="schedule_account_select">账户</string>
 
-    <string name="schedule_calendar_modify">修改日程</string>
-    <string name="schedule_calendar_delete">删除日程</string>
+    <string name="schedule_calendar_modify">变更日程</string>
+    <string name="schedule_calendar_delete">取消日程</string>
     <string name="schedule_calendar_create">新建日程</string>
     <string name="schedule_calendar_my_schedule">日程</string>
     <string name="schedule_calendar_my_meeting">会议</string>
@@ -455,7 +455,7 @@
     <string name="schedule_meeting_add_attendee_title">参与人</string>
     <string name="schedule_meeting_add_record_holder_title">会议记录人</string>
     <string name="schedule_meeting_add_conference_title">会议联络人</string>
-    <string name="schedule_meeting_select_attendee_title">选择参会人</string>
+    <string name="schedule_meeting_select_attendee_title">选择参与人</string>
     <string name="schedule_meeting_select_record_holder_title">选择会议记录人</string>
     <string name="schedule_meeting_select_conference_title">选择会议联络人</string>
     <string name="schedule_meeting_add_note">备注</string>
