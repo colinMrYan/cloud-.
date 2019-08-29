@@ -36,6 +36,7 @@ import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
+import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.bean.appcenter.GetIDResult;
@@ -388,9 +389,11 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
                 }
                 break;
             case R.id.ll_start_time:
+                InputMethodUtils.hide(ScheduleAddActivity.this);
                 showTimeSelectDialog(true);
                 break;
             case R.id.ll_end_time:
+                InputMethodUtils.hide(ScheduleAddActivity.this);
                 showTimeSelectDialog(false);
                 break;
             case R.id.iv_meeting_position_enter:
