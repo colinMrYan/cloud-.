@@ -486,6 +486,7 @@ public class FileTransferService extends ImpPlugin {
         failCb = JSONUtils.getString(jsonObject, "fail", "");
         JSONObject optionsObj = JSONUtils.getJSONObject(jsonObject, "options", new JSONObject());
         String filePath = JSONUtils.getString(optionsObj, "filePath", "");
+        filePath = FilePathUtils.getRealPath(filePath);
         if (!StringUtils.isBlank(filePath)) {
             String result = "";
             try {
@@ -522,7 +523,7 @@ public class FileTransferService extends ImpPlugin {
 
                         }
                     }
-                    callbackSuccess(array.toString());
+                    callbackSuccess(array);
                 } else {
                     callbackFail(Res.getString("cancel_select"));
                 }
@@ -534,6 +535,12 @@ public class FileTransferService extends ImpPlugin {
     private void callbackSuccess(String result) {
         if (!StringUtils.isBlank(successCb)) {
             this.jsCallback(successCb, result);
+        }
+    }
+
+    private void callbackSuccess(JSONArray array) {
+        if (!StringUtils.isBlank(successCb)) {
+            this.jsCallback(successCb, array);
         }
     }
 

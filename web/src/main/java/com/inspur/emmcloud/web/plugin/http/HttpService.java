@@ -7,6 +7,7 @@ import com.inspur.emmcloud.web.api.WebAPIInterfaceImpl;
 import com.inspur.emmcloud.web.api.WebAPIService;
 import com.inspur.emmcloud.web.plugin.ImpPlugin;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -45,7 +46,19 @@ public class HttpService extends ImpPlugin {
         if (!StringUtils.isBlank(successCal)) {
             JSONObject object = new JSONObject();
             try {
-                object.put("result", result);
+                if (!StringUtils.isBlank(result)) {
+                    if (result.startsWith("{") && result.endsWith("}")) {
+                        JSONObject resultObj = JSONUtils.getJSONObject(result);
+                        object.put("result", resultObj);
+                    } else if (result.startsWith("[") && result.endsWith("]")) {
+                        JSONArray resultArray = JSONUtils.getJSONArray(result, new JSONArray());
+                        object.put("result", resultArray);
+                    } else {
+                        object.put("result", result);
+                    }
+
+                }
+
             } catch (Exception e) {
                 e.printStackTrace();
             }

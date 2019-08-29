@@ -97,7 +97,7 @@ public class FileManagerActivity extends BaseActivity {
                             setOKTextStatus();
                             fileAdapter.notifyItemChanged(position);
                         } else if (selectFileBeanList.size() == maximum) {
-                            ToastUtils.show(FileManagerActivity.this, R.string.file_select_limit_warning);
+                            ToastUtils.show(FileManagerActivity.this, getString(R.string.file_select_limit_warning, maximum));
                         } else {
                             selectFileBeanList.add(file);
                             setOKTextStatus();

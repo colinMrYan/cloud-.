@@ -1130,7 +1130,7 @@
     <string name="turn_on_light">開燈</string>
     <string name="turn_off_light">關燈</string>
     <string name="imp_function_error">功能調用錯誤，請檢查應用是否已升級到最新版本</string>
-    <string name="file_select_limit_warning">超過了建議選擇檔案數限制</string>
+    <string name="file_select_limit_warning">最多只能選擇%1$d個檔案</string>
     <string name="select_file">選擇檔案</string>
     <string name="internal_shared_storage">內部儲存設備</string>
 
