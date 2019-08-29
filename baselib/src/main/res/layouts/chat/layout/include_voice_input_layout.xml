@@ -80,6 +80,7 @@
             android:minWidth="70dp"
             android:minHeight="70dp"
             android:src="#8436A5F6"
+            android:visibility="invisible"
             app:riv_corner_radius="35dp"
             app:riv_oval="true" />
 
@@ -100,8 +101,8 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="53dp"
-            android:padding="10dp"
             android:layout_toRightOf="@+id/volume_level_img"
+            android:padding="10dp"
             android:text="@string/send"
             android:textColor="@color/voice_communication_function_default"
             android:textSize="16sp" />

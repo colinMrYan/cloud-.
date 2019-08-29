@@ -162,12 +162,12 @@ public class Voice2StringMessageUtils {
                 // 设置语言区域
                 speechRecognizer.setParameter(SpeechConstant.ACCENT, "mandarin");
                 break;
-            case "zh-Hans-Cantonese":
-                // 设置语言
-                speechRecognizer.setParameter(SpeechConstant.LANGUAGE, "zh_cn");
-                // 设置语言区域
-                speechRecognizer.setParameter(SpeechConstant.ACCENT, "contonese");
-                break;
+//            case "zh-Hans-Cantonese":
+//                // 设置语言
+//                speechRecognizer.setParameter(SpeechConstant.LANGUAGE, "zh_cn");
+//                // 设置语言区域
+//                speechRecognizer.setParameter(SpeechConstant.ACCENT, "mandarin");
+//                break;
             case "en":
                 // 设置语言
                 speechRecognizer.setParameter(SpeechConstant.LANGUAGE, "en_us");

@@ -110,9 +110,9 @@ public class ECMChatInputMenu extends LinearLayout {
 
     @BindView(R.id.wave_progress_input)
     WaterWaveProgress waterWaveProgress;
+    private int voiceInputStatus = 1;
     private static final int VOICE_INPUT_STATUS_NORMAL = 1;
     private static final int VOICE_INPUT_STATUS_STOP = 2;
-    private static final int VOICE_INPUT_STATUS_ACTION_UP = 3;
     private static final int VOICE_INPUT_STATUS_SPEAKING = 5;
     @BindView(R.id.voice_input_language)
     TextView languageTv;
@@ -285,8 +285,8 @@ public class ECMChatInputMenu extends LinearLayout {
         mediaPlayerUtils = new MediaPlayerUtils(getContext());
         voice2StringMessageUtils = new Voice2StringMessageUtils(getContext());
         initLanguageData();
-        voiceInputCompleteView.setProgress(50);
-        initVoiceInputView(VOICE_INPUT_STATUS_NORMAL);
+        voiceInputStatus = VOICE_INPUT_STATUS_NORMAL;
+        initVoiceInputView();
 //        waterWaveProgress.setShowProgress(false);
 //        waterWaveProgress.setShowNumerical(false);
 //        waterWaveProgress.setWaveSpeed(0.02F);
@@ -330,38 +330,29 @@ public class ECMChatInputMenu extends LinearLayout {
     private void initLanguageData() {
         languageList.add(getContext().getString(R.string.voice_input_language_mandarin));   //普通話
         languageList.add(getContext().getString(R.string.voice_input_language_english));    //英語
-        languageList.add(getContext().getString(R.string.voice_input_language_cantonese));  //粵語
+//        languageList.add(getContext().getString(R.string.voice_input_language_cantonese));  //粵語
     }
 
     private ValueAnimator animator;
 
     @SuppressLint("ClickableViewAccessibility")
-    private void initVoiceInputView(int status) {
-        Log.d("zhang", "initVoiceInputView: status = " + status);
-        switch (status) {
+    private void initVoiceInputView() {
+        Log.d("zhang", "initVoiceInputView: voiceInputStatus = " + voiceInputStatus);
+        switch (voiceInputStatus) {
             case VOICE_INPUT_STATUS_NORMAL:
+                voiceInputEt.setText("");
                 voiceInputEt.setHint(getContext().getString(R.string.voice_input_hint_prepare));
+                languageTv.setVisibility(VISIBLE);
             case VOICE_INPUT_STATUS_STOP:
                 stopVoiceCompleteAnim();
-                voiceInputCompleteView.setVisibility(INVISIBLE);
                 String text = voiceInputEt.getText().toString();
                 Log.d("zhang", "initVoiceInputView: text = " + text);
-                if (StringUtils.isBlank(text)) {
-                    voiceInputEt.setVisibility(INVISIBLE);
-                    languageTv.setVisibility(VISIBLE);
-                    voiceInputClean.setVisibility(INVISIBLE);
-                    voiceInputSend.setVisibility(INVISIBLE);
-                } else {
-                    voiceInputEt.setVisibility(VISIBLE);
-                    languageTv.setVisibility(INVISIBLE);
-                    voiceInputClean.setVisibility(VISIBLE);
-                    voiceInputSend.setVisibility(VISIBLE);
-                }
+                voiceInputEt.setVisibility(StringUtils.isBlank(text) ? INVISIBLE : VISIBLE);
+                languageTv.setVisibility(StringUtils.isBlank(text) ? VISIBLE : INVISIBLE);
+                voiceInputClean.setVisibility(StringUtils.isBlank(text) ? INVISIBLE : VISIBLE);
+                voiceInputSend.setVisibility(StringUtils.isBlank(text) ? INVISIBLE : VISIBLE);
                 voiceInputCloseImg.setVisibility(VISIBLE);
-                voiceInputLevelImgShade.setVisibility(INVISIBLE);
-                break;
-            case VOICE_INPUT_STATUS_ACTION_UP:
-                voiceInputLevelImgShade.setVisibility(INVISIBLE);
+//                voiceInputLevelImgShade.setVisibility(INVISIBLE);
                 break;
             case VOICE_INPUT_STATUS_SPEAKING:
                 voiceInputEt.setVisibility(VISIBLE);
@@ -402,6 +393,7 @@ public class ECMChatInputMenu extends LinearLayout {
             animator.cancel();
             animator = null;
         }
+        voiceInputLevelImgShade.setVisibility(INVISIBLE);
         voiceInputCompleteView.setVisibility(INVISIBLE);
     }
 
@@ -428,7 +420,9 @@ public class ECMChatInputMenu extends LinearLayout {
                 if (voiceResult.getXunFeiPermissionError() == Voice2StringMessageUtils.MSG_XUNFEI_PERMISSION_ERROR) {
                     ToastUtils.show(MyApplication.getInstance(), getContext().getString(R.string.voice_audio_record_unavailiable));
                 }
-                initVoiceInputView(VOICE_INPUT_STATUS_STOP);
+                Log.d("zhang", "handleVoiceResult: voiceResult.getXunFeiError()");
+                voiceInputStatus = VOICE_INPUT_STATUS_STOP;
+                initVoiceInputView();
                 return;
             }
             String results = voiceResult.getResults();
@@ -451,7 +445,8 @@ public class ECMChatInputMenu extends LinearLayout {
 
             }
         }
-        initVoiceInputView(VOICE_INPUT_STATUS_STOP);
+        voiceInputStatus = VOICE_INPUT_STATUS_STOP;
+        initVoiceInputView();
     }
 
     /**
@@ -681,11 +676,12 @@ public class ECMChatInputMenu extends LinearLayout {
         inputEdit.setVisibility(INVISIBLE);
         addMenuLayout.setVisibility(GONE);
         voiceInputLayout.setVisibility(View.VISIBLE);
-        voiceInputEt.setText("");
+        voiceInputStatus = VOICE_INPUT_STATUS_NORMAL;
+        initVoiceInputView();
         lastVolumeLevel = 0;
         waterWaveProgress.setProgress(0);
 //        mediaPlayerUtils.playVoiceOn();
-//        voice2StringMessageUtils.startVoiceListening();
+        voice2StringMessageUtils.startVoiceListening();
     }
 
     public void setChatDrafts(String drafts) {
@@ -843,6 +839,7 @@ public class ECMChatInputMenu extends LinearLayout {
                 break;
             case R.id.voice_input_close_img:
                 inputEdit.setVisibility(VISIBLE);
+                voiceInputEt.setText("");
                 voiceInputLayout.setVisibility(View.GONE);
                 voice2StringMessageUtils.stopListening();
                 break;
@@ -871,7 +868,8 @@ public class ECMChatInputMenu extends LinearLayout {
     public boolean onTouch(View v, MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                initVoiceInputView(VOICE_INPUT_STATUS_SPEAKING);
+                voiceInputStatus = VOICE_INPUT_STATUS_SPEAKING;
+                initVoiceInputView();
                 voiceInputEt.setHint(getContext().getString(R.string.voice_input_hint_prepare));
                 mediaPlayerUtils.playVoiceOn();
                 voice2StringMessageUtils.startVoiceListening();
@@ -880,8 +878,10 @@ public class ECMChatInputMenu extends LinearLayout {
             case MotionEvent.ACTION_CANCEL:
                 mediaPlayerUtils.playVoiceOff();
                 voice2StringMessageUtils.stopListening();
-                initVoiceInputView(VOICE_INPUT_STATUS_ACTION_UP);
-                startVoiceCompleteAnim();
+                voiceInputLevelImgShade.setVisibility(INVISIBLE);
+                if (voiceInputStatus != VOICE_INPUT_STATUS_STOP) {
+                    startVoiceCompleteAnim();
+                }
                 break;
         }
 
@@ -1038,8 +1038,9 @@ public class ECMChatInputMenu extends LinearLayout {
     public void stopVoiceInput() {
 //        voiceInputLayout.setVisibility(View.GONE);
         voice2StringMessageUtils.stopListening();
-        initVoiceInputView(VOICE_INPUT_STATUS_STOP);
-//        mediaPlayerUtils.playVoiceOff();
+        mediaPlayerUtils.playVoiceOff();
+        voiceInputStatus = VOICE_INPUT_STATUS_STOP;
+        initVoiceInputView();
     }
 
     public String getInputContent() {
