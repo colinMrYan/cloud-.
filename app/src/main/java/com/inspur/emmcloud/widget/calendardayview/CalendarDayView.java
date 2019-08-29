@@ -482,11 +482,19 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
             popCalendarTypeImg.setImageResource(resId);
         }
         popEventTitleText.setText(event.getEventTitle());
-        String date = TimeUtils.calendar2FormatString(getContext(), selectCalendar, TimeUtils.FORMAT_MONTH_DAY);
-        String week = TimeUtils.getWeekDay(getContext(), selectCalendar);
-        String startTime = TimeUtils.calendar2FormatString(getContext(), event.getDayEventStartTime(selectCalendar), TimeUtils.FORMAT_HOUR_MINUTE);
-        String endTime = TimeUtils.calendar2FormatString(getContext(), event.getDayEventEndTime(selectCalendar), TimeUtils.FORMAT_HOUR_MINUTE);
-        popEventTimeText.setText(date + " " + week + " " + startTime + " - " + endTime);
+        if (TimeUtils.isSameDay(event.getEventStartTime(), event.getEventEndTime())) {
+            String date = TimeUtils.calendar2FormatString(getContext(), selectCalendar, TimeUtils.FORMAT_MONTH_DAY);
+            String week = TimeUtils.getWeekDay(getContext(), selectCalendar);
+            String startTime = TimeUtils.calendar2FormatString(getContext(), event.getDayEventStartTime(selectCalendar), TimeUtils.FORMAT_HOUR_MINUTE);
+            String endTime = TimeUtils.calendar2FormatString(getContext(), event.getDayEventEndTime(selectCalendar), TimeUtils.FORMAT_HOUR_MINUTE);
+            popEventTimeText.setText(date + " " + week + " " + startTime + " - " + endTime);
+        } else {
+            String startTime = TimeUtils.calendar2FormatString(getContext(), event.getEventStartTime(), TimeUtils.FORMAT_MONTH_DAY_HOUR_MINUTE);
+            String endTime = TimeUtils.calendar2FormatString(getContext(), event.getEventEndTime(), TimeUtils.FORMAT_MONTH_DAY_HOUR_MINUTE);
+            popEventTimeText.setText(startTime + " - " + endTime);
+        }
+
+
         popupWindow.setTouchable(true);
         popupWindow.setBackgroundDrawable(getResources().getDrawable(
                 R.drawable.pop_window_view_tran));

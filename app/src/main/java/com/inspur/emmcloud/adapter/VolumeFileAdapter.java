@@ -204,6 +204,7 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
                         VolumeFileUploadManagerUtils.getInstance().removeVolumeFileUploadService(volumeFile);
                         volumeFileList.remove(position);
                         notifyItemRemoved(position);
+                        notifyItemRangeChanged(0, getItemCount());
                     } else if (NetUtils.isNetworkConnected(context)) {
                         //重新上传
                         volumeFile.setStatus(VolumeFile.STATUS_UPLOADIND);

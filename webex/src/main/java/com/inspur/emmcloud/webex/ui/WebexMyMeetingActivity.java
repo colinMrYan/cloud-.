@@ -195,8 +195,14 @@ public class WebexMyMeetingActivity extends BaseActivity {
     private void setNoMeetingTipsText() {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MONTH, 1);
-        String date = TimeUtils.Calendar2TimeString(calendar, TimeUtils.getFormat(WebexMyMeetingActivity.this, TimeUtils.FORMAT_MONTH_DAY));
+        String date = null;
+        if (calendar.get(Calendar.YEAR) != Calendar.getInstance().get(Calendar.YEAR)) {
+            date = TimeUtils.Calendar2TimeString(calendar, TimeUtils.getFormat(WebexMyMeetingActivity.this, TimeUtils.FORMAT_YEAR_MONTH_DAY));
+        } else {
+            date = TimeUtils.Calendar2TimeString(calendar, TimeUtils.getFormat(WebexMyMeetingActivity.this, TimeUtils.FORMAT_MONTH_DAY));
+        }
         noMeetingText.setText(Html.fromHtml(getString(R.string.webex_no_meeting_tips, date)));
+
     }
 
     private void handMessage() {

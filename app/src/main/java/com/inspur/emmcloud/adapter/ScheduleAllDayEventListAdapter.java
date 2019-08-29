@@ -107,7 +107,7 @@ public class ScheduleAllDayEventListAdapter extends BaseAdapter {
         popEventTitleText.setText(event.getEventTitle());
         String date = TimeUtils.calendar2FormatString(context, selectCalendar, TimeUtils.FORMAT_MONTH_DAY);
         String week = TimeUtils.getWeekDay(context, selectCalendar);
-        popEventTimeText.setText(date + " " + week);
+        popEventTimeText.setText(date + " " + context.getString(R.string.all_day));
 
         ImageView shareImage = contentView.findViewById(R.id.iv_share);
         ImageView deleteImage = contentView.findViewById(R.id.iv_delete);
