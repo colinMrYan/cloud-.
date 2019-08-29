@@ -823,6 +823,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
         CircleTextImageView userHeadImage = dialog.findViewById(R.id.iv_share_user_head);
         TextView fileNameText = dialog.findViewById(R.id.tv_share_file_name);
         TextView userNameText = dialog.findViewById(R.id.tv_share_user_name);
+        dialog.setCancelable(false);
         displayImg(searchModel, userHeadImage);
         okBtn.setText(getString(R.string.ok));
         userNameText.setText(searchModel.getName());
