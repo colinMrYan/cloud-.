@@ -98,8 +98,8 @@ public class VolumeGroupChangePermissionActivity extends BaseActivity {
         writePermissionSwitch.setChecked(group.getPrivilege() > VOLUME_READ_PERMISSION);
         readPermissionSwitch.setChecked(true);
         readPermissionSwitch.setEnabled(group.getPrivilege() <= VOLUME_READ_PERMISSION);
-        setSwitchColor(group.getPrivilege() > 4 ? 0xbb7fc5f6 : 0xff008cee,
-                group.getPrivilege() > 4 ? 0x667fc5f6 : 0xff7fc5f6, readPermissionSwitch);
+//        setSwitchColor(group.getPrivilege() > 4 ? 0xbb7fc5f6 : 0xff008cee,
+//                group.getPrivilege() > 4 ? 0x667fc5f6 : 0xff7fc5f6, readPermissionSwitch);
         final String currentVolumePath = getIntent().getStringExtra("volumeFilePath");
         writePermissionSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
