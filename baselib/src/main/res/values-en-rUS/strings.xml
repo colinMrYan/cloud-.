@@ -1215,8 +1215,8 @@
     <string name="login_more_scan_find_right">]Do you decide to add？</string>
     <string name="cluster_default">default</string>
 
-    <string name="volume_read_write_permission">Have upload / view permissions</string>
-    <string name="volume_read_permission">Have view permissions</string>
+    <string name="volume_read_write_permission">Can View/Upload</string>
+    <string name="volume_read_permission">Can View</string>
 
     <string name="cluster_no_permission">The current function lacks effective authorization information.</string>
 
