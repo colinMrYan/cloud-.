@@ -70,11 +70,12 @@ public class DateTimePickerDialog {
         relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TimePicker picker = new TimePicker((Activity) context, TimePicker.HOUR_24);
+                TimePicker picker = new TimePicker((Activity) context, TimePicker.HOUR_24, true);
+                picker.setIntervalMinutes(true);
                 picker.setUseWeight(false);
                 picker.setCycleDisable(false);
                 picker.setRangeStart(0, 0);//00:00
-                picker.setRangeEnd(23, 59);//23:59
+                picker.setRangeEnd(23, 3);//23:59
                 picker.setGravity(Gravity.CENTER);//弹框居中
                 picker.setContentPadding(0, 5);
                 picker.setSelectedItem(resultCalendar.get(Calendar.HOUR_OF_DAY), resultCalendar.get(Calendar.MINUTE));

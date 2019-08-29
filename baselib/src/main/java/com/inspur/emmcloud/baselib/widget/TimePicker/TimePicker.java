@@ -11,15 +11,15 @@ import android.app.Activity;
 public class TimePicker extends DateTimePicker {
 
     public TimePicker(Activity activity) {
-        this(activity, HOUR_24);
+        this(activity, HOUR_24, true);
     }
 
     /**
      * @see #HOUR_24
      * @see #HOUR_12
      */
-    public TimePicker(Activity activity, @TimeMode int mode) {
-        super(activity, NONE, mode);
+    public TimePicker(Activity activity, @TimeMode int mode, boolean intervalMinutes) {
+        super(activity, NONE, mode, intervalMinutes);
     }
 
     /**

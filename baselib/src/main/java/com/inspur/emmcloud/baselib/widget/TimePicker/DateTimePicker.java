@@ -80,6 +80,7 @@ public class DateTimePicker extends WheelPicker {
     private int endHour, endMinute = 59;
     private int textSize = WheelView.TEXT_SIZE;
     private boolean resetWhileWheel = true;
+    private boolean intervalMinutes = false;
 
     /**
      * @see #HOUR_24
@@ -87,6 +88,35 @@ public class DateTimePicker extends WheelPicker {
      */
     public DateTimePicker(Activity activity, @TimeMode int timeMode) {
         this(activity, YEAR_MONTH_DAY, timeMode);
+    }
+
+    public DateTimePicker(Activity activity, @TimeMode int timeMode, boolean intervalMinutes) {
+        this(activity, YEAR_MONTH_DAY, timeMode, intervalMinutes);
+    }
+
+    public DateTimePicker(Activity activity, @DateMode int dateMode, @TimeMode int timeMode, boolean intervalMinutes) {
+        super(activity);
+        if (dateMode == NONE && timeMode == NONE) {
+            throw new IllegalArgumentException("The modes are NONE at the same time");
+        }
+        if (dateMode == YEAR_MONTH_DAY && timeMode != NONE) {
+            if (screenWidthPixels < 720) {
+                textSize = 14;//年月日时分，比较宽，设置字体小一点才能显示完整
+            } else if (screenWidthPixels < 480) {
+                textSize = 12;
+            }
+        }
+        this.dateMode = dateMode;
+        //根据时间模式初始化小时范围
+        if (timeMode == HOUR_12) {
+            startHour = 1;
+            endHour = 12;
+        } else {
+            startHour = 0;
+            endHour = 23;
+        }
+        this.timeMode = timeMode;
+        this.intervalMinutes = intervalMinutes;
     }
 
     public DateTimePicker(Activity activity, @DateMode int dateMode, @TimeMode int timeMode) {
@@ -118,6 +148,14 @@ public class DateTimePicker extends WheelPicker {
      */
     public void setResetWhileWheel(boolean resetWhileWheel) {
         this.resetWhileWheel = resetWhileWheel;
+    }
+
+    public boolean isIntervalMinutes() {
+        return intervalMinutes;
+    }
+
+    public void setIntervalMinutes(boolean intervalMinutes) {
+        this.intervalMinutes = intervalMinutes;
     }
 
     /**
@@ -729,7 +767,15 @@ public class DateTimePicker extends WheelPicker {
             selectedHour = hours.get(0);
         }
         if (!resetWhileWheel) {
-            selectedMinute = DateUtils.fillZero(Calendar.getInstance().get(Calendar.MINUTE));
+            if (intervalMinutes) {
+                int minutes = Calendar.getInstance().get(Calendar.MINUTE);
+                if (minutes % 15 != 0) {
+                    minutes = (minutes / 15 + 1) * 15;
+                }
+                selectedMinute = DateUtils.fillZero(minutes);
+            } else {
+                selectedMinute = DateUtils.fillZero(Calendar.getInstance().get(Calendar.MINUTE));
+            }
         }
     }
 
@@ -756,6 +802,13 @@ public class DateTimePicker extends WheelPicker {
             for (int i = 0; i <= 59; i++) {
                 minutes.add(DateUtils.fillZero(i));
             }
+        }
+        if (intervalMinutes) {
+            minutes.clear();
+            minutes.add("00");
+            minutes.add("15");
+            minutes.add("30");
+            minutes.add("45");
         }
         if (minutes.indexOf(selectedMinute) == -1) {
             //当前设置的分钟不在指定范围，则默认选中范围开始的分钟
