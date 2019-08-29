@@ -1264,6 +1264,7 @@
 
     <string name="volume_read_write_permission">拥有上传/查看权限</string>
     <string name="volume_read_permission">拥有查看权限</string>
+    <string name="volume_no_permission">无权限</string>
 
     <string name="clear">清除</string>
     <string name="confirm_clear">确认清除？</string>

@@ -1217,6 +1217,7 @@
 
     <string name="volume_read_write_permission">Can View/Upload</string>
     <string name="volume_read_permission">Can View</string>
+    <string name="volume_no_permission">No Permission</string>
 
     <string name="cluster_no_permission">The current function lacks effective authorization information.</string>
 

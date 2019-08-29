@@ -65,7 +65,7 @@ public class VolumeGroupPermissionManagerAdapter extends RecyclerView.Adapter<Vo
         } else if (privilege >= 1 && privilege <= 4) {
             return context.getString(R.string.volume_read_permission);
         } else {
-            return "无权限";
+            return context.getString(R.string.volume_no_permission);
         }
     }
 
