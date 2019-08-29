@@ -566,8 +566,8 @@
     <string name="clouddriver_volume_info">Shared Disk Details</string>
     <string name="clouddriver_volume_name">Shared Disk Name</string>
     <string name="clouddriver_all_volume_member_size">All Members(%1$d)</string>
-    <string name="clouddriver_upload_permission">Have upload/view permissions</string>
-    <string name="clouddriver_watch_permission">Have view permissions</string>
+    <string name="clouddriver_upload_permission">Can View/Upload</string>
+    <string name="clouddriver_watch_permission">Can View</string>
     <string name="clouddriver_sure_delete_volume">Sure to delete?</string>
     <string name="clouddriver_del_member">Delete Members</string>
     <string name="clouddriver_all_group_member_size">All Members(%1$d)</string>

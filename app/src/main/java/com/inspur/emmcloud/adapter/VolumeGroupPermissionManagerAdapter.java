@@ -43,13 +43,30 @@ public class VolumeGroupPermissionManagerAdapter extends RecyclerView.Adapter<Vo
     @Override
     public void onBindViewHolder(VolumeGroupPermissionManagerAdapter.VolumeGroupPermissionManagerAdapterHolder holder, final int position) {
         holder.groupNameText.setText(groupList.get(position).getName());
-        holder.permissionText.setText(groupList.get(position).getPrivilege() > 4 ? context.getString(R.string.volume_read_write_permission) : context.getString(R.string.volume_read_permission));
+        holder.permissionText.setText(getPermission(position));
         holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 volumeGroupPermissionManagerInterface.onVolumeGroupClickListener(groupList.get(position));
             }
         });
+    }
+
+    /**
+     * 权限计算
+     *
+     * @param position
+     * @return
+     */
+    private String getPermission(int position) {
+        int privilege = groupList.get(position).getPrivilege();
+        if (privilege > 4) {
+            return context.getString(R.string.volume_read_write_permission);
+        } else if (privilege >= 1 && privilege <= 4) {
+            return context.getString(R.string.volume_read_permission);
+        } else {
+            return "无权限";
+        }
     }
 
     @Override
