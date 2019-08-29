@@ -22,7 +22,7 @@
         android:layout_marginRight="22dp"
         android:layout_marginTop="20dp">
 
-            <ImageView
+        <com.inspur.emmcloud.baselib.widget.CircleTextImageView
                 android:id="@+id/iv_share_user_head"
                 android:layout_width="32dp"
                 android:layout_height="32dp"

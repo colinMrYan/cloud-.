@@ -25,23 +25,34 @@ import com.inspur.emmcloud.adapter.VolumeFileAdapter;
 import com.inspur.emmcloud.adapter.VolumeFileFilterPopGridAdapter;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.dialogs.ActionSheetDialog;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.basemodule.util.compressor.Compressor;
 import com.inspur.emmcloud.basemodule.util.imagepicker.ImagePicker;
 import com.inspur.emmcloud.basemodule.util.imagepicker.bean.ImageItem;
 import com.inspur.emmcloud.basemodule.util.imagepicker.ui.ImageGridActivity;
 import com.inspur.emmcloud.basemodule.util.mycamera.MyCameraActivity;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
+import com.inspur.emmcloud.bean.chat.Conversation;
+import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
+import com.inspur.emmcloud.ui.chat.ConversationActivity;
+import com.inspur.emmcloud.util.privates.ChatCreateUtils;
+import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.VolumeFilePrivilegeUtils;
 import com.inspur.emmcloud.util.privates.VolumeFileUploadManagerUtils;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -473,6 +484,91 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                 }
                 uploadFile(imgPath);
             }
+        } else if (requestCode == SHARE_IMAGE_OR_FILES) {
+            // shareToVolumeFile
+            String result = data.getStringExtra("searchResult");
+            try {
+                String userOrChannelId = "";
+                boolean isGroup = false;
+                JSONObject jsonObject = new JSONObject(result);
+                if (jsonObject.has("people")) {
+                    JSONArray peopleArray = jsonObject.getJSONArray("people");
+                    if (peopleArray.length() > 0) {
+                        JSONObject peopleObj = peopleArray.getJSONObject(0);
+                        userOrChannelId = peopleObj.getString("pid");
+                        isGroup = false;
+                    }
+                }
+
+                if (jsonObject.has("channelGroup")) {
+                    JSONArray channelGroupArray = jsonObject
+                            .getJSONArray("channelGroup");
+                    if (channelGroupArray.length() > 0) {
+                        JSONObject cidObj = channelGroupArray.getJSONObject(0);
+                        userOrChannelId = cidObj.getString("cid");
+                        isGroup = true;
+                    }
+                }
+                if (StringUtils.isBlank(userOrChannelId)) {
+                    ToastUtils.show(MyApplication.getInstance(), getString(R.string.baselib_share_fail));
+                } else {
+                    if (isGroup) {
+                        startChannelActivity(userOrChannelId);
+                    } else {
+                        createDirectChannel(userOrChannelId);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                ToastUtils.show(MyApplication.getInstance(), getString(R.string.baselib_share_fail));
+            }
+        }
+
+    }
+
+    /**
+     * 打开channel
+     */
+    private void startChannelActivity(String cid) {
+        Bundle bundle = new Bundle();
+        bundle.putString("cid", cid);
+        bundle.putString("share_type", "file");
+        bundle.putString("path", currentDirAbsolutePath); //currentDirAbsolutePath
+        bundle.putSerializable("share_obj_form_volume", (Serializable) shareToVolumeFile);
+        IntentUtils.startActivity(this, ConversationActivity.class, bundle, true);
+    }
+
+    /**
+     * 创建单聊
+     *
+     * @param uid
+     */
+    private void createDirectChannel(String uid) {
+        if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
+            new ConversationCreateUtils().createDirectConversation(this, uid,
+                    new ConversationCreateUtils.OnCreateDirectConversationListener() {
+                        @Override
+                        public void createDirectConversationSuccess(Conversation conversation) {
+                            startChannelActivity(conversation.getId());
+                        }
+
+                        @Override
+                        public void createDirectConversationFail() {
+
+                        }
+                    });
+        } else {
+            new ChatCreateUtils().createDirectChannel(this, uid,
+                    new ChatCreateUtils.OnCreateDirectChannelListener() {
+                        @Override
+                        public void createDirectChannelSuccess(GetCreateSingleChannelResult getCreateSingleChannelResult) {
+                            startChannelActivity(getCreateSingleChannelResult.getCid());
+                        }
+
+                        @Override
+                        public void createDirectChannelFail() {
+                        }
+                    });
         }
 
     }

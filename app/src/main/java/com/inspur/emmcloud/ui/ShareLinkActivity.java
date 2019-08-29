@@ -4,35 +4,28 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
-import com.inspur.emmcloud.baselib.widget.dialogs.MyDialog;
 import com.inspur.emmcloud.basemodule.config.Constant;
-import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
-import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
-import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
+import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
-import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -131,6 +124,10 @@ public class ShareLinkActivity extends BaseActivity {
         intent.putExtra("isMulti_select", false);
         intent.putExtra("isContainMe", true);
         intent.putExtra("title", getString(R.string.baselib_share_to));
+        String title = JSONUtils.getString(shareLink, "title", shareLink);
+        title = getString(R.string.baselib_share_link) + title;
+        intent.putExtra(ContactSearchFragment.EXTRA_SHOW_COMFIRM_DIALOG_WITH_MESSAGE, title);
+        intent.putExtra(ContactSearchFragment.EXTRA_SHOW_COMFIRM_DIALOG, true);
         intent.setClass(getApplicationContext(),
                 ContactSearchActivity.class);
         startActivityForResult(intent, SHARE_LINK);
@@ -171,8 +168,11 @@ public class ShareLinkActivity extends BaseActivity {
                         //startChannelActivity(cid);
                     }
                 }
-
-                showSendSureDialog(userOrGroupId, isGroup);
+                if (isGroup) {
+                    startChannelActivity(userOrGroupId);
+                } else {
+                    createDirectChannel(userOrGroupId);
+                }
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -183,59 +183,6 @@ public class ShareLinkActivity extends BaseActivity {
             finish();
         }
     }
-
-
-    /**
-     * 弹出分享确认框
-     */
-    private void showSendSureDialog(final String uid, final boolean isGroup) {
-        final MyDialog dialog = new MyDialog(this,
-                R.layout.chat_out_share_sure_dialog);
-        Button okBtn = dialog.findViewById(R.id.ok_btn);
-        ImageView userHeadImage = dialog.findViewById(R.id.iv_share_user_head);
-        TextView fileNameText = dialog.findViewById(R.id.tv_share_file_name);
-        TextView userNameText = dialog.findViewById(R.id.tv_share_user_name);
-        String contactName = "";
-        String headPath = "";
-        if (isGroup) {
-            Conversation conversation = ConversationCacheUtils.getConversation(this, uid);
-            contactName = conversation.getName();
-            headPath = MyAppConfig.LOCAL_CACHE_PHOTO_PATH + "/" + MyApplication.getInstance().getTanent() + uid + "_100.png1";
-        } else {
-            ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(uid);
-            contactName = contactUser.getName();
-            headPath = APIUri.getChannelImgUrl(MyApplication.getInstance(), uid);
-        }
-        ImageDisplayUtils.getInstance().displayRoundedImage(userHeadImage, headPath, R.drawable.icon_person_default, this, 32);
-        okBtn.setText(getString(R.string.ok));
-        userNameText.setText(contactName);
-        String title = JSONUtils.getString(shareLink, "title", shareLink);
-        title = getString(R.string.baselib_share_link) + title;
-        fileNameText.setText(title);
-        okBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-                if (isGroup) {
-                    startChannelActivity(uid);
-                } else {
-                    createDirectChannel(uid);
-                }
-
-            }
-        });
-        Button cancelBt = dialog.findViewById(R.id.cancel_btn);
-        cancelBt.setText(getString(R.string.cancel));
-        cancelBt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-
-            }
-        });
-        dialog.show();
-    }
-
 
     /**
      * 创建单聊
