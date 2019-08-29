@@ -338,28 +338,29 @@ final class LunarCalendar {
             emmCalendar.setLeapMonth(lunar[1]);
             lunarEmmCalendar.setLeapMonth(lunar[1]);
         }
-        String solarTerm = LunarCalendar.getSolarTerm(year, month, day);
-        String gregorian = LunarCalendar.gregorianFestival(month, day);
-        String festival = getTraditionFestival(lunar[0], lunar[1], lunar[2]);
+//        String solarTerm = LunarCalendar.getSolarTerm(year, month, day);
+//        String gregorian = LunarCalendar.gregorianFestival(month, day);
+//        String festival = getTraditionFestival(lunar[0], lunar[1], lunar[2]);
         String lunarText = LunarCalendar.numToChinese(lunar[1], lunar[2], lunar[3]);
-        if (TextUtils.isEmpty(gregorian)) {
-            gregorian = getSpecialFestival(year, month, day);
-        }
-        emmCalendar.setSolarTerm(solarTerm);
-        emmCalendar.setGregorianFestival(gregorian);
-        emmCalendar.setTraditionFestival(festival);
-        lunarEmmCalendar.setTraditionFestival(festival);
-        lunarEmmCalendar.setSolarTerm(solarTerm);
+//        if (TextUtils.isEmpty(gregorian)) {
+//            gregorian = getSpecialFestival(year, month, day);
+//        }
+//        emmCalendar.setSolarTerm(solarTerm);
+//        emmCalendar.setGregorianFestival(gregorian);
+//        emmCalendar.setTraditionFestival(festival);
+//        lunarEmmCalendar.setTraditionFestival(festival);
+//        lunarEmmCalendar.setSolarTerm(solarTerm);
         //jason修改处：以公历节日优先级最高
-        if (!TextUtils.isEmpty(gregorian)) {
-            emmCalendar.setLunar(gregorian);
-        } else if (!TextUtils.isEmpty(solarTerm)) {
-            emmCalendar.setLunar(solarTerm);
-        } else if (!TextUtils.isEmpty(festival)) {
-            emmCalendar.setLunar(festival);
-        } else {
-            emmCalendar.setLunar(lunarText);
-        }
+//        if (!TextUtils.isEmpty(gregorian)) {
+//            emmCalendar.setLunar(gregorian);
+//        } else if (!TextUtils.isEmpty(solarTerm)) {
+//            emmCalendar.setLunar(solarTerm);
+//        } else if (!TextUtils.isEmpty(festival)) {
+//            emmCalendar.setLunar(festival);
+//        } else {
+//            emmCalendar.setLunar(lunarText);
+//        }
+        emmCalendar.setLunar(lunarText);
         lunarEmmCalendar.setLunar(lunarText);
     }
 
