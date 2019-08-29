@@ -1217,6 +1217,10 @@
     <string name="face_login">刷脸登录</string>
     <string name="off_face_verify_relogin">关闭刷脸，重新登录</string>
     <string name="face_verifying">验证中</string>
+    <string name="finger_print_times_use_up">您的识别次数用尽，请尝试手势解锁，或者一段时间后重试</string>
+    <string name="finger_print_try_times">指纹认证失败，您还可以尝试%1$d次</string>
+    <string name="finger_print_id">%1$s的触控ID</string>
+    <string name="finger_print_by_finger_print">通过指纹验证解锁%1$s</string>
 
     <!--九宫格-->
     <!-- Gesture login activity -->

@@ -21,6 +21,8 @@ public class FilePathUtils {
         if (filePath.startsWith(SDCARD_PREFIX)) {
             String path = filePath.replace(SDCARD_PREFIX, "");
             return path;
+        } else if (filePath.startsWith("http")) {
+            return filePath;
         } else {
             return filePath.startsWith("/") ? (BASE_PATH + filePath) : (BASE_PATH + "/" + filePath);
         }
