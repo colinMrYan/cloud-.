@@ -1113,7 +1113,7 @@ public class MyAppFragment extends BaseFragment {
         @Override
         protected void onPostExecute(List<AppGroupBean> appGroupList) {
             super.onPostExecute(appGroupList);
-            if (MyAppCacheUtils.getMyAppListFromNet(getActivity()).size() > 0) {
+            if (MyAppCacheUtils.getMyAppListFromNet(MyApplication.getInstance()).size() > 0) {
                 new AppBadgeUtils(MyApplication.getInstance()).getAppBadgeCountFromServer();
             }
             appListAdapter.setAppAdapterList(appGroupList);
