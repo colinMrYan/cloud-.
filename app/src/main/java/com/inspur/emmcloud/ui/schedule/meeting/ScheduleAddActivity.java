@@ -217,8 +217,10 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
         schedule.setAllDay(b);
         timeTextChangeByIsAllDay(b);
         remindEvent = new RemindEvent();
-        remindEvent.setName(ScheduleAlertTimeActivity.getAlertTimeNameByTime(remindEvent.getAdvanceTimeSpan(), schedule.getAllDay()));
-        reminderText.setText(ScheduleAlertTimeActivity.getAlertTimeNameByTime(remindEvent.getAdvanceTimeSpan(), schedule.getAllDay()));//设置提醒
+        int data = b ? -32400 : 600;
+        remindEvent.setAdvanceTimeSpan(data);
+        remindEvent.setName(ScheduleAlertTimeActivity.getAlertTimeNameByTime(data, b));
+        reminderText.setText(ScheduleAlertTimeActivity.getAlertTimeNameByTime(data, b));//设置提醒
     }
 
     /**

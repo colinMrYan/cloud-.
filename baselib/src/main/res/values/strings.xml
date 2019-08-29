@@ -384,7 +384,7 @@
     <string name="schedule_setting_view">视图</string>
     <string name="schedule_calendar_input_content_hint">请输入日程内容...</string>
     <string name="schedule_calendar_time_alert">结束时间应该晚于起始时间</string>
-    <string name="schedule_alert_time_occur">日程当天(上午9点)</string>
+    <string name="schedule_alert_time_occur">当天(上午9点)</string>
     <string name="schedule_alert_time_before_one_day">1天前(上午9点)</string>
     <string name="schedule_alert_time_before_two_day">2天前(上午9点)</string>
     <string name="schedule_alert_time_before_a_week">一周前(上午9点)</string>
