@@ -1829,16 +1829,26 @@ public class ConversationActivity extends ConversationBaseActivity {
      */
     private void shareMessageToFriends(Context context, UIMessage uiMessage) {
         Intent intent = new Intent();
-        intent.putExtra(ContactSearchFragment.EXTRA_TYPE, 0);
-        intent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, false);
         JSONObject jsonObject = JSONUtils.getJSONObject(uiMessage.getMessage().getContent());
-        String name = "";
+        String result = "";
         try {
-            name = jsonObject.getString("name");
+            switch (uiMessage.getMessage().getType()) {
+                case Message.MESSAGE_TYPE_MEDIA_IMAGE:
+                    result = getString(R.string.baselib_share_image) + " " + jsonObject.getString("name");
+                    break;
+                case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
+                    result = getString(R.string.baselib_share_file) + " " + jsonObject.getString("name");
+                    break;
+                case Message.MESSAGE_TYPE_TEXT_PLAIN:
+                    result = jsonObject.getString("text");
+                    break;
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        intent.putExtra(ContactSearchFragment.EXTRA_SHOW_COMFIRM_DIALOG_WITH_MESSAGE, StringUtils.isBlank(name) ? "" : name);
+        intent.putExtra(ContactSearchFragment.EXTRA_TYPE, 0);
+        intent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, false);
+        intent.putExtra(ContactSearchFragment.EXTRA_SHOW_COMFIRM_DIALOG_WITH_MESSAGE, StringUtils.isBlank(result) ? "" : result);
         intent.putExtra(ContactSearchFragment.EXTRA_SHOW_COMFIRM_DIALOG, true);
         ArrayList<String> uidList = new ArrayList<>();
         uidList.add(MyApplication.getInstance().getUid());
