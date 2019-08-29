@@ -6,22 +6,18 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.SwitchCompat;
-import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -65,8 +61,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 import butterknife.BindView;
@@ -370,33 +364,6 @@ public class SettingActivity extends BaseActivity {
             case R.id.rl_setting_self_start: //TODO zyj
 //                UriUtils.openUrl(this, "http://www.baidu.com");
 //                ARouter.getInstance().build("/meeting/history").navigation();
-                ARouter.getInstance().build("/web/VideoActivity").navigation();
-//                if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-//                    PermissionRequestManagerUtils.getInstance().requestRuntimePermission(this, Permissions.CAMERA,
-//                            new PermissionRequestCallback() {
-//                                @Override
-//                                public void onPermissionRequestSuccess(List<String> permissions) {
-//                                    Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-//                                    try {
-//                                        fileUri = FileProvider.getUriForFile(SettingActivity.this,
-//                                                getApplicationContext().getPackageName() + ".provider", createMediaFile());//这是正确的写法
-//
-//                                    } catch (IOException e) {
-//                                        e.printStackTrace();
-//                                    }
-//                                    intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-//                                    intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-//                                    intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 15);
-//                                    startActivityForResult(intent, 1);
-//                                }
-//
-//                                @Override
-//                                public void onPermissionRequestFail(List<String> permissions) {
-//
-//                                }
-//                            });
-//                }
-
                 break;
             case R.id.rl_setting_account_safe:
                 IntentUtils.startActivity(SettingActivity.this, SafeCenterActivity.class);
@@ -415,42 +382,6 @@ public class SettingActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1) {
-            if (resultCode == RESULT_OK) {
-                Toast.makeText(this, "Video saved to:\n" +
-                        data.getData(), Toast.LENGTH_LONG).show();
-                Log.d("zhang", "onActivityResult: url = " + data.getData());
-                Intent intent = new Intent();
-                intent.setData(data.getData());
-//                startActivity(intent);
-            }
-        }
-    }
-
-    private File createMediaFile() throws IOException {
-        if (AppUtils.isHasSDCard(this)) {
-            if ((Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))) {
-                // 选择自己的文件夹
-                String path = Environment.getExternalStorageDirectory().getPath() + "/myvideo/";
-                // Constants.video_url 是一个常量，代表存放视频的文件夹
-                File mediaStorageDir = new File(path);
-                if (!mediaStorageDir.exists()) {
-                    if (!mediaStorageDir.mkdirs()) {
-                        Log.e("TAG", "文件夹创建失败");
-                        return null;
-                    }
-                }
-
-                // 文件根据当前的毫秒数给自己命名
-                String timeStamp = String.valueOf(System.currentTimeMillis());
-                timeStamp = timeStamp.substring(7);
-                String imageFileName = "V" + timeStamp;
-                String suffix = ".mp4";
-                File mediaFile = new File(mediaStorageDir + File.separator + imageFileName + suffix);
-                return mediaFile;
-            }
-        }
-        return null;
     }
 
     /**

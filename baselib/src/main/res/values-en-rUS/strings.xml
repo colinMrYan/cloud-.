@@ -1175,6 +1175,10 @@
     <string name="face_login">Face Login</string>
     <string name="off_face_verify_relogin">Turn Off it and relogin </string>
     <string name="face_verifying">Verifying</string>
+    <string name="finger_print_times_use_up">Your recognition times are exhausted. Please try gesture unlocking or try again after a period of time.</string>
+    <string name="finger_print_try_times">If fingerprint authentication fails, you can also try %1$d</string>
+    <string name="finger_print_id">%1$s Touch ID</string>
+    <string name="finger_print_by_finger_print">Unlock %1$s by touch ID</string>
 
     <!--九宫格-->
     <!-- Gesture login activity -->
