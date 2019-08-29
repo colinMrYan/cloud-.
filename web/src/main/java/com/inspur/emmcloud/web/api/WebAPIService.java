@@ -12,6 +12,8 @@ import com.inspur.emmcloud.componentservice.login.OauthCallBack;
 import com.inspur.emmcloud.web.bean.AppRedirectResult;
 
 import org.xutils.http.RequestParams;
+import org.xutils.http.app.RedirectHandler;
+import org.xutils.http.request.UriRequest;
 
 /**
  * Created by chenmch on 2019/6/14.
@@ -74,5 +76,47 @@ public class WebAPIService {
             LoginService service = router.getService(LoginService.class);
             service.refreshToken(oauthCallBack, requestTime);
         }
+    }
+
+
+    public void webHttpGet(final String requestUrl) {
+        RequestParams params = new RequestParams(requestUrl);
+        params.setRedirectHandler(new RedirectHandler() {
+            @Override
+            public RequestParams getRedirectParams(UriRequest uriRequest) throws Throwable {
+                String locationUrl = uriRequest.getResponseHeader("Location");
+                RequestParams params = BaseApplication.getInstance().getHttpRequestParams(locationUrl);
+                return params;
+            }
+        });
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, requestUrl) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnWebHttpGetSuccess((new String(arg0)));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnWebHttpGetFail(error, responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        webHttpGet(requestUrl);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+        });
     }
 }

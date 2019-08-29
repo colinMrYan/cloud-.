@@ -16,4 +16,14 @@ public class WebAPIInterfaceImpl implements WebAPIInterface {
     public void returnGetAppAuthCodeResultFail(String error, int errorCode) {
 
     }
+
+    @Override
+    public void returnWebHttpGetSuccess(String result) {
+
+    }
+
+    @Override
+    public void returnWebHttpGetFail(String error, int errorCode) {
+
+    }
 }
