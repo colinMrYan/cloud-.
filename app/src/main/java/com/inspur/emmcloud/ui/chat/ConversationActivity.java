@@ -1843,7 +1843,10 @@ public class ConversationActivity extends ConversationBaseActivity {
                     result = getString(R.string.baselib_share_file) + " " + jsonObject.getString("name");
                     break;
                 case Message.MESSAGE_TYPE_TEXT_PLAIN:
-                    result = jsonObject.getString("text");
+                    String text = uiMessage.getMessage().getMsgContentTextPlain().getText();
+                    SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(MyApplication.getInstance(), text,
+                            uiMessage.getMessage().getMsgContentTextPlain().getMentionsMap());
+                    result = spannableString.toString();
                     break;
             }
         } catch (JSONException e) {
