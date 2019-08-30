@@ -73,6 +73,7 @@
     <string name="upgrade_later">Skip</string>
     <string name="upgrade_install_now">Install</string>
     <string name="upgrade_install_next_time">Next Time</string>
+    <string name="try_again">Try Again</string>
 
     <!-- 公共部分 -->
     <string name="year">Year</string>

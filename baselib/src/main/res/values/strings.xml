@@ -80,6 +80,7 @@
     <string name="upgrade_install_next_time">下次安装</string>
     <string name="file_open_by_other_app">用其他应用打开</string>
     <string name="file_open_by_other_app_tips">%1$s暂时不能打开该文件请使用其他应用打开</string>
+    <string name="try_again">再试一次</string>
 
     <!-- 公共部分 -->
     <string name="year">年</string>
