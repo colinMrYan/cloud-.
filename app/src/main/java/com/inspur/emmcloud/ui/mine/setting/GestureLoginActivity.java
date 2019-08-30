@@ -61,6 +61,7 @@ public class GestureLoginActivity extends BaseActivity {
     private int errorTime = 0;
     private FingerprintIdentify cloudFingerprintIdentify;
     private MyDialog myDialog;
+    private TextView titleTextView;
     private LockPatternView.OnPatternListener patternListener = new LockPatternView.OnPatternListener() {
 
         @Override
@@ -166,7 +167,8 @@ public class GestureLoginActivity extends BaseActivity {
     private void showFingerPrintDialog() {
         myDialog = new MyDialog(GestureLoginActivity.this, R.layout.safe_finger_print_dialog);
         myDialog.setCancelable(false);
-        ((TextView) myDialog.findViewById(R.id.tv_touch_id)).setText(getString(R.string.finger_print_id, AppUtils.getAppName(this)));
+        titleTextView = myDialog.findViewById(R.id.tv_touch_id);
+        titleTextView.setText(getString(R.string.finger_print_id, AppUtils.getAppName(this)));
         ((TextView) myDialog.findViewById(R.id.tv_unlock_by_touch_id)).setText(getString(R.string.finger_print_by_finger_print, AppUtils.getAppName(this)));
         TextView cancelBtn = myDialog.findViewById(R.id.tv_finger_print_cancel);
         cancelBtn.setOnClickListener(new View.OnClickListener() {
@@ -200,7 +202,12 @@ public class GestureLoginActivity extends BaseActivity {
             @Override
             public void onNotMatch(int availableTimes) {
                 // 指纹不匹配，并返回可用剩余次数并自动继续验证
-                ToastUtils.show(GestureLoginActivity.this, getString(R.string.finger_print_try_times, availableTimes));
+//                ToastUtils.show(GestureLoginActivity.this, getString(R.string.finger_print_try_times, availableTimes));
+                if (titleTextView != null) {
+                    titleTextView.setText(R.string.try_again);
+                    Animation shake = AnimationUtils.loadAnimation(GestureLoginActivity.this, R.anim.left_right_shake);
+                    titleTextView.startAnimation(shake);
+                }
             }
 
             @Override
@@ -209,16 +216,30 @@ public class GestureLoginActivity extends BaseActivity {
                 // 错误次数达到上限或者API报错停止了验证，自动结束指纹识别
                 // isDeviceLocked 表示指纹硬件是否被暂时锁定
                 // 通常情况错误五次后会锁定三十秒，不同硬件也不一定完全如此，有资料介绍有的硬件也会锁定长达两分钟
+                reLayout();
             }
 
             @Override
             public void onStartFailedByDeviceLocked() {
                 dismisDialog();
                 // 第一次调用startIdentify失败，因为设备被暂时锁定
+                reLayout();
             }
-
         });
         showFingerPrintDialog();
+    }
+
+    /**
+     * 重新布局，如果指纹调用到达上限或者指纹当前不可用则隐藏指纹选项，并弹出提示
+     */
+    private void reLayout() {
+        ToastUtils.show(GestureLoginActivity.this, getString(R.string.finger_print_times_use_up));
+        fingerPrintBtn.setVisibility(View.GONE);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        layoutParams.topMargin = DensityUtil.dip2px(56);
+        forgetGestureBtn.setPadding(DensityUtil.dip2px(20), DensityUtil.dip2px(20), DensityUtil.dip2px(20), DensityUtil.dip2px(20));
+        forgetGestureBtn.setLayoutParams(layoutParams);
     }
 
     /**
@@ -228,7 +249,7 @@ public class GestureLoginActivity extends BaseActivity {
         if (myDialog != null && myDialog.isShowing()) {
             myDialog.dismiss();
         }
-        ToastUtils.show(GestureLoginActivity.this, getString(R.string.finger_print_times_use_up));
+//        ToastUtils.show(GestureLoginActivity.this, getString(R.string.finger_print_times_use_up));
     }
 
     /**
@@ -340,8 +361,19 @@ public class GestureLoginActivity extends BaseActivity {
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        if (cloudFingerprintIdentify != null) {
+            cloudFingerprintIdentify.cancelIdentify();
+        }
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (cloudFingerprintIdentify != null) {
+            cloudFingerprintIdentify.cancelIdentify();
+        }
         EventBus.getDefault().unregister(this);
     }
 

@@ -79,6 +79,7 @@
     <string name="upgrade_later">稍後再說</string>
     <string name="upgrade_install_now">立即安裝</string>
     <string name="upgrade_install_next_time">下次安裝</string>
+    <string name="try_again">再試一次</string>
 
 
     <!-- 公共部分 -->
@@ -1217,6 +1218,7 @@
 
     <string name="volume_read_write_permission">擁有上傳/查看許可權</string>
     <string name="volume_read_permission">擁有查看許可權</string>
+    <string name="volume_no_permission">无許可權</string>
 
     <string name="cluster_no_permission">當前功能缺少有效的授權資訊。</string>
 
