@@ -79,6 +79,7 @@
     <string name="upgrade_later">稍後再說</string>
     <string name="upgrade_install_now">立即安裝</string>
     <string name="upgrade_install_next_time">下次安裝</string>
+    <string name="try_again">再試一次</string>
 
 
     <!-- 公共部分 -->
@@ -383,12 +384,12 @@
     <string name="schedule_setting_view">視圖</string>
     <string name="schedule_calendar_input_content_hint">請輸入日程內容...</string>
     <string name="schedule_calendar_time_alert">結束時間不能早於起始時間</string>
-    <string name="schedule_alert_time_occur">日程當天（上午9點）</string>
+    <string name="schedule_alert_time_occur">當天（上午9點）</string>
     <string name="schedule_alert_time_before_one_day">1天前(上午9點)</string>
     <string name="schedule_alert_time_before_two_day">2天前(上午9點)</string>
     <string name="schedule_alert_time_before_a_week">一周前(上午9點)</string>
-    <string name="schedule_calendar_modify">修改日程</string>
-    <string name="schedule_calendar_delete">刪除日程</string>
+    <string name="schedule_calendar_modify">變更日程</string>
+    <string name="schedule_calendar_delete">取消日程</string>
     <string name="schedule_calendar_create">新建日程</string>
     <string name="schedule_calendar_my_schedule">日程</string>
     <string name="schedule_calendar_my_meeting">會議</string>
@@ -398,9 +399,9 @@
     <string name="schedule_calendar_pm">下午</string>
     <string name="schedule_calendar_so_on"> 等</string>
     <string name="schedule_calendar_schedules">項工程</string>
-    <string name="schedule_calendar_no_schedule_today">暫無日程安排</string>
-    <string name="schedule_meeting_no_meeting_today">暂无會議安排</string>
-    <string name="schedule_task_no_task_today">暂无任務安排</string>
+    <string name="schedule_calendar_no_schedule_today">暫無日程</string>
+    <string name="schedule_meeting_no_meeting_today">暂无會議</string>
+    <string name="schedule_task_no_task_today">暂无任務</string>
     <string name="schedule_click_to_add_schedule">再次點擊新建日程</string>
     <string name="schedule_exchange_login_fail">%1$s 密碼已更改，請到日程設置中更新</string>
     <string name="schedule_account_type">賬戶</string>
@@ -441,7 +442,7 @@
     <string name="schedule_meeting_add_attendee_title">參与人</string>
     <string name="schedule_meeting_add_record_holder_title">會議記錄人</string>
     <string name="schedule_meeting_add_conference_title">會議聯絡人</string>
-    <string name="schedule_meeting_select_attendee_title">選擇參會人</string>
+    <string name="schedule_meeting_select_attendee_title">選擇參與人</string>
     <string name="schedule_meeting_select_record_holder_title">選擇會議記錄人</string>
     <string name="schedule_meeting_select_conference_title">選擇會議聯絡人</string>
     <string name="schedule_meeting_add_note">備註</string>
@@ -793,7 +794,7 @@
     <string name="schedule_meeting_topic">會議主題</string>
     <string name="schedule_title">日期主題</string>
     <string name="meeting_room_booking_detail">會議室詳情</string>
-    <string name="meeting_room_booking_topic">請輸入會議主題</string>
+    <string name="meeting_room_booking_topic">請輸入主題</string>
     <string name="meeting_room_booking_choosing_room">請選擇會議室</string>
     <string name="meeting_room_booking_members_edit">請添加參會人員</string>
     <string name="meeting_room_booking_log_edit">請添加會務人員</string>
@@ -1217,6 +1218,7 @@
 
     <string name="volume_read_write_permission">擁有上傳/查看許可權</string>
     <string name="volume_read_permission">擁有查看許可權</string>
+    <string name="volume_no_permission">无許可權</string>
 
     <string name="cluster_no_permission">當前功能缺少有效的授權資訊。</string>
 

@@ -136,7 +136,7 @@ public class DateTimePickerDialog {
      */
     public void showDatePickerDialog(Boolean isAllday, Calendar orgCalendar) {
         mTag = 1;
-        resultCalendar = orgCalendar;
+        resultCalendar = (Calendar) orgCalendar.clone();
         View view = initDatePicker(isAllday);
         alertDialog = new AlertDialog.Builder(context, R.style.DateTimeAlertDialog);
         initDialog(view);
