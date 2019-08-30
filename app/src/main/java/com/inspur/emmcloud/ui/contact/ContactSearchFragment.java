@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -36,6 +37,7 @@ import com.inspur.emmcloud.baselib.widget.FlowLayout;
 import com.inspur.emmcloud.baselib.widget.MaxHightScrollView;
 import com.inspur.emmcloud.baselib.widget.NoHorScrollView;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
+import com.inspur.emmcloud.baselib.widget.dialogs.MyDialog;
 import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
@@ -92,6 +94,8 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
     public static final String EXTRA_HAS_SELECT = "hasSearchResult";
     public static final String EXTRA_EXCLUDE_SELECT = "excludeContactUidList";
     public static final String EXTRA_LIMIT = "select_limit";
+    public static final String EXTRA_SHOW_COMFIRM_DIALOG = "show_sure_dialog";
+    public static final String EXTRA_SHOW_COMFIRM_DIALOG_WITH_MESSAGE = "show_sure_dialog_with_message";
     private static final int SEARCH_ALL = 0;
     private static final int SEARCH_CHANNELGROUP = 1;
     private static final int SEARCH_CONTACT = 2;
@@ -153,6 +157,9 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
     private List<Contact> excludeContactList = new ArrayList<>();//不显示某些数据
     private long lastBackTime;
     private int selectLimit = 5000;
+
+    private boolean isShowConfirmDialog = false;
+    private String sureDialogMessage;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -282,6 +289,14 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                 excludeContactUidList = (List<String>) intent.getExtras().getSerializable(EXTRA_EXCLUDE_SELECT);
                 excludeContactList = Contact.contactUserList2ContactList(ContactUserCacheUtils.getContactUserListById(excludeContactUidList));
 
+            }
+            if (intent.hasExtra(EXTRA_SHOW_COMFIRM_DIALOG)) {
+                isShowConfirmDialog = true;
+            }
+            if ((intent.hasExtra(EXTRA_SHOW_COMFIRM_DIALOG_WITH_MESSAGE))) {
+                sureDialogMessage = intent.getExtras().getString(EXTRA_SHOW_COMFIRM_DIALOG_WITH_MESSAGE);
+            } else {
+                sureDialogMessage = "";
             }
         }
         initSearchArea();
@@ -785,13 +800,59 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        String searchResult = searchResultObj.toString();
-        Intent intent = new Intent();
-        intent.putExtra("searchResult", searchResult);
-        intent.putExtra("selectMemList", (Serializable) selectMemList);
-        getActivity().setResult(RESULT_OK, intent);
-        getActivity().finish();
+        if (isShowConfirmDialog) {
+            String searchResult = searchResultObj.toString();
+            showConfirmDialog(searchResult, selectMemList.get(0), selectMemList.get(0).getType().equals(SearchModel.TYPE_GROUP));
+        } else {
+            String searchResult = searchResultObj.toString();
+            Intent intent = new Intent();
+            intent.putExtra("searchResult", searchResult);
+            intent.putExtra("selectMemList", (Serializable) selectMemList);
+            getActivity().setResult(RESULT_OK, intent);
+            getActivity().finish();
+        }
     }
+
+    /**
+     * 弹出分享确认框
+     */
+    private void showConfirmDialog(final String searchResult, final SearchModel searchModel, final boolean isGroup) {
+        final MyDialog dialog = new MyDialog(getActivity(),
+                R.layout.chat_out_share_sure_dialog);
+        Button okBtn = dialog.findViewById(R.id.ok_btn);
+        CircleTextImageView userHeadImage = dialog.findViewById(R.id.iv_share_user_head);
+        TextView fileNameText = dialog.findViewById(R.id.tv_share_file_name);
+        TextView userNameText = dialog.findViewById(R.id.tv_share_user_name);
+        dialog.setCancelable(false);
+        displayImg(searchModel, userHeadImage);
+        okBtn.setText(getString(R.string.ok));
+        userNameText.setText(searchModel.getName());
+        fileNameText.setText(sureDialogMessage);
+        okBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                Intent intent = new Intent();
+                intent.putExtra("searchResult", searchResult);
+                intent.putExtra("selectMemList", (Serializable) selectMemList);
+                getActivity().setResult(RESULT_OK, intent);
+                getActivity().finish();
+            }
+        });
+        Button cancelBt = dialog.findViewById(R.id.cancel_btn);
+        cancelBt.setText(getString(R.string.cancel));
+        cancelBt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                selectMemList.clear();
+                notifyFlowLayoutDataChange();
+
+            }
+        });
+        dialog.show();
+    }
+
 
     private void initPopView() {
         // TODO Auto-generated method stub

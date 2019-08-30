@@ -10,4 +10,8 @@ public interface WebAPIInterface {
     void returnGetAppAuthCodeResultSuccess(AppRedirectResult appRedirectResult);
 
     void returnGetAppAuthCodeResultFail(String error, int errorCode);
+
+    void returnWebHttpGetSuccess(String result);
+
+    void returnWebHttpGetFail(String error, int errorCode);
 }

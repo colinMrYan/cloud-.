@@ -5,9 +5,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.privates.ninelock.LockPatternIndicator;
 import com.inspur.emmcloud.util.privates.ninelock.LockPatternUtil;
@@ -113,10 +116,21 @@ public class CreateGestureActivity extends BaseActivity {
         PreferencesByUsersUtils.putBoolean(context, GESTURE_CODE_ISOPEN, isGestureCodeOpen);
     }
 
+    /**
+     * 存储用户是否打开指纹识别
+     *
+     * @param context
+     * @param isFingerPrintOpen
+     */
+    public static void putFingerPrint(Context context, boolean isFingerPrintOpen) {
+        PreferencesByUserAndTanentUtils.putBoolean(context, Constant.SAFE_CENTER_FINGER_PRINT, isFingerPrintOpen);
+    }
+
     @Override
     public void onCreate() {
         ButterKnife.bind(this);
         init();
+        ImmersionBar.with(this).statusBarColor(R.color.grey_f6f6f6).statusBarDarkFont(true, 0.2f).init();
     }
 
     @Override

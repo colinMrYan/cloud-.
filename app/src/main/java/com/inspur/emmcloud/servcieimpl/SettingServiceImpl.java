@@ -28,7 +28,7 @@ public class SettingServiceImpl implements SettingService {
             MyApplication.getInstance().startActivity(intent);
         } else if (isSetGestureLock()) {
             Intent intent = new Intent(MyApplication.getInstance(), GestureLoginActivity.class);
-            intent.putExtra("gesture_code_change", "login");
+            intent.putExtra(GestureLoginActivity.GESTURE_CODE_CHANGE, "login");
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             MyApplication.getInstance().startActivity(intent);
         }

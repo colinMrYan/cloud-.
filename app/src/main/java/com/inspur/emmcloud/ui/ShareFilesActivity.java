@@ -7,21 +7,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
-import com.inspur.emmcloud.baselib.widget.dialogs.MyDialog;
 import com.inspur.emmcloud.basemodule.config.Constant;
-import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
@@ -29,7 +24,6 @@ import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
-import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.ui.appcenter.volume.VolumeHomePageActivity;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
@@ -38,13 +32,12 @@ import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.TabAndAppExistUtils;
-import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
-import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
+import com.itheima.roundedimageview.RoundedImageView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -100,6 +93,23 @@ public class ShareFilesActivity extends BaseActivity {
 //            ToastUtils.show(ShareFilesActivity.this, getString(R.string.share_no_more_than_five));
 //            finish();
 //        }
+        if (uriList == null || uriList.size() == 0) {
+            ToastUtils.show(ShareFilesActivity.this, getString(R.string.baselib_share_fail));
+            finish();
+        }
+        if (uriList.size() > SHARE_FILES_LIMIT) {
+            ToastUtils.show(ShareFilesActivity.this, getString(R.string.share_no_more_than_five));
+            finish();
+        }
+        initViews();
+    }
+
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        this.uriList.clear();
+        this.uriList.addAll((List<String>) intent.getSerializableExtra(Constant.SHARE_FILE_URI_LIST));
         if (uriList == null || uriList.size() == 0) {
             ToastUtils.show(ShareFilesActivity.this, getString(R.string.baselib_share_fail));
             finish();
@@ -172,7 +182,6 @@ public class ShareFilesActivity extends BaseActivity {
                 break;
             default:
                 recyclerView.setVisibility(View.VISIBLE);
-                recyclerView.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(MyApplication.getInstance(), 11)));
                 GridLayoutManager gridLayoutManager = new GridLayoutManager(MyApplication.getInstance(), getGridViewColumn());
                 recyclerView.setLayoutManager(gridLayoutManager);
                 if (isImageUriList(uriList)) {
@@ -247,8 +256,16 @@ public class ShareFilesActivity extends BaseActivity {
      */
     private void shareFilesToFriends() {
         Intent intent = new Intent();
+        String firstFileName = "";
+        File file = new File(uriList.get(0));
+        firstFileName = file.getName();
+        String shareManyPictures = getResources().getString(isImageUriList(uriList) ? R.string.baselib_share_many_picture : R.string.baselib_share_many_files, uriList.size());
+        String fileType = isImageUriList(uriList) ? getString(R.string.baselib_share_image) : getString(R.string.baselib_share_file);
+        String detailResult = fileType + " " + firstFileName + (uriList.size() > 1 ? shareManyPictures : "");
         intent.putExtra(ContactSearchFragment.EXTRA_TYPE, 0);
         intent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, false);
+        intent.putExtra(ContactSearchFragment.EXTRA_SHOW_COMFIRM_DIALOG_WITH_MESSAGE, detailResult);
+        intent.putExtra(ContactSearchFragment.EXTRA_SHOW_COMFIRM_DIALOG, true);
         ArrayList<String> uidList = new ArrayList<>();
         uidList.add(MyApplication.getInstance().getUid());
         intent.putStringArrayListExtra(ContactSearchFragment.EXTRA_EXCLUDE_SELECT, uidList);
@@ -289,70 +306,17 @@ public class ShareFilesActivity extends BaseActivity {
                 if (StringUtils.isBlank(userOrChannelId)) {
                     ToastUtils.show(MyApplication.getInstance(), getString(R.string.baselib_share_fail));
                 } else {
-                    showSendSureDialog(userOrChannelId, isGroup);
+                    if (isGroup) {
+                        startChannelActivity(userOrChannelId);
+                    } else {
+                        createDirectChannel(userOrChannelId);
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 ToastUtils.show(MyApplication.getInstance(), getString(R.string.baselib_share_fail));
             }
         }
-    }
-
-    /**
-     * 弹出分享确认框
-     */
-    private void showSendSureDialog(final String uid, final boolean isGroup) {
-        final MyDialog dialog = new MyDialog(this,
-                R.layout.chat_out_share_sure_dialog);
-        Button okBtn = dialog.findViewById(R.id.ok_btn);
-        ImageView userHeadImage = dialog.findViewById(R.id.iv_share_user_head);
-        TextView fileNameText = dialog.findViewById(R.id.tv_share_file_name);
-        TextView userNameText = dialog.findViewById(R.id.tv_share_user_name);
-        String contactName = "";
-        String headPath = "";
-        if (isGroup) {
-            Conversation conversation = ConversationCacheUtils.getConversation(this, uid);
-            contactName = conversation.getName();
-            headPath = MyAppConfig.LOCAL_CACHE_PHOTO_PATH + "/" + MyApplication.getInstance().getTanent() + uid + "_100.png1";
-        } else {
-            ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(uid);
-            contactName = contactUser.getName();
-            headPath = APIUri.getChannelImgUrl(MyApplication.getInstance(), uid);
-        }
-        ImageDisplayUtils.getInstance().displayRoundedImage(userHeadImage, headPath, R.drawable.icon_person_default, ShareFilesActivity.this, 32);
-        okBtn.setText(getString(R.string.ok));
-        userNameText.setText(contactName);
-        String firstFileName = "";
-        if (uriList.get(0).contains("/")) {
-            firstFileName = uriList.get(0).substring((uriList.get(0).lastIndexOf("/")) + 1, uriList.get(0).length());
-        } else {
-            firstFileName = uriList.get(0);
-        }
-        String shareManyPictures = getResources().getString(isImageUriList(uriList) ? R.string.baselib_share_many_picture : R.string.baselib_share_many_files, uriList.size());
-        String fileType = isImageUriList(uriList) ? getString(R.string.baselib_share_image) : getString(R.string.baselib_share_file);
-        fileNameText.setText(fileType + firstFileName + (uriList.size() > 1 ? shareManyPictures : ""));
-        okBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-                if (isGroup) {
-                    startChannelActivity(uid);
-                } else {
-                    createDirectChannel(uid);
-                }
-
-            }
-        });
-        Button cancelBt = dialog.findViewById(R.id.cancel_btn);
-        cancelBt.setText(getString(R.string.cancel));
-        cancelBt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-
-            }
-        });
-        dialog.show();
     }
 
     /**
@@ -402,6 +366,18 @@ public class ShareFilesActivity extends BaseActivity {
 
     }
 
+    private String getFileIcon(String filePath) {
+        String iconPath = "";
+        int iconId = FileUtils.getRegularFileIconResId(filePath);
+        if (iconId == R.drawable.ic_volume_file_typ_img) {
+            iconPath = filePath;
+        } else {
+            iconPath = "drawable://" + iconId;
+        }
+        return iconPath;
+    }
+
+
     /**
      * 多图片适配器*/
     class ShareImagesAdapter extends RecyclerView.Adapter<FileHolder> {
@@ -421,7 +397,7 @@ public class ShareFilesActivity extends BaseActivity {
 
         @Override
         public void onBindViewHolder(FileHolder holder, int position) {
-            ImageDisplayUtils.getInstance().displayImage(holder.imageView, uriList.get(position).toString(), R.drawable.default_image);
+            ImageDisplayUtils.getInstance().displayImage(holder.imageView, getFileIcon(uriList.get(position)), R.drawable.default_image);
         }
 
         @Override
@@ -450,13 +426,16 @@ public class ShareFilesActivity extends BaseActivity {
 
         @Override
         public void onBindViewHolder(FileHolder holder, int position) {
-            ImageDisplayUtils.getInstance().displayImage(holder.imageView, "drawable://" + FileUtils.getRegularFileIconResId(uriList.get(position)), R.drawable.default_image);
+            ImageDisplayUtils.getInstance().displayImage(holder.imageView, getFileIcon(uriList.get(position)), R.drawable.default_image);
+            // holder.imageView.setImageResource(R.drawable.default_image);
+            // Bitmap bm = BitmapFactory.decodeFile(path);
+            // image2.setImageBitmap(bm);//不会变形
             String filePath = uriList.get(position);
             if (!StringUtils.isBlank(filePath) && filePath.contains("/")) {
                 String fileName = filePath.substring(filePath.lastIndexOf("/") + 1, filePath.length());
                 holder.textView.setText(fileName);
             } else {
-                holder.textView.setText("未知名称");
+                holder.textView.setText(R.string.no_file);
             }
         }
 
@@ -467,7 +446,7 @@ public class ShareFilesActivity extends BaseActivity {
     }
 
     class FileHolder extends RecyclerView.ViewHolder {
-        private ImageView imageView;
+        private RoundedImageView imageView;
         private TextView textView;
 
         public FileHolder(View itemView) {

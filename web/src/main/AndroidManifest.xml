@@ -22,11 +22,6 @@
             android:supportsRtl="true" />
 
         <activity
-            android:name=".plugin.video.VideoPlayActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait" />
-
-        <activity
             android:name=".plugin.photo.ImageGalleryActivity"
             android:label="@string/app_name"
             android:resizeableActivity="true"

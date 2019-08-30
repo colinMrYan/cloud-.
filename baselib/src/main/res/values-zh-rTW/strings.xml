@@ -383,12 +383,12 @@
     <string name="schedule_setting_view">視圖</string>
     <string name="schedule_calendar_input_content_hint">請輸入日程內容...</string>
     <string name="schedule_calendar_time_alert">結束時間不能早於起始時間</string>
-    <string name="schedule_alert_time_occur">日程當天（上午9點）</string>
+    <string name="schedule_alert_time_occur">當天（上午9點）</string>
     <string name="schedule_alert_time_before_one_day">1天前(上午9點)</string>
     <string name="schedule_alert_time_before_two_day">2天前(上午9點)</string>
     <string name="schedule_alert_time_before_a_week">一周前(上午9點)</string>
-    <string name="schedule_calendar_modify">修改日程</string>
-    <string name="schedule_calendar_delete">刪除日程</string>
+    <string name="schedule_calendar_modify">變更日程</string>
+    <string name="schedule_calendar_delete">取消日程</string>
     <string name="schedule_calendar_create">新建日程</string>
     <string name="schedule_calendar_my_schedule">日程</string>
     <string name="schedule_calendar_my_meeting">會議</string>
@@ -398,9 +398,9 @@
     <string name="schedule_calendar_pm">下午</string>
     <string name="schedule_calendar_so_on"> 等</string>
     <string name="schedule_calendar_schedules">項工程</string>
-    <string name="schedule_calendar_no_schedule_today">暫無日程安排</string>
-    <string name="schedule_meeting_no_meeting_today">暂无會議安排</string>
-    <string name="schedule_task_no_task_today">暂无任務安排</string>
+    <string name="schedule_calendar_no_schedule_today">暫無日程</string>
+    <string name="schedule_meeting_no_meeting_today">暂无會議</string>
+    <string name="schedule_task_no_task_today">暂无任務</string>
     <string name="schedule_click_to_add_schedule">再次點擊新建日程</string>
     <string name="schedule_exchange_login_fail">%1$s 密碼已更改，請到日程設置中更新</string>
     <string name="schedule_account_type">賬戶</string>
@@ -441,7 +441,7 @@
     <string name="schedule_meeting_add_attendee_title">參与人</string>
     <string name="schedule_meeting_add_record_holder_title">會議記錄人</string>
     <string name="schedule_meeting_add_conference_title">會議聯絡人</string>
-    <string name="schedule_meeting_select_attendee_title">選擇參會人</string>
+    <string name="schedule_meeting_select_attendee_title">選擇參與人</string>
     <string name="schedule_meeting_select_record_holder_title">選擇會議記錄人</string>
     <string name="schedule_meeting_select_conference_title">選擇會議聯絡人</string>
     <string name="schedule_meeting_add_note">備註</string>
@@ -793,7 +793,7 @@
     <string name="schedule_meeting_topic">會議主題</string>
     <string name="schedule_title">日期主題</string>
     <string name="meeting_room_booking_detail">會議室詳情</string>
-    <string name="meeting_room_booking_topic">請輸入會議主題</string>
+    <string name="meeting_room_booking_topic">請輸入主題</string>
     <string name="meeting_room_booking_choosing_room">請選擇會議室</string>
     <string name="meeting_room_booking_members_edit">請添加參會人員</string>
     <string name="meeting_room_booking_log_edit">請添加會務人員</string>
@@ -1130,7 +1130,7 @@
     <string name="turn_on_light">開燈</string>
     <string name="turn_off_light">關燈</string>
     <string name="imp_function_error">功能調用錯誤，請檢查應用是否已升級到最新版本</string>
-    <string name="file_select_limit_warning">超過了建議選擇檔案數限制</string>
+    <string name="file_select_limit_warning">最多只能選擇%1$d個檔案</string>
     <string name="select_file">選擇檔案</string>
     <string name="internal_shared_storage">內部儲存設備</string>
 
@@ -1154,11 +1154,14 @@
 
 
     <!--安全中心-->
-    <string name="setting_safe_gesture_face">面容ID、手勢密碼</string>
+    <string name="setting_safe_gesture_face">指紋、手勢密碼</string>
+    <string name="setting_face_unlock">刷臉解鎖設定</string>
+    <string name="setting_safe_face_id_unlock">刷臉解鎖</string>
     <string name="setting_safe_gesture_face_setting">面容ID、手勢密碼設定</string>
     <string name="setting_safe_center">帳號、設備安全</string>
     <string name="safe_center_gesture">手勢密碼</string>
     <string name="safe_center_finger_print">指紋</string>
+    <string name="safe_center_use_finger_print_unlock">指紋解鎖</string>
     <string name="switch_gesture_unlock">手勢解鎖</string>
     <string name="switch_gesture_reset_unlock">重置手勢解鎖</string>
     <string name="put_face_in_frame">請把臉放入框內保持不動</string>
@@ -1173,6 +1176,10 @@
     <string name="face_login">刷臉登錄</string>
     <string name="off_face_verify_relogin">關閉刷臉，重新登錄</string>
     <string name="face_verifying">驗證中</string>
+    <string name="finger_print_times_use_up">您的識別次數用盡，請嘗試手勢解鎖，或者一段時間後重試</string>
+    <string name="finger_print_try_times">指紋認證失敗，您還可以嘗試%1$d次</string>
+    <string name="finger_print_id">%1$s的觸控ID</string>
+    <string name="finger_print_by_finger_print">通過指紋驗證解鎖%1$s</string>
 
     <!--九宮格-->
     <!-- Gesture login activity -->

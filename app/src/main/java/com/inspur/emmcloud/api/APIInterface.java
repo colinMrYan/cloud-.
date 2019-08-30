@@ -803,4 +803,9 @@ public interface APIInterface {
 
     void returnAttendMeetingStatusFail(String error, int errorCode);
 
+    void returnShareFileToFriendsFromVolumeSuccess(String newPath, VolumeFile volumeFile);
+
+    void returnShareFileToFriendsFromVolumeFail(String error, int errorCode);
+
+
 }

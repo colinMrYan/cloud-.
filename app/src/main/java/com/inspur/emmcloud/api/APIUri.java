@@ -1728,5 +1728,7 @@ public class APIUri {
         return "https://api.inspuronline.com/bot/v1/action/trigger/";
     }
 
-
+    public static String getVolumeShareFileUrl(String volume, String channel) {
+        return getUrlBaseVolume() + "/" + volume + "/file/share/channel/" + channel;
+    }
 }
