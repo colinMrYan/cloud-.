@@ -79,7 +79,7 @@ public abstract class BaseApplication extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
         init();
-        LanguageManager.getInstance().setLanguageLocal();
+        onConfigurationChanged(null);
         removeAllSessionCookie();
         myActivityLifecycleCallbacks = new MyActivityLifecycleCallbacks();
         registerActivityLifecycleCallbacks(myActivityLifecycleCallbacks);
@@ -408,19 +408,20 @@ public abstract class BaseApplication extends MultiDexApplication {
         String previousLocal = PreferencesUtils.getString(BaseApplication.getInstance(), Constant.PREF_LANGUAGE_CURRENT_LOCAL, "");
         if (config != null) {
             super.onConfigurationChanged(config);
-            String currentLocal = Resources.getSystem().getConfiguration().locale.toString();
-            if (!previousLocal.equals(currentLocal)) {
-                //清空我的应用统一更新版本信息防止切换语言不刷新列表
-                ClientConfigUpdateUtils.getInstance().clearDbDataConfigWithMyApp();
-            }
+        }
+        String currentLocal = Resources.getSystem().getConfiguration().locale.toString();
+        if (!previousLocal.equals(currentLocal)) {
+            //清空我的应用统一更新版本信息防止切换语言不刷新列表
+            ClientConfigUpdateUtils.getInstance().clearDbDataConfigWithMyApp();
         }
         LanguageManager.getInstance().setLanguageLocal();
     }
 
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(LanguageManager.getInstance().attachBaseContext(newBase));
-    }
+//    @Override
+//    protected void attachBaseContext(Context newBase) {
+//        LogUtils.jasonDebug("attachBaseContext=========================================================");
+//        super.attachBaseContext(LanguageManager.getInstance().attachBaseContext(newBase));
+//    }
 
 
     public MyActivityLifecycleCallbacks getActivityLifecycleCallbacks() {
