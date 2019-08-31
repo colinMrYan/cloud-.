@@ -22,6 +22,7 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ResolutionUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
@@ -257,32 +258,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             finish();
         }
         STATE = state;
-        inviteeLinearLayout.setVisibility(state == INVITEE_LAYOUT_STATE ? View.VISIBLE : View.GONE);
-        inviteMemebersGroupLinearLayout.setVisibility((state == INVITER_LAYOUT_STATE || state == COMMUNICATION_LAYOUT_STATE) ? View.VISIBLE : View.GONE);
-        communicationMembersLinearLayout.setVisibility(state == INVITEE_LAYOUT_STATE ? View.VISIBLE : View.GONE);
-        functionLinearLayout.setVisibility((state == INVITER_LAYOUT_STATE || state == COMMUNICATION_LAYOUT_STATE) ? View.VISIBLE : View.GONE);
-        communicationStateTv.setVisibility((state == INVITER_LAYOUT_STATE || state == COMMUNICATION_LAYOUT_STATE) ? View.VISIBLE : View.GONE);
-        communicationTimeChronometer.setVisibility(state == COMMUNICATION_LAYOUT_STATE ? View.VISIBLE : View.GONE);
-        answerPhoneImg.setVisibility((state == INVITEE_LAYOUT_STATE) ? View.VISIBLE : View.GONE);
-
-        int colorNormal = ContextCompat.getColor(this, R.color.voice_communication_function_default);
-        int colorUnavailiable = ContextCompat.getColor(this, R.color.voice_communication_function_unavailiable_text);
-        excuseImg.setImageResource(state == COMMUNICATION_LAYOUT_STATE ? R.drawable.icon_excuse_unselected : R.drawable.icon_excuse_unavailable);
-        excuseTv.setTextColor(state == COMMUNICATION_LAYOUT_STATE ? colorNormal : colorUnavailiable);
-        excuseImg.setClickable(state == COMMUNICATION_LAYOUT_STATE);
-
-        handsFreeImg.setImageResource(state == COMMUNICATION_LAYOUT_STATE ? R.drawable.icon_hands_free_unselected : R.drawable.icon_hands_free_unavailable);
-        handsFreeTv.setTextColor(state == COMMUNICATION_LAYOUT_STATE ? colorNormal : colorUnavailiable);
-        handsFreeImg.setClickable(state == COMMUNICATION_LAYOUT_STATE);
-
-        muteImg.setImageResource(state == COMMUNICATION_LAYOUT_STATE ? R.drawable.icon_mute_unselcected : R.drawable.icon_mute_unavaiable);
-        muteTv.setTextColor(state == COMMUNICATION_LAYOUT_STATE ? colorNormal : colorUnavailiable);
-        muteImg.setClickable(state == COMMUNICATION_LAYOUT_STATE);
-
-        //启用悬浮窗打开这里
-        packUpImg.setVisibility(state == COMMUNICATION_LAYOUT_STATE ? View.VISIBLE : View.GONE);
-
-        communicationStateTv.setText(state == INVITER_LAYOUT_STATE ? getString(R.string.voice_communication_dialog) : (state == INVITEE_LAYOUT_STATE ? getString(R.string.voice_communication_waitting_answer) : (state == COMMUNICATION_LAYOUT_STATE ? getString(R.string.voice_communicaiton_watting_talking) : "")));
+        changeFunctionState(state);
         if (state == COMMUNICATION_LAYOUT_STATE) {
             if (voiceCommunicationMemberList == null) {
                 return;
@@ -301,6 +277,41 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 voiceCommunicationMemberAdapterSecond.setMemberDataAndRefresh(list2, 2);
             }
         }
+    }
+
+    /**
+     * 修改三个功能键的UI状态
+     *
+     * @param state
+     */
+    private void changeFunctionState(int state) {
+        inviteeLinearLayout.setVisibility(state == INVITEE_LAYOUT_STATE ? View.VISIBLE : View.GONE);
+        inviteMemebersGroupLinearLayout.setVisibility((state == INVITER_LAYOUT_STATE || state == COMMUNICATION_LAYOUT_STATE) ? View.VISIBLE : View.GONE);
+        communicationMembersLinearLayout.setVisibility(state == INVITEE_LAYOUT_STATE ? View.VISIBLE : View.GONE);
+        functionLinearLayout.setVisibility((state == INVITER_LAYOUT_STATE || state == COMMUNICATION_LAYOUT_STATE) ? View.VISIBLE : View.GONE);
+        communicationStateTv.setVisibility((state == INVITER_LAYOUT_STATE || state == COMMUNICATION_LAYOUT_STATE) ? View.VISIBLE : View.GONE);
+        communicationTimeChronometer.setVisibility(state == COMMUNICATION_LAYOUT_STATE ? View.VISIBLE : View.GONE);
+
+        //启用悬浮窗打开这里
+        packUpImg.setVisibility(state == COMMUNICATION_LAYOUT_STATE ? View.VISIBLE : View.GONE);
+        communicationStateTv.setText(state == INVITER_LAYOUT_STATE ? getString(R.string.voice_communication_dialog) :
+                (state == INVITEE_LAYOUT_STATE ? getString(R.string.voice_communication_waitting_answer) :
+                        (state == COMMUNICATION_LAYOUT_STATE ? getString(R.string.voice_communicaiton_watting_talking) : "")));
+        answerPhoneImg.setVisibility((state == INVITEE_LAYOUT_STATE) ? View.VISIBLE : View.GONE);
+        int colorNormal = ContextCompat.getColor(this, R.color.voice_communication_function_default);
+        int colorUnavailiable = ContextCompat.getColor(this, R.color.voice_communication_function_unavailiable_text);
+        excuseImg.setImageResource(state == COMMUNICATION_LAYOUT_STATE ? R.drawable.icon_excuse_unselected : R.drawable.icon_excuse_unavailable);
+        excuseTv.setTextColor(state == COMMUNICATION_LAYOUT_STATE ? colorNormal : colorUnavailiable);
+        excuseImg.setClickable(state == COMMUNICATION_LAYOUT_STATE);
+
+        handsFreeImg.setImageResource(state == COMMUNICATION_LAYOUT_STATE ? R.drawable.icon_hands_free_unselected : R.drawable.icon_hands_free_unavailable);
+        handsFreeTv.setTextColor(state == COMMUNICATION_LAYOUT_STATE ? colorNormal : colorUnavailiable);
+        handsFreeImg.setClickable(state == COMMUNICATION_LAYOUT_STATE);
+
+        muteImg.setImageResource(state == COMMUNICATION_LAYOUT_STATE ? R.drawable.icon_mute_unselcected : R.drawable.icon_mute_unavaiable);
+        muteTv.setTextColor(state == COMMUNICATION_LAYOUT_STATE ? colorNormal : colorUnavailiable);
+        muteImg.setClickable(state == COMMUNICATION_LAYOUT_STATE);
+
         //如果是通话中则“通话中”文字显示一下就不再显示
         communicationStateTv.setText(state == COMMUNICATION_LAYOUT_STATE ? "" : communicationStateTv.getText());
         if (state == INVITER_LAYOUT_STATE || state == INVITEE_LAYOUT_STATE) {
@@ -309,7 +320,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             mediaPlayerManagerUtils.stop();
         }
     }
-
 
     /**
      * 初始化回调
@@ -328,6 +338,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             public void onUserJoined(int uid, int elapsed) {
                 for (int i = 0; i < voiceCommunicationMemberList.size(); i++) {
                     if (voiceCommunicationMemberList.get(i).getAgoraUid() == uid) {
+                        LogUtils.YfcDebug("有人加入了频道");
                         voiceCommunicationMemberList.get(i).setUserState(1);
                     }
                 }
@@ -336,12 +347,14 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            initCommunicationViewsAndMusicByState(COMMUNICATION_LAYOUT_STATE);
+//                            initCommunicationViewsAndMusicByState(COMMUNICATION_LAYOUT_STATE);
+                            changeFunctionState(COMMUNICATION_LAYOUT_STATE);
                             communicationTimeChronometer.setBase(SystemClock.elapsedRealtime());
                             communicationTimeChronometer.start();
                             refreshCommunicationMemberAdapter();
                         }
                     });
+//                    STATE = COMMUNICATION_LAYOUT_STATE;
                 }
             }
 
@@ -526,7 +539,9 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     private void saveCommunicationData() {
         voiceCommunicationUtils.setState(STATE);
         voiceCommunicationUtils.setVoiceCommunicationUserInfoBeanList(voiceCommunicationUserInfoBeanList);
+        LogUtils.YfcDebug("saveCommunicationData voiceCommunicationUserInfoBeanList：" + voiceCommunicationUserInfoBeanList.size());
         voiceCommunicationUtils.setChannelId(channelId);
+        LogUtils.YfcDebug("保存状态时通话人员数量：" + voiceCommunicationMemberList.size());
         voiceCommunicationUtils.setVoiceCommunicationMemberList(voiceCommunicationMemberList);
         voiceCommunicationUtils.setInviteeInfoBean(inviteeInfoBean);
         voiceCommunicationUtils.setUserCount(userCount);
