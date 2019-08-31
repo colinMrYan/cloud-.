@@ -132,7 +132,7 @@ public class Constant {
     public static final String EVENTBUS_TAG_OPEN_WORK_TAB = "tag_open_work_tab";
     public static final String EVENTBUS_TAG_EWS_401 = "tag_ews_401";
     public static final String EVENTBUS_TAG_VOLUME_FILE_SORT_TIME_CHANGED = "volume_file_sort_time_changed";
-
+    public static final String EVENTBUS_TAG_VOLUME_FILE_LOCATION_SELECT_CLOSE = "volume_file_locaiton_select_close";
     public static final String SERVICE_VERSION_CHAT_V0 = "v0";
     public static final String SERVICE_VERSION_CHAT_V1 = "v1";
 
