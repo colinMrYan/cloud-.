@@ -22,7 +22,6 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ResolutionUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
@@ -167,33 +166,29 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         firstRecyclerview.setLayoutManager(layoutManager);
         firstRecyclerview.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this, 8)));
-        LinearLayoutManager layoutManager2 = new LinearLayoutManager(this);
-        layoutManager2.setOrientation(LinearLayoutManager.HORIZONTAL);
-        secondRecyclerview.setLayoutManager(layoutManager2);
-        secondRecyclerview.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this, 8)));
+        firstRecyclerview.setAdapter(voiceCommunicationMemberAdapterFirst);
+        if (voiceCommunicationMemberList != null && voiceCommunicationMemberList.size() > 5) {
+            LinearLayoutManager layoutManager2 = new LinearLayoutManager(this);
+            layoutManager2.setOrientation(LinearLayoutManager.HORIZONTAL);
+            secondRecyclerview.setLayoutManager(layoutManager2);
+            secondRecyclerview.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this, 8)));
+            secondRecyclerview.setAdapter(voiceCommunicationMemberAdapterSecond);
+
+            LinearLayoutManager layoutManagerMembersSecond = new LinearLayoutManager(this);
+            layoutManagerMembersSecond.setOrientation(LinearLayoutManager.HORIZONTAL);
+            communicationMemberSecondRecyclerview.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this, 8)));
+            communicationMemberSecondRecyclerview.setLayoutManager(layoutManagerMembersSecond);
+        }
         LinearLayoutManager layoutManagerMemebersFirst = new LinearLayoutManager(this);
         layoutManagerMemebersFirst.setOrientation(LinearLayoutManager.HORIZONTAL);
         communicationMembersFirstRecyclerview.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this, 8)));
         communicationMembersFirstRecyclerview.setLayoutManager(layoutManagerMemebersFirst);
-        LinearLayoutManager layoutManagerMembersSecond = new LinearLayoutManager(this);
-        layoutManagerMembersSecond.setOrientation(LinearLayoutManager.HORIZONTAL);
-        communicationMemberSecondRecyclerview.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this, 8)));
-        communicationMemberSecondRecyclerview.setLayoutManager(layoutManagerMembersSecond);
+
         initCommunicationViewsAndMusicByState(STATE);
         initFunctionState();
         switch (STATE) {
             case INVITER_LAYOUT_STATE:
-                if (voiceCommunicationUserInfoBeanList.size() <= 5) {
-                    firstRecyclerview.setAdapter(voiceCommunicationMemberAdapterFirst);
-                    voiceCommunicationMemberAdapterFirst.setMemberDataAndRefresh(voiceCommunicationUserInfoBeanList, 1);
-                } else if (voiceCommunicationUserInfoBeanList.size() <= 9) {
-                    List<VoiceCommunicationJoinChannelInfoBean> list1 = voiceCommunicationUserInfoBeanList.subList(0, 5);
-                    List<VoiceCommunicationJoinChannelInfoBean> list2 = voiceCommunicationUserInfoBeanList.subList(5, voiceCommunicationUserInfoBeanList.size());
-                    firstRecyclerview.setAdapter(voiceCommunicationMemberAdapterFirst);
-                    secondRecyclerview.setAdapter(voiceCommunicationMemberAdapterSecond);
-                    voiceCommunicationMemberAdapterFirst.setMemberDataAndRefresh(list1, 1);
-                    voiceCommunicationMemberAdapterSecond.setMemberDataAndRefresh(list2, 2);
-                }
+                refreshCommunicationMemberAdapter();
                 createChannel();
                 break;
             case INVITEE_LAYOUT_STATE:
@@ -259,23 +254,24 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         }
         STATE = state;
         changeFunctionState(state);
-        if (state == COMMUNICATION_LAYOUT_STATE) {
+        if (state == COMMUNICATION_LAYOUT_STATE || state == INVITEE_LAYOUT_STATE || state == INVITER_LAYOUT_STATE) {
             if (voiceCommunicationMemberList == null) {
                 return;
             }
-            if (voiceCommunicationMemberList.size() <= 5) {
-                firstRecyclerview.setAdapter(voiceCommunicationMemberAdapterFirst);
-                voiceCommunicationMemberAdapterFirst.setMemberDataAndRefresh(voiceCommunicationMemberList, 1);
-            } else if (voiceCommunicationMemberList.size() <= 9) {
-                List<VoiceCommunicationJoinChannelInfoBean> list1 = voiceCommunicationMemberList.subList(0, 5);
-                List<VoiceCommunicationJoinChannelInfoBean> list2 = voiceCommunicationMemberList.subList(5, voiceCommunicationMemberList.size());
-                firstRecyclerview.setAdapter(voiceCommunicationMemberAdapterFirst);
-                firstRecyclerview.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this, 12)));
-                secondRecyclerview.setAdapter(voiceCommunicationMemberAdapterSecond);
-                secondRecyclerview.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this, 12)));
-                voiceCommunicationMemberAdapterFirst.setMemberDataAndRefresh(list1, 1);
-                voiceCommunicationMemberAdapterSecond.setMemberDataAndRefresh(list2, 2);
-            }
+            refreshCommunicationMemberAdapter();
+//            if (voiceCommunicationMemberList.size() <= 5) {
+//                firstRecyclerview.setAdapter(voiceCommunicationMemberAdapterFirst);
+//                voiceCommunicationMemberAdapterFirst.setMemberDataAndRefresh(voiceCommunicationMemberList, 1);
+//            } else if (voiceCommunicationMemberList.size() <= 9) {
+//                List<VoiceCommunicationJoinChannelInfoBean> list1 = voiceCommunicationMemberList.subList(0, 5);
+//                List<VoiceCommunicationJoinChannelInfoBean> list2 = voiceCommunicationMemberList.subList(5, voiceCommunicationMemberList.size());
+//                firstRecyclerview.setAdapter(voiceCommunicationMemberAdapterFirst);
+//                firstRecyclerview.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this, 12)));
+//                secondRecyclerview.setAdapter(voiceCommunicationMemberAdapterSecond);
+//                secondRecyclerview.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this, 12)));
+//                voiceCommunicationMemberAdapterFirst.setMemberDataAndRefresh(list1, 1);
+//                voiceCommunicationMemberAdapterSecond.setMemberDataAndRefresh(list2, 2);
+//            }
         }
     }
 
@@ -338,7 +334,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             public void onUserJoined(int uid, int elapsed) {
                 for (int i = 0; i < voiceCommunicationMemberList.size(); i++) {
                     if (voiceCommunicationMemberList.get(i).getAgoraUid() == uid) {
-                        LogUtils.YfcDebug("有人加入了频道");
                         voiceCommunicationMemberList.get(i).setUserState(1);
                     }
                 }
@@ -347,14 +342,13 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-//                            initCommunicationViewsAndMusicByState(COMMUNICATION_LAYOUT_STATE);
+//                            STATE = COMMUNICATION_LAYOUT_STATE;
                             changeFunctionState(COMMUNICATION_LAYOUT_STATE);
                             communicationTimeChronometer.setBase(SystemClock.elapsedRealtime());
                             communicationTimeChronometer.start();
                             refreshCommunicationMemberAdapter();
                         }
                     });
-//                    STATE = COMMUNICATION_LAYOUT_STATE;
                 }
             }
 
@@ -539,9 +533,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     private void saveCommunicationData() {
         voiceCommunicationUtils.setState(STATE);
         voiceCommunicationUtils.setVoiceCommunicationUserInfoBeanList(voiceCommunicationUserInfoBeanList);
-        LogUtils.YfcDebug("saveCommunicationData voiceCommunicationUserInfoBeanList：" + voiceCommunicationUserInfoBeanList.size());
         voiceCommunicationUtils.setChannelId(channelId);
-        LogUtils.YfcDebug("保存状态时通话人员数量：" + voiceCommunicationMemberList.size());
         voiceCommunicationUtils.setVoiceCommunicationMemberList(voiceCommunicationMemberList);
         voiceCommunicationUtils.setInviteeInfoBean(inviteeInfoBean);
         voiceCommunicationUtils.setUserCount(userCount);
@@ -621,7 +613,10 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 voiceCommunicationUtils.joinChannel(voiceCommunicationJoinChannelInfoBean.getToken(),
                         getVoiceCommunicationResult.getChannelId(), voiceCommunicationJoinChannelInfoBean.getUserId(), voiceCommunicationJoinChannelInfoBean.getAgoraUid());
             }
-            voiceCommunicationMemberList.addAll(getVoiceCommunicationResult.getVoiceCommunicationJoinChannelInfoBeanList());
+            if (getIntent().getIntExtra(VOICE_COMMUNICATION_STATE, EXCEPTION_STATE) != COME_BACK_FROM_SERVICE) {
+                voiceCommunicationMemberList.addAll(getVoiceCommunicationResult.getVoiceCommunicationJoinChannelInfoBeanList());
+                refreshCommunicationMemberAdapter();
+            }
         }
 
         @Override
@@ -633,7 +628,10 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         public void returnGetVoiceCommunicationChannelInfoSuccess(GetVoiceCommunicationResult getVoiceCommunicationResult) {
             channelId = getVoiceCommunicationResult.getChannelId();
             setInviterInfo(getVoiceCommunicationResult);
-            voiceCommunicationMemberList.addAll(getVoiceCommunicationResult.getVoiceCommunicationJoinChannelInfoBeanList());
+            if (getIntent().getIntExtra(VOICE_COMMUNICATION_STATE, EXCEPTION_STATE) != COME_BACK_FROM_SERVICE) {
+                voiceCommunicationMemberList.addAll(getVoiceCommunicationResult.getVoiceCommunicationJoinChannelInfoBeanList());
+                refreshCommunicationMemberAdapter();
+            }
             for (int i = 0; i < getVoiceCommunicationResult.getVoiceCommunicationJoinChannelInfoBeanList().size(); i++) {
                 VoiceCommunicationJoinChannelInfoBean voiceCommunicationJoinChannelInfoBean = getVoiceCommunicationResult.getVoiceCommunicationJoinChannelInfoBeanList().get(i);
                 if (voiceCommunicationJoinChannelInfoBean.getUserId().equals(MyApplication.getInstance().getUid())) {
