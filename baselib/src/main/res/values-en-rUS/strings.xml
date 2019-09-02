@@ -1023,7 +1023,7 @@
     <string name="net_diagnosis_title">Network Diagnoses</string>
     <string name="net_diagnosis_hard_link_title">Detect network settings</string>
     <string name="net_diagnosis_wifi_link_title">Detect router</string>
-    <string name="net_diagnosis_dns_link_title">Detect network connectivity</string>
+    <string name="net_diagnosis_dns_link_title">Network Connectivity Detection</string>
     <string name="net_diagnosis_hard_link_conent">Contained Items:Connection status of Wi-Fi,4G,LTE and so on.</string>
     <string name="net_diagnosis_hard_to_fix">Repair</string>
     <string name="net_diagnosis_portal_to_set">Authentication</string>

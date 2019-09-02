@@ -1041,7 +1041,7 @@
     <string name="net_diagnosis_title">网络诊断</string>
     <string name="net_diagnosis_hard_link_title">检测网络设置</string>
     <string name="net_diagnosis_wifi_link_title">检测Wi-Fi路由器状态</string>
-    <string name="net_diagnosis_dns_link_title">检测网络连通性</string>
+    <string name="net_diagnosis_dns_link_title">网络连通性检测</string>
     <string name="net_diagnosis_hard_link_conent">当前检查项目包含：硬件链接是否通畅，是否有链接Wi-Fi、4G、LTE等</string>
     <string name="net_diagnosis_hard_to_fix">去修复</string>
     <string name="net_diagnosis_portal_to_set">去认证</string>

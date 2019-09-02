@@ -513,6 +513,11 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".ui.mine.setting.NetStateCheckingDetailActivity"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.mine.setting.NetHardConnectCheckActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"

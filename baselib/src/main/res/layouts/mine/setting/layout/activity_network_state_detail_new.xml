@@ -76,7 +76,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true"
                     android:layout_marginTop="30dp"
-                    android:text="网址"
+                    android:text="@string/net_check_net_url"
                     android:textColor="#FF333333"
                     android:textSize="17dp"></TextView>
 
@@ -90,9 +90,6 @@
                     android:text="@string/net_diagnosis_hard_link_conent"
                     android:textColor="#666666"
                     android:textSize="15dp"></TextView>
-
-
-
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
@@ -142,7 +139,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true"
                     android:layout_marginTop="30dp"
-                    android:text="请求结果"
+                    android:text="@string/net_check_net_request_result"
                     android:textColor="#FF333333"
                     android:textSize="17dp"></TextView>
 
@@ -205,12 +202,12 @@
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true"
                     android:layout_marginTop="30dp"
-                    android:text="网络状态"
+                    android:text="@string/net_check_net_state"
                     android:textColor="#FF333333"
                     android:textSize="17dp"></TextView>
 
                 <TextView
-                    android:id="@+id/match_parent"
+                    android:id="@+id/tv_check_net_current_net_type"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
@@ -274,7 +271,7 @@
                 android:layout_toRightOf="@id/rl_checking_dns_logs">
 
                 <TextView
-                    android:id="@+id/tv_checking_dns_title"
+                    android:id="@+id/tv_net_connection_checking"
                     android:layout_width="match_parent"
                     android:layout_height="24dp"
                     android:layout_alignParentLeft="true"
@@ -310,7 +307,7 @@
                         android:visibility="gone" />
 
                     <com.inspur.emmcloud.baselib.widget.CustomLoadingView
-                        android:id="@+id/qv_ping_inspur_loading"
+                        android:id="@+id/iv_ping_inspur_loading"
                         android:layout_width="13dp"
                         android:layout_height="13dp"
                         android:layout_centerVertical="true"
@@ -345,7 +342,7 @@
                         android:visibility="gone" />
 
                     <com.inspur.emmcloud.baselib.widget.CustomLoadingView
-                        android:id="@+id/qv_ping_baidu_loading"
+                        android:id="@+id/iv_ping_baidu_loading"
                         android:layout_width="13dp"
                         android:layout_height="13dp"
                         android:layout_centerVertical="true"
@@ -380,7 +377,7 @@
                         android:visibility="gone" />
 
                     <com.inspur.emmcloud.baselib.widget.CustomLoadingView
-                        android:id="@+id/qv_ping_ali_loading"
+                        android:id="@+id/iv_ping_ali_loading"
                         android:layout_width="13dp"
                         android:layout_height="13dp"
                         android:layout_centerVertical="true"
