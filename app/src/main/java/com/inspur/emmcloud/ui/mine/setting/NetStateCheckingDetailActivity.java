@@ -39,9 +39,13 @@ public class NetStateCheckingDetailActivity extends BaseActivity {
     ImageView pingAliStateImage;
     @BindView(R.id.iv_ping_ali_loading)
     CustomLoadingView pingAliLoadingImage;
+
     CheckingNetStateUtils checkingNetStateUtils;
     private String PortalCheckingUrls = NetUtils.httpUrls[0];
     private String[] CheckHttpUrls = NetUtils.httpUrls;
+
+    private String urlContent; //展示url
+    private String checkNetResultContent; //网络状态
 
     @Override
     public void onCreate() {
