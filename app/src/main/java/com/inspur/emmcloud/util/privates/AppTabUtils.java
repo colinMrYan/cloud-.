@@ -1,11 +1,11 @@
 package com.inspur.emmcloud.util.privates;
 
 import android.content.Context;
-import android.content.res.Configuration;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.bean.system.MainTabProperty;
@@ -32,8 +32,7 @@ public class AppTabUtils {
         if (tab == null) {
             return "";
         }
-        Configuration config = context.getResources().getConfiguration();
-        String environmentLanguage = config.locale.getLanguage();
+        String environmentLanguage = LanguageManager.getInstance().getCurrentAppLanguage();
         if (environmentLanguage.toLowerCase().equals("zh") || environmentLanguage.toLowerCase().equals("zh-Hans".toLowerCase())) {
             return tab.getMainTabTitleResult().getZhHans();
         } else if (environmentLanguage.toLowerCase().equals("zh-Hant".toLowerCase())) {

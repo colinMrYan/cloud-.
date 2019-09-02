@@ -1521,9 +1521,12 @@ public class ConversationActivity extends ConversationBaseActivity {
      * @param cid
      */
     private void transmitTextMsg(String cid, UIMessage uiMessage) {
-        String text = uiMessage2Content(uiMessage);
+        String text = uiMessage.getMessage().getMsgContentTextPlain().getText();
+        SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(MyApplication.getInstance(), text,
+                uiMessage.getMessage().getMsgContentTextPlain().getMentionsMap());
+        String content = spannableString.toString();
         if (WebSocketPush.getInstance().isSocketConnect()) {
-            Message localMessage = CommunicationUtils.combinLocalTextPlainMessage(text, cid, null);
+            Message localMessage = CommunicationUtils.combinLocalTextPlainMessage(content, cid, null);
             WSAPIService.getInstance().sendChatTextPlainMsg(localMessage);
             ToastUtils.show(R.string.chat_transmit_message_success);
         } else {
@@ -1840,7 +1843,10 @@ public class ConversationActivity extends ConversationBaseActivity {
                     result = getString(R.string.baselib_share_file) + " " + jsonObject.getString("name");
                     break;
                 case Message.MESSAGE_TYPE_TEXT_PLAIN:
-                    result = jsonObject.getString("text");
+                    String text = uiMessage.getMessage().getMsgContentTextPlain().getText();
+                    SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(MyApplication.getInstance(), text,
+                            uiMessage.getMessage().getMsgContentTextPlain().getMentionsMap());
+                    result = spannableString.toString();
                     break;
             }
         } catch (JSONException e) {

@@ -1,6 +1,5 @@
 package com.inspur.emmcloud.ui.appcenter.volume;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,7 +7,6 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.VolumeFileAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -17,14 +15,16 @@ import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButton;
+import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
-import com.inspur.emmcloud.bean.system.ClearShareDataBean;
 import com.inspur.emmcloud.util.privates.VolumeFilePrivilegeUtils;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -61,6 +61,7 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
     @Override
     public void onCreate() {
         super.onCreate();
+        EventBus.getDefault().register(this);
         isFunctionCopy = getIntent().getBooleanExtra("isFunctionCopy", true);
         initViews();
     }
@@ -147,13 +148,18 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveMessage(SimpleEventMessage eventMessage) {
+        if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_VOLUME_FILE_LOCATION_SELECT_CLOSE)) {
+            finish();
+        }
+    }
+
     /**
      * 返回上传页面
      */
     private void goUploadPage() {
         if (NetUtils.isNetworkConnected(this)) {
-            //发送到ShareVolume页面和VolumeHomePage页面
-            EventBus.getDefault().post(new ClearShareDataBean());
             Bundle bundle = new Bundle();
             bundle.putSerializable("volume", volume);
             bundle.putSerializable("currentDirAbsolutePath", currentDirAbsolutePath);
@@ -177,13 +183,14 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
      * 关闭此Activity所有的instance
      */
     private void closeAllThisActivityInstance() {
-        List<Activity> activityList = ((MyApplication) getApplicationContext()).getActivityList();
-        for (int i = 0; i < activityList.size(); i++) {
-            Activity activity = activityList.get(i);
-            if (activity != null && activity instanceof VolumeFileLocationSelectActivity) {
-                activity.finish();
-            }
-        }
+        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_VOLUME_FILE_LOCATION_SELECT_CLOSE));
+//        List<Activity> activityList = ((MyApplication) getApplicationContext()).getActivityList();
+//        for (int i = 0; i < activityList.size(); i++) {
+//            Activity activity = activityList.get(i);
+//            if (activity != null && activity instanceof VolumeFileLocationSelectActivity) {
+//                activity.finish();
+//            }
+//        }
     }
 
     @Override

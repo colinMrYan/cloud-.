@@ -558,7 +558,7 @@
     <string name="clouddriver_upload_again">重新上傳</string>
     <string name="clouddriver_download_size">下載(%1$s)</string>
     <string name="clouddriver_downloading_status">下載中(%1$s/%2$s)</string>
-    <string name="clouddriver_file_name_invaliad">檔案名中不能包含特殊字元 / \ " : | * ? &lt; &gt; &#038;</string>
+    <string name="clouddriver_file_name_invaliad">檔案名中不能包含特殊字元 / \ " : | * ? &lt; &gt; </string>
     <string name="clouddriver_select_photo">選擇照片</string>
     <string name="clouddriver_select_file">選擇檔</string>
     <string name="clouddriver_volume_info">網盤詳情</string>
@@ -573,8 +573,8 @@
     <string name="clouddriver_add_volume_member">添加網盤成員</string>
     <string name="clouddriver_del_volume_group_member">刪除組成員</string>
     <string name="clouddriver_add_volume_group_member">添加組成員</string>
-    <string name="clouddriver_directory_name_invaliad">資料夾名中不能包含特殊字元 / \ " : | * ? &lt; &gt; &#038; </string>
-    <string name="clouddriver_volume_name_invaliad">網盤名中不能包含特殊字元 / \ " : | * ? &lt; &gt; &#038; </string>
+    <string name="clouddriver_directory_name_invaliad">資料夾名中不能包含特殊字元 / \ " : | * ? &lt; &gt;  </string>
+    <string name="clouddriver_volume_name_invaliad">網盤名中不能包含特殊字元 / \ " : | * ? &lt; &gt;  </string>
     <string name="clouddriver_exists_same_name">已存在同名檔/資料夾</string>
     <string name="file_rename">檔重命名</string>
     <string name="folder_rename">文件夾命名</string>

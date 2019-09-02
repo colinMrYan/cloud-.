@@ -70,7 +70,7 @@
                     android:layout_width="14dp"
                     android:layout_height="14dp"
                     android:layout_centerVertical="true"
-                    android:src="@drawable/schedule_calendar_type_brown" />
+                    android:src="@drawable/schedule_calendar_type_yellow" />
 
                 <TextView
                     android:id="@+id/tv_holiday_name"
