@@ -3,7 +3,6 @@ package com.inspur.emmcloud.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -35,6 +34,7 @@ import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseFragmentActivity;
 import com.inspur.emmcloud.basemodule.util.ECMShortcutBadgeNumberManagerUtils;
+import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
@@ -178,8 +178,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
 //                Constant.PREF_APP_TAB_BAR_INFO_CURRENT, "");
         mainTabResultList = getMainTabList();
         if (mainTabResultList.size() > 0) {
-            Configuration config = getResources().getConfiguration();
-            String environmentLanguage = config.locale.getLanguage();
+            String environmentLanguage = LanguageManager.getInstance().getCurrentAppLanguage();
 //            GetAppMainTabResult getAppMainTabResult = new GetAppMainTabResult(appTabs);
 //            // 发送到MessageFragment
 //            EventBus.getDefault().post(getAppMainTabResult);
