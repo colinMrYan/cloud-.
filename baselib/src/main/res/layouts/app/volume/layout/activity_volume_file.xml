@@ -185,7 +185,6 @@
                     android:drawableRight="@drawable/ic_volume_menu_drop_down"
                     android:onClick="onClick"
                     android:padding="12dp"
-                    android:text="@string/clouddriver_sort_by_name_asc"
                     android:textColor="#666666"
                     android:textSize="15sp" />
 

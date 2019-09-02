@@ -42,6 +42,7 @@ public class VolumeGroupChangePermissionActivity extends BaseActivity {
     SwitchCompat readPermissionSwitch;
     private MyAppAPIService myAppAPIService;
     private LoadingDialog loadingDialog;
+    private boolean isShouldChangePermission = true;
 
     public void setSwitchColor(int thumbColor, int trackColor, SwitchCompat v) {
         // thumb color
@@ -96,7 +97,7 @@ public class VolumeGroupChangePermissionActivity extends BaseActivity {
         writePermissionText.setText(getString(R.string.volume_read_write_permission));
         readPermissionText.setText(getString(R.string.volume_read_permission));
         writePermissionSwitch.setChecked(group.getPrivilege() > VOLUME_READ_PERMISSION);
-        readPermissionSwitch.setChecked(true);
+        readPermissionSwitch.setChecked(group.getPrivilege() > 0);
         readPermissionSwitch.setEnabled(group.getPrivilege() <= VOLUME_READ_PERMISSION);
 //        setSwitchColor(group.getPrivilege() > 4 ? 0xbb7fc5f6 : 0xff008cee,
 //                group.getPrivilege() > 4 ? 0x667fc5f6 : 0xff7fc5f6, readPermissionSwitch);
@@ -110,10 +111,11 @@ public class VolumeGroupChangePermissionActivity extends BaseActivity {
         readPermissionSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                updateVolumeGroupPermission(group, currentVolumePath, b ? VOLUME_READ_PERMISSION : VOLUME_NO_PERMISSION, true);
+                if (isShouldChangePermission) {
+                    updateVolumeGroupPermission(group, currentVolumePath, b ? VOLUME_READ_PERMISSION : VOLUME_NO_PERMISSION, true);
+                }
             }
         });
-
     }
 
     /**
@@ -144,12 +146,15 @@ public class VolumeGroupChangePermissionActivity extends BaseActivity {
         public void returnUpdateVolumeGroupPermissionSuccess(GetVolumeGroupPermissionResult getVolumeGroupPermissionResult) {
             LoadingDialog.dimissDlg(loadingDialog);
             if (getVolumeGroupPermissionResult.getPrivilege() >= VOLUME_WRITE_PERMISSION) {
+                isShouldChangePermission = false;
                 writePermissionSwitch.setChecked(true);
                 // readPermissionSwitch.setIsCodeManual(true, true);
+                readPermissionSwitch.setChecked(true);
                 readPermissionSwitch.setEnabled(false);
                 //readPermissionSwitch.setPaintColorOn(0x667fc5f6);
                 //readPermissionSwitch.setPaintCircleBtnColor(0xbb7fc5f6);
             } else {
+                isShouldChangePermission = true;
                 writePermissionSwitch.setChecked(false);
                 readPermissionSwitch.setEnabled(true);
                 if (getVolumeGroupPermissionResult.getPrivilege() == VOLUME_NO_PERMISSION) {

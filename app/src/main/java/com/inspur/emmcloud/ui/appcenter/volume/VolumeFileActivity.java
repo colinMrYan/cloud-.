@@ -28,10 +28,13 @@ import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.dialogs.ActionSheetDialog;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.basemodule.util.compressor.Compressor;
 import com.inspur.emmcloud.basemodule.util.imagepicker.ImagePicker;
@@ -48,14 +51,15 @@ import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.VolumeFilePrivilegeUtils;
 import com.inspur.emmcloud.util.privates.VolumeFileUploadManagerUtils;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -95,8 +99,10 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     @Override
     public void onCreate() {
         super.onCreate();
+        EventBus.getDefault().register(this);
         this.isShowFileUploading = true;
         isOpenFromParentDirectory = getIntent().getBooleanExtra("isOpenFromParentDirectory", false);
+        setOperationSortText();
         setListIemClick();
         registerReceiver();
         handleFileShareToVolume();
@@ -191,6 +197,13 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveMessage(SimpleEventMessage simpleEventMessage) {
+        if (simpleEventMessage.getAction().equals(Constant.EVENTBUS_TAG_VOLUME_FILE_SORT_TIME_CHANGED)) {
+            sortType = PreferencesByUserAndTanentUtils.getString(BaseApplication.getInstance(), Constant.PREF_VOLUME_FILE_SORT_TYPE, SORT_BY_NAME_UP);
+            setOperationSort();
+        }
+    }
 
     public void onClick(View v) {
         switch (v.getId()) {
@@ -313,19 +326,33 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         sortOperationPop.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
-                setOperationSort();
+                Drawable drawable1 = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_volume_menu_drop_down);
+                drawable1.setBounds(0, 0, DensityUtil.dip2px(getApplicationContext(), 14), DensityUtil.dip2px(getApplicationContext(), 14));
+                operationSortText.setCompoundDrawables(null, null, drawable1, null);
+                String sortTypeOld = PreferencesByUserAndTanentUtils.getString(BaseApplication.getInstance(), Constant.PREF_VOLUME_FILE_SORT_TYPE, SORT_BY_NAME_UP);
+                if (!sortTypeOld.equals(sortType)) {
+                    PreferencesByUserAndTanentUtils.putString(BaseApplication.getInstance(), Constant.PREF_VOLUME_FILE_SORT_TYPE, sortType);
+                    EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_VOLUME_FILE_SORT_TIME_CHANGED));
+                }
+
             }
         });
 
     }
 
+
     /**
      * 设置排序显示
      */
     private void setOperationSort() {
-        Drawable drawable1 = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_volume_menu_drop_down);
-        drawable1.setBounds(0, 0, DensityUtil.dip2px(getApplicationContext(), 14), DensityUtil.dip2px(getApplicationContext(), 14));
-        operationSortText.setCompoundDrawables(null, null, drawable1, null);
+        setOperationSortText();
+        sortVolumeFileList();
+        adapter.setVolumeFileList(volumeFileList);
+        adapter.notifyDataSetChanged();
+
+    }
+
+    private void setOperationSortText() {
         String sortTypeShowTxt;
         switch (sortType) {
             case SORT_BY_NAME_DOWN:
@@ -342,32 +369,8 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                 break;
         }
         operationSortText.setText(sortTypeShowTxt);
-        sortVolumeFileList();
-        adapter.setVolumeFileList(volumeFileList);
-        adapter.notifyDataSetChanged();
     }
 
-
-    /**
-     * 文件排序
-     */
-    protected void sortVolumeFileList() {
-        List<VolumeFile> VolumeFileUploadingList = new ArrayList<>();
-        List<VolumeFile> VolumeFileNormalList = new ArrayList<>();
-        for (int i = 0; i < volumeFileList.size(); i++) {
-            VolumeFile volumeFile = volumeFileList.get(i);
-            if (!volumeFile.getStatus().equals("normal")) {
-                VolumeFileUploadingList.add(volumeFile);
-            } else {
-                VolumeFileNormalList.add(volumeFile);
-            }
-        }
-
-        Collections.sort(VolumeFileNormalList, new FileSortComparable());
-        volumeFileList.clear();
-        volumeFileList.addAll(VolumeFileUploadingList);
-        volumeFileList.addAll(VolumeFileNormalList);
-    }
 
     /**
      * 弹出文件筛选框
@@ -648,45 +651,5 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         super.onDestroy();
     }
 
-    private class FileSortComparable implements Comparator<VolumeFile> {
-        @Override
-        public int compare(VolumeFile volumeFileA, VolumeFile volumeFileB) {
-            int sortResult = 0;
-            if (volumeFileA.getType().equals(VolumeFile.FILE_TYPE_DIRECTORY) && volumeFileB.getType().equals(VolumeFile.FILE_TYPE_REGULAR)) {
-                sortResult = -1;
-            } else if (volumeFileB.getType().equals(VolumeFile.FILE_TYPE_DIRECTORY) && volumeFileA.getType().equals(VolumeFile.FILE_TYPE_REGULAR)) {
-                sortResult = 1;
-            } else {
-                switch (sortType) {
-                    case SORT_BY_NAME_UP:
-                        sortResult = volumeFileA.getName().toLowerCase().compareTo(volumeFileB.getName().toLowerCase().toString());
-                        break;
-                    case SORT_BY_NAME_DOWN:
-                        sortResult = 0 - volumeFileA.getName().toLowerCase().compareTo(volumeFileB.getName().toLowerCase().toString());
-                        break;
-                    case SORT_BY_TIME_DOWN:
-                        if (volumeFileA.getCreationDate() == volumeFileB.getCreationDate()) {
-                            sortResult = 0;
-                        } else if (volumeFileA.getCreationDate() < volumeFileB.getCreationDate()) {
-                            sortResult = 1;
-                        } else {
-                            sortResult = -1;
-                        }
-                        break;
-                    case SORT_BY_TIME_UP:
-                        if (volumeFileA.getCreationDate() == volumeFileB.getCreationDate()) {
-                            sortResult = 0;
-                        } else if (volumeFileA.getCreationDate() < volumeFileB.getCreationDate()) {
-                            sortResult = -1;
-                        } else {
-                            sortResult = 1;
-                        }
-                        break;
-                    default:
-                        break;
-                }
-            }
-            return sortResult;
-        }
-    }
+
 }

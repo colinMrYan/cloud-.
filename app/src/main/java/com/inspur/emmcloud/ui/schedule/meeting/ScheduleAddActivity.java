@@ -542,6 +542,8 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
                         endTimeCalendar.add(Calendar.HOUR_OF_DAY, 2);
                         showTimeInvalidDlg();
                         return;
+                    } else {
+                        endTimeCalendar = (Calendar) calendar.clone();
                     }
                 }
                 setMeetingTime();

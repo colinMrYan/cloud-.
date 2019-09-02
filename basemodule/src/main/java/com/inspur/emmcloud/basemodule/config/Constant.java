@@ -76,6 +76,7 @@ public class Constant {
     public static final String PREF_SCHEDULE_ENABLE_EXCHANGE = "schedule_enable_exchange";
     public static final String PREF_SCHEDULE_BASIC_DATA_VERSION = "schedule_basic_data_version";
     public static final String PREF_SCHEDULE_HOLIDAY_STATE = "schedule_holiday_state";
+    public static final String PREF_VOLUME_FILE_SORT_TYPE = "volume_file_sort_type";
 
     public static final String ACTION_MEETING = "com.inspur.meeting";
     public static final String ACTION_TASK = "com.inspur.task";
@@ -130,7 +131,8 @@ public class Constant {
     public static final String EVENTBUS_TAG_SCHEDULE_MEETING_COMMON_OFFICE_CHANGED = "tag_schedule_meeting_common_office_changed";
     public static final String EVENTBUS_TAG_OPEN_WORK_TAB = "tag_open_work_tab";
     public static final String EVENTBUS_TAG_EWS_401 = "tag_ews_401";
-
+    public static final String EVENTBUS_TAG_VOLUME_FILE_SORT_TIME_CHANGED = "volume_file_sort_time_changed";
+    public static final String EVENTBUS_TAG_VOLUME_FILE_LOCATION_SELECT_CLOSE = "volume_file_locaiton_select_close";
     public static final String SERVICE_VERSION_CHAT_V0 = "v0";
     public static final String SERVICE_VERSION_CHAT_V1 = "v1";
 
