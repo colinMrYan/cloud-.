@@ -91,74 +91,7 @@
                     android:textColor="#666666"
                     android:textSize="15dp"></TextView>
 
-                <!--<RelativeLayout-->
-                <!--android:id="@+id/rl_net_error_fix"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_below="@id/tv_checking_hard_content"-->
-                <!--android:onClick="onClick">-->
 
-                <!--<RelativeLayout-->
-                <!--android:id="@+id/rl_hard_loading_img"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_centerVertical="true">-->
-
-                <!--<com.inspur.emmcloud.baselib.widget.CustomLoadingView-->
-                <!--android:id="@+id/qv_checking_hard_loading"-->
-                <!--android:layout_width="20dp"-->
-                <!--android:layout_height="20dp"-->
-                <!--android:layout_marginTop="11dp"-->
-                <!--app:loading_color="@color/grey_a5a5a5" />-->
-
-                <!--<ImageView-->
-                <!--android:id="@+id/iv_hard_state_log"-->
-                <!--android:layout_width="20dp"-->
-                <!--android:layout_height="20dp"-->
-                <!--android:layout_marginTop="11dp"-->
-                <!--android:background="@drawable/ic_netchecking_ok"-->
-                <!--android:scaleType="centerCrop"-->
-                <!--android:visibility="gone" />-->
-                <!--</RelativeLayout>-->
-
-                <!--<RelativeLayout-->
-                <!--android:id="@+id/rl_to_fix"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_toRightOf="@id/rl_hard_loading_img"-->
-                <!--android:visibility="gone">-->
-
-                <!--<ImageView-->
-                <!--android:id="@+id/iv_fix_left_arrow"-->
-                <!--android:layout_width="15dp"-->
-                <!--android:layout_height="15dp"-->
-                <!--android:layout_marginLeft="4dp"-->
-                <!--android:layout_marginTop="14dp"-->
-                <!--android:background="@drawable/ic_fix_left_arrow"-->
-                <!--android:scaleType="fitCenter" />-->
-
-                <!--<TextView-->
-                <!--android:id="@+id/tv_fix"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginLeft="4dp"-->
-                <!--android:layout_marginTop="11dp"-->
-                <!--android:layout_toRightOf="@id/iv_fix_left_arrow"-->
-                <!--android:text="@string/net_diagnosis_hard_to_fix"-->
-                <!--android:textColor="#FFF54949"-->
-                <!--android:textSize="15sp" />-->
-
-                <!--<ImageView-->
-                <!--android:layout_width="5dp"-->
-                <!--android:layout_height="10dp"-->
-                <!--android:layout_marginLeft="4dp"-->
-                <!--android:layout_marginTop="16dp"-->
-                <!--android:layout_toRightOf="@id/tv_fix"-->
-                <!--android:background="@drawable/ic_fix_right_arrow"-->
-                <!--android:scaleType="fitCenter" />-->
-                <!--</RelativeLayout>-->
-
-                <!--</RelativeLayout>-->
 
                 <View
                     android:layout_width="match_parent"
@@ -224,75 +157,6 @@
                     android:textColor="#666666"
                     android:textSize="15dp"></TextView>
 
-                <!--<RelativeLayout-->
-                <!--android:id="@+id/rl_net_error_fix"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_below="@id/tv_checking_hard_content"-->
-                <!--android:onClick="onClick">-->
-
-                <!--<RelativeLayout-->
-                <!--android:id="@+id/rl_hard_loading_img"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_centerVertical="true">-->
-
-                <!--<com.inspur.emmcloud.baselib.widget.CustomLoadingView-->
-                <!--android:id="@+id/qv_checking_hard_loading"-->
-                <!--android:layout_width="20dp"-->
-                <!--android:layout_height="20dp"-->
-                <!--android:layout_marginTop="11dp"-->
-                <!--app:loading_color="@color/grey_a5a5a5" />-->
-
-                <!--<ImageView-->
-                <!--android:id="@+id/iv_hard_state_log"-->
-                <!--android:layout_width="20dp"-->
-                <!--android:layout_height="20dp"-->
-                <!--android:layout_marginTop="11dp"-->
-                <!--android:background="@drawable/ic_netchecking_ok"-->
-                <!--android:scaleType="centerCrop"-->
-                <!--android:visibility="gone" />-->
-                <!--</RelativeLayout>-->
-
-                <!--<RelativeLayout-->
-                <!--android:id="@+id/rl_to_fix"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_toRightOf="@id/rl_hard_loading_img"-->
-                <!--android:visibility="gone">-->
-
-                <!--<ImageView-->
-                <!--android:id="@+id/iv_fix_left_arrow"-->
-                <!--android:layout_width="15dp"-->
-                <!--android:layout_height="15dp"-->
-                <!--android:layout_marginLeft="4dp"-->
-                <!--android:layout_marginTop="14dp"-->
-                <!--android:background="@drawable/ic_fix_left_arrow"-->
-                <!--android:scaleType="fitCenter" />-->
-
-                <!--<TextView-->
-                <!--android:id="@+id/tv_fix"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginLeft="4dp"-->
-                <!--android:layout_marginTop="11dp"-->
-                <!--android:layout_toRightOf="@id/iv_fix_left_arrow"-->
-                <!--android:text="@string/net_diagnosis_hard_to_fix"-->
-                <!--android:textColor="#FFF54949"-->
-                <!--android:textSize="15sp" />-->
-
-                <!--<ImageView-->
-                <!--android:layout_width="5dp"-->
-                <!--android:layout_height="10dp"-->
-                <!--android:layout_marginLeft="4dp"-->
-                <!--android:layout_marginTop="16dp"-->
-                <!--android:layout_toRightOf="@id/tv_fix"-->
-                <!--android:background="@drawable/ic_fix_right_arrow"-->
-                <!--android:scaleType="fitCenter" />-->
-                <!--</RelativeLayout>-->
-
-                <!--</RelativeLayout>-->
-
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
@@ -352,6 +216,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true"
                     android:layout_marginRight="14dp"
+                    android:layout_marginTop="5dp"
                     android:text="当前网络连接类型: WIFI"
                     android:textColor="#666666"
                     android:textSize="15dp"></TextView>

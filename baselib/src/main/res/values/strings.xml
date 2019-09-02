@@ -1056,6 +1056,14 @@
     <string name="net_ping_url_ali">阿里</string>
     <string name="net_ping_url_cloud">云＋</string>
 
+    <string name="net_check_net_url">网址</string>
+    <string name="net_check_net_request_result">请求结果</string>
+    <string name="net_check_net_state">网络状态</string>
+    <string name="net_check_net_current_type">当前网络类型：</string>
+    <string name="net_check_net_current_state">连接状态：</string>
+    <string name="net_check_net_current_state_connected">已连接</string>
+    <string name="net_check_net_current_state_unconnected">未连接</string>
+
     <!--电源白名单-->
     <string name="battery_tip_content">系统已对该应用开启省电优化，可能导致消息延迟或丢失，请将其加入到省电优化白名单（点击“去设置”，在弹出对话框中点击“允许”)</string>
     <string name="white_list_tip_content">由于系统限制，请您手动开启本软件自启动权限，从而保障软件运行的最佳环境（点击“去设置”)</string>

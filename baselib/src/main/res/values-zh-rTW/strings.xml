@@ -1039,6 +1039,14 @@
     <string name="net_ping_url_ali">阿里</string>
     <string name="net_ping_url_cloud">雲＋</string>
 
+    <string name="net_check_net_url">網址</string>
+    <string name="net_check_net_request_result">請求結果</string>
+    <string name="net_check_net_state">網絡狀態</string>
+    <string name="net_check_net_current_type">當前網絡類型：</string>
+    <string name="net_check_net_current_state">連接狀態：</string>
+    <string name="net_check_net_current_state_connected">已連接</string>
+    <string name="net_check_net_current_state_unconnected">未連接</string>
+
     <!--电源白名单-->
     <string name="battery_tip_content">系統已對該應用開啟省電優化，可能導致消息延遲或丟失，請將其加入到省電優化白名單（點擊“去設置”，在彈出對話框中點擊“允許”)</string>
     <string name="white_list_tip_content">由於系統限制，請您手動開啟本軟件自啟動許可權，從而保障軟件運行的最佳環境（點擊“去設定”）</string>

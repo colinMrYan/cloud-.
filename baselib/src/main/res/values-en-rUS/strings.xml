@@ -1038,6 +1038,14 @@
     <string name="net_ping_url_ali">Alibaba</string>
     <string name="net_ping_url_cloud">Cloud+</string>
 
+    <string name="net_check_net_url">Website</string>
+    <string name="net_check_net_request_result">Result</string>
+    <string name="net_check_net_state">Net State</string>
+    <string name="net_check_net_current_type">Net Type：</string>
+    <string name="net_check_net_current_state">Net State：</string>
+    <string name="net_check_net_current_state_connected">Connected</string>
+    <string name="net_check_net_current_state_unconnected">Unconnected</string>
+
     <!--电源白名单-->
     <string name="battery_tip_content">System has applied battery optimizations to the App,which may cause messages be delayed or missed,please add this to battery optimizations whitelist.(Click Set,then in the dialog pops,click Allow)</string>
     <string name="white_list_tip_content">Due to system restrictions, please manually open the software self-startup permission, so as to ensure the best environment for software operation (click "Set")</string>
