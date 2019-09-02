@@ -66,5 +66,4 @@ dependencies {
     annotationProcessor deps.ARouter.router_anno
     implementation deps.butterknife.butterknife
     annotationProcessor deps.butterknife.butterknife_compiler
-    implementation deps.wechatOpenSdk
 }
