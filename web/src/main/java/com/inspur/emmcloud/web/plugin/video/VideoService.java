@@ -60,7 +60,7 @@ public class VideoService extends ImpPlugin {
                     uri = Uri.parse(path);
                 } else {
                     File file = new File(path);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                         uri = FileProvider.getUriForFile(getFragmentContext(), getFragmentContext().getPackageName() + ".provider", file);
                     } else {
@@ -92,8 +92,13 @@ public class VideoService extends ImpPlugin {
                                 Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
                                 String fileName = optionsObj.optString("id");
                                 try {
-                                    fileUri = FileProvider.getUriForFile(getActivity(),
-                                            getActivity().getPackageName() + ".provider", createMediaFile(fileName));//这是正确的写法
+                                    File file = createMediaFile(fileName);
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                        fileUri = FileProvider.getUriForFile(getFragmentContext(),
+                                                getFragmentContext().getPackageName() + ".provider", file);
+                                    } else {
+                                        fileUri = Uri.fromFile(file);
+                                    }
 
                                 } catch (IOException e) {
                                     try {
