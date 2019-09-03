@@ -51,6 +51,7 @@ import com.inspur.emmcloud.componentservice.contact.ContactService;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
+import com.inspur.emmcloud.ui.mine.setting.WebViewNetStateDetailActivity;
 import com.inspur.emmcloud.ui.schedule.ScheduleAlertTimeActivity;
 import com.inspur.emmcloud.ui.schedule.ScheduleTypeSelectActivity;
 import com.inspur.emmcloud.util.privates.CalendarUtils;
@@ -378,7 +379,13 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ibt_back:
-                finish();
+                //finish();
+                Bundle bundle = new Bundle();
+                bundle.putString(WebViewNetStateDetailActivity.EXTRA_OUTSIDE_URL, "www.baidu.com");
+                bundle.putString(WebViewNetStateDetailActivity.EXTRA_OUTSIDE_URL_REQUEST_RESULT, "这段子很长很长很长或或或或或或或" +
+                        "或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或" +
+                        "户HUU呼哈哈哈哈或或或或或或或或或或或或或");
+                IntentUtils.startActivity(this, WebViewNetStateDetailActivity.class, bundle);
                 break;
             case R.id.tv_save:
                 if (!isInputValid())
