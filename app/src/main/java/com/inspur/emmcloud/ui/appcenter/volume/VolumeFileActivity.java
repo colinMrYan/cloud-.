@@ -284,7 +284,6 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                                 AppUtils.openGallery(VolumeFileActivity.this, 10, REQUEST_OPEN_GALLERY, true);
                                 break;
                             case 2:
-                                //  AppUtils.openFileSystem(VolumeFileActivity.this, REQUEST_OPEN_FILE_BROWSER);
                                 Bundle bundle = new Bundle();
                                 bundle.putInt("extra_maximum", 10);
                                 ARouter.getInstance().build(Constant.AROUTER_CLASS_WEB_FILEMANAGER).with(bundle).navigation(VolumeFileActivity.this, REQUEST_OPEN_FILE_BROWSER);
