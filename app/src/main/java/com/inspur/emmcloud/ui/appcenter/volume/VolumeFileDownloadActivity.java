@@ -11,6 +11,8 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.api.APIDownloadCallBack;
@@ -19,6 +21,7 @@ import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
+import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.util.privates.VolumeFileIconUtils;
@@ -60,6 +63,7 @@ public class VolumeFileDownloadActivity extends BaseActivity {
     private String fileSavePath = "";
     private Callback.Cancelable cancelable;
     private VolumeFile volumeFile;
+    private String currentDirAbsolutePath;
 
 
     @Override
@@ -67,7 +71,15 @@ public class VolumeFileDownloadActivity extends BaseActivity {
         ButterKnife.bind(this);
         volumeFile = (VolumeFile) getIntent().getSerializableExtra("volumeFile");
         fileNameText.setText(volumeFile.getName());
-        fileTypeImg.setImageResource(VolumeFileIconUtils.getIconResId(volumeFile));
+        currentDirAbsolutePath = getIntent().getStringExtra("currentDirAbsolutePath");
+        if (volumeFile.getFormat().startsWith("image/")) {
+            String url = APIUri.getVolumeFileUploadSTSTokenUrl(volumeFile.getVolume()) + "?path=" + StringUtils.encodeURIComponent(currentDirAbsolutePath);
+            LogUtils.jasonDebug("url===" + url);
+            ImageDisplayUtils.getInstance().displayImage(fileTypeImg, url, R.drawable.ic_volume_file_typ_img);
+        } else {
+            fileTypeImg.setImageResource(VolumeFileIconUtils.getIconResId(volumeFile));
+        }
+
         fileSizeText.setText(FileUtils.formatFileSize(volumeFile.getSize()));
         fileSavePath = MyAppConfig.getVolumeFileDownloadDirPath() + volumeFile.getName();
         if (FileUtils.isFileExist(fileSavePath)) {
@@ -168,7 +180,6 @@ public class VolumeFileDownloadActivity extends BaseActivity {
         downloadBtn.setVisibility(View.GONE);
         downloadStatusLayout.setVisibility(View.VISIBLE);
         String volumeId = getIntent().getStringExtra("volumeId");
-        String currentDirAbsolutePath = getIntent().getStringExtra("currentDirAbsolutePath");
         String source = APIUri.getVolumeFileUploadSTSTokenUrl(volumeId);
         APIDownloadCallBack callBack = new APIDownloadCallBack(getApplicationContext(), source) {
             @Override

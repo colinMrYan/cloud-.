@@ -50,6 +50,7 @@ public class DisplayMediaImageMsg {
                 .showImageForEmptyUri(R.drawable.ic_chat_img_bg)
                 .showImageOnFail(R.drawable.ic_chat_img_bg)
                 .showImageOnLoading(R.drawable.ic_chat_img_bg)
+                .considerExifParams(true)
                 // 设置图片的解码类型
                 .bitmapConfig(Bitmap.Config.RGB_565).cacheInMemory(true)
                 .cacheOnDisk(true).build();
