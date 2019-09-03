@@ -282,7 +282,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                                 AppUtils.openCamera(VolumeFileActivity.this, cameraPicFileName, REQUEST_OPEN_CEMERA);
                                 break;
                             case 1:
-                                AppUtils.openGallery(VolumeFileActivity.this, 1, REQUEST_OPEN_GALLERY, true);
+                                AppUtils.openGallery(VolumeFileActivity.this, 5, REQUEST_OPEN_GALLERY, true);
                                 break;
                             case 2:
                                 AppUtils.openFileSystem(VolumeFileActivity.this, REQUEST_OPEN_FILE_BROWSER);
@@ -475,17 +475,19 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                 Boolean originalPicture = data.getBooleanExtra(ImageGridActivity.EXTRA_ORIGINAL_PICTURE, false);
                 ArrayList<ImageItem> imageItemList = (ArrayList<ImageItem>) data
                         .getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
-                String imgPath = imageItemList.get(0).path;
-                if (!originalPicture) {
-                    try {
-                        File file = new Compressor(VolumeFileActivity.this).setMaxHeight(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setMaxWidth(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
-                                .compressToFile(new File(imgPath));
-                        imgPath = file.getAbsolutePath();
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                for (int i = 0; i < imageItemList.size(); i++) {
+                    String imgPath = imageItemList.get(i).path;
+                    if (!originalPicture) {
+                        try {
+                            File file = new Compressor(VolumeFileActivity.this).setMaxHeight(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setMaxWidth(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
+                                    .compressToFile(new File(imgPath));
+                            imgPath = file.getAbsolutePath();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
+                    uploadFile(imgPath);
                 }
-                uploadFile(imgPath);
             }
         } else if (requestCode == SHARE_IMAGE_OR_FILES) {
             // shareToVolumeFile
