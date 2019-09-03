@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
+import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,7 +17,7 @@ import butterknife.ButterKnife;
  * Created by libaochao on 2019/9/2.
  */
 
-public class NetStateCheckingDetailActivity extends BaseActivity {
+public class WebViewNetStateDetailActivity extends BaseActivity {
 
     public static String[] subUrls = {"www.baidu.com", "www.aliyun.com"};
     @BindView(R.id.tv_check_net_url_content)
@@ -46,14 +47,25 @@ public class NetStateCheckingDetailActivity extends BaseActivity {
 
     private String urlContent; //展示url
     private String checkNetResultContent; //网络状态
+    private Drawable drawableError;
+    private Drawable drawableSuccess;
+
 
     @Override
     public void onCreate() {
         ButterKnife.bind(this);
+        checkingNetStateUtils = new CheckingNetStateUtils(this);
+        iniView();
     }
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_network_state_detail_new;
+        return R.layout.activity_webview_net_state_detail;
     }
+
+    private void iniView() {
+        drawableError = getBaseContext().getResources().getDrawable(R.drawable.ic_netchecking_error);
+        drawableSuccess = getBaseContext().getResources().getDrawable(R.drawable.ic_netchecking_ok);
+    }
+
 }

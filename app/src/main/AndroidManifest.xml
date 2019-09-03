@@ -513,7 +513,7 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.mine.setting.NetStateCheckingDetailActivity"
+            android:name=".ui.mine.setting.WebViewNetStateDetailActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />

@@ -100,6 +100,7 @@
                     android:layout_marginTop="16dp"
                     android:background="@color/color_list_divider" />
             </RelativeLayout>
+
         </RelativeLayout>
 
         <RelativeLayout
@@ -145,7 +146,7 @@
                         android:layout_marginTop="30dp"
                         android:maxHeight="60dp"
                         android:scrollbars="vertical"
-                        android:text="测速形式上埃德加i抵达加沙送i地阿迪平均气温达到继电器的煎熬【 就【岛上的哦啊【松开大卡司打开商铺代理商品的匹配的漂亮菩萨啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊宋萍萍萍萍萍萍萍萍萍萍萍萍萍萍萍萍萍萍"
+                        android:text="@string/net_check_net_request_result"
                         android:textColor="#FF333333"
                         android:textSize="17dp"></TextView>
 
@@ -154,9 +155,10 @@
                         android:layout_height="21dp"
                         android:layout_alignBottom="@id/tv_check_net_result_title"
                         android:layout_alignParentRight="true"
-                        android:background="@color/black"
+                        android:layout_marginRight="10dp"
                         android:paddingBottom="4dp"
-                        android:paddingRight="10dp" />
+                        android:paddingRight="10dp"
+                        android:src="@drawable/ic_net_check_content_result" />
                 </RelativeLayout>
 
 
@@ -169,7 +171,7 @@
                     android:layout_marginTop="10dp"
                     android:maxHeight="60dp"
                     android:scrollbars="vertical"
-                    android:text="@string/net_diagnosis_hard_link_conent"
+                    android:text="OK"
                     android:textColor="#666666"
                     android:textSize="15dp"></TextView>
 
@@ -183,6 +185,7 @@
                     android:layout_marginTop="16dp"
                     android:background="@color/color_list_divider" />
             </LinearLayout>
+
         </RelativeLayout>
 
         <RelativeLayout
@@ -256,6 +259,7 @@
                     android:layout_marginTop="16dp"
                     android:background="@color/color_list_divider" />
             </LinearLayout>
+
         </RelativeLayout>
 
         <RelativeLayout
@@ -266,7 +270,7 @@
             android:onClick="onClick">
 
             <RelativeLayout
-                android:id="@+id/rl_checking_dns_logs"
+                android:id="@+id/rl_checking_urls_logs"
                 android:layout_width="87dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
@@ -274,7 +278,7 @@
                 android:layout_alignParentTop="true">
 
                 <ImageView
-                    android:id="@+id/iv_dns_device_log"
+                    android:id="@+id/iv_check_urls_log"
                     android:layout_width="42dp"
                     android:layout_height="42dp"
                     android:layout_alignParentLeft="true"
@@ -287,7 +291,7 @@
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/rl_checking_dns_logs">
+                android:layout_toRightOf="@id/rl_checking_urls_logs">
 
                 <TextView
                     android:id="@+id/tv_net_connection_checking"
@@ -304,7 +308,7 @@
                     android:id="@+id/rl_checking_inspur"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/tv_checking_dns_title"
+                    android:layout_below="@id/tv_net_connection_checking"
                     android:layout_marginTop="10dp">
 
                     <TextView
@@ -440,7 +444,9 @@
                         android:layout_toRightOf="@id/tv_cloudpluse_content"
                         app:loading_color="@color/grey_a5a5a5" />
                 </RelativeLayout>
+
             </RelativeLayout>
+
         </RelativeLayout>
 
     </LinearLayout>
