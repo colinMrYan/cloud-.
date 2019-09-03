@@ -50,6 +50,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -507,11 +508,14 @@ public class ScheduleDetailActivity extends BaseActivity {
 
     //list去重
     private List<Participant> deleteRepeatData(List<Participant> list) {
+        if (list == null) return null;
         //不把邀请人加到参会人里
-        for (Participant item : list) {
+        Iterator<Participant> iterator = list.iterator();
+        while (iterator.hasNext()) {
+            Participant item = iterator.next();
             ContactUser user = ContactUserCacheUtils.getContactUserByUid(item.getId());
             if (user == null) {
-                list.remove(item);
+                iterator.remove();
             }
         }
         Set<Participant> set = new TreeSet<>(new Comparator<Participant>() {
