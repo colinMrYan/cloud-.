@@ -177,6 +177,11 @@ public class ScheduleDetailActivity extends BaseActivity {
         //来自会议
         scheduleInviteLayout.setVisibility(View.VISIBLE);
         scheduleAttendLayout.setVisibility(StringUtils.isBlank(getScheduleParticipant()) ? View.GONE : View.VISIBLE);   //参会人
+        //仅有一个参会人  且是自己得情况
+        if (scheduleEvent.getAllParticipantList().size() == 1 &&
+                scheduleEvent.getAllParticipantList().get(0).getId().equals(BaseApplication.getInstance().getUid())) {
+            scheduleAttendLayout.setVisibility(View.GONE);
+        }
         if (!StringUtils.isBlank(scheduleEvent.getOwner())) { //邀请人
             String userName = ContactUserCacheUtils.getUserName(scheduleEvent.getOwner());
             scheduleInviteText.setText(getString(R.string.meeting_detail_inviter, userName));
