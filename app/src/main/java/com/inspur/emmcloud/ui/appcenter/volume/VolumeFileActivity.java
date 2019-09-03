@@ -464,10 +464,6 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                         uploadFile(pathList.get(i));
                     }
                 }
-//                ArrayList<String> pathList = new ArrayList<>();
-//                Uri uri = data.getData();
-//                String filePath = GetPathFromUri4kitkat.getPathByUri(getApplicationContext(), uri);
-//                uploadFile(filePath);
             } else if (requestCode == REQUEST_OPEN_CEMERA //拍照返回
                     && NetUtils.isNetworkConnected(getApplicationContext())) {
                 String imgPath = data.getExtras().getString(MyCameraActivity.OUT_FILE_PATH);
