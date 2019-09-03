@@ -290,7 +290,7 @@
     <string name="socket_close">已断开</string>
     <string name="chat_file_download_success">文件已下载成功，再次点击进行打开</string>
     <string name="group_name_longth_valid">群名称字数超限（不超过40个字符）</string>
-    <string name="message_create_group">会议群聊</string>
+    <string name="message_create_group">发起群聊</string>
     <string name="business_card">个人名片</string>
     <string name="no_channel_album">无内容</string>
     <string name="no_channel_file">无内容</string>
@@ -921,7 +921,7 @@
     <string name="meeting_detail_attendee_unknown">无响应</string>
     <string name="meeting_detail_attendee_tentative">暂定</string>
     <string name="meeting_group_chat_fail">发起会议群聊失败</string>
-    <string name="meeting_create_group_chat">发起群聊</string>
+    <string name="meeting_create_group_chat">会议群聊</string>
     <string name="meeting_cancel_the_meeting">确定取消会议？</string>
 
     <!-- 会议预定错误提示 -->

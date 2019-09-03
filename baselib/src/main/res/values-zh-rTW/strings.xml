@@ -287,7 +287,7 @@
     <string name="socket_close">已斷開</string>
     <string name="chat_file_download_success">檔案已下載成功，再次點擊進行打開</string>
     <string name="group_name_longth_valid">群名稱字數超限（不超過40個字元）</string>
-    <string name="message_create_group">會議群聊</string>
+    <string name="message_create_group">發起群聊</string>
     <string name="business_card">個人名片</string>
     <string name="no_channel_album">無內容</string>
     <string name="no_channel_file">無內容</string>
@@ -869,7 +869,7 @@
     <string name="meeting_room_booked">時間已被預訂，請重新選擇</string>
     <string name="meeting_room_ilegal_time">時間非法，請檢查 </string>
     <string name="meeting_room_time_late">開始時間不能早於當前時間</string>
-    <string name="meeting_create_group_chat">發起群聊</string>
+    <string name="meeting_create_group_chat">會議群聊</string>
     <string name="meeting_cancel_the_meeting">確定取消會議?</string>
     <string name="schedule_add">新建</string>
     <string name="schedule_update">编辑</string>
