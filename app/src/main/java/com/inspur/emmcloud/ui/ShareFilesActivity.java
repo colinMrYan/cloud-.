@@ -16,6 +16,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
@@ -34,6 +35,7 @@ import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.TabAndAppExistUtils;
 import com.itheima.roundedimageview.RoundedImageView;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -241,6 +243,8 @@ public class ShareFilesActivity extends BaseActivity {
      */
     private void startVolumeShareActivity(List<String> uriList) {
         if (FileUtils.isFileInListExist(uriList)) {
+            //提前一步清空上次一分享未成功的页面残余
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_VOLUME_FILE_LOCATION_SELECT_CLOSE));
             Intent intent = new Intent();
             intent.setClass(ShareFilesActivity.this, VolumeHomePageActivity.class);
             intent.putExtra(Constant.SHARE_FILE_URI_LIST, (Serializable) uriList);

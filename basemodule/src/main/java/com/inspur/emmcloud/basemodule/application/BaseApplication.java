@@ -417,11 +417,17 @@ public abstract class BaseApplication extends MultiDexApplication {
         LanguageManager.getInstance().setLanguageLocal();
     }
 
-//    @Override
-//    protected void attachBaseContext(Context newBase) {
-//        LogUtils.jasonDebug("attachBaseContext=========================================================");
-//        super.attachBaseContext(LanguageManager.getInstance().attachBaseContext(newBase));
-//    }
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        String previousLocal = PreferencesUtils.getString(newBase, Constant.PREF_LANGUAGE_CURRENT_LOCAL, "");
+        String currentLocal = Resources.getSystem().getConfiguration().locale.toString();
+        if (!previousLocal.equals(currentLocal)) {
+            super.attachBaseContext(newBase);
+        } else {
+            super.attachBaseContext(LanguageManager.getInstance().attachBaseContext(newBase));
+        }
+
+    }
 
 
     public MyActivityLifecycleCallbacks getActivityLifecycleCallbacks() {
