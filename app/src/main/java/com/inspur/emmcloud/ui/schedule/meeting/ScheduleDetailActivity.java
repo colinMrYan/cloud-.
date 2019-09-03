@@ -298,7 +298,7 @@ public class ScheduleDetailActivity extends BaseActivity {
 
             //管理员不显示发起群聊 (创建者跟参会人)
             if (relatedPersonFlag && WebServiceRouterManager.getInstance().isV1xVersionChat()) {
-                moreTextList.add(getString(R.string.message_create_group)); //发起群聊
+                moreTextList.add(getString(R.string.meeting_create_group_chat)); //会议群聊
                 scheduleApiService.getCalendarBindChat(scheduleId);
             }
 
