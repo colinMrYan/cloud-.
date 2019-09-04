@@ -336,7 +336,6 @@ public class PluginMgr {
                 }
             }
             entries.clear();
-            entries = null;
         }
 
     }
