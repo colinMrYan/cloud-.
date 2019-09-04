@@ -47,10 +47,10 @@
     <RelativeLayout
         android:id="@+id/volume_level_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="120dp"
         android:layout_above="@+id/voice_input_close_img"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="5dp">
+        android:layout_marginBottom="-20dp">
 
         <ImageView
             android:id="@+id/volume_level_img"
@@ -77,9 +77,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:minWidth="70dp"
-            android:minHeight="70dp"
-            android:src="#8436A5F6"
+            android:minWidth="100dp"
+            android:minHeight="100dp"
+            android:src="#3336A5F6"
             android:visibility="invisible"
             app:riv_corner_radius="35dp"
             app:riv_oval="true" />
@@ -116,6 +116,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:padding="10dp"
+        android:layout_marginBottom="10dp"
         android:src="@drawable/ic_arrow_down" />
 
 </RelativeLayout>

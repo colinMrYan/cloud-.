@@ -38,6 +38,7 @@ import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.dialogs.ActionSheetDialog;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.basemodule.util.ClickRuleUtil;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
 import com.inspur.emmcloud.basemodule.util.LanguageManager;
@@ -869,6 +870,7 @@ public class ECMChatInputMenu extends LinearLayout {
     public boolean onTouch(View v, MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                if (ClickRuleUtil.isFastClick()) return false;
                 voiceInputStatus = VOICE_INPUT_STATUS_SPEAKING;
                 initVoiceInputView();
                 voiceInputEt.setHint(getContext().getString(R.string.voice_input_hint_prepare));
@@ -1002,8 +1004,8 @@ public class ECMChatInputMenu extends LinearLayout {
             volume = 7;
         }
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) voiceInputLevelImgShade.getLayoutParams();
-        params.height = DensityUtil.dip2px(getContext(), 70) + DensityUtil.dip2px(getContext(), volume * 3);
-        params.width = DensityUtil.dip2px(getContext(), 70) + DensityUtil.dip2px(getContext(), volume * 3);
+        params.height = DensityUtil.dip2px(getContext(), 100) + DensityUtil.dip2px(getContext(), volume * 3);
+        params.width = DensityUtil.dip2px(getContext(), 100) + DensityUtil.dip2px(getContext(), volume * 3);
         voiceInputLevelImgShade.setLayoutParams(params);
         voiceInputLevelImgShade.setCornerRadius(params.height / 2);
 
