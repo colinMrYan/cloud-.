@@ -269,7 +269,7 @@ public class CheckingNetStateUtils {
                         if (_strSubTypeName.equalsIgnoreCase("TD-SCDMA") || _strSubTypeName.equalsIgnoreCase("WCDMA") || _strSubTypeName.equalsIgnoreCase("CDMA2000")) {
                             netWorkType = "3G";
                         } else {
-                            netWorkType = "Mobile Web";
+                            netWorkType = "Mobile Network";
                         }
                         break;
                 }
