@@ -5,6 +5,7 @@ import android.content.Context;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.romadaptation.RomInfoUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.bean.AppException;
 import com.inspur.emmcloud.basemodule.bean.GetAllConfigVersionResult;
 import com.inspur.emmcloud.basemodule.bean.GetLanguageResult;
 import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
@@ -359,6 +360,39 @@ public class BaseModuleApiService {
             public void callbackFail(String error, int responseCode) {
                 // TODO Auto-generated method stub
                 apiInterface.returnMyInfoFail(error, responseCode);
+            }
+        });
+    }
+
+
+    /**
+     * 异常上传
+     *
+     * @param exception
+     */
+    public void uploadException(final JSONObject exception, final List<AppException> appExceptionList) {
+        final String completeUrl = BaseModuleApiUri.getUploadExceptionUrl();
+        RequestParams params = ((BaseApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
+        params.setAsJsonContent(true);
+        params.setBodyContent(exception.toString());
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                // TODO Auto-generated method stub
+                apiInterface.returnUploadExceptionFail(new String(""), -1);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnUploadExceptionSuccess(appExceptionList);
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnUploadExceptionFail(error, responseCode);
             }
         });
     }

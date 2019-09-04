@@ -4,6 +4,8 @@ import android.content.Context;
 
 import com.inspur.emmcloud.basemodule.bean.AppException;
 
+import org.xutils.db.sqlite.WhereBuilder;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -110,6 +112,29 @@ public class AppExceptionCacheUtils {
         return appExceptionList;
     }
 
+    /**
+     * 获取指定级别的异常列表
+     *
+     * @param context
+     * @param errorLevel
+     * @return
+     */
+    public static AppException getAppExceptionListByLevel(final Context context, int errorLevel) {
+        AppException appException = null;
+        try {
+            appException = DbCacheUtils.getDb(context).selector(AppException.class).where
+                    (WhereBuilder.b("ErrorLevel", "=", errorLevel))
+                    .findFirst();
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+        if (appException == null) {
+            appException = new AppException();
+        }
+        return appException;
+    }
+
 
     /**
      * 清除AppException表信息
@@ -133,6 +158,20 @@ public class AppExceptionCacheUtils {
     public static void deleteAppException(Context context, List<AppException> appExceptionList) {
         try {
             DbCacheUtils.getDb(context).delete(appExceptionList);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 删除AppException
+     *
+     * @param context
+     */
+    public static void deleteAppException(Context context, AppException appException) {
+        try {
+            DbCacheUtils.getDb(context).delete(appException);
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

@@ -30,7 +30,6 @@ import com.inspur.emmcloud.basemodule.util.Res;
 import com.inspur.emmcloud.bean.system.SplashDefaultBean;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
 import com.inspur.emmcloud.componentservice.login.LoginService;
-import com.inspur.emmcloud.service.AppExceptionService;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.mine.setting.GuideActivity;
 import com.inspur.emmcloud.util.privates.NotificationUpgradeUtils;
@@ -121,8 +120,7 @@ public class MainActivity extends BaseActivity {
         int splashLogoResId = Res.getDrawableID("ic_splash_logo_" + appFirstLoadAlis);
         ImageDisplayUtils.getInstance().displayImage(splashLogoImg, "drawable://" + splashLogoResId, R.drawable.ic_splash_logo);
         activitySplashShowTime = System.currentTimeMillis();
-        //进行app异常上传
-        startUploadExceptionService();
+
         // 检测分辨率、网络环境
         if (!ResolutionUtils.isFitResolution(MainActivity.this)) {
             showResolutionValiadDlg();
@@ -130,15 +128,6 @@ public class MainActivity extends BaseActivity {
             initEnvironment();
         }
         showLastSplash();
-    }
-
-    /**
-     * 启动异常上传服务
-     */
-    private void startUploadExceptionService() {
-        Intent intent = new Intent();
-        intent.setClass(this, AppExceptionService.class);
-        startService(intent);
     }
 
     /**

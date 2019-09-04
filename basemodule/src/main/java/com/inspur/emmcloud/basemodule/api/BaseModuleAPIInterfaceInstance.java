@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.basemodule.api;
 
+import com.inspur.emmcloud.basemodule.bean.AppException;
 import com.inspur.emmcloud.basemodule.bean.GetAllConfigVersionResult;
 import com.inspur.emmcloud.basemodule.bean.GetLanguageResult;
 import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
@@ -58,6 +59,21 @@ public class BaseModuleAPIInterfaceInstance implements BaseModuleAPIInterface {
 
     @Override
     public void returnMyInfoFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnUploadExceptionSuccess() {
+
+    }
+
+    @Override
+    public void returnUploadExceptionSuccess(List<AppException> appExceptionList) {
+
+    }
+
+    @Override
+    public void returnUploadExceptionFail(String error, int errorCode) {
 
     }
 }

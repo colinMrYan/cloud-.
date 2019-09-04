@@ -1,6 +1,5 @@
 package com.inspur.emmcloud.api;
 
-import com.inspur.emmcloud.basemodule.bean.AppException;
 import com.inspur.emmcloud.basemodule.bean.GetUploadPushInfoResult;
 import com.inspur.emmcloud.bean.ChatFileUploadInfo;
 import com.inspur.emmcloud.bean.appcenter.App;
@@ -230,11 +229,7 @@ public interface APIInterface {
 
     void returnUploadTrainTicketFail(String error, int errorCode);
 
-    void returnUploadExceptionSuccess();
 
-    void returnUploadExceptionSuccess(final List<AppException> appExceptionList);
-
-    void returnUploadExceptionFail(String error, int errorCode);
 
     void returnLocationResultSuccess(GetLocationResult getLoctionResult);
 
