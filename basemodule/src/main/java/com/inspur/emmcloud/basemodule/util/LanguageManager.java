@@ -14,6 +14,7 @@ import android.content.res.Resources;
 import android.os.Build;
 import android.os.LocaleList;
 
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.api.BaseModuleAPIInterfaceInstance;
@@ -89,6 +90,7 @@ public class LanguageManager extends BaseModuleAPIInterfaceInstance {
         configuration.setLocale(locale);
         configuration.setLocales(new LocaleList(locale));
         configuration.fontScale = 1.0f;
+        LogUtils.jasonDebug("updateResources===" + locale.toString());
         return context.createConfigurationContext(configuration);
     }
 
@@ -234,6 +236,9 @@ public class LanguageManager extends BaseModuleAPIInterfaceInstance {
             }
         }
         config.fontScale = 1.0f;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            BaseApplication.getInstance().createConfigurationContext(config);
+        }
         BaseApplication.getInstance().getResources().updateConfiguration(config,
                 BaseApplication.getInstance().getResources().getDisplayMetrics());
     }

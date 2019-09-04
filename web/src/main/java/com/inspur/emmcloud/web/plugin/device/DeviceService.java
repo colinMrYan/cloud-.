@@ -5,7 +5,6 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Vibrator;
-import android.provider.Settings;
 
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.ResolutionUtils;
@@ -41,23 +40,17 @@ public class DeviceService extends ImpPlugin {
     public String executeAndReturn(String action, JSONObject paramsObject) {
         successCb = JSONUtils.getString(paramsObject, "success", "");
         failCb = JSONUtils.getString(paramsObject, "fail", "");
-        String res = "";
-        JSONObject jsonObject = new JSONObject();
-        if ("getInfo".equals(action)) {
-            res = conbineDeviceInfo(jsonObject);
-        } else {
-            showCallIMPMethodErrorDlg();
-        }
-        return res;
+        showCallIMPMethodErrorDlg();
+        return "";
     }
 
     /**
      * 组装设备信息
      *
-     * @param jsonObject
      * @return
      */
-    private String conbineDeviceInfo(JSONObject jsonObject) {
+    private JSONObject conbineDeviceInfo() {
+        JSONObject jsonObject = new JSONObject();
         String res = "";
         // 检查网络连接
         try {
@@ -67,7 +60,7 @@ public class DeviceService extends ImpPlugin {
             // 获取操作系统
             jsonObject.put("platform", String.valueOf(this.getPlatform()));
             // 获取设备国际唯一标识码
-            jsonObject.put("uuid", String.valueOf(this.getUuid()));
+            jsonObject.put("uuid", AppUtils.getMyUUID(getFragmentContext()).hashCode() + "");
             jsonObject.put("model", getModel());
             jsonObject.put("bundleId", AppUtils.getPackageName(getFragmentContext()));
             jsonObject.put("appVersion", AppUtils.getVersion(getFragmentContext()));
@@ -77,16 +70,16 @@ public class DeviceService extends ImpPlugin {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        res = jsonObject.toString();
-        return res;
+        return jsonObject;
     }
+
 
     @Override
     public void execute(String action, JSONObject jsonObject) {
         successCb = JSONUtils.getString(jsonObject, "success", "");
         failCb = JSONUtils.getString(jsonObject, "fail", "");
         if ("getInfo".equals(action)) {
-            jsCallback(successCb, conbineDeviceInfo(new JSONObject()));
+            jsCallback(successCb, conbineDeviceInfo());
         } else
             // 使用notification中的beep组件
             if ("beep".equals(action)) {
@@ -116,17 +109,6 @@ public class DeviceService extends ImpPlugin {
         return platform;
     }
 
-    /**
-     * 得到设备的系统名称
-     *
-     * @return
-     */
-    public String getUuid() {
-        String uuid = Settings.Secure.getString(getActivity()
-                        .getContentResolver(),
-                Settings.Secure.ANDROID_ID);
-        return uuid;
-    }
 
     public String getModel() {
         String model = android.os.Build.MODEL;

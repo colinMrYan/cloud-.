@@ -75,7 +75,7 @@ public class VolumeFileDownloadActivity extends BaseActivity {
         } else {
             setDownloadingStatus(false);
             boolean isStartDownload = getIntent().getBooleanExtra("isStartDownload", false);
-            if (isStartDownload) {
+            if (isStartDownload && checkDownloadEnvironment()) {
                 downloadFile();
             }
         }

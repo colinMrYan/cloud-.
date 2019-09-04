@@ -12,10 +12,4 @@
         <item name="android:windowFullscreen">true</item>
     </style>
 
-    <style name="web_Universal.Widget.ProgressBar" parent="@android:style/Widget.ProgressBar">
-        <item name="android:indeterminateDrawable">@drawable/web_video_progress_rotate</item>
-        <item name="android:indeterminateDuration">1000</item>
-    </style>
-
-
 </resources>

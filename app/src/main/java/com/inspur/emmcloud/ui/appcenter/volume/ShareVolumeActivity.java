@@ -30,6 +30,7 @@ import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.ActionSheetDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.MyDialog;
+import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
@@ -38,7 +39,6 @@ import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeListResult;
 import com.inspur.emmcloud.bean.appcenter.volume.Volume;
-import com.inspur.emmcloud.bean.system.ClearShareDataBean;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -69,7 +69,6 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
     private MyAppAPIService apiService;
     private LoadingDialog loadingDlg;
     private MyDialog createShareVolumeDlg, updateShareVolumeNameDlg;
-    private boolean isShareState = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +100,7 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 List<Uri> shareUriList = null;
-                if (isShareState) {
+                if (getIntent() != null && getIntent().hasExtra(Constant.SHARE_FILE_URI_LIST)) {
                     shareUriList = (List<Uri>) getIntent().getSerializableExtra(Constant.SHARE_FILE_URI_LIST);
                 }
                 Volume volume = shareVolumeList.get(position);
@@ -211,14 +210,19 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
     }
 
     /**
-     * 接收来自上传页面的消息
-     *
-     * @param clearShareDataBean
+     * EventBus传递消息
+     * @param eventMessage
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void clearShareData(ClearShareDataBean clearShareDataBean) {
-        isShareState = false;
+    public void onReceiveMessage(SimpleEventMessage eventMessage) {
+        if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_VOLUME_FILE_LOCATION_SELECT_CLOSE)) {
+            if (getIntent() != null && getIntent().hasExtra(Constant.SHARE_FILE_URI_LIST)) {
+                finish();
+            }
+
+        }
     }
+
 
     /**
      * 弹出文件删除提示框

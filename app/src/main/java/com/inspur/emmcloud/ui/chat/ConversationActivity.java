@@ -99,6 +99,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -817,9 +818,18 @@ public class ConversationActivity extends ConversationBaseActivity {
             switch (type) {
                 case "image":
                 case "file":
-                    List<String> pathList = getIntent().getStringArrayListExtra("share_paths");
-                    for (String url : pathList) {
-                        combinAndSendMessageWithFile(type.equals("image") ? getCompressorUrl(url) : url, type.equals("file") ? Message.MESSAGE_TYPE_FILE_REGULAR_FILE : Message.MESSAGE_TYPE_MEDIA_IMAGE, null);
+                    if (getIntent().hasExtra("share_obj_form_volume")) {
+                        String cid = getIntent().getExtras().getString("cid");
+                        String path = getIntent().getExtras().getString("path");
+                        VolumeFile volumeFile = (VolumeFile) getIntent().getSerializableExtra("share_obj_form_volume");
+                        transmitMsgFromVolume(cid, volumeFile, path);
+                    } else {
+                        List<String> pathList = getIntent().getStringArrayListExtra("share_paths");
+                        for (String url : pathList) {
+                            String urlLowerCase = url.toLowerCase();
+                            boolean isImage = urlLowerCase.endsWith("png") || urlLowerCase.endsWith("jpg") || urlLowerCase.endsWith("jpeg") || urlLowerCase.endsWith("dng");
+                            combinAndSendMessageWithFile(isImage ? getCompressorUrl(url) : url, isImage ? Message.MESSAGE_TYPE_MEDIA_IMAGE : Message.MESSAGE_TYPE_FILE_REGULAR_FILE, null);
+                        }
                     }
                     break;
                 case "link":
@@ -1483,6 +1493,9 @@ public class ConversationActivity extends ConversationBaseActivity {
             case Message.MESSAGE_TYPE_MEDIA_IMAGE:
                 transmitImgMsg(cid, uiMessage.getMessage());
                 break;
+            case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
+                transmitFileMsg(cid, uiMessage.getMessage());
+                break;
             case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
                 transmitTextMsg(cid, uiMessage);
                 break;
@@ -1492,18 +1505,43 @@ public class ConversationActivity extends ConversationBaseActivity {
     }
 
     /**
+     * 转发来自网盘
+     */
+    private void transmitMsgFromVolume(String cid, VolumeFile volumeFile, String path) {
+        if (NetUtils.isNetworkConnected(getApplicationContext())) {
+            ChatAPIService apiService = new ChatAPIService(this);
+            apiService.setAPIInterface(new WebService());
+            apiService.shareFileToFriendsFromVolume(volumeFile.getVolume(), cid, path, volumeFile);
+        }
+    }
+
+    /**
      * 转发文本消息
      *
      * @param cid
      */
     private void transmitTextMsg(String cid, UIMessage uiMessage) {
-        String text = uiMessage2Content(uiMessage);
+        String content = uiMessage2Content(uiMessage);
         if (WebSocketPush.getInstance().isSocketConnect()) {
-            Message localMessage = CommunicationUtils.combinLocalTextPlainMessage(text, cid, null);
+            Message localMessage = CommunicationUtils.combinLocalTextPlainMessage(content, cid, null);
             WSAPIService.getInstance().sendChatTextPlainMsg(localMessage);
             ToastUtils.show(R.string.chat_transmit_message_success);
         } else {
             ToastUtils.show(R.string.chat_transmit_message_fail);
+        }
+    }
+
+    /**
+     * 转发文件消息
+     */
+    private void transmitFileMsg(String cid, Message sendMessage) {
+        String path = null;
+        MsgContentRegularFile msgContentAttachmentFile = sendMessage.getMsgContentAttachmentFile();
+        path = msgContentAttachmentFile.getMedia();
+        if (NetUtils.isNetworkConnected(getApplicationContext())) {
+            ChatAPIService apiService = new ChatAPIService(this);
+            apiService.setAPIInterface(new WebService());
+            apiService.transmitFile(path, sendMessage.getChannel(), cid, "regular-file", sendMessage);
         }
     }
 
@@ -1536,6 +1574,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 items = new int[]{R.string.chat_long_click_copy, R.string.chat_long_click_transmit, R.string.chat_long_click_schedule};
                 break;
             case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
+                items = new int[]{R.string.chat_long_click_transmit};
                 break;
             case Message.MESSAGE_TYPE_EXTENDED_CONTACT_CARD:
                 break;
@@ -1675,7 +1714,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                         copyToClipboard(ConversationActivity.this, content);
                         break;
                     case R.string.chat_long_click_transmit:
-                        shareMessageToFrinds(ConversationActivity.this);
+                        shareMessageToFriends(ConversationActivity.this, uiMessage);
                         break;
                     case R.string.chat_long_click_schedule:
                         addTextToSchedule(content);
@@ -1717,7 +1756,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                                 copyToClipboard(context, content);
                                 break;
                             case R.string.chat_long_click_transmit:
-                                shareMessageToFrinds(context);
+                                shareMessageToFriends(context, uiMessage);
                                 break;
                             case R.string.chat_long_click_schedule:
                                 addTextToSchedule(content);
@@ -1788,10 +1827,30 @@ public class ConversationActivity extends ConversationBaseActivity {
     /**
      * 给朋友转发
      */
-    private void shareMessageToFrinds(Context context) {
+    private void shareMessageToFriends(Context context, UIMessage uiMessage) {
         Intent intent = new Intent();
+        JSONObject jsonObject = JSONUtils.getJSONObject(uiMessage.getMessage().getContent());
+        String result = "";
+        try {
+            switch (uiMessage.getMessage().getType()) {
+                case Message.MESSAGE_TYPE_MEDIA_IMAGE:
+                    result = getString(R.string.baselib_share_image) + " " + jsonObject.getString("name");
+                    break;
+                case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
+                    result = getString(R.string.baselib_share_file) + " " + jsonObject.getString("name");
+                    break;
+                case Message.MESSAGE_TYPE_TEXT_PLAIN:
+                case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
+                    result = uiMessage2Content(uiMessage);
+                    break;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         intent.putExtra(ContactSearchFragment.EXTRA_TYPE, 0);
         intent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, false);
+        intent.putExtra(ContactSearchFragment.EXTRA_SHOW_COMFIRM_DIALOG_WITH_MESSAGE, StringUtils.isBlank(result) ? "" : result);
+        intent.putExtra(ContactSearchFragment.EXTRA_SHOW_COMFIRM_DIALOG, true);
         ArrayList<String> uidList = new ArrayList<>();
         uidList.add(MyApplication.getInstance().getUid());
         intent.putStringArrayListExtra(ContactSearchFragment.EXTRA_EXCLUDE_SELECT, uidList);
@@ -1844,8 +1903,17 @@ public class ConversationActivity extends ConversationBaseActivity {
         public void returnTransmitPictureSuccess(String cid, String description, Message message) {
             if (WebSocketPush.getInstance().isSocketConnect()) {
                 String path = JSONUtils.getString(description, "path", "");
-                Message combineMessage = CommunicationUtils.combineTransmitMediaImageMessage(cid, path, message.getMsgContentMediaImage());
-                WSAPIService.getInstance().sendChatMediaImageMsg(combineMessage);
+                Message combineMessage = null;
+                switch (message.getType()) {
+                    case Message.MESSAGE_TYPE_MEDIA_IMAGE:
+                        combineMessage = CommunicationUtils.combineTransmitMediaImageMessage(cid, path, message.getMsgContentMediaImage());
+                        WSAPIService.getInstance().sendChatMediaImageMsg(combineMessage);
+                        break;
+                    case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
+                        combineMessage = CommunicationUtils.combineTransmitRegularFileMessage(cid, path, message.getMsgContentAttachmentFile());
+                        WSAPIService.getInstance().sendChatRegularFileMsg(combineMessage);
+                        break;
+                }
                 ToastUtils.show(R.string.chat_transmit_message_success);
 
             } else {
@@ -1856,6 +1924,23 @@ public class ConversationActivity extends ConversationBaseActivity {
         @Override
         public void returnTransmitPictureError(String error, int errorCode) {
             ToastUtils.show(R.string.chat_transmit_message_fail);
+        }
+
+        @Override
+        public void returnShareFileToFriendsFromVolumeSuccess(String newPath, VolumeFile volumeFile) {
+            MsgContentRegularFile msgContentRegularFile = new MsgContentRegularFile();
+            msgContentRegularFile.setCategory(Message.MESSAGE_TYPE_FILE_REGULAR_FILE);
+            msgContentRegularFile.setName(volumeFile.getName());
+            msgContentRegularFile.setSize(volumeFile.getSize());
+            msgContentRegularFile.setMedia(newPath);
+            Message combineMessage = CommunicationUtils.combineTransmitRegularFileMessage(cid, newPath, msgContentRegularFile);
+            WSAPIService.getInstance().sendChatRegularFileMsg(combineMessage);
+            super.returnShareFileToFriendsFromVolumeSuccess(newPath, volumeFile);
+        }
+
+        @Override
+        public void returnShareFileToFriendsFromVolumeFail(String error, int errorCode) {
+            super.returnShareFileToFriendsFromVolumeFail(error, errorCode);
         }
     }
 }

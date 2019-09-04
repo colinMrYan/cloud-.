@@ -36,6 +36,7 @@ import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
+import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.bean.appcenter.GetIDResult;
@@ -217,8 +218,10 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
         schedule.setAllDay(b);
         timeTextChangeByIsAllDay(b);
         remindEvent = new RemindEvent();
-        remindEvent.setName(ScheduleAlertTimeActivity.getAlertTimeNameByTime(remindEvent.getAdvanceTimeSpan(), schedule.getAllDay()));
-        reminderText.setText(ScheduleAlertTimeActivity.getAlertTimeNameByTime(remindEvent.getAdvanceTimeSpan(), schedule.getAllDay()));//设置提醒
+        int data = b ? -32400 : 600;
+        remindEvent.setAdvanceTimeSpan(data);
+        remindEvent.setName(ScheduleAlertTimeActivity.getAlertTimeNameByTime(data, b));
+        reminderText.setText(ScheduleAlertTimeActivity.getAlertTimeNameByTime(data, b));//设置提醒
     }
 
     /**
@@ -388,9 +391,11 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
                 }
                 break;
             case R.id.ll_start_time:
+                InputMethodUtils.hide(ScheduleAddActivity.this);
                 showTimeSelectDialog(true);
                 break;
             case R.id.ll_end_time:
+                InputMethodUtils.hide(ScheduleAddActivity.this);
                 showTimeSelectDialog(false);
                 break;
             case R.id.iv_meeting_position_enter:
@@ -537,6 +542,8 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
                         endTimeCalendar.add(Calendar.HOUR_OF_DAY, 2);
                         showTimeInvalidDlg();
                         return;
+                    } else {
+                        endTimeCalendar = (Calendar) calendar.clone();
                     }
                 }
                 setMeetingTime();

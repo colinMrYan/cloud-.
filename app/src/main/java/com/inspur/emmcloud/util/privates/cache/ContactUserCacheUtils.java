@@ -374,10 +374,10 @@ public class ContactUserCacheUtils {
             List<ContactUser> searchContactUserList1 = DbCacheUtils.getDb().selector
                     (ContactUser.class)
                     .where(WhereBuilder.b().expr("id not in" + noInSql))
-                    .and(WhereBuilder.b("pinyin", "=", searchStr)
-                            .or("name", "=", searchStr)
+                    .and(WhereBuilder.b("name", "=", searchStr)
+                            .or("pinyin", "=", searchStr)
                             .or("nameGlobal", "=", searchStr)
-                            .or("code", "=", searchStr)
+                            .or("email", "=", searchStr)
                     )
                     .limit(limit).findAll();
             if (searchContactUserList1 != null) {
@@ -390,10 +390,11 @@ public class ContactUserCacheUtils {
                 List<ContactUser> searchContactUserList2 = DbCacheUtils.getDb().selector
                         (ContactUser.class)
                         .where(WhereBuilder.b().expr("id not in" + noInSql))
-                        .and(WhereBuilder.b("pinyin", "like", searchStr)
-                                .or("name", "like", searchStr)
+                        .and(WhereBuilder.b("name", "like", searchStr)
+                                .or("pinyin", "like", searchStr)
                                 .or("nameGlobal", "like", searchStr)
-                                .or("code", "like", searchStr))
+                                .or("email", "like", searchStr)
+                        )
                         .limit(limit - searchContactList.size()).findAll();
                 if (searchContactUserList2 != null) {
                     searchContactList.addAll(Contact.contactUserList2ContactList(searchContactUserList2));
@@ -406,9 +407,11 @@ public class ContactUserCacheUtils {
                 List<ContactUser> searchContactUserList3 = DbCacheUtils.getDb().selector
                         (ContactUser.class)
                         .where(WhereBuilder.b().expr("id not in" + noInSql))
-                        .and(WhereBuilder.b("pinyin", "like", searchStr)
-                                .or("name", "like", searchStr)
-                                .or("nameGlobal", "like", searchStr))
+                        .and(WhereBuilder.b("name", "like", searchStr)
+                                .or("pinyin", "like", searchStr)
+                                .or("nameGlobal", "like", searchStr)
+                                .or("email", "like", searchStr)
+                        )
                         .limit(limit - searchContactList.size()).findAll();
                 if (searchContactUserList3 != null) {
                     searchContactList.addAll(Contact.contactUserList2ContactList(searchContactUserList3));
@@ -420,9 +423,11 @@ public class ContactUserCacheUtils {
                 List<ContactUser> searchContactUserList4 = DbCacheUtils.getDb().selector
                         (ContactUser.class)
                         .where(WhereBuilder.b().expr("id not in" + noInSql))
-                        .and(WhereBuilder.b("pinyin", "like", searchStr)
-                                .or("name", "like", searchStr)
-                                .or("nameGlobal", "like", searchStr))
+                        .and(WhereBuilder.b("name", "like", searchStr)
+                                .or("pinyin", "like", searchStr)
+                                .or("nameGlobal", "like", searchStr)
+                                .or("email", "like", searchStr)
+                        )
                         .limit(limit - searchContactList.size()).findAll();
                 if (searchContactUserList4 != null) {
                     searchContactList.addAll(Contact.contactUserList2ContactList(searchContactUserList4));
@@ -442,9 +447,11 @@ public class ContactUserCacheUtils {
                 List<ContactUser> searchContactList5 = DbCacheUtils.getDb().selector
                         (ContactUser.class)
                         .where(WhereBuilder.b().expr("id not in" + noInSql))
-                        .and(WhereBuilder.b("pinyin", "like", searchStr)
-                                .or("name", "like", searchStr)
-                                .or("nameGlobal", "like", searchStr))
+                        .and(WhereBuilder.b("name", "like", searchStr)
+                                .or("pinyin", "like", searchStr)
+                                .or("nameGlobal", "like", searchStr)
+                                .or("email", "like", searchStr)
+                        )
                         .limit(limit - searchContactList.size()).findAll();
                 if (searchContactList5 != null) {
                     searchContactList.addAll(Contact.contactUserList2ContactList(searchContactList5));

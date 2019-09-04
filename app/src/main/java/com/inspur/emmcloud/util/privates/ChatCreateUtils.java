@@ -40,6 +40,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -203,10 +204,12 @@ public class ChatCreateUtils {
             list.add(ownerParticipant);
         }
         //去除通讯录中不存在的人(外部联系人)
-        for (Participant item : list) {
+        Iterator<Participant> iterator = list.iterator();
+        while (iterator.hasNext()) {
+            Participant item = iterator.next();
             ContactUser user = ContactUserCacheUtils.getContactUserByUid(item.getId());
             if (user == null) {
-                list.remove(item);
+                iterator.remove();
             }
         }
         Set<Participant> set = new TreeSet<>(new Comparator<Participant>() {

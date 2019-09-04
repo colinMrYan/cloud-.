@@ -65,6 +65,7 @@ public class UploadPhoto {
         params.addHeader("Cookie", cookie);
         params.addBodyParameter("encodeType", encodeType + "");
         params.addBodyParameter("context", context);
+        params.setReadTimeout(120000);
         x.http().post(params, new CommonCallback<String>() {
 
             @Override
