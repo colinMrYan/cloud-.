@@ -1239,9 +1239,9 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                 globalName = contactOrg.getNameGlobal();
             }
         }
-        if (!StringUtils.isBlank(globalName)) {
-            completeName = completeName + "（" + globalName + "）";
-        }
+//        if (!StringUtils.isBlank(globalName)) {
+//            completeName = completeName + "（" + globalName + "）";
+//        }
         return completeName;
     }
 
@@ -1449,14 +1449,11 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
             if (convertView == null) {
                 viewHolder = new ViewHolder();
                 LayoutInflater mInflater = (LayoutInflater) getActivity().getSystemService(LAYOUT_INFLATER_SERVICE);
-                convertView = mInflater.inflate(
-                        R.layout.member_search_item_view, null);
-                viewHolder.nameText = (TextView) convertView
-                        .findViewById(R.id.tv_name);
-                viewHolder.rightArrowImg = (ImageView) convertView
-                        .findViewById(R.id.arrow_img);
-                viewHolder.selectedImg = (ImageView) convertView
-                        .findViewById(R.id.selected_img);
+                convertView = mInflater.inflate(R.layout.member_search_item_view, null);
+                viewHolder.nameText = (TextView) convertView.findViewById(R.id.tv_name);
+                viewHolder.descTv = convertView.findViewById(R.id.tv_desc);
+                viewHolder.rightArrowImg = (ImageView) convertView.findViewById(R.id.arrow_img);
+                viewHolder.selectedImg = (ImageView) convertView.findViewById(R.id.selected_img);
                 viewHolder.photoImg = (CircleTextImageView) convertView.findViewById(R.id.img_photo);
                 convertView.setTag(viewHolder);
             } else {
@@ -1477,8 +1474,27 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                 viewHolder.rightArrowImg.setVisibility(View.INVISIBLE);
                 searchModel = openGroupChannelList.get(position);
                 viewHolder.nameText.setText(searchModel.getName());
-
             }
+
+            if (searchModel.getType().equals(SearchModel.TYPE_USER)) {
+                String enName = getEnglishName(searchModel);
+                String orgName = getOrgName(searchModel);
+                if (StringUtils.isBlank(enName) && StringUtils.isBlank(orgName)) {
+                    viewHolder.descTv.setVisibility(View.GONE);
+                } else {
+                    viewHolder.descTv.setVisibility(View.VISIBLE);
+                    if (StringUtils.isBlank(enName)) {
+                        viewHolder.descTv.setText(orgName);
+                    } else if (StringUtils.isBlank(orgName)) {
+                        viewHolder.descTv.setText(enName);
+                    } else {
+                        viewHolder.descTv.setText(enName + "  |  " + orgName);
+                    }
+                }
+            } else {
+                viewHolder.descTv.setVisibility(View.GONE);
+            }
+
             if (searchModel != null) {
                 displayImg(searchModel, viewHolder.photoImg);
                 if (selectMemList.contains(searchModel)) {
@@ -1525,12 +1541,10 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
             ViewHolder viewHolder = null;
             if (convertView == null) {
                 viewHolder = new ViewHolder();
-                convertView = LayoutInflater.from(getActivity()).inflate(
-                        R.layout.member_search_item_view, null);
-                viewHolder.nameText = (TextView) convertView
-                        .findViewById(R.id.tv_name);
-                viewHolder.selectedImg = (ImageView) convertView
-                        .findViewById(R.id.selected_img);
+                convertView = LayoutInflater.from(getActivity()).inflate(R.layout.member_search_item_view, null);
+                viewHolder.nameText = (TextView) convertView.findViewById(R.id.tv_name);
+                viewHolder.descTv = convertView.findViewById(R.id.tv_desc);
+                viewHolder.selectedImg = (ImageView) convertView.findViewById(R.id.selected_img);
                 viewHolder.photoImg = (CircleTextImageView) convertView.findViewById(R.id.img_photo);
                 convertView.setTag(viewHolder);
             } else {
@@ -1546,6 +1560,26 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                 viewHolder.selectedImg.setVisibility(View.INVISIBLE);
                 viewHolder.nameText.setTextColor(Color.parseColor("#030303"));
             }
+
+            if (searchModel.getType().equals(SearchModel.TYPE_USER)) {
+                String enName = getEnglishName(searchModel);
+                String orgName = getOrgName(searchModel);
+                if (StringUtils.isBlank(enName) && StringUtils.isBlank(orgName)) {
+                    viewHolder.descTv.setVisibility(View.GONE);
+                } else {
+                    viewHolder.descTv.setVisibility(View.VISIBLE);
+                    if (StringUtils.isBlank(enName)) {
+                        viewHolder.descTv.setText(orgName);
+                    } else if (StringUtils.isBlank(orgName)) {
+                        viewHolder.descTv.setText(enName);
+                    } else {
+                        viewHolder.descTv.setText(enName + "  |  " + orgName);
+                    }
+                }
+            } else {
+                viewHolder.descTv.setVisibility(View.GONE);
+            }
+
             return convertView;
         }
     }
@@ -1592,13 +1626,10 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
             if (convertView == null) {
                 viewHolder = new ViewHolder();
                 LayoutInflater mInflater = (LayoutInflater) getActivity().getSystemService(LAYOUT_INFLATER_SERVICE);
-                convertView = mInflater.inflate(
-                        R.layout.member_search_item_view, null);
-                viewHolder.nameText = (TextView) convertView
-                        .findViewById(R.id.tv_name);
+                convertView = mInflater.inflate(R.layout.member_search_item_view, null);
+                viewHolder.nameText = (TextView) convertView.findViewById(R.id.tv_name);
                 viewHolder.descTv = convertView.findViewById(R.id.tv_desc);
-                viewHolder.selectedImg = (ImageView) convertView
-                        .findViewById(R.id.selected_img);
+                viewHolder.selectedImg = (ImageView) convertView.findViewById(R.id.selected_img);
                 viewHolder.photoImg = (CircleTextImageView) convertView.findViewById(R.id.img_photo);
                 convertView.setTag(viewHolder);
             } else {
@@ -1611,7 +1642,6 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
             } else {
                 Contact contact = searchContactList.get(position);
                 searchModel = contact.contact2SearchModel();
-
             }
             displayImg(searchModel, viewHolder.photoImg);
             viewHolder.nameText.setText(getCompleteName(searchModel));
