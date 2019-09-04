@@ -97,8 +97,12 @@ public class VideoService extends ImpPlugin {
                                         fileUri = FileProvider.getUriForFile(getFragmentContext(),
                                                 getFragmentContext().getPackageName() + ".provider", file);
                                     } else {
-                                        fileUri = Uri.fromFile(file);
+                                        String path = FilePathUtils.BASE_PATH + "/video/";
+                                        // Constants.video_url 是一个常量，代表存放视频的文件夹
+                                        File mediaStorageDir = new File(path);
+                                        fileUri = Uri.fromFile(mediaStorageDir);
                                     }
+
                                 } catch (IOException e) {
                                     try {
                                         JSONObject json = new JSONObject();
@@ -109,7 +113,6 @@ public class VideoService extends ImpPlugin {
                                     }
                                     e.printStackTrace();
                                 }
-
                                 intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
                                 intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 600);
 
