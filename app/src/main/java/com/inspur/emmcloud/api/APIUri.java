@@ -9,6 +9,7 @@ import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
+import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.chat.Robot;
 import com.inspur.emmcloud.bean.schedule.Schedule;
 import com.inspur.emmcloud.bean.schedule.calendar.AccountType;
@@ -932,6 +933,10 @@ public class APIUri {
         return getUrlBaseVolume() + "/" + volumeId + "/file/request";
     }
 
+
+    public static String getVolumeFileDownloadUrl(VolumeFile volumeFile, String currentDirAbsolutePath) {
+        return getUrlBaseVolume() + "/" + volumeFile.getVolume() + "/file/request?path=" + StringUtils.encodeURIComponent(currentDirAbsolutePath + volumeFile.getName());
+    }
     /**
      * 获取云盘创建文件夹url
      *

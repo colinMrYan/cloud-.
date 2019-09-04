@@ -81,6 +81,14 @@ public class FileAdapter extends RecyclerViewAdapter {
             fileHolder.fileIcon.setImageResource(R.drawable.ic_volume_file_typ_zip);
         } else if (fileType == FileType.image) {
             ImageDisplayUtils.getInstance().displayImage(fileHolder.fileIcon, fileBean.getPath());
+        } else if (fileType == FileType.word) {
+            fileHolder.fileIcon.setImageResource(R.drawable.ic_volume_file_typ_word);
+        } else if (fileType == FileType.excel) {
+            fileHolder.fileIcon.setImageResource(R.drawable.ic_volume_file_typ_excel);
+        } else if (fileType == FileType.ppt) {
+            fileHolder.fileIcon.setImageResource(R.drawable.ic_volume_file_typ_ppt);
+        } else if (fileType == FileType.pdf) {
+            fileHolder.fileIcon.setImageResource(R.drawable.ic_volume_file_typ_pdf);
         } else {
             fileHolder.fileIcon.setImageResource(R.drawable.ic_volume_file_typ_unknown);
         }

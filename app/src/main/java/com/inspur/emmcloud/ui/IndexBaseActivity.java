@@ -43,13 +43,9 @@ import com.inspur.emmcloud.bean.appcenter.AppGroupBean;
 import com.inspur.emmcloud.bean.contact.ContactClickMessage;
 import com.inspur.emmcloud.bean.system.ChangeTabBean;
 import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
-import com.inspur.emmcloud.bean.system.MainTabPayLoad;
 import com.inspur.emmcloud.bean.system.MainTabResult;
-import com.inspur.emmcloud.bean.system.MainTabTitleResult;
 import com.inspur.emmcloud.bean.system.TabBean;
 import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
-import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
-import com.inspur.emmcloud.bean.system.navibar.NaviBarScheme;
 import com.inspur.emmcloud.broadcastreceiver.NetworkChangeReceiver;
 import com.inspur.emmcloud.broadcastreceiver.ScreenBroadcastReceiver;
 import com.inspur.emmcloud.componentservice.web.WebService;
@@ -176,7 +172,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
         TabBean[] tabBeans = null;
 //        String appTabs = PreferencesByUserAndTanentUtils.getString(IndexBaseActivity.this,
 //                Constant.PREF_APP_TAB_BAR_INFO_CURRENT, "");
-        mainTabResultList = getMainTabList();
+        mainTabResultList = AppTabUtils.getMainTabResultList(IndexBaseActivity.this);
         if (mainTabResultList.size() > 0) {
             String environmentLanguage = LanguageManager.getInstance().getCurrentAppLanguage();
 //            GetAppMainTabResult getAppMainTabResult = new GetAppMainTabResult(appTabs);
@@ -241,53 +237,9 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
                 }
             }
         }
-        if (tabBeans == null) {
-            tabBeans = addDefaultTabs();
-        }
         showTabs(tabBeans);
     }
 
-    private ArrayList<MainTabResult> getMainTabList() {
-        ArrayList<MainTabResult> mainTabResultList = null;
-        String currentTabLayoutName = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.APP_TAB_LAYOUT_NAME, "");
-        NaviBarModel naviBarModel = new NaviBarModel(PreferencesByUserAndTanentUtils.getString(this, Constant.APP_TAB_LAYOUT_DATA, ""));
-        List<NaviBarScheme> naviBarSchemeList = naviBarModel.getNaviBarPayload().getNaviBarSchemeList();
-        //首先根据用户设置的模式来获取naviBarSchemeList
-        for (int i = 0; i < naviBarSchemeList.size(); i++) {
-            if (naviBarSchemeList.get(i).getName().equals(currentTabLayoutName)) {
-                mainTabResultList = naviBarSchemeList.get(i).getMainTabResultList();
-                break;
-            }
-        }
-        //如果没有用户设置的模式或者是第一次安装默认的模式  使用defaultScheme
-        if ((mainTabResultList == null || mainTabResultList.size() == 0) && naviBarSchemeList.size() > 0) {
-            String defaultTabLayoutName = naviBarModel.getNaviBarPayload().getDefaultScheme();
-            for (int i = 0; i < naviBarSchemeList.size(); i++) {
-                if (naviBarSchemeList.get(i).getName().equals(defaultTabLayoutName)) {
-                    mainTabResultList = naviBarSchemeList.get(i).getMainTabResultList();
-                    PreferencesByUserAndTanentUtils.putString(this, Constant.APP_TAB_LAYOUT_NAME, defaultTabLayoutName);
-                    break;
-                }
-            }
-        }
-        //如果前面两个都没有则使用mainTab
-        if (mainTabResultList == null || mainTabResultList.size() == 0) {
-            String appTabs = PreferencesByUserAndTanentUtils.getString(IndexBaseActivity.this,
-                    Constant.PREF_APP_TAB_BAR_INFO_CURRENT, "");
-            GetAppMainTabResult getAppMainTabResult = new GetAppMainTabResult(appTabs);
-            mainTabResultList = getAppMainTabResult.getMainTabPayLoad().getMainTabResultList();
-        }
-        //最终得到tab的List之后发送给CommunicationFragment
-        if (mainTabResultList != null) {
-            GetAppMainTabResult getAppMainTabResult = new GetAppMainTabResult();
-            MainTabPayLoad mainTabPayLoad = new MainTabPayLoad();
-            mainTabPayLoad.setMainTabResultList(mainTabResultList);
-            getAppMainTabResult.setMainTabPayLoad(mainTabPayLoad);
-            // 发送到CommunicationFragment
-            EventBus.getDefault().post(getAppMainTabResult);
-        }
-        return mainTabResultList;
-    }
 
     // 显示icon本地映射
     private int getIconFromLocalByIco(String icon) {
@@ -636,65 +588,6 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
         }
     }
 
-    /**
-     * 当没有数据的时候返回内容
-     * 添加默认数据根据目前服务端传回数据添加
-     * 未添加的已经添加默认
-     *
-     * @return
-     */
-    private TabBean[] addDefaultTabs() {
-        // 无数据改为显示两个tab，数组变为2
-        TabBean[] tabBeans = new TabBean[2];
-        TabBean tabBeanApp = new TabBean(getString(R.string.application), MyAppFragment.class, getApplicationMainTab());
-        tabBeanApp.setTabId(Constant.APP_TAB_BAR_APPLICATION);
-        TabBean tabBeanMine = new TabBean(getString(R.string.mine), MoreFragment.class, getMineTab());
-        tabBeanMine.setTabId(Constant.APP_TAB_BAR_PROFILE);
-        // 无数据改为显示两个tab
-        tabBeans[0] = tabBeanApp;
-        tabBeans[1] = tabBeanMine;
-        return tabBeans;
-    }
-
-    /**
-     * 生成applicationMainTab
-     *
-     * @return
-     */
-    private MainTabResult getApplicationMainTab() {
-        MainTabResult applicationTabResult = new MainTabResult();
-        applicationTabResult.setIcon("application");
-        applicationTabResult.setName("application");
-        applicationTabResult.setUri(Constant.APP_TAB_BAR_APPLICATION);
-        applicationTabResult.setType("native");
-        applicationTabResult.setSelected(false);
-        MainTabTitleResult applicationTabTitleResult = new MainTabTitleResult();
-        applicationTabTitleResult.setZhHant("應用");
-        applicationTabTitleResult.setZhHans("应用");
-        applicationTabTitleResult.setEnUS("Apps");
-        applicationTabResult.setMainTabTitleResult(applicationTabTitleResult);
-        return applicationTabResult;
-    }
-
-    /**
-     * 生成mainTab
-     *
-     * @return
-     */
-    private MainTabResult getMineTab() {
-        MainTabResult mineTabResult = new MainTabResult();
-        mineTabResult.setIcon("me");
-        mineTabResult.setName("me");
-        mineTabResult.setUri(Constant.APP_TAB_BAR_PROFILE);
-        mineTabResult.setType("native");
-        mineTabResult.setSelected(false);
-        MainTabTitleResult mainTabTitleResult = new MainTabTitleResult();
-        mainTabTitleResult.setZhHant("我");
-        mainTabTitleResult.setZhHans("我");
-        mainTabTitleResult.setEnUS("Me");
-        mineTabResult.setMainTabTitleResult(mainTabTitleResult);
-        return mineTabResult;
-    }
 
     /**
      * 根据语言设置tab，扩展语言从这里扩展
@@ -764,7 +657,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
         int tabIndex = 0;
 //        String appTabs = PreferencesByUserAndTanentUtils.getString(IndexBaseActivity.this,
 //                Constant.PREF_APP_TAB_BAR_INFO_CURRENT, "");
-        ArrayList<MainTabResult> mainTabResultList = getMainTabList();
+        ArrayList<MainTabResult> mainTabResultList = AppTabUtils.getMainTabResultList(this);
         if (mainTabResultList.size() > 0) {
 //            ArrayList<MainTabResult> mainTabResultList =
 //                    new GetAppMainTabResult(appTabs).getMainTabPayLoad().getMainTabResultList();
