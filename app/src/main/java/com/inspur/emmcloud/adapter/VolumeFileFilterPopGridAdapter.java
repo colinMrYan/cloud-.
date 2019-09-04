@@ -17,7 +17,7 @@ import com.inspur.emmcloud.R;
 public class VolumeFileFilterPopGridAdapter extends BaseAdapter {
     private Context context;
     private int[] filterTypeNameIds = {R.string.docunment, R.string.picture, R.string.audio, R.string.video, R.string.other};
-    private int[] filterTypeIconIds = {R.drawable.ic_volume_file_typ_document, R.drawable.ic_volume_file_typ_img, R.drawable.ic_volume_file_typ_audio, R.drawable.ic_volume_file_typ_video, R.drawable.ic_volume_file_typ_other};
+    private int[] filterTypeIconIds = {R.drawable.ic_volume_file_typ_document, R.drawable.baselib_file_type_img, R.drawable.baselib_file_type_audio, R.drawable.baselib_file_type_video, R.drawable.ic_volume_file_typ_other};
 
     public VolumeFileFilterPopGridAdapter(Context context) {
         this.context = context;
