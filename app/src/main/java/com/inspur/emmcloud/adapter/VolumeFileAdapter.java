@@ -11,10 +11,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
-import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.interf.ProgressCallback;
@@ -171,13 +169,14 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
             holder.fileSelcetImg.setVisibility(View.GONE);
         }
         int fileTypeImgResId = VolumeFileIconUtils.getIconResId(volumeFile);
-        holder.fileTypeImg.setTag("");
-        if (volumeFile.getFormat().startsWith("image/")) {
-            String url = APIUri.getVolumeFileDownloadUrl(volumeFile, currentDirAbsolutePath);
-            ImageDisplayUtils.getInstance().displayImageByTag(holder.fileTypeImg, url, R.drawable.ic_volume_file_typ_img);
-        } else {
-            holder.fileTypeImg.setImageResource(fileTypeImgResId);
-        }
+        holder.fileTypeImg.setImageResource(fileTypeImgResId);
+//        holder.fileTypeImg.setTag("");
+//        if (volumeFile.getFormat().startsWith("image/")) {
+//            String url = APIUri.getVolumeFileDownloadUrl(volumeFile, currentDirAbsolutePath);
+//            ImageDisplayUtils.getInstance().displayImageByTag(holder.fileTypeImg, url, R.drawable.ic_volume_file_typ_img);
+//        } else {
+//            holder.fileTypeImg.setImageResource(fileTypeImgResId);
+//        }
 
         holder.fileNameText.setText(volumeFile.getName());
         holder.fileSizeText.setText(FileUtils.formatFileSize(volumeFile.getSize()));
