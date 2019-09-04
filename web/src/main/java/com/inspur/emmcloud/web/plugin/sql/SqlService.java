@@ -76,6 +76,9 @@ public class SqlService extends ImpPlugin {
             try {
                 return SQLiteDatabase.openOrCreateDatabase(dbPath, null);
             } catch (Exception e) {
+                if (this.database != null) {
+                    this.database.close();
+                }
                 e.printStackTrace();
                 return null;
             }
@@ -185,6 +188,7 @@ public class SqlService extends ImpPlugin {
             }
             resultJsonObject.put("result", result);
         } catch (Exception e) {
+            cursor.close();
             e.printStackTrace();
         }
         // 将查询结果传回前台
