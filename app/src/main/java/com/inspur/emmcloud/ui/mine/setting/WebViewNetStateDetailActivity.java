@@ -5,6 +5,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.text.method.ScrollingMovementMethod;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -95,6 +96,41 @@ public class WebViewNetStateDetailActivity extends BaseActivity {
         checkNetUrlContentText.setText(urlContent);
         checkNetResultText.setText(checkNetResultContent);
         checkNetResultText.setMovementMethod(ScrollingMovementMethod.getInstance());
+        checkNetUrlContentText.setMovementMethod(ScrollingMovementMethod.getInstance());
+        checkNetResultText.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    // 通知ScrollView控件不要干扰
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
+                }
+                if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                    // 通知ScrollView控件不要干扰
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
+                }
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    v.getParent().requestDisallowInterceptTouchEvent(false);
+                }
+                return false;
+            }
+        });
+        checkNetResultText.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    // 通知ScrollView控件不要干扰
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
+                }
+                if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                    // 通知ScrollView控件不要干扰
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
+                }
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    v.getParent().requestDisallowInterceptTouchEvent(false);
+                }
+                return false;
+            }
+        });
     }
 
     @Override
@@ -114,7 +150,10 @@ public class WebViewNetStateDetailActivity extends BaseActivity {
             case R.id.ibt_back:
                 finish();
                 break;
-            case R.id.iv_check_net_result_copy:
+            case R.id.tv_copy_net_url:
+                copyToClipboard(this, urlContent);
+                break;
+            case R.id.tv_copy_net_result_content:
                 copyToClipboard(this, checkNetResultContent);
                 break;
         }
@@ -180,7 +219,8 @@ public class WebViewNetStateDetailActivity extends BaseActivity {
         } else {
             currentNetStateText.setText(netStatePre + getApplication().getString(R.string.net_check_net_current_state_unknown));
         }
-
+        String networksType = checkingNetStateUtils.getNetworksType();
+        currentNetTypeText.setText(getString(R.string.net_check_net_current_type) + networksType);   //net_check_net_current_type
     }
 
 

@@ -381,10 +381,10 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
             case R.id.ibt_back:
                 //finish();
                 Bundle bundle = new Bundle();
-                bundle.putString(WebViewNetStateDetailActivity.EXTRA_OUTSIDE_URL, "www.baidu.com");
+                bundle.putString(WebViewNetStateDetailActivity.EXTRA_OUTSIDE_URL, "www.baidu.com.wwwwed..e...c.d.d.s.d.d.sd..s.d...df.s.或或或或或或或d.c..sdd.c或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或");
                 bundle.putString(WebViewNetStateDetailActivity.EXTRA_OUTSIDE_URL_REQUEST_RESULT, "这段子很长很长很长或或或或或或或" +
                         "或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或" +
-                        "户HUU呼哈哈哈哈或或或或或或或或或或或或或");
+                        "户HUU呼哈哈哈哈或或或或或或或或或或或或或gengchnengncnnvnsdnnfnsndnnfhahahahahhahahahhhhhhhhhhhhhhhhhhhhhhahhahahhhhhahhahahha");
                 IntentUtils.startActivity(this, WebViewNetStateDetailActivity.class, bundle);
                 break;
             case R.id.tv_save:

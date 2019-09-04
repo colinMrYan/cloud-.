@@ -9,6 +9,7 @@ import android.os.Message;
 import android.telephony.TelephonyManager;
 
 import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.baselib.util.PingNetEntity;
@@ -273,6 +274,8 @@ public class CheckingNetStateUtils {
                         break;
                 }
             }
+        } else {
+            netWorkType = context.getString(R.string.net_no_network_available);
         }
         return netWorkType;
     }

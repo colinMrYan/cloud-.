@@ -1048,6 +1048,8 @@
     <string name="net_check_net_current_state_connected">已連接</string>
     <string name="net_check_net_current_state_unconnected">未連接</string>
     <string name="net_check_net_current_state_unknown">未知</string>
+    <string name="net_diagnosis_copy">點此複製該內容</string>
+    <string name="net_no_network_available">無網絡</string>
 
     <!--电源白名单-->
     <string name="battery_tip_content">系統已對該應用開啟省電優化，可能導致消息延遲或丟失，請將其加入到省電優化白名單（點擊“去設置”，在彈出對話框中點擊“允許”)</string>
