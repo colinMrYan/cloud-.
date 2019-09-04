@@ -55,6 +55,7 @@ import com.inspur.emmcloud.util.privates.AppBadgeUtils;
 import com.inspur.emmcloud.util.privates.DataCleanManager;
 import com.inspur.emmcloud.util.privates.TabAndAppExistUtils;
 import com.inspur.emmcloud.util.privates.cache.AppConfigCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.MyAppCacheUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -519,7 +520,7 @@ public class SettingActivity extends BaseActivity {
                         ClientConfigUpdateUtils.getInstance().clearDbDataConfigWithClearAllCache();
                         ImageDisplayUtils.getInstance().clearAllCache();
                         //因为断网时清除所有缓存会清掉
-//                        MyAppCacheUtils.clearMyAppList(SettingActivity.this);
+                        MyAppCacheUtils.clearMyAppList(SettingActivity.this);
                         //清除全部缓存时是否需要清除掉小程序，如果需要，解开下面一行的注释
 //					ReactNativeFlow.deleteReactNativeInstallDir(MyAppConfig.getReactInstallPath(SettingActivity.this,userId));
                         ToastUtils.show(getApplicationContext(),
