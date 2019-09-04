@@ -59,7 +59,7 @@ public class MyAppConfig {
     public static final int UPLOAD_THUMBNAIL_IMG_MAX_SIZE = 600;
     public static final int VOLUME_MAX_FILE_NAME_LENGTH = 40;
     public static final int WEBSOCKET_QEQUEST_TIMEOUT = 16;
-    public static int NETWORK_MOBILE_MAX_SIZE_ALERT = 1021 * 1021 * 50;
+    public static int NETWORK_MOBILE_MAX_SIZE_ALERT = 1024 * 1024 * 50;
 
 
     public static Map<String, String> getLocalLanguageMap() {
