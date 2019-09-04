@@ -32,8 +32,8 @@ public class MyAppConfig {
             .getExternalStorageDirectory() + "/IMP-Cloud/cache/voice";
     public static final String LOCAL_CACHE_PHOTO_PATH = Environment
             .getExternalStorageDirectory() + "/IMP-Cloud/cache/photo";
-    public static final String LOCAL_CACHE_DEFAULT_DB_PATH = Environment
-            .getExternalStorageDirectory() + "/IMP-Cloud/cache/default_db";
+    //    public static final String LOCAL_CACHE_DEFAULT_DB_PATH = Environment
+//            .getExternalStorageDirectory() + "/IMP-Cloud/cache/default_db";
     public static final String LOCAL_OFFLINE_APP_PATH = Environment
             .getExternalStorageDirectory() + "/IMP-Cloud/offlineApp";
     public static final String LOCAL_DOWNLOAD_PATH = Environment
@@ -69,6 +69,10 @@ public class MyAppConfig {
         languageMap.put("zh-TW", "zh-TW");
         return languageMap;
 
+    }
+
+    public static String getPluginDefaultDbCache() {
+        return BaseApplication.getInstance().getDir("plugin_dir", MODE_PRIVATE).getPath() + "/cache/default_db";
     }
 
     /**
