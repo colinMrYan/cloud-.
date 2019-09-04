@@ -299,28 +299,7 @@ public class AppSchemeHandleActivity extends BaseActivity {
                     return;
                     //增加复制文本分享功能
                 } else if (isTextShare()) {
-                    Router router = Router.getInstance();
-                    if (router.getService(CommunicationService.class) != null) {
-                        CommunicationService service = router.getService(CommunicationService.class);
-                        service.shareTxtPlainToConversation(getIntent().getExtras().getString(Intent.EXTRA_TEXT), new ShareToConversationListener() {
-                            @Override
-                            public void shareSuccess(String cid) {
-                                ToastUtils.show(R.string.baselib_share_success);
-                                finish();
-                            }
-
-                            @Override
-                            public void shareFail() {
-                                ToastUtils.show(R.string.baselib_share_fail);
-                                finish();
-                            }
-
-                            @Override
-                            public void shareCancel() {
-                                finish();
-                            }
-                        });
-                    }
+                    shareTextMessage(getIntent().getExtras().getString(Intent.EXTRA_TEXT));
                     return;
                 } else {
                     ToastUtils.show(AppSchemeHandleActivity.this, getString(R.string.share_not_support));
@@ -372,7 +351,7 @@ public class AppSchemeHandleActivity extends BaseActivity {
             } else if (text == null && subject == null) {
                 return shareLinkMap;
             }
-            shareLinkMap.put("title", StringUtils.isBlank(titleStr) ? getString(R.string.share_default_title) : titleStr);
+            shareLinkMap.put("title", titleStr);
             shareLinkMap.put("url", urlStr);
             shareLinkMap.put("digest", digest);
         }
@@ -441,20 +420,55 @@ public class AppSchemeHandleActivity extends BaseActivity {
      * 处理分享url
      */
     private void handleLinkShare(HashMap<String, String> shareLinkContentMap) {
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("url", shareLinkContentMap.get("url"));
-            jsonObject.put("poster", "");
-            jsonObject.put("digest", shareLinkContentMap.get("digest"));
-            jsonObject.put("title", shareLinkContentMap.get("title"));
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (StringUtils.isBlank(shareLinkContentMap.get("title")) &&
+                StringUtils.isBlank(shareLinkContentMap.get("digest"))) {
+            shareTextMessage(shareLinkContentMap.get("url"));
+        } else {
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("url", shareLinkContentMap.get("url"));
+                jsonObject.put("poster", "");
+                jsonObject.put("digest", shareLinkContentMap.get("digest"));
+                jsonObject.put("title", shareLinkContentMap.get("title"));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            Intent intent = new Intent();
+            intent.setClass(AppSchemeHandleActivity.this, ShareLinkActivity.class);
+            intent.putExtra(Constant.SHARE_LINK, jsonObject.toString());
+            startActivity(intent);
+            finish();
         }
-        Intent intent = new Intent();
-        intent.setClass(AppSchemeHandleActivity.this, ShareLinkActivity.class);
-        intent.putExtra(Constant.SHARE_LINK, jsonObject.toString());
-        startActivity(intent);
-        finish();
+    }
+
+    /**
+     * 作为文字消息分享
+     *
+     * @param message
+     */
+    private void shareTextMessage(String message) {
+        Router router = Router.getInstance();
+        if (router.getService(CommunicationService.class) != null) {
+            CommunicationService service = router.getService(CommunicationService.class);
+            service.shareTxtPlainToConversation(message, new ShareToConversationListener() {
+                @Override
+                public void shareSuccess(String cid) {
+                    ToastUtils.show(R.string.baselib_share_success);
+                    finish();
+                }
+
+                @Override
+                public void shareFail() {
+                    ToastUtils.show(R.string.baselib_share_fail);
+                    finish();
+                }
+
+                @Override
+                public void shareCancel() {
+                    finish();
+                }
+            });
+        }
     }
 
     /**

@@ -454,7 +454,7 @@
     <string name="schedule_meeting_in_meeting">會議中</string>
     <string name="schedule_meeting_be_free">空閒</string>
     <string name="schedule_choose_common_office">常用辦公地點</string>
-    <string name="schedule_meeting_change">修改會議</string>
+    <string name="schedule_meeting_change">變更會議</string>
     <string name="schedule_meeting_cancel">取消會議</string>
     <string name="schedule_meeting_booking_detail">會議詳情</string>
     <string name="schedule_meeting_my_create">我創建的：</string>
@@ -869,7 +869,7 @@
     <string name="meeting_room_booked">時間已被預訂，請重新選擇</string>
     <string name="meeting_room_ilegal_time">時間非法，請檢查 </string>
     <string name="meeting_room_time_late">開始時間不能早於當前時間</string>
-    <string name="meeting_create_group_chat">發起群聊</string>
+    <string name="meeting_create_group_chat">會議群聊</string>
     <string name="meeting_cancel_the_meeting">確定取消會議?</string>
     <string name="schedule_add">新建</string>
     <string name="schedule_update">编辑</string>
