@@ -179,7 +179,12 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
 //        }
 
         holder.fileNameText.setText(volumeFile.getName());
-        holder.fileSizeText.setText(FileUtils.formatFileSize(volumeFile.getSize()));
+        if (volumeFile.getType().equals(VolumeFile.FILE_TYPE_DIRECTORY)) {
+            holder.fileSizeText.setVisibility(View.INVISIBLE);
+        } else {
+            holder.fileSizeText.setVisibility(View.VISIBLE);
+            holder.fileSizeText.setText(FileUtils.formatFileSize(volumeFile.getSize()));
+        }
         String fileTime = TimeUtils.getTime(volumeFile.getLastUpdate(), format);
         holder.fileTimeText.setText(fileTime);
         if (!isStatusNomal) {
