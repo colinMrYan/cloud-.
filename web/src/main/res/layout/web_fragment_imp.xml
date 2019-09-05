@@ -121,40 +121,57 @@
         android:layout_height="match_parent"
         android:layout_below="@id/rl_header"
         android:background="@color/content_bg"
-        android:onClick="onClick"
         android:orientation="vertical"
         android:visibility="gone">
 
         <ImageView
-            android:layout_width="113dp"
-            android:layout_height="133dp"
+            android:layout_width="133dp"
+            android:layout_height="100dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="133dp"
-            android:src="@drawable/imp_load_fail" />
+            android:layout_marginTop="100dp"
+            android:src="@drawable/ic_net_check_load_error" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp"
-            android:text="@string/function_load_fail"
+            android:layout_marginTop="18dp"
+            android:text="@string/function_net_load_fail"
             android:textColor="#666666"
             android:textSize="16sp" />
-
         <TextView
-            android:id="@+id/refresh_text"
-            android:layout_width="wrap_content"
-            android:layout_height="34dp"
+            android:id="@+id/tv_reload_web"
+            android:layout_width="130dp"
+            android:layout_height="40dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="40dp"
-            android:background="@drawable/bg_net_error_tip"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/bg_corner_r20"
             android:gravity="center"
             android:onClick="onClick"
-            android:paddingLeft="25dp"
-            android:paddingRight="25dp"
-            android:text="@string/function_reload"
-            android:textColor="#666666"
-            android:textSize="15sp" />
+            android:text="@string/function_net_over_load"
+            android:textColor="#41AAF6"
+            android:textSize="16sp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tv_look_web_error_detail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:onClick="onClick"
+                android:paddingBottom="20dp"
+                android:paddingLeft="25dp"
+                android:paddingRight="25dp"
+                android:text="@string/function_net_look_error_detail"
+                android:textColor="#36A5F6"
+                android:textSize="13sp" />
+
+        </RelativeLayout>
+
     </LinearLayout>
 
     <RelativeLayout
