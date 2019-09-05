@@ -1280,6 +1280,12 @@
     <string name="voice_word_setting">Automatic Voice Recognition</string>
     <string name="voice_audio_record_unavailiable">The current recording device is not available. Please check whether the recording permissions are enabled.</string>
     <string name="voice_to_word">Voice to Text</string>
+    <!--语音输入改造-->
+    <string name="voice_input_language_mandarin">Chinese(Mandarin)</string>
+    <string name="voice_input_language_cantonese">Chinese(Cantonese)</string>
+    <string name="voice_input_language_english">English</string>
+    <string name="voice_input_hint_prepare">Preparing...</string>
+    <string name="voice_input_hint_speak_now">Speak now...</string>
 
     <string name="notification_switch">New Notification</string>
     <string name="notification_switch_cant_recive">if closed,you won\'t receive any notifications Close</string>

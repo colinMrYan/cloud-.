@@ -1280,6 +1280,12 @@
     <string name="voice_word_setting">語音自動識別</string>
     <string name="voice_audio_record_unavailiable">當前錄音設備不可用，請檢查錄音許可權是否開啟</string>
     <string name="voice_to_word">轉文字</string>
+    <!--语音输入改造-->
+    <string name="voice_input_language_mandarin">普通話</string>
+    <string name="voice_input_language_cantonese">粵語</string>
+    <string name="voice_input_language_english">英語</string>
+    <string name="voice_input_hint_prepare">准備中...</string>
+    <string name="voice_input_hint_speak_now">請説話...</string>
 
     <string name="notification_switch">新消息通知</string>
 
