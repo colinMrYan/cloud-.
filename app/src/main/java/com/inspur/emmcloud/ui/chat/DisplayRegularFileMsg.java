@@ -22,10 +22,11 @@ import com.inspur.emmcloud.widget.bubble.BubbleLayout;
 public class DisplayRegularFileMsg {
     /**
      * 文件卡片
-     *
      * @param context
-     * @param convertView
-     * @param msg
+     * @param message
+     * @param sendStauts
+     * @param isMsgDetial
+     * @return
      */
     public static View getView(final Context context,
                                final Message message, final int sendStauts, boolean isMsgDetial) {
