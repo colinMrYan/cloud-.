@@ -30,7 +30,6 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@id/iv_file_icon">
 
@@ -39,6 +38,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
+                android:lineSpacingMultiplier="1.1"
                 android:maxLines="3"
                 android:textColor="#333333"
                 android:textSize="15sp" />
