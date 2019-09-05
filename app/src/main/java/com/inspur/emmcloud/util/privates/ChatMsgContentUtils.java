@@ -35,7 +35,13 @@ public class ChatMsgContentUtils {
             if (mentionsMap.containsKey(key)) {
                 String uid = mentionsMap.get(key);
                 String protocol = "ecm-contact://" + uid;
-                String newString = "@" + ContactUserCacheUtils.getUserName(uid) + " ";
+                ;
+                String newString;
+                if (uid.equals("10")) {
+                    newString = "@" + "ALL" + " ";
+                } else {
+                    newString = "@" + ContactUserCacheUtils.getUserName(uid) + " ";
+                }
                 int startPosition = contentStringBuilder.indexOf(patternString);
                 contentStringBuilder.replace(startPosition, startPosition + patternString.length(), newString);
                 MentionProtocolList.add(new MentionsAndUrl(startPosition, startPosition + newString.length(), protocol));

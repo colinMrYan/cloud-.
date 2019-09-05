@@ -103,6 +103,9 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
 
     private void initViews() {
         state = getIntent().getIntExtra(MEMBER_PAGE_STATE, -1);
+        if (state == MENTIONS_STATE) {
+            findViewById(R.id.rl_select_all).setVisibility(View.VISIBLE);
+        }
         loadingDlg = new LoadingDialog(this);
         loadingDlg.show();
         selectedMemberRecylerView = (RecyclerView) findViewById(R.id.recyclerview_voice_communication_select_members);
@@ -432,6 +435,21 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
                 break;
             case R.id.tv_ok:
                 startCommunication();
+                break;
+            case R.id.rl_select_all:
+                JSONObject jsonResult = new JSONObject();
+                Intent intent = new Intent();
+                try {
+                    jsonResult.put("uid", 10);
+                    jsonResult.put("name", "ALL");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                intent.putExtra("searchResult", jsonResult.toString());
+                boolean isInputKeyWord = getIntent().getBooleanExtra("isInputKeyWord", false);
+                intent.putExtra("isInputKeyWord", isInputKeyWord);
+                setResult(RESULT_OK, intent);
+                finish();
                 break;
             default:
                 break;
