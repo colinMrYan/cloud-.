@@ -20,10 +20,12 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
 import com.inspur.emmcloud.baselib.router.Router;
+import com.inspur.emmcloud.baselib.util.CalendarReminderUtils;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.EditTextUtils;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
@@ -39,6 +41,9 @@ import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
+import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.bean.appcenter.GetIDResult;
 import com.inspur.emmcloud.bean.schedule.Location;
 import com.inspur.emmcloud.bean.schedule.Participant;
@@ -112,6 +117,8 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
     RelativeLayout calendarTypeLayout;
     @BindView(R.id.switch_all_day)
     Switch allDaySwitch;
+    @BindView(R.id.switch_sync_calendar)
+    Switch syncCalendarSwitch;
     @BindView(R.id.tv_event_type)
     TextView eventTypeText;
     @BindView(R.id.et_meeting_position)
@@ -312,6 +319,31 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
         calendarTypeLayout.setClickable(!isEventEditModel);
         allDaySwitch.setOnCheckedChangeListener(this);
         modifyLocationUI();
+        syncCalendarSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                syncCalendarSwitch.isChecked() == isChecked;
+                if (isChecked) {
+
+                }
+
+                PermissionRequestManagerUtils.getInstance().requestRuntimePermission(
+                        ScheduleAddActivity.this, Permissions.CALENDAR, new PermissionRequestCallback() {
+                            @Override
+                            public void onPermissionRequestSuccess(List<String> permissions) {
+                                LogUtils.YfcDebug("权限获取成功");
+                                CalendarReminderUtils.getCalendarEvent(ScheduleAddActivity.this);
+//                        CalendarReminderUtils.addCalendarEvent(ScheduleAddActivity.this,"测试日历","这是一个测试日历111",System.currentTimeMillis(),116);
+                                LogUtils.YfcDebug("日历账号：" + CalendarReminderUtils.checkAndAddCalendarAccount(ScheduleAddActivity.this));
+                            }
+
+                            @Override
+                            public void onPermissionRequestFail(List<String> permissions) {
+                                LogUtils.YfcDebug("权限获取失败");
+                            }
+                        });
+            }
+        });
 
     }
 
