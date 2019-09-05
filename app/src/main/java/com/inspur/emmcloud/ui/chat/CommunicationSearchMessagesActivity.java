@@ -131,7 +131,6 @@ public class CommunicationSearchMessagesActivity extends BaseActivity {
         });
         searchEdit.setOnEditorActionListener(onEditorActionListener);
         final List<com.inspur.emmcloud.bean.chat.Message> messageList = MessageCacheUtil.getGroupMessageWithType(BaseApplication.getInstance(), conversationFromChatContent.getConversation().getId());
-        LogUtils.LbcDebug("messageList:::::::" + messageList.size());
         final List<String> messageContentList = getMessageContentList(messageList);
         searchEdit.addTextChangedListener(new TextWatcher() {
             @Override
