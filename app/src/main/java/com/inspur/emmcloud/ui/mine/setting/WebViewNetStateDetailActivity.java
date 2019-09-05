@@ -59,12 +59,10 @@ public class WebViewNetStateDetailActivity extends BaseActivity {
 
     CheckingNetStateUtils checkingNetStateUtils;
     private String[] CheckHttpUrls = NetUtils.httpUrls;
-
     private String urlContent; //展示url
     private String checkNetResultContent; //网络状态详情
     private Drawable drawableError;
     private Drawable drawableSuccess;
-
 
     @Override
     public void onCreate() {
@@ -143,7 +141,6 @@ public class WebViewNetStateDetailActivity extends BaseActivity {
         super.onResume();
         checkingNetConnectState();
     }
-
 
     public void onClick(View v) {
         switch (v.getId()) {
