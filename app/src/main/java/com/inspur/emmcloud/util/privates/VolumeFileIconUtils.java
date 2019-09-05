@@ -44,12 +44,6 @@ public class VolumeFileIconUtils {
             case "application/pdf":
                 resId = R.drawable.baselib_file_type_pdf;
                 break;
-            case "text/html":
-                resId = R.drawable.ic_volume_file_typ_html;
-                break;
-            case "text/xml":
-                resId = R.drawable.ic_volume_file_typ_xsl;
-                break;
             default:
                 if (format.startsWith("image/")) {
                     resId = R.drawable.baselib_file_type_img;
