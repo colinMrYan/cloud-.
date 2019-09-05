@@ -82,6 +82,8 @@ public class ImpFragment extends ImpBaseFragment {
     public static final int REQUEST_CODE_RECORD_VIDEO = 10;
     public static final int FILE_CHOOSER_RESULT_CODE = 5173;
     private static final String JAVASCRIPT_PREFIX = "javascript:";
+    private static String EXTRA_OUTSIDE_URL = "extra_outside_url";
+    private static String EXTRA_OUTSIDE_URL_REQUEST_RESULT = "extra_outside_url_request_result";
     private ImpWebView webView;
     private Map<String, String> webViewHeaders;
     private LinearLayout loadFailLayout;
@@ -246,8 +248,8 @@ public class ImpFragment extends ImpBaseFragment {
         rootView.findViewById(R.id.imp_change_font_size_btn).setOnClickListener(listener);
         rootView.findViewById(R.id.ibt_back).setOnClickListener(listener);
         rootView.findViewById(R.id.imp_close_btn).setOnClickListener(listener);
-        rootView.findViewById(R.id.refresh_text).setOnClickListener(listener);
-        rootView.findViewById(R.id.load_error_layout).setOnClickListener(listener);
+        rootView.findViewById(R.id.tv_look_web_error_detail).setOnClickListener(listener);
+        rootView.findViewById(R.id.tv_reload_web).setOnClickListener(listener);
     }
 
     /**
@@ -794,10 +796,13 @@ public class ImpFragment extends ImpBaseFragment {
             } else if (i == R.id.imp_close_btn) {
                 finishActivity();
 
-            } else if (i == R.id.refresh_text) {
-                ARouter.getInstance().build(Constant.AROUTER_CLASS_APP_NETWORK_DETAIL).navigation();
+            } else if (i == R.id.tv_look_web_error_detail) {
+                Bundle bundle = new Bundle();
+                bundle.putString(EXTRA_OUTSIDE_URL, "測試Url");
+                bundle.putString(EXTRA_OUTSIDE_URL_REQUEST_RESULT, "測試Error Detail");
+                ARouter.getInstance().build(Constant.AROUTER_CLASS_APP_WEB_ERROR_DETAIL).with(bundle).navigation();
 
-            } else if (i == R.id.load_error_layout) {
+            } else if (i == R.id.tv_reload_web) {
                 showLoadingDlg(getString(Res.getStringID("@string/loading_text")));
                 webView.reload();
                 webView.setVisibility(View.INVISIBLE);

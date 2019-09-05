@@ -9,6 +9,7 @@ import android.os.Message;
 import android.telephony.TelephonyManager;
 
 import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.baselib.util.PingNetEntity;
@@ -268,11 +269,13 @@ public class CheckingNetStateUtils {
                         if (_strSubTypeName.equalsIgnoreCase("TD-SCDMA") || _strSubTypeName.equalsIgnoreCase("WCDMA") || _strSubTypeName.equalsIgnoreCase("CDMA2000")) {
                             netWorkType = "3G";
                         } else {
-                            netWorkType = "移动网络";
+                            netWorkType = "Mobile Network";
                         }
                         break;
                 }
             }
+        } else {
+            netWorkType = context.getString(R.string.net_no_network_available);
         }
         return netWorkType;
     }
