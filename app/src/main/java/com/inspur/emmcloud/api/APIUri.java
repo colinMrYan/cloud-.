@@ -93,7 +93,8 @@ public class APIUri {
      * @return
      */
     public static String getCloudDriver() {
-        return WebServiceRouterManager.getInstance().getClusterCloudDrive();
+        return "https://cloud-drive.inspures.com/cloud-drive/rest/v1";
+//        return WebServiceRouterManager.getInstance().getClusterCloudDrive();
     }
 
     /**

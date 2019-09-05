@@ -151,6 +151,8 @@ public class VolumeFileUploadManagerUtils {
                     e.printStackTrace();
                 }
                 break;
+            case "aws_s3":
+                break;
             default:
                 break;
         }
