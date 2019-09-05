@@ -373,7 +373,7 @@ public class ShareFilesActivity extends BaseActivity {
     private String getFileIcon(String filePath) {
         String iconPath = "";
         int iconId = FileUtils.getRegularFileIconResId(filePath);
-        if (iconId == R.drawable.ic_volume_file_typ_img) {
+        if (iconId == R.drawable.baselib_file_type_img) {
             iconPath = filePath;
         } else {
             iconPath = "drawable://" + iconId;

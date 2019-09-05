@@ -14,7 +14,7 @@ public class VolumeFileIconUtils {
     public static int getIconResId(VolumeFile volumeFile) {
         Integer resId = -1;
         if (volumeFile.getType().equals(VolumeFile.FILE_TYPE_DIRECTORY)) {
-            resId = R.drawable.ic_volume_file_typ_forder;
+            resId = R.drawable.baselib_file_type_folder;
         } else {
             String format = volumeFile.getFormat();
             resId = getResourceIdByFormat(format);
@@ -26,7 +26,7 @@ public class VolumeFileIconUtils {
             }
 
             if (resId == null) {
-                resId = R.drawable.ic_volume_file_typ_unknown;
+                resId = R.drawable.baselib_file_type_unkown;
             }
         }
         return resId;
@@ -36,33 +36,27 @@ public class VolumeFileIconUtils {
         Integer resId = null;
         switch (format) {
             case "application/zip":
-                resId = R.drawable.ic_volume_file_typ_zip;
+                resId = R.drawable.baselib_file_type_zip;
                 break;
             case "text/plain":
-                resId = R.drawable.ic_volume_file_typ_txt;
+                resId = R.drawable.baselib_file_type_txt;
                 break;
             case "application/pdf":
-                resId = R.drawable.ic_volume_file_typ_pdf;
-                break;
-            case "text/html":
-                resId = R.drawable.ic_volume_file_typ_html;
-                break;
-            case "text/xml":
-                resId = R.drawable.ic_volume_file_typ_xsl;
+                resId = R.drawable.baselib_file_type_pdf;
                 break;
             default:
                 if (format.startsWith("image/")) {
-                    resId = R.drawable.ic_volume_file_typ_img;
+                    resId = R.drawable.baselib_file_type_img;
                 } else if (format.startsWith("video/")) {
-                    resId = R.drawable.ic_volume_file_typ_video;
+                    resId = R.drawable.baselib_file_type_video;
                 } else if (format.startsWith("audio/")) {
-                    resId = R.drawable.ic_volume_file_typ_audio;
+                    resId = R.drawable.baselib_file_type_audio;
                 } else if (format.startsWith("application/vnd.openxmlformats-officedocument.wordprocessingml")) {
-                    resId = R.drawable.ic_volume_file_typ_word;
+                    resId = R.drawable.baselib_file_type_word;
                 } else if (format.startsWith("application/vnd.openxmlformats-officedocument.presentationml")) {
-                    resId = R.drawable.ic_volume_file_typ_ppt;
+                    resId = R.drawable.baselib_file_type_ppt;
                 } else if (format.startsWith("application/vnd.openxmlformats-officedocument.spreadsheetml")) {
-                    resId = R.drawable.ic_volume_file_typ_excel;
+                    resId = R.drawable.baselib_file_type_excel;
                 }
                 break;
         }
