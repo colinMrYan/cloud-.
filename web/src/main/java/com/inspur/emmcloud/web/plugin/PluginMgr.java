@@ -19,6 +19,7 @@ import com.inspur.emmcloud.web.plugin.dialog.DialogService;
 import com.inspur.emmcloud.web.plugin.emm.EMMService;
 import com.inspur.emmcloud.web.plugin.filetransfer.FileTransferService;
 import com.inspur.emmcloud.web.plugin.gps.GpsService;
+import com.inspur.emmcloud.web.plugin.http.HttpService;
 import com.inspur.emmcloud.web.plugin.loadingdialog.LoadingDialogService;
 import com.inspur.emmcloud.web.plugin.map.MapService;
 import com.inspur.emmcloud.web.plugin.network.NetworkService;
@@ -253,6 +254,8 @@ public class PluginMgr {
                 serviceName = NFCService.class.getCanonicalName();
             } else if (serviceName.endsWith("ShareSocialService")) {
                 serviceName = ShareSocialService.class.getCanonicalName();
+            } else if (serviceName.endsWith("HttpService")) {
+                serviceName = HttpService.class.getCanonicalName();
             }
             LogUtils.jasonDebug("serviceName==" + serviceName);
         }

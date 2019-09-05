@@ -9,7 +9,6 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
-import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
 import com.inspur.emmcloud.widget.bubble.ArrowDirection;
@@ -23,10 +22,11 @@ import com.inspur.emmcloud.widget.bubble.BubbleLayout;
 public class DisplayRegularFileMsg {
     /**
      * 文件卡片
-     *
      * @param context
-     * @param convertView
-     * @param msg
+     * @param message
+     * @param sendStauts
+     * @param isMsgDetial
+     * @return
      */
     public static View getView(final Context context,
                                final Message message, final int sendStauts, boolean isMsgDetial) {
@@ -45,9 +45,9 @@ public class DisplayRegularFileMsg {
             cardLayout.setArrowWidth(0);
             cardLayout.setCornersRadius(0);
         }
-        ImageView img = (ImageView) convertView.findViewById(R.id.iv_file_icon);
+        ImageView img = convertView.findViewById(R.id.iv_file_icon);
         final MsgContentRegularFile msgContentFile = message.getMsgContentAttachmentFile();
-        ImageDisplayUtils.getInstance().displayImage(img, "drawable://" + FileUtils.getRegularFileIconResId(msgContentFile.getName()));
+        img.setImageResource(FileUtils.getRegularFileIconResId(msgContentFile.getName()));
         fileNameText.setText(msgContentFile.getName());
         fileSizeText.setText(FileUtils.formatFileSize(msgContentFile.getSize()));
         return convertView;

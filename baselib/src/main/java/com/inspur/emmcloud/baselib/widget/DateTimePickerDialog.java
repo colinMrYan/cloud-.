@@ -1,10 +1,11 @@
 package com.inspur.emmcloud.baselib.widget;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +15,11 @@ import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.TimePicker;
 
 import com.inspur.baselib.R;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
+import com.inspur.emmcloud.baselib.widget.TimePicker.TimePicker;
+import com.inspur.emmcloud.baselib.widget.TimePicker.Utils.ConvertUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -68,17 +70,31 @@ public class DateTimePickerDialog {
         relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new com.inspur.emmcloud.baselib.widget.TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
+                TimePicker picker = new TimePicker((Activity) context, TimePicker.HOUR_24, true);
+                picker.setIntervalMinutes(true);
+                picker.setUseWeight(false);
+                picker.setCycleDisable(false);
+                picker.setRangeStart(0, 0);//00:00
+                picker.setRangeEnd(23, 3);//23:59
+                picker.setGravity(Gravity.CENTER);//弹框居中
+                picker.setContentPadding(0, 5);
+                picker.setSelectedItem(resultCalendar.get(Calendar.HOUR_OF_DAY), resultCalendar.get(Calendar.MINUTE));
+                picker.setTopLineVisible(false);
+                picker.setTextPadding(ConvertUtils.toPx((Activity) context, 15));
+                picker.setOnTimePickListener(new TimePicker.OnTimePickListener() {
                     @Override
-                    public void onTimeSet(TimePicker timePicker, int hourOfDay, int minute) {
+                    public void onTimePicked(String hour, String minute) {
+                        int hourOfDay = Integer.parseInt(hour);
+                        int minutes = Integer.parseInt(minute);
                         resultCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                        resultCalendar.set(Calendar.MINUTE, minute);
+                        resultCalendar.set(Calendar.MINUTE, minutes);
                         String sHour = hourOfDay < 10 ? "0" + hourOfDay : "" + hourOfDay;
-                        String sMinute = minute < 10 ? "0" + minute : "" + minute;
+                        String sMinute = minutes < 10 ? "0" + minutes : "" + minutes;
                         String time = sHour + ":" + sMinute;
                         timeTextView.setText(time);
                     }
-                }, resultCalendar.get(Calendar.HOUR_OF_DAY), resultCalendar.get(Calendar.MINUTE), true).showTimePickerDialog();
+                });
+                picker.show();
             }
         });
         if (isAllDay) {
@@ -120,7 +136,7 @@ public class DateTimePickerDialog {
      */
     public void showDatePickerDialog(Boolean isAllday, Calendar orgCalendar) {
         mTag = 1;
-        resultCalendar = orgCalendar;
+        resultCalendar = (Calendar) orgCalendar.clone();
         View view = initDatePicker(isAllday);
         alertDialog = new AlertDialog.Builder(context, R.style.DateTimeAlertDialog);
         initDialog(view);

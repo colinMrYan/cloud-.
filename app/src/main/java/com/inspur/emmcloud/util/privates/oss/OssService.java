@@ -151,12 +151,11 @@ public class OssService implements VolumeFileUploadService {
         task = oss.asyncResumableUpload(request, new OSSCompletedCallback<ResumableUploadRequest, ResumableUploadResult>() {
             @Override
             public void onSuccess(ResumableUploadRequest request, ResumableUploadResult result) {
-                LogUtils.jasonDebug("onSuccess");
 //                Log.d("PutObject", "UploadSuccess");
 //
 //                Log.d("ETag", result.getETag());
 //                Log.d("RequestId", result.getRequestId());
-//                Log.d("PutObjectResult", result.getServerCallbackReturnBody());
+                LogUtils.jasonDebug("onSuccess--" + result.getServerCallbackReturnBody());
                 Message msg = new Message();
                 msg.what = SUCCESS;
                 msg.obj = result.getServerCallbackReturnBody();

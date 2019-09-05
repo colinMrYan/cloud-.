@@ -7,20 +7,17 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
-import com.inspur.emmcloud.baselib.widget.dialogs.MyDialog;
+import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
-import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
@@ -28,7 +25,6 @@ import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
-import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.ui.appcenter.volume.VolumeHomePageActivity;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
@@ -37,13 +33,13 @@ import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.TabAndAppExistUtils;
-import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.itheima.roundedimageview.RoundedImageView;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -247,6 +243,8 @@ public class ShareFilesActivity extends BaseActivity {
      */
     private void startVolumeShareActivity(List<String> uriList) {
         if (FileUtils.isFileInListExist(uriList)) {
+            //提前一步清空上次一分享未成功的页面残余
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_VOLUME_FILE_LOCATION_SELECT_CLOSE));
             Intent intent = new Intent();
             intent.setClass(ShareFilesActivity.this, VolumeHomePageActivity.class);
             intent.putExtra(Constant.SHARE_FILE_URI_LIST, (Serializable) uriList);
@@ -262,8 +260,16 @@ public class ShareFilesActivity extends BaseActivity {
      */
     private void shareFilesToFriends() {
         Intent intent = new Intent();
+        String firstFileName = "";
+        File file = new File(uriList.get(0));
+        firstFileName = file.getName();
+        String shareManyPictures = getResources().getString(isImageUriList(uriList) ? R.string.baselib_share_many_picture : R.string.baselib_share_many_files, uriList.size());
+        String fileType = isImageUriList(uriList) ? getString(R.string.baselib_share_image) : getString(R.string.baselib_share_file);
+        String detailResult = fileType + " " + firstFileName + (uriList.size() > 1 ? shareManyPictures : "");
         intent.putExtra(ContactSearchFragment.EXTRA_TYPE, 0);
         intent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, false);
+        intent.putExtra(ContactSearchFragment.EXTRA_SHOW_COMFIRM_DIALOG_WITH_MESSAGE, detailResult);
+        intent.putExtra(ContactSearchFragment.EXTRA_SHOW_COMFIRM_DIALOG, true);
         ArrayList<String> uidList = new ArrayList<>();
         uidList.add(MyApplication.getInstance().getUid());
         intent.putStringArrayListExtra(ContactSearchFragment.EXTRA_EXCLUDE_SELECT, uidList);
@@ -304,70 +310,17 @@ public class ShareFilesActivity extends BaseActivity {
                 if (StringUtils.isBlank(userOrChannelId)) {
                     ToastUtils.show(MyApplication.getInstance(), getString(R.string.baselib_share_fail));
                 } else {
-                    showSendSureDialog(userOrChannelId, isGroup);
+                    if (isGroup) {
+                        startChannelActivity(userOrChannelId);
+                    } else {
+                        createDirectChannel(userOrChannelId);
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 ToastUtils.show(MyApplication.getInstance(), getString(R.string.baselib_share_fail));
             }
         }
-    }
-
-    /**
-     * 弹出分享确认框
-     */
-    private void showSendSureDialog(final String uid, final boolean isGroup) {
-        final MyDialog dialog = new MyDialog(this,
-                R.layout.chat_out_share_sure_dialog);
-        Button okBtn = dialog.findViewById(R.id.ok_btn);
-        ImageView userHeadImage = dialog.findViewById(R.id.iv_share_user_head);
-        TextView fileNameText = dialog.findViewById(R.id.tv_share_file_name);
-        TextView userNameText = dialog.findViewById(R.id.tv_share_user_name);
-        String contactName = "";
-        String headPath = "";
-        if (isGroup) {
-            Conversation conversation = ConversationCacheUtils.getConversation(this, uid);
-            contactName = conversation.getName();
-            headPath = MyAppConfig.LOCAL_CACHE_PHOTO_PATH + "/" + MyApplication.getInstance().getTanent() + uid + "_100.png1";
-        } else {
-            ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(uid);
-            contactName = contactUser.getName();
-            headPath = APIUri.getChannelImgUrl(MyApplication.getInstance(), uid);
-        }
-        ImageDisplayUtils.getInstance().displayRoundedImage(userHeadImage, headPath, R.drawable.icon_person_default, ShareFilesActivity.this, 32);
-        okBtn.setText(getString(R.string.ok));
-        userNameText.setText(contactName);
-        String firstFileName = "";
-        if (uriList.get(0).contains("/")) {
-            firstFileName = uriList.get(0).substring((uriList.get(0).lastIndexOf("/")) + 1, uriList.get(0).length());
-        } else {
-            firstFileName = uriList.get(0);
-        }
-        String shareManyPictures = getResources().getString(isImageUriList(uriList) ? R.string.baselib_share_many_picture : R.string.baselib_share_many_files, uriList.size());
-        String fileType = isImageUriList(uriList) ? getString(R.string.baselib_share_image) : getString(R.string.baselib_share_file);
-        fileNameText.setText(fileType + firstFileName + (uriList.size() > 1 ? shareManyPictures : ""));
-        okBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-                if (isGroup) {
-                    startChannelActivity(uid);
-                } else {
-                    createDirectChannel(uid);
-                }
-
-            }
-        });
-        Button cancelBt = dialog.findViewById(R.id.cancel_btn);
-        cancelBt.setText(getString(R.string.cancel));
-        cancelBt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-
-            }
-        });
-        dialog.show();
     }
 
     /**
@@ -420,7 +373,7 @@ public class ShareFilesActivity extends BaseActivity {
     private String getFileIcon(String filePath) {
         String iconPath = "";
         int iconId = FileUtils.getRegularFileIconResId(filePath);
-        if (iconId == R.drawable.ic_volume_file_typ_img) {
+        if (iconId == R.drawable.baselib_file_type_img) {
             iconPath = filePath;
         } else {
             iconPath = "drawable://" + iconId;

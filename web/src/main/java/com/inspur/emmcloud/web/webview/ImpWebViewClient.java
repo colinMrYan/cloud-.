@@ -45,7 +45,7 @@ public class ImpWebViewClient extends WebViewClient {
     private Handler mHandler = null;
     private Runnable runnable = null;
     private ImpCallBackInterface impCallBackInterface;
-
+    private String url = "";
     public ImpWebViewClient(LinearLayout loadFailLayout, ImpCallBackInterface impCallBackInterface) {
         this.loadFailLayout = loadFailLayout;
         this.impCallBackInterface = impCallBackInterface;
@@ -84,6 +84,7 @@ public class ImpWebViewClient extends WebViewClient {
     @Override
     public void onPageStarted(WebView view, String url, Bitmap favicon) {
         super.onPageStarted(view, url, favicon);
+        this.url = url;
         myWebView = (ImpWebView) view;
         if (runnable != null && url.startsWith("http://baoxiao.inspur.com")) {
             mHandler.postDelayed(runnable, 2000);
@@ -148,7 +149,7 @@ public class ImpWebViewClient extends WebViewClient {
     @Override
     public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
         super.onReceivedError(view, request, error);
-        if (request.isForMainFrame() && request.getUrl().toString().equals(view.getUrl())) {// 在这里加上个判断
+        if (request.isForMainFrame() && request.getUrl().toString().equals(url)) {// 在这里加上个判断
             if (runnable != null) {
                 mHandler.removeCallbacks(runnable);
                 runnable = null;

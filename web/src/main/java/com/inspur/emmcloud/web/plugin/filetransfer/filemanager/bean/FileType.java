@@ -5,5 +5,5 @@ package com.inspur.emmcloud.web.plugin.filetransfer.filemanager.bean;
  */
 
 public enum FileType {
-    directory, txt, zip, video, music, image, apk, other
+    directory, txt, zip, video, music, image, apk, other, ppt, excel, word, pdf
 }

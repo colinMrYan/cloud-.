@@ -64,7 +64,7 @@ public class ContactOrgCacheUtils {
     /**
      * 存储更新后客户端通讯录显示起始位置
      *
-     * @param unitID
+     * @param rootId
      */
     public static void setContactOrgRootId(String rootId) {
         PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_CONTACT_ORG_ROOT_ID, rootId);
@@ -121,6 +121,41 @@ public class ContactOrgCacheUtils {
             // 组织下的组织架构列表
             List<ContactOrg> contactOrgList = DbCacheUtils.getDb().selector(ContactOrg.class).where("parentId", "=", contactOrgId).orderBy("sortOrder").findAll();
             List<ContactUser> contactUserList = DbCacheUtils.getDb().selector(ContactUser.class).where("parentId", "=", contactOrgId).orderBy("sortOrder").findAll();
+            if (contactOrgList != null) {
+                contactList.addAll(Contact.contactOrgList2ContactList(contactOrgList));
+            }
+            if (contactUserList != null) {
+                contactList.addAll(Contact.contactUserList2ContactList(contactUserList));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return contactList;
+    }
+
+    /**
+     * 获取组织架构下的组织和人员
+     *
+     * @param contactOrgId
+     * @return
+     */
+    public static List<Contact> getChildContactList(String contactOrgId, List<String> excludeUidList) {
+        List<Contact> contactList = new ArrayList<>();
+        try {
+            String excludeUidSql = "()";
+            if (excludeUidList != null && excludeUidList.size() > 0) {
+                excludeUidSql = excludeUidSql.substring(0, excludeUidSql.length() - 1);
+                for (String uid : excludeUidList) {
+                    excludeUidSql = excludeUidSql + uid + ",";
+                }
+                if (excludeUidSql.endsWith(",")) {
+                    excludeUidSql = excludeUidSql.substring(0, excludeUidSql.length() - 1);
+                }
+                excludeUidSql = excludeUidSql + ")";
+            }
+            // 组织下的组织架构列表
+            List<ContactOrg> contactOrgList = DbCacheUtils.getDb().selector(ContactOrg.class).where("parentId", "=", contactOrgId).orderBy("sortOrder").findAll();
+            List<ContactUser> contactUserList = DbCacheUtils.getDb().selector(ContactUser.class).where("parentId", "=", contactOrgId).and(WhereBuilder.b().expr("id not in" + excludeUidSql)).orderBy("sortOrder").findAll();
             if (contactOrgList != null) {
                 contactList.addAll(Contact.contactOrgList2ContactList(contactOrgList));
             }

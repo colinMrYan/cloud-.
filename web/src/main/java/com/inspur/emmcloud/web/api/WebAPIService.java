@@ -12,6 +12,10 @@ import com.inspur.emmcloud.componentservice.login.OauthCallBack;
 import com.inspur.emmcloud.web.bean.AppRedirectResult;
 
 import org.xutils.http.RequestParams;
+import org.xutils.http.app.RedirectHandler;
+import org.xutils.http.request.UriRequest;
+
+import java.net.URL;
 
 /**
  * Created by chenmch on 2019/6/14.
@@ -74,5 +78,58 @@ public class WebAPIService {
             LoginService service = router.getService(LoginService.class);
             service.refreshToken(oauthCallBack, requestTime);
         }
+    }
+
+
+    public void webHttpGet(final String requestUrl) {
+        RequestParams params = new RequestParams(requestUrl);
+        params.setRedirectHandler(new RedirectHandler() {
+            @Override
+            public RequestParams getRedirectParams(UriRequest uriRequest) throws Throwable {
+                String locationUrl = uriRequest.getResponseHeader("Location");
+                if (locationUrl.startsWith(WebAPIUri.getWebLoginUrl()) || locationUrl.startsWith("https://id.inspur.com/oauth2.0/authorize")) {
+                    URL urlWithParams = null;
+                    try {
+                        urlWithParams = new URL(locationUrl);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    int port = urlWithParams.getPort();
+                    String requestUrl = urlWithParams.getProtocol() + "://" + urlWithParams.getHost() + (port == -1 ? "" : ":" + port);
+                    locationUrl = requestUrl + "/oauth2.0/quick_authz_code" + "?" + urlWithParams.getQuery();
+                }
+                RequestParams params = BaseApplication.getInstance().getHttpRequestParams(locationUrl);
+                return params;
+            }
+        });
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, requestUrl) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnWebHttpGetSuccess((new String(arg0)));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnWebHttpGetFail(error, responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        webHttpGet(requestUrl);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+        });
     }
 }

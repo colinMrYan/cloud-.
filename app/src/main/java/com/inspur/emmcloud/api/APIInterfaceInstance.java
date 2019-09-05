@@ -1827,4 +1827,14 @@ public class APIInterfaceInstance implements APIInterface {
     public void returnAttendMeetingStatusFail(String error, int errorCode) {
 
     }
+
+    @Override
+    public void returnShareFileToFriendsFromVolumeSuccess(String newPath, VolumeFile volumeFile) {
+
+    }
+
+    @Override
+    public void returnShareFileToFriendsFromVolumeFail(String error, int errorCode) {
+
+    }
 }
