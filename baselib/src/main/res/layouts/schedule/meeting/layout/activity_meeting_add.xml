@@ -563,8 +563,53 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5px"
-                android:layout_marginBottom="51dp"
                 android:layout_marginLeft="16dp"
+                android:background="@color/color_list_divider" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/rl_sync_calendar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/white"
+                    android:onClick="onClick">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:paddingLeft="16dp"
+                        android:paddingTop="11dp"
+                        android:paddingBottom="11dp"
+                        android:text="同步到系统日历"
+                        android:textColor="#333333"
+                        android:textSize="16sp" />
+
+
+                    <Switch
+                        android:id="@+id/switch_sync_calendar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="51dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="16dp" />
+
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5px"
+                android:layout_marginLeft="16dp"
+                android:layout_marginBottom="51dp"
                 android:background="@color/color_list_divider" />
 
         </LinearLayout>
