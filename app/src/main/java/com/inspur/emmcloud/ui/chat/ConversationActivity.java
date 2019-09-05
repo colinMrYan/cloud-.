@@ -1251,7 +1251,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             LocalBroadcastManager.getInstance(this).unregisterReceiver(refreshNameReceiver);
             refreshNameReceiver = null;
         }
-        chatInputMenu.releaseVoliceInput();
+        chatInputMenu.releaseVoiceInput();
         EventBus.getDefault().unregister(this);
     }
 

@@ -357,6 +357,7 @@ public class ECMChatInputMenu extends LinearLayout {
 //                voiceInputLevelImgShade.setVisibility(INVISIBLE);
                 break;
             case VOICE_INPUT_STATUS_SPEAKING:
+                stopVoiceCompleteAnim();
                 voiceInputEt.setVisibility(VISIBLE);
                 languageTv.setVisibility(INVISIBLE);
                 voiceInputCloseImg.setVisibility(INVISIBLE);
@@ -395,7 +396,9 @@ public class ECMChatInputMenu extends LinearLayout {
             animator.cancel();
             animator = null;
         }
-        voiceInputLevelImgShade.setVisibility(INVISIBLE);
+        if (voiceInputStatus != VOICE_INPUT_STATUS_SPEAKING) {
+            voiceInputLevelImgShade.setVisibility(INVISIBLE);
+        }
         voiceInputCompleteView.setVisibility(INVISIBLE);
     }
 
@@ -986,7 +989,7 @@ public class ECMChatInputMenu extends LinearLayout {
     /**
      * 释放MediaPlay资源
      */
-    public void releaseVoliceInput() {
+    public void releaseVoiceInput() {
         if (voice2StringMessageUtils.getSpeechRecognizer() != null) {
             mediaPlayerUtils.release();
             voice2StringMessageUtils.getSpeechRecognizer().cancel();
