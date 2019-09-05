@@ -1050,6 +1050,10 @@
     <string name="net_diagnosis_copy">Click here to copy</string>
     <string name="net_no_network_available">No Network Available</string>
 
+    <string name="function_net_load_fail">Loading Fail</string>
+    <string name="function_net_over_load">Reload</string>
+    <string name="function_net_look_error_detail">Check Exception Information</string>
+
 
     <!--电源白名单-->
     <string name="battery_tip_content">System has applied battery optimizations to the App,which may cause messages be delayed or missed,please add this to battery optimizations whitelist.(Click Set,then in the dialog pops,click Allow)</string>

@@ -1069,6 +1069,10 @@
     <string name="net_check_net_current_state_unconnected">未连接</string>
     <string name="net_check_net_current_state_unknown">未知</string>
 
+    <string name="function_net_load_fail">网络加载失败</string>
+    <string name="function_net_over_load">重新加载</string>
+    <string name="function_net_look_error_detail">查看异常信息</string>
+
     <!--电源白名单-->
     <string name="battery_tip_content">系统已对该应用开启省电优化，可能导致消息延迟或丢失，请将其加入到省电优化白名单（点击“去设置”，在弹出对话框中点击“允许”)</string>
     <string name="white_list_tip_content">由于系统限制，请您手动开启本软件自启动权限，从而保障软件运行的最佳环境（点击“去设置”)</string>

@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.CustomLoadingView;
@@ -29,9 +30,8 @@ import butterknife.ButterKnife;
 /**
  * Created by libaochao on 2019/9/2.
  */
-
+@Route(path = Constant.AROUTER_CLASS_APP_WEB_ERROR_DETAIL)
 public class WebViewNetStateDetailActivity extends BaseActivity {
-
 
     public static String EXTRA_OUTSIDE_URL = "extra_outside_url";
     public static String EXTRA_OUTSIDE_URL_REQUEST_RESULT = "extra_outside_url_request_result";
