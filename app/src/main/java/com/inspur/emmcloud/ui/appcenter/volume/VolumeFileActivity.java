@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -19,6 +18,7 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.VolumeFileAdapter;
@@ -47,7 +47,6 @@ import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
-import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.VolumeFilePrivilegeUtils;
 import com.inspur.emmcloud.util.privates.VolumeFileUploadManagerUtils;
 
@@ -282,10 +281,12 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                                 AppUtils.openCamera(VolumeFileActivity.this, cameraPicFileName, REQUEST_OPEN_CEMERA);
                                 break;
                             case 1:
-                                AppUtils.openGallery(VolumeFileActivity.this, 1, REQUEST_OPEN_GALLERY, true);
+                                AppUtils.openGallery(VolumeFileActivity.this, 10, REQUEST_OPEN_GALLERY, true);
                                 break;
                             case 2:
-                                AppUtils.openFileSystem(VolumeFileActivity.this, REQUEST_OPEN_FILE_BROWSER);
+                                Bundle bundle = new Bundle();
+                                bundle.putInt("extra_maximum", 10);
+                                ARouter.getInstance().build(Constant.AROUTER_CLASS_WEB_FILEMANAGER).with(bundle).navigation(VolumeFileActivity.this, REQUEST_OPEN_FILE_BROWSER);
                                 break;
                             default:
                                 break;
@@ -453,9 +454,16 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_OPEN_FILE_BROWSER) {  //文件浏览器选择文件返回
-                Uri uri = data.getData();
-                String filePath = GetPathFromUri4kitkat.getPathByUri(getApplicationContext(), uri);
-                uploadFile(filePath);
+                if (data.hasExtra("pathList")) {
+                    ArrayList<String> pathList;
+                    pathList = data.getStringArrayListExtra("pathList");
+                    if (pathList == null) {
+                        pathList = new ArrayList<>();
+                    }
+                    for (int i = 0; i < pathList.size(); i++) {
+                        uploadFile(pathList.get(i));
+                    }
+                }
             } else if (requestCode == REQUEST_OPEN_CEMERA //拍照返回
                     && NetUtils.isNetworkConnected(getApplicationContext())) {
                 String imgPath = data.getExtras().getString(MyCameraActivity.OUT_FILE_PATH);
@@ -475,17 +483,19 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                 Boolean originalPicture = data.getBooleanExtra(ImageGridActivity.EXTRA_ORIGINAL_PICTURE, false);
                 ArrayList<ImageItem> imageItemList = (ArrayList<ImageItem>) data
                         .getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
-                String imgPath = imageItemList.get(0).path;
-                if (!originalPicture) {
-                    try {
-                        File file = new Compressor(VolumeFileActivity.this).setMaxHeight(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setMaxWidth(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
-                                .compressToFile(new File(imgPath));
-                        imgPath = file.getAbsolutePath();
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                for (int i = 0; i < imageItemList.size(); i++) {
+                    String imgPath = imageItemList.get(i).path;
+                    if (!originalPicture) {
+                        try {
+                            File file = new Compressor(VolumeFileActivity.this).setMaxHeight(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setMaxWidth(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
+                                    .compressToFile(new File(imgPath));
+                            imgPath = file.getAbsolutePath();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
+                    uploadFile(imgPath);
                 }
-                uploadFile(imgPath);
             }
         } else if (requestCode == SHARE_IMAGE_OR_FILES) {
             // shareToVolumeFile
@@ -631,11 +641,22 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         } else {
             //当从外部分享完成后进入到相应界面，返回时按目录结构逐级回退
             String[] forders = currentDirAbsolutePath.split("/");
-            String parentForderName = forders[forders.length - 1];
-            String parentDirAbsolutePath = currentDirAbsolutePath.substring(0, currentDirAbsolutePath.length() - 1 - parentForderName.length());
+            if (forders.length < 2) {
+                finish();
+                return;
+            }
+            String parentForderName = forders[forders.length - 2];
+            String parentDirAbsolutePath = currentDirAbsolutePath.substring(0, currentDirAbsolutePath.length() - 1 - forders[forders.length - 1].length());
             Bundle bundle = new Bundle();
             bundle.putSerializable("volume", volume);
             bundle.putSerializable("currentDirAbsolutePath", parentDirAbsolutePath);
+            if (parentDirAbsolutePath.equals("/")) {
+                if (volume.getType().equals("private")) {
+                    parentForderName = getString(R.string.clouddriver_my_file);
+                } else {
+                    parentForderName = volume.getName();
+                }
+            }
             bundle.putSerializable("title", parentForderName);
             IntentUtils.startActivity(VolumeFileActivity.this, VolumeFileActivity.class, bundle, true);
         }
