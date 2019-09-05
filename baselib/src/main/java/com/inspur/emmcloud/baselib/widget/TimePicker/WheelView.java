@@ -496,17 +496,23 @@ public class WheelView extends View {
         if (onItemSelectListener == null && onWheelListener == null) {
             return;
         }
-        postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (onItemSelectListener != null) {
-                    onItemSelectListener.onSelected(selectedIndex);
-                }
-                if (onWheelListener != null) {
-                    onWheelListener.onSelected(true, selectedIndex, items.get(selectedIndex).getName());
-                }
-            }
-        }, 200L);
+        if (onItemSelectListener != null) {
+            onItemSelectListener.onSelected(selectedIndex);
+        }
+        if (onWheelListener != null) {
+            onWheelListener.onSelected(true, selectedIndex, items.get(selectedIndex).getName());
+        }
+//        postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                if (onItemSelectListener != null) {
+//                    onItemSelectListener.onSelected(selectedIndex);
+//                }
+//                if (onWheelListener != null) {
+//                    onWheelListener.onSelected(true, selectedIndex, items.get(selectedIndex).getName());
+//                }
+//            }
+//        }, 200L);
     }
 
     @Override
@@ -1056,7 +1062,7 @@ public class WheelView extends View {
                     realOffset = 1;
                 }
             }
-            if (Math.abs(realTotalOffset) <= 1) {
+            if (Math.abs(realTotalOffset) <= 7) {
                 view.cancelFuture();
                 view.handler.sendEmptyMessage(MessageHandler.WHAT_ITEM_SELECTED);
             } else {

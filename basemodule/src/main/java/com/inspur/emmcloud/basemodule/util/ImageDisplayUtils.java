@@ -49,6 +49,7 @@ public class ImageDisplayUtils {
         DisplayImageOptions options = new DisplayImageOptions.Builder()
                 // 设置图片的解码类型
                 .bitmapConfig(Bitmap.Config.RGB_565)
+                .considerExifParams(true)
                 .build();
         ImageLoaderConfiguration.Builder builder = new ImageLoaderConfiguration.Builder(context)
                 .memoryCacheExtraOptions(1280, 1280)
@@ -90,6 +91,7 @@ public class ImageDisplayUtils {
                 .showImageOnFail(defaultDrawableId)
                 .showImageOnLoading(defaultDrawableId)
                 .cacheInMemory(true)
+                .considerExifParams(true)
                 .bitmapConfig(Bitmap.Config.ARGB_8888)   //设置图片的解码类型
                 .displayer(new RoundedBitmapDisplayer(DensityUtil.dip2px(context, dp)))
                 .build();
@@ -113,6 +115,7 @@ public class ImageDisplayUtils {
                 .bitmapConfig(Bitmap.Config.RGB_565)
                 .cacheInMemory(true)
                 .cacheOnDisk(true)
+                .considerExifParams(true)
                 .build();
         ImageLoader.getInstance().displayImage(uri, imageView, options);
     }
@@ -196,6 +199,7 @@ public class ImageDisplayUtils {
                 .bitmapConfig(Bitmap.Config.RGB_565)
                 .cacheInMemory(false)
                 .cacheOnDisk(false)
+                .considerExifParams(true)
                 .build();
         ImageLoader.getInstance().displayImage(uri, imageView, options);
     }
@@ -233,6 +237,7 @@ public class ImageDisplayUtils {
                 .showImageForEmptyUri(defaultDrawableId)
                 .showImageOnFail(defaultDrawableId)
                 .showImageOnLoading(defaultDrawableId)
+                .considerExifParams(true)
                 .cacheInMemory(true)
                 .cacheOnDisk(true)
                 .build();
@@ -253,6 +258,7 @@ public class ImageDisplayUtils {
                 //.showImageOnLoading(defaultDrawableId)
                 // 设置图片的解码类型
                 .bitmapConfig(Bitmap.Config.RGB_565)
+                .considerExifParams(true)
                 .cacheInMemory(false)
                 .cacheOnDisk(false)
                 .build();

@@ -137,6 +137,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         swipeRefreshLayout.setOnRefreshListener(this);
         fileRecycleView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new VolumeFileAdapter(this, volumeFileList);
+        adapter.setCurrentDirAbsolutePath(currentDirAbsolutePath);
         fileRecycleView.setAdapter(adapter);
     }
 

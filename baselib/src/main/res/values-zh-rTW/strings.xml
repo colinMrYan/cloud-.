@@ -454,7 +454,7 @@
     <string name="schedule_meeting_in_meeting">會議中</string>
     <string name="schedule_meeting_be_free">空閒</string>
     <string name="schedule_choose_common_office">常用辦公地點</string>
-    <string name="schedule_meeting_change">修改會議</string>
+    <string name="schedule_meeting_change">變更會議</string>
     <string name="schedule_meeting_cancel">取消會議</string>
     <string name="schedule_meeting_booking_detail">會議詳情</string>
     <string name="schedule_meeting_my_create">我創建的：</string>
@@ -869,7 +869,7 @@
     <string name="meeting_room_booked">時間已被預訂，請重新選擇</string>
     <string name="meeting_room_ilegal_time">時間非法，請檢查 </string>
     <string name="meeting_room_time_late">開始時間不能早於當前時間</string>
-    <string name="meeting_create_group_chat">發起群聊</string>
+    <string name="meeting_create_group_chat">會議群聊</string>
     <string name="meeting_cancel_the_meeting">確定取消會議?</string>
     <string name="schedule_add">新建</string>
     <string name="schedule_update">编辑</string>
@@ -1024,7 +1024,7 @@
     <string name="net_diagnosis_title">網絡診斷</string>
     <string name="net_diagnosis_hard_link_title">檢測網絡設定</string>
     <string name="net_diagnosis_wifi_link_title">檢測Wi-Fi路由器狀態</string>
-    <string name="net_diagnosis_dns_link_title">檢測網絡連通性</string>
+    <string name="net_diagnosis_dns_link_title">網絡連通性檢測</string>
     <string name="net_diagnosis_hard_link_conent">當前檢查項目包含：硬件鏈接是否通暢，是否有鏈接Wi-Fi、4G、LTE等</string>
     <string name="net_diagnosis_hard_to_fix">去修復</string>
     <string name="net_diagnosis_portal_to_set">去認證</string>
@@ -1039,6 +1039,22 @@
     <string name="net_ping_url_inspur">浪潮</string>
     <string name="net_ping_url_ali">阿里</string>
     <string name="net_ping_url_cloud">雲＋</string>
+
+    <string name="net_check_net_url">網址</string>
+    <string name="net_check_net_request_result">請求結果</string>
+    <string name="net_check_net_state">網絡狀態</string>
+    <string name="net_check_net_current_type">當前網絡類型：</string>
+    <string name="net_check_net_current_state">連接狀態：</string>
+    <string name="net_check_net_current_state_connected">已連接</string>
+    <string name="net_check_net_current_state_unconnected">未連接</string>
+    <string name="net_check_net_current_state_unknown">未知</string>
+    <string name="net_diagnosis_copy">點此複製該內容</string>
+    <string name="net_no_network_available">無網絡</string>
+
+    <string name="function_net_load_fail">網絡加載失敗</string>
+    <string name="function_net_over_load">重新加載</string>
+    <string name="function_net_look_error_detail">查看異常信息</string>
+    <string name="net_check_error_detail_title">異常信息</string>
 
     <!--电源白名单-->
     <string name="battery_tip_content">系統已對該應用開啟省電優化，可能導致消息延遲或丟失，請將其加入到省電優化白名單（點擊“去設置”，在彈出對話框中點擊“允許”)</string>
@@ -1264,6 +1280,12 @@
     <string name="voice_word_setting">語音自動識別</string>
     <string name="voice_audio_record_unavailiable">當前錄音設備不可用，請檢查錄音許可權是否開啟</string>
     <string name="voice_to_word">轉文字</string>
+    <!--语音输入改造-->
+    <string name="voice_input_language_mandarin">普通話</string>
+    <string name="voice_input_language_cantonese">粵語</string>
+    <string name="voice_input_language_english">英語</string>
+    <string name="voice_input_hint_prepare">准備中...</string>
+    <string name="voice_input_hint_speak_now">請説話...</string>
 
     <string name="notification_switch">新消息通知</string>
 
