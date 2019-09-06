@@ -10,6 +10,7 @@ import com.inspur.emmcloud.bean.appcenter.volume.VolumeFileUploadInfo;
 import com.inspur.emmcloud.interf.ProgressCallback;
 import com.inspur.emmcloud.interf.VolumeFileUploadService;
 import com.inspur.emmcloud.util.privates.oss.OssService;
+import com.inspur.emmcloud.util.privates.s3.S3Service;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -152,6 +153,7 @@ public class VolumeFileUploadManagerUtils {
                 }
                 break;
             case "aws_s3":
+                volumeFileUploadService = new S3Service(getVolumeFileUploadTokenResult, mockVolumeFile);
                 break;
             default:
                 break;

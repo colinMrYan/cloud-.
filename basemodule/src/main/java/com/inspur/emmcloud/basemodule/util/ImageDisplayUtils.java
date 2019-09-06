@@ -95,11 +95,12 @@ public class ImageDisplayUtils {
                 .bitmapConfig(Bitmap.Config.ARGB_8888)   //设置图片的解码类型
                 .displayer(new RoundedBitmapDisplayer(DensityUtil.dip2px(context, dp)))
                 .build();
+
         ImageLoader.getInstance().displayImage(uri, imageView, options);
     }
 
     public void displayImage(final ImageView imageView, String uri, Integer defaultDrawableId) {
-        DisplayImageOptions options = getDefaultOptions(defaultDrawableId);
+        DisplayImageOptions options = getDefaultOptions(defaultDrawableId, uri);
         if (!StringUtils.isBlank(uri) && !uri.startsWith("http") && !uri.startsWith("file:") && !uri.startsWith("content:") && !uri.startsWith("assets:") && !uri.startsWith("drawable:")) {
             uri = "file://" + uri;
         }
@@ -114,7 +115,7 @@ public class ImageDisplayUtils {
                 // 设置图片的解码类型
                 .bitmapConfig(Bitmap.Config.RGB_565)
                 .cacheInMemory(true)
-                .cacheOnDisk(true)
+                .cacheOnDisk(!uri.startsWith("drawable:"))
                 .considerExifParams(true)
                 .build();
         ImageLoader.getInstance().displayImage(uri, imageView, options);
@@ -133,10 +134,10 @@ public class ImageDisplayUtils {
             imageView.setImageResource(defaultDrawableId);
             return;
         }
-        DisplayImageOptions options = getDefaultOptions(defaultDrawableId);
         if (!uri.startsWith("http") && !uri.startsWith("file:") && !uri.startsWith("content:") && !uri.startsWith("assets:") && !uri.startsWith("drawable:")) {
             uri = "file://" + uri;
         }
+        DisplayImageOptions options = getDefaultOptions(defaultDrawableId, uri);
         final String finalUri = uri;
         imageView.setTag(finalUri);
         ImageLoader.getInstance().loadImage(uri, options, new ImageLoadingListener() {
@@ -220,7 +221,7 @@ public class ImageDisplayUtils {
             uri = "file://" + uri;
         }
         ImageSize size = new ImageSize(width, height);
-        DisplayImageOptions options = getDefaultOptions(defaultDrawableId);
+        DisplayImageOptions options = getDefaultOptions(defaultDrawableId, uri);
         ImageLoader.getInstance().displayImage(uri, new ImageViewAware(imageView), options, size, null, null);
     }
 
@@ -230,7 +231,7 @@ public class ImageDisplayUtils {
      * @param defaultDrawableId
      * @return
      */
-    public DisplayImageOptions getDefaultOptions(Integer defaultDrawableId) {
+    public DisplayImageOptions getDefaultOptions(Integer defaultDrawableId, String uri) {
         DisplayImageOptions options = new DisplayImageOptions.Builder()
                 // 设置图片的解码类型
                 .bitmapConfig(Bitmap.Config.RGB_565)
@@ -239,7 +240,7 @@ public class ImageDisplayUtils {
                 .showImageOnLoading(defaultDrawableId)
                 .considerExifParams(true)
                 .cacheInMemory(true)
-                .cacheOnDisk(true)
+                .cacheOnDisk(!uri.startsWith("drawable:"))
                 .build();
         return options;
     }
