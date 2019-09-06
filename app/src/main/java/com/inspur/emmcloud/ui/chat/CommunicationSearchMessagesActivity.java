@@ -17,11 +17,8 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.GroupMessageSearchAdapter;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
-import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
 import com.inspur.emmcloud.baselib.widget.ClearEditText;
-import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
@@ -130,8 +127,6 @@ public class CommunicationSearchMessagesActivity extends BaseActivity {
             }
         });
         searchEdit.setOnEditorActionListener(onEditorActionListener);
-        final List<com.inspur.emmcloud.bean.chat.Message> messageList = MessageCacheUtil.getGroupMessageWithType(BaseApplication.getInstance(), conversationFromChatContent.getConversation().getId());
-        final List<String> messageContentList = getMessageContentList(messageList);
         searchEdit.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -145,12 +140,7 @@ public class CommunicationSearchMessagesActivity extends BaseActivity {
             public void afterTextChanged(Editable s) {
                 searchMessagesList.clear();
                 String keyWords = s.toString();
-                for (int i = 0; i < messageContentList.size(); i++) {
-                    if (!StringUtils.isBlank(keyWords) && messageContentList.get(i).contains(keyWords)) {
-                        searchMessagesList.add(messageList.get(i));
-                    }
-                }
-                LogUtils.LbcDebug("searchMessagesList" + searchMessagesList.size() + "keyWords" + keyWords);
+                searchMessagesList = MessageCacheUtil.getMessageListByContent(CommunicationSearchMessagesActivity.this, keyWords, conversationFromChatContent.getConversation().getId());
                 groupMessageSearchAdapter.setAndRefreshAdapter(searchMessagesList, keyWords);
             }
         });

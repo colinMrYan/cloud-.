@@ -783,6 +783,30 @@ public class MessageCacheUtil {
 
 
     /**
+     * 根据内容查找文本聊天记录
+     */
+    public static List<Message> getMessageListByContent(Context context, String content, String id) {
+        List<Message> messageList;
+        try {
+            messageList = DbCacheUtils.getDb(context).selector(Message.class)
+                    .where("type", "=", Message.MESSAGE_TYPE_TEXT_PLAIN)
+                    .and(WhereBuilder.b("content", "like", "%" + content + "%"))
+                    .and(WhereBuilder.b("channel", "=", id))
+                    .findAll();
+            if (messageList != null) {
+                return messageList;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ArrayList<>();
+    }
+
+
+
+
+    /**
      * 查找所有文本类型的消息
      *
      * @param context
