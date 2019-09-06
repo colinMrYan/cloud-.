@@ -598,6 +598,7 @@
                         android:layout_height="51dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
+                        android:checked="false"
                         android:layout_marginRight="16dp" />
 
 

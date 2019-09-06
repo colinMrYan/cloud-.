@@ -20,7 +20,6 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
 import com.inspur.emmcloud.baselib.router.Router;
-import com.inspur.emmcloud.baselib.util.CalendarReminderUtils;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.EditTextUtils;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
@@ -33,10 +32,13 @@ import com.inspur.emmcloud.baselib.widget.DateTimePickerDialog;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.bean.CalendarIdAndCloudIdBean;
 import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.CalendarIdAndCloudScheduleIdCacheUtils;
+import com.inspur.emmcloud.basemodule.util.CalendarReminderUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
@@ -319,32 +321,29 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
         calendarTypeLayout.setClickable(!isEventEditModel);
         allDaySwitch.setOnCheckedChangeListener(this);
         modifyLocationUI();
+        //同步日程的选项默认为打开状态
         syncCalendarSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 //                syncCalendarSwitch.isChecked() == isChecked;
                 if (isChecked) {
+                    PermissionRequestManagerUtils.getInstance().requestRuntimePermission(
+                            ScheduleAddActivity.this, Permissions.CALENDAR, new PermissionRequestCallback() {
+                                @Override
+                                public void onPermissionRequestSuccess(List<String> permissions) {
+                                    LogUtils.YfcDebug("权限获取成功");
+                                }
 
+                                @Override
+                                public void onPermissionRequestFail(List<String> permissions) {
+                                    LogUtils.YfcDebug("权限获取失败");
+                                    syncCalendarSwitch.setChecked(false);
+                                }
+                            });
                 }
-
-                PermissionRequestManagerUtils.getInstance().requestRuntimePermission(
-                        ScheduleAddActivity.this, Permissions.CALENDAR, new PermissionRequestCallback() {
-                            @Override
-                            public void onPermissionRequestSuccess(List<String> permissions) {
-                                LogUtils.YfcDebug("权限获取成功");
-                                CalendarReminderUtils.getCalendarEvent(ScheduleAddActivity.this);
-//                        CalendarReminderUtils.addCalendarEvent(ScheduleAddActivity.this,"测试日历","这是一个测试日历111",System.currentTimeMillis(),116);
-                                LogUtils.YfcDebug("日历账号：" + CalendarReminderUtils.checkAndAddCalendarAccount(ScheduleAddActivity.this));
-                            }
-
-                            @Override
-                            public void onPermissionRequestFail(List<String> permissions) {
-                                LogUtils.YfcDebug("权限获取失败");
-                            }
-                        });
             }
         });
-
+        syncCalendarSwitch.setChecked(true);
     }
 
     /**
@@ -418,6 +417,12 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
                 Schedule schedule = getScheduleEvent();
                 if (isEventEditModel) {
                     updateSchedule(schedule);
+                    if (syncCalendarSwitch.isChecked()) {
+                        LogUtils.YfcDebug("更新时日程ID：" + schedule.getId());
+                        CalendarReminderUtils.updateCloudScheduleInSysCalendar(ScheduleAddActivity.this,
+                                schedule.getTitle(), schedule.getNote(), schedule.getStartTime()
+                                , schedule.getEndTime(), schedule.getId(), schedule.getAllDay(), 5);
+                    }
                 } else {
                     addSchedule(schedule);
                 }
@@ -867,6 +872,16 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
             LoadingDialog.dimissDlg(loadingDlg);
             ToastUtils.show(getApplicationContext(), R.string.calendar_add_success);
             schedule.setId(getIDResult.getId());
+            if (syncCalendarSwitch.isChecked()) {
+                String calendarId = CalendarReminderUtils.saveCloudSchedule(ScheduleAddActivity.this,
+                        schedule.getTitle(), schedule.getNote(), schedule.getStartTime()
+                        , schedule.getEndTime(), schedule.getId(), schedule.getAllDay(), 5).getLastPathSegment();
+                LogUtils.YfcDebug("返回数据：" + JSONUtils.toJSONString(getIDResult));
+                CalendarIdAndCloudScheduleIdCacheUtils.saveCalendarIdAndCloudIdBean(
+                        ScheduleAddActivity.this, new CalendarIdAndCloudIdBean(calendarId, getIDResult.getId()));
+                LogUtils.YfcDebug("存储完复查数据：" + JSONUtils.toJSONString(CalendarIdAndCloudScheduleIdCacheUtils.
+                        getCalendarIdByCloudScheduleId(ScheduleAddActivity.this, getIDResult.getId())));
+            }
             sendCalendarEventNotification();
             finish();
         }
