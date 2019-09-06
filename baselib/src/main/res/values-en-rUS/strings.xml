@@ -299,7 +299,7 @@
     <string name="dismiss_group">Dismiss Group</string>
     <string name="quit_group_warning_text">Confirm to leave team?</string>
     <string name="dismiss_group_warning_text">After Dismiss Group,all the chat history and files will be deleted</string>
-    <string name="chat_stick_on_top">Stick on Top</string>
+    <string name="chat_stick_on_top">Sticky on Top</string>
     <string name="chat_remove">Delete</string>
     <string name="chat_remove_from_top">Remove from Top</string>
     <string name="no_chat_content">No chat content</string>
@@ -1241,8 +1241,8 @@
     <string name="share_mutil_only_support_image">Multi file sharing only supports Photo format</string>
     <string name="share_no_more_than_five">No more than 5 Files can\'t be uploaded</string>
     <string name="share_no_share_way">There is no way to share it</string>
-    <string name="share_to_channel">Send to the channel</string>
-    <string name="share_upload_volume">Upload to the cloud volume</string>
+    <string name="share_to_channel">Send to the Channel</string>
+    <string name="share_upload_volume">Upload to the Cloud Drive</string>
     <string name="share_no_suffix">Do not support a file sharing the name without suffix</string>
     <string name="share_has_not_exist_file">There are nonexistent files in the files you shared, please check.</string>
     <string name="share_not_support">Unsupported sharing types</string>

@@ -76,6 +76,10 @@ public class SqlService extends ImpPlugin {
             try {
                 return SQLiteDatabase.openOrCreateDatabase(dbPath, null);
             } catch (Exception e) {
+                if (this.database != null) {
+                    this.database.close();
+                    this.database = null;
+                }
                 e.printStackTrace();
                 return null;
             }
@@ -106,11 +110,14 @@ public class SqlService extends ImpPlugin {
 //        sql = "alter table testTable  add address varchar(40)";
 //        sql = "alter table testTable drop column address";//目前sqlite不支持drop column方法
 //        sql = "create database myDatabase";    //sqlite不支持Sql语句创建数据库  只支持命令创建数据库
+        Cursor myCursor = null;
         try {
             if (isSelectSql(sql)) {
-                Cursor myCursor = this.database.rawQuery(sql, null);
+                myCursor = this.database.rawQuery(sql, null);
                 this.processResults(myCursor);
-                myCursor.close();
+                if (myCursor != null) {
+                    myCursor.close();
+                }
             } else {
                 this.database.execSQL(sql);
                 // 将查询结果传回前台
@@ -118,6 +125,10 @@ public class SqlService extends ImpPlugin {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            if (myCursor != null) {
+                myCursor.close();
+                myCursor = null;
+            }
             // 将错误信息反馈回前台
             jsCallback(failCb, getErrorJson(e.getMessage()));
         }
@@ -185,6 +196,10 @@ public class SqlService extends ImpPlugin {
             }
             resultJsonObject.put("result", result);
         } catch (Exception e) {
+            if (cursor != null) {
+                cursor.close();
+                cursor = null;
+            }
             e.printStackTrace();
         }
         // 将查询结果传回前台
