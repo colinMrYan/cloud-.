@@ -321,6 +321,7 @@
     <string name="chat_send_email_max_person_tip">There are too many recipients at present, which may cause the mail to send an exception, make sure to send？</string>
     <string name="chat_more_contacts">More Contacts</string>
     <string name="chat_more_groups">More Group Chats</string>
+    <string name="chat_group_chats">Group Chats</string>
     <string name="chat_more_content">More Chat Histories</string>
 
     <!-- 会议卡片 -->
@@ -502,7 +503,7 @@
     <string name="station_name_not_exist">You fill station name does not exist, please check the station name</string>
     <string name="found_q2_q2">Expense Report of Q2</string>
     <string name="find_search_contacts">Contacts</string>
-    <string name="find_search_chat_history">Chat history</string>
+    <string name="find_search_chat_history">Chat Histories</string>
     <string name="find_search_news">News</string>
 
     <!-- 应用部分 -->
