@@ -540,7 +540,7 @@ public class TaskAddActivity extends BaseActivity {
         }
         final String id = taskMangerList.get(0).getId();
         String ImageUrl = APIUri.getUserIconUrl(this, id);
-        ImageDisplayUtils.getInstance().displayRoundedImage(managerHeadImageView, ImageUrl, R.drawable.default_image, this, 15);
+        ImageDisplayUtils.getInstance().displayRoundedImage(managerHeadImageView, ImageUrl, R.drawable.icon_person_default, this, 15);
         managerHeadImageView.setVisibility(View.VISIBLE);
         managerNumText.setText(1 + getString(R.string.schedule_task_a_person));
         managerNumText.setVisibility(View.VISIBLE);
@@ -577,7 +577,7 @@ public class TaskAddActivity extends BaseActivity {
                 break;
             final String participantId = taskParticipantList.get(i).getId();
             participantImageUrl.add(APIUri.getUserIconUrl(this, participantId));
-            ImageDisplayUtils.getInstance().displayRoundedImage(ImageList[i], participantImageUrl.get(i), R.drawable.default_image, this, 15);
+            ImageDisplayUtils.getInstance().displayRoundedImage(ImageList[i], participantImageUrl.get(i), R.drawable.icon_person_default, this, 15);
             ImageList[i].setVisibility(View.VISIBLE);
             ImageList[i].setOnClickListener(new View.OnClickListener() {
                 @Override

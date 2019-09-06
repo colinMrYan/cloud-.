@@ -18,6 +18,7 @@ import com.inspur.emmcloud.api.apiservice.ContactAPIService;
 import com.inspur.emmcloud.baselib.util.NotificationSetUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.ClientConfigItem;
 import com.inspur.emmcloud.basemodule.bean.GetAllConfigVersionResult;
 import com.inspur.emmcloud.basemodule.config.Constant;
@@ -37,6 +38,9 @@ import com.inspur.emmcloud.bean.contact.ContactProtoBuf;
 import com.inspur.emmcloud.bean.contact.GetContactOrgListUpateResult;
 import com.inspur.emmcloud.bean.contact.GetContactUserListUpateResult;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
+import com.inspur.emmcloud.bean.schedule.calendar.AccountType;
+import com.inspur.emmcloud.bean.schedule.calendar.CalendarColor;
+import com.inspur.emmcloud.bean.schedule.calendar.ScheduleCalendar;
 import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
@@ -53,6 +57,7 @@ import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactOrgCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ScheduleCalendarCacheUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -109,7 +114,16 @@ public class IndexActivity extends IndexBaseActivity {
                 PushManagerUtils.getInstance().startPush();
             }
         }
+        initScheduleCalendar();
+    }
 
+    protected void initScheduleCalendar() {
+        List<ScheduleCalendar> scheduleCalendarList = ScheduleCalendarCacheUtils.getScheduleCalendarList(BaseApplication.getInstance());
+        if (scheduleCalendarList.size() == 0) {
+            scheduleCalendarList.add(new ScheduleCalendar(CalendarColor.BLUE, "", "", "", AccountType.APP_SCHEDULE));
+            scheduleCalendarList.add(new ScheduleCalendar(CalendarColor.ORANGE, "", "", "", AccountType.APP_MEETING));
+            ScheduleCalendarCacheUtils.saveScheduleCalendarList(BaseApplication.getInstance(), scheduleCalendarList);
+        }
     }
 
     private void initView() {
