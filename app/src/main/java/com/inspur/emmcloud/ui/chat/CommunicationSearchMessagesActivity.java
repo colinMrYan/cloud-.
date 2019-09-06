@@ -43,12 +43,8 @@ import butterknife.ButterKnife;
  */
 
 public class CommunicationSearchMessagesActivity extends BaseActivity {
-    public static final String SEARCH_CONTACT = "search_contact";
-    public static final String SEARCH_GROUP = "search_group";
     public static final String SEARCH_ALL_FROM_CHAT = "search_all_from_chat";
     public static final String SEARCH_CONTENT = "search_content";
-    public static final int REFRESH_DATA = 1;
-    public static final int CLEAR_DATA = 2;
 
     @BindView(R.id.ev_search_input)
     ClearEditText searchEdit;
@@ -62,7 +58,6 @@ public class CommunicationSearchMessagesActivity extends BaseActivity {
     TextView searchModelNameText;
     @BindView(R.id.tv_static_name)
     TextView staticNameText;
-
 
     private List<com.inspur.emmcloud.bean.chat.Message> searchMessagesList = new ArrayList<>(); // 群组搜索结果
     private ConversationFromChatContent conversationFromChatContent;
@@ -188,6 +183,9 @@ public class CommunicationSearchMessagesActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 隐藏虚拟键盘
+     */
     private void dismissSoftKeyboard() {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(searchEdit.getWindowToken(), 0);

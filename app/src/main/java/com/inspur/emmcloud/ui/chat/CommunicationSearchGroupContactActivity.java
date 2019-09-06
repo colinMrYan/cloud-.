@@ -94,7 +94,9 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
     private ConversationFromChatContentAdapter conversationFromChatContentAdapter;
     private String searchText;
     private long lastSearchTime = 0;
-    /***/
+    /**
+     * 虚拟键盘
+     */
     private TextView.OnEditorActionListener onEditorActionListener = new TextView.OnEditorActionListener() {
         @Override
         public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -137,6 +139,8 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
         return R.layout.communication_search_group_contact_activity;
     }
 
+    /**
+     * 异步处理数据*/
     private void handMessage() {
         handler = new Handler() {
             @Override
@@ -267,6 +271,8 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
 
     }
 
+    /**
+     * 初始化异步方法*/
     private void initSearchRunnable() {
         searchRunnable = new Runnable() {
             @Override

@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
+
     <RelativeLayout
         android:id="@+id/rl_header"
         android:layout_width="wrap_content"

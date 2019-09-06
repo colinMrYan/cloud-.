@@ -57,7 +57,6 @@ import butterknife.ButterKnife;
 
 public class CommunicationSearchModelMoreActivity extends BaseActivity implements View.OnClickListener, ListView.OnItemClickListener, MySwipeRefreshLayout.OnLoadListener {
 
-    public static final String SEARCH_ALL = "search_all";
     public static final String SEARCH_CONTACT = "search_contact";
     public static final String SEARCH_GROUP = "search_group";
     public static final String SEARCH_ALL_FROM_CHAT = "search_all_from_chat";
