@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fitsSystemWindows="true">
+
+    <RelativeLayout
+        android:id="@+id/rl_header"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/header_height"
+        android:background="?attr/header_bg">
+
+        <ImageButton
+            android:id="@+id/ibt_back"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_centerVertical="true"
+            android:onClick="onClick"
+            android:padding="11dp"
+            android:scaleType="fitXY"
+            android:src="?attr/ic_back_btn" />
+
+        <TextView
+            android:id="@+id/header_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="@string/net_check_error_detail_title"
+            android:textColor="?attr/header_text_color"
+            android:textSize="@dimen/header_textsize" />
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/rl_header">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/content_bg"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/rl_check_net_url"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <RelativeLayout
+                    android:id="@+id/rl_check_net_url_logs"
+                    android:layout_width="87dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true">
+
+                    <ImageView
+                        android:id="@+id/iv_check_net_url_log"
+                        android:layout_width="42dp"
+                        android:layout_height="42dp"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="20dp"
+                        android:background="@drawable/ic_net_check_url" />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/rl_check_net_url_logs"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_check_net_url_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="24dp"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginTop="20dp"
+                        android:text="@string/net_check_net_url"
+                        android:textColor="#333333"
+                        android:textSize="17dp"></TextView>
+
+                    <TextView
+                        android:id="@+id/tv_check_net_url_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tv_check_net_url_title"
+                        android:layout_marginRight="14dp"
+                        android:layout_marginTop="10dp"
+                        android:maxLines="3"
+                        android:scrollbars="vertical"
+                        android:textColor="#666666"
+                        android:textSize="15dp"></TextView>
+
+                    <TextView
+                        android:id="@+id/tv_copy_net_url"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:onClick="onClick"
+                        android:text="@string/net_diagnosis_copy"
+                        android:textColor="#36A5F6" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_below="@id/tv_check_net_url_content"
+                        android:layout_marginLeft="0dp"
+                        android:layout_marginRight="13dp"
+                        android:layout_marginTop="20dp"
+                        android:background="@color/color_list_divider" />
+                </LinearLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_check_net_result"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <RelativeLayout
+                    android:id="@+id/rl_check_net_result_logs"
+                    android:layout_width="87dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true">
+
+                    <ImageView
+                        android:id="@+id/iv_check_net_result_log"
+                        android:layout_width="42dp"
+                        android:layout_height="42dp"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="20dp"
+                        android:background="@drawable/ic_check_net_result" />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/rl_check_net_result_logs"
+                    android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tv_check_net_result_title"
+                            android:layout_width="match_parent"
+                            android:layout_height="24dp"
+                            android:layout_marginTop="20dp"
+                            android:maxHeight="60dp"
+                            android:text="@string/net_check_net_request_result"
+                            android:textColor="#333333"
+                            android:textSize="17dp"></TextView>
+
+                    <TextView
+                        android:id="@+id/tv_check_net_result_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tv_check_net_result_title"
+                        android:layout_marginRight="16dp"
+                        android:layout_marginTop="10dp"
+                        android:maxLines="6"
+                        android:scrollbars="vertical"
+                        android:textColor="#666666"
+                        android:textSize="15dp"></TextView>
+
+                    <TextView
+                        android:id="@+id/tv_copy_net_result_content"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:onClick="onClick"
+                        android:text="@string/net_diagnosis_copy"
+                        android:textColor="#36A5F6" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_below="@id/tv_check_net_result_content"
+                        android:layout_marginLeft="0dp"
+                        android:layout_marginRight="13dp"
+                        android:layout_marginTop="20dp"
+                        android:background="@color/color_list_divider" />
+                </LinearLayout>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_check_net_state"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <RelativeLayout
+                    android:id="@+id/rl_check_net_state_logs"
+                    android:layout_width="87dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true">
+
+                    <ImageView
+                        android:id="@+id/iv_check_net_state_log"
+                        android:layout_width="42dp"
+                        android:layout_height="42dp"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginLeft="18dp"
+                        android:layout_marginTop="20dp"
+                        android:background="@drawable/ic_net_check_route" />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/rl_check_net_state_logs"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="24dp"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginTop="20dp"
+                        android:text="@string/net_check_net_state"
+                        android:textColor="#333333"
+                        android:textSize="17dp"></TextView>
+
+                    <TextView
+                        android:id="@+id/tv_check_net_current_net_type"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginRight="14dp"
+                        android:layout_marginTop="10dp"
+                        android:textColor="#666666"
+                        android:textSize="15dp"></TextView>
+
+                    <TextView
+                        android:id="@+id/tv_check_net_current_net_state"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginRight="14dp"
+                        android:textColor="#666666"
+                        android:textSize="15dp"></TextView>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="13dp"
+                        android:layout_marginTop="20dp"
+                        android:background="@color/color_list_divider" />
+                </LinearLayout>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_checking_dns_state"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/rl_checking_portal_state">
+
+                <RelativeLayout
+                    android:id="@+id/rl_checking_urls_logs"
+                    android:layout_width="87dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true">
+
+                    <ImageView
+                        android:id="@+id/iv_check_urls_log"
+                        android:layout_width="42dp"
+                        android:layout_height="42dp"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginLeft="18dp"
+                        android:layout_marginTop="20dp"
+                        android:background="@drawable/ic_net_check_connect" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/rl_checking_urls_logs"
+                    android:paddingBottom="20dp">
+
+                    <TextView
+                        android:id="@+id/tv_net_connection_checking"
+                        android:layout_width="match_parent"
+                        android:layout_height="24dp"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginTop="20dp"
+                        android:text="@string/net_diagnosis_dns_link_title"
+                        android:textColor="#333333"
+                        android:textSize="17dp"></TextView>
+
+                    <RelativeLayout
+                        android:id="@+id/rl_checking_inspur"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tv_net_connection_checking"
+                        android:layout_marginTop="10dp">
+
+                        <TextView
+                            android:id="@+id/tv_inspur_content"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/net_ping_url_inspur"
+                            android:textColor="#0F7BCA"
+                            android:textSize="15sp" />
+
+                        <ImageView
+                            android:id="@+id/iv_ping_inspur_state"
+                            android:layout_width="13dp"
+                            android:layout_height="13dp"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="10dp"
+                            android:layout_toRightOf="@id/tv_inspur_content"
+                            android:background="@drawable/ic_netchecking_ok"
+                            android:visibility="gone" />
+
+                        <com.inspur.emmcloud.baselib.widget.CustomLoadingView
+                            android:id="@+id/iv_ping_inspur_loading"
+                            android:layout_width="13dp"
+                            android:layout_height="13dp"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="10dp"
+                            android:layout_toRightOf="@id/tv_inspur_content"
+                            app:loading_color="@color/grey_a5a5a5" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/rl_checking_baidu"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/rl_checking_inspur"
+                        android:layout_marginTop="5dp">
+
+                        <TextView
+                            android:id="@+id/tv_baidu_content"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/net_ping_url_baidu"
+                            android:textColor="#0F7BCA"
+                            android:textSize="15sp" />
+
+                        <ImageView
+                            android:id="@+id/iv_ping_baidu_state"
+                            android:layout_width="13dp"
+                            android:layout_height="13dp"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="10dp"
+                            android:layout_toRightOf="@id/tv_baidu_content"
+                            android:background="@drawable/ic_netchecking_ok"
+                            android:visibility="gone" />
+
+                        <com.inspur.emmcloud.baselib.widget.CustomLoadingView
+                            android:id="@+id/iv_ping_baidu_loading"
+                            android:layout_width="13dp"
+                            android:layout_height="13dp"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="10dp"
+                            android:layout_toRightOf="@id/tv_baidu_content"
+                            app:loading_color="@color/grey_a5a5a5" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/rl_checking_ali"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/rl_checking_baidu"
+                        android:layout_marginTop="5dp">
+
+                        <TextView
+                            android:id="@+id/tv_ali_content"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/net_ping_url_ali"
+                            android:textColor="#0F7BCA"
+                            android:textSize="15sp" />
+
+                        <ImageView
+                            android:id="@+id/iv_ping_ali_state"
+                            android:layout_width="13dp"
+                            android:layout_height="13dp"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="10dp"
+                            android:layout_toRightOf="@id/tv_ali_content"
+                            android:background="@drawable/ic_netchecking_ok"
+                            android:visibility="gone" />
+
+                        <com.inspur.emmcloud.baselib.widget.CustomLoadingView
+                            android:id="@+id/iv_ping_ali_loading"
+                            android:layout_width="13dp"
+                            android:layout_height="13dp"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="10dp"
+                            android:layout_toRightOf="@id/tv_ali_content"
+                            app:loading_color="@color/grey_a5a5a5" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/rl_checking_cloudpluse"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/rl_checking_ali"
+                        android:layout_marginTop="5dp"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:id="@+id/tv_cloudpluse_content"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/net_ping_url_cloud"
+                            android:textColor="#0F7BCA"
+                            android:textSize="15sp" />
+
+                        <ImageView
+                            android:id="@+id/iv_ping_cloudpluse_state"
+                            android:layout_width="13dp"
+                            android:layout_height="13dp"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="10dp"
+                            android:layout_toRightOf="@id/tv_cloudpluse_content"
+                            android:background="@drawable/ic_netchecking_ok"
+                            android:visibility="gone" />
+
+                        <com.inspur.emmcloud.baselib.widget.CustomLoadingView
+                            android:id="@+id/qv_ping_cloudpluse_loading"
+                            android:layout_width="13dp"
+                            android:layout_height="13dp"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="10dp"
+                            android:layout_toRightOf="@id/tv_cloudpluse_content"
+                            app:loading_color="@color/grey_a5a5a5" />
+                    </RelativeLayout>
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

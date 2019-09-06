@@ -36,8 +36,7 @@ public class OfflineAppUtil {
 
     private static File getAppDirFile(List<File> fileFolderList) {
         for (File file : fileFolderList) {
-            if (file.isDirectory() && file.getName().equals(APP_DIR_TEMP)) ;
-            {
+            if (file.isDirectory() && !file.getName().equals(APP_DIR_TEMP)) {
                 return file;
             }
         }
@@ -46,7 +45,7 @@ public class OfflineAppUtil {
 
 
     private static void downLoadZip(final Activity activity, final App app, final boolean isShowLoadingDlg) {
-        if (NetUtils.isNetworkConnected(activity)) {
+        if (!NetUtils.isNetworkConnected(activity)) {
             return;
         }
         final LoadingDialog loadingDlg = new LoadingDialog(activity);

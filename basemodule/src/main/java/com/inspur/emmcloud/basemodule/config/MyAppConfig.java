@@ -32,8 +32,8 @@ public class MyAppConfig {
             .getExternalStorageDirectory() + "/IMP-Cloud/cache/voice";
     public static final String LOCAL_CACHE_PHOTO_PATH = Environment
             .getExternalStorageDirectory() + "/IMP-Cloud/cache/photo";
-    public static final String LOCAL_CACHE_DEFAULT_DB_PATH = Environment
-            .getExternalStorageDirectory() + "/IMP-Cloud/cache/default_db";
+    //    public static final String LOCAL_CACHE_DEFAULT_DB_PATH = Environment
+//            .getExternalStorageDirectory() + "/IMP-Cloud/cache/default_db";
     public static final String LOCAL_OFFLINE_APP_PATH = Environment
             .getExternalStorageDirectory() + "/IMP-Cloud/offlineApp";
     public static final String LOCAL_DOWNLOAD_PATH = Environment
@@ -59,7 +59,7 @@ public class MyAppConfig {
     public static final int UPLOAD_THUMBNAIL_IMG_MAX_SIZE = 600;
     public static final int VOLUME_MAX_FILE_NAME_LENGTH = 40;
     public static final int WEBSOCKET_QEQUEST_TIMEOUT = 16;
-    public static int NETWORK_MOBILE_MAX_SIZE_ALERT = 1021 * 1021 * 50;
+    public static int NETWORK_MOBILE_MAX_SIZE_ALERT = 1024 * 1024 * 50;
 
 
     public static Map<String, String> getLocalLanguageMap() {
@@ -69,6 +69,10 @@ public class MyAppConfig {
         languageMap.put("zh-TW", "zh-TW");
         return languageMap;
 
+    }
+
+    public static String getPluginDefaultDbCache() {
+        return BaseApplication.getInstance().getDir("plugin_dir", MODE_PRIVATE).getPath() + "/cache/default_db";
     }
 
     /**

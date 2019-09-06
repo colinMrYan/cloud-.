@@ -129,7 +129,7 @@ public class AssetsDatabaseManager {
 
     private String getDatabaseFilepath() {
 //        return String.format(databasepath, context.getApplicationInfo().packageName);
-        return MyAppConfig.LOCAL_CACHE_DEFAULT_DB_PATH;
+        return MyAppConfig.getPluginDefaultDbCache();
     }
 
     private String getDatabaseFile(String dbfile) {

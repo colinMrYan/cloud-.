@@ -70,6 +70,7 @@ public class Constant {
     public static final String PREF_LANGUAGE_CURRENT_LOCAL = "language_current_local";
     public static final String PREF_SERVER_SUPPORT_LANGUAGE = "server_support_language";
     public static final String PREF_CURRENT_LANGUAGE = "current_language";
+    public static final String PREF_VOICE_INPUT_LANGUAGE = "voice_input_language";
     public static final String PREF_CURRENT_LANGUAGE_NAME = "current_language_name";
     public static final String PREF_IS_CONTACT_READY = "isContactReady";
     public static final String PREF_APP_BACKGROUND_TIME = "app_background_time";
@@ -226,6 +227,7 @@ public class Constant {
 
     public static final String AROUTER_CLASS_APP_INDEX = "/app/IndexActivity";
     public static final String AROUTER_CLASS_APP_NETWORK_DETAIL = "/app/NetWorkStateDetailActivity";
+    public static final String AROUTER_CLASS_APP_WEB_ERROR_DETAIL = "/app/WebViewNetStateDetailActivity";
 
     public static final String AROUTER_CLASS_AROUTER_DEGRADE = "/aRouter/degrade";
     public static final String AROUTER_CLASS_MAIL_LOGIN = "/mail/login";
