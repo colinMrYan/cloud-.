@@ -14,7 +14,7 @@ public class GetIDResult {
 //            // TODO Auto-generated catch block
 //            e.printStackTrace();
 //        }
-        this.id = response;
+        this.id = response.replaceAll("\"", "");
     }
 
     public String getId() {

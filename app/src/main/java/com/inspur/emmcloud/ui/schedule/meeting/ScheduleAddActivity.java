@@ -331,12 +331,10 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
                             ScheduleAddActivity.this, Permissions.CALENDAR, new PermissionRequestCallback() {
                                 @Override
                                 public void onPermissionRequestSuccess(List<String> permissions) {
-                                    LogUtils.YfcDebug("权限获取成功");
                                 }
 
                                 @Override
                                 public void onPermissionRequestFail(List<String> permissions) {
-                                    LogUtils.YfcDebug("权限获取失败");
                                     syncCalendarSwitch.setChecked(false);
                                 }
                             });
@@ -876,11 +874,8 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
                 String calendarId = CalendarReminderUtils.saveCloudSchedule(ScheduleAddActivity.this,
                         schedule.getTitle(), schedule.getNote(), schedule.getStartTime()
                         , schedule.getEndTime(), schedule.getId(), schedule.getAllDay(), 5).getLastPathSegment();
-                LogUtils.YfcDebug("返回数据：" + JSONUtils.toJSONString(getIDResult));
                 CalendarIdAndCloudScheduleIdCacheUtils.saveCalendarIdAndCloudIdBean(
                         ScheduleAddActivity.this, new CalendarIdAndCloudIdBean(calendarId, getIDResult.getId()));
-                LogUtils.YfcDebug("存储完复查数据：" + JSONUtils.toJSONString(CalendarIdAndCloudScheduleIdCacheUtils.
-                        getCalendarIdByCloudScheduleId(ScheduleAddActivity.this, getIDResult.getId())));
             }
             sendCalendarEventNotification();
             finish();

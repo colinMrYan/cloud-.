@@ -2,8 +2,6 @@ package com.inspur.emmcloud.basemodule.util;
 
 import android.content.Context;
 
-import com.inspur.emmcloud.baselib.util.JSONUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.basemodule.bean.CalendarIdAndCloudIdBean;
 
 import org.xutils.db.sqlite.WhereBuilder;
@@ -19,9 +17,7 @@ public class CalendarIdAndCloudScheduleIdCacheUtils {
     public static void saveCalendarIdAndCloudIdBean(final Context context, final CalendarIdAndCloudIdBean calendarIdAndCloudIdBean) {
         try {
             DbCacheUtils.getDb(context).saveOrUpdate(calendarIdAndCloudIdBean);
-            LogUtils.YfcDebug("存储数据时数据内容：" + JSONUtils.toJSONString(calendarIdAndCloudIdBean));
         } catch (Exception e) {
-            LogUtils.YfcDebug("存储数据异常：" + e.getMessage());
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
@@ -37,8 +33,6 @@ public class CalendarIdAndCloudScheduleIdCacheUtils {
     public static CalendarIdAndCloudIdBean getCalendarIdByCloudScheduleId(Context context, String cloudScheduleId) {
         CalendarIdAndCloudIdBean calendarIdAndCloudIdBean = new CalendarIdAndCloudIdBean();
         try {
-            LogUtils.YfcDebug("cloudScheduleId:" + cloudScheduleId);
-            LogUtils.YfcDebug("所有数据：" + JSONUtils.toJSONString(DbCacheUtils.getDb(context).selector(CalendarIdAndCloudIdBean.class).findAll()));
             calendarIdAndCloudIdBean = DbCacheUtils.getDb(context).selector(CalendarIdAndCloudIdBean.class)
                     .where("cloudScheduleId", "=", cloudScheduleId)
                     .findFirst();
