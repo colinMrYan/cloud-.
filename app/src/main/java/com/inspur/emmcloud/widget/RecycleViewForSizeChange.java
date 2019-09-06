@@ -10,6 +10,7 @@ import android.util.AttributeSet;
  */
 
 public class RecycleViewForSizeChange extends RecyclerView {
+    private boolean isFirst = true;
     public RecycleViewForSizeChange(Context context) {
         super(context);
     }
@@ -25,14 +26,19 @@ public class RecycleViewForSizeChange extends RecyclerView {
     @Override
     protected void onSizeChanged(int w, final int h, int oldw, final int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        this.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (getAdapter() != null) {
-                    MoveToPosition(getAdapter().getItemCount() - 1);
+        if (!isFirst) {
+            this.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (getAdapter() != null) {
+                        MoveToPosition(getAdapter().getItemCount() - 1);
+                    }
                 }
-            }
-        }, 50);
+            }, 50);
+        } else {
+            isFirst = false;
+        }
+
     }
 
     public void MoveToPosition(int position) {

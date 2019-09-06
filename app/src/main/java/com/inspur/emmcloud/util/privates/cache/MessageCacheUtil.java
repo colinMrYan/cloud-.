@@ -7,6 +7,8 @@ import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.DbCacheUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
+import com.inspur.emmcloud.bean.chat.Conversation;
+import com.inspur.emmcloud.bean.chat.ConversationFromChatContent;
 import com.inspur.emmcloud.bean.chat.MatheSet;
 import com.inspur.emmcloud.bean.chat.Message;
 
@@ -15,7 +17,9 @@ import org.xutils.db.sqlite.WhereBuilder;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 消息本地数据库存储处理类
@@ -722,5 +726,108 @@ public class MessageCacheUtil {
         return messageList;
     }
 
+    /**
+     * 根据内容查找记录
+     */
+    public static List<ConversationFromChatContent> getConversationListByContent(Context context, String content) {
+        Map<String, Integer> cidNumMap = new HashMap<>();
+        List<ConversationFromChatContent> conversationFromChatContentList = new ArrayList<>();
+        try {
+            List<Message> messageList;
+            List<String> conversationIdList = new ArrayList<>();
+//            String searchStr = "";
+//            for (int i = 0; i < content.length(); i++) {
+//                if (i < content.length() - 1) {
+//                    searchStr += "%" + content.charAt(i);
+//                } else {
+//                    searchStr += "%" + content.charAt(i) + "%";
+//                }
+//            }
+            messageList = DbCacheUtils.getDb(context).selector(Message.class)
+                    .where("type", "=", Message.MESSAGE_TYPE_TEXT_PLAIN)
+                    .and(WhereBuilder.b("content", "like", "%" + content + "%"))
+                    .findAll();
+            if (messageList != null) {
+                for (int i = 0; i < messageList.size(); i++) {
+                    String currentMessageConversation = messageList.get(i).getChannel();
+                    if (cidNumMap != null && cidNumMap.containsKey(currentMessageConversation)) {
+                        int num = cidNumMap.get(currentMessageConversation);
+                        num = num + 1;
+                        cidNumMap.put(currentMessageConversation, num);
+                    } else {
+                        cidNumMap.put(currentMessageConversation, 1);
+                        conversationIdList.add(currentMessageConversation);
+                    }
+                }
+            }
+            List<Conversation> conversationList = ConversationCacheUtils.getConversationListByIdList(context, conversationIdList);
+            for (int i = 0; i < conversationList.size(); i++) {
+                Conversation tempConversation = conversationList.get(i);
+                if (cidNumMap.containsKey(tempConversation.getId())) {
+                    ConversationFromChatContent conversationFromChatContent =
+                            new ConversationFromChatContent(tempConversation, cidNumMap.get(tempConversation.getId()));
+                    if (tempConversation.getType().equals(Conversation.TYPE_DIRECT)) {
+                        conversationFromChatContent.initSingleChatContact();
+                    }
+                    conversationFromChatContentList.add(conversationFromChatContent);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (conversationFromChatContentList == null) {
+            conversationFromChatContentList = new ArrayList<>();
+        }
+        return conversationFromChatContentList;
+    }
+
+
+    /**
+     * 根据内容查找文本聊天记录
+     */
+    public static List<Message> getMessageListByContent(Context context, String content, String id) {
+        List<Message> messageList;
+        try {
+            messageList = DbCacheUtils.getDb(context).selector(Message.class)
+                    .where("type", "=", Message.MESSAGE_TYPE_TEXT_PLAIN)
+                    .and(WhereBuilder.b("content", "like", "%" + content + "%"))
+                    .and(WhereBuilder.b("channel", "=", id))
+                    .findAll();
+            if (messageList != null) {
+                return messageList;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ArrayList<>();
+    }
+
+
+
+
+    /**
+     * 查找所有文本类型的消息
+     *
+     * @param context
+     * @param cid
+     * @return
+     */
+    public static List<Message> getGroupMessageWithTypeAndKeywords(Context context, String cid) {
+        List<Message> messageList = new ArrayList<>();
+        try {
+            messageList = DbCacheUtils.getDb(context).selector(Message.class)
+                    .where("channel", "=", cid)
+                    .and(WhereBuilder.b("type", "=", Message.MESSAGE_TYPE_TEXT_PLAIN))
+                    .orderBy("creationDate", true)
+                    .findAll();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (messageList == null) {
+            messageList = new ArrayList<>();
+        }
+        return messageList;
+    }
 
 }
