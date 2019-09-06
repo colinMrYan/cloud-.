@@ -1044,7 +1044,7 @@
     <string name="net_diagnosis_title">网络诊断</string>
     <string name="net_diagnosis_hard_link_title">检测网络设置</string>
     <string name="net_diagnosis_wifi_link_title">检测Wi-Fi路由器状态</string>
-    <string name="net_diagnosis_dns_link_title">检测网络连通性</string>
+    <string name="net_diagnosis_dns_link_title">网络连通性检测</string>
     <string name="net_diagnosis_hard_link_conent">当前检查项目包含：硬件链接是否通畅，是否有链接Wi-Fi、4G、LTE等</string>
     <string name="net_diagnosis_hard_to_fix">去修复</string>
     <string name="net_diagnosis_portal_to_set">去认证</string>
@@ -1059,7 +1059,23 @@
     <string name="net_ping_url_inspur">浪潮</string>
     <string name="net_ping_url_ali">阿里</string>
     <string name="net_ping_url_cloud">云＋</string>
+    <string name="net_diagnosis_copy">点此复制该内容</string>
+    <string name="net_no_network_available">无网络</string>
 
+
+    <string name="net_check_net_url">网址</string>
+    <string name="net_check_net_request_result">请求结果</string>
+    <string name="net_check_net_state">网络状态</string>
+    <string name="net_check_net_current_type">当前网络类型：</string>
+    <string name="net_check_net_current_state">连接状态：</string>
+    <string name="net_check_net_current_state_connected">已连接</string>
+    <string name="net_check_net_current_state_unconnected">未连接</string>
+    <string name="net_check_net_current_state_unknown">未知</string>
+
+    <string name="function_net_load_fail">网络加载失败</string>
+    <string name="function_net_over_load">重新加载</string>
+    <string name="function_net_look_error_detail">查看异常信息</string>
+    <string name="net_check_error_detail_title">异常信息</string>
     <!--电源白名单-->
     <string name="battery_tip_content">系统已对该应用开启省电优化，可能导致消息延迟或丢失，请将其加入到省电优化白名单（点击“去设置”，在弹出对话框中点击“允许”)</string>
     <string name="white_list_tip_content">由于系统限制，请您手动开启本软件自启动权限，从而保障软件运行的最佳环境（点击“去设置”)</string>
@@ -1326,6 +1342,12 @@
     <string name="voice_word_setting">语音自动识别</string>
     <string name="voice_audio_record_unavailiable">当前录音设备不可用，请检查录音权限是否开启</string>
     <string name="voice_to_word">转文字</string>
+    <!--语音输入改造-->
+    <string name="voice_input_language_mandarin">普通话</string>
+    <string name="voice_input_language_cantonese">粤语</string>
+    <string name="voice_input_language_english">英语</string>
+    <string name="voice_input_hint_prepare">准备中...</string>
+    <string name="voice_input_hint_speak_now">请说话...</string>
 
     <string name="notification_switch">新消息通知</string>
     <string name="notification_switch_cant_recive">关闭后，手机将不再接收新消息通知</string>

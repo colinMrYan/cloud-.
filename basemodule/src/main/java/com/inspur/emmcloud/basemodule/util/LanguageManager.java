@@ -301,6 +301,23 @@ public class LanguageManager extends BaseModuleAPIInterfaceInstance {
     }
 
     /**
+     * 语音输入用户偏好
+     */
+    public String getVoiceInputLanguage() {
+        String language = PreferencesByTanentUtils.getString(BaseApplication.getInstance(), Constant.PREF_VOICE_INPUT_LANGUAGE);
+        if (!StringUtils.isBlank(language)) {
+            return language;
+        }
+        return "";
+    }
+
+    /**
+     * 设置语音输入用户偏好
+     */
+    public void setVoiceInputLanguage(String language) {
+        PreferencesByTanentUtils.putString(BaseApplication.getInstance(), Constant.PREF_VOICE_INPUT_LANGUAGE, language);
+    }
+    /**
      * 从本地获取缓存的服务端支持语音列表
      *
      * @return

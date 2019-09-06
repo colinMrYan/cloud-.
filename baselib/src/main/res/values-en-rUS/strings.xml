@@ -299,7 +299,7 @@
     <string name="dismiss_group">Dismiss Group</string>
     <string name="quit_group_warning_text">Confirm to leave team?</string>
     <string name="dismiss_group_warning_text">After Dismiss Group,all the chat history and files will be deleted</string>
-    <string name="chat_stick_on_top">Stick on Top</string>
+    <string name="chat_stick_on_top">Sticky on Top</string>
     <string name="chat_remove">Delete</string>
     <string name="chat_remove_from_top">Remove from Top</string>
     <string name="no_chat_content">No chat content</string>
@@ -1026,7 +1026,7 @@
     <string name="net_diagnosis_title">Network Diagnoses</string>
     <string name="net_diagnosis_hard_link_title">Detect network settings</string>
     <string name="net_diagnosis_wifi_link_title">Detect router</string>
-    <string name="net_diagnosis_dns_link_title">Detect network connectivity</string>
+    <string name="net_diagnosis_dns_link_title">Network Connectivity Detection</string>
     <string name="net_diagnosis_hard_link_conent">Contained Items:Connection status of Wi-Fi,4G,LTE and so on.</string>
     <string name="net_diagnosis_hard_to_fix">Repair</string>
     <string name="net_diagnosis_portal_to_set">Authentication</string>
@@ -1041,6 +1041,22 @@
     <string name="net_ping_url_inspur">Inspur</string>
     <string name="net_ping_url_ali">Alibaba</string>
     <string name="net_ping_url_cloud">Cloud+</string>
+
+    <string name="net_check_net_url">Website</string>
+    <string name="net_check_net_request_result">Result</string>
+    <string name="net_check_net_state">Net State</string>
+    <string name="net_check_net_current_type">Net Type：</string>
+    <string name="net_check_net_current_state">Net State：</string>
+    <string name="net_check_net_current_state_connected">Connected</string>
+    <string name="net_check_net_current_state_unconnected">Unconnected</string>
+    <string name="net_check_net_current_state_unknown">Unknown</string>
+    <string name="net_diagnosis_copy">Click here to copy</string>
+    <string name="net_no_network_available">No Network Available</string>
+
+    <string name="function_net_load_fail">Loading Fail</string>
+    <string name="function_net_over_load">Reload</string>
+    <string name="function_net_look_error_detail">Check Exception Information</string>
+    <string name="net_check_error_detail_title">Exception Information</string>
 
     <!--电源白名单-->
     <string name="battery_tip_content">System has applied battery optimizations to the App,which may cause messages be delayed or missed,please add this to battery optimizations whitelist.(Click Set,then in the dialog pops,click Allow)</string>
@@ -1228,8 +1244,8 @@
     <string name="share_mutil_only_support_image">Multi file sharing only supports Photo format</string>
     <string name="share_no_more_than_five">No more than 5 Files can\'t be uploaded</string>
     <string name="share_no_share_way">There is no way to share it</string>
-    <string name="share_to_channel">Send to the channel</string>
-    <string name="share_upload_volume">Upload to the cloud volume</string>
+    <string name="share_to_channel">Send to the Channel</string>
+    <string name="share_upload_volume">Upload to the Cloud Drive</string>
     <string name="share_no_suffix">Do not support a file sharing the name without suffix</string>
     <string name="share_has_not_exist_file">There are nonexistent files in the files you shared, please check.</string>
     <string name="share_not_support">Unsupported sharing types</string>
@@ -1267,6 +1283,12 @@
     <string name="voice_word_setting">Automatic Voice Recognition</string>
     <string name="voice_audio_record_unavailiable">The current recording device is not available. Please check whether the recording permissions are enabled.</string>
     <string name="voice_to_word">Voice to Text</string>
+    <!--语音输入改造-->
+    <string name="voice_input_language_mandarin">Chinese(Mandarin)</string>
+    <string name="voice_input_language_cantonese">Chinese(Cantonese)</string>
+    <string name="voice_input_language_english">English</string>
+    <string name="voice_input_hint_prepare">Preparing...</string>
+    <string name="voice_input_hint_speak_now">Speak now...</string>
 
     <string name="notification_switch">New Notification</string>
     <string name="notification_switch_cant_recive">if closed,you won\'t receive any notifications Close</string>

@@ -69,7 +69,7 @@ public class StuffInformationService extends ImpPlugin {
                 object.put("head", WebServiceRouterManager.getInstance().getClusterEmm() + "api/sys/v3.0/img/userhead/" + BaseApplication.getInstance().getUid());
             }
             object.put("tenantId", BaseApplication.getInstance().getCurrentEnterprise().getId());
-            this.jsCallback(successCb, object.toString());
+            this.jsCallback(successCb, object);
         } catch (Exception e) {
             e.printStackTrace();
             this.jsCallback(failCb, "error");

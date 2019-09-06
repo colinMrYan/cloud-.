@@ -123,14 +123,14 @@ public class SelectStaffService extends ImpPlugin {
                 contactList = service.getSortUserList(uidList);
             }
             if (multiSelection == 0 && contactList.size() == 1) {
-                this.jsCallback(successCb, contactList.get(0).contact2JSONObject(getActivity()).toString());
+                this.jsCallback(successCb, contactList.get(0).contact2JSONObject(getActivity()));
             } else {
                 JSONArray jsonArray = new JSONArray();
                 for (int i = 0; i < contactList.size(); i++) {
                     jsonArray.put(contactList.get(i).contact2JSONObject(getActivity()));
                 }
                 if (jsonArray.length() > 0) {
-                    this.jsCallback(successCb, jsonArray.toString());
+                    this.jsCallback(successCb, jsonArray);
                 }
             }
         } else {

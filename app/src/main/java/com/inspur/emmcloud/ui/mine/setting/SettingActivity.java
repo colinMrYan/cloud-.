@@ -471,7 +471,7 @@ public class SettingActivity extends BaseActivity {
                             case 0:
                                 DataCleanManager.cleanApplicationData(
                                         SettingActivity.this, MyAppConfig.LOCAL_DOWNLOAD_PATH,
-                                        MyAppConfig.LOCAL_CACHE_PATH);
+                                        MyAppConfig.LOCAL_CACHE_PATH, MyAppConfig.LOCAL_IMP_USER_OPERATE_DIC);
                                 ImageDisplayUtils.getInstance().clearAllCache();
                                 handler.sendEmptyMessage(DATA_CLEAR_SUCCESS);
                                 break;
@@ -512,12 +512,14 @@ public class SettingActivity extends BaseActivity {
                         String msgCachePath = MyAppConfig.LOCAL_DOWNLOAD_PATH;
                         String imgCachePath = MyAppConfig.LOCAL_CACHE_PATH;
                         String offlineAppPath = MyAppConfig.LOCAL_OFFLINE_APP_PATH;
+                        String userSpacePath = MyAppConfig.LOCAL_IMP_USER_OPERATE_DIC;
                         DataCleanManager.cleanApplicationData(SettingActivity.this,
-                                msgCachePath, imgCachePath, offlineAppPath);
+                                msgCachePath, imgCachePath, offlineAppPath, userSpacePath);
                         MyApplication.getInstance().setIsContactReady(false);
                         //当清除所有缓存的时候清空以db形式存储数据的configVersion
                         ClientConfigUpdateUtils.getInstance().clearDbDataConfigWithClearAllCache();
                         ImageDisplayUtils.getInstance().clearAllCache();
+                        //因为断网时清除所有缓存会清掉
                         MyAppCacheUtils.clearMyAppList(SettingActivity.this);
                         //清除全部缓存时是否需要清除掉小程序，如果需要，解开下面一行的注释
 //					ReactNativeFlow.deleteReactNativeInstallDir(MyAppConfig.getReactInstallPath(SettingActivity.this,userId));
