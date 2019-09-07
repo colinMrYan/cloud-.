@@ -106,7 +106,7 @@ public class VolumeFileUploadManagerUtils {
                 if (volumeFileUploadInfo.getVolumeFile() == mockVolumeFile) {
                     VolumeFileUploadService volumeFileUploadService = volumeFileUploadInfo.getVolumeFileUploadService();
                     if (volumeFileUploadService != null) {
-                        volumeFileUploadService.onDestory();
+                        volumeFileUploadService.onDestroy();
                     }
                     volumeFileUploadInfoList.remove(i);
                     break;

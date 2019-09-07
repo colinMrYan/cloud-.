@@ -807,5 +807,7 @@ public interface APIInterface {
 
     void returnShareFileToFriendsFromVolumeFail(String error, int errorCode);
 
+    void returnCallbackAfterFileUploadSuccess(VolumeFile volumeFile);
 
+    void returnCallbackAfterFileUploadFail(String error, int errorCode);
 }

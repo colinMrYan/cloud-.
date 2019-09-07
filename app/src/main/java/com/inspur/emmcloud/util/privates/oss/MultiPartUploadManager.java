@@ -56,7 +56,7 @@ public class MultiPartUploadManager {
             {
                 put("callbackUrl", getVolumeFileUploadTokenResult.getCallbackUrl());
                 //callbackBody可以自定义传入的信息
-                put("callbackBody", getVolumeFileUploadTokenResult.getCallbackBody());
+                put("callbackBody", getVolumeFileUploadTokenResult.getCallbackBodyEncode());
             }
         });
 

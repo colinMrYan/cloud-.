@@ -1837,4 +1837,14 @@ public class APIInterfaceInstance implements APIInterface {
     public void returnShareFileToFriendsFromVolumeFail(String error, int errorCode) {
 
     }
+
+    @Override
+    public void returnCallbackAfterFileUploadSuccess(VolumeFile volumeFile) {
+
+    }
+
+    @Override
+    public void returnCallbackAfterFileUploadFail(String error, int errorCode) {
+
+    }
 }

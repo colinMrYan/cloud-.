@@ -781,7 +781,7 @@ public class FileUtils {
     }
 
     /**
-     * 获取文件扩展名
+     * 获取文件扩展名(xx.png,返回png)
      *
      * @param filename
      * @return
@@ -794,6 +794,22 @@ public class FileUtils {
             }
         }
         return filename;
+    }
+
+    /**
+     * 获取文件扩展名(xx.png,返回.png)
+     *
+     * @param fileName
+     * @return
+     */
+    public static String getExtensionNameWithPoint(String fileName) {
+        if ((fileName != null) && (fileName.length() > 0)) {
+            int dot = fileName.lastIndexOf('.');
+            if ((dot > -1) && (dot < (fileName.length() - 1))) {
+                return "." + fileName.substring(dot + 1);
+            }
+        }
+        return "";
     }
 
     //
