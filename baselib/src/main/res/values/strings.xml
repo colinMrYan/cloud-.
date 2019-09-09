@@ -397,6 +397,7 @@
     <string name="schedule_alert_time_before_hours">%1$s小时前</string>
     <string name="schedule_alert_time_before_days">%1$s天前</string>
     <string name="schedule_account_select">账户</string>
+    <string name="schedule_sync_sys_calendar">同步到本地日程</string>
 
     <string name="schedule_calendar_modify">变更日程</string>
     <string name="schedule_calendar_delete">取消日程</string>
