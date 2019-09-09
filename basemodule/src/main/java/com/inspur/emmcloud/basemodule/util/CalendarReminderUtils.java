@@ -154,37 +154,50 @@ public class CalendarReminderUtils {
         event.put(CalendarContract.Events.DTEND, endTime);
         event.put(CalendarContract.Events.ALL_DAY, isAllDay);
         //设置有闹钟提醒
-        event.put(CalendarContract.Events.HAS_ALARM, 1);
+        event.put(CalendarContract.Events.HAS_ALARM, previousDate > -1);
         //这个是时区，必须有
-        event.put(CalendarContract.Events.EVENT_TIMEZONE, "Asia/Shanghai");
+        event.put(CalendarContract.Events.EVENT_TIMEZONE, CalendarContract.Calendars.CALENDAR_TIME_ZONE);
         //添加事件
         Uri cloudScheduleUri = context.getContentResolver().insert(Uri.parse(CALENDER_EVENT_URL), event);
         if (cloudScheduleUri == null) {
             //添加日历事件失败直接返回
             return null;
         }
-        //事件提醒的设定
-        ContentValues values = new ContentValues();
-        values.put(CalendarContract.Reminders.EVENT_ID, ContentUris.parseId(cloudScheduleUri));
-        // 提前previousDate分钟有提醒
-        values.put(CalendarContract.Reminders.MINUTES, previousDate);
-        values.put(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
-        Uri cloudScheduleRemindUri = context.getContentResolver().insert(Uri.parse(CALENDER_REMINDER_URL), values);
 
-//        if(uri == null) {
-//            //添加事件提醒失败直接返回
-//            return;
-//        }
+        Uri cloudScheduleRemindUri = null;
+        if (previousDate > -1) {
+            //事件提醒的设定
+            ContentValues values = new ContentValues();
+            values.put(CalendarContract.Reminders.EVENT_ID, ContentUris.parseId(cloudScheduleUri));
+            // 提前previousDate分钟有提醒
+            values.put(CalendarContract.Reminders.MINUTES, previousDate);
+            values.put(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
+            cloudScheduleRemindUri = context.getContentResolver().insert(Uri.parse(CALENDER_REMINDER_URL), values);
+        }
 
         try {
             jsonObject.put(CalendarIdAndCloudIdBean.CLOUD_PLUS_CALENDAR_ID, cloudScheduleUri.getLastPathSegment());
-            jsonObject.put(CalendarIdAndCloudIdBean.CLOUD_PLUS_SCHEDULE_CALENDAR_ID, cloudScheduleRemindUri.getLastPathSegment());
+            jsonObject.put(CalendarIdAndCloudIdBean.CLOUD_PLUS_SCHEDULE_CALENDAR_ID, cloudScheduleRemindUri == null ? ""
+                    : cloudScheduleRemindUri.getLastPathSegment());
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return jsonObject;
     }
 
+    /**
+     * 注释同上
+     *
+     * @param context
+     * @param title
+     * @param description
+     * @param reminderTime
+     * @param endTime
+     * @param scheduleId
+     * @param isAllDay
+     * @param previousDate
+     * @return
+     */
     public static Uri updateCloudScheduleInSysCalendar(Context context, String title, String description,
                                                        long reminderTime, long endTime,
                                                        String scheduleId, boolean isAllDay, int previousDate) {
@@ -198,23 +211,25 @@ public class CalendarReminderUtils {
         event.put(CalendarContract.Events.DTEND, endTime);
         event.put(CalendarContract.Events.ALL_DAY, isAllDay);
         //设置有闹钟提醒
-        event.put(CalendarContract.Events.HAS_ALARM, 1);
+        event.put(CalendarContract.Events.HAS_ALARM, previousDate>-1);
         //这个是时区，必须有   CalendarContract.Calendars.CALENDAR_TIME_ZONE目前为日历关联的时区 早上10点用华盛顿时间测试  日程在8号
         event.put(CalendarContract.Events.EVENT_TIMEZONE, CalendarContract.Calendars.CALENDAR_TIME_ZONE);
         Uri updateUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, Long.
                 parseLong(getCalendarId(context, "", scheduleId)));
         context.getContentResolver().update(updateUri, event, null, null);
 
-        //事件提醒的设定
-        ContentValues values = new ContentValues();
-        values.put(CalendarContract.Reminders.EVENT_ID, ContentUris.parseId(updateUri));
-        // 提前previousDate分钟有提醒
-        values.put(CalendarContract.Reminders.MINUTES, previousDate);
-        values.put(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
+        if (previousDate > -1) {
+            //事件提醒的设定
+            ContentValues values = new ContentValues();
+            values.put(CalendarContract.Reminders.EVENT_ID, ContentUris.parseId(updateUri));
+            // 提前previousDate分钟有提醒
+            values.put(CalendarContract.Reminders.MINUTES, previousDate);
+            values.put(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
 
-        Uri updateRemindUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, Long.
-                parseLong(getCalendarRemindId(context, "", scheduleId)));
-        context.getContentResolver().update(updateRemindUri, values, null, null);
+            Uri updateRemindUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, Long.
+                    parseLong(getCalendarRemindId(context, "", scheduleId)));
+            context.getContentResolver().update(updateRemindUri, values, null, null);
+        }
         return updateUri;
     }
 
