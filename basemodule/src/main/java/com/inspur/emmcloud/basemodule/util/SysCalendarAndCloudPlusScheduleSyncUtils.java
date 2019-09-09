@@ -18,7 +18,10 @@ import org.json.JSONObject;
 
 import java.util.TimeZone;
 
-public class CalendarReminderUtils {
+/**
+ * 系统日历和云+日程同步工具类
+ */
+public class SysCalendarAndCloudPlusScheduleSyncUtils {
 
     private static String CALENDER_URL = "content://com.android.calendar/calendars";
     private static String CALENDER_EVENT_URL = "content://com.android.calendar/events";
