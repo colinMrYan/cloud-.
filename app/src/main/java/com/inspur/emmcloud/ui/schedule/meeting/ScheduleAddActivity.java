@@ -24,7 +24,6 @@ import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.EditTextUtils;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
@@ -416,10 +415,9 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
                 if (isEventEditModel) {
                     updateSchedule(schedule);
                     if (syncCalendarSwitch.isChecked()) {
-                        LogUtils.YfcDebug("更新时日程ID：" + schedule.getId());
                         CalendarReminderUtils.updateCloudScheduleInSysCalendar(ScheduleAddActivity.this,
                                 schedule.getTitle(), schedule.getNote(), schedule.getStartTime()
-                                , schedule.getEndTime(), schedule.getId(), schedule.getAllDay(), 5);
+                                , schedule.getEndTime(), schedule.getId(), schedule.getAllDay(), (schedule.getRemindEventObj().getAdvanceTimeSpan() / 60));
                     }
                 } else {
                     addSchedule(schedule);
@@ -871,11 +869,17 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
             ToastUtils.show(getApplicationContext(), R.string.calendar_add_success);
             schedule.setId(getIDResult.getId());
             if (syncCalendarSwitch.isChecked()) {
-                String calendarId = CalendarReminderUtils.saveCloudSchedule(ScheduleAddActivity.this,
+                try {
+                    JSONObject jsonObject = CalendarReminderUtils.saveCloudSchedule(ScheduleAddActivity.this,
                         schedule.getTitle(), schedule.getNote(), schedule.getStartTime()
-                        , schedule.getEndTime(), schedule.getId(), schedule.getAllDay(), 5).getLastPathSegment();
-                CalendarIdAndCloudScheduleIdCacheUtils.saveCalendarIdAndCloudIdBean(
-                        ScheduleAddActivity.this, new CalendarIdAndCloudIdBean(calendarId, getIDResult.getId()));
+                            , schedule.getEndTime(), schedule.getId(), schedule.getAllDay(), schedule.getRemindEventObj().getAdvanceTimeSpan() / 60);
+                    CalendarIdAndCloudScheduleIdCacheUtils.saveCalendarIdAndCloudIdBean(
+                            ScheduleAddActivity.this, new CalendarIdAndCloudIdBean(jsonObject.
+                                    getString(CalendarIdAndCloudIdBean.CLOUD_PLUS_CALENDAR_ID), getIDResult.getId(),
+                                    jsonObject.getString(CalendarIdAndCloudIdBean.CLOUD_PLUS_SCHEDULE_CALENDAR_ID)));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
             sendCalendarEventNotification();
             finish();

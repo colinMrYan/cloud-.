@@ -7,12 +7,13 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
 import android.provider.CalendarContract;
-import android.text.TextUtils;
 
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.basemodule.bean.CalendarIdAndCloudIdBean;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.TimeZone;
@@ -122,9 +123,9 @@ public class CalendarReminderUtils {
      * @param isAllDay     是不是整天
      * @param previousDate 提前多长时间提醒 单位是分钟
      */
-    public static Uri saveCloudSchedule(Context context, String title, String description,
-                                        long reminderTime, long endTime,
-                                        String scheduleId, boolean isAllDay, int previousDate) {
+    public static JSONObject saveCloudSchedule(Context context, String title, String description,
+                                               long reminderTime, long endTime,
+                                               String scheduleId, boolean isAllDay, int previousDate) {
         if (context == null) {
             return null;
         }
@@ -134,6 +135,8 @@ public class CalendarReminderUtils {
             //获取账户id失败直接返回，添加日历事件失败
             return null;
         }
+
+        JSONObject jsonObject = new JSONObject();
 //        //添加日历事件
 //        Calendar mCalendar = Calendar.getInstance();
 //        //设置开始时间
@@ -155,46 +158,36 @@ public class CalendarReminderUtils {
         //这个是时区，必须有
         event.put(CalendarContract.Events.EVENT_TIMEZONE, "Asia/Shanghai");
         //添加事件
-        Uri newEvent = context.getContentResolver().insert(Uri.parse(CALENDER_EVENT_URL), event);
-        if (newEvent == null) {
+        Uri cloudScheduleUri = context.getContentResolver().insert(Uri.parse(CALENDER_EVENT_URL), event);
+        if (cloudScheduleUri == null) {
             //添加日历事件失败直接返回
             return null;
         }
         //事件提醒的设定
         ContentValues values = new ContentValues();
-        values.put(CalendarContract.Reminders.EVENT_ID, ContentUris.parseId(newEvent));
+        values.put(CalendarContract.Reminders.EVENT_ID, ContentUris.parseId(cloudScheduleUri));
         // 提前previousDate分钟有提醒
         values.put(CalendarContract.Reminders.MINUTES, previousDate);
         values.put(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
-        Uri uri = context.getContentResolver().insert(Uri.parse(CALENDER_REMINDER_URL), values);
+        Uri cloudScheduleRemindUri = context.getContentResolver().insert(Uri.parse(CALENDER_REMINDER_URL), values);
 
 //        if(uri == null) {
 //            //添加事件提醒失败直接返回
 //            return;
 //        }
-        return newEvent;
+
+        try {
+            jsonObject.put(CalendarIdAndCloudIdBean.CLOUD_PLUS_CALENDAR_ID, cloudScheduleUri.getLastPathSegment());
+            jsonObject.put(CalendarIdAndCloudIdBean.CLOUD_PLUS_SCHEDULE_CALENDAR_ID, cloudScheduleRemindUri.getLastPathSegment());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
     }
 
     public static Uri updateCloudScheduleInSysCalendar(Context context, String title, String description,
                                                        long reminderTime, long endTime,
                                                        String scheduleId, boolean isAllDay, int previousDate) {
-//        long eventID = Long.parseLong(getCalendarId(context, "", scheduleId));
-//        int calId = checkAndAddCalendarAccount(context);
-//        ContentValues values = new ContentValues();
-//        values.put("title", title);
-//        values.put("description", description);
-//        //插入账户的id
-//        values.put("calendar_id", calId);
-//        values.put(CalendarContract.Calendars._ID, eventID);
-//        values.put(CalendarContract.Events.DTSTART, reminderTime);
-//        values.put(CalendarContract.Events.DTEND, endTime);
-//        values.put(CalendarContract.Events.ALL_DAY, isAllDay);
-//        //设置有闹钟提醒
-//        values.put(CalendarContract.Events.HAS_ALARM, 1);
-//        //这个是时区，必须有
-//        values.put(CalendarContract.Events.EVENT_TIMEZONE, "Asia/Shanghai");
-//        Uri updateUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, eventID);
-//        int rows = context.getContentResolver().update(updateUri, values, null, null);
 
         int calId = checkAndAddCalendarAccount(context);
         ContentValues event = new ContentValues();
@@ -207,10 +200,8 @@ public class CalendarReminderUtils {
         event.put(CalendarContract.Events.ALL_DAY, isAllDay);
         //设置有闹钟提醒
         event.put(CalendarContract.Events.HAS_ALARM, 1);
-        //这个是时区，必须有
-        event.put(CalendarContract.Events.EVENT_TIMEZONE, "Asia/Shanghai");
-        //添加事件
-//        Uri newEvent = context.getContentResolver().update(Uri.parse(CALENDER_EVENT_URL), event);
+        //这个是时区，必须有   CalendarContract.Calendars.CALENDAR_TIME_ZONE目前为日历关联的时区 早上10点用华盛顿时间测试  日程在8号
+        event.put(CalendarContract.Events.EVENT_TIMEZONE, CalendarContract.Calendars.CALENDAR_TIME_ZONE);
         Uri updateUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, Long.
                 parseLong(getCalendarId(context, "", scheduleId)));
         context.getContentResolver().update(updateUri, event, null, null);
@@ -221,71 +212,62 @@ public class CalendarReminderUtils {
         // 提前previousDate分钟有提醒
         values.put(CalendarContract.Reminders.MINUTES, previousDate);
         values.put(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
-        Uri uri = context.getContentResolver().insert(Uri.parse(CALENDER_REMINDER_URL), values);
+
+        Uri updateRemindUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, Long.
+                parseLong(getCalendarRemindId(context, "", scheduleId)));
+//        context.getContentResolver().update(updateRemindUri, values,
+//                CalendarContract.Reminders._ID + "=" + getCalendarRemindId(context,"",scheduleId),
+//                null);
+        context.getContentResolver().update(updateRemindUri, values, null, null);
+//        context.getContentResolver().insert(updateRemindUri, values);
         return updateUri;
     }
 
-    /**
-     * 通过Uri查询日程事件
-     *
-     * @param context
-     * @param uri
-     */
-    public static void getCalendarEventByUri(Context context, Uri uri) {
-        LogUtils.YfcDebug("uri:" + uri);
-        Cursor eventCursor = context.getContentResolver().query(uri,
-                null, null, null, null);
-        try {
-            if (eventCursor != null) {
-                for (int i = 0; i < eventCursor.getColumnCount(); i++) {
-                    //获取到属性的名称
-                    String columnName = eventCursor.getColumnName(i);
-                    //获取到属性对应的值
-                    String message = eventCursor.getString(eventCursor.getColumnIndex(columnName));
-                    LogUtils.YfcDebug(columnName + "----" + message);
-                }
-            } else {
-                LogUtils.YfcDebug("cursor为空");
-            }
-        } catch (Exception e) {
-            LogUtils.YfcDebug("e:" + e.getMessage());
-        }
-    }
+//    /**
+//     * 通过Uri查询日程事件
+//     *
+//     * @param context
+//     * @param uri
+//     */
+//    public static void getCalendarEventByUri(Context context, Uri uri) {
+//        LogUtils.YfcDebug("uri:" + uri);
+//        Cursor eventCursor = context.getContentResolver().query(uri,
+//                null, null, null, null);
+//        try {
+//            if (eventCursor != null) {
+//                for (int i = 0; i < eventCursor.getColumnCount(); i++) {
+//                    //获取到属性的名称
+//                    String columnName = eventCursor.getColumnName(i);
+//                    //获取到属性对应的值
+//                    String message = eventCursor.getString(eventCursor.getColumnIndex(columnName));
+//                    LogUtils.YfcDebug(columnName + "----" + message);
+//                }
+//            } else {
+//                LogUtils.YfcDebug("cursor为空");
+//            }
+//        } catch (Exception e) {
+//            LogUtils.YfcDebug("e:" + e.getMessage());
+//        }
+//    }
 
     /**
-     * 删除日历事件
+     * 删除系统日历事件，同时删除关联表数据
+     * @param context
+     * @param scheduleId
      */
-    public static void deleteCalendarEvent(Context context, String title) {
+    public static void deleteCalendarEvent(Context context, String scheduleId) {
         if (context == null) {
             return;
         }
-        Cursor eventCursor = context.getContentResolver().query(Uri.parse(CALENDER_EVENT_URL),
-                null, null, null, null);
-        try {
-            if (eventCursor == null) {
-                //查询返回空值
-                return;
-            }
-            if (eventCursor.getCount() > 0) {
-                //遍历所有事件，找到title跟需要查询的title一样的项
-                for (eventCursor.moveToFirst(); !eventCursor.isAfterLast(); eventCursor.moveToNext()) {
-                    String eventTitle = eventCursor.getString(eventCursor.getColumnIndex("title"));
-                    if (!TextUtils.isEmpty(title) && title.equals(eventTitle)) {
-                        //取得id
-                        int id = eventCursor.getInt(eventCursor.getColumnIndex(CalendarContract.Calendars._ID));
-                        Uri deleteUri = ContentUris.withAppendedId(Uri.parse(CALENDER_EVENT_URL), id);
-                        int rows = context.getContentResolver().delete(deleteUri, null, null);
-                        if (rows == -1) {
-                            //事件删除失败
-                            return;
-                        }
-                    }
-                }
-            }
-        } finally {
-            if (eventCursor != null) {
-                eventCursor.close();
-            }
+        String calendarId = getCalendarId(context, "", scheduleId);
+        Uri deleteUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, Long.
+                parseLong(calendarId));
+        int rows = context.getContentResolver().delete(deleteUri, null, null);
+        if (rows == -1) {
+            LogUtils.YfcDebug("删除失败");
+        } else {
+            CalendarIdAndCloudScheduleIdCacheUtils.deleteByCloudScheduleId(context, scheduleId);
+            LogUtils.YfcDebug("删除成功");
         }
     }
 
@@ -371,5 +353,21 @@ public class CalendarReminderUtils {
         }
         return StringUtils.isBlank(cloudPlusId) ? "" : CalendarIdAndCloudScheduleIdCacheUtils.
                 getCalendarIdByCloudScheduleId(context, cloudPlusId).getCalendarId();
+    }
+
+    /**
+     * 获取系统日历提醒Id
+     *
+     * @param context
+     * @param calendarRemindId
+     * @param cloudPlusId
+     * @return
+     */
+    private static String getCalendarRemindId(Context context, String calendarRemindId, String cloudPlusId) {
+        if (!StringUtils.isBlank(calendarRemindId)) {
+            return calendarRemindId;
+        }
+        return StringUtils.isBlank(cloudPlusId) ? "" : CalendarIdAndCloudScheduleIdCacheUtils.
+                getCalendarIdByCloudScheduleId(context, cloudPlusId).getCloudScheduleRemindId();
     }
 }
