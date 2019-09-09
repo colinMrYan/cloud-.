@@ -415,5 +415,10 @@
             android:launchMode="singleInstance"
             android:resizeableActivity="true"
             android:theme="@style/dialog_activity" />
+
+        <!--S3-->
+        <service
+            android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
+            android:enabled="true" />
     </application>
 </manifest>

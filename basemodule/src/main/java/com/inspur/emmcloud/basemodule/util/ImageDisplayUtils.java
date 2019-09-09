@@ -99,10 +99,10 @@ public class ImageDisplayUtils {
     }
 
     public void displayImage(final ImageView imageView, String uri, Integer defaultDrawableId) {
-        DisplayImageOptions options = getDefaultOptions(defaultDrawableId, uri);
         if (!StringUtils.isBlank(uri) && !uri.startsWith("http") && !uri.startsWith("file:") && !uri.startsWith("content:") && !uri.startsWith("assets:") && !uri.startsWith("drawable:")) {
             uri = "file://" + uri;
         }
+        DisplayImageOptions options = getDefaultOptions(defaultDrawableId, uri);
         finalShowImg(uri, imageView, options);
     }
 
@@ -114,14 +114,14 @@ public class ImageDisplayUtils {
                 // 设置图片的解码类型
                 .bitmapConfig(Bitmap.Config.RGB_565)
                 .cacheInMemory(true)
-                .cacheOnDisk(!uri.startsWith("drawable:"))
+                .cacheOnDisk(!(uri != null && uri.startsWith("drawable:")))
                 .considerExifParams(true)
                 .build();
         finalShowImg(uri, imageView, options);
     }
 
     private void finalShowImg(String uri, ImageView imageView, DisplayImageOptions options) {
-        if (uri.startsWith("drawable://")) {
+        if (uri != null && uri.startsWith("drawable://")) {
             //此处防止drawable太大导致内存溢出
             try {
                 String[] drawableIds = uri.split("drawable://");
@@ -152,10 +152,10 @@ public class ImageDisplayUtils {
             imageView.setImageResource(defaultDrawableId);
             return;
         }
-        DisplayImageOptions options = getDefaultOptions(defaultDrawableId, uri);
         if (!uri.startsWith("http") && !uri.startsWith("file:") && !uri.startsWith("content:") && !uri.startsWith("assets:") && !uri.startsWith("drawable:")) {
             uri = "file://" + uri;
         }
+        DisplayImageOptions options = getDefaultOptions(defaultDrawableId, uri);
         final String finalUri = uri;
         imageView.setTag(finalUri);
         ImageLoader.getInstance().loadImage(uri, options, new ImageLoadingListener() {
@@ -259,7 +259,7 @@ public class ImageDisplayUtils {
                 .showImageOnLoading(defaultDrawableId)
                 .considerExifParams(true)
                 .cacheInMemory(true)
-                .cacheOnDisk(!uri.startsWith("drawable:"))
+                .cacheOnDisk(!(uri != null && uri.startsWith("drawable:")))
                 .build();
         return options;
     }

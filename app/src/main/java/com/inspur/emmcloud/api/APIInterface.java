@@ -490,7 +490,7 @@ public interface APIInterface {
     void returnVolumeFileListFail(String error, int errorCode);
 
     void returnVolumeFileUploadTokenSuccess(GetVolumeFileUploadTokenResult getVolumeFileUploadTokenResult,
-                                            String fileLocalPath, VolumeFile mockVolumeFile);
+                                            String fileLocalPath, VolumeFile mockVolumeFile, int transferObserverId);
 
     void returnVolumeFileUploadTokenFail(VolumeFile mockVolumeFile, String error, int errorCode, String filePath);
 
@@ -807,5 +807,7 @@ public interface APIInterface {
 
     void returnShareFileToFriendsFromVolumeFail(String error, int errorCode);
 
+    void returnCallbackAfterFileUploadSuccess(VolumeFile volumeFile);
 
+    void returnCallbackAfterFileUploadFail(String error, int errorCode);
 }
