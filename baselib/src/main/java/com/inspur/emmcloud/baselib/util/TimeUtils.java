@@ -1,6 +1,10 @@
 package com.inspur.emmcloud.baselib.util;
 
 import android.content.Context;
+import android.text.BidiFormatter;
+import android.text.TextDirectionHeuristics;
+import android.text.TextUtils;
+import android.view.View;
 
 import com.inspur.baselib.R;
 
@@ -9,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 import java.util.TimeZone;
 
 /**
@@ -1141,5 +1146,37 @@ public class TimeUtils {
             return String.valueOf(totalss);
         }
         return String.valueOf(totalss);
+    }
+
+
+    public static String getTimeZone() {
+        Calendar mDummyDate;
+        mDummyDate = Calendar.getInstance();
+        Calendar now = Calendar.getInstance();
+        mDummyDate.setTimeZone(now.getTimeZone());
+        mDummyDate.set(now.get(Calendar.YEAR), 11, 31, 13, 0, 0);
+        return getTimeZoneText(now.getTimeZone(), true);
+    }
+
+    private static String getTimeZoneText(TimeZone tz, boolean includeName) {
+        Date now = new Date();
+        SimpleDateFormat gmtFormatter = new SimpleDateFormat("ZZZZ");
+        gmtFormatter.setTimeZone(tz);
+        String gmtString = gmtFormatter.format(now);
+        BidiFormatter bidiFormatter = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            bidiFormatter = BidiFormatter.getInstance();
+            Locale l = Locale.getDefault();
+            boolean isRtl = TextUtils.getLayoutDirectionFromLocale(l) == View.LAYOUT_DIRECTION_RTL;
+            gmtString = bidiFormatter.unicodeWrap(gmtString,
+                    isRtl ? TextDirectionHeuristics.RTL : TextDirectionHeuristics.LTR);
+
+            if (!includeName) {
+                return gmtString;
+            }
+        }
+
+        LogUtils.YfcDebug("ZoneText：" + gmtString);
+        return gmtString;
     }
 }

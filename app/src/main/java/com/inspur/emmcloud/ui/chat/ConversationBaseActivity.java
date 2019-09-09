@@ -27,6 +27,7 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity {
     public static final String EXTRA_NEED_GET_NEW_MESSAGE = "get_new_msg";
     public static final String EXTRA_UNREAD_MESSAGE = "unread_count";
     public static final String EXTRA_UIMESSAGE = "uimessage";
+    public static final String EXTRA_FROM_SERCH = "from_search";
 
     protected String cid;
     protected LoadingDialog loadingDlg;
