@@ -3,6 +3,8 @@ package com.inspur.emmcloud.basemodule.util;
 import android.content.Context;
 import android.util.Log;
 
+import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
 import com.inspur.emmcloud.basemodule.api.BaseModuleApiUri;
@@ -52,6 +54,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
         Log.e("AndroidRuntime", errorInfo);
         AppExceptionCacheUtils.saveAppException(mContext, 1, "", errorInfo, 0);
         AppException appException = AppExceptionCacheUtils.getAppExceptionListByLevel(mContext, 1);
+        LogUtils.YfcDebug("查询到的异常:" + JSONUtils.toJSONString(appException));
         uploadException(mContext, getUploadContentJSONObj(appException), appException);
         //如果系统提供了默认的异常处理器，则交给系统去结束我们的程序，否则就由我们自己结束自己
         if (mDefaultHandler != null) {
@@ -76,7 +79,6 @@ public class CrashHandler implements UncaughtExceptionHandler {
      * @param exception
      */
     private void uploadException(final Context mContext, final JSONObject exception, final AppException appException) {
-//
         if (NetUtils.isNetworkConnected(mContext, false) && !AppUtils.isApkDebugable(mContext)) {
             final String completeUrl = BaseModuleApiUri.getUploadExceptionUrl();
             RequestParams params = ((BaseApplication) mContext.getApplicationContext()).getHttpRequestParams(completeUrl);
