@@ -1,10 +1,8 @@
 package com.inspur.emmcloud.bean.system;
 
-import android.content.res.Configuration;
-
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.basemodule.util.LanguageManager;
 
 import org.json.JSONObject;
 
@@ -27,10 +25,7 @@ public class MineLayoutItem {
             uri = JSONUtils.getString(object, "uri", "");
             title = JSONUtils.getString(object, "title", "");
             if (!StringUtils.isBlank(title)) {
-                Configuration config = MyApplication.getInstance().getResources().getConfiguration();
-                String language = config.locale.getLanguage();
-                language = language.toLowerCase();
-                switch (language) {
+                switch (LanguageManager.getInstance().getCurrentAppLanguage()) {
                     case "zh-Hant":
                         title = JSONUtils.getString(title, "zh-Hans", "");
                         break;

@@ -36,7 +36,18 @@ public class SelectStaffService extends ImpPlugin {
 
     @Override
     public void execute(String action, JSONObject paramsObject) {
-        showCallIMPMethodErrorDlg();
+        multiSelection = JSONUtils.getInt(JSONUtils.getJSONObject(paramsObject, "options", new JSONObject()), "multiSelection", 0);
+        successCb = JSONUtils.getString(paramsObject, "success", "");
+        failCb = JSONUtils.getString(paramsObject, "fail", "");
+        if ("select".equals(action)) {
+            selectFromContact();
+        } else if ("viewContact".equals(action)) {
+            viewContact();
+        } else if ("openContact".equals(action)) {
+            openContact();
+        } else {
+            showCallIMPMethodErrorDlg();
+        }
     }
 
     /**
@@ -86,18 +97,7 @@ public class SelectStaffService extends ImpPlugin {
 
     @Override
     public String executeAndReturn(String action, JSONObject paramsObject) {
-        multiSelection = JSONUtils.getInt(JSONUtils.getJSONObject(paramsObject, "options", new JSONObject()), "multiSelection", 0);
-        successCb = JSONUtils.getString(paramsObject, "success", "");
-        failCb = JSONUtils.getString(paramsObject, "fail", "");
-        if ("select".equals(action)) {
-            selectFromContact();
-        } else if ("viewContact".equals(action)) {
-            viewContact();
-        } else if ("openContact".equals(action)) {
-            openContact();
-        } else {
-            showCallIMPMethodErrorDlg();
-        }
+        showCallIMPMethodErrorDlg();
         return "";
     }
 
@@ -123,14 +123,14 @@ public class SelectStaffService extends ImpPlugin {
                 contactList = service.getSortUserList(uidList);
             }
             if (multiSelection == 0 && contactList.size() == 1) {
-                this.jsCallback(successCb, contactList.get(0).contact2JSONObject(getActivity()).toString());
+                this.jsCallback(successCb, contactList.get(0).contact2JSONObject(getActivity()));
             } else {
                 JSONArray jsonArray = new JSONArray();
                 for (int i = 0; i < contactList.size(); i++) {
                     jsonArray.put(contactList.get(i).contact2JSONObject(getActivity()));
                 }
                 if (jsonArray.length() > 0) {
-                    this.jsCallback(successCb, jsonArray.toString());
+                    this.jsCallback(successCb, jsonArray);
                 }
             }
         } else {

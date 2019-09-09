@@ -129,19 +129,26 @@
                             android:layout_height="match_parent"
                             android:layout_centerVertical="true"
                             android:onClick="onClick"
-                            android:padding="12dp"
+                            android:paddingBottom="12dp"
+                            android:paddingLeft="25dp"
+                            android:paddingRight="12dp"
+                            android:paddingTop="12dp"
                             android:src="@drawable/ic_arrow_right" />
 
                         <ImageView
                             android:id="@+id/iv_meeting_position_del"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:layout_centerVertical="true"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignParentTop="true"
                             android:onClick="onClick"
-                            android:padding="11dp"
+                            android:paddingBottom="11dp"
+                            android:paddingLeft="25dp"
+                            android:paddingRight="11dp"
+                            android:paddingTop="11dp"
                             android:scaleType="fitCenter"
-                            android:src="@drawable/app_edittext_clear"
-                            android:visibility="gone" />
+                            android:src="@drawable/app_edittext_clear" />
                     </RelativeLayout>
 
                 </RelativeLayout>

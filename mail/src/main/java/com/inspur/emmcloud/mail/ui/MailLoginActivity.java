@@ -53,6 +53,9 @@ public class MailLoginActivity extends BaseActivity {
         mail = PreferencesByUserAndTanentUtils.getString(BaseApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, "");
         password = PreferencesByUserAndTanentUtils.getString(BaseApplication.getInstance(), Constant.PREF_MAIL_PASSWORD, "");
         EditTextUtils.setText(mailEdit, mail);
+        if (!StringUtils.isBlank(mail)) {
+            mailEdit.setEnabled(false);
+        }
         mailEdit.addTextChangedListener(watcher);
         passwordEdit.addTextChangedListener(watcher);
         passwordEdit.setTransformationMethod(PasswordTransformationMethod.getInstance());

@@ -59,23 +59,22 @@ public class ScheduleEventListAdapter extends RecyclerView.Adapter<ScheduleEvent
         String endTime = "";
         if (event.getEventType().equals(Schedule.TYPE_CALENDAR)) {
             holder.eventPositionText.setVisibility(View.GONE);
-            startTime = TimeUtils.calendar2FormatString(context, event.getDayEventStartTime(selectCalendar), TimeUtils.FORMAT_HOUR_MINUTE);
-            endTime = TimeUtils.calendar2FormatString(context, event.getDayEventEndTime(selectCalendar), TimeUtils.FORMAT_HOUR_MINUTE);
         } else if (event.getEventType().equals(Schedule.TYPE_MEETING)) {
             holder.eventPositionText.setVisibility(View.VISIBLE);
             if (!StringUtils.isBlank(event.getEventSubTitle())) {
                 holder.eventPositionText.setText(context.getString(R.string.meeting_detail_location) + event.getEventSubTitle());
             }
-            startTime = TimeUtils.calendar2FormatString(context, event.getDayEventStartTime(selectCalendar), TimeUtils.FORMAT_HOUR_MINUTE);
-            endTime = TimeUtils.calendar2FormatString(context, event.getDayEventEndTime(selectCalendar), TimeUtils.FORMAT_HOUR_MINUTE);
+
+        }
+        startTime = TimeUtils.calendar2FormatString(context, event.getDayEventStartTime(selectCalendar), TimeUtils.FORMAT_HOUR_MINUTE);
+        if (event.isAllDay() || (!event.getEventStartTime().after(TimeUtils.getDayBeginCalendar(selectCalendar)) && !event.getEventEndTime().before(TimeUtils.getDayEndCalendar(selectCalendar)))) {
+            startTime = context.getString(R.string.all_day);
         } else {
-            holder.eventPositionText.setVisibility(View.GONE);
-            if (TimeUtils.isSameDay(event.getEventEndTime(), selectCalendar)) {
-                startTime = context.getString(R.string.today);
+            if (!event.getEventEndTime().before(TimeUtils.getDayEndCalendar(selectCalendar))) {
+                endTime = "24:00";
             } else {
-                startTime = TimeUtils.calendar2FormatString(context, event.getEventEndTime(), TimeUtils.FORMAT_MONTH_DAY);
+                endTime = TimeUtils.calendar2FormatString(context, event.getDayEventEndTime(selectCalendar), TimeUtils.FORMAT_HOUR_MINUTE);
             }
-            endTime = "截止";
         }
         holder.eventImg.setImageResource(event.getEventIconResId(false));
         holder.eventColorImage.setImageResource(event.getCalendarIconResId());

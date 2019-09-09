@@ -10,5 +10,7 @@
     <!-- GPS -->
     <string name="web_gps_opened">GPS已經開啟</string>
     <string name="web_gps_closed">GPS已經關閉</string>
+    <!--短视频录制-->
+    <string name="web_video_record_fail">錄製失敗</string>
 
 </resources>

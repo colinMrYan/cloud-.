@@ -27,13 +27,16 @@ import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeGroupResult;
 import com.inspur.emmcloud.bean.appcenter.volume.Group;
 import com.inspur.emmcloud.bean.appcenter.volume.Volume;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeDetail;
+import com.inspur.emmcloud.bean.appcenter.volume.VolumeGroupContainMe;
 import com.inspur.emmcloud.ui.chat.ChannelMembersDelActivity;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
+import com.inspur.emmcloud.util.privates.cache.VolumeGroupContainMeCacheUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -199,6 +202,17 @@ public class ShareVolumeInfoActivity extends BaseActivity {
     }
 
     /**
+     * 获取网盘下包含自己的组
+     */
+    private void getVolumeGroupContainMe() {
+        if (NetUtils.isNetworkConnected(getApplicationContext())) {
+            apiService.getVolumeGroupContainMe(volume.getId());
+        } else {
+            LoadingDialog.dimissDlg(loadingDlg);
+        }
+    }
+
+    /**
      * 打开详细成员列表
      */
     private void openMemberDetail(int position, int type) {
@@ -352,6 +366,20 @@ public class ShareVolumeInfoActivity extends BaseActivity {
         @Override
         public void returnVolumeMemDelFail(String error, int errorCode) {
             super.returnVolumeMemDelFail(error, errorCode);
+            WebServiceMiddleUtils.hand(getApplicationContext(), error, errorCode);
+        }
+
+        @Override
+        public void returnVolumeGroupContainMeSuccess(GetVolumeGroupResult getVolumeGroupResult) {
+            LoadingDialog.dimissDlg(loadingDlg);
+            List<String> groupIdList = getVolumeGroupResult.getGroupIdList();
+            VolumeGroupContainMe volumeGroupContainMe = new VolumeGroupContainMe(volume.getId(), groupIdList);
+            VolumeGroupContainMeCacheUtils.saveVolumeGroupContainMe(getApplicationContext(), volumeGroupContainMe);
+        }
+
+        @Override
+        public void returnVolumeGroupContainMeFail(String error, int errorCode) {
+            LoadingDialog.dimissDlg(loadingDlg);
             WebServiceMiddleUtils.hand(getApplicationContext(), error, errorCode);
         }
     }

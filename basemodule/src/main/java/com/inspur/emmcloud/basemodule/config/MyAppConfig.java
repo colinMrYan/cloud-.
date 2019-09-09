@@ -32,6 +32,8 @@ public class MyAppConfig {
             .getExternalStorageDirectory() + "/IMP-Cloud/cache/voice";
     public static final String LOCAL_CACHE_PHOTO_PATH = Environment
             .getExternalStorageDirectory() + "/IMP-Cloud/cache/photo";
+    //    public static final String LOCAL_CACHE_DEFAULT_DB_PATH = Environment
+//            .getExternalStorageDirectory() + "/IMP-Cloud/cache/default_db";
     public static final String LOCAL_OFFLINE_APP_PATH = Environment
             .getExternalStorageDirectory() + "/IMP-Cloud/offlineApp";
     public static final String LOCAL_DOWNLOAD_PATH = Environment
@@ -42,12 +44,22 @@ public class MyAppConfig {
             .getExternalStorageDirectory() + "/IMP-Cloud/cache/Markdown/";
     public static final String LOCAL_CACHE_CHAT_PATH = Environment
             .getExternalStorageDirectory() + "/IMP-Cloud/cache/chat/";
+    public static final String LOCAL_CACHE_OSS_RECORD_PATH = Environment
+            .getExternalStorageDirectory() + "/IMP-Cloud/oss/";
+    public static final String LOCAL_SHARE_FILE_PATH = Environment
+            .getExternalStorageDirectory() + "/IMP-Cloud/cache/share_file/";
+
+    /**
+     * 用户文件操作空间，所有用户文件操作不应超出这个范围，清除全部缓存时应当考虑清除此处
+     */
+    public static final String LOCAL_IMP_USER_OPERATE_DIC = Environment
+            .getExternalStorageDirectory() + "/IMP-Cloud/imp/user_space/";
     public static final int UPLOAD_ORIGIN_IMG_MAX_SIZE = 2600;
     public static final int UPLOAD_ORIGIN_IMG_DEFAULT_SIZE = 1280;
     public static final int UPLOAD_THUMBNAIL_IMG_MAX_SIZE = 600;
     public static final int VOLUME_MAX_FILE_NAME_LENGTH = 40;
     public static final int WEBSOCKET_QEQUEST_TIMEOUT = 16;
-    public static Boolean test = true;
+    public static int NETWORK_MOBILE_MAX_SIZE_ALERT = 1024 * 1024 * 50;
 
 
     public static Map<String, String> getLocalLanguageMap() {
@@ -57,6 +69,10 @@ public class MyAppConfig {
         languageMap.put("zh-TW", "zh-TW");
         return languageMap;
 
+    }
+
+    public static String getPluginDefaultDbCache() {
+        return BaseApplication.getInstance().getDir("plugin_dir", MODE_PRIVATE).getPath() + "/cache/default_db";
     }
 
     /**
@@ -99,6 +115,10 @@ public class MyAppConfig {
      */
     public static String getReactTempFilePath(Context context, String userId) {
         return context.getDir("ReactResource_046", MODE_PRIVATE).getPath() + "/" + BaseApplication.getInstance().getTanent() + "/" + userId + "/Pre";
+    }
+
+    public static String getVolumeFileDownloadDirPath() {
+        return LOCAL_DOWNLOAD_PATH + BaseApplication.getInstance().getUid() + "/" + BaseApplication.getInstance().getTanent() + "/";
     }
 
     /**

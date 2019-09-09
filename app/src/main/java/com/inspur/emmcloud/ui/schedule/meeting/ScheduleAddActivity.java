@@ -36,6 +36,7 @@ import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
+import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.bean.appcenter.GetIDResult;
@@ -129,6 +130,7 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
     private List<SearchModel> attendeeSearchModelList = new ArrayList<>();  //参会人
     private List<SearchModel> recorderSearchModelList = new ArrayList<>();  //记录人
     private List<SearchModel> liaisonSearchModelList = new ArrayList<>();   //联系人
+    private List<SearchModel> originalSearchModelList = new ArrayList<>();   //组织者
     private MeetingRoom meetingRoom;    //会议室
     private Location location;          // 地点
     private RemindEvent remindEvent = new RemindEvent();    // 提醒
@@ -216,8 +218,10 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
         schedule.setAllDay(b);
         timeTextChangeByIsAllDay(b);
         remindEvent = new RemindEvent();
-        remindEvent.setName(ScheduleAlertTimeActivity.getAlertTimeNameByTime(remindEvent.getAdvanceTimeSpan(), schedule.getAllDay()));
-        reminderText.setText(ScheduleAlertTimeActivity.getAlertTimeNameByTime(remindEvent.getAdvanceTimeSpan(), schedule.getAllDay()));//设置提醒
+        int data = b ? -32400 : 600;
+        remindEvent.setAdvanceTimeSpan(data);
+        remindEvent.setName(ScheduleAlertTimeActivity.getAlertTimeNameByTime(data, b));
+        reminderText.setText(ScheduleAlertTimeActivity.getAlertTimeNameByTime(data, b));//设置提醒
     }
 
     /**
@@ -247,19 +251,21 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
             String uid = JSONUtils.getString(jsonObject, "id", "");
             SearchModel searchModel = getSearchModel(uid);
             String role = JSONUtils.getString(jsonObject, "role", "");
-            if (Participant.TYPE_COMMON.equals(role)) {
+            if (Participant.TYPE_COMMON.equals(role) || Participant.TYPE_ORGANIZER.equals(role)) {
                 attendeeSearchModelList.add(searchModel);
             } else if (Participant.TYPE_CONTACT.equals(role)) {
                 liaisonSearchModelList.add(searchModel);
             } else if (Participant.TYPE_RECORDER.equals(role)) {
                 recorderSearchModelList.add(searchModel);
+            } else if (Participant.TYPE_ORGANIZER.equals(role)) {
+                originalSearchModelList.add(searchModel);
             }
         }
         remindEvent = schedule.getRemindEventObj();
         startTimeCalendar = schedule.getStartTimeCalendar();
         endTimeCalendar = schedule.getEndTimeCalendar();
         if (schedule.getAllDay()) {
-            endTimeCalendar = TimeUtils.getDayEndCalendar(endTimeCalendar);
+            endTimeCalendar.add(Calendar.MILLISECOND, -1);
         }
         String alertTimeName = ScheduleAlertTimeActivity.getAlertTimeNameByTime(JSONUtils.getInt(schedule.getRemindEvent(), "advanceTimeSpan", -1), schedule.getAllDay());
         remindEvent = new RemindEvent(JSONUtils.getString(schedule.getRemindEvent(), "remindType", "in_app"),
@@ -385,9 +391,11 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
                 }
                 break;
             case R.id.ll_start_time:
+                InputMethodUtils.hide(ScheduleAddActivity.this);
                 showTimeSelectDialog(true);
                 break;
             case R.id.ll_end_time:
+                InputMethodUtils.hide(ScheduleAddActivity.this);
                 showTimeSelectDialog(false);
                 break;
             case R.id.iv_meeting_position_enter:
@@ -426,7 +434,7 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
      */
     private boolean isInputValid() {
         String title = titleEdit.getText().toString().trim();
-        String meetingPosition = positionEditText.getText().toString();
+        String meetingPosition = positionEditText.getText().toString().trim();
         if (StringUtils.isBlank(title)) {
             ToastUtils.show(MyApplication.getInstance(), R.string.meeting_room_booking_topic);
             return false;
@@ -446,7 +454,7 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
                     getString(R.string.meeting_topic_too_long));
             return false;
         }
-        String note = notesEdit.getText().toString();
+        String note = notesEdit.getText().toString().trim();
         if (!StringUtils.isBlank(note) && note.length() > 499) {
             ToastUtils.show(getApplicationContext(),
                     getString(R.string.meeting_notice_too_long));
@@ -534,6 +542,8 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
                         endTimeCalendar.add(Calendar.HOUR_OF_DAY, 2);
                         showTimeInvalidDlg();
                         return;
+                    } else {
+                        endTimeCalendar = (Calendar) calendar.clone();
                     }
                 }
                 setMeetingTime();
@@ -723,13 +733,18 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
         correctedCalendarTime();
         schedule.setStartTime(startTimeCalendar.getTimeInMillis());
         schedule.setEndTime(endTimeCalendar.getTimeInMillis());
-        schedule.setNote(notesEdit.getText().toString());
+        schedule.setNote(notesEdit.getText().toString().trim());
         schedule.setLocation((location != null && !StringUtils.isBlank(location.getId())) ? JSONUtils.toJSONString(location) :
                 JSONUtils.toJSONString(new Location("", "", positionEditText.getText().toString())));
         JSONArray array = new JSONArray();
         try {
             for (SearchModel searchModel : attendeeSearchModelList) {
                 JSONObject obj = new JSONObject();
+//                for(SearchModel searchSubModel:originalSearchModelList){
+//                    if(searchModel.getId().equals(searchSubModel.getId())){
+//
+//                    }
+//                }
                 obj.put("id", searchModel.getId());
                 obj.put("name", searchModel.getName());
                 obj.put("role", Participant.TYPE_COMMON);

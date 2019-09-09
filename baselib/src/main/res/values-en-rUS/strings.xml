@@ -6,6 +6,7 @@
     <string name="reclick_to_desktop">Clicking again will exit the application</string>
     <string name="Network_Mobile">Connected to Cellular</string>
     <string name="Network_WIFI">Connected to WIFI</string>
+    <string name="send_to_app">Send to Cloud+</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="resolution_valiad">Your device resolution is less than 800*480, unable to run this program</string>
@@ -65,6 +66,14 @@
     <string name="unsupport_type">Unsupported Type</string>
     <string name="function_load_fail">Load failed,Touch the screen to reload </string>
     <string name="function_reload">Network Diagnosis</string>
+    <string name="baselib_internal_share">Internal</string>
+    <string name="file_open_by_other_app">Open with App</string>
+    <string name="file_open_by_other_app_tips">%1$s cannot open this file. Please try opening with another application.</string>
+    <string name="upgrade_download">Update</string>
+    <string name="upgrade_later">Skip</string>
+    <string name="upgrade_install_now">Install</string>
+    <string name="upgrade_install_next_time">Next Time</string>
+    <string name="try_again">Try Again</string>
 
     <!-- 公共部分 -->
     <string name="year">Year</string>
@@ -109,7 +118,7 @@
     <string name="close">Close</string>
     <string name="commoly_use_app">Commonly</string>
     <string name="function_not_implemented">During closed beta, it will not open</string>
-    <string name="app_init">initializing</string>
+    <string name="app_init">Initializing</string>
     <string name="news_content_cant_empty">Content cannot be empty</string>
     <string name="help">Help</string>
     <string name="load_data_failed">Failed to load data</string>
@@ -210,6 +219,12 @@
     <string name="baselib_share_to">Share to</string>
     <string name="baselib_share_success">Sharing Successfully</string>
     <string name="baselib_share_fail">Sharing unsuccessfully</string>
+    <string name="baselib_share_many_picture">等%1$d pictures</string>
+    <string name="baselib_share_many_files">等%1$d files</string>
+    <string name="baselib_share_image">[Image]</string>
+    <string name="baselib_share_file">[File]</string>
+    <string name="baselib_share_link">[Link]</string>
+    <string name="baselib_share_send_to">Send to:</string>
     <string name="login_please_input_password">Enter a new password</string>
     <string name="login">Log In</string>
     <string name="login_user_not_bound_enterprise">The current user is not bound to the enterprise, please contact the administrator!</string>
@@ -263,7 +278,7 @@
     <string name="join_discuss">Join discussion</string>
     <string name="add_new_comment">Add new comments</string>
     <string name="socket_connecting">Connecting</string>
-    <string name="socket_close">Disconnect</string>
+    <string name="socket_close">Disconnected</string>
     <string name="chat_file_download_success">File has been downloaded successfully, click again to open</string>
     <string name="group_name_longth_valid">Group name, word overrun (no more than 40 characters)</string>
     <string name="message_create_group">New Chat</string>
@@ -284,7 +299,7 @@
     <string name="dismiss_group">Dismiss Group</string>
     <string name="quit_group_warning_text">Confirm to leave team?</string>
     <string name="dismiss_group_warning_text">After Dismiss Group,all the chat history and files will be deleted</string>
-    <string name="chat_stick_on_top">Stick on Top</string>
+    <string name="chat_stick_on_top">Sticky on Top</string>
     <string name="chat_remove">Delete</string>
     <string name="chat_remove_from_top">Remove from Top</string>
     <string name="no_chat_content">No chat content</string>
@@ -349,7 +364,7 @@
     <!-- 日程 （新）-->
     <string name="schedule_event_alert">Alert</string>
     <string name="schedule_calendar_add">Add Schedule</string>
-    <string name="schedule_calendar_detail">Schedule Detail</string>
+    <string name="schedule_calendar_detail">Schedule Details</string>
     <string name="schedule_setting_list_view">List View</string>
     <string name="schedule_setting_day_view">Day View</string>
     <string name="schedule_calendar_company">My Schedule</string>
@@ -433,7 +448,7 @@
     <string name="schedule_meeting_add_record_holder_title">Recorder</string>
     <string name="schedule_meeting_add_conference_title">Contact</string>
     <string name="schedule_meeting_select_attendee_title">Select attendee</string>
-    <string name="schedule_meeting_booking_detail">Meeting Detail</string>
+    <string name="schedule_meeting_booking_detail">Meeting Details</string>
     <string name="schedule_meeting_select_record_holder_title">Select Recorder</string>
     <string name="schedule_meeting_select_conference_title">Select Contact</string>
     <string name="schedule_meeting_add_note">Note</string>
@@ -533,35 +548,35 @@
     <string name="clouddriver_select_copy_position">Select the copy position</string>
     <string name="clouddriver_select_move_position">Select a target directory</string>
     <string name="clouddriver_file_open_fail">failed to open file!</string>
-    <string name="clouddriver_file_dpwnload">Download</string>
+    <string name="clouddriver_file_detail">Details</string>
     <string name="clouddriver_create_folder">Create Folder</string>
     <string name="clouddriver_file_filter">Filter</string>
-    <string name="clouddriver_sort_by_time_asc">Sort by Time Asc</string>
-    <string name="clouddriver_sort_by_time_dasc">Sort by Time Desc</string>
-    <string name="clouddriver_sort_by_name_asc">Sort by Name Asc</string>
-    <string name="clouddriver_sort_by_name_dasc">Sort by Name Desc</string>
+    <string name="clouddriver_sort_by_time_asc">Time Asc</string>
+    <string name="clouddriver_sort_by_time_dasc">Time Desc</string>
+    <string name="clouddriver_sort_by_name_asc">Name Asc</string>
+    <string name="clouddriver_sort_by_name_dasc">Name Desc</string>
     <string name="clouddriver_current_directory_hint">Current Directory：%1$s</string>
     <string name="clouddriver_upload_waiting">Waiting for Uploading</string>
     <string name="clouddriver_upload_fail">Failed to Upload</string>
     <string name="clouddriver_upload_again">Upload Again</string>>
     <string name="clouddriver_download_size">Download(%1$s)</string>
     <string name="clouddriver_downloading_status">Downloading(%1$s/%2$s)</string>
-    <string name="clouddriver_file_name_invaliad">No special characters can be included in the file name: / \ " : | * ? &lt; &gt;&#038; </string>
+    <string name="clouddriver_file_name_invaliad">No special characters can be included in the file name: / \ " : | * ? &lt; &gt; </string>
     <string name="clouddriver_select_photo">Gallery</string>
     <string name="clouddriver_select_file">File</string>
     <string name="clouddriver_volume_info">Shared Disk Details</string>
     <string name="clouddriver_volume_name">Shared Disk Name</string>
     <string name="clouddriver_all_volume_member_size">All Members(%1$d)</string>
-    <string name="clouddriver_upload_permission">Have upload/view permissions</string>
-    <string name="clouddriver_watch_permission">Have view permissions</string>
+    <string name="clouddriver_upload_permission">Can View/Upload</string>
+    <string name="clouddriver_watch_permission">Can View</string>
     <string name="clouddriver_sure_delete_volume">Sure to delete?</string>
     <string name="clouddriver_del_member">Delete Members</string>
     <string name="clouddriver_all_group_member_size">All Members(%1$d)</string>
     <string name="clouddriver_add_volume_member">Add Member</string>
     <string name="clouddriver_del_volume_group_member">Delete Member</string>
     <string name="clouddriver_add_volume_group_member">Add Member</string>
-    <string name="clouddriver_directory_name_invaliad">No special characters can be included in the directory name: / \ " : | * ? &lt; &gt; &#038;</string>
-    <string name="clouddriver_volume_name_invaliad">No special characters can be included in the shared disk name: / \ " : | * ? &lt; &gt; &#038; </string>
+    <string name="clouddriver_directory_name_invaliad">No special characters can be included in the directory name: / \ " : | * ? &lt; &gt; </string>
+    <string name="clouddriver_volume_name_invaliad">No special characters can be included in the shared disk name: / \ " : | * ? &lt; &gt;  </string>
     <string name="clouddriver_exists_same_name">Already exists file / folder of the same name</string>
     <string name="clouddriver_volume_group_info">Group Detaiks</string>
     <string name="clouddriver_volume_group_member">Group Member</string>
@@ -579,10 +594,12 @@
     <string name="clouddriver_volume_file_filter">Filter</string>
     <string name="clouddriver_volume_group_name">Group Name</string>
     <string name="clouddriver_volume_upload_file">Upload File</string>
-    <string name="clouddriver_upload_file_to_volume">Upload file to volume</string>
-    <string name="clouddriver_file_permission_manager">Permission manager</string>
+    <string name="clouddriver_file_permission_manager">Permissions</string>
+    <string name="volume_upload_to_current_directory">Upload to Current Directory</string>
+    <string name="volume_file_upload_network_type_warning">Currently not connected to Wi-Fi,uploading will use mobile traffic,continue?</string>
+    <string name="volume_file_download_network_type_warning">Currently not connected to Wi-Fi,downloading will use mobile traffic,continue?</string>
     <string name="create">Create</string>
-    <string name="disk">Disk</string>
+    <string name="cloud_drive">Cloud Drive</string>
     <string name="video">Video</string>
     <string name="audio">Audio</string>
     <string name="other">Other</string>
@@ -593,7 +610,7 @@
     <string name="upload_cancel">Cancel</string>
     <string name="no_file">No Files</string>
     <string name="group">Group</string>
-    <string name="people_num">%1$dpeople</string>
+    <string name="people_num">%1$d</string>
     <string name="file_rename">File Rename</string>
     <string name="folder_rename">Folder Rename</string>
     <string name="refresh">Refresh</string>
@@ -720,6 +737,8 @@
     <string name="modify_jump">Skip</string>
     <string name="modify_welcom_user_cloud">Welcome to the inspur of cloud +</string>
     <string name="modify_first_use">This is the first time you use the cloud + , the inspur passes is set password to login next time</string>
+    <string name="setting_update_this_time_hint">Update</string>
+    <string name="setting_update_wifi_download_package_hint">The package has been automatically downloaded under WiFi</string>
 
     <!-- 用户信息页面部分 -->
     <string name="user_info_text">Profile</string>
@@ -931,6 +950,7 @@
     <string name="calendar_no_alert">None</string>
     <string name="calendar_when_event_finished">Finished</string>
     <string name="calendar_cancel_the_schedule">Are you sure to cancel the schedule?</string>
+    <string name="calendar_china_holiday">Holiday</string>
 
     <!-- 通用 -->
     <string name="save">Save</string>
@@ -1003,7 +1023,7 @@
     <string name="net_diagnosis_title">Network Diagnoses</string>
     <string name="net_diagnosis_hard_link_title">Detect network settings</string>
     <string name="net_diagnosis_wifi_link_title">Detect router</string>
-    <string name="net_diagnosis_dns_link_title">Detect network connectivity</string>
+    <string name="net_diagnosis_dns_link_title">Network Connectivity Detection</string>
     <string name="net_diagnosis_hard_link_conent">Contained Items:Connection status of Wi-Fi,4G,LTE and so on.</string>
     <string name="net_diagnosis_hard_to_fix">Repair</string>
     <string name="net_diagnosis_portal_to_set">Authentication</string>
@@ -1018,6 +1038,22 @@
     <string name="net_ping_url_inspur">Inspur</string>
     <string name="net_ping_url_ali">Alibaba</string>
     <string name="net_ping_url_cloud">Cloud+</string>
+
+    <string name="net_check_net_url">Website</string>
+    <string name="net_check_net_request_result">Result</string>
+    <string name="net_check_net_state">Net State</string>
+    <string name="net_check_net_current_type">Net Type：</string>
+    <string name="net_check_net_current_state">Net State：</string>
+    <string name="net_check_net_current_state_connected">Connected</string>
+    <string name="net_check_net_current_state_unconnected">Unconnected</string>
+    <string name="net_check_net_current_state_unknown">Unknown</string>
+    <string name="net_diagnosis_copy">Click here to copy</string>
+    <string name="net_no_network_available">No Network Available</string>
+
+    <string name="function_net_load_fail">Loading Fail</string>
+    <string name="function_net_over_load">Reload</string>
+    <string name="function_net_look_error_detail">Check Exception Information</string>
+    <string name="net_check_error_detail_title">Exception Information</string>
 
     <!--电源白名单-->
     <string name="battery_tip_content">System has applied battery optimizations to the App,which may cause messages be delayed or missed,please add this to battery optimizations whitelist.(Click Set,then in the dialog pops,click Allow)</string>
@@ -1095,9 +1131,11 @@
     <string name="forgetpwd">Forget Password</string>
     <string name="download_fail">Download Failed</string>
     <string name="download_success">Download Success</string>
-    <string name="file_downloading">Download...Please wait</string>
+    <string name="file_downloading">Downloading...Please wait</string>
+    <string name="file_uploading">Uploading...Please wait</string>
     <string name="file_download_success">Download succeeded,open now?</string>
     <string name="has_downloaded">Downloaded</string>
+    <string name="has_uploaded">Uploaded</string>
     <string name="imp_content">Content</string>
     <string name="file_ok">Confirm</string>
     <string name="file_cancel">Cancel</string>
@@ -1108,7 +1146,7 @@
     <string name="turn_on_light">Turn on the light</string>
     <string name="turn_off_light">Turn off the light</string>
     <string name="imp_function_error">Function call error. Please check if Cloud + has been upgraded to the latest version.</string>
-    <string name="file_select_limit_warning">The maximum number of optional files has been reached</string>
+    <string name="file_select_limit_warning">You can select up to %1$d files</string>
     <string name="select_file">Choose files</string>
     <string name="internal_shared_storage">Internal shared storage</string>
 
@@ -1132,13 +1170,16 @@
     <string name="splash_skip">Enter immediately</string>
 
     <!--安全中心-->
-    <string name="setting_safe_gesture_face">Face ID and Gesture Password</string>
+    <string name="setting_safe_gesture_face">Touch ID,Gesture Password Settings</string>
+    <string name="setting_face_unlock">Face Enter Setting</string>
+    <string name="setting_safe_face_id_unlock">Face Enter</string>
     <string name="setting_safe_gesture_face_setting">Face ID and Gesture Password Settings</string>
     <string name="setting_safe_center">Account,Device Security</string>
     <string name="safe_center_gesture">Gesture Password</string>
-    <string name="safe_center_finger_print">Fingerprint</string>
-    <string name="switch_gesture_unlock">Pattern Unlock</string>
-    <string name="switch_gesture_reset_unlock">Reset gesture unlock</string>
+    <string name="safe_center_finger_print">Turn On Touch ID Lock</string>
+    <string name="safe_center_use_finger_print_unlock">Touch ID</string>
+    <string name="switch_gesture_unlock">Turn On Password Lock</string>
+    <string name="switch_gesture_reset_unlock">Reset Gesture Password</string>
     <string name="put_face_in_frame">Put your face into the frame</string>
     <string name="experience_face_verify">Have a try</string>
     <string name="no_face">No face</string>
@@ -1151,11 +1192,15 @@
     <string name="face_login">Face Login</string>
     <string name="off_face_verify_relogin">Turn Off it and relogin </string>
     <string name="face_verifying">Verifying</string>
+    <string name="finger_print_times_use_up">Your recognition times are exhausted. Please try gesture unlocking or try again after a period of time.</string>
+    <string name="finger_print_try_times">If fingerprint authentication fails, you can also try %1$d</string>
+    <string name="finger_print_id">%1$s Touch ID</string>
+    <string name="finger_print_by_finger_print">By verifying Touch ID unlock %1$s </string>
 
     <!--九宫格-->
     <!-- Gesture login activity -->
     <string name="gesture_forget_gesture">Forget gesture code</string>
-    <string name="gesture_default">Please enter a gesture password</string>
+    <string name="gesture_default">Please enter your gesture password</string>
     <string name="gesture_error">Gesture password input error</string>
     <string name="gesture_correct">Input correct</string>
     <string name="gesture_code_error">Password error, you can try again </string>
@@ -1163,8 +1208,8 @@
     <string name="gesture_code_tips">After 5 failures, you need to log in again</string>
 
     <!-- Create gesture activity -->
-    <string name="create_gesture_default">Draw your patterns</string>
-    <string name="create_gesture_correct">Draw pattern again</string>
+    <string name="create_gesture_default">Draw the Unlock Pattern</string>
+    <string name="create_gesture_correct">Draw your pattern again</string>
     <string name="create_gesture_less_error">At least 4 points required. Please re-enter</string>
     <string name="create_gesture_confirm_error">Not match. Please draw it again</string>
     <string name="create_gesture_confirm_correct">Success</string>
@@ -1187,16 +1232,17 @@
     <string name="login_more_scan_find_right">]Do you decide to add？</string>
     <string name="cluster_default">default</string>
 
-    <string name="volume_read_write_permission">Have upload / view permissions</string>
-    <string name="volume_read_permission">Have view permissions</string>
+    <string name="volume_read_write_permission">Can View/Upload</string>
+    <string name="volume_read_permission">Can View</string>
+    <string name="volume_no_permission">No Permission</string>
 
     <string name="cluster_no_permission">The current function lacks effective authorization information.</string>
 
     <string name="share_mutil_only_support_image">Multi file sharing only supports Photo format</string>
-    <string name="share_no_more_than_five">No more than 5 pictures can\'t be uploaded</string>
+    <string name="share_no_more_than_five">No more than 5 Files can\'t be uploaded</string>
     <string name="share_no_share_way">There is no way to share it</string>
-    <string name="share_to_channel">Send to the channel</string>
-    <string name="share_upload_volume">Upload to the cloud volume</string>
+    <string name="share_to_channel">Send to the Channel</string>
+    <string name="share_upload_volume">Upload to the Cloud Drive</string>
     <string name="share_no_suffix">Do not support a file sharing the name without suffix</string>
     <string name="share_has_not_exist_file">There are nonexistent files in the files you shared, please check.</string>
     <string name="share_not_support">Unsupported sharing types</string>
@@ -1234,6 +1280,12 @@
     <string name="voice_word_setting">Automatic Voice Recognition</string>
     <string name="voice_audio_record_unavailiable">The current recording device is not available. Please check whether the recording permissions are enabled.</string>
     <string name="voice_to_word">Voice to Text</string>
+    <!--语音输入改造-->
+    <string name="voice_input_language_mandarin">Chinese(Mandarin)</string>
+    <string name="voice_input_language_cantonese">Chinese(Cantonese)</string>
+    <string name="voice_input_language_english">English</string>
+    <string name="voice_input_hint_prepare">Preparing...</string>
+    <string name="voice_input_hint_speak_now">Speak now...</string>
 
     <string name="notification_switch">New Notification</string>
     <string name="notification_switch_cant_recive">if closed,you won\'t receive any notifications Close</string>

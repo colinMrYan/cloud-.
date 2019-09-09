@@ -31,7 +31,6 @@ public class Event {
     public String eventSubTitle;
     public Calendar eventStartTime;
     public Calendar eventEndTime;
-    private int index = -1;
     private boolean isAllDay = false;
     private Object eventObj;
     private String calendarType;
@@ -73,13 +72,13 @@ public class Event {
         return eventList;
     }
 
-    public int getIndex() {
-        return index;
-    }
-
-    public void setIndex(int index) {
-        this.index = index;
-    }
+//    public int getIndex() {
+//        return index;
+//    }
+//
+//    public void setIndex(int index) {
+//        this.index = index;
+//    }
 
     public String getEventId() {
         return eventId;
@@ -148,28 +147,11 @@ public class Event {
     }
 
     public boolean canDelete() {
-//        if (getEventType().equals(Schedule.TYPE_CALENDAR)) {
-//            return true;
-//        }
-//        if (getEventType().equals(Schedule.TYPE_MEETING)) {
-//            boolean isAdmin = PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(), Constant.PREF_IS_MEETING_ADMIN,
-//                    false);
-//            if (isAdmin || (getOwner().equals(BaseApplication.getInstance().getUid()) && getEventEndTime().after(Calendar.getInstance()))) {
-//                return true;
-//            }
-//        }
         Schedule schedule = (Schedule) getEventObj();
         return schedule.canDelete();
     }
 
     public boolean canModify() {
-//        boolean isOwner = getOwner().equals(BaseApplication.getInstance().getUid());
-//        if (getEventType().equals(Schedule.TYPE_CALENDAR) && isOwner) {
-//            return true;
-//        }
-//        if (getEventType().equals(Schedule.TYPE_MEETING) && isOwner && getEventEndTime().after(Calendar.getInstance())) {
-//            return true;
-//        }
         Schedule schedule = (Schedule) getEventObj();
         return schedule.canModify();
     }
@@ -285,5 +267,19 @@ public class Event {
             return ContextCompat.getColor(BaseApplication.getInstance(), calendarColor.getColor());
         }
         return color;
+    }
+
+
+    public boolean equals(Object other) { // 重写equals方法，后面最好重写hashCode方法
+
+        if (this == other) // 先检查是否其自反性，后比较other是否为空。这样效率高
+            return true;
+        if (other == null)
+            return false;
+        if (!(other instanceof Event))
+            return false;
+
+        final Event otherEvent = (Event) other;
+        return getEventId().equals(otherEvent.getEventId());
     }
 }

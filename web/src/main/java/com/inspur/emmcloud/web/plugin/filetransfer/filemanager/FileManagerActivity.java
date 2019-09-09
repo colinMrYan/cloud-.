@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -97,7 +96,7 @@ public class FileManagerActivity extends BaseActivity {
                             setOKTextStatus();
                             fileAdapter.notifyItemChanged(position);
                         } else if (selectFileBeanList.size() == maximum) {
-                            ToastUtils.show(FileManagerActivity.this, R.string.file_select_limit_warning);
+                            ToastUtils.show(FileManagerActivity.this, getString(R.string.file_select_limit_warning, maximum));
                         } else {
                             selectFileBeanList.add(file);
                             setOKTextStatus();
@@ -221,21 +220,16 @@ public class FileManagerActivity extends BaseActivity {
         titleRecyclerview.smoothScrollToPosition(titleAdapter.getItemCount());
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK
-                && event.getRepeatCount() == 0) {
 
-            List<TitlePath> titlePathList = (List<TitlePath>) titleAdapter.getAdapterData();
-            if (titlePathList.size() == 1) {
-                finish();
-            } else {
-                titleAdapter.removeItem(titlePathList.size() - 1);
-                getFile(titlePathList.get(titlePathList.size() - 1).getPath());
-            }
-            return true;
+    @Override
+    public void onBackPressed() {
+        List<TitlePath> titlePathList = (List<TitlePath>) titleAdapter.getAdapterData();
+        if (titlePathList.size() == 1) {
+            finish();
+        } else {
+            titleAdapter.removeItem(titlePathList.size() - 1);
+            getFile(titlePathList.get(titlePathList.size() - 1).getPath());
         }
-        return super.onKeyDown(keyCode, event);
     }
 
     public class FileComparator implements Comparator {

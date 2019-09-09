@@ -70,11 +70,14 @@ public class Constant {
     public static final String PREF_LANGUAGE_CURRENT_LOCAL = "language_current_local";
     public static final String PREF_SERVER_SUPPORT_LANGUAGE = "server_support_language";
     public static final String PREF_CURRENT_LANGUAGE = "current_language";
+    public static final String PREF_VOICE_INPUT_LANGUAGE = "voice_input_language";
     public static final String PREF_CURRENT_LANGUAGE_NAME = "current_language_name";
     public static final String PREF_IS_CONTACT_READY = "isContactReady";
     public static final String PREF_APP_BACKGROUND_TIME = "app_background_time";
     public static final String PREF_SCHEDULE_ENABLE_EXCHANGE = "schedule_enable_exchange";
     public static final String PREF_SCHEDULE_BASIC_DATA_VERSION = "schedule_basic_data_version";
+    public static final String PREF_SCHEDULE_HOLIDAY_STATE = "schedule_holiday_state";
+    public static final String PREF_VOLUME_FILE_SORT_TYPE = "volume_file_sort_type";
 
     public static final String ACTION_MEETING = "com.inspur.meeting";
     public static final String ACTION_TASK = "com.inspur.task";
@@ -119,6 +122,7 @@ public class Constant {
     public static final String EVENTBUS_TAG_MAIL_LOGIN_FAIL = "tag_mail_login_fail";
     public static final String EVENTBUS_TAG_MAIL_REMOVE = "tag_mail_remove";
     public static final String EVENTBUS_TAG_SCHEDULE_CALENDAR_SETTING_CHANGED = "tag_schedule_calendar_setting_changed";
+    public static final String EVENTBUS_TAG_SCHEDULE_HOLIDAY_CHANGE = "tag_schedule_holiday_changed";
     public static final String EVENTBUS_TAG_SCHEDULE_TASK_DATA_CHANGED = "tag_schedule_task_data_changed";
     public static final String EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED = "tag_schedule_calendar_data_changed";
     public static final String EVENTBUS_TASK_ORDER_CHANGE = "task_order_change";
@@ -128,7 +132,8 @@ public class Constant {
     public static final String EVENTBUS_TAG_SCHEDULE_MEETING_COMMON_OFFICE_CHANGED = "tag_schedule_meeting_common_office_changed";
     public static final String EVENTBUS_TAG_OPEN_WORK_TAB = "tag_open_work_tab";
     public static final String EVENTBUS_TAG_EWS_401 = "tag_ews_401";
-
+    public static final String EVENTBUS_TAG_VOLUME_FILE_SORT_TIME_CHANGED = "volume_file_sort_time_changed";
+    public static final String EVENTBUS_TAG_VOLUME_FILE_LOCATION_SELECT_CLOSE = "volume_file_locaiton_select_close";
     public static final String SERVICE_VERSION_CHAT_V0 = "v0";
     public static final String SERVICE_VERSION_CHAT_V1 = "v1";
 
@@ -202,6 +207,8 @@ public class Constant {
     public static final String EXTRA_IS_HISTORY_MEETING = "is_history_meeting"; //来源  历史会议
 
     public static final String AROUTER_CLASS_COMMUNICATION_MEMBER = "/communication/MembersActivity";
+    public static final String AROUTER_CLASS_COMMUNICATION_IMAGEPAGER = "/communication/ImagePagerActivity";
+
     public static final String AROUTER_CLASS_LOGIN_MAIN = "/login/LoginActivity";
     public static final String AROUTER_CLASS_LOGIN_PASSWORD_MODIFY = "/login/PasswordModifyActivity";
     public static final String AROUTER_CLASS_LOGIN_GS = "/login/ScanQrCodeLoginGSActivity";
@@ -220,6 +227,7 @@ public class Constant {
 
     public static final String AROUTER_CLASS_APP_INDEX = "/app/IndexActivity";
     public static final String AROUTER_CLASS_APP_NETWORK_DETAIL = "/app/NetWorkStateDetailActivity";
+    public static final String AROUTER_CLASS_APP_WEB_ERROR_DETAIL = "/app/WebViewNetStateDetailActivity";
 
     public static final String AROUTER_CLASS_AROUTER_DEGRADE = "/aRouter/degrade";
     public static final String AROUTER_CLASS_MAIL_LOGIN = "/mail/login";
@@ -233,6 +241,8 @@ public class Constant {
     public static final int ATTEND_MEETING_STATUS_REJECT = 2;
     public static final int ATTEND_MEETING_STATUS_TENTATIVE = 3;
     public static final String APP_MYAPP_LIST_FROM_NET = "my_app_list_from_net";
+
+    public static final String SAFE_CENTER_FINGER_PRINT = "safe_center_finger_print";
 
 
 }

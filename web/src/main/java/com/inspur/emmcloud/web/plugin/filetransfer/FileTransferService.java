@@ -31,31 +31,30 @@ import com.inspur.emmcloud.web.util.StrUtil;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
+import org.xutils.x;
 
-import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.text.Format;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.UUID;
-
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.X509TrustManager;
 
 import static android.app.Activity.RESULT_OK;
 
+/**
+ * FileTransferService中下载，读取，写入内容，列出文件列表，删除文件等新加插件传的路径都认为是相对路径
+ * 相对路径前无“/”
+ */
 public class FileTransferService extends ImpPlugin {
     public static final String SUCCESS = "1";
     public static final String FAILURE = "0";
@@ -63,18 +62,19 @@ public class FileTransferService extends ImpPlugin {
     private static final String TAG = "uploadFile";
     private static final int TIME_OUT = 10 * 10000000; // 超时时间
     private static final String CHARSET = "utf-8"; // 设置编码
+    private static final String SAVE_FILE = "save_file";
     private static double MBDATA = 1048576.0;
     private static double KBDATA = 1024.0;
     // 文件
     private File file;
-    private String loadUrl = "", filepath = "", fileName = "", fileType = "",
+    private String downloadUrl = "", filepath = "", fileName = "", fileType = "",
             absoluteFilePath = "", reallyPath = ""; //reallyPath 文件的整体路径
     // 下载回调
-    private String downloadSucCB, downloadFailCB, fileInfo;
+    private String downloadSucCB, downloadFailCB, fileInfo, saveFileCallBack;
     // 上传文件参数
-    private String uploadUrl = "", uploadpath = "", uploadName = "";
+    private String uploadUrl = "", uploadName = "";
     // 上传回调
-    private String uploadProgress, uploadSucCB, uploadFailCB;
+    private String uploadSucCB, uploadFailCB;
     // 提示不含有sd卡
     private AlertDialog msgDlg;
     // 获取SDCard根目录
@@ -95,11 +95,14 @@ public class FileTransferService extends ImpPlugin {
     private TextView ratioText;
     private long totalSize;
     private long downloadSize;
+    private AlertDialog fileUploadDlg;
     /**
      * 记录进度条数量*
      */
     private int progress;
     private ProgressBar progressBar;
+    private String downloadFileType = "";
+    private String replaceBasePath = FilePathUtils.BASE_PATH + "/";
     // 回传下载结果
     Handler handler = new Handler() {
 
@@ -133,6 +136,17 @@ public class FileTransferService extends ImpPlugin {
                         public void run() {
                             if (StrUtil.strIsNotNull(downloadFailCB)) {
                                 jsCallback(downloadFailCB, fileName);
+                            } else if (downloadFileType.equals(SAVE_FILE) && StrUtil.strIsNotNull(saveFileCallBack)) {
+                                try {
+                                    if (downloadFileType.equals(SAVE_FILE)) {
+                                        JSONObject jsonObject = new JSONObject();
+                                        jsonObject.put("status", 0);
+                                        jsonObject.put("errorMessage", "");
+                                        jsCallback(saveFileCallBack, jsonObject);
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                             }
 
                         }
@@ -145,7 +159,9 @@ public class FileTransferService extends ImpPlugin {
                     if (fileDownloadDlg != null && fileDownloadDlg.isShowing()) {
                         fileDownloadDlg.dismiss();
                     }
-                    new FileOpen(getActivity(), reallyPath, fileType).showOpenDialog();
+                    if (!StrUtil.strIsNotNull(saveFileCallBack)) {
+                        new FileOpen(getActivity(), reallyPath, fileType).showOpenDialog();
+                    }
                     fileInfo = (String) msg.obj;
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
@@ -153,14 +169,21 @@ public class FileTransferService extends ImpPlugin {
                             if (StrUtil.strIsNotNull(downloadSucCB)) {
                                 String[] return_param = {fileInfo, fileName};
                                 jsCallback(downloadSucCB, return_param);
+                            } else if (downloadFileType.equals(SAVE_FILE) && StrUtil.strIsNotNull(saveFileCallBack)) {
+                                JSONObject jsonObject = new JSONObject();
+                                try {
+                                    jsonObject.put("path", reallyPath.replace(replaceBasePath, ""));
+                                    jsonObject.put("status", 1);
+                                } catch (Exception e1) {
+                                    e1.printStackTrace();
+                                }
+                                jsCallback(saveFileCallBack, jsonObject);
                             }
                         }
                     });
                     break;
                 // 上传进度
                 case 3:
-                    int pro = (Integer) msg.obj;
-                    jsCallback(uploadProgress, pro + "");
                     break;
                 // 上传成功
                 case 4:
@@ -187,15 +210,168 @@ public class FileTransferService extends ImpPlugin {
             case "download": // 下载文件
                 download(paramsObject);
                 break;
+            case "saveFile":
+                saveFile(paramsObject);
+                break;
             case "selectFile": // 选择文件
                 selectFile(paramsObject);
                 break;
             case "base64File":
                 getFileBase64(paramsObject);
                 break;
+            case "writeFile":
+                //写文件
+                writeFile(paramsObject);
+                break;
+            case "readFile":
+                //读文件
+                readFile(paramsObject);
+                break;
+            case "deleteFile":
+                //删除指定文件
+                deleteFile(paramsObject);
+                break;
+            case "listFile":
+                //列出在指定目录下的文件名
+                listFile(paramsObject);
+                break;
             default:
                 showCallIMPMethodErrorDlg();
                 break;
+        }
+    }
+
+
+    /**
+     * 下载文件插件为新加一个方法
+     *
+     * @param paramsObject
+     */
+    private void saveFile(JSONObject paramsObject) {
+        downloadFileType = SAVE_FILE;
+        saveFileCallBack = JSONUtils.getString(paramsObject, "success", "");
+        JSONObject jsonObject = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
+        downloadUrl = JSONUtils.getString(jsonObject, "url", "");
+        fileName = JSONUtils.getString(jsonObject, "saveName", "");
+        try {
+            JSONObject jsonObjectParam = new JSONObject();
+            jsonObject.put("url", downloadUrl);
+            jsonObject.put("filePath", FilePathUtils.BASE_PATH);
+            execute("download", jsonObjectParam);
+        } catch (Exception e) {
+            e.printStackTrace();
+            handler.sendEmptyMessage(1);
+        }
+    }
+
+    /**
+     * 列出文件夹中所有文件
+     *
+     * @param paramsObject
+     */
+    private void listFile(JSONObject paramsObject) {
+        JSONObject optionsJsonObject = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
+        String folderName = JSONUtils.getString(optionsJsonObject, "directory", "");
+        folderName = FilePathUtils.getRealPath(folderName);
+        List<String> fileArrayList = FileUtils.getFileNamesInFolder(folderName, false);
+        List<String> folderArrayList = FileUtils.getFileFolderNamesInFolder(folderName);
+        JSONObject jsonObject = new JSONObject();
+        List<String> fileArrayListFilter = new ArrayList<>();
+        List<String> folderArrayListFilter = new ArrayList<>();
+        for (int i = 0; i < fileArrayList.size(); i++) {
+            fileArrayListFilter.add(fileArrayList.get(i).replace(replaceBasePath, ""));
+        }
+        for (int i = 0; i < folderArrayList.size(); i++) {
+            folderArrayListFilter.add(folderArrayList.get(i).replace(replaceBasePath, ""));
+        }
+        try {
+            jsonObject.put("folders", new JSONArray(folderArrayListFilter));
+            jsonObject.put("files", new JSONArray(fileArrayListFilter));
+            jsCallback(JSONUtils.getString(paramsObject, "success", ""), jsonObject);
+        } catch (Exception e) {
+            jsCallback(JSONUtils.getString(paramsObject, "fail", ""), getErrorJson(e.getMessage()));
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 删除文件或文件夹
+     *
+     * @param paramsObject
+     */
+    private void deleteFile(JSONObject paramsObject) {
+        JSONObject optionsJsonObject = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
+        String folderName = JSONUtils.getString(optionsJsonObject, "directory", "");
+        String fileName = JSONUtils.getString(optionsJsonObject, "fileName", "");
+        folderName = FilePathUtils.getRealPath(folderName);
+        String relativePath = new File(folderName, fileName).getPath();
+        if (FilePathUtils.isSafePath(relativePath)) {
+            boolean isDel = FileUtils.deleteFile(relativePath);
+            jsCallback(isDel ? JSONUtils.getString(paramsObject, "success", "") :
+                    JSONUtils.getString(paramsObject, "fail", ""), "");
+        } else {
+            jsCallback(JSONUtils.getString(paramsObject, "fail", ""), getErrorJson(""));
+        }
+    }
+
+    /**
+     * 读文件
+     * 不需要关心是否在相对目录下
+     *
+     * @param paramsObject
+     */
+    private void readFile(JSONObject paramsObject) {
+        JSONObject optionsJsonObject = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
+        String folderName = JSONUtils.getString(optionsJsonObject, "directory", "");
+        String fileName = JSONUtils.getString(optionsJsonObject, "fileName", "");
+        folderName = FilePathUtils.getRealPath(folderName);
+        String relativePath = new File(folderName, fileName).getPath();
+        String readContent = FileUtils.readFile(relativePath, "utf-8").toString();
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("content", readContent);
+            jsCallback(JSONUtils.getString(paramsObject, "success", ""), jsonObject);
+        } catch (Exception e) {
+            jsCallback(JSONUtils.getString(paramsObject, "fail", ""), getErrorJson(e.getMessage()));
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 组装错误信息
+     *
+     * @param message
+     * @return
+     */
+    private JSONObject getErrorJson(String message) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("errorMessage", message);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
+    }
+
+    /**
+     * 写文件
+     * 需要关心文件路径是否在相对目录下
+     *
+     * @param paramsObject
+     */
+    private void writeFile(JSONObject paramsObject) {
+        JSONObject optionsJsonObject = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
+
+        String folderName = JSONUtils.getString(optionsJsonObject, "directory", "");
+        String fileName = JSONUtils.getString(optionsJsonObject, "fileName", "");
+        folderName = FilePathUtils.getRealPath(folderName);
+        String relativePath = new File(folderName, fileName).getPath();
+        if (FilePathUtils.isSafePath(relativePath)) {
+            FileUtils.writeFile(relativePath, JSONUtils.getString(optionsJsonObject, "content", ""),
+                    JSONUtils.getBoolean(optionsJsonObject, "append", true));
+            jsCallback(JSONUtils.getString(paramsObject, "success", ""));
+        } else {
+            jsCallback(JSONUtils.getString(paramsObject, "fail", ""), getErrorJson("file path error"));
         }
     }
 
@@ -206,18 +382,19 @@ public class FileTransferService extends ImpPlugin {
         if ("download".equals(action)) {
             download(paramsObject);
         } else if ("downloadFile".equals(action)) { // 为了兼容自定义的imp插件
-            if (!paramsObject.isNull("key"))
+            if (!paramsObject.isNull("key")){
                 try {
                     String key = paramsObject.getString("key");
                     //key = "http://10.24.14.63:8080/test/inspur_cloud_mobileclient_1.0.0.apk";
                     JSONObject jsonObject = new JSONObject();
                     jsonObject.put("url", key);
-                    jsonObject.put("filePath", "/IMP-Cloud/download/");
+                    jsonObject.put("filePath", FilePathUtils.BASE_PATH);
                     execute("download", jsonObject);
-                } catch (JSONException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                     handler.sendEmptyMessage(1);
                 }
+            }
         } else {
             showCallIMPMethodErrorDlg();
         }
@@ -228,19 +405,26 @@ public class FileTransferService extends ImpPlugin {
     // 下载
     private void download(JSONObject jsonObject) {
         try {
-            if (!jsonObject.isNull("url"))
-                loadUrl = jsonObject.getString("url");
-            if (!jsonObject.isNull("filePath"))
+            if (!jsonObject.isNull("url")) {
+                downloadUrl = jsonObject.getString("url");
+            }
+            if (!jsonObject.isNull("filePath")) {
                 filepath = jsonObject.getString("filePath");
-            if (!jsonObject.isNull("fileName"))
+            }
+            if (!jsonObject.isNull("fileName")) {
                 fileName = jsonObject.getString("fileName");
-            if (!jsonObject.isNull("flag"))
+            }
+            if (!jsonObject.isNull("flag")) {
                 flag = jsonObject.getBoolean("flag");
-            if (!jsonObject.isNull("successCallback"))
+            }
+            if (!jsonObject.isNull("successCallback")) {
                 downloadSucCB = jsonObject.getString("successCallback");
-            if (!jsonObject.isNull("errorCallback"))
+            }
+            if (!jsonObject.isNull("errorCallback")) {
                 downloadFailCB = jsonObject.getString("errorCallback");
-            filepath = "/IMP-Cloud/download/";
+            }
+//            filepath = "/IMP-Cloud/download/";
+            filepath = FilePathUtils.BASE_PATH;
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -256,7 +440,7 @@ public class FileTransferService extends ImpPlugin {
             return;
         }
         // 文件存放路径
-        filepath = sdcard + filepath;
+//        filepath = sdcard + filepath;
         File tmpFile = new File(filepath);
         if (!tmpFile.exists()) {
             tmpFile.mkdirs();
@@ -267,8 +451,8 @@ public class FileTransferService extends ImpPlugin {
             absoluteFilePath = absoluteFilePath + "/";
         }
 
-        loadUrl = loadUrl.trim();
-        loadUrl = StrUtil.changeUrl(loadUrl);
+        downloadUrl = downloadUrl.trim();
+        downloadUrl = StrUtil.changeUrl(downloadUrl);
         showDownloadStatus();
     }
 
@@ -299,17 +483,19 @@ public class FileTransferService extends ImpPlugin {
 
     private void getFileBase64(JSONObject jsonObject) {
         successCb = JSONUtils.getString(jsonObject, "success", "");
+        failCb = JSONUtils.getString(jsonObject, "fail", "");
         JSONObject optionsObj = JSONUtils.getJSONObject(jsonObject, "options", new JSONObject());
         String filePath = JSONUtils.getString(optionsObj, "filePath", "");
+        filePath = FilePathUtils.getRealPath(filePath);
         if (!StringUtils.isBlank(filePath)) {
             String result = "";
             try {
                 result = FileUtils.encodeBase64File(filePath);
                 callbackSuccess(result);
             } catch (Exception e) {
+                callbackFail(result);
                 e.printStackTrace();
             }
-
         }
     }
 
@@ -328,7 +514,7 @@ public class FileTransferService extends ImpPlugin {
                             try {
                                 object.put("name", file.getName());
                                 object.put("size", FileUtils.getFileSize(path));
-                                object.put("path", path);
+                                object.put("path", FilePathUtils.SDCARD_PREFIX + path);
                                 object.put("md5", FileUtils.getFileMD5(file));
                                 array.put(object);
                             } catch (Exception e) {
@@ -337,7 +523,7 @@ public class FileTransferService extends ImpPlugin {
 
                         }
                     }
-                    callbackSuccess(array.toString());
+                    callbackSuccess(array);
                 } else {
                     callbackFail(Res.getString("cancel_select"));
                 }
@@ -349,6 +535,12 @@ public class FileTransferService extends ImpPlugin {
     private void callbackSuccess(String result) {
         if (!StringUtils.isBlank(successCb)) {
             this.jsCallback(successCb, result);
+        }
+    }
+
+    private void callbackSuccess(JSONArray array) {
+        if (!StringUtils.isBlank(successCb)) {
+            this.jsCallback(successCb, array);
         }
     }
 
@@ -385,12 +577,9 @@ public class FileTransferService extends ImpPlugin {
         stopConn = false;
         LayoutInflater layoutInflater = LayoutInflater.from(getFragmentContext());
         View view = layoutInflater
-                .inflate(Res.getLayoutID("web_filetransfer_dialog_file_download_progress")
-                        ,
-                        null);
+                .inflate(Res.getLayoutID("web_filetransfer_dialog_file_download_progress"), null);
         ratioText = (TextView) view.findViewById(Res.getWidgetID("ratio_text"));
         progressBar = (ProgressBar) view.findViewById(Res.getWidgetID("update_progress"));
-
         fileDownloadDlg = new AlertDialog.Builder(getActivity(),
                 android.R.style.Theme_Holo_Light_Dialog)
                 .setTitle(Res.getStringID("file_downloading"))
@@ -406,24 +595,35 @@ public class FileTransferService extends ImpPlugin {
                                 fileDownloadDlg.dismiss();
                                 // 设置取消状态
                                 stopConn = true;
+                                if (downloadFileType.equals(SAVE_FILE)) {
+                                    JSONObject jsonObject = new JSONObject();
+                                    try {
+                                        jsonObject.put("status", 2);
+                                        jsonObject.put("errorMessage", "");
+                                    } catch (Exception e1) {
+                                        e1.printStackTrace();
+                                    }
+                                    jsCallback(saveFileCallBack, jsonObject.toString());
+                                }
                             }
                         }).create();
         fileDownloadDlg.getWindow().setBackgroundDrawableResource(
                 android.R.color.transparent);
         fileDownloadDlg.show();
         // 下载文件
-        Thread thread = new Thread(new updateRunnable());
+        Thread thread = new Thread(new UpdateRunnable());
         thread.start();
     }
 
     /**
      * 下载文件
+     * 文件名先以指定的文件名为准，如果没有指定文件名则以getFileName方法里返回的为准
      *
      * @param urlString 下载的url
      * @return 返回文件下载的详细路径
      * @throws Exception
      */
-    private void downLoadFile(String urlString) throws Exception {
+    private void downLoadFile(String urlString) {
         // 已下载的大小
         long downnum = 0;
         // 下载百分比
@@ -445,6 +645,7 @@ public class FileTransferService extends ImpPlugin {
             if (!StrUtil.strIsNotNull(fileType)) {
                 fileType = urlConnection.getContentType();
             }
+            clearFiles(filename);
             if (StrUtil.strIsNotNull(fileName)) {
                 file = new File(absoluteFilePath + fileName);
             } else {
@@ -483,26 +684,52 @@ public class FileTransferService extends ImpPlugin {
                     handler.sendMessage(msg);
                 }
             }
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-            handler.sendEmptyMessage(1);
-        } catch (IOException e) {
+
+
+        } catch (Exception e) {
             e.printStackTrace();
             handler.sendEmptyMessage(1);
         } finally {
-            if (urlConnection != null) {
-                urlConnection.disconnect();
-            }
-            if (inputStream != null) {
-                inputStream.close();
-            }
-            if (outputStream != null) {
-                outputStream.close();
+            try {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+                if (outputStream != null) {
+                    outputStream.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
 
-    // 在url中获取文件名
+    /**
+     * 清除文件
+     *
+     * @param fileName
+     */
+    private void clearFiles(String fileName) {
+        String fileNameWithoutExtension = FileUtils.getFileNameWithoutExtension(fileName);
+        String fileExtension = FileUtils.getFileExtension(fileName);
+        FileUtils.deleteFile(StrUtil.strIsNotNull(fileName) ? (absoluteFilePath + fileName) : (absoluteFilePath + fileName));
+        if (fileExtension.contains("db")) {
+            FileUtils.deleteFile(absoluteFilePath + fileNameWithoutExtension + "." + fileExtension + "-shm");
+            FileUtils.deleteFile(absoluteFilePath + fileNameWithoutExtension + "." + fileExtension + "-wal");
+        }
+    }
+
+    /**
+     * url里获取文件名
+     * 先以头部filename为准
+     * 没有则取connection里的名字
+     * 再没有则生成一个.tmp名字
+     *
+     * @param urlConnection
+     * @return
+     */
     private String getFileName(HttpURLConnection urlConnection) {
         String filename = null;
         String headField = urlConnection.getHeaderField("Content-Disposition");
@@ -541,160 +768,153 @@ public class FileTransferService extends ImpPlugin {
      * @param jsonObject
      */
     private void upload(JSONObject jsonObject) {
-        try {
-            if (!jsonObject.isNull("url"))
-                uploadUrl = jsonObject.getString("url");
-            if (!jsonObject.isNull("filePath"))
-                uploadpath = jsonObject.getString("filePath");
-            if (!jsonObject.isNull("fileName"))
-                uploadName = jsonObject.getString("fileName");
-            if (!jsonObject.isNull("progressCallback"))
-                uploadProgress = jsonObject.getString("progressCallback");
-            if (!jsonObject.isNull("successCallback"))
-                uploadSucCB = jsonObject.getString("successCallback");
-            if (!jsonObject.isNull("errorCallback"))
-                uploadFailCB = jsonObject.getString("errorCallback");
-        } catch (JSONException e) {
-            e.printStackTrace();
+        uploadSucCB = JSONUtils.getString(jsonObject, "success", "");
+        uploadFailCB = JSONUtils.getString(jsonObject, "fail", "");
+        JSONObject optionsObj = JSONUtils.getJSONObject(jsonObject, "options", new JSONObject());
+        uploadUrl = JSONUtils.getString(optionsObj, "url", "");
+        boolean isShowProgress = JSONUtils.getBoolean(optionsObj, "showProgress", false);
+        JSONArray fileArray = JSONUtils.getJSONArray(optionsObj, "files", new JSONArray());
+        List<String> uploadPathList = new ArrayList<>();
+        for (int i = 0; i < fileArray.length(); i++) {
+            JSONObject fileObj = JSONUtils.getJSONObject(fileArray, i, new JSONObject());
+            String filePath = JSONUtils.getString(fileObj, "filePath", "");
+            filePath = FilePathUtils.getRealPath(filePath);
+            uploadPathList.add(filePath);
         }
-        // 上传的文件
-        file = new File(uploadpath);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                uploadFile(file);
-            }
+        JSONObject dataObj = JSONUtils.getJSONObject(optionsObj, "data", null);
+        showFileUploadDlg(uploadPathList, isShowProgress, dataObj);
 
-        }).start();
     }
 
-    /**
-     * 上传文件
-     *
-     * @param
-     * @return 上传结果
-     */
-    private String uploadFile(File uploadfile) {
-        // 上传文件的大小
-        int downnum = 0;
-        // 上传百分比
-        int downcount = 0;
-        // 边界标识 随机生成
-        String BOUNDARY = UUID.randomUUID().toString();
-        // 结束标识
-        String PREFIX = "--", LINE_END = "\r\n";
-        // 内容类型
-        String CONTENT_TYPE = "multipart/form-data";
-        try {
-            URL url = new URL(uploadUrl);
-            HttpURLConnection conn = null;
-            if (url.getProtocol().toLowerCase().equals("https")) {
-                HttpsURLConnection httpsConn = null;
-                httpsConn = (HttpsURLConnection) url
-                        .openConnection();
-                MyX509TrustManager xtm = new MyX509TrustManager();
-
-                MyHostnameVerifier hnv = new MyHostnameVerifier();
-                SSLContext sslContext = null;
-                sslContext = SSLContext.getInstance("TLS"); //或SSL
-                X509TrustManager[] xtmArray = new X509TrustManager[]{xtm};
-                sslContext.init(null, xtmArray, new java.security.SecureRandom());
-                if (sslContext != null) {
-                    HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
+    private void showFileUploadDlg(List<String> uploadPathList, final boolean isShowProgress, JSONObject dataObj) {
+        RequestParams params = new RequestParams(uploadUrl);
+        params.setConnectTimeout(30000);
+        params.setMultipart(true);
+        if (dataObj != null) {
+            Iterator<String> keys = dataObj.keys();
+            while (keys.hasNext()) {
+                try {
+                    String key = keys.next();
+                    params.addBodyParameter(key, dataObj.getString(key));
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                HttpsURLConnection.setDefaultHostnameVerifier(hnv);
-                conn = httpsConn;
-            } else {
-                conn = (HttpURLConnection) url.openConnection();
+
             }
-            conn.setReadTimeout(TIME_OUT);
-            conn.setConnectTimeout(TIME_OUT);
-            // 允许输入流
-            conn.setDoInput(true);
-            // 允许输出流
-            conn.setDoOutput(true);
-            // 不允许使用缓存
-            conn.setUseCaches(false);
-            // 请求方式
-            conn.setRequestMethod("POST");
-            // 设置编码
-            conn.setRequestProperty("Charset", CHARSET);
-            conn.setRequestProperty("connection", "keep-alive");
-            conn.setRequestProperty("Content-Type", CONTENT_TYPE + ";boundary="
-                    + BOUNDARY);
-            if (uploadfile != null) {
-                /**
-                 * 当文件不为空，把文件包装并且上传
-                 */
-                OutputStream outputSteam = conn.getOutputStream();
+        }
+        for (int i = 0; i < uploadPathList.size(); i++) {
+            File file = new File(uploadPathList.get(i));
+            params.addBodyParameter("" + i, file);
+        }
+        LayoutInflater layoutInflater = LayoutInflater.from(getFragmentContext());
+        View view = layoutInflater
+                .inflate(Res.getLayoutID("web_filetransfer_dialog_file_download_progress"), null);
+        final TextView ratioText = view.findViewById(Res.getWidgetID("ratio_text"));
+        final ProgressBar progressBar = view.findViewById(Res.getWidgetID("update_progress"));
 
-                DataOutputStream dos = new DataOutputStream(outputSteam);
-                StringBuffer sb = new StringBuffer();
-                sb.append(PREFIX);
-                sb.append(BOUNDARY);
-                sb.append(LINE_END);
-                /**
-                 * name里面的值为服务器端需要key 只有这个key 才可以得到对应的文件 filename是文件的名字
-                 */
+        final Callback.Cancelable cancelable = x.http().post(params, new Callback.ProgressCallback<String>() {
+            @Override
+            public void onWaiting() {
 
-                sb.append("Content-Disposition: form-data; name=\"img\"; filename=\""
-                        + encode(uploadfile.getName()) + "\"" + LINE_END);
-                sb.append("Content-Type: application/octet-stream; charset="
-                        + CHARSET + LINE_END);
-                sb.append(LINE_END);
-                dos.write(sb.toString().getBytes());
-                InputStream is = new FileInputStream(uploadfile);
-                byte[] bytes = new byte[1024];
-                int len = 0;
-                int fileLength = (int) uploadfile.length();
-                while ((len = is.read(bytes)) != -1) {
-                    dos.write(bytes, 0, len);
-                    downnum += len;
-                    if ((downcount == 0)
-                            || downnum * 100 / fileLength - 1 > downcount) {
-                        downcount += 1;
-                        Message msg = handler.obtainMessage(3);
-                        msg.obj = downnum * 100 / fileLength;
-                        handler.sendMessage(msg);
+            }
+
+            @Override
+            public void onStarted() {
+
+            }
+
+            @Override
+            public void onLoading(long total, long current, boolean isDownloading) {
+                if (isShowProgress) {
+                    int progress = (int) (current * 100 / total);
+                    progressBar.setProgress(progress);
+                    if (total <= 0) {
+                        ratioText.setText(getFragmentContext().getString(Res.getStringID("has_uploaded"))
+                                + setFormat(current));
+                    } else {
+                        String text = progress + "%" + "," + "  "
+                                + setFormat(current) + "/"
+                                + setFormat(total);
+                        ratioText.setText(text);
                     }
                 }
-                is.close();
-                dos.write(LINE_END.getBytes());
-                byte[] end_data = (PREFIX + BOUNDARY + PREFIX + LINE_END)
-                        .getBytes();
-                dos.write(end_data);
-                dos.flush();
-                /**
-                 * 获取响应码 200=成功 当响应成功，获取响应的流
-                 */
-                int res = conn.getResponseCode();
-                if (res == 200) {
-                    // 上传成功
-                    Message msg = handler.obtainMessage(4);
-                    msg.obj = uploadName;
-                    handler.sendMessage(msg);
-                    return SUCCESS;
+
+            }
+
+            @Override
+            public void onSuccess(String result) {
+                callbackFileUploadSuccess(result);
+                if (fileDownloadDlg != null) {
+                    fileDownloadDlg.dismiss();
                 }
             }
-        } catch (Exception e) {
-            // 回调上传失败方法
-            Message msg = handler.obtainMessage(5);
-            msg.obj = uploadName;
-            handler.sendMessage(msg);
-            e.printStackTrace();
+
+            @Override
+            public void onError(Throwable throwable, boolean b) {
+                callbackFileUploadFail(1, throwable.getMessage());
+                if (fileDownloadDlg != null) {
+                    fileDownloadDlg.dismiss();
+                }
+            }
+
+            @Override
+            public void onCancelled(CancelledException e) {
+                callbackFileUploadFail(2, "取消上传！");
+                if (fileDownloadDlg != null) {
+                    fileDownloadDlg.dismiss();
+                }
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        });
+        fileUploadDlg = new AlertDialog.Builder(getActivity(),
+                android.R.style.Theme_Holo_Light_Dialog)
+                .setTitle(Res.getStringID("file_uploading"))
+                .setView(view)
+                .setCancelable(false)
+                .setNegativeButton(Res.getStringID("cancel"),
+                        new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog,
+                                                int which) {
+                                // TODO Auto-generated method stub
+                                dialog.dismiss();
+                                cancelable.cancel();
+                            }
+                        }).create();
+        fileUploadDlg.getWindow().setBackgroundDrawableResource(
+                android.R.color.transparent);
+        if (isShowProgress) {
+            fileUploadDlg.show();
         }
-        return SUCCESS;
     }
 
-    // 对包含中文的字符串进行转码，此为UTF-8。服务器那边要进行一次解码
-    private String encode(String value) {
-        try {
-            return URLEncoder.encode(value, "utf-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            return "";
+    private void callbackFileUploadSuccess(String result) {
+        if (!StringUtils.isBlank(uploadSucCB)) {
+            JSONObject obj = JSONUtils.getJSONObject(result);
+            this.jsCallback(uploadSucCB, obj);
         }
     }
+
+    private void callbackFileUploadFail(int status, String errorMessage) {
+        if (!StringUtils.isBlank(uploadFailCB)) {
+            JSONObject obj = new JSONObject();
+            try {
+                obj.put("status", status);
+                obj.put("errorMessage", errorMessage);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            this.jsCallback(uploadFailCB, obj);
+        }
+    }
+
+
 
     /**
      * 格式化数据
@@ -719,17 +939,13 @@ public class FileTransferService extends ImpPlugin {
     /**
      * 下载文件线程
      */
-    class updateRunnable implements Runnable {
-        // 已下载的大小
-        int downnum = 0;
-        // 下载百分比
-        int downcount = 0;
+    class UpdateRunnable implements Runnable {
 
         @Override
         public void run() {
             Looper.prepare();
             try {
-                downLoadFile(loadUrl);
+                downLoadFile(downloadUrl);
             } catch (Exception e) {
                 e.printStackTrace();
                 handler.sendEmptyMessage(1);

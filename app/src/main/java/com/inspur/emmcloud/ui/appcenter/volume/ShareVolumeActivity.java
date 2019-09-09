@@ -30,6 +30,7 @@ import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.ActionSheetDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.MyDialog;
+import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
@@ -38,7 +39,6 @@ import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeListResult;
 import com.inspur.emmcloud.bean.appcenter.volume.Volume;
-import com.inspur.emmcloud.bean.system.ClearShareDataBean;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -46,6 +46,8 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -67,7 +69,6 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
     private MyAppAPIService apiService;
     private LoadingDialog loadingDlg;
     private MyDialog createShareVolumeDlg, updateShareVolumeNameDlg;
-    private boolean isShareState = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +100,7 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 List<Uri> shareUriList = null;
-                if (isShareState) {
+                if (getIntent() != null && getIntent().hasExtra(Constant.SHARE_FILE_URI_LIST)) {
                     shareUriList = (List<Uri>) getIntent().getSerializableExtra(Constant.SHARE_FILE_URI_LIST);
                 }
                 Volume volume = shareVolumeList.get(position);
@@ -144,7 +145,7 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
      */
     protected void showCreateShareVolumeDlg() {
         createShareVolumeDlg = new MyDialog(ShareVolumeActivity.this,
-                R.layout.volume_dialog_update_name_input, R.style.userhead_dialog_bg);
+                R.layout.volume_dialog_update_name_input);
         createShareVolumeDlg.setCancelable(false);
         final EditText inputEdit = (EditText) createShareVolumeDlg.findViewById(R.id.edit);
         inputEdit.setHint(R.string.clouddriver_input_volume_name);
@@ -209,14 +210,19 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
     }
 
     /**
-     * 接收来自上传页面的消息
-     *
-     * @param clearShareDataBean
+     * EventBus传递消息
+     * @param eventMessage
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void clearShareData(ClearShareDataBean clearShareDataBean) {
-        isShareState = false;
+    public void onReceiveMessage(SimpleEventMessage eventMessage) {
+        if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_VOLUME_FILE_LOCATION_SELECT_CLOSE)) {
+            if (getIntent() != null && getIntent().hasExtra(Constant.SHARE_FILE_URI_LIST)) {
+                finish();
+            }
+
+        }
     }
+
 
     /**
      * 弹出文件删除提示框
@@ -249,14 +255,14 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
      */
     private void showUpdateShareVolumeNameDlg(final Volume volume) {
         updateShareVolumeNameDlg = new MyDialog(ShareVolumeActivity.this,
-                R.layout.volume_dialog_update_name_input, R.style.userhead_dialog_bg);
+                R.layout.volume_dialog_update_name_input);
         updateShareVolumeNameDlg.setCancelable(false);
         final EditText inputEdit = (EditText) updateShareVolumeNameDlg.findViewById(R.id.edit);
         inputEdit.setText(volume.getName());
         inputEdit.setSelectAllOnFocus(true);
         inputEdit.setInputType(InputType.TYPE_CLASS_TEXT);
         inputEdit.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MyAppConfig.VOLUME_MAX_FILE_NAME_LENGTH)});
-        ((TextView) updateShareVolumeNameDlg.findViewById(R.id.app_update_title)).setText(R.string.clouddriver_create_volume);
+        ((TextView) updateShareVolumeNameDlg.findViewById(R.id.app_update_title)).setText(R.string.rename);
         Button okBtn = (Button) updateShareVolumeNameDlg.findViewById(R.id.ok_btn);
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -301,6 +307,23 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+    }
+
+    private void sortShareVolumeList() {
+        Collections.sort(shareVolumeList, new Comparator<Volume>() {
+            @Override
+            public int compare(Volume volume1, Volume volume2) {
+                long creationDate1 = volume1.getCreationDate();
+                long creationDate2 = volume2.getCreationDate();
+                if (creationDate1 < creationDate2) {
+                    return 1;
+                }
+                if (creationDate1 > creationDate2) {
+                    return -1;
+                }
+                return 0;
+            }
+        });
     }
 
     @Override
@@ -393,6 +416,7 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
             LoadingDialog.dimissDlg(loadingDlg);
             swipeRefreshLayout.setRefreshing(false);
             shareVolumeList = getVolumeListResult.getShareVolumeList();
+            sortShareVolumeList();
             adapter.notifyDataSetChanged();
         }
 
@@ -412,7 +436,7 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
                 createShareVolumeDlg.dismiss();
 
             }
-            shareVolumeList.add(volume);
+            shareVolumeList.add(0, volume);
             adapter.notifyDataSetChanged();
         }
 
@@ -436,6 +460,7 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
             int position = shareVolumeList.indexOf(volume);
             if (position != -1) {
                 shareVolumeList.get(position).setName(name);
+                sortShareVolumeList();
                 adapter.notifyDataSetChanged();
             }
         }
@@ -449,7 +474,7 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
         }
 
         @Override
-        public void retrunRemoveShareVolumeSuccess(Volume volume) {
+        public void returnRemoveShareVolumeSuccess(Volume volume) {
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }

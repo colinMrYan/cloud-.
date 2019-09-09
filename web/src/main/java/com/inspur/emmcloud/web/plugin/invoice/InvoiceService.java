@@ -1,0 +1,208 @@
+package com.inspur.emmcloud.web.plugin.invoice;
+
+import android.util.Log;
+
+import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
+import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
+import com.inspur.emmcloud.basemodule.api.HttpUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.web.plugin.ImpPlugin;
+import com.tencent.mm.opensdk.modelbiz.ChooseCardFromWXCardPackage;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
+
+import org.json.JSONObject;
+import org.xutils.http.RequestParams;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+
+public class InvoiceService extends ImpPlugin {
+    @Override
+    public void execute(String action, JSONObject paramsObject) {
+        if (action.equals("open")) {
+            initInvoice();
+        }
+    }
+
+    String getAccessTokenUrl;
+    String wechatAccessToken, wechatTicket;
+
+    /**
+     * 获取sha1值
+     *
+     * @param info
+     * @return
+     */
+    public static String encryptToSHA(String info) {
+        byte[] digesta = null;
+        try {
+            MessageDigest alga = MessageDigest.getInstance("SHA-1");
+            alga.update(info.getBytes());
+            digesta = alga.digest();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        String rs = byte2hex(digesta);
+        return rs;
+    }
+
+    public static String byte2hex(byte[] b) {
+        String hs = "";
+        String stmp = "";
+        for (int n = 0; n < b.length; n++) {
+            stmp = (java.lang.Integer.toHexString(b[n] & 0XFF));
+            if (stmp.length() == 1) {
+                hs = hs + "0" + stmp;
+            } else {
+                hs = hs + stmp;
+            }
+        }
+        return hs;
+    }
+
+    /**
+     * 字符串  字典序排列
+     *
+     * @param list
+     * @return
+     */
+    private String getOriginSignData(List<String> list) {
+        Set<String> set = new TreeSet<>(new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                return o1.compareTo(o2);
+            }
+        });
+        set.addAll(list);
+
+        List<String> resultList = new ArrayList<>(set);
+
+        StringBuilder sb = new StringBuilder();
+        for (String item : resultList) {
+            sb.append(item);
+        }
+
+        return sb.toString();
+    }
+
+    private void initInvoice() {
+        String appId = "wx4eb8727ea9c26495";
+        getWechatAccessToken();
+
+        List<String> list = new ArrayList();
+        list.add("baabbcc");
+        list.add("caaaa");
+        list.add("a");
+        String result = getOriginSignData(list);
+
+        // cardType: INVOICE    appid: wx4eb8727ea9c26495  timestamp:1567220   nonceStr: abc
+        //api_ticket: 9KwiourQPRN3vx3Nn1c_ibRS2ZhWRzh2EitC_f0mfFgJ8x411Tc45byvYvZLJFCPLgFkMkHgZott8G0r-GfenA
+        String orignData = "15672209KwiourQPRN3vx3Nn1c_ibRS2ZhWRzh2EitC_f0mfFgJ8x411Tc45byvYvZLJFCPLgFkMkHgZott8G0r-GfenAINVOICEabcwx4eb8727ea9c26495";
+        try {
+            String sha1 = encryptToSHA(orignData);
+            Log.d("zhang", "initInvoice: sha1=" + sha1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        //注册app
+        IWXAPI api = WXAPIFactory.createWXAPI(getFragmentContext(), "wx4eb8727ea9c26495", true);
+        api.registerApp("wx4eb8727ea9c26495");
+
+
+//        "168b6677c67cdb7da8e7b3968f3d38d9ba6bea61"
+        //拉起微信电子发票列表
+        ChooseCardFromWXCardPackage.Req req = new ChooseCardFromWXCardPackage.Req();
+        req.appId = appId;
+        req.cardType = "INVOICE";
+        req.cardSign = "168b6677c67cdb7da8e7b3968f3d38d9ba6bea61";
+        req.nonceStr = "abc";
+        req.timeStamp = "1567220";
+        req.signType = "SHA1";
+
+        if (req.checkArgs()) {
+            api.sendReq(req);
+        }
+    }
+
+    /**
+     * 获取微信的accessToken
+     */
+    private void getWechatAccessToken() {
+        String appId = "wx4eb8727ea9c26495";
+        String appSecret = "56a0426315f1d0985a1cc1e75e96130d";
+        getAccessTokenUrl = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&";
+        String completeUrl = getAccessTokenUrl + "appid=" + appId + "&secret=" + appSecret;
+        RequestParams params = BaseApplication.getInstance()
+                .getHttpRequestParams(completeUrl);
+//        HttpUtils.request(getFragmentContext(), CloudHttpMethod.GET, params, new BaseModuleAPICallback(getFragmentContext(), completeUrl) {
+//            @Override
+//            public void callbackSuccess(byte[] arg0) {
+//                JSONObject object = JSONUtils.getJSONObject(new String(arg0));
+//                Log.d("zhang", "callbackSuccess: ");
+//                wechatAccessToken = object.optString("access_token");
+//                getTicket(wechatAccessToken);
+//            }
+//
+//            @Override
+//            public void callbackFail(String error, int responseCode) {
+//                Log.d("zhang", "callbackFail: ");
+//            }
+//
+//            @Override
+//            public void callbackTokenExpire(long requestTime) {
+//
+//            }
+//        });
+    }
+
+    /**
+     * 根据微信的accessToken获取ticket
+     *
+     * @param wechatAccessToken
+     */
+    private void getTicket(String wechatAccessToken) {
+        String completeUrl = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=" + wechatAccessToken + "&type=wx_card";
+
+        RequestParams params = BaseApplication.getInstance()
+                .getHttpRequestParams(completeUrl);
+        HttpUtils.request(getFragmentContext(), CloudHttpMethod.GET, params, new BaseModuleAPICallback(getFragmentContext(), completeUrl) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                JSONObject object = JSONUtils.getJSONObject(new String(arg0));
+                wechatTicket = object.optString("ticket");
+                long timeStamp = System.currentTimeMillis();
+                Log.d("zhang", "callbackSuccess: ");
+
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                Log.d("zhang", "callbackFail: ");
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+
+            }
+        });
+    }
+
+    @Override
+    public String executeAndReturn(String action, JSONObject paramsObject) {
+        return null;
+    }
+
+    @Override
+    public void onDestroy() {
+
+    }
+}

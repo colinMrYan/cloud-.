@@ -70,7 +70,7 @@ public class MeetingRoomInfoActivity extends BaseActivity {
     LinearLayout equipmentLayout;
     @BindView(R.id.tl_meeting_tab)
     TabLayout tabLayout;
-    private long MINI_INTER_BETWEEN_MEETING = 60000;
+    private long MINI_INTER_BETWEEN_MEETING = 900000;
     private MeetingRoom meetingRoom;
     private ScheduleApiService apiService;
     private LoadingDialog loadingDlg;
@@ -134,16 +134,8 @@ public class MeetingRoomInfoActivity extends BaseActivity {
     }
 
     private List<String> getTabTitleList() {
-        if (meetingRoom.getMaxAhead() > 2) {
-            return createTabDay(7);
-        } else {
-            return createTabDay(2);
-        }
-    }
-
-    private List<String> createTabDay(int count) {
         ArrayList<String> tabTitleList = new ArrayList<>();
-        for (int i = 0; i < count; i++) {
+        for (int i = 0; i < meetingRoom.getMaxAhead(); i++) {
             tabTitleList.add(TimeUtils.getFormatStringFromTargetTime(
                     MeetingRoomInfoActivity.this, currentCalendar, i));
         }
@@ -274,7 +266,7 @@ public class MeetingRoomInfoActivity extends BaseActivity {
             @Override
             public void onPageSelected(int arg0) {
                 // TODO Auto-generated method stub
-                if (tabLayout != null) {
+                if (tabLayout != null && tabLayout.getTabAt(arg0) != null) {
                     tabLayout.getTabAt(arg0).select();
                     currentPagerIndex = arg0;
                 }
@@ -418,7 +410,7 @@ public class MeetingRoomInfoActivity extends BaseActivity {
                 long meetingDayStartTime = meeting.getDayStartTime(calendar);
                 long meetingDayEndTime = meeting.getDayEndTime(calendar);
                 long LastMeetingEnd = (j > 0) ? dayMeetingList.get(j - 1).getDayEndTime(calendar) : dayStartTimeLong;
-                if (meetingDayStartTime - LastMeetingEnd > MINI_INTER_BETWEEN_MEETING && (meetingDayStartTime > System.currentTimeMillis())) {
+                if (meetingDayStartTime - LastMeetingEnd >= MINI_INTER_BETWEEN_MEETING && (meetingDayStartTime > System.currentTimeMillis())) {
                     MeetingSchedule meetingSchedule = new MeetingSchedule((i == 0 && (LastMeetingEnd < System.currentTimeMillis())) ? System.currentTimeMillis() : LastMeetingEnd, meetingDayStartTime, null);
                     dayMeetingScheduleList.add(meetingSchedule);
                 }

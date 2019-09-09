@@ -9,6 +9,7 @@ import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
+import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.chat.Robot;
 import com.inspur.emmcloud.bean.schedule.Schedule;
 import com.inspur.emmcloud.bean.schedule.calendar.AccountType;
@@ -419,8 +420,8 @@ public class APIUri {
      * @return
      */
     public static String getChatFileResouceUrl(String cid, String path) {
-        String url = getECMChatUrl() + "/api/v1/channel/" + cid + "/file/request?path=" + path;
-        return url.replaceAll("\\+", "%2B");
+        String url = getECMChatUrl() + "/api/v1/channel/" + cid + "/file/request?path=" + StringUtils.encodeURIComponent(path);
+        return url;
     }
 
     /**
@@ -431,8 +432,8 @@ public class APIUri {
      * @return
      */
     public static String getChatVoiceFileResouceUrl(String cid, String path) {
-        String url = getECMChatUrl() + "/api/v1/channel/" + cid + "/voice/request?path=" + path;
-        return url.replaceAll("\\+", "%2B");
+        String url = getECMChatUrl() + "/api/v1/channel/" + cid + "/voice/request?path=" + StringUtils.encodeURIComponent(path);
+        return url;
     }
 
     /**
@@ -932,6 +933,10 @@ public class APIUri {
         return getUrlBaseVolume() + "/" + volumeId + "/file/request";
     }
 
+
+    public static String getVolumeFileDownloadUrl(VolumeFile volumeFile, String currentDirAbsolutePath) {
+        return getUrlBaseVolume() + "/" + volumeFile.getVolume() + "/file/request?path=" + StringUtils.encodeURIComponent(currentDirAbsolutePath + volumeFile.getName());
+    }
     /**
      * 获取云盘创建文件夹url
      *
@@ -1659,8 +1664,22 @@ public class APIUri {
     /**
      * 通过id获取会议详情
      */
-    public static String getMeetingUrlFromId(String id) {
-        return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/Get/" + id;
+    public static String getMeetingUrlFromId(String id, ScheduleCalendar scheduleCalendar) {
+        //return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/Get/" + id;
+        String url = getScheduleBaseUrl() + ("api/schedule/v6.0/calendar/Get/");
+        if (scheduleCalendar != null) {
+            AccountType accountType = AccountType.getAccountType(scheduleCalendar.getAcType());
+            switch (accountType) {
+                case EXCHANGE:
+                    url = getScheduleBaseUrl() + "api/schedule/v6.0/ews/Get/";
+                    break;
+                default:
+                    break;
+            }
+        }
+        url = url + id;
+        return url;
+
     }
 
     /**
@@ -1714,5 +1733,7 @@ public class APIUri {
         return "https://api.inspuronline.com/bot/v1/action/trigger/";
     }
 
-
+    public static String getVolumeShareFileUrl(String volume, String channel) {
+        return getUrlBaseVolume() + "/" + volume + "/file/share/channel/" + channel;
+    }
 }

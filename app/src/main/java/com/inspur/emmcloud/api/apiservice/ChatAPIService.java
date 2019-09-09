@@ -21,7 +21,9 @@ import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
 import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
 import com.inspur.emmcloud.basemodule.api.HttpUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.bean.ChatFileUploadInfo;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileUploadTokenResult;
+import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetChannelListResult;
@@ -1067,21 +1069,23 @@ public class ChatAPIService {
      * 获取聊天文件上传Token
      *
      * @param fileName
-     * @param cid
+     * @param chatFileUploadInfo
      */
-    public void getFileUploadToken(final String fileName, final String cid, final boolean isMediaVoice) {
+    public void getFileUploadToken(final String fileName, final ChatFileUploadInfo chatFileUploadInfo) {
+        String cid = chatFileUploadInfo.getMessage().getChannel();
+        boolean isMediaVoice = chatFileUploadInfo.getMessage().getType().equals(Message.MESSAGE_TYPE_MEDIA_VOICE);
         final String url = isMediaVoice ? APIUri.getUploadMediaVoiceFileTokenUrl(cid) : APIUri.getUploadFileTokenUrl(cid);
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
         params.addParameter("name", fileName);
         HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
-                apiInterface.returnChatFileUploadTokenSuccess(new GetVolumeFileUploadTokenResult(new String(arg0)));
+                apiInterface.returnChatFileUploadTokenSuccess(new GetVolumeFileUploadTokenResult(new String(arg0)), chatFileUploadInfo);
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnChatFileUploadTokenFail(error, responseCode);
+                apiInterface.returnChatFileUploadTokenFail(error, responseCode, chatFileUploadInfo);
             }
 
             @Override
@@ -1089,7 +1093,7 @@ public class ChatAPIService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        getFileUploadToken(fileName, cid, isMediaVoice);
+                        getFileUploadToken(fileName, chatFileUploadInfo);
                     }
 
                     @Override
@@ -1776,5 +1780,40 @@ public class ChatAPIService {
             }
         });
     }
+
+    public void shareFileToFriendsFromVolume(final String volume, final String channel, final String path, final VolumeFile volumeFile) {
+        String url = APIUri.getVolumeShareFileUrl(volume, channel);
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
+        params.addQueryStringParameter("path", path);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, url) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnShareFileToFriendsFromVolumeSuccess(arg0.toString(), volumeFile);
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnShareFileToFriendsFromVolumeFail(error, responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        shareFileToFriendsFromVolume(volume, channel, path, volumeFile);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                refreshToken(
+                        oauthCallBack, requestTime);
+            }
+        });
+    }
+
 
 }

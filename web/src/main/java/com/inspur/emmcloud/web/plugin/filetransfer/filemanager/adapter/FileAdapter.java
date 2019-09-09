@@ -70,19 +70,27 @@ public class FileAdapter extends RecyclerViewAdapter {
 
         //设置图标
         if (fileType == FileType.directory) {
-            fileHolder.fileIcon.setImageResource(R.drawable.ic_volume_file_typ_forder);
+            fileHolder.fileIcon.setImageResource(R.drawable.baselib_file_type_folder);
         } else if (fileType == FileType.music) {
-            fileHolder.fileIcon.setImageResource(R.drawable.ic_volume_file_typ_audio);
+            fileHolder.fileIcon.setImageResource(R.drawable.baselib_file_type_audio);
         } else if (fileType == FileType.video) {
-            fileHolder.fileIcon.setImageResource(R.drawable.ic_volume_file_typ_video);
+            fileHolder.fileIcon.setImageResource(R.drawable.baselib_file_type_video);
         } else if (fileType == FileType.txt) {
-            fileHolder.fileIcon.setImageResource(R.drawable.ic_volume_file_typ_txt);
+            fileHolder.fileIcon.setImageResource(R.drawable.baselib_file_type_txt);
         } else if (fileType == FileType.zip) {
-            fileHolder.fileIcon.setImageResource(R.drawable.ic_volume_file_typ_zip);
+            fileHolder.fileIcon.setImageResource(R.drawable.baselib_file_type_zip);
         } else if (fileType == FileType.image) {
             ImageDisplayUtils.getInstance().displayImage(fileHolder.fileIcon, fileBean.getPath());
+        } else if (fileType == FileType.word) {
+            fileHolder.fileIcon.setImageResource(R.drawable.baselib_file_type_word);
+        } else if (fileType == FileType.excel) {
+            fileHolder.fileIcon.setImageResource(R.drawable.baselib_file_type_excel);
+        } else if (fileType == FileType.ppt) {
+            fileHolder.fileIcon.setImageResource(R.drawable.baselib_file_type_ppt);
+        } else if (fileType == FileType.pdf) {
+            fileHolder.fileIcon.setImageResource(R.drawable.baselib_file_type_pdf);
         } else {
-            fileHolder.fileIcon.setImageResource(R.drawable.ic_volume_file_typ_unknown);
+            fileHolder.fileIcon.setImageResource(R.drawable.baselib_file_type_unkown);
         }
     }
 

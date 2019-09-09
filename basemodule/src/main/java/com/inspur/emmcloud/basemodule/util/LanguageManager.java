@@ -90,6 +90,7 @@ public class LanguageManager extends BaseModuleAPIInterfaceInstance {
         configuration.setLocale(locale);
         configuration.setLocales(new LocaleList(locale));
         configuration.fontScale = 1.0f;
+        LogUtils.jasonDebug("updateResources===" + locale.toString());
         return context.createConfigurationContext(configuration);
     }
 
@@ -191,8 +192,6 @@ public class LanguageManager extends BaseModuleAPIInterfaceInstance {
             if (languageName.equals("followSys")) {
                 List<Language> commonLanguageList = getCommonLanguageList(null);
                 boolean isContainDefault = false;
-                LogUtils.jasonDebug("Resources.getSystem().getConfiguration().locale.getCountry())=" + Resources.getSystem().getConfiguration().locale.toString());
-
                 if (currentLocal.contains("zh_CN")) {
                     currentLocal = "zh-CN";
                 } else if (currentLocal.contains("Hant") || currentLocal.contains("zh_TW") || currentLocal.contains("zh_HK")) {
@@ -202,24 +201,18 @@ public class LanguageManager extends BaseModuleAPIInterfaceInstance {
                 } else {
                     currentLocal = Resources.getSystem().getConfiguration().locale.getCountry();
                 }
-                LogUtils.jasonDebug("localSyStemLanguage==" + currentLocal);
                 for (int i = 0; i < commonLanguageList.size(); i++) {
                     Language commonLanguage = commonLanguageList.get(i);
-                    LogUtils.jasonDebug("commonLanguage.getIso()==" + commonLanguage.getIso());
                     if (commonLanguage.getIso().contains(currentLocal)) {
                         setCurrentLanguageJson(commonLanguage.toString());
                         languageJson = commonLanguage.toString();
                         isContainDefault = true;
-                        LogUtils.jasonDebug("languageJson==" + languageJson);
                         break;
                     }
                 }
-                LogUtils.jasonDebug("isContainDefault==" + isContainDefault);
                 if (!isContainDefault) {
                     setCurrentLanguageJson(commonLanguageList.get(0).toString());
                     languageJson = commonLanguageList.get(0).toString();
-                    LogUtils.jasonDebug("commonLanguageList.get(0).toString()==" + commonLanguageList.get(0).toString());
-                    LogUtils.jasonDebug("languageJson==" + languageJson);
                 }
             }
             PreferencesUtils.putString(BaseApplication.getInstance(), Constant.PREF_LAST_LANGUAGE, languageJson);
@@ -234,8 +227,6 @@ public class LanguageManager extends BaseModuleAPIInterfaceInstance {
                 // TODO: handle exception
                 e.printStackTrace();
             }
-            LogUtils.jasonDebug("country==" + country);
-            LogUtils.jasonDebug("variant==" + variant);
             Locale locale = new Locale(country, variant);
             Locale.setDefault(locale);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
@@ -245,6 +236,9 @@ public class LanguageManager extends BaseModuleAPIInterfaceInstance {
             }
         }
         config.fontScale = 1.0f;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            BaseApplication.getInstance().createConfigurationContext(config);
+        }
         BaseApplication.getInstance().getResources().updateConfiguration(config,
                 BaseApplication.getInstance().getResources().getDisplayMetrics());
     }
@@ -306,6 +300,23 @@ public class LanguageManager extends BaseModuleAPIInterfaceInstance {
         return "zh-Hans";
     }
 
+    /**
+     * 语音输入用户偏好
+     */
+    public String getVoiceInputLanguage() {
+        String language = PreferencesByTanentUtils.getString(BaseApplication.getInstance(), Constant.PREF_VOICE_INPUT_LANGUAGE);
+        if (!StringUtils.isBlank(language)) {
+            return language;
+        }
+        return "";
+    }
+
+    /**
+     * 设置语音输入用户偏好
+     */
+    public void setVoiceInputLanguage(String language) {
+        PreferencesByTanentUtils.putString(BaseApplication.getInstance(), Constant.PREF_VOICE_INPUT_LANGUAGE, language);
+    }
     /**
      * 从本地获取缓存的服务端支持语音列表
      *

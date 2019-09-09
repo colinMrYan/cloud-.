@@ -21,6 +21,7 @@ import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.bean.schedule.calendar.AccountType;
 import com.inspur.emmcloud.bean.schedule.calendar.CalendarColor;
@@ -52,6 +53,8 @@ public class CalendarSettingActivity extends BaseActivity {
     ImageView daySelectImageView;
     @BindView(R.id.ll_add_calendar)
     LinearLayout addCalendarLayout;
+    @BindView(R.id.switch_view_holiday_state)
+    SwitchCompat holidayStateSwitch;
     private List<ScheduleCalendar> scheduleCalendarList = new ArrayList<>();
     private CalendarAdapter calendarAdapter;
     private ScheduleCalendar currentScheduleCalendar;
@@ -63,6 +66,26 @@ public class CalendarSettingActivity extends BaseActivity {
         boolean isListView = viewDisplayType.equals(SHOW_TYPE_LIST);
         listSelectImageView.setVisibility(isListView ? View.VISIBLE : View.GONE);
         daySelectImageView.setVisibility(isListView ? View.GONE : View.VISIBLE);
+        ScheduleCalendar scheduleCalendar = new ScheduleCalendar();
+        scheduleCalendar.setOpen(true);
+        switch (LanguageManager.getInstance().getCurrentAppLanguage()) {
+            case "zh-Hans":
+            case "zh-hant":
+                boolean holidayState = PreferencesByUserAndTanentUtils.getBoolean(CalendarSettingActivity.this, Constant.PREF_SCHEDULE_HOLIDAY_STATE, true);
+                findViewById(R.id.rl_holiday).setVisibility(View.VISIBLE);
+                holidayStateSwitch.setChecked(holidayState);
+                break;
+            default:
+                findViewById(R.id.rl_holiday).setVisibility(View.GONE);
+                break;
+        }
+        holidayStateSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                PreferencesByUserAndTanentUtils.putBoolean(CalendarSettingActivity.this, Constant.PREF_SCHEDULE_HOLIDAY_STATE, b);
+                EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_HOLIDAY_CHANGE, ""));
+            }
+        });
         scheduleCalendarList = ScheduleCalendarCacheUtils.getScheduleCalendarList(BaseApplication.getInstance());
         calendarAdapter = new CalendarAdapter();
         calendarsListView.setAdapter(calendarAdapter);
@@ -191,11 +214,10 @@ public class CalendarSettingActivity extends BaseActivity {
                     ScheduleCalendarCacheUtils.saveScheduleCalendar(BaseApplication.getInstance(), scheduleCalendar1);
                 }
             });
-            convertView.setOnLongClickListener(new View.OnLongClickListener() {
+            convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public boolean onLongClick(View v) {
+                public void onClick(View view) {
                     if (scheduleCalendarList.get(position).getAcType().equals(AccountType.EXCHANGE.toString())) {
-
                         String deleteAccount = getString(R.string.schedule_delete_ac);
                         String modifyAccount = getString(R.string.schedule_modify_ac);
                         new ActionSheetDialog.ActionListSheetBuilder(CalendarSettingActivity.this)
@@ -213,7 +235,6 @@ public class CalendarSettingActivity extends BaseActivity {
                                 .show();
 
                     }
-                    return true;
                 }
             });
             CalendarColor calendarColor = CalendarColor.getCalendarColor(scheduleCalendar.getColor());

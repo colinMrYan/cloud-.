@@ -50,6 +50,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -63,11 +64,11 @@ import butterknife.ButterKnife;
 public class ScheduleDetailActivity extends BaseActivity {
 
     public static final String EXTRA_SCHEDULE_ENTITY = "extra_schedule_entity";
+    public static final String IS_FROM_MEETING_ROOM = "is_from_meeting_room";  // 是否来自会议室界面
     private static final int SCHEDULE_ATTENDEE = 0;  //参与人
     private static final int SCHEDULE_RECORD_HOLDER = 1;  //记录人
     private static final int SCHEDULE_CONTACT = 2;        //联系人
     private static final int SCHEDULE_INVITE = 3;          //邀请人
-    public static final String IS_FROM_MEETING_ROOM = "is_from_meeting_room";  // 是否来自会议室界面
     /**
      * 日程相关
      **/
@@ -176,6 +177,11 @@ public class ScheduleDetailActivity extends BaseActivity {
         //来自会议
         scheduleInviteLayout.setVisibility(View.VISIBLE);
         scheduleAttendLayout.setVisibility(StringUtils.isBlank(getScheduleParticipant()) ? View.GONE : View.VISIBLE);   //参会人
+        //仅有一个参会人  且是自己得情况
+        if (scheduleEvent.getAllParticipantList().size() == 1 &&
+                scheduleEvent.getAllParticipantList().get(0).getId().equals(BaseApplication.getInstance().getUid())) {
+            scheduleAttendLayout.setVisibility(View.GONE);
+        }
         if (!StringUtils.isBlank(scheduleEvent.getOwner())) { //邀请人
             String userName = ContactUserCacheUtils.getUserName(scheduleEvent.getOwner());
             scheduleInviteText.setText(getString(R.string.meeting_detail_inviter, userName));
@@ -211,9 +217,10 @@ public class ScheduleDetailActivity extends BaseActivity {
                 scheduleEvent.getOwner().equals(BaseApplication.getInstance().getUid())) ? View.GONE : View.VISIBLE);
         initScheduleType();
         initDiffStatus();
-        if (isFromMeetingRoom) { //如果来自会议室列表  参会状态跟日程  不显示
+        if (isFromMeetingRoom) { //如果来自会议室列表  参会状态跟日程  更多  不显示
             scheduleCalendarTypeLayout.setVisibility(View.GONE);
             attendStatusLayout.setVisibility(View.GONE);
+            scheduleMoreImg.setVisibility(View.GONE);
         }
     }
 
@@ -291,7 +298,7 @@ public class ScheduleDetailActivity extends BaseActivity {
 
             //管理员不显示发起群聊 (创建者跟参会人)
             if (relatedPersonFlag && WebServiceRouterManager.getInstance().isV1xVersionChat()) {
-                moreTextList.add(getString(R.string.message_create_group)); //发起群聊
+                moreTextList.add(getString(R.string.meeting_create_group_chat)); //会议群聊
                 scheduleApiService.getCalendarBindChat(scheduleId);
             }
 
@@ -506,11 +513,14 @@ public class ScheduleDetailActivity extends BaseActivity {
 
     //list去重
     private List<Participant> deleteRepeatData(List<Participant> list) {
+        if (list == null) return null;
         //不把邀请人加到参会人里
-        for (Participant item : list) {
+        Iterator<Participant> iterator = list.iterator();
+        while (iterator.hasNext()) {
+            Participant item = iterator.next();
             ContactUser user = ContactUserCacheUtils.getContactUserByUid(item.getId());
             if (user == null) {
-                list.remove(item);
+                iterator.remove();
             }
         }
         Set<Participant> set = new TreeSet<>(new Comparator<Participant>() {
@@ -578,7 +588,6 @@ public class ScheduleDetailActivity extends BaseActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                         delSchedule();
-                        finish();
                     }
                 })
                 .show();

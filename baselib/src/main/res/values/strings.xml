@@ -9,6 +9,7 @@
     <string name="reclick_to_desktop">再按一次退出程序</string>
     <string name="Network_Mobile">已经连接到移动网络</string>
     <string name="Network_WIFI">已经连接到WIFI</string>
+    <string name="send_to_app">发送到云+</string>
     <string name="ok">确定</string>
     <string name="cancel">取消</string>
     <string name="resolution_warning">您的设备分辨率小于800*480，无法运行此程序</string>
@@ -72,6 +73,14 @@
     <string name="no_search_term">没有更多的搜索结果</string>
     <string name="function_load_fail">加载出错，轻触屏幕重新加载</string>
     <string name="function_reload">网络诊断</string>
+    <string name="baselib_internal_share">内部分享</string>
+    <string name="upgrade_download">下载更新</string>
+    <string name="upgrade_later">稍后再说</string>
+    <string name="upgrade_install_now">立即安装</string>
+    <string name="upgrade_install_next_time">下次安装</string>
+    <string name="file_open_by_other_app">用其他应用打开</string>
+    <string name="file_open_by_other_app_tips">%1$s暂时不能打开该文件请使用其他应用打开</string>
+    <string name="try_again">再试一次</string>
 
     <!-- 公共部分 -->
     <string name="year">年</string>
@@ -220,7 +229,12 @@
     <string name="baselib_share_success">分享成功</string>
     <string name="baselib_share_fail">分享失败</string>
 
-
+    <string name="baselib_share_many_picture">等%1$d张图片</string>
+    <string name="baselib_share_many_files">等%1$d个文件</string>
+    <string name="baselib_share_image">[图片]</string>
+    <string name="baselib_share_file">[文件]</string>
+    <string name="baselib_share_link">[链接]</string>
+    <string name="baselib_share_send_to">发送给：</string>
     <string name="login_please_input_password"> 请输入密码</string>
     <string name="login">登录</string>
     <string name="login_user_not_bound_enterprise">当前用户未绑定企业，请联系管理员！</string>
@@ -371,7 +385,7 @@
     <string name="schedule_setting_view">视图</string>
     <string name="schedule_calendar_input_content_hint">请输入日程内容...</string>
     <string name="schedule_calendar_time_alert">结束时间应该晚于起始时间</string>
-    <string name="schedule_alert_time_occur">日程当天(上午9点)</string>
+    <string name="schedule_alert_time_occur">当天(上午9点)</string>
     <string name="schedule_alert_time_before_one_day">1天前(上午9点)</string>
     <string name="schedule_alert_time_before_two_day">2天前(上午9点)</string>
     <string name="schedule_alert_time_before_a_week">一周前(上午9点)</string>
@@ -380,8 +394,8 @@
     <string name="schedule_alert_time_before_days">%1$s天前</string>
     <string name="schedule_account_select">账户</string>
 
-    <string name="schedule_calendar_modify">修改日程</string>
-    <string name="schedule_calendar_delete">删除日程</string>
+    <string name="schedule_calendar_modify">变更日程</string>
+    <string name="schedule_calendar_delete">取消日程</string>
     <string name="schedule_calendar_create">新建日程</string>
     <string name="schedule_calendar_my_schedule">日程</string>
     <string name="schedule_calendar_my_meeting">会议</string>
@@ -391,9 +405,9 @@
     <string name="schedule_calendar_pm">下午</string>
     <string name="schedule_calendar_so_on"> 等</string>
     <string name="schedule_calendar_schedules">项日程</string>
-    <string name="schedule_calendar_no_schedule_today">暂无日程安排</string>
-    <string name="schedule_meeting_no_meeting_today">暂无会议安排</string>
-    <string name="schedule_task_no_task_today">暂无任务安排</string>
+    <string name="schedule_calendar_no_schedule_today">暂无日程</string>
+    <string name="schedule_meeting_no_meeting_today">暂无会议</string>
+    <string name="schedule_task_no_task_today">暂无任务</string>
     <string name="schedule_click_to_add_schedule">再次点击新建日程</string>
     <string name="schedule_exchange_login_fail">%1$s 密码已更改，请到日程设置中更新</string>
     <string name="schedule_account_type">日历</string>
@@ -442,7 +456,7 @@
     <string name="schedule_meeting_add_attendee_title">参与人</string>
     <string name="schedule_meeting_add_record_holder_title">会议记录人</string>
     <string name="schedule_meeting_add_conference_title">会议联络人</string>
-    <string name="schedule_meeting_select_attendee_title">选择参会人</string>
+    <string name="schedule_meeting_select_attendee_title">选择参与人</string>
     <string name="schedule_meeting_select_record_holder_title">选择会议记录人</string>
     <string name="schedule_meeting_select_conference_title">选择会议联络人</string>
     <string name="schedule_meeting_add_note">备注</string>
@@ -458,7 +472,7 @@
     <string name="schedule_meeting_in_meeting">会议中</string>
     <string name="schedule_meeting_be_free">空闲</string>
     <string name="meeting_detail_location">地点：</string>
-    <string name="schedule_meeting_change">修改会议</string>
+    <string name="schedule_meeting_change">变更会议</string>
     <string name="schedule_meeting_cancel">取消会议</string>
     <string name="schedule_meeting_my_create">我创建的：</string>
     <string name="schedule_meeting_my_take_part_in">我参与的：</string>
@@ -548,7 +562,7 @@
     <string name="clouddriver_select_copy_position">选择复制位置</string>
     <string name="clouddriver_select_move_position">选择目标文件夹</string>
     <string name="clouddriver_file_open_fail">文件打开失败！</string>
-    <string name="clouddriver_file_dpwnload">文件下载</string>
+    <string name="clouddriver_file_detail">文件详情</string>
     <string name="clouddriver_create_folder">新建文件夹</string>
     <string name="clouddriver_file_filter">分类筛选</string>
     <string name="clouddriver_sort_by_time_asc">时间升序</string>
@@ -561,7 +575,7 @@
     <string name="clouddriver_upload_again">重新上传</string>
     <string name="clouddriver_download_size">下载(%1$s)</string>
     <string name="clouddriver_downloading_status">下载中(%1$s/%2$s)</string>
-    <string name="clouddriver_file_name_invaliad">名称中不能包含特殊字符 / \ " : | * ? &lt; &gt;&#038;</string>
+    <string name="clouddriver_file_name_invaliad">名称中不能包含特殊字符 / \ " : | * ? &lt; &gt;</string>
     <string name="clouddriver_select_photo">选择照片</string>
     <string name="clouddriver_select_file">选择文件</string>
     <string name="clouddriver_volume_info">网盘详情</string>
@@ -575,8 +589,8 @@
     <string name="clouddriver_add_volume_member">添加网盘成员</string>
     <string name="clouddriver_del_volume_group_member">删除组成员</string>
     <string name="clouddriver_add_volume_group_member">添加组成员</string>
-    <string name="clouddriver_directory_name_invaliad">文件夹名中不能包含特殊字符 / \ " : | * ? &lt; &gt; &#038; </string>
-    <string name="clouddriver_volume_name_invaliad">网盘名中不能包含特殊字符 / \ " : | * ?  &lt; &gt; &#038;</string>
+    <string name="clouddriver_directory_name_invaliad">文件夹名中不能包含特殊字符 / \ " : | * ? &lt; &gt;  </string>
+    <string name="clouddriver_volume_name_invaliad">网盘名中不能包含特殊字符 / \ " : | * ?  &lt; &gt; </string>
     <string name="clouddriver_exists_same_name">已存在同名文件/文件夹</string>
     <string name="clouddriver_volume_group_info">组详情</string>
     <string name="clouddriver_volume_group_member">组成员</string>
@@ -595,7 +609,7 @@
     <string name="clouddriver_volume_group_name">组名称</string>
     <string name="clouddriver_file_permission_manager">权限管理</string>
     <string name="clouddriver_volume_upload_file">上传文件</string>
-    <string name="clouddriver_upload_file_to_volume">上传到网盘</string>
+    <string name="volume_upload_to_current_directory">上传到当前目录</string>
     <string name="rename">重命名</string>
     <string name="move_to">移动到</string>
     <string name="copy">复制</string>
@@ -611,8 +625,9 @@
     <string name="people_num">%1$d人</string>
     <string name="file_rename">文件重命名</string>
     <string name="folder_rename">文件夹重命名</string>
-    <string name="disk">网盘</string>
-
+    <string name="cloud_drive">云盘</string>
+    <string name="volume_file_upload_network_type_warning">当前处于非Wi-Fi环境，继续上传将消耗运营商流量，请确认是否继续</string>
+    <string name="volume_file_download_network_type_warning">当前处于非Wi-Fi环境，继续下载将消耗运营商流量，请确认是否继续</string>
 
     <!--Webex 邮箱-->
     <string name="mail_install_cert"><u>安装数字证书</u></string>
@@ -705,6 +720,9 @@
     <string name="setting_gesture_force_set">根据企业安全性原则，需要您设置手势密码</string>
     <string name="setting_gesture_force_open">根据企业安全性原则，您不可以关闭手势密码</string>
 
+    <string name="setting_update_this_time_hint">本次更新</string>
+    <string name="setting_update_wifi_download_package_hint">WiFi下已自动下载安装包</string>
+
     <string name="contact">通讯录</string>
     <string name="web">web</string>
     <string name="mine_theme_switch">换肤</string>
@@ -795,7 +813,7 @@
     <string name="schedule_meeting_topic">会议主题</string>
     <string name="schedule_title">日程标题</string>
     <string name="meeting_room_booking_detail">会议室详情</string>
-    <string name="meeting_room_booking_topic">请输入会议主题</string>
+    <string name="meeting_room_booking_topic">请输入主题</string>
     <string name="meeting_room_booking_choosing_room">请选择会议室</string>
     <string name="meeting_room_booking_members_edit">请添加参会人员</string>
     <string name="meeting_room_booking_log_edit">请添加会务人员</string>
@@ -903,7 +921,7 @@
     <string name="meeting_detail_attendee_unknown">无响应</string>
     <string name="meeting_detail_attendee_tentative">暂定</string>
     <string name="meeting_group_chat_fail">发起会议群聊失败</string>
-    <string name="meeting_create_group_chat">发起群聊</string>
+    <string name="meeting_create_group_chat">会议群聊</string>
     <string name="meeting_cancel_the_meeting">确定取消会议？</string>
 
     <!-- 会议预定错误提示 -->
@@ -951,6 +969,7 @@
     <string name="calendar_no_alert">无提醒</string>
     <string name="calendar_when_event_finished">结束时</string>
     <string name="calendar_cancel_the_schedule">确定取消日程？</string>
+    <string name="calendar_china_holiday">中国节假日</string>
 
     <!-- 通用 -->
     <string name="save">保存</string>
@@ -1022,7 +1041,7 @@
     <string name="net_diagnosis_title">网络诊断</string>
     <string name="net_diagnosis_hard_link_title">检测网络设置</string>
     <string name="net_diagnosis_wifi_link_title">检测Wi-Fi路由器状态</string>
-    <string name="net_diagnosis_dns_link_title">检测网络连通性</string>
+    <string name="net_diagnosis_dns_link_title">网络连通性检测</string>
     <string name="net_diagnosis_hard_link_conent">当前检查项目包含：硬件链接是否通畅，是否有链接Wi-Fi、4G、LTE等</string>
     <string name="net_diagnosis_hard_to_fix">去修复</string>
     <string name="net_diagnosis_portal_to_set">去认证</string>
@@ -1037,7 +1056,23 @@
     <string name="net_ping_url_inspur">浪潮</string>
     <string name="net_ping_url_ali">阿里</string>
     <string name="net_ping_url_cloud">云＋</string>
+    <string name="net_diagnosis_copy">点此复制该内容</string>
+    <string name="net_no_network_available">无网络</string>
 
+
+    <string name="net_check_net_url">网址</string>
+    <string name="net_check_net_request_result">请求结果</string>
+    <string name="net_check_net_state">网络状态</string>
+    <string name="net_check_net_current_type">当前网络类型：</string>
+    <string name="net_check_net_current_state">连接状态：</string>
+    <string name="net_check_net_current_state_connected">已连接</string>
+    <string name="net_check_net_current_state_unconnected">未连接</string>
+    <string name="net_check_net_current_state_unknown">未知</string>
+
+    <string name="function_net_load_fail">网络加载失败</string>
+    <string name="function_net_over_load">重新加载</string>
+    <string name="function_net_look_error_detail">查看异常信息</string>
+    <string name="net_check_error_detail_title">异常信息</string>
     <!--电源白名单-->
     <string name="battery_tip_content">系统已对该应用开启省电优化，可能导致消息延迟或丢失，请将其加入到省电优化白名单（点击“去设置”，在弹出对话框中点击“允许”)</string>
     <string name="white_list_tip_content">由于系统限制，请您手动开启本软件自启动权限，从而保障软件运行的最佳环境（点击“去设置”)</string>
@@ -1114,8 +1149,10 @@
     <string name="download_fail">下载失败</string>
     <string name="download_success">下载成功</string>
     <string name="file_downloading">文件下载中，请稍候...</string>
+    <string name="file_uploading">文件上传中，请稍候...</string>
     <string name="file_download_success">文件已下载成功，是否打开？</string>
     <string name="has_downloaded">已下载</string>
+    <string name="has_uploaded">已上传</string>
     <string name="imp_content">内容</string>
     <string name="file_ok">确定</string>
     <string name="file_cancel">取消</string>
@@ -1128,7 +1165,7 @@
     <string name="function_not_implemented">内测期间，暂不开放</string>
     <string name="msg_default_time">时间</string>
     <string name="imp_function_error">功能调用错误，请检查应用是否已升级到最新版本</string>
-    <string name="file_select_limit_warning">超过了建议选择文件数限制</string>
+    <string name="file_select_limit_warning">最多只能选择%1$d个文件</string>
     <string name="select_file">选择文件</string>
     <string name="internal_shared_storage">内部存储设备</string>
 
@@ -1174,11 +1211,15 @@
     <string name="hwpush_ability_value" translatable="false">successRateAnalytics</string>
 
     <!--安全中心-->
-    <string name="setting_safe_gesture_face">面容ID、手势密码</string>
+    <string name="setting_safe_gesture_face">指纹、手势密码</string>
+    <string name="setting_face_unlock">刷脸解锁设置</string>
     <string name="setting_safe_gesture_face_setting">面容ID、手势密码设置</string>
+    <string name="setting_safe_face_id_unlock">刷脸解锁</string>
     <string name="setting_safe_center">账号、设备安全</string>
     <string name="safe_center_gesture">手势密码</string>
     <string name="safe_center_finger_print">指纹</string>
+    <string name="safe_cloud_touch_id">%1$s </string>
+    <string name="safe_center_use_finger_print_unlock">指纹解锁</string>
     <string name="switch_gesture_unlock">手势解锁</string>
     <string name="switch_gesture_reset_unlock">重置手势解锁</string>
     <string name="put_face_in_frame">请把脸放入框内保持不动</string>
@@ -1193,6 +1234,10 @@
     <string name="face_login">刷脸登录</string>
     <string name="off_face_verify_relogin">关闭刷脸，重新登录</string>
     <string name="face_verifying">验证中</string>
+    <string name="finger_print_times_use_up">您的识别次数用尽，请尝试手势解锁，或者一段时间后重试</string>
+    <string name="finger_print_try_times">指纹认证失败，您还可以尝试%1$d次</string>
+    <string name="finger_print_id">%1$s的触控ID</string>
+    <string name="finger_print_by_finger_print">通过指纹验证解锁%1$s</string>
 
     <!--九宫格-->
     <!-- Gesture login activity -->
@@ -1236,6 +1281,7 @@
 
     <string name="volume_read_write_permission">拥有上传/查看权限</string>
     <string name="volume_read_permission">拥有查看权限</string>
+    <string name="volume_no_permission">无权限</string>
 
     <string name="clear">清除</string>
     <string name="confirm_clear">确认清除？</string>
@@ -1249,7 +1295,7 @@
     <string name="cluster_no_permission">当前功能缺少有效的授权信息。</string>
 
     <string name="share_mutil_only_support_image">多文件分享仅支持照片格式</string>
-    <string name="share_no_more_than_five">不能上传多于5个图片</string>
+    <string name="share_no_more_than_five">不能上传多于5个文件</string>
     <string name="share_no_share_way">没有能够分享的方式</string>
     <string name="share_to_channel">发送到频道</string>
     <string name="share_upload_volume">上传到云盘</string>
@@ -1293,6 +1339,12 @@
     <string name="voice_word_setting">语音自动识别</string>
     <string name="voice_audio_record_unavailiable">当前录音设备不可用，请检查录音权限是否开启</string>
     <string name="voice_to_word">转文字</string>
+    <!--语音输入改造-->
+    <string name="voice_input_language_mandarin">普通话</string>
+    <string name="voice_input_language_cantonese">粤语</string>
+    <string name="voice_input_language_english">英语</string>
+    <string name="voice_input_hint_prepare">准备中...</string>
+    <string name="voice_input_hint_speak_now">请说话...</string>
 
     <string name="notification_switch">新消息通知</string>
     <string name="notification_switch_cant_recive">关闭后，手机将不再接收新消息通知</string>

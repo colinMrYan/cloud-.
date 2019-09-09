@@ -6,6 +6,7 @@ import android.content.Intent;
 import com.inspur.emmcloud.web.ui.ImpCallBackInterface;
 import com.inspur.emmcloud.web.webview.ImpWebView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -59,6 +60,15 @@ public interface IPlugin {
     void jsCallback(String functionName, String param);
 
     /**
+     * 回调JavaScript方法，回调参数是JSON对象
+     *
+     * @param functionName
+     * @param param
+     */
+    void jsCallback(String functionName, JSONObject param);
+
+    void jsCallback(String functionName, JSONArray params);
+    /**
      * 回调JavaScript方法,回调参数是字符串数组
      *
      * @param functionName
@@ -75,5 +85,9 @@ public interface IPlugin {
 
     void onActivityPause();
 
+    void onActivityStart();
+
     void onActivityResult(int requestCode, int resultCode, Intent data);
+
+    void onActivityNewIntent(Intent intent);
 }

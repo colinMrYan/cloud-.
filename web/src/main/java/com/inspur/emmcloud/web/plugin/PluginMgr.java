@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.web.plugin;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -18,16 +19,20 @@ import com.inspur.emmcloud.web.plugin.dialog.DialogService;
 import com.inspur.emmcloud.web.plugin.emm.EMMService;
 import com.inspur.emmcloud.web.plugin.filetransfer.FileTransferService;
 import com.inspur.emmcloud.web.plugin.gps.GpsService;
+import com.inspur.emmcloud.web.plugin.http.HttpService;
 import com.inspur.emmcloud.web.plugin.loadingdialog.LoadingDialogService;
 import com.inspur.emmcloud.web.plugin.map.MapService;
 import com.inspur.emmcloud.web.plugin.network.NetworkService;
+import com.inspur.emmcloud.web.plugin.nfc.NFCService;
 import com.inspur.emmcloud.web.plugin.photo.PhotoService;
+import com.inspur.emmcloud.web.plugin.share.ShareSocialService;
 import com.inspur.emmcloud.web.plugin.sms.SmsService;
+import com.inspur.emmcloud.web.plugin.sql.SqlService;
 import com.inspur.emmcloud.web.plugin.staff.SelectStaffService;
 import com.inspur.emmcloud.web.plugin.staff.StuffInformationService;
 import com.inspur.emmcloud.web.plugin.startapp.StartAppService;
 import com.inspur.emmcloud.web.plugin.telephone.TelephoneService;
-import com.inspur.emmcloud.web.plugin.video.VideoRecordService;
+import com.inspur.emmcloud.web.plugin.video.VideoService;
 import com.inspur.emmcloud.web.plugin.window.WindowService;
 import com.inspur.emmcloud.web.ui.ImpCallBackInterface;
 import com.inspur.emmcloud.web.ui.iLog;
@@ -241,8 +246,16 @@ public class PluginMgr {
                 serviceName = StuffInformationService.class.getCanonicalName();
             } else if (serviceName.endsWith("TelephoneService")) {
                 serviceName = TelephoneService.class.getCanonicalName();
-            } else if (serviceName.endsWith("VideoRecordService")) {
-                serviceName = VideoRecordService.class.getCanonicalName();
+            } else if (serviceName.endsWith("SqlService")) {
+                serviceName = SqlService.class.getCanonicalName();
+            } else if (serviceName.endsWith("VideoService")) {
+                serviceName = VideoService.class.getCanonicalName();
+            } else if (serviceName.endsWith("NFCService")) {
+                serviceName = NFCService.class.getCanonicalName();
+            } else if (serviceName.endsWith("ShareSocialService")) {
+                serviceName = ShareSocialService.class.getCanonicalName();
+            } else if (serviceName.endsWith("HttpService")) {
+                serviceName = HttpService.class.getCanonicalName();
             }
             LogUtils.jasonDebug("serviceName==" + serviceName);
         }
@@ -267,7 +280,7 @@ public class PluginMgr {
         service = service.trim();
         IPlugin plugin = null;
         Log.d("jason", "serviceName=" + service);
-        if (!entries.containsKey(service) || service.equals(FileTransferService.class.getCanonicalName())) {
+        if (!entries.containsKey(service)) {
             plugin = createPlugin(service);
             if (plugin != null) {
                 entries.put(service, plugin);
@@ -316,34 +329,68 @@ public class PluginMgr {
      * activity关闭之前调用方法关闭相应的空间
      */
     public void onDestroy() {
-        for (IPlugin plugin : entries.values()) {
-            if (plugin != null) {
-                plugin.onDestroy();
+        if (entries != null) {
+            for (IPlugin plugin : entries.values()) {
+                if (plugin != null) {
+                    plugin.onDestroy();
+                }
             }
+            entries.clear();
         }
-        entries.clear();
-        entries = null;
+
     }
 
     /**
      * activity onResume事件
      */
     public void onResume() {
-        for (IPlugin plugin : entries.values()) {
-            if (plugin != null) {
-                plugin.onActivityResume();
+        if (entries != null) {
+            for (IPlugin plugin : entries.values()) {
+                if (plugin != null) {
+                    plugin.onActivityResume();
+                }
             }
         }
+
     }
 
     /**
      * activity onPause事件
      */
     public void onPause() {
-        for (IPlugin plugin : entries.values()) {
-            if (plugin != null) {
-                plugin.onActivityPause();
+        if (entries != null) {
+            for (IPlugin plugin : entries.values()) {
+                if (plugin != null) {
+                    plugin.onActivityPause();
+                }
             }
         }
+
     }
+
+    /**
+     * activity onResume事件
+     */
+    public void onStar() {
+        if (entries != null) {
+            for (IPlugin plugin : entries.values()) {
+                if (plugin != null) {
+                    plugin.onActivityStart();
+                }
+            }
+        }
+
+    }
+
+    public void onNewIntent(Intent intent) {
+        if (entries != null) {
+            for (IPlugin plugin : entries.values()) {
+                if (plugin != null) {
+                    plugin.onActivityNewIntent(intent);
+                }
+            }
+        }
+
+    }
+
 }

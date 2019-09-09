@@ -42,12 +42,24 @@ public class FileUtil {
         }
 
         if (fileName.endsWith(".png") || fileName.endsWith(".gif")
-                || fileName.endsWith(".jpeg") || fileName.endsWith(".jpg")) {
+                || fileName.endsWith(".jpeg") || fileName.endsWith(".jpg") || fileName.equals(".dng")) {
             return FileType.image;
         }
 
         if (fileName.endsWith(".apk")) {
             return FileType.apk;
+        }
+        if (fileName.endsWith(".doc") || fileName.endsWith(".docx")) {
+            return FileType.word;
+        }
+        if (fileName.endsWith(".xls") || fileName.endsWith(".xlsx")) {
+            return FileType.excel;
+        }
+        if (fileName.endsWith(".ppt") || fileName.endsWith(".pptx")) {
+            return FileType.ppt;
+        }
+        if (fileName.endsWith(".pdf")) {
+            return FileType.pdf;
         }
         return FileType.other;
     }

@@ -153,20 +153,21 @@ public class CustomWeekView extends WeekView {
         String lunar = TextUtils.isEmpty(calendar.getSchemeLunar()) ? calendar.getLunar() : calendar.getSchemeLunar();
         if (hasScheme) {
             mTextPaint.setColor(calendar.getSchemeColor());
-            if(isLunarAndFestivalShow()){
-                canvas.drawText(calendar.getScheme(), x + mItemWidth - mPadding - mCircleRadius-dipToPx(getContext(), 1.5f), mPadding + mSchemeBaseLine + dipToPx(getContext(), 6), mTextPaint);
+            if (isLunarAndFestivalShow() && isRestShow()) {
+                canvas.drawText(calendar.getScheme(), x + mItemWidth - mPadding - mCircleRadius - dipToPx(getContext(), 1.5f), mPadding + mSchemeBaseLine + dipToPx(getContext(), 6), mTextPaint);
             }
         }
         if (isSelected) {
             canvas.drawText(day, cx, mTextBaseLine + top + (isLunarAndFestivalShow() ? 0 : mRadius / 2),
                     mSelectTextPaint);
-            if(isLunarAndFestivalShow()){
+            if (isLunarAndFestivalShow()) {
                 canvas.drawText(lunar, cx, mTextBaseLine + mItemHeight / 15, mSelectedLunarTextPaint);
             }
         } else if (hasScheme) {
             canvas.drawText(day, cx, mTextBaseLine + top + (isLunarAndFestivalShow() ? 0 : mRadius / 2),
-                    calendar.isCurrentMonth() ? mSchemeTextPaint : mOtherMonthTextPaint);
-            if(isLunarAndFestivalShow()){
+                    calendar.isCurrentDay() ? mCurDayTextPaint :
+                            calendar.isCurrentMonth() ? mSchemeTextPaint : mOtherMonthTextPaint);
+            if (isLunarAndFestivalShow()) {
                 Paint currentMonthPaint = null;
                 if (calendar.getSchemeLunarColor() != 0) {
                     mSchemeSolarTextPaint.setColor(calendar.getSchemeLunarColor());
@@ -174,7 +175,7 @@ public class CustomWeekView extends WeekView {
                 } else {
                     currentMonthPaint = !TextUtils.isEmpty(calendar.getTraditionFestival()) || !TextUtils.isEmpty(calendar.getGregorianFestival()) ? mSolarTermTextPaint : mSchemeLunarTextPaint;
                 }
-                canvas.drawText(lunar, cx, mTextBaseLine  + mItemHeight / 15,
+                canvas.drawText(lunar, cx, mTextBaseLine + mItemHeight / 15,
                         calendar.isCurrentMonth() ? currentMonthPaint : mOtherMonthLunarTextPaint);
             }
 
@@ -182,11 +183,10 @@ public class CustomWeekView extends WeekView {
             canvas.drawText(day, cx, mTextBaseLine + top + (isLunarAndFestivalShow() ? 0 : mRadius / 2),
                     calendar.isCurrentDay() ? mCurDayTextPaint :
                             calendar.isCurrentMonth() ? mCurMonthTextPaint : mOtherMonthTextPaint);
-            if(isLunarAndFestivalShow()){
-                canvas.drawText(lunar, cx, mTextBaseLine  + mItemHeight / 15,
-                        calendar.isCurrentDay() ? mCurDayLunarTextPaint :
-                                calendar.isCurrentMonth() ? (!TextUtils.isEmpty(calendar.getTraditionFestival()) || !TextUtils.isEmpty(calendar.getGregorianFestival())) ? mSolarTermTextPaint :
-                                        mCurMonthLunarTextPaint : mOtherMonthLunarTextPaint);
+            if (isLunarAndFestivalShow()) {
+                canvas.drawText(lunar, cx, mTextBaseLine + mItemHeight / 15,
+                        calendar.isCurrentMonth() ? (!TextUtils.isEmpty(calendar.getTraditionFestival()) || !TextUtils.isEmpty(calendar.getGregorianFestival())) ? mSolarTermTextPaint :
+                                mCurMonthLunarTextPaint : mOtherMonthLunarTextPaint);
             }
 
         }

@@ -498,8 +498,9 @@ public class NewsWebDetailActivity extends BaseActivity {
                 : ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_day_background_layout));
         (dialog.findViewById(R.id.app_news_dialog)).setBackground(drawable);
         GradientDrawable drawableBtn = new GradientDrawable();
-        drawableBtn.setCornerRadius(DensityUtil.dip2px(NewsWebDetailActivity.this, 5));
-        drawableBtn.setColor(model.equals(darkMode) ? ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_night_background_btn) : ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_day_background_btn));
+        setDrawProperty(drawableBtn, model);
+        GradientDrawable drawableFontBtn = new GradientDrawable();
+        setDrawProperty(drawableFontBtn, model);
         (dialog.findViewById(R.id.app_news_mode_layout)).setBackground(drawableBtn);
         setDayBtn(model.equals(darkMode) ? 1 : 2);
         Button shareBtn = (dialog.findViewById(R.id.app_news_share_btn));
@@ -519,10 +520,10 @@ public class NewsWebDetailActivity extends BaseActivity {
         dayOrNightModeText.setTextColor(model.equals(darkMode) ? ContextCompat.getColor(NewsWebDetailActivity.this, R.color.white) : ContextCompat.getColor(NewsWebDetailActivity.this, R.color.black));
         ((ImageView) dialog.findViewById(R.id.app_news_mode_sun_img)).setImageResource(model.equals(darkMode) ? R.drawable.app_news_mode_day_light : R.drawable.app_news_mode_day_dark);
         ((ImageView) dialog.findViewById(R.id.app_news_mode_moon_img)).setImageResource(model.equals(darkMode) ? R.drawable.app_news_mode_light : R.drawable.app_news_mode_dark);
-        smallerBtn.setBackground(drawableBtn);
-        normalBtn.setBackground(drawableBtn);
-        largerBtn.setBackground(drawableBtn);
-        largestBtn.setBackground(drawableBtn);
+        smallerBtn.setBackground(drawableFontBtn);
+        normalBtn.setBackground(drawableFontBtn);
+        largerBtn.setBackground(drawableFontBtn);
+        largestBtn.setBackground(drawableFontBtn);
         setFontSizeBtn();
         dialog.findViewById(R.id.app_news_mode_line).setBackgroundColor(model.equals(darkMode) ? ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_night_line_color)
                 : ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_day_line_color));
@@ -530,6 +531,18 @@ public class NewsWebDetailActivity extends BaseActivity {
                 : ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_day_line_color));
         ((TextView) dialog.findViewById(R.id.app_news_font_text)).setTextColor(model.equals(darkMode) ? ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_night_font_size_color)
                 : ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_night_font_size_color));
+    }
+
+    /**
+     * 为drawable设置属性
+     *
+     * @param drawableBtn
+     * @param model
+     */
+    private void setDrawProperty(GradientDrawable drawableBtn, String model) {
+        drawableBtn.setCornerRadius(DensityUtil.dip2px(NewsWebDetailActivity.this, 5));
+        drawableBtn.setColor(model.equals(darkMode) ? ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_night_background_btn) : ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_day_background_btn));
+
     }
 
     /**
@@ -855,11 +868,13 @@ public class NewsWebDetailActivity extends BaseActivity {
                 @Override
                 public void shareSuccess(String cid) {
                     ToastUtils.show(R.string.baselib_share_success);
+                    dismissShareDialog();
                 }
 
                 @Override
                 public void shareFail() {
                     ToastUtils.show(R.string.baselib_share_fail);
+                    dismissShareDialog();
                 }
 
                 @Override
@@ -867,6 +882,12 @@ public class NewsWebDetailActivity extends BaseActivity {
 
                 }
             });
+        }
+    }
+
+    private void dismissShareDialog() {
+        if (dialog != null) {
+            dialog.dismiss();
         }
     }
 

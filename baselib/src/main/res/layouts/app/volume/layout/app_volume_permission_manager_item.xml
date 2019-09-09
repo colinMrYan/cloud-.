@@ -12,6 +12,10 @@
         android:layout_centerVertical="true"
         android:gravity="center_vertical"
         android:paddingLeft="12dp"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@+id/tv_volume_group_permission"
+        android:ellipsize="middle"
+        android:singleLine="true"
         android:textSize="17sp" />
 
     <TextView
