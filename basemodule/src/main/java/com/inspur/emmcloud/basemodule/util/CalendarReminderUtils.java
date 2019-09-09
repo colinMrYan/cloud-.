@@ -188,7 +188,6 @@ public class CalendarReminderUtils {
     public static Uri updateCloudScheduleInSysCalendar(Context context, String title, String description,
                                                        long reminderTime, long endTime,
                                                        String scheduleId, boolean isAllDay, int previousDate) {
-
         int calId = checkAndAddCalendarAccount(context);
         ContentValues event = new ContentValues();
         event.put("title", title);
@@ -215,11 +214,7 @@ public class CalendarReminderUtils {
 
         Uri updateRemindUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, Long.
                 parseLong(getCalendarRemindId(context, "", scheduleId)));
-//        context.getContentResolver().update(updateRemindUri, values,
-//                CalendarContract.Reminders._ID + "=" + getCalendarRemindId(context,"",scheduleId),
-//                null);
         context.getContentResolver().update(updateRemindUri, values, null, null);
-//        context.getContentResolver().insert(updateRemindUri, values);
         return updateUri;
     }
 
