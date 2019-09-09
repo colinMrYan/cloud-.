@@ -80,21 +80,6 @@ public class ShareFilesActivity extends BaseActivity {
     public void onCreate() {
         ButterKnife.bind(this);
         this.uriList.addAll((List<String>) getIntent().getSerializableExtra(Constant.SHARE_FILE_URI_LIST));
-//        if (!isImageUriList(uriList)) {
-//            if (uriList.size() <= 1) {
-//                File file = new File(uriList.get(0));
-//                if (StringUtils.isBlank(FileUtils.getSuffix(file))) {
-//                    ToastUtils.show(ShareFilesActivity.this, getString(R.string.share_no_suffix));
-//                    finish();
-//                }
-//            } else {
-//                ToastUtils.show(ShareFilesActivity.this, getString(R.string.share_mutil_only_support_image));
-//                finish();
-//            }
-//        } else if (isImageUriList(uriList) && uriList.size() > 5) {
-//            ToastUtils.show(ShareFilesActivity.this, getString(R.string.share_no_more_than_five));
-//            finish();
-//        }
         if (uriList == null || uriList.size() == 0) {
             ToastUtils.show(ShareFilesActivity.this, getString(R.string.baselib_share_fail));
             finish();
@@ -184,6 +169,8 @@ public class ShareFilesActivity extends BaseActivity {
                 break;
             default:
                 recyclerView.setVisibility(View.VISIBLE);
+                imageLayout.setVisibility(View.GONE);
+                fileLayout.setVisibility(View.GONE);
                 GridLayoutManager gridLayoutManager = new GridLayoutManager(MyApplication.getInstance(), getGridViewColumn());
                 recyclerView.setLayoutManager(gridLayoutManager);
                 if (isImageUriList(uriList)) {
@@ -373,7 +360,7 @@ public class ShareFilesActivity extends BaseActivity {
     private String getFileIcon(String filePath) {
         String iconPath = "";
         int iconId = FileUtils.getRegularFileIconResId(filePath);
-        if (iconId == R.drawable.ic_volume_file_typ_img) {
+        if (iconId == R.drawable.baselib_file_type_img) {
             iconPath = filePath;
         } else {
             iconPath = "drawable://" + iconId;

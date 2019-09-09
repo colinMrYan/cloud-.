@@ -540,7 +540,7 @@ public class TaskAddActivity extends BaseActivity {
         }
         final String id = taskMangerList.get(0).getId();
         String ImageUrl = APIUri.getUserIconUrl(this, id);
-        ImageDisplayUtils.getInstance().displayRoundedImage(managerHeadImageView, ImageUrl, R.drawable.default_image, this, 15);
+        ImageDisplayUtils.getInstance().displayRoundedImage(managerHeadImageView, ImageUrl, R.drawable.icon_person_default, this, 15);
         managerHeadImageView.setVisibility(View.VISIBLE);
         managerNumText.setText(1 + getString(R.string.schedule_task_a_person));
         managerNumText.setVisibility(View.VISIBLE);
@@ -577,7 +577,7 @@ public class TaskAddActivity extends BaseActivity {
                 break;
             final String participantId = taskParticipantList.get(i).getId();
             participantImageUrl.add(APIUri.getUserIconUrl(this, participantId));
-            ImageDisplayUtils.getInstance().displayRoundedImage(ImageList[i], participantImageUrl.get(i), R.drawable.default_image, this, 15);
+            ImageDisplayUtils.getInstance().displayRoundedImage(ImageList[i], participantImageUrl.get(i), R.drawable.icon_person_default, this, 15);
             ImageList[i].setVisibility(View.VISIBLE);
             ImageList[i].setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -800,22 +800,22 @@ public class TaskAddActivity extends BaseActivity {
         int icId = 0;
         switch (fileType) {
             case "TEXT":
-                icId = R.drawable.ic_volume_file_typ_txt;
+                icId = R.drawable.baselib_file_type_txt;
                 break;
             case "MS_WORD":
-                icId = R.drawable.ic_volume_file_typ_word;
+                icId = R.drawable.baselib_file_type_word;
                 break;
             case "MS_EXCEL":
-                icId = R.drawable.ic_volume_file_typ_excel;
+                icId = R.drawable.baselib_file_type_excel;
                 break;
             case "MS_PPT":
-                icId = R.drawable.ic_volume_file_typ_ppt;
+                icId = R.drawable.baselib_file_type_ppt;
                 break;
             case "JPEG":
-                icId = R.drawable.ic_volume_file_typ_img;
+                icId = R.drawable.baselib_file_type_img;
                 break;
             default:
-                icId = R.drawable.ic_volume_file_typ_unknown;
+                icId = R.drawable.baselib_file_type_unkown;
                 break;
         }
         return icId;
@@ -883,7 +883,7 @@ public class TaskAddActivity extends BaseActivity {
             if (JSONUtils.getString(jsonAttachmentList.get(i).getJsonAttachment(), "type", "").equals("JPEG")) {
                 String imageUri = getImgPreviewUri(jsonAttachmentList.get(i).getJsonAttachment().toString());
                 ImageDisplayUtils.getInstance().displayImage(otherHolder.attachmentImageView,
-                        imageUri, R.drawable.ic_volume_file_typ_img);
+                        imageUri, R.drawable.baselib_file_type_img);
             } else {
                 otherHolder.attachmentImageView.setImageResource(getFileIconByType(JSONUtils.getString(jsonAttachmentList.get(i).getJsonAttachment(), "type", "")));
             }

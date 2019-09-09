@@ -11,6 +11,7 @@ import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.DownLoaderUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
+import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.appcenter.App;
 
 import java.io.File;
@@ -35,8 +36,7 @@ public class OfflineAppUtil {
 
     private static File getAppDirFile(List<File> fileFolderList) {
         for (File file : fileFolderList) {
-            if (file.isDirectory() && file.getName().equals(APP_DIR_TEMP)) ;
-            {
+            if (file.isDirectory() && !file.getName().equals(APP_DIR_TEMP)) {
                 return file;
             }
         }
@@ -45,6 +45,9 @@ public class OfflineAppUtil {
 
 
     private static void downLoadZip(final Activity activity, final App app, final boolean isShowLoadingDlg) {
+        if (!NetUtils.isNetworkConnected(activity)) {
+            return;
+        }
         final LoadingDialog loadingDlg = new LoadingDialog(activity);
         loadingDlg.show(isShowLoadingDlg);
         final String userId = BaseApplication.getInstance().getUid();
@@ -86,6 +89,7 @@ public class OfflineAppUtil {
             @Override
             public void callbackError(Throwable arg0, boolean arg1) {
                 LoadingDialog.dimissDlg(loadingDlg);
+                ToastUtils.show(R.string.react_native_app_update_failed);
             }
         };
 
