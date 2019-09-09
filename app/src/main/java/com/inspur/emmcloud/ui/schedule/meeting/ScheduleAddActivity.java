@@ -37,10 +37,10 @@ import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.CalendarIdAndCloudScheduleIdCacheUtils;
-import com.inspur.emmcloud.basemodule.util.CalendarReminderUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.util.SysCalendarAndCloudPlusScheduleSysUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
@@ -415,7 +415,7 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
                 if (isEventEditModel) {
                     updateSchedule(schedule);
                     if (syncCalendarSwitch.isChecked()) {
-                        CalendarReminderUtils.updateCloudScheduleInSysCalendar(ScheduleAddActivity.this,
+                        SysCalendarAndCloudPlusScheduleSysUtils.updateCloudScheduleInSysCalendar(ScheduleAddActivity.this,
                                 schedule.getTitle(), schedule.getNote(), schedule.getStartTime()
                                 , schedule.getEndTime(), schedule.getId(), schedule.getAllDay(), (schedule.getRemindEventObj().getAdvanceTimeSpan() / 60));
                     }
@@ -870,7 +870,7 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
             schedule.setId(getIDResult.getId());
             if (syncCalendarSwitch.isChecked()) {
                 try {
-                    JSONObject jsonObject = CalendarReminderUtils.saveCloudSchedule(ScheduleAddActivity.this,
+                    JSONObject jsonObject = SysCalendarAndCloudPlusScheduleSysUtils.saveCloudSchedule(ScheduleAddActivity.this,
                         schedule.getTitle(), schedule.getNote(), schedule.getStartTime()
                             , schedule.getEndTime(), schedule.getId(), schedule.getAllDay(), schedule.getRemindEventObj().getAdvanceTimeSpan() / 60);
                     CalendarIdAndCloudScheduleIdCacheUtils.saveCalendarIdAndCloudIdBean(

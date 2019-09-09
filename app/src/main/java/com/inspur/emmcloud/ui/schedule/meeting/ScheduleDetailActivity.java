@@ -26,9 +26,9 @@ import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
-import com.inspur.emmcloud.basemodule.util.CalendarReminderUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.basemodule.util.SysCalendarAndCloudPlusScheduleSysUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.schedule.Location;
@@ -621,7 +621,7 @@ public class ScheduleDetailActivity extends BaseActivity {
         @Override
         public void returnDeleteScheduleSuccess(String scheduleId) {
             LoadingDialog.dimissDlg(loadingDlg);
-            CalendarReminderUtils.deleteCalendarEvent(ScheduleDetailActivity.this, scheduleId);
+            SysCalendarAndCloudPlusScheduleSysUtils.deleteCalendarEvent(ScheduleDetailActivity.this, scheduleId);
             EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED, null));
             finish();
         }
