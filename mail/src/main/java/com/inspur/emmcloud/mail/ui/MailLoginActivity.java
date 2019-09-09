@@ -13,7 +13,6 @@ import com.inspur.emmcloud.baselib.util.FomatUtils;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
-import com.inspur.emmcloud.baselib.widget.ClearEditText;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
@@ -36,7 +35,7 @@ import butterknife.ButterKnife;
 public class MailLoginActivity extends BaseActivity {
 
     @BindView(R2.id.et_mail)
-    ClearEditText mailEdit;
+    EditText mailEdit;
     @BindView(R2.id.et_password)
     EditText passwordEdit;
     @BindView(R2.id.bt_login)
@@ -63,7 +62,7 @@ public class MailLoginActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_mail_login;
+        return R.layout.mail_login_activity;
     }
 
     protected int getStatusType() {

@@ -43,7 +43,7 @@ public class MailHomeBaseActivity extends BaseFragmentActivity implements AllInt
 
     @Override
     public void onCreate() {
-        setContentView(R.layout.activity_mail_home);
+        setContentView(R.layout.mail_home_activity);
         ButterKnife.bind(this);
         EventBus.getDefault().register(this);
         loadingDlg = new LoadingDialog(this);

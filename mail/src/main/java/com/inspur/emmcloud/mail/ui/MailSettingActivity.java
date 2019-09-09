@@ -46,7 +46,7 @@ public class MailSettingActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_mail_setting;
+        return R.layout.mail_setting_activity;
     }
 
     public void onClick(View v) {

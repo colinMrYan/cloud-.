@@ -86,7 +86,7 @@ public class MailCertificateInstallActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_mail_certificate_install;
+        return R.layout.mail_certificate_install_activity;
     }
 
     /**

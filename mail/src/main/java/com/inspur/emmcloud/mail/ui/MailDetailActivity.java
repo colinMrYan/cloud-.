@@ -142,7 +142,7 @@ public class MailDetailActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_mail_details;
+        return R.layout.mail_details_activity;
     }
 
     private void initView() {

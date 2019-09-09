@@ -112,14 +112,14 @@ public class MailSendActivity extends BaseActivity {
 
     @Override
     public void onCreate() {
-        setContentView(R.layout.activity_mail_send);
+        setContentView(R.layout.mail_send_activity);
         ButterKnife.bind(this);
         init();
     }
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_mail_send;
+        return R.layout.mail_send_activity;
     }
 
     /**
