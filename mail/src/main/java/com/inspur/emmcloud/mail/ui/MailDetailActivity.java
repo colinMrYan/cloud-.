@@ -117,7 +117,7 @@ public class MailDetailActivity extends BaseActivity {
     @BindView(R2.id.progress_bar_load)
     ProgressBar loadProgressBar;
     private MailAttachmentListAdapter mailAttachmentListAdapter;
-
+    //Res.getDrawableID("web_qrcode_zx_code_line")
     private Mail mail;
     private MailAPIService apiService;
     private LoadingDialog loadingDlg;
@@ -146,6 +146,8 @@ public class MailDetailActivity extends BaseActivity {
     }
 
     private void initView() {
+        findViewById(R.id.ibt_mail_delete).setBackgroundResource(R.drawable.ic_mail_delete_white);
+        signImg.setImageResource(R.drawable.ic_mail_flag_sign_yes);
         setMailContentVisible(false);
         encryptImg.setImageResource(mail.isEncrypted() ? R.drawable.ic_mail_flag_encrypt_yes : R.drawable.ic_mail_flag_encrypt_no);
         encryptImg.setVisibility(mail.isEncrypted() ? View.VISIBLE : View.INVISIBLE);

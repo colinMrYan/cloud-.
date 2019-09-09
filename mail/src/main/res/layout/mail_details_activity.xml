@@ -32,7 +32,6 @@
                 android:layout_centerVertical="true"
                 android:onClick="onClick"
                 android:paddingRight="10dp"
-                android:src="@drawable/ic_mail_delete_white"
                 android:tint="?attr/header_text_color" />
         </RelativeLayout>
 
@@ -75,16 +74,14 @@
                                 android:id="@+id/iv_flag_encrypt"
                                 android:layout_width="16dp"
                                 android:layout_height="16dp"
-                                android:layout_marginRight="5dp"
-                                android:src="@drawable/ic_mail_flag_encrypt_yes" />
+                                android:layout_marginRight="5dp" />
 
                             <ImageView
                                 android:id="@+id/iv_flag_sign"
                                 android:layout_width="16dp"
                                 android:layout_height="16dp"
                                 android:layout_marginRight="15dp"
-                                android:layout_toRightOf="@id/iv_flag_encrypt"
-                                android:src="@drawable/ic_mail_flag_sign_yes" />
+                                android:layout_toRightOf="@id/iv_flag_encrypt" />
                         </RelativeLayout>
 
                         <TextView
