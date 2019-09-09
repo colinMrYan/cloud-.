@@ -397,6 +397,7 @@
     <string name="schedule_calendar_so_on">... </string>
     <string name="schedule_calendar_schedules">schedules</string>
     <string name="schedule_account_select">Account</string>
+    <string name="schedule_sync_sys_calendar">Synchronize to local calendar</string>
 
     <string name="schedule_calendar_no_schedule_today">No Schedule</string>
     <string name="schedule_meeting_no_meeting_today">No Meeting</string>
