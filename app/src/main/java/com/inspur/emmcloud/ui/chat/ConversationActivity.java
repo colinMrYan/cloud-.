@@ -271,11 +271,16 @@ public class ConversationActivity extends ConversationBaseActivity {
             getNewMessageOfChannel();
         }
         if (uiMessage != null) {
-            int position = uiMessageList.indexOf(uiMessage);
+            final int position = uiMessageList.indexOf(uiMessage);
             if (position != -1) {
-                msgListView.scrollToPosition(position);
+                msgListView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        msgListView.MoveToPosition(position);
+                    }
+                });
+                }
             }
-        }
     }
 
     /**
@@ -1251,7 +1256,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             LocalBroadcastManager.getInstance(this).unregisterReceiver(refreshNameReceiver);
             refreshNameReceiver = null;
         }
-        chatInputMenu.releaseVoliceInput();
+        chatInputMenu.releaseVoiceInput();
         EventBus.getDefault().unregister(this);
     }
 

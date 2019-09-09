@@ -169,6 +169,8 @@ public class ShareFilesActivity extends BaseActivity {
                 break;
             default:
                 recyclerView.setVisibility(View.VISIBLE);
+                imageLayout.setVisibility(View.GONE);
+                fileLayout.setVisibility(View.GONE);
                 GridLayoutManager gridLayoutManager = new GridLayoutManager(MyApplication.getInstance(), getGridViewColumn());
                 recyclerView.setLayoutManager(gridLayoutManager);
                 if (isImageUriList(uriList)) {
@@ -358,7 +360,7 @@ public class ShareFilesActivity extends BaseActivity {
     private String getFileIcon(String filePath) {
         String iconPath = "";
         int iconId = FileUtils.getRegularFileIconResId(filePath);
-        if (iconId == R.drawable.ic_volume_file_typ_img) {
+        if (iconId == R.drawable.baselib_file_type_img) {
             iconPath = filePath;
         } else {
             iconPath = "drawable://" + iconId;
