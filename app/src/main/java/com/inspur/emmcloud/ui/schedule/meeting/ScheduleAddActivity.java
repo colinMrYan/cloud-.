@@ -31,14 +31,20 @@ import com.inspur.emmcloud.baselib.widget.DateTimePickerDialog;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.bean.CalendarIdAndCloudIdBean;
 import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.CalendarIdAndCloudScheduleIdCacheUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.util.SysCalendarAndCloudPlusScheduleSyncUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
+import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.bean.appcenter.GetIDResult;
 import com.inspur.emmcloud.bean.schedule.Location;
 import com.inspur.emmcloud.bean.schedule.Participant;
@@ -112,6 +118,8 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
     RelativeLayout calendarTypeLayout;
     @BindView(R.id.switch_all_day)
     Switch allDaySwitch;
+    @BindView(R.id.switch_sync_calendar)
+    Switch syncCalendarSwitch;
     @BindView(R.id.tv_event_type)
     TextView eventTypeText;
     @BindView(R.id.et_meeting_position)
@@ -312,7 +320,27 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
         calendarTypeLayout.setClickable(!isEventEditModel);
         allDaySwitch.setOnCheckedChangeListener(this);
         modifyLocationUI();
+        //同步日程的选项默认为打开状态
+        syncCalendarSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                syncCalendarSwitch.isChecked() == isChecked;
+                if (isChecked) {
+                    PermissionRequestManagerUtils.getInstance().requestRuntimePermission(
+                            ScheduleAddActivity.this, Permissions.CALENDAR, new PermissionRequestCallback() {
+                                @Override
+                                public void onPermissionRequestSuccess(List<String> permissions) {
+                                }
 
+                                @Override
+                                public void onPermissionRequestFail(List<String> permissions) {
+                                    syncCalendarSwitch.setChecked(false);
+                                }
+                            });
+                }
+            }
+        });
+        syncCalendarSwitch.setChecked(schedule.getSyncToLocal());
     }
 
     /**
@@ -387,6 +415,7 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
                 if (isEventEditModel) {
                     updateSchedule(schedule);
                 } else {
+                    //添加日程时因为此时日程并未真正创建，没有日程id所以等日程创建完成在存储
                     addSchedule(schedule);
                 }
                 break;
@@ -736,6 +765,7 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
         schedule.setNote(notesEdit.getText().toString().trim());
         schedule.setLocation((location != null && !StringUtils.isBlank(location.getId())) ? JSONUtils.toJSONString(location) :
                 JSONUtils.toJSONString(new Location("", "", positionEditText.getText().toString())));
+        schedule.setSyncToLocal(syncCalendarSwitch.isChecked());
         JSONArray array = new JSONArray();
         try {
             for (SearchModel searchModel : attendeeSearchModelList) {
@@ -835,6 +865,20 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
             LoadingDialog.dimissDlg(loadingDlg);
             ToastUtils.show(getApplicationContext(), R.string.calendar_add_success);
             schedule.setId(getIDResult.getId());
+            //向系统日历里添加日历时需要判断同步开关是否打开，打开的时候则添加，不打开则不不管
+            if (syncCalendarSwitch.isChecked()) {
+                try {
+                    JSONObject jsonObject = SysCalendarAndCloudPlusScheduleSyncUtils.saveCloudSchedule(ScheduleAddActivity.this,
+                        schedule.getTitle(), schedule.getNote(), schedule.getStartTime()
+                            , schedule.getEndTime(), schedule.getId(), schedule.getAllDay(), schedule.getRemindEventObj().getAdvanceTimeSpan() / 60);
+                    CalendarIdAndCloudScheduleIdCacheUtils.saveCalendarIdAndCloudIdBean(
+                            ScheduleAddActivity.this, new CalendarIdAndCloudIdBean(jsonObject.
+                                    getString(CalendarIdAndCloudIdBean.CLOUD_PLUS_CALENDAR_ID), getIDResult.getId(),
+                                    jsonObject.getString(CalendarIdAndCloudIdBean.CLOUD_PLUS_SCHEDULE_CALENDAR_ID)));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
             sendCalendarEventNotification();
             finish();
         }
@@ -848,6 +892,14 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
         @Override
         public void returnUpdateScheduleSuccess() {
             LoadingDialog.dimissDlg(loadingDlg);
+            //更新日历时如果同步开关开着则同步数据，否则关掉
+            if (syncCalendarSwitch.isChecked()) {
+                SysCalendarAndCloudPlusScheduleSyncUtils.updateCloudScheduleInSysCalendar(ScheduleAddActivity.this,
+                        schedule.getTitle(), schedule.getNote(), schedule.getStartTime()
+                        , schedule.getEndTime(), schedule.getId(), schedule.getAllDay(), (schedule.getRemindEventObj().getAdvanceTimeSpan() / 60));
+            } else {
+                SysCalendarAndCloudPlusScheduleSyncUtils.deleteCalendarEvent(ScheduleAddActivity.this, schedule.getId());
+            }
             sendCalendarEventNotification();
             ToastUtils.show(getApplicationContext(),
                     getString(R.string.modify_success));

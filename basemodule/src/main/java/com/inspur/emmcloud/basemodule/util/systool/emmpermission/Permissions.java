@@ -69,6 +69,10 @@ public final class Permissions {
             Permissions.READ_EXTERNAL_STORAGE,
             Permissions.WRITE_EXTERNAL_STORAGE};
 
+    public static final String[] CALENDAR = new String[]{
+            Permissions.READ_CALENDAR, Permissions.WRITE_CALENDAR
+    };
+
     /**
      * Turn permissions into text.
      */
