@@ -1,12 +1,19 @@
 package com.inspur.emmcloud.util.privates.s3;
 
+import android.content.Intent;
+
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.BasicSessionCredentials;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferService;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtilityOptions;
 import com.amazonaws.regions.Region;
+import com.amazonaws.services.s3.S3ClientOptions;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.baselib.util.LogUtils;
@@ -15,6 +22,7 @@ import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileUploadTokenResult;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
+import com.inspur.emmcloud.bean.appcenter.volume.VolumeFileUploadInfo;
 import com.inspur.emmcloud.interf.ProgressCallback;
 import com.inspur.emmcloud.interf.VolumeFileUploadService;
 
@@ -30,10 +38,14 @@ public class S3Service extends APIInterfaceInstance implements VolumeFileUploadS
     private GetVolumeFileUploadTokenResult getVolumeFileUploadTokenResult;
     private VolumeFile mockVolumeFile;
     private ProgressCallback progressCallback;
+    private TransferUtility mTransferUtility;
+    private TransferObserver transferObserver;
+    private VolumeFileUploadInfo volumeFileUploadInfo;
 
-    public S3Service(GetVolumeFileUploadTokenResult getVolumeFileUploadTokenResult, VolumeFile mockVolumeFile) {
-        this.getVolumeFileUploadTokenResult = getVolumeFileUploadTokenResult;
+    public S3Service(VolumeFileUploadInfo volumeFileUploadInfo, VolumeFile mockVolumeFile) {
+        this.getVolumeFileUploadTokenResult = volumeFileUploadInfo.getGetVolumeFileUploadTokenResult();
         this.mockVolumeFile = mockVolumeFile;
+        this.volumeFileUploadInfo = volumeFileUploadInfo;
         initService();
     }
 
@@ -45,11 +57,17 @@ public class S3Service extends APIInterfaceInstance implements VolumeFileUploadS
     @Override
     public void setProgressCallback(ProgressCallback progressCallback) {
         this.progressCallback = progressCallback;
+        if (transferObserver != null && progressCallback != null) {
+            long bytesCurrent = transferObserver.getBytesTransferred();
+            long bytesTotal = transferObserver.getBytesTotal();
+            int progress = (int) (((float) bytesCurrent / (float) bytesTotal) * 100);
+            progressCallback.onLoading(progress);
+        }
     }
 
     @Override
     public void uploadFile(String fileName, final String localFilePath) {
-
+        LogUtils.jasonDebug("uploadFile-------------");
         ClientConfiguration mConf = new ClientConfiguration();
         mConf.setConnectionTimeout(15 * 1000); // 连接超时，默认15秒
         mConf.setSocketTimeout(15 * 1000); // socket超时，默认15秒
@@ -59,28 +77,56 @@ public class S3Service extends APIInterfaceInstance implements VolumeFileUploadS
         BasicSessionCredentials awsCredentials = new BasicSessionCredentials(getVolumeFileUploadTokenResult.getAccessKeyId(), getVolumeFileUploadTokenResult.getAccessKeySecret(), getVolumeFileUploadTokenResult.getSecurityToken());
         Region region = Region.getRegion(getVolumeFileUploadTokenResult.getRegion());
         MyAmazonS3Client sS3Client = new MyAmazonS3Client(awsCredentials, region, mConf);
+        S3ClientOptions options = S3ClientOptions.builder().setPathStyleAccess(true).build();
+        options.skipContentMd5Check(true);
+        sS3Client.setS3ClientOptions(options);
         sS3Client.setEndpoint(getVolumeFileUploadTokenResult.getUrl());
-        TransferUtility mTransferUtility = TransferUtility.builder().context(BaseApplication.getInstance())
+        TransferUtilityOptions transferUtilityOptions = new TransferUtilityOptions();
+        transferUtilityOptions.setTransferThreadPoolSize(3);
+        mTransferUtility = TransferUtility.builder().context(BaseApplication.getInstance())
                 .s3Client(sS3Client)
+                .transferUtilityOptions(transferUtilityOptions)
                 .build();
+        long contentLength = FileUtils.getFileSize(localFilePath);
+        ObjectMetadata meta = new ObjectMetadata();
+        meta.setContentLength(contentLength);
+        if (volumeFileUploadInfo != null) {
+            int transferObserverId = volumeFileUploadInfo.getTransferObserverId();
+            if (transferObserverId != -1) {
+                transferObserver = mTransferUtility.getTransferById(transferObserverId);
+                if (transferObserver != null) {
+                    mTransferUtility.resume(transferObserverId);
+                }
+            }
+        }
 
-
-        final TransferObserver transferObserver = mTransferUtility.upload(getVolumeFileUploadTokenResult.getBucket(), getVolumeFileUploadTokenResult.getFileName(), new File(localFilePath));
+        if (transferObserver == null) {
+            transferObserver = mTransferUtility.upload(getVolumeFileUploadTokenResult.getBucket(), getVolumeFileUploadTokenResult.getFileName(), new File(localFilePath), meta);
+            if (volumeFileUploadInfo != null) {
+                volumeFileUploadInfo.setTransferObserverId(transferObserver.getId());
+            }
+        }
+        transferObserver.cleanTransferListener();
         transferObserver.setTransferListener(new TransferListener() {
             @Override
             public void onStateChanged(int id, TransferState state) {
+                LogUtils.jasonDebug("state===" + state.toString());
                 if (state == TransferState.COMPLETED) {
                     if (progressCallback != null) {
-                        LogUtils.jasonDebug("transferObserver=" + transferObserver.getAbsoluteFilePath());
                         callback(localFilePath);
                     }
+                } else if (state == TransferState.WAITING_FOR_NETWORK) {
+                    mTransferUtility.pause(transferObserver.getId());
+                    transferObserver.cleanTransferListener();
+                    callbackFail();
                 }
             }
 
             @Override
             public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
                 if (progressCallback != null) {
-                    int progress = (int) ((float) bytesCurrent / (float) bytesTotal) * 100;
+                    int progress = (int) (((float) bytesCurrent / (float) bytesTotal) * 100);
+                    LogUtils.jasonDebug("progress===" + progress);
                     progressCallback.onLoading(progress);
                 }
             }
@@ -88,9 +134,14 @@ public class S3Service extends APIInterfaceInstance implements VolumeFileUploadS
             @Override
             public void onError(int id, Exception ex) {
                 callbackFail();
+                transferObserver.cleanTransferListener();
+                mTransferUtility.cancel(transferObserver.getId());
+                LogUtils.jasonDebug("ex===" + ex.toString());
 
             }
         });
+
+        MyApplication.getInstance().startService(new Intent(MyApplication.getInstance(), TransferService.class));
     }
 
     private void callbackFail() {
@@ -107,7 +158,7 @@ public class S3Service extends APIInterfaceInstance implements VolumeFileUploadS
 
     @Override
     public void onDestroy() {
-
+        mTransferUtility.cancel(transferObserver.getId());
     }
 
     //{"x:region":"oss-cn-shanghai",
@@ -133,11 +184,11 @@ public class S3Service extends APIInterfaceInstance implements VolumeFileUploadS
                 obj.put("x:format", FileUtils.getExtensionNameWithPoint(file.getName()));
                 obj.put("location", getVolumeFileUploadTokenResult.getEndpoint() + "/" + getVolumeFileUploadTokenResult.getBucket() + "/" + getVolumeFileUploadTokenResult.getFileName());
                 String callbackBody = getVolumeFileUploadTokenResult.getCallbackBody();
-                String[] bodyparms = callbackBody.split("&");
-                for (String parm : bodyparms) {
-                    if (parm.startsWith("x:region=") || parm.startsWith("x:volume=") || parm.startsWith("x:path=") || parm.startsWith("x:storage")) {
-                        String key = parm.split("=")[0];
-                        String value = parm.substring(key.length() + 1, parm.length());
+                String[] bodyParams = callbackBody.split("&");
+                for (String param : bodyParams) {
+                    if (param.startsWith("x:region=") || param.startsWith("x:volume=") || param.startsWith("x:path=") || param.startsWith("x:storage")) {
+                        String key = param.split("=")[0];
+                        String value = param.substring(key.length() + 1, param.length());
                         obj.put(key, value);
                     }
 

@@ -101,6 +101,7 @@ import com.amazonaws.util.Md5Utils;
 import com.amazonaws.util.RuntimeHttpUtils;
 import com.amazonaws.util.ServiceClientHolderInputStream;
 import com.amazonaws.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -4546,6 +4547,7 @@ public class MyAmazonS3Client extends AmazonWebServiceClient implements AmazonS3
         try {
 //            return new URI(endpoint.getScheme() + "://" + bucketName + "."
 //                    + endpoint.getAuthority());
+            LogUtils.jasonDebug("endpoint + \"/\" + bucketName=" + endpoint + "/" + bucketName);
             return new URI(endpoint + "/" + bucketName);
         } catch (final URISyntaxException e) {
             throw new IllegalArgumentException("Invalid bucket name: " + bucketName, e);
@@ -4858,8 +4860,10 @@ public class MyAmazonS3Client extends AmazonWebServiceClient implements AmazonS3
             }
             executionContext.setSigner(createSigner(request, bucket, key));
             executionContext.setCredentials(credentials);
+
             response = client.execute(request, responseHandler,
                     errorResponseHandler, executionContext);
+            LogUtils.jasonDebug("request=" + request.getEndpoint().toString());
             return response.getAwsResponse();
         } catch (final AmazonS3Exception ase) {
             /**

@@ -551,7 +551,7 @@ public class MyAppAPIService {
         HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
-                apiInterface.returnVolumeFileUploadTokenSuccess(new GetVolumeFileUploadTokenResult(new String(arg0)), localFilePath, mockVolumeFile);
+                apiInterface.returnVolumeFileUploadTokenSuccess(new GetVolumeFileUploadTokenResult(new String(arg0)), localFilePath, mockVolumeFile, volumeFileUploadInfo.getTransferObserverId());
             }
 
             @Override

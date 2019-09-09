@@ -3,7 +3,6 @@ package com.inspur.emmcloud.util.privates;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileUploadTokenResult;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFileUploadInfo;
@@ -138,22 +137,22 @@ public class VolumeFileUploadManagerUtils {
     /**
      * 根据不同的storage选择不同的存储服务
      *
-     * @param getVolumeFileUploadTokenResult
+     * @param volumeFileUploadInfo
      * @param mockVolumeFile
      * @return
      */
-    private VolumeFileUploadService getVolumeFileUploadService(GetVolumeFileUploadTokenResult getVolumeFileUploadTokenResult, VolumeFile mockVolumeFile) {
+    private VolumeFileUploadService getVolumeFileUploadService(VolumeFileUploadInfo volumeFileUploadInfo, VolumeFile mockVolumeFile) {
         VolumeFileUploadService volumeFileUploadService = null;
-        switch (getVolumeFileUploadTokenResult.getStorage()) {
+        switch (volumeFileUploadInfo.getGetVolumeFileUploadTokenResult().getStorage()) {
             case "ali_oss":  //阿里云
                 try {
-                    volumeFileUploadService = new OssService(getVolumeFileUploadTokenResult, mockVolumeFile);
+                    volumeFileUploadService = new OssService(volumeFileUploadInfo.getGetVolumeFileUploadTokenResult(), mockVolumeFile);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
                 break;
             case "aws_s3":
-                volumeFileUploadService = new S3Service(getVolumeFileUploadTokenResult, mockVolumeFile);
+                volumeFileUploadService = new S3Service(volumeFileUploadInfo, mockVolumeFile);
                 break;
             default:
                 break;
@@ -164,19 +163,20 @@ public class VolumeFileUploadManagerUtils {
     private class WebService extends APIInterfaceInstance {
 
         @Override
-        public void returnVolumeFileUploadTokenSuccess(GetVolumeFileUploadTokenResult getVolumeFileUploadTokenResult, String fileLocalPath, VolumeFile mockVolumeFile) {
-            LogUtils.jasonDebug("getXPath()==" + getVolumeFileUploadTokenResult.getXPath());
-            VolumeFileUploadService volumeFileUploadService = getVolumeFileUploadService(getVolumeFileUploadTokenResult, mockVolumeFile);
+        public void returnVolumeFileUploadTokenSuccess(GetVolumeFileUploadTokenResult getVolumeFileUploadTokenResult, String fileLocalPath, VolumeFile mockVolumeFile, int transferObserverId) {
             for (int i = 0; i < volumeFileUploadInfoList.size(); i++) {
                 VolumeFileUploadInfo volumeFileUploadInfo = volumeFileUploadInfoList.get(i);
                 if (volumeFileUploadInfo.getVolumeFile() == mockVolumeFile) {
                     ProgressCallback progressCallback = volumeFileUploadInfo.getProgressCallback();
+                    volumeFileUploadInfo.setGetVolumeFileUploadTokenResult(getVolumeFileUploadTokenResult);
+                    VolumeFileUploadService volumeFileUploadService = getVolumeFileUploadService(volumeFileUploadInfo, mockVolumeFile);
                     if (volumeFileUploadService != null) {
                         if (progressCallback != null) {
                             volumeFileUploadService.setProgressCallback(progressCallback);   //如果ProgressCallback已经从ui传递进来，则给volumeFileUploadService设置ProgressCallback
                         }
+                        volumeFileUploadInfo.setTransferObserverId(transferObserverId);
                         volumeFileUploadInfo.setVolumeFileUploadService(volumeFileUploadService);
-                        volumeFileUploadInfo.setGetVolumeFileUploadTokenResult(getVolumeFileUploadTokenResult);
+//                        volumeFileUploadInfo.setGetVolumeFileUploadTokenResult(getVolumeFileUploadTokenResult);
                         volumeFileUploadService.uploadFile(getVolumeFileUploadTokenResult.getFileName(), fileLocalPath);
                     } else {  //如果没有获取相应的上传服务 返回上传失败
                         volumeFileUploadInfo.getVolumeFile().setStatus(VolumeFile.STATUS_UPLOADIND_FAIL);
