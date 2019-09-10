@@ -154,8 +154,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                     showFileOperationDlg(volumeFileList.get(position));
                 }
             }
-        });
-        adapter.setItemDropDownImgClickListener(new VolumeFileAdapter.MyItemDropDownImgClickListener() {
+
             @Override
             public void onItemDropDownImgClick(View view, int position) {
                 if (!adapter.getMultiselect()) {
@@ -164,6 +163,22 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                     adapter.setVolumeFileSelect(position);
                 }
 
+            }
+
+            @Override
+            public void onItemOperationTextClick(View view, int position) {
+                VolumeFile volumeFile = volumeFileList.get(position);
+                if (volumeFile.getStatus().equals(VolumeFile.STATUS_UPLOADIND)) {
+                    //取消上传
+                    VolumeFileUploadManagerUtils.getInstance().removeVolumeFileUploadService(volumeFile);
+                    volumeFileList.remove(position);
+                    adapter.notifyItemRemoved(position);
+                } else if (NetUtils.isNetworkConnected(VolumeFileActivity.this)) {
+                    //重新上传
+                    volumeFile.setStatus(VolumeFile.STATUS_UPLOADIND);
+                    VolumeFileUploadManagerUtils.getInstance().reUploadFile(volumeFile);
+                    adapter.notifyItemChanged(position);
+                }
             }
         });
     }
@@ -641,11 +656,22 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         } else {
             //当从外部分享完成后进入到相应界面，返回时按目录结构逐级回退
             String[] forders = currentDirAbsolutePath.split("/");
-            String parentForderName = forders[forders.length - 1];
-            String parentDirAbsolutePath = currentDirAbsolutePath.substring(0, currentDirAbsolutePath.length() - 1 - parentForderName.length());
+            if (forders.length < 2) {
+                finish();
+                return;
+            }
+            String parentForderName = forders[forders.length - 2];
+            String parentDirAbsolutePath = currentDirAbsolutePath.substring(0, currentDirAbsolutePath.length() - 1 - forders[forders.length - 1].length());
             Bundle bundle = new Bundle();
             bundle.putSerializable("volume", volume);
             bundle.putSerializable("currentDirAbsolutePath", parentDirAbsolutePath);
+            if (parentDirAbsolutePath.equals("/")) {
+                if (volume.getType().equals("private")) {
+                    parentForderName = getString(R.string.clouddriver_my_file);
+                } else {
+                    parentForderName = volume.getName();
+                }
+            }
             bundle.putSerializable("title", parentForderName);
             IntentUtils.startActivity(VolumeFileActivity.this, VolumeFileActivity.class, bundle, true);
         }

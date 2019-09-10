@@ -781,7 +781,7 @@ public class FileUtils {
     }
 
     /**
-     * 获取文件扩展名
+     * 获取文件扩展名(xx.png,返回png)
      *
      * @param filename
      * @return
@@ -794,6 +794,22 @@ public class FileUtils {
             }
         }
         return filename;
+    }
+
+    /**
+     * 获取文件扩展名(xx.png,返回.png)
+     *
+     * @param fileName
+     * @return
+     */
+    public static String getExtensionNameWithPoint(String fileName) {
+        if ((fileName != null) && (fileName.length() > 0)) {
+            int dot = fileName.lastIndexOf('.');
+            if ((dot > -1) && (dot < (fileName.length() - 1))) {
+                return "." + fileName.substring(dot + 1);
+            }
+        }
+        return "";
     }
 
     //
@@ -1080,29 +1096,29 @@ public class FileUtils {
      */
     public static int getRegularFileIconResId(String fileName) {
         fileName = fileName.toLowerCase();
-        int imageIconId = R.drawable.ic_volume_file_typ_unknown;
+        int imageIconId = R.drawable.baselib_file_type_unkown;
         if (fileName.endsWith("doc") || fileName.endsWith("docx")) {
-            imageIconId = R.drawable.ic_volume_file_typ_word;
+            imageIconId = R.drawable.baselib_file_type_word;
         } else if (fileName.endsWith("xls") || fileName.endsWith("xlsx")) {
-            imageIconId = R.drawable.ic_volume_file_typ_excel;
+            imageIconId = R.drawable.baselib_file_type_excel;
         } else if (fileName.endsWith("ppt") || fileName.endsWith("pptx")) {
-            imageIconId = R.drawable.ic_volume_file_typ_ppt;
+            imageIconId = R.drawable.baselib_file_type_ppt;
         } else if (fileName.endsWith("pdf")) {
-            imageIconId = R.drawable.ic_volume_file_typ_pdf;
+            imageIconId = R.drawable.baselib_file_type_pdf;
         } else if (fileName.endsWith("txt")) {
-            imageIconId = R.drawable.ic_volume_file_typ_txt;
+            imageIconId = R.drawable.baselib_file_type_txt;
         } else if (fileName.endsWith("zip")) {
-            imageIconId = R.drawable.ic_volume_file_typ_zip;
+            imageIconId = R.drawable.baselib_file_type_zip;
         } else if (fileName.endsWith("rar")) {
-            imageIconId = R.drawable.ic_volume_file_typ_zip;
+            imageIconId = R.drawable.baselib_file_type_zip;
         } else if (fileName.endsWith("jpg") || fileName.endsWith("png") || fileName.endsWith("jpeg") || fileName.endsWith("dng")) {
-            imageIconId = R.drawable.ic_volume_file_typ_img;
+            imageIconId = R.drawable.baselib_file_type_img;
         } else if (fileName.endsWith("mp4") || fileName.endsWith("avi") || fileName.endsWith("wma") || fileName.endsWith("rmvb") || fileName.endsWith("3gp")
                 || fileName.endsWith("mid") || fileName.endsWith("flash") || fileName.endsWith("rm")) {
-            imageIconId = R.drawable.ic_volume_file_typ_video;
+            imageIconId = R.drawable.baselib_file_type_video;
         } else if (fileName.endsWith("wave") || fileName.endsWith("aiff") || fileName.endsWith("mpeg") || fileName.endsWith("mp3") || fileName.endsWith("mpeg-4")
                 || fileName.endsWith("midi") || fileName.endsWith("amr") || fileName.endsWith("ape") || fileName.endsWith("flac") || fileName.endsWith("aac")) {
-            imageIconId = R.drawable.ic_volume_file_typ_audio;
+            imageIconId = R.drawable.baselib_file_type_audio;
         }
         return imageIconId;
     }

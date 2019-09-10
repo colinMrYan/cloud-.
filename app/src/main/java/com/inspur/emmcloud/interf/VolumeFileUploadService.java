@@ -5,7 +5,7 @@ package com.inspur.emmcloud.interf;
  */
 
 public interface VolumeFileUploadService {
-    void onDestory();
+    void onDestroy();
 
     void setProgressCallback(ProgressCallback progressCallback);
 

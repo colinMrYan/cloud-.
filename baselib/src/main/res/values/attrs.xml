@@ -415,4 +415,12 @@
         <attr name="loading_color" format="color" />
     </declare-styleable>
     <attr name="CusLoadingStyle" format="reference" />
+
+    <declare-styleable name="TasksCompletedView">
+        <attr name="radius" format="dimension" />
+        <attr name="strokeWidth" format="dimension" />
+        <attr name="circleColor" format="color" />
+        <attr name="ringColor" format="color" />
+        <attr name="ringBgColor" format="color" />
+    </declare-styleable>
 </resources>

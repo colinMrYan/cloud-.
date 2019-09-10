@@ -13,7 +13,6 @@ import android.widget.TextView;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
-import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.interf.ProgressCallback;
 import com.inspur.emmcloud.util.privates.VolumeFileIconUtils;
@@ -36,7 +35,6 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
     private Context context;
     private List<VolumeFile> volumeFileList;
     private MyItemClickListener mItemClickListener;
-    private MyItemDropDownImgClickListener myItemDropDownImgClickListener;
     private boolean isMultiselect = false;
     private List<VolumeFile> selectVolumeFileList = new ArrayList<>();
     private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -136,6 +134,7 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
      * @param newVolumeFile
      */
     public void replaceVolumeFileData(VolumeFile mockVolumeFile, VolumeFile newVolumeFile) {
+        VolumeFileUploadManagerUtils.getInstance().removeVolumeFileUploadService(mockVolumeFile);
         int position = volumeFileList.indexOf(mockVolumeFile);
         if (position != -1) {
             volumeFileList.remove(position);
@@ -149,7 +148,7 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.app_volume_file_item_view, parent, false);
-        ViewHolder holder = new ViewHolder(view, mItemClickListener, myItemDropDownImgClickListener);
+        ViewHolder holder = new ViewHolder(view, mItemClickListener);
         return holder;
     }
 
@@ -179,7 +178,12 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
 //        }
 
         holder.fileNameText.setText(volumeFile.getName());
-        holder.fileSizeText.setText(FileUtils.formatFileSize(volumeFile.getSize()));
+        if (volumeFile.getType().equals(VolumeFile.FILE_TYPE_DIRECTORY)) {
+            holder.fileSizeText.setVisibility(View.INVISIBLE);
+        } else {
+            holder.fileSizeText.setVisibility(View.VISIBLE);
+            holder.fileSizeText.setText(FileUtils.formatFileSize(volumeFile.getSize()));
+        }
         String fileTime = TimeUtils.getTime(volumeFile.getLastUpdate(), format);
         holder.fileTimeText.setText(fileTime);
         if (!isStatusNomal) {
@@ -208,25 +212,6 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
                     notifyItemChanged(position);
                 }
             });
-            holder.uploadOperationText.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (volumeFile.getStatus().equals(VolumeFile.STATUS_UPLOADIND)) {
-                        //取消上传
-                        VolumeFileUploadManagerUtils.getInstance().removeVolumeFileUploadService(volumeFile);
-                        volumeFileList.remove(position);
-                        notifyItemRemoved(position);
-                        notifyItemRangeChanged(0, getItemCount());
-                    } else if (NetUtils.isNetworkConnected(context)) {
-                        //重新上传
-                        volumeFile.setStatus(VolumeFile.STATUS_UPLOADIND);
-                        VolumeFileUploadManagerUtils.getInstance().reUploadFile(volumeFile);
-                        notifyItemChanged(position);
-                    }
-
-
-                }
-            });
         }
     }
 
@@ -239,19 +224,13 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
         this.mItemClickListener = myItemClickListener;
     }
 
-    public void setItemDropDownImgClickListener(MyItemDropDownImgClickListener myItemDropDownImgClickListener) {
-        this.myItemDropDownImgClickListener = myItemDropDownImgClickListener;
-    }
-
 
     public interface MyItemClickListener {
         void onItemClick(View view, int position);
-
         void onItemLongClick(View view, int position);
-    }
-
-    public interface MyItemDropDownImgClickListener {
         void onItemDropDownImgClick(View view, int position);
+
+        void onItemOperationTextClick(View view, int position);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
@@ -278,27 +257,27 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
         @BindView(R.id.file_operation_drop_down_img)
         ImageView fileOperationDropDownImg;
         private MyItemClickListener myItemClickListener;
-        private MyItemDropDownImgClickListener myItemDropDownImgClickListener;
 
-        public ViewHolder(View itemView, MyItemClickListener myItemClickListener, MyItemDropDownImgClickListener myItemDropDownImgClickListener) {
+        public ViewHolder(View itemView, MyItemClickListener myItemClickListener) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             this.myItemClickListener = myItemClickListener;
-            this.myItemDropDownImgClickListener = myItemDropDownImgClickListener;
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
             fileOperationDropDownImg.setOnClickListener(this);
+            uploadOperationText.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
-            if (v.getId() == R.id.file_operation_drop_down_img) {
-                if (myItemDropDownImgClickListener != null) {
-                    myItemDropDownImgClickListener.onItemDropDownImgClick(v, getAdapterPosition());
+            if (myItemClickListener != null) {
+                if (v.getId() == R.id.file_operation_drop_down_img) {
+                    myItemClickListener.onItemDropDownImgClick(v, getAdapterPosition());
+                } else if (v.getId() == R.id.upload_cancel_text) {
+                    myItemClickListener.onItemOperationTextClick(v, getAdapterPosition());
+                } else {
+                    myItemClickListener.onItemClick(v, getAdapterPosition());
                 }
-
-            } else if (myItemClickListener != null) {
-                myItemClickListener.onItemClick(v, getAdapterPosition());
             }
         }
 

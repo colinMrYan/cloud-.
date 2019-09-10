@@ -86,7 +86,7 @@ public class GetVolumeFileUploadTokenResult {
         this.callbackUrl = callbackUrl;
     }
 
-    public String getCallbackBody() {
+    public String getCallbackBodyEncode() {
         StringBuffer buffer = new StringBuffer(callbackBody);
         Pattern pattern = Pattern.compile("x:path=(.*?)\\|\\d+");
         Matcher matcher = pattern.matcher(callbackBody);
@@ -101,6 +101,10 @@ public class GetVolumeFileUploadTokenResult {
             }
         }
 
+        return callbackBody;
+    }
+
+    public String getCallbackBody() {
         return callbackBody;
     }
 

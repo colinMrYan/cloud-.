@@ -419,4 +419,17 @@ public class ConversationCacheUtils {
             e.printStackTrace();
         }
     }
+
+    public static List<Conversation> getConversationListByIdList(Context context, List<String> conversationIdList) {
+        List<Conversation> conversationList = new ArrayList<>();
+        try {
+            conversationList = DbCacheUtils.getDb(context).selector(Conversation.class).where("id", "in", conversationIdList).findAll();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (conversationList == null) {
+            conversationList = new ArrayList<>();
+        }
+        return conversationList;
+    }
 }
