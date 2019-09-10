@@ -687,6 +687,15 @@ public class ECMChatInputMenu extends LinearLayout {
         waterWaveProgress.setProgress(0);
 //        mediaPlayerUtils.playVoiceOn();
         voice2StringMessageUtils.initVoiceParam();
+        setLanguageText();
+    }
+
+    private void setLanguageText() {
+        String language = LanguageManager.getInstance().getVoiceInputLanguage();
+        if (StringUtils.isBlank(language)) {
+            language = LanguageManager.getInstance().getCurrentAppLanguage();
+        }
+        languageTv.setText(language.equals("en") ? R.string.voice_input_language_english : R.string.voice_input_language_mandarin);
     }
 
     public void setChatDrafts(String drafts) {
