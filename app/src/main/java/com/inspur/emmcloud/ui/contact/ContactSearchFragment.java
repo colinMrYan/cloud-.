@@ -59,6 +59,7 @@ import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
+import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.CommonContactCacheUtils;
@@ -76,7 +77,6 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -1206,21 +1206,6 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
     }
 
     /**
-     * 英文名
-     */
-    public String getEnglishName(SearchModel searchModel) {
-        String englishName = null;
-        if (searchModel.getType().equals(SearchModel.TYPE_USER)) {
-            ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(searchModel.getId());
-            if (contactUser != null) {
-                englishName = contactUser.getNameGlobal();
-            }
-        }
-
-        return englishName;
-    }
-
-    /**
      * 中文名+英文名
      *
      * @return
@@ -1243,52 +1228,6 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
 //            completeName = completeName + "（" + globalName + "）";
 //        }
         return completeName;
-    }
-
-    /**
-     * 获取二 三级组织
-     */
-    private String getOrgName(SearchModel searchModel) {
-        ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(searchModel.getId());
-        String orgNameOrID = contactUser.getParentId();
-        String root = "root";
-        List<String> orgNameList = new ArrayList<>();
-        while (!root.equals(orgNameOrID)) {
-            ContactOrg contactOrgTest = ContactOrgCacheUtils.getContactOrg(orgNameOrID);
-            orgNameOrID = contactOrgTest.getName();
-            orgNameList.add(orgNameOrID);
-            orgNameOrID = contactOrgTest.getParentId();
-        }
-        Collections.reverse(orgNameList);
-        if (orgNameList.size() > 1) {
-            if (orgNameList.size() == 2) {
-                return orgNameList.get(1);
-            } else {
-                return orgNameList.get(1) + "-" + orgNameList.get(2);
-            }
-        }
-        return null;
-    }
-
-    private void setUserDescText(SearchModel searchModel, TextView textView) {
-        if (searchModel.getType().equals(SearchModel.TYPE_USER)) {
-            String enName = getEnglishName(searchModel);
-            String orgName = getOrgName(searchModel);
-            if (StringUtils.isBlank(enName) && StringUtils.isBlank(orgName)) {
-                textView.setVisibility(View.GONE);
-            } else {
-                textView.setVisibility(View.VISIBLE);
-                if (StringUtils.isBlank(enName)) {
-                    textView.setText(orgName);
-                } else if (StringUtils.isBlank(orgName)) {
-                    textView.setText(enName);
-                } else {
-                    textView.setText(enName + "  |  " + orgName);
-                }
-            }
-        } else {
-            textView.setVisibility(View.GONE);
-        }
     }
 
     public interface MyItemClickListener {
@@ -1496,7 +1435,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                 searchModel = openGroupChannelList.get(position);
                 viewHolder.nameText.setText(searchModel.getName());
             }
-            setUserDescText(searchModel, viewHolder.descTv);
+            CommunicationUtils.setUserDescText(searchModel, viewHolder.descTv, false);
 
             if (searchModel != null) {
                 displayImg(searchModel, viewHolder.photoImg);
@@ -1563,7 +1502,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                 viewHolder.selectedImg.setVisibility(View.INVISIBLE);
                 viewHolder.nameText.setTextColor(Color.parseColor("#030303"));
             }
-            setUserDescText(searchModel, viewHolder.descTv);
+            CommunicationUtils.setUserDescText(searchModel, viewHolder.descTv, true);
 
             return convertView;
         }
@@ -1630,7 +1569,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
             }
             displayImg(searchModel, viewHolder.photoImg);
             viewHolder.nameText.setText(getCompleteName(searchModel));
-            setUserDescText(searchModel, viewHolder.descTv);
+            CommunicationUtils.setUserDescText(searchModel, viewHolder.descTv, true);
             if (selectMemList.contains(searchModel)) {
                 viewHolder.selectedImg.setVisibility(View.VISIBLE);
             } else {
