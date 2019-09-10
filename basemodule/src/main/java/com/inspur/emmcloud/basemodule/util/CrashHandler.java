@@ -1,21 +1,20 @@
 package com.inspur.emmcloud.basemodule.util;
 
 import android.content.Context;
+import android.os.Build;
+import android.os.StrictMode;
 import android.util.Log;
 
-import com.inspur.emmcloud.baselib.util.JSONUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
-import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
 import com.inspur.emmcloud.basemodule.api.BaseModuleApiUri;
-import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
-import com.inspur.emmcloud.basemodule.api.HttpUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.AppException;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.xutils.http.HttpMethod;
 import org.xutils.http.RequestParams;
+import org.xutils.x;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -53,9 +52,9 @@ public class CrashHandler implements UncaughtExceptionHandler {
         Log.d("jason", "errorInfo=" + errorInfo);
         Log.e("AndroidRuntime", errorInfo);
         AppExceptionCacheUtils.saveAppException(mContext, 1, "", errorInfo, 0);
+//        AppException appException = new AppException(System.currentTimeMillis(), AppUtils.getVersion(mContext),1,"", errorInfo, 0);
         AppException appException = AppExceptionCacheUtils.getAppExceptionListByLevel(mContext, 1);
-        LogUtils.YfcDebug("查询到的异常:" + JSONUtils.toJSONString(appException));
-        uploadException(mContext, getUploadContentJSONObj(appException), appException);
+        uploadException(mContext, appException);
         //如果系统提供了默认的异常处理器，则交给系统去结束我们的程序，否则就由我们自己结束自己
         if (mDefaultHandler != null) {
             mDefaultHandler.uncaughtException(thread, throwable);
@@ -73,35 +72,26 @@ public class CrashHandler implements UncaughtExceptionHandler {
     }
 
     /**
-     * 上传异常
-     *
+     * 上传异常,修改严格模式设置使异常上传放在主线程执行
      * @param mContext
-     * @param exception
      */
-    private void uploadException(final Context mContext, final JSONObject exception, final AppException appException) {
+    private void uploadException(final Context mContext, final AppException appException) {
+        JSONObject jsonObject = getUploadContentJSONObj(appException);
         if (NetUtils.isNetworkConnected(mContext, false) && !AppUtils.isApkDebugable(mContext)) {
             final String completeUrl = BaseModuleApiUri.getUploadExceptionUrl();
             RequestParams params = ((BaseApplication) mContext.getApplicationContext()).getHttpRequestParams(completeUrl);
             params.setAsJsonContent(true);
-            params.setBodyContent(exception.toString());
-            HttpUtils.request(mContext, CloudHttpMethod.POST, params, new BaseModuleAPICallback(mContext, completeUrl) {
-
-                @Override
-                public void callbackTokenExpire(long requestTime) {
-                    // TODO Auto-generated method stub
-                }
-
-                @Override
-                public void callbackSuccess(byte[] arg0) {
-                    // TODO Auto-generated method stub
-                    AppExceptionCacheUtils.deleteAppException(mContext, appException);
-                }
-
-                @Override
-                public void callbackFail(String error, int responseCode) {
-                    // TODO Auto-generated method stub
-                }
-            });
+            params.setBodyContent(jsonObject.toString());
+            if (Build.VERSION.SDK_INT >= 11) {
+                StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectDiskReads().detectDiskWrites().detectNetwork().penaltyLog().build());
+                StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectLeakedSqlLiteObjects().detectLeakedClosableObjects().penaltyLog().penaltyDeath().build());
+            }
+            try {
+                x.http().requestSync(HttpMethod.POST, params, JSONObject.class);
+                AppExceptionCacheUtils.deleteAppException(mContext, appException);
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
         }
     }
 
@@ -141,7 +131,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
             contentObj.put("deviceOSVersion", android.os.Build.VERSION.RELEASE);
             contentObj.put("deviceModel", android.os.Build.MODEL);
             JSONArray errorDataArray = new JSONArray();
-            errorDataArray.put(appException);
+            errorDataArray.put(appException.toJSONObject());
             contentObj.put("errorData", errorDataArray);
         } catch (Exception e) {
             e.printStackTrace();
