@@ -18,6 +18,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.GroupMessageSearchAdapter;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
 import com.inspur.emmcloud.baselib.widget.ClearEditText;
 import com.inspur.emmcloud.basemodule.bean.SearchModel;
@@ -137,7 +138,11 @@ public class CommunicationSearchMessagesActivity extends BaseActivity {
             public void afterTextChanged(Editable s) {
                 searchMessagesList.clear();
                 String keyWords = s.toString();
-                searchMessagesList = MessageCacheUtil.getMessageListByContent(CommunicationSearchMessagesActivity.this, keyWords, conversationFromChatContent.getConversation().getId());
+                if (StringUtils.isBlank(keyWords)) {
+                    searchMessagesList = new ArrayList<>();
+                } else {
+                    searchMessagesList = MessageCacheUtil.getMessageListByContent(CommunicationSearchMessagesActivity.this, keyWords, conversationFromChatContent.getConversation().getId());
+                }
                 groupMessageSearchAdapter.setAndRefreshAdapter(searchMessagesList, keyWords);
             }
         });
