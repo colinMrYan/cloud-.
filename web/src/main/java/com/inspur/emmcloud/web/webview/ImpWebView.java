@@ -18,7 +18,6 @@ import android.webkit.WebSettings;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -67,7 +66,6 @@ public class ImpWebView extends WebView {
     private ProgressBar progressbar;
     private ImpWebChromeClient impWebChromeClient;
     private TextView titleText;
-    private LinearLayout loadFailLayout;
     private Handler handler;
     private FrameLayout frameLayout;
     private PluginMgr pluginMgr;
@@ -81,9 +79,8 @@ public class ImpWebView extends WebView {
         this.context = context;
     }
 
-    public void setProperty(TextView titleText, LinearLayout loadFailLayout, FrameLayout layout, ImpCallBackInterface impCallBackInterface) {
+    public void setProperty(TextView titleText, FrameLayout layout, ImpCallBackInterface impCallBackInterface) {
         this.titleText = titleText;
-        this.loadFailLayout = loadFailLayout;
         this.frameLayout = layout;
         this.impCallBackInterface = impCallBackInterface;
         this.setWebView();
@@ -186,7 +183,7 @@ public class ImpWebView extends WebView {
         setNetworkAvailable(true);
 
         this.setBackgroundColor(Color.WHITE);
-        this.setWebViewClient(new ImpWebViewClient(loadFailLayout, impCallBackInterface));
+        this.setWebViewClient(new ImpWebViewClient(impCallBackInterface));
         // 使WebView支持弹出框
         impWebChromeClient = new ImpWebChromeClient(context, this, frameLayout);
         this.setWebChromeClient(impWebChromeClient);
