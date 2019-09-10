@@ -113,7 +113,7 @@ public class AppExceptionCacheUtils {
     }
 
     /**
-     * 获取指定级别的异常列表
+     * 获取指定级别的异常,返回一条
      *
      * @param context
      * @param errorLevel
