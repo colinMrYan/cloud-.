@@ -14,7 +14,7 @@ public class VolumeFileUploadInfo {
     private ProgressCallback progressCallback;
     private String localFilePath;
     private GetVolumeFileUploadTokenResult getVolumeFileUploadTokenResult;
-
+    private int transferObserverId = -1;
     public VolumeFileUploadInfo(VolumeFileUploadService volumeFileUploadService, VolumeFile volumeFile, String volumeFileParentPath, ProgressCallback progressCallback, String localFilePath) {
         this.volumeFileUploadService = volumeFileUploadService;
         this.volumeFile = volumeFile;
@@ -69,5 +69,13 @@ public class VolumeFileUploadInfo {
 
     public void setGetVolumeFileUploadTokenResult(GetVolumeFileUploadTokenResult getVolumeFileUploadTokenResult) {
         this.getVolumeFileUploadTokenResult = getVolumeFileUploadTokenResult;
+    }
+
+    public int getTransferObserverId() {
+        return transferObserverId;
+    }
+
+    public void setTransferObserverId(int transferObserverId) {
+        this.transferObserverId = transferObserverId;
     }
 }

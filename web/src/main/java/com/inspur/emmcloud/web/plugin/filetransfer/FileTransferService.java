@@ -645,6 +645,7 @@ public class FileTransferService extends ImpPlugin {
             if (!StrUtil.strIsNotNull(fileType)) {
                 fileType = urlConnection.getContentType();
             }
+            clearFiles(filename);
             if (StrUtil.strIsNotNull(fileName)) {
                 file = new File(absoluteFilePath + fileName);
             } else {
@@ -702,6 +703,21 @@ public class FileTransferService extends ImpPlugin {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    /**
+     * 清除文件
+     *
+     * @param fileName
+     */
+    private void clearFiles(String fileName) {
+        String fileNameWithoutExtension = FileUtils.getFileNameWithoutExtension(fileName);
+        String fileExtension = FileUtils.getFileExtension(fileName);
+        FileUtils.deleteFile(StrUtil.strIsNotNull(fileName) ? (absoluteFilePath + fileName) : (absoluteFilePath + fileName));
+        if (fileExtension.contains("db")) {
+            FileUtils.deleteFile(absoluteFilePath + fileNameWithoutExtension + "." + fileExtension + "-shm");
+            FileUtils.deleteFile(absoluteFilePath + fileNameWithoutExtension + "." + fileExtension + "-wal");
         }
     }
 

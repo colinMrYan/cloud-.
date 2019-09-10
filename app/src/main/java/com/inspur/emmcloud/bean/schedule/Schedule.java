@@ -57,7 +57,7 @@ public class Schedule implements Serializable {
     @Column(name = "isCommunity")
     private Boolean isCommunity = false;//是否公开（别人可以关注你的日程，此属性决定了当前日程是否对别人可见）
     @Column(name = "syncToLocal")
-    private Boolean syncToLocal = false;//是否将日程信息同步到 移动设备日历里边。
+    private Boolean syncToLocal = true;//是否将日程信息同步到 移动设备日历里边。
     @Column(name = "remindEvent")
     private String remindEvent = "";
     @Column(name = "state")
