@@ -20,6 +20,7 @@ import android.net.TrafficStats;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -29,6 +30,7 @@ import android.util.DisplayMetrics;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.github.zafarkhaja.semver.Version;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.EncryptUtils;
@@ -548,11 +550,16 @@ public class AppUtils {
      * 调用文件系统
      */
     public static void openFileSystem(Activity activity, int requestCode) {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("*/*");
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        activity.startActivityForResult(
-                Intent.createChooser(intent, activity.getString(R.string.meeting_file_upload_tips)), requestCode);
+        openFileSystem(activity, requestCode, 1);
+    }
+
+    /**
+     * 调用文件系统
+     */
+    public static void openFileSystem(Activity activity, int requestCode, int maximum) {
+        Bundle bundle = new Bundle();
+        bundle.putInt("extra_maximum", maximum);
+        ARouter.getInstance().build(Constant.AROUTER_CLASS_WEB_FILEMANAGER).with(bundle).navigation(activity, requestCode);
     }
 
     /**

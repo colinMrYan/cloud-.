@@ -85,36 +85,27 @@ public class ECMChatInputMenu extends LinearLayout {
     private static final int TAG_KEYBOARD_INPUT = 0;
     private static final int TAG_VOICE_INPUT = 1;
     private static final int TOPDELY_TIMES = 17;
-    @BindView(R.id.input_edit)
-    ChatInputEdit inputEdit;
-
-    @BindView(R.id.add_btn)
-    ImageButton addBtn;
-
-    @BindView(R.id.send_msg_btn)
-    Button sendMsgBtn;
-
-    @BindView(R.id.add_menu_layout)
-    RelativeLayout addMenuLayout;
-
-    @BindView(R.id.viewpager_layout)
-    ECMChatInputMenuViewpageLayout viewpagerLayout;
-
-    @BindView(R.id.voice_input_layout)
-    RelativeLayout voiceInputLayout;
-
-    @BindView(R.id.voice_btn)
-    ImageButton voiceBtn;
-
-    @BindView(R.id.bt_audio_record)
-    AudioRecordButton audioRecordBtn;
-
-    @BindView(R.id.wave_progress_input)
-    WaterWaveProgress waterWaveProgress;
-    private int voiceInputStatus = 1;
     private static final int VOICE_INPUT_STATUS_NORMAL = 1;
     private static final int VOICE_INPUT_STATUS_STOP = 2;
     private static final int VOICE_INPUT_STATUS_SPEAKING = 5;
+    @BindView(R.id.input_edit)
+    ChatInputEdit inputEdit;
+    @BindView(R.id.add_btn)
+    ImageButton addBtn;
+    @BindView(R.id.send_msg_btn)
+    Button sendMsgBtn;
+    @BindView(R.id.add_menu_layout)
+    RelativeLayout addMenuLayout;
+    @BindView(R.id.viewpager_layout)
+    ECMChatInputMenuViewpageLayout viewpagerLayout;
+    @BindView(R.id.voice_input_layout)
+    RelativeLayout voiceInputLayout;
+    @BindView(R.id.voice_btn)
+    ImageButton voiceBtn;
+    @BindView(R.id.bt_audio_record)
+    AudioRecordButton audioRecordBtn;
+    @BindView(R.id.wave_progress_input)
+    WaterWaveProgress waterWaveProgress;
     @BindView(R.id.voice_input_language)
     TextView languageTv;
     @BindView(R.id.voice_input_edit_text)
@@ -125,7 +116,13 @@ public class ECMChatInputMenu extends LinearLayout {
     ImageView voiceInputLevelImg;
     @BindView(R.id.volume_level_img_shade)
     RoundedImageView voiceInputLevelImgShade;   //伴随音量大小
-
+    @BindView(R.id.volume_level_img_complete)
+    VoiceCompleteView voiceInputCompleteView;
+    @BindView(R.id.voice_input_clear)
+    TextView voiceInputClean;
+    @BindView(R.id.voice_input_send)
+    TextView voiceInputSend;
+    private int voiceInputStatus = 1;
     private boolean canMentions = false;
     private ChatInputMenuListener chatInputMenuListener;
     private List<InputTypeBean> inputTypeBeanList = new ArrayList<>();
@@ -142,8 +139,8 @@ public class ECMChatInputMenu extends LinearLayout {
     private Map<String, Boolean> voiceBooleanMap = new HashMap<>();
     private AudioDialogManager audioDialogManager;
     private ECMChatInputMenuCallback inputMenuClickCallback;
-    @BindView(R.id.volume_level_img_complete)
-    VoiceCompleteView voiceInputCompleteView;
+    private List<String> languageList = new ArrayList<>();
+    private ValueAnimator animator;
 
     public ECMChatInputMenu(Context context) {
         this(context, null);
@@ -273,12 +270,6 @@ public class ECMChatInputMenu extends LinearLayout {
         });
     }
 
-    @BindView(R.id.voice_input_clear)
-    TextView voiceInputClean;
-    @BindView(R.id.voice_input_send)
-    TextView voiceInputSend;
-    private List<String> languageList = new ArrayList<>();
-
     /**
      * 初始化语言输入相关
      */
@@ -334,8 +325,6 @@ public class ECMChatInputMenu extends LinearLayout {
         languageList.add(getContext().getString(R.string.voice_input_language_english));    //英語
 //        languageList.add(getContext().getString(R.string.voice_input_language_cantonese));  //粵語
     }
-
-    private ValueAnimator animator;
 
     @SuppressLint("ClickableViewAccessibility")
     private void initVoiceInputView() {
@@ -615,7 +604,7 @@ public class ECMChatInputMenu extends LinearLayout {
                             AppUtils.openCamera((Activity) getContext(), fileName, CAMERA_RESULT);
                             break;
                         case "file":
-                            AppUtils.openFileSystem((Activity) getContext(), CHOOSE_FILE);
+                            AppUtils.openFileSystem((Activity) getContext(), CHOOSE_FILE, 5);
                             break;
                         case "mention":
                             openMentionPage(false);
@@ -1080,6 +1069,10 @@ public class ECMChatInputMenu extends LinearLayout {
                 .show();
     }
 
+    public void setInputMenuClickCallback(ECMChatInputMenuCallback inputMenuClickCallback) {
+        this.inputMenuClickCallback = inputMenuClickCallback;
+    }
+
     public interface ChatInputMenuListener {
         void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList, Map<String, String> mentionsMap);
 
@@ -1089,9 +1082,5 @@ public class ECMChatInputMenu extends LinearLayout {
         void onVoiceCommucaiton();
 
         void onChatDraftsClear();
-    }
-
-    public void setInputMenuClickCallback(ECMChatInputMenuCallback inputMenuClickCallback) {
-        this.inputMenuClickCallback = inputMenuClickCallback;
     }
 }
