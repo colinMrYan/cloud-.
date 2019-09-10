@@ -104,12 +104,19 @@
             android:onClick="onClick"
             android:visibility="gone">
 
+            <ImageView
+                android:id="@+id/iv_all_head"
+                android:layout_width="49dp"
+                android:layout_height="49dp"
+                android:src="@drawable/icon_channel_group_default" />
+
             <TextView
+                android:id="@+id/tv_all_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:padding="10dp"
-                android:text="点我全选" />
+                android:text="@string/chat_search_mention_all" />
         </RelativeLayout>
 
         <FrameLayout

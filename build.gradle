@@ -108,7 +108,7 @@ buildscript {
                     'jcore': 'cn.jiguang.sdk:jcore:2.0.1'],
             ical4j            :'org.mnode.ical4j:ical4j:2.0.1',
             fingerprintidentify : 'com.wei.android.lib:fingerprintidentify:1.2.1',
-            wechatOpenSdk       : 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:5.4.3'
+            wechatOpenSdk       : 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:5.4.3',
             fingerprintidentify : 'com.wei.android.lib:fingerprintidentify:1.2.1',
             S3: [
                     'aws_android_sdk_s3': 'com.amazonaws:aws-android-sdk-s3:2.15.2',

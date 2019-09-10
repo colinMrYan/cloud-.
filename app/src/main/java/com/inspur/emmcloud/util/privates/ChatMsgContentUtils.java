@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.SpannableString;
 import android.text.Spanned;
 
+import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.bean.schedule.MentionsAndUrl;
@@ -35,10 +36,9 @@ public class ChatMsgContentUtils {
             if (mentionsMap.containsKey(key)) {
                 String uid = mentionsMap.get(key);
                 String protocol = "ecm-contact://" + uid;
-                ;
                 String newString;
                 if (uid.equals("10")) {
-                    newString = "@" + "ALL" + " ";
+                    newString = "@" + context.getString(R.string.chat_search_mention_all) + " ";
                 } else {
                     newString = "@" + ContactUserCacheUtils.getUserName(uid) + " ";
                 }

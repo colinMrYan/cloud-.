@@ -441,7 +441,7 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
                 Intent intent = new Intent();
                 try {
                     jsonResult.put("uid", 10);
-                    jsonResult.put("name", "ALL");
+                    jsonResult.put("name", getString(R.string.chat_search_mention_all));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
