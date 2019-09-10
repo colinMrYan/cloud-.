@@ -62,7 +62,6 @@ import com.inspur.emmcloud.util.privates.ChannelInfoUtils;
 import com.inspur.emmcloud.util.privates.ConbineMsg;
 import com.inspur.emmcloud.util.privates.CustomProtocol;
 import com.inspur.emmcloud.util.privates.DirectChannelUtils;
-import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.MsgReadCreationDateCacheUtils;
@@ -553,8 +552,8 @@ public class ChannelV0Activity extends BaseActivity {
             // 文件管理器返回
             if (requestCode == CHOOSE_FILE
                     && NetUtils.isNetworkConnected(getApplicationContext())) {
-                String filePath = GetPathFromUri4kitkat.getPathByUri(MyApplication.getInstance(), data.getData());
-                combinAndSendResFileMsg(filePath);
+                List<String> filePathList = data.getStringArrayListExtra("pathList");
+                combinAndSendResFileMsg(filePathList.get(0));
                 //拍照返回
             } else if (requestCode == CAMERA_RESULT) {
                 String imgPath = data.getExtras().getString(MyCameraActivity.OUT_FILE_PATH);

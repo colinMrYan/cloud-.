@@ -80,7 +80,6 @@ import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.DirectChannelUtils;
-import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.NotificationUpgradeUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
 import com.inspur.emmcloud.util.privates.Voice2StringMessageUtils;
@@ -879,14 +878,19 @@ public class ConversationActivity extends ConversationBaseActivity {
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case RQQUEST_CHOOSE_FILE:
-                    String filePath = GetPathFromUri4kitkat.getPathByUri(MyApplication.getInstance(), data.getData());
-                    File file = new File(filePath);
-                    if (StringUtils.isBlank(FileUtils.getSuffix(file))) {
-                        ToastUtils.show(MyApplication.getInstance(),
-                                getString(R.string.not_support_upload));
-                    } else {
-                        combinAndSendMessageWithFile(filePath, Message.MESSAGE_TYPE_FILE_REGULAR_FILE, null);
+                    List<String> filePathList = data.getStringArrayListExtra("pathList");
+                    for (String filepath : filePathList) {
+                        combinAndSendMessageWithFile(filepath, Message.MESSAGE_TYPE_FILE_REGULAR_FILE, null);
                     }
+
+//                    String filePath = GetPathFromUri4kitkat.getPathByUri(MyApplication.getInstance(), data.getData());
+//                    File file = new File(filePath);
+//                    if (StringUtils.isBlank(FileUtils.getSuffix(file))) {
+//                        ToastUtils.show(MyApplication.getInstance(),
+//                                getString(R.string.not_support_upload));
+//                    } else {
+//                        combinAndSendMessageWithFile(filepath, Message.MESSAGE_TYPE_FILE_REGULAR_FILE, null);
+//                    }
                     break;
                 case REQUEST_CAMERA:
                     String imgPath = getCompressorUrl(data.getExtras().getString(MyCameraActivity.OUT_FILE_PATH));
