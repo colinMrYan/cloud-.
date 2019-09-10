@@ -573,8 +573,9 @@ public class TaskAddActivity extends BaseActivity {
             return;
         }
         for (int i = 0; i < taskParticipantList.size(); i++) {
-            if (i == 3)
+            if (i == 3) {
                 break;
+            }
             final String participantId = taskParticipantList.get(i).getId();
             participantImageUrl.add(APIUri.getUserIconUrl(this, participantId));
             ImageDisplayUtils.getInstance().displayRoundedImage(ImageList[i], participantImageUrl.get(i), R.drawable.icon_person_default, this, 15);
@@ -793,33 +794,6 @@ public class TaskAddActivity extends BaseActivity {
         return membersIds;
     }
 
-    /**
-     * 获取文件类型对应的图标
-     */
-    public int getFileIconByType(String fileType) {
-        int icId = 0;
-        switch (fileType) {
-            case "TEXT":
-                icId = R.drawable.baselib_file_type_txt;
-                break;
-            case "MS_WORD":
-                icId = R.drawable.baselib_file_type_word;
-                break;
-            case "MS_EXCEL":
-                icId = R.drawable.baselib_file_type_excel;
-                break;
-            case "MS_PPT":
-                icId = R.drawable.baselib_file_type_ppt;
-                break;
-            case "JPEG":
-                icId = R.drawable.baselib_file_type_img;
-                break;
-            default:
-                icId = R.drawable.baselib_file_type_unkown;
-                break;
-        }
-        return icId;
-    }
 
     /**
      * 上传任务数据
@@ -830,8 +804,9 @@ public class TaskAddActivity extends BaseActivity {
         taskResult.setTitle(title);
         taskResult.setPriority(priority);
         taskResult.setTags(taskColorTagList);
-        if (deadLineCalendar != null)
+        if (deadLineCalendar != null) {
             taskResult.setDueDate(TimeUtils.localCalendar2UTCCalendar(deadLineCalendar));
+        }
         String taskJson = JSONUtils.toJSONString(taskResult);
         return taskJson;
     }
@@ -880,19 +855,22 @@ public class TaskAddActivity extends BaseActivity {
             } else {
                 otherHolder = (AttachmentHolder) view.getTag();
             }
+            String name = JSONUtils.getString(jsonAttachmentList.get(i).getJsonAttachment(), "name", "");
             if (JSONUtils.getString(jsonAttachmentList.get(i).getJsonAttachment(), "type", "").equals("JPEG")) {
                 String imageUri = getImgPreviewUri(jsonAttachmentList.get(i).getJsonAttachment().toString());
                 ImageDisplayUtils.getInstance().displayImage(otherHolder.attachmentImageView,
                         imageUri, R.drawable.baselib_file_type_img);
             } else {
-                otherHolder.attachmentImageView.setImageResource(getFileIconByType(JSONUtils.getString(jsonAttachmentList.get(i).getJsonAttachment(), "type", "")));
+                otherHolder.attachmentImageView.setImageResource(FileUtils.getFileIconResIdByFileName(name));
             }
-            otherHolder.attachmentNameText.setText(JSONUtils.getString(jsonAttachmentList.get(i).getJsonAttachment(), "name", ""));
+            otherHolder.attachmentNameText.setText(name);
             otherHolder.attachmentDeleteImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (taskType < 2)
+                    if (taskType < 2) {
                         deleteAttachment(num);
+                    }
+
                 }
             });
             return view;

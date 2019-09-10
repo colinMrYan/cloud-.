@@ -127,7 +127,7 @@ public class DocumentActivity extends BaseActivity {
             final String fileName = documentInfo.getFileName();
             final String source = documentInfo.getUri();
             fileNameText.setText(fileName);
-            ImageDisplayUtils.getInstance().displayImage(fileImg, "drawable://" + FileUtils.getIconResId(fileName));
+            ImageDisplayUtils.getInstance().displayImage(fileImg, "drawable://" + FileUtils.getFileIconResIdByFileName(fileName));
             convertView.setOnClickListener(new OnClickListener() {
 
                 @Override

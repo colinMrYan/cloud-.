@@ -15,7 +15,6 @@ import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.interf.ProgressCallback;
-import com.inspur.emmcloud.util.privates.VolumeFileIconUtils;
 import com.inspur.emmcloud.util.privates.VolumeFileUploadManagerUtils;
 
 import java.text.SimpleDateFormat;
@@ -167,16 +166,13 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
         } else {
             holder.fileSelcetImg.setVisibility(View.GONE);
         }
-        int fileTypeImgResId = VolumeFileIconUtils.getIconResId(volumeFile);
-        holder.fileTypeImg.setImageResource(fileTypeImgResId);
-//        holder.fileTypeImg.setTag("");
-//        if (volumeFile.getFormat().startsWith("image/")) {
-//            String url = APIUri.getVolumeFileDownloadUrl(volumeFile, currentDirAbsolutePath);
-//            ImageDisplayUtils.getInstance().displayImageByTag(holder.fileTypeImg, url, R.drawable.ic_volume_file_typ_img);
-//        } else {
-//            holder.fileTypeImg.setImageResource(fileTypeImgResId);
-//        }
-
+        Integer fileIconResId = null;
+        if (volumeFile.getType().equals(VolumeFile.FILE_TYPE_DIRECTORY)) {
+            fileIconResId = R.drawable.baselib_file_type_folder;
+        } else {
+            fileIconResId = FileUtils.getFileIconResIdByFileName(volumeFile.getName());
+        }
+        holder.fileTypeImg.setImageResource(fileIconResId);
         holder.fileNameText.setText(volumeFile.getName());
         if (volumeFile.getType().equals(VolumeFile.FILE_TYPE_DIRECTORY)) {
             holder.fileSizeText.setVisibility(View.INVISIBLE);
