@@ -1504,6 +1504,9 @@ public class ConversationActivity extends ConversationBaseActivity {
             case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
                 transmitTextMsg(cid, uiMessage);
                 break;
+            case Message.MESSAGE_TYPE_EXTENDED_LINKS:
+                transmitLinkMsg(cid, uiMessage);
+                break;
             default:
                 break;
         }
@@ -1517,6 +1520,21 @@ public class ConversationActivity extends ConversationBaseActivity {
             ChatAPIService apiService = new ChatAPIService(this);
             apiService.setAPIInterface(new WebService());
             apiService.shareFileToFriendsFromVolume(volumeFile.getVolume(), cid, path, volumeFile);
+        }
+    }
+
+    /**
+     * 转发链接消息
+     *
+     * @param cid
+     */
+    private void transmitLinkMsg(String cid, UIMessage uiMessage) {
+        if (WebSocketPush.getInstance().isSocketConnect()) {
+            Message localMessage = CommunicationUtils.combinLocalExtendedLinksMessageHaveContent(cid, uiMessage.getMessage().getContent());
+            WSAPIService.getInstance().sendChatExtendedLinksMsg(localMessage);
+            ToastUtils.show(R.string.chat_transmit_message_success);
+        } else {
+            ToastUtils.show(R.string.chat_transmit_message_fail);
         }
     }
 
@@ -1591,6 +1609,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
                 break;
             case Message.MESSAGE_TYPE_EXTENDED_LINKS:
+                items = new int[]{R.string.chat_long_click_transmit};
                 break;
             case Message.MESSAGE_TYPE_MEDIA_VOICE:
                 break;
@@ -1847,6 +1866,9 @@ public class ConversationActivity extends ConversationBaseActivity {
                 case Message.MESSAGE_TYPE_TEXT_PLAIN:
                 case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
                     result = uiMessage2Content(uiMessage);
+                    break;
+                case Message.MESSAGE_TYPE_EXTENDED_LINKS:
+                    result = getString(R.string.baselib_share_link) + " " + jsonObject.getString("title");
                     break;
             }
         } catch (JSONException e) {

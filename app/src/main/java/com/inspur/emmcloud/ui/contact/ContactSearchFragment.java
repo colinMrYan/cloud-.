@@ -1270,6 +1270,27 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
         return null;
     }
 
+    private void setUserDescText(SearchModel searchModel, TextView textView) {
+        if (searchModel.getType().equals(SearchModel.TYPE_USER)) {
+            String enName = getEnglishName(searchModel);
+            String orgName = getOrgName(searchModel);
+            if (StringUtils.isBlank(enName) && StringUtils.isBlank(orgName)) {
+                textView.setVisibility(View.GONE);
+            } else {
+                textView.setVisibility(View.VISIBLE);
+                if (StringUtils.isBlank(enName)) {
+                    textView.setText(orgName);
+                } else if (StringUtils.isBlank(orgName)) {
+                    textView.setText(enName);
+                } else {
+                    textView.setText(enName + "  |  " + orgName);
+                }
+            }
+        } else {
+            textView.setVisibility(View.GONE);
+        }
+    }
+
     public interface MyItemClickListener {
         void onItemClick(View view, int position);
     }
@@ -1475,25 +1496,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                 searchModel = openGroupChannelList.get(position);
                 viewHolder.nameText.setText(searchModel.getName());
             }
-
-            if (searchModel.getType().equals(SearchModel.TYPE_USER)) {
-                String enName = getEnglishName(searchModel);
-                String orgName = getOrgName(searchModel);
-                if (StringUtils.isBlank(enName) && StringUtils.isBlank(orgName)) {
-                    viewHolder.descTv.setVisibility(View.GONE);
-                } else {
-                    viewHolder.descTv.setVisibility(View.VISIBLE);
-                    if (StringUtils.isBlank(enName)) {
-                        viewHolder.descTv.setText(orgName);
-                    } else if (StringUtils.isBlank(orgName)) {
-                        viewHolder.descTv.setText(enName);
-                    } else {
-                        viewHolder.descTv.setText(enName + "  |  " + orgName);
-                    }
-                }
-            } else {
-                viewHolder.descTv.setVisibility(View.GONE);
-            }
+            setUserDescText(searchModel, viewHolder.descTv);
 
             if (searchModel != null) {
                 displayImg(searchModel, viewHolder.photoImg);
@@ -1560,25 +1563,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                 viewHolder.selectedImg.setVisibility(View.INVISIBLE);
                 viewHolder.nameText.setTextColor(Color.parseColor("#030303"));
             }
-
-            if (searchModel.getType().equals(SearchModel.TYPE_USER)) {
-                String enName = getEnglishName(searchModel);
-                String orgName = getOrgName(searchModel);
-                if (StringUtils.isBlank(enName) && StringUtils.isBlank(orgName)) {
-                    viewHolder.descTv.setVisibility(View.GONE);
-                } else {
-                    viewHolder.descTv.setVisibility(View.VISIBLE);
-                    if (StringUtils.isBlank(enName)) {
-                        viewHolder.descTv.setText(orgName);
-                    } else if (StringUtils.isBlank(orgName)) {
-                        viewHolder.descTv.setText(enName);
-                    } else {
-                        viewHolder.descTv.setText(enName + "  |  " + orgName);
-                    }
-                }
-            } else {
-                viewHolder.descTv.setVisibility(View.GONE);
-            }
+            setUserDescText(searchModel, viewHolder.descTv);
 
             return convertView;
         }
@@ -1645,24 +1630,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
             }
             displayImg(searchModel, viewHolder.photoImg);
             viewHolder.nameText.setText(getCompleteName(searchModel));
-            if (searchModel.getType().equals(SearchModel.TYPE_USER)) {
-                String enName = getEnglishName(searchModel);
-                String orgName = getOrgName(searchModel);
-                if (StringUtils.isBlank(enName) && StringUtils.isBlank(orgName)) {
-                    viewHolder.descTv.setVisibility(View.GONE);
-                } else {
-                    viewHolder.descTv.setVisibility(View.VISIBLE);
-                    if (StringUtils.isBlank(enName)) {
-                        viewHolder.descTv.setText(orgName);
-                    } else if (StringUtils.isBlank(orgName)) {
-                        viewHolder.descTv.setText(enName);
-                    } else {
-                        viewHolder.descTv.setText(enName + "  |  " + orgName);
-                    }
-                }
-            } else {
-                viewHolder.descTv.setVisibility(View.GONE);
-            }
+            setUserDescText(searchModel, viewHolder.descTv);
             if (selectMemList.contains(searchModel)) {
                 viewHolder.selectedImg.setVisibility(View.VISIBLE);
             } else {

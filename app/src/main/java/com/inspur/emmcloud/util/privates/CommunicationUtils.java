@@ -315,6 +315,17 @@ public class CommunicationUtils {
         return message;
     }
 
+    public static Message combinLocalExtendedLinksMessageHaveContent(String cid, String content) {
+        String tracer = getTracer();
+        Message message = combinLocalMessageCommon();
+        message.setChannel(cid);
+        message.setId(tracer);
+        message.setTmpId(tracer);
+        message.setType("extended/links");
+        message.setContent(content);
+        return message;
+    }
+
 
     public static Message combinLocalReplyAttachmentCardMessage(ContactUser contactUser, String cid, String fromUser) {
         String currentTime = System.currentTimeMillis() + "";

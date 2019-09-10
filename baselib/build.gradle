@@ -144,7 +144,6 @@ dependencies {
     androidTestApi('com.android.support.test:rules:0.5') {
         exclude module: 'support-annotations'
     }
-    api deps.Toast
     api deps.ARouter.arouter_api
     api deps.ical4j
     api deps.fingerprintidentify

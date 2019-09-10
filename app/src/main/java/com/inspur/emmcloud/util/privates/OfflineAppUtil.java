@@ -2,8 +2,8 @@ package com.inspur.emmcloud.util.privates;
 
 import android.app.Activity;
 
-import com.hjq.toast.ToastUtils;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.util.ZipUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.api.APIDownloadCallBack;
