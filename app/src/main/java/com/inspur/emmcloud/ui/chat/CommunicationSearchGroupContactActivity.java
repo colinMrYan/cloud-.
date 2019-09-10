@@ -18,6 +18,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
@@ -112,6 +113,7 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
     @Override
     public void onCreate() {
         ButterKnife.bind(this);
+        ImmersionBar.with(this).statusBarColor(R.color.search_contact_header_bg).statusBarDarkFont(true, 0.2f).init();
         handMessage();
         initSearchRunnable();
         groupAdapter = new GroupOrContactAdapter();
@@ -137,6 +139,11 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
     @Override
     public int getLayoutResId() {
         return R.layout.communication_search_group_contact_activity;
+    }
+
+    @Override
+    protected int getStatusType() {
+        return STATUS_NO_SET;
     }
 
     /**

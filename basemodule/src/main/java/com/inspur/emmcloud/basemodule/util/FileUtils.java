@@ -245,10 +245,10 @@ public class FileUtils {
     /**
      * write file
      *
-     * @param filePath   the file to be opened for writing.
-     * @param stream the input stream
-     * @param append if <code>true</code>, then bytes will be written to the end of
-     *               the file rather than the beginning
+     * @param filePath the file to be opened for writing.
+     * @param stream   the input stream
+     * @param append   if <code>true</code>, then bytes will be written to the end of
+     *                 the file rather than the beginning
      * @return return true
      * @throws RuntimeException if an error occurs while operator FileOutputStream
      */
@@ -1018,109 +1018,110 @@ public class FileUtils {
         }
     }
 
-    /**
-     * 获取文件标识图片
-     *
-     * @param fileName
-     */
-    public static int getIconResId(String fileName) {
-        fileName = fileName.toLowerCase();
-        int imageIconId = R.drawable.icon_file_unknown;
-        if (fileName.endsWith("doc") || fileName.endsWith("docx")) {
-            imageIconId = R.drawable.icon_file_word;
-        } else if (fileName.endsWith("xls") || fileName.endsWith("xlsx")) {
-            imageIconId = R.drawable.icon_file_excel;
-        } else if (fileName.endsWith("ppt") || fileName.endsWith("pptx")) {
-            imageIconId = R.drawable.icon_file_ppt;
-        } else if (fileName.endsWith("pdf")) {
-            imageIconId = R.drawable.icon_file_pdf;
-        } else if (fileName.endsWith("txt")) {
-            imageIconId = R.drawable.icon_txt;
-        } else if (fileName.endsWith("zip")) {
-            imageIconId = R.drawable.icon_file_zip;
-        } else if (fileName.endsWith("rar")) {
-            imageIconId = R.drawable.icon_file_rar;
-        } else if (fileName.contains("jpg") || fileName.contains("png")) {
-            imageIconId = R.drawable.icon_file_photos;
-        }
-        return imageIconId;
-    }
 
     /**
      * 根据文件名得到类型
      *
-     * @param fileName
+     * @param format
      * @return
      */
-    public static String getFileTypeByName(String fileName) {
-        String fileType = CLOUD_UNKNOWN_FILE_TYPE;
-        String suffix = getFileExtension(fileName);
-        switch (suffix) {
-            case "doc":
-            case "docx":
-            case "xls":
-            case "xlsx":
-            case "ppt":
-            case "pptx":
-            case "pdf":
-            case "txt":
-                fileType = CLOUD_DOCUMENT;
-                break;
-            case "jpg":
-            case "png":
-                fileType = CLOUD_PICTURE;
-                break;
-            case "mp3":
-            case "amr":
-            case "aac":
-            case "wav":
-                fileType = CLOUD_AUDIO;
-                break;
-            case "mp4":
-            case "rmvb":
-            case "mkv":
-            case "flv":
-                fileType = CLOUD_VIDEO;
-                break;
-            default:
-                fileType = CLOUD_UNKNOWN_FILE_TYPE;
-                break;
+    public static String getFileTypeFormat(String format) {
+        String fileType = "";
+        if (format.startsWith("image/")) {
+            fileType = CLOUD_PICTURE;
+        } else if (format.startsWith("video/")) {
+            fileType = CLOUD_VIDEO;
+        } else if (format.startsWith("audio/")) {
+            fileType = CLOUD_AUDIO;
+        } else if (format.startsWith("application/vnd.openxmlformats-officedocument.wordprocessingml")) {
+            fileType = CLOUD_DOCUMENT;
+        } else if (format.startsWith("application/vnd.openxmlformats-officedocument.presentationml")) {
+            fileType = CLOUD_DOCUMENT;
+        } else if (format.startsWith("application/vnd.openxmlformats-officedocument.spreadsheetml")) {
+            fileType = CLOUD_DOCUMENT;
         }
+        if (StringUtils.isBlank(fileType)) {
+            switch (format) {
+                case "text/plain":
+                case "application/pdf":
+                case "application/msword":
+                case "application/vnd.ms-excel":
+                case "application/vnd.ms-powerpoint":
+                    fileType = CLOUD_DOCUMENT;
+                    break;
+                default:
+                    fileType = CLOUD_UNKNOWN_FILE_TYPE;
+                    break;
+            }
+        }
+
         return fileType;
     }
 
-    /**
-     * 获取文件标识图片
-     *
-     * @param fileName
-     */
-    public static int getRegularFileIconResId(String fileName) {
-        fileName = fileName.toLowerCase();
-        int imageIconId = R.drawable.baselib_file_type_unkown;
-        if (fileName.endsWith("doc") || fileName.endsWith("docx")) {
-            imageIconId = R.drawable.baselib_file_type_word;
-        } else if (fileName.endsWith("xls") || fileName.endsWith("xlsx")) {
-            imageIconId = R.drawable.baselib_file_type_excel;
-        } else if (fileName.endsWith("ppt") || fileName.endsWith("pptx")) {
-            imageIconId = R.drawable.baselib_file_type_ppt;
-        } else if (fileName.endsWith("pdf")) {
-            imageIconId = R.drawable.baselib_file_type_pdf;
-        } else if (fileName.endsWith("txt")) {
-            imageIconId = R.drawable.baselib_file_type_txt;
-        } else if (fileName.endsWith("zip")) {
-            imageIconId = R.drawable.baselib_file_type_zip;
-        } else if (fileName.endsWith("rar")) {
-            imageIconId = R.drawable.baselib_file_type_zip;
-        } else if (fileName.endsWith("jpg") || fileName.endsWith("png") || fileName.endsWith("jpeg") || fileName.endsWith("dng")) {
-            imageIconId = R.drawable.baselib_file_type_img;
-        } else if (fileName.endsWith("mp4") || fileName.endsWith("avi") || fileName.endsWith("wma") || fileName.endsWith("rmvb") || fileName.endsWith("3gp")
-                || fileName.endsWith("mid") || fileName.endsWith("flash") || fileName.endsWith("rm")) {
-            imageIconId = R.drawable.baselib_file_type_video;
-        } else if (fileName.endsWith("wave") || fileName.endsWith("aiff") || fileName.endsWith("mpeg") || fileName.endsWith("mp3") || fileName.endsWith("mpeg-4")
-                || fileName.endsWith("midi") || fileName.endsWith("amr") || fileName.endsWith("ape") || fileName.endsWith("flac") || fileName.endsWith("aac")) {
-            imageIconId = R.drawable.baselib_file_type_audio;
+
+    public static Integer getFileIconResId(File file) {
+        if (file == null) {
+            return R.drawable.baselib_file_type_unkown;
         }
-        return imageIconId;
+        String format = getMimeType(file.getName());
+        return getFileIconResIdByFormat(format);
+    }
+
+    public static Integer getFileIconResIdByFilePath(String filePath) {
+        File file = new File(filePath);
+        return getFileIconResId(file);
+    }
+
+    public static Integer getFileIconResIdByFileName(String fileName) {
+        String format = getMimeType(fileName);
+        return getFileIconResIdByFormat(format);
+    }
+
+    public static Integer getFileIconResIdByFormat(String format) {
+        Integer resId = R.drawable.baselib_file_type_unkown;
+        switch (format) {
+            case "application/zip":
+            case "application/x-gtar":
+            case "application/x-gzip":
+            case "application/x-tar":
+            case "application/x-rar-compressed":
+            case "application/x-compressed":
+            case "application/x-compress":
+            case "application/x-7z-compressed":
+                resId = R.drawable.baselib_file_type_zip;
+                break;
+            case "text/plain":
+                resId = R.drawable.baselib_file_type_txt;
+                break;
+            case "application/pdf":
+                resId = R.drawable.baselib_file_type_pdf;
+                break;
+            case "application/msword":
+                resId = R.drawable.baselib_file_type_word;
+                break;
+            case "application/vnd.ms-excel":
+                resId = R.drawable.baselib_file_type_excel;
+                break;
+            case "application/vnd.ms-powerpoint":
+                resId = R.drawable.baselib_file_type_ppt;
+                break;
+            default:
+                if (format.startsWith("image/")) {
+                    resId = R.drawable.baselib_file_type_img;
+                } else if (format.startsWith("video/")) {
+                    resId = R.drawable.baselib_file_type_video;
+                } else if (format.startsWith("audio/")) {
+                    resId = R.drawable.baselib_file_type_audio;
+                } else if (format.startsWith("application/vnd.openxmlformats-officedocument.wordprocessingml")) {
+                    resId = R.drawable.baselib_file_type_word;
+                } else if (format.startsWith("application/vnd.openxmlformats-officedocument.presentationml")) {
+                    resId = R.drawable.baselib_file_type_ppt;
+                } else if (format.startsWith("application/vnd.openxmlformats-officedocument.spreadsheetml")) {
+                    resId = R.drawable.baselib_file_type_excel;
+                }
+                break;
+        }
+        return resId;
     }
 
     /**

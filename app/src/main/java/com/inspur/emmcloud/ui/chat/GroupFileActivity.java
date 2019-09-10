@@ -231,7 +231,8 @@ public class GroupFileActivity extends BaseActivity {
         List<GroupFileInfo> fileInfoFilterList = new ArrayList<>();
         fileInfoFilterList.clear();
         for (GroupFileInfo groupFileInfo : fileInfoList) {
-            if (FileUtils.getFileTypeByName(groupFileInfo.getName()).equals(fileFilterType)) {
+            String format = FileUtils.getMimeType(groupFileInfo.getName());
+            if (fileFilterType.equals(FileUtils.getFileTypeFormat(format))) {
                 fileInfoFilterList.add(groupFileInfo);
             }
         }
@@ -264,7 +265,7 @@ public class GroupFileActivity extends BaseActivity {
             fileMonthText.setVisibility(View.GONE);
         }
         fileTimeText.setText(TimeUtils.getChannelMsgDisplayTime(GroupFileActivity.this, groupFileInfo.getLongTime()));
-        fileImg.setImageResource(FileUtils.getRegularFileIconResId(fileName));
+        fileImg.setImageResource(FileUtils.getFileIconResIdByFileName(fileName));
         convertView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

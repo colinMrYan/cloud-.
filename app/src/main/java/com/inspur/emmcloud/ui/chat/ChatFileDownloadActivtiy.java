@@ -59,7 +59,7 @@ public class ChatFileDownloadActivtiy extends BaseActivity {
         message = (Message) getIntent().getSerializableExtra("message");
         MsgContentRegularFile msgContentFile = message.getMsgContentAttachmentFile();
         fileNameText.setText(msgContentFile.getName());
-        fileTypeImg.setImageResource(FileUtils.getRegularFileIconResId(msgContentFile.getName()));
+        fileTypeImg.setImageResource(FileUtils.getFileIconResIdByFileName(msgContentFile.getName()));
         fileSizeText.setText(FileUtils.formatFileSize(msgContentFile.getSize()));
         fileSavePath = MyAppConfig.LOCAL_DOWNLOAD_PATH + msgContentFile.getName();
         if (FileUtils.isFileExist(fileSavePath)) {
