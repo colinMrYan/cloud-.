@@ -17,7 +17,6 @@ import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.LinearLayout;
 
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
@@ -41,13 +40,12 @@ import java.util.Map;
  */
 public class ImpWebViewClient extends WebViewClient {
     private ImpWebView myWebView;
-    private LinearLayout loadFailLayout;
     private Handler mHandler = null;
     private Runnable runnable = null;
     private ImpCallBackInterface impCallBackInterface;
     private String url = "";
-    public ImpWebViewClient(LinearLayout loadFailLayout, ImpCallBackInterface impCallBackInterface) {
-        this.loadFailLayout = loadFailLayout;
+
+    public ImpWebViewClient(ImpCallBackInterface impCallBackInterface) {
         this.impCallBackInterface = impCallBackInterface;
         handMessage();
         initRunnable();
@@ -141,23 +139,24 @@ public class ImpWebViewClient extends WebViewClient {
         }
         if (impCallBackInterface != null) {
             impCallBackInterface.onLoadingDlgDimiss();
+            impCallBackInterface.showLoadFailLayout(failingUrl, description);
         }
-        loadFailLayout.setVisibility(View.VISIBLE);
     }
 
     @TargetApi(Build.VERSION_CODES.M)
     @Override
     public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
         super.onReceivedError(view, request, error);
-        if (request.isForMainFrame() && request.getUrl().toString().equals(url)) {// 在这里加上个判断
+        // 在这里加上个判断,防止资源文件等错误导致显示错误页
+        if (request.isForMainFrame() && request.getUrl().toString().equals(url)) {
             if (runnable != null) {
                 mHandler.removeCallbacks(runnable);
                 runnable = null;
             }
             if (impCallBackInterface != null) {
                 impCallBackInterface.onLoadingDlgDimiss();
+                impCallBackInterface.showLoadFailLayout(url, error.getDescription().toString());
             }
-            loadFailLayout.setVisibility(View.VISIBLE);
         }
     }
 

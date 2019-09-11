@@ -80,7 +80,6 @@ import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.DirectChannelUtils;
-import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.NotificationUpgradeUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
 import com.inspur.emmcloud.util.privates.Voice2StringMessageUtils;
@@ -879,14 +878,19 @@ public class ConversationActivity extends ConversationBaseActivity {
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case RQQUEST_CHOOSE_FILE:
-                    String filePath = GetPathFromUri4kitkat.getPathByUri(MyApplication.getInstance(), data.getData());
-                    File file = new File(filePath);
-                    if (StringUtils.isBlank(FileUtils.getSuffix(file))) {
-                        ToastUtils.show(MyApplication.getInstance(),
-                                getString(R.string.not_support_upload));
-                    } else {
-                        combinAndSendMessageWithFile(filePath, Message.MESSAGE_TYPE_FILE_REGULAR_FILE, null);
+                    List<String> filePathList = data.getStringArrayListExtra("pathList");
+                    for (String filepath : filePathList) {
+                        combinAndSendMessageWithFile(filepath, Message.MESSAGE_TYPE_FILE_REGULAR_FILE, null);
                     }
+
+//                    String filePath = GetPathFromUri4kitkat.getPathByUri(MyApplication.getInstance(), data.getData());
+//                    File file = new File(filePath);
+//                    if (StringUtils.isBlank(FileUtils.getSuffix(file))) {
+//                        ToastUtils.show(MyApplication.getInstance(),
+//                                getString(R.string.not_support_upload));
+//                    } else {
+//                        combinAndSendMessageWithFile(filepath, Message.MESSAGE_TYPE_FILE_REGULAR_FILE, null);
+//                    }
                     break;
                 case REQUEST_CAMERA:
                     String imgPath = getCompressorUrl(data.getExtras().getString(MyCameraActivity.OUT_FILE_PATH));
@@ -1119,7 +1123,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         String lastDraft = MessageCacheUtil.getDraftByCid(ConversationActivity.this, cid);
         String inputContent = chatInputMenu.getInputContent();
         if (!StringUtils.isBlank(inputContent) && !lastDraft.equals(inputContent)) {
-            Message draftMessage = CommunicationUtils.combinLocalTextPlainMessage(inputContent.equals("@") ? (" " + inputContent) : inputContent, cid);
+            Message draftMessage = CommunicationUtils.combinLocalTextPlainMessage(inputContent.equals("@") ? (" " + inputContent) : inputContent, cid, null);
             draftMessage.setSendStatus(Message.MESSAGE_SEND_EDIT);
             draftMessage.setRead(Message.MESSAGE_READ);
             draftMessage.setCreationDate(System.currentTimeMillis());
@@ -1319,7 +1323,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         new Thread() {
             @Override
             public void run() {
-                MessageCacheUtil.updateMessageSendStatus(ConversationActivity.this, messageSendingList);
+                MessageCacheUtil.saveMessageList(ConversationActivity.this, messageSendingList);
             }
         }.start();
     }
@@ -1806,7 +1810,6 @@ public class ConversationActivity extends ConversationBaseActivity {
         switch (uiMessage.getMessage().getType()) {
             case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
                 SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(
-                        MyApplication.getInstance(),
                         uiMessage.getMessage().getMsgContentTextMarkdown().getText(),
                         uiMessage.getMessage().getMsgContentTextMarkdown().getMentionsMap());
                 content = spannableString.toString();
@@ -1816,7 +1819,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 break;
             case Message.MESSAGE_TYPE_TEXT_PLAIN:
                 String text = uiMessage.getMessage().getMsgContentTextPlain().getText();
-                spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(MyApplication.getInstance(), text,
+                spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(text,
                         uiMessage.getMessage().getMsgContentTextPlain().getMentionsMap());
                 content = spannableString.toString();
                 break;

@@ -106,15 +106,16 @@ public class ImpFragment extends ImpBaseFragment {
     private ImpCallBackInterface impCallBackInterface;
     private OnKeyDownListener onKeyDownListener;
     private boolean isStaticWebTitle = false;
+    //错误url和错误信息
+    private String errorUrl = "";
+    private String errorDescription = "";
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(
-                getActivity().LAYOUT_INFLATER_SERVICE);
-        rootView = inflater.inflate(Res.getLayoutID("web_fragment_imp"), null);
+        rootView = LayoutInflater.from(getActivity()).inflate(Res.getLayoutID("web_fragment_imp"), null);
         initViews();
         version = getArguments().getString(Constant.WEB_FRAGMENT_VERSION, "");
     }
@@ -257,6 +258,7 @@ public class ImpFragment extends ImpBaseFragment {
      *
      * @param script
      */
+    @Override
     protected void runJavaScript(String script) {
         webView.loadUrl(script);
     }
@@ -294,12 +296,12 @@ public class ImpFragment extends ImpBaseFragment {
         if (getArguments().getBoolean(Constant.WEB_FRAGMENT_SHOW_HEADER, true)) {
             String title = getArguments().getString(Constant.WEB_FRAGMENT_APP_NAME);
             headerText.setOnClickListener(new ImpFragmentClickListener());
-            webView.setProperty(headerText, loadFailLayout, frameLayout, impCallBackInterface);
+            webView.setProperty(headerText, frameLayout, impCallBackInterface);
             initWebViewGoBackOrClose();
             headerLayout.setVisibility(View.VISIBLE);
             headerText.setText(title);
         } else {
-            webView.setProperty(null, loadFailLayout, frameLayout, impCallBackInterface);
+            webView.setProperty(null, frameLayout, impCallBackInterface);
         }
     }
 
@@ -448,6 +450,15 @@ public class ImpFragment extends ImpBaseFragment {
             @Override
             public boolean isWebFromIndex() {
                 return isStaticWebTitle;
+            }
+
+            @Override
+            public void showLoadFailLayout(String url, String description) {
+                errorUrl = url;
+                errorDescription = description;
+                if (loadFailLayout != null) {
+                    loadFailLayout.setVisibility(View.VISIBLE);
+                }
             }
         };
     }
@@ -706,8 +717,9 @@ public class ImpFragment extends ImpBaseFragment {
 
                 ValueCallback<Uri[]> mUploadCallbackAboveL = webView
                         .getWebChromeClient().getValueCallbackAboveL();
-                if (null == mUploadCallbackAboveL)
+                if (null == mUploadCallbackAboveL) {
                     return;
+                }
                 if (uri == null) {
                     mUploadCallbackAboveL.onReceiveValue(null);
                 } else {
@@ -718,8 +730,9 @@ public class ImpFragment extends ImpBaseFragment {
             } else {
                 ValueCallback<Uri> mUploadMessage = webView
                         .getWebChromeClient().getValueCallback();
-                if (null == mUploadMessage)
+                if (null == mUploadMessage) {
                     return;
+                }
                 mUploadMessage.onReceiveValue(uri);
                 mUploadMessage = null;
             }
@@ -798,8 +811,8 @@ public class ImpFragment extends ImpBaseFragment {
 
             } else if (i == R.id.tv_look_web_error_detail) {
                 Bundle bundle = new Bundle();
-                bundle.putString(EXTRA_OUTSIDE_URL, "測試Url");
-                bundle.putString(EXTRA_OUTSIDE_URL_REQUEST_RESULT, "測試Error Detail");
+                bundle.putString(EXTRA_OUTSIDE_URL, errorUrl);
+                bundle.putString(EXTRA_OUTSIDE_URL_REQUEST_RESULT, errorDescription);
                 ARouter.getInstance().build(Constant.AROUTER_CLASS_APP_WEB_ERROR_DETAIL).with(bundle).navigation();
 
             } else if (i == R.id.tv_reload_web) {
