@@ -10,6 +10,7 @@ import android.os.Handler;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.service.AppExceptionService;
 import com.inspur.emmcloud.basemodule.service.PVCollectService;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.ClientIDUtils;
@@ -88,7 +89,8 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
                 startSyncCommonAppService();
                 new ClientIDUtils(BaseApplication.getInstance()).upload();
             }
-
+            //进行app异常上传
+            startUploadExceptionService(activity);
         }
     }
 
@@ -150,6 +152,15 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
             intent.setClass(context, PVCollectService.class);
             context.startService(intent);
         }
+    }
+
+    /**
+     * 启动异常上传服务
+     */
+    private void startUploadExceptionService(Activity activity) {
+        Intent intent = new Intent();
+        intent.setClass(activity, AppExceptionService.class);
+        activity.startService(intent);
     }
 
 

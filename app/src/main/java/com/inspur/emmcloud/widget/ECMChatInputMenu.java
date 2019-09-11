@@ -36,6 +36,7 @@ import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.dialogs.ActionSheetDialog;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.ClickRuleUtil;
@@ -795,6 +796,22 @@ public class ECMChatInputMenu extends LinearLayout {
             voiceBtn.setImageResource((tag == 0) ? R.drawable.ic_chat_input_voice : R.drawable.ic_chat_input_keyboard);
             inputEdit.setVisibility((tag == 0) ? VISIBLE : GONE);
             audioRecordBtn.setVisibility((tag == 0) ? GONE : VISIBLE);
+            if (tag != 0) {
+                PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getContext(), Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
+                    @Override
+                    public void onPermissionRequestSuccess(List<String> permissions) {
+
+                    }
+
+                    @Override
+                    public void onPermissionRequestFail(List<String> permissions) {
+                        ToastUtils.show(BaseApplication.getInstance(),
+                                PermissionRequestManagerUtils.getInstance().
+                                        getPermissionToast(BaseApplication.getInstance(), permissions));
+                        setVoiceInputStatus(0);
+                    }
+                });
+            }
         }
     }
 

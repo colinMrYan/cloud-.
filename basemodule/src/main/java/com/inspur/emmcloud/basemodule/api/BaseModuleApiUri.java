@@ -83,6 +83,16 @@ public class BaseModuleApiUri {
         return WebServiceRouterManager.getInstance().getIDMUrl() + "oauth2.0/profile";
     }
 
+    /**
+     * 异常上传接口
+     *
+     * @return
+     */
+    public static String getUploadExceptionUrl() {
+        return "https://uvc1.inspuronline.com/cpexception";
+    }
+
+
 
     public static String getUserPhoto(Context context, String uid) {
         if (StringUtils.isBlank(uid) || uid.equals("null"))
