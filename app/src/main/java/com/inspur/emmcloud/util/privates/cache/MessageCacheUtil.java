@@ -750,17 +750,9 @@ public class MessageCacheUtil {
         try {
             List<Message> messageList;
             List<String> conversationIdList = new ArrayList<>();
-//            String searchStr = "";
-//            for (int i = 0; i < content.length(); i++) {
-//                if (i < content.length() - 1) {
-//                    searchStr += "%" + content.charAt(i);
-//                } else {
-//                    searchStr += "%" + content.charAt(i) + "%";
-//                }
-//            }
             messageList = DbCacheUtils.getDb(context).selector(Message.class)
                     .where("type", "=", Message.MESSAGE_TYPE_TEXT_PLAIN)
-                    .and(WhereBuilder.b("content", "like", "%" + content + "%"))
+                    .and(WhereBuilder.b("showContent", "like", "%" + content + "%"))
                     .findAll();
             if (messageList != null) {
                 for (int i = 0; i < messageList.size(); i++) {
@@ -805,7 +797,7 @@ public class MessageCacheUtil {
         try {
             messageList = DbCacheUtils.getDb(context).selector(Message.class)
                     .where("type", "=", Message.MESSAGE_TYPE_TEXT_PLAIN)
-                    .and(WhereBuilder.b("content", "like", "%" + content + "%"))
+                    .and(WhereBuilder.b("showContent", "like", "%" + content + "%"))
                     .and(WhereBuilder.b("channel", "=", id))
                     .findAll();
             if (messageList != null) {
