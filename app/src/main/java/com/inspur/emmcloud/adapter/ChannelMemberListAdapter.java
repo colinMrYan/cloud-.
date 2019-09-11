@@ -14,12 +14,14 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.bean.chat.PersonDto;
+import com.inspur.emmcloud.componentservice.contact.ContactUser;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-
 
 /**
  * 成员列表适配器
@@ -86,8 +88,9 @@ public class ChannelMemberListAdapter extends BaseAdapter implements SectionInde
             holder = new ViewHolder();
             holder.userHeadImg = (ImageView) convertView.findViewById(R.id.iv_user_head);
             holder.userNameTv = (TextView) convertView.findViewById(R.id.tv_user_name);
+            holder.userDescTv = convertView.findViewById(R.id.tv_user_desc);
             holder.sideBarLetterTv = (TextView) convertView.findViewById(R.id.tv_member_slidebar);
-            holder.line = convertView.findViewById(R.id.v_line);
+//            holder.line = convertView.findViewById(R.id.v_line);
             holder.selectedImg = (ImageView) convertView.findViewById(R.id.img_member_selected);
             holder.contentRl = (RelativeLayout) convertView.findViewById(R.id.rl_content);
             convertView.setTag(holder);
@@ -103,12 +106,14 @@ public class ChannelMemberListAdapter extends BaseAdapter implements SectionInde
                 holder.sideBarLetterTv.setVisibility(View.VISIBLE);
                 holder.sideBarLetterTv.setText("☆".equals(dto.getSortLetters()) ? dto.getSortLetters()
                         + mActivity.getString(R.string.administrators_of_channel) : dto.getSortLetters());
-                holder.line.setVisibility(View.GONE);
+//                holder.line.setVisibility(View.GONE);
             } else {
                 holder.sideBarLetterTv.setVisibility(View.GONE);
-                holder.line.setVisibility(View.GONE);
+//                holder.line.setVisibility(View.GONE);
             }
             holder.userNameTv.setText(dto.getName());
+            setUserDesc(dto, holder.userDescTv);
+
             String photoUrl = APIUri.getUserIconUrl(MyApplication.getInstance(), dto.getUid());
             if (dto.getUid().equals("10")) {
                 holder.userHeadImg.setImageResource(R.drawable.ic_mention_all);
@@ -123,6 +128,26 @@ public class ChannelMemberListAdapter extends BaseAdapter implements SectionInde
             holder.selectedImg.setVisibility(View.INVISIBLE);
         }
         return convertView;
+    }
+
+    private void setUserDesc(PersonDto dto, TextView textView) {
+        if (StringUtils.isBlank(dto.getUid())) {
+            textView.setVisibility(View.GONE);
+            return;
+        }
+
+        String enName = null;
+        ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(dto.getUid());
+        if (contactUser != null) {
+            enName = contactUser.getNameGlobal();
+        }
+
+        if (StringUtils.isBlank(enName)) {
+            textView.setVisibility(View.GONE);
+        } else {
+            textView.setText(enName);
+            textView.setVisibility(View.VISIBLE);
+        }
     }
 
     /**
@@ -155,7 +180,8 @@ public class ChannelMemberListAdapter extends BaseAdapter implements SectionInde
         ImageView userHeadImg;
         TextView sideBarLetterTv;
         TextView userNameTv;
-        View line;
+        TextView userDescTv;
+        //        View line;
         ImageView selectedImg;
         RelativeLayout contentRl;
     }

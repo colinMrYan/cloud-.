@@ -61,15 +61,18 @@ public class ContactOrgStructureActivity extends BaseActivity {
         uid = getIntent().getExtras().getString("uid");
         contactUser = ContactUserCacheUtils.getContactUserByUid(uid);
         orgNameList = new ArrayList<>();
-        String root = "root";
-        String orgNameOrID = contactUser.getParentId();
-        while (!root.equals(orgNameOrID)) {
-            ContactOrg contactOrgTest = ContactOrgCacheUtils.getContactOrg(orgNameOrID);
-            orgNameOrID = contactOrgTest.getName();
-            orgNameList.add(orgNameOrID);
-            orgNameOrID = contactOrgTest.getParentId();
+        if (contactUser != null) {
+            String root = "root";
+            String orgNameOrID = contactUser.getParentId();
+            while (!root.equals(orgNameOrID)) {
+                ContactOrg contactOrgTest = ContactOrgCacheUtils.getContactOrg(orgNameOrID);
+                if (contactOrgTest == null) return;
+                orgNameOrID = contactOrgTest.getName();
+                orgNameList.add(orgNameOrID);
+                orgNameOrID = contactOrgTest.getParentId();
+            }
+            Collections.reverse(orgNameList);
         }
-        Collections.reverse(orgNameList);
     }
 }
 

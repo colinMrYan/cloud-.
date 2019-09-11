@@ -207,9 +207,11 @@ public class MyInfoActivity extends BaseActivity {
      */
     private void saveUpdateHeadTime() {
         ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(MyApplication.getInstance().getUid());
-        contactUser.setLastQueryTime(System.currentTimeMillis() + "");
-        contactUser.setHasHead(1);
-        ContactUserCacheUtils.saveContactUser(contactUser);
+        if (contactUser != null) {
+            contactUser.setLastQueryTime(System.currentTimeMillis() + "");
+            contactUser.setHasHead(1);
+            ContactUserCacheUtils.saveContactUser(contactUser);
+        }
         MyApplication.getInstance().clearUserPhotoUrl(MyApplication.getInstance().getUid());
     }
 

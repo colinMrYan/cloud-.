@@ -113,6 +113,8 @@ public class ECMChatInputMenu extends LinearLayout {
     EditText voiceInputEt;
     @BindView(R.id.voice_input_close_img)
     ImageView voiceInputCloseImg;
+    @BindView(R.id.voice_input_speak_tip)
+    TextView voiceInputSpeakTipTv;
     @BindView(R.id.volume_level_img)
     ImageView voiceInputLevelImg;
     @BindView(R.id.volume_level_img_shade)
@@ -343,6 +345,7 @@ public class ECMChatInputMenu extends LinearLayout {
                 languageTv.setVisibility(StringUtils.isBlank(text) ? VISIBLE : INVISIBLE);
                 voiceInputClean.setVisibility(StringUtils.isBlank(text) ? INVISIBLE : VISIBLE);
                 voiceInputSend.setVisibility(StringUtils.isBlank(text) ? INVISIBLE : VISIBLE);
+                voiceInputSpeakTipTv.setVisibility(StringUtils.isBlank(text) ? VISIBLE : INVISIBLE);
                 voiceInputCloseImg.setVisibility(VISIBLE);
 //                voiceInputLevelImgShade.setVisibility(INVISIBLE);
                 break;
@@ -350,6 +353,7 @@ public class ECMChatInputMenu extends LinearLayout {
                 stopVoiceCompleteAnim();
                 voiceInputEt.setVisibility(VISIBLE);
                 languageTv.setVisibility(INVISIBLE);
+                voiceInputSpeakTipTv.setVisibility(INVISIBLE);
                 voiceInputCloseImg.setVisibility(INVISIBLE);
                 voiceInputClean.setVisibility(INVISIBLE);
                 voiceInputSend.setVisibility(INVISIBLE);

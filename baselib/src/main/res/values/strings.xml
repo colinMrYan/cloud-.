@@ -1352,6 +1352,8 @@
     <string name="voice_input_language_english">英语</string>
     <string name="voice_input_hint_prepare">准备中...</string>
     <string name="voice_input_hint_speak_now">请说话...</string>
+    <string name="voice_input_tip_speak">按下说话</string>
+    <string name="voice_input_clear">清空</string>
 
     <string name="notification_switch">新消息通知</string>
     <string name="notification_switch_cant_recive">关闭后，手机将不再接收新消息通知</string>
