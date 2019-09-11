@@ -52,8 +52,8 @@ public class CrashHandler implements UncaughtExceptionHandler {
         Log.d("jason", "errorInfo=" + errorInfo);
         Log.e("AndroidRuntime", errorInfo);
         AppExceptionCacheUtils.saveAppException(mContext, 1, "", errorInfo, 0);
-//        AppException appException = new AppException(System.currentTimeMillis(), AppUtils.getVersion(mContext),1,"", errorInfo, 0);
-        AppException appException = AppExceptionCacheUtils.getAppExceptionListByLevel(mContext, 1);
+        AppException appException = new AppException(System.currentTimeMillis(), AppUtils.getVersion(mContext), 1, "", errorInfo, 0);
+//        AppException appException = AppExceptionCacheUtils.getAppExceptionListByLevel(mContext, 1);
         uploadException(mContext, appException);
         //如果系统提供了默认的异常处理器，则交给系统去结束我们的程序，否则就由我们自己结束自己
         if (mDefaultHandler != null) {
@@ -82,16 +82,23 @@ public class CrashHandler implements UncaughtExceptionHandler {
             RequestParams params = ((BaseApplication) mContext.getApplicationContext()).getHttpRequestParams(completeUrl);
             params.setAsJsonContent(true);
             params.setBodyContent(jsonObject.toString());
+
+            //由于Android3.0之后已经不能在主线程发起网络请求，因为会造成ANR，但此处情况特殊，需临时关闭StrictMode
+            StrictMode.ThreadPolicy oldThreadPolicy = StrictMode.getThreadPolicy();
+            StrictMode.VmPolicy oldVmPolicy = StrictMode.getVmPolicy();
             if (Build.VERSION.SDK_INT >= 11) {
                 StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectDiskReads().detectDiskWrites().detectNetwork().penaltyLog().build());
                 StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectLeakedSqlLiteObjects().detectLeakedClosableObjects().penaltyLog().penaltyDeath().build());
             }
             try {
                 x.http().requestSync(HttpMethod.POST, params, JSONObject.class);
-                AppExceptionCacheUtils.deleteAppException(mContext, appException);
+                AppExceptionCacheUtils.deleteAppExceptionByContentAndHappenTime(mContext, appException.getHappenTime(), appException.getErrorInfo());
             } catch (Throwable throwable) {
                 throwable.printStackTrace();
             }
+            //时候后改回StrictMode
+            StrictMode.setThreadPolicy(oldThreadPolicy);
+            StrictMode.setVmPolicy(oldVmPolicy);
         }
     }
 
