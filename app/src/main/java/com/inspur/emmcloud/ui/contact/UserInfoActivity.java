@@ -140,6 +140,10 @@ public class UserInfoActivity extends BaseActivity {
             parentUid = uid;
             contactUser = ContactUserCacheUtils.getContactUserByUid(uid);
         }
+        if (uid.equals("10")) {
+            finish();
+            return;
+        }
         if (contactUser == null) {
             ToastUtils.show(MyApplication.getInstance(), R.string.cannot_view_info);
             finish();
