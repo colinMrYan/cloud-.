@@ -5,11 +5,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
-import com.inspur.emmcloud.baselib.util.StringUtils;
-import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
@@ -76,11 +73,11 @@ public class ConbineMsg {
         File tempFile = new File(filePath);
         String fileMime = FileUtils.getMimeType(tempFile);
         String fileName = tempFile.getName();
-        if (StringUtils.isBlank(FileUtils.getSuffix(tempFile))) {
-            ToastUtils.show(MyApplication.getInstance(),
-                    MyApplication.getInstance().getString(R.string.not_support_upload));
-            return null;
-        }
+//        if (StringUtils.isBlank(FileUtils.getSuffix(tempFile))) {
+//            ToastUtils.show(MyApplication.getInstance(),
+//                    MyApplication.getInstance().getString(R.string.not_support_upload));
+//            return null;
+//        }
         String fakeMessageId = System.currentTimeMillis() + "";
 
 
