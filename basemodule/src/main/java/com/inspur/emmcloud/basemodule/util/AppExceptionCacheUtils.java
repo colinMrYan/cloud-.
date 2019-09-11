@@ -178,4 +178,20 @@ public class AppExceptionCacheUtils {
         }
     }
 
+    /**
+     * 通过异常发生时间和异常信息删除异常
+     *
+     * @param context
+     * @param happenTime
+     * @param errorInfo
+     */
+    public static void deleteAppExceptionByContentAndHappenTime(Context context, long happenTime, String errorInfo) {
+        try {
+            DbCacheUtils.getDb(context).delete(AppException.class, WhereBuilder.b("HappenTime", "=", happenTime)
+                    .and("ErrorInfo", "=", errorInfo));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
