@@ -10,9 +10,9 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@color/content_bg"
+        android:paddingBottom="1dp"
         android:paddingLeft="12dp"
         android:paddingTop="1dp"
-        android:paddingBottom="1dp"
         android:textColor="#666666"
         android:textSize="14sp" />
 

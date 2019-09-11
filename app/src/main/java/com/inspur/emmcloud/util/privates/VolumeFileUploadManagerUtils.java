@@ -152,7 +152,7 @@ public class VolumeFileUploadManagerUtils {
                 }
                 break;
             case "aws_s3":
-                volumeFileUploadService = new S3Service(volumeFileUploadInfo, mockVolumeFile);
+                volumeFileUploadService = new S3Service(volumeFileUploadInfo);
                 break;
             default:
                 break;

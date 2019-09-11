@@ -1,14 +1,14 @@
-package com.inspur.emmcloud.service;
+package com.inspur.emmcloud.basemodule.service;
 
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.basemodule.api.BaseModuleAPIInterfaceInstance;
+import com.inspur.emmcloud.basemodule.api.BaseModuleApiService;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.AppException;
 import com.inspur.emmcloud.basemodule.util.AppExceptionCacheUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
@@ -48,7 +48,7 @@ public class AppExceptionService extends Service {
             List<AppException> appExceptionList = AppExceptionCacheUtils.getAppExceptionList(AppExceptionService.this, 50);
             if (appExceptionList.size() != 0) {
                 JSONObject uploadContentJSONObj = getUploadContentJSONObj(appExceptionList);
-                AppAPIService apiService = new AppAPIService(AppExceptionService.this);
+                BaseModuleApiService apiService = new BaseModuleApiService(AppExceptionService.this);
                 apiService.setAPIInterface(new WebService());
                 apiService.uploadException(uploadContentJSONObj, appExceptionList);
                 return;
@@ -68,8 +68,8 @@ public class AppExceptionService extends Service {
         try {
             contentObj.put("appID", 1);
             contentObj.put("userCode", PreferencesUtils.getString(AppExceptionService.this, "userID", ""));
-            if (MyApplication.getInstance().getCurrentEnterprise() != null) {
-                contentObj.put("enterpriseCode", MyApplication.getInstance().getCurrentEnterprise().getId());
+            if (BaseApplication.getInstance().getCurrentEnterprise() != null) {
+                contentObj.put("enterpriseCode", BaseApplication.getInstance().getCurrentEnterprise().getId());
             } else {
                 contentObj.put("enterpriseCode", "");
             }
@@ -89,7 +89,7 @@ public class AppExceptionService extends Service {
         return contentObj;
     }
 
-    private class WebService extends APIInterfaceInstance {
+    private class WebService extends BaseModuleAPIInterfaceInstance {
         @Override
         public void returnUploadExceptionSuccess(final List<AppException> appExceptionList) {
             AppExceptionCacheUtils.deleteAppException(AppExceptionService.this, appExceptionList);

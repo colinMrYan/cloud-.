@@ -167,7 +167,7 @@
 
                     <View
                         android:layout_width="fill_parent"
-                        android:layout_height="0.5dp"
+                        android:layout_height="0.5px"
                         android:layout_below="@id/tv_user_department"
                         android:background="@color/color_list_divider" />
                 </RelativeLayout>
@@ -210,7 +210,7 @@
 
                     <View
                         android:layout_width="fill_parent"
-                        android:layout_height="0.5dp"
+                        android:layout_height="0.5px"
                         android:layout_below="@id/tv_user_position"
                         android:background="@color/color_list_divider" />
                 </RelativeLayout>
@@ -249,7 +249,7 @@
 
                     <View
                         android:layout_width="fill_parent"
-                        android:layout_height="0.5dp"
+                        android:layout_height="0.5px"
                         android:layout_below="@id/tv_user_mail"
                         android:background="@color/color_list_divider" />
                 </RelativeLayout>
@@ -284,7 +284,7 @@
 
                 <View
                     android:layout_width="fill_parent"
-                    android:layout_height="0.5dp"
+                    android:layout_height="0.5px"
                     android:layout_below="@+id/tv_user_phone_num"
                     android:background="@color/color_list_divider" />
             </RelativeLayout>
@@ -323,7 +323,7 @@
 
                     <View
                         android:layout_width="fill_parent"
-                        android:layout_height="0.5dp"
+                        android:layout_height="0.5px"
                         android:layout_below="@id/tv_user_telephone"
                         android:background="@color/color_list_divider" />
                 </RelativeLayout>

@@ -115,7 +115,11 @@ public class ChannelMemberListAdapter extends BaseAdapter implements SectionInde
             setUserDesc(dto, holder.userDescTv);
 
             String photoUrl = APIUri.getUserIconUrl(MyApplication.getInstance(), dto.getUid());
-            ImageDisplayUtils.getInstance().displayImage(holder.userHeadImg, photoUrl, R.drawable.icon_person_default);
+            if (dto.getUid().equals("10")) {
+                holder.userHeadImg.setImageResource(R.drawable.ic_mention_all);
+            } else {
+                ImageDisplayUtils.getInstance().displayImage(holder.userHeadImg, photoUrl, R.drawable.icon_person_default);
+            }
         }
         if (selectedUserList.contains(dto)) {
             holder.selectedImg.setVisibility(View.VISIBLE);

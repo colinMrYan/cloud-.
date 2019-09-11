@@ -1,22 +1,29 @@
 package com.inspur.emmcloud.basemodule.api;
 
 import android.content.Context;
+import android.os.Build;
+import android.os.StrictMode;
 
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.romadaptation.RomInfoUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.bean.AppException;
 import com.inspur.emmcloud.basemodule.bean.GetAllConfigVersionResult;
 import com.inspur.emmcloud.basemodule.bean.GetLanguageResult;
 import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
 import com.inspur.emmcloud.basemodule.bean.GetUploadPushInfoResult;
 import com.inspur.emmcloud.basemodule.bean.PVCollectModel;
 import com.inspur.emmcloud.basemodule.push.PushManagerUtils;
+import com.inspur.emmcloud.basemodule.util.AppExceptionCacheUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.componentservice.login.LoginService;
 import com.inspur.emmcloud.componentservice.login.OauthCallBack;
 
 import org.json.JSONObject;
+import org.xutils.http.HttpMethod;
 import org.xutils.http.RequestParams;
+import org.xutils.x;
 
 import java.util.List;
 
@@ -361,6 +368,74 @@ public class BaseModuleApiService {
                 apiInterface.returnMyInfoFail(error, responseCode);
             }
         });
+    }
+
+
+    /**
+     * 异常上传
+     *
+     * @param exception
+     */
+    public void uploadException(final JSONObject exception, final List<AppException> appExceptionList) {
+        final String completeUrl = BaseModuleApiUri.getUploadExceptionUrl();
+        RequestParams params = ((BaseApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
+        params.setAsJsonContent(true);
+        params.setBodyContent(exception.toString());
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                // TODO Auto-generated method stub
+                apiInterface.returnUploadExceptionFail(new String(""), -1);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnUploadExceptionSuccess(appExceptionList);
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnUploadExceptionFail(error, responseCode);
+            }
+        });
+    }
+
+    /**
+     * 上传异常,修改严格模式设置使异常上传放在主线程执行
+     * 返回值{"status" : "success"}
+     *
+     * @param mContext
+     */
+    public void uploadException(final Context mContext, final AppException appException, JSONObject jsonObject) {
+        if (NetUtils.isNetworkConnected(mContext, false) && !AppUtils.isApkDebugable(mContext)) {
+            final String completeUrl = BaseModuleApiUri.getUploadExceptionUrl();
+            RequestParams params = ((BaseApplication) mContext.getApplicationContext()).getHttpRequestParams(completeUrl);
+            params.setAsJsonContent(true);
+            params.setBodyContent(jsonObject.toString());
+
+            //Android3.0之后已经不能在主线程发起网络请求，会造成ANR，但此处情况特殊，需临时关闭StrictMode
+            StrictMode.ThreadPolicy oldThreadPolicy = StrictMode.getThreadPolicy();
+            StrictMode.VmPolicy oldVmPolicy = StrictMode.getVmPolicy();
+            if (Build.VERSION.SDK_INT >= 11) {
+                StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectDiskReads().detectDiskWrites().detectNetwork().penaltyLog().build());
+                StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectLeakedSqlLiteObjects().detectLeakedClosableObjects().penaltyLog().penaltyDeath().build());
+            }
+            try {
+                JSONObject jsonObjectResult = x.http().requestSync(HttpMethod.POST, params, JSONObject.class);
+                //只处理成功，其他发生任何情况都等进入后台时统一上传
+                if (jsonObjectResult.getString("status").equals("success")) {
+                    AppExceptionCacheUtils.deleteAppExceptionByContentAndHappenTime(mContext, appException.getHappenTime(), appException.getErrorInfo());
+                }
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
+            //时候后改回StrictMode
+            StrictMode.setThreadPolicy(oldThreadPolicy);
+            StrictMode.setVmPolicy(oldVmPolicy);
+        }
     }
 
 }
