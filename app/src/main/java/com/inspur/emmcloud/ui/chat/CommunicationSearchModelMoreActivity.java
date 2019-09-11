@@ -100,7 +100,7 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
     @Override
     public void onCreate() {
         ButterKnife.bind(this);
-        ImmersionBar.with(this).statusBarColor(R.color.search_contact_header_bg).statusBarDarkFont(true, 0.2f).init();
+        ImmersionBar.with(this).statusBarColor(R.color.search_contact_header_bg).statusBarDarkFont(true, 0.2f).navigationBarColor(R.color.white).navigationBarDarkIcon(true, 1.0f).init();
         searchArea = getIntent().getStringExtra("search_type");
         searchText = getIntent().getStringExtra("search_content");
         searchEdit.setOnEditorActionListener(onEditorActionListener);

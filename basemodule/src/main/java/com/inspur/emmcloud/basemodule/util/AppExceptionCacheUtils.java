@@ -4,6 +4,8 @@ import android.content.Context;
 
 import com.inspur.emmcloud.basemodule.bean.AppException;
 
+import org.xutils.db.sqlite.WhereBuilder;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -27,6 +29,24 @@ public class AppExceptionCacheUtils {
         try {
             if (!AppUtils.isApkDebugable(context)) {
                 AppException appException = new AppException(System.currentTimeMillis(), AppUtils.getVersion(context), errorLevel, url, error, errorCode);
+                DbCacheUtils.getDb(context).saveOrUpdate(appException);
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 存储异常信息
+     *
+     * @param context
+     * @param appException
+     */
+    public static void saveAppException(final Context context, AppException appException) {
+        // TODO Auto-generated method stub
+        try {
+            if (!AppUtils.isApkDebugable(context)) {
                 DbCacheUtils.getDb(context).saveOrUpdate(appException);
             }
         } catch (Exception e) {
@@ -110,6 +130,29 @@ public class AppExceptionCacheUtils {
         return appExceptionList;
     }
 
+    /**
+     * 获取指定级别的异常,返回一条
+     *
+     * @param context
+     * @param errorLevel
+     * @return
+     */
+    public static AppException getAppExceptionListByLevel(final Context context, int errorLevel) {
+        AppException appException = null;
+        try {
+            appException = DbCacheUtils.getDb(context).selector(AppException.class).where
+                    (WhereBuilder.b("ErrorLevel", "=", errorLevel))
+                    .findFirst();
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+        if (appException == null) {
+            appException = new AppException();
+        }
+        return appException;
+    }
+
 
     /**
      * 清除AppException表信息
@@ -135,6 +178,36 @@ public class AppExceptionCacheUtils {
             DbCacheUtils.getDb(context).delete(appExceptionList);
         } catch (Exception e) {
             // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 删除AppException
+     *
+     * @param context
+     */
+    public static void deleteAppException(Context context, AppException appException) {
+        try {
+            DbCacheUtils.getDb(context).delete(appException);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 通过异常发生时间和异常信息删除异常
+     *
+     * @param context
+     * @param happenTime
+     * @param errorInfo
+     */
+    public static void deleteAppExceptionByContentAndHappenTime(Context context, long happenTime, String errorInfo) {
+        try {
+            DbCacheUtils.getDb(context).delete(AppException.class, WhereBuilder.b("HappenTime", "=", happenTime)
+                    .and("ErrorInfo", "=", errorInfo));
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

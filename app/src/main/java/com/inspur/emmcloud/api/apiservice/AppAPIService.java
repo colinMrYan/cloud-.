@@ -16,7 +16,6 @@ import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
 import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
 import com.inspur.emmcloud.basemodule.api.HttpUtils;
-import com.inspur.emmcloud.basemodule.bean.AppException;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.bean.appcenter.GetClientIdRsult;
@@ -30,10 +29,7 @@ import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
 import com.inspur.emmcloud.componentservice.login.LoginService;
 import com.inspur.emmcloud.componentservice.login.OauthCallBack;
 
-import org.json.JSONObject;
 import org.xutils.http.RequestParams;
-
-import java.util.List;
 
 /**
  * com.inspur.emmcloud.api.apiservice.MyAppAPIService create at 2016年11月8日
@@ -214,37 +210,7 @@ public class AppAPIService {
         });
     }
 
-    /**
-     * 异常上传
-     *
-     * @param exception
-     */
-    public void uploadException(final JSONObject exception, final List<AppException> appExceptionList) {
-        final String completeUrl = APIUri.getUploadExceptionUrl();
-        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
-        params.setAsJsonContent(true);
-        params.setBodyContent(exception.toString());
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
 
-            @Override
-            public void callbackTokenExpire(long requestTime) {
-                // TODO Auto-generated method stub
-                apiInterface.returnUploadExceptionFail(new String(""), -1);
-            }
-
-            @Override
-            public void callbackSuccess(byte[] arg0) {
-                // TODO Auto-generated method stub
-                apiInterface.returnUploadExceptionSuccess(appExceptionList);
-            }
-
-            @Override
-            public void callbackFail(String error, int responseCode) {
-                // TODO Auto-generated method stub
-                apiInterface.returnUploadExceptionFail(error, responseCode);
-            }
-        });
-    }
 
     /**
      * 获取显示tab页的接口

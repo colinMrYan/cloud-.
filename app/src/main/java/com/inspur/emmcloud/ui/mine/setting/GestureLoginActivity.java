@@ -45,9 +45,9 @@ import butterknife.OnClick;
  */
 public class GestureLoginActivity extends BaseActivity {
 
+    public final static String GESTURE_CODE_CHANGE = "gesture_code_change";
     private static final int GESTURE_CODE_TIMES = 5;
     private static final long DELAYTIME = 600l;
-    public final static String GESTURE_CODE_CHANGE = "gesture_code_change";
     @BindView(R.id.lockPatternView)
     LockPatternView lockPatternView;
     @BindView(R.id.gestrue_message_text)
@@ -118,7 +118,7 @@ public class GestureLoginActivity extends BaseActivity {
         ButterKnife.bind(this);
         EventBus.getDefault().register(this);
         init();
-        ImmersionBar.with(this).statusBarColor(R.color.grey_f6f6f6).statusBarDarkFont(true, 0.2f).init();
+        ImmersionBar.with(this).statusBarColor(R.color.grey_f6f6f6).statusBarDarkFont(true, 0.2f).navigationBarColor(R.color.white).navigationBarDarkIcon(true, 1.0f).init();
     }
 
     @Override

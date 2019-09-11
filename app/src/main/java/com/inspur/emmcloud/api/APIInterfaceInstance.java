@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.api;
 
 
-import com.inspur.emmcloud.basemodule.bean.AppException;
 import com.inspur.emmcloud.basemodule.bean.GetUploadPushInfoResult;
 import com.inspur.emmcloud.bean.ChatFileUploadInfo;
 import com.inspur.emmcloud.bean.appcenter.App;
@@ -100,12 +99,6 @@ public class APIInterfaceInstance implements APIInterface {
     public APIInterfaceInstance() {
         super();
     }
-
-    @Override
-    public void returnUploadExceptionSuccess(List<AppException> appExceptionList) {
-
-    }
-
 
     @Override
     public void returnUnBindDeviceSuccess() {
@@ -483,17 +476,6 @@ public class APIInterfaceInstance implements APIInterface {
 
     }
 
-    @Override
-    public void returnUploadExceptionSuccess() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnUploadExceptionFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
-    }
 
     @Override
     public void returnLocationResultSuccess(GetLocationResult getLoctionResult) {

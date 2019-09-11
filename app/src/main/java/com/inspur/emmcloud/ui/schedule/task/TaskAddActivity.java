@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
@@ -474,11 +473,11 @@ public class TaskAddActivity extends BaseActivity {
             filePath = pathList.get(0);
         }
         attachmentLocalPath = filePath;
-        File tempFile = new File(filePath);
-        if (TextUtils.isEmpty(FileUtils.getSuffix(tempFile))) {
-            ToastUtils.show(this, getString(R.string.not_support_upload));
-            return;
-        }
+//        File tempFile = new File(filePath);
+//        if (TextUtils.isEmpty(FileUtils.getSuffix(tempFile))) {
+//            ToastUtils.show(this, getString(R.string.not_support_upload));
+//            return;
+//        }
         if (NetUtils.isNetworkConnected(this)) {
             loadingDlg.show();
             ChatAPIService apiService = new ChatAPIService(TaskAddActivity.this);

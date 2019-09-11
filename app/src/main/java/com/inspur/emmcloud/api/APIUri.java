@@ -114,14 +114,6 @@ public class APIUri {
         return getCloudDriver() + "/group";
     }
     /***************************************************************系统*******************************************************************/
-    /**
-     * 异常上传接口
-     *
-     * @return
-     */
-    public static String getUploadExceptionUrl() {
-        return "https://uvc1.inspuronline.com/cpexception";
-    }
 
 
     /**

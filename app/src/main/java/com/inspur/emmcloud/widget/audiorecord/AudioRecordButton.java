@@ -14,13 +14,8 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
-import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
-import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
-import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.util.privates.MediaPlayerManagerUtils;
 import com.shuyu.waveview.FileUtils;
-
-import java.util.List;
 
 public class AudioRecordButton extends Button {
 
@@ -100,24 +95,25 @@ public class AudioRecordButton extends Button {
         setOnLongClickListener(new OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                if (PermissionRequestManagerUtils.getInstance().isHasPermission(getContext(), Permissions.RECORD_AUDIO)) {
-                    startRecordVoice();
-                } else {
-                    PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getContext(), Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
-                        @Override
-                        public void onPermissionRequestSuccess(List<String> permissions) {
-                            voiceRecordUIFinish();
-                            reset();
-                        }
-
-                        @Override
-                        public void onPermissionRequestFail(List<String> permissions) {
-                            ToastUtils.show(context, PermissionRequestManagerUtils.getInstance().getPermissionToast(context, permissions));
-                        }
-
-
-                    });
-                }
+//                if (PermissionRequestManagerUtils.getInstance().isHasPermission(getContext(), Permissions.RECORD_AUDIO)) {
+//                    startRecordVoice();
+//                } else {
+//                    PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getContext(), Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
+//                        @Override
+//                        public void onPermissionRequestSuccess(List<String> permissions) {
+//                            voiceRecordUIFinish();
+//                            reset();
+//                        }
+//
+//                        @Override
+//                        public void onPermissionRequestFail(List<String> permissions) {
+//                            ToastUtils.show(context, PermissionRequestManagerUtils.getInstance().getPermissionToast(context, permissions));
+//                        }
+//
+//
+//                    });
+//                }
+                startRecordVoice();
                 return false;
             }
         });
