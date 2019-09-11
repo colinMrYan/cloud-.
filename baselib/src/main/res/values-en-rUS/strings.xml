@@ -1293,6 +1293,8 @@
     <string name="voice_input_language_english">English</string>
     <string name="voice_input_hint_prepare">Preparing...</string>
     <string name="voice_input_hint_speak_now">Speak now...</string>
+    <string name="voice_input_tip_speak">Hold to Talk</string>
+    <string name="voice_input_clear">Clear</string>
 
     <string name="notification_switch">New Notification</string>
     <string name="notification_switch_cant_recive">if closed,you won\'t receive any notifications Close</string>

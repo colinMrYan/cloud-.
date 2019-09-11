@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="334dp"
     android:background="@color/white"
-    android:visibility="gone">
+    android:visibility="visible">
 
     <EditText
         android:id="@+id/voice_input_edit_text"
@@ -52,6 +52,17 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="-20dp">
 
+        <TextView
+            android:id="@+id/voice_input_speak_tip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/volume_level_img"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp"
+            android:text="@string/voice_input_tip_speak"
+            android:textColor="@color/msg_content_color"
+            android:textSize="14sp" />
+
         <ImageView
             android:id="@+id/volume_level_img"
             android:layout_width="60dp"
@@ -91,7 +102,7 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="63dp"
             android:layout_toLeftOf="@id/volume_level_img"
-            android:text="清空"
+            android:text="@string/voice_input_clear"
             android:textColor="@color/voice_communication_function_default"
             android:textSize="16sp" />
 
@@ -115,8 +126,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:padding="10dp"
         android:layout_marginBottom="10dp"
+        android:padding="10dp"
         android:src="@drawable/ic_arrow_down" />
 
 </RelativeLayout>
