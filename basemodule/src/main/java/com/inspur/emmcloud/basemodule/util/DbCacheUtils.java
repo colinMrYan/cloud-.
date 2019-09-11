@@ -11,8 +11,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 
+import org.greenrobot.eventbus.EventBus;
 import org.xutils.DbManager;
 import org.xutils.x;
 
@@ -34,7 +36,7 @@ public class DbCacheUtils {
                 .setDbName("emm.db")
                 // 不设置dbDir时, 默认存储在app的私有目录.
                 .setDbDir(new File(dbCachePath))
-                .setDbVersion(19)
+                .setDbVersion(20)
                 .setAllowTransaction(true)
                 .setDbOpenListener(new DbManager.DbOpenListener() {
                     @Override
@@ -48,44 +50,6 @@ public class DbCacheUtils {
                     public void onUpgrade(DbManager db, int oldVersion, int newVersion) {
                         // TODO: ...
                         try {
-//                            if (oldVersion < 5) {
-//                                db.dropTable(ChannelGroup.class);
-//                                db.dropTable(AppCommonlyUse.class);
-//                                db.dropTable(Channel.class);
-//                            }
-//                            if (oldVersion < 6) {
-//                                if (tableIsExist(db, "com_inspur_emmcloud_bean_Contact")) {
-//                                    db.execNonQuery("alter table com_inspur_emmcloud_bean_Contact rename to Contact");
-//                                    db.execNonQuery("alter table Contact add lastUpdateTime String");
-//                                }
-//
-//                                if (tableIsExist(db, "com_inspur_emmcloud_bean_Channel")) {
-//                                    db.execNonQuery("alter table com_inspur_emmcloud_bean_Channel rename to Channel");
-//                                }
-//
-//                                if (tableIsExist(db, "com_inspur_emmcloud_bean_ChannelOperationInfo")) {
-//                                    db.execNonQuery("alter table com_inspur_emmcloud_bean_ChannelOperationInfo rename to ChannelOperationInfo");
-//                                }
-//
-//                                if (tableIsExist(db, "com_inspur_emmcloud_bean_SearchModel")) {
-//                                    db.execNonQuery("alter table com_inspur_emmcloud_bean_SearchModel rename to SearchModel");
-//                                }
-//                                if (tableIsExist(db, "com_inspur_emmcloud_bean_MyCalendarOperation")) {
-//                                    db.execNonQuery("alter table com_inspur_emmcloud_bean_MyCalendarOperation rename to MyCalendarOperation");
-//                                }
-//
-//                                if (tableIsExist(db, "com_inspur_emmcloud_bean_Robot")) {
-//                                    db.execNonQuery("alter table com_inspur_emmcloud_bean_Robot rename to Robot");
-//                                }
-//
-//                                if (tableIsExist(db, "com_inspur_emmcloud_bean_AppOrder")) {
-//                                    db.execNonQuery("alter table com_inspur_emmcloud_bean_AppOrder rename to AppOrder");
-//                                }
-//
-//                            }
-//                            if (oldVersion < 7) {
-//                                db.dropTable(PVCollectModel.class);
-//                            }
                             if (oldVersion < 8) {
                                 if (tableIsExist(db, "Contact")) {
                                     db.execNonQuery("CREATE INDEX contactindex ON Contact(inspurID)");
@@ -134,6 +98,12 @@ public class DbCacheUtils {
                             if (oldVersion < 19) {
                                 db.execNonQuery("DROP TABLE IF EXISTS Schedule");
                                 db.execNonQuery("DROP TABLE IF EXISTS Meeting");
+                            }
+                            if (oldVersion < 20) {
+                                if (tableIsExist(db, "Message")) {
+                                    db.execNonQuery("ALTER TABLE Message ADD COLUMN showContent TEXT DEFAULT ''");
+                                    EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_MESSAGE_ADD_SHOW_CONTENT));
+                                }
                             }
                         } catch (Exception e) {
                             e.printStackTrace();

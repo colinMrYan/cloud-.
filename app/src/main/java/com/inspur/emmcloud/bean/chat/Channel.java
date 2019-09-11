@@ -290,10 +290,10 @@ public class Channel implements Serializable {
             }
             switch (messageType) {
                 case Message.MESSAGE_TYPE_TEXT_PLAIN:
-                    newMsgContent = fromUserName + ChatMsgContentUtils.mentionsAndUrl2Span(context, message.getMsgContentTextPlain().getText(), message.getMsgContentTextPlain().getMentionsMap()).toString();
+                    newMsgContent = fromUserName + ChatMsgContentUtils.mentionsAndUrl2Span(message.getMsgContentTextPlain().getText(), message.getMsgContentTextPlain().getMentionsMap()).toString();
                     break;
                 case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
-                    SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(context, message.getMsgContentTextMarkdown().getText(), message.getMsgContentTextMarkdown().getMentionsMap());
+                    SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(message.getMsgContentTextMarkdown().getText(), message.getMsgContentTextMarkdown().getMentionsMap());
                     String markdownString = spannableString.toString();
                     if (!StringUtils.isBlank(markdownString)) {
                         markdownString = MarkDown.fromMarkdown(markdownString);

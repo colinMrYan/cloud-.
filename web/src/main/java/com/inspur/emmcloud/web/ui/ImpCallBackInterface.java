@@ -42,4 +42,6 @@ public interface ImpCallBackInterface {
     void setOnKeyDownListener(OnKeyDownListener onKeyDownListener);
 
     boolean isWebFromIndex();
+
+    void showLoadFailLayout(String url, String description);
 }

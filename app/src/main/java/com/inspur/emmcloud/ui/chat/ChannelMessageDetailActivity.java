@@ -475,7 +475,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
             userNameText.setText(ContactUserCacheUtils.getUserName(message.getFromUser()));
             String content = message.getMsgContentComment().getText();
             contentText.setMovementMethod(LinkMovementClickMethod.getInstance());
-            SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(MyApplication.getInstance(), content, message.getMsgContentTextPlain().getMentionsMap());
+            SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(content, message.getMsgContentTextPlain().getMentionsMap());
             contentText.setText(spannableString);
             TransHtmlToTextUtils.stripUnderlines(contentText,
                     Color.parseColor("#0f7bca"));

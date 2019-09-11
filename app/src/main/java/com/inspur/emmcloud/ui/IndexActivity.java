@@ -3,7 +3,6 @@ package com.inspur.emmcloud.ui;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
-import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -21,6 +20,7 @@ import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.ClientConfigItem;
 import com.inspur.emmcloud.basemodule.bean.GetAllConfigVersionResult;
+import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.push.PushManagerUtils;
 import com.inspur.emmcloud.basemodule.service.PVCollectService;
@@ -33,6 +33,7 @@ import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.GetAllRobotsResult;
+import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.contact.ContactOrg;
 import com.inspur.emmcloud.bean.contact.ContactProtoBuf;
 import com.inspur.emmcloud.bean.contact.GetContactOrgListUpateResult;
@@ -56,6 +57,7 @@ import com.inspur.emmcloud.util.privates.SplashPageUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactOrgCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ScheduleCalendarCacheUtils;
 
@@ -63,6 +65,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -274,7 +277,7 @@ public class IndexActivity extends IndexBaseActivity {
         handler = new Handler() {
 
             @Override
-            public void handleMessage(Message msg) {
+            public void handleMessage(android.os.Message msg) {
                 switch (msg.what) {
                     case SYNC_ALL_BASE_DATA_SUCCESS:
                         LoadingDialog.dimissDlg(loadingDlg);
@@ -319,6 +322,27 @@ public class IndexActivity extends IndexBaseActivity {
         }
         EventBus.getDefault().unregister(this);
         super.onDestroy();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveSimpleMessage(SimpleEventMessage simpleEventMessage) {
+        if (simpleEventMessage.getAction().equals(Constant.EVENTBUS_TAG_MESSAGE_ADD_SHOW_CONTENT)) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    List<String> messageTypeList = new ArrayList<>();
+                    messageTypeList.add(Message.MESSAGE_TYPE_TEXT_PLAIN);
+                    messageTypeList.add(Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN);
+                    messageTypeList.add(Message.MESSAGE_TYPE_TEXT_MARKDOWN);
+                    List<Message> messageList = MessageCacheUtil.getMessageListByType(BaseApplication.getInstance(), messageTypeList);
+                    for (Message message : messageList) {
+                        message.setMessageShowContent();
+                    }
+                    MessageCacheUtil.saveMessageList(BaseApplication.getInstance(), messageList);
+
+                }
+            }).start();
+        }
     }
 
 
