@@ -68,16 +68,13 @@ public class Voice2StringMessageUtils {
 
     public Voice2StringMessageUtils(Context context) {
         this.context = context;
-
+        initListeners();
     }
 
     /**
      * 启动听写
      */
     public void startVoiceListening() {
-        if (initListener == null) {
-            initListeners();
-        }
         // 使用SpeechRecognizer对象，可根据回调消息自定义界面；
         if (speechRecognizer == null) {
             speechRecognizer = SpeechRecognizer.createRecognizer(context, initListener);
@@ -88,7 +85,6 @@ public class Voice2StringMessageUtils {
     }
 
     public void initVoiceParam() {
-        initListeners();
         // 使用SpeechRecognizer对象，可根据回调消息自定义界面；
         speechRecognizer = SpeechRecognizer.createRecognizer(context, initListener);
         setParam(VOICE_FROM_XUNFEI);

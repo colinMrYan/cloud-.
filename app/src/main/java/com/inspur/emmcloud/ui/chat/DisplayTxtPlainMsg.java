@@ -44,7 +44,7 @@ public class DisplayTxtPlainMsg {
         contentText.setMovementMethod(TextViewFixTouchConsume.LocalLinkMovementMethod.getInstance());
         contentText.setFocusable(false);
         contentText.setFocusableInTouchMode(false);
-        SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(context, text, message.getMsgContentTextPlain().getMentionsMap());
+        SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(text, message.getMsgContentTextPlain().getMentionsMap());
         contentText.setText(spannableString);
         TransHtmlToTextUtils.stripUnderlines(
                 contentText, context.getResources().getColor(isMyMsg ? R.color.hightlight_in_blue_bg

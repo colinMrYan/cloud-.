@@ -36,16 +36,19 @@ import java.io.File;
 
 public class S3Service extends APIInterfaceInstance implements VolumeFileUploadService {
     private GetVolumeFileUploadTokenResult getVolumeFileUploadTokenResult;
-    private VolumeFile mockVolumeFile;
     private ProgressCallback progressCallback;
     private TransferUtility mTransferUtility;
     private TransferObserver transferObserver;
     private VolumeFileUploadInfo volumeFileUploadInfo;
 
-    public S3Service(VolumeFileUploadInfo volumeFileUploadInfo, VolumeFile mockVolumeFile) {
+    public S3Service(VolumeFileUploadInfo volumeFileUploadInfo) {
         this.getVolumeFileUploadTokenResult = volumeFileUploadInfo.getGetVolumeFileUploadTokenResult();
-        this.mockVolumeFile = mockVolumeFile;
         this.volumeFileUploadInfo = volumeFileUploadInfo;
+        initService();
+    }
+
+    public S3Service(GetVolumeFileUploadTokenResult getVolumeFileUploadTokenResult) {
+        this.getVolumeFileUploadTokenResult = getVolumeFileUploadTokenResult;
         initService();
     }
 

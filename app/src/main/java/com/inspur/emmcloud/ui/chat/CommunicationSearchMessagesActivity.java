@@ -80,7 +80,7 @@ public class CommunicationSearchMessagesActivity extends BaseActivity {
     @Override
     public void onCreate() {
         ButterKnife.bind(this);
-        ImmersionBar.with(this).statusBarColor(R.color.search_contact_header_bg).statusBarDarkFont(true, 0.2f).init();
+        ImmersionBar.with(this).statusBarColor(R.color.search_contact_header_bg).statusBarDarkFont(true, 0.2f).navigationBarColor(R.color.white).navigationBarDarkIcon(true, 1.0f).init();
         if (getIntent().hasExtra(SEARCH_ALL_FROM_CHAT)) {
             conversationFromChatContent = (ConversationFromChatContent) getIntent().getSerializableExtra(SEARCH_ALL_FROM_CHAT);
             if (conversationFromChatContent.getConversation().getType().equals(Conversation.TYPE_GROUP)) {
@@ -170,15 +170,15 @@ public class CommunicationSearchMessagesActivity extends BaseActivity {
             String type = message.getType();
             switch (type) {
                 case com.inspur.emmcloud.bean.chat.Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
-                    messageContentList.add(ChatMsgContentUtils.mentionsAndUrl2Span(CommunicationSearchMessagesActivity.this,
+                    messageContentList.add(ChatMsgContentUtils.mentionsAndUrl2Span(
                             message.getMsgContentComment().getText(), message.getMsgContentComment().getMentionsMap()).toString());
                     break;
                 case com.inspur.emmcloud.bean.chat.Message.MESSAGE_TYPE_TEXT_PLAIN:
-                    messageContentList.add(ChatMsgContentUtils.mentionsAndUrl2Span(CommunicationSearchMessagesActivity.this,
+                    messageContentList.add(ChatMsgContentUtils.mentionsAndUrl2Span(
                             message.getMsgContentTextPlain().getText(), message.getMsgContentTextPlain().getMentionsMap()).toString());
                     break;
                 case com.inspur.emmcloud.bean.chat.Message.MESSAGE_TYPE_TEXT_MARKDOWN:
-                    messageContentList.add(ChatMsgContentUtils.mentionsAndUrl2Span(CommunicationSearchMessagesActivity.this,
+                    messageContentList.add(ChatMsgContentUtils.mentionsAndUrl2Span(
                             message.getMsgContentTextMarkdown().getText(), message.getMsgContentTextMarkdown().getMentionsMap()).toString());
                     break;
             }

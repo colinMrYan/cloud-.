@@ -93,10 +93,10 @@ public class UIConversation implements Serializable {
             }
             switch (messageType) {
                 case Message.MESSAGE_TYPE_TEXT_PLAIN:
-                    content = ChatMsgContentUtils.mentionsAndUrl2Span(MyApplication.getInstance(), message.getMsgContentTextPlain().getText(), message.getMsgContentTextPlain().getMentionsMap()).toString();
+                    content = ChatMsgContentUtils.mentionsAndUrl2Span(message.getMsgContentTextPlain().getText(), message.getMsgContentTextPlain().getMentionsMap()).toString();
                     break;
                 case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
-                    SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(MyApplication.getInstance(), message.getMsgContentTextMarkdown().getText(), message.getMsgContentTextMarkdown().getMentionsMap());
+                    SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(message.getMsgContentTextMarkdown().getText(), message.getMsgContentTextMarkdown().getMentionsMap());
                     content = spannableString.toString();
                     if (!StringUtils.isBlank(content)) {
                         content = MarkDown.fromMarkdown(content);

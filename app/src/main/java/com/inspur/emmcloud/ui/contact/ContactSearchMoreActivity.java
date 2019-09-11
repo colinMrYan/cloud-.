@@ -50,6 +50,7 @@ import com.inspur.emmcloud.bean.contact.FirstGroupTextModel;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
+import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.CommonContactCacheUtils;
@@ -456,15 +457,16 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
                 globalName = contactOrg.getNameGlobal();
             }
         }
-        if (!StringUtils.isBlank(globalName)) {
-            completeName = completeName + "（" + globalName + "）";
-        }
+//        if (!StringUtils.isBlank(globalName)) {
+//            completeName = completeName + "（" + globalName + "）";
+//        }
         return completeName;
 
     }
 
     public static class ViewHolder {
         TextView nameText;
+        TextView descText;
         CircleTextImageView photoImg;
         ImageView selectedImg;
     }
@@ -589,6 +591,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
                         R.layout.member_search_item_view, null);
                 viewHolder.nameText = (TextView) convertView
                         .findViewById(R.id.tv_name);
+                viewHolder.descText = convertView.findViewById(R.id.tv_desc);
                 viewHolder.photoImg = (CircleTextImageView) convertView.findViewById(R.id.img_photo);
                 viewHolder.selectedImg = (ImageView) convertView
                         .findViewById(R.id.selected_img);
@@ -610,7 +613,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
             }
             displayImg(searchModel, viewHolder.photoImg);
             viewHolder.nameText.setText(getCompleteName(searchModel));
-
+            CommunicationUtils.setUserDescText(searchModel, viewHolder.descText, true);
 
             if (selectMemList.contains(searchModel)) {
                 viewHolder.selectedImg.setVisibility(View.VISIBLE);

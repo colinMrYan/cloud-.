@@ -899,10 +899,17 @@ public class ConversationActivity extends ConversationBaseActivity {
                 case REQUEST_MENTIONS:
                     // @返回
                     String result = data.getStringExtra("searchResult");
-                    String uid = JSONUtils.getString(result, "uid", null);
-                    String name = JSONUtils.getString(result, "name", null);
-                    boolean isInputKeyWord = data.getBooleanExtra("isInputKeyWord", false);
-                    chatInputMenu.addMentions(uid, name, isInputKeyWord);
+                    JSONArray jsonArray = JSONUtils.getJSONArray(result, new JSONArray());
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        try {
+                            String uid = JSONUtils.getString(jsonArray.getString(i), "uid", null);
+                            String name = JSONUtils.getString(jsonArray.getString(i), "name", null);
+                            boolean isInputKeyWord = data.getBooleanExtra("isInputKeyWord", false);
+                            chatInputMenu.addMentions(uid, name, isInputKeyWord);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
                     break;
                 case REQUEST_QUIT_CHANNELGROUP:
                     MyApplication.getInstance().setCurrentChannelCid("");
@@ -1116,7 +1123,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         String lastDraft = MessageCacheUtil.getDraftByCid(ConversationActivity.this, cid);
         String inputContent = chatInputMenu.getInputContent();
         if (!StringUtils.isBlank(inputContent) && !lastDraft.equals(inputContent)) {
-            Message draftMessage = CommunicationUtils.combinLocalTextPlainMessage(inputContent.equals("@") ? (" " + inputContent) : inputContent, cid);
+            Message draftMessage = CommunicationUtils.combinLocalTextPlainMessage(inputContent.equals("@") ? (" " + inputContent) : inputContent, cid, null);
             draftMessage.setSendStatus(Message.MESSAGE_SEND_EDIT);
             draftMessage.setRead(Message.MESSAGE_READ);
             draftMessage.setCreationDate(System.currentTimeMillis());
@@ -1316,7 +1323,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         new Thread() {
             @Override
             public void run() {
-                MessageCacheUtil.updateMessageSendStatus(ConversationActivity.this, messageSendingList);
+                MessageCacheUtil.saveMessageList(ConversationActivity.this, messageSendingList);
             }
         }.start();
     }
@@ -1803,7 +1810,6 @@ public class ConversationActivity extends ConversationBaseActivity {
         switch (uiMessage.getMessage().getType()) {
             case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
                 SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(
-                        MyApplication.getInstance(),
                         uiMessage.getMessage().getMsgContentTextMarkdown().getText(),
                         uiMessage.getMessage().getMsgContentTextMarkdown().getMentionsMap());
                 content = spannableString.toString();
@@ -1813,7 +1819,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 break;
             case Message.MESSAGE_TYPE_TEXT_PLAIN:
                 String text = uiMessage.getMessage().getMsgContentTextPlain().getText();
-                spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(MyApplication.getInstance(), text,
+                spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(text,
                         uiMessage.getMessage().getMsgContentTextPlain().getMentionsMap());
                 content = spannableString.toString();
                 break;

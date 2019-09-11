@@ -3,6 +3,8 @@ package com.inspur.emmcloud.bean.chat;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
+import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
+import com.inspur.emmcloud.util.privates.richtext.markdown.MarkDown;
 
 import org.json.JSONObject;
 import org.xutils.db.annotation.Column;
@@ -54,6 +56,8 @@ public class Message implements Serializable {
     private int sendStatus = 1;//0 发送中  1发送成功  2发送失败 字段扩展
     @Column(name = "localPath")
     private String localPath = "";
+    @Column(name = "showContent")
+    private String showContent = "";
     private String tmpId = "";
 
     public Message() {
@@ -92,10 +96,28 @@ public class Message implements Serializable {
             readState = true;
         }
         read = readState ? 1 : 0;
+        setMessageShowContent();
     }
 
     public static boolean isMessage(Msg msg) {
         return msg.getBody().contains("\\\"message\\\":\\\"1.0\\\"");
+    }
+
+    public void setMessageShowContent() {
+        switch (type) {
+            case MESSAGE_TYPE_TEXT_PLAIN:
+                MsgContentTextPlain msgContentTextPlain = getMsgContentTextPlain();
+                showContent = ChatMsgContentUtils.mentionsAndUrl2Span(msgContentTextPlain.getText(), msgContentTextPlain.getMentionsMap()).toString();
+                break;
+            case MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
+                MsgContentComment msgContentComment = getMsgContentComment();
+                showContent = ChatMsgContentUtils.mentionsAndUrl2Span(msgContentComment.getText(), msgContentComment.getMentionsMap()).toString();
+                break;
+            case MESSAGE_TYPE_TEXT_MARKDOWN:
+                MsgContentTextMarkdown msgContentTextMarkdown = getMsgContentTextMarkdown();
+                showContent = MarkDown.fromMarkdown(msgContentTextMarkdown.getText());
+                break;
+        }
     }
 
     public MsgContentExtendedActions getMsgContentExtendedActions() {
@@ -133,6 +155,14 @@ public class Message implements Serializable {
 
     public MsgContentMediaVoice getMsgContentMediaVoice() {
         return new MsgContentMediaVoice(content);
+    }
+
+    public String getShowContent() {
+        return showContent;
+    }
+
+    public void setShowContent(String showContent) {
+        this.showContent = showContent;
     }
 
     public MsgContentTextPlain getMsgContentTextPlain() {

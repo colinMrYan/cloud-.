@@ -1,10 +1,11 @@
 package com.inspur.emmcloud.util.privates;
 
-import android.content.Context;
 import android.text.SpannableString;
 import android.text.Spanned;
 
+import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.bean.schedule.MentionsAndUrl;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
@@ -20,9 +21,12 @@ import java.util.regex.Pattern;
  */
 
 public class ChatMsgContentUtils {
-    public static SpannableString mentionsAndUrl2Span(Context context, String content, Map<String, String> mentionsMap) {
+    public static SpannableString mentionsAndUrl2Span(String content, Map<String, String> mentionsMap) {
         if (StringUtils.isBlank(content)) {
             return new SpannableString("");
+        }
+        if (mentionsMap == null || mentionsMap.size() == 0) {
+            return new SpannableString(content);
         }
         StringBuilder contentStringBuilder = new StringBuilder();
         contentStringBuilder.append(content);
@@ -35,7 +39,12 @@ public class ChatMsgContentUtils {
             if (mentionsMap.containsKey(key)) {
                 String uid = mentionsMap.get(key);
                 String protocol = "ecm-contact://" + uid;
-                String newString = "@" + ContactUserCacheUtils.getUserName(uid) + " ";
+                String newString;
+                if (uid.equals("10")) {
+                    newString = "@" + BaseApplication.getInstance().getString(R.string.chat_search_mention_all) + " ";
+                } else {
+                    newString = "@" + ContactUserCacheUtils.getUserName(uid) + " ";
+                }
                 int startPosition = contentStringBuilder.indexOf(patternString);
                 contentStringBuilder.replace(startPosition, startPosition + patternString.length(), newString);
                 MentionProtocolList.add(new MentionsAndUrl(startPosition, startPosition + newString.length(), protocol));
