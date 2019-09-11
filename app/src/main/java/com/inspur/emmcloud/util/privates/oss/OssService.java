@@ -131,7 +131,7 @@ public class OssService implements VolumeFileUploadService {
             {
                 put("callbackUrl", getVolumeFileUploadTokenResult.getCallbackUrl());
                 //callbackBody可以自定义传入的信息
-                put("callbackBody", getVolumeFileUploadTokenResult.getCallbackBody());
+                put("callbackBody", getVolumeFileUploadTokenResult.getCallbackBodyEncode());
             }
         });
 
@@ -193,7 +193,7 @@ public class OssService implements VolumeFileUploadService {
     }
 
     @Override
-    public void onDestory() {
+    public void onDestroy() {
         if (task != null) {
             task.cancel();
             task = null;

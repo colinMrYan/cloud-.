@@ -143,7 +143,7 @@ public class ShareFilesActivity extends BaseActivity {
         } else {
             fileTextView.setVisibility(View.GONE);
         }
-        ImageDisplayUtils.getInstance().displayImage(fileImageView, "drawable://" + FileUtils.getRegularFileIconResId(filePath));
+        ImageDisplayUtils.getInstance().displayImage(fileImageView, "drawable://" + FileUtils.getFileIconResIdByFilePath(filePath));
     }
 
     /**
@@ -359,7 +359,7 @@ public class ShareFilesActivity extends BaseActivity {
 
     private String getFileIcon(String filePath) {
         String iconPath = "";
-        int iconId = FileUtils.getRegularFileIconResId(filePath);
+        int iconId = FileUtils.getFileIconResIdByFilePath(filePath);
         if (iconId == R.drawable.baselib_file_type_img) {
             iconPath = filePath;
         } else {

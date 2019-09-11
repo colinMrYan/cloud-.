@@ -12,11 +12,13 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
+import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.GroupMessageSearchAdapter;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
 import com.inspur.emmcloud.baselib.widget.ClearEditText;
 import com.inspur.emmcloud.basemodule.bean.SearchModel;
@@ -78,6 +80,7 @@ public class CommunicationSearchMessagesActivity extends BaseActivity {
     @Override
     public void onCreate() {
         ButterKnife.bind(this);
+        ImmersionBar.with(this).statusBarColor(R.color.search_contact_header_bg).statusBarDarkFont(true, 0.2f).init();
         if (getIntent().hasExtra(SEARCH_ALL_FROM_CHAT)) {
             conversationFromChatContent = (ConversationFromChatContent) getIntent().getSerializableExtra(SEARCH_ALL_FROM_CHAT);
             if (conversationFromChatContent.getConversation().getType().equals(Conversation.TYPE_GROUP)) {
@@ -135,7 +138,11 @@ public class CommunicationSearchMessagesActivity extends BaseActivity {
             public void afterTextChanged(Editable s) {
                 searchMessagesList.clear();
                 String keyWords = s.toString();
-                searchMessagesList = MessageCacheUtil.getMessageListByContent(CommunicationSearchMessagesActivity.this, keyWords, conversationFromChatContent.getConversation().getId());
+                if (StringUtils.isBlank(keyWords)) {
+                    searchMessagesList = new ArrayList<>();
+                } else {
+                    searchMessagesList = MessageCacheUtil.getMessageListByContent(CommunicationSearchMessagesActivity.this, keyWords, conversationFromChatContent.getConversation().getId());
+                }
                 groupMessageSearchAdapter.setAndRefreshAdapter(searchMessagesList, keyWords);
             }
         });
@@ -144,6 +151,11 @@ public class CommunicationSearchMessagesActivity extends BaseActivity {
             searchEdit.setText(searchText);
             searchEdit.setSelection(searchText.length());
         }
+    }
+
+    @Override
+    protected int getStatusType() {
+        return STATUS_NO_SET;
     }
 
     /**

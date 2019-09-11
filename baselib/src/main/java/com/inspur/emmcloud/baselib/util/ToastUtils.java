@@ -10,20 +10,21 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.hjq.toast.style.ToastBlackStyle;
 import com.inspur.baselib.R;
+import com.inspur.emmcloud.baselib.util.toast.CusToastUtils;
+import com.inspur.emmcloud.baselib.util.toast.style.ToastBlackStyle;
 
 /**
- * ToastUtils
+ * CusToastUtils
  *
  * @author <a href="http://www.trinea.cn" target="_blank">Trinea</a> 2013-12-9
  */
 public class ToastUtils {
 
     public static void init(Application application) {
-        com.hjq.toast.ToastUtils.init(application, new ToastBlackStyle());
-        com.hjq.toast.ToastUtils.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM, 0, DensityUtil.dip2px(50));
-        com.hjq.toast.ToastUtils.setView(com.inspur.emmcloud.baselib.util.ToastUtils.createTextView(application));
+        CusToastUtils.init(application, new ToastBlackStyle());
+        CusToastUtils.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM, 0, DensityUtil.dip2px(50));
+        CusToastUtils.setView(createTextView(application));
     }
 
     private ToastUtils() {
@@ -31,11 +32,11 @@ public class ToastUtils {
     }
 
     public static void show(int resId){
-        com.hjq.toast.ToastUtils.show(resId);
+        CusToastUtils.show(resId);
     }
 
     public static void show(String text){
-        com.hjq.toast.ToastUtils.show(text);
+        CusToastUtils.show(text);
     }
 
     public static void show(Context context, int resId) {
@@ -52,7 +53,7 @@ public class ToastUtils {
 
     public static void show(Context context, CharSequence text, int duration) {
 //        Toast.makeText(context, text, duration).show();
-        com.hjq.toast.ToastUtils.show(text);
+        CusToastUtils.show(text);
     }
 
     public static void show(Context context, int resId, Object... args) {

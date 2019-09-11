@@ -41,13 +41,18 @@ public class VolumeFileFilterActvity extends VolumeFileBaseActivity {
             public void onItemLongClick(View view, int position) {
                 showFileOperationDlg(volumeFileList.get(position));
             }
-        });
-        adapter.setItemDropDownImgClickListener(new VolumeFileAdapter.MyItemDropDownImgClickListener() {
+
             @Override
             public void onItemDropDownImgClick(View view, int position) {
                 showFileOperationDlg(volumeFileList.get(position));
             }
+
+            @Override
+            public void onItemOperationTextClick(View view, int position) {
+
+            }
         });
+
     }
 
     private void registerReceiver() {

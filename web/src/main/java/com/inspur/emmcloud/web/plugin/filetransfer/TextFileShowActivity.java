@@ -19,7 +19,7 @@ public class TextFileShowActivity extends ImpBaseActivity {
         setContentView(Res.getLayoutID("web_activity_show_txt"));
         Intent intent = getIntent();
         String content = intent.getExtras().getString("text");
-        TextView contentText = (TextView) findViewById(Res.getWidgetID("content_text"));
+        TextView contentText = (TextView) findViewById(Res.getWidgetID("tv_content"));
         contentText.setText(content);
     }
 

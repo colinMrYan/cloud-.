@@ -18,6 +18,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
@@ -36,6 +37,7 @@ import com.inspur.emmcloud.bean.chat.ConversationFromChatContent;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
+import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
@@ -112,6 +114,7 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
     @Override
     public void onCreate() {
         ButterKnife.bind(this);
+        ImmersionBar.with(this).statusBarColor(R.color.search_contact_header_bg).statusBarDarkFont(true, 0.2f).init();
         handMessage();
         initSearchRunnable();
         groupAdapter = new GroupOrContactAdapter();
@@ -137,6 +140,11 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
     @Override
     public int getLayoutResId() {
         return R.layout.communication_search_group_contact_activity;
+    }
+
+    @Override
+    protected int getStatusType() {
+        return STATUS_NO_SET;
     }
 
     /**
@@ -456,6 +464,7 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
             if (searchModel != null) {
                 displayImg(searchModel, searchHolder.headImageView);
                 searchHolder.nameTextView.setText(searchModel.getName().toString());
+                CommunicationUtils.setUserDescText(searchModel, searchHolder.detailTextView);
             }
             //刷新数据
             return view;
@@ -518,5 +527,4 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
             return view;
         }
     }
-
 }

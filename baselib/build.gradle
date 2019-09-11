@@ -144,9 +144,13 @@ dependencies {
     androidTestApi('com.android.support.test:rules:0.5') {
         exclude module: 'support-annotations'
     }
-    api deps.Toast
     api deps.ARouter.arouter_api
     api deps.ical4j
     api deps.fingerprintidentify
+
+    api deps.S3.aws_android_sdk_s3
+    api deps.S3.aws_android_sdk_core
+    api (deps.S3.aws_android_sdk_mobile_client){ transitive = true }
+    api (deps.S3.aws_auth){ transitive = true }
     api deps.wechatOpenSdk
 }

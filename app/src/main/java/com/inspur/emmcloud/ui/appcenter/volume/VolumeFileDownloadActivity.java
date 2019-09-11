@@ -21,7 +21,6 @@ import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
-import com.inspur.emmcloud.util.privates.VolumeFileIconUtils;
 
 import org.xutils.common.Callback;
 import org.xutils.http.HttpMethod;
@@ -67,7 +66,7 @@ public class VolumeFileDownloadActivity extends BaseActivity {
         ButterKnife.bind(this);
         volumeFile = (VolumeFile) getIntent().getSerializableExtra("volumeFile");
         fileNameText.setText(volumeFile.getName());
-        fileTypeImg.setImageResource(VolumeFileIconUtils.getIconResId(volumeFile));
+        fileTypeImg.setImageResource(FileUtils.getFileIconResIdByFileName(volumeFile.getName()));
         fileSizeText.setText(FileUtils.formatFileSize(volumeFile.getSize()));
         fileSavePath = MyAppConfig.getVolumeFileDownloadDirPath() + volumeFile.getName();
         if (FileUtils.isFileExist(fileSavePath)) {

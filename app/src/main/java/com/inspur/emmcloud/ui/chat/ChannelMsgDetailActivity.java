@@ -223,7 +223,7 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
             ImageDisplayUtils.getInstance().displayImage(msgContentImg,
                     APIUri.getPreviewUrl(fileName), R.drawable.icon_photo_default);
         } else {
-            ImageDisplayUtils.getInstance().displayImage(msgContentImg, "drawable://" + FileUtils.getIconResId(fileName));
+            ImageDisplayUtils.getInstance().displayImage(msgContentImg, "drawable://" + FileUtils.getFileIconResIdByFileName(fileName));
         }
     }
 

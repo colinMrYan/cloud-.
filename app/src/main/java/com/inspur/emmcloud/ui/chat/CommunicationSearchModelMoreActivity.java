@@ -21,7 +21,6 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
-import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
 import com.inspur.emmcloud.baselib.widget.ClearEditText;
@@ -38,6 +37,7 @@ import com.inspur.emmcloud.bean.chat.ConversationFromChatContent;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
+import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
@@ -99,11 +99,9 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
     @Override
     public void onCreate() {
         ButterKnife.bind(this);
+        ImmersionBar.with(this).statusBarColor(R.color.search_contact_header_bg).statusBarDarkFont(true, 0.2f).init();
         searchArea = getIntent().getStringExtra("search_type");
         searchText = getIntent().getStringExtra("search_content");
-        int navigationBarColor = R.color.search_contact_header_bg;
-        boolean isStatusBarDarkFont = ResourceUtils.getBoolenOfAttr(this, R.attr.status_bar_dark_font);
-        ImmersionBar.with(this).statusBarColor(navigationBarColor).navigationBarColor(navigationBarColor).navigationBarDarkIcon(true, 1.0f).statusBarDarkFont(isStatusBarDarkFont, 0.2f).init();
         searchEdit.setOnEditorActionListener(onEditorActionListener);
         searchEdit.addTextChangedListener(new SearchWatcher());
         InputMethodUtils.display(this, searchEdit);
@@ -132,6 +130,10 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
         return R.layout.communication_search_model_detail_activity;
     }
 
+    @Override
+    protected int getStatusType() {
+        return STATUS_NO_SET;
+    }
     @Override
     public void onLoadMore() {
         mySwipeRefreshLayout.setLoading(false);
@@ -406,6 +408,7 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
             if (searchModel != null) {
                 displayImg(searchModel, searchHolder.headImageView);
                 searchHolder.nameTextView.setText(searchModel.getName().toString());
+                CommunicationUtils.setUserDescText(searchModel, searchHolder.detailTextView);
             }
             //刷新数据
             return view;

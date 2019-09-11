@@ -25,11 +25,10 @@ import com.inspur.emmcloud.bean.schedule.calendar.CalendarEvent;
 import com.inspur.emmcloud.bean.system.ChangeTabBean;
 import com.inspur.emmcloud.componentservice.communication.CommunicationService;
 import com.inspur.emmcloud.componentservice.communication.ShareToConversationListener;
+import com.inspur.emmcloud.componentservice.mail.MailService;
 import com.inspur.emmcloud.componentservice.mail.OnExchangeLoginListener;
 import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.ui.appcenter.ReactNativeAppActivity;
-import com.inspur.emmcloud.ui.appcenter.mail.MailHomeActivity;
-import com.inspur.emmcloud.ui.appcenter.mail.MailLoginActivity;
 import com.inspur.emmcloud.ui.appcenter.volume.VolumeHomePageActivity;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
 import com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity;
@@ -44,7 +43,6 @@ import com.inspur.emmcloud.ui.schedule.meeting.ScheduleDetailActivity;
 import com.inspur.emmcloud.ui.schedule.task.TaskAddActivity;
 import com.inspur.emmcloud.util.privates.AppId2AppAndOpenAppUtils;
 import com.inspur.emmcloud.util.privates.CustomProtocol;
-import com.inspur.emmcloud.util.privates.ExchangeLoginUtils;
 import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.ProfileUtils;
 import com.inspur.emmcloud.util.privates.WebAppUtils;
@@ -564,19 +562,24 @@ public class AppSchemeHandleActivity extends BaseActivity {
                 finish();
                 break;
             case "mail":
-                new ExchangeLoginUtils.Builder(this)
-                        .setShowLoadingDlg(true)
-                        .setOnExchangeLoginListener(new OnExchangeLoginListener() {
-                            @Override
-                            public void onMailLoginSuccess() {
-                                IntentUtils.startActivity(AppSchemeHandleActivity.this, MailHomeActivity.class, true);
-                            }
+                if (Router.getInstance().getService(MailService.class) != null) {
+                    MailService mailService = Router.getInstance().getService(MailService.class);
+                    mailService.exchangeLogin(this, new OnExchangeLoginListener() {
+                        @Override
+                        public void onMailLoginSuccess() {
+                            ARouter.getInstance().build(Constant.AROUTER_CLASS_MAIL_HOME).navigation();
+                            finish();
+                        }
 
-                            @Override
-                            public void onMailLoginFail(String error, int errorCode) {
-                                IntentUtils.startActivity(AppSchemeHandleActivity.this, MailLoginActivity.class, true);
-                            }
-                        }).build().login();
+                        @Override
+                        public void onMailLoginFail(String error, int errorCode) {
+                            ARouter.getInstance().build(Constant.AROUTER_CLASS_MAIL_LOGIN).navigation();
+                            finish();
+                        }
+                    });
+                } else {
+                    finish();
+                }
                 break;
             default:
                 finish();

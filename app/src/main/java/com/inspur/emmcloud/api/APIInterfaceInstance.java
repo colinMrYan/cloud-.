@@ -1116,7 +1116,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnVolumeFileUploadTokenSuccess(GetVolumeFileUploadTokenResult getVolumeFileUploadTokenResult, String fileLocalPath, VolumeFile mockVolumeFile) {
+    public void returnVolumeFileUploadTokenSuccess(GetVolumeFileUploadTokenResult getVolumeFileUploadTokenResult, String fileLocalPath, VolumeFile mockVolumeFile, int transferObserverId) {
     }
 
     @Override
@@ -1817,6 +1817,16 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnShareFileToFriendsFromVolumeFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnCallbackAfterFileUploadSuccess(VolumeFile volumeFile) {
+
+    }
+
+    @Override
+    public void returnCallbackAfterFileUploadFail(String error, int errorCode) {
 
     }
 }

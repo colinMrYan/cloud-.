@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
@@ -47,7 +48,8 @@ public class DisplayRegularFileMsg {
         }
         ImageView img = convertView.findViewById(R.id.iv_file_icon);
         final MsgContentRegularFile msgContentFile = message.getMsgContentAttachmentFile();
-        img.setImageResource(FileUtils.getRegularFileIconResId(msgContentFile.getName()));
+        LogUtils.jasonDebug("format==" + FileUtils.getMimeType(msgContentFile.getName()));
+        img.setImageResource(FileUtils.getFileIconResIdByFileName(msgContentFile.getName()));
         fileNameText.setText(msgContentFile.getName());
         fileSizeText.setText(FileUtils.formatFileSize(msgContentFile.getSize()));
         return convertView;

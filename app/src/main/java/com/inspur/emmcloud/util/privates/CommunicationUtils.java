@@ -3,12 +3,16 @@ package com.inspur.emmcloud.util.privates;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.compressor.Compressor;
 import com.inspur.emmcloud.bean.chat.Channel;
@@ -27,11 +31,13 @@ import com.inspur.emmcloud.bean.contact.ContactOrg;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.ui.chat.DisplayMediaImageMsg;
 import com.inspur.emmcloud.util.privates.cache.ContactOrgCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 
 import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -315,6 +321,17 @@ public class CommunicationUtils {
         return message;
     }
 
+    public static Message combinLocalExtendedLinksMessageHaveContent(String cid, String content) {
+        String tracer = getTracer();
+        Message message = combinLocalMessageCommon();
+        message.setChannel(cid);
+        message.setId(tracer);
+        message.setTmpId(tracer);
+        message.setType("extended/links");
+        message.setContent(content);
+        return message;
+    }
+
 
     public static Message combinLocalReplyAttachmentCardMessage(ContactUser contactUser, String cid, String fromUser) {
         String currentTime = System.currentTimeMillis() + "";
@@ -424,6 +441,77 @@ public class CommunicationUtils {
         }
         return fileCategory;
 
+    }
+
+    public static void setUserDescText(SearchModel searchModel, TextView textView) {
+        setUserDescText(searchModel, textView, true);
+    }
+
+    /**
+     * 获取用户 英文名 + 机构
+     *
+     * @param searchModel
+     * @param textView
+     */
+    public static void setUserDescText(SearchModel searchModel, TextView textView, boolean isShowOrg) {
+        if (searchModel.getType().equals(SearchModel.TYPE_USER)) {
+            String enName = getEnglishName(searchModel);
+            String orgName = isShowOrg ? getOrgName(searchModel) : null;
+            if (StringUtils.isBlank(enName) && StringUtils.isBlank(orgName)) {
+                textView.setVisibility(View.GONE);
+            } else {
+                textView.setVisibility(View.VISIBLE);
+                if (StringUtils.isBlank(enName)) {
+                    textView.setText(orgName);
+                } else if (StringUtils.isBlank(orgName)) {
+                    textView.setText(enName);
+                } else {
+                    textView.setText(enName + "  |  " + orgName);
+                }
+            }
+        } else {
+            textView.setVisibility(View.GONE);
+        }
+    }
+
+    /**
+     * 英文名
+     */
+    public static String getEnglishName(SearchModel searchModel) {
+        String englishName = null;
+        if (searchModel.getType().equals(SearchModel.TYPE_USER)) {
+            ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(searchModel.getId());
+            if (contactUser != null) {
+                englishName = contactUser.getNameGlobal();
+            }
+        }
+
+        return englishName;
+    }
+
+    /**
+     * 获取二 三级组织
+     */
+    public static String getOrgName(SearchModel searchModel) {
+        ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(searchModel.getId());
+        String orgNameOrID = contactUser.getParentId();
+        String root = "root";
+        List<String> orgNameList = new ArrayList<>();
+        while (!root.equals(orgNameOrID)) {
+            ContactOrg contactOrgTest = ContactOrgCacheUtils.getContactOrg(orgNameOrID);
+            orgNameOrID = contactOrgTest.getName();
+            orgNameList.add(orgNameOrID);
+            orgNameOrID = contactOrgTest.getParentId();
+        }
+        Collections.reverse(orgNameList);
+        if (orgNameList.size() > 1) {
+            if (orgNameList.size() == 2) {
+                return orgNameList.get(1);
+            } else {
+                return orgNameList.get(1) + "-" + orgNameList.get(2);
+            }
+        }
+        return null;
     }
 
 

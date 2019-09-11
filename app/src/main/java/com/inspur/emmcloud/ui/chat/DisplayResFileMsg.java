@@ -63,7 +63,7 @@ public class DisplayResFileMsg {
         String fileName = JSONUtils.getString(msgBody, "name", "");
         final String downloadUri = JSONUtils.getString(msgBody, "key", "");
         ImageView fileTypeImg = cardContentView.findViewById(R.id.file_type_img);
-        ImageDisplayUtils.getInstance().displayImage(fileTypeImg, "drawable://" + FileUtils.getIconResId(downloadUri));
+        ImageDisplayUtils.getInstance().displayImage(fileTypeImg, "drawable://" + FileUtils.getFileIconResIdByFileName(downloadUri));
         fileTitleText.setText(fileName);
         fileSizeText.setText(FileUtils.formatFileSize(fileSize));
         File dir = new File(MyAppConfig.LOCAL_DOWNLOAD_PATH);
