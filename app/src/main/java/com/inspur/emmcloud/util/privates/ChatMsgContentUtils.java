@@ -1,6 +1,5 @@
 package com.inspur.emmcloud.util.privates;
 
-import android.content.Context;
 import android.text.SpannableString;
 import android.text.Spanned;
 
@@ -20,9 +19,12 @@ import java.util.regex.Pattern;
  */
 
 public class ChatMsgContentUtils {
-    public static SpannableString mentionsAndUrl2Span(Context context, String content, Map<String, String> mentionsMap) {
+    public static SpannableString mentionsAndUrl2Span(String content, Map<String, String> mentionsMap) {
         if (StringUtils.isBlank(content)) {
             return new SpannableString("");
+        }
+        if (mentionsMap == null || mentionsMap.size() == 0) {
+            return new SpannableString(content);
         }
         StringBuilder contentStringBuilder = new StringBuilder();
         contentStringBuilder.append(content);

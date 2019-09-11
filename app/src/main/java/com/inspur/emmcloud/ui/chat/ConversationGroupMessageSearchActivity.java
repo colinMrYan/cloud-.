@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
+import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.GroupMessageSearchAdapter;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
@@ -42,6 +43,7 @@ public class ConversationGroupMessageSearchActivity extends BaseActivity {
     @Override
     public void onCreate() {
         ButterKnife.bind(this);
+        ImmersionBar.with(this).statusBarColor(R.color.search_contact_header_bg).statusBarDarkFont(true, 0.2f).init();
         initViews();
     }
 
@@ -109,15 +111,15 @@ public class ConversationGroupMessageSearchActivity extends BaseActivity {
             String type = message.getType();
             switch (type) {
                 case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
-                    messageContentList.add(ChatMsgContentUtils.mentionsAndUrl2Span(ConversationGroupMessageSearchActivity.this,
+                    messageContentList.add(ChatMsgContentUtils.mentionsAndUrl2Span(
                             message.getMsgContentComment().getText(), message.getMsgContentComment().getMentionsMap()).toString());
                     break;
                 case Message.MESSAGE_TYPE_TEXT_PLAIN:
-                    messageContentList.add(ChatMsgContentUtils.mentionsAndUrl2Span(ConversationGroupMessageSearchActivity.this,
+                    messageContentList.add(ChatMsgContentUtils.mentionsAndUrl2Span(
                             message.getMsgContentTextPlain().getText(), message.getMsgContentTextPlain().getMentionsMap()).toString());
                     break;
                 case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
-                    messageContentList.add(ChatMsgContentUtils.mentionsAndUrl2Span(ConversationGroupMessageSearchActivity.this,
+                    messageContentList.add(ChatMsgContentUtils.mentionsAndUrl2Span(
                             message.getMsgContentTextMarkdown().getText(), message.getMsgContentTextMarkdown().getMentionsMap()).toString());
                     break;
             }

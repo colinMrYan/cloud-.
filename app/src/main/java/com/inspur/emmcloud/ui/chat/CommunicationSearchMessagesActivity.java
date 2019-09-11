@@ -170,15 +170,15 @@ public class CommunicationSearchMessagesActivity extends BaseActivity {
             String type = message.getType();
             switch (type) {
                 case com.inspur.emmcloud.bean.chat.Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
-                    messageContentList.add(ChatMsgContentUtils.mentionsAndUrl2Span(CommunicationSearchMessagesActivity.this,
+                    messageContentList.add(ChatMsgContentUtils.mentionsAndUrl2Span(
                             message.getMsgContentComment().getText(), message.getMsgContentComment().getMentionsMap()).toString());
                     break;
                 case com.inspur.emmcloud.bean.chat.Message.MESSAGE_TYPE_TEXT_PLAIN:
-                    messageContentList.add(ChatMsgContentUtils.mentionsAndUrl2Span(CommunicationSearchMessagesActivity.this,
+                    messageContentList.add(ChatMsgContentUtils.mentionsAndUrl2Span(
                             message.getMsgContentTextPlain().getText(), message.getMsgContentTextPlain().getMentionsMap()).toString());
                     break;
                 case com.inspur.emmcloud.bean.chat.Message.MESSAGE_TYPE_TEXT_MARKDOWN:
-                    messageContentList.add(ChatMsgContentUtils.mentionsAndUrl2Span(CommunicationSearchMessagesActivity.this,
+                    messageContentList.add(ChatMsgContentUtils.mentionsAndUrl2Span(
                             message.getMsgContentTextMarkdown().getText(), message.getMsgContentTextMarkdown().getMentionsMap()).toString());
                     break;
             }
