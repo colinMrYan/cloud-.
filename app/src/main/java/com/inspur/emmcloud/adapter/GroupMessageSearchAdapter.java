@@ -67,19 +67,18 @@ public class GroupMessageSearchAdapter extends RecyclerView.Adapter<GroupMessage
         Spanned text = null;
         switch (type) {
             case Message.MESSAGE_TYPE_TEXT_PLAIN:
-                String textContent = ChatMsgContentUtils.mentionsAndUrl2Span(context,
-                        message.getMsgContentTextPlain().getText(),
+                String textContent = ChatMsgContentUtils.mentionsAndUrl2Span(message.getMsgContentTextPlain().getText(),
                         message.getMsgContentTextPlain().getMentionsMap()).toString();
                 text = StringUtils.getHtmlString(textContent, keyWordsColor, keyWords);
                 break;
             case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
-                String markDownContent = ChatMsgContentUtils.mentionsAndUrl2Span(context,
+                String markDownContent = ChatMsgContentUtils.mentionsAndUrl2Span(
                         message.getMsgContentTextMarkdown().getText(),
                         message.getMsgContentTextMarkdown().getMentionsMap()).toString();
                 text = StringUtils.getHtmlString(markDownContent, keyWordsColor, keyWords);
                 break;
             case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
-                String commentContent = ChatMsgContentUtils.mentionsAndUrl2Span(context,
+                String commentContent = ChatMsgContentUtils.mentionsAndUrl2Span(
                         message.getMsgContentComment().getText(),
                         message.getMsgContentComment().getMentionsMap()).toString();
                 text = StringUtils.getHtmlString(commentContent, keyWordsColor, keyWords);

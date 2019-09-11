@@ -26,6 +26,20 @@ import java.util.Map;
  */
 public class MessageCacheUtil {
 
+    public static List<Message> getMessageListByType(final Context context, final List<String> messageTypeList) {
+        List<Message> messageList = null;
+        try {
+            messageList = DbCacheUtils.getDb(context).selector(Message.class).where("type", "in", messageTypeList).findAll();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (messageList == null) {
+            messageList = new ArrayList<>();
+        }
+        return messageList;
+    }
+
+
     /**
      * 存储消息
      *
@@ -48,7 +62,7 @@ public class MessageCacheUtil {
      * @param context
      * @param messageList
      */
-    public static void updateMessageSendStatus(Context context, List<Message> messageList) {
+    public static void saveMessageList(Context context, List<Message> messageList) {
         try {
             DbCacheUtils.getDb(context).saveOrUpdate(messageList);
         } catch (Exception e) {
@@ -704,6 +718,7 @@ public class MessageCacheUtil {
 
     /**
      * 获取发送中和发送失败的消息
+     *
      * @param context
      * @param cid
      * @return
@@ -802,8 +817,6 @@ public class MessageCacheUtil {
 
         return new ArrayList<>();
     }
-
-
 
 
     /**
