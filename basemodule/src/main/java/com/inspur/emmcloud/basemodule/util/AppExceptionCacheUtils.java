@@ -38,6 +38,24 @@ public class AppExceptionCacheUtils {
     }
 
     /**
+     * 存储异常信息
+     *
+     * @param context
+     * @param appException
+     */
+    public static void saveAppException(final Context context, AppException appException) {
+        // TODO Auto-generated method stub
+        try {
+            if (!AppUtils.isApkDebugable(context)) {
+                DbCacheUtils.getDb(context).saveOrUpdate(appException);
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * 存储路由表
      *
      * @param context
