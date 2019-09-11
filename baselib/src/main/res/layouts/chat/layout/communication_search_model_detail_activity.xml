@@ -19,6 +19,7 @@
             android:layout_centerVertical="true"
             android:clickable="true"
             android:gravity="center"
+            android:onClick="onClick"
             android:paddingLeft="4dp"
             android:paddingRight="15dp"
             android:text="@string/cancel"
@@ -40,6 +41,7 @@
                 android:layout_width="14dp"
                 android:layout_height="14dp"
                 android:layout_centerVertical="true"
+                android:layout_marginLeft="8dp"
                 android:background="@drawable/bg_search"
                 android:tint="#8E8E93" />
 
@@ -50,18 +52,17 @@
                 android:layout_gravity="center_vertical"
                 android:layout_toRightOf="@id/iv_search_members"
                 android:background="@color/white"
-                android:drawablePadding="3dp"
                 android:freezesText="true"
                 android:gravity="center_vertical"
                 android:hint="@string/communication_search"
                 android:imeOptions="actionSearch"
                 android:paddingBottom="5dp"
-                android:paddingLeft="5dp"
+                android:paddingLeft="8dp"
                 android:paddingRight="5dp"
                 android:paddingTop="5dp"
                 android:singleLine="true"
                 android:textColor="@color/black"
-                android:textColorHint="#CDCDCD"
+                android:textColorHint="#8E8E93"
                 android:textSize="14sp" />
         </RelativeLayout>
     </RelativeLayout>
