@@ -336,6 +336,7 @@
     <string name="chat_more_content">更多聊天记录</string>
     <string name="chat_search_group_chats">群聊</string>
     <string name="chat_search_mention_all">全部成员</string>
+    <string name="chat_contact_more_select">多选</string>
 
     <!-- 会议卡片 -->
     <string name="meeting_has_confirmed">已确认</string>

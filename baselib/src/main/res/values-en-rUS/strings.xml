@@ -324,6 +324,7 @@
     <string name="chat_search_group_chats">Group Chats</string>
     <string name="chat_more_content">More Chat Histories</string>
     <string name="chat_search_mention_all">All</string>
+    <string name="chat_contact_more_select">More</string>
 
     <!-- 会议卡片 -->
     <string name="meeting_has_confirmed">Confirmed</string>
