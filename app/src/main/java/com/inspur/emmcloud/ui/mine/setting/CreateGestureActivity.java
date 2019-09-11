@@ -130,7 +130,7 @@ public class CreateGestureActivity extends BaseActivity {
     public void onCreate() {
         ButterKnife.bind(this);
         init();
-        ImmersionBar.with(this).statusBarColor(R.color.grey_f6f6f6).statusBarDarkFont(true, 0.2f).init();
+        ImmersionBar.with(this).statusBarColor(R.color.grey_f6f6f6).statusBarDarkFont(true, 0.2f).navigationBarColor(R.color.white).navigationBarDarkIcon(true, 1.0f).init();
     }
 
     @Override

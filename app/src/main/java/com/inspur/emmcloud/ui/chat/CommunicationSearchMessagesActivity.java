@@ -80,7 +80,7 @@ public class CommunicationSearchMessagesActivity extends BaseActivity {
     @Override
     public void onCreate() {
         ButterKnife.bind(this);
-        ImmersionBar.with(this).statusBarColor(R.color.search_contact_header_bg).statusBarDarkFont(true, 0.2f).init();
+        ImmersionBar.with(this).statusBarColor(R.color.search_contact_header_bg).statusBarDarkFont(true, 0.2f).navigationBarColor(R.color.white).navigationBarDarkIcon(true, 1.0f).init();
         if (getIntent().hasExtra(SEARCH_ALL_FROM_CHAT)) {
             conversationFromChatContent = (ConversationFromChatContent) getIntent().getSerializableExtra(SEARCH_ALL_FROM_CHAT);
             if (conversationFromChatContent.getConversation().getType().equals(Conversation.TYPE_GROUP)) {
