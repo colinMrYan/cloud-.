@@ -476,11 +476,14 @@ public class CommunicationUtils {
      */
     public static String getOrgName(SearchModel searchModel) {
         ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(searchModel.getId());
+        if (contactUser == null) return null;
         String orgNameOrID = contactUser.getParentId();
+        if (StringUtils.isBlank(orgNameOrID)) return null;
         String root = "root";
         List<String> orgNameList = new ArrayList<>();
         while (!root.equals(orgNameOrID)) {
             ContactOrg contactOrgTest = ContactOrgCacheUtils.getContactOrg(orgNameOrID);
+            if (contactOrgTest == null) return null;
             orgNameOrID = contactOrgTest.getName();
             orgNameList.add(orgNameOrID);
             orgNameOrID = contactOrgTest.getParentId();
@@ -495,6 +498,5 @@ public class CommunicationUtils {
         }
         return null;
     }
-
 
 }

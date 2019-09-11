@@ -386,7 +386,13 @@ public class ScheduleDetailActivity extends BaseActivity {
                 return participant.getName() + participant.getEmail();
             }
 
-            return ContactUserCacheUtils.getContactUserByUid(participantList.get(0).getId()).getName();
+            ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(participantList.get(0).getId());
+
+            if (contactUser != null) {
+                return contactUser.getName();
+            }
+
+            return null;
         } else {
             if (StringUtils.isBlank(participantList.get(0).getId()) ||
                     ContactUserCacheUtils.getContactUserByUid(participant.getId()) == null) {  //id为空但是有name的情况
@@ -394,9 +400,12 @@ public class ScheduleDetailActivity extends BaseActivity {
                         participantList.get(0).getName() + participantList.get(0).getEmail(),
                         participantList.size());
             }
-            return getString(R.string.meeting_detail_attendee_num,
-                    ContactUserCacheUtils.getContactUserByUid(participantList.get(0).getId()).getName(),
-                    participantList.size());
+            String name = "";
+            ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(participantList.get(0).getId());
+            if (contactUser != null) {
+                name = contactUser.getName();
+            }
+            return getString(R.string.meeting_detail_attendee_num, name, participantList.size());
         }
     }
 
