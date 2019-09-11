@@ -20,6 +20,7 @@
         android:id="@+id/v_line"
         android:layout_width="fill_parent"
         android:layout_height="0.5px"
+        android:layout_marginLeft="30dp"
         android:background="#C8C7CC" />
 
     <RelativeLayout
