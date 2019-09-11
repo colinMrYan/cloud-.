@@ -5,6 +5,7 @@ import android.text.Spanned;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.bean.schedule.MentionsAndUrl;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
@@ -40,7 +41,7 @@ public class ChatMsgContentUtils {
                 String protocol = "ecm-contact://" + uid;
                 String newString;
                 if (uid.equals("10")) {
-                    newString = "@" + context.getString(R.string.chat_search_mention_all) + " ";
+                    newString = "@" + BaseApplication.getInstance().getString(R.string.chat_search_mention_all) + " ";
                 } else {
                     newString = "@" + ContactUserCacheUtils.getUserName(uid) + " ";
                 }
