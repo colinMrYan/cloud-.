@@ -126,6 +126,7 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
         } else {
             selectedUserList.add(tranContactUser2PersonDto(ContactUserCacheUtils.getContactUserByUid(MyApplication.getInstance().getUid())));
         }
+        searchEditLayout.setVisibility(state == MENTIONS_STATE ? View.VISIBLE : View.GONE);
         loadingDlg = new LoadingDialog(this);
         loadingDlg.show();
         selectedMemberRecylerView = (RecyclerView) findViewById(R.id.recyclerview_voice_communication_select_members);
