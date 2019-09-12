@@ -36,6 +36,7 @@ import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.ConversationFromChatContent;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.contact.Contact;
+import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
@@ -192,21 +193,21 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
                 bundle = new Bundle();
                 bundle.putString("search_type", SEARCH_GROUP);
                 bundle.putString("search_content", searchText);
-                IntentUtils.startActivity(this, CommunicationSearchModelMoreActivity.class, bundle, true);
+                IntentUtils.startActivity(this, CommunicationSearchModelMoreActivity.class, bundle, false);
                 //跳转到群组列表页面
                 break;
             case R.id.rl_search_more_contact:
                 bundle = new Bundle();
                 bundle.putString("search_type", SEARCH_CONTACT);
                 bundle.putString("search_content", searchText);
-                IntentUtils.startActivity(this, CommunicationSearchModelMoreActivity.class, bundle, true);
+                IntentUtils.startActivity(this, CommunicationSearchModelMoreActivity.class, bundle, false);
                 //跳转到查找人列表
                 break;
             case R.id.rl_search_more_contact_from_chat:
                 bundle = new Bundle();
                 bundle.putString("search_type", SEARCH_ALL_FROM_CHAT);
                 bundle.putString("search_content", searchText);
-                IntentUtils.startActivity(this, CommunicationSearchModelMoreActivity.class, bundle, true);
+                IntentUtils.startActivity(this, CommunicationSearchModelMoreActivity.class, bundle, false);
                 break;
             default:
                 break;
@@ -221,7 +222,9 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
                 startChannelActivity(groupsList.get(i).getId());
                 break;
             case R.id.lv_search_contact:
-                createDirectChannel(contactsList.get(i).getId());
+                Bundle bundle = new Bundle();
+                bundle.putString("uid", contactsList.get(i).getId());
+                IntentUtils.startActivity(this, UserInfoActivity.class, bundle);
                 break;
             case R.id.lv_search_contact_from_chat:
                 Intent intent = new Intent(CommunicationSearchGroupContactActivity.this, CommunicationSearchMessagesActivity.class);
@@ -299,11 +302,9 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
                                 } else {
                                     groupsSearchList = ConversationCacheUtils.getSearchConversationSearchModelList(MyApplication.getInstance(), searchText);
                                 }
-                                if (groupsSearchList.size() > 3) {
-                                    groupsList = new ArrayList<>();
-                                    for (int i = 0; i < 3; i++) {
-                                        groupsList.add(groupsSearchList.get(i));
-                                    }
+                                groupsList = new ArrayList<>();
+                                for (int i = 0; i < (groupsSearchList.size() > 3 ? 3 : groupsSearchList.size()); i++) {
+                                    groupsList.add(groupsSearchList.get(i));
                                 }
                                 contactsSearchList = ContactUserCacheUtils.getSearchContact(searchText, null, 3);
                                 contactsList = new ArrayList<>();
@@ -321,11 +322,9 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
                                 } else {
                                     groupsSearchList = ConversationCacheUtils.getSearchConversationSearchModelList(MyApplication.getInstance(), searchText);
                                 }
-                                if (groupsSearchList.size() > 3) {
-                                    groupsList = new ArrayList<>();
-                                    for (int i = 0; i < 3; i++) {
-                                        groupsList.add(groupsSearchList.get(i));
-                                    }
+                                groupsList = new ArrayList<>();
+                                for (int i = 0; i < (groupsSearchList.size() > 3 ? 3 : groupsSearchList.size()); i++) {
+                                    groupsList.add(groupsSearchList.get(i));
                                 }
                                 break;
                             case SEARCH_CONTACT:
@@ -512,7 +511,8 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
                 SearchModel searchModel = conversation.conversation2SearchModel();
                 displayImg(searchModel, searchHolder.headImageView);
                 searchHolder.nameTextView.setText(searchModel.getName().toString());
-                searchHolder.detailTextView.setText(conversationFromChatContentList.get(i).getMessageNum() + "条相关消息记录");
+                String string = getString(R.string.chat_contact_related_message, conversationFromChatContentList.get(i).getMessageNum());
+                searchHolder.detailTextView.setText(string);
                 searchHolder.detailTextView.setVisibility(View.VISIBLE);
             }
             Contact contact = conversationFromChatContentList.get(i).getSingleChatContactUser();
@@ -520,7 +520,8 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
                 SearchModel searchModel = contact.contact2SearchModel();
                 displayImg(searchModel, searchHolder.headImageView);
                 searchHolder.nameTextView.setText(searchModel.getName().toString());
-                searchHolder.detailTextView.setText(conversationFromChatContentList.get(i).getMessageNum() + "条相关消息记录");
+                String string = getString(R.string.chat_contact_related_message, conversationFromChatContentList.get(i).getMessageNum());
+                searchHolder.detailTextView.setText(string);
                 searchHolder.detailTextView.setVisibility(View.VISIBLE);
             }
             //刷新数据

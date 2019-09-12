@@ -42,7 +42,8 @@
                 android:layout_height="14dp"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="8dp"
-                android:background="@drawable/ic_search_members" />
+                android:background="@drawable/bg_search"
+                android:tint="#8E8E93" />
 
             <TextView
                 android:id="@+id/tv_static_name"
@@ -64,7 +65,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_toRightOf="@id/tv_static_name"
                 android:background="@color/white"
-                android:drawableRight="@drawable/ic_edit_text_delbtn"
+                android:drawablePadding="3dp"
                 android:freezesText="true"
                 android:gravity="center_vertical"
                 android:hint="@string/communication_search"

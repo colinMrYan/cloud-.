@@ -36,6 +36,7 @@ import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.ConversationFromChatContent;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.contact.Contact;
+import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
@@ -285,9 +286,9 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
                     }
                     break;
                 case SEARCH_CONTACT:
-                    if (!searchContactList.get(i).getId().equals(BaseApplication.getInstance().getUid())) {
-                        createDirectChannel(searchContactList.get(i).getId());
-                    }
+                    Bundle bundle = new Bundle();
+                    bundle.putString("uid", searchContactList.get(i).getId());
+                    IntentUtils.startActivity(this, UserInfoActivity.class, bundle);
                     break;
             }
         }
