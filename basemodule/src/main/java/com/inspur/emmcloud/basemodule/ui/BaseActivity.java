@@ -156,6 +156,17 @@ public abstract class BaseActivity extends Activity {
 
     }
 
+    public void setTitleText(int resId) {
+        setTitleText(getResources().getString(resId));
+    }
+
+    private void setTitleText(String title) {
+        TextView titleTv = findViewById(R.id.header_title);
+        if (titleTv != null) {
+            titleTv.setText(title);
+        }
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();

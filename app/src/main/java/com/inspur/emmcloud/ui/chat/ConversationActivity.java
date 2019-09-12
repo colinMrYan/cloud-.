@@ -1248,6 +1248,9 @@ public class ConversationActivity extends ConversationBaseActivity {
         }
         if (chatInputMenu.isVoiceInput()) {
             chatInputMenu.stopVoiceInput();
+            if (chatInputMenu.isVoiceInputLayoutShow()) {
+                chatInputMenu.hideVoiceInputLayout();
+            }
             return;
         }
         if (InputMethodUtils.isSoftInputShow(ConversationActivity.this)) {

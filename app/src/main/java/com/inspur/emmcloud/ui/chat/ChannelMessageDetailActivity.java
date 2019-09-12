@@ -320,6 +320,14 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
             intent.putExtra("commentCount", commentList.size());
             setResult(RESULT_OK, intent);
         }
+
+        if (chatInputMenu.isVoiceInput()) {
+            chatInputMenu.stopVoiceInput();
+            if (chatInputMenu.isVoiceInputLayoutShow()) {
+                chatInputMenu.hideVoiceInputLayout();
+            }
+            return;
+        }
         finish();
     }
 
