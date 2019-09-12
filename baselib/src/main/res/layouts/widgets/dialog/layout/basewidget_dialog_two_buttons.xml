@@ -104,7 +104,7 @@
             android:id="@+id/icon_aircraft"
             android:layout_width="67dp"
             android:layout_height="80dp"
-            android:layout_marginLeft="17dp"
+            android:layout_marginLeft="3dp"
             android:src="@drawable/icon_aircraft" />
     </RelativeLayout>
 
