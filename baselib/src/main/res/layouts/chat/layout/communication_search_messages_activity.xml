@@ -92,6 +92,7 @@
             android:padding="11dp">
 
             <RelativeLayout
+                android:id="@+id/rl_channel_sub_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 

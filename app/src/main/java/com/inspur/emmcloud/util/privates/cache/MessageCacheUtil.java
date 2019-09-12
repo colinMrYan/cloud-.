@@ -741,6 +741,54 @@ public class MessageCacheUtil {
         return messageList;
     }
 
+
+    /**
+     * 根据聊天内容查找所有消息
+     *
+     * @param context
+     * @param content
+     */
+    public static List<Message> getMessagesListByKeyword(Context context, String content) {
+        List<Message> messageList = new ArrayList<>();
+        try {
+            messageList = DbCacheUtils.getDb(context).selector(Message.class)
+                    .where(WhereBuilder.b("type", "=", Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN)
+                            .or("type", "=", Message.MESSAGE_TYPE_TEXT_MARKDOWN)
+                            .or("type", "=", Message.MESSAGE_TYPE_TEXT_PLAIN))
+                    .and(WhereBuilder.b("showContent", "like", "%" + content + "%"))
+                    .findAll();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (messageList == null) {
+            messageList = new ArrayList<>();
+        }
+        return messageList;
+    }
+
+    /**
+     * 根据内容查找文本聊天记录
+     */
+    public static List<Message> getMessageListByContent(Context context, String content, String id) {
+        List<Message> messageList;
+        try {
+            messageList = DbCacheUtils.getDb(context).selector(Message.class)
+                    .where("type", "=", Message.MESSAGE_TYPE_TEXT_PLAIN)
+                    .or(WhereBuilder.b("type", "=", Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN)
+                            .or("type", "=", Message.MESSAGE_TYPE_TEXT_MARKDOWN))
+                    .and(WhereBuilder.b("showContent", "like", "%" + content + "%"))
+                    .and(WhereBuilder.b("channel", "=", id))
+                    .findAll();
+            if (messageList != null) {
+                return messageList;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ArrayList<>();
+    }
+
     /**
      * 根据内容查找记录
      */
@@ -786,28 +834,6 @@ public class MessageCacheUtil {
             conversationFromChatContentList = new ArrayList<>();
         }
         return conversationFromChatContentList;
-    }
-
-
-    /**
-     * 根据内容查找文本聊天记录
-     */
-    public static List<Message> getMessageListByContent(Context context, String content, String id) {
-        List<Message> messageList;
-        try {
-            messageList = DbCacheUtils.getDb(context).selector(Message.class)
-                    .where("type", "=", Message.MESSAGE_TYPE_TEXT_PLAIN)
-                    .and(WhereBuilder.b("showContent", "like", "%" + content + "%"))
-                    .and(WhereBuilder.b("channel", "=", id))
-                    .findAll();
-            if (messageList != null) {
-                return messageList;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return new ArrayList<>();
     }
 
 

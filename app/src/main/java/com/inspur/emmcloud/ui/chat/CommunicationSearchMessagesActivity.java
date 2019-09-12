@@ -10,6 +10,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gyf.barlibrary.ImmersionBar;
@@ -31,6 +32,7 @@ import com.inspur.emmcloud.bean.chat.ConversationFromChatContent;
 import com.inspur.emmcloud.bean.chat.UIMessage;
 import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
+import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 
 import java.io.File;
@@ -60,6 +62,8 @@ public class CommunicationSearchMessagesActivity extends BaseActivity {
     TextView searchModelNameText;
     @BindView(R.id.tv_static_name)
     TextView staticNameText;
+    @BindView(R.id.rl_channel_sub_title)
+    RelativeLayout channelSubRelativeLayout;
 
     private List<com.inspur.emmcloud.bean.chat.Message> searchMessagesList = new ArrayList<>(); // 群组搜索结果
     private ConversationFromChatContent conversationFromChatContent;
@@ -81,11 +85,11 @@ public class CommunicationSearchMessagesActivity extends BaseActivity {
     public void onCreate() {
         ButterKnife.bind(this);
         ImmersionBar.with(this).statusBarColor(R.color.search_contact_header_bg).statusBarDarkFont(true, 0.2f).navigationBarColor(R.color.white).navigationBarDarkIcon(true, 1.0f).init();
-        if (getIntent().hasExtra(SEARCH_ALL_FROM_CHAT)) {
+        if (getIntent().hasExtra(SEARCH_ALL_FROM_CHAT)) {                      //直接傳 ConversationFromChatContent
             conversationFromChatContent = (ConversationFromChatContent) getIntent().getSerializableExtra(SEARCH_ALL_FROM_CHAT);
             if (conversationFromChatContent.getConversation().getType().equals(Conversation.TYPE_GROUP)) {
                 displayImg(conversationFromChatContent.getConversation().conversation2SearchModel(), searchModelHeadImage);
-                searchModelNameText.setText("“" + conversationFromChatContent.getConversation().getName() + "”" + " 的记录"); //Record(s) for
+                searchModelNameText.setText("“" + conversationFromChatContent.getConversation().getName() + "”" + " 的记录"); //Record(s)  分別處理群組和個人
                 staticNameText.setText(conversationFromChatContent.getConversation().getName());
             } else {
                 if (conversationFromChatContent.getSingleChatContactUser() != null) {
@@ -96,6 +100,12 @@ public class CommunicationSearchMessagesActivity extends BaseActivity {
                     staticNameText.setText(searchModel.getName());
                 }
             }
+        } else if (getIntent().hasExtra(ConversationGroupInfoActivity.EXTRA_CID)) {     //只传ID 的时候
+            channelSubRelativeLayout.setVisibility(View.GONE);
+            String cid = getIntent().getStringExtra(ConversationGroupInfoActivity.EXTRA_CID);
+            Conversation conversation = ConversationCacheUtils.getConversation(this, cid);
+            conversationFromChatContent = new ConversationFromChatContent(conversation, 0);
+
         }
         groupMessageSearchAdapter = new GroupMessageSearchAdapter(this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);

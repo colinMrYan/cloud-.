@@ -47,7 +47,9 @@ import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -312,7 +314,7 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
                                     contactsList.add(contactsSearchList.get(j).contact2SearchModel());
                                 }
                                 conversationFromChatContentList = new ArrayList<>();
-                                conversationFromChatContentList = MessageCacheUtil.getConversationListByContent(MyApplication.getInstance(), searchText);
+                                conversationFromChatContentList = oriChannelInfoByKeyword(searchText);
                                 break;
                             case SEARCH_GROUP:
                                 if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
@@ -344,6 +346,40 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
                 }).start();
             }
         };
+    }
+
+    private List<ConversationFromChatContent> oriChannelInfoByKeyword(String searchData) {
+        Map<String, Integer> cidNumMap = new HashMap<>();
+        List<com.inspur.emmcloud.bean.chat.Message> allMessageListByKeyword = new ArrayList<>();
+        List<ConversationFromChatContent> conversationFromChatContentList = new ArrayList<>();
+        List<String> conversationIdList = new ArrayList<>();
+        allMessageListByKeyword = MessageCacheUtil.getMessagesListByKeyword(MyApplication.getInstance(), searchData);
+        if (allMessageListByKeyword != null) {
+            for (int i = 0; i < allMessageListByKeyword.size(); i++) {
+                String currentMessageConversation = allMessageListByKeyword.get(i).getChannel();
+                if (cidNumMap != null && cidNumMap.containsKey(currentMessageConversation)) {
+                    int num = cidNumMap.get(currentMessageConversation);
+                    num = num + 1;
+                    cidNumMap.put(currentMessageConversation, num);
+                } else {
+                    cidNumMap.put(currentMessageConversation, 1);
+                    conversationIdList.add(currentMessageConversation);
+                }
+            }
+        }
+        List<Conversation> conversationList = ConversationCacheUtils.getConversationListByIdList(MyApplication.getInstance(), conversationIdList);
+        for (int i = 0; i < conversationList.size(); i++) {
+            Conversation tempConversation = conversationList.get(i);
+            if (cidNumMap.containsKey(tempConversation.getId())) {
+                ConversationFromChatContent conversationFromChatContent =
+                        new ConversationFromChatContent(tempConversation, cidNumMap.get(tempConversation.getId()));
+                if (tempConversation.getType().equals(Conversation.TYPE_DIRECT)) {
+                    conversationFromChatContent.initSingleChatContact();
+                }
+                conversationFromChatContentList.add(conversationFromChatContent);
+            }
+        }
+        return conversationFromChatContentList;
     }
 
     /**
