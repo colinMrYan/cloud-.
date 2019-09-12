@@ -452,6 +452,7 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
      * @return
      */
     private PersonDto tranContactUser2PersonDto(ContactUser contactUser) {
+        if (contactUser == null) return null;
         PersonDto personDto = new PersonDto();
         personDto.setName(contactUser.getName());
         personDto.setUid(contactUser.getId());

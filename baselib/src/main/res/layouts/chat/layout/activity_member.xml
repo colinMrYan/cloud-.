@@ -138,6 +138,7 @@
                 android:textColorHint="#CDCDCD"
                 android:textSize="16sp" />
         </RelativeLayout>
+
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -147,8 +148,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:cacheColorHint="@color/transparent"
-                android:divider="@drawable/bg_mention_members_divider"
-                android:dividerHeight="0.5px"
+                android:divider="@null"
                 android:fadingEdge="none"
                 android:listSelector="@color/transparent"
                 android:scrollbars="none"></ListView>
