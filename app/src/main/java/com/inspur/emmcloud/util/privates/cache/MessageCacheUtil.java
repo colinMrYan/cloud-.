@@ -751,12 +751,21 @@ public class MessageCacheUtil {
     public static List<Message> getMessagesListByKeyword(Context context, String content) {
         List<Message> messageList = new ArrayList<>();
         try {
-            messageList = DbCacheUtils.getDb(context).selector(Message.class)
-                    .where(WhereBuilder.b("type", "=", Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN)
-                            .or("type", "=", Message.MESSAGE_TYPE_TEXT_MARKDOWN)
-                            .or("type", "=", Message.MESSAGE_TYPE_TEXT_PLAIN))
+            List<Message> messageList1 = DbCacheUtils.getDb(context).selector(Message.class)
+                    .where("type", "=", Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN)
                     .and(WhereBuilder.b("showContent", "like", "%" + content + "%"))
                     .findAll();
+            List<Message> messageList2 = DbCacheUtils.getDb(context).selector(Message.class)
+                    .where("type", "=", Message.MESSAGE_TYPE_TEXT_MARKDOWN)
+                    .and(WhereBuilder.b("showContent", "like", "%" + content + "%"))
+                    .findAll();
+            List<Message> messageList3 = DbCacheUtils.getDb(context).selector(Message.class)
+                    .where("type", "=", Message.MESSAGE_TYPE_TEXT_PLAIN)
+                    .and(WhereBuilder.b("showContent", "like", "%" + content + "%"))
+                    .findAll();
+            messageList.addAll(messageList1);
+            messageList.addAll(messageList2);
+            messageList.addAll(messageList3);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -769,15 +778,15 @@ public class MessageCacheUtil {
     /**
      * 根据内容查找文本聊天记录
      */
-    public static List<Message> getMessageListByContent(Context context, String content, String id) {
+    public static List<Message> getMessageListByKeywordAndId(Context context, String content, String id) {
         List<Message> messageList;
         try {
             messageList = DbCacheUtils.getDb(context).selector(Message.class)
-                    .where("type", "=", Message.MESSAGE_TYPE_TEXT_PLAIN)
-                    .or(WhereBuilder.b("type", "=", Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN)
-                            .or("type", "=", Message.MESSAGE_TYPE_TEXT_MARKDOWN))
+                    .where("channel", "=", id)
+                    .and(WhereBuilder.b("type", "=", Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN)
+                            .or("type", "=", Message.MESSAGE_TYPE_TEXT_MARKDOWN)
+                            .or("type", "=", Message.MESSAGE_TYPE_TEXT_PLAIN))
                     .and(WhereBuilder.b("showContent", "like", "%" + content + "%"))
-                    .and(WhereBuilder.b("channel", "=", id))
                     .findAll();
             if (messageList != null) {
                 return messageList;

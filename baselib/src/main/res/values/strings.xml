@@ -494,6 +494,7 @@
     <string name="schedule_add">新建</string>
     <string name="schedule_update">编辑</string>
     <string name="schedule_add_position">请输入地点...</string>
+    <string name="chat_search_related_messages">%1$s的记录</string>
 
     <!-- 发现部分 -->
     <string name="find">发现</string>
