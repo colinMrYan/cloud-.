@@ -2,6 +2,7 @@ package com.inspur.emmcloud.componentservice.web;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.v4.app.Fragment;
 
 import com.inspur.emmcloud.componentservice.CoreService;
@@ -23,6 +24,8 @@ public interface WebService extends CoreService {
     void openGallery(Activity activity, int limit, int requestCode);
 
     void openGallery(Activity activity, int limit, int requestCode, boolean isSupportOrigin);
+
+    Bitmap getQrCodeWithContent(String qrString, int qrSize);
 
     Class getImpFragmentClass();
 

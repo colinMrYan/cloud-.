@@ -3,9 +3,15 @@ package com.inspur.emmcloud.web.servcieimpl;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.util.imagepicker.ImagePicker;
 import com.inspur.emmcloud.basemodule.util.imagepicker.ui.ImageGridActivity;
@@ -21,6 +27,7 @@ import com.inspur.emmcloud.web.plugin.barcode.decoder.PreviewDecodeActivity;
 import com.inspur.emmcloud.web.ui.ImpFragment;
 
 import java.io.File;
+import java.util.Hashtable;
 import java.util.List;
 
 /**
@@ -118,6 +125,47 @@ public class WebServiceImpl implements WebService {
         imagePicker.setSupportOrigin(isSupportOrigin);
         Intent intent = new Intent(activity, ImageGridActivity.class);
         activity.startActivityForResult(intent, requestCode);
+    }
+
+    /**
+     * 根据传入字符串和大小获取二维码
+     *
+     * @param qrString
+     * @param qrSize
+     * @return
+     */
+    @Override
+    public Bitmap getQrCodeWithContent(String qrString, int qrSize) {
+        // TODO Auto-generated method stub
+        try {
+            Hashtable<EncodeHintType, Object> hints = new Hashtable<EncodeHintType, Object>();
+            hints.put(EncodeHintType.CHARACTER_SET, "utf-8");
+            hints.put(EncodeHintType.MARGIN, 2);
+            // 图像数据转换，使用了矩阵转换
+            BitMatrix bitMatrix = new QRCodeWriter().encode(qrString,
+                    BarcodeFormat.QR_CODE, qrSize, qrSize, hints);
+            int[] pixels = new int[qrSize * qrSize];
+            // 下面这里按照二维码的算法，逐个生成二维码的图片，
+            // 两个for循环是图片横列扫描的结果
+            for (int y = 0; y < qrSize; y++) {
+                for (int x = 0; x < qrSize; x++) {
+                    if (bitMatrix.get(x, y)) {
+                        pixels[y * qrSize + x] = 0xff000000;
+                    } else {
+                        pixels[y * qrSize + x] = 0xffffffff;
+                    }
+                }
+            }
+            // 生成二维码图片的格式，使用ARGB_8888
+            Bitmap bitmap = Bitmap.createBitmap(qrSize, qrSize,
+                    Bitmap.Config.ARGB_8888);
+            bitmap.setPixels(pixels, 0, qrSize, 0, 0, qrSize, qrSize);
+            // 显示到一个ImageView上面
+            return bitmap;
+        } catch (WriterException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override
