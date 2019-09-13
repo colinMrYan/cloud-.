@@ -38,7 +38,8 @@
         android:layout_height="80dp"
         android:layout_below="@id/rl_header"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="10dp"
+        android:elevation="6dp"
         android:src="@drawable/icon_channel_group_default" />
 
     <TextView
@@ -47,29 +48,39 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/iv_group_image"
         android:layout_centerHorizontal="true"
-        android:text="群聊" />
+        android:layout_marginTop="8dp"
+        android:elevation="6dp"
+        android:text="群聊(5)"
+        android:textColor="#333333" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="480dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="83dp"
+        android:layout_below="@id/rl_header"
+        android:layout_marginTop="33dp"
         android:background="@color/white"
         android:elevation="5dp">
 
         <ImageView
             android:id="@+id/iv_group_qrcode"
             android:layout_width="312dp"
-            android:layout_height="312dp" />
+            android:layout_height="312dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="75dp" />
 
         <Button
             android:id="@+id/btn_share_group_qrcode"
-            android:layout_width="match_parent"
+            android:layout_width="91dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/iv_group_qrcode"
+            android:layout_centerHorizontal="true"
             android:background="@null"
-            android:drawableLeft="@drawable/icon_channel" />
+            android:drawableLeft="@drawable/ic_group_share"
+            android:text="分享二维码"
+            android:textColor="#36A5F6"
+            android:textSize="13sp" />
     </RelativeLayout>
 
 </RelativeLayout>

@@ -240,6 +240,11 @@ public class ConversationGroupInfoActivity extends BaseActivity {
                 bundle.putString(EXTRA_CID, conversation.getId());
                 IntentUtils.startActivity(ConversationGroupInfoActivity.this, ConversationGroupMessageSearchActivity.class, bundle);
                 break;
+            case R.id.ll_group_qrcode:
+                bundle.putString("cid", conversation.getId());
+                IntentUtils.startActivity(ConversationGroupInfoActivity.this,
+                        ConversationQrCodeActivity.class, bundle);
+                break;
             default:
                 break;
         }
