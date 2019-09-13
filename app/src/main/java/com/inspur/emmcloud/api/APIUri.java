@@ -5,6 +5,7 @@ import android.content.Context;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.baselib.util.ImageUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
@@ -1728,5 +1729,27 @@ public class APIUri {
 
     public static String getVolumeShareFileUrl(String volume, String channel) {
         return getUrlBaseVolume() + "/" + volume + "/file/share/channel/" + channel;
+    }
+
+    /**
+     * 得到扫码加群二维码内容的URL
+     *
+     * @param cid
+     * @return
+     */
+    public static String getInvitationUrl(String cid) {
+        LogUtils.YfcDebug("11：" + getECMChatChannelUrl());
+        LogUtils.YfcDebug("22：" + getECMChatConversationBaseUrl());
+        return "https://ecm.inspur.com/chat" + "/rest/v1/group/" + cid + "/invitation";
+    }
+
+    /**
+     * 得到扫码加群二维码内容的URL
+     *
+     * @param cid
+     * @return
+     */
+    public static String getJoinConversationUrl(String cid) {
+        return getECMChatUrl() + "/rest/v1/group/" + cid + "/seat";
     }
 }

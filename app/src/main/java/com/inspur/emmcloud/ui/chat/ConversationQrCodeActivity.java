@@ -8,12 +8,18 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.ImageUtils;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
+import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.bean.chat.ScanCodeJoinConversationBean;
 
 import java.io.File;
 
@@ -33,6 +39,8 @@ public class ConversationQrCodeActivity extends BaseActivity {
     ImageView groupQrCodeImage;
     @BindView(R.id.btn_share_group_qrcode)
     Button shareGroupQrCodeBtn;
+    private String cid;
+    private LoadingDialog loadingDialog;
 
     @Override
     public void onCreate() {
@@ -41,26 +49,27 @@ public class ConversationQrCodeActivity extends BaseActivity {
     }
 
     private void initViews() {
-        Router router = Router.getInstance();
+        loadingDialog = new LoadingDialog(this);
+        this.cid = getIntent().getStringExtra("cid");
         File file = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH + "/" +
-                MyApplication.getInstance().getTanent() + getIntent().
-                getStringExtra("cid") + "_100.png1");
+                MyApplication.getInstance().getTanent() + cid + "_100.png1");
         if (file.exists()) {
             groupCircleTextImageView.setImageBitmap(ImageUtils.getBitmapByFile(file));
         } else {
             groupCircleTextImageView.setImageResource(R.drawable.icon_channel_group_default);
         }
         getQrCodeContent();
-        if (router.getService(com.inspur.emmcloud.componentservice.web.WebService.class) != null) {
-            com.inspur.emmcloud.componentservice.web.WebService service = router.getService(com.inspur.emmcloud.componentservice.web.WebService.class);
-            Bitmap bitmap = service.getQrCodeWithContent("430Test", 500);
-            groupQrCodeImage.setImageBitmap(bitmap);
-        }
     }
 
+    /**
+     * 获取扫码加群二维码内容
+     */
     private void getQrCodeContent() {
         if (NetUtils.isNetworkConnected(this)) {
-
+            loadingDialog.show();
+            ChatAPIService chatAPIService = new ChatAPIService(this);
+            chatAPIService.setAPIInterface(new WebService());
+            chatAPIService.getInvitationContent(cid);
         }
     }
 
@@ -74,6 +83,27 @@ public class ConversationQrCodeActivity extends BaseActivity {
             case R.id.ibt_back:
                 finish();
                 break;
+        }
+    }
+
+    class WebService extends APIInterfaceInstance {
+        @Override
+        public void returnInvitationContentSuccess(ScanCodeJoinConversationBean scanCodeJoinConversationBean) {
+            LogUtils.YfcDebug("返回成功：" + JSONUtils.toJSONString(scanCodeJoinConversationBean));
+            LoadingDialog.dimissDlg(loadingDialog);
+            Router router = Router.getInstance();
+            if (router.getService(com.inspur.emmcloud.componentservice.web.WebService.class) != null) {
+                com.inspur.emmcloud.componentservice.web.WebService service = router.getService(com.inspur.emmcloud.componentservice.web.WebService.class);
+                Bitmap bitmap = service.getQrCodeWithContent("430Test", 1000);
+                groupQrCodeImage.setImageBitmap(bitmap);
+            }
+        }
+
+        @Override
+        public void returnInvitationContentFail(String error, int errorCode) {
+            LogUtils.YfcDebug("返回失败：" + error);
+            //返回失败不消失 微信就是如此
+//            LoadingDialog.dimissDlg(loadingDialog);
         }
     }
 }

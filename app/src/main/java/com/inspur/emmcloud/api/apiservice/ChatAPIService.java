@@ -38,6 +38,7 @@ import com.inspur.emmcloud.bean.chat.GetNewsImgResult;
 import com.inspur.emmcloud.bean.chat.GetSendMsgResult;
 import com.inspur.emmcloud.bean.chat.GetVoiceCommunicationResult;
 import com.inspur.emmcloud.bean.chat.Message;
+import com.inspur.emmcloud.bean.chat.ScanCodeJoinConversationBean;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.system.GetBoolenResult;
 import com.inspur.emmcloud.componentservice.login.LoginService;
@@ -1815,5 +1816,42 @@ public class ChatAPIService {
         });
     }
 
+    /**
+     * 获取扫码加群二维码内容
+     *
+     * @param cid
+     */
+    public void getInvitationContent(final String cid) {
+        String url = APIUri.getInvitationUrl(cid);
+        LogUtils.YfcDebug("URL:" + url);
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, url) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnInvitationContentSuccess(new ScanCodeJoinConversationBean(new String(arg0)));
+            }
 
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnInvitationContentFail(error, responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getInvitationContent(cid);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                refreshToken(
+                        oauthCallBack, requestTime);
+            }
+        });
+    }
 }

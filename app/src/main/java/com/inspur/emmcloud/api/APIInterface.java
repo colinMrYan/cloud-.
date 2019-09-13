@@ -47,6 +47,7 @@ import com.inspur.emmcloud.bean.chat.GetVoiceCommunicationResult;
 import com.inspur.emmcloud.bean.chat.GetWebSocketUrlResult;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.Robot;
+import com.inspur.emmcloud.bean.chat.ScanCodeJoinConversationBean;
 import com.inspur.emmcloud.bean.contact.GetContactOrgListUpateResult;
 import com.inspur.emmcloud.bean.contact.GetContactUserListUpateResult;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
@@ -805,4 +806,12 @@ public interface APIInterface {
     void returnCallbackAfterFileUploadSuccess(VolumeFile volumeFile);
 
     void returnCallbackAfterFileUploadFail(String error, int errorCode);
+
+    void returnInvitationContentSuccess(ScanCodeJoinConversationBean scanCodeJoinConversationBean);
+
+    void returnInvitationContentFail(String error, int errorCode);
+
+    void returnJoinConversationSuccess(Conversation conversation);
+
+    void returnJoinConversationFail(String error, int errorCode);
 }
