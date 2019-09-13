@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
 
@@ -12,6 +13,7 @@ import com.google.zxing.EncodeHintType;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.util.imagepicker.ImagePicker;
 import com.inspur.emmcloud.basemodule.util.imagepicker.ui.ImageGridActivity;
@@ -166,6 +168,69 @@ public class WebServiceImpl implements WebService {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public Bitmap getQrCodeWithContent(String qrString, Bitmap centerLogo, int qrSize) {
+        //宽度值，影响中间图片大小
+        int IMAGE_HALF_WIDTH = 50;
+        try {
+            IMAGE_HALF_WIDTH = qrSize / 10;
+            Hashtable<EncodeHintType, Object> hints = new Hashtable<>();
+            hints.put(EncodeHintType.CHARACTER_SET, "utf-8");
+            /*
+             * 设置容错级别，默认为ErrorCorrectionLevel.L
+             * 因为中间加入logo所以建议你把容错级别调至H,否则可能会出现识别不了
+             */
+            hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
+            //设置空白边距的宽度
+            hints.put(EncodeHintType.MARGIN, 1); //default is 4
+            // 图像数据转换，使用了矩阵转换
+            BitMatrix bitMatrix = new QRCodeWriter().encode(qrString,
+                    BarcodeFormat.QR_CODE, qrSize, qrSize, hints);
+
+            int width = bitMatrix.getWidth();//矩阵高度
+            int height = bitMatrix.getHeight();//矩阵宽度
+            int halfW = width / 2;
+            int halfH = height / 2;
+
+            Matrix m = new Matrix();
+            float sx = (float) 2 * IMAGE_HALF_WIDTH / centerLogo.getWidth();
+            float sy = (float) 2 * IMAGE_HALF_WIDTH
+                    / centerLogo.getHeight();
+            m.setScale(sx, sy);
+            //设置缩放信息
+            //将logo图片按martix设置的信息缩放
+            centerLogo = Bitmap.createBitmap(centerLogo, 0, 0,
+                    centerLogo.getWidth(), centerLogo.getHeight(), m, false);
+
+            int[] pixels = new int[qrSize * qrSize];
+            for (int y = 0; y < qrSize; y++) {
+                for (int x = 0; x < qrSize; x++) {
+                    if (x > halfW - IMAGE_HALF_WIDTH && x < halfW + IMAGE_HALF_WIDTH
+                            && y > halfH - IMAGE_HALF_WIDTH
+                            && y < halfH + IMAGE_HALF_WIDTH) {
+                        //该位置用于存放图片信息
+                        //记录图片每个像素信息
+                        pixels[y * width + x] = centerLogo.getPixel(x - halfW
+                                + IMAGE_HALF_WIDTH, y - halfH + IMAGE_HALF_WIDTH);
+                    } else {
+                        if (bitMatrix.get(x, y)) {
+                            pixels[y * qrSize + x] = 0xff000000;
+                        } else {
+                            pixels[y * qrSize + x] = 0xffffffff;
+                        }
+                    }
+                }
+            }
+            Bitmap bitmap = Bitmap.createBitmap(qrSize, qrSize,
+                    Bitmap.Config.ARGB_8888);
+            bitmap.setPixels(pixels, 0, qrSize, 0, 0, qrSize, qrSize);
+            return bitmap;
+        } catch (WriterException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override

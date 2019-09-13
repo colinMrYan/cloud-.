@@ -27,6 +27,8 @@ public interface WebService extends CoreService {
 
     Bitmap getQrCodeWithContent(String qrString, int qrSize);
 
+    Bitmap getQrCodeWithContent(String qrString, Bitmap centerLogo, int qrSize);
+
     Class getImpFragmentClass();
 
     /**
