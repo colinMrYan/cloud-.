@@ -70,10 +70,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="45dp"
-                android:paddingBottom="3dp"
                 android:paddingLeft="5dp"
+                android:paddingTop="3dp"
                 android:paddingRight="10dp"
-                android:paddingTop="3dp">
+                android:paddingBottom="3dp">
 
                 <com.inspur.emmcloud.baselib.widget.FlowLayout
                     android:id="@+id/flowlayout"
@@ -87,7 +87,7 @@
         <View
             android:id="@+id/space_edit"
             android:layout_width="match_parent"
-            android:layout_height="0.5px"
+            android:layout_height="1px"
             android:layout_below="@id/search_edit_layout"
             android:background="@color/color_list_divider" />
 
@@ -114,12 +114,12 @@
                         android:id="@+id/open_title_list"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:paddingLeft="10dp"></android.support.v7.widget.RecyclerView>
+                        android:paddingLeft="15dp" />
                 </RelativeLayout>
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0.5px"
+                    android:layout_height="1px"
                     android:background="@color/color_list_divider" />
 
                 <ListView
@@ -128,7 +128,7 @@
                     android:layout_height="0dp"
                     android:layout_weight="1.0"
                     android:divider="#ffffff"
-                    android:dividerHeight="0.5px"></ListView>
+                    android:dividerHeight="1px" />
             </LinearLayout>
 
             <LinearLayout
@@ -141,33 +141,31 @@
                     android:id="@+id/orgin_first_group_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginBottom="6dp"
                     android:background="@color/white"
                     android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/title_all_text"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="40dp"
                         android:background="@color/white"
                         android:gravity="center_vertical"
-                        android:paddingBottom="10dp"
                         android:paddingLeft="15dp"
                         android:paddingRight="10dp"
-                        android:paddingTop="10dp"
                         android:text="@string/all"
                         android:textColor="#666666"
                         android:textSize="16sp" />
 
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="0.5px"
+                        android:layout_height="1px"
                         android:background="@color/color_list_divider" />
 
                     <RelativeLayout
                         android:id="@+id/struct_layout"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="62dp"
                         android:background="@color/white">
 
                         <com.inspur.emmcloud.baselib.widget.CircleTextImageView
@@ -175,10 +173,10 @@
                             android:layout_width="36dp"
                             android:layout_height="36dp"
                             android:layout_centerVertical="true"
-                            android:layout_marginBottom="4dp"
                             android:layout_marginLeft="15dp"
-                            android:layout_marginRight="10dp"
                             android:layout_marginTop="4dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_marginBottom="4dp"
                             android:src="@drawable/ic_contact_struct" />
 
                         <TextView
@@ -191,20 +189,17 @@
                             android:text="@string/origanization_struct"
                             android:textColor="#333333"
                             android:textSize="16sp" />
-
-
                     </RelativeLayout>
-
 
                     <RelativeLayout
                         android:id="@+id/channel_group_layout"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="62dp"
                         android:background="@color/white">
 
                         <View
                             android:layout_width="match_parent"
-                            android:layout_height="0.5px"
+                            android:layout_height="1px"
                             android:layout_marginLeft="55dp"
                             android:background="@color/color_list_divider" />
 
@@ -213,10 +208,10 @@
                             android:layout_width="36dp"
                             android:layout_height="36dp"
                             android:layout_centerVertical="true"
-                            android:layout_marginBottom="4dp"
                             android:layout_marginLeft="15dp"
-                            android:layout_marginRight="10dp"
                             android:layout_marginTop="4dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_marginBottom="4dp"
                             android:src="@drawable/ic_contact_group" />
 
                         <TextView
@@ -232,7 +227,7 @@
 
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="0.5px"
+                        android:layout_height="1px"
                         android:layout_marginLeft="55dp"
                         android:background="@color/color_list_divider" />
                 </LinearLayout>
@@ -248,27 +243,25 @@
                     <TextView
                         android:id="@+id/second_title_text"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="40dp"
                         android:background="#ffffff"
                         android:gravity="center_vertical"
-                        android:paddingBottom="10dp"
                         android:paddingLeft="15dp"
-                        android:paddingTop="10dp"
                         android:textColor="#666666"
-                        android:textSize="@dimen/content_title_textsize" />
+                        android:textSize="16sp" />
 
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="0.5px"
+                        android:layout_height="1px"
                         android:background="@color/color_list_divider" />
 
                     <ListView
                         android:id="@+id/second_group_list"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
-                        android:layout_weight="1.0"
+                        android:layout_weight="1"
                         android:divider="#ffffff"
-                        android:dividerHeight="0.5px"></ListView>
+                        android:dividerHeight="1px" />
                 </LinearLayout>
             </LinearLayout>
         </RelativeLayout>
@@ -304,7 +297,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_toLeftOf="@+id/pop_third_group_more_text"
-                            android:paddingLeft="7dp"></android.support.v7.widget.RecyclerView>
+                            android:paddingLeft="7dp" />
 
                         <TextView
                             android:id="@+id/pop_third_group_more_text"
@@ -323,7 +316,7 @@
 
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="0.5px"
+                        android:layout_height="1px"
                         android:background="@color/color_list_divider" />
 
                     <RelativeLayout
@@ -345,7 +338,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:divider="#ffffff"
-                            android:dividerHeight="0.5dp"></ListView>
+                            android:dividerHeight="0.5dp" />
                     </RelativeLayout>
                 </LinearLayout>
 
@@ -366,7 +359,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_toLeftOf="@+id/pop_second_group_more_text"
-                            android:paddingLeft="7dp"></android.support.v7.widget.RecyclerView>
+                            android:paddingLeft="7dp" />
 
                         <TextView
                             android:id="@+id/pop_second_group_more_text"
@@ -385,7 +378,7 @@
 
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="0.5px"
+                        android:layout_height="1px"
                         android:background="@color/color_list_divider" />
 
                     <RelativeLayout
@@ -407,7 +400,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:divider="#ffffff"
-                            android:dividerHeight="0.5px"></ListView>
+                            android:dividerHeight="1px" />
                     </RelativeLayout>
                 </LinearLayout>
             </LinearLayout>
