@@ -151,6 +151,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
      */
     protected void showFileOperationDlg(final VolumeFile volumeFile) {
         boolean isVolumeFileWriteable = VolumeFilePrivilegeUtils.getVolumeFileWriteable(getApplicationContext(), volumeFile);
+        boolean isVolumeFileReadable = VolumeFilePrivilegeUtils.getVolumeFileReadable(getApplicationContext(), volumeFile);
         boolean isVolumeFileDirectory = volumeFile.getType().equals(VolumeFile.FILE_TYPE_DIRECTORY);
         deleteAction = getString(R.string.delete);
         downloadAction = getString(R.string.download);
@@ -166,7 +167,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
                 .addItem(renameAction, isVolumeFileWriteable)
                 .addItem(moveToAction, isVolumeFileWriteable)
                 .addItem(copyAction, isVolumeFileWriteable)
-                .addItem(permissionAction, isVolumeFileDirectory)
+                .addItem(permissionAction, isVolumeFileDirectory && (isVolumeFileWriteable || isVolumeFileReadable))
                 //.addItem(shareTo, !isVolumeFileDirectory)
                 // .addItem("分享", !isVolumeFileDirectory)
                 .setOnSheetItemClickListener(new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {
