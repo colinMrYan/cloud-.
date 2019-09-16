@@ -534,7 +534,8 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
                 SearchModel searchModel = conversation.conversation2SearchModel();
                 displayImg(searchModel, searchHolder.headImageView);
                 searchHolder.nameTextView.setText(searchModel.getName().toString());
-                searchHolder.detailTextView.setText(conversationFromChatContentList.get(i).getMessageNum() + "条相关消息记录");
+                String string = getString(R.string.chat_contact_related_message, conversationFromChatContentList.get(i).getMessageNum());
+                searchHolder.detailTextView.setText(string);
                 searchHolder.detailTextView.setVisibility(View.VISIBLE);
             }
             if (conversation != null && conversation.getType().equals(Conversation.TYPE_CAST)) {
@@ -544,13 +545,15 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
                 ImageDisplayUtils.getInstance().displayImage(searchHolder.headImageView, icon, R.drawable.icon_person_default);
                 String string = getString(R.string.chat_contact_related_message, conversationFromChatContentList.get(i).getMessageNum());
                 searchHolder.detailTextView.setText(string);
+                searchHolder.detailTextView.setVisibility(View.VISIBLE);
             }
             Contact contact = conversationFromChatContentList.get(i).getSingleChatContactUser();
             if (contact != null && conversation.getType().equals(Conversation.TYPE_DIRECT)) {
                 SearchModel searchModel = contact.contact2SearchModel();
                 displayImg(searchModel, searchHolder.headImageView);
                 searchHolder.nameTextView.setText(searchModel.getName().toString());
-                searchHolder.detailTextView.setText(conversationFromChatContentList.get(i).getMessageNum() + "条相关消息记录");
+                String string = getString(R.string.chat_contact_related_message, conversationFromChatContentList.get(i).getMessageNum());
+                searchHolder.detailTextView.setText(string);
                 searchHolder.detailTextView.setVisibility(View.VISIBLE);
             }
             //刷新数据
