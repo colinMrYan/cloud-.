@@ -33,12 +33,14 @@ import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.DateTimePickerDialog;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.api.APIDownloadCallBack;
+import com.inspur.emmcloud.basemodule.bean.DownloadFileCategory;
 import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.DownLoaderUtils;
+import com.inspur.emmcloud.basemodule.util.FileDownloadManager;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
@@ -192,18 +194,18 @@ public class TaskAddActivity extends BaseActivity {
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     if (Environment.getExternalStorageState().equals(
                             Environment.MEDIA_MOUNTED)) {
-                        File dir = new File(MyAppConfig.LOCAL_DOWNLOAD_PATH);
+                        File dir = new File(MyAppConfig.getFileDownloadByUserAndTanentDirPath());
                         if (!dir.exists()) {
                             dir.mkdirs();
                         }
-                        String filename = taskResult.getAttachments().get(i).getName();
+                        final String filename = taskResult.getAttachments().get(i).getName();
                         String fileUri = taskResult.getAttachments().get(i).getUri();
-                        String target = MyAppConfig.LOCAL_DOWNLOAD_PATH + filename;
-                        String downLoadSource = APIUri.getPreviewUrl(fileUri);
-                        if (FileUtils.isFileExist(fileUri)) {
-                        } else if ((FileUtils.isFileExist(target))) {
-                            FileUtils.openFile(TaskAddActivity.this, target);
+                        String filePath = FileDownloadManager.getInstance().getDownloadFilePath(DownloadFileCategory.CATEGORY_TASK, taskResult.getId(), filename);
+                        if (!StringUtils.isBlank(filePath)) {
+                            FileUtils.openFile(TaskAddActivity.this, filePath);
                         } else {
+                            final String fileSavePath = MyAppConfig.getFileDownloadByUserAndTanentDirPath() + FileUtils.getNoDuplicateFileNameInDir(MyAppConfig.getFileDownloadByUserAndTanentDirPath(), filename);
+                            String downLoadSource = APIUri.getPreviewUrl(fileUri);
                             APIDownloadCallBack downLoadCallBack = new APIDownloadCallBack(TaskAddActivity.this, downLoadSource) {
                                 @Override
                                 public void callbackStart() {
@@ -219,6 +221,7 @@ public class TaskAddActivity extends BaseActivity {
                                 @Override
                                 public void callbackSuccess(File file) {
                                     attachmentOtherAdapter.notifyDataSetChanged();
+                                    FileDownloadManager.getInstance().saveDownloadFileInfo(DownloadFileCategory.CATEGORY_TASK, taskResult.getId(), filename, fileSavePath);
                                 }
 
                                 @Override
@@ -231,7 +234,7 @@ public class TaskAddActivity extends BaseActivity {
 
                                 }
                             };
-                            new DownLoaderUtils().startDownLoad(downLoadSource, target, downLoadCallBack);
+                            new DownLoaderUtils().startDownLoad(downLoadSource, fileSavePath, downLoadCallBack);
                         }
                     }
                 }
@@ -652,15 +655,15 @@ public class TaskAddActivity extends BaseActivity {
      * 获取图片预览路径
      */
     private String getImgPreviewUri(String attachmentJson) {
-        File dir = new File(MyAppConfig.LOCAL_DOWNLOAD_PATH);
+        File dir = new File(MyAppConfig.getFileDownloadByUserAndTanentDirPath());
         if (!dir.exists()) {
             dir.mkdirs();
         }
         String filename = JSONUtils.getString(attachmentJson, "name", "");
         String fileUri = JSONUtils.getString(attachmentJson, "uri", "");
-        String target = MyAppConfig.LOCAL_DOWNLOAD_PATH + filename;
+        String target = FileDownloadManager.getInstance().getDownloadFilePath(DownloadFileCategory.CATEGORY_TASK, taskResult.getId(), filename);
         String downLoadSource = APIUri.getPreviewUrl(fileUri);
-        if ((FileUtils.isFileExist(target))) {
+        if (!StringUtils.isBlank(target)) {
             return target;
         } else {
             return downLoadSource;

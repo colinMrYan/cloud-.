@@ -125,7 +125,7 @@ public class ImageGalleryActivity extends BaseActivity {
     }
 
     private void saveImg(String url) {
-        String savePath = MyAppConfig.LOCAL_DOWNLOAD_PATH + "download" + System.currentTimeMillis() + ".jpg";
+        String savePath = MyAppConfig.getFileDownloadDirPath() + System.currentTimeMillis() + ".jpg";
         new DownLoaderUtils().startDownLoad(url, savePath, new Callback.ProgressCallback<File>() {
             @Override
             public void onWaiting() {

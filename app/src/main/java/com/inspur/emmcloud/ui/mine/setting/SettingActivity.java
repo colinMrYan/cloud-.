@@ -470,7 +470,7 @@ public class SettingActivity extends BaseActivity {
                         switch (which) {
                             case 0:
                                 DataCleanManager.cleanApplicationData(
-                                        SettingActivity.this, MyAppConfig.LOCAL_DOWNLOAD_PATH,
+                                        SettingActivity.this, MyAppConfig.getFileDownloadDirPath(),
                                         MyAppConfig.LOCAL_CACHE_PATH, MyAppConfig.LOCAL_IMP_USER_OPERATE_DIC);
                                 ImageDisplayUtils.getInstance().clearAllCache();
                                 handler.sendEmptyMessage(DATA_CLEAR_SUCCESS);
@@ -509,7 +509,7 @@ public class SettingActivity extends BaseActivity {
                         dialog.dismiss();
                         DataCleanManager.cleanWebViewCache(SettingActivity.this);
                         ((MyApplication) getApplicationContext()).deleteAllDb();
-                        String msgCachePath = MyAppConfig.LOCAL_DOWNLOAD_PATH;
+                        String msgCachePath = MyAppConfig.getFileDownloadDirPath();
                         String imgCachePath = MyAppConfig.LOCAL_CACHE_PATH;
                         String offlineAppPath = MyAppConfig.LOCAL_OFFLINE_APP_PATH;
                         String userSpacePath = MyAppConfig.LOCAL_IMP_USER_OPERATE_DIC;

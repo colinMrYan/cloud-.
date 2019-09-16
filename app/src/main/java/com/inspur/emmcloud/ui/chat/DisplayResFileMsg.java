@@ -66,11 +66,11 @@ public class DisplayResFileMsg {
         ImageDisplayUtils.getInstance().displayImage(fileTypeImg, "drawable://" + FileUtils.getFileIconResIdByFileName(downloadUri));
         fileTitleText.setText(fileName);
         fileSizeText.setText(FileUtils.formatFileSize(fileSize));
-        File dir = new File(MyAppConfig.LOCAL_DOWNLOAD_PATH);
+        File dir = new File(MyAppConfig.getFileDownloadDirPath());
         if (!dir.exists()) {
             dir.mkdir();
         }
-        final String target = MyAppConfig.LOCAL_DOWNLOAD_PATH + fileName;
+        final String target = MyAppConfig.getFileDownloadDirPath() + fileName;
 
         if (FileUtils.isFileExist(target) || FileUtils.isFileExist(downloadUri)) {
             fileDownLoadImg.setVisibility(View.GONE);

@@ -363,10 +363,7 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
                         originBitmap = ImageUtils.rotaingImageView(90, originBitmap);
                         //通过各种旋转和镜面操作，使originBitmap显示出preview界面
                         Bitmap cropBitmap = previewSFV.getPicture(originBitmap);
-                        // String filePath = MyAppConfig.LOCAL_DOWNLOAD_PATH + System.currentTimeMillis() + ".png";
-                        //  ImageUtils.saveImageToSD(getApplicationContext(),filePath, cropBitmap, 100);
                         cropBitmap = ImageUtils.scaleBitmap(cropBitmap, 250);
-                        //ImageUtils.saveImageToSD(getApplicationContext(), MyAppConfig.LOCAL_DOWNLOAD_PATH + System.currentTimeMillis() + ".png", cropBitmap, 100);
                         FaceDetector faceDetector = new FaceDetector(cropBitmap.getWidth(), cropBitmap.getHeight(), 1);
                         FaceDetector.Face[] faces = new FaceDetector.Face[1];
                         int faceNum = faceDetector.findFaces(cropBitmap, faces);
