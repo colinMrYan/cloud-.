@@ -351,6 +351,9 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
         };
     }
 
+    /**
+     * 通过关键字获取包含该关键字的频道消息等信息
+     */
     private List<ConversationFromChatContent> oriChannelInfoByKeyword(String searchData) {
         Map<String, Integer> cidNumMap = new HashMap<>();
         cidNumMap.clear();
@@ -421,7 +424,8 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
 
     }
 
-    /***/
+    /**
+     * EditText  Watcher*/
     class SearchWatcher implements TextWatcher {
 
         @Override
