@@ -165,7 +165,7 @@ public class ImageDetailV0Fragment extends Fragment {
 //        Bitmap bitmap = mImageView.getDrawingCache();
 //        String savedImagePath = saveBitmapFile(bitmap);
         if (NetUtils.isNetworkConnected(getActivity())) {
-            final String fileSavePath = MyAppConfig.LOCAL_CACHE_CHAT_PATH
+            final String fileSavePath = MyAppConfig.getFileDownloadDirPath()
                     + FileUtils.getFileName(mImageUrl);
             new DownLoaderUtils().startDownLoad(mImageUrl, fileSavePath, new APIDownloadCallBack(mImageUrl) {
 

@@ -70,7 +70,7 @@ public class WebSocketPush {
                     Iterator<EventMessage> it = requestEventMessageList.iterator();
                     while (it.hasNext()) {
                         EventMessage eventMessage = it.next();
-                        if (eventMessage.getStartQuestTime() + MyAppConfig.WEBSOCKET_QEQUEST_TIMEOUT <= timeCount) {
+                        if (eventMessage.getStartQuestTime() + MyAppConfig.WEBSOCKET_REQUEST_TIMEOUT <= timeCount) {
                             setRequestEventMessageTimeout(eventMessage, "socket_send_timeout");
                             it.remove();
                         }

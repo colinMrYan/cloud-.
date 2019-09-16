@@ -40,10 +40,12 @@ import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButton;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.bean.DownloadFileCategory;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.basemodule.util.FileDownloadManager;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
@@ -1248,6 +1250,9 @@ public class ConversationActivity extends ConversationBaseActivity {
         }
         if (chatInputMenu.isVoiceInput()) {
             chatInputMenu.stopVoiceInput();
+            if (chatInputMenu.isVoiceInputLayoutShow()) {
+                chatInputMenu.hideVoiceInputLayout();
+            }
             return;
         }
         if (InputMethodUtils.isSoftInputShow(ConversationActivity.this)) {
@@ -1654,8 +1659,8 @@ public class ConversationActivity extends ConversationBaseActivity {
                     return;
                 }
                 final MsgContentRegularFile msgContentFile = message.getMsgContentAttachmentFile();
-                final String fileDownloadPath = MyAppConfig.LOCAL_DOWNLOAD_PATH + msgContentFile.getName();
-                if (FileUtils.isFileExist(fileDownloadPath)) {
+                final String fileDownloadPath = FileDownloadManager.getInstance().getDownloadFilePath(DownloadFileCategory.CATEGORY_MESSAGE, message.getId(), msgContentFile.getName());
+                if (!StringUtils.isBlank(fileDownloadPath)) {
                     FileUtils.openFile(context, fileDownloadPath);
                 } else {
                     Intent intent = new Intent(context, ChatFileDownloadActivtiy.class);

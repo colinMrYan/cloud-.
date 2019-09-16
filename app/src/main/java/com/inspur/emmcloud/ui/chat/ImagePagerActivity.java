@@ -46,6 +46,7 @@ import com.inspur.emmcloud.widget.SoftKeyboardStateHelper;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -383,10 +384,17 @@ public class ImagePagerActivity extends BaseFragmentActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode != RESULT_CANCELED && requestCode == RESULT_MENTIONS) {
             String result = data.getStringExtra("searchResult");
-            String uid = JSONUtils.getString(result, "uid", null);
-            String name = JSONUtils.getString(result, "name", null);
-            boolean isInputKeyWord = data.getBooleanExtra("isInputKeyWord", false);
-            ecmChatInputMenu.addMentions(uid, name, isInputKeyWord);
+            JSONArray jsonArray = JSONUtils.getJSONArray(result, new JSONArray());
+            for (int i = 0; i < jsonArray.length(); i++) {
+                try {
+                    String uid = JSONUtils.getString(jsonArray.getString(i), "uid", null);
+                    String name = JSONUtils.getString(jsonArray.getString(i), "name", null);
+                    boolean isInputKeyWord = data.getBooleanExtra("isInputKeyWord", false);
+                    ecmChatInputMenu.addMentions(uid, name, isInputKeyWord);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         } else if (resultCode == RESULT_OK && requestCode == CHECK_IMG_COMMENT) {
             String mid = data.getStringExtra("mid");
             int commentCount = data.getIntExtra("commentCount", 0);

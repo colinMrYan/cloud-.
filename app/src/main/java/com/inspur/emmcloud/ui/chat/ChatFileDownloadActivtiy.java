@@ -9,13 +9,16 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.api.APIDownloadCallBack;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.bean.DownloadFileCategory;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.DownLoaderUtils;
+import com.inspur.emmcloud.basemodule.util.FileDownloadManager;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.chat.Message;
@@ -61,8 +64,8 @@ public class ChatFileDownloadActivtiy extends BaseActivity {
         fileNameText.setText(msgContentFile.getName());
         fileTypeImg.setImageResource(FileUtils.getFileIconResIdByFileName(msgContentFile.getName()));
         fileSizeText.setText(FileUtils.formatFileSize(msgContentFile.getSize()));
-        fileSavePath = MyAppConfig.LOCAL_DOWNLOAD_PATH + msgContentFile.getName();
-        if (FileUtils.isFileExist(fileSavePath)) {
+        fileSavePath = FileDownloadManager.getInstance().getDownloadFilePath(DownloadFileCategory.CATEGORY_MESSAGE, message.getId(), msgContentFile.getName());
+        if (!StringUtils.isBlank(fileSavePath)) {
             setDownloadingStatus(true);
         } else {
             setDownloadingStatus(false);
@@ -126,6 +129,7 @@ public class ChatFileDownloadActivtiy extends BaseActivity {
         if (!NetUtils.isNetworkConnected(getApplicationContext()) || !AppUtils.isHasSDCard(getApplicationContext())) {
             return;
         }
+        fileSavePath = MyAppConfig.getFileDownloadByUserAndTanentDirPath() + FileUtils.getNoDuplicateFileNameInDir(MyAppConfig.getFileDownloadByUserAndTanentDirPath(), message.getMsgContentAttachmentFile().getName());
         downloadBtn.setVisibility(View.GONE);
         downloadStatusLayout.setVisibility(View.VISIBLE);
         String source = APIUri.getChatFileResouceUrl(message.getChannel(), message.getMsgContentAttachmentFile().getMedia());
@@ -148,6 +152,7 @@ public class ChatFileDownloadActivtiy extends BaseActivity {
 
             @Override
             public void callbackSuccess(File file) {
+                FileDownloadManager.getInstance().saveDownloadFileInfo(DownloadFileCategory.CATEGORY_MESSAGE, message.getId(), message.getMsgContentAttachmentFile().getName(), fileSavePath);
                 ToastUtils.show(getApplicationContext(), R.string.download_success);
                 downloadStatusLayout.setVisibility(View.GONE);
                 progressBar.setProgress(0);

@@ -22,12 +22,15 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.VolumeFileFilterPopGridAdapter;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.api.APIDownloadCallBack;
+import com.inspur.emmcloud.basemodule.bean.DownloadFileCategory;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.DownLoaderUtils;
+import com.inspur.emmcloud.basemodule.util.FileDownloadManager;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.GroupFileInfo;
@@ -102,7 +105,7 @@ public class GroupFileActivity extends BaseActivity {
             for (Message message : fileTypeMessageList) {
                 MsgContentRegularFile msgContentRegularFile = message.getMsgContentAttachmentFile();
                 String url = APIUri.getChatFileResouceUrl(message.getChannel(), msgContentRegularFile.getMedia());
-                GroupFileInfo groupFileInfo = new GroupFileInfo(url, msgContentRegularFile.getName(), msgContentRegularFile.getSize() + "", message.getCreationDate(), ContactUserCacheUtils.getUserName(message.getFromUser()));
+                GroupFileInfo groupFileInfo = new GroupFileInfo(url, msgContentRegularFile.getName(), msgContentRegularFile.getSize() + "", message.getCreationDate(), ContactUserCacheUtils.getUserName(message.getFromUser()), message.getId());
                 fileInfoList.add(groupFileInfo);
             }
         }
@@ -247,9 +250,8 @@ public class GroupFileActivity extends BaseActivity {
         TextView fileMonthText = convertView.findViewById(R.id.tv_file_month);
         convertView.findViewById(R.id.v_line).setVisibility(position == 0 ? View.GONE : View.VISIBLE);
         final HorizontalProgressBarWithNumber progressBar = convertView.findViewById(R.id.file_download_progressbar);
-        GroupFileInfo groupFileInfo = groupFileInfoList.get(position);
+        final GroupFileInfo groupFileInfo = groupFileInfoList.get(position);
         final String fileName = groupFileInfo.getName();
-        final String source = groupFileInfo.getUrl();
         fileNameText.setText(fileName);
         fileSizeText.setText(groupFileInfo.getSize());
         if (sortType.equals(SORT_BY_TIME_DOWN) || sortType.equals(SORT_BY_TIME_UP)) {
@@ -265,67 +267,84 @@ public class GroupFileActivity extends BaseActivity {
             fileMonthText.setVisibility(View.GONE);
         }
         fileTimeText.setText(TimeUtils.getChannelMsgDisplayTime(GroupFileActivity.this, groupFileInfo.getLongTime()));
-        fileImg.setImageResource(FileUtils.getFileIconResIdByFileName(fileName));
+        fileImg.setImageResource(FileUtils.getFileIconResIdByFileName(groupFileInfo.getName()));
         convertView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                // 当文件正在下载中 点击不响应
-                final String fileDownloadPath = MyAppConfig.LOCAL_DOWNLOAD_PATH + fileName;
-                progressBar.setTag(fileDownloadPath);
-                // 当文件正在下载中 点击不响应
-                if ((0 < progressBar.getProgress())
-                        && (progressBar.getProgress() < 100)) {
-                    return;
-                }
-                APIDownloadCallBack progressCallback = new APIDownloadCallBack(GroupFileActivity.this, source) {
-                    @Override
-                    public void callbackStart() {
-                        if ((progressBar.getTag() != null)
-                                && (progressBar.getTag() == fileDownloadPath)) {
-
-                            progressBar.setVisibility(View.VISIBLE);
-                        } else {
-                            progressBar.setVisibility(View.GONE);
-                        }
-                    }
-
-                    @Override
-                    public void callbackLoading(long total, long current, boolean isUploading) {
-                        if (total == 0) {
-                            total = 1;
-                        }
-                        int progress = (int) ((current * 100) / total);
-                        if (!(progressBar.getVisibility() == View.VISIBLE)) {
-                            progressBar.setVisibility(View.VISIBLE);
-                        }
-                        progressBar.setProgress(progress);
-                        progressBar.refreshDrawableState();
-                    }
-
-                    @Override
-                    public void callbackSuccess(File file) {
-                        progressBar.setVisibility(View.GONE);
-                        ToastUtils.show(getApplicationContext(), R.string.download_success);
-                    }
-
-                    @Override
-                    public void callbackError(Throwable arg0, boolean arg1) {
-                        progressBar.setVisibility(View.GONE);
-                        ToastUtils.show(getApplicationContext(), R.string.download_fail);
-                    }
-
-                    @Override
-                    public void callbackCanceled(CancelledException e) {
-
-                    }
-                };
-                if (FileUtils.isFileExist(fileDownloadPath)) {
-                    FileUtils.openFile(getApplicationContext(), fileDownloadPath);
-                } else {
-                    new DownLoaderUtils().startDownLoad(source, fileDownloadPath, progressCallback);
-                }
+                downloadFile(progressBar, groupFileInfo);
             }
         });
+    }
+
+    private void downloadFile(final HorizontalProgressBarWithNumber progressBar, final GroupFileInfo groupFileInfo) {
+        String fileDownloadPath = "";
+        if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
+            fileDownloadPath = MyAppConfig.getFileDownloadDirPath() + groupFileInfo.getName();
+        } else {
+            fileDownloadPath = FileDownloadManager.getInstance().getDownloadFilePath(DownloadFileCategory.CATEGORY_MESSAGE, groupFileInfo.getMessageId(), groupFileInfo.getName());
+            if (StringUtils.isBlank(fileDownloadPath)) {
+                fileDownloadPath = MyAppConfig.getFileDownloadByUserAndTanentDirPath() + FileUtils.getNoDuplicateFileNameInDir(MyAppConfig.getFileDownloadByUserAndTanentDirPath(), groupFileInfo.getName());
+            }
+        }
+
+        // 当文件正在下载中 点击不响应
+        final String localFilePath = fileDownloadPath;
+        progressBar.setTag(localFilePath);
+        // 当文件正在下载中 点击不响应
+        if ((0 < progressBar.getProgress())
+                && (progressBar.getProgress() < 100)) {
+            return;
+        }
+        APIDownloadCallBack progressCallback = new APIDownloadCallBack(GroupFileActivity.this, groupFileInfo.getUrl()) {
+            @Override
+            public void callbackStart() {
+                if ((progressBar.getTag() != null)
+                        && (progressBar.getTag() == localFilePath)) {
+
+                    progressBar.setVisibility(View.VISIBLE);
+                } else {
+                    progressBar.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void callbackLoading(long total, long current, boolean isUploading) {
+                if (total == 0) {
+                    total = 1;
+                }
+                int progress = (int) ((current * 100) / total);
+                if (!(progressBar.getVisibility() == View.VISIBLE)) {
+                    progressBar.setVisibility(View.VISIBLE);
+                }
+                progressBar.setProgress(progress);
+                progressBar.refreshDrawableState();
+            }
+
+            @Override
+            public void callbackSuccess(File file) {
+                if (!WebServiceRouterManager.getInstance().isV0VersionChat()) {
+                    FileDownloadManager.getInstance().saveDownloadFileInfo(DownloadFileCategory.CATEGORY_MESSAGE, groupFileInfo.getMessageId(), groupFileInfo.getName(), localFilePath);
+                }
+                progressBar.setVisibility(View.GONE);
+                ToastUtils.show(getApplicationContext(), R.string.download_success);
+            }
+
+            @Override
+            public void callbackError(Throwable arg0, boolean arg1) {
+                progressBar.setVisibility(View.GONE);
+                ToastUtils.show(getApplicationContext(), R.string.download_fail);
+            }
+
+            @Override
+            public void callbackCanceled(CancelledException e) {
+
+            }
+        };
+        if (FileUtils.isFileExist(localFilePath)) {
+            FileUtils.openFile(getApplicationContext(), localFilePath);
+        } else {
+            new DownLoaderUtils().startDownLoad(groupFileInfo.getUrl(), localFilePath, progressCallback);
+        }
     }
 
     private class FileSortComparable implements Comparator {

@@ -48,10 +48,10 @@ import java.util.UUID;
 
 public class CommunicationUtils {
     /* *
-    * 获取频道名称
-    * @param channel
-    * @return
-    */
+     * 获取频道名称
+     * @param channel
+     * @return
+     */
     public static String getChannelDisplayTitle(Channel channel) {
 
         String title;
@@ -91,10 +91,10 @@ public class CommunicationUtils {
     }
 
     /* *
-    * 获取频道名称
-    * @param channel
-    * @return
-    */
+     * 获取频道名称
+     * @param channel
+     * @return
+     */
     public static String getConversationTitle(Conversation conversation) {
         String title = conversation.getName();
         if (conversation.getType().equals(Conversation.TYPE_DIRECT)) {
@@ -465,6 +465,11 @@ public class CommunicationUtils {
             ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(searchModel.getId());
             if (contactUser != null) {
                 englishName = contactUser.getNameGlobal();
+                if (!StringUtils.isBlank(englishName)) {
+                    if (englishName.equals(contactUser.getName()))
+                        return null;
+                }
+
             }
         }
 

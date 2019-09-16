@@ -118,7 +118,11 @@ public class MainActivity extends BaseActivity {
     private void init() {
         String appFirstLoadAlis = PreferencesUtils.getString(MyApplication.getInstance(), Constant.PREF_APP_LOAD_ALIAS);
         int splashLogoResId = Res.getDrawableID("ic_splash_logo_" + appFirstLoadAlis);
-        ImageDisplayUtils.getInstance().displayImage(splashLogoImg, "drawable://" + splashLogoResId, R.drawable.ic_splash_logo);
+        if (splashLogoResId == 0) {
+            splashLogoImg.setImageResource(R.drawable.ic_splash_logo);
+        } else {
+            ImageDisplayUtils.getInstance().displayImage(splashLogoImg, "drawable://" + splashLogoResId, R.drawable.ic_splash_logo);
+        }
         activitySplashShowTime = System.currentTimeMillis();
 
         // 检测分辨率、网络环境

@@ -134,8 +134,7 @@ public class DocumentActivity extends BaseActivity {
                 public void onClick(View v) {
                     // TODO Auto-generated method stub
                     // 当文件正在下载中 点击不响应
-                    final String target = MyAppConfig.LOCAL_DOWNLOAD_PATH
-                            + fileName;
+                    final String target = MyAppConfig.getFileDownloadDirPath() + fileName;
 
                     progressBar.setTag(target);
 

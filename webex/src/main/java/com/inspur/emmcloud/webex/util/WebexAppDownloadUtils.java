@@ -53,7 +53,7 @@ public class WebexAppDownloadUtils {
                         downloadingDialog.dismiss();
                     }
 //                    AppUtils.installApk(BaseApplication.getInstance(), MyAppConfig.LOCAL_DOWNLOAD_PATH, "webex.apk");
-                    FileUtils.openFile(BaseApplication.getInstance(), MyAppConfig.LOCAL_DOWNLOAD_PATH + "webex.apk");
+                    FileUtils.openFile(BaseApplication.getInstance(), MyAppConfig.getFileDownloadDirPath() + "webex.apk");
                     break;
                 case DOWNLOAD_FAIL:
                     if (downloadingDialog != null && downloadingDialog.isShowing()) {
@@ -107,7 +107,7 @@ public class WebexAppDownloadUtils {
         if (Environment.getExternalStorageState().equals(
                 Environment.MEDIA_MOUNTED)) {
             RequestParams params = new RequestParams(appUrl);
-            params.setSaveFilePath(MyAppConfig.LOCAL_DOWNLOAD_PATH + "webex.apk");
+            params.setSaveFilePath(MyAppConfig.getFileDownloadDirPath() + "webex.apk");
             cancelableDownloadRequest = x.http().get(params,
                     new Callback.ProgressCallback<File>() {
 

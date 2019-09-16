@@ -156,6 +156,7 @@ public class UserInfoActivity extends BaseActivity {
         String mail = contactUser.getEmail();
         String phoneNum = contactUser.getMobile();
         String name = contactUser.getName();
+        String globalName = contactUser.getNameGlobal();
         String telStr = contactUser.getTel();
         String officeStr = contactUser.getOffice();
 
@@ -192,7 +193,19 @@ public class UserInfoActivity extends BaseActivity {
         } else {
             telLayout.setVisibility(View.GONE);
         }
-        nameText.setText(StringUtils.isBlank(name) ? getString(R.string.not_set) : name);
+
+        if (StringUtils.isBlank(name)) {
+            nameText.setText(getString(R.string.not_set));
+        } else {
+            if (StringUtils.isBlank(globalName) || name.equals(globalName)) {
+                nameText.setText(name);
+            } else {
+                nameText.setText(name + " |  " + globalName);
+            }
+            if (isOverSingleLine()) {
+                nameText.setText(name);
+            }
+        }
 
         if (!StringUtils.isBlank(officeStr)) {
             dutyText.setVisibility(View.VISIBLE);
@@ -212,6 +225,14 @@ public class UserInfoActivity extends BaseActivity {
         mobileStartChatLayout.setVisibility(isNoContactWay ? View.VISIBLE : View.GONE);
         addSysContactTv.setVisibility(contactUser.getId().equals(MyApplication.getInstance().getUid()) ? View.GONE : View.VISIBLE);
         userContactWayLayout.setVisibility(contactUser.getId().equals(MyApplication.getInstance().getUid()) ? View.GONE : View.VISIBLE);
+    }
+
+    private boolean isOverSingleLine() {
+        String value = nameText.getText().toString();
+        if (StringUtils.isBlank(value)) return false;
+        nameText.measure(0, 0);
+        int width = nameText.getMeasuredWidth();
+        return width >= nameText.getMaxWidth();
     }
 
     public void onClick(View v) {

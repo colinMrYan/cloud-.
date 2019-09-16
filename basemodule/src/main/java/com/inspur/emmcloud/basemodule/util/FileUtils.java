@@ -796,6 +796,13 @@ public class FileUtils {
         return filename;
     }
 
+    public static String getFilenamePrefix(String filename) {
+        if ((filename != null) && (filename.length() > 0)) {
+            return filename.substring(0, filename.lastIndexOf("."));
+        }
+        return "";
+    }
+
     /**
      * 获取文件扩展名(xx.png,返回.png)
      *
@@ -1486,6 +1493,27 @@ public class FileUtils {
             }
         }
         return arrayList;
+    }
+
+    /**
+     * 获取文件名：保证在文件夹内不重名
+     *
+     * @param dirPath
+     * @param fileName
+     * @return
+     */
+    public static String getNoDuplicateFileNameInDir(String dirPath, String fileName) {
+        String filePrefix = getFilenamePrefix(fileName);
+        String fileSuffix = getExtensionNameWithPoint(fileName);
+        File dir = new File(dirPath);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        File file = new File(dirPath, fileName);
+        for (int i = 1; file.exists() && i < Integer.MAX_VALUE; i++) {
+            file = new File(dirPath, filePrefix + '(' + i + ')' + fileSuffix);
+        }
+        return file.getName();
     }
 
     /**

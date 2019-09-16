@@ -346,7 +346,7 @@ public class ECMChatInputMenu extends LinearLayout {
                 voiceInputClean.setVisibility(StringUtils.isBlank(text) ? INVISIBLE : VISIBLE);
                 voiceInputSend.setVisibility(StringUtils.isBlank(text) ? INVISIBLE : VISIBLE);
                 voiceInputSpeakTipTv.setVisibility(StringUtils.isBlank(text) ? VISIBLE : INVISIBLE);
-                voiceInputCloseImg.setVisibility(VISIBLE);
+                voiceInputCloseImg.setVisibility(StringUtils.isBlank(text) ? VISIBLE : INVISIBLE);
 //                voiceInputLevelImgShade.setVisibility(INVISIBLE);
                 break;
             case VOICE_INPUT_STATUS_SPEAKING:
@@ -939,6 +939,7 @@ public class ECMChatInputMenu extends LinearLayout {
         otherLayoutView.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+                hideVoiceInputLayout();
                 if (addMenuLayout.getVisibility() != View.GONE) {
                     addMenuLayout.setVisibility(View.GONE);
                 }
@@ -950,6 +951,7 @@ public class ECMChatInputMenu extends LinearLayout {
         listContentView.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+                hideVoiceInputLayout();
                 hideAddMenuLayout();
                 InputMethodUtils.hide((Activity) getContext());
                 return false;
@@ -984,6 +986,10 @@ public class ECMChatInputMenu extends LinearLayout {
         return addMenuLayout.isShown();
     }
 
+    public boolean isVoiceInputLayoutShow() {
+        return voiceInputLayout.isShown();
+    }
+
     public void setAddMenuLayoutShow(boolean isShow) {
         if (isShow) {
             int softInputHeight = InputMethodUtils.getSupportSoftInputHeight((Activity) getContext());
@@ -1003,6 +1009,10 @@ public class ECMChatInputMenu extends LinearLayout {
 
     public void hideAddMenuLayout() {
         addMenuLayout.setVisibility(View.GONE);
+    }
+
+    public void hideVoiceInputLayout() {
+        voiceInputLayout.setVisibility(GONE);
     }
 
     /**

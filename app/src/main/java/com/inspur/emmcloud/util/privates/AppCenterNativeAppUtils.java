@@ -204,7 +204,7 @@ public class AppCenterNativeAppUtils {
 
                 }
             };
-            new DownLoaderUtils().startDownLoad(app.getInstallUri(), MyAppConfig.LOCAL_DOWNLOAD_PATH + app.getAppID() + ".apk", progressCallback);
+            new DownLoaderUtils().startDownLoad(app.getInstallUri(), MyAppConfig.getFileDownloadDirPath() + app.getAppID() + ".apk", progressCallback);
         }
     }
 

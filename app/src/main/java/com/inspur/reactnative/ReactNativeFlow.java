@@ -105,7 +105,7 @@ public class ReactNativeFlow {
      * @param context
      */
     public static void downLoadZipFile(final Context context, final ReactNativeUpdateBean reactNativeUpdateBean, final String userId) {
-        final String reactZipFilePath = MyAppConfig.LOCAL_DOWNLOAD_PATH + "/" + userId + "/" + reactNativeUpdateBean.getBundle().getAndroidUri();
+        final String reactZipFilePath = MyAppConfig.getFileDownloadDirPath() + "/" + userId + "/" + reactNativeUpdateBean.getBundle().getAndroidUri();
         APIDownloadCallBack progressCallback = new APIDownloadCallBack(context, APIUri.getZipUrl()) {
             @Override
             public void callbackStart() {
@@ -146,7 +146,7 @@ public class ReactNativeFlow {
     private static void updateNewVersion(Context context, ReactNativeUpdateBean reactNativeUpdateBean, String userId) {
         String reactCurrentPath = MyAppConfig.getReactAppFilePath(context, userId, "discover");
         String reactTempPath = MyAppConfig.getReactTempFilePath(context, userId);
-        String reactZipFilePath = MyAppConfig.LOCAL_DOWNLOAD_PATH + userId + "/" +
+        String reactZipFilePath = MyAppConfig.getFileDownloadDirPath() + userId + "/" +
                 reactNativeUpdateBean.getBundle().getAndroidUri();
         //出现文件问题和hash值验证问题时打开这里调试
 //        LogUtils.YfcDebug("reactZipFilepath："+reactZipFilePath);
