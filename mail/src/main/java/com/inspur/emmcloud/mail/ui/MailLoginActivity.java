@@ -57,8 +57,6 @@ public class MailLoginActivity extends BaseActivity {
         ContactService mailService = Router.getInstance().getService(ContactService.class);
         if (mailService != null) {
             contactUser = mailService.getContactUserByUid(BaseApplication.getInstance().getUid());
-        }
-        if (contactUser != null) {
             mail = contactUser.getEmail();
         }
         EditTextUtils.setText(mailEdit, mail);
