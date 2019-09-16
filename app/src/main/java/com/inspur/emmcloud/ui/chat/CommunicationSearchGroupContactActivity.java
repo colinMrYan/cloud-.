@@ -35,11 +35,13 @@ import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.ConversationFromChatContent;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
+import com.inspur.emmcloud.bean.chat.UIConversation;
 import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
+import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
@@ -47,7 +49,9 @@ import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -311,8 +315,9 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
                                 for (int j = 0; j < contactsSearchList.size(); j++) {
                                     contactsList.add(contactsSearchList.get(j).contact2SearchModel());
                                 }
+                                conversationFromChatContentList.clear();
                                 conversationFromChatContentList = new ArrayList<>();
-                                conversationFromChatContentList = MessageCacheUtil.getConversationListByContent(MyApplication.getInstance(), searchText);
+                                conversationFromChatContentList = oriChannelInfoByKeyword(searchText);
                                 break;
                             case SEARCH_GROUP:
                                 if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
@@ -344,6 +349,46 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
                 }).start();
             }
         };
+    }
+
+    /**
+     * 通过关键字获取包含该关键字的频道消息等信息
+     */
+    private List<ConversationFromChatContent> oriChannelInfoByKeyword(String searchData) {
+        Map<String, Integer> cidNumMap = new HashMap<>();
+        cidNumMap.clear();
+        List<com.inspur.emmcloud.bean.chat.Message> allMessageListByKeyword = new ArrayList<>();
+        allMessageListByKeyword.clear();
+        List<ConversationFromChatContent> conversationFromChatContentResultList = new ArrayList<>();
+        conversationFromChatContentResultList.clear();
+        List<String> conversationIdList = new ArrayList<>();
+        allMessageListByKeyword = MessageCacheUtil.getMessagesListByKeyword(MyApplication.getInstance(), searchData);
+        if (allMessageListByKeyword != null) {
+            for (int i = 0; i < allMessageListByKeyword.size(); i++) {
+                String currentMessageConversation = allMessageListByKeyword.get(i).getChannel();
+                if (cidNumMap != null && cidNumMap.containsKey(currentMessageConversation)) {
+                    int num = cidNumMap.get(currentMessageConversation);
+                    num = num + 1;
+                    cidNumMap.put(currentMessageConversation, num);
+                } else {
+                    cidNumMap.put(currentMessageConversation, 1);
+                    conversationIdList.add(currentMessageConversation);
+                }
+            }
+        }
+        List<Conversation> conversationList = ConversationCacheUtils.getConversationListByIdList(MyApplication.getInstance(), conversationIdList);
+        for (int i = 0; i < conversationList.size(); i++) {
+            Conversation tempConversation = conversationList.get(i);
+            if (cidNumMap.containsKey(tempConversation.getId())) {
+                ConversationFromChatContent conversationFromChatContent =
+                        new ConversationFromChatContent(tempConversation, cidNumMap.get(tempConversation.getId()));
+                if (tempConversation.getType().equals(Conversation.TYPE_DIRECT)) {
+                    conversationFromChatContent.initSingleChatContact();
+                }
+                conversationFromChatContentResultList.add(conversationFromChatContent);
+            }
+        }
+        return conversationFromChatContentResultList;
     }
 
     /**
@@ -379,7 +424,8 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
 
     }
 
-    /***/
+    /**
+     * EditText  Watcher*/
     class SearchWatcher implements TextWatcher {
 
         @Override
@@ -396,11 +442,11 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
             searchText = searchEdit.getText().toString().trim();
             if (!StringUtils.isBlank(searchText)) {
                 long currentTime = System.currentTimeMillis();
-                if (currentTime - lastSearchTime > 500) {
+                if (currentTime - lastSearchTime > 700) {
                     handler.post(searchRunnable);
                 } else {
                     handler.removeCallbacks(searchRunnable);
-                    handler.postDelayed(searchRunnable, 500);
+                    handler.postDelayed(searchRunnable, 700);
                 }
                 lastSearchTime = System.currentTimeMillis();
             } else {
@@ -507,7 +553,7 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
                 searchHolder = (SearchHolder) view.getTag();
             }
             Conversation conversation = conversationFromChatContentList.get(i).getConversation();
-            if (conversation != null && conversation.getType().equals(Conversation.TYPE_GROUP)) {
+            if (conversation != null && (conversation.getType().equals(Conversation.TYPE_GROUP))) {
                 SearchModel searchModel = conversation.conversation2SearchModel();
                 displayImg(searchModel, searchHolder.headImageView);
                 searchHolder.nameTextView.setText(searchModel.getName().toString());
@@ -515,6 +561,17 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
                 searchHolder.detailTextView.setText(string);
                 searchHolder.detailTextView.setVisibility(View.VISIBLE);
             }
+
+            if (conversation != null && (conversation.getType().equals(Conversation.TYPE_CAST))) {
+                UIConversation uiConversation = new UIConversation(conversation);
+                String icon = DirectChannelUtils.getRobotIcon(MyApplication.getInstance(), conversation.getName());
+                searchHolder.nameTextView.setText(uiConversation.getTitle());
+                ImageDisplayUtils.getInstance().displayImage(searchHolder.headImageView, icon, R.drawable.icon_person_default);
+                String string = getString(R.string.chat_contact_related_message, conversationFromChatContentList.get(i).getMessageNum());
+                searchHolder.detailTextView.setText(string);
+                searchHolder.detailTextView.setVisibility(View.VISIBLE);
+            }
+
             Contact contact = conversationFromChatContentList.get(i).getSingleChatContactUser();
             if (contact != null && conversation.getType().equals(Conversation.TYPE_DIRECT)) {
                 SearchModel searchModel = contact.contact2SearchModel();
