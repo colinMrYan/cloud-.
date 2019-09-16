@@ -35,7 +35,6 @@ import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.ConversationFromChatContent;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
-import com.inspur.emmcloud.bean.chat.Robot;
 import com.inspur.emmcloud.bean.chat.UIConversation;
 import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
@@ -47,7 +46,6 @@ import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
-import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -540,7 +538,6 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
                 searchHolder.detailTextView.setVisibility(View.VISIBLE);
             }
             if (conversation != null && conversation.getType().equals(Conversation.TYPE_CAST)) {
-                Robot robot = RobotCacheUtils.getRobotById(CommunicationSearchModelMoreActivity.this, conversation.getId());
                 String icon = DirectChannelUtils.getRobotIcon(MyApplication.getInstance(), conversation.getName());
                 UIConversation uiConversation = new UIConversation(conversation);
                 searchHolder.nameTextView.setText(uiConversation.getTitle());

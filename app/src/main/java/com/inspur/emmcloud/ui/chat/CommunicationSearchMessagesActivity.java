@@ -107,7 +107,6 @@ public class CommunicationSearchMessagesActivity extends BaseActivity {
                 ImageDisplayUtils.getInstance().displayImage(searchModelHeadImage, uiConversation.getIcon(), R.drawable.icon_person_default);
                 String showData = getString(R.string.chat_search_related_messages, "“" + uiConversation.getTitle() + "”");
                 searchModelNameText.setText(showData);
-
             }
         } else if (getIntent().hasExtra(ConversationGroupInfoActivity.EXTRA_CID)) {     //只传ID 的时候
             channelSubRelativeLayout.setVisibility(View.GONE);
@@ -166,7 +165,6 @@ public class CommunicationSearchMessagesActivity extends BaseActivity {
                     searchMessagesList = MessageCacheUtil.getMessageListByKeywordAndId(CommunicationSearchMessagesActivity.this, keyWords, conversationFromChatContent.getConversation().getId());
                 }
                 groupMessageSearchAdapter.setAndRefreshAdapter(searchMessagesList, keyWords);
-
             }
         });
         if (getIntent().hasExtra(SEARCH_CONTENT)) {

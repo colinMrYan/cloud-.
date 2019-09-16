@@ -23,7 +23,6 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
 import com.inspur.emmcloud.baselib.widget.ClearEditText;
@@ -353,7 +352,6 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
     }
 
     private List<ConversationFromChatContent> oriChannelInfoByKeyword(String searchData) {
-        LogUtils.LbcDebug("searchData:::::" + searchData);
         Map<String, Integer> cidNumMap = new HashMap<>();
         cidNumMap.clear();
         List<com.inspur.emmcloud.bean.chat.Message> allMessageListByKeyword = new ArrayList<>();
@@ -364,31 +362,23 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
         allMessageListByKeyword = MessageCacheUtil.getMessagesListByKeyword(MyApplication.getInstance(), searchData);
         if (allMessageListByKeyword != null) {
             for (int i = 0; i < allMessageListByKeyword.size(); i++) {
-                LogUtils.LbcDebug("data" + allMessageListByKeyword.get(i).getShowContent() + ":::" + allMessageListByKeyword.get(i).getChannel());
                 String currentMessageConversation = allMessageListByKeyword.get(i).getChannel();
                 if (cidNumMap != null && cidNumMap.containsKey(currentMessageConversation)) {
                     int num = cidNumMap.get(currentMessageConversation);
                     num = num + 1;
-                    LogUtils.LbcDebug("num++1111111111::" + num);
                     cidNumMap.put(currentMessageConversation, num);
                 } else {
-                    LogUtils.LbcDebug("22222222222222222");
                     cidNumMap.put(currentMessageConversation, 1);
                     conversationIdList.add(currentMessageConversation);
                 }
             }
         }
-        LogUtils.LbcDebug("cidNumMap:::::" + cidNumMap.size());
-        LogUtils.LbcDebug("conversationIdList Size:::::" + conversationIdList.size());
-
         List<Conversation> conversationList = ConversationCacheUtils.getConversationListByIdList(MyApplication.getInstance(), conversationIdList);
-        LogUtils.LbcDebug("conversationList  Size:::::" + conversationList.size());
         for (int i = 0; i < conversationList.size(); i++) {
             Conversation tempConversation = conversationList.get(i);
             if (cidNumMap.containsKey(tempConversation.getId())) {
                 ConversationFromChatContent conversationFromChatContent =
                         new ConversationFromChatContent(tempConversation, cidNumMap.get(tempConversation.getId()));
-                LogUtils.LbcDebug(" cidNumMap.get(tempConversation.getId())" + cidNumMap.get(tempConversation.getId()));
                 if (tempConversation.getType().equals(Conversation.TYPE_DIRECT)) {
                     conversationFromChatContent.initSingleChatContact();
                 }
