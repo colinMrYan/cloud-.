@@ -10,7 +10,7 @@ public class ScanCodeJoinConversationBean {
     String conversationQrCode = "";
 
     public ScanCodeJoinConversationBean(String response) {
-        conversationQrCode = JSONUtils.getString(response, "", "");
+        conversationQrCode = JSONUtils.getString(response, "url", "");
     }
 
     public String getConversationQrCode() {

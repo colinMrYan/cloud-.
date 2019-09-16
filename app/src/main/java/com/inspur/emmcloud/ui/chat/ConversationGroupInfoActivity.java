@@ -58,6 +58,7 @@ public class ConversationGroupInfoActivity extends BaseActivity {
     public static final String EXTRA_CID = "cid";
     private static final int QEQUEST_ADD_MEMBER = 2;
     private static final int QEQUEST_DEL_MEMBER = 3;
+    public static final String MEMBER_SIZE = "member_size";
     @BindView(R.id.gv_member)
     NoScrollGridView memberGrid;
     @BindView(R.id.tv_member)
@@ -242,6 +243,7 @@ public class ConversationGroupInfoActivity extends BaseActivity {
                 break;
             case R.id.ll_group_qrcode:
                 bundle.putString("cid", conversation.getId());
+                bundle.putInt(MEMBER_SIZE, conversation.getMemberList().size());
                 IntentUtils.startActivity(ConversationGroupInfoActivity.this,
                         ConversationQrCodeActivity.class, bundle);
                 break;
