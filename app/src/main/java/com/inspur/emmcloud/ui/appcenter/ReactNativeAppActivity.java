@@ -350,7 +350,7 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
     private void downloadReactNativeZip(final ReactNativeDownloadUrlBean reactNativeDownloadUrlBean) {
         final String userId = ((MyApplication) getApplication()).getUid();
         final String reactZipDownloadFromUri = APIUri.getZipUrl() + reactNativeDownloadUrlBean.getUri();
-        final String reactZipFilePath = MyAppConfig.LOCAL_DOWNLOAD_PATH + userId + "/" + reactNativeDownloadUrlBean.getUri();
+        final String reactZipFilePath = MyAppConfig.getFileDownloadDirPath() + userId + "/" + reactNativeDownloadUrlBean.getUri();
         APIDownloadCallBack progressCallback = new APIDownloadCallBack(ReactNativeAppActivity.this, reactZipDownloadFromUri) {
             @Override
             public void callbackStart() {

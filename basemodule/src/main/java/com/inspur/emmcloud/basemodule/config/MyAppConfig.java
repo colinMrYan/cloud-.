@@ -32,23 +32,14 @@ public class MyAppConfig {
             .getExternalStorageDirectory() + "/IMP-Cloud/cache/voice";
     public static final String LOCAL_CACHE_PHOTO_PATH = Environment
             .getExternalStorageDirectory() + "/IMP-Cloud/cache/photo";
-    //    public static final String LOCAL_CACHE_DEFAULT_DB_PATH = Environment
-//            .getExternalStorageDirectory() + "/IMP-Cloud/cache/default_db";
     public static final String LOCAL_OFFLINE_APP_PATH = Environment
             .getExternalStorageDirectory() + "/IMP-Cloud/offlineApp";
-    public static final String LOCAL_DOWNLOAD_PATH = Environment
-            .getExternalStorageDirectory() + "/IMP-Cloud/download/";
-    public static final String LOCAL_DOWNLOAD_PATH_MAIL_ATTCACHEMENT = Environment
-            .getExternalStorageDirectory() + "/IMP-Cloud/download/mail/";
     public static final String LOCAL_CACHE_MARKDOWN_PATH = Environment
             .getExternalStorageDirectory() + "/IMP-Cloud/cache/Markdown/";
-    public static final String LOCAL_CACHE_CHAT_PATH = Environment
-            .getExternalStorageDirectory() + "/IMP-Cloud/cache/chat/";
     public static final String LOCAL_CACHE_OSS_RECORD_PATH = Environment
             .getExternalStorageDirectory() + "/IMP-Cloud/oss/";
     public static final String LOCAL_SHARE_FILE_PATH = Environment
             .getExternalStorageDirectory() + "/IMP-Cloud/cache/share_file/";
-
     /**
      * 用户文件操作空间，所有用户文件操作不应超出这个范围，清除全部缓存时应当考虑清除此处
      */
@@ -58,7 +49,9 @@ public class MyAppConfig {
     public static final int UPLOAD_ORIGIN_IMG_DEFAULT_SIZE = 1280;
     public static final int UPLOAD_THUMBNAIL_IMG_MAX_SIZE = 600;
     public static final int VOLUME_MAX_FILE_NAME_LENGTH = 40;
-    public static final int WEBSOCKET_QEQUEST_TIMEOUT = 16;
+    public static final int WEBSOCKET_REQUEST_TIMEOUT = 16;
+    private static final String LOCAL_DOWNLOAD_PATH = Environment
+            .getExternalStorageDirectory() + "/IMP-Cloud/download/";
     public static int NETWORK_MOBILE_MAX_SIZE_ALERT = 1024 * 1024 * 50;
 
 
@@ -69,6 +62,18 @@ public class MyAppConfig {
         languageMap.put("zh-TW", "zh-TW");
         return languageMap;
 
+    }
+
+    public static String getFileDownloadDirPath() {
+        return Environment.getExternalStorageDirectory() + "/IMP-Cloud/download/";
+    }
+
+    public static String getFileDownloadByUserAndTanentDirPath() {
+        return getFileDownloadDirPath() + BaseApplication.getInstance().getUid() + "/" + BaseApplication.getInstance().getTanent() + "/";
+    }
+
+    public static String getMailAttachmentFilePath(String mailId, String mailAttachmentName) {
+        return getFileDownloadByUserAndTanentDirPath() + mailId + "/" + mailAttachmentName;
     }
 
     public static String getPluginDefaultDbCache() {
@@ -115,10 +120,6 @@ public class MyAppConfig {
      */
     public static String getReactTempFilePath(Context context, String userId) {
         return context.getDir("ReactResource_046", MODE_PRIVATE).getPath() + "/" + BaseApplication.getInstance().getTanent() + "/" + userId + "/Pre";
-    }
-
-    public static String getVolumeFileDownloadDirPath() {
-        return LOCAL_DOWNLOAD_PATH + BaseApplication.getInstance().getUid() + "/" + BaseApplication.getInstance().getTanent() + "/";
     }
 
     /**

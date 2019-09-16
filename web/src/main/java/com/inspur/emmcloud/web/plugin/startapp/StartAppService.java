@@ -70,8 +70,7 @@ public class StartAppService extends ImpPlugin {
                     if (downloadingDialog != null && downloadingDialog.isShowing()) {
                         downloadingDialog.dismiss();
                     }
-//                    AppUtils.installApk(getActivity(),MyAppConfig.LOCAL_DOWNLOAD_PATH,"impInstall.apk");
-                    FileUtils.openFile(getActivity(), MyAppConfig.LOCAL_DOWNLOAD_PATH + "impInstall.apk");
+                    FileUtils.openFile(getActivity(), MyAppConfig.getFileDownloadDirPath() + "impInstall.apk");
                     break;
                 case DOWNLOAD_FAIL:
                     if (downloadingDialog != null && downloadingDialog.isShowing()) {
@@ -240,7 +239,7 @@ public class StartAppService extends ImpPlugin {
         if (Environment.getExternalStorageState().equals(
                 Environment.MEDIA_MOUNTED)) {
             RequestParams params = new RequestParams(appUrl);
-            params.setSaveFilePath(MyAppConfig.LOCAL_DOWNLOAD_PATH + "impInstall.apk");
+            params.setSaveFilePath(MyAppConfig.getFileDownloadDirPath() + "impInstall.apk");
             cancelableDownloadRequest = x.http().get(params,
                     new Callback.ProgressCallback<File>() {
 

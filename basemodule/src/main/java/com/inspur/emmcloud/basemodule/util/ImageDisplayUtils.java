@@ -127,8 +127,11 @@ public class ImageDisplayUtils {
                 String[] drawableIds = uri.split("drawable://");
                 if (drawableIds.length == 2) {
                     int drawableId = Integer.valueOf(drawableIds[1]);
-                    imageView.setImageResource(drawableId);
-                    return;
+                    if (drawableId != 0) {
+                        imageView.setImageResource(drawableId);
+                        return;
+                    }
+
                 }
             } catch (Exception e) {
                 e.printStackTrace();

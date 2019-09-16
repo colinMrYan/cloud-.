@@ -255,10 +255,6 @@ public class MailApiService {
         params.setMultipart(true);
         params.addQueryStringParameter("mail", PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT));
         params.addBodyParameter("file", new ByteArrayInputStream(mailContent), "application/octet-stream", "111");
-//        String fileName = System.currentTimeMillis()+".aa";
-//        String path = MyAppConfig.LOCAL_DOWNLOAD_PATH+fileName;
-//        FileUtils.writeFile(new File(path),new ByteArrayInputStream(mailContent));
-        // params.addBodyParameter("file",new File(path));
         params.setAsJsonContent(true);
         HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, url) {
             @Override
