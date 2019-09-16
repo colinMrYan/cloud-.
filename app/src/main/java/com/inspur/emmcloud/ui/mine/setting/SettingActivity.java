@@ -179,6 +179,7 @@ public class SettingActivity extends BaseActivity {
     }
 
     private void initView() {
+        setTitleText(R.string.settings);
         loadingDlg = new LoadingDialog(this);
         apiService = new MineAPIService(this);
         apiService.setAPIInterface(new WebService());
