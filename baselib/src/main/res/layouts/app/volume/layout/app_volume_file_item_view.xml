@@ -42,11 +42,15 @@
 
     <ImageView
         android:id="@+id/file_select_img"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="65dp"
+        android:layout_height="70dp"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="15dp"
+        android:paddingBottom="25dp"
+        android:paddingLeft="30dp"
+        android:paddingRight="15dp"
+        android:paddingTop="25dp"
         android:scaleType="fitXY"
         android:src="@drawable/ic_select_no" />
 

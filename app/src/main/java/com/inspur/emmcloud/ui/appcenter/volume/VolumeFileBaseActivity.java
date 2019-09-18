@@ -677,6 +677,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
             LoadingDialog.dimissDlg(loadingDlg);
             volumeFileList.removeAll(deleteVolumeFileList);
             adapter.setVolumeFileList(volumeFileList);
+            adapter.clearSelectedVolumeFileList();
             adapter.notifyDataSetChanged();
             initDataBlankLayoutStatus();
         }

@@ -74,7 +74,7 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
         headerOperationLayout.setVisibility(View.GONE);
         locationSelectCancelText.setVisibility(View.VISIBLE);
         locationSelectBarLayout.setVisibility(View.VISIBLE);
-        adapter.setShowFileOperationDropDownImg(false);
+        adapter.setShowFileOperationSelcteImage(false);
         adapter.setItemClickListener(new VolumeFileAdapter.MyItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
