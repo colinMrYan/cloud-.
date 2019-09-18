@@ -7,6 +7,7 @@ import android.os.Parcelable;
 import android.util.Log;
 
 import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
 import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
 import com.inspur.emmcloud.basemodule.api.HttpUtils;
@@ -70,7 +71,8 @@ public class WXEntryActivity extends WXCallbackActivity implements IWXAPIEventHa
      * @param wechatCardBean
      */
     private void getInvoiceInfo(WechatCardBean wechatCardBean) {
-        String wechatAccessToken = "25_z_lDEf8toYld3uS3hRpfMD6FJUXvCoo_RgrOzAha8BmzUtoqeAxnp5chDHSITRa0k8Q_QSOLNUWlU2WE5JBtGNW4ijG46BHiUVRbLEgGUQMLvAiPRGwJ0oNh-WEileazn3f9OTBpPZjD6Up4QJYhAGAEXM";
+        String wechatAccessToken = PreferencesUtils.getString(this, "WechatAccessToken");
+//        "25_z_lDEf8toYld3uS3hRpfMD6FJUXvCoo_RgrOzAha8BmzUtoqeAxnp5chDHSITRa0k8Q_QSOLNUWlU2WE5JBtGNW4ijG46BHiUVRbLEgGUQMLvAiPRGwJ0oNh-WEileazn3f9OTBpPZjD6Up4QJYhAGAEXM";
         String completeUrl = "https://api.weixin.qq.com/card/invoice/reimburse/getinvoiceinfo?access_token=" + wechatAccessToken;
 
         RequestParams params = BaseApplication.getInstance()
