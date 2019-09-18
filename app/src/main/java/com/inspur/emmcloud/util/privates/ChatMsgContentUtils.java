@@ -25,9 +25,6 @@ public class ChatMsgContentUtils {
         if (StringUtils.isBlank(content)) {
             return new SpannableString("");
         }
-        if (mentionsMap == null || mentionsMap.size() == 0) {
-            return new SpannableString(content);
-        }
         StringBuilder contentStringBuilder = new StringBuilder();
         contentStringBuilder.append(content);
         Pattern mentionPattern = Pattern.compile("@[a-z]*\\d+\\s");
