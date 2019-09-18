@@ -182,7 +182,7 @@ public class MailDetailActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 MailAttachment mailAttachment = reallyMailAttachmentList.get(position);
-                String attachmentFilePath = MyAppConfig.LOCAL_DOWNLOAD_PATH_MAIL_ATTCACHEMENT + mail.getId() + "/" + mailAttachment.getName();
+                String attachmentFilePath = MyAppConfig.getMailAttachmentFilePath(mail.getId(), mailAttachment.getName());
                 if (FileUtils.isFileExist(attachmentFilePath)) {
                     FileUtils.openFile(MailDetailActivity.this, attachmentFilePath);
                 }
@@ -255,7 +255,7 @@ public class MailDetailActivity extends BaseActivity {
         for (MailAttachment mailAttachment : mail.getMailAttachmentList()) {
             if (!mailAttachment.isAttachment()) {
                 if (url.contains(mailAttachment.getContentId())) {
-                    String attachmentFilePath = MyAppConfig.LOCAL_DOWNLOAD_PATH_MAIL_ATTCACHEMENT + mail.getId() + "/" + mailAttachment.getName();
+                    String attachmentFilePath = MyAppConfig.getMailAttachmentFilePath(mail.getId(), mailAttachment.getName());
                     if (FileUtils.isFileExist(attachmentFilePath)) {
                         try {
                             File attachmentFile = new File(attachmentFilePath);
@@ -284,7 +284,7 @@ public class MailDetailActivity extends BaseActivity {
     private boolean checkMailAttachmentsDownload(List<MailAttachment> mailAttachmentList) {
         boolean isMailAttachmentsDownload = true;
         for (MailAttachment mailAttachment : mailAttachmentList) {
-            String attachmentFilePath = MyAppConfig.LOCAL_DOWNLOAD_PATH_MAIL_ATTCACHEMENT + mail.getId() + "/" + mailAttachment.getName();
+            String attachmentFilePath = MyAppConfig.getMailAttachmentFilePath(mail.getId(), mailAttachment.getName());
             if (!FileUtils.isFileExist(attachmentFilePath)) {
                 isMailAttachmentsDownload = false;
                 break;
@@ -306,7 +306,8 @@ public class MailDetailActivity extends BaseActivity {
 
     private void downloadMailAttachments(final List<MailAttachment> mailAttachmentList) {
         for (final MailAttachment mailAttachment : mailAttachmentList) {
-            final String mailAttachmentFilePath = MyAppConfig.LOCAL_DOWNLOAD_PATH_MAIL_ATTCACHEMENT + mail.getId() + "/" + (mail.isEncrypted() ? System.currentTimeMillis() + ".tmp" : mailAttachment.getName());
+            String attachmentName = mail.isEncrypted() ? System.currentTimeMillis() + ".tmp" : mailAttachment.getName();
+            final String mailAttachmentFilePath = MyAppConfig.getMailAttachmentFilePath(mail.getId(), attachmentName);
             if (FileUtils.isFileExist(mailAttachmentFilePath)) {
                 return;
             }
@@ -333,7 +334,7 @@ public class MailDetailActivity extends BaseActivity {
                         if (mailAttachment.isAttachment()) {
                             decryptBytes = ZipUtils.unGzipcompress(decryptBytes);
                         }
-                        FileUtils.writeFile(MyAppConfig.LOCAL_DOWNLOAD_PATH_MAIL_ATTCACHEMENT + mail.getId() + "/" + mailAttachment.getName(), new ByteArrayInputStream(decryptBytes));
+                        FileUtils.writeFile(MyAppConfig.getMailAttachmentFilePath(mail.getId(), mailAttachment.getName()), new ByteArrayInputStream(decryptBytes));
                         FileUtils.deleteFile(file.getAbsolutePath());
                     }
                     boolean isMailAttachmentsDownload = checkMailAttachmentsDownload(mailAttachmentList);

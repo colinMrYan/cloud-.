@@ -11,13 +11,16 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.api.APIDownloadCallBack;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.bean.DownloadFileCategory;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.basemodule.util.FileDownloadManager;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
@@ -68,10 +71,11 @@ public class VolumeFileDownloadActivity extends BaseActivity {
         fileNameText.setText(volumeFile.getName());
         fileTypeImg.setImageResource(FileUtils.getFileIconResIdByFileName(volumeFile.getName()));
         fileSizeText.setText(FileUtils.formatFileSize(volumeFile.getSize()));
-        fileSavePath = MyAppConfig.getVolumeFileDownloadDirPath() + volumeFile.getName();
-        if (FileUtils.isFileExist(fileSavePath)) {
+        fileSavePath = FileDownloadManager.getInstance().getDownloadFilePath(DownloadFileCategory.CATEGORY_VOLUME_FILE, volumeFile.getId(), volumeFile.getName());
+        if (!StringUtils.isBlank(fileSavePath)) {
             setDownloadingStatus(true);
         } else {
+            fileSavePath = MyAppConfig.getFileDownloadByUserAndTanentDirPath() + FileUtils.getNoDuplicateFileNameInDir(MyAppConfig.getFileDownloadByUserAndTanentDirPath(), volumeFile.getName());
             setDownloadingStatus(false);
             boolean isStartDownload = getIntent().getBooleanExtra("isStartDownload", false);
             if (isStartDownload && checkDownloadEnvironment()) {
@@ -166,7 +170,7 @@ public class VolumeFileDownloadActivity extends BaseActivity {
     private void downloadFile() {
         downloadBtn.setVisibility(View.GONE);
         downloadStatusLayout.setVisibility(View.VISIBLE);
-        String volumeId = getIntent().getStringExtra("volumeId");
+        final String volumeId = getIntent().getStringExtra("volumeId");
         String currentDirAbsolutePath = getIntent().getStringExtra("currentDirAbsolutePath");
         String source = APIUri.getVolumeFileUploadSTSTokenUrl(volumeId);
         APIDownloadCallBack callBack = new APIDownloadCallBack(getApplicationContext(), source) {
@@ -188,6 +192,7 @@ public class VolumeFileDownloadActivity extends BaseActivity {
 
             @Override
             public void callbackSuccess(File file) {
+                FileDownloadManager.getInstance().saveDownloadFileInfo(DownloadFileCategory.CATEGORY_VOLUME_FILE, volumeFile.getId(), volumeFile.getName(), fileSavePath);
                 ToastUtils.show(getApplicationContext(), R.string.download_success);
                 downloadStatusLayout.setVisibility(View.GONE);
                 progressBar.setProgress(0);

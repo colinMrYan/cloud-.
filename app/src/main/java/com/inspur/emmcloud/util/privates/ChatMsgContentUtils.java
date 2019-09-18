@@ -40,7 +40,7 @@ public class ChatMsgContentUtils {
                 String uid = mentionsMap.get(key);
                 String protocol = "ecm-contact://" + uid;
                 String newString;
-                if (uid.equals("10")) {
+                if (uid.equals("EVERYBODY")) {
                     newString = "@" + BaseApplication.getInstance().getString(R.string.chat_search_mention_all) + " ";
                 } else {
                     newString = "@" + ContactUserCacheUtils.getUserName(uid) + " ";

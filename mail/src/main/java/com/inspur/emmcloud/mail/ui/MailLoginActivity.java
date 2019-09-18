@@ -8,10 +8,10 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.EditTextUtils;
 import com.inspur.emmcloud.baselib.util.FomatUtils;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
@@ -19,6 +19,8 @@ import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.componentservice.contact.ContactService;
+import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.componentservice.mail.OnExchangeLoginListener;
 import com.inspur.emmcloud.mail.R;
 import com.inspur.emmcloud.mail.R2;
@@ -44,13 +46,19 @@ public class MailLoginActivity extends BaseActivity {
     TextInputLayout usernameTextInputLayout;
     private String mail = "";
     private String password = "";
+    private ContactUser contactUser;
 
     @Override
     public void onCreate() {
         ButterKnife.bind(this);
         TextWatcher watcher = new TextWatcher();
         mail = PreferencesByUserAndTanentUtils.getString(BaseApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, "");
-        password = PreferencesByUserAndTanentUtils.getString(BaseApplication.getInstance(), Constant.PREF_MAIL_PASSWORD, "");
+        //  password = PreferencesByUserAndTanentUtils.getString(BaseApplication.getInstance(), Constant.PREF_MAIL_PASSWORD, "");
+        ContactService mailService = Router.getInstance().getService(ContactService.class);
+        if (mailService != null) {
+            contactUser = mailService.getContactUserByUid(BaseApplication.getInstance().getUid());
+            mail = contactUser.getEmail();
+        }
         EditTextUtils.setText(mailEdit, mail);
         if (!StringUtils.isBlank(mail)) {
             mailEdit.setEnabled(false);
@@ -90,12 +98,10 @@ public class MailLoginActivity extends BaseActivity {
                     .setOnExchangeLoginListener(new OnExchangeLoginListener() {
                         @Override
                         public void onMailLoginSuccess() {
-                            LogUtils.LbcDebug("onMailLoginSuccess");
                             if (getIntent().hasExtra("from") && getIntent().getExtras().getString("from").equals("schedule_exchange_login")) {
                                 setResult(RESULT_OK);
                                 finish();
                             } else {
-                                LogUtils.LbcDebug("onMailLoginSuccess");
                                 IntentUtils.startActivity(MailLoginActivity.this, MailHomeActivity.class, true);
                             }
                         }
@@ -105,6 +111,7 @@ public class MailLoginActivity extends BaseActivity {
                             WebServiceMiddleUtils.hand(MailLoginActivity.this, error, errorCode);
                         }
                     }).build().login();
+
         }
     }
 

@@ -22,13 +22,15 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
 import com.inspur.emmcloud.baselib.widget.ScrollViewWithListView;
+import com.inspur.emmcloud.basemodule.bean.DownloadFileCategory;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
-import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.FileDownloadManager;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
@@ -52,6 +54,7 @@ import com.inspur.emmcloud.widget.LinkMovementClickMethod;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -196,8 +199,9 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
                 @Override
                 public void onClick(View view) {
                     MsgContentRegularFile msgContentFile = message.getMsgContentAttachmentFile();
-                    String fileDownloadPath = MyAppConfig.LOCAL_DOWNLOAD_PATH + msgContentFile.getName();
-                    if (FileUtils.isFileExist(fileDownloadPath)) {
+                    String fileDownloadPath = FileDownloadManager.getInstance().getDownloadFilePath(DownloadFileCategory.CATEGORY_MESSAGE, message.getId(), msgContentFile.getName());
+                    ;
+                    if (!StringUtils.isBlank(fileDownloadPath)) {
                         FileUtils.openFile(ChannelMessageDetailActivity.this, fileDownloadPath);
                     } else {
                         Intent intent = new Intent(ChannelMessageDetailActivity.this, ChatFileDownloadActivtiy.class);
@@ -290,10 +294,17 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode != RESULT_CANCELED && requestCode == RESULT_MENTIONS) {
             String result = data.getStringExtra("searchResult");
-            String uid = JSONUtils.getString(result, "uid", null);
-            String name = JSONUtils.getString(result, "name", null);
-            boolean isInputKeyWord = data.getBooleanExtra("isInputKeyWord", false);
-            chatInputMenu.addMentions(uid, name, isInputKeyWord);
+            JSONArray jsonArray = JSONUtils.getJSONArray(result, new JSONArray());
+            for (int i = 0; i < jsonArray.length(); i++) {
+                try {
+                    String uid = JSONUtils.getString(jsonArray.getString(i), "uid", null);
+                    String name = JSONUtils.getString(jsonArray.getString(i), "name", null);
+                    boolean isInputKeyWord = data.getBooleanExtra("isInputKeyWord", false);
+                    chatInputMenu.addMentions(uid, name, isInputKeyWord);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
