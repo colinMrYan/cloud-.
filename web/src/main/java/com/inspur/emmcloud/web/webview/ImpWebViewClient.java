@@ -44,7 +44,7 @@ public class ImpWebViewClient extends WebViewClient {
     private Runnable runnable = null;
     private ImpCallBackInterface impCallBackInterface;
     private String url = "";
-    private boolean isRedirect = false;
+    private boolean isLogin = false;
 
     public ImpWebViewClient(ImpCallBackInterface impCallBackInterface) {
         this.impCallBackInterface = impCallBackInterface;
@@ -170,8 +170,6 @@ public class ImpWebViewClient extends WebViewClient {
     @TargetApi(Build.VERSION_CODES.N)
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, final WebResourceRequest request) {
-
-        this.isRedirect = request.isRedirect();
         if (runnable != null) {
             mHandler.removeCallbacks(runnable);
             runnable = null;
@@ -221,10 +219,6 @@ public class ImpWebViewClient extends WebViewClient {
     @SuppressWarnings("deprecation")
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, String url) {
-        WebView.HitTestResult hit = view.getHitTestResult();
-        if (hit != null) {
-            this.isRedirect = true;
-        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             return false;
         }
@@ -238,12 +232,21 @@ public class ImpWebViewClient extends WebViewClient {
         return true;
     }
 
-    public boolean isRedirect() {
-        return isRedirect;
+    public boolean isLogin() {
+        return isLogin;
     }
 
-    public void setRedirect(boolean redirect) {
-        isRedirect = redirect;
+    public void setLogin(boolean login) {
+        isLogin = login;
+    }
+
+    @Override
+    public void doUpdateVisitedHistory(WebView view, String url, boolean isReload) {
+        super.doUpdateVisitedHistory(view, url, isReload);
+        if (isLogin) {
+            view.clearHistory();
+            isLogin = false;
+        }
     }
 
     /**
@@ -300,15 +303,6 @@ public class ImpWebViewClient extends WebViewClient {
 
     }
 
-    @Override
-    public void doUpdateVisitedHistory(WebView view, String url, boolean isReload) {
-        super.doUpdateVisitedHistory(view, url, isReload);
-        if (isRedirect) {
-            myWebView.clearHistory();
-            isRedirect = false;
-        }
-    }
-
     class WebService extends WebAPIInterfaceImpl {
         private WebView webView;
 
@@ -321,6 +315,7 @@ public class ImpWebViewClient extends WebViewClient {
             if (NetUtils.isNetworkConnected(BaseApplication.getInstance())) {
                 String redirectUri = appRedirectResult.getRedirect_uri();
                 webView.loadUrl(redirectUri, getWebViewHeaders(redirectUri));
+                isLogin = true;
             }
         }
 
