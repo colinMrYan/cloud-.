@@ -480,7 +480,8 @@ public class ImpFragment extends ImpBaseFragment {
     public void initWebViewGoBackOrClose() {
         if (webView != null) {
             if (getActivity().getClass().getName().equals(ImpActivity.class.getName())) {
-                (rootView.findViewById(Res.getWidgetID("imp_close_btn"))).setVisibility(webView.canGoBack() ? View.VISIBLE : View.GONE);
+                (rootView.findViewById(Res.getWidgetID("imp_close_btn"))).
+                        setVisibility(webView.canGoBack() && !webView.getImpWebViewClient().isRedirect() ? View.VISIBLE : View.GONE);
             }
             setHeaderTextWidth();
         }

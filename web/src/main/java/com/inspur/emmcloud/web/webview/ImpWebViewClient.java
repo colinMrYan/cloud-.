@@ -44,6 +44,7 @@ public class ImpWebViewClient extends WebViewClient {
     private Runnable runnable = null;
     private ImpCallBackInterface impCallBackInterface;
     private String url = "";
+    private boolean isRedirect = false;
 
     public ImpWebViewClient(ImpCallBackInterface impCallBackInterface) {
         this.impCallBackInterface = impCallBackInterface;
@@ -169,6 +170,8 @@ public class ImpWebViewClient extends WebViewClient {
     @TargetApi(Build.VERSION_CODES.N)
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, final WebResourceRequest request) {
+
+        this.isRedirect = request.isRedirect();
         if (runnable != null) {
             mHandler.removeCallbacks(runnable);
             runnable = null;
@@ -218,6 +221,10 @@ public class ImpWebViewClient extends WebViewClient {
     @SuppressWarnings("deprecation")
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, String url) {
+        WebView.HitTestResult hit = view.getHitTestResult();
+        if (hit != null) {
+            this.isRedirect = true;
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             return false;
         }
@@ -229,6 +236,14 @@ public class ImpWebViewClient extends WebViewClient {
             view.loadUrl(url, getWebViewHeaders(url));
         }
         return true;
+    }
+
+    public boolean isRedirect() {
+        return isRedirect;
+    }
+
+    public void setRedirect(boolean redirect) {
+        isRedirect = redirect;
     }
 
     /**
@@ -283,6 +298,15 @@ public class ImpWebViewClient extends WebViewClient {
             appAPIService.getAuthCode(requestUrl, urlWithParams.getQuery());
         }
 
+    }
+
+    @Override
+    public void doUpdateVisitedHistory(WebView view, String url, boolean isReload) {
+        super.doUpdateVisitedHistory(view, url, isReload);
+        if (isRedirect) {
+            myWebView.clearHistory();
+            isRedirect = false;
+        }
     }
 
     class WebService extends WebAPIInterfaceImpl {

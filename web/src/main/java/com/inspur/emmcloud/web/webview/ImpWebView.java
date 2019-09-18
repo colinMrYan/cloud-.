@@ -65,6 +65,7 @@ public class ImpWebView extends WebView {
     private String relativeUrl;
     private ProgressBar progressbar;
     private ImpWebChromeClient impWebChromeClient;
+    private ImpWebViewClient impWebViewClient;
     private TextView titleText;
     private Handler handler;
     private FrameLayout frameLayout;
@@ -116,6 +117,11 @@ public class ImpWebView extends WebView {
     //imp修改处
     public ImpWebChromeClient getWebChromeClient() {
         return impWebChromeClient;
+    }
+
+    //imp修改处
+    public ImpWebViewClient getImpWebViewClient() {
+        return impWebViewClient;
     }
 
     public void init() {
@@ -183,7 +189,8 @@ public class ImpWebView extends WebView {
         setNetworkAvailable(true);
 
         this.setBackgroundColor(Color.WHITE);
-        this.setWebViewClient(new ImpWebViewClient(impCallBackInterface));
+        impWebViewClient = new ImpWebViewClient(impCallBackInterface);
+        this.setWebViewClient(impWebViewClient);
         // 使WebView支持弹出框
         impWebChromeClient = new ImpWebChromeClient(context, this, frameLayout);
         this.setWebChromeClient(impWebChromeClient);
