@@ -103,6 +103,11 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
             public void onItemOperationTextClick(View view, int position) {
 
             }
+
+            @Override
+            public void onSelectedItemClick(View view, int position) {
+
+            }
         });
         pathText.setVisibility(View.VISIBLE);
         pathText.setText(getString(R.string.clouddriver_current_directory_hint, currentDirAbsolutePath));

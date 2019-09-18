@@ -121,6 +121,16 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
 
     private void setListIemClick() {
         adapter.setItemClickListener(new VolumeFileAdapter.MyItemClickListener() {
+
+            @Override
+            public void onSelectedItemClick(View view, int position) {
+                adapter.setVolumeFileSelect(position);
+                batchOprationHeaderText.setText(getString(R.string.clouddriver_has_selected, adapter.getSelectVolumeFileList().size()));
+                setBatchOprationLayoutByPrivilege();
+                getBatchOprationSelectAllText.setText((volumeFileList.size() == adapter.getSelectVolumeFileList().size()) ? R.string.clouddriver_select_nothing : R.string.clouddriver_select_all);
+                batchOprationHeaderText.setText(getString(R.string.clouddriver_has_selected, adapter.getSelectVolumeFileList().size()));
+            }
+
             @Override
             public void onItemClick(View view, int position) {
                 VolumeFile volumeFile = volumeFileList.get(position);
@@ -133,15 +143,9 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                             bundle.putSerializable("title", volumeFile.getName());
                             bundle.putBoolean("isOpenFromParentDirectory", true);
                             IntentUtils.startActivity(VolumeFileActivity.this, VolumeFileActivity.class, bundle);
-                        } else {
+                        } else if (adapter.getSelectVolumeFileList().size() == 0) {
                             downloadOrOpenVolumeFile(volumeFile);
                         }
-                    } else {
-                        adapter.setVolumeFileSelect(position);
-                        batchOprationHeaderText.setText(getString(R.string.clouddriver_has_selected, adapter.getSelectVolumeFileList().size()));
-                        setBatchOprationLayoutByPrivilege();
-                        getBatchOprationSelectAllText.setText((volumeFileList.size() == adapter.getSelectVolumeFileList().size()) ? R.string.clouddriver_select_nothing : R.string.clouddriver_select_all);
-                        batchOprationHeaderText.setText(getString(R.string.clouddriver_has_selected, adapter.getSelectVolumeFileList().size()));
                     }
                 }
 
@@ -207,7 +211,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         super.initDataBlankLayoutStatus();
         operationLayout.setVisibility((volumeFileList.size() == 0) ? View.GONE : View.VISIBLE);
         if (adapter.getMultiselect()) {
-            setMutiSelect(false);
+            setMutiSelect(true);
         }
     }
 
@@ -235,7 +239,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                 showSortOperationPop();
                 break;
             case R.id.operation_multiselect_text:
-                setMutiSelect(!adapter.getMultiselect());
+                setMutiSelect(true);
                 break;
             case R.id.operation_filter_text:
                 showFileFilterPop(v);
@@ -266,7 +270,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                 moveFile(adapter.getSelectVolumeFileList());
                 break;
             case R.id.batch_operation_cancel_text:
-                setMutiSelect(false);
+                setMutiSelect(true);
                 break;
             case R.id.batch_operation_select_all_text:
                 boolean isSelectAllStatus = getBatchOprationSelectAllText.getText().toString().equals(getString(R.string.clouddriver_select_all));
