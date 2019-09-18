@@ -272,6 +272,9 @@ public class ChatInputEdit extends EditText {
                 Editable editable = getText();
                 editable.delete(index - 1, index);
             }
+            if (insertModel.getInsertContentId().equals("10")) {
+                insertModel.setInsertId("10");
+            }
         }
         //避免插入相同的数据
         for (InsertModel model : insertModelList) {
@@ -308,7 +311,11 @@ public class ChatInputEdit extends EditText {
             if (insertModelList.size() > 0) {
                 for (InsertModel insertModel : insertModelList) {
                     if (insertModel.getInsertRule().equals("@")) {
-                        mentionsMap.put(insertModel.getInsertId(), insertModel.getInsertContentId());
+                        if (insertModel.getInsertId().equals("10")) {
+                            mentionsMap.put(insertModel.getInsertId(), "EVERYBODY");
+                        } else {
+                            mentionsMap.put(insertModel.getInsertId(), insertModel.getInsertContentId());
+                        }
                     }
                 }
             }

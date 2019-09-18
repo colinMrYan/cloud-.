@@ -122,10 +122,10 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
             lettersSideBar.setVisibility(View.GONE);
             moreSelectText.setVisibility(View.VISIBLE);
             okTv.setVisibility(View.GONE);
-            flowAddEdit();
         } else {
             selectedUserList.add(tranContactUser2PersonDto(ContactUserCacheUtils.getContactUserByUid(MyApplication.getInstance().getUid())));
         }
+        flowAddEdit();
         loadingDlg = new LoadingDialog(this);
         loadingDlg.show();
         selectedMemberRecylerView = (RecyclerView) findViewById(R.id.recyclerview_voice_communication_select_members);
