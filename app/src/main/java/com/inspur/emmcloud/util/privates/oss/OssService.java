@@ -23,7 +23,7 @@ import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileUploadTokenResult;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.interf.ProgressCallback;
 import com.inspur.emmcloud.interf.VolumeFileUploadService;
-import com.inspur.emmcloud.util.privates.VolumeFileUploadManagerUtils;
+import com.inspur.emmcloud.util.privates.VolumeFileUploadManager;
 
 import java.io.File;
 import java.util.HashMap;
@@ -45,6 +45,7 @@ public class OssService implements VolumeFileUploadService {
     private ProgressCallback progressCallback;
     private VolumeFile mockVolumeFile;
     private Handler handler;
+    private ResumableUploadRequest request;
 
 
     public OssService(GetVolumeFileUploadTokenResult getVolumeFileUploadTokenResult, VolumeFile mockVolumeFile) {
@@ -94,7 +95,7 @@ public class OssService implements VolumeFileUploadService {
                             String result = (String) msg.obj;
                             progressCallback.onSuccess(new VolumeFile(result));
                         }
-                        VolumeFileUploadManagerUtils.getInstance().removeVolumeFileUploadService(mockVolumeFile);
+                        VolumeFileUploadManager.getInstance().cancelVolumeFileUploadService(mockVolumeFile);
                         break;
                     case FAIL:
                         if (progressCallback != null) {
@@ -122,7 +123,7 @@ public class OssService implements VolumeFileUploadService {
         if (!file.exists()) {
             file.mkdirs();
         }
-        ResumableUploadRequest request = new ResumableUploadRequest(getVolumeFileUploadTokenResult.getBucket(), fileName, localFile, MyAppConfig.LOCAL_CACHE_OSS_RECORD_PATH);
+        request = new ResumableUploadRequest(getVolumeFileUploadTokenResult.getBucket(), fileName, localFile, MyAppConfig.LOCAL_CACHE_OSS_RECORD_PATH);
         /**
          * 设置callback address
          */
@@ -194,6 +195,23 @@ public class OssService implements VolumeFileUploadService {
 
     @Override
     public void onDestroy() {
+        if (request != null) {
+            request.setDeleteUploadOnCancelling(true);
+        }
+        if (task != null) {
+            task.cancel();
+            task = null;
+        }
+        if (handler != null) {
+            handler = null;
+        }
+    }
+
+    @Override
+    public void onPause() {
+        if (request != null) {
+            request.setDeleteUploadOnCancelling(false);
+        }
         if (task != null) {
             task.cancel();
             task = null;

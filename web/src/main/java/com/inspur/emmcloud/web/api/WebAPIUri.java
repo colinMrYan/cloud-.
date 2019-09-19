@@ -16,4 +16,11 @@ public class WebAPIUri {
         return WebServiceRouterManager.getInstance().getIDMUrl() + "oauth2.0/authorize";
     }
 
+    /**
+     * 微信 电子发票获取  token 和 ticket
+     */
+    public static String getWechatTicketUrl() {
+        return "https://emm.inspuronline.com/" + "wechat/invoice/TokenAndTicket";
+    }
+
 }

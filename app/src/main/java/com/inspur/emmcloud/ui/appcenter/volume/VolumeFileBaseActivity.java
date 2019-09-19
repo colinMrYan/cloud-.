@@ -50,7 +50,7 @@ import com.inspur.emmcloud.bean.appcenter.volume.VolumeGroupContainMe;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.util.privates.VolumeFilePrivilegeUtils;
-import com.inspur.emmcloud.util.privates.VolumeFileUploadManagerUtils;
+import com.inspur.emmcloud.util.privates.VolumeFileUploadManager;
 import com.inspur.emmcloud.util.privates.cache.VolumeGroupContainMeCacheUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -635,7 +635,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
             }
 
             if (isShowFileUploading) {
-                List<VolumeFile> volumeFileUploadingList = VolumeFileUploadManagerUtils.getInstance().getCurrentForderUploadingVolumeFile(volume.getId(), currentDirAbsolutePath);
+                List<VolumeFile> volumeFileUploadingList = VolumeFileUploadManager.getInstance().getCurrentFolderUploadVolumeFile(volume.getId(), currentDirAbsolutePath);
                 volumeFileList.addAll(0, volumeFileUploadingList);
             }
             sortVolumeFileList();

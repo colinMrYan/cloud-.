@@ -35,11 +35,13 @@ import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.ConversationFromChatContent;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
+import com.inspur.emmcloud.bean.chat.UIConversation;
 import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
+import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
@@ -47,7 +49,9 @@ import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -203,7 +207,7 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
                                 break;
                             case SEARCH_ALL_FROM_CHAT:
                                 conversationFromChatContentList = new ArrayList<>();
-                                conversationFromChatContentList = MessageCacheUtil.getConversationListByContent(MyApplication.getInstance(), searchText);
+                                conversationFromChatContentList = oriChannelInfoByKeyword(searchText);
                                 break;
                             default:
                                 break;
@@ -215,6 +219,40 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
                 }).start();
             }
         };
+    }
+
+    private List<ConversationFromChatContent> oriChannelInfoByKeyword(String searchData) {
+        Map<String, Integer> cidNumMap = new HashMap<>();
+        List<com.inspur.emmcloud.bean.chat.Message> allMessageListByKeyword = new ArrayList<>();
+        List<ConversationFromChatContent> conversationFromChatContentList = new ArrayList<>();
+        List<String> conversationIdList = new ArrayList<>();
+        allMessageListByKeyword = MessageCacheUtil.getMessagesListByKeyword(MyApplication.getInstance(), searchData);
+        if (allMessageListByKeyword != null) {
+            for (int i = 0; i < allMessageListByKeyword.size(); i++) {
+                String currentMessageConversation = allMessageListByKeyword.get(i).getChannel();
+                if (cidNumMap != null && cidNumMap.containsKey(currentMessageConversation)) {
+                    int num = cidNumMap.get(currentMessageConversation);
+                    num = num + 1;
+                    cidNumMap.put(currentMessageConversation, num);
+                } else {
+                    cidNumMap.put(currentMessageConversation, 1);
+                    conversationIdList.add(currentMessageConversation);
+                }
+            }
+        }
+        List<Conversation> conversationList = ConversationCacheUtils.getConversationListByIdList(MyApplication.getInstance(), conversationIdList);
+        for (int i = 0; i < conversationList.size(); i++) {
+            Conversation tempConversation = conversationList.get(i);
+            if (cidNumMap.containsKey(tempConversation.getId())) {
+                ConversationFromChatContent conversationFromChatContent =
+                        new ConversationFromChatContent(tempConversation, cidNumMap.get(tempConversation.getId()));
+                if (tempConversation.getType().equals(Conversation.TYPE_DIRECT)) {
+                    conversationFromChatContent.initSingleChatContact();
+                }
+                conversationFromChatContentList.add(conversationFromChatContent);
+            }
+        }
+        return conversationFromChatContentList;
     }
 
     @Override
@@ -363,6 +401,7 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
                 searchGroupList.clear();
                 conversationFromChatContentList.clear();
                 handler.sendEmptyMessage(REFRESH_DATA);
+                finish();
             }
         }
     }
@@ -495,7 +534,17 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
                 SearchModel searchModel = conversation.conversation2SearchModel();
                 displayImg(searchModel, searchHolder.headImageView);
                 searchHolder.nameTextView.setText(searchModel.getName().toString());
-                searchHolder.detailTextView.setText(conversationFromChatContentList.get(i).getMessageNum() + "条相关消息记录");
+                String string = getString(R.string.chat_contact_related_message, conversationFromChatContentList.get(i).getMessageNum());
+                searchHolder.detailTextView.setText(string);
+                searchHolder.detailTextView.setVisibility(View.VISIBLE);
+            }
+            if (conversation != null && conversation.getType().equals(Conversation.TYPE_CAST)) {
+                String icon = DirectChannelUtils.getRobotIcon(MyApplication.getInstance(), conversation.getName());
+                UIConversation uiConversation = new UIConversation(conversation);
+                searchHolder.nameTextView.setText(uiConversation.getTitle());
+                ImageDisplayUtils.getInstance().displayImage(searchHolder.headImageView, icon, R.drawable.icon_person_default);
+                String string = getString(R.string.chat_contact_related_message, conversationFromChatContentList.get(i).getMessageNum());
+                searchHolder.detailTextView.setText(string);
                 searchHolder.detailTextView.setVisibility(View.VISIBLE);
             }
             Contact contact = conversationFromChatContentList.get(i).getSingleChatContactUser();
@@ -503,7 +552,8 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
                 SearchModel searchModel = contact.contact2SearchModel();
                 displayImg(searchModel, searchHolder.headImageView);
                 searchHolder.nameTextView.setText(searchModel.getName().toString());
-                searchHolder.detailTextView.setText(conversationFromChatContentList.get(i).getMessageNum() + "条相关消息记录");
+                String string = getString(R.string.chat_contact_related_message, conversationFromChatContentList.get(i).getMessageNum());
+                searchHolder.detailTextView.setText(string);
                 searchHolder.detailTextView.setVisibility(View.VISIBLE);
             }
             //刷新数据
