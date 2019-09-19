@@ -111,6 +111,7 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
                                 bundle.putString("operationFileDirAbsolutePath", "/");
                                 IntentUtils.startActivity(VolumeHomePageActivity.this, VolumeFileLocationSelectActivity.class, bundle);
                             } else {
+                                bundle.putInt(VolumeFileBaseActivity.VOLUME_FROM, VolumeFileBaseActivity.MY_VOLUME);
                                 IntentUtils.startActivity(VolumeHomePageActivity.this, VolumeFileActivity.class,
                                         bundle);
                             }

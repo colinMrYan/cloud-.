@@ -78,6 +78,8 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     protected static final String SORT_BY_NAME_DOWN = "sort_by_name_down";
     protected static final String SORT_BY_TIME_UP = "sort_by_time_up";
     protected static final String SORT_BY_TIME_DOWN = "sort_by_time_down";
+    public static final String VOLUME_FROM = "volume_from";
+    public static final int MY_VOLUME = 0;
     public VolumeFile shareToVolumeFile;
     protected LoadingDialog loadingDlg;
     protected VolumeFileAdapter adapter;
@@ -105,6 +107,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     private List<VolumeFile> moveVolumeFileList = new ArrayList<>();//移动的云盘文件列表
     private MyAppAPIService apiServiceBase;
     private Dialog fileRenameDlg, createFolderDlg;
+    private int volumeFrom = -1;
 
     @Override
     public void onCreate() {
@@ -123,6 +126,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         apiServiceBase = new MyAppAPIService(VolumeFileBaseActivity.this);
         apiServiceBase.setAPIInterface(new WebServiceBase());
         volume = (Volume) getIntent().getSerializableExtra("volume");
+        volumeFrom = getIntent().getIntExtra(VOLUME_FROM, -1);
         currentDirAbsolutePath = getIntent().getExtras().getString("currentDirAbsolutePath", "/");
         fileFilterType = getIntent().getExtras().getString("fileFilterType", "");
         title = getIntent().getExtras().getString("title", "");
@@ -160,6 +164,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         copyAction = getString(R.string.copy);
         permissionAction = getString(R.string.clouddriver_file_permission_manager);
         // shareTo = getString(R.string.baselib_share_to);
+        //我的文件那个网盘不再显示权限管理
         new ActionSheetDialog.ActionListSheetBuilder(VolumeFileBaseActivity.this)
                 .setTitle(volumeFile.getName())
                 .addItem(deleteAction, isVolumeFileWriteable)
@@ -167,7 +172,8 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
                 .addItem(renameAction, isVolumeFileWriteable)
                 .addItem(moveToAction, isVolumeFileWriteable)
                 .addItem(copyAction, isVolumeFileWriteable)
-                .addItem(permissionAction, isVolumeFileDirectory && (isVolumeFileWriteable || isVolumeFileReadable))
+                .addItem(permissionAction, isVolumeFileDirectory && (isVolumeFileWriteable || isVolumeFileReadable)
+                        && (volumeFrom != MY_VOLUME))
                 //.addItem(shareTo, !isVolumeFileDirectory)
                 // .addItem("分享", !isVolumeFileDirectory)
                 .setOnSheetItemClickListener(new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {
