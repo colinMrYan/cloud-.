@@ -46,6 +46,8 @@ public class OssService implements VolumeFileUploadService {
     private VolumeFile mockVolumeFile;
     private Handler handler;
     private ResumableUploadRequest request;
+    private long bytesTransferred = 0;
+    private long lastTimeRecord = 0;
 
 
     public OssService(GetVolumeFileUploadTokenResult getVolumeFileUploadTokenResult, VolumeFile mockVolumeFile) {
@@ -136,9 +138,11 @@ public class OssService implements VolumeFileUploadService {
             }
         });
 
+
         request.setProgressCallback(new OSSProgressCallback() {
             @Override
             public void onProgress(Object request, long currentSize, long totalSize) {
+
                 progress = (int) (100 * currentSize / totalSize);
                 LogUtils.jasonDebug("progress=" + progress);
                 Message msg = new Message();

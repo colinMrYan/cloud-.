@@ -94,9 +94,7 @@ public class S3Service extends APIInterfaceInstance implements VolumeFileUploadS
         if (volumeFileUpload != null) {
             int transferObserverId = volumeFileUpload.getTransferObserverId();
             if (transferObserverId != -1) {
-                LogUtils.jasonDebug("11111111111111111");
                 transferObserver = mTransferUtility.resume(transferObserverId);
-                LogUtils.jasonDebug("222222222222");
             }
         }
 
@@ -134,7 +132,9 @@ public class S3Service extends APIInterfaceInstance implements VolumeFileUploadS
                     progressCallback.onLoading(progress);
                     long currentTime = System.currentTimeMillis();
                     if (bytesCurrent >= bytesTransferred) {
-                        LogUtils.jasonDebug("网速==" + (bytesCurrent - bytesTransferred) * 1.0 / (currentTime - lastTimeRecord));
+                        String uploadSpeed = ((bytesCurrent - bytesTransferred) * 1000 / (currentTime - lastTimeRecord)) + "";
+                        uploadSpeed = FileUtils.formatFileSize(uploadSpeed);
+                        uploadSpeed = uploadSpeed + "/S";
                     }
                 }
             }
