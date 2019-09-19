@@ -5,10 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -104,6 +106,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     private String cameraPicFileName;
     private BroadcastReceiver broadcastReceiver;
     private boolean isOpenFromParentDirectory = false;//是否从父级目录打开，如果是的话关闭时直接finish，否则需要打开父级页面
+    private PopupWindow popupWindow;
 
 
     @Override
@@ -116,6 +119,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         setListIemClick();
         registerReceiver();
         handleFileShareToVolume();
+        initPopuptWindow();
     }
 
     /**
@@ -240,8 +244,20 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                 onBackPressed();
                 break;
             case R.id.iv_head_operation:
-                rootBottomOperationLayout.setVisibility(rootBottomOperationLayout.
-                        getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+//                rootBottomOperationLayout.setVisibility(rootBottomOperationLayout.
+//                        getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+//                popupWindow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT); //设置宽度 布局文件里设置的没有用
+//                popupWindow.setHeight(ViewGroup.LayoutParams.MATCH_PARENT);  //设置高度  必须代码设置
+//                popupWindow.setContentView(window_view);  //设置布局
+//                //popupWindow.showAsDropDown(window_view);  //设置显示位置
+//
+//                popupWindow.setBackgroundDrawable(new BitmapDrawable());
+//                popupWindow.setOutsideTouchable(true); //外部是否可点击 点击外部消失
+//                popupWindow.setFocusable(true);  //响应返回键  点击返回键 消失
+
+                View parentView = LayoutInflater.from(this).inflate(R.layout.activity_main, null);
+                popupWindow.showAtLocation(parentView, Gravity.BOTTOM, 0, 0);      //相对父布局
+                // popupWindow.showAsDropDown();
                 break;
             case R.id.btn_upload_file:
                 break;
@@ -324,6 +340,65 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
             default:
                 break;
         }
+    }
+
+    /**
+     * 设置pop框
+     */
+    private void initPopuptWindow() {
+        View view = View.inflate(this, R.layout.volume_top_operation_layout, null);
+        // 创建一个PopupWindow
+        // 参数1：contentView 指定PopupWindow的内容
+        // 参数2：width 指定PopupWindow的width
+        // 参数3：height 指定PopupWindow的height
+        popupWindow = new PopupWindow(view);
+        // 需要设置一下此参数，点击外边可消失
+        popupWindow.setBackgroundDrawable(new BitmapDrawable());
+        // 设置点击窗口外边窗口消失    这两步用于点击手机的返回键的时候，不是直接关闭activity,而是关闭pop框
+        popupWindow.setOutsideTouchable(true);
+        // 设置此参数获得焦点，否则无法点击，即：事件拦截消费
+        popupWindow.setFocusable(true);
+
+        view.findViewById(R.id.ll_volume_upload_image).setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        AppUtils.openGallery(VolumeFileActivity.this, 10, REQUEST_OPEN_GALLERY, true);
+                    }
+                }
+        );
+
+        view.findViewById(R.id.ll_volume_new_folder).setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        showCreateFolderDlg();
+                    }
+                }
+        );
+        view.findViewById(R.id.ll_volume_upload_file).setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("extra_maximum", 10);
+                        ARouter.getInstance().
+                                build(Constant.AROUTER_CLASS_WEB_FILEMANAGER).with(bundle).
+                                navigation(VolumeFileActivity.this, REQUEST_OPEN_FILE_BROWSER);
+                    }
+                }
+        );
+
+        view.findViewById(R.id.ll_volume_take_phone).setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        cameraPicFileName = System.currentTimeMillis() + ".jpg";
+                        AppUtils.openCamera(VolumeFileActivity.this, cameraPicFileName, REQUEST_OPEN_CEMERA);
+                    }
+                }
+        );
+
     }
 
     /**
