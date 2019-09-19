@@ -40,7 +40,7 @@ import butterknife.BindView;
 
 public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
 
-    @BindView(R.id.location_select_bar_layout)
+    @BindView(R.id.bottom_layout)
     RelativeLayout locationSelectBarLayout;
     @BindView(R.id.btn_location_select_to)
     CustomRoundButton locationSelectToBtn;
@@ -124,7 +124,7 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
             case R.id.ibt_back:
                 finish();
                 break;
-            case R.id.new_forder_img:
+            case R.id.iv_head_operation:
                 showCreateFolderDlg();
                 break;
 

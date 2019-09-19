@@ -175,7 +175,11 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
         holder.fileInfoLayout.setVisibility(isStatusNomal ? View.VISIBLE : View.GONE);
         holder.fileOperationDropDownImg.setVisibility(View.GONE);
         holder.fileSelcetImg.setVisibility(isShowFileOperationSelecteImage ? View.VISIBLE : View.GONE);
-        holder.fileSelcetImg.setImageResource(selectVolumeFileList.contains(volumeFile) ? R.drawable.ic_select_yes : R.drawable.ic_select_no);
+        if (selectVolumeFileList.size() > 0) {
+            holder.fileSelcetImg.setImageResource(selectVolumeFileList.contains(volumeFile) ? R.drawable.ic_select_yes : R.drawable.ic_select_no);
+        } else {
+            holder.fileSelcetImg.setImageResource(R.drawable.ic_volume_no_selected);
+        }
         Integer fileIconResId = null;
         if (volumeFile.getType().equals(VolumeFile.FILE_TYPE_DIRECTORY)) {
             fileIconResId = R.drawable.baselib_file_type_folder;

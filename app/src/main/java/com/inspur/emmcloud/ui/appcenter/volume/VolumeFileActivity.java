@@ -79,6 +79,8 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     TextView operationSortText;
     @BindView(R.id.ll_bottom_operation)
     LinearLayout bottomOperationLayout;
+    @BindView(R.id.ll_root_bottom_operation)
+    LinearLayout rootBottomOperationLayout;
     @BindView(R.id.batch_operation_header_layout)
     RelativeLayout batchOprationHeaderLayout;
     @BindView(R.id.batch_operation_header_text)
@@ -89,6 +91,15 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     LinearLayout volumeDeleteLayout;
     @BindView(R.id.ll_volume_move)
     LinearLayout volumeMoveLayout;
+    @BindView(R.id.ll_volume_copy)
+    LinearLayout volumeCopyLayout;
+    @BindView(R.id.ll_volume_rename)
+    LinearLayout volumeRenameLayout;
+    @BindView(R.id.ll_volume_more)
+    LinearLayout volumeMoreLayout;
+    @BindView(R.id.ll_volume_download)
+    LinearLayout volumeDownloadLayout;
+
     private PopupWindow sortOperationPop;
     private String cameraPicFileName;
     private BroadcastReceiver broadcastReceiver;
@@ -126,7 +137,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
             public void onSelectedItemClick(View view, int position) {
                 adapter.setVolumeFileSelect(position);
                 batchOprationHeaderText.setText(getString(R.string.clouddriver_has_selected, adapter.getSelectVolumeFileList().size()));
-                setBatchOprationLayoutByPrivilege();
+                setBottomOperationItemShow(adapter.getSelectVolumeFileList());
                 getBatchOprationSelectAllText.setText((volumeFileList.size() == adapter.getSelectVolumeFileList().size()) ? R.string.clouddriver_select_nothing : R.string.clouddriver_select_all);
                 batchOprationHeaderText.setText(getString(R.string.clouddriver_has_selected, adapter.getSelectVolumeFileList().size()));
             }
@@ -228,12 +239,13 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
             case R.id.ibt_back:
                 onBackPressed();
                 break;
-            case R.id.new_forder_img:
-                showCreateFolderDlg();
+            case R.id.iv_head_operation:
+                rootBottomOperationLayout.setVisibility(rootBottomOperationLayout.
+                        getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
                 break;
             case R.id.btn_upload_file:
-            case R.id.upload_img:
-                showUploadFileDlg();
+                break;
+            case R.id.iv_down_up_list:
                 break;
             case R.id.operation_sort_text:
                 showSortOperationPop();
@@ -267,7 +279,6 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                 }
                 break;
             case R.id.ll_volume_copy:
-                bottomOperationLayout.setVisibility(View.GONE);
                 if (adapter.getSelectVolumeFileList().size() > 0) {
                     copyFile(adapter.getSelectVolumeFileList());
                 }
@@ -279,10 +290,28 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                 }
                 break;
             case R.id.ll_volume_download:
+                downloadFile(adapter.getSelectVolumeFileList().get(0));
                 break;
             case R.id.ll_volume_rename:
+                showFileRenameDlg(adapter.getSelectVolumeFileList().get(0));
                 break;
             case R.id.ll_volume_more:
+                break;
+            case R.id.ll_volume_upload_image:
+                AppUtils.openGallery(VolumeFileActivity.this, 10, REQUEST_OPEN_GALLERY, true);
+                break;
+            case R.id.ll_volume_new_folder:
+                rootBottomOperationLayout.setVisibility(View.GONE);
+                showCreateFolderDlg();
+                break;
+            case R.id.ll_volume_upload_file:
+                Bundle bundle = new Bundle();
+                bundle.putInt("extra_maximum", 10);
+                ARouter.getInstance().build(Constant.AROUTER_CLASS_WEB_FILEMANAGER).with(bundle).navigation(VolumeFileActivity.this, REQUEST_OPEN_FILE_BROWSER);
+                break;
+            case R.id.ll_volume_take_phone:
+                cameraPicFileName = System.currentTimeMillis() + ".jpg";
+                AppUtils.openCamera(VolumeFileActivity.this, cameraPicFileName, REQUEST_OPEN_CEMERA);
                 break;
             case R.id.batch_operation_cancel_text:
                 setMutiSelect(true);
@@ -290,7 +319,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
             case R.id.batch_operation_select_all_text:
                 boolean isSelectAllStatus = getBatchOprationSelectAllText.getText().toString().equals(getString(R.string.clouddriver_select_all));
                 setselectAll(isSelectAllStatus);
-                setBatchOprationLayoutByPrivilege();
+                setBottomOperationItemShow(adapter.getSelectVolumeFileList());
                 break;
             default:
                 break;
@@ -461,16 +490,15 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     }
 
     private void setBottomOperationItemShow(List<VolumeFile> selectVolumeFileList) {
-        if (selectVolumeFileList.size() > 1) {
-            findViewById(R.id.ll_volume_more).setVisibility(View.GONE);
-            findViewById(R.id.ll_volume_download).setVisibility(View.GONE);
-            findViewById(R.id.ll_volume_rename).setVisibility(View.GONE);
-            bottomOperationLayout.setVisibility(View.VISIBLE);
-        } else {
-            if (selectVolumeFileList.get(0).getType().equals(VolumeFile.FILE_TYPE_DIRECTORY)) {
-
-            }
-        }
+        volumeDownloadLayout.setVisibility(selectVolumeFileList.size() == 1 &&
+                !selectVolumeFileList.get(0).getType().equals(VolumeFile.FILE_TYPE_DIRECTORY) ?
+                View.VISIBLE : View.GONE);
+        volumeMoveLayout.setVisibility(View.VISIBLE);
+        volumeCopyLayout.setVisibility(View.VISIBLE);
+        volumeDeleteLayout.setVisibility(View.VISIBLE);
+        volumeMoreLayout.setVisibility(selectVolumeFileList.size() == 1 ? View.VISIBLE : View.GONE);
+        volumeRenameLayout.setVisibility(selectVolumeFileList.size() == 1 ? View.VISIBLE : View.GONE);
+        bottomOperationLayout.setVisibility(selectVolumeFileList.size() > 0 ? View.VISIBLE : View.GONE);
     }
 
     /**
@@ -524,6 +552,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
             } else if (requestCode == REQUEST_SHOW_FILE_FILTER) {  //移动文件
                 getVolumeFileList(false);
             }
+            rootBottomOperationLayout.setVisibility(View.GONE);
         } else if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {  // 图库选择图片返回
             if (data != null && requestCode == REQUEST_OPEN_GALLERY) {
                 Boolean originalPicture = data.getBooleanExtra(ImageGridActivity.EXTRA_ORIGINAL_PICTURE, false);
