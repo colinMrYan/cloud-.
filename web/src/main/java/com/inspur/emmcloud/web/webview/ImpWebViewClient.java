@@ -313,9 +313,9 @@ public class ImpWebViewClient extends WebViewClient {
         @Override
         public void returnGetAppAuthCodeResultSuccess(AppRedirectResult appRedirectResult) {
             if (NetUtils.isNetworkConnected(BaseApplication.getInstance())) {
+                isLogin = true;
                 String redirectUri = appRedirectResult.getRedirect_uri();
                 webView.loadUrl(redirectUri, getWebViewHeaders(redirectUri));
-                isLogin = true;
             }
         }
 
