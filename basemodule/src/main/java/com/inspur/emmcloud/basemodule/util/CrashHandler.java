@@ -76,6 +76,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
             }
         });
         //如果系统提供了默认的异常处理器，则交给系统去结束我们的程序，否则就由我们自己结束自己
+        //这里如果系统处理，可能只崩溃一个页面，如果都交给自己处理，则发生异常必定整个退出
         if (mDefaultHandler != null) {
             mDefaultHandler.uncaughtException(thread, throwable);
         } else {
