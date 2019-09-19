@@ -7,6 +7,7 @@ import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.basemodule.api.BaseModuleApiService;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.AppException;
+import com.inspur.emmcloud.basemodule.interf.ExceptionUploadInterface;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -35,8 +36,13 @@ public class CrashHandler implements UncaughtExceptionHandler {
      * 获取CrashHandler实例 ,单例模式
      */
     public static CrashHandler getInstance() {
-        if (mInstance == null)
-            mInstance = new CrashHandler();
+        if (mInstance == null) {
+            synchronized (CrashHandler.class) {
+                if (mInstance == null) {
+                    mInstance = new CrashHandler();
+                }
+            }
+        }
         return mInstance;
     }
 
@@ -52,10 +58,23 @@ public class CrashHandler implements UncaughtExceptionHandler {
         String errorInfo = getErrorInfo(throwable);
         Log.d("jason", "errorInfo=" + errorInfo);
         Log.e("AndroidRuntime", errorInfo);
-        AppException appException = new AppException(System.currentTimeMillis(), AppUtils.getVersion(mContext), 1, "", errorInfo, 0);
+        final AppException appException = new AppException(System.currentTimeMillis(), AppUtils.getVersion(mContext), 1, "", errorInfo, 0);
         AppExceptionCacheUtils.saveAppException(mContext, appException);
 //        AppException appException = AppExceptionCacheUtils.getAppExceptionListByLevel(mContext, 1);
-        new BaseModuleApiService(mContext).uploadException(mContext, appException, getUploadContentJSONObj(appException));
+        new BaseModuleApiService(mContext).uploadException(mContext, appException, getUploadContentJSONObj(appException), new ExceptionUploadInterface() {
+            @Override
+            public void uploadExceptionFinish(JSONObject uploadResultJSONObject) {
+                //只处理成功，其他发生任何情况都等进入后台时统一上传
+                try {
+                    if (uploadResultJSONObject.getString("status").equals("success")) {
+                        AppExceptionCacheUtils.deleteAppExceptionByContentAndHappenTime(mContext,
+                                appException.getHappenTime(), appException.getErrorInfo());
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
         //如果系统提供了默认的异常处理器，则交给系统去结束我们的程序，否则就由我们自己结束自己
         if (mDefaultHandler != null) {
             mDefaultHandler.uncaughtException(thread, throwable);
