@@ -216,6 +216,7 @@ public class AppSchemeHandleActivity extends BaseActivity {
                                 break;
                             case "ecc-app-change-tab":
                                 EventBus.getDefault().post(new ChangeTabBean(Constant.APP_TAB_BAR_APPLICATION));
+                                finish();
                                 break;
                             case "emm":
                                 if (NetUtils.isNetworkConnected(BaseApplication.getInstance())) {
