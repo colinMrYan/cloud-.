@@ -13,8 +13,8 @@ import com.inspur.emmcloud.basemodule.bean.GetLanguageResult;
 import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
 import com.inspur.emmcloud.basemodule.bean.GetUploadPushInfoResult;
 import com.inspur.emmcloud.basemodule.bean.PVCollectModel;
+import com.inspur.emmcloud.basemodule.interf.ExceptionUploadInterface;
 import com.inspur.emmcloud.basemodule.push.PushManagerUtils;
-import com.inspur.emmcloud.basemodule.util.AppExceptionCacheUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.componentservice.login.LoginService;
@@ -409,7 +409,7 @@ public class BaseModuleApiService {
      *
      * @param mContext
      */
-    public void uploadException(final Context mContext, final AppException appException, JSONObject jsonObject) {
+    public void uploadException(final Context mContext, final AppException appException, JSONObject jsonObject, ExceptionUploadInterface exceptionInterface) {
         if (NetUtils.isNetworkConnected(mContext, false) && !AppUtils.isApkDebugable(mContext)) {
             final String completeUrl = BaseModuleApiUri.getUploadExceptionUrl();
             RequestParams params = ((BaseApplication) mContext.getApplicationContext()).getHttpRequestParams(completeUrl);
@@ -425,9 +425,8 @@ public class BaseModuleApiService {
             }
             try {
                 JSONObject jsonObjectResult = x.http().requestSync(HttpMethod.POST, params, JSONObject.class);
-                //只处理成功，其他发生任何情况都等进入后台时统一上传
-                if (jsonObjectResult.getString("status").equals("success")) {
-                    AppExceptionCacheUtils.deleteAppExceptionByContentAndHappenTime(mContext, appException.getHappenTime(), appException.getErrorInfo());
+                if (exceptionInterface != null) {
+                    exceptionInterface.uploadExceptionFinish(jsonObjectResult);
                 }
             } catch (Throwable throwable) {
                 throwable.printStackTrace();
