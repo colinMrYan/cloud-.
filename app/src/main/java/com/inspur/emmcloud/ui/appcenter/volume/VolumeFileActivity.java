@@ -74,30 +74,15 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     private static final int REQUEST_OPEN_GALLERY = 3;
     private static final int REQUEST_OPEN_FILE_BROWSER = 4;
     private static final int REQUEST_SHOW_FILE_FILTER = 5;
-    @BindView(R.id.operation_layout)
-    RelativeLayout operationLayout;
     @BindView(R.id.operation_sort_text)
     TextView operationSortText;
-    @BindView(R.id.ll_bottom_operation)
-    LinearLayout bottomOperationLayout;
     @BindView(R.id.batch_operation_header_layout)
     RelativeLayout batchOprationHeaderLayout;
     @BindView(R.id.batch_operation_header_text)
     TextView batchOprationHeaderText;
     @BindView(R.id.batch_operation_select_all_text)
     TextView getBatchOprationSelectAllText;
-    @BindView(R.id.ll_volume_delete)
-    LinearLayout volumeDeleteLayout;
-    @BindView(R.id.ll_volume_move)
-    LinearLayout volumeMoveLayout;
-    @BindView(R.id.ll_volume_copy)
-    LinearLayout volumeCopyLayout;
-    @BindView(R.id.ll_volume_rename)
-    LinearLayout volumeRenameLayout;
-    @BindView(R.id.ll_volume_more)
-    LinearLayout volumeMoreLayout;
-    @BindView(R.id.ll_volume_download)
-    LinearLayout volumeDownloadLayout;
+
 
     private PopupWindow sortOperationPop;
     private String cameraPicFileName;
@@ -323,6 +308,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                 break;
             case R.id.ll_volume_more:
                 bottomOperationLayout.setVisibility(View.GONE);
+                showFileOperationDlg(adapter.getSelectVolumeFileList().get(0));
                 break;
             case R.id.batch_operation_cancel_text:
                 setMutiSelect(true);
@@ -477,18 +463,6 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     protected void setCurrentDirectoryLayoutByPrivilege() {
         boolean isCurrentDirectoryWriteable = VolumeFilePrivilegeUtils.getVolumeFileWriteable(getApplicationContext(), getVolumeFileListResult);
         headerOperationLayout.setVisibility(isCurrentDirectoryWriteable ? View.VISIBLE : View.GONE);
-    }
-
-    private void setBottomOperationItemShow(List<VolumeFile> selectVolumeFileList) {
-        volumeDownloadLayout.setVisibility(selectVolumeFileList.size() == 1 &&
-                !selectVolumeFileList.get(0).getType().equals(VolumeFile.FILE_TYPE_DIRECTORY) ?
-                View.VISIBLE : View.GONE);
-        volumeMoveLayout.setVisibility(View.VISIBLE);
-        volumeCopyLayout.setVisibility(View.VISIBLE);
-        volumeDeleteLayout.setVisibility(View.VISIBLE);
-        volumeMoreLayout.setVisibility(selectVolumeFileList.size() == 1 ? View.VISIBLE : View.GONE);
-        volumeRenameLayout.setVisibility(selectVolumeFileList.size() == 1 ? View.VISIBLE : View.GONE);
-        bottomOperationLayout.setVisibility(selectVolumeFileList.size() > 0 ? View.VISIBLE : View.GONE);
     }
 
     /**
