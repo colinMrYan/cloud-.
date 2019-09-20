@@ -60,7 +60,6 @@ public class CrashHandler implements UncaughtExceptionHandler {
         Log.e("AndroidRuntime", errorInfo);
         final AppException appException = new AppException(System.currentTimeMillis(), AppUtils.getVersion(mContext), 1, "", errorInfo, 0);
         AppExceptionCacheUtils.saveAppException(mContext, appException);
-//        AppException appException = AppExceptionCacheUtils.getAppExceptionListByLevel(mContext, 1);
         new BaseModuleApiService(mContext).uploadException(mContext, appException, getUploadContentJSONObj(appException), new ExceptionUploadInterface() {
             @Override
             public void uploadExceptionFinish(JSONObject uploadResultJSONObject) {
