@@ -365,6 +365,7 @@ public class SettingActivity extends BaseActivity {
             case R.id.rl_setting_self_start: //TODO zyj
 //                UriUtils.openUrl(this, "http://www.baidu.com");
 //                ARouter.getInstance().build("/meeting/history").navigation();
+//                startActivity(new Intent(this, VolumeFileTransferActivity.class));
                 break;
             case R.id.rl_setting_account_safe:
                 IntentUtils.startActivity(SettingActivity.this, SafeCenterActivity.class);

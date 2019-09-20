@@ -41,6 +41,7 @@ public class AppCenterMoreActivity extends BaseActivity {
      * 初始化views
      */
     private void initView() {
+        setTitleText(R.string.app_center_more_apps);
         appCenterMoreListView = (ListView) findViewById(R.id.app_center_more_apps);
         if (getIntent().hasExtra(APP_CENTER_APPLIST)) {
             appList = (List<App>) getIntent().getSerializableExtra(APP_CENTER_APPLIST);
@@ -59,7 +60,7 @@ public class AppCenterMoreActivity extends BaseActivity {
             }
         }
         if (getIntent().hasExtra(APP_CENTER_CATEGORY_NAME)) {
-            ((TextView) findViewById(R.id.header_text)).setText(getIntent().getStringExtra(APP_CENTER_CATEGORY_NAME));
+            setTitleText(getIntent().getStringExtra(APP_CENTER_CATEGORY_NAME));
         }
     }
 

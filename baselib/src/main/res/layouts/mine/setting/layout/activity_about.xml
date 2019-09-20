@@ -15,6 +15,7 @@
             android:layout_width="44dp"
             android:layout_height="44dp"
             android:layout_centerVertical="true"
+            android:background="@color/transparent"
             android:onClick="onClick"
             android:padding="11dp"
             android:scaleType="fitXY"
@@ -42,8 +43,8 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical"
-            android:paddingBottom="19dp"
-            android:paddingTop="20dp">
+            android:paddingTop="20dp"
+            android:paddingBottom="19dp">
 
             <com.inspur.emmcloud.baselib.widget.CircleTextImageView
                 android:id="@+id/iv_logo"
@@ -80,10 +81,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:paddingBottom="11dp"
                     android:paddingTop="11dp"
-                    android:textColor="#333333"
+                    android:paddingBottom="11dp"
                     android:text="@string/about_welcome_text"
+                    android:textColor="#333333"
                     android:textSize="16sp" />
 
                 <ImageView
@@ -113,11 +114,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:paddingBottom="11dp"
                     android:paddingLeft="16dp"
                     android:paddingTop="11dp"
-                    android:textColor="#333333"
+                    android:paddingBottom="11dp"
                     android:text="@string/about_protocol_text"
+                    android:textColor="#333333"
                     android:textSize="16sp" />
 
                 <ImageView
@@ -147,10 +148,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:paddingBottom="11dp"
                     android:paddingTop="11dp"
-                    android:textColor="#333333"
+                    android:paddingBottom="11dp"
                     android:text="@string/check_update_text"
+                    android:textColor="#333333"
                     android:textSize="16sp" />
 
                 <ImageView
@@ -180,11 +181,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:paddingBottom="11dp"
                     android:paddingLeft="16dp"
                     android:paddingTop="11dp"
-                    android:textColor="#333333"
+                    android:paddingBottom="11dp"
                     android:text="@string/invite_friends_text"
+                    android:textColor="#333333"
                     android:textSize="16sp" />
 
                 <ImageView

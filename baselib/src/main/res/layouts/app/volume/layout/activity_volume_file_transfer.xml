@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <include layout="@layout/include_common_header_layout" />
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tl_file_transfer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/white"
+        app:tabBackground="@color/transparent"
+        app:tabGravity="fill"
+        app:tabMode="scrollable"
+        app:tabSelectedTextColor="#36A5F6"
+        app:tabTextColor="#333333" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp_file_transfer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/content_bg"
+        android:overScrollMode="never" />
+
+
+</LinearLayout>

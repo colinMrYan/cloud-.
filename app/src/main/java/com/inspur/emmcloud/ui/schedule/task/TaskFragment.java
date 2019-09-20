@@ -2,6 +2,7 @@ package com.inspur.emmcloud.ui.schedule.task;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -68,7 +69,7 @@ public class TaskFragment extends BaseFragment {
      */
     private void initFragmentList() {
         //建一个存放fragment的集合，并且把新的fragment放到集合中
-        List<TaskListFragment> list = new ArrayList<TaskListFragment>();
+        List<Fragment> list = new ArrayList<>();
 //        Bundle bundle = new Bundle();
 //        bundle.putInt(MY_TASK_TYPE,MY_MINE);
 //        allTaskListFragment = new TaskListFragment();
