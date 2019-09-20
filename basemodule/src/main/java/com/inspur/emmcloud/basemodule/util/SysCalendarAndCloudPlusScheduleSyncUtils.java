@@ -273,14 +273,21 @@ public class SysCalendarAndCloudPlusScheduleSyncUtils {
             return;
         }
         String calendarId = getCalendarId(context, "", scheduleId);
-        Uri deleteUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, Long.
-                parseLong(calendarId));
-        int rows = context.getContentResolver().delete(deleteUri, null, null);
-        if (rows == -1) {
-            LogUtils.YfcDebug("删除失败");
-        } else {
-            CalendarIdAndCloudScheduleIdCacheUtils.deleteByCloudScheduleId(context, scheduleId);
-            LogUtils.YfcDebug("删除成功");
+        try {
+            if (!StringUtils.isBlank(calendarId)) {
+                Uri deleteUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, Long.
+                        parseLong(calendarId));
+                int rows = context.getContentResolver().delete(deleteUri, null, null);
+                if (rows == -1) {
+                    LogUtils.YfcDebug("删除失败");
+                } else {
+                    CalendarIdAndCloudScheduleIdCacheUtils.deleteByCloudScheduleId(context, scheduleId);
+                    LogUtils.YfcDebug("删除成功");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            LogUtils.YfcDebug("异常：" + e.getMessage());
         }
     }
 

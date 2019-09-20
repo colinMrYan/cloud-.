@@ -39,6 +39,7 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
     private List<VolumeFile> selectVolumeFileList = new ArrayList<>();
     private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     private boolean isShowFileOperationDropDownImg = true;
+    private boolean isShowFileOperationSelecteImage = true;
     private String currentDirAbsolutePath;
     public VolumeFileAdapter(Context context, List<VolumeFile> volumeFileList) {
         this.context = context;
@@ -60,6 +61,15 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
      */
     public void setShowFileOperationDropDownImg(boolean isShowFileOperationDropDownImg) {
         this.isShowFileOperationDropDownImg = isShowFileOperationDropDownImg;
+    }
+
+    /**
+     * 设置是否显示右侧选择按钮
+     *
+     * @param isShowFileOperationSelecteImage
+     */
+    public void setShowFileOperationSelcteImage(boolean isShowFileOperationSelecteImage) {
+        this.isShowFileOperationSelecteImage = isShowFileOperationSelecteImage;
     }
 
     /**
@@ -88,6 +98,10 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
      */
     public List<VolumeFile> getSelectVolumeFileList() {
         return selectVolumeFileList;
+    }
+
+    public void clearSelectedVolumeFileList() {
+        selectVolumeFileList.clear();
     }
 
     /**
@@ -160,12 +174,12 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
         holder.fileUploadStatusLayout.setVisibility(isStatusNomal ? View.GONE : View.VISIBLE);
         holder.uploadOperationText.setVisibility(isStatusNomal ? View.GONE : View.VISIBLE);
         holder.fileInfoLayout.setVisibility(isStatusNomal ? View.VISIBLE : View.GONE);
-        holder.fileOperationDropDownImg.setVisibility((isStatusNomal && isShowFileOperationDropDownImg) ? View.VISIBLE : View.GONE);
-        if (isMultiselect && isStatusNomal) {
-            holder.fileSelcetImg.setVisibility(View.VISIBLE);
+        holder.fileOperationDropDownImg.setVisibility(View.GONE);
+        holder.fileSelcetImg.setVisibility(isShowFileOperationSelecteImage ? View.VISIBLE : View.GONE);
+        if (selectVolumeFileList.size() > 0) {
             holder.fileSelcetImg.setImageResource(selectVolumeFileList.contains(volumeFile) ? R.drawable.ic_select_yes : R.drawable.ic_select_no);
         } else {
-            holder.fileSelcetImg.setVisibility(View.GONE);
+            holder.fileSelcetImg.setImageResource(R.drawable.ic_volume_no_selected);
         }
         Integer fileIconResId = null;
         if (volumeFile.getType().equals(VolumeFile.FILE_TYPE_DIRECTORY)) {
@@ -233,6 +247,8 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
         void onItemDropDownImgClick(View view, int position);
 
         void onItemOperationTextClick(View view, int position);
+
+        void onSelectedItemClick(View view, int position);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
@@ -268,6 +284,7 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
             itemView.setOnLongClickListener(this);
             fileOperationDropDownImg.setOnClickListener(this);
             uploadOperationText.setOnClickListener(this);
+            fileSelcetImg.setOnClickListener(this);
         }
 
         @Override
@@ -277,6 +294,8 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
                     myItemClickListener.onItemDropDownImgClick(v, getAdapterPosition());
                 } else if (v.getId() == R.id.upload_cancel_text) {
                     myItemClickListener.onItemOperationTextClick(v, getAdapterPosition());
+                } else if (v.getId() == R.id.file_select_img) {
+                    myItemClickListener.onSelectedItemClick(v, getAdapterPosition());
                 } else {
                     myItemClickListener.onItemClick(v, getAdapterPosition());
                 }
