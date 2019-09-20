@@ -80,6 +80,45 @@ public class VolumeFilePrivilegeUtils {
         return (privilege > 4);
     }
 
+    /**
+     * 判断是否有读权限
+     *
+     * @param context
+     * @param volumeFile
+     * @return
+     */
+    public static boolean getVolumeFileReadable(Context context, VolumeFile volumeFile) {
+        int privilege = 0;
+        String myUid = MyApplication.getInstance().getUid();
+        LogUtils.jasonDebug("======myUid=" + myUid);
+        LogUtils.jasonDebug("=======volumeFile.getOwner()=" + volumeFile.getOwner());
+        if (volumeFile.getOwner().equals(myUid)) {
+            LogUtils.jasonDebug("===========isowner");
+            privilege = volumeFile.getOwnerPrivilege();
+        } else {
+            VolumeGroupContainMe volumeGroupContainMe = VolumeGroupContainMeCacheUtils.getVolumeGroupContainMe(context, volumeFile.getVolume());
+            if (volumeGroupContainMe != null) {
+                LogUtils.jasonDebug("===========有自己所属组数据");
+                List<String> groupIdList = volumeGroupContainMe.getGroupIdList();
+                List<Integer> privilegeList = new ArrayList<>();
+                for (int i = 0; i < groupIdList.size(); i++) {
+                    String groupId = groupIdList.get(i);
+                    Map<String, Integer> groupPrivilegeMap = volumeFile.getGroupPrivilegeMap();
+                    Integer groupPrivilege = groupPrivilegeMap.get(groupId);
+                    if (groupPrivilege != null) {
+                        privilegeList.add(groupPrivilege);
+                    }
+                }
+                privilege = Collections.max(privilegeList);
+            } else {
+                LogUtils.jasonDebug("===========没有自己所属组数据");
+                privilege = volumeFile.getOthersPrivilege();
+            }
+        }
+        LogUtils.jasonDebug("===========最终privilege=" + privilege);
+        return (privilege >= 1 && privilege <= 4);
+    }
+
     public static boolean getVolumeFileWriteable(Context context, GetVolumeFileListResult getVolumeFileListResult) {
         int privilege = 0;
         String myUid = MyApplication.getInstance().getUid();

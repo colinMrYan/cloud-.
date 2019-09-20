@@ -24,8 +24,9 @@ public class VolumeFile implements Serializable {
     public static final String FILTER_TYPE_VIDEO = "filter_video";
     public static final String FILTER_TYPE_OTHER = "filter_other";
     public static final String STATUS_NORMAL = "normal";
-    public static final String STATUS_UPLOADIND = "downloading";
-    public static final String STATUS_UPLOADIND_FAIL = "download_fail";
+    public static final String STATUS_UPLOADIND = "uploading";
+    public static final String STATUS_UPLOAD_FAIL = "upload_fail";
+    public static final String STATUS_UPLOAD_PAUSE = "upload_pause";
     private String id = "";
     private String type = "";
     private String name = "";

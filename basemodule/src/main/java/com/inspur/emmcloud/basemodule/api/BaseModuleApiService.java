@@ -13,10 +13,9 @@ import com.inspur.emmcloud.basemodule.bean.GetLanguageResult;
 import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
 import com.inspur.emmcloud.basemodule.bean.GetUploadPushInfoResult;
 import com.inspur.emmcloud.basemodule.bean.PVCollectModel;
+import com.inspur.emmcloud.basemodule.interf.ExceptionUploadInterface;
 import com.inspur.emmcloud.basemodule.push.PushManagerUtils;
-import com.inspur.emmcloud.basemodule.util.AppExceptionCacheUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
-import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.componentservice.login.LoginService;
 import com.inspur.emmcloud.componentservice.login.OauthCallBack;
 
@@ -409,13 +408,11 @@ public class BaseModuleApiService {
      *
      * @param mContext
      */
-    public void uploadException(final Context mContext, final AppException appException, JSONObject jsonObject) {
-        if (NetUtils.isNetworkConnected(mContext, false) && !AppUtils.isApkDebugable(mContext)) {
+    public void uploadException(final Context mContext, JSONObject jsonObject, ExceptionUploadInterface exceptionInterface) {
             final String completeUrl = BaseModuleApiUri.getUploadExceptionUrl();
             RequestParams params = ((BaseApplication) mContext.getApplicationContext()).getHttpRequestParams(completeUrl);
             params.setAsJsonContent(true);
             params.setBodyContent(jsonObject.toString());
-
             //Android3.0之后已经不能在主线程发起网络请求，会造成ANR，但此处情况特殊，需临时关闭StrictMode
             StrictMode.ThreadPolicy oldThreadPolicy = StrictMode.getThreadPolicy();
             StrictMode.VmPolicy oldVmPolicy = StrictMode.getVmPolicy();
@@ -425,9 +422,8 @@ public class BaseModuleApiService {
             }
             try {
                 JSONObject jsonObjectResult = x.http().requestSync(HttpMethod.POST, params, JSONObject.class);
-                //只处理成功，其他发生任何情况都等进入后台时统一上传
-                if (jsonObjectResult.getString("status").equals("success")) {
-                    AppExceptionCacheUtils.deleteAppExceptionByContentAndHappenTime(mContext, appException.getHappenTime(), appException.getErrorInfo());
+                if (exceptionInterface != null) {
+                    exceptionInterface.uploadExceptionFinish(jsonObjectResult);
                 }
             } catch (Throwable throwable) {
                 throwable.printStackTrace();
@@ -435,7 +431,6 @@ public class BaseModuleApiService {
             //时候后改回StrictMode
             StrictMode.setThreadPolicy(oldThreadPolicy);
             StrictMode.setVmPolicy(oldVmPolicy);
-        }
     }
 
 }

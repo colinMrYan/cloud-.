@@ -11,11 +11,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.interf.ProgressCallback;
-import com.inspur.emmcloud.util.privates.VolumeFileUploadManagerUtils;
+import com.inspur.emmcloud.util.privates.VolumeFileUploadManager;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -147,7 +148,7 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
      * @param newVolumeFile
      */
     public void replaceVolumeFileData(VolumeFile mockVolumeFile, VolumeFile newVolumeFile) {
-        VolumeFileUploadManagerUtils.getInstance().removeVolumeFileUploadService(mockVolumeFile);
+        VolumeFileUploadManager.getInstance().cancelVolumeFileUploadService(mockVolumeFile);
         int position = volumeFileList.indexOf(mockVolumeFile);
         if (position != -1) {
             volumeFileList.remove(position);
@@ -184,7 +185,7 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
         if (volumeFile.getType().equals(VolumeFile.FILE_TYPE_DIRECTORY)) {
             fileIconResId = R.drawable.baselib_file_type_folder;
         } else {
-            fileIconResId = FileUtils.getFileIconResIdByFileName(volumeFile.getName());
+            fileIconResId = FileUtils.getFileIconResIdByFormat(volumeFile.getFormat());
         }
         holder.fileTypeImg.setImageResource(fileIconResId);
         holder.fileNameText.setText(volumeFile.getName());
@@ -197,31 +198,36 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
         String fileTime = TimeUtils.getTime(volumeFile.getLastUpdate(), format);
         holder.fileTimeText.setText(fileTime);
         if (!isStatusNomal) {
+            LogUtils.jasonDebug("volumeFileStatus==" + volumeFileStatus);
             boolean isStutasUploading = volumeFileStatus.equals(VolumeFile.STATUS_UPLOADIND);
             holder.uploadOperationText.setText(isStutasUploading ? R.string.upload_cancel : R.string.clouddriver_upload_again);
             holder.uploadProgressBar.setProgress(0);
             holder.uploadProgressBar.setVisibility(View.GONE);
             holder.uploadStatusText.setVisibility(View.VISIBLE);
             holder.uploadStatusText.setText(isStutasUploading ? R.string.clouddriver_upload_waiting : R.string.clouddriver_upload_fail);
-            VolumeFileUploadManagerUtils.getInstance().setOssUploadProgressCallback(volumeFile, new ProgressCallback() {
-                @Override
-                public void onSuccess(VolumeFile newVolumeFile) {
-                    replaceVolumeFileData(volumeFile, newVolumeFile);
-                }
+            if (volumeFileStatus.equals(VolumeFile.STATUS_UPLOADIND)) {
+                VolumeFileUploadManager.getInstance().setBusinessProgressCallback(volumeFile, new ProgressCallback() {
+                    @Override
+                    public void onSuccess(VolumeFile newVolumeFile) {
+                        replaceVolumeFileData(volumeFile, newVolumeFile);
+                    }
 
-                @Override
-                public void onLoading(int progress) {
-                    holder.uploadProgressBar.setVisibility(View.VISIBLE);
-                    holder.uploadStatusText.setVisibility(View.GONE);
-                    holder.uploadProgressBar.setProgress(progress);
-                }
+                    @Override
+                    public void onLoading(int progress) {
+                        holder.uploadProgressBar.setVisibility(View.VISIBLE);
+                        holder.uploadStatusText.setVisibility(View.GONE);
+                        holder.uploadProgressBar.setProgress(progress);
+                    }
 
-                @Override
-                public void onFail() {
-                    volumeFile.setStatus(VolumeFile.STATUS_UPLOADIND_FAIL);
-                    notifyItemChanged(position);
-                }
-            });
+                    @Override
+                    public void onFail() {
+                        LogUtils.jasonDebug("onFail-------------------------------------------------");
+                        volumeFile.setStatus(VolumeFile.STATUS_UPLOAD_FAIL);
+                        notifyItemChanged(position);
+                    }
+                });
+            }
+
         }
     }
 

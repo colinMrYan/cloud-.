@@ -33,6 +33,7 @@ import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
@@ -48,7 +49,7 @@ import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.VolumeFilePrivilegeUtils;
-import com.inspur.emmcloud.util.privates.VolumeFileUploadManagerUtils;
+import com.inspur.emmcloud.util.privates.VolumeFileUploadManager;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -148,11 +149,17 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                     if (!adapter.getMultiselect()) {
                         Bundle bundle = new Bundle();
                         if (volumeFile.getType().equals(VolumeFile.FILE_TYPE_DIRECTORY)) {
-                            bundle.putSerializable("volume", volume);
-                            bundle.putSerializable("currentDirAbsolutePath", currentDirAbsolutePath + volumeFile.getName() + "/");
-                            bundle.putSerializable("title", volumeFile.getName());
-                            bundle.putBoolean("isOpenFromParentDirectory", true);
-                            IntentUtils.startActivity(VolumeFileActivity.this, VolumeFileActivity.class, bundle);
+                            boolean isVolumeFileWriteable = VolumeFilePrivilegeUtils.getVolumeFileWriteable(getApplicationContext(), volumeFile);
+                            boolean isVolumeFileReadable = VolumeFilePrivilegeUtils.getVolumeFileReadable(getApplicationContext(), volumeFile);
+                            if (isVolumeFileWriteable || isVolumeFileReadable) {
+                                bundle.putSerializable("volume", volume);
+                                bundle.putSerializable("currentDirAbsolutePath", currentDirAbsolutePath + volumeFile.getName() + "/");
+                                bundle.putSerializable("title", volumeFile.getName());
+                                bundle.putBoolean("isOpenFromParentDirectory", true);
+                                IntentUtils.startActivity(VolumeFileActivity.this, VolumeFileActivity.class, bundle);
+                            } else {
+                                ToastUtils.show(R.string.volume_no_permission);
+                            }
                         } else {
                             downloadOrOpenVolumeFile(volumeFile);
                         }
@@ -184,13 +191,13 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                 VolumeFile volumeFile = volumeFileList.get(position);
                 if (volumeFile.getStatus().equals(VolumeFile.STATUS_UPLOADIND)) {
                     //取消上传
-                    VolumeFileUploadManagerUtils.getInstance().removeVolumeFileUploadService(volumeFile);
+                    VolumeFileUploadManager.getInstance().cancelVolumeFileUploadService(volumeFile);
                     volumeFileList.remove(position);
                     adapter.notifyItemRemoved(position);
                 } else if (NetUtils.isNetworkConnected(VolumeFileActivity.this)) {
                     //重新上传
                     volumeFile.setStatus(VolumeFile.STATUS_UPLOADIND);
-                    VolumeFileUploadManagerUtils.getInstance().reUploadFile(volumeFile);
+                    VolumeFileUploadManager.getInstance().reUploadFile(volumeFile);
                     adapter.notifyItemChanged(position);
                 }
             }
@@ -217,6 +224,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     /**
      * 初始化无数据时显示的ui
      */
+    @Override
     protected void initDataBlankLayoutStatus() {
         super.initDataBlankLayoutStatus();
         operationLayout.setVisibility((volumeFileList.size() == 0) ? View.GONE : View.VISIBLE);
@@ -658,16 +666,14 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
             return;
 
         }
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-            VolumeFile mockVolumeFile = getMockVolumeFileData(file);
-            VolumeFileUploadManagerUtils.getInstance().uploadFile(mockVolumeFile, filePath, currentDirAbsolutePath);
-            volumeFileList.add(0, mockVolumeFile);
-            initDataBlankLayoutStatus();
-            adapter.setVolumeFileList(volumeFileList);
-            adapter.notifyItemInserted(0);
-            //解决RecyclerView当数据添加到第一位置，显示位置不正确的系统bug
-            fileRecycleView.scrollToPosition(0);
-        }
+        VolumeFile mockVolumeFile = getMockVolumeFileData(file);
+        VolumeFileUploadManager.getInstance().uploadFile(mockVolumeFile, filePath, currentDirAbsolutePath);
+        volumeFileList.add(0, mockVolumeFile);
+        initDataBlankLayoutStatus();
+        adapter.setVolumeFileList(volumeFileList);
+        adapter.notifyItemInserted(0);
+        //解决RecyclerView当数据添加到第一位置，显示位置不正确的系统bug
+        fileRecycleView.scrollToPosition(0);
     }
 
     /**
@@ -683,9 +689,9 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         volumeFile.setId(time + "");
         volumeFile.setCreationDate(time);
         volumeFile.setName(file.getName());
-        volumeFile.setStatus("downloading");
+        volumeFile.setStatus(VolumeFile.STATUS_UPLOADIND);
         volumeFile.setVolume(volume.getId());
-        volumeFile.setFormat("");
+        volumeFile.setFormat(FileUtils.getMimeType(file.getName()));
         return volumeFile;
     }
 

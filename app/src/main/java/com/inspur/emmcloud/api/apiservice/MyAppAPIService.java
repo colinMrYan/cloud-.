@@ -12,6 +12,7 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIInterface;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.router.Router;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
 import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
 import com.inspur.emmcloud.basemodule.api.HttpUtils;
@@ -33,7 +34,7 @@ import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeResultWithPermissionRe
 import com.inspur.emmcloud.bean.appcenter.volume.Volume;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeDetail;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
-import com.inspur.emmcloud.bean.appcenter.volume.VolumeFileUploadInfo;
+import com.inspur.emmcloud.bean.appcenter.volume.VolumeFileUpload;
 import com.inspur.emmcloud.componentservice.login.LoginService;
 import com.inspur.emmcloud.componentservice.login.OauthCallBack;
 
@@ -521,37 +522,35 @@ public class MyAppAPIService {
     /**
      * 获取文件上传Token
      * @param fileName
-     * @param volumeFileUploadInfo
+     * @param volumeFileUpload
      * @param mockVolumeFile
      */
-    public void getVolumeFileUploadToken(final String fileName, final VolumeFileUploadInfo volumeFileUploadInfo, final VolumeFile mockVolumeFile) {
+    public void getVolumeFileUploadToken(final String fileName, final VolumeFileUpload volumeFileUpload, final VolumeFile mockVolumeFile) {
         final String url = APIUri.getVolumeFileUploadSTSTokenUrl(mockVolumeFile.getVolume());
-        String volumeFilePath = volumeFileUploadInfo.getVolumeFileParentPath();
-        final String localFilePath = volumeFileUploadInfo.getLocalFilePath();
+        String volumeFilePath = volumeFileUpload.getVolumeFileParentPath();
+        final String localFilePath = volumeFileUpload.getLocalFilePath();
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
         JSONObject bodyObj = new JSONObject();
         try {
             bodyObj.put("name", fileName);
             bodyObj.put("path", volumeFilePath + fileName);
-            JSONObject baseObj = new JSONObject();
-            baseObj.put("path", volumeFileUploadInfo.getGetVolumeFileUploadTokenResult().getXPath());
-            baseObj.put("id", volumeFileUploadInfo.getGetVolumeFileUploadTokenResult().getFileName());
-            params.addQueryStringParameter("strategy", "multipart");
-            bodyObj.put("base", baseObj);
+            if (!StringUtils.isBlank(volumeFileUpload.getUploadId())) {
+                JSONObject baseObj = new JSONObject();
+                baseObj.put("path", volumeFileUpload.getUploadPath());
+                baseObj.put("id", volumeFileUpload.getUploadId());
+                params.addQueryStringParameter("strategy", "multipart");
+                bodyObj.put("base", baseObj);
+            }
             params.setAsJsonContent(true);
         } catch (Exception e) {
             e.printStackTrace();
         }
         params.setBodyContent(bodyObj.toString());
         params.setAsJsonContent(true);
-        if (volumeFileUploadInfo.getGetVolumeFileUploadTokenResult() != null) {
-
-
-        }
         HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
-                apiInterface.returnVolumeFileUploadTokenSuccess(new GetVolumeFileUploadTokenResult(new String(arg0)), localFilePath, mockVolumeFile, volumeFileUploadInfo.getTransferObserverId());
+                apiInterface.returnVolumeFileUploadTokenSuccess(new GetVolumeFileUploadTokenResult(new String(arg0)), localFilePath, mockVolumeFile, volumeFileUpload.getTransferObserverId());
             }
 
             @Override
@@ -564,7 +563,7 @@ public class MyAppAPIService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        getVolumeFileUploadToken(fileName, volumeFileUploadInfo, mockVolumeFile);
+                        getVolumeFileUploadToken(fileName, volumeFileUpload, mockVolumeFile);
                     }
 
                     @Override

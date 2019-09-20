@@ -15,6 +15,7 @@ import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
@@ -215,15 +216,17 @@ public class AppSchemeHandleActivity extends BaseActivity {
                                 break;
                             case "ecc-app-change-tab":
                                 EventBus.getDefault().post(new ChangeTabBean(Constant.APP_TAB_BAR_APPLICATION));
+                                finish();
                                 break;
                             case "emm":
-                                if (host.equals("news")) {
-                                    ARouter.getInstance().build(Constant.AROUTER_CLASS_GROUP_NEWS).navigation();
-                                    finish();
-//                                    IntentUtils.startActivity(SchemeHandleActivity.this, GroupNewsActivity.class, true);
-                                } else if (host.equals("volume")) {
-                                    IntentUtils.startActivity(AppSchemeHandleActivity.this, VolumeHomePageActivity.class, true);
+                                if (NetUtils.isNetworkConnected(BaseApplication.getInstance())) {
+                                    if (host.equals("news")) {
+                                        ARouter.getInstance().build(Constant.AROUTER_CLASS_GROUP_NEWS).navigation();
+                                    } else if (host.equals("volume")) {
+                                        IntentUtils.startActivity(AppSchemeHandleActivity.this, VolumeHomePageActivity.class);
+                                    }
                                 }
+                                finish();
                                 break;
                             case "inspur-ecc-native":
                                 openNativeSchemeByHost(host, uri, getIntent());
