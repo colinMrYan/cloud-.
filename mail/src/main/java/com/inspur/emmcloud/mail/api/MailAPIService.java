@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.mail.api;
 
 import android.content.Context;
+import android.util.Base64;
 
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.LogUtils;
@@ -9,6 +10,7 @@ import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
 import com.inspur.emmcloud.basemodule.api.HttpUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.componentservice.login.LoginService;
 import com.inspur.emmcloud.componentservice.login.OauthCallBack;
@@ -44,9 +46,19 @@ public class MailAPIService {
         }
     }
 
+    private RequestParams getMailRequestParams(String url) {
+        String account = PreferencesByUserAndTanentUtils.getString(BaseApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, "");
+        String password = PreferencesByUserAndTanentUtils.getString(BaseApplication.getInstance(), Constant.PREF_MAIL_PASSWORD, "");
+
+        String exchangeAuthHeaderValue = account + ":" + password;
+        exchangeAuthHeaderValue = Base64.encodeToString(exchangeAuthHeaderValue.getBytes(), Base64.NO_WRAP);
+        LogUtils.jasonDebug("exchangeAuthHeaderValue====================" + exchangeAuthHeaderValue);
+        return BaseApplication.getInstance().getHttpRequestParams(url, "x-ews-auth", exchangeAuthHeaderValue);
+    }
+
     public void getMailFolder() {
         String completeUrl = MailAPIUri.getMailFolderUrl();
-        RequestParams params = ((BaseApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
+        RequestParams params = getMailRequestParams(completeUrl);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
@@ -83,7 +95,7 @@ public class MailAPIService {
 
     public void getMailList(final String folderId, final int pageSize, final int offset) {
         String completeUrl = MailAPIUri.getMailListUrl();
-        RequestParams params = ((BaseApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
+        RequestParams params = getMailRequestParams(completeUrl);
         params.addQueryStringParameter("folderId", folderId);
         params.addQueryStringParameter("pageSize", pageSize + "");
         params.addQueryStringParameter("offset", offset + "");
@@ -123,7 +135,7 @@ public class MailAPIService {
 
     public void getMailDetail(final String mailId, final boolean isEncrypted) {
         String completeUrl = MailAPIUri.getMailDetailUrl(isEncrypted);
-        RequestParams params = ((BaseApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
+        RequestParams params = getMailRequestParams(completeUrl);
         params.addQueryStringParameter("mailId", mailId);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
 
@@ -206,13 +218,13 @@ public class MailAPIService {
      * @param key         加密后证书密码
      */
     public void upLoadCertificateFile(final String mail, final String key, final String certifivate) {
-        final String Url = MailAPIUri.getCertificateUrl();
-        RequestParams params = ((BaseApplication) context.getApplicationContext()).getHttpRequestParams(Url);
+        final String url = MailAPIUri.getCertificateUrl();
+        RequestParams params = getMailRequestParams(url);
         params.addParameter("email", mail);
         params.addParameter("data0", certifivate);
         params.addParameter("data1", key);
         params.setAsJsonContent(true);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, Url) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnMailCertificateUploadSuccess(arg0);
@@ -247,7 +259,7 @@ public class MailAPIService {
      */
     public void sendEncryptMail(final byte[] mailContent) {
         final String url = MailAPIUri.getUploadMailUrl();
-        RequestParams params = ((BaseApplication) context.getApplicationContext()).getHttpRequestParams(url);
+        RequestParams params = getMailRequestParams(url);
         params.setMultipart(true);
         params.addQueryStringParameter("mail", PreferencesByUsersUtils.getString(BaseApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT));
         params.addBodyParameter("file", new ByteArrayInputStream(mailContent), "application/octet-stream", "111");
@@ -287,7 +299,7 @@ public class MailAPIService {
      */
     public void removeMail(final String mailInfo) {
         final String url = MailAPIUri.getRemoveMailUrl();
-        RequestParams params = ((BaseApplication) context.getApplicationContext()).getHttpRequestParams(url);
+        RequestParams params = getMailRequestParams(url);
         params.setBodyContent(mailInfo);
         params.setAsJsonContent(true);
         HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, url) {

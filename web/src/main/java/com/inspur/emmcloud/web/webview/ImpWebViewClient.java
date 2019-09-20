@@ -44,6 +44,7 @@ public class ImpWebViewClient extends WebViewClient {
     private Runnable runnable = null;
     private ImpCallBackInterface impCallBackInterface;
     private String url = "";
+    private boolean isLogin = false;
 
     public ImpWebViewClient(ImpCallBackInterface impCallBackInterface) {
         this.impCallBackInterface = impCallBackInterface;
@@ -231,6 +232,23 @@ public class ImpWebViewClient extends WebViewClient {
         return true;
     }
 
+    public boolean isLogin() {
+        return isLogin;
+    }
+
+    public void setLogin(boolean login) {
+        isLogin = login;
+    }
+
+    @Override
+    public void doUpdateVisitedHistory(WebView view, String url, boolean isReload) {
+        super.doUpdateVisitedHistory(view, url, isReload);
+        if (isLogin) {
+            view.clearHistory();
+            isLogin = false;
+        }
+    }
+
     /**
      * 过滤url
      *
@@ -295,6 +313,7 @@ public class ImpWebViewClient extends WebViewClient {
         @Override
         public void returnGetAppAuthCodeResultSuccess(AppRedirectResult appRedirectResult) {
             if (NetUtils.isNetworkConnected(BaseApplication.getInstance())) {
+                isLogin = true;
                 String redirectUri = appRedirectResult.getRedirect_uri();
                 webView.loadUrl(redirectUri, getWebViewHeaders(redirectUri));
             }

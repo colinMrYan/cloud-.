@@ -10,4 +10,6 @@ public interface VolumeFileUploadService {
     void setProgressCallback(ProgressCallback progressCallback);
 
     void uploadFile(String fileName, String localFile);
+
+    void onPause();
 }

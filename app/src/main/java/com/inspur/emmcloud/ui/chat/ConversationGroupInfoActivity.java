@@ -239,7 +239,7 @@ public class ConversationGroupInfoActivity extends BaseActivity {
                 break;
             case R.id.rl_search_messages:
                 bundle.putString(EXTRA_CID, conversation.getId());
-                IntentUtils.startActivity(ConversationGroupInfoActivity.this, ConversationGroupMessageSearchActivity.class, bundle);
+                IntentUtils.startActivity(ConversationGroupInfoActivity.this, CommunicationSearchMessagesActivity.class, bundle);
                 break;
             case R.id.ll_group_qrcode:
                 bundle.putString("cid", conversation.getId());

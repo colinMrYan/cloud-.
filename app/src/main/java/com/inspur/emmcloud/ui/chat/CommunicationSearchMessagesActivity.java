@@ -10,6 +10,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gyf.barlibrary.ImmersionBar;
@@ -28,9 +29,10 @@ import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.ConversationFromChatContent;
+import com.inspur.emmcloud.bean.chat.UIConversation;
 import com.inspur.emmcloud.bean.chat.UIMessage;
 import com.inspur.emmcloud.bean.contact.Contact;
-import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
+import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 
 import java.io.File;
@@ -60,6 +62,8 @@ public class CommunicationSearchMessagesActivity extends BaseActivity {
     TextView searchModelNameText;
     @BindView(R.id.tv_static_name)
     TextView staticNameText;
+    @BindView(R.id.rl_channel_sub_title)
+    RelativeLayout channelSubRelativeLayout;
 
     private List<com.inspur.emmcloud.bean.chat.Message> searchMessagesList = new ArrayList<>(); // 群组搜索结果
     private ConversationFromChatContent conversationFromChatContent;
@@ -81,21 +85,35 @@ public class CommunicationSearchMessagesActivity extends BaseActivity {
     public void onCreate() {
         ButterKnife.bind(this);
         ImmersionBar.with(this).statusBarColor(R.color.search_contact_header_bg).statusBarDarkFont(true, 0.2f).navigationBarColor(R.color.white).navigationBarDarkIcon(true, 1.0f).init();
-        if (getIntent().hasExtra(SEARCH_ALL_FROM_CHAT)) {
+        if (getIntent().hasExtra(SEARCH_ALL_FROM_CHAT)) {                      //直接傳 ConversationFromChatContent
             conversationFromChatContent = (ConversationFromChatContent) getIntent().getSerializableExtra(SEARCH_ALL_FROM_CHAT);
             if (conversationFromChatContent.getConversation().getType().equals(Conversation.TYPE_GROUP)) {
                 displayImg(conversationFromChatContent.getConversation().conversation2SearchModel(), searchModelHeadImage);
-                searchModelNameText.setText("“" + conversationFromChatContent.getConversation().getName() + "”" + " 的记录"); //Record(s) for
+                String showData = getString(R.string.chat_search_related_messages, "“" + conversationFromChatContent.getConversation().getName() + "”");
+                searchModelNameText.setText(showData); //Record(s)  分別處理群組和個人
                 staticNameText.setText(conversationFromChatContent.getConversation().getName());
-            } else {
+            } else if (conversationFromChatContent.getConversation().getType().equals(Conversation.TYPE_DIRECT)) {
                 if (conversationFromChatContent.getSingleChatContactUser() != null) {
                     Contact contact = conversationFromChatContent.getSingleChatContactUser();
                     SearchModel searchModel = contact.contact2SearchModel();
                     displayImg(searchModel, searchModelHeadImage);
-                    searchModelNameText.setText("“" + searchModel.getName() + "”" + " 的记录");
+                    String showData = getString(R.string.chat_search_related_messages, "“" + conversationFromChatContent.getConversation().getName() + "”");
+                    searchModelNameText.setText(showData);
                     staticNameText.setText(searchModel.getName());
                 }
+            } else if (conversationFromChatContent.getConversation().getType().equals(Conversation.TYPE_CAST)) {
+                UIConversation uiConversation = new UIConversation(conversationFromChatContent.getConversation());
+                staticNameText.setText(uiConversation.getTitle());
+                ImageDisplayUtils.getInstance().displayImage(searchModelHeadImage, uiConversation.getIcon(), R.drawable.icon_person_default);
+                String showData = getString(R.string.chat_search_related_messages, "“" + uiConversation.getTitle() + "”");
+                searchModelNameText.setText(showData);
             }
+        } else if (getIntent().hasExtra(ConversationGroupInfoActivity.EXTRA_CID)) {     //只传ID 的时候
+            channelSubRelativeLayout.setVisibility(View.GONE);
+            String cid = getIntent().getStringExtra(ConversationGroupInfoActivity.EXTRA_CID);
+            Conversation conversation = ConversationCacheUtils.getConversation(this, cid);
+            conversationFromChatContent = new ConversationFromChatContent(conversation, 0);
+
         }
         groupMessageSearchAdapter = new GroupMessageSearchAdapter(this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -140,8 +158,11 @@ public class CommunicationSearchMessagesActivity extends BaseActivity {
                 String keyWords = s.toString();
                 if (StringUtils.isBlank(keyWords)) {
                     searchMessagesList = new ArrayList<>();
+                    if (getIntent().hasExtra(SEARCH_ALL_FROM_CHAT)) {
+                        finish();
+                    }
                 } else {
-                    searchMessagesList = MessageCacheUtil.getMessageListByContent(CommunicationSearchMessagesActivity.this, keyWords, conversationFromChatContent.getConversation().getId());
+                    searchMessagesList = MessageCacheUtil.getMessageListByKeywordAndId(CommunicationSearchMessagesActivity.this, keyWords, conversationFromChatContent.getConversation().getId());
                 }
                 groupMessageSearchAdapter.setAndRefreshAdapter(searchMessagesList, keyWords);
             }
@@ -156,34 +177,6 @@ public class CommunicationSearchMessagesActivity extends BaseActivity {
     @Override
     protected int getStatusType() {
         return STATUS_NO_SET;
-    }
-
-    /**
-     * 中间转化步骤便于搜索，防止搜索数字搜出@的人
-     *
-     * @param messageList
-     * @return
-     */
-    private List<String> getMessageContentList(List<com.inspur.emmcloud.bean.chat.Message> messageList) {
-        List<String> messageContentList = new ArrayList<>();
-        for (com.inspur.emmcloud.bean.chat.Message message : messageList) {
-            String type = message.getType();
-            switch (type) {
-                case com.inspur.emmcloud.bean.chat.Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
-                    messageContentList.add(ChatMsgContentUtils.mentionsAndUrl2Span(
-                            message.getMsgContentComment().getText(), message.getMsgContentComment().getMentionsMap()).toString());
-                    break;
-                case com.inspur.emmcloud.bean.chat.Message.MESSAGE_TYPE_TEXT_PLAIN:
-                    messageContentList.add(ChatMsgContentUtils.mentionsAndUrl2Span(
-                            message.getMsgContentTextPlain().getText(), message.getMsgContentTextPlain().getMentionsMap()).toString());
-                    break;
-                case com.inspur.emmcloud.bean.chat.Message.MESSAGE_TYPE_TEXT_MARKDOWN:
-                    messageContentList.add(ChatMsgContentUtils.mentionsAndUrl2Span(
-                            message.getMsgContentTextMarkdown().getText(), message.getMsgContentTextMarkdown().getMentionsMap()).toString());
-                    break;
-            }
-        }
-        return messageContentList;
     }
 
 

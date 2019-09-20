@@ -174,9 +174,7 @@
                             android:layout_height="36dp"
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="15dp"
-                            android:layout_marginTop="4dp"
                             android:layout_marginRight="10dp"
-                            android:layout_marginBottom="4dp"
                             android:src="@drawable/ic_contact_struct" />
 
                         <TextView
@@ -205,13 +203,11 @@
 
                         <com.inspur.emmcloud.baselib.widget.CircleTextImageView
                             android:id="@+id/channel_group_img"
-                            android:layout_width="36dp"
-                            android:layout_height="36dp"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="15dp"
-                            android:layout_marginTop="4dp"
                             android:layout_marginRight="10dp"
-                            android:layout_marginBottom="4dp"
                             android:src="@drawable/ic_contact_group" />
 
                         <TextView
