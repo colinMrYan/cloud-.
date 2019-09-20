@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -29,7 +28,6 @@ import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
-import com.inspur.emmcloud.baselib.widget.dialogs.ActionSheetDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
@@ -81,8 +79,6 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     TextView operationSortText;
     @BindView(R.id.ll_bottom_operation)
     LinearLayout bottomOperationLayout;
-    @BindView(R.id.ll_root_bottom_operation)
-    LinearLayout rootBottomOperationLayout;
     @BindView(R.id.batch_operation_header_layout)
     RelativeLayout batchOprationHeaderLayout;
     @BindView(R.id.batch_operation_header_text)
@@ -119,7 +115,6 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         setListIemClick();
         registerReceiver();
         handleFileShareToVolume();
-        initPopuptWindow();
     }
 
     /**
@@ -244,20 +239,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                 onBackPressed();
                 break;
             case R.id.iv_head_operation:
-//                rootBottomOperationLayout.setVisibility(rootBottomOperationLayout.
-//                        getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
-//                popupWindow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT); //设置宽度 布局文件里设置的没有用
-//                popupWindow.setHeight(ViewGroup.LayoutParams.MATCH_PARENT);  //设置高度  必须代码设置
-//                popupWindow.setContentView(window_view);  //设置布局
-//                //popupWindow.showAsDropDown(window_view);  //设置显示位置
-//
-//                popupWindow.setBackgroundDrawable(new BitmapDrawable());
-//                popupWindow.setOutsideTouchable(true); //外部是否可点击 点击外部消失
-//                popupWindow.setFocusable(true);  //响应返回键  点击返回键 消失
-
-                View parentView = LayoutInflater.from(this).inflate(R.layout.activity_main, null);
-                popupWindow.showAtLocation(parentView, Gravity.BOTTOM, 0, 0);      //相对父布局
-                // popupWindow.showAsDropDown();
+                showUploadOperationPopWindow(new ArrayList<VolumeFile>());
                 break;
             case R.id.btn_upload_file:
                 break;
@@ -288,6 +270,23 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                 sortType = SORT_BY_NAME_DOWN;
                 sortOperationPop.dismiss();
                 break;
+            case R.id.ll_volume_upload_image_pop:
+                AppUtils.openGallery(VolumeFileActivity.this, 10, REQUEST_OPEN_GALLERY, true);
+                break;
+            case R.id.ll_volume_new_folder_pop:
+                showCreateFolderDlg();
+                break;
+            case R.id.ll_volume_upload_file_pop:
+                Bundle bundle = new Bundle();
+                bundle.putInt("extra_maximum", 10);
+                ARouter.getInstance().
+                        build(Constant.AROUTER_CLASS_WEB_FILEMANAGER).with(bundle).
+                        navigation(VolumeFileActivity.this, REQUEST_OPEN_FILE_BROWSER);
+                break;
+            case R.id.ll_volume_take_phone_pop:
+                cameraPicFileName = System.currentTimeMillis() + ".jpg";
+                AppUtils.openCamera(VolumeFileActivity.this, cameraPicFileName, REQUEST_OPEN_CEMERA);
+                break;
             case R.id.ll_volume_delete:
                 bottomOperationLayout.setVisibility(View.GONE);
                 if (adapter.getSelectVolumeFileList().size() > 0) {
@@ -295,6 +294,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                 }
                 break;
             case R.id.ll_volume_copy:
+                bottomOperationLayout.setVisibility(View.GONE);
                 if (adapter.getSelectVolumeFileList().size() > 0) {
                     copyFile(adapter.getSelectVolumeFileList());
                 }
@@ -306,28 +306,15 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                 }
                 break;
             case R.id.ll_volume_download:
+                bottomOperationLayout.setVisibility(View.GONE);
                 downloadFile(adapter.getSelectVolumeFileList().get(0));
                 break;
             case R.id.ll_volume_rename:
+                bottomOperationLayout.setVisibility(View.GONE);
                 showFileRenameDlg(adapter.getSelectVolumeFileList().get(0));
                 break;
             case R.id.ll_volume_more:
-                break;
-            case R.id.ll_volume_upload_image:
-                AppUtils.openGallery(VolumeFileActivity.this, 10, REQUEST_OPEN_GALLERY, true);
-                break;
-            case R.id.ll_volume_new_folder:
-                rootBottomOperationLayout.setVisibility(View.GONE);
-                showCreateFolderDlg();
-                break;
-            case R.id.ll_volume_upload_file:
-                Bundle bundle = new Bundle();
-                bundle.putInt("extra_maximum", 10);
-                ARouter.getInstance().build(Constant.AROUTER_CLASS_WEB_FILEMANAGER).with(bundle).navigation(VolumeFileActivity.this, REQUEST_OPEN_FILE_BROWSER);
-                break;
-            case R.id.ll_volume_take_phone:
-                cameraPicFileName = System.currentTimeMillis() + ".jpg";
-                AppUtils.openCamera(VolumeFileActivity.this, cameraPicFileName, REQUEST_OPEN_CEMERA);
+                bottomOperationLayout.setVisibility(View.GONE);
                 break;
             case R.id.batch_operation_cancel_text:
                 setMutiSelect(true);
@@ -345,96 +332,29 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     /**
      * 设置pop框
      */
-    private void initPopuptWindow() {
-        View view = View.inflate(this, R.layout.volume_top_operation_layout, null);
-        // 创建一个PopupWindow
-        // 参数1：contentView 指定PopupWindow的内容
-        // 参数2：width 指定PopupWindow的width
-        // 参数3：height 指定PopupWindow的height
-        popupWindow = new PopupWindow(view);
-        // 需要设置一下此参数，点击外边可消失
-        popupWindow.setBackgroundDrawable(new BitmapDrawable());
-        // 设置点击窗口外边窗口消失    这两步用于点击手机的返回键的时候，不是直接关闭activity,而是关闭pop框
+    private void showUploadOperationPopWindow(List<VolumeFile> selectVolumeFileList) {
+        View view = LayoutInflater.from(VolumeFileActivity.this)
+                .inflate(R.layout.volume_top_operation_layout, null);
+        popupWindow = new PopupWindow(view, LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT, true);
         popupWindow.setOutsideTouchable(true);
-        // 设置此参数获得焦点，否则无法点击，即：事件拦截消费
         popupWindow.setFocusable(true);
-
-        view.findViewById(R.id.ll_volume_upload_image).setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        AppUtils.openGallery(VolumeFileActivity.this, 10, REQUEST_OPEN_GALLERY, true);
-                    }
-                }
-        );
-
-        view.findViewById(R.id.ll_volume_new_folder).setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        showCreateFolderDlg();
-                    }
-                }
-        );
-        view.findViewById(R.id.ll_volume_upload_file).setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Bundle bundle = new Bundle();
-                        bundle.putInt("extra_maximum", 10);
-                        ARouter.getInstance().
-                                build(Constant.AROUTER_CLASS_WEB_FILEMANAGER).with(bundle).
-                                navigation(VolumeFileActivity.this, REQUEST_OPEN_FILE_BROWSER);
-                    }
-                }
-        );
-
-        view.findViewById(R.id.ll_volume_take_phone).setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        cameraPicFileName = System.currentTimeMillis() + ".jpg";
-                        AppUtils.openCamera(VolumeFileActivity.this, cameraPicFileName, REQUEST_OPEN_CEMERA);
-                    }
-                }
-        );
+        view.findViewById(R.id.ll_volume_download_pop).setVisibility(selectVolumeFileList.size() == 1 &&
+                !selectVolumeFileList.get(0).getType().equals(VolumeFile.FILE_TYPE_DIRECTORY) ?
+                View.VISIBLE : View.GONE);
+        view.findViewById(R.id.ll_volume_move_pop).setVisibility(selectVolumeFileList.size() > 0 ? View.VISIBLE : View.GONE);
+        view.findViewById(R.id.ll_volume_copy_pop).setVisibility(selectVolumeFileList.size() > 0 ? View.VISIBLE : View.GONE);
+        view.findViewById(R.id.ll_volume_delete_pop).setVisibility(selectVolumeFileList.size() > 0 ? View.VISIBLE : View.GONE);
+        view.findViewById(R.id.ll_volume_more_pop).setVisibility(selectVolumeFileList.size() == 1 ? View.VISIBLE : View.GONE);
+        view.findViewById(R.id.ll_volume_rename_pop).setVisibility(selectVolumeFileList.size() == 1 ? View.VISIBLE : View.GONE);
+        view.findViewById(R.id.ll_volume_upload_image_pop).setVisibility(selectVolumeFileList.size() > 0 ? View.GONE : View.VISIBLE);
+        view.findViewById(R.id.ll_volume_new_folder_pop).setVisibility(selectVolumeFileList.size() > 0 ? View.GONE : View.VISIBLE);
+        view.findViewById(R.id.ll_volume_upload_file_pop).setVisibility(selectVolumeFileList.size() > 0 ? View.GONE : View.VISIBLE);
+        view.findViewById(R.id.ll_volume_take_phone_pop).setVisibility(selectVolumeFileList.size() > 0 ? View.GONE : View.VISIBLE);
+        View parentView = LayoutInflater.from(this).inflate(R.layout.activity_volume_file, null);
+        popupWindow.showAtLocation(parentView, Gravity.BOTTOM, 0, 0);      //相对父布局
 
     }
-
-    /**
-     * 弹出选择上传文件提示框
-     */
-    private void showUploadFileDlg() {
-        new ActionSheetDialog.ActionListSheetBuilder(VolumeFileActivity.this)
-                .addItem(getString(R.string.take_photo))
-                .addItem(getString(R.string.clouddriver_select_photo))
-                .addItem(getString(R.string.clouddriver_select_file))
-                .setOnSheetItemClickListener(new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {
-                    @Override
-                    public void onClick(ActionSheetDialog dialog, View itemView, int position) {
-                        switch (position) {
-                            case 0:
-                                cameraPicFileName = System.currentTimeMillis() + ".jpg";
-                                AppUtils.openCamera(VolumeFileActivity.this, cameraPicFileName, REQUEST_OPEN_CEMERA);
-                                break;
-                            case 1:
-                                AppUtils.openGallery(VolumeFileActivity.this, 10, REQUEST_OPEN_GALLERY, true);
-                                break;
-                            case 2:
-                                Bundle bundle = new Bundle();
-                                bundle.putInt("extra_maximum", 10);
-                                ARouter.getInstance().build(Constant.AROUTER_CLASS_WEB_FILEMANAGER).with(bundle).navigation(VolumeFileActivity.this, REQUEST_OPEN_FILE_BROWSER);
-                                break;
-                            default:
-                                break;
-                        }
-                        dialog.dismiss();
-                    }
-                })
-                .build()
-                .show();
-    }
-
 
     /**
      * 弹出文件排序选择框
@@ -551,19 +471,6 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         headerOperationLayout.setVisibility(isCurrentDirectoryWriteable ? View.VISIBLE : View.GONE);
     }
 
-    private void setBatchOprationLayoutByPrivilege() {
-        List<VolumeFile> selectVolumeFileList = adapter.getSelectVolumeFileList();
-        if (selectVolumeFileList.size() > 0) {
-            bottomOperationLayout.setVisibility(View.VISIBLE);
-            boolean isFileListWriteable = VolumeFilePrivilegeUtils.getVolumeFileListWriteable(getApplicationContext(), selectVolumeFileList);
-            volumeDeleteLayout.setVisibility(isFileListWriteable ? View.VISIBLE : View.GONE);
-            volumeMoveLayout.setVisibility(isFileListWriteable ? View.VISIBLE : View.GONE);
-        } else {
-            bottomOperationLayout.setVisibility(View.GONE);
-        }
-
-    }
-
     private void setBottomOperationItemShow(List<VolumeFile> selectVolumeFileList) {
         volumeDownloadLayout.setVisibility(selectVolumeFileList.size() == 1 &&
                 !selectVolumeFileList.get(0).getType().equals(VolumeFile.FILE_TYPE_DIRECTORY) ?
@@ -627,7 +534,6 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
             } else if (requestCode == REQUEST_SHOW_FILE_FILTER) {  //移动文件
                 getVolumeFileList(false);
             }
-            rootBottomOperationLayout.setVisibility(View.GONE);
         } else if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {  // 图库选择图片返回
             if (data != null && requestCode == REQUEST_OPEN_GALLERY) {
                 Boolean originalPicture = data.getBooleanExtra(ImageGridActivity.EXTRA_ORIGINAL_PICTURE, false);
@@ -811,6 +717,12 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
             IntentUtils.startActivity(VolumeFileActivity.this, VolumeFileActivity.class, bundle, true);
         }
 
+    }
+
+    @Override
+    protected void onResume() {
+        setBottomOperationItemShow(adapter.getSelectVolumeFileList());
+        super.onResume();
     }
 
     @Override
