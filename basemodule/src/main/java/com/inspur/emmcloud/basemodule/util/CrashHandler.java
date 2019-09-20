@@ -58,10 +58,10 @@ public class CrashHandler implements UncaughtExceptionHandler {
         String errorInfo = getErrorInfo(throwable);
         Log.d("jason", "errorInfo=" + errorInfo);
         Log.e("AndroidRuntime", errorInfo);
-        if (!AppUtils.isApkDebugable(mContext)) {
+        if (NetUtils.isNetworkConnected(mContext, false) && !AppUtils.isApkDebugable(mContext)) {
             final AppException appException = new AppException(System.currentTimeMillis(), AppUtils.getVersion(mContext), 1, "", errorInfo, 0);
             AppExceptionCacheUtils.saveAppException(mContext, appException);
-            new BaseModuleApiService(mContext).uploadException(mContext, appException, getUploadContentJSONObj(appException), new ExceptionUploadInterface() {
+            new BaseModuleApiService(mContext).uploadException(mContext, getUploadContentJSONObj(appException), new ExceptionUploadInterface() {
                 @Override
                 public void uploadExceptionFinish(JSONObject uploadResultJSONObject) {
                     //只处理成功，其他发生任何情况都等进入后台时统一上传
