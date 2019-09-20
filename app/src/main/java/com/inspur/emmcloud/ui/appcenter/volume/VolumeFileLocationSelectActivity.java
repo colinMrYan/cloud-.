@@ -40,7 +40,7 @@ import butterknife.BindView;
 
 public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
 
-    @BindView(R.id.location_select_bar_layout)
+    @BindView(R.id.bottom_layout)
     RelativeLayout locationSelectBarLayout;
     @BindView(R.id.btn_location_select_to)
     CustomRoundButton locationSelectToBtn;
@@ -74,7 +74,7 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
         headerOperationLayout.setVisibility(View.GONE);
         locationSelectCancelText.setVisibility(View.VISIBLE);
         locationSelectBarLayout.setVisibility(View.VISIBLE);
-        adapter.setShowFileOperationDropDownImg(false);
+        adapter.setShowFileOperationSelcteImage(false);
         adapter.setItemClickListener(new VolumeFileAdapter.MyItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -103,6 +103,11 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
             public void onItemOperationTextClick(View view, int position) {
 
             }
+
+            @Override
+            public void onSelectedItemClick(View view, int position) {
+
+            }
         });
         pathText.setVisibility(View.VISIBLE);
         pathText.setText(getString(R.string.clouddriver_current_directory_hint, currentDirAbsolutePath));
@@ -119,7 +124,7 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
             case R.id.ibt_back:
                 finish();
                 break;
-            case R.id.new_forder_img:
+            case R.id.iv_head_operation:
                 showCreateFolderDlg();
                 break;
 
