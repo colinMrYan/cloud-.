@@ -118,11 +118,16 @@ public abstract class MediaPlayBaseActivity extends BaseActivity implements Sens
 
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        playerManager.stop();
+    }
 
     @Override
     protected void onStop() {
         super.onStop();
-        playerManager.stop();
+//        playerManager.stop();
         releaseWakeLock();
         sensorManager.unregisterListener(this);
         unregisterReceiver(receiver);

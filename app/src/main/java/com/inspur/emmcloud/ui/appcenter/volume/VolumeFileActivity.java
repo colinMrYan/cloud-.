@@ -129,11 +129,17 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                     if (!adapter.getMultiselect()) {
                         Bundle bundle = new Bundle();
                         if (volumeFile.getType().equals(VolumeFile.FILE_TYPE_DIRECTORY)) {
-                            bundle.putSerializable("volume", volume);
-                            bundle.putSerializable("currentDirAbsolutePath", currentDirAbsolutePath + volumeFile.getName() + "/");
-                            bundle.putSerializable("title", volumeFile.getName());
-                            bundle.putBoolean("isOpenFromParentDirectory", true);
-                            IntentUtils.startActivity(VolumeFileActivity.this, VolumeFileActivity.class, bundle);
+                            boolean isVolumeFileWriteable = VolumeFilePrivilegeUtils.getVolumeFileWriteable(getApplicationContext(), volumeFile);
+                            boolean isVolumeFileReadable = VolumeFilePrivilegeUtils.getVolumeFileReadable(getApplicationContext(), volumeFile);
+                            if (isVolumeFileWriteable || isVolumeFileReadable) {
+                                bundle.putSerializable("volume", volume);
+                                bundle.putSerializable("currentDirAbsolutePath", currentDirAbsolutePath + volumeFile.getName() + "/");
+                                bundle.putSerializable("title", volumeFile.getName());
+                                bundle.putBoolean("isOpenFromParentDirectory", true);
+                                IntentUtils.startActivity(VolumeFileActivity.this, VolumeFileActivity.class, bundle);
+                            } else {
+                                ToastUtils.show(R.string.volume_no_permission);
+                            }
                         } else {
                             downloadOrOpenVolumeFile(volumeFile);
                         }
