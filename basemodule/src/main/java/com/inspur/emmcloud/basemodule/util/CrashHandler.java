@@ -58,22 +58,24 @@ public class CrashHandler implements UncaughtExceptionHandler {
         String errorInfo = getErrorInfo(throwable);
         Log.d("jason", "errorInfo=" + errorInfo);
         Log.e("AndroidRuntime", errorInfo);
-        final AppException appException = new AppException(System.currentTimeMillis(), AppUtils.getVersion(mContext), 1, "", errorInfo, 0);
-        AppExceptionCacheUtils.saveAppException(mContext, appException);
-        new BaseModuleApiService(mContext).uploadException(mContext, appException, getUploadContentJSONObj(appException), new ExceptionUploadInterface() {
-            @Override
-            public void uploadExceptionFinish(JSONObject uploadResultJSONObject) {
-                //只处理成功，其他发生任何情况都等进入后台时统一上传
-                try {
-                    if (uploadResultJSONObject.getString("status").equals("success")) {
-                        AppExceptionCacheUtils.deleteAppExceptionByContentAndHappenTime(mContext,
-                                appException.getHappenTime(), appException.getErrorInfo());
+        if (!AppUtils.isApkDebugable(mContext)) {
+            final AppException appException = new AppException(System.currentTimeMillis(), AppUtils.getVersion(mContext), 1, "", errorInfo, 0);
+            AppExceptionCacheUtils.saveAppException(mContext, appException);
+            new BaseModuleApiService(mContext).uploadException(mContext, appException, getUploadContentJSONObj(appException), new ExceptionUploadInterface() {
+                @Override
+                public void uploadExceptionFinish(JSONObject uploadResultJSONObject) {
+                    //只处理成功，其他发生任何情况都等进入后台时统一上传
+                    try {
+                        if (uploadResultJSONObject.getString("status").equals("success")) {
+                            AppExceptionCacheUtils.deleteAppExceptionByContentAndHappenTime(mContext,
+                                    appException.getHappenTime(), appException.getErrorInfo());
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
-            }
-        });
+            });
+        }
         //如果系统提供了默认的异常处理器，则交给系统去结束我们的程序，否则就由我们自己结束自己
         //这里如果系统处理，可能只崩溃一个页面，如果都交给自己处理，则发生异常必定整个退出
         if (mDefaultHandler != null) {
