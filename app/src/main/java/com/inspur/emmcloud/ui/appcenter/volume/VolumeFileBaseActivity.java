@@ -50,6 +50,7 @@ import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeGroupContainMe;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
+import com.inspur.emmcloud.util.privates.ShareFile2OutAppUtils;
 import com.inspur.emmcloud.util.privates.VolumeFilePrivilegeUtils;
 import com.inspur.emmcloud.util.privates.VolumeFileUploadManager;
 import com.inspur.emmcloud.util.privates.cache.VolumeGroupContainMeCacheUtils;
@@ -190,6 +191,12 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
                         dialog.dismiss();
                     }
                 })
+                .setOnActionSheetDlgDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialogInterface) {
+                        setBottomOperationItemShow(adapter.getSelectVolumeFileList());
+                    }
+                })
                 .build()
                 .show();
     }
@@ -199,7 +206,15 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         if (action.equals(permissionAction)) {
             startVolumeFilePermissionManager(volumeFile);
         } else if (action.equals(shareTo)) {
-            shareToFriends(volumeFile);
+            String fileSavePath = FileDownloadManager.getInstance().getDownloadFilePath(DownloadFileCategory.CATEGORY_VOLUME_FILE, volumeFile.getId(), volumeFile.getName());
+            if (!StringUtils.isBlank(fileSavePath)) {
+                ShareFile2OutAppUtils.shareFile(fileSavePath, this);
+            } else {
+                ToastUtils.show("请先下载后再分享");
+            }
+
+        } else {
+
         }
     }
 
