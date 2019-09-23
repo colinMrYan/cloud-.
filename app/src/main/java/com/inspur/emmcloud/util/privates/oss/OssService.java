@@ -19,6 +19,7 @@ import com.alibaba.sdk.android.oss.model.ResumableUploadResult;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileUploadTokenResult;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.interf.ProgressCallback;
@@ -46,6 +47,9 @@ public class OssService implements VolumeFileUploadService {
     private VolumeFile mockVolumeFile;
     private Handler handler;
     private ResumableUploadRequest request;
+    private long bytesTransferred = 0;
+    private long lastTimeRecord = 0;
+    private boolean isFirst = true;
 
 
     public OssService(GetVolumeFileUploadTokenResult getVolumeFileUploadTokenResult, VolumeFile mockVolumeFile) {
@@ -104,8 +108,9 @@ public class OssService implements VolumeFileUploadService {
                         break;
                     case PROGRESS:
                         if (progressCallback != null) {
-                            int progress = (int) msg.obj;
-                            progressCallback.onLoading(progress);
+                            int progress = msg.arg1;
+                            String uploadSpeed = (String) msg.obj;
+                            progressCallback.onLoading(progress, uploadSpeed);
                         }
                         break;
                     default:
@@ -141,9 +146,25 @@ public class OssService implements VolumeFileUploadService {
             public void onProgress(Object request, long currentSize, long totalSize) {
                 progress = (int) (100 * currentSize / totalSize);
                 LogUtils.jasonDebug("progress=" + progress);
+                String uploadSpeed = "";
+                if (isFirst) {
+                    lastTimeRecord = System.currentTimeMillis();
+                    bytesTransferred = currentSize;
+                    isFirst = false;
+                } else {
+                    long currentTime = System.currentTimeMillis();
+                    if (currentSize >= bytesTransferred) {
+                        uploadSpeed = ((currentSize - bytesTransferred) * 1000 / (currentTime - lastTimeRecord)) + "";
+                        uploadSpeed = FileUtils.formatFileSize(uploadSpeed);
+                        uploadSpeed = uploadSpeed + "/S";
+                    }
+
+                }
                 Message msg = new Message();
                 msg.what = PROGRESS;
-                msg.obj = progress;
+                msg.arg1 = progress;
+                msg.obj = uploadSpeed;
+                LogUtils.jasonDebug("uploadSpeed===" + uploadSpeed);
                 if (handler != null) {
                     handler.sendMessage(msg);
                 }
