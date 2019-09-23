@@ -229,7 +229,7 @@ public class SysCalendarAndCloudPlusScheduleSyncUtils {
             values.put(CalendarContract.Reminders.MINUTES, previousDate);
             values.put(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
 
-            Uri updateRemindUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, Long.
+            Uri updateRemindUri = ContentUris.withAppendedId(CalendarContract.Reminders.CONTENT_URI, Long.
                     parseLong(getCalendarRemindId(context, "", scheduleId)));
             context.getContentResolver().update(updateRemindUri, values, null, null);
         }
