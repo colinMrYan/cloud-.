@@ -29,6 +29,8 @@ import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
+import com.inspur.emmcloud.baselib.widget.VolumeActionData;
+import com.inspur.emmcloud.baselib.widget.VolumeActionLayout;
 import com.inspur.emmcloud.baselib.widget.dialogs.ActionSheetDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.MyDialog;
@@ -122,7 +124,10 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     RelativeLayout operationLayout;
     @BindView(R.id.ll_bottom_operation)
     LinearLayout bottomOperationLayout;
+    @BindView(R.id.ll_volume_action)
+    VolumeActionLayout volumeActionLayout;
     String deleteAction, downloadAction, renameAction, moveToAction, copyAction, permissionAction, shareTo; //弹框点击状态
+    String deleteFileAction, downloadFileAction, renameFileAction, moveToFileAction, copyFileAction, permissionFileAction, shareToFile, moreFileAction; //弹框点击状态
     private List<VolumeFile> moveVolumeFileList = new ArrayList<>();//移动的云盘文件列表
     private MyAppAPIService apiServiceBase;
     private Dialog fileRenameDlg, createFolderDlg;
@@ -267,7 +272,60 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         volumeDeleteLayout.setVisibility(isVolumeFileWriteable ? View.VISIBLE : View.GONE);
         volumeMoreLayout.setVisibility(selectVolumeFileList.size() == 1 ? View.VISIBLE : View.GONE);
         volumeRenameLayout.setVisibility(isVolumeFileWriteable && selectVolumeFileList.size() == 1 ? View.VISIBLE : View.GONE);
-        bottomOperationLayout.setVisibility(selectVolumeFileList.size() > 0 ? View.VISIBLE : View.GONE);
+        /// bottomOperationLayout.setVisibility(selectVolumeFileList.size() > 0 ? View.VISIBLE : View.GONE);
+
+
+        bottomOperationLayout.setVisibility(View.GONE);
+        volumeActionLayout.setVisibility(selectVolumeFileList.size() > 0 ? View.VISIBLE : View.GONE);
+        List<VolumeActionData> volumeActionDataList = new ArrayList<>();
+        downloadFileAction = getString(R.string.download);
+        moveToFileAction = getString(R.string.move);
+        copyFileAction = getString(R.string.copy);
+        deleteFileAction = getString(R.string.delete);
+        moreFileAction = getString(R.string.more);
+        renameFileAction = getString(R.string.rename);
+
+
+        volumeActionDataList.add(new VolumeActionData(downloadFileAction, R.drawable.ic_volume_download,
+                selectVolumeFileList.size() == 1 && !selectVolumeFileList.get(0).getType().equals(VolumeFile.FILE_TYPE_DIRECTORY)));
+        volumeActionDataList.add(new VolumeActionData(moveToFileAction, R.drawable.ic_volume_move, isVolumeFileWriteable));
+        volumeActionDataList.add(new VolumeActionData(copyFileAction, R.drawable.ic_volume_copy, isVolumeFileWriteable));
+        volumeActionDataList.add(new VolumeActionData(deleteFileAction, R.drawable.ic_volume_delete, isVolumeFileWriteable));
+        volumeActionDataList.add(new VolumeActionData(renameFileAction, R.drawable.ic_volume_rename,
+                isVolumeFileWriteable && selectVolumeFileList.size() == 1));
+        volumeActionDataList.add(new VolumeActionData(moreFileAction, R.drawable.ic_volume_more, selectVolumeFileList.size() == 1));
+        volumeActionLayout.setVolumeActionData(volumeActionDataList, new VolumeActionLayout.VolumeActionClickListener() {
+            @Override
+            public void volumeActionSelectedListener(String actionName) {
+                handleVolumeAction(actionName);
+            }
+        });
+    }
+
+
+    /**
+     * 处理Volume 相关的Action
+     */
+    private void handleVolumeAction(String action) {
+        if (action.equals(downloadAction)) {
+            //下载
+            downloadFile(adapter.getSelectVolumeFileList().get(0));
+        } else if (action.equals(moveToFileAction)) {
+            //移动到
+            moveFile(adapter.getSelectVolumeFileList());
+        } else if (action.equals(copyFileAction)) {
+            copyFile(adapter.getSelectVolumeFileList());
+        } else if (action.equals(deleteFileAction)) {
+            if (adapter.getSelectVolumeFileList().size() > 0) {
+                deleteFile(adapter.getSelectVolumeFileList());
+            }
+        } else if (action.equals(moreFileAction)) {
+            showFileOperationDlg(adapter.getSelectVolumeFileList().get(0));
+        } else if (action.equals(renameFileAction)) {
+            showFileRenameDlg(adapter.getSelectVolumeFileList().get(0));
+        } else {
+
+        }
     }
 
     /**

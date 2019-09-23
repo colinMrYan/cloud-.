@@ -270,6 +270,14 @@
         </RelativeLayout>
     </android.support.v4.widget.SwipeRefreshLayout>
 
+    <com.inspur.emmcloud.baselib.widget.VolumeActionLayout
+        android:id="@+id/ll_volume_action"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#ffffff"
+        android:visibility="gone"></com.inspur.emmcloud.baselib.widget.VolumeActionLayout>
+
     <LinearLayout
         android:id="@+id/ll_bottom_operation"
         android:layout_width="match_parent"
@@ -405,6 +413,7 @@
                 android:layout_gravity="center_horizontal"
                 android:text="@string/more" />
         </LinearLayout>
+
     </LinearLayout>
 
     <RelativeLayout
@@ -472,5 +481,6 @@
                 android:visibility="gone"
                 app:cus_backgroundColor="#36A5F6"
                 app:cus_radius="2dp" />
-        </RelativeLayout>
+
+    </RelativeLayout>
 </RelativeLayout>
