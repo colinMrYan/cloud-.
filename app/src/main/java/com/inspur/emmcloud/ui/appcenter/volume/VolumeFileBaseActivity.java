@@ -3,6 +3,7 @@ package com.inspur.emmcloud.ui.appcenter.volume;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -50,13 +51,13 @@ import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeGroupContainMe;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
-import com.inspur.emmcloud.util.privates.ShareFile2OutAppUtils;
 import com.inspur.emmcloud.util.privates.VolumeFilePrivilegeUtils;
 import com.inspur.emmcloud.util.privates.VolumeFileUploadManager;
 import com.inspur.emmcloud.util.privates.cache.VolumeGroupContainMeCacheUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -208,13 +209,10 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         } else if (action.equals(shareTo)) {
             String fileSavePath = FileDownloadManager.getInstance().getDownloadFilePath(DownloadFileCategory.CATEGORY_VOLUME_FILE, volumeFile.getId(), volumeFile.getName());
             if (!StringUtils.isBlank(fileSavePath)) {
-                ShareFile2OutAppUtils.shareFile(fileSavePath, this);
+                shareFile(fileSavePath);
             } else {
-                ToastUtils.show("请先下载后再分享");
+                ToastUtils.show(getString(R.string.clouddriver_volume_frist_download));
             }
-
-        } else {
-
         }
     }
 
@@ -233,6 +231,15 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
                 ContactSearchActivity.class);
         startActivityForResult(intent, SHARE_IMAGE_OR_FILES);
     }
+
+    public void shareFile(String filePath) {
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.putExtra(Intent.EXTRA_STREAM,
+                Uri.fromFile(new File(filePath)));
+        shareIntent.setType("*/*");//此处可发送多种文件
+        startActivity(Intent.createChooser(shareIntent, getString(R.string.baselib_share_to)));
+    }
+
 
     /**
      * 打开权限管理
