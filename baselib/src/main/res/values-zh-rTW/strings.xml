@@ -1338,6 +1338,7 @@
     <string name="welcome_to">歡迎使用</string>
 
     <string name="user_call">呼叫</string>
+    <string name="cloud_plus_update">%1$s更新</string>
 
     <!--日历字符串资源开始-->
     <string-array name="lunar_first_of_month">

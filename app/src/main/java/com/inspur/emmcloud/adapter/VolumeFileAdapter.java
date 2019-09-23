@@ -213,7 +213,7 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
                     }
 
                     @Override
-                    public void onLoading(int progress) {
+                    public void onLoading(int progress, String uploadSpeed) {
                         holder.uploadProgressBar.setVisibility(View.VISIBLE);
                         holder.uploadStatusText.setVisibility(View.GONE);
                         holder.uploadProgressBar.setProgress(progress);
