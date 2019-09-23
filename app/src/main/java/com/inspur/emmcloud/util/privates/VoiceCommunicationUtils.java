@@ -188,11 +188,12 @@ public class VoiceCommunicationUtils {
 
     /**
      * 设置加密密码
+     * 因为加密之后与IOS通信有问题  先去掉加密
      *
      * @param secret
      */
     public void setEncryptionSecret(String secret) {
-        mRtcEngine.setEncryptionSecret(secret);
+//        mRtcEngine.setEncryptionSecret(secret);
     }
 
     /**
