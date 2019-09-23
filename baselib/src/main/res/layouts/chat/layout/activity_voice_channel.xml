@@ -152,6 +152,32 @@
             android:orientation="vertical">
 
             <ImageView
+                android:id="@+id/img_mute"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_gravity="center_horizontal"
+                android:onClick="onClick"
+                android:padding="2dp"
+                android:src="@drawable/icon_mute_unselcected" />
+
+            <TextView
+                android:id="@+id/tv_mute"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="13dp"
+                android:text="@string/voice_communication_mute"
+                android:textColor="#333333"
+                android:textSize="13sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <ImageView
                 android:id="@+id/img_an_excuse"
                 android:layout_width="38dp"
                 android:layout_height="38dp"
@@ -175,6 +201,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:visibility="gone"
             android:orientation="vertical">
 
             <ImageView
@@ -197,31 +224,7 @@
                 android:textSize="13sp" />
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/img_mute"
-                android:layout_width="38dp"
-                android:layout_height="38dp"
-                android:layout_gravity="center_horizontal"
-                android:onClick="onClick"
-                android:padding="2dp"
-                android:src="@drawable/icon_mute_unselcected" />
-
-            <TextView
-                android:id="@+id/tv_mute"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="13dp"
-                android:text="@string/voice_communication_mute"
-                android:textColor="#333333"
-                android:textSize="13sp" />
-        </LinearLayout>
 
 
         <LinearLayout
