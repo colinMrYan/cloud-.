@@ -1075,7 +1075,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             }
 
             @Override
-            public void onLoading(int progress) {
+            public void onLoading(int progress, String uploadSpeed) {
                 //此处不进行loading进度，因为消息的发送进度不等于资源的发送进度
             }
 

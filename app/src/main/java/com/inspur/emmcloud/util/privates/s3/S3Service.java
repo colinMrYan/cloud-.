@@ -62,7 +62,7 @@ public class S3Service extends APIInterfaceInstance implements VolumeFileUploadS
             long bytesCurrent = transferObserver.getBytesTransferred();
             long bytesTotal = transferObserver.getBytesTotal();
             int progress = (int) (((float) bytesCurrent / (float) bytesTotal) * 100);
-            progressCallback.onLoading(progress);
+            progressCallback.onLoading(progress, "");
         }
     }
 
@@ -70,10 +70,10 @@ public class S3Service extends APIInterfaceInstance implements VolumeFileUploadS
     public void uploadFile(String fileName, final String localFilePath) {
         LogUtils.jasonDebug("uploadFile-------------");
         ClientConfiguration mConf = new ClientConfiguration();
-        mConf.setConnectionTimeout(15 * 1000); // 连接超时，默认15秒
-        mConf.setSocketTimeout(15 * 1000); // socket超时，默认15秒
+        mConf.setConnectionTimeout(15 * 1000);
+        mConf.setSocketTimeout(15 * 1000);
         mConf.setMaxConnections(5);
-        mConf.setMaxErrorRetry(2); // 失败后最大重试次数，默认2次
+        mConf.setMaxErrorRetry(2);
 
         BasicSessionCredentials awsCredentials = new BasicSessionCredentials(getVolumeFileUploadTokenResult.getAccessKeyId(), getVolumeFileUploadTokenResult.getAccessKeySecret(), getVolumeFileUploadTokenResult.getSecurityToken());
         Region region = Region.getRegion(getVolumeFileUploadTokenResult.getRegion());
@@ -127,15 +127,16 @@ public class S3Service extends APIInterfaceInstance implements VolumeFileUploadS
             @Override
             public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
                 if (progressCallback != null) {
+                    String uploadSpeed = "";
                     int progress = (int) (((float) bytesCurrent / (float) bytesTotal) * 100);
                     LogUtils.jasonDebug("progress===" + progress);
-                    progressCallback.onLoading(progress);
                     long currentTime = System.currentTimeMillis();
                     if (bytesCurrent >= bytesTransferred) {
-                        String uploadSpeed = ((bytesCurrent - bytesTransferred) * 1000 / (currentTime - lastTimeRecord)) + "";
+                        uploadSpeed = ((bytesCurrent - bytesTransferred) * 1000 / (currentTime - lastTimeRecord)) + "";
                         uploadSpeed = FileUtils.formatFileSize(uploadSpeed);
                         uploadSpeed = uploadSpeed + "/S";
                     }
+                    progressCallback.onLoading(progress, uploadSpeed);
                 }
             }
 

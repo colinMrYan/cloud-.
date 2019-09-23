@@ -9,7 +9,7 @@ import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 public interface ProgressCallback {
     void onSuccess(VolumeFile volumeFile);
 
-    void onLoading(int progress);
+    void onLoading(int progress, String uploadSpeed);
 
     void onFail();
 }
