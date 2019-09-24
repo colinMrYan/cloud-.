@@ -158,7 +158,7 @@ public class VoiceCommunicationUtils {
             LogUtils.YfcDebug("初始化声网异常：" + e.getMessage());
         }
         if (mRtcEngine != null) {
-            mRtcEngine.enableAudioVolumeIndication(1000, 3);
+            mRtcEngine.enableAudioVolumeIndication(1000, 3, false);
         }
 //        mRtcEngine.registerLocalUserAccount(context.getString(R.string.agora_app_id),"12345");
     }
@@ -193,7 +193,7 @@ public class VoiceCommunicationUtils {
      * @param secret
      */
     public void setEncryptionSecret(String secret) {
-//        mRtcEngine.setEncryptionSecret(secret);
+        mRtcEngine.setEncryptionSecret(secret);
     }
 
     /**
