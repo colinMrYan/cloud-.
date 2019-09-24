@@ -129,7 +129,7 @@ public class ChatFileUploadManagerUtils extends APIInterfaceInstance {
             }
 
             @Override
-            public void onLoading(int progress) {
+            public void onLoading(int progress, String uploadSpeed) {
             }
 
             @Override

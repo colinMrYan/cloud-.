@@ -1349,7 +1349,7 @@
     <string name="group_qrcode">QR Code</string>
 
     <string name="user_call">Call</string>
-
+    <string name="cloud_plus_update">%1$s Update</string>
     <string-array name="segment_control_items">
         <item>Low</item>
         <item>Middle</item>
