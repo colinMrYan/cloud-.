@@ -125,6 +125,10 @@ public class VoiceCommunicationUtils {
             super.onNetworkQuality(uid, txQuality, rxQuality);
             onVoiceCommunicationCallbacks.onNetworkQuality(uid, txQuality, rxQuality);
         }
+
+        @Override
+        public void onFirstRemoteVideoDecoded(int uid, int width, int height, int elapsed) {
+        }
     };
 
     public VoiceCommunicationUtils(Context context) {
