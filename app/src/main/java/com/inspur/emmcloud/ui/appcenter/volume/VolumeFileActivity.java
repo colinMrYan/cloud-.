@@ -212,7 +212,6 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     @Override
     protected void initDataBlankLayoutStatus() {
         super.initDataBlankLayoutStatus();
-        operationLayout.setVisibility((volumeFileList.size() == 0) ? View.GONE : View.VISIBLE);
         if (adapter.getMultiselect()) {
             setMutiSelect(true);
         }
@@ -279,36 +278,6 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
             case R.id.ll_volume_take_phone_pop:
                 cameraPicFileName = System.currentTimeMillis() + ".jpg";
                 AppUtils.openCamera(VolumeFileActivity.this, cameraPicFileName, REQUEST_OPEN_CEMERA);
-                break;
-            case R.id.ll_volume_delete:
-                bottomOperationLayout.setVisibility(View.GONE);
-                if (adapter.getSelectVolumeFileList().size() > 0) {
-                    deleteFile(adapter.getSelectVolumeFileList());
-                }
-                break;
-            case R.id.ll_volume_copy:
-                bottomOperationLayout.setVisibility(View.GONE);
-                if (adapter.getSelectVolumeFileList().size() > 0) {
-                    copyFile(adapter.getSelectVolumeFileList());
-                }
-                break;
-            case R.id.ll_volume_move:
-                bottomOperationLayout.setVisibility(View.GONE);
-                if (adapter.getSelectVolumeFileList().size() > 0) {
-                    moveFile(adapter.getSelectVolumeFileList());
-                }
-                break;
-            case R.id.ll_volume_download:
-                bottomOperationLayout.setVisibility(View.GONE);
-                downloadFile(adapter.getSelectVolumeFileList().get(0));
-                break;
-            case R.id.ll_volume_rename:
-                bottomOperationLayout.setVisibility(View.GONE);
-                showFileRenameDlg(adapter.getSelectVolumeFileList().get(0));
-                break;
-            case R.id.ll_volume_more:
-                bottomOperationLayout.setVisibility(View.GONE);
-                showFileOperationDlg(adapter.getSelectVolumeFileList().get(0));
                 break;
             case R.id.batch_operation_cancel_text:
                 setMutiSelect(true);
@@ -473,9 +442,6 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     private void setMutiSelect(boolean isMutiselect) {
         getBatchOprationSelectAllText.setText(R.string.clouddriver_select_all);
         batchOprationHeaderText.setText(getString(R.string.clouddriver_has_selected, 0));
-        if (!isMutiselect) {
-            bottomOperationLayout.setVisibility(View.GONE);
-        }
         batchOprationHeaderLayout.setVisibility(isMutiselect ? View.VISIBLE : View.GONE);
         adapter.setShowFileOperationDropDownImg(!isMutiselect);
         adapter.setMultiselect(isMutiselect);
