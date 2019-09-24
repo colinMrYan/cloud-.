@@ -45,6 +45,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import io.agora.rtc.RtcEngine;
+
 /**
  * Application class
  */
@@ -83,6 +85,7 @@ public abstract class BaseApplication extends MultiDexApplication {
         removeAllSessionCookie();
         myActivityLifecycleCallbacks = new MyActivityLifecycleCallbacks();
         registerActivityLifecycleCallbacks(myActivityLifecycleCallbacks);
+        LogUtils.YfcDebug("声网版本：" + RtcEngine.getSdkVersion());
     }
 
 
