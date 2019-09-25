@@ -488,6 +488,8 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
      */
     protected void initDataBlankLayoutStatus() {
         dataBlankLayout.setVisibility((volumeFileList.size() == 0) ? View.VISIBLE : View.GONE);
+        boolean isHavePrivilege = VolumeFilePrivilegeUtils.canGetVolumeFilePrivilege(this, volume);
+        uploadFileBtn.setVisibility(isHavePrivilege ? View.VISIBLE : View.GONE);
     }
 
     /**
