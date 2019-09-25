@@ -126,6 +126,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     private static final int REFRESH_PUSH_MESSAGE = 7;
     private static final int REFRESH_OFFLINE_MESSAGE = 8;
     private static final int UNREAD_NUMBER_BORDER = 20;
+    public static final String CLOUD_PLUS_CHANNEL_ID = "channel_id";
 
     @BindView(R.id.msg_list)
     RecycleViewForSizeChange msgListView;
@@ -387,22 +388,12 @@ public class ConversationActivity extends ConversationBaseActivity {
 
             @Override
             public void onVoiceCommucaiton() {
-                List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList = new ArrayList<>();
-                List<String> memberList = new ArrayList<>();
-                memberList.add(DirectChannelUtils.getDirctChannelOtherUid(MyApplication.getInstance(), conversation.getName()));
-                memberList.add(MyApplication.getInstance().getUid());
-                List<ContactUser> contactUserList = ContactUserCacheUtils.getContactUserListById(memberList);
-                for (int i = 0; i < contactUserList.size(); i++) {
-                    VoiceCommunicationJoinChannelInfoBean voiceCommunicationJoinChannelInfoBean = new VoiceCommunicationJoinChannelInfoBean();
-                    voiceCommunicationJoinChannelInfoBean.setUserId(contactUserList.get(i).getId());
-                    voiceCommunicationJoinChannelInfoBean.setUserName(contactUserList.get(i).getName());
-                    voiceCommunicationUserInfoBeanList.add(voiceCommunicationJoinChannelInfoBean);
-                }
-                Intent intent = new Intent();
-                intent.setClass(ConversationActivity.this, ChannelVoiceCommunicationActivity.class);
-                intent.putExtra("userList", (Serializable) voiceCommunicationUserInfoBeanList);
-                intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.INVITER_LAYOUT_STATE);
-                startActivity(intent);
+                startVoiceOrVideoCall(ECMChatInputMenu.VOICE_CALL);
+            }
+
+            @Override
+            public void onVideoCommucaiton() {
+                startVoiceOrVideoCall(ECMChatInputMenu.VIDEO_CALL);
             }
 
             @Override
@@ -421,6 +412,32 @@ public class ConversationActivity extends ConversationBaseActivity {
                 inputMenuClick(type);
             }
         });
+    }
+
+    /**
+     * 根据类型启动电话
+     *
+     * @param type
+     */
+    private void startVoiceOrVideoCall(String type) {
+        List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList = new ArrayList<>();
+        List<String> memberList = new ArrayList<>();
+        memberList.add(DirectChannelUtils.getDirctChannelOtherUid(MyApplication.getInstance(), conversation.getName()));
+        memberList.add(MyApplication.getInstance().getUid());
+        List<ContactUser> contactUserList = ContactUserCacheUtils.getContactUserListById(memberList);
+        for (int i = 0; i < contactUserList.size(); i++) {
+            VoiceCommunicationJoinChannelInfoBean voiceCommunicationJoinChannelInfoBean = new VoiceCommunicationJoinChannelInfoBean();
+            voiceCommunicationJoinChannelInfoBean.setUserId(contactUserList.get(i).getId());
+            voiceCommunicationJoinChannelInfoBean.setUserName(contactUserList.get(i).getName());
+            voiceCommunicationUserInfoBeanList.add(voiceCommunicationJoinChannelInfoBean);
+        }
+        Intent intent = new Intent();
+        intent.setClass(ConversationActivity.this, ChannelVoiceCommunicationActivity.class);
+        intent.putExtra("userList", (Serializable) voiceCommunicationUserInfoBeanList);
+        intent.putExtra(CLOUD_PLUS_CHANNEL_ID, cid);
+        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_VIDEO_CALL_TYPE, type);
+        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.INVITER_LAYOUT_STATE);
+        startActivity(intent);
     }
 
     private void inputMenuClick(String type) {

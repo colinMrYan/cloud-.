@@ -22,6 +22,7 @@ import com.inspur.emmcloud.basemodule.util.ClientIDUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
+import com.inspur.emmcloud.bean.chat.GetVoiceAndVideoResult;
 import com.inspur.emmcloud.bean.chat.WSPushContent;
 import com.inspur.emmcloud.bean.system.EventMessage;
 import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
@@ -451,6 +452,12 @@ public class WebSocketPush {
                                     GetWebSocketBadgeResult getWebSocketBadgeResult = new GetWebSocketBadgeResult(wsPushContent.getBody());
                                     BadgeBodyModel badgeBodyModel = getWebSocketBadgeResult.getBadgeBodyModel();
                                     EventBus.getDefault().post(badgeBodyModel);
+                                }
+                                break;
+                            case "/command/client":
+                                if (wsPushContent.getMethod().equals("post")) {
+                                    GetVoiceAndVideoResult getVoiceAndVideoResult = new GetVoiceAndVideoResult(wsPushContent.getBody());
+                                    EventBus.getDefault().post(getVoiceAndVideoResult);
                                 }
                                 break;
                         }
