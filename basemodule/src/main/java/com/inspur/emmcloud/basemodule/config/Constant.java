@@ -35,7 +35,7 @@ public class Constant {
     public static final String PREF_APP_TAB_BAR_VERSION = "app_tab_bar_version";
     public static final String PREF_APP_TAB_BAR_INFO_CURRENT = "app_tab_bar_info_current";
     public static final String PREF_APP_LOAD_ALIAS = "app_load_alias";
-    public static final String PREF_APP_OPEN_VOICE_WORD_SWITCH = "voice_2_word_switch";
+    public static final String PREF_APP_OPEN_VOICE_WORD_SWITCH = "voice_2_word_switch_default_false";
     public static final String PREF_WEBEX_DOWNLOAD_URL = "webex_download_url";
     public static final String PREF_WEBEX_FIRST_ENTER = "webex_first_enter";
     public static final String PREF_GET_OFFLINE_LAST_MID = "get_offline_last_mid";
@@ -135,6 +135,8 @@ public class Constant {
     public static final String EVENTBUS_TAG_VOLUME_FILE_SORT_TIME_CHANGED = "volume_file_sort_time_changed";
     public static final String EVENTBUS_TAG_VOLUME_FILE_LOCATION_SELECT_CLOSE = "volume_file_locaiton_select_close";
     public static final String EVENTBUS_TAG_MESSAGE_ADD_SHOW_CONTENT = "tag_message_add_show_content";
+    public static final String EVENTBUS_TAG_VOLUME_UPLOAD = "tag_volume_upload";
+    public static final String EVENTBUS_TAG_VOLUME_ = "tag_volume_upload";
     public static final String SERVICE_VERSION_CHAT_V0 = "v0";
     public static final String SERVICE_VERSION_CHAT_V1 = "v1";
 

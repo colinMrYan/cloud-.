@@ -6,6 +6,8 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileUploadTokenResult;
@@ -16,6 +18,8 @@ import com.inspur.emmcloud.interf.VolumeFileUploadService;
 import com.inspur.emmcloud.util.privates.cache.VolumeFileUploadCacheUtils;
 import com.inspur.emmcloud.util.privates.oss.OssService;
 import com.inspur.emmcloud.util.privates.s3.S3Service;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -201,7 +205,7 @@ public class VolumeFileUploadManager extends APIInterfaceInstance {
             if (volumeFileUpload.getId().equals(volumeFile.getId())) {
                 if (businessProgressCallback != null) {
                     if (volumeFileUpload.getStatus().equals(VolumeFile.STATUS_UPLOADIND)) {
-                        businessProgressCallback.onLoading(volumeFileUpload.getProgress());
+                        businessProgressCallback.onLoading(volumeFileUpload.getProgress(), "");
                     } else if (volumeFileUpload.getStatus().equals(VolumeFile.STATUS_UPLOAD_FAIL)) {
                         new Handler().post(new Runnable() {
                             @Override
@@ -287,6 +291,7 @@ public class VolumeFileUploadManager extends APIInterfaceInstance {
 
         public MyProgressCallback(VolumeFileUpload volumeFileUpload) {
             this.volumeFileUpload = volumeFileUpload;
+            volumeFileUploadList.remove(volumeFileUpload);
         }
 
         @Override
@@ -295,16 +300,16 @@ public class VolumeFileUploadManager extends APIInterfaceInstance {
             if (volumeFileUpload.getBusinessProgressCallback() != null) {
                 volumeFileUpload.getBusinessProgressCallback().onSuccess(volumeFile);
             }
-
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_VOLUME_UPLOAD, volumeFile));
         }
 
         @Override
-        public void onLoading(int progress) {
+        public void onLoading(int progress, String uploadSpeed) {
             volumeFileUpload.setProgress(progress);
             volumeFileUpload.setStatus(VolumeFile.STATUS_UPLOADIND);
             VolumeFileUploadCacheUtils.saveVolumeFileUpload(volumeFileUpload);
             if (volumeFileUpload.getBusinessProgressCallback() != null) {
-                volumeFileUpload.getBusinessProgressCallback().onLoading(progress);
+                volumeFileUpload.getBusinessProgressCallback().onLoading(progress, uploadSpeed);
             }
         }
 

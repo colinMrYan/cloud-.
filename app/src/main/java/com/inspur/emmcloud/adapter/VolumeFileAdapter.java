@@ -175,7 +175,7 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
         holder.uploadOperationText.setVisibility(isStatusNomal ? View.GONE : View.VISIBLE);
         holder.fileInfoLayout.setVisibility(isStatusNomal ? View.VISIBLE : View.GONE);
         holder.fileOperationDropDownImg.setVisibility(View.GONE);
-        holder.fileSelcetImg.setVisibility(isShowFileOperationSelecteImage ? View.VISIBLE : View.GONE);
+        holder.fileSelcetImg.setVisibility(isShowFileOperationSelecteImage && isStatusNomal ? View.VISIBLE : View.GONE);
         if (selectVolumeFileList.size() > 0) {
             holder.fileSelcetImg.setImageResource(selectVolumeFileList.contains(volumeFile) ? R.drawable.ic_select_yes : R.drawable.ic_select_no);
         } else {
@@ -213,7 +213,7 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
                     }
 
                     @Override
-                    public void onLoading(int progress) {
+                    public void onLoading(int progress, String uploadSpeed) {
                         holder.uploadProgressBar.setVisibility(View.VISIBLE);
                         holder.uploadStatusText.setVisibility(View.GONE);
                         holder.uploadProgressBar.setProgress(progress);

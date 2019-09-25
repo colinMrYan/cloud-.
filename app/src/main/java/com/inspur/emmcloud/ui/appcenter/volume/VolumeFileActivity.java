@@ -74,30 +74,15 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     private static final int REQUEST_OPEN_GALLERY = 3;
     private static final int REQUEST_OPEN_FILE_BROWSER = 4;
     private static final int REQUEST_SHOW_FILE_FILTER = 5;
-    @BindView(R.id.operation_layout)
-    RelativeLayout operationLayout;
     @BindView(R.id.operation_sort_text)
     TextView operationSortText;
-    @BindView(R.id.ll_bottom_operation)
-    LinearLayout bottomOperationLayout;
     @BindView(R.id.batch_operation_header_layout)
     RelativeLayout batchOprationHeaderLayout;
     @BindView(R.id.batch_operation_header_text)
     TextView batchOprationHeaderText;
     @BindView(R.id.batch_operation_select_all_text)
     TextView getBatchOprationSelectAllText;
-    @BindView(R.id.ll_volume_delete)
-    LinearLayout volumeDeleteLayout;
-    @BindView(R.id.ll_volume_move)
-    LinearLayout volumeMoveLayout;
-    @BindView(R.id.ll_volume_copy)
-    LinearLayout volumeCopyLayout;
-    @BindView(R.id.ll_volume_rename)
-    LinearLayout volumeRenameLayout;
-    @BindView(R.id.ll_volume_more)
-    LinearLayout volumeMoreLayout;
-    @BindView(R.id.ll_volume_download)
-    LinearLayout volumeDownloadLayout;
+
 
     private PopupWindow sortOperationPop;
     private String cameraPicFileName;
@@ -227,7 +212,6 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     @Override
     protected void initDataBlankLayoutStatus() {
         super.initDataBlankLayoutStatus();
-        operationLayout.setVisibility((volumeFileList.size() == 0) ? View.GONE : View.VISIBLE);
         if (adapter.getMultiselect()) {
             setMutiSelect(true);
         }
@@ -295,35 +279,6 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
             case R.id.ll_volume_take_phone_pop:
                 cameraPicFileName = System.currentTimeMillis() + ".jpg";
                 AppUtils.openCamera(VolumeFileActivity.this, cameraPicFileName, REQUEST_OPEN_CEMERA);
-                break;
-            case R.id.ll_volume_delete:
-                bottomOperationLayout.setVisibility(View.GONE);
-                if (adapter.getSelectVolumeFileList().size() > 0) {
-                    deleteFile(adapter.getSelectVolumeFileList());
-                }
-                break;
-            case R.id.ll_volume_copy:
-                bottomOperationLayout.setVisibility(View.GONE);
-                if (adapter.getSelectVolumeFileList().size() > 0) {
-                    copyFile(adapter.getSelectVolumeFileList());
-                }
-                break;
-            case R.id.ll_volume_move:
-                bottomOperationLayout.setVisibility(View.GONE);
-                if (adapter.getSelectVolumeFileList().size() > 0) {
-                    moveFile(adapter.getSelectVolumeFileList());
-                }
-                break;
-            case R.id.ll_volume_download:
-                bottomOperationLayout.setVisibility(View.GONE);
-                downloadFile(adapter.getSelectVolumeFileList().get(0));
-                break;
-            case R.id.ll_volume_rename:
-                bottomOperationLayout.setVisibility(View.GONE);
-                showFileRenameDlg(adapter.getSelectVolumeFileList().get(0));
-                break;
-            case R.id.ll_volume_more:
-                bottomOperationLayout.setVisibility(View.GONE);
                 break;
             case R.id.batch_operation_cancel_text:
                 setMutiSelect(true);
@@ -480,18 +435,6 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         headerOperationLayout.setVisibility(isCurrentDirectoryWriteable ? View.VISIBLE : View.GONE);
     }
 
-    private void setBottomOperationItemShow(List<VolumeFile> selectVolumeFileList) {
-        volumeDownloadLayout.setVisibility(selectVolumeFileList.size() == 1 &&
-                !selectVolumeFileList.get(0).getType().equals(VolumeFile.FILE_TYPE_DIRECTORY) ?
-                View.VISIBLE : View.GONE);
-        volumeMoveLayout.setVisibility(View.VISIBLE);
-        volumeCopyLayout.setVisibility(View.VISIBLE);
-        volumeDeleteLayout.setVisibility(View.VISIBLE);
-        volumeMoreLayout.setVisibility(selectVolumeFileList.size() == 1 ? View.VISIBLE : View.GONE);
-        volumeRenameLayout.setVisibility(selectVolumeFileList.size() == 1 ? View.VISIBLE : View.GONE);
-        bottomOperationLayout.setVisibility(selectVolumeFileList.size() > 0 ? View.VISIBLE : View.GONE);
-    }
-
     /**
      * 设置是否是多选状态
      *
@@ -500,9 +443,6 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     private void setMutiSelect(boolean isMutiselect) {
         getBatchOprationSelectAllText.setText(R.string.clouddriver_select_all);
         batchOprationHeaderText.setText(getString(R.string.clouddriver_has_selected, 0));
-        if (!isMutiselect) {
-            bottomOperationLayout.setVisibility(View.GONE);
-        }
         batchOprationHeaderLayout.setVisibility(isMutiselect ? View.VISIBLE : View.GONE);
         adapter.setShowFileOperationDropDownImg(!isMutiselect);
         adapter.setMultiselect(isMutiselect);
@@ -669,13 +609,18 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         }
         VolumeFile mockVolumeFile = getMockVolumeFileData(file);
         VolumeFileUploadManager.getInstance().uploadFile(mockVolumeFile, filePath, currentDirAbsolutePath);
-        volumeFileList.add(0, mockVolumeFile);
-        initDataBlankLayoutStatus();
-        adapter.setVolumeFileList(volumeFileList);
-        adapter.notifyItemInserted(0);
-        //解决RecyclerView当数据添加到第一位置，显示位置不正确的系统bug
-        fileRecycleView.scrollToPosition(0);
     }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveSimpleEventMessage(SimpleEventMessage simpleEventMessage) {
+        if (simpleEventMessage.getAction().equals(Constant.EVENTBUS_TAG_VOLUME_UPLOAD)) {
+            getVolumeFileList(false);
+            List<VolumeFile> volumeFileUploadList = VolumeFileUploadManager.getInstance().getCurrentFolderUploadVolumeFile(volume.getId(), currentDirAbsolutePath);
+            tipViewLayout.setVisibility(volumeFileUploadList.size() > 0 ? View.VISIBLE : View.GONE);
+        }
+    }
+
 
     /**
      * 生成一个用于上传展示的数据
@@ -729,6 +674,8 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     @Override
     protected void onResume() {
         setBottomOperationItemShow(adapter.getSelectVolumeFileList());
+        List<VolumeFile> volumeFileUploadList = VolumeFileUploadManager.getInstance().getCurrentFolderUploadVolumeFile(volume.getId(), currentDirAbsolutePath);
+        tipViewLayout.setVisibility(volumeFileUploadList.size() > 0 ? View.VISIBLE : View.GONE);
         super.onResume();
     }
 
@@ -740,6 +687,5 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         }
         super.onDestroy();
     }
-
 
 }
