@@ -248,7 +248,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
             isVolumeFileWriteable = VolumeFilePrivilegeUtils.getVolumeFileWriteable(getApplicationContext(), selectVolumeFileList.get(0));
         }
         volumeActionLayout.setVisibility(selectVolumeFileList.size() > 0 ? View.VISIBLE : View.GONE);
-        List<VolumeActionData> volumeActionDataList = new ArrayList<>();
+        final List<VolumeActionData> volumeActionDataList = new ArrayList<>();
         downloadAction = getString(R.string.download);
         moveToAction = getString(R.string.move);
         copyAction = getString(R.string.copy);
@@ -266,6 +266,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         volumeActionLayout.setVolumeActionData(volumeActionDataList, new VolumeActionLayout.VolumeActionClickListener() {
             @Override
             public void volumeActionSelectedListener(String actionName) {
+                volumeActionLayout.setVisibility(View.GONE);
                 handleVolumeAction(actionName);
             }
         });
