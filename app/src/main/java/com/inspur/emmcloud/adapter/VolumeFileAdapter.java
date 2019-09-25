@@ -304,7 +304,8 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
 
         @Override
         public boolean onLongClick(View v) {
-            myItemClickListener.onItemLongClick(v, getAdapterPosition());
+            // myItemClickListener.onItemLongClick(v, getAdapterPosition());
+            myItemClickListener.onSelectedItemClick(v, getAdapterPosition());
             return false;
         }
     }

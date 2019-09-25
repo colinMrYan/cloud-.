@@ -74,6 +74,8 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     private static final int REQUEST_OPEN_GALLERY = 3;
     private static final int REQUEST_OPEN_FILE_BROWSER = 4;
     private static final int REQUEST_SHOW_FILE_FILTER = 5;
+    @BindView(R.id.operation_layout)
+    RelativeLayout operationLayout;
     @BindView(R.id.operation_sort_text)
     TextView operationSortText;
     @BindView(R.id.batch_operation_header_layout)
@@ -212,6 +214,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     @Override
     protected void initDataBlankLayoutStatus() {
         super.initDataBlankLayoutStatus();
+        operationLayout.setVisibility((volumeFileList.size() == 0) ? View.GONE : View.VISIBLE);
         if (adapter.getMultiselect()) {
             setMutiSelect(true);
         }
@@ -234,6 +237,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                 showUploadOperationPopWindow(new ArrayList<VolumeFile>());
                 break;
             case R.id.btn_upload_file:
+                openFileBrowser();
                 break;
             case R.id.iv_down_up_list:
                 break;
@@ -269,11 +273,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                 showCreateFolderDlg();
                 break;
             case R.id.ll_volume_upload_file_pop:
-                Bundle bundle = new Bundle();
-                bundle.putInt("extra_maximum", 10);
-                ARouter.getInstance().
-                        build(Constant.AROUTER_CLASS_WEB_FILEMANAGER).with(bundle).
-                        navigation(VolumeFileActivity.this, REQUEST_OPEN_FILE_BROWSER);
+                openFileBrowser();
                 break;
             case R.id.ll_volume_take_phone_pop:
                 cameraPicFileName = System.currentTimeMillis() + ".jpg";
@@ -588,6 +588,17 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                     });
         }
 
+    }
+
+    /**
+     * 打开文件浏览
+     */
+    private void openFileBrowser() {
+        Bundle bundle = new Bundle();
+        bundle.putInt("extra_maximum", 10);
+        ARouter.getInstance().
+                build(Constant.AROUTER_CLASS_WEB_FILEMANAGER).with(bundle).
+                navigation(VolumeFileActivity.this, REQUEST_OPEN_FILE_BROWSER);
     }
 
     /**

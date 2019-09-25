@@ -313,7 +313,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
             copyFile(adapter.getSelectVolumeFileList());
         } else if (action.equals(deleteAction)) {
             if (adapter.getSelectVolumeFileList().size() > 0) {
-                deleteFile(adapter.getSelectVolumeFileList());
+                showFileDelWranibgDlg(adapter.getSelectVolumeFileList());
             }
         } else if (action.equals(moreAction)) {
             showFileOperationDlg(adapter.getSelectVolumeFileList().get(0));
@@ -327,23 +327,22 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     /**
      * 弹出文件删除提示框
      *
-     * @param volumeFile
+     * @param deleteVolumeFile
      */
-    protected void showFileDelWranibgDlg(final VolumeFile volumeFile) {
+    protected void showFileDelWranibgDlg(final List<VolumeFile> deleteVolumeFile) {
         new CustomDialog.MessageDialogBuilder(VolumeFileBaseActivity.this)
                 .setMessage(R.string.clouddriver_sure_delete_file)
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        setBottomOperationItemShow(adapter.getSelectVolumeFileList());
                         dialog.dismiss();
                     }
                 })
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        List<VolumeFile> deleteVolumeFileList = new ArrayList<>();
-                        deleteVolumeFileList.add(volumeFile);
-                        deleteFile(deleteVolumeFileList);
+                        deleteFile(deleteVolumeFile);
                         dialog.dismiss();
                     }
                 })
