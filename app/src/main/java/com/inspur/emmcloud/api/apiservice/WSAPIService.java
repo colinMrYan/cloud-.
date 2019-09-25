@@ -322,6 +322,69 @@ public class WSAPIService {
         }
     }
 
+
+    /**
+     * 发送音视频通话消息
+     * @param channelId   云+的cid
+     * @param room        声网音视频的channelId
+     * @param schema      自定义
+     * @param type        请求类型，音频或视频VIDEO 或 VOICE
+     * @param jsonArray   邀请成员
+     */
+    public void sendStartVoiceAndVideoCallMessage(String channelId,String room,String schema,String type,JSONArray jsonArray) {
+        try {
+            String tracer = CommunicationUtils.getTracer();
+            JSONObject object = new JSONObject();
+            JSONObject actionObj = new JSONObject();
+            actionObj.put("method", "post");
+            actionObj.put("path", "/command/server");
+            object.put("action", actionObj);
+            JSONObject headerObj = new JSONObject();
+            headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
+            headerObj.put("tracer", tracer);
+            object.put("headers", headerObj);
+            JSONObject paramObj = new JSONObject();
+            paramObj.put("channelId",channelId);
+            paramObj.put("room",room);
+            paramObj.put("schema",schema);
+            paramObj.put("type",type);
+            paramObj.put("to",jsonArray);
+            JSONObject bodyObj = new JSONObject();
+            bodyObj.put("action","server.vedio.call");
+            bodyObj.put("params",paramObj);
+            object.put("body",bodyObj);
+            EventMessage eventMessage = new EventMessage(tracer, Constant.EVENTBUS_TAG_GET_MESSAGE_COMMENT);
+            WebSocketPush.getInstance().sendEventMessage(eventMessage, object, tracer);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * 客户端收到指令请求后，通过websocket，返回以下指定格式告知服务端已收到请求
+     * @param tracer// 所收到指令请求的tracer
+     */
+    public void sendReceiveStartVoiceAndVideoCallMessageSuccess(String tracer){
+        try {
+            JSONObject object = new JSONObject();
+            JSONObject actionObj = new JSONObject();
+            actionObj.put("status", 200);
+            object.put("action", actionObj);
+            JSONObject headerObj = new JSONObject();
+            headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
+            headerObj.put("tracer", tracer);
+            object.put("headers", headerObj);
+            JSONObject bodyObj = new JSONObject();
+            bodyObj.put("result","ok");
+            object.put("body",bodyObj);
+            EventMessage eventMessage = new EventMessage(tracer, Constant.EVENTBUS_TAG_GET_MESSAGE_COMMENT);
+            WebSocketPush.getInstance().sendEventMessage(eventMessage, object, tracer);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void getMessageCommentCount(String mid) {
         try {
             String tracer = CommunicationUtils.getTracer();
