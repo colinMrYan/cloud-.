@@ -194,6 +194,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
                 .addItem(permissionAction, isVolumeFileDirectory && (isVolumeFileWriteable || isVolumeFileReadable)
                         && (volumeFrom != MY_VOLUME) && volumeFile.getOwner().equals(BaseApplication.getInstance().getUid()))
                 .addItem(shareTo, !isVolumeFileDirectory)
+                .addItem(moveToAction, !isVolumeFileDirectory)
                 .setOnSheetItemClickListener(new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {
                     @Override
                     public void onClick(ActionSheetDialog dialog, View itemView, int position) {
@@ -223,6 +224,9 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
             } else {
                 ToastUtils.show(getString(R.string.clouddriver_volume_frist_download));
             }
+        } else if (action.equals(moveToAction)) {
+            //移动到
+            moveFile(adapter.getSelectVolumeFileList());
         }
     }
 
@@ -279,7 +283,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         renameAction = getString(R.string.rename);
         volumeActionDataList.add(new VolumeActionData(downloadAction, R.drawable.ic_volume_download,
                 selectVolumeFileList.size() == 1 && !selectVolumeFileList.get(0).getType().equals(VolumeFile.FILE_TYPE_DIRECTORY)));
-        volumeActionDataList.add(new VolumeActionData(moveToAction, R.drawable.ic_volume_move, isVolumeFileWriteable));
+        // volumeActionDataList.add(new VolumeActionData(moveToAction, R.drawable.ic_volume_move, isVolumeFileWriteable));
         volumeActionDataList.add(new VolumeActionData(copyAction, R.drawable.ic_volume_copy, isVolumeFileWriteable));
         volumeActionDataList.add(new VolumeActionData(deleteAction, R.drawable.ic_volume_delete, isVolumeFileWriteable));
         volumeActionDataList.add(new VolumeActionData(renameAction, R.drawable.ic_volume_rename,
