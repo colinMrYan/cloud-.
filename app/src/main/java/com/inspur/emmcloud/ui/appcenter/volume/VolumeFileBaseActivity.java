@@ -54,8 +54,8 @@ import com.inspur.emmcloud.bean.appcenter.volume.VolumeGroupContainMe;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.util.privates.VolumeFilePrivilegeUtils;
-import com.inspur.emmcloud.util.privates.VolumeFileUploadManager;
 import com.inspur.emmcloud.util.privates.cache.VolumeGroupContainMeCacheUtils;
+import com.inspur.emmcloud.widget.tipsview.TipsView;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -110,6 +110,12 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     CustomRoundButton uploadFileBtn;
     @BindView(R.id.ll_volume_action)
     VolumeActionLayout volumeActionLayout;
+    @BindView(R.id.tipview_red_point)
+    TipsView redPointView;
+    @BindView(R.id.rl_tip_view)
+    RelativeLayout tipViewLayout;
+    @BindView(R.id.tv_volume_tip)
+    TextView volumeTipTextView;
     String deleteAction, downloadAction, renameAction, moveToAction, copyAction, permissionAction, shareTo, moreAction; //弹框点击状态
     private List<VolumeFile> moveVolumeFileList = new ArrayList<>();//移动的云盘文件列表
     private MyAppAPIService apiServiceBase;
@@ -139,6 +145,22 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         title = getIntent().getExtras().getString("title", "");
         headerText.setVisibility(View.VISIBLE);
         headerText.setText(title);
+        redPointView.attach(tipViewLayout, new TipsView.Listener() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+
+            @Override
+            public void onCancel() {
+
+            }
+        });
         initRecycleView();
     }
 
@@ -711,11 +733,10 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
             } else {
                 volumeFileList = getVolumeFileListResult.getVolumeFileFilterList(fileFilterType);
             }
-
-            if (isShowFileUploading) {
-                List<VolumeFile> volumeFileUploadingList = VolumeFileUploadManager.getInstance().getCurrentFolderUploadVolumeFile(volume.getId(), currentDirAbsolutePath);
-                volumeFileList.addAll(0, volumeFileUploadingList);
-            }
+//            if (isShowFileUploading) {
+//                List<VolumeFile> volumeFileUploadingList = VolumeFileUploadManager.getInstance().getCurrentFolderUploadVolumeFile(volume.getId(), currentDirAbsolutePath);
+//                volumeFileList.addAll(0, volumeFileUploadingList);
+//            }
             sortVolumeFileList();
             adapter.setVolumeFileList(volumeFileList);
             adapter.notifyDataSetChanged();

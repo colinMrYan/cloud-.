@@ -615,6 +615,8 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     public void onReceiveSimpleEventMessage(SimpleEventMessage simpleEventMessage) {
         if (simpleEventMessage.getAction().equals(Constant.EVENTBUS_TAG_VOLUME_UPLOAD)) {
             getVolumeFileList(false);
+            List<VolumeFile> volumeFileUploadList = VolumeFileUploadManager.getInstance().getCurrentFolderUploadVolumeFile(volume.getId(), currentDirAbsolutePath);
+            tipViewLayout.setVisibility(volumeFileUploadList.size() > 0 ? View.VISIBLE : View.GONE);
         }
     }
 
@@ -671,6 +673,8 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     @Override
     protected void onResume() {
         setBottomOperationItemShow(adapter.getSelectVolumeFileList());
+        List<VolumeFile> volumeFileUploadList = VolumeFileUploadManager.getInstance().getCurrentFolderUploadVolumeFile(volume.getId(), currentDirAbsolutePath);
+        tipViewLayout.setVisibility(volumeFileUploadList.size() > 0 ? View.VISIBLE : View.GONE);
         super.onResume();
     }
 

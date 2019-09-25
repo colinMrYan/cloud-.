@@ -43,8 +43,7 @@
                 android:id="@+id/header_operation_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_alignParentRight="true"
-                android:visibility="gone">
+                android:layout_alignParentRight="true">
 
                 <ImageView
                     android:id="@+id/iv_head_operation"
@@ -60,20 +59,47 @@
                     android:src="@drawable/ic_volume_head_operation"
                     android:tint="?attr/header_text_color" />
 
-                <ImageView
-                    android:id="@+id/iv_down_up_list"
+                <RelativeLayout
                     android:layout_width="48dp"
                     android:layout_height="match_parent"
-                    android:layout_toRightOf="@id/iv_head_operation"
-                    android:clickable="true"
-                    android:onClick="onClick"
-                    android:paddingBottom="15dp"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="12dp"
-                    android:paddingTop="15dp"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/ic_volume_down_up_list"
-                    android:tint="?attr/header_text_color" />
+                    android:layout_toRightOf="@id/iv_head_operation">
+
+                    <RelativeLayout
+                        android:id="@+id/rl_tip_view"
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="12dp"
+                        android:layout_marginTop="15dp">
+
+                        <TextView
+                            android:id="@+id/tv_volume_tip"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_tips_new_message"
+                            android:gravity="center"
+                            android:includeFontPadding="false"
+                            android:text="1"
+                            android:textColor="@color/black"
+                            android:textSize="5sp" />
+                    </RelativeLayout>
+
+                    <ImageView
+                        android:id="@+id/iv_down_up_list"
+                        android:layout_width="48dp"
+                        android:layout_height="match_parent"
+                        android:clickable="true"
+                        android:onClick="onClick"
+                        android:paddingBottom="15dp"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="12dp"
+                        android:paddingTop="15dp"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/ic_volume_down_up_list"
+                        android:tint="?attr/header_text_color" />
+
+                </RelativeLayout>
+
             </RelativeLayout>
 
             <TextView
@@ -347,4 +373,9 @@
                 app:cus_radius="2dp" />
 
     </RelativeLayout>
+
+    <com.inspur.emmcloud.widget.tipsview.TipsView
+        android:id="@+id/tipview_red_point"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </RelativeLayout>
