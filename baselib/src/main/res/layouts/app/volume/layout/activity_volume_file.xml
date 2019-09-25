@@ -43,8 +43,7 @@
                 android:id="@+id/header_operation_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_alignParentRight="true"
-                android:visibility="gone">
+                android:layout_alignParentRight="true">
 
                 <ImageView
                     android:id="@+id/iv_head_operation"
@@ -60,20 +59,47 @@
                     android:src="@drawable/ic_volume_head_operation"
                     android:tint="?attr/header_text_color" />
 
-                <ImageView
-                    android:id="@+id/iv_down_up_list"
+                <RelativeLayout
                     android:layout_width="48dp"
                     android:layout_height="match_parent"
-                    android:layout_toRightOf="@id/iv_head_operation"
-                    android:clickable="true"
-                    android:onClick="onClick"
-                    android:paddingBottom="15dp"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="12dp"
-                    android:paddingTop="15dp"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/ic_volume_down_up_list"
-                    android:tint="?attr/header_text_color" />
+                    android:layout_toRightOf="@id/iv_head_operation">
+
+                    <RelativeLayout
+                        android:id="@+id/rl_tip_view"
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="12dp"
+                        android:layout_marginTop="15dp">
+
+                        <TextView
+                            android:id="@+id/tv_volume_tip"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_tips_new_message"
+                            android:gravity="center"
+                            android:includeFontPadding="false"
+                            android:text="1"
+                            android:textColor="@color/black"
+                            android:textSize="5sp" />
+                    </RelativeLayout>
+
+                    <ImageView
+                        android:id="@+id/iv_down_up_list"
+                        android:layout_width="48dp"
+                        android:layout_height="match_parent"
+                        android:clickable="true"
+                        android:onClick="onClick"
+                        android:paddingBottom="15dp"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="12dp"
+                        android:paddingTop="15dp"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/ic_volume_down_up_list"
+                        android:tint="?attr/header_text_color" />
+
+                </RelativeLayout>
+
             </RelativeLayout>
 
             <TextView
@@ -162,7 +188,7 @@
         android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/bottom_layout"
+        android:layout_above="@+id/rl_bottom_all_action"
         android:layout_below="@id/path_text"
         android:background="@color/content_bg"
         android:scrollbars="vertical">
@@ -270,150 +296,20 @@
         </RelativeLayout>
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <LinearLayout
-        android:id="@+id/ll_bottom_operation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="#ffffff"
-        android:orientation="horizontal"
-        android:paddingBottom="10dp"
-        android:paddingTop="8dp"
-        android:visibility="gone">
-
-        <LinearLayout
-            android:id="@+id/ll_volume_download"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="onClick"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:layout_gravity="center_horizontal"
-                android:src="@drawable/ic_volume_download" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="@string/download" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/ll_volume_copy"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="onClick"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:layout_gravity="center_horizontal"
-                android:src="@drawable/ic_volume_copy" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="@string/copy" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/ll_volume_move"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="onClick"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:layout_gravity="center_horizontal"
-                android:src="@drawable/ic_volume_move" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="@string/move" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/ll_volume_delete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="onClick"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:layout_gravity="center_horizontal"
-                android:src="@drawable/ic_volume_delete" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="@string/delete" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/ll_volume_rename"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="onClick"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:layout_gravity="center_horizontal"
-                android:src="@drawable/ic_volume_rename" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="@string/rename" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/ll_volume_more"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="onClick"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:layout_gravity="center_horizontal"
-                android:src="@drawable/ic_volume_more" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="@string/more" />
-        </LinearLayout>
-    </LinearLayout>
 
     <RelativeLayout
-        android:id="@+id/bottom_layout"
+        android:id="@+id/rl_bottom_all_action"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="#ffffff"
-        android:visibility="gone">
+        android:background="#ffffff">
+
+        <RelativeLayout
+            android:id="@+id/bottom_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ffffff"
+            android:visibility="gone">
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
@@ -472,5 +368,21 @@
                 android:visibility="gone"
                 app:cus_backgroundColor="#36A5F6"
                 app:cus_radius="2dp" />
+
         </RelativeLayout>
+
+        <com.inspur.emmcloud.baselib.widget.VolumeActionLayout
+            android:id="@+id/ll_volume_action"
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:background="#ffffff"
+            android:paddingBottom="10dp"
+            android:paddingTop="8dp"
+            android:visibility="gone"></com.inspur.emmcloud.baselib.widget.VolumeActionLayout>
+    </RelativeLayout>
+
+    <com.inspur.emmcloud.widget.tipsview.TipsView
+        android:id="@+id/tipview_red_point"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </RelativeLayout>

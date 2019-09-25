@@ -603,7 +603,10 @@
     <string name="clouddriver_volume_file_filter">Filter</string>
     <string name="clouddriver_volume_group_name">Group Name</string>
     <string name="clouddriver_volume_upload_file">Upload File</string>
+    <string name="clouddriver_volume_upload_image">Upload Image</string>
+    <string name="clouddriver_volume_upload_take_photo">Camera</string>
     <string name="clouddriver_file_permission_manager">Permissions</string>
+    <string name="clouddriver_volume_frist_download">Please download before uploading</string>
     <string name="volume_upload_to_current_directory">Upload to Current Directory</string>
     <string name="volume_file_upload_network_type_warning">Currently not connected to Wi-Fi,uploading will use mobile traffic,continue?</string>
     <string name="volume_file_download_network_type_warning">Currently not connected to Wi-Fi,downloading will use mobile traffic,continue?</string>

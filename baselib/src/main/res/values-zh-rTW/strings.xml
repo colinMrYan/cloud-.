@@ -604,8 +604,11 @@
     <string name="clouddriver_volume_file_filter">分類篩選</string>
     <string name="clouddriver_volume_group_name">組名稱</string>
     <string name="clouddriver_volume_upload_file">上傳文件</string>
+    <string name="clouddriver_volume_upload_image">上傳圖片</string>
+    <string name="clouddriver_volume_upload_take_photo">Camera拍照上傳</string>
     <string name="clouddriver_file_permission_manager">許可權管理</string>
     <string name="volume_upload_to_current_directory">上傳到目前的目錄</string>
+    <string name="clouddriver_volume_frist_download">所選本地文件已不存在，請重新下載</string>
     <string name="volume_file_upload_network_type_warning">當前處於非Wi-Fi環境，繼續上傳將消耗運營商流量，請確認是否繼續</string>
     <string name="volume_file_download_network_type_warning">當前處於非Wi-Fi環境，繼續下載將消耗運營商流量，請確認是否繼續</string>
     <string name="rename">重命名</string>

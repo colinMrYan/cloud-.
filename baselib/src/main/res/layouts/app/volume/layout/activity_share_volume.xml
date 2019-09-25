@@ -65,5 +65,15 @@
             android:dividerHeight="0dp"></ListView>
     </android.support.v4.widget.SwipeRefreshLayout>
 
+    <com.inspur.emmcloud.baselib.widget.VolumeActionLayout
+        android:id="@+id/ll_volume_bottom_action"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#ffffff"
+        android:paddingBottom="10dp"
+        android:paddingTop="8dp"
+        android:visibility="gone"></com.inspur.emmcloud.baselib.widget.VolumeActionLayout>
+
 
 </RelativeLayout>
