@@ -21,6 +21,7 @@
                 android:layout_width="44dp"
                 android:layout_height="44dp"
                 android:layout_centerVertical="true"
+                android:background="@null"
                 android:onClick="onClick"
                 android:padding="11dp"
                 android:scaleType="fitXY"
@@ -52,10 +53,10 @@
                     android:layout_height="match_parent"
                     android:clickable="true"
                     android:onClick="onClick"
-                    android:paddingBottom="15dp"
                     android:paddingLeft="12dp"
-                    android:paddingRight="10dp"
                     android:paddingTop="14dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="15dp"
                     android:scaleType="fitXY"
                     android:src="@drawable/ic_volume_head_operation"
                     android:tint="?attr/header_text_color" />
@@ -67,10 +68,10 @@
                     android:layout_toRightOf="@id/iv_head_operation"
                     android:clickable="true"
                     android:onClick="onClick"
-                    android:paddingBottom="15dp"
                     android:paddingLeft="10dp"
-                    android:paddingRight="12dp"
                     android:paddingTop="15dp"
+                    android:paddingRight="12dp"
+                    android:paddingBottom="15dp"
                     android:scaleType="fitXY"
                     android:src="@drawable/ic_volume_down_up_list"
                     android:tint="?attr/header_text_color" />
@@ -149,10 +150,10 @@
         android:layout_below="@id/rl_header"
         android:background="@android:color/white"
         android:ellipsize="middle"
-        android:paddingBottom="9dp"
         android:paddingLeft="12dp"
-        android:paddingRight="10dp"
         android:paddingTop="9dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="9dp"
         android:singleLine="true"
         android:textColor="#333333"
         android:textSize="16sp"
@@ -277,8 +278,8 @@
         android:layout_alignParentBottom="true"
         android:background="#ffffff"
         android:orientation="horizontal"
-        android:paddingBottom="10dp"
         android:paddingTop="8dp"
+        android:paddingBottom="10dp"
         android:visibility="gone">
 
         <LinearLayout
@@ -294,6 +295,7 @@
                 android:layout_height="22dp"
                 android:layout_gravity="center_horizontal"
                 android:src="@drawable/ic_volume_download" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -414,63 +416,64 @@
         android:layout_alignParentBottom="true"
         android:background="#ffffff"
         android:visibility="gone">
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="@color/color_list_divider" />
 
-            <TextView
-                android:id="@+id/location_select_new_forder_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:onClick="onClick"
-                android:padding="12dp"
-                android:text="@string/clouddriver_create_folder"
-                android:textColor="#444444"
-                android:textSize="15sp" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/color_list_divider" />
 
-            <com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButton
-                android:id="@+id/btn_location_select_to"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginBottom="10dp"
-                android:layout_marginRight="12dp"
-                android:layout_marginTop="10dp"
-                android:minHeight="0dp"
-                android:onClick="onClick"
-                android:paddingBottom="7dp"
-                android:paddingLeft="14dp"
-                android:paddingRight="13dp"
-                android:paddingTop="7dp"
-                android:text="@string/clouddriver_move2_current_directory"
-                android:textColor="@android:color/white"
-                android:textSize="15sp"
-                app:cus_backgroundColor="#36A5F6"
-                app:cus_radius="2dp" />
+        <TextView
+            android:id="@+id/location_select_new_forder_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:onClick="onClick"
+            android:padding="12dp"
+            android:text="@string/clouddriver_create_folder"
+            android:textColor="#444444"
+            android:textSize="15sp" />
 
-            <com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButton
-                android:id="@+id/btn_location_select_upload_to"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginBottom="10dp"
-                android:layout_marginRight="12dp"
-                android:layout_marginTop="10dp"
-                android:minHeight="0dp"
-                android:onClick="onClick"
-                android:paddingBottom="7dp"
-                android:paddingLeft="14dp"
-                android:paddingRight="13dp"
-                android:paddingTop="7dp"
-                android:text="@string/volume_upload_to_current_directory"
-                android:textColor="@android:color/white"
-                android:textSize="15sp"
-                android:visibility="gone"
-                app:cus_backgroundColor="#36A5F6"
-                app:cus_radius="2dp" />
-        </RelativeLayout>
+        <com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButton
+            android:id="@+id/btn_location_select_to"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginBottom="10dp"
+            android:minHeight="0dp"
+            android:onClick="onClick"
+            android:paddingLeft="14dp"
+            android:paddingTop="7dp"
+            android:paddingRight="13dp"
+            android:paddingBottom="7dp"
+            android:text="@string/clouddriver_move2_current_directory"
+            android:textColor="@android:color/white"
+            android:textSize="15sp"
+            app:cus_backgroundColor="#36A5F6"
+            app:cus_radius="2dp" />
+
+        <com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButton
+            android:id="@+id/btn_location_select_upload_to"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginBottom="10dp"
+            android:minHeight="0dp"
+            android:onClick="onClick"
+            android:paddingLeft="14dp"
+            android:paddingTop="7dp"
+            android:paddingRight="13dp"
+            android:paddingBottom="7dp"
+            android:text="@string/volume_upload_to_current_directory"
+            android:textColor="@android:color/white"
+            android:textSize="15sp"
+            android:visibility="gone"
+            app:cus_backgroundColor="#36A5F6"
+            app:cus_radius="2dp" />
+    </RelativeLayout>
 </RelativeLayout>

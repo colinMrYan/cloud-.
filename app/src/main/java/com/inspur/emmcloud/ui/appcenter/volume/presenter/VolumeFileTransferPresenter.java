@@ -5,4 +5,7 @@ import com.inspur.emmcloud.ui.appcenter.volume.contract.VolumeFileTransferContra
 
 public class VolumeFileTransferPresenter extends BasePresenter<VolumeFileTransferContract.View> implements VolumeFileTransferContract.Presenter {
 
+    public void setData() {
+
+    }
 }

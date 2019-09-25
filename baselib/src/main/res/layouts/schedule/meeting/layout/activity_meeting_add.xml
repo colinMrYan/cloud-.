@@ -15,6 +15,7 @@
             android:layout_width="44dp"
             android:layout_height="44dp"
             android:layout_centerVertical="true"
+            android:background="@null"
             android:onClick="onClick"
             android:padding="11dp"
             android:scaleType="fitXY"
@@ -57,6 +58,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="vertical">
+
             <EditText
                 android:id="@+id/et_title"
                 android:layout_width="match_parent"
@@ -64,10 +66,10 @@
                 android:background="@android:color/white"
                 android:gravity="top"
                 android:hint="@string/schedule_meeting_add_content_hint"
-                android:paddingBottom="15dp"
                 android:paddingLeft="16dp"
-                android:paddingRight="16dp"
                 android:paddingTop="15dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="15dp"
                 android:textColor="#333333"
                 android:textColorHint="#999999"
                 android:textSize="15sp" />
@@ -110,9 +112,9 @@
                         android:layout_toRightOf="@id/tv_meeting_position_title"
                         android:background="@null"
                         android:hint="@string/schedule_add_position"
-                        android:paddingBottom="11dp"
                         android:paddingLeft="16dp"
                         android:paddingTop="11dp"
+                        android:paddingBottom="11dp"
                         android:singleLine="true"
                         android:textColor="#333333"
                         android:textColorHint="#999999"
@@ -123,30 +125,31 @@
                         android:layout_width="wrap_content"
                         android:layout_height="44dp"
                         android:layout_alignParentRight="true">
+
                         <ImageView
                             android:id="@+id/iv_meeting_position_enter"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:layout_centerVertical="true"
                             android:onClick="onClick"
-                            android:paddingBottom="12dp"
                             android:paddingLeft="25dp"
-                            android:paddingRight="12dp"
                             android:paddingTop="12dp"
+                            android:paddingRight="12dp"
+                            android:paddingBottom="12dp"
                             android:src="@drawable/ic_arrow_right" />
 
                         <ImageView
                             android:id="@+id/iv_meeting_position_del"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:layout_alignParentLeft="true"
                             android:layout_alignParentStart="true"
+                            android:layout_alignParentLeft="true"
                             android:layout_alignParentTop="true"
                             android:onClick="onClick"
-                            android:paddingBottom="11dp"
                             android:paddingLeft="25dp"
-                            android:paddingRight="11dp"
                             android:paddingTop="11dp"
+                            android:paddingRight="11dp"
+                            android:paddingBottom="11dp"
                             android:scaleType="fitCenter"
                             android:src="@drawable/app_edittext_clear" />
                     </RelativeLayout>
@@ -173,11 +176,11 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true"
-                    android:paddingBottom="11dp"
                     android:paddingTop="11dp"
+                    android:paddingBottom="11dp"
                     android:text="@string/all_day"
                     android:textColor="#333333"
                     android:textSize="16sp" />
@@ -293,6 +296,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:orientation="vertical">
+
                 <LinearLayout
                     android:id="@+id/ll_add_attendee"
                     android:layout_width="match_parent"
@@ -307,9 +311,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:paddingBottom="11dp"
                         android:paddingLeft="16dp"
                         android:paddingTop="11dp"
+                        android:paddingBottom="11dp"
                         android:text="@string/schedule_meeting_add_attendee_title"
                         android:textColor="#333333"
                         android:textSize="15sp" />
@@ -355,9 +359,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:paddingBottom="11dp"
                             android:paddingLeft="16dp"
                             android:paddingTop="11dp"
+                            android:paddingBottom="11dp"
                             android:text="@string/schedule_meeting_add_record_holder_title"
                             android:textColor="#333333"
                             android:textSize="15sp" />
@@ -397,9 +401,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:paddingBottom="11dp"
                             android:paddingLeft="16dp"
                             android:paddingTop="11dp"
+                            android:paddingBottom="11dp"
                             android:text="@string/schedule_meeting_add_conference_title"
                             android:textColor="#333333"
                             android:textSize="15sp" />
@@ -437,9 +441,9 @@
                     android:id="@+id/tv_notes_tips"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="11dp"
                     android:paddingLeft="16dp"
                     android:paddingTop="11dp"
+                    android:paddingBottom="11dp"
                     android:text="@string/schedule_meeting_add_note"
                     android:textColor="#333333"
                     android:textSize="15sp" />
@@ -451,9 +455,9 @@
                     android:layout_below="@id/tv_notes_tips"
                     android:background="@null"
                     android:minHeight="41dp"
-                    android:paddingBottom="10dp"
                     android:paddingLeft="16dp"
                     android:paddingRight="16dp"
+                    android:paddingBottom="10dp"
                     android:textColor="#333333"
                     android:textSize="15sp" />
             </RelativeLayout>
@@ -479,9 +483,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:paddingBottom="11dp"
                     android:paddingLeft="16dp"
                     android:paddingTop="11dp"
+                    android:paddingBottom="11dp"
                     android:text="@string/schedule_meeting_add_alert_time"
                     android:textColor="#333333"
                     android:textSize="15sp" />
@@ -490,9 +494,9 @@
                     android:id="@+id/tv_reminder"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="11dp"
                     android:paddingLeft="16dp"
                     android:paddingTop="11dp"
+                    android:paddingBottom="11dp"
                     android:textColor="#888888"
                     android:textSize="15sp" />
 
@@ -525,12 +529,12 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
+                        android:layout_alignParentLeft="true"
                         android:layout_alignParentTop="true"
-                        android:paddingBottom="11dp"
                         android:paddingLeft="16dp"
                         android:paddingTop="11dp"
+                        android:paddingBottom="11dp"
                         android:text="@string/schedule_account_type"
                         android:textColor="#333333"
                         android:textSize="16sp" />
@@ -541,8 +545,8 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="33dp"
-                        android:paddingBottom="11dp"
                         android:paddingTop="11dp"
+                        android:paddingBottom="11dp"
                         android:text="日程"
                         android:textColor="#888888"
                         android:textSize="15sp" />
@@ -598,8 +602,8 @@
                         android:layout_height="51dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:checked="false"
-                        android:layout_marginRight="16dp" />
+                        android:layout_marginRight="16dp"
+                        android:checked="false" />
 
 
                 </RelativeLayout>

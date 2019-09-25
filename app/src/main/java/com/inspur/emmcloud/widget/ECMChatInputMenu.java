@@ -522,7 +522,7 @@ public class ECMChatInputMenu extends LinearLayout {
                 inputControl = "11101";
             }
             //控制binaryString长度，防止穿的数字过大
-            int length = inputControl.length() > 7 ? 7 : inputControl.length();
+            int length = inputControl.length() > 10 ? 10 : inputControl.length();
             boolean isInputTextEnable = false;
             boolean isInputPhotoEnable = false;
             boolean isInputFileEnable = false;
@@ -548,7 +548,7 @@ public class ECMChatInputMenu extends LinearLayout {
                     case 5:
                         isVoiceCallEnable = controlValue.endsWith("1");
                         break;
-                    case 3:
+                    case 8:
                         isSendEmailEnable = controlValue.endsWith("1");
                         break;
                     default:

@@ -11,7 +11,6 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.AllTaskFragmentAdapter;
 import com.inspur.emmcloud.basemodule.ui.BaseMvpActivity;
 import com.inspur.emmcloud.basemodule.util.TabLayoutUtil;
-import com.inspur.emmcloud.ui.appcenter.volume.contract.VolumeFileTransferContract;
 import com.inspur.emmcloud.ui.appcenter.volume.presenter.VolumeFileTransferPresenter;
 
 import java.util.ArrayList;
@@ -21,8 +20,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class VolumeFileTransferActivity extends BaseMvpActivity<VolumeFileTransferPresenter>
-        implements VolumeFileTransferContract.View {
+public class VolumeFileTransferActivity extends BaseMvpActivity {
 
     @BindView(R.id.tl_file_transfer)
     TabLayout tabLayout;
@@ -42,17 +40,18 @@ public class VolumeFileTransferActivity extends BaseMvpActivity<VolumeFileTransf
     }
 
     private void init() {
-        setTitleText("文件传输");
+        setTitleText(R.string.volume_file_transfer);
         mPresenter = new VolumeFileTransferPresenter();
         mPresenter.attachView(this);
 
-        tabLayout.addTab(tabLayout.newTab().setText("下载列表"), true);
-        tabLayout.addTab(tabLayout.newTab().setText("上传列表"), true);
-        tabLayout.addTab(tabLayout.newTab().setText("已下载"), true);
-        TabLayoutUtil.setTabLayoutWidth(this, tabLayout);
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.volume_file_transfer_download_list), true);
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.volume_file_transfer_upload_list), true);
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.has_downloaded), true);
         initFragmentList();
+        TabLayoutUtil.setTabLayoutWidth(this, tabLayout);
         tabLayout.getTabAt(0).select();
 
+        viewPager.setAdapter(adapter);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {

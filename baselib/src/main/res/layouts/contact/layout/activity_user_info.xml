@@ -17,6 +17,7 @@
             android:layout_width="44dp"
             android:layout_height="44dp"
             android:layout_centerVertical="true"
+            android:background="@null"
             android:elevation="15dp"
             android:onClick="onClick"
             android:padding="11dp"
@@ -46,8 +47,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/ibt_back_layout"
         android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
         android:layout_marginTop="-3dp"
+        android:layout_marginRight="15dp"
         android:paddingBottom="5dp"
         app:cardCornerRadius="8dp"
         app:cardElevation="1.5dp"
@@ -76,9 +77,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:maxWidth="300dp"
                 android:layout_marginTop="8dp"
                 android:elevation="10dp"
+                android:maxWidth="300dp"
                 android:textColor="@color/black"
                 android:textSize="17sp" />
 
@@ -122,8 +123,8 @@
             android:layout_marginTop="10dp"
             android:background="@color/white"
             android:orientation="vertical"
-            android:paddingBottom="38dp"
-            android:paddingLeft="32dp">
+            android:paddingLeft="32dp"
+            android:paddingBottom="38dp">
 
             <LinearLayout
                 android:id="@+id/ll_user_department"
@@ -202,8 +203,8 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/tv_position"
                         android:ellipsize="end"
-                        android:paddingBottom="7dp"
                         android:paddingRight="24dp"
+                        android:paddingBottom="7dp"
                         android:singleLine="true"
                         android:textColor="#333333"
                         android:textIsSelectable="true"
@@ -351,8 +352,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
                 android:layout_marginLeft="25dp"
-                android:layout_marginRight="25dp"
                 android:layout_marginTop="8dp"
+                android:layout_marginRight="25dp"
                 android:background="@drawable/bg_user_new_chat"
                 android:gravity="center"
                 android:onClick="onClick"
