@@ -78,6 +78,8 @@ import butterknife.OnTouch;
  */
 public class ECMChatInputMenu extends LinearLayout {
 
+    public static final String VOICE_CALL = "voice_call";
+    public static final String VIDEO_CALL = "video_call";
     private static final int GELLARY_RESULT = 2;
     private static final int CAMERA_RESULT = 3;
     private static final int CHOOSE_FILE = 4;
@@ -507,7 +509,7 @@ public class ECMChatInputMenu extends LinearLayout {
             String[] functionNameArray = {getContext().getString(R.string.album),
                     getContext().getString(R.string.take_photo),
                     getContext().getString(R.string.file), getContext().getString(R.string.voice_input), getContext().getString(R.string.mention), getContext().getString(R.string.voice_call), getContext().getString(R.string.send_email)};
-            String[] functionActionArray = {"gallery", "camera", "file", "voice_input", "mention", "voice_call", "send_email"};
+            String[] functionActionArray = {"gallery", "camera", "file", "voice_input", "mention", VOICE_CALL, "send_email"};
             String inputControl = "-1";
             if (!StringUtils.isBlank(inputs)) {
                 try {
@@ -629,12 +631,28 @@ public class ECMChatInputMenu extends LinearLayout {
                                 });
                             }
                             break;
-                        case "voice_call":
+                        case VOICE_CALL:
                             if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
                                 PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getContext(), Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
                                     @Override
                                     public void onPermissionRequestSuccess(List<String> permissions) {
-                                        startVoiceCall();
+                                        startVoiceCall(VOICE_CALL);
+                                    }
+
+                                    @Override
+                                    public void onPermissionRequestFail(List<String> permissions) {
+                                        ToastUtils.show(getContext(), PermissionRequestManagerUtils.getInstance().getPermissionToast(getContext(), permissions));
+                                    }
+
+                                });
+                            }
+                            break;
+                        case VIDEO_CALL:
+                            if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+                                PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getContext(), Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
+                                    @Override
+                                    public void onPermissionRequestSuccess(List<String> permissions) {
+                                        startVoiceCall(VIDEO_CALL);
                                     }
 
                                     @Override
@@ -657,10 +675,14 @@ public class ECMChatInputMenu extends LinearLayout {
         }
     }
 
-    private void startVoiceCall() {
+    private void startVoiceCall(String type) {
         //语音通话
         if (!canMentions) {
-            chatInputMenuListener.onVoiceCommucaiton();
+            if (type.equals(VOICE_CALL)) {
+                chatInputMenuListener.onVoiceCommucaiton();
+            } else if (type.equals(VIDEO_CALL)) {
+                chatInputMenuListener.onVideoCommucaiton();
+            }
         } else {
             Intent intent = new Intent();
             intent.setClass(getContext(), MembersActivity.class);
@@ -1118,8 +1140,9 @@ public class ECMChatInputMenu extends LinearLayout {
 
         void onSendVoiceRecordMsg(String results, float seconds, String filePath);
 
+        void onVoiceCommucaiton();//语音通话
 
-        void onVoiceCommucaiton();
+        void onVideoCommucaiton();//视频通话
 
         void onChatDraftsClear();
     }

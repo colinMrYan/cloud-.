@@ -42,6 +42,7 @@ import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
+import com.inspur.emmcloud.widget.ECMChatInputMenu;
 import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
 import com.inspur.emmcloud.widget.slidebar.CharacterParser;
 import com.inspur.emmcloud.widget.slidebar.SideBar;
@@ -597,6 +598,8 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
         Intent intent = new Intent();
         intent.setClass(MembersActivity.this, ChannelVoiceCommunicationActivity.class);
         intent.putExtra("userList", (Serializable) voiceCommunicationUserInfoBeanList);
+        intent.putExtra(ConversationActivity.CLOUD_PLUS_CHANNEL_ID, channelId);
+        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_VIDEO_CALL_TYPE, ECMChatInputMenu.VOICE_CALL);
         intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.INVITER_LAYOUT_STATE);
         startActivity(intent);
         finish();

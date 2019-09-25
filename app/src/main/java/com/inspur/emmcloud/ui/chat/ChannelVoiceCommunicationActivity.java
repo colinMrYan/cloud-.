@@ -21,6 +21,7 @@ import com.inspur.emmcloud.adapter.VoiceCommunicationMemberAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
+import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.ResolutionUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
@@ -54,6 +55,8 @@ import butterknife.ButterKnife;
  * Created by yufuchang on 2018/8/14.
  */
 public class ChannelVoiceCommunicationActivity extends BaseActivity {
+    public static final String VOICE_VIDEO_CALL_SCHEME = "ecc-cmd";//scheme
+    public static final String VOICE_VIDEO_CALL_TYPE = "voice_video_call_type";
     public static final String VOICE_COMMUNICATION_STATE = "voice_communication_state";//传递页面布局样式的
     public static final String VOICE_TIME = "voice_time";
     public static final String SCREEN_SIZE = "screen_size";
@@ -112,7 +115,9 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     ImageView packUpImg;
     private ChatAPIService apiService;
     private List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList = new ArrayList<>();
-    private String channelId = "";//声网的channelId
+    private String agoraChannelId = "";//声网的channelId
+    private String cloudPlusChannelId = "";//云+的Id
+    private String communicationType = "";//会话类型 VOICE_CALL或者VIDEO_CALL
     private List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationMemberList = new ArrayList<>();
     private VoiceCommunicationJoinChannelInfoBean inviteeInfoBean;
     private int userCount = 1;
@@ -125,6 +130,8 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     @Override
     public void onCreate() {
         ButterKnife.bind(this);
+        cloudPlusChannelId = getIntent().getStringExtra(ConversationActivity.CLOUD_PLUS_CHANNEL_ID);
+        communicationType = getIntent().getStringExtra(VOICE_VIDEO_CALL_TYPE);
         voiceCommunicationUserInfoBeanList = (List<VoiceCommunicationJoinChannelInfoBean>) getIntent().getSerializableExtra("userList");
         voiceCommunicationUtils = VoiceCommunicationUtils.getVoiceCommunicationUtils(this);
         recoverData();
@@ -144,7 +151,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         if (STATE == COME_BACK_FROM_SERVICE) {
             STATE = voiceCommunicationUtils.getState();
             voiceCommunicationUserInfoBeanList = voiceCommunicationUtils.getVoiceCommunicationUserInfoBeanList();
-            channelId = voiceCommunicationUtils.getChannelId();
+            agoraChannelId = voiceCommunicationUtils.getChannelId();
             voiceCommunicationMemberList = voiceCommunicationUtils.getVoiceCommunicationMemberList();
             inviteeInfoBean = voiceCommunicationUtils.getInviteeInfoBean();
             userCount = voiceCommunicationUtils.getUserCount();
@@ -192,9 +199,9 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 createChannel();
                 break;
             case INVITEE_LAYOUT_STATE:
-                String channelId = getIntent().getStringExtra("channelId");
-                voiceCommunicationUtils.setEncryptionSecret(channelId);
-                getChannelInfoByChannelId(channelId);
+                String agoraChannelId = getIntent().getStringExtra("channelId");
+                voiceCommunicationUtils.setEncryptionSecret(agoraChannelId);
+                getChannelInfoByChannelId(agoraChannelId);
                 break;
         }
         if (getIntent().getLongExtra(VOICE_TIME, 0) > 0) {
@@ -213,13 +220,13 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     }
 
     /**
-     * 通过channelId获取Channel信息
+     * 通过agoraChannelId获取Channel信息
      *
-     * @param channelId
+     * @param agoraChannelId
      */
-    private void getChannelInfoByChannelId(String channelId) {
+    private void getChannelInfoByChannelId(String agoraChannelId) {
         if (NetUtils.isNetworkConnected(this)) {
-            apiService.getAgoraChannelInfo(channelId);
+            apiService.getAgoraChannelInfo(agoraChannelId);
         }
     }
 
@@ -326,7 +333,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             public void onUserOffline(int uid, int reason) {
                 userCount = userCount - 1;
                 if (userCount < 2) {
-                    leaveChannelSuccess(channelId);
+                    leaveChannelSuccess(agoraChannelId);
                 }
             }
 
@@ -408,8 +415,42 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                     }
                 });
             }
+
+            @Override
+            public void onFirstRemoteVideoDecoded(final int uid, int width, int height, int elapsed) {
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        mLogView.logI("First remote video decoded, uid: " + (uid & 0xFFFFFFFFL));
+//                        setupRemoteVideo(uid);
+//                    }
+//                });
+            }
         });
     }
+
+//    private void setupRemoteVideo(int uid) {
+//        // Only one remote video view is available for this
+//        // tutorial. Here we check if there exists a surface
+//        // view tagged as this uid.
+//        int count = mRemoteContainer.getChildCount();
+//        View view = null;
+//        for (int i = 0; i < count; i++) {
+//            View v = mRemoteContainer.getChildAt(i);
+//            if (v.getTag() instanceof Integer && ((int) v.getTag()) == uid) {
+//                view = v;
+//            }
+//        }
+//
+//        if (view != null) {
+//            return;
+//        }
+//
+//        mRemoteView = RtcEngine.CreateRendererView(getBaseContext());
+//        mRemoteContainer.addView(mRemoteView);
+//        mRtcEngine.setupRemoteVideo(new VideoCanvas(mRemoteView, VideoCanvas.RENDER_MODE_HIDDEN, uid));
+//        mRemoteView.setTag(uid);
+//    }
 
     /**
      * 刷新成员adapter
@@ -441,11 +482,11 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     /**
      * 用户离开
      *
-     * @param channelId
+     * @param agoraChannelId
      */
-    private void leaveChannelSuccess(String channelId) {
+    private void leaveChannelSuccess(String agoraChannelId) {
         if (NetUtils.isNetworkConnected(this)) {
-            apiService.leaveAgoraChannel(channelId);
+            apiService.leaveAgoraChannel(agoraChannelId);
         }
     }
 
@@ -475,14 +516,14 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 communicationTimeChronometer.setBase(SystemClock.elapsedRealtime());
                 communicationTimeChronometer.start();
                 voiceCommunicationUtils.joinChannel(inviteeInfoBean.getToken(),
-                        channelId, inviteeInfoBean.getUserId(), inviteeInfoBean.getAgoraUid());
+                        agoraChannelId, inviteeInfoBean.getUserId(), inviteeInfoBean.getAgoraUid());
                 break;
             case R.id.img_hung_up:
                 //先通知S，后退出声网
                 if (answerPhoneImg.getVisibility() == View.VISIBLE) {
-                    apiService.refuseAgoraChannel(channelId);
+                    apiService.refuseAgoraChannel(agoraChannelId);
                 } else {
-                    apiService.leaveAgoraChannel(channelId);
+                    apiService.leaveAgoraChannel(agoraChannelId);
                 }
                 break;
             case R.id.img_voice_communication_pack_up:
@@ -533,7 +574,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     private void saveCommunicationData() {
         voiceCommunicationUtils.setState(STATE);
         voiceCommunicationUtils.setVoiceCommunicationUserInfoBeanList(voiceCommunicationUserInfoBeanList);
-        voiceCommunicationUtils.setChannelId(channelId);
+        voiceCommunicationUtils.setChannelId(agoraChannelId);
         voiceCommunicationUtils.setVoiceCommunicationMemberList(voiceCommunicationMemberList);
         voiceCommunicationUtils.setInviteeInfoBean(inviteeInfoBean);
         voiceCommunicationUtils.setUserCount(userCount);
@@ -564,7 +605,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         //先通知S，后退出声网
-        apiService.leaveAgoraChannel(channelId);
+        apiService.leaveAgoraChannel(agoraChannelId);
     }
 
     @Override
@@ -602,14 +643,26 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         return null;
     }
 
+    /**
+     * 通知websocket，已经创建了声网频道，让websocket通知频道里的人员
+     */
+    private void remindWebSocketAgoraChannelHasCreated() {
+        JSONArray jsonArray = new JSONArray();
+        for (int i = 0; i < voiceCommunicationMemberList.size(); i++) {
+            jsonArray.put(voiceCommunicationMemberList.get(i).getUserId());
+        }
+        if (jsonArray.length() > 1) {
+            WSAPIService.getInstance().sendStartVoiceAndVideoCallMessage(cloudPlusChannelId, agoraChannelId, VOICE_VIDEO_CALL_SCHEME, "VOICE", jsonArray);
+        }
+    }
 
     class WebService extends APIInterfaceInstance {
         @Override
         public void returnGetVoiceCommunicationResultSuccess(GetVoiceCommunicationResult getVoiceCommunicationResult) {
-            channelId = getVoiceCommunicationResult.getChannelId();
+            agoraChannelId = getVoiceCommunicationResult.getChannelId();
             VoiceCommunicationJoinChannelInfoBean voiceCommunicationJoinChannelInfoBean = getMyCommunicationInfoBean(getVoiceCommunicationResult);
             if (voiceCommunicationJoinChannelInfoBean != null) {
-                voiceCommunicationUtils.setEncryptionSecret(channelId);
+                voiceCommunicationUtils.setEncryptionSecret(agoraChannelId);
                 voiceCommunicationUtils.joinChannel(voiceCommunicationJoinChannelInfoBean.getToken(),
                         getVoiceCommunicationResult.getChannelId(), voiceCommunicationJoinChannelInfoBean.getUserId(), voiceCommunicationJoinChannelInfoBean.getAgoraUid());
             }
@@ -617,6 +670,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 voiceCommunicationMemberList.addAll(getVoiceCommunicationResult.getVoiceCommunicationJoinChannelInfoBeanList());
                 refreshCommunicationMemberAdapter();
             }
+            remindWebSocketAgoraChannelHasCreated();
         }
 
         @Override
@@ -626,7 +680,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
 
         @Override
         public void returnGetVoiceCommunicationChannelInfoSuccess(GetVoiceCommunicationResult getVoiceCommunicationResult) {
-            channelId = getVoiceCommunicationResult.getChannelId();
+            agoraChannelId = getVoiceCommunicationResult.getChannelId();
             setInviterInfo(getVoiceCommunicationResult);
             if (getIntent().getIntExtra(VOICE_COMMUNICATION_STATE, EXCEPTION_STATE) != COME_BACK_FROM_SERVICE) {
                 voiceCommunicationMemberList.addAll(getVoiceCommunicationResult.getVoiceCommunicationJoinChannelInfoBeanList());

@@ -52,6 +52,7 @@ import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetConversationListResult;
 import com.inspur.emmcloud.bean.chat.GetOfflineMessageListResult;
 import com.inspur.emmcloud.bean.chat.GetRecentMessageListResult;
+import com.inspur.emmcloud.bean.chat.GetVoiceAndVideoResult;
 import com.inspur.emmcloud.bean.chat.MatheSet;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.UIConversation;
@@ -870,6 +871,22 @@ public class CommunicationFragment extends BaseFragment {
             intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.INVITEE_LAYOUT_STATE);
             startActivity(intent);
         }
+    }
+
+    //接收到websocket发过来的消息，拨打音视频电话，被呼叫触发
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveVoiceOrVideoCall(GetVoiceAndVideoResult getVoiceAndVideoResult) {
+        startVoiceOrVideoCall(getVoiceAndVideoResult.getContextParamsRoom(), getVoiceAndVideoResult.getContextParamsType());
+    }
+
+    private void startVoiceOrVideoCall(String contextParamsRoom, String contextParamsType) {
+        //消息拦截逻辑，以后应当拦截命令消息，此时注释掉，以后解开注意判空
+        Intent intent = new Intent();
+        intent.setClass(getActivity(), ChannelVoiceCommunicationActivity.class);
+        intent.putExtra("channelId", contextParamsRoom);
+        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_VIDEO_CALL_TYPE, contextParamsType);
+        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.INVITEE_LAYOUT_STATE);
+        startActivity(intent);
     }
 
     //socket断开重连时（如断网联网）会触发此方法
