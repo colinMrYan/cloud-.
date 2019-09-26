@@ -74,6 +74,8 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     private static final int REQUEST_OPEN_GALLERY = 3;
     private static final int REQUEST_OPEN_FILE_BROWSER = 4;
     private static final int REQUEST_SHOW_FILE_FILTER = 5;
+    @BindView(R.id.operation_layout)
+    RelativeLayout operationLayout;
     @BindView(R.id.operation_sort_text)
     TextView operationSortText;
     @BindView(R.id.batch_operation_header_layout)
@@ -212,6 +214,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     @Override
     protected void initDataBlankLayoutStatus() {
         super.initDataBlankLayoutStatus();
+        operationLayout.setVisibility((volumeFileList.size() == 0) ? View.GONE : View.VISIBLE);
         if (adapter.getMultiselect()) {
             setMutiSelect(true);
         }
@@ -234,6 +237,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                 showUploadOperationPopWindow(new ArrayList<VolumeFile>());
                 break;
             case R.id.btn_upload_file:
+                openFileBrowser();
                 break;
             case R.id.iv_down_up_list:
                 break;
@@ -269,11 +273,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                 showCreateFolderDlg();
                 break;
             case R.id.ll_volume_upload_file_pop:
-                Bundle bundle = new Bundle();
-                bundle.putInt("extra_maximum", 10);
-                ARouter.getInstance().
-                        build(Constant.AROUTER_CLASS_WEB_FILEMANAGER).with(bundle).
-                        navigation(VolumeFileActivity.this, REQUEST_OPEN_FILE_BROWSER);
+                openFileBrowser();
                 break;
             case R.id.ll_volume_take_phone_pop:
                 cameraPicFileName = System.currentTimeMillis() + ".jpg";
@@ -432,6 +432,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     protected void setCurrentDirectoryLayoutByPrivilege() {
         boolean isCurrentDirectoryWriteable = VolumeFilePrivilegeUtils.getVolumeFileWriteable(getApplicationContext(), getVolumeFileListResult);
         headerOperationLayout.setVisibility(isCurrentDirectoryWriteable ? View.VISIBLE : View.GONE);
+        uploadFileBtn.setVisibility(volumeFileList.size() == 0 && isCurrentDirectoryWriteable ? View.VISIBLE : View.GONE);
     }
 
     /**
@@ -591,6 +592,17 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     }
 
     /**
+     * 打开文件浏览
+     */
+    private void openFileBrowser() {
+        Bundle bundle = new Bundle();
+        bundle.putInt("extra_maximum", 10);
+        ARouter.getInstance().
+                build(Constant.AROUTER_CLASS_WEB_FILEMANAGER).with(bundle).
+                navigation(VolumeFileActivity.this, REQUEST_OPEN_FILE_BROWSER);
+    }
+
+    /**
      * 上传文件
      *
      * @param filePath
@@ -606,15 +618,25 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
             return;
 
         }
-        VolumeFile mockVolumeFile = getMockVolumeFileData(file);
-        VolumeFileUploadManager.getInstance().uploadFile(mockVolumeFile, filePath, currentDirAbsolutePath);
+        //VolumeFile mockVolumeFile = getMockVolumeFileData(file);
+        //VolumeFileUploadManager.getInstance().uploadFile(mockVolumeFile, filePath, currentDirAbsolutePath);
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+            VolumeFile mockVolumeFile = getMockVolumeFileData(file);
+            VolumeFileUploadManager.getInstance().uploadFile(mockVolumeFile, filePath, currentDirAbsolutePath);
+            volumeFileList.add(0, mockVolumeFile);
+            initDataBlankLayoutStatus();
+            adapter.setVolumeFileList(volumeFileList);
+            adapter.notifyItemInserted(0);
+            //解决RecyclerView当数据添加到第一位置，显示位置不正确的系统bug
+            fileRecycleView.scrollToPosition(0);
+        }
     }
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveSimpleEventMessage(SimpleEventMessage simpleEventMessage) {
         if (simpleEventMessage.getAction().equals(Constant.EVENTBUS_TAG_VOLUME_UPLOAD)) {
-            getVolumeFileList(false);
+            // getVolumeFileList(false);
             List<VolumeFile> volumeFileUploadList = VolumeFileUploadManager.getInstance().getCurrentFolderUploadVolumeFile(volume.getId(), currentDirAbsolutePath);
             tipViewLayout.setVisibility(volumeFileUploadList.size() > 0 ? View.VISIBLE : View.GONE);
         }
