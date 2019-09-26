@@ -622,6 +622,8 @@
     <string name="no_file">暫無文件</string>
     <string name="group">組</string>
     <string name="create">新建</string>
+    <string name="volume_please_install_qq">請先安裝QQ</string>
+    <string name="volume_please_install_wechat">請先安裝微信</string>
 
     <!-- 我的頁面部分 -->
     <string name="moments">动态</string>
