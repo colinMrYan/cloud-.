@@ -54,6 +54,7 @@ import com.inspur.emmcloud.bean.appcenter.volume.VolumeGroupContainMe;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.util.privates.VolumeFilePrivilegeUtils;
+import com.inspur.emmcloud.util.privates.VolumeFileUploadManager;
 import com.inspur.emmcloud.util.privates.cache.VolumeGroupContainMeCacheUtils;
 import com.inspur.emmcloud.widget.tipsview.TipsView;
 
@@ -738,10 +739,10 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
             } else {
                 volumeFileList = getVolumeFileListResult.getVolumeFileFilterList(fileFilterType);
             }
-//            if (isShowFileUploading) {
-//                List<VolumeFile> volumeFileUploadingList = VolumeFileUploadManager.getInstance().getCurrentFolderUploadVolumeFile(volume.getId(), currentDirAbsolutePath);
-//                volumeFileList.addAll(0, volumeFileUploadingList);
-//            }
+            if (isShowFileUploading) {
+                List<VolumeFile> volumeFileUploadingList = VolumeFileUploadManager.getInstance().getCurrentFolderUploadVolumeFile(volume.getId(), currentDirAbsolutePath);
+                volumeFileList.addAll(0, volumeFileUploadingList);
+            }
             sortVolumeFileList();
             adapter.setVolumeFileList(volumeFileList);
             adapter.notifyDataSetChanged();

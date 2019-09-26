@@ -617,15 +617,25 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
             return;
 
         }
-        VolumeFile mockVolumeFile = getMockVolumeFileData(file);
-        VolumeFileUploadManager.getInstance().uploadFile(mockVolumeFile, filePath, currentDirAbsolutePath);
+        //VolumeFile mockVolumeFile = getMockVolumeFileData(file);
+        //VolumeFileUploadManager.getInstance().uploadFile(mockVolumeFile, filePath, currentDirAbsolutePath);
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+            VolumeFile mockVolumeFile = getMockVolumeFileData(file);
+            VolumeFileUploadManager.getInstance().uploadFile(mockVolumeFile, filePath, currentDirAbsolutePath);
+            volumeFileList.add(0, mockVolumeFile);
+            initDataBlankLayoutStatus();
+            adapter.setVolumeFileList(volumeFileList);
+            adapter.notifyItemInserted(0);
+            //解决RecyclerView当数据添加到第一位置，显示位置不正确的系统bug
+            fileRecycleView.scrollToPosition(0);
+        }
     }
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveSimpleEventMessage(SimpleEventMessage simpleEventMessage) {
         if (simpleEventMessage.getAction().equals(Constant.EVENTBUS_TAG_VOLUME_UPLOAD)) {
-            getVolumeFileList(false);
+            // getVolumeFileList(false);
             List<VolumeFile> volumeFileUploadList = VolumeFileUploadManager.getInstance().getCurrentFolderUploadVolumeFile(volume.getId(), currentDirAbsolutePath);
             tipViewLayout.setVisibility(volumeFileUploadList.size() > 0 ? View.VISIBLE : View.GONE);
         }
