@@ -432,6 +432,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     protected void setCurrentDirectoryLayoutByPrivilege() {
         boolean isCurrentDirectoryWriteable = VolumeFilePrivilegeUtils.getVolumeFileWriteable(getApplicationContext(), getVolumeFileListResult);
         headerOperationLayout.setVisibility(isCurrentDirectoryWriteable ? View.VISIBLE : View.GONE);
+        uploadFileBtn.setVisibility(volumeFileList.size() == 0 && isCurrentDirectoryWriteable ? View.VISIBLE : View.GONE);
     }
 
     /**
