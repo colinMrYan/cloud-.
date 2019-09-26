@@ -44,6 +44,7 @@ public class CardPackageAdapter extends RecyclerView.Adapter<CardPackageAdapter.
     @Override
     public void onBindViewHolder(final CardPackageHold holder, final int position) {
         holder.companyNameText.setText(cardPackageBeanList.get(position).getCompany());
+        holder.switchView.setOnCheckedChangeListener(null);
         holder.switchView.setChecked(cardPackageBeanList.get(position).getState() == 1);
         holder.switchView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
