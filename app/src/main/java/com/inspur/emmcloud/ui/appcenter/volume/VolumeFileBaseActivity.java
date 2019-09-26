@@ -54,6 +54,7 @@ import com.inspur.emmcloud.bean.appcenter.volume.VolumeGroupContainMe;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.util.privates.VolumeFilePrivilegeUtils;
+import com.inspur.emmcloud.util.privates.VolumeFileUploadManager;
 import com.inspur.emmcloud.util.privates.cache.VolumeGroupContainMeCacheUtils;
 import com.inspur.emmcloud.widget.tipsview.TipsView;
 
@@ -313,7 +314,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
             copyFile(adapter.getSelectVolumeFileList());
         } else if (action.equals(deleteAction)) {
             if (adapter.getSelectVolumeFileList().size() > 0) {
-                deleteFile(adapter.getSelectVolumeFileList());
+                showFileDelWranibgDlg(adapter.getSelectVolumeFileList());
             }
         } else if (action.equals(moreAction)) {
             showFileOperationDlg(adapter.getSelectVolumeFileList().get(0));
@@ -327,23 +328,22 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     /**
      * 弹出文件删除提示框
      *
-     * @param volumeFile
+     * @param deleteVolumeFile
      */
-    protected void showFileDelWranibgDlg(final VolumeFile volumeFile) {
+    protected void showFileDelWranibgDlg(final List<VolumeFile> deleteVolumeFile) {
         new CustomDialog.MessageDialogBuilder(VolumeFileBaseActivity.this)
                 .setMessage(R.string.clouddriver_sure_delete_file)
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        setBottomOperationItemShow(adapter.getSelectVolumeFileList());
                         dialog.dismiss();
                     }
                 })
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        List<VolumeFile> deleteVolumeFileList = new ArrayList<>();
-                        deleteVolumeFileList.add(volumeFile);
-                        deleteFile(deleteVolumeFileList);
+                        deleteFile(deleteVolumeFile);
                         dialog.dismiss();
                     }
                 })
@@ -489,6 +489,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
      */
     protected void initDataBlankLayoutStatus() {
         dataBlankLayout.setVisibility((volumeFileList.size() == 0) ? View.VISIBLE : View.GONE);
+        uploadFileBtn.setVisibility(headerOperationLayout.getVisibility() == View.VISIBLE ? View.VISIBLE : View.GONE);
     }
 
     /**
@@ -737,10 +738,10 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
             } else {
                 volumeFileList = getVolumeFileListResult.getVolumeFileFilterList(fileFilterType);
             }
-//            if (isShowFileUploading) {
-//                List<VolumeFile> volumeFileUploadingList = VolumeFileUploadManager.getInstance().getCurrentFolderUploadVolumeFile(volume.getId(), currentDirAbsolutePath);
-//                volumeFileList.addAll(0, volumeFileUploadingList);
-//            }
+            if (isShowFileUploading) {
+                List<VolumeFile> volumeFileUploadingList = VolumeFileUploadManager.getInstance().getCurrentFolderUploadVolumeFile(volume.getId(), currentDirAbsolutePath);
+                volumeFileList.addAll(0, volumeFileUploadingList);
+            }
             sortVolumeFileList();
             adapter.setVolumeFileList(volumeFileList);
             adapter.notifyDataSetChanged();
