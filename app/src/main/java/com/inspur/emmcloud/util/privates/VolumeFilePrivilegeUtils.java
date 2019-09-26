@@ -22,7 +22,6 @@ import java.util.Map;
 public class VolumeFilePrivilegeUtils {
 
     public static boolean canGetVolumeFilePrivilege(Context context, Volume volume) {
-        LogUtils.LbcDebug("volume Pri");
         return (!volume.getType().equals("public") || VolumeGroupContainMeCacheUtils.getVolumeGroupContainMe(context, volume.getId()) != null);
     }
 
