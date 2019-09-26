@@ -626,6 +626,8 @@
     <string name="file_rename">File Rename</string>
     <string name="folder_rename">Folder Rename</string>
     <string name="refresh">Refresh</string>
+    <string name="volume_please_install_qq">Please install QQ</string>
+    <string name="volume_please_install_wechat">Please install Wechat</string>
 
 
     <!-- 我的页面部分 -->
