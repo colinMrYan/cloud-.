@@ -204,6 +204,7 @@ public class CalendarSettingActivity extends BaseActivity {
             final ScheduleCalendar scheduleCalendar = scheduleCalendarList.get(position);
             convertView = View.inflate(CalendarSettingActivity.this, R.layout.schedule_calendar_setting_mycalendars, null);
             SwitchCompat switchCompat = convertView.findViewById(R.id.switch_view_calendar_state);
+            switchCompat.setOnCheckedChangeListener(null);
             switchCompat.setChecked(scheduleCalendar.isOpen());
             switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
