@@ -1,285 +1,474 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/content_bg"
     android:fitsSystemWindows="true">
 
-    <!--<Button-->
-    <!--android:id="@+id/btn_add_member"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_below="@id/header_layout"-->
-    <!--android:onClick="onClick"-->
-    <!--android:text="打开选择人员界面" />-->
-    <ImageView
-        android:id="@+id/img_voice_communication_pack_up"
-        android:layout_width="30dp"
-        android:layout_height="56dp"
-        android:layout_marginLeft="20dp"
-        android:onClick="onClick"
-        android:paddingBottom="16dp"
-        android:paddingTop="16dp"
-        android:src="@drawable/icon_voice_commucation_pack_up" />
-
-    <LinearLayout
-        android:id="@+id/ll_voice_communication_invite"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/rl_header"
-        android:layout_centerHorizontal="true"
-        android:orientation="vertical">
-
-        <com.inspur.emmcloud.baselib.widget.CircleTextImageView
-            android:id="@+id/img_user_head"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_marginTop="36dp" />
-
-        <TextView
-            android:id="@+id/tv_user_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="21dp"
-            android:gravity="center_horizontal"
-            android:textColor="#333333"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/tv_invite_voice_communication"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:gravity="center_horizontal"
-            android:text="@string/voice_communication_invite_you"
-            android:textColor="#333333"
-            android:textSize="13sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/ll_voice_communication_invite_members"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/rl_header"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="60dp"
-        android:orientation="vertical">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerview_voice_communication_first"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:overScrollMode="never" />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerview_voice_communication_second"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:overScrollMode="never" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/ll_voice_communication_memebers"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/tv_voice_communication_state"
-        android:layout_below="@id/ll_voice_communication_invite"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="60dp"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/voice_communication_members"
-            android:textColor="#333333"
-            android:textSize="13dp" />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerview_voice_communication_memebers_first"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:overScrollMode="never" />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerview_voice_communication_memebers_second"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="6dp"
-            android:overScrollMode="never" />
-    </LinearLayout>
-
-
-    <TextView
-        android:id="@+id/tv_voice_communication_state"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/tv_voice_communication_time"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dp"
-        android:text=""
-        android:textColor="#333333"
-        android:textSize="16sp" />
-
-    <Chronometer
-        android:id="@+id/tv_voice_communication_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/ll_voice_communication_function_group"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="38dp"
-        android:textColor="#333333"
-        android:textSize="16sp" />
-
-    <LinearLayout
-        android:id="@+id/ll_voice_communication_function_group"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/rl_voice_communication_operate"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="35dp"
-        android:orientation="horizontal">
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <ImageView
-                android:id="@+id/img_mute"
-                android:layout_width="38dp"
-                android:layout_height="38dp"
-                android:layout_gravity="center_horizontal"
-                android:onClick="onClick"
-                android:padding="2dp"
-                android:src="@drawable/icon_mute_unselcected" />
-
-            <TextView
-                android:id="@+id/tv_mute"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="13dp"
-                android:text="@string/voice_communication_mute"
-                android:textColor="#333333"
-                android:textSize="13sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <ImageView
-                android:id="@+id/img_an_excuse"
-                android:layout_width="38dp"
-                android:layout_height="38dp"
-                android:layout_gravity="center_horizontal"
-                android:onClick="onClick"
-                android:padding="2dp"
-                android:src="@drawable/icon_excuse_unselected" />
-
-            <TextView
-                android:id="@+id/tv_an_excuse"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="13dp"
-                android:text="@string/voice_communication_excuse"
-                android:textColor="#333333"
-                android:textSize="13sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:visibility="gone"
-            android:orientation="vertical">
-
-            <ImageView
-                android:id="@+id/img_hands_free"
-                android:layout_width="38dp"
-                android:layout_height="38dp"
-                android:layout_gravity="center_horizontal"
-                android:onClick="onClick"
-                android:padding="2dp"
-                android:src="@drawable/icon_hands_free_unselected" />
-
-            <TextView
-                android:id="@+id/tv_hands_free"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="13dp"
-                android:text="@string/voice_communication_hands_free"
-                android:textColor="#333333"
-                android:textSize="13sp" />
-        </LinearLayout>
-
-
-
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <ImageView
-                android:id="@+id/img_tran_video"
-                android:layout_width="38dp"
-                android:layout_height="38dp"
-                android:layout_gravity="center_horizontal"
-                android:onClick="onClick"
-                android:padding="2dp"
-                android:src="@drawable/icon_trans_video" />
-
-            <TextView
-                android:id="@+id/tv_tran_video"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="13dp"
-                android:text="@string/voice_communication_tran_video"
-                android:textColor="#333333"
-                android:textSize="13sp" />
-        </LinearLayout>
-    </LinearLayout>
-
     <RelativeLayout
-        android:id="@+id/rl_voice_communication_operate"
+        android:id="@+id/rl_voice_call_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="30dp"
-        android:gravity="center_horizontal">
+        android:layout_height="match_parent"
+        android:visibility="gone">
 
-        <com.inspur.emmcloud.baselib.widget.CircleTextImageView
-            android:id="@+id/img_hung_up"
-            android:layout_width="76dp"
-            android:layout_height="76dp"
-            android:onClick="onClick"
-            android:src="@drawable/icon_hung_up" />
 
-        <com.inspur.emmcloud.baselib.widget.CircleTextImageView
-            android:id="@+id/img_answer_the_phone"
-            android:layout_width="76dp"
-            android:layout_height="76dp"
-            android:layout_marginLeft="100dp"
-            android:layout_toRightOf="@id/img_hung_up"
+        <!--<Button-->
+        <!--android:id="@+id/btn_add_member"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@id/header_layout"-->
+        <!--android:onClick="onClick"-->
+        <!--android:text="打开选择人员界面" />-->
+        <ImageView
+            android:id="@+id/img_voice_communication_pack_up"
+            android:layout_width="30dp"
+            android:layout_height="56dp"
+            android:layout_marginLeft="20dp"
             android:onClick="onClick"
-            android:src="@drawable/icon_answer_the_phone"
-            android:visibility="gone" />
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:src="@drawable/icon_voice_commucation_pack_up" />
+
+        <LinearLayout
+            android:id="@+id/ll_voice_communication_invite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/rl_header"
+            android:layout_centerHorizontal="true"
+            android:orientation="vertical">
+
+            <com.inspur.emmcloud.baselib.widget.CircleTextImageView
+                android:id="@+id/img_user_head"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_marginTop="36dp" />
+
+            <TextView
+                android:id="@+id/tv_user_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="21dp"
+                android:gravity="center_horizontal"
+                android:textColor="#333333"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/tv_invite_voice_communication"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:gravity="center_horizontal"
+                android:text="@string/voice_communication_invite_you"
+                android:textColor="#333333"
+                android:textSize="13sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_voice_communication_invite_members"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/rl_header"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="60dp"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerview_voice_communication_first"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:overScrollMode="never" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerview_voice_communication_second"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:overScrollMode="never" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_voice_communication_memebers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/tv_voice_communication_state"
+            android:layout_below="@id/ll_voice_communication_invite"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="60dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/voice_communication_members"
+                android:textColor="#333333"
+                android:textSize="13dp" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerview_voice_communication_memebers_first"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:overScrollMode="never" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerview_voice_communication_memebers_second"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="6dp"
+                android:overScrollMode="never" />
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/tv_voice_communication_state"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/tv_voice_communication_time"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp"
+            android:text=""
+            android:textColor="#333333"
+            android:textSize="16sp" />
+
+        <Chronometer
+            android:id="@+id/tv_voice_communication_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/ll_voice_communication_function_group"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="38dp"
+            android:textColor="#333333"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:id="@+id/ll_voice_communication_function_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/rl_voice_communication_operate"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="35dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/img_mute"
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:layout_gravity="center_horizontal"
+                    android:onClick="onClick"
+                    android:padding="2dp"
+                    android:src="@drawable/icon_mute_unselcected" />
+
+                <TextView
+                    android:id="@+id/tv_mute"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="13dp"
+                    android:text="@string/voice_communication_mute"
+                    android:textColor="#333333"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/img_an_excuse"
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:layout_gravity="center_horizontal"
+                    android:onClick="onClick"
+                    android:padding="2dp"
+                    android:src="@drawable/icon_excuse_unselected" />
+
+                <TextView
+                    android:id="@+id/tv_an_excuse"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="13dp"
+                    android:text="@string/voice_communication_excuse"
+                    android:textColor="#333333"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/img_hands_free"
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:layout_gravity="center_horizontal"
+                    android:onClick="onClick"
+                    android:padding="2dp"
+                    android:src="@drawable/icon_hands_free_unselected" />
+
+                <TextView
+                    android:id="@+id/tv_hands_free"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="13dp"
+                    android:text="@string/voice_communication_hands_free"
+                    android:textColor="#333333"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/img_tran_video"
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:layout_gravity="center_horizontal"
+                    android:onClick="onClick"
+                    android:padding="2dp"
+                    android:src="@drawable/icon_trans_video" />
+
+                <TextView
+                    android:id="@+id/tv_tran_video"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="13dp"
+                    android:text="@string/voice_communication_tran_video"
+                    android:textColor="#333333"
+                    android:textSize="13sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/rl_voice_communication_operate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="30dp"
+            android:gravity="center_horizontal">
+
+            <com.inspur.emmcloud.baselib.widget.CircleTextImageView
+                android:id="@+id/img_hung_up"
+                android:layout_width="76dp"
+                android:layout_height="76dp"
+                android:onClick="onClick"
+                android:src="@drawable/icon_hung_up" />
+
+            <com.inspur.emmcloud.baselib.widget.CircleTextImageView
+                android:id="@+id/img_answer_the_phone"
+                android:layout_width="76dp"
+                android:layout_height="76dp"
+                android:layout_marginLeft="100dp"
+                android:layout_toRightOf="@id/img_hung_up"
+                android:onClick="onClick"
+                android:src="@drawable/icon_answer_the_phone"
+                android:visibility="gone" />
+        </RelativeLayout>
     </RelativeLayout>
 
+    <!--以下为视频通话视图-->
+    <RelativeLayout
+        android:id="@+id/rl_video_call_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible">
+
+
+        <RelativeLayout
+            android:id="@+id/rl_person_info"
+            android:layout_width="160dp"
+            android:layout_height="66dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="35dp"
+            android:layout_marginRight="10dp"
+            android:visibility="gone">
+
+            <com.inspur.emmcloud.baselib.widget.CircleTextImageView
+                android:id="@+id/img_video_head"
+                android:layout_width="66dp"
+                android:layout_height="66dp"
+                android:src="@drawable/icon_person_default" />
+
+            <TextView
+                android:id="@+id/tv_video_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/img_video_head"
+                android:text="名字"
+                android:textColor="#ffffff"
+                android:textSize="28sp" />
+
+            <TextView
+                android:id="@+id/tv_video_state"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_video_name"
+                android:layout_marginTop="10dp"
+                android:layout_toRightOf="@id/img_video_head"
+                android:text="状态"
+                android:textColor="#ffffff"
+                android:textSize="16sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_remote_video_view_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </RelativeLayout>
+
+        <FrameLayout
+            android:id="@+id/fl_local_video_view_container"
+            android:layout_width="94dp"
+            android:layout_height="167dp"
+            android:layout_alignParentRight="true" />
+
+        <ImageView
+            android:id="@+id/img_video_communication_pack_up"
+            android:layout_width="30dp"
+            android:layout_height="56dp"
+            android:layout_marginLeft="20dp"
+            android:onClick="onClick"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:src="@drawable/icon_voice_commucation_pack_up" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/ll_turn_to_voice"
+                android:layout_width="0dp"
+                android:layout_height="93dp"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:onClick="onClick"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/img_turn_to_voice"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:src="@drawable/ic_video_call_turn_to_voice_white" />
+
+                <TextView
+                    android:layout_width="70dp"
+                    android:layout_height="17dp"
+                    android:layout_marginTop="12dp"
+                    android:gravity="center_horizontal"
+                    android:text="切换到语音通话"
+                    android:textColor="#ffffff"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_video_hung_up"
+                android:layout_width="0dp"
+                android:layout_height="93dp"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:onClick="onClick"
+                android:orientation="vertical">
+
+                <com.inspur.emmcloud.baselib.widget.CircleTextImageView
+                    android:id="@+id/img_video_hung_up"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:src="@drawable/icon_hung_up" />
+
+                <TextView
+                    android:layout_width="70dp"
+                    android:layout_height="17dp"
+                    android:layout_marginTop="12dp"
+                    android:gravity="center_horizontal"
+                    android:text="@string/cancel"
+                    android:textColor="#ffffff"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_video_answer_phone"
+                android:layout_width="0dp"
+                android:layout_height="93dp"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:onClick="onClick"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <com.inspur.emmcloud.baselib.widget.CircleTextImageView
+                    android:id="@+id/img_video_answer_phone"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:src="@drawable/icon_answer_the_phone" />
+
+                <TextView
+                    android:layout_width="70dp"
+                    android:layout_height="17dp"
+                    android:layout_marginTop="12dp"
+                    android:gravity="center_horizontal"
+                    android:text="接听"
+                    android:textColor="#ffffff"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_video_switch_camera"
+                android:layout_width="0dp"
+                android:layout_height="93dp"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:onClick="onClick"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/img_video_turn_camera"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:src="@drawable/ic_voice_call_switch_camera_white" />
+
+                <TextView
+                    android:layout_width="70dp"
+                    android:layout_height="17dp"
+                    android:layout_marginTop="12dp"
+                    android:gravity="center_horizontal"
+                    android:text="切换摄像头"
+                    android:textColor="#ffffff"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
 
 </RelativeLayout>

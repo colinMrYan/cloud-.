@@ -47,5 +47,6 @@ public interface OnVoiceCommunicationCallbacks {
     //该回调定期触发，向 APP 报告频道内用户当前的上行、下行网络质量。用户 ID。表示该回调报告的是持有该 ID 的用户的网络质量。当 uid 为 0 时，返回的是本地用户的网络质量。当前版本仅报告本地用户的网络质量。 tx为上行音量，rx为下行音量
     void onNetworkQuality(int uid, int txQuality, int rxQuality);
 
-    void onFirstRemoteVideoDecoded(int uid, int width, int height, int elapsed);
+    //远端用户视频状态已变化回调
+    void onRemoteVideoStateChanged(int uid, int state, int reason, int elapsed);
 }

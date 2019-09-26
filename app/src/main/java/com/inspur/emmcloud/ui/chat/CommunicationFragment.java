@@ -867,7 +867,7 @@ public class CommunicationFragment extends BaseFragment {
 //                    MsgReadCreationDateCacheUtils.saveMessageReadCreationDate(getActivity(),receivedMsg.getCid(),receivedMsg.getTime());
             Intent intent = new Intent();
             intent.setClass(getActivity(), ChannelVoiceCommunicationActivity.class);
-            intent.putExtra("channelId", customProtocol.getParamMap().get("id"));
+            intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_VIDEO_CALL_AGORA_ID, customProtocol.getParamMap().get("id"));
             intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.INVITEE_LAYOUT_STATE);
             startActivity(intent);
         }
@@ -883,7 +883,7 @@ public class CommunicationFragment extends BaseFragment {
         //消息拦截逻辑，以后应当拦截命令消息，此时注释掉，以后解开注意判空
         Intent intent = new Intent();
         intent.setClass(getActivity(), ChannelVoiceCommunicationActivity.class);
-        intent.putExtra("channelId", contextParamsRoom);
+        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_VIDEO_CALL_AGORA_ID, contextParamsRoom);
         intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_VIDEO_CALL_TYPE, contextParamsType);
         intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.INVITEE_LAYOUT_STATE);
         startActivity(intent);

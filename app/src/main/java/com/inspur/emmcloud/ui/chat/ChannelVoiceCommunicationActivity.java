@@ -9,10 +9,14 @@ import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MotionEvent;
+import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Chronometer;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
@@ -23,6 +27,7 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ResolutionUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
@@ -40,6 +45,7 @@ import com.inspur.emmcloud.bean.system.GetBoolenResult;
 import com.inspur.emmcloud.util.privates.MediaPlayerManagerUtils;
 import com.inspur.emmcloud.util.privates.SuspensionWindowManagerUtils;
 import com.inspur.emmcloud.util.privates.VoiceCommunicationUtils;
+import com.inspur.emmcloud.widget.ECMChatInputMenu;
 import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
 
 import org.json.JSONArray;
@@ -50,13 +56,19 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.agora.rtc.RtcEngine;
+import io.agora.rtc.video.VideoCanvas;
 
 /**
  * Created by yufuchang on 2018/8/14.
  */
 public class ChannelVoiceCommunicationActivity extends BaseActivity {
+    public static final String VOICE_VIDEO_CALL_AGORA_ID = "channelId";
     public static final String VOICE_VIDEO_CALL_SCHEME = "ecc-cmd";//scheme
-    public static final String VOICE_VIDEO_CALL_TYPE = "voice_video_call_type";
+    public static final String VOICE_VIDEO_CALL_TYPE = "voice_video_call_type";//通话类型
+    public static final String VOICE_VIDEO_ROOM_ID = "voice_video_room_id";
+    public static final String VOICE_VIDEO_CMD = "voice_video_cmd";
+    public static final String VOICE_VIDEO_UID = "voice_video_UID";
     public static final String VOICE_COMMUNICATION_STATE = "voice_communication_state";//传递页面布局样式的
     public static final String VOICE_TIME = "voice_time";
     public static final String SCREEN_SIZE = "screen_size";
@@ -113,6 +125,28 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     ImageView hungUpImg;
     @BindView(R.id.img_voice_communication_pack_up)
     ImageView packUpImg;
+    @BindView(R.id.rl_remote_video_view_container)
+    RelativeLayout remoteVideoContainer;
+    @BindView(R.id.fl_local_video_view_container)
+    FrameLayout localVideoContainer;
+    @BindView(R.id.rl_video_call_layout)
+    RelativeLayout videoCallLayout;
+    @BindView(R.id.rl_voice_call_layout)
+    RelativeLayout voiceCallLayout;
+    @BindView(R.id.rl_root)
+    RelativeLayout rootLayout;
+    @BindView(R.id.ll_turn_to_voice)
+    LinearLayout turnToVoiceLayout;
+    @BindView(R.id.ll_video_hung_up)
+    LinearLayout videoHungUp;
+    @BindView(R.id.ll_video_answer_phone)
+    LinearLayout answerVideoPhoneLayout;
+    @BindView(R.id.ll_video_switch_camera)
+    LinearLayout switchCameraLayout;
+    @BindView(R.id.img_video_communication_pack_up)
+    ImageView videoPackUpImg;
+    @BindView(R.id.rl_person_info)
+    RelativeLayout personInfoLayout;
     private ChatAPIService apiService;
     private List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList = new ArrayList<>();
     private String agoraChannelId = "";//声网的channelId
@@ -125,6 +159,11 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     private VoiceCommunicationMemberAdapter voiceCommunicationMemberAdapterSecond;
     private MediaPlayerManagerUtils mediaPlayerManagerUtils;
     private VoiceCommunicationUtils voiceCommunicationUtils;
+    private SurfaceView agoraLocalView;//视频会话小视图
+    private SurfaceView agoraRemoteView;//视频会话大视图
+
+    private int initx;//本地视频初始x坐标
+    private int inity;//本地视频初始y坐标
 
 
     @Override
@@ -133,7 +172,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         cloudPlusChannelId = getIntent().getStringExtra(ConversationActivity.CLOUD_PLUS_CHANNEL_ID);
         communicationType = getIntent().getStringExtra(VOICE_VIDEO_CALL_TYPE);
         voiceCommunicationUserInfoBeanList = (List<VoiceCommunicationJoinChannelInfoBean>) getIntent().getSerializableExtra("userList");
-        voiceCommunicationUtils = VoiceCommunicationUtils.getVoiceCommunicationUtils(this);
+        voiceCommunicationUtils = VoiceCommunicationUtils.getVoiceCommunicationUtils(this, communicationType);
         recoverData();
         initViews();
     }
@@ -152,6 +191,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             STATE = voiceCommunicationUtils.getState();
             voiceCommunicationUserInfoBeanList = voiceCommunicationUtils.getVoiceCommunicationUserInfoBeanList();
             agoraChannelId = voiceCommunicationUtils.getChannelId();
+            communicationType = voiceCommunicationUtils.getCommunicationType();
             voiceCommunicationMemberList = voiceCommunicationUtils.getVoiceCommunicationMemberList();
             inviteeInfoBean = voiceCommunicationUtils.getInviteeInfoBean();
             userCount = voiceCommunicationUtils.getUserCount();
@@ -162,6 +202,13 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
      * 初始化Views
      */
     private void initViews() {
+        if (communicationType.equals(ECMChatInputMenu.VIDEO_CALL)) {
+            videoCallLayout.setVisibility(View.VISIBLE);
+            voiceCallLayout.setVisibility(View.GONE);
+        } else if (communicationType.equals(ECMChatInputMenu.VOICE_CALL)) {
+            voiceCallLayout.setVisibility(View.VISIBLE);
+            videoCallLayout.setVisibility(View.GONE);
+        }
         apiService = new ChatAPIService(this);
         apiService.setAPIInterface(new WebService());
         voiceCommunicationMemberAdapterFirst = new VoiceCommunicationMemberAdapter(this, voiceCommunicationUserInfoBeanList, 0);
@@ -199,7 +246,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 createChannel();
                 break;
             case INVITEE_LAYOUT_STATE:
-                String agoraChannelId = getIntent().getStringExtra("channelId");
+                String agoraChannelId = getIntent().getStringExtra(VOICE_VIDEO_CALL_AGORA_ID);
                 voiceCommunicationUtils.setEncryptionSecret(agoraChannelId);
                 getChannelInfoByChannelId(agoraChannelId);
                 break;
@@ -207,6 +254,70 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         if (getIntent().getLongExtra(VOICE_TIME, 0) > 0) {
             communicationTimeChronometer.setBase(SystemClock.elapsedRealtime() - getIntent().getLongExtra(VOICE_TIME, 0) * 1000);
             communicationTimeChronometer.start();
+        }
+//        dragLocalVideoView();
+    }
+
+    /**
+     * 本地视频窗口拖动功能，目前还有问题
+     */
+    private void dragLocalVideoView() {
+        if (communicationType.equals(ECMChatInputMenu.VIDEO_CALL)) {
+            localVideoContainer.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            initx = (int) event.getRawX();
+                            inity = (int) event.getRawY();
+                            break;
+                        case MotionEvent.ACTION_MOVE:
+                            int dx = (int) event.getRawX() - initx;
+                            int dy = (int) event.getRawY() - inity;
+
+                            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) v.getLayoutParams();
+
+                            int l = layoutParams.leftMargin + dx;
+                            int t = layoutParams.topMargin + dy;
+                            int b = rootLayout.getHeight() - t - v.getHeight();
+                            int r = rootLayout.getWidth() - l - v.getWidth();
+                            if (l < 0) {//处理布局被移动到上下左右四个边缘时的情况，决定着按钮不会被移动到屏幕外边去
+                                l = 0;
+                                r = rootLayout.getWidth() - v.getWidth();
+                            }
+                            if (t < 0) {
+                                t = 0;
+                                b = rootLayout.getHeight() - v.getHeight();
+                            }
+
+                            if (r < 0) {
+                                r = 0;
+                                l = rootLayout.getWidth() - v.getWidth();
+                            }
+                            if (b < 0) {
+                                b = 0;
+                                t = rootLayout.getHeight() - v.getHeight();
+                            }
+                            layoutParams.leftMargin = l;
+                            layoutParams.topMargin = t;
+                            layoutParams.bottomMargin = b;
+                            layoutParams.rightMargin = r;
+                            layoutParams.width = DensityUtil.dip2px(ChannelVoiceCommunicationActivity.this, 94);
+                            layoutParams.height = DensityUtil.dip2px(ChannelVoiceCommunicationActivity.this, 167);
+                            LogUtils.YfcDebug("设置参数");
+                            v.setLayoutParams(layoutParams);
+                            initx = (int) event.getRawX();
+                            inity = (int) event.getRawY();
+                            v.postInvalidate();
+                            break;
+                        case MotionEvent.ACTION_CANCEL:
+                            break;
+                        default:
+                            break;
+                    }
+                    return true;
+                }
+            });
         }
     }
 
@@ -261,24 +372,12 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         }
         STATE = state;
         changeFunctionState(state);
-        if (state == COMMUNICATION_LAYOUT_STATE || state == INVITEE_LAYOUT_STATE || state == INVITER_LAYOUT_STATE) {
+        if (communicationType.equals(ECMChatInputMenu.VOICE_CALL) && (state == COMMUNICATION_LAYOUT_STATE
+                || state == INVITEE_LAYOUT_STATE || state == INVITER_LAYOUT_STATE)) {
             if (voiceCommunicationMemberList == null) {
                 return;
             }
             refreshCommunicationMemberAdapter();
-//            if (voiceCommunicationMemberList.size() <= 5) {
-//                firstRecyclerview.setAdapter(voiceCommunicationMemberAdapterFirst);
-//                voiceCommunicationMemberAdapterFirst.setMemberDataAndRefresh(voiceCommunicationMemberList, 1);
-//            } else if (voiceCommunicationMemberList.size() <= 9) {
-//                List<VoiceCommunicationJoinChannelInfoBean> list1 = voiceCommunicationMemberList.subList(0, 5);
-//                List<VoiceCommunicationJoinChannelInfoBean> list2 = voiceCommunicationMemberList.subList(5, voiceCommunicationMemberList.size());
-//                firstRecyclerview.setAdapter(voiceCommunicationMemberAdapterFirst);
-//                firstRecyclerview.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this, 12)));
-//                secondRecyclerview.setAdapter(voiceCommunicationMemberAdapterSecond);
-//                secondRecyclerview.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this, 12)));
-//                voiceCommunicationMemberAdapterFirst.setMemberDataAndRefresh(list1, 1);
-//                voiceCommunicationMemberAdapterSecond.setMemberDataAndRefresh(list2, 2);
-//            }
         }
     }
 
@@ -288,39 +387,49 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
      * @param state
      */
     private void changeFunctionState(int state) {
-        inviteeLinearLayout.setVisibility(state == INVITEE_LAYOUT_STATE ? View.VISIBLE : View.GONE);
-        inviteMemebersGroupLinearLayout.setVisibility((state == INVITER_LAYOUT_STATE || state == COMMUNICATION_LAYOUT_STATE) ? View.VISIBLE : View.GONE);
-        communicationMembersLinearLayout.setVisibility(state == INVITEE_LAYOUT_STATE ? View.VISIBLE : View.GONE);
-        functionLinearLayout.setVisibility((state == INVITER_LAYOUT_STATE || state == COMMUNICATION_LAYOUT_STATE) ? View.VISIBLE : View.GONE);
-        communicationStateTv.setVisibility((state == INVITER_LAYOUT_STATE || state == COMMUNICATION_LAYOUT_STATE) ? View.VISIBLE : View.GONE);
-        communicationTimeChronometer.setVisibility(state == COMMUNICATION_LAYOUT_STATE ? View.VISIBLE : View.GONE);
+        if (communicationType.equals(ECMChatInputMenu.VOICE_CALL)) {
+            inviteeLinearLayout.setVisibility(state == INVITEE_LAYOUT_STATE ? View.VISIBLE : View.GONE);
+            inviteMemebersGroupLinearLayout.setVisibility((state == INVITER_LAYOUT_STATE || state == COMMUNICATION_LAYOUT_STATE) ? View.VISIBLE : View.GONE);
+            communicationMembersLinearLayout.setVisibility(state == INVITEE_LAYOUT_STATE ? View.VISIBLE : View.GONE);
+            functionLinearLayout.setVisibility((state == INVITER_LAYOUT_STATE || state == COMMUNICATION_LAYOUT_STATE) ? View.VISIBLE : View.GONE);
+            communicationStateTv.setVisibility((state == INVITER_LAYOUT_STATE || state == COMMUNICATION_LAYOUT_STATE) ? View.VISIBLE : View.GONE);
+            communicationTimeChronometer.setVisibility(state == COMMUNICATION_LAYOUT_STATE ? View.VISIBLE : View.GONE);
 
-        //启用悬浮窗打开这里
-        packUpImg.setVisibility(state == COMMUNICATION_LAYOUT_STATE ? View.VISIBLE : View.GONE);
-        communicationStateTv.setText(state == INVITER_LAYOUT_STATE ? getString(R.string.voice_communication_dialog) :
-                (state == INVITEE_LAYOUT_STATE ? getString(R.string.voice_communication_waitting_answer) :
-                        (state == COMMUNICATION_LAYOUT_STATE ? getString(R.string.voice_communicaiton_watting_talking) : "")));
-        answerPhoneImg.setVisibility((state == INVITEE_LAYOUT_STATE) ? View.VISIBLE : View.GONE);
-        int colorNormal = ContextCompat.getColor(this, R.color.voice_communication_function_default);
-        int colorUnavailiable = ContextCompat.getColor(this, R.color.voice_communication_function_unavailiable_text);
-        excuseImg.setImageResource(state == COMMUNICATION_LAYOUT_STATE ? R.drawable.icon_excuse_unselected : R.drawable.icon_excuse_unavailable);
-        excuseTv.setTextColor(state == COMMUNICATION_LAYOUT_STATE ? colorNormal : colorUnavailiable);
-        excuseImg.setClickable(state == COMMUNICATION_LAYOUT_STATE);
+            //启用悬浮窗打开这里
+            packUpImg.setVisibility(state == COMMUNICATION_LAYOUT_STATE ? View.VISIBLE : View.GONE);
+            communicationStateTv.setText(state == INVITER_LAYOUT_STATE ? getString(R.string.voice_communication_dialog) :
+                    (state == INVITEE_LAYOUT_STATE ? getString(R.string.voice_communication_waitting_answer) :
+                            (state == COMMUNICATION_LAYOUT_STATE ? getString(R.string.voice_communicaiton_watting_talking) : "")));
+            answerPhoneImg.setVisibility((state == INVITEE_LAYOUT_STATE) ? View.VISIBLE : View.GONE);
+            int colorNormal = ContextCompat.getColor(this, R.color.voice_communication_function_default);
+            int colorUnavailiable = ContextCompat.getColor(this, R.color.voice_communication_function_unavailiable_text);
+            excuseImg.setImageResource(state == COMMUNICATION_LAYOUT_STATE ? R.drawable.icon_excuse_unselected : R.drawable.icon_excuse_unavailable);
+            excuseTv.setTextColor(state == COMMUNICATION_LAYOUT_STATE ? colorNormal : colorUnavailiable);
+            excuseImg.setClickable(state == COMMUNICATION_LAYOUT_STATE);
 
-        handsFreeImg.setImageResource(state == COMMUNICATION_LAYOUT_STATE ? R.drawable.icon_hands_free_unselected : R.drawable.icon_hands_free_unavailable);
-        handsFreeTv.setTextColor(state == COMMUNICATION_LAYOUT_STATE ? colorNormal : colorUnavailiable);
-        handsFreeImg.setClickable(state == COMMUNICATION_LAYOUT_STATE);
+            handsFreeImg.setImageResource(state == COMMUNICATION_LAYOUT_STATE ? R.drawable.icon_hands_free_unselected : R.drawable.icon_hands_free_unavailable);
+            handsFreeTv.setTextColor(state == COMMUNICATION_LAYOUT_STATE ? colorNormal : colorUnavailiable);
+            handsFreeImg.setClickable(state == COMMUNICATION_LAYOUT_STATE);
 
-        muteImg.setImageResource(state == COMMUNICATION_LAYOUT_STATE ? R.drawable.icon_mute_unselcected : R.drawable.icon_mute_unavaiable);
-        muteTv.setTextColor(state == COMMUNICATION_LAYOUT_STATE ? colorNormal : colorUnavailiable);
-        muteImg.setClickable(state == COMMUNICATION_LAYOUT_STATE);
+            muteImg.setImageResource(state == COMMUNICATION_LAYOUT_STATE ? R.drawable.icon_mute_unselcected : R.drawable.icon_mute_unavaiable);
+            muteTv.setTextColor(state == COMMUNICATION_LAYOUT_STATE ? colorNormal : colorUnavailiable);
+            muteImg.setClickable(state == COMMUNICATION_LAYOUT_STATE);
 
-        //如果是通话中则“通话中”文字显示一下就不再显示
-        communicationStateTv.setText(state == COMMUNICATION_LAYOUT_STATE ? "" : communicationStateTv.getText());
-        if (state == INVITER_LAYOUT_STATE || state == INVITEE_LAYOUT_STATE) {
-            mediaPlayerManagerUtils.play(R.raw.voice_communication_watting_answer, null);
-        } else {
-            mediaPlayerManagerUtils.stop();
+            //如果是通话中则“通话中”文字显示一下就不再显示
+            communicationStateTv.setText(state == COMMUNICATION_LAYOUT_STATE ? "" : communicationStateTv.getText());
+            if (state == INVITER_LAYOUT_STATE || state == INVITEE_LAYOUT_STATE) {
+                mediaPlayerManagerUtils.play(R.raw.voice_communication_watting_answer, null);
+            } else {
+                mediaPlayerManagerUtils.stop();
+            }
+        } else if (communicationType.equals(ECMChatInputMenu.VIDEO_CALL)) {
+            turnToVoiceLayout.setVisibility(state == COMMUNICATION_LAYOUT_STATE ? View.VISIBLE : View.GONE);
+            videoHungUp.setVisibility((state == COMMUNICATION_LAYOUT_STATE || state == INVITER_LAYOUT_STATE || state == INVITEE_LAYOUT_STATE) ? View.VISIBLE : View.GONE);
+            answerVideoPhoneLayout.setVisibility(state == INVITEE_LAYOUT_STATE ? View.VISIBLE : View.GONE);
+            switchCameraLayout.setVisibility(state == COMMUNICATION_LAYOUT_STATE ? View.VISIBLE : View.GONE);
+            videoPackUpImg.setVisibility(state == COMMUNICATION_LAYOUT_STATE ? View.VISIBLE : View.GONE);
+            personInfoLayout.setVisibility((state == INVITER_LAYOUT_STATE || state == INVITEE_LAYOUT_STATE) ? View.VISIBLE : View.GONE);
+//            localVideoContainer.setVisibility(state == COMMUNICATION_LAYOUT_STATE?View.VISIBLE:View.GONE);
         }
     }
 
@@ -416,41 +525,65 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 });
             }
 
+
             @Override
-            public void onFirstRemoteVideoDecoded(final int uid, int width, int height, int elapsed) {
-//                runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        mLogView.logI("First remote video decoded, uid: " + (uid & 0xFFFFFFFFL));
-//                        setupRemoteVideo(uid);
-//                    }
-//                });
+            public void onRemoteVideoStateChanged(final int uid, int state, int reason, int elapsed) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        setupRemoteVideo(uid);
+                    }
+                });
             }
         });
     }
 
-//    private void setupRemoteVideo(int uid) {
-//        // Only one remote video view is available for this
-//        // tutorial. Here we check if there exists a surface
-//        // view tagged as this uid.
-//        int count = mRemoteContainer.getChildCount();
-//        View view = null;
-//        for (int i = 0; i < count; i++) {
-//            View v = mRemoteContainer.getChildAt(i);
-//            if (v.getTag() instanceof Integer && ((int) v.getTag()) == uid) {
-//                view = v;
-//            }
+    /**
+     * 设置本地视频显示
+     */
+    private void setupLocalVideo() {
+        if (!communicationType.equals(ECMChatInputMenu.VIDEO_CALL)) {
+            return;
+        }
+        // This is used to set a local preview.
+        // The steps setting local and remote view are very similar.
+        // But note that if the local user do not have a uid or do
+        // not care what the uid is, he can set his uid as ZERO.
+        // Our server will assign one and return the uid via the event
+        // handler callback function (onJoinChannelSuccess) after
+        // joining the channel successfully.
+        LogUtils.YfcDebug("设置本地视频");
+        agoraLocalView = RtcEngine.CreateRendererView(getBaseContext());
+        agoraLocalView.setZOrderMediaOverlay(true);
+//        if(STATE == INVITER_LAYOUT_STATE){
+//            remoteVideoContainer.addView(agoraLocalView);
+//        } else {
+        localVideoContainer.addView(agoraLocalView);
 //        }
-//
-//        if (view != null) {
-//            return;
-//        }
-//
-//        mRemoteView = RtcEngine.CreateRendererView(getBaseContext());
-//        mRemoteContainer.addView(mRemoteView);
-//        mRtcEngine.setupRemoteVideo(new VideoCanvas(mRemoteView, VideoCanvas.RENDER_MODE_HIDDEN, uid));
-//        mRemoteView.setTag(uid);
-//    }
+        voiceCommunicationUtils.getRtcEngine().setupLocalVideo(new VideoCanvas(agoraLocalView, VideoCanvas.RENDER_MODE_HIDDEN, 0));
+    }
+
+    private void setupRemoteVideo(int uid) {
+        // Only one remote video view is available for this
+        // tutorial. Here we check if there exists a surface
+        // view tagged as this uid.
+        int count = remoteVideoContainer.getChildCount();
+        View view = null;
+        for (int i = 0; i < count; i++) {
+            View v = remoteVideoContainer.getChildAt(i);
+            if (v.getTag() instanceof Integer && ((int) v.getTag()) == uid) {
+                view = v;
+            }
+        }
+        if (view != null) {
+            return;
+        }
+        agoraRemoteView = RtcEngine.CreateRendererView(getBaseContext());
+        remoteVideoContainer.addView(agoraRemoteView);
+        LogUtils.YfcDebug("设置远程视图");
+        voiceCommunicationUtils.getRtcEngine().setupRemoteVideo(new VideoCanvas(agoraRemoteView, VideoCanvas.RENDER_MODE_HIDDEN, uid));
+        agoraRemoteView.setTag(uid);
+    }
 
     /**
      * 刷新成员adapter
@@ -518,6 +651,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 voiceCommunicationUtils.joinChannel(inviteeInfoBean.getToken(),
                         agoraChannelId, inviteeInfoBean.getUserId(), inviteeInfoBean.getAgoraUid());
                 break;
+            case R.id.ll_video_hung_up:
             case R.id.img_hung_up:
                 //先通知S，后退出声网
                 if (answerPhoneImg.getVisibility() == View.VISIBLE) {
@@ -547,7 +681,20 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                                 .show();
                     }
                 }
-//                createCommunicationService();
+                break;
+            case R.id.ll_video_switch_camera:
+                LogUtils.YfcDebug("转换摄像头");
+                voiceCommunicationUtils.switchCamera();
+                break;
+            case R.id.ll_video_answer_phone:
+                LogUtils.YfcDebug("接听电话");
+                setupLocalVideo();
+                initCommunicationViewsAndMusicByState(COMMUNICATION_LAYOUT_STATE);
+                voiceCommunicationUtils.joinChannel(inviteeInfoBean.getToken(),
+                        agoraChannelId, inviteeInfoBean.getUserId(), inviteeInfoBean.getAgoraUid());
+                break;
+            case R.id.ll_turn_to_voice:
+                voiceCommunicationUtils.disableVideo();
                 break;
             default:
                 break;
@@ -575,20 +722,11 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         voiceCommunicationUtils.setState(STATE);
         voiceCommunicationUtils.setVoiceCommunicationUserInfoBeanList(voiceCommunicationUserInfoBeanList);
         voiceCommunicationUtils.setChannelId(agoraChannelId);
+        voiceCommunicationUtils.setCommunicationType(communicationType);
         voiceCommunicationUtils.setVoiceCommunicationMemberList(voiceCommunicationMemberList);
         voiceCommunicationUtils.setInviteeInfoBean(inviteeInfoBean);
         voiceCommunicationUtils.setUserCount(userCount);
     }
-
-//    /**
-//     * 创建通话小窗口
-//     */
-//    public void createCommunicationService(){
-//        Intent intent = new Intent(this,VoiceHoldService.class);
-//        intent.putExtra(VOICE_TIME, Long.parseLong(TimeUtils.getChronometerSeconds(communicationTimeChronometer.getText().toString())));
-//        intent.putExtra(SCREEN_SIZE, ResolutionUtils.getWidth(this));
-//        startService(intent);
-//    }
 
     /**
      * 修改Image选中状态和textView属性
@@ -663,6 +801,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             VoiceCommunicationJoinChannelInfoBean voiceCommunicationJoinChannelInfoBean = getMyCommunicationInfoBean(getVoiceCommunicationResult);
             if (voiceCommunicationJoinChannelInfoBean != null) {
                 voiceCommunicationUtils.setEncryptionSecret(agoraChannelId);
+                setupLocalVideo();
                 voiceCommunicationUtils.joinChannel(voiceCommunicationJoinChannelInfoBean.getToken(),
                         getVoiceCommunicationResult.getChannelId(), voiceCommunicationJoinChannelInfoBean.getUserId(), voiceCommunicationJoinChannelInfoBean.getAgoraUid());
             }

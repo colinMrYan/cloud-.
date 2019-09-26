@@ -8,12 +8,14 @@ import com.inspur.emmcloud.bean.chat.VoiceCommunicationAudioVolumeInfo;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationRtcStats;
 import com.inspur.emmcloud.interf.OnVoiceCommunicationCallbacks;
+import com.inspur.emmcloud.widget.ECMChatInputMenu;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import io.agora.rtc.IRtcEngineEventHandler;
 import io.agora.rtc.RtcEngine;
+import io.agora.rtc.video.VideoEncoderConfiguration;
 
 /**
  * 详细回调接口解释见OnVoiceCommunicationCallbacks
@@ -28,6 +30,7 @@ public class VoiceCommunicationUtils {
     private OnVoiceCommunicationCallbacks onVoiceCommunicationCallbacks;
     private List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList = new ArrayList<>();
     private String channelId = "";//声网的channelId
+    private String communicationType = "";//会话类型
     private List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationMemberList = new ArrayList<>();
     private VoiceCommunicationJoinChannelInfoBean inviteeInfoBean;
     private int userCount = 1;
@@ -127,7 +130,9 @@ public class VoiceCommunicationUtils {
         }
 
         @Override
-        public void onFirstRemoteVideoDecoded(int uid, int width, int height, int elapsed) {
+        public void onRemoteVideoStateChanged(int uid, int state, int reason, int elapsed) {
+            super.onRemoteVideoStateChanged(uid, state, reason, elapsed);
+            onVoiceCommunicationCallbacks.onRemoteVideoStateChanged(uid, state, reason, elapsed);
         }
     };
 
@@ -140,7 +145,7 @@ public class VoiceCommunicationUtils {
      *
      * @return
      */
-    public static VoiceCommunicationUtils getVoiceCommunicationUtils(Context context) {
+    public static VoiceCommunicationUtils getVoiceCommunicationUtils(Context context, String communicationType) {
         if (voiceCommunicationUtils == null) {
             synchronized (VoiceCommunicationUtils.class) {
                 if (voiceCommunicationUtils == null) {
@@ -148,23 +153,52 @@ public class VoiceCommunicationUtils {
                 }
             }
         }
-        voiceCommunicationUtils.initializeAgoraEngine();
+        voiceCommunicationUtils.initializeAgoraEngine(communicationType);
         return voiceCommunicationUtils;
     }
 
     /**
      * 初始化引擎
      */
-    public void initializeAgoraEngine() {
+    private void initializeAgoraEngine(String communicationType) {
         try {
             mRtcEngine = RtcEngine.create(context, context.getString(R.string.agora_app_id), mRtcEventHandler);
         } catch (Exception e) {
             LogUtils.YfcDebug("初始化声网异常：" + e.getMessage());
         }
         if (mRtcEngine != null) {
+            if (communicationType.equals(ECMChatInputMenu.VIDEO_CALL)) {
+                LogUtils.YfcDebug("设置视频通话");
+                setupVideoConfig();
+            }
             mRtcEngine.enableAudioVolumeIndication(1000, 3, false);
         }
 //        mRtcEngine.registerLocalUserAccount(context.getString(R.string.agora_app_id),"12345");
+    }
+
+    /**
+     * 设置video
+     */
+    private void setupVideoConfig() {
+        // In simple use cases, we only need to enable video capturing
+        // and rendering once at the initialization step.
+        // Note: audio recording and playing is enabled by default.
+        mRtcEngine.enableVideo();
+
+        // Please go to this page for detailed explanation
+        // https://docs.agora.io/en/Video/API%20Reference/java/classio_1_1agora_1_1rtc_1_1_rtc_engine.html#af5f4de754e2c1f493096641c5c5c1d8f
+        mRtcEngine.setVideoEncoderConfiguration(new VideoEncoderConfiguration(
+                VideoEncoderConfiguration.VD_640x360,
+                VideoEncoderConfiguration.FRAME_RATE.FRAME_RATE_FPS_15,
+                VideoEncoderConfiguration.STANDARD_BITRATE,
+                VideoEncoderConfiguration.ORIENTATION_MODE.ORIENTATION_MODE_FIXED_PORTRAIT));
+    }
+
+    /**
+     * 关闭视频模块
+     */
+    public void disableVideo() {
+        mRtcEngine.disableVideo();
     }
 
     /**
@@ -192,12 +226,23 @@ public class VoiceCommunicationUtils {
 
     /**
      * 设置加密密码
-     * 因为加密之后与IOS通信有问题  先去掉加密
+     * 暂时去掉加密
      *
      * @param secret
      */
     public void setEncryptionSecret(String secret) {
+//        int a = mRtcEngine.setEncryptionSecret("123456");
+//        int b = mRtcEngine.setEncryptionMode("aes-128-ecb");
+//        LogUtils.YfcDebug("setEncryptionSecret:"+a);
+//        LogUtils.YfcDebug("setEncryptionMode:"+b);
         mRtcEngine.setEncryptionSecret(secret);
+    }
+
+    /**
+     * 转换摄像头
+     */
+    public void switchCamera() {
+        mRtcEngine.switchCamera();
     }
 
     /**
@@ -243,6 +288,15 @@ public class VoiceCommunicationUtils {
         if (mRtcEngine != null) {
             mRtcEngine.muteAllRemoteAudioStreams(isMuteAllUser);
         }
+    }
+
+    /**
+     * 获取RtcEngine实例
+     *
+     * @return
+     */
+    public RtcEngine getRtcEngine() {
+        return mRtcEngine;
     }
 
     /**
@@ -323,5 +377,13 @@ public class VoiceCommunicationUtils {
 
     public void setState(int state) {
         this.state = state;
+    }
+
+    public String getCommunicationType() {
+        return communicationType;
+    }
+
+    public void setCommunicationType(String communicationType) {
+        this.communicationType = communicationType;
     }
 }

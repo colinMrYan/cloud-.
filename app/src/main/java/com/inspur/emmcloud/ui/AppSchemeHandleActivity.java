@@ -13,6 +13,7 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
@@ -47,6 +48,7 @@ import com.inspur.emmcloud.util.privates.CustomProtocol;
 import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.ProfileUtils;
 import com.inspur.emmcloud.util.privates.WebAppUtils;
+import com.inspur.emmcloud.widget.ECMChatInputMenu;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -266,11 +268,16 @@ public class AppSchemeHandleActivity extends BaseActivity {
      * @param content
      */
     private void startVoiceCall(String content) {
+        LogUtils.YfcDebug("content:" + content);
         CustomProtocol customProtocol = new CustomProtocol(content);
         if (customProtocol != null) {
             Intent intent = new Intent();
             intent.setClass(AppSchemeHandleActivity.this, ChannelVoiceCommunicationActivity.class);
-            intent.putExtra("channelId", customProtocol.getParamMap().get("id"));
+            intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_VIDEO_CALL_AGORA_ID, customProtocol.getParamMap().get("id"));
+            intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_VIDEO_ROOM_ID, customProtocol.getParamMap().get("channelid"));
+            intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_VIDEO_UID, customProtocol.getParamMap().get("uid"));
+            intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.INVITEE_LAYOUT_STATE);
+            intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_VIDEO_CALL_TYPE, ECMChatInputMenu.VIDEO_CALL);
             intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.INVITEE_LAYOUT_STATE);
             startActivity(intent);
         }
