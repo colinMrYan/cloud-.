@@ -38,6 +38,7 @@ import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.MaxHeightListView;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.MainTabMenu;
+import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppWebConfig;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
@@ -51,12 +52,17 @@ import com.inspur.emmcloud.web.plugin.PluginMgr;
 import com.inspur.emmcloud.web.plugin.barcode.scan.BarCodeService;
 import com.inspur.emmcloud.web.plugin.camera.CameraService;
 import com.inspur.emmcloud.web.plugin.filetransfer.FileTransferService;
+import com.inspur.emmcloud.web.plugin.invoice.InvoiceService;
 import com.inspur.emmcloud.web.plugin.photo.PhotoService;
 import com.inspur.emmcloud.web.plugin.staff.SelectStaffService;
 import com.inspur.emmcloud.web.plugin.video.VideoService;
 import com.inspur.emmcloud.web.plugin.window.DropItemTitle;
 import com.inspur.emmcloud.web.plugin.window.OnKeyDownListener;
 import com.inspur.emmcloud.web.webview.ImpWebView;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -117,6 +123,7 @@ public class ImpFragment extends ImpBaseFragment {
         super.onCreate(savedInstanceState);
         rootView = LayoutInflater.from(getActivity()).inflate(Res.getLayoutID("web_fragment_imp"), null);
         initViews();
+        EventBus.getDefault().register(this);
         version = getArguments().getString(Constant.WEB_FRAGMENT_VERSION, "");
     }
 
@@ -164,6 +171,7 @@ public class ImpFragment extends ImpBaseFragment {
     protected void onNewIntent(Intent intent) {
         webView.onActivityNewIntent(intent);
     }
+
     /**
      * 初始化Views
      */
@@ -690,6 +698,7 @@ public class ImpFragment extends ImpBaseFragment {
         impCallBackInterface = null;
         //清除掉图片缓存
 //        DataCleanManager.cleanCustomCache(MyAppConfig.LOCAL_IMG_CREATE_PATH);
+        EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
 
@@ -739,6 +748,7 @@ public class ImpFragment extends ImpBaseFragment {
             }
         } else {
             PluginMgr pluginMgr = webView.getPluginMgr();
+
             if (pluginMgr != null) {
                 String serviceName = "";
                 switch (requestCode) {
@@ -865,6 +875,18 @@ public class ImpFragment extends ImpBaseFragment {
             titleText.setText(dropItemTitle.getText());
             selectImg.setVisibility(dropItemTitle.isSelected() ? View.VISIBLE : View.INVISIBLE);
             return convertView;
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onWechatEvent(SimpleEventMessage message) {
+        if (message.getAction().equals(Constant.EVENTBUS_TAG_WECHAT_RESULT)) {
+            String result = (String) message.getMessageObj();
+
+            String serviceName = InvoiceService.class.getCanonicalName();
+            PluginMgr pluginMgr = webView.getPluginMgr();
+            InvoiceService invoiceService = (InvoiceService) pluginMgr.getPlugin(serviceName);
+            invoiceService.handleWechatResult(result);
         }
     }
 }

@@ -137,6 +137,7 @@ public class Constant {
     public static final String EVENTBUS_TAG_MESSAGE_ADD_SHOW_CONTENT = "tag_message_add_show_content";
     public static final String EVENTBUS_TAG_VOLUME_UPLOAD = "tag_volume_upload";
     public static final String EVENTBUS_TAG_VOLUME_ = "tag_volume_upload";
+    public static final String EVENTBUS_TAG_WECHAT_RESULT = "tag_wechat_result";
     public static final String SERVICE_VERSION_CHAT_V0 = "v0";
     public static final String SERVICE_VERSION_CHAT_V1 = "v1";
 
