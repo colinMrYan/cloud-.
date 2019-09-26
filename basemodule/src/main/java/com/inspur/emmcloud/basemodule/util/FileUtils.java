@@ -1094,6 +1094,7 @@ public class FileUtils {
             case "application/x-rar-compressed":
             case "application/x-compressed":
             case "application/x-compress":
+            case "application/rar":
             case "application/x-7z-compressed":
                 resId = R.drawable.baselib_file_type_zip;
                 break;
