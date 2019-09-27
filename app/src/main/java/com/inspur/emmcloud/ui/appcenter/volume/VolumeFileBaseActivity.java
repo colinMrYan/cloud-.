@@ -3,7 +3,6 @@ package com.inspur.emmcloud.ui.appcenter.volume;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -26,6 +25,7 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.baselib.util.FomatUtils;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
@@ -53,15 +53,23 @@ import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeGroupContainMe;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
+import com.inspur.emmcloud.util.privates.ShareFile2OutAppUtils;
 import com.inspur.emmcloud.util.privates.VolumeFilePrivilegeUtils;
 import com.inspur.emmcloud.util.privates.VolumeFileUploadManager;
 import com.inspur.emmcloud.util.privates.cache.VolumeGroupContainMeCacheUtils;
 import com.inspur.emmcloud.widget.tipsview.TipsView;
+import com.umeng.commonsdk.UMConfigure;
+import com.umeng.socialize.PlatformConfig;
+import com.umeng.socialize.ShareAction;
+import com.umeng.socialize.UMShareListener;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.shareboard.SnsPlatform;
+import com.umeng.socialize.utils.ShareBoardlistener;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.io.File;
 import java.io.Serializable;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -118,6 +126,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     @BindView(R.id.tv_volume_tip)
     TextView volumeTipTextView;
     String deleteAction, downloadAction, renameAction, moveToAction, copyAction, permissionAction, shareTo, moreAction; //弹框点击状态
+    CustomShareListener mShareListener;
     private List<VolumeFile> moveVolumeFileList = new ArrayList<>();//移动的云盘文件列表
     private MyAppAPIService apiServiceBase;
     private Dialog fileRenameDlg, createFolderDlg;
@@ -128,6 +137,10 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         ButterKnife.bind(this);
         initView();
         getVolumeFileList(true);
+        UMConfigure.init(this, "59aa1f8f76661373290010d3"
+                , "umeng", UMConfigure.DEVICE_TYPE_PHONE, "");
+        PlatformConfig.setWeixin("wx4eb8727ea9c26495", "56a0426315f1d0985a1cc1e75e96130d");
+        PlatformConfig.setQQZone("1105561850", "1kaw4r1c37SUupFL");
     }
 
     @Override
@@ -222,6 +235,9 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
             String fileSavePath = FileDownloadManager.getInstance().getDownloadFilePath(DownloadFileCategory.CATEGORY_VOLUME_FILE, volumeFile.getId(), volumeFile.getName());
             if (!StringUtils.isBlank(fileSavePath)) {
                 shareFile(fileSavePath);
+                adapter.clearSelectedVolumeFileList();
+                adapter.notifyDataSetChanged();
+                setBottomOperationItemShow(new ArrayList<VolumeFile>());
             } else {
                 ToastUtils.show(getString(R.string.clouddriver_volume_frist_download));
             }
@@ -247,14 +263,23 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         startActivityForResult(intent, SHARE_IMAGE_OR_FILES);
     }
 
-    public void shareFile(String filePath) {
-        Intent shareIntent = new Intent(Intent.ACTION_SEND);
-        shareIntent.putExtra(Intent.EXTRA_STREAM,
-                Uri.fromFile(new File(filePath)));
-        shareIntent.setType("*/*");//此处可发送多种文件
-        startActivity(Intent.createChooser(shareIntent, getString(R.string.baselib_share_to)));
+    public void shareFile(final String filePath) {
+        mShareListener = new CustomShareListener(this);
+        new ShareAction(this).setDisplayList(
+                SHARE_MEDIA.WEIXIN, SHARE_MEDIA.QQ
+        )
+                .setShareboardclickCallback(new ShareBoardlistener() {
+                    @Override
+                    public void onclick(SnsPlatform snsPlatform, SHARE_MEDIA share_media) {
+                        if (share_media == SHARE_MEDIA.WEIXIN) {
+                            ShareFile2OutAppUtils.shareFile2WeChat(getApplicationContext(), filePath);
+                        } else if (share_media == SHARE_MEDIA.QQ) {
+                            ShareFile2OutAppUtils.shareFileToQQ(getApplicationContext(), filePath);
+                        }
+                    }
+                })
+                .open();
     }
-
 
     /**
      * 打开权限管理
@@ -298,7 +323,6 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
             }
         });
     }
-
 
     /**
      * 处理Volume 相关的Action
@@ -397,7 +421,6 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         InputMethodUtils.display(VolumeFileBaseActivity.this, inputEdit);
     }
 
-
     /**
      * 弹出文件重命名提示框
      */
@@ -458,13 +481,11 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         InputMethodUtils.display(VolumeFileBaseActivity.this, inputEdit);
     }
 
-
     /**
      * 设置跟权限相关的layout,可以被继承此Activity的实例重写控制当前页面的layout
      */
     protected void setCurrentDirectoryLayoutByPrivilege() {
     }
-
 
     /**
      * 下载或打开文件
@@ -674,6 +695,39 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
             apiServiceBase.getVolumeFileList(volume.getId(), path);
         } else {
             swipeRefreshLayout.setRefreshing(false);
+        }
+    }
+
+    private static class CustomShareListener implements UMShareListener {
+
+        private WeakReference<VolumeFileBaseActivity> mActivity;
+
+        private CustomShareListener(VolumeFileBaseActivity activity) {
+            mActivity = new WeakReference(activity);
+        }
+
+        @Override
+        public void onStart(SHARE_MEDIA platform) {
+
+        }
+
+        @Override
+        public void onResult(SHARE_MEDIA platform) {
+            ToastUtils.show(mActivity.get(), R.string.baselib_share_success);
+        }
+
+        @Override
+        public void onError(SHARE_MEDIA platform, Throwable t) {
+            ToastUtils.show(mActivity.get(), R.string.baselib_share_fail);
+            if (t != null) {
+                LogUtils.jasonDebug("throw:" + t.getMessage());
+            }
+
+        }
+
+        @Override
+        public void onCancel(SHARE_MEDIA platform) {
+
         }
     }
 
