@@ -32,6 +32,7 @@ import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
+import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetAllRobotsResult;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.contact.ContactOrg;
@@ -50,6 +51,7 @@ import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.service.CoreService;
 import com.inspur.emmcloud.service.LocationService;
 import com.inspur.emmcloud.util.privates.AppConfigUtils;
+import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.MyAppWidgetUtils;
 import com.inspur.emmcloud.util.privates.ProfileUtils;
 import com.inspur.emmcloud.util.privates.ReactNativeUtils;
@@ -57,6 +59,7 @@ import com.inspur.emmcloud.util.privates.SplashPageUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactOrgCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ScheduleCalendarCacheUtils;
@@ -342,6 +345,18 @@ public class IndexActivity extends IndexBaseActivity {
 
                 }
             }).start();
+        } else if (simpleEventMessage.getAction().equals(Constant.EVENTBUS_TAG_CONVERSATION_ADD_SHOW_CONTENT)) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    List<Conversation> conversationList = ConversationCacheUtils.getConversationList(BaseApplication.getInstance());
+                    for (Conversation conversation : conversationList) {
+                        conversation.setShowName(CommunicationUtils.getConversationTitle(conversation));
+                    }
+                    ConversationCacheUtils.saveConversationList(BaseApplication.getInstance(), conversationList);
+                }
+            }).start();
+
         }
     }
 
