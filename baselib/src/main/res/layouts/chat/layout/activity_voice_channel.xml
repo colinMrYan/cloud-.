@@ -298,6 +298,23 @@
 
 
         <RelativeLayout
+            android:id="@+id/rl_remote_video_view_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </RelativeLayout>
+
+        <FrameLayout
+            android:id="@+id/fl_local_video_view_container"
+            android:layout_width="94dp"
+            android:layout_height="167dp"
+            android:layout_alignParentRight="true" />
+
+
+        <RelativeLayout
             android:id="@+id/rl_person_info"
             android:layout_width="160dp"
             android:layout_height="66dp"
@@ -332,22 +349,6 @@
                 android:textColor="#ffffff"
                 android:textSize="16sp" />
         </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/rl_remote_video_view_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </RelativeLayout>
-
-        <FrameLayout
-            android:id="@+id/fl_local_video_view_container"
-            android:layout_width="94dp"
-            android:layout_height="167dp"
-            android:layout_alignParentRight="true" />
 
         <ImageView
             android:id="@+id/img_video_communication_pack_up"

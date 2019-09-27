@@ -202,6 +202,18 @@ public class VoiceCommunicationUtils {
     }
 
     /**
+     * 人声的播放信号音量，可在 0~400 范围内进行调节：
+     * 0：静音
+     * 100：原始音量
+     * 400：最大可为原始音量的 4 倍（自带溢出保护）
+     *
+     * @param volumeLevel
+     */
+    public void adjustPlaybackSignalVolume(int volumeLevel) {
+        mRtcEngine.adjustPlaybackSignalVolume(volumeLevel);
+    }
+
+    /**
      * 加入频道
      *
      * @param token
@@ -257,11 +269,22 @@ public class VoiceCommunicationUtils {
     }
 
     /**
-     * 打开外放
+     * 打开外放模式
      *
      * @param isSpakerphoneOpen
      */
     public void onSwitchSpeakerphoneClicked(boolean isSpakerphoneOpen) {
+        if (mRtcEngine != null) {
+            mRtcEngine.setEnableSpeakerphone(isSpakerphoneOpen);
+        }
+    }
+
+    /**
+     * 打开外放
+     *
+     * @param isSpakerphoneOpen
+     */
+    public void setEnableSpeakerphone(boolean isSpakerphoneOpen) {
         if (mRtcEngine != null) {
             mRtcEngine.setEnableSpeakerphone(isSpakerphoneOpen);
         }

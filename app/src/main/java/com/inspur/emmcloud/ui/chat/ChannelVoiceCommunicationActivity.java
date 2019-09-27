@@ -388,6 +388,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
      */
     private void changeFunctionState(int state) {
         if (communicationType.equals(ECMChatInputMenu.VOICE_CALL)) {
+            voiceCommunicationUtils.adjustPlaybackSignalVolume(100);
             inviteeLinearLayout.setVisibility(state == INVITEE_LAYOUT_STATE ? View.VISIBLE : View.GONE);
             inviteMemebersGroupLinearLayout.setVisibility((state == INVITER_LAYOUT_STATE || state == COMMUNICATION_LAYOUT_STATE) ? View.VISIBLE : View.GONE);
             communicationMembersLinearLayout.setVisibility(state == INVITEE_LAYOUT_STATE ? View.VISIBLE : View.GONE);
@@ -423,14 +424,26 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 mediaPlayerManagerUtils.stop();
             }
         } else if (communicationType.equals(ECMChatInputMenu.VIDEO_CALL)) {
+            voiceCommunicationUtils.adjustPlaybackSignalVolume(400);
+            voiceCommunicationUtils.setEnableSpeakerphone(true);
             turnToVoiceLayout.setVisibility(state == COMMUNICATION_LAYOUT_STATE ? View.VISIBLE : View.GONE);
             videoHungUp.setVisibility((state == COMMUNICATION_LAYOUT_STATE || state == INVITER_LAYOUT_STATE || state == INVITEE_LAYOUT_STATE) ? View.VISIBLE : View.GONE);
             answerVideoPhoneLayout.setVisibility(state == INVITEE_LAYOUT_STATE ? View.VISIBLE : View.GONE);
             switchCameraLayout.setVisibility(state == COMMUNICATION_LAYOUT_STATE ? View.VISIBLE : View.GONE);
-            videoPackUpImg.setVisibility(state == COMMUNICATION_LAYOUT_STATE ? View.VISIBLE : View.GONE);
+//            videoPackUpImg.setVisibility(state == COMMUNICATION_LAYOUT_STATE ? View.VISIBLE : View.GONE);
+            videoPackUpImg.setVisibility(View.GONE);
             personInfoLayout.setVisibility((state == INVITER_LAYOUT_STATE || state == INVITEE_LAYOUT_STATE) ? View.VISIBLE : View.GONE);
-//            localVideoContainer.setVisibility(state == COMMUNICATION_LAYOUT_STATE?View.VISIBLE:View.GONE);
+            if (state == COMMUNICATION_LAYOUT_STATE) {
+                localVideoContainer.getLayoutParams().height = DensityUtil.dip2px(this, 167);
+                localVideoContainer.getLayoutParams().width = DensityUtil.dip2px(this, 94);
+            }
+            dragLocalVideoView();
         }
+    }
+
+    @Override
+    protected int getStatusType() {
+        return super.getStatusType();
     }
 
     /**
@@ -555,11 +568,11 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         LogUtils.YfcDebug("设置本地视频");
         agoraLocalView = RtcEngine.CreateRendererView(getBaseContext());
         agoraLocalView.setZOrderMediaOverlay(true);
-//        if(STATE == INVITER_LAYOUT_STATE){
-//            remoteVideoContainer.addView(agoraLocalView);
-//        } else {
+        if (STATE == INVITER_LAYOUT_STATE) {
+            localVideoContainer.getLayoutParams().height = FrameLayout.LayoutParams.MATCH_PARENT;
+            localVideoContainer.getLayoutParams().width = FrameLayout.LayoutParams.MATCH_PARENT;
+        }
         localVideoContainer.addView(agoraLocalView);
-//        }
         voiceCommunicationUtils.getRtcEngine().setupLocalVideo(new VideoCanvas(agoraLocalView, VideoCanvas.RENDER_MODE_HIDDEN, 0));
     }
 
