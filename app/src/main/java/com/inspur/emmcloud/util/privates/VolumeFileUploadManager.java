@@ -291,11 +291,11 @@ public class VolumeFileUploadManager extends APIInterfaceInstance {
 
         public MyProgressCallback(VolumeFileUpload volumeFileUpload) {
             this.volumeFileUpload = volumeFileUpload;
-            volumeFileUploadList.remove(volumeFileUpload);
         }
 
         @Override
         public void onSuccess(VolumeFile volumeFile) {
+            volumeFileUploadList.remove(volumeFileUpload);
             VolumeFileUploadCacheUtils.deleteVolumeFileUpload(volumeFileUpload);
             if (volumeFileUpload.getBusinessProgressCallback() != null) {
                 volumeFileUpload.getBusinessProgressCallback().onSuccess(volumeFile);

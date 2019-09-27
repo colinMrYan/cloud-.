@@ -267,15 +267,19 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                 sortOperationPop.dismiss();
                 break;
             case R.id.ll_volume_upload_image_pop:
+                popupWindow.dismiss();
                 AppUtils.openGallery(VolumeFileActivity.this, 10, REQUEST_OPEN_GALLERY, true);
                 break;
             case R.id.ll_volume_new_folder_pop:
+                popupWindow.dismiss();
                 showCreateFolderDlg();
                 break;
             case R.id.ll_volume_upload_file_pop:
+                popupWindow.dismiss();
                 openFileBrowser();
                 break;
             case R.id.ll_volume_take_phone_pop:
+                popupWindow.dismiss();
                 cameraPicFileName = System.currentTimeMillis() + ".jpg";
                 AppUtils.openCamera(VolumeFileActivity.this, cameraPicFileName, REQUEST_OPEN_CEMERA);
                 break;
@@ -636,9 +640,11 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveSimpleEventMessage(SimpleEventMessage simpleEventMessage) {
         if (simpleEventMessage.getAction().equals(Constant.EVENTBUS_TAG_VOLUME_UPLOAD)) {
-            // getVolumeFileList(false);
             List<VolumeFile> volumeFileUploadList = VolumeFileUploadManager.getInstance().getCurrentFolderUploadVolumeFile(volume.getId(), currentDirAbsolutePath);
             tipViewLayout.setVisibility(volumeFileUploadList.size() > 0 ? View.VISIBLE : View.GONE);
+            if (volumeFileUploadList.size() == 0) {
+                getVolumeFileList(false);
+            }
         }
     }
 
