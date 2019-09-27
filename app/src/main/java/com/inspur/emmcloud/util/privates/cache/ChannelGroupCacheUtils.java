@@ -7,6 +7,7 @@ import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.basemodule.util.DbCacheUtils;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
+import com.inspur.emmcloud.bean.chat.Conversation;
 
 import org.xutils.common.util.KeyValue;
 import org.xutils.db.sqlite.WhereBuilder;
@@ -142,6 +143,42 @@ public class ChannelGroupCacheUtils {
             searchChannelGroupList = new ArrayList<ChannelGroup>();
         }
         return ChannelGroup.channelGroupList2SearchModelList(searchChannelGroupList);
+    }
+
+    /**
+     * 搜索群组
+     *
+     * @param context
+     * @param searchText
+     * @return
+     */
+    public static List<Conversation> getSearchChannelSearchModelList(Context context,
+                                                                     String searchText) {
+        List<Conversation> searchChannelGroupList = null;
+        if (!StringUtils.isBlank(searchText)) {
+
+            try {
+                String searchStr = "";
+                for (int i = 0; i < searchText.length(); i++) {
+                    if (i < searchText.length() - 1) {
+                        searchStr += "%" + searchText.charAt(i);
+                    } else {
+                        searchStr += "%" + searchText.charAt(i) + "%";
+                    }
+                }
+                searchChannelGroupList = DbCacheUtils.getDb(context).selector
+                        (Conversation.class)
+                        .where("pyFull", "like", searchStr)
+                        .or("pyShort", "like", searchStr).or("channelName", "like", searchStr).findAll();
+            } catch (Exception e) {
+                // TODO: handle exception
+                e.printStackTrace();
+            }
+        }
+        if (searchChannelGroupList == null) {
+            searchChannelGroupList = new ArrayList<Conversation>();
+        }
+        return searchChannelGroupList;
 
     }
 

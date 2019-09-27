@@ -495,8 +495,95 @@ public class StringUtils {
      */
     public static Spanned getHtmlString(String content, String keyWordsColor, String keyWords) {
         String htmlKeyWords = "<font color='" + keyWordsColor + "'>" + keyWords + "</font>";
+        keyWords = singleRegexEscape(keyWords);
         content = content.replaceAll(keyWords, htmlKeyWords);
-        return Html.fromHtml(String.format(content));
+        return Html.fromHtml(content);
+    }
+
+    /**
+     * 单个特殊字符转义为字符
+     * ^ $ . * + - ? = ! : | \ / ( ) [ ] { }
+     */
+    public static String singleRegexEscape(String str) {
+        String result;
+        if (str.equals("?")) {
+            result = "\\?";
+        } else if (str.equals("+")) {
+            result = "\\+";
+        } else if (str.equals("*")) {
+            result = "\\*";
+        } else if (str.equals("^")) {
+            result = "\\^";
+        } else if (str.equals("$")) {
+            result = "\\$";
+        } else if (str.equals("*")) {
+            result = "\\*";
+        } else if (str.equals("-")) {
+            result = "\\-";
+        } else if (str.equals("!")) {
+            result = "\\!";
+        } else if (str.equals(":")) {
+            result = "\\:";
+        } else if (str.equals("|")) {
+            result = "\\|";
+        } else if (str.equals("\\")) {
+            result = "\\\\";
+        } else if (str.equals("(")) {
+            result = "\\(";
+        } else if (str.equals(")")) {
+            result = "\\)";
+        } else if (str.equals("[")) {
+            result = "\\[";
+        } else if (str.equals("]")) {
+            result = "\\]";
+        } else if (str.equals("{")) {
+            result = "\\{";
+        } else if (str.equals("}")) {
+            result = "\\}";
+        } else {
+            result = str;
+        }
+        return result;
+    }
+
+    public static String replaceRegexEscape(String str) {
+        String result = str;
+        if (str.contains("?")) {
+            result.replace("?", "\\?");
+        } else if (str.equals("+")) {
+            result.replace("+", "\\+");
+        } else if (str.equals("^")) {
+            result.replace("^", "\\^");
+        } else if (str.equals("$")) {
+            result.replace("$", "\\$");
+        } else if (str.equals("*")) {
+            result.replace("*", "\\*");
+        } else if (str.equals("-")) {
+            result.replace("-", "\\-");
+        } else if (str.equals("!")) {
+            result.replace("!", "\\!");
+        } else if (str.equals(":")) {
+            result.replace(":", "\\:");
+        } else if (str.equals("|")) {
+            result.replace("|", "\\|");
+        } else if (str.equals("\\")) {
+            result.replace("\\", "\\\\");
+        } else if (str.equals("(")) {
+            result.replace("(", "\\(");
+        } else if (str.equals(")")) {
+            result.replace(")", "\\)");
+        } else if (str.equals("[")) {
+            result.replace("+", "\\[");
+        } else if (str.equals("]")) {
+            result.replace("]", "\\]");
+        } else if (str.equals("{")) {
+            result.replace("{", "\\{");
+        } else if (str.equals("}")) {
+            result.replace("}", "\\}");
+        } else {
+            result = str;
+        }
+        return result;
     }
 
     /**
