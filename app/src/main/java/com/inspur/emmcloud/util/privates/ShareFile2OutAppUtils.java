@@ -62,7 +62,7 @@ public class ShareFile2OutAppUtils {
     }
 
     /**
-     * 分享图片给QQ好友
+     * 分享给QQ好友
      */
     public static void shareFileToQQ(Context mContext, String filePath) {
         if (isInstallApp(mContext, PACKAGE_MOBILE_QQ)) {
