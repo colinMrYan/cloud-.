@@ -323,7 +323,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         volumeActionDataList.add(new VolumeActionData(moveToAction, R.drawable.ic_volume_move, isVolumeFileWriteable));
         volumeActionDataList.add(new VolumeActionData(shareTo, R.drawable.ic_volume_share, selectVolumeFileList.size() == 1 &&
                 !isVolumeFileDirectory && (isVolumeFileWriteable || isVolumeFileReadable)));
-        volumeActionDataList.add(new VolumeActionData(permissionAction, R.drawable.ic_volume_detail,
+        volumeActionDataList.add(new VolumeActionData(permissionAction, R.drawable.ic_volume_permission,
                 isVolumeFileDirectory && (isVolumeFileWriteable || isVolumeFileReadable)
                         && (volumeFrom != MY_VOLUME) && isOwner));
         for (int i = 0; i < volumeActionDataList.size(); i++) {
