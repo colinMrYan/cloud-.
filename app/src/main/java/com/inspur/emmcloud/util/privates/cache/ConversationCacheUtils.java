@@ -290,6 +290,25 @@ public class ConversationCacheUtils {
     }
 
     /**
+     * 获取整体的会话 （不区分类型）
+     *
+     * @param context
+     * @return
+     */
+    public static List<Conversation> getConversationListByLastUpdate(Context context) {
+        List<Conversation> conversationList = null;
+        try {
+            conversationList = DbCacheUtils.getDb(context).selector(Conversation.class).orderBy("lastUpdate", true).findAll();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (conversationList == null) {
+            conversationList = new ArrayList<>();
+        }
+        return conversationList;
+    }
+
+    /**
      * 获取某个类型的会话
      *
      * @param context

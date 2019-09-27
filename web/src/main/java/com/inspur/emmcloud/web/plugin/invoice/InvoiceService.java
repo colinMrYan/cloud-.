@@ -220,14 +220,8 @@ public class InvoiceService extends ImpPlugin {
 
     public void handleWechatResult(String result) {
         if (!StringUtils.isBlank(result)) {
-            try {
-                JSONObject json = new JSONObject();
-                json.put("result", result);
-                jsCallback(successCb, json);
-                jsCallback(result);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            JSONObject json = JSONUtils.getJSONObject(result);
+            jsCallback(successCb, json);
         } else {
             try {
                 JSONObject json = new JSONObject();

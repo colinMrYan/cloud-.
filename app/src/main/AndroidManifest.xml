@@ -867,6 +867,11 @@
             android:excludeFromRecents="true"
             android:resizeableActivity="true"
             android:theme="@style/Theme.UMDefault" />
+        <activity
+            android:name=".ui.chat.mvp.view.ConversationSearchActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:resizeableActivity="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
     </application>
 
