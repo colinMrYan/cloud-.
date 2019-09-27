@@ -15,6 +15,7 @@
             android:layout_width="44dp"
             android:layout_height="44dp"
             android:layout_centerVertical="true"
+            android:background="@null"
             android:onClick="onClick"
             android:padding="11dp"
             android:scaleType="fitXY"
@@ -65,10 +66,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:onClick="onClick"
-                android:paddingBottom="3dp"
                 android:paddingLeft="5dp"
+                android:paddingTop="3dp"
                 android:paddingRight="10dp"
-                android:paddingTop="3dp">
+                android:paddingBottom="3dp">
 
                 <com.inspur.emmcloud.baselib.widget.FlowLayout
                     android:id="@+id/flowlayout"

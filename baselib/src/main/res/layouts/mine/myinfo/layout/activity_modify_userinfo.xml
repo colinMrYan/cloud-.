@@ -16,6 +16,7 @@
             android:layout_width="44dp"
             android:layout_height="44dp"
             android:layout_centerVertical="true"
+            android:background="@null"
             android:onClick="onClick"
             android:padding="11dp"
             android:scaleType="fitXY"
@@ -59,8 +60,8 @@
             android:id="@+id/view"
             android:layout_width="1dp"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/modifyinfo_layout"
             android:layout_alignTop="@+id/modifyinfo_layout"
+            android:layout_alignBottom="@+id/modifyinfo_layout"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@id/get_modifyinfo_btn"
             android:background="#d9dddf" />
@@ -95,9 +96,9 @@
                 android:hint="@string/please_input_change"
                 android:maxLength="11"
 
-                android:paddingBottom="13dp"
-                android:paddingRight="13dp"
                 android:paddingTop="13dp"
+                android:paddingRight="13dp"
+                android:paddingBottom="13dp"
                 android:singleLine="true"
                 android:textColor="#333333"
                 android:textSize="@dimen/content_normal_textsize"></com.inspur.emmcloud.baselib.widget.ClearEditText>

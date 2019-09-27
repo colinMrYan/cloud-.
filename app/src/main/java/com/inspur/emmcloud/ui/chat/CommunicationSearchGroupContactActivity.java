@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -27,11 +28,13 @@ import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
 import com.inspur.emmcloud.baselib.widget.ClearEditText;
 import com.inspur.emmcloud.basemodule.bean.SearchModel;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
+import com.inspur.emmcloud.basemodule.util.dialog.ShareDialog;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.ConversationFromChatContent;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
@@ -69,6 +72,7 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
     public static final String SEARCH_CONTENT = "search_content";
     public static final int REFRESH_DATA = 1;
     public static final int CLEAR_DATA = 2;
+    private static final int REQUEST_CODE_SHARE = 5;
 
     @BindView(R.id.lv_search_contact)
     ListView searchContactListView;
@@ -101,6 +105,7 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
     private ConversationFromChatContentAdapter conversationFromChatContentAdapter;
     private String searchText;
     private long lastSearchTime = 0;
+    private String shareContent;
     /**
      * 虚拟键盘
      */
@@ -140,6 +145,7 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
         allContentLayout.setVisibility(View.GONE);
         allGroupLayout.setVisibility(View.GONE);
         InputMethodUtils.display(this, searchEdit);
+        shareContent = (String) getIntent().getSerializableExtra(Constant.SHARE_CONTENT);
     }
 
     @Override
@@ -188,30 +194,33 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
 
     @Override
     public void onClick(View view) {
-        Bundle bundle;
+        Intent intent = new Intent();
         switch (view.getId()) {
             case R.id.tv_cancel:
                 finish();
                 break;
             case R.id.rl_search_more_group:
-                bundle = new Bundle();
-                bundle.putString("search_type", SEARCH_GROUP);
-                bundle.putString("search_content", searchText);
-                IntentUtils.startActivity(this, CommunicationSearchModelMoreActivity.class, bundle, false);
+                intent.setClass(this, CommunicationSearchModelMoreActivity.class);
+                intent.putExtra("search_type", SEARCH_GROUP);
+                intent.putExtra("search_content", searchText);
+                intent.putExtra(Constant.SHARE_CONTENT, shareContent);
+                startActivityForResult(intent, REQUEST_CODE_SHARE);
                 //跳转到群组列表页面
                 break;
             case R.id.rl_search_more_contact:
-                bundle = new Bundle();
-                bundle.putString("search_type", SEARCH_CONTACT);
-                bundle.putString("search_content", searchText);
-                IntentUtils.startActivity(this, CommunicationSearchModelMoreActivity.class, bundle, false);
+                intent.setClass(this, CommunicationSearchModelMoreActivity.class);
+                intent.putExtra("search_type", SEARCH_CONTACT);
+                intent.putExtra("search_content", searchText);
+                intent.putExtra(Constant.SHARE_CONTENT, shareContent);
+                startActivityForResult(intent, REQUEST_CODE_SHARE);
                 //跳转到查找人列表
                 break;
             case R.id.rl_search_more_contact_from_chat:
-                bundle = new Bundle();
-                bundle.putString("search_type", SEARCH_ALL_FROM_CHAT);
-                bundle.putString("search_content", searchText);
-                IntentUtils.startActivity(this, CommunicationSearchModelMoreActivity.class, bundle, false);
+                intent.setClass(this, CommunicationSearchModelMoreActivity.class);
+                intent.putExtra("search_type", SEARCH_ALL_FROM_CHAT);
+                intent.putExtra("search_content", searchText);
+                intent.putExtra(Constant.SHARE_CONTENT, shareContent);
+                startActivityForResult(intent, REQUEST_CODE_SHARE);
                 break;
             default:
                 break;
@@ -220,6 +229,10 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        if (!StringUtils.isBlank(shareContent)) {   //拦截分享
+            handleShare(adapterView, i);
+            return;
+        }
         switch (adapterView.getId()) {
             case R.id.lv_search_group:
                 groupsList.get(i);
@@ -239,6 +252,93 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
             default:
                 break;
         }
+    }
+
+    private void handleShare(AdapterView<?> adapterView, int position) {
+
+        SearchModel searchModel;
+
+        switch (adapterView.getId()) {
+            case R.id.lv_search_group:
+                searchModel = groupsList.get(position);
+//                startChannelActivity(groupsList.get(position).getId());
+
+                handleSearchModelShare(searchModel);
+                break;
+            case R.id.lv_search_contact:
+                searchModel = contactsList.get(position);
+//                Bundle bundle = new Bundle();
+//                bundle.putString("uid", contactsList.get(position).getId());
+//                IntentUtils.startActivity(this, UserInfoActivity.class, bundle);
+
+                handleSearchModelShare(searchModel);
+                break;
+            case R.id.lv_search_contact_from_chat:
+                ConversationFromChatContent conversationFromChatContent = conversationFromChatContentList.get(position);
+                final Conversation conversation = conversationFromChatContent.getConversation();
+
+                String name = CommunicationUtils.getName(this, conversation);
+                String headUrl = CommunicationUtils.getHeadUrl(conversation);
+                //分享到
+                ShareDialog.Builder builder = new ShareDialog.Builder(this);
+                builder.setUserName(name);
+                builder.setContent(shareContent);
+                builder.setDefaultResId(R.drawable.ic_app_default);
+                builder.setHeadUrl(headUrl);
+                final ShareDialog dialog = builder.build();
+                dialog.setCallBack(new ShareDialog.CallBack() {
+                    @Override
+                    public void onConfirm(View view) {
+                        Intent intent = new Intent();
+                        intent.putExtra("conversation", conversation);
+                        setResult(RESULT_OK, intent);
+                        dialog.dismiss();
+                        finish();
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        dialog.dismiss();
+                    }
+                });
+                dialog.show();
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * 单人聊天  群组聊天
+     *
+     * @param searchModel
+     */
+    private void handleSearchModelShare(final SearchModel searchModel) {
+        String name = searchModel.getName();
+        String headUrl = searchModel.getIcon();
+        //分享到
+        ShareDialog.Builder builder = new ShareDialog.Builder(this);
+        builder.setUserName(name);
+        builder.setContent(shareContent);
+        builder.setDefaultResId(R.drawable.ic_app_default);
+        builder.setHeadUrl(headUrl);
+        final ShareDialog dialog = builder.build();
+        dialog.setCallBack(new ShareDialog.CallBack() {
+            @Override
+            public void onConfirm(View view) {
+                Intent intent = new Intent();
+                intent.putExtra("searchModel", searchModel);
+                setResult(RESULT_OK, intent);
+                dialog.dismiss();
+                finish();
+            }
+
+            @Override
+            public void onCancel() {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
     }
 
     /**
@@ -583,6 +683,15 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
             }
             //刷新数据
             return view;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_SHARE && resultCode == RESULT_OK) {
+            setResult(RESULT_OK, data);
+            finish();
         }
     }
 }

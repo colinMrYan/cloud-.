@@ -23,6 +23,7 @@
             android:layout_width="44dp"
             android:layout_height="44dp"
             android:layout_centerVertical="true"
+            android:background="@null"
             android:onClick="onClick"
             android:padding="11dp"
             android:scaleType="fitXY"
@@ -35,10 +36,10 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:onClick="onClick"
-            android:paddingBottom="10dp"
             android:paddingLeft="10dp"
-            android:paddingRight="12dp"
             android:paddingTop="10dp"
+            android:paddingRight="12dp"
+            android:paddingBottom="10dp"
             android:textColor="@android:color/white"
             android:textSize="@dimen/header_function_textsize"
             android:textStyle="normal" />
@@ -79,6 +80,7 @@
             android:text="@string/origin"
             android:textColor="#ffffff"
             android:textSize="16sp" />
+
         <com.inspur.emmcloud.basemodule.util.imagepicker.view.SuperCheckBox
             android:id="@+id/cb_check"
             style="@style/SuperCheckboxTheme"

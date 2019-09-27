@@ -15,6 +15,7 @@
             android:layout_width="44dp"
             android:layout_height="44dp"
             android:layout_centerVertical="true"
+            android:background="@null"
             android:onClick="onClick"
             android:padding="11dp"
             android:scaleType="fitXY"
@@ -72,8 +73,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tv_mail_account_tips"
-                android:paddingBottom="10dp"
                 android:paddingTop="10dp"
+                android:paddingBottom="10dp"
                 android:textColor="#666666"
                 android:textSize="16sp" />
         </RelativeLayout>
@@ -109,8 +110,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="20dp"
                     android:layout_toLeftOf="@+id/ibt_mail_password_visible"
-                    android:paddingBottom="10dp"
                     android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
                     android:textColor="#666666"
                     android:textSize="16sp" />
 
@@ -120,6 +121,7 @@
                     android:layout_height="30dp"
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="11dp"
+                    android:background="@null"
                     android:onClick="onClick"
                     android:padding="5dp"
                     android:scaleType="fitXY"
@@ -157,8 +159,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:paddingBottom="10dp"
                     android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
                     android:text="证书管理"
                     android:textColor="#666666"
                     android:textSize="16sp" />

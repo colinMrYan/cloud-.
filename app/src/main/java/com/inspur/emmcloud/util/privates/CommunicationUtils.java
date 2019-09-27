@@ -13,6 +13,7 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.bean.SearchModel;
+import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.compressor.Compressor;
 import com.inspur.emmcloud.bean.chat.Channel;
@@ -502,6 +503,32 @@ public class CommunicationUtils {
             }
         }
         return null;
+    }
+
+    public static String getHeadUrl(Conversation conversation) {
+        String icon = "";
+        if (StringUtils.isBlank(conversation.getId())) {
+            return icon;
+        }
+        if (conversation.getType().equals(Conversation.TYPE_GROUP)) {
+            File file = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH,
+                    MyApplication.getInstance().getTanent() + conversation.getId() + "_100.png1");
+            if (file.exists()) {
+                icon = "file://" + file.getAbsolutePath();
+            }
+        } else {
+            icon = DirectChannelUtils.getDirectChannelIcon(MyApplication.getInstance(), conversation.getName());
+        }
+
+        return icon;
+    }
+
+    public static String getName(Context context, Conversation conversation) {
+        if (conversation.getType().equals(Conversation.TYPE_GROUP)) {
+            return conversation.getName();
+        } else {
+            return DirectChannelUtils.getDirectChannelTitle(context, conversation.getName());
+        }
     }
 
 }
