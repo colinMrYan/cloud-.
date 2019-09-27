@@ -204,7 +204,7 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
                 VolumeFileUploadManager.getInstance().setBusinessProgressCallback(volumeFile, new ProgressCallback() {
                     @Override
                     public void onSuccess(VolumeFile newVolumeFile) {
-                        replaceVolumeFileData(volumeFile, newVolumeFile);
+//                        replaceVolumeFileData(volumeFile, newVolumeFile);
                     }
 
                     @Override
