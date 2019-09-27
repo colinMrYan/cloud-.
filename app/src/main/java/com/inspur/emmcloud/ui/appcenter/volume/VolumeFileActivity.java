@@ -659,6 +659,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         volumeFile.setStatus(VolumeFile.STATUS_UPLOADIND);
         volumeFile.setVolume(volume.getId());
         volumeFile.setFormat(FileUtils.getMimeType(file.getName()));
+        volumeFile.setLocalFilePath(file.getAbsolutePath());
         return volumeFile;
     }
 

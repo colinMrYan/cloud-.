@@ -73,6 +73,7 @@ public class VolumeFileUploadManager extends APIInterfaceInstance {
         volumeFile.setStatus(volumeFileUpload.getStatus());
         volumeFile.setVolume(volumeFileUpload.getVolumeId());
         volumeFile.setFormat(FileUtils.getMimeType(filename));
+        volumeFile.setLocalFilePath(volumeFileUpload.getLocalFilePath());
         return volumeFile;
     }
 
@@ -291,11 +292,11 @@ public class VolumeFileUploadManager extends APIInterfaceInstance {
 
         public MyProgressCallback(VolumeFileUpload volumeFileUpload) {
             this.volumeFileUpload = volumeFileUpload;
-            volumeFileUploadList.remove(volumeFileUpload);
         }
 
         @Override
         public void onSuccess(VolumeFile volumeFile) {
+            volumeFileUploadList.remove(volumeFileUpload);
             VolumeFileUploadCacheUtils.deleteVolumeFileUpload(volumeFileUpload);
             if (volumeFileUpload.getBusinessProgressCallback() != null) {
                 volumeFileUpload.getBusinessProgressCallback().onSuccess(volumeFile);

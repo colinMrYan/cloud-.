@@ -47,7 +47,7 @@
             android:id="@+id/file_type_img"
             android:layout_width="90dp"
             android:layout_height="90dp"
-            android:scaleType="fitCenter"
+            android:scaleType="fitXY"
             android:src="@drawable/baselib_file_type_img" />
 
         <TextView
