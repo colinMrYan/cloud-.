@@ -85,7 +85,7 @@ public class ShareFile2OutAppUtils {
 
 
     /**
-     * 直接分享图片到微信好友
+     * 直接分享到微信好友
      *
      * @param context
      */
