@@ -643,7 +643,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
             List<VolumeFile> volumeFileUploadList = VolumeFileUploadManager.getInstance().getCurrentFolderUploadVolumeFile(volume.getId(), currentDirAbsolutePath);
             tipViewLayout.setVisibility(volumeFileUploadList.size() > 0 ? View.VISIBLE : View.GONE);
             if (volumeFileUploadList.size() == 0) {
-                getVolumeFileList(false);
+                // getVolumeFileList(false);
             }
         }
     }
