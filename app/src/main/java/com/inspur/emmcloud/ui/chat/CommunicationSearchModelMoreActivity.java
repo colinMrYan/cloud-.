@@ -66,6 +66,7 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
 
     public static final String SEARCH_CONTACT = "search_contact";
     public static final String SEARCH_GROUP = "search_group";
+    public static final String SEARCH_PRIVATE_CHAT = "search_private_chat";
     public static final String SEARCH_ALL_FROM_CHAT = "search_all_from_chat";
     public static final String SEARCH_CONTENT = "search_content";
     public static final int REFRESH_DATA = 1;
@@ -123,6 +124,9 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
         } else if (searchArea.equals(SEARCH_GROUP)) {
             groupAdapter = new GroupAdapter();
             searchGroupListView.setAdapter(groupAdapter);
+        } else if (searchArea.equals(SEARCH_PRIVATE_CHAT)) {
+            groupAdapter = new GroupAdapter();
+            searchGroupListView.setAdapter(groupAdapter);
         } else if (searchArea.equals(SEARCH_CONTACT)) {
             contactAdapter = new ContactAdapter();
             searchGroupListView.setAdapter(contactAdapter);
@@ -169,7 +173,7 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
                         /**刷新Ui*/
                         if (searchArea.equals(SEARCH_ALL_FROM_CHAT)) {
                             conversationFromChatContentAdapter.notifyDataSetChanged();
-                        } else if (searchArea.equals(SEARCH_GROUP)) {
+                        } else if (searchArea.equals(SEARCH_GROUP) || searchArea.equals(SEARCH_PRIVATE_CHAT)) {
                             groupAdapter.notifyDataSetChanged();
                         } else {
                             mySwipeRefreshLayout.setCanLoadMore((searchContactList.size() == 25));
@@ -202,6 +206,13 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
                                 } else {
                                     searchGroupList = ConversationCacheUtils.getSearchConversationSearchModelList(MyApplication.getInstance(), searchText);
                                 }
+                                if (searchGroupList == null) {
+                                    searchGroupList = new ArrayList<>();
+                                }
+                                break;
+                            case SEARCH_PRIVATE_CHAT:
+                                searchGroupList.clear();
+                                searchGroupList = ConversationCacheUtils.getSearchConversationPrivateChatSearchModelList(MyApplication.getInstance(), searchText);
                                 if (searchGroupList == null) {
                                     searchGroupList = new ArrayList<>();
                                 }
@@ -326,6 +337,7 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
             startActivity(intent);
         } else {
             switch (searchArea) {
+                case SEARCH_PRIVATE_CHAT:
                 case SEARCH_GROUP:
                     if (!searchGroupList.get(i).getId().equals(BaseApplication.getInstance().getUid())) {
                         switch (searchGroupList.get(i).getType()) {
@@ -379,6 +391,7 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
             dialog.show();
         } else {
             switch (searchArea) {
+                case SEARCH_PRIVATE_CHAT:
                 case SEARCH_GROUP:
                     SearchModel searchModel = searchGroupList.get(position);
                     handleSearchModelShare(searchModel);

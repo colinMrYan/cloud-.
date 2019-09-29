@@ -358,8 +358,7 @@ public class ConversationCacheUtils {
                 }
                 conversationList = DbCacheUtils.getDb(context).selector(Conversation.class)
                         .where("showName", "like", searchStr)
-                        .and(WhereBuilder.b("type", "=", Conversation.TYPE_DIRECT)
-                                .or("type", "=", Conversation.TYPE_GROUP)).orderBy("lastUpdate", true).findAll();
+                        .and(WhereBuilder.b("type", "=", Conversation.TYPE_GROUP)).orderBy("lastUpdate", true).findAll();
             } catch (Exception e) {
                 // TODO: handle exception
                 e.printStackTrace();
@@ -369,7 +368,34 @@ public class ConversationCacheUtils {
             conversationList = new ArrayList<>();
         }
         return Conversation.conversationList2SearchModelList(conversationList);
+    }
 
+    public static List<SearchModel> getSearchConversationPrivateChatSearchModelList(Context context,
+                                                                                    String searchText) {
+        List<Conversation> conversationList = null;
+        if (!StringUtils.isBlank(searchText)) {
+
+            try {
+                String searchStr = "";
+                for (int i = 0; i < searchText.length(); i++) {
+                    if (i < searchText.length() - 1) {
+                        searchStr += "%" + searchText.charAt(i);
+                    } else {
+                        searchStr += "%" + searchText.charAt(i) + "%";
+                    }
+                }
+                conversationList = DbCacheUtils.getDb(context).selector(Conversation.class)
+                        .where("showName", "like", searchStr)
+                        .and(WhereBuilder.b("type", "=", Conversation.TYPE_DIRECT)).orderBy("lastUpdate", true).findAll();
+            } catch (Exception e) {
+                // TODO: handle exception
+                e.printStackTrace();
+            }
+        }
+        if (conversationList == null) {
+            conversationList = new ArrayList<>();
+        }
+        return Conversation.conversationList2SearchModelList(conversationList);
     }
 
 //    public static List<String> getConversationExistMemberUidList(Context context,String id,int limit){
