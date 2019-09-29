@@ -45,12 +45,14 @@ public class VoiceCommunicationUtils {
         //用户加入频道回调
         @Override
         public void onUserJoined(int uid, int elapsed) {
+            LogUtils.YfcDebug("有新的用户加入：" + uid);
             onVoiceCommunicationCallbacks.onUserJoined(uid, elapsed);
         }
 
         //加入频道成功
         @Override
         public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
+            LogUtils.YfcDebug("用户加入成功");
 //            userCount = userCount + 1;
             onVoiceCommunicationCallbacks.onJoinChannelSuccess(channel, uid, elapsed);
         }

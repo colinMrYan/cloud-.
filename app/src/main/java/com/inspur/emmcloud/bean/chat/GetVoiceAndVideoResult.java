@@ -18,8 +18,10 @@ public class GetVoiceAndVideoResult {
     private String contextParamsRoom;
     private String contextParamsSchema;
     private String contextParamsType;
+    private String tracer;
 
-    public GetVoiceAndVideoResult(String body) {
+    public GetVoiceAndVideoResult(String tracer, String body) {
+        this.tracer = tracer;
         this.id = JSONUtils.getString(body, "id", "");
         this.channel = JSONUtils.getString(body, "channel", "");
         JSONObject fromObj = JSONUtils.getJSONObject(body, "from", new JSONObject());
@@ -95,5 +97,13 @@ public class GetVoiceAndVideoResult {
 
     public void setContextParamsType(String contextParamsType) {
         this.contextParamsType = contextParamsType;
+    }
+
+    public String getTracer() {
+        return tracer;
+    }
+
+    public void setTracer(String tracer) {
+        this.tracer = tracer;
     }
 }

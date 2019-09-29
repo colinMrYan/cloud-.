@@ -29,25 +29,32 @@ import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ResolutionUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.bean.chat.GetVoiceAndVideoResult;
 import com.inspur.emmcloud.bean.chat.GetVoiceCommunicationResult;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationAudioVolumeInfo;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
 import com.inspur.emmcloud.bean.system.GetBoolenResult;
+import com.inspur.emmcloud.util.privates.CustomProtocol;
 import com.inspur.emmcloud.util.privates.MediaPlayerManagerUtils;
 import com.inspur.emmcloud.util.privates.SuspensionWindowManagerUtils;
 import com.inspur.emmcloud.util.privates.VoiceCommunicationUtils;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
 import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -168,6 +175,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
 
     @Override
     public void onCreate() {
+        EventBus.getDefault().register(this);
         ButterKnife.bind(this);
         cloudPlusChannelId = getIntent().getStringExtra(ConversationActivity.CLOUD_PLUS_CHANNEL_ID);
         communicationType = getIntent().getStringExtra(VOICE_VIDEO_CALL_TYPE);
@@ -446,6 +454,44 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         return super.getStatusType();
     }
 
+
+    //通话过程中状态变化，这里处理destroy和refuse，在CommunicationFrament上处理invite，因为invite时还未打开此页面
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveVoiceOrVideoCall(final GetVoiceAndVideoResult getVoiceAndVideoResult) {
+        CustomProtocol customProtocol = new CustomProtocol(getVoiceAndVideoResult.getContextParamsSchema());
+        String cmd = customProtocol.getParamMap().get("cmd");
+        if (!StringUtils.isBlank(cmd) && cmd.equals("destroy")) {
+            changeUserConnectStateByUid(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_LEAVE,
+                    customProtocol.getParamMap().get("uid"));
+            leaveChannelSuccess(agoraChannelId);
+            finish();
+        } else if (!StringUtils.isBlank(cmd) && cmd.equals("refuse")) {
+            LogUtils.YfcDebug("接收到拒绝消息");
+            changeUserConnectStateByUid(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_REFUSE,
+                    customProtocol.getParamMap().get("uid"));
+            checkCommunicationFinish();
+        }
+    }
+
+    /**
+     * 检查是否需要退出
+     */
+    private void checkCommunicationFinish() {
+        if (voiceCommunicationMemberList != null && voiceCommunicationMemberList.size() > 0) {
+            int waitAndCommunicationSize = 0;
+            for (int i = 0; i < voiceCommunicationMemberList.size(); i++) {
+                if (voiceCommunicationMemberList.get(i).getConnectState() == VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_CONNECTED ||
+                        voiceCommunicationMemberList.get(i).getConnectState() == VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_INIT) {
+                    waitAndCommunicationSize = waitAndCommunicationSize + 1;
+                }
+            }
+            LogUtils.YfcDebug("waitAndCommunicationSize：" + waitAndCommunicationSize);
+            if (waitAndCommunicationSize < 2) {
+                leaveChannelSuccess(agoraChannelId);
+            }
+        }
+    }
+
     /**
      * 初始化回调
      */
@@ -454,9 +500,10 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             @Override
             public void onUserOffline(int uid, int reason) {
                 userCount = userCount - 1;
-                if (userCount < 2) {
-                    leaveChannelSuccess(agoraChannelId);
-                }
+                //通过声网判断退出的方法
+//                if (userCount < 2) {
+//                    leaveChannelSuccess(agoraChannelId);
+//                }
             }
 
             @Override
@@ -483,11 +530,13 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
 
             @Override
             public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
+                changeUserConnectState(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_CONNECTED, uid);
                 joinChannelSuccess(channel);
             }
 
             @Override
             public void onRejoinChannelSuccess(String channel, int uid, int elapsed) {
+                changeUserConnectState(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_CONNECTED, uid);
                 userCount = userCount + 1;
                 joinChannelSuccess(channel);
             }
@@ -549,6 +598,46 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 });
             }
         });
+    }
+
+    /**
+     * 修改用户的链接状态
+     *
+     * @param connectStateConnected
+     */
+    private void changeUserConnectState(int connectStateConnected, int agroaUid) {
+        if (voiceCommunicationMemberList != null && voiceCommunicationMemberList.size() > 0) {
+            for (int i = 0; i < voiceCommunicationMemberList.size(); i++) {
+                LogUtils.YfcDebug("oiceCommunicationMemberList.get(i).getAgoraUid()：" + voiceCommunicationMemberList.get(i).getAgoraUid());
+                LogUtils.YfcDebug("agroaUid：" + agroaUid);
+                LogUtils.YfcDebug("是否需要修改状态：" + (voiceCommunicationMemberList.get(i).getAgoraUid() == agroaUid));
+                if (voiceCommunicationMemberList.get(i).getAgoraUid() == agroaUid) {
+                    LogUtils.YfcDebug("修改状态");
+                    voiceCommunicationMemberList.get(i).setConnectState(connectStateConnected);
+                    break;
+                }
+            }
+        }
+    }
+
+    /**
+     * 修改用户的链接状态
+     *
+     * @param connectStateConnected
+     */
+    private void changeUserConnectStateByUid(int connectStateConnected, String uid) {
+        if (voiceCommunicationMemberList != null && voiceCommunicationMemberList.size() > 0) {
+            for (int i = 0; i < voiceCommunicationMemberList.size(); i++) {
+                LogUtils.YfcDebug("1111111oiceCommunicationMemberList.get(i).getAgoraUid()：" + voiceCommunicationMemberList.get(i).getUserId());
+                LogUtils.YfcDebug("11111111111agroaUid：" + uid);
+                LogUtils.YfcDebug("是否需要修改状态：" + (voiceCommunicationMemberList.get(i).getUserId() == uid));
+                if (voiceCommunicationMemberList.get(i).getUserId().equals(uid)) {
+                    LogUtils.YfcDebug("修改状态");
+                    voiceCommunicationMemberList.get(i).setConnectState(connectStateConnected);
+                    break;
+                }
+            }
+        }
     }
 
     /**
@@ -762,6 +851,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        EventBus.getDefault().unregister(this);
         mediaPlayerManagerUtils.stop();
     }
 
@@ -795,17 +885,42 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     }
 
     /**
-     * 通知websocket，已经创建了声网频道，让websocket通知频道里的人员
+     * 获取通信类型
+     *
+     * @return
      */
-    private void remindWebSocketAgoraChannelHasCreated() {
-        JSONArray jsonArray = new JSONArray();
-        for (int i = 0; i < voiceCommunicationMemberList.size(); i++) {
-            jsonArray.put(voiceCommunicationMemberList.get(i).getUserId());
-        }
-        if (jsonArray.length() > 1) {
-            WSAPIService.getInstance().sendStartVoiceAndVideoCallMessage(cloudPlusChannelId, agoraChannelId, VOICE_VIDEO_CALL_SCHEME, "VOICE", jsonArray);
+    private String getCommunicationType() {
+        if (communicationType.equals(ECMChatInputMenu.VIDEO_CALL)) {
+            return "VIDEO";
+        } else if (communicationType.equals(ECMChatInputMenu.VOICE_CALL)) {
+            return "VOICE";
+        } else {
+            return "VOICE";
         }
     }
+
+    /**
+     * 获取Schema
+     * ecc-cmd://voice_channel?cmd=invite&id=27359bbda1a1455c9d7357501e803383
+     * @return
+     */
+    private String getSchema(String cmd, String channelId, String roomId) {
+        return "ecc-cmd://voice_channel?cmd=" + cmd + "&channelid=" + channelId + "&roomid=" + roomId + "&uid=" + BaseApplication.getInstance().getUid();
+    }
+
+    /**
+     * 获取Uid
+     *
+     * @return
+     */
+    private JSONArray getUidArray(List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList){
+        JSONArray jsonArray = new JSONArray();
+        for (int i = 0; i < voiceCommunicationUserInfoBeanList.size(); i++) {
+            jsonArray.put(voiceCommunicationUserInfoBeanList.get(i).getUserId());
+        }
+        return jsonArray;
+    }
+
 
     class WebService extends APIInterfaceInstance {
         @Override
@@ -819,10 +934,11 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                         getVoiceCommunicationResult.getChannelId(), voiceCommunicationJoinChannelInfoBean.getUserId(), voiceCommunicationJoinChannelInfoBean.getAgoraUid());
             }
             if (getIntent().getIntExtra(VOICE_COMMUNICATION_STATE, EXCEPTION_STATE) != COME_BACK_FROM_SERVICE) {
+                WSAPIService.getInstance().sendStartVoiceAndVideoCallMessage(cloudPlusChannelId, agoraChannelId,
+                        getSchema("invite", cloudPlusChannelId, agoraChannelId), getCommunicationType(), getUidArray(voiceCommunicationMemberList));
                 voiceCommunicationMemberList.addAll(getVoiceCommunicationResult.getVoiceCommunicationJoinChannelInfoBeanList());
                 refreshCommunicationMemberAdapter();
             }
-            remindWebSocketAgoraChannelHasCreated();
         }
 
         @Override
@@ -872,24 +988,38 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         @Override
         public void returnRefuseVoiceCommunicationChannelSuccess(GetBoolenResult getBoolenResult) {
             voiceCommunicationUtils.destroy();
+            LogUtils.YfcDebug("cloudPlusChannelId:" + cloudPlusChannelId);
+            WSAPIService.getInstance().sendStartVoiceAndVideoCallMessage(cloudPlusChannelId, agoraChannelId,
+                    getSchema("refuse", cloudPlusChannelId, agoraChannelId), getCommunicationType(), getUidArray(voiceCommunicationMemberList));
             finish();
         }
 
         @Override
         public void returnRefuseVoiceCommunicationChannelFail(String error, int errorCode) {
             voiceCommunicationUtils.destroy();
+            WSAPIService.getInstance().sendStartVoiceAndVideoCallMessage(cloudPlusChannelId, agoraChannelId,
+                    getSchema("refuse", cloudPlusChannelId, agoraChannelId), getCommunicationType(), getUidArray(voiceCommunicationMemberList));
             finish();
         }
 
         @Override
         public void returnLeaveVoiceCommunicationChannelSuccess(GetBoolenResult getBoolenResult) {
             voiceCommunicationUtils.destroy();
+            LogUtils.YfcDebug("cloudPlusChannelId:" + cloudPlusChannelId);
+            if (userCount < 2) {
+                WSAPIService.getInstance().sendStartVoiceAndVideoCallMessage(cloudPlusChannelId, agoraChannelId,
+                        getSchema("destroy", cloudPlusChannelId, agoraChannelId), getCommunicationType(), getUidArray(voiceCommunicationMemberList));
+            }
             finish();
         }
 
         @Override
         public void returnLeaveVoiceCommunicationChannelFail(String error, int errorCode) {
             voiceCommunicationUtils.destroy();
+            if (userCount < 2) {
+                WSAPIService.getInstance().sendStartVoiceAndVideoCallMessage(cloudPlusChannelId, agoraChannelId,
+                        getSchema("destroy", cloudPlusChannelId, agoraChannelId), getCommunicationType(), getUidArray(voiceCommunicationMemberList));
+            }
             finish();
         }
     }

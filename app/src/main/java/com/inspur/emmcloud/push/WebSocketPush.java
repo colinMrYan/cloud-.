@@ -7,7 +7,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
@@ -169,7 +168,8 @@ public class WebSocketPush {
             if (isSocketConnect() || (!isForceReconnect && isWebsocketConnecting)) {
                 return;
             }
-            String url = APIUri.getWebsocketConnectUrl();
+            //String url = APIUri.getWebsocketConnectUrl();
+            String url = "http://10.25.12.114:3000";
             String path = WebServiceRouterManager.getInstance().isV0VersionChat() ? "/" + MyApplication.getInstance().getCurrentEnterprise().getCode() + "/socket/handshake" :
                     "/chat/socket/handshake";
             sendWebSocketStatusBroadcast(Socket.EVENT_CONNECTING);
@@ -456,7 +456,7 @@ public class WebSocketPush {
                                 break;
                             case "/command/client":
                                 if (wsPushContent.getMethod().equals("post")) {
-                                    GetVoiceAndVideoResult getVoiceAndVideoResult = new GetVoiceAndVideoResult(wsPushContent.getBody());
+                                    GetVoiceAndVideoResult getVoiceAndVideoResult = new GetVoiceAndVideoResult(wsPushContent.getTracer(), wsPushContent.getBody());
                                     EventBus.getDefault().post(getVoiceAndVideoResult);
                                 }
                                 break;

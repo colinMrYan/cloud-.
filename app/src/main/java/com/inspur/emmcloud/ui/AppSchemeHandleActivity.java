@@ -244,7 +244,7 @@ public class AppSchemeHandleActivity extends BaseActivity {
                                 urlList.add(filePath);
                                 startVolumeShareActivity(urlList);
                                 break;
-                            case "ecc-cmd":
+                            case "ecc-cloudplus-cmd":
                                 startVoiceCall(uri.toString());
                                 finish();
                                 break;
@@ -273,11 +273,11 @@ public class AppSchemeHandleActivity extends BaseActivity {
         if (customProtocol != null) {
             Intent intent = new Intent();
             intent.setClass(AppSchemeHandleActivity.this, ChannelVoiceCommunicationActivity.class);
-            intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_VIDEO_CALL_AGORA_ID, customProtocol.getParamMap().get("id"));
-            intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_VIDEO_ROOM_ID, customProtocol.getParamMap().get("channelid"));
+            intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_VIDEO_CALL_AGORA_ID, customProtocol.getParamMap().get("roomid"));
+            intent.putExtra(ConversationActivity.CLOUD_PLUS_CHANNEL_ID, customProtocol.getParamMap().get("channelid"));
             intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_VIDEO_UID, customProtocol.getParamMap().get("uid"));
             intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.INVITEE_LAYOUT_STATE);
-            intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_VIDEO_CALL_TYPE, ECMChatInputMenu.VIDEO_CALL);
+            intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_VIDEO_CALL_TYPE, ECMChatInputMenu.VOICE_CALL);
             intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.INVITEE_LAYOUT_STATE);
             startActivity(intent);
         }

@@ -11,11 +11,16 @@ import java.io.Serializable;
  */
 
 public class VoiceCommunicationJoinChannelInfoBean implements Serializable {
+
+    public static final int CONNECT_STATE_INIT = 0;
+    public static final int CONNECT_STATE_CONNECTED = 1;
+    public static final int CONNECT_STATE_REFUSE = 2;
+    public static final int CONNECT_STATE_LEAVE = 3;
     private String userId;
     private String headImageUrl;
     private int agoraUid;
     private String token;
-    private int connectState;
+    private int connectState;//[0-初始（未知）1-链接 2-拒绝 3-离开]
     private String userName;
     private int volume = -1;
     private int userState = -1;
@@ -32,7 +37,7 @@ public class VoiceCommunicationJoinChannelInfoBean implements Serializable {
         this.headImageUrl = JSONUtils.getString(info, "headImgUrl", "");
         this.token = JSONUtils.getString(info, "token", "");
         this.agoraUid = JSONUtils.getInt(info, "agoraUid", 0);
-        this.connectState = JSONUtils.getInt(info, "connectState", -1);
+        this.connectState = JSONUtils.getInt(info, "connectState", 0);
         this.userName = JSONUtils.getString(info, "name", "");
     }
 
