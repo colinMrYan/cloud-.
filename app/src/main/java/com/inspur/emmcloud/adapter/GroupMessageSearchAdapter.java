@@ -65,24 +65,28 @@ public class GroupMessageSearchAdapter extends RecyclerView.Adapter<GroupMessage
     private Spanned getContent(Message message) {
         String type = message.getType();
         Spanned text = null;
-        switch (type) {
-            case Message.MESSAGE_TYPE_TEXT_PLAIN:
-                String textContent = ChatMsgContentUtils.mentionsAndUrl2Span(message.getMsgContentTextPlain().getText(),
-                        message.getMsgContentTextPlain().getMentionsMap()).toString();
-                text = StringUtils.getHtmlString(textContent, keyWordsColor, keyWords);
-                break;
-            case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
-                String markDownContent = ChatMsgContentUtils.mentionsAndUrl2Span(
-                        message.getMsgContentTextMarkdown().getText(),
-                        message.getMsgContentTextMarkdown().getMentionsMap()).toString();
-                text = StringUtils.getHtmlString(markDownContent, keyWordsColor, keyWords);
-                break;
-            case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
-                String commentContent = ChatMsgContentUtils.mentionsAndUrl2Span(
-                        message.getMsgContentComment().getText(),
-                        message.getMsgContentComment().getMentionsMap()).toString();
-                text = StringUtils.getHtmlString(commentContent, keyWordsColor, keyWords);
-                break;
+        try {
+            switch (type) {
+                case Message.MESSAGE_TYPE_TEXT_PLAIN:
+                    String textContent = ChatMsgContentUtils.mentionsAndUrl2Span(message.getMsgContentTextPlain().getText(),
+                            message.getMsgContentTextPlain().getMentionsMap()).toString();
+                    text = StringUtils.getHtmlString(textContent, keyWordsColor, keyWords);
+                    break;
+                case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
+                    String markDownContent = ChatMsgContentUtils.mentionsAndUrl2Span(
+                            message.getMsgContentTextMarkdown().getText(),
+                            message.getMsgContentTextMarkdown().getMentionsMap()).toString();
+                    text = StringUtils.getHtmlString(markDownContent, keyWordsColor, keyWords);
+                    break;
+                case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
+                    String commentContent = ChatMsgContentUtils.mentionsAndUrl2Span(
+                            message.getMsgContentComment().getText(),
+                            message.getMsgContentComment().getMentionsMap()).toString();
+                    text = StringUtils.getHtmlString(commentContent, keyWordsColor, keyWords);
+                    break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return text;
     }

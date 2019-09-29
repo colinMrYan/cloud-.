@@ -494,8 +494,8 @@ public class StringUtils {
      * @return
      */
     public static Spanned getHtmlString(String content, String keyWordsColor, String keyWords) {
-        String htmlKeyWords = "<font color='" + keyWordsColor + "'>" + keyWords + "</font>";
         keyWords = singleRegexEscape(keyWords);
+        String htmlKeyWords = "<font color='" + keyWordsColor + "'>" + keyWords + "</font>";
         content = content.replaceAll(keyWords, htmlKeyWords);
         return Html.fromHtml(content);
     }
