@@ -22,6 +22,7 @@
                 android:layout_width="44dp"
                 android:layout_height="44dp"
                 android:layout_centerVertical="true"
+                android:background="@null"
                 android:onClick="onClick"
                 android:padding="11dp"
                 android:scaleType="fitXY"
@@ -124,8 +125,8 @@
             android:layout_width="180dp"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="18dp"
             android:layout_marginTop="50dp"
+            android:layout_marginRight="18dp"
             android:adjustViewBounds="true"
             android:src="@drawable/mask_guide_webex_schedule" />
 
@@ -133,10 +134,10 @@
             android:id="@+id/iv_schedule_ok"
             android:layout_width="90dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:layout_below="@id/iv_mask_schedule"
-            android:layout_marginRight="59dp"
+            android:layout_alignParentRight="true"
             android:layout_marginTop="15dp"
+            android:layout_marginRight="59dp"
             android:adjustViewBounds="true"
             android:onClick="onClick"
             android:src="@drawable/mask_guide_webex_schedule_mask_guide_webex_schedule_ok" />

@@ -44,6 +44,7 @@ public class VolumeFile implements Serializable {
     private int othersPrivilege = 0;
     private String owner = "";
     private String path = "";
+    private String localFilePath = "";
 
     public VolumeFile() {
     }
@@ -212,6 +213,14 @@ public class VolumeFile implements Serializable {
 
     public void setVolume(String volume) {
         this.volume = volume;
+    }
+
+    public String getLocalFilePath() {
+        return localFilePath;
+    }
+
+    public void setLocalFilePath(String localFilePath) {
+        this.localFilePath = localFilePath;
     }
 
     public boolean equals(Object other) { // 重写equals方法，后面最好重写hashCode方法

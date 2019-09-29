@@ -11,9 +11,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
+import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.interf.ProgressCallback;
 import com.inspur.emmcloud.util.privates.VolumeFileUploadManager;
@@ -148,7 +150,6 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
      * @param newVolumeFile
      */
     public void replaceVolumeFileData(VolumeFile mockVolumeFile, VolumeFile newVolumeFile) {
-        VolumeFileUploadManager.getInstance().cancelVolumeFileUploadService(mockVolumeFile);
         int position = volumeFileList.indexOf(mockVolumeFile);
         if (position != -1) {
             volumeFileList.remove(position);
@@ -181,13 +182,7 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
         } else {
             holder.fileSelcetImg.setImageResource(R.drawable.ic_volume_no_selected);
         }
-        Integer fileIconResId = null;
-        if (volumeFile.getType().equals(VolumeFile.FILE_TYPE_DIRECTORY)) {
-            fileIconResId = R.drawable.baselib_file_type_folder;
-        } else {
-            fileIconResId = FileUtils.getFileIconResIdByFormat(volumeFile.getFormat());
-        }
-        holder.fileTypeImg.setImageResource(fileIconResId);
+        showVolumeFileTypeImg(holder.fileTypeImg, volumeFile);
         holder.fileNameText.setText(volumeFile.getName());
         if (volumeFile.getType().equals(VolumeFile.FILE_TYPE_DIRECTORY)) {
             holder.fileSizeText.setVisibility(View.INVISIBLE);
@@ -209,7 +204,7 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
                 VolumeFileUploadManager.getInstance().setBusinessProgressCallback(volumeFile, new ProgressCallback() {
                     @Override
                     public void onSuccess(VolumeFile newVolumeFile) {
-                        replaceVolumeFileData(volumeFile, newVolumeFile);
+//                        replaceVolumeFileData(volumeFile, newVolumeFile);
                     }
 
                     @Override
@@ -221,7 +216,6 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
 
                     @Override
                     public void onFail() {
-                        LogUtils.jasonDebug("onFail-------------------------------------------------");
                         volumeFile.setStatus(VolumeFile.STATUS_UPLOAD_FAIL);
                         notifyItemChanged(position);
                     }
@@ -229,6 +223,31 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
             }
 
         }
+    }
+
+    private void showVolumeFileTypeImg(ImageView imageView, VolumeFile volumeFile) {
+        Integer fileIconResId = null;
+        imageView.setTag("");
+        if (volumeFile.getType().equals(VolumeFile.FILE_TYPE_DIRECTORY)) {
+            fileIconResId = R.drawable.baselib_file_type_folder;
+        } else {
+            if (volumeFile.getFormat().startsWith("image/")) {
+                String url = "";
+                if (volumeFile.getStatus().equals(VolumeFile.STATUS_UPLOADIND)) {
+                    url = volumeFile.getLocalFilePath();
+                } else {
+                    String path = currentDirAbsolutePath + volumeFile.getName();
+                    url = APIUri.getVolumeFileTypeImgThumbnailUrl(volumeFile, path);
+                }
+                imageView.setTag(url);
+                ImageDisplayUtils.getInstance().displayImageByTag(imageView, url, R.drawable.baselib_file_type_img);
+                return;
+            } else {
+                fileIconResId = FileUtils.getFileIconResIdByFormat(volumeFile.getFormat());
+            }
+
+        }
+        imageView.setImageResource(fileIconResId);
     }
 
     @Override

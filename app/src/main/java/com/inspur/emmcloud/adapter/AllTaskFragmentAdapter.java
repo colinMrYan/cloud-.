@@ -5,8 +5,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.view.ViewGroup;
 
-import com.inspur.emmcloud.ui.schedule.task.TaskListFragment;
-
 import java.util.List;
 
 /**
@@ -15,9 +13,9 @@ import java.util.List;
 
 public class AllTaskFragmentAdapter extends FragmentPagerAdapter {
     //存放fragment的集合
-    private List<TaskListFragment> taskListFragmentList;
+    private List<Fragment> taskListFragmentList;
 
-    public AllTaskFragmentAdapter(FragmentManager fm, List<TaskListFragment> taskListFragmentList) {
+    public AllTaskFragmentAdapter(FragmentManager fm, List<Fragment> taskListFragmentList) {
         super(fm);
         this.taskListFragmentList = taskListFragmentList;
     }
@@ -32,7 +30,7 @@ public class AllTaskFragmentAdapter extends FragmentPagerAdapter {
         return taskListFragmentList.size();
     }
 
-    public List<TaskListFragment> getTaskListFragment() {
+    public List<Fragment> getTaskListFragment() {
         return taskListFragmentList;
     }
 

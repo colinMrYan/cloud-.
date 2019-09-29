@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,6 +13,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -30,6 +32,7 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
+import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
@@ -205,7 +208,7 @@ public class CommunicationFragment extends BaseFragment {
         contactImg.setOnClickListener(onViewClickListener);
         titleText = (TextView) rootView.findViewById(R.id.header_text);
         noDataLayout = (RelativeLayout) rootView.findViewById(R.id.rl_no_chat);
-        contactSearchTextView =  rootView.findViewById(R.id.tv_search_contact);
+        contactSearchTextView = rootView.findViewById(R.id.tv_search_contact);
         contactSearchTextView.setOnClickListener(onViewClickListener);
         initPullRefreshLayout();
         initRecycleView();
@@ -342,6 +345,14 @@ public class CommunicationFragment extends BaseFragment {
         } else {
             items = new String[]{getString(uiConversation.getConversation().isStick() ? R.string.chat_remove_from_top : R.string.chat_stick_on_top), getString(R.string.chat_remove)};
         }
+        TextView textView = new TextView(getContext());
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
+        textView.setTextColor(Color.parseColor("#999999"));
+        textView.setText(uiConversation.getTitle());
+        int paddingTop = DensityUtil.dip2px(20);
+        int paddingLeft = DensityUtil.dip2px(24);
+        textView.setPadding(paddingLeft, paddingTop, paddingLeft, 0);
+        textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         new CustomDialog.ListDialogBuilder(getActivity())
                 .setTitle(uiConversation.getTitle())
                 .setItems(items, new DialogInterface.OnClickListener() {
@@ -355,6 +366,7 @@ public class CommunicationFragment extends BaseFragment {
                         }
                     }
                 })
+                .setCustomTitle(textView)
                 .show();
     }
 

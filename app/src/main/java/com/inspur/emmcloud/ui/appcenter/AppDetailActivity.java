@@ -65,6 +65,7 @@ public class AppDetailActivity extends BaseActivity {
 
 
     private void initView() {
+        setTitleText(R.string.detail);
         appIconImg = (ImageView) findViewById(R.id.app_icon_img);
         ImageDisplayUtils.getInstance().displayImage(appIconImg, app.getAppIcon(), R.drawable.ic_app_default);
         statusBtn = (Button) findViewById(R.id.app_status_btn);

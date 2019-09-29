@@ -239,6 +239,7 @@
             <intent-filter android:label="@string/send_to_app">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:scheme="content" />
                 <data android:scheme="file" />
                 <data android:mimeType="video/*"></data>
@@ -780,7 +781,10 @@
             android:name=".ui.appcenter.volume.VolumeGroupChangePermissionActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
-
+        <activity
+            android:name=".ui.appcenter.volume.view.VolumeFileTransferActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
 
 
         <!-- service -->
@@ -863,7 +867,11 @@
             android:excludeFromRecents="true"
             android:resizeableActivity="true"
             android:theme="@style/Theme.UMDefault" />
-
+        <activity
+            android:name=".ui.chat.mvp.view.ConversationSearchActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:resizeableActivity="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
     </application>
 

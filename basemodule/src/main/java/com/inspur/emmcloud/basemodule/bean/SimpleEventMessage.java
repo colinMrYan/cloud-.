@@ -7,7 +7,7 @@ package com.inspur.emmcloud.basemodule.bean;
 public class SimpleEventMessage {
     private String action;
     private Object messageObj;
-
+    private Object extraObj;
     public SimpleEventMessage(String action, Object messageObj) {
         this.action = action;
         this.messageObj = messageObj;
@@ -32,5 +32,13 @@ public class SimpleEventMessage {
 
     public void setMessageObj(Object messageObj) {
         this.messageObj = messageObj;
+    }
+
+    public Object getExtraObj() {
+        return extraObj;
+    }
+
+    public void setExtraObj(Object extraObj) {
+        this.extraObj = extraObj;
     }
 }
