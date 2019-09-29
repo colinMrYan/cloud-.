@@ -43,6 +43,7 @@ import com.inspur.emmcloud.basemodule.util.imagepicker.bean.ImageItem;
 import com.inspur.emmcloud.basemodule.util.imagepicker.ui.ImageGridActivity;
 import com.inspur.emmcloud.basemodule.util.mycamera.MyCameraActivity;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
+import com.inspur.emmcloud.bean.appcenter.volume.VolumeFileUpload;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
@@ -240,7 +241,6 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                 openFileBrowser();
                 break;
             case R.id.iv_down_up_list:
-
                 break;
             case R.id.operation_sort_text:
                 showSortOperationPop();
@@ -268,15 +268,19 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                 sortOperationPop.dismiss();
                 break;
             case R.id.ll_volume_upload_image_pop:
+                popupWindow.dismiss();
                 AppUtils.openGallery(VolumeFileActivity.this, 10, REQUEST_OPEN_GALLERY, true);
                 break;
             case R.id.ll_volume_new_folder_pop:
+                popupWindow.dismiss();
                 showCreateFolderDlg();
                 break;
             case R.id.ll_volume_upload_file_pop:
+                popupWindow.dismiss();
                 openFileBrowser();
                 break;
             case R.id.ll_volume_take_phone_pop:
+                popupWindow.dismiss();
                 cameraPicFileName = System.currentTimeMillis() + ".jpg";
                 AppUtils.openCamera(VolumeFileActivity.this, cameraPicFileName, REQUEST_OPEN_CEMERA);
                 break;
@@ -636,8 +640,26 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveSimpleEventMessage(SimpleEventMessage simpleEventMessage) {
-        if (simpleEventMessage.getAction().equals(Constant.EVENTBUS_TAG_VOLUME_UPLOAD)) {
-            // getVolumeFileList(false);
+        if (simpleEventMessage.getAction().equals(Constant.EVENTBUS_TAG_VOLUME_FILE_UPLOAD_SUCCESS)) {
+            if (adapter != null) {
+                VolumeFile volumeFile = (VolumeFile) simpleEventMessage.getMessageObj();
+                VolumeFileUpload volumeFileUpload = (VolumeFileUpload) simpleEventMessage.getExtraObj();
+                if (volumeFile.getVolume().equals(volume.getId()) && currentDirAbsolutePath.equals(volumeFileUpload.getVolumeFileParentPath())) {
+                    int index = -1;
+                    for (int i = 0; i < volumeFileList.size(); i++) {
+                        if (volumeFileList.get(i).getId().equals(volumeFileUpload.getId())) {
+                            index = i;
+                            break;
+                        }
+                    }
+                    if (index != -1) {
+                        volumeFileList.remove(index);
+                        volumeFileList.add(index, volumeFile);
+                        adapter.setVolumeFileList(volumeFileList);
+                        adapter.notifyItemChanged(index);
+                    }
+                }
+            }
             List<VolumeFile> volumeFileUploadList = VolumeFileUploadManager.getInstance().getCurrentFolderUploadVolumeFile(volume.getId(), currentDirAbsolutePath);
             tipViewLayout.setVisibility(volumeFileUploadList.size() > 0 ? View.VISIBLE : View.GONE);
         }
@@ -660,6 +682,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         volumeFile.setStatus(VolumeFile.STATUS_UPLOADIND);
         volumeFile.setVolume(volume.getId());
         volumeFile.setFormat(FileUtils.getMimeType(file.getName()));
+        volumeFile.setLocalFilePath(file.getAbsolutePath());
         return volumeFile;
     }
 

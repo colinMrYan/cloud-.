@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.basemodule.R;
+import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.imagepicker.ImagePicker;
 import com.inspur.emmcloud.basemodule.util.imagepicker.bean.ImageItem;
 import com.inspur.emmcloud.basemodule.util.imagepicker.view.CropImageView;
@@ -56,15 +57,8 @@ public class ImageCropActivity extends ImageBaseActivity implements View.OnClick
         mCropImageView.setFocusStyle(imagePicker.getStyle());
         mCropImageView.setFocusWidth(imagePicker.getFocusWidth());
         mCropImageView.setFocusHeight(imagePicker.getFocusHeight());
-
-        //缩放图片
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(imagePath, options);
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-        options.inSampleSize = calculateInSampleSize(options, displayMetrics.widthPixels, displayMetrics.heightPixels);
-        options.inJustDecodeBounds = false;
-        mBitmap = BitmapFactory.decodeFile(imagePath, options);
+        mBitmap = ImageDisplayUtils.getInstance().loadImageSync(imagePath, displayMetrics.widthPixels, displayMetrics.heightPixels);
         mCropImageView.setImageBitmap(mBitmap);
         rotateButton = (Button) findViewById(R.id.cv_rotate_btn);
         rotateButton.setVisibility(View.GONE);
@@ -77,7 +71,6 @@ public class ImageCropActivity extends ImageBaseActivity implements View.OnClick
         });
         setStatus();
 
-//        mCropImageView.setImageURI(Uri.fromFile(new File(imagePath)));
     }
 
     public int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {

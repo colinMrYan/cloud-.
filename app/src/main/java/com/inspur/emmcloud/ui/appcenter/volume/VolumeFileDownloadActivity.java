@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
@@ -22,6 +23,7 @@ import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.FileDownloadManager;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
+import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 
@@ -62,6 +64,7 @@ public class VolumeFileDownloadActivity extends BaseActivity {
     private String fileSavePath = "";
     private Callback.Cancelable cancelable;
     private VolumeFile volumeFile;
+    private String currentDirAbsolutePath;
 
 
     @Override
@@ -69,7 +72,8 @@ public class VolumeFileDownloadActivity extends BaseActivity {
         ButterKnife.bind(this);
         volumeFile = (VolumeFile) getIntent().getSerializableExtra("volumeFile");
         fileNameText.setText(volumeFile.getName());
-        fileTypeImg.setImageResource(FileUtils.getFileIconResIdByFileName(volumeFile.getName()));
+        currentDirAbsolutePath = getIntent().getStringExtra("currentDirAbsolutePath");
+        showVolumeFileTypeImg();
         fileSizeText.setText(FileUtils.formatFileSize(volumeFile.getSize()));
         fileSavePath = FileDownloadManager.getInstance().getDownloadFilePath(DownloadFileCategory.CATEGORY_VOLUME_FILE, volumeFile.getId(), volumeFile.getName());
         if (!StringUtils.isBlank(fileSavePath)) {
@@ -82,6 +86,23 @@ public class VolumeFileDownloadActivity extends BaseActivity {
                 downloadFile();
             }
         }
+    }
+
+    private void showVolumeFileTypeImg() {
+        if (volumeFile.getFormat().startsWith("image/")) {
+            String url = "";
+            if (volumeFile.getStatus().equals(VolumeFile.STATUS_UPLOADIND)) {
+                url = volumeFile.getLocalFilePath();
+            } else {
+                url = APIUri.getVolumeFileTypeImgThumbnailUrl(volumeFile, currentDirAbsolutePath);
+            }
+            fileTypeImg.setTag(url);
+            ImageDisplayUtils.getInstance().displayImageByTag(fileTypeImg, url, R.drawable.baselib_file_type_img);
+        } else {
+            fileTypeImg.setImageResource(FileUtils.getFileIconResIdByFormat(volumeFile.getFormat()));
+        }
+
+
     }
 
     private void setDownloadingStatus(boolean isDownloaded) {
@@ -171,7 +192,6 @@ public class VolumeFileDownloadActivity extends BaseActivity {
         downloadBtn.setVisibility(View.GONE);
         downloadStatusLayout.setVisibility(View.VISIBLE);
         final String volumeId = getIntent().getStringExtra("volumeId");
-        String currentDirAbsolutePath = getIntent().getStringExtra("currentDirAbsolutePath");
         String source = APIUri.getVolumeFileUploadSTSTokenUrl(volumeId);
         APIDownloadCallBack callBack = new APIDownloadCallBack(getApplicationContext(), source) {
             @Override
@@ -222,6 +242,7 @@ public class VolumeFileDownloadActivity extends BaseActivity {
         RequestParams params = ((MyApplication) getApplicationContext()).getHttpRequestParams(source);
         params.addParameter("volumeId", volumeId);
         params.addQueryStringParameter("path", currentDirAbsolutePath);
+        LogUtils.jasonDebug("params==" + params.toString());
         params.setRedirectHandler(new RedirectHandler() {
             @Override
             public RequestParams getRedirectParams(UriRequest uriRequest) throws Throwable {
