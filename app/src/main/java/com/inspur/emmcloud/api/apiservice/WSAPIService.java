@@ -350,7 +350,7 @@ public class WSAPIService {
             paramObj.put("type",type);
             paramObj.put("to",jsonArray);
             JSONObject bodyObj = new JSONObject();
-            bodyObj.put("action","server.vedio.call");
+            bodyObj.put("action", "server.video.call");
             bodyObj.put("params",paramObj);
             object.put("body",bodyObj);
             EventMessage eventMessage = new EventMessage(tracer, Constant.EVENTBUS_TAG_GET_MESSAGE_COMMENT);
