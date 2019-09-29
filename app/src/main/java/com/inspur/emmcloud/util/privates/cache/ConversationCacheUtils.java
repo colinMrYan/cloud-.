@@ -357,9 +357,9 @@ public class ConversationCacheUtils {
                     }
                 }
                 conversationList = DbCacheUtils.getDb(context).selector(Conversation.class)
-                        .where("showname", "like", searchStr)
+                        .where("showName", "like", searchStr)
                         .and(WhereBuilder.b("type", "=", Conversation.TYPE_DIRECT)
-                                .or("type", "type", Conversation.TYPE_GROUP)).orderBy("lastUpdate", true).findAll();
+                                .or("type", "=", Conversation.TYPE_GROUP)).orderBy("lastUpdate", true).findAll();
             } catch (Exception e) {
                 // TODO: handle exception
                 e.printStackTrace();

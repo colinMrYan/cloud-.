@@ -3,6 +3,7 @@ package com.inspur.emmcloud.bean.chat;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.PinyinUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 
@@ -252,22 +253,29 @@ public class Conversation implements Serializable {
     public SearchModel conversation2SearchModel() {
         SearchModel searchModel = new SearchModel();
         searchModel.setId(getId());
-        searchModel.setName(getName());
+        searchModel.setName(getShowName());
         switch (type) {
             case TYPE_GROUP:
                 searchModel.setType(SearchModel.TYPE_GROUP);
+                searchModel.setIcon(getAvatar());
                 break;
             case TYPE_DIRECT:
+                String uid;
+                List<String> memberList = getMemberList();
+                uid = memberList.get(0).equals(BaseApplication.getInstance().getUid()) ?
+                        memberList.get(1) : memberList.get(0);
+                searchModel.setId(uid);
                 searchModel.setType(SearchModel.TYPE_USER);
                 break;
             case TYPE_CAST:
+                searchModel.setIcon(getAvatar());
                 searchModel.setType(SearchModel.TYPE_STRUCT);
                 break;
             case TYPE_LINK:
+                searchModel.setIcon(getAvatar());
                 searchModel.setType(SearchModel.TYPE_STRUCT);
                 break;
         }
-        searchModel.setIcon(getAvatar());
         return searchModel;
     }
 

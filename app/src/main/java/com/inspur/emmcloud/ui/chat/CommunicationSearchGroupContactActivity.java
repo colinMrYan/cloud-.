@@ -235,8 +235,7 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
         }
         switch (adapterView.getId()) {
             case R.id.lv_search_group:
-                groupsList.get(i);
-                startChannelActivity(groupsList.get(i).getId());
+                inputChannel(groupsList.get(i));
                 break;
             case R.id.lv_search_contact:
                 Bundle bundle = new Bundle();
@@ -253,6 +252,19 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
                 break;
         }
     }
+
+
+    private void inputChannel(SearchModel searchModel) {
+        switch (searchModel.getType()) {
+            case SearchModel.TYPE_GROUP:
+                startChannelActivity(searchModel.getId());
+                break;
+            case SearchModel.TYPE_USER:
+                createDirectChannel(searchModel.getId());
+                break;
+        }
+    }
+
 
     private void handleShare(AdapterView<?> adapterView, int position) {
 
@@ -524,6 +536,15 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_SHARE && resultCode == RESULT_OK) {
+            setResult(RESULT_OK, data);
+            finish();
+        }
+    }
+
     /**
      * EditText  Watcher*/
     class SearchWatcher implements TextWatcher {
@@ -683,15 +704,6 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
             }
             //刷新数据
             return view;
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_SHARE && resultCode == RESULT_OK) {
-            setResult(RESULT_OK, data);
-            finish();
         }
     }
 }

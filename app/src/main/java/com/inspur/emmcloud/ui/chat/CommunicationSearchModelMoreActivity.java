@@ -328,7 +328,14 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
             switch (searchArea) {
                 case SEARCH_GROUP:
                     if (!searchGroupList.get(i).getId().equals(BaseApplication.getInstance().getUid())) {
-                        startChannelActivity(searchGroupList.get(i).getId());
+                        switch (searchGroupList.get(i).getType()) {
+                            case SearchModel.TYPE_GROUP:
+                                startChannelActivity(searchGroupList.get(i).getId());
+                                break;
+                            case SearchModel.TYPE_USER:
+                                createDirectChannel(searchGroupList.get(i).getId());
+                                break;
+                        }
                     }
                     break;
                 case SEARCH_CONTACT:
