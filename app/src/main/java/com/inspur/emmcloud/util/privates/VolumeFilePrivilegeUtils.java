@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileListResult;
 import com.inspur.emmcloud.bean.appcenter.volume.Volume;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
@@ -119,12 +120,11 @@ public class VolumeFilePrivilegeUtils {
         return (privilege >= 1 && privilege <= 4);
     }
 
-    public static boolean getVolumeFileWriteable(Context context, GetVolumeFileListResult getVolumeFileListResult) {
+    public static boolean getVolumeFileWriteable(Context context, GetVolumeFileListResult getVolumeFileListResult, Volume volume) {
         int privilege = 0;
-        String myUid = MyApplication.getInstance().getUid();
-        if (getVolumeFileListResult.getOwner().equals(myUid)) {
-            privilege = getVolumeFileListResult.getOwnerPrivilege();
-        } else {
+        if (volume.getOwner().equals(BaseApplication.getInstance().getUid())) {
+            return true;
+        } else if (getVolumeFileListResult != null) {
             VolumeGroupContainMe volumeGroupContainMe = VolumeGroupContainMeCacheUtils.getVolumeGroupContainMe(context, getVolumeFileListResult.getVolume());
             if (volumeGroupContainMe != null) {
                 List<String> groupIdList = volumeGroupContainMe.getGroupIdList();
@@ -138,13 +138,14 @@ public class VolumeFilePrivilegeUtils {
                     }
                 }
                 privilege = Collections.max(privilegeList);
-                LogUtils.YfcDebug("privilege:" + privilege);
             } else {
                 privilege = getVolumeFileListResult.getOthersPrivilege();
-                LogUtils.YfcDebug("privilege:" + privilege);
             }
+            return (privilege > 4);
+        } else {
+            return false;
         }
-        return (privilege > 4);
+
     }
 
 
