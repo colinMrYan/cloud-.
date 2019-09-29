@@ -253,7 +253,7 @@ public class Conversation implements Serializable {
         SearchModel searchModel = new SearchModel();
         searchModel.setId(getId());
         searchModel.setName(getName());
-        searchModel.setType(searchModel.TYPE_GROUP);
+        searchModel.setType(SearchModel.TYPE_GROUP);
         searchModel.setIcon(getAvatar());
         return searchModel;
     }
