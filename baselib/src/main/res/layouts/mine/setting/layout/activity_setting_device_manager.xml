@@ -57,6 +57,8 @@
             android:id="@+id/current_device_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:divider="@color/color_list_divider"
+            android:dividerHeight="0.5px"
             android:listSelector="@color/transparent"></ListView>
 
         <TextView
@@ -75,6 +77,8 @@
             android:id="@+id/history_device_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:divider="@color/color_list_divider"
+            android:dividerHeight="0.5px"
             android:listSelector="@color/transparent"></ListView>
     </LinearLayout>
 
