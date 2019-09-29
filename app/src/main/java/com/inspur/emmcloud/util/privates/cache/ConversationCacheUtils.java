@@ -357,7 +357,9 @@ public class ConversationCacheUtils {
                     }
                 }
                 conversationList = DbCacheUtils.getDb(context).selector(Conversation.class)
-                        .where("type", "=", Conversation.TYPE_GROUP).and(WhereBuilder.b("name", "like", searchStr).or("pyfull", "like", searchStr)).orderBy("lastUpdate",true).findAll();
+                        .where("showname", "like", searchStr)
+                        .and(WhereBuilder.b("type", "=", Conversation.TYPE_DIRECT)
+                                .or("type", "type", Conversation.TYPE_GROUP)).orderBy("lastUpdate", true).findAll();
             } catch (Exception e) {
                 // TODO: handle exception
                 e.printStackTrace();
