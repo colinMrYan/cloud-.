@@ -33,6 +33,7 @@
             android:layout_width="44dp"
             android:layout_height="44dp"
             android:layout_centerVertical="true"
+            android:background="@null"
             android:onClick="onClick"
             android:padding="11dp"
             android:scaleType="fitXY"
@@ -94,8 +95,8 @@
                         android:gravity="center"
                         android:minHeight="0dp"
                         android:onClick="onClick"
-                        android:paddingBottom="5dp"
                         android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
                         android:text="@string/add"
                         android:textColor="#ffffff"
                         app:cus_backgroundColor="#4A90E2"
@@ -111,8 +112,8 @@
                         android:background="@null"
                         android:hint="@string/webex_input_invitee_emails_hint"
                         android:maxLines="1"
-                        android:paddingBottom="11dp"
                         android:paddingTop="11dp"
+                        android:paddingBottom="11dp"
                         android:textSize="17sp" />
 
                     <View
@@ -127,9 +128,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/rl"
-                    android:paddingBottom="10dp"
                     android:paddingLeft="15dp"
                     android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
                     android:textColor="#666666"
                     android:textSize="15sp" />
 

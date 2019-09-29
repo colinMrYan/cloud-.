@@ -22,7 +22,7 @@ public class ChannelMemActivity extends BaseActivity {
     @Override
     public void onCreate() {
         String title = getIntent().getStringExtra("title");
-        ((TextView) findViewById(R.id.header_text)).setText(title);
+        setTitleText(title);
         memberArray = getIntent().getStringArrayExtra("members");
         if (memberArray != null && memberArray.length > 0) {
             GridView memberGrid = (GridView) findViewById(R.id.gv_member);

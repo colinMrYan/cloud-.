@@ -23,6 +23,7 @@
                 android:layout_centerVertical="true"
                 android:onClick="onClick"
                 android:padding="11dp"
+                android:background="@null"
                 android:scaleType="fitXY"
                 android:src="?attr/ic_back_btn" />
 

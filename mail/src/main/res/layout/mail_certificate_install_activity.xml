@@ -17,6 +17,7 @@
             android:layout_width="44dp"
             android:layout_height="44dp"
             android:layout_centerVertical="true"
+            android:background="@null"
             android:onClick="onClick"
             android:padding="11dp"
             android:scaleType="fitXY"
@@ -78,9 +79,9 @@
                     android:id="@+id/tv_installed_tip1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
                     android:layout_below="@id/tv_installed_cer_tip_title"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
                     android:paddingTop="4dp"
                     android:text="1、首先将证书导入到手机（ios可以通过其他邮箱将pfx证书或者p12证书以附件形式发送到本邮箱，然后将此证书附件下载）"
                     android:textColor="#666666" />
@@ -102,8 +103,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/rl_install_order"
                 android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
                 android:layout_marginTop="20dp"
+                android:layout_marginRight="15dp"
                 android:visibility="gone">
 
                 <TextView
@@ -133,8 +134,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="8dp"
-                            android:layout_marginRight="8dp"
-                            android:layout_marginTop="10dp">
+                            android:layout_marginTop="10dp"
+                            android:layout_marginRight="8dp">
 
                             <TextView
                                 android:id="@+id/tv_installed_cer_title"
@@ -156,8 +157,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="8dp"
-                            android:layout_marginRight="8dp"
-                            android:layout_marginTop="6dp">
+                            android:layout_marginTop="6dp"
+                            android:layout_marginRight="8dp">
 
                             <TextView
                                 android:id="@+id/tv_cer_owner_tip"
@@ -180,8 +181,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="8dp"
-                            android:layout_marginRight="8dp"
-                            android:layout_marginTop="6dp">
+                            android:layout_marginTop="6dp"
+                            android:layout_marginRight="8dp">
 
                             <TextView
                                 android:id="@+id/tv_cer_issuer_tip"
@@ -204,8 +205,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="8dp"
-                            android:layout_marginRight="8dp"
-                            android:layout_marginTop="6dp">
+                            android:layout_marginTop="6dp"
+                            android:layout_marginRight="8dp">
 
                             <TextView
                                 android:id="@+id/tv_installed_cer_final_data_tip"
@@ -228,8 +229,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="8dp"
-                            android:layout_marginRight="8dp"
-                            android:layout_marginTop="12dp">
+                            android:layout_marginTop="12dp"
+                            android:layout_marginRight="8dp">
 
                             <View
                                 android:id="@+id/v_topline1"
@@ -241,8 +242,8 @@
                                 android:id="@+id/tv_encryption_title"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginBottom="12dp"
                                 android:layout_marginTop="12dp"
+                                android:layout_marginBottom="12dp"
                                 android:text="加密发送邮件的内容和附件"
                                 android:textColor="#333333"
                                 android:textSize="14sp" />
@@ -273,8 +274,8 @@
                                 android:id="@+id/tv_signature_title"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginBottom="12dp"
                                 android:layout_marginTop="12dp"
+                                android:layout_marginBottom="12dp"
                                 android:text="加签发送邮件的内容和附件"
                                 android:textColor="#333333"
                                 android:textSize="14sp" />
@@ -301,13 +302,13 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/rl_installed_certificate"
                 android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
                 android:layout_marginTop="20dp"
+                android:layout_marginRight="15dp"
                 android:background="@drawable/bg_certificate_content"
                 android:orientation="vertical"
-                android:paddingBottom="5dp"
                 android:paddingLeft="8dp"
                 android:paddingTop="12dp"
+                android:paddingBottom="5dp"
                 android:visibility="gone">
 
                 <TextView

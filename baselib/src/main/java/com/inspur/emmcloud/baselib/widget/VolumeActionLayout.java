@@ -48,9 +48,7 @@ public class VolumeActionLayout extends LinearLayout {
         addView(layoutRootView);
     }
 
-
     public void setVolumeActionData(List<VolumeActionData> volumeActionDataList, VolumeActionClickListener volumeActionClickListener) {
-
         if (showVolumeActionDataList.size() > 0) {
             showVolumeActionDataList.clear();
         }
@@ -67,13 +65,16 @@ public class VolumeActionLayout extends LinearLayout {
         volumeActionAdapter.notifyDataSetChanged();
     }
 
+    public void clearView() {
+        showVolumeActionDataList.clear();
+        volumeActionAdapter.notifyDataSetChanged();
+    }
+
     public interface VolumeActionClickListener {
         public void volumeActionSelectedListener(String actionName);
     }
 
-
     private class VolumeActionAdapter extends RecyclerView.Adapter<VolumeActionAdapter.MyViewHolder> {
-
         @NonNull
         @Override
         public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

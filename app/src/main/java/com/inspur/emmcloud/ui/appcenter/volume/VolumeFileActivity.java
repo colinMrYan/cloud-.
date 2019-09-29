@@ -268,15 +268,19 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                 sortOperationPop.dismiss();
                 break;
             case R.id.ll_volume_upload_image_pop:
+                popupWindow.dismiss();
                 AppUtils.openGallery(VolumeFileActivity.this, 10, REQUEST_OPEN_GALLERY, true);
                 break;
             case R.id.ll_volume_new_folder_pop:
+                popupWindow.dismiss();
                 showCreateFolderDlg();
                 break;
             case R.id.ll_volume_upload_file_pop:
+                popupWindow.dismiss();
                 openFileBrowser();
                 break;
             case R.id.ll_volume_take_phone_pop:
+                popupWindow.dismiss();
                 cameraPicFileName = System.currentTimeMillis() + ".jpg";
                 AppUtils.openCamera(VolumeFileActivity.this, cameraPicFileName, REQUEST_OPEN_CEMERA);
                 break;

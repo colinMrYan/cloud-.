@@ -797,8 +797,12 @@ public class FileUtils {
     }
 
     public static String getFilenamePrefix(String filename) {
-        if ((filename != null) && (filename.length() > 0)) {
-            return filename.substring(0, filename.lastIndexOf("."));
+        try {
+            if ((filename != null) && (filename.length() > 0)) {
+                return filename.substring(0, filename.lastIndexOf("."));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return "";
     }

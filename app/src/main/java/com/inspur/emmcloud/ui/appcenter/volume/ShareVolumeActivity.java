@@ -211,7 +211,7 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
         volumeDetailAction = getString(R.string.detail);
         deleteVolumeAction = getString(R.string.delete);
         renameVolumeAction = getString(R.string.rename);
-        volumeActionDataList.add(new VolumeActionData(volumeDetailAction, R.drawable.ic_volume_copy, selectVolumeList.size() == 1 && true));
+        volumeActionDataList.add(new VolumeActionData(volumeDetailAction, R.drawable.ic_volume_detail, selectVolumeList.size() == 1 && true));
         volumeActionDataList.add(new VolumeActionData(deleteVolumeAction, R.drawable.ic_volume_delete, isOwner));
         volumeActionDataList.add(new VolumeActionData(renameVolumeAction, R.drawable.ic_volume_rename, selectVolumeList.size() == 1 && isOwner));
         bottomActionLayout.setVolumeActionData(volumeActionDataList, new VolumeActionLayout.VolumeActionClickListener() {

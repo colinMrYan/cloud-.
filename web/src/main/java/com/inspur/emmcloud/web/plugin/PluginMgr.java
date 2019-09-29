@@ -20,6 +20,7 @@ import com.inspur.emmcloud.web.plugin.emm.EMMService;
 import com.inspur.emmcloud.web.plugin.filetransfer.FileTransferService;
 import com.inspur.emmcloud.web.plugin.gps.GpsService;
 import com.inspur.emmcloud.web.plugin.http.HttpService;
+import com.inspur.emmcloud.web.plugin.invoice.InvoiceService;
 import com.inspur.emmcloud.web.plugin.loadingdialog.LoadingDialogService;
 import com.inspur.emmcloud.web.plugin.map.MapService;
 import com.inspur.emmcloud.web.plugin.network.NetworkService;
@@ -98,7 +99,6 @@ public class PluginMgr {
         } else {
             executeOnMainThread(serviceName, action, params);
         }
-
     }
 
     private void executeOnMainThread(String serviceName, final String action,
@@ -193,7 +193,6 @@ public class PluginMgr {
             }
         }
         return res;
-
     }
 
     private String getReallyServiceName(String serviceName) {
@@ -256,6 +255,8 @@ public class PluginMgr {
                 serviceName = ShareSocialService.class.getCanonicalName();
             } else if (serviceName.endsWith("HttpService")) {
                 serviceName = HttpService.class.getCanonicalName();
+            } else if (serviceName.endsWith("WechatService")) {
+                serviceName = InvoiceService.class.getCanonicalName();
             }
             LogUtils.jasonDebug("serviceName==" + serviceName);
         }
@@ -337,7 +338,6 @@ public class PluginMgr {
             }
             entries.clear();
         }
-
     }
 
     /**
@@ -351,7 +351,6 @@ public class PluginMgr {
                 }
             }
         }
-
     }
 
     /**
@@ -365,7 +364,6 @@ public class PluginMgr {
                 }
             }
         }
-
     }
 
     /**
@@ -379,7 +377,6 @@ public class PluginMgr {
                 }
             }
         }
-
     }
 
     public void onNewIntent(Intent intent) {
@@ -390,7 +387,6 @@ public class PluginMgr {
                 }
             }
         }
-
     }
 
 }

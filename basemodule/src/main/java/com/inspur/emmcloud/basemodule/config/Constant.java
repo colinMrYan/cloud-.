@@ -138,6 +138,7 @@ public class Constant {
     public static final String EVENTBUS_TAG_CONVERSATION_ADD_SHOW_CONTENT = "tag_conversation_add_show_content";
     public static final String EVENTBUS_TAG_VOLUME_FILE_UPLOAD_SUCCESS = "tag_volume_file_upload_success";
     public static final String EVENTBUS_TAG_VOLUME_ = "tag_volume_upload";
+    public static final String EVENTBUS_TAG_WECHAT_RESULT = "tag_wechat_result";
     public static final String SERVICE_VERSION_CHAT_V0 = "v0";
     public static final String SERVICE_VERSION_CHAT_V1 = "v1";
 
@@ -247,6 +248,8 @@ public class Constant {
     public static final String APP_MYAPP_LIST_FROM_NET = "my_app_list_from_net";
 
     public static final String SAFE_CENTER_FINGER_PRINT = "safe_center_finger_print";
+    //分享内容
+    public static final String SHARE_CONTENT = "share_content";
 
 
 }

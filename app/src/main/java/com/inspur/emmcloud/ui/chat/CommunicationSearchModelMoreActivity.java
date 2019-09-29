@@ -27,11 +27,13 @@ import com.inspur.emmcloud.baselib.widget.ClearEditText;
 import com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.SearchModel;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
+import com.inspur.emmcloud.basemodule.util.dialog.ShareDialog;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.ConversationFromChatContent;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
@@ -88,6 +90,7 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
     private GroupAdapter groupAdapter;
     private ContactAdapter contactAdapter;
     private ConversationFromChatContentAdapter conversationFromChatContentAdapter;
+    private String shareContent;
 
     private TextView.OnEditorActionListener onEditorActionListener = new TextView.OnEditorActionListener() {
         @Override
@@ -107,6 +110,7 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
         ImmersionBar.with(this).statusBarColor(R.color.search_contact_header_bg).statusBarDarkFont(true, 0.2f).navigationBarColor(R.color.white).navigationBarDarkIcon(true, 1.0f).init();
         searchArea = getIntent().getStringExtra("search_type");
         searchText = getIntent().getStringExtra("search_content");
+        shareContent = (String) getIntent().getSerializableExtra(Constant.SHARE_CONTENT);
         searchEdit.setOnEditorActionListener(onEditorActionListener);
         searchEdit.addTextChangedListener(new SearchWatcher());
         InputMethodUtils.display(this, searchEdit);
@@ -311,6 +315,10 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        if (!StringUtils.isBlank(shareContent)) {
+            handleShare(i);
+            return;
+        }
         if (searchArea.equals(SEARCH_ALL_FROM_CHAT)) {
             Intent intent = new Intent(CommunicationSearchModelMoreActivity.this, CommunicationSearchMessagesActivity.class);
             intent.putExtra(SEARCH_ALL_FROM_CHAT, conversationFromChatContentList.get(i));
@@ -330,6 +338,111 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
                     break;
             }
         }
+    }
+
+    private void handleShare(int position) {
+        if (searchArea.equals(SEARCH_ALL_FROM_CHAT)) {
+            ConversationFromChatContent conversationFromChatContent = conversationFromChatContentList.get(position);
+            final Conversation conversation = conversationFromChatContent.getConversation();
+
+            String name = CommunicationUtils.getName(this, conversation);
+            String headUrl = CommunicationUtils.getHeadUrl(conversation);
+            //分享到
+            ShareDialog.Builder builder = new ShareDialog.Builder(this);
+            builder.setUserName(name);
+            builder.setContent(shareContent);
+            builder.setDefaultResId(R.drawable.ic_app_default);
+            builder.setHeadUrl(headUrl);
+            final ShareDialog dialog = builder.build();
+            dialog.setCallBack(new ShareDialog.CallBack() {
+                @Override
+                public void onConfirm(View view) {
+                    Intent intent = new Intent();
+                    intent.putExtra("conversation", conversation);
+                    setResult(RESULT_OK, intent);
+                    dialog.dismiss();
+                    finish();
+                }
+
+                @Override
+                public void onCancel() {
+                    dialog.dismiss();
+                }
+            });
+            dialog.show();
+        } else {
+            switch (searchArea) {
+                case SEARCH_GROUP:
+                    SearchModel searchModel = searchGroupList.get(position);
+                    handleSearchModelShare(searchModel);
+                    break;
+                case SEARCH_CONTACT:
+                    Contact contact = searchContactList.get(position);
+                    handleContactShare(contact);
+                    break;
+            }
+        }
+    }
+
+    private void handleContactShare(final Contact contact) {
+        String name = contact.getName();
+        String headUrl = BaseApplication.getInstance().getUserPhotoUrl(contact.getId());
+        //分享到
+        ShareDialog.Builder builder = new ShareDialog.Builder(this);
+        builder.setUserName(name);
+        builder.setContent(shareContent);
+        builder.setDefaultResId(R.drawable.ic_app_default);
+        builder.setHeadUrl(headUrl);
+        final ShareDialog dialog = builder.build();
+        dialog.setCallBack(new ShareDialog.CallBack() {
+            @Override
+            public void onConfirm(View view) {
+                Intent intent = new Intent();
+                intent.putExtra("contact", contact);
+                setResult(RESULT_OK, intent);
+                dialog.dismiss();
+                finish();
+            }
+
+            @Override
+            public void onCancel() {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
+
+    /**
+     * 单人聊天  群组聊天
+     *
+     * @param searchModel
+     */
+    private void handleSearchModelShare(final SearchModel searchModel) {
+        String name = searchModel.getName();
+        String headUrl = searchModel.getIcon();
+        //分享到
+        ShareDialog.Builder builder = new ShareDialog.Builder(this);
+        builder.setUserName(name);
+        builder.setContent(shareContent);
+        builder.setDefaultResId(R.drawable.ic_app_default);
+        builder.setHeadUrl(headUrl);
+        final ShareDialog dialog = builder.build();
+        dialog.setCallBack(new ShareDialog.CallBack() {
+            @Override
+            public void onConfirm(View view) {
+                Intent intent = new Intent();
+                intent.putExtra("searchModel", searchModel);
+                setResult(RESULT_OK, intent);
+                dialog.dismiss();
+                finish();
+            }
+
+            @Override
+            public void onCancel() {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
     }
 
     /**

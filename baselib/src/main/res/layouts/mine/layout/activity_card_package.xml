@@ -16,6 +16,7 @@
             android:layout_width="44dp"
             android:layout_height="44dp"
             android:layout_centerVertical="true"
+            android:background="@null"
             android:onClick="onClick"
             android:padding="11dp"
             android:scaleType="fitXY"
@@ -82,7 +83,7 @@
         android:layout_below="@id/rl_header"
         android:clipToPadding="false"
         android:paddingLeft="12dp"
-        android:paddingRight="12dp"
-        android:paddingTop="132dp" />
+        android:paddingTop="132dp"
+        android:paddingRight="12dp" />
 
 </RelativeLayout>
