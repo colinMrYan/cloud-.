@@ -299,7 +299,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         boolean isVolumeFileDirectory = true;
         boolean isOwner = true;
         if (selectVolumeFileList.size() > 0) {
-            isVolumeFileWriteable = VolumeFilePrivilegeUtils.getVolumeFileWriteable(getApplicationContext(), selectVolumeFileList.get(0));
+            isVolumeFileWriteable = VolumeFilePrivilegeUtils.getVolumeFileWritable(getApplicationContext(), selectVolumeFileList.get(0));
             isVolumeFileReadable = VolumeFilePrivilegeUtils.getVolumeFileReadable(getApplicationContext(), selectVolumeFileList.get(0));
             isVolumeFileDirectory = selectVolumeFileList.get(0).getType().equals(VolumeFile.FILE_TYPE_DIRECTORY);
             isOwner = selectVolumeFileList.get(0).getOwner().equals(BaseApplication.getInstance().getUid());

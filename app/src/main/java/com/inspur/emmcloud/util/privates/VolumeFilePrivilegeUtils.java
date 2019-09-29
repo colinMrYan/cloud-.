@@ -35,7 +35,7 @@ public class VolumeFilePrivilegeUtils {
      */
     public static boolean getVolumeFileListWriteable(Context context, List<VolumeFile> volumeFileList) {
         for (int i = 0; i < volumeFileList.size(); i++) {
-            if (getVolumeFileWriteable(context, volumeFileList.get(i)) == false) {
+            if (getVolumeFileWritable(context, volumeFileList.get(i)) == false) {
                 return false;
             }
         }
@@ -49,7 +49,7 @@ public class VolumeFilePrivilegeUtils {
      * @param volumeFile
      * @return
      */
-    public static boolean getVolumeFileWriteable(Context context, VolumeFile volumeFile) {
+    public static boolean getVolumeFileWritable(Context context, VolumeFile volumeFile) {
         int privilege = 0;
         String myUid = MyApplication.getInstance().getUid();
         LogUtils.jasonDebug("======myUid=" + myUid);
@@ -120,7 +120,7 @@ public class VolumeFilePrivilegeUtils {
         return (privilege >= 1 && privilege <= 4);
     }
 
-    public static boolean getVolumeFileWriteable(Context context, GetVolumeFileListResult getVolumeFileListResult, Volume volume) {
+    public static boolean getVolumeFileWritable(Context context, GetVolumeFileListResult getVolumeFileListResult, Volume volume) {
         int privilege = 0;
         if (volume.getOwner().equals(BaseApplication.getInstance().getUid())) {
             return true;

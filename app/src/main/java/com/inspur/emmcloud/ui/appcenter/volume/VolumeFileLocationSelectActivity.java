@@ -190,8 +190,8 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
      */
     @Override
     protected void setCurrentDirectoryLayoutByPrivilege() {
-        boolean isCurrentDirectoryWriteable = VolumeFilePrivilegeUtils.getVolumeFileWriteable(getApplicationContext(), getVolumeFileListResult, volume);
-        locationSelectBarLayout.setVisibility(isCurrentDirectoryWriteable ? View.VISIBLE : View.GONE);
+        boolean isCurrentDirectoryWritable = VolumeFilePrivilegeUtils.getVolumeFileWritable(getApplicationContext(), getVolumeFileListResult, volume);
+        locationSelectBarLayout.setVisibility(isCurrentDirectoryWritable ? View.VISIBLE : View.GONE);
     }
 
     /**
