@@ -6,12 +6,14 @@ import com.inspur.emmcloud.interf.VolumeFileUploadService;
 import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
 
+import java.io.Serializable;
+
 /**
  * Created by chenmch on 2019/9/16.
  */
 
 @Table(name = "VolumeFileUpload")
-public class VolumeFileUpload {
+public class VolumeFileUpload implements Serializable {
     @Column(name = "id", isId = true)
     private String id;
     /**

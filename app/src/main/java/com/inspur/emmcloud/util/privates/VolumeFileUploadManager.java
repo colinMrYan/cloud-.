@@ -73,6 +73,7 @@ public class VolumeFileUploadManager extends APIInterfaceInstance {
         volumeFile.setStatus(volumeFileUpload.getStatus());
         volumeFile.setVolume(volumeFileUpload.getVolumeId());
         volumeFile.setFormat(FileUtils.getMimeType(filename));
+        volumeFile.setLocalFilePath(volumeFileUpload.getLocalFilePath());
         return volumeFile;
     }
 
@@ -300,7 +301,9 @@ public class VolumeFileUploadManager extends APIInterfaceInstance {
             if (volumeFileUpload.getBusinessProgressCallback() != null) {
                 volumeFileUpload.getBusinessProgressCallback().onSuccess(volumeFile);
             }
-            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_VOLUME_UPLOAD, volumeFile));
+            SimpleEventMessage simpleEventMessage = new SimpleEventMessage(Constant.EVENTBUS_TAG_VOLUME_FILE_UPLOAD_SUCCESS, volumeFile);
+            simpleEventMessage.setExtraObj(volumeFileUpload);
+            EventBus.getDefault().post(simpleEventMessage);
         }
 
         @Override
