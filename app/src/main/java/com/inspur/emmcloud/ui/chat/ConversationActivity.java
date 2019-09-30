@@ -40,6 +40,7 @@ import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButton;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.DownloadFileCategory;
+import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
@@ -71,6 +72,7 @@ import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.interf.ProgressCallback;
 import com.inspur.emmcloud.interf.ResultCallback;
 import com.inspur.emmcloud.push.WebSocketPush;
+import com.inspur.emmcloud.ui.chat.mvp.view.ConversationSearchActivity;
 import com.inspur.emmcloud.ui.chat.pop.PopupWindowList;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
@@ -918,24 +920,25 @@ public class ConversationActivity extends ConversationBaseActivity {
                     break;
                 case SHARE_SEARCH_RUEST_CODE:
                     if (NetUtils.isNetworkConnected(getApplicationContext())) {
-                        String searchResult = data.getStringExtra("searchResult");
-                        JSONObject jsonObject = JSONUtils.getJSONObject(searchResult);
-                        if (jsonObject.has("people")) {
-                            JSONArray peopleArray = JSONUtils.getJSONArray(jsonObject, "people", new JSONArray());
-                            if (peopleArray.length() > 0) {
-                                JSONObject peopleObj = JSONUtils.getJSONObject(peopleArray, 0, new JSONObject());
-                                String pidUid = JSONUtils.getString(peopleObj, "pid", "");
-                                createDirectChannel(pidUid, backUiMessage);
-                            }
-                        }
-                        if (jsonObject.has("channelGroup")) {
-                            JSONArray channelGroupArray = JSONUtils.getJSONArray(jsonObject, "channelGroup", new JSONArray());
-                            if (channelGroupArray.length() > 0) {
-                                JSONObject cidObj = JSONUtils.getJSONObject(channelGroupArray, 0, new JSONObject());
-                                String cid = JSONUtils.getString(cidObj, "cid", "");
-                                transmitMsg(cid, backUiMessage);
-                            }
-                        }
+                        handleShareResult(data);
+//                        String searchResult = data.getStringExtra("searchResult");
+//                        JSONObject jsonObject = JSONUtils.getJSONObject(searchResult);
+//                        if (jsonObject.has("people")) {
+//                            JSONArray peopleArray = JSONUtils.getJSONArray(jsonObject, "people", new JSONArray());
+//                            if (peopleArray.length() > 0) {
+//                                JSONObject peopleObj = JSONUtils.getJSONObject(peopleArray, 0, new JSONObject());
+//                                String pidUid = JSONUtils.getString(peopleObj, "pid", "");
+//                                createDirectChannel(pidUid, backUiMessage);
+//                            }
+//                        }
+//                        if (jsonObject.has("channelGroup")) {
+//                            JSONArray channelGroupArray = JSONUtils.getJSONArray(jsonObject, "channelGroup", new JSONArray());
+//                            if (channelGroupArray.length() > 0) {
+//                                JSONObject cidObj = JSONUtils.getJSONObject(channelGroupArray, 0, new JSONObject());
+//                                String cid = JSONUtils.getString(cidObj, "cid", "");
+//                                transmitMsg(cid, backUiMessage);
+//                            }
+//                        }
                     }
                     break;
             }
@@ -964,6 +967,38 @@ public class ConversationActivity extends ConversationBaseActivity {
                         combinAndSendMessageWithFile(imgPath, Message.MESSAGE_TYPE_MEDIA_IMAGE, resolutionRatio);
                     }
                 }
+        }
+    }
+
+    private void handleShareResult(Intent data) {
+        Conversation conversation = (Conversation) data.getSerializableExtra("conversation");
+        if (conversation != null) {
+            String userOrChannelId = conversation.getId();
+            boolean isGroup = conversation.getType().equals(Conversation.TYPE_GROUP);
+            if (!isGroup) {
+                userOrChannelId = DirectChannelUtils.getDirctChannelOtherUid(
+                        ConversationActivity.this, conversation.getName());
+            }
+            share2Conversation(userOrChannelId, isGroup);
+        }
+
+        SearchModel searchModel = (SearchModel) data.getSerializableExtra("searchModel");
+        if (searchModel != null) {
+            String userOrChannelId = searchModel.getId();
+            boolean isGroup = searchModel.getType().equals(SearchModel.TYPE_GROUP);
+            share2Conversation(userOrChannelId, isGroup);
+        }
+    }
+
+    private void share2Conversation(String userOrChannelId, boolean isGroup) {
+        if (StringUtils.isBlank(userOrChannelId)) {
+            ToastUtils.show(MyApplication.getInstance(), getString(R.string.baselib_share_fail));
+        } else {
+            if (isGroup) {
+                transmitMsg(userOrChannelId, backUiMessage);
+            } else {
+                createDirectChannel(userOrChannelId, backUiMessage);
+            }
         }
     }
 
@@ -1860,7 +1895,12 @@ public class ConversationActivity extends ConversationBaseActivity {
         intent.putExtra(ContactSearchFragment.EXTRA_TITLE, context.getString(R.string.baselib_share_to));
         intent.setClass(context,
                 ContactSearchActivity.class);
-        startActivityForResult(intent, SHARE_SEARCH_RUEST_CODE);
+//        startActivityForResult(intent, SHARE_SEARCH_RUEST_CODE);
+
+        Intent shareIntent = new Intent(this, ConversationSearchActivity.class);
+        shareIntent.putExtra(Constant.SHARE_CONTENT, result);
+
+        startActivityForResult(shareIntent, SHARE_SEARCH_RUEST_CODE);
     }
 
     class CacheMessageListThread extends Thread {

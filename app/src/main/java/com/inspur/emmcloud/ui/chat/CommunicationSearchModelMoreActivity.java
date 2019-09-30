@@ -391,7 +391,8 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
                 @Override
                 public void onConfirm(View view) {
                     Intent intent = new Intent();
-                    intent.putExtra("conversation", conversation);
+                    SearchModel searchModel = conversation.conversation2SearchModel();
+                    intent.putExtra("searchModel", searchModel);
                     setResult(RESULT_OK, intent);
                     dialog.dismiss();
                     finish();

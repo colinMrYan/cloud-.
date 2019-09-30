@@ -106,9 +106,6 @@ public class InvoiceService extends ImpPlugin {
      * 获取微信的accessToken
      */
     private void initInvoice() {
-        String appId = "wx4eb8727ea9c26495";
-        String appSecret = "56a0426315f1d0985a1cc1e75e96130d";
-//        getAccessTokenUrl = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&";
         String completeUrl = WebAPIUri.getWechatTicketUrl();
         RequestParams params = BaseApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
