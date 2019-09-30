@@ -76,12 +76,12 @@
                 android:id="@+id/iv_file_type_img_preview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="10dp"
+                android:adjustViewBounds="true"
                 android:paddingLeft="30dp"
                 android:paddingRight="30dp"
-                android:scaleType="centerInside"
+                android:scaleType="fitCenter"
                 android:visibility="gone" />
         </RelativeLayout>
         <TextView

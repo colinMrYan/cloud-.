@@ -928,7 +928,7 @@ public class APIUri {
 
     public static String getVolumeFileTypeImgThumbnailUrl(VolumeFile volumeFile, String volumeFilePath) {
         volumeFilePath = StringUtils.utf8Encode(volumeFilePath, volumeFilePath);
-        return getVolumeFileUploadSTSTokenUrl(volumeFile.getVolume()) + "?path=" + volumeFilePath + "&volumeId=" + volumeFile.getVolume() + "&resize=true&l=200&m=mfit";
+        return getVolumeFileUploadSTSTokenUrl(volumeFile.getVolume()) + "?path=" + volumeFilePath + "&volumeId=" + volumeFile.getVolume() + "&resize=true&l=300&m=mfit";
     }
 
     public static String getVolumeFileDownloadUrl(VolumeFile volumeFile, String currentDirAbsolutePath) {

@@ -70,7 +70,7 @@
                 android:adjustViewBounds="true"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:scaleType="centerCrop" />
+                android:scaleType="fitCenter" />
 
             <TextView
                 android:id="@+id/tv_img_file_name"
