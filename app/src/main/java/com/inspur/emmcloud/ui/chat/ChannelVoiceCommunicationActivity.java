@@ -518,7 +518,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-//                            STATE = COMMUNICATION_LAYOUT_STATE;
+                            STATE = COMMUNICATION_LAYOUT_STATE;
                             changeFunctionState(COMMUNICATION_LAYOUT_STATE);
                             communicationTimeChronometer.setBase(SystemClock.elapsedRealtime());
                             communicationTimeChronometer.start();
@@ -530,13 +530,13 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
 
             @Override
             public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
-                changeUserConnectState(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_CONNECTED, uid);
+                changeUserConnectStateByAgoraUid(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_CONNECTED, uid);
                 joinChannelSuccess(channel);
             }
 
             @Override
             public void onRejoinChannelSuccess(String channel, int uid, int elapsed) {
-                changeUserConnectState(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_CONNECTED, uid);
+                changeUserConnectStateByAgoraUid(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_CONNECTED, uid);
                 userCount = userCount + 1;
                 joinChannelSuccess(channel);
             }
@@ -602,14 +602,13 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
 
     /**
      * 修改用户的链接状态
+     * 通过agoraUid
      *
      * @param connectStateConnected
      */
-    private void changeUserConnectState(int connectStateConnected, int agroaUid) {
+    private void changeUserConnectStateByAgoraUid(int connectStateConnected, int agroaUid) {
         if (voiceCommunicationMemberList != null && voiceCommunicationMemberList.size() > 0) {
             for (int i = 0; i < voiceCommunicationMemberList.size(); i++) {
-                LogUtils.YfcDebug("oiceCommunicationMemberList.get(i).getAgoraUid()：" + voiceCommunicationMemberList.get(i).getAgoraUid());
-                LogUtils.YfcDebug("agroaUid：" + agroaUid);
                 LogUtils.YfcDebug("是否需要修改状态：" + (voiceCommunicationMemberList.get(i).getAgoraUid() == agroaUid));
                 if (voiceCommunicationMemberList.get(i).getAgoraUid() == agroaUid) {
                     LogUtils.YfcDebug("修改状态");
@@ -622,14 +621,13 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
 
     /**
      * 修改用户的链接状态
+     * 通过云+uid
      *
      * @param connectStateConnected
      */
     private void changeUserConnectStateByUid(int connectStateConnected, String uid) {
         if (voiceCommunicationMemberList != null && voiceCommunicationMemberList.size() > 0) {
             for (int i = 0; i < voiceCommunicationMemberList.size(); i++) {
-                LogUtils.YfcDebug("1111111oiceCommunicationMemberList.get(i).getAgoraUid()：" + voiceCommunicationMemberList.get(i).getUserId());
-                LogUtils.YfcDebug("11111111111agroaUid：" + uid);
                 LogUtils.YfcDebug("是否需要修改状态：" + (voiceCommunicationMemberList.get(i).getUserId() == uid));
                 if (voiceCommunicationMemberList.get(i).getUserId().equals(uid)) {
                     LogUtils.YfcDebug("修改状态");
@@ -905,7 +903,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
      * @return
      */
     private String getSchema(String cmd, String channelId, String roomId) {
-        return "ecc-cmd://voice_channel?cmd=" + cmd + "&channelid=" + channelId + "&roomid=" + roomId + "&uid=" + BaseApplication.getInstance().getUid();
+        return "ecc-cloudplus-cmd://voice_channel?cmd=" + cmd + "&channelid=" + channelId + "&roomid=" + roomId + "&uid=" + BaseApplication.getInstance().getUid();
     }
 
     /**
@@ -1006,6 +1004,11 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         public void returnLeaveVoiceCommunicationChannelSuccess(GetBoolenResult getBoolenResult) {
             voiceCommunicationUtils.destroy();
             LogUtils.YfcDebug("cloudPlusChannelId:" + cloudPlusChannelId);
+            if (STATE == COMMUNICATION_LAYOUT_STATE) {
+                LogUtils.YfcDebug("发送拒绝指令" + STATE);
+                WSAPIService.getInstance().sendStartVoiceAndVideoCallMessage(cloudPlusChannelId, agoraChannelId,
+                        getSchema("refuse", cloudPlusChannelId, agoraChannelId), getCommunicationType(), getUidArray(voiceCommunicationMemberList));
+            }
             if (userCount < 2) {
                 WSAPIService.getInstance().sendStartVoiceAndVideoCallMessage(cloudPlusChannelId, agoraChannelId,
                         getSchema("destroy", cloudPlusChannelId, agoraChannelId), getCommunicationType(), getUidArray(voiceCommunicationMemberList));
@@ -1016,6 +1019,10 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         @Override
         public void returnLeaveVoiceCommunicationChannelFail(String error, int errorCode) {
             voiceCommunicationUtils.destroy();
+            if (STATE == COMMUNICATION_LAYOUT_STATE) {
+                WSAPIService.getInstance().sendStartVoiceAndVideoCallMessage(cloudPlusChannelId, agoraChannelId,
+                        getSchema("refuse", cloudPlusChannelId, agoraChannelId), getCommunicationType(), getUidArray(voiceCommunicationMemberList));
+            }
             if (userCount < 2) {
                 WSAPIService.getInstance().sendStartVoiceAndVideoCallMessage(cloudPlusChannelId, agoraChannelId,
                         getSchema("destroy", cloudPlusChannelId, agoraChannelId), getCommunicationType(), getUidArray(voiceCommunicationMemberList));

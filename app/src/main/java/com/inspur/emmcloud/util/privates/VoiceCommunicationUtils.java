@@ -8,7 +8,6 @@ import com.inspur.emmcloud.bean.chat.VoiceCommunicationAudioVolumeInfo;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationRtcStats;
 import com.inspur.emmcloud.interf.OnVoiceCommunicationCallbacks;
-import com.inspur.emmcloud.widget.ECMChatInputMenu;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -169,13 +168,13 @@ public class VoiceCommunicationUtils {
             LogUtils.YfcDebug("初始化声网异常：" + e.getMessage());
         }
         if (mRtcEngine != null) {
-            if (communicationType.equals(ECMChatInputMenu.VIDEO_CALL)) {
-                LogUtils.YfcDebug("设置视频通话");
-                setupVideoConfig();
-            }
+            //屏蔽视频通话逻辑
+//            if (communicationType.equals(ECMChatInputMenu.VIDEO_CALL)) {
+//                LogUtils.YfcDebug("设置视频通话");
+//                setupVideoConfig();
+//            }
             mRtcEngine.enableAudioVolumeIndication(1000, 3, false);
         }
-//        mRtcEngine.registerLocalUserAccount(context.getString(R.string.agora_app_id),"12345");
     }
 
     /**

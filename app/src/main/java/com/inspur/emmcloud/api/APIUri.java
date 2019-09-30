@@ -57,6 +57,7 @@ public class APIUri {
      * @return
      */
     public static String getECMChatUrl() {
+
 //        return WebServiceRouterManager.getInstance().getClusterChat();
         return "http://10.25.12.114:3000/chat";
     }

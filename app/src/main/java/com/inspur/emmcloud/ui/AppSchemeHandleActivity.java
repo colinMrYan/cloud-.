@@ -146,6 +146,7 @@ public class AppSchemeHandleActivity extends BaseActivity {
                         handleShareIntent();
                     } else {
                         Uri uri = getIntent().getData();
+                        LogUtils.YfcDebug("接收到通知：" + uri.toString());
                         if (uri == null) {
                             finish();
                             return;
@@ -245,6 +246,12 @@ public class AppSchemeHandleActivity extends BaseActivity {
                                 startVolumeShareActivity(urlList);
                                 break;
                             case "ecc-cloudplus-cmd":
+                                LogUtils.YfcDebug("接收到ecc-cloudplus-cmd");
+                                startVoiceCall(uri.toString());
+                                finish();
+                                break;
+                            case "ecc-cmd":
+                                LogUtils.YfcDebug("接收到ecc-cmd");
                                 startVoiceCall(uri.toString());
                                 finish();
                                 break;

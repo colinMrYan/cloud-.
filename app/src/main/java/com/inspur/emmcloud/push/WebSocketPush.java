@@ -168,7 +168,8 @@ public class WebSocketPush {
             if (isSocketConnect() || (!isForceReconnect && isWebsocketConnecting)) {
                 return;
             }
-            //String url = APIUri.getWebsocketConnectUrl();
+//            String url = APIUri.getWebsocketConnectUrl();
+
             String url = "http://10.25.12.114:3000";
             String path = WebServiceRouterManager.getInstance().isV0VersionChat() ? "/" + MyApplication.getInstance().getCurrentEnterprise().getCode() + "/socket/handshake" :
                     "/chat/socket/handshake";
