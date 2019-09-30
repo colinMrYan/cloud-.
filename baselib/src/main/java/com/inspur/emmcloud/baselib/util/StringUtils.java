@@ -494,9 +494,11 @@ public class StringUtils {
      * @return
      */
     public static Spanned getHtmlString(String content, String keyWordsColor, String keyWords) {
-        keyWords = singleRegexEscape(keyWords);
+        LogUtils.LbcDebug("content::::" + content);
         String htmlKeyWords = "<font color='" + keyWordsColor + "'>" + keyWords + "</font>";
-        content = content.replaceAll(keyWords, htmlKeyWords);
+        LogUtils.LbcDebug("htmlKeyWords::::" + htmlKeyWords);
+        content = content.replace(keyWords, htmlKeyWords);
+        LogUtils.LbcDebug("keyword" + keyWords + "content::::" + content);
         return Html.fromHtml(content);
     }
 
