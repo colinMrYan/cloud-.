@@ -24,6 +24,7 @@
                 android:layout_width="44dp"
                 android:layout_height="44dp"
                 android:layout_centerVertical="true"
+                android:background="@null"
                 android:onClick="onClick"
                 android:padding="11dp"
                 android:scaleType="fitXY"
@@ -82,10 +83,10 @@
             android:adjustViewBounds="true"
             android:clickable="true"
             android:onClick="onClick"
-            android:paddingBottom="17dp"
             android:paddingLeft="13dp"
-            android:paddingRight="16dp"
             android:paddingTop="17dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="17dp"
             android:scaleType="fitXY"
             android:src="?attr/ic_header_option"
             android:visibility="gone" />
@@ -139,6 +140,7 @@
             android:text="@string/function_net_load_fail"
             android:textColor="#666666"
             android:textSize="16sp" />
+
         <TextView
             android:id="@+id/tv_reload_web"
             android:layout_width="130dp"
@@ -163,9 +165,9 @@
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:onClick="onClick"
-                android:paddingBottom="20dp"
                 android:paddingLeft="25dp"
                 android:paddingRight="25dp"
+                android:paddingBottom="20dp"
                 android:text="@string/function_net_look_error_detail"
                 android:textColor="#36A5F6"
                 android:textSize="13sp" />
@@ -207,8 +209,8 @@
                 android:layout_below="@id/pb_load"
                 android:layout_marginTop="10dp"
                 android:ellipsize="end"
-                android:maxLines="2"
                 android:maxWidth="200dp"
+                android:maxLines="2"
                 android:textColor="#555555"
                 android:textSize="@dimen/content_small_textsize" />
         </RelativeLayout>

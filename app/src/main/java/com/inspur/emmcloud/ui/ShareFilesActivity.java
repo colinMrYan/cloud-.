@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
@@ -28,10 +30,10 @@ import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.ui.appcenter.volume.VolumeHomePageActivity;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
-import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
-import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
+import com.inspur.emmcloud.ui.chat.mvp.view.ConversationSearchActivity;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
+import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.privates.TabAndAppExistUtils;
 import com.itheima.roundedimageview.RoundedImageView;
 
@@ -53,6 +55,7 @@ import butterknife.ButterKnife;
 public class ShareFilesActivity extends BaseActivity {
 
     private final static int SHARE_IMAGE_OR_FILES = 0;
+    private final static int SHARE_FROM_RECENT_CHAT = 1;    //分享到最近聊天
     private final static int SHARE_FILES_LIMIT = 5;
     @BindView(R.id.rv_file_list)
     RecyclerView recyclerView;
@@ -246,31 +249,43 @@ public class ShareFilesActivity extends BaseActivity {
      * 给朋友分享图片或文件
      */
     private void shareFilesToFriends() {
-        Intent intent = new Intent();
-        String firstFileName = "";
+//        Intent intent = new Intent();
+//        String firstFileName = "";
+//        File file = new File(uriList.get(0));
+//        firstFileName = file.getName();
+//        String shareManyPictures = getResources().getString(isImageUriList(uriList) ? R.string.baselib_share_many_picture : R.string.baselib_share_many_files, uriList.size());
+//        String fileType = isImageUriList(uriList) ? getString(R.string.baselib_share_image) : getString(R.string.baselib_share_file);
+//        String detailResult = fileType + " " + firstFileName + (uriList.size() > 1 ? shareManyPictures : "");
+//        intent.putExtra(ContactSearchFragment.EXTRA_TYPE, 0);
+//        intent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, false);
+//        intent.putExtra(ContactSearchFragment.EXTRA_SHOW_COMFIRM_DIALOG_WITH_MESSAGE, detailResult);
+//        intent.putExtra(ContactSearchFragment.EXTRA_SHOW_COMFIRM_DIALOG, true);
+//        ArrayList<String> uidList = new ArrayList<>();
+//        uidList.add(MyApplication.getInstance().getUid());
+//        intent.putStringArrayListExtra(ContactSearchFragment.EXTRA_EXCLUDE_SELECT, uidList);
+//        intent.putExtra(ContactSearchFragment.EXTRA_TITLE, getString(R.string.baselib_share_to));
+//        intent.setClass(getApplicationContext(), ContactSearchActivity.class);
+//        startActivityForResult(intent, SHARE_IMAGE_OR_FILES);
+
         File file = new File(uriList.get(0));
-        firstFileName = file.getName();
+        String firstFileName = file.getName();
         String shareManyPictures = getResources().getString(isImageUriList(uriList) ? R.string.baselib_share_many_picture : R.string.baselib_share_many_files, uriList.size());
         String fileType = isImageUriList(uriList) ? getString(R.string.baselib_share_image) : getString(R.string.baselib_share_file);
-        String detailResult = fileType + " " + firstFileName + (uriList.size() > 1 ? shareManyPictures : "");
-        intent.putExtra(ContactSearchFragment.EXTRA_TYPE, 0);
-        intent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, false);
-        intent.putExtra(ContactSearchFragment.EXTRA_SHOW_COMFIRM_DIALOG_WITH_MESSAGE, detailResult);
-        intent.putExtra(ContactSearchFragment.EXTRA_SHOW_COMFIRM_DIALOG, true);
-        ArrayList<String> uidList = new ArrayList<>();
-        uidList.add(MyApplication.getInstance().getUid());
-        intent.putStringArrayListExtra(ContactSearchFragment.EXTRA_EXCLUDE_SELECT, uidList);
-        intent.putExtra(ContactSearchFragment.EXTRA_TITLE, getString(R.string.baselib_share_to));
-        intent.setClass(getApplicationContext(),
-                ContactSearchActivity.class);
-        startActivityForResult(intent, SHARE_IMAGE_OR_FILES);
+        String shareContent = fileType + " " + firstFileName + (uriList.size() > 1 ? shareManyPictures : "");
+        Intent shareIntent = new Intent(this, ConversationSearchActivity.class);
+        shareIntent.putExtra(Constant.SHARE_CONTENT, shareContent);
+
+        startActivityForResult(shareIntent, SHARE_FROM_RECENT_CHAT);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d("zhang", "onActivityResult: ");
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == SHARE_IMAGE_OR_FILES && resultCode == RESULT_OK
-                && NetUtils.isNetworkConnected(getApplicationContext())) {
+        if (resultCode != RESULT_OK || !NetUtils.isNetworkConnected(getApplicationContext())) {
+            return;
+        }
+        if (requestCode == SHARE_IMAGE_OR_FILES) {
             String result = data.getStringExtra("searchResult");
             try {
                 String userOrChannelId = "";
@@ -294,18 +309,47 @@ public class ShareFilesActivity extends BaseActivity {
                         isGroup = true;
                     }
                 }
-                if (StringUtils.isBlank(userOrChannelId)) {
-                    ToastUtils.show(MyApplication.getInstance(), getString(R.string.baselib_share_fail));
-                } else {
-                    if (isGroup) {
-                        startChannelActivity(userOrChannelId);
-                    } else {
-                        createDirectChannel(userOrChannelId);
-                    }
-                }
+
+                share2Conversation(userOrChannelId, isGroup);
             } catch (Exception e) {
                 e.printStackTrace();
                 ToastUtils.show(MyApplication.getInstance(), getString(R.string.baselib_share_fail));
+            }
+        } else if (requestCode == SHARE_FROM_RECENT_CHAT) {
+            Conversation conversation = (Conversation) data.getSerializableExtra("conversation");
+            if (conversation != null) {
+                String userOrChannelId = conversation.getId();
+                boolean isGroup = conversation.getType().equals(Conversation.TYPE_GROUP);
+                if (!isGroup) {
+                    userOrChannelId = DirectChannelUtils.getDirctChannelOtherUid(
+                            ShareFilesActivity.this, conversation.getName());
+                }
+                share2Conversation(userOrChannelId, isGroup);
+            }
+
+            SearchModel searchModel = (SearchModel) data.getSerializableExtra("searchModel");
+            if (searchModel != null) {
+                String userOrChannelId = searchModel.getId();
+                boolean isGroup = searchModel.getType().equals(SearchModel.TYPE_GROUP);
+                share2Conversation(userOrChannelId, isGroup);
+            }
+        }
+    }
+
+    /**
+     * 分享到聊天界面
+     *
+     * @param userOrChannelId
+     * @param isGroup
+     */
+    private void share2Conversation(String userOrChannelId, boolean isGroup) {
+        if (StringUtils.isBlank(userOrChannelId)) {
+            ToastUtils.show(MyApplication.getInstance(), getString(R.string.baselib_share_fail));
+        } else {
+            if (isGroup) {
+                startChannelActivity(userOrChannelId);
+            } else {
+                createDirectChannel(userOrChannelId);
             }
         }
     }

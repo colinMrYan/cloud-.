@@ -228,6 +228,19 @@ public class ImageDisplayUtils {
     }
 
     /**
+     * 此方法属于同步加载，一般传递本地文件，如果是网址，外部要开线程处理
+     *
+     * @param uri
+     * @return
+     */
+    public Bitmap loadImageSync(String uri, int width, int height) {
+        if (!uri.startsWith("http") && !uri.startsWith("file:") && !uri.startsWith("content:") && !uri.startsWith("assets:") && !uri.startsWith("drawable:")) {
+            uri = "file://" + uri;
+        }
+        return ImageLoader.getInstance().loadImageSync(uri, new ImageSize(width, height), getDefaultOptions());
+    }
+
+    /**
      * 展示固定大小的图片
      *
      * @param uri
@@ -287,6 +300,22 @@ public class ImageDisplayUtils {
         return options;
     }
 
+
+    /**
+     * 获取默认的DisplayImageOptions
+     *
+     * @return
+     */
+    public DisplayImageOptions getDefaultOptions() {
+        DisplayImageOptions options = new DisplayImageOptions.Builder()
+                // 设置图片的解码类型
+                .bitmapConfig(Bitmap.Config.RGB_565)
+                .considerExifParams(true)
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .build();
+        return options;
+    }
 
         /**
          * 获取无缓存的DisplayImageOptions

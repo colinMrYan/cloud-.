@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -27,11 +28,13 @@ import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
 import com.inspur.emmcloud.baselib.widget.ClearEditText;
 import com.inspur.emmcloud.basemodule.bean.SearchModel;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
+import com.inspur.emmcloud.basemodule.util.dialog.ShareDialog;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.ConversationFromChatContent;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
@@ -65,17 +68,23 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
     public static final String SEARCH_ALL = "search_all";
     public static final String SEARCH_CONTACT = "search_contact";
     public static final String SEARCH_GROUP = "search_group";
+    public static final String SEARCH_PRIVATE_CHAT = "search_private_chat";
     public static final String SEARCH_ALL_FROM_CHAT = "search_all_from_chat";
     public static final String SEARCH_CONTENT = "search_content";
     public static final int REFRESH_DATA = 1;
     public static final int CLEAR_DATA = 2;
+    private static final int REQUEST_CODE_SHARE = 5;
 
     @BindView(R.id.lv_search_contact)
     ListView searchContactListView;
     @BindView(R.id.lv_search_group)
     ListView searchGroupListView;
+    @BindView(R.id.lv_search_private_chat)
+    ListView searchPrivateChatListView;
     @BindView(R.id.lv_search_contact_from_chat)
     ListView searchContactFromChatListView;
+    @BindView(R.id.rl_search_more_private_chat)
+    RelativeLayout searchMorePrivateChatLayout;
     @BindView(R.id.rl_search_more_group)
     RelativeLayout searchMoreGroupLayout;
     @BindView(R.id.rl_search_more_contact_from_chat)
@@ -88,19 +97,24 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
     LinearLayout allGroupLayout;
     @BindView(R.id.ll_all_content)
     LinearLayout allContentLayout;
+    @BindView(R.id.ll_all_private_chat)
+    LinearLayout allPrivateChatLayout;
     @BindView(R.id.ev_search_input)
     ClearEditText searchEdit;
     private List<SearchModel> contactsList = new ArrayList<>();
     private List<SearchModel> groupsList = new ArrayList<>();
+    private List<SearchModel> privateChatList = new ArrayList<>();
     private List<ConversationFromChatContent> conversationFromChatContentList = new ArrayList<>();
     private Runnable searchRunnable;
     private String searchArea = SEARCH_ALL;
     private Handler handler;
     private GroupOrContactAdapter groupAdapter;
     private GroupOrContactAdapter contactAdapter;
+    private GroupOrContactAdapter privateChatAdapter;
     private ConversationFromChatContentAdapter conversationFromChatContentAdapter;
     private String searchText;
     private long lastSearchTime = 0;
+    private String shareContent;
     /**
      * 虚拟键盘
      */
@@ -123,23 +137,29 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
         handMessage();
         initSearchRunnable();
         groupAdapter = new GroupOrContactAdapter();
+        privateChatAdapter = new GroupOrContactAdapter();
         contactAdapter = new GroupOrContactAdapter();
         conversationFromChatContentAdapter = new ConversationFromChatContentAdapter();
         searchEdit.setOnEditorActionListener(onEditorActionListener);
         searchEdit.addTextChangedListener(new SearchWatcher());
         searchContactListView.setAdapter(contactAdapter);
         searchGroupListView.setAdapter(groupAdapter);
+        searchPrivateChatListView.setAdapter(privateChatAdapter);
         searchContactFromChatListView.setAdapter(conversationFromChatContentAdapter);
         searchContactListView.setOnItemClickListener(this);
         searchGroupListView.setOnItemClickListener(this);
+        searchPrivateChatListView.setOnItemClickListener(this);
         searchContactFromChatListView.setOnItemClickListener(this);
         searchMoreContentLayout.setVisibility(View.GONE);
         searchMoreGroupLayout.setVisibility(View.GONE);
+        searchMorePrivateChatLayout.setVisibility(View.GONE);
         searchMoreContactFromChatLayout.setVisibility(View.GONE);
         allContactLayout.setVisibility(View.GONE);
         allContentLayout.setVisibility(View.GONE);
         allGroupLayout.setVisibility(View.GONE);
+        allPrivateChatLayout.setVisibility(View.GONE);
         InputMethodUtils.display(this, searchEdit);
+        shareContent = (String) getIntent().getSerializableExtra(Constant.SHARE_CONTENT);
     }
 
     @Override
@@ -167,13 +187,19 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
                         if (contactsList == null) {
                             contactsList = new ArrayList<>();
                         }
+                        if (privateChatList == null) {
+                            privateChatList = new ArrayList<>();
+                        }
                         searchMoreContentLayout.setVisibility(contactsList.size() > 2 ? View.VISIBLE : View.GONE);
                         searchMoreGroupLayout.setVisibility(groupsList.size() > 2 ? View.VISIBLE : View.GONE);
+                        searchMorePrivateChatLayout.setVisibility(privateChatList.size() > 2 ? View.VISIBLE : View.GONE);
                         searchMoreContactFromChatLayout.setVisibility(conversationFromChatContentList.size() > 2 ? View.VISIBLE : View.GONE);
                         allGroupLayout.setVisibility(groupsList.size() > 0 ? View.VISIBLE : View.GONE);
                         allContactLayout.setVisibility(contactsList.size() > 0 ? View.VISIBLE : View.GONE);
                         allContentLayout.setVisibility(conversationFromChatContentList.size() > 0 ? View.VISIBLE : View.GONE);
+                        allPrivateChatLayout.setVisibility(privateChatList.size() > 0 ? View.VISIBLE : View.GONE);
                         groupAdapter.setContentList(groupsList);
+                        privateChatAdapter.setContentList(privateChatList);
                         contactAdapter.setContentList(contactsList);
                         groupAdapter.notifyDataSetChanged();
                         contactAdapter.notifyDataSetChanged();
@@ -188,30 +214,40 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
 
     @Override
     public void onClick(View view) {
-        Bundle bundle;
+        Intent intent = new Intent();
         switch (view.getId()) {
             case R.id.tv_cancel:
                 finish();
                 break;
+            case R.id.rl_search_more_private_chat:
+                intent.setClass(this, CommunicationSearchModelMoreActivity.class);
+                intent.putExtra("search_type", SEARCH_PRIVATE_CHAT);
+                intent.putExtra("search_content", searchText);
+                intent.putExtra(Constant.SHARE_CONTENT, shareContent);
+                startActivityForResult(intent, REQUEST_CODE_SHARE);
+                break;
             case R.id.rl_search_more_group:
-                bundle = new Bundle();
-                bundle.putString("search_type", SEARCH_GROUP);
-                bundle.putString("search_content", searchText);
-                IntentUtils.startActivity(this, CommunicationSearchModelMoreActivity.class, bundle, false);
+                intent.setClass(this, CommunicationSearchModelMoreActivity.class);
+                intent.putExtra("search_type", SEARCH_GROUP);
+                intent.putExtra("search_content", searchText);
+                intent.putExtra(Constant.SHARE_CONTENT, shareContent);
+                startActivityForResult(intent, REQUEST_CODE_SHARE);
                 //跳转到群组列表页面
                 break;
             case R.id.rl_search_more_contact:
-                bundle = new Bundle();
-                bundle.putString("search_type", SEARCH_CONTACT);
-                bundle.putString("search_content", searchText);
-                IntentUtils.startActivity(this, CommunicationSearchModelMoreActivity.class, bundle, false);
+                intent.setClass(this, CommunicationSearchModelMoreActivity.class);
+                intent.putExtra("search_type", SEARCH_CONTACT);
+                intent.putExtra("search_content", searchText);
+                intent.putExtra(Constant.SHARE_CONTENT, shareContent);
+                startActivityForResult(intent, REQUEST_CODE_SHARE);
                 //跳转到查找人列表
                 break;
             case R.id.rl_search_more_contact_from_chat:
-                bundle = new Bundle();
-                bundle.putString("search_type", SEARCH_ALL_FROM_CHAT);
-                bundle.putString("search_content", searchText);
-                IntentUtils.startActivity(this, CommunicationSearchModelMoreActivity.class, bundle, false);
+                intent.setClass(this, CommunicationSearchModelMoreActivity.class);
+                intent.putExtra("search_type", SEARCH_ALL_FROM_CHAT);
+                intent.putExtra("search_content", searchText);
+                intent.putExtra(Constant.SHARE_CONTENT, shareContent);
+                startActivityForResult(intent, REQUEST_CODE_SHARE);
                 break;
             default:
                 break;
@@ -220,10 +256,13 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        if (!StringUtils.isBlank(shareContent)) {   //拦截分享
+            handleShare(adapterView, i);
+            return;
+        }
         switch (adapterView.getId()) {
             case R.id.lv_search_group:
-                groupsList.get(i);
-                startChannelActivity(groupsList.get(i).getId());
+                openChannel(groupsList.get(i));
                 break;
             case R.id.lv_search_contact:
                 Bundle bundle = new Bundle();
@@ -236,9 +275,111 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
                 intent.putExtra(SEARCH_CONTENT, searchText);
                 startActivity(intent);
                 break;
+            case R.id.lv_search_private_chat:
+                openChannel(privateChatList.get(i));
+                break;
             default:
                 break;
         }
+    }
+
+    private void openChannel(SearchModel searchModel) {
+        switch (searchModel.getType()) {
+            case SearchModel.TYPE_GROUP:
+                startChannelActivity(searchModel.getId());
+                break;
+            case SearchModel.TYPE_USER:
+                createDirectChannel(searchModel.getId());
+                break;
+        }
+    }
+
+
+    private void handleShare(AdapterView<?> adapterView, int position) {
+
+        SearchModel searchModel;
+
+        switch (adapterView.getId()) {
+            case R.id.lv_search_group:
+                searchModel = groupsList.get(position);
+//                startChannelActivity(groupsList.get(position).getId());
+
+                handleSearchModelShare(searchModel);
+                break;
+            case R.id.lv_search_contact:
+                searchModel = contactsList.get(position);
+//                Bundle bundle = new Bundle();
+//                bundle.putString("uid", contactsList.get(position).getId());
+//                IntentUtils.startActivity(this, UserInfoActivity.class, bundle);
+
+                handleSearchModelShare(searchModel);
+                break;
+            case R.id.lv_search_contact_from_chat:
+                ConversationFromChatContent conversationFromChatContent = conversationFromChatContentList.get(position);
+                final Conversation conversation = conversationFromChatContent.getConversation();
+
+                String name = CommunicationUtils.getName(this, conversation);
+                String headUrl = CommunicationUtils.getHeadUrl(conversation);
+                //分享到
+                ShareDialog.Builder builder = new ShareDialog.Builder(this);
+                builder.setUserName(name);
+                builder.setContent(shareContent);
+                builder.setDefaultResId(R.drawable.ic_app_default);
+                builder.setHeadUrl(headUrl);
+                final ShareDialog dialog = builder.build();
+                dialog.setCallBack(new ShareDialog.CallBack() {
+                    @Override
+                    public void onConfirm(View view) {
+                        Intent intent = new Intent();
+                        intent.putExtra("conversation", conversation);
+                        setResult(RESULT_OK, intent);
+                        dialog.dismiss();
+                        finish();
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        dialog.dismiss();
+                    }
+                });
+                dialog.show();
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * 单人聊天  群组聊天
+     *
+     * @param searchModel
+     */
+    private void handleSearchModelShare(final SearchModel searchModel) {
+        String name = searchModel.getName();
+        String headUrl = searchModel.getIcon();
+        //分享到
+        ShareDialog.Builder builder = new ShareDialog.Builder(this);
+        builder.setUserName(name);
+        builder.setContent(shareContent);
+        builder.setDefaultResId(R.drawable.ic_app_default);
+        builder.setHeadUrl(headUrl);
+        final ShareDialog dialog = builder.build();
+        dialog.setCallBack(new ShareDialog.CallBack() {
+            @Override
+            public void onConfirm(View view) {
+                Intent intent = new Intent();
+                intent.putExtra("searchModel", searchModel);
+                setResult(RESULT_OK, intent);
+                dialog.dismiss();
+                finish();
+            }
+
+            @Override
+            public void onCancel() {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
     }
 
     /**
@@ -296,6 +437,7 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
                     @Override
                     public void run() {
                         List<SearchModel> groupsSearchList;
+                        List<SearchModel> privateChatSearchList;
                         List<Contact> contactsSearchList;
                         switch (searchArea) {
                             case SEARCH_ALL:
@@ -305,6 +447,11 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
                                                     searchText);
                                 } else {
                                     groupsSearchList = ConversationCacheUtils.getSearchConversationSearchModelList(MyApplication.getInstance(), searchText);
+                                }
+                                privateChatSearchList = ConversationCacheUtils.getSearchConversationPrivateChatSearchModelList(MyApplication.getInstance(), searchText);
+                                privateChatList = new ArrayList<>();
+                                for (int i = 0; i < (privateChatSearchList.size() > 3 ? 3 : privateChatSearchList.size()); i++) {
+                                    privateChatList.add(privateChatSearchList.get(i));
                                 }
                                 groupsList = new ArrayList<>();
                                 for (int i = 0; i < (groupsSearchList.size() > 3 ? 3 : groupsSearchList.size()); i++) {
@@ -424,6 +571,15 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_SHARE && resultCode == RESULT_OK) {
+            setResult(RESULT_OK, data);
+            finish();
+        }
+    }
+
     /**
      * EditText  Watcher*/
     class SearchWatcher implements TextWatcher {
@@ -455,6 +611,7 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
                 handler.sendEmptyMessage(REFRESH_DATA);
                 contactsList.clear();
                 groupsList.clear();
+                privateChatList.clear();
                 conversationFromChatContentList.clear();
             }
         }

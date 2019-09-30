@@ -13,7 +13,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.SpannableString;
-import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -1787,44 +1786,6 @@ public class ConversationActivity extends ConversationBaseActivity {
             }
         });
 
-    }
-
-    /**
-     * 长按事件处理
-     */
-    private void showLongClickOperationsDialog(final int[] operationsId, final Context context, final UIMessage uiMessage) {
-        final String[] operations = new String[operationsId.length];
-        for (int i = 0; i < operationsId.length; i++) {
-            String operation = context.getResources().getString(operationsId[i]);
-            operations[i] = operation;
-        }
-        ContextThemeWrapper ctw = new ContextThemeWrapper(this, R.style.cus_dialog_style);
-        new CustomDialog.ListDialogBuilder(ctw)
-                .setItems(operations, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String content;
-                        content = uiMessage2Content(uiMessage);
-                        if (StringUtils.isBlank(content)) {
-                            content = "";
-                        }
-                        switch (operationsId[which]) {
-                            case R.string.chat_long_click_copy:
-                                copyToClipboard(context, content);
-                                break;
-                            case R.string.chat_long_click_transmit:
-                                shareMessageToFriends(context, uiMessage);
-                                break;
-                            case R.string.chat_long_click_schedule:
-                                addTextToSchedule(content);
-                                break;
-                            case R.string.chat_long_click_copy_text:
-                                copyToClipboard(context, content);
-                                break;
-                        }
-                        dialog.dismiss();
-                    }
-                }).show();
     }
 
     private String uiMessage2Content(UIMessage uiMessage) {

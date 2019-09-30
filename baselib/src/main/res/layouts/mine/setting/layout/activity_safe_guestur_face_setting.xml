@@ -51,8 +51,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:paddingBottom="11dp"
                 android:paddingTop="11dp"
+                android:paddingBottom="11dp"
                 android:text="@string/switch_gesture_unlock"
                 android:textColor="#333333"
                 android:textSize="16sp" />
@@ -77,17 +77,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:visibility="gone"
             android:background="@drawable/text_layout_selector"
-            android:paddingLeft="16dp">
+            android:paddingLeft="16dp"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/tv_setting_safe_start_finger_print"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:paddingBottom="11dp"
                 android:paddingTop="11dp"
+                android:paddingBottom="11dp"
                 android:text="@string/safe_center_finger_print"
                 android:textColor="#333333"
                 android:textSize="16sp" />
@@ -122,8 +122,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:paddingBottom="11dp"
                 android:paddingTop="11dp"
+                android:paddingBottom="11dp"
                 android:text="@string/switch_gesture_reset_unlock"
                 android:textColor="#333333"
                 android:textSize="16sp" />
@@ -149,17 +149,17 @@
             android:layout_height="wrap_content"
             android:background="@drawable/text_layout_selector"
             android:onClick="onClick"
-            android:visibility="gone"
             android:paddingLeft="16dp"
-            android:paddingRight="16dp">
+            android:paddingRight="16dp"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/tv_setting_safe_reset_face"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:paddingBottom="11dp"
                 android:paddingTop="11dp"
+                android:paddingBottom="11dp"
                 android:text="@string/experience_face_verify"
                 android:textColor="#333333"
                 android:textSize="16sp" />

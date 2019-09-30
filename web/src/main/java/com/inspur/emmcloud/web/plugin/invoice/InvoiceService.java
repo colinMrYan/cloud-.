@@ -4,16 +4,19 @@ import android.util.Log;
 
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
 import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
 import com.inspur.emmcloud.basemodule.api.HttpUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.web.R;
 import com.inspur.emmcloud.web.api.WebAPIUri;
 import com.inspur.emmcloud.web.plugin.ImpPlugin;
 import com.tencent.mm.opensdk.modelbiz.ChooseCardFromWXCardPackage;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.xutils.http.RequestParams;
 
@@ -26,15 +29,19 @@ import java.util.Set;
 import java.util.TreeSet;
 
 public class InvoiceService extends ImpPlugin {
+    private String successCb, failCb;
+
     @Override
     public void execute(String action, JSONObject paramsObject) {
-        if (action.equals("open")) {
+        successCb = JSONUtils.getString(paramsObject, "success", "");
+        failCb = JSONUtils.getString(paramsObject, "fail", "");
+
+        if (action.equals("invoice")) {
             initInvoice();
         }
     }
 
     String appId = "wx4eb8727ea9c26495";
-    String getAccessTokenUrl;
     String wechatAccessToken, wechatTicket, timestamp;
 
     /**
@@ -95,56 +102,14 @@ public class InvoiceService extends ImpPlugin {
         return sb.toString();
     }
 
-    private void initInvoice() {
-        getWechatAccessToken();
-
-//        List<String> list = new ArrayList();
-//        list.add("INVOICE");
-//        list.add(appId);
-//        list.add(timestamp);
-//        list.add("abc");
-//        list.add(wechatTicket);
-//        String result = getOriginSignData(list);
-
-        // cardType: INVOICE    appid: wx4eb8727ea9c26495  timestamp:1567220   nonceStr: abc
-        //api_ticket: 9KwiourQPRN3vx3Nn1c_ibRS2ZhWRzh2EitC_f0mfFgJ8x411Tc45byvYvZLJFCPLgFkMkHgZott8G0r-GfenA
-//        String orignData = "15672209KwiourQPRN3vx3Nn1c_ibRS2ZhWRzh2EitC_f0mfFgJ8x411Tc45byvYvZLJFCPLgFkMkHgZott8G0r-GfenAINVOICEabcwx4eb8727ea9c26495";
-//        try {
-//            String sha1 = encryptToSHA(orignData);
-//            Log.d("zhang", "initInvoice: sha1=" + sha1);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-
-
-        //注册app
-//        IWXAPI api = WXAPIFactory.createWXAPI(getFragmentContext(), "wx4eb8727ea9c26495", true);
-//        api.registerApp("wx4eb8727ea9c26495");
-
-//        "168b6677c67cdb7da8e7b3968f3d38d9ba6bea61"
-        //拉起微信电子发票列表
-//        ChooseCardFromWXCardPackage.Req req = new ChooseCardFromWXCardPackage.Req();
-//        req.appId = appId;
-//        req.cardType = "INVOICE";
-//        req.cardSign = "168b6677c67cdb7da8e7b3968f3d38d9ba6bea61";
-//        req.nonceStr = "abc";
-//        req.timeStamp = "1567220";
-//        req.signType = "SHA1";
-//
-//        if (req.checkArgs()) {
-//            api.sendReq(req);
-//        }
-    }
-
     /**
      * 获取微信的accessToken
      */
-    private void getWechatAccessToken() {
+    private void initInvoice() {
         String appId = "wx4eb8727ea9c26495";
         String appSecret = "56a0426315f1d0985a1cc1e75e96130d";
-        getAccessTokenUrl = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&";
+//        getAccessTokenUrl = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&";
         String completeUrl = WebAPIUri.getWechatTicketUrl();
-        //getAccessTokenUrl + "appid=" + appId + "&secret=" + appSecret;
         RequestParams params = BaseApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
         HttpUtils.request(getFragmentContext(), CloudHttpMethod.GET, params, new BaseModuleAPICallback(getFragmentContext(), completeUrl) {
@@ -251,5 +216,21 @@ public class InvoiceService extends ImpPlugin {
     @Override
     public void onDestroy() {
 
+    }
+
+    public void handleWechatResult(String result) {
+        if (!StringUtils.isBlank(result)) {
+            JSONObject json = JSONUtils.getJSONObject(result);
+            jsCallback(successCb, json);
+        } else {
+            try {
+                JSONObject json = new JSONObject();
+                json.put("errorMessage", getFragmentContext().getString(R.string.unknown_error));
+                jsCallback(failCb, json);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+//        jsCallback(jscb, result);
     }
 }

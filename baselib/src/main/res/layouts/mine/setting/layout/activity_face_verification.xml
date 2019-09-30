@@ -31,10 +31,10 @@
         android:id="@+id/cover_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/preview_sv"
         android:layout_alignLeft="@id/preview_sv"
-        android:layout_alignRight="@id/preview_sv"
         android:layout_alignTop="@id/preview_sv"
+        android:layout_alignRight="@id/preview_sv"
+        android:layout_alignBottom="@id/preview_sv"
         android:gravity="center"
         android:orientation="horizontal"
         android:weightSum="100">
@@ -51,8 +51,8 @@
                 android:layout_height="wrap_content"
                 android:background="#86000000"
                 android:gravity="center"
-                android:paddingBottom="10dp"
                 android:paddingTop="20dp"
+                android:paddingBottom="10dp"
                 android:textColor="@android:color/white"
                 android:textSize="17sp"
                 android:visibility="gone" />
