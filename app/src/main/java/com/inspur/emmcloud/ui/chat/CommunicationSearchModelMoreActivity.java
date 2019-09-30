@@ -62,7 +62,8 @@ import butterknife.ButterKnife;
  * Created by libaochao on 2019/8/20.
  */
 
-public class CommunicationSearchModelMoreActivity extends BaseActivity implements View.OnClickListener, ListView.OnItemClickListener, MySwipeRefreshLayout.OnLoadListener {
+public class CommunicationSearchModelMoreActivity extends BaseActivity implements View.OnClickListener, ListView.OnItemClickListener,
+        MySwipeRefreshLayout.OnLoadListener, MySwipeRefreshLayout.OnRefreshListener {
 
     public static final String SEARCH_CONTACT = "search_contact";
     public static final String SEARCH_GROUP = "search_group";
@@ -150,7 +151,6 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
 
     @Override
     public void onLoadMore() {
-        mySwipeRefreshLayout.setLoading(false);
         switch (searchArea) {
             case SEARCH_GROUP:
                 mySwipeRefreshLayout.setCanLoadMore(false);
@@ -160,9 +160,16 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
                 mySwipeRefreshLayout.setCanLoadMore((moreContactList.size() == 25));
                 searchContactList.addAll(searchContactList.size(), moreContactList);
                 contactAdapter.notifyDataSetChanged();
+                mySwipeRefreshLayout.setLoading(false);
                 break;
         }
 
+    }
+
+    @Override
+    public void onRefresh() {
+        mySwipeRefreshLayout.setLoading(false);
+        mySwipeRefreshLayout.setRefreshing(false);
     }
 
     private void handMessage() {
