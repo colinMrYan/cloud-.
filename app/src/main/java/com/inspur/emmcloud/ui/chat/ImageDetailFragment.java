@@ -25,7 +25,6 @@ import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
 import com.inspur.emmcloud.bean.system.EventMessage;
 import com.inspur.emmcloud.widget.largeimage.LargeImageView;
-import com.inspur.emmcloud.widget.largeimage.factory.FileBitmapDecoderFactory;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -42,6 +41,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -271,7 +271,14 @@ public class ImageDetailFragment extends Fragment {
 
         if (!StringUtils.isBlank(rawUrl) && ImageDisplayUtils.getInstance().isHaveCacheImage(rawUrl)) {
             String path = ImageDisplayUtils.getInstance().getCacheImageFile(rawUrl).getAbsolutePath();
-            mImageView.setImage(new FileBitmapDecoderFactory(path));
+            try {
+                FileInputStream fis = new FileInputStream(path);
+                Bitmap bitmap = BitmapFactory.decodeStream(fis);
+                mImageView.setImage(bitmap);
+            } catch (Exception e) {
+                e.printStackTrace();
+                mImageView.setImage(R.drawable.default_image);
+            }
         } else {
             ImageLoader.getInstance().loadImage(mImageUrl, options,
                     new SimpleImageLoadingListener() {
@@ -346,10 +353,12 @@ public class ImageDetailFragment extends Fragment {
                 options, new ImageLoadingListener() {
                     @Override
                     public void onLoadingStarted(String imageUri, View view) {
+                        LogUtils.jasonDebug("onLoadingStarted");
                     }
 
                     @Override
                     public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+                        LogUtils.jasonDebug("onLoadingFailed");
                     }
 
                     @Override
@@ -366,6 +375,7 @@ public class ImageDetailFragment extends Fragment {
 
                     @Override
                     public void onLoadingCancelled(String imageUri, View view) {
+                        LogUtils.jasonDebug("onLoadingCancelled");
                     }
                 }, imageLoadingProgressListener);
 

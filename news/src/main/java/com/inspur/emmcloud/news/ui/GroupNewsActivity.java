@@ -80,6 +80,7 @@ public class GroupNewsActivity extends BaseFragmentActivity {
         int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics());
         viewPager.setPageMargin(pageMargin);
         viewPager.setAdapter(pagerAdapter);
+        viewPager.setCurrentItem(0, true);
         //获取PagerSlidingTabStrip，并初始化设置
         PagerSlidingTabStrip pagerSlidingTabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
         pagerSlidingTabStrip.setVisibility(View.VISIBLE);
