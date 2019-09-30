@@ -62,10 +62,12 @@ import butterknife.ButterKnife;
  * Created by libaochao on 2019/8/20.
  */
 
-public class CommunicationSearchModelMoreActivity extends BaseActivity implements View.OnClickListener, ListView.OnItemClickListener, MySwipeRefreshLayout.OnLoadListener {
+public class CommunicationSearchModelMoreActivity extends BaseActivity implements View.OnClickListener, ListView.OnItemClickListener,
+        MySwipeRefreshLayout.OnLoadListener, MySwipeRefreshLayout.OnRefreshListener {
 
     public static final String SEARCH_CONTACT = "search_contact";
     public static final String SEARCH_GROUP = "search_group";
+    public static final String SEARCH_PRIVATE_CHAT = "search_private_chat";
     public static final String SEARCH_ALL_FROM_CHAT = "search_all_from_chat";
     public static final String SEARCH_CONTENT = "search_content";
     public static final int REFRESH_DATA = 1;
@@ -79,6 +81,13 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
     ListView searchGroupListView;
     @BindView(R.id.refresh_layout)
     MySwipeRefreshLayout mySwipeRefreshLayout;
+    Handler mHandler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            mySwipeRefreshLayout.setRefreshing(false);
+            return true;
+        }
+    });
     private Runnable searchRunnable;
     private List<SearchModel> searchGroupList = new ArrayList<>(); // 群组搜索结果
     private List<Contact> searchContactList = new ArrayList<>(); // 人员搜索结果
@@ -91,7 +100,6 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
     private ContactAdapter contactAdapter;
     private ConversationFromChatContentAdapter conversationFromChatContentAdapter;
     private String shareContent;
-
     private TextView.OnEditorActionListener onEditorActionListener = new TextView.OnEditorActionListener() {
         @Override
         public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -123,6 +131,9 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
         } else if (searchArea.equals(SEARCH_GROUP)) {
             groupAdapter = new GroupAdapter();
             searchGroupListView.setAdapter(groupAdapter);
+        } else if (searchArea.equals(SEARCH_PRIVATE_CHAT)) {
+            groupAdapter = new GroupAdapter();
+            searchGroupListView.setAdapter(groupAdapter);
         } else if (searchArea.equals(SEARCH_CONTACT)) {
             contactAdapter = new ContactAdapter();
             searchGroupListView.setAdapter(contactAdapter);
@@ -131,6 +142,7 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
         searchEdit.setText(searchText);
         searchEdit.setSelection(searchText.length());
         mySwipeRefreshLayout.setOnLoadListener(this);
+        mySwipeRefreshLayout.setOnRefreshListener(this);
         mySwipeRefreshLayout.setEnabled(true);
     }
 
@@ -143,9 +155,9 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
     protected int getStatusType() {
         return STATUS_NO_SET;
     }
+
     @Override
     public void onLoadMore() {
-        mySwipeRefreshLayout.setLoading(false);
         switch (searchArea) {
             case SEARCH_GROUP:
                 mySwipeRefreshLayout.setCanLoadMore(false);
@@ -155,9 +167,15 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
                 mySwipeRefreshLayout.setCanLoadMore((moreContactList.size() == 25));
                 searchContactList.addAll(searchContactList.size(), moreContactList);
                 contactAdapter.notifyDataSetChanged();
+                mySwipeRefreshLayout.setLoading(false);
                 break;
         }
 
+    }
+
+    @Override
+    public void onRefresh() {
+        mHandler.sendEmptyMessageDelayed(1, 1000);
     }
 
     private void handMessage() {
@@ -169,7 +187,7 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
                         /**刷新Ui*/
                         if (searchArea.equals(SEARCH_ALL_FROM_CHAT)) {
                             conversationFromChatContentAdapter.notifyDataSetChanged();
-                        } else if (searchArea.equals(SEARCH_GROUP)) {
+                        } else if (searchArea.equals(SEARCH_GROUP) || searchArea.equals(SEARCH_PRIVATE_CHAT)) {
                             groupAdapter.notifyDataSetChanged();
                         } else {
                             mySwipeRefreshLayout.setCanLoadMore((searchContactList.size() == 25));
@@ -202,6 +220,13 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
                                 } else {
                                     searchGroupList = ConversationCacheUtils.getSearchConversationSearchModelList(MyApplication.getInstance(), searchText);
                                 }
+                                if (searchGroupList == null) {
+                                    searchGroupList = new ArrayList<>();
+                                }
+                                break;
+                            case SEARCH_PRIVATE_CHAT:
+                                searchGroupList.clear();
+                                searchGroupList = ConversationCacheUtils.getSearchConversationPrivateChatSearchModelList(MyApplication.getInstance(), searchText);
                                 if (searchGroupList == null) {
                                     searchGroupList = new ArrayList<>();
                                 }
@@ -326,9 +351,17 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
             startActivity(intent);
         } else {
             switch (searchArea) {
+                case SEARCH_PRIVATE_CHAT:
                 case SEARCH_GROUP:
                     if (!searchGroupList.get(i).getId().equals(BaseApplication.getInstance().getUid())) {
-                        startChannelActivity(searchGroupList.get(i).getId());
+                        switch (searchGroupList.get(i).getType()) {
+                            case SearchModel.TYPE_GROUP:
+                                startChannelActivity(searchGroupList.get(i).getId());
+                                break;
+                            case SearchModel.TYPE_USER:
+                                createDirectChannel(searchGroupList.get(i).getId());
+                                break;
+                        }
                     }
                     break;
                 case SEARCH_CONTACT:
@@ -371,45 +404,20 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
             });
             dialog.show();
         } else {
+            SearchModel searchModel;
             switch (searchArea) {
+                case SEARCH_PRIVATE_CHAT:
                 case SEARCH_GROUP:
-                    SearchModel searchModel = searchGroupList.get(position);
+                    searchModel = searchGroupList.get(position);
                     handleSearchModelShare(searchModel);
                     break;
                 case SEARCH_CONTACT:
                     Contact contact = searchContactList.get(position);
-                    handleContactShare(contact);
+                    searchModel = contact.contact2SearchModel();
+                    handleSearchModelShare(searchModel);
                     break;
             }
         }
-    }
-
-    private void handleContactShare(final Contact contact) {
-        String name = contact.getName();
-        String headUrl = BaseApplication.getInstance().getUserPhotoUrl(contact.getId());
-        //分享到
-        ShareDialog.Builder builder = new ShareDialog.Builder(this);
-        builder.setUserName(name);
-        builder.setContent(shareContent);
-        builder.setDefaultResId(R.drawable.ic_app_default);
-        builder.setHeadUrl(headUrl);
-        final ShareDialog dialog = builder.build();
-        dialog.setCallBack(new ShareDialog.CallBack() {
-            @Override
-            public void onConfirm(View view) {
-                Intent intent = new Intent();
-                intent.putExtra("contact", contact);
-                setResult(RESULT_OK, intent);
-                dialog.dismiss();
-                finish();
-            }
-
-            @Override
-            public void onCancel() {
-                dialog.dismiss();
-            }
-        });
-        dialog.show();
     }
 
     /**

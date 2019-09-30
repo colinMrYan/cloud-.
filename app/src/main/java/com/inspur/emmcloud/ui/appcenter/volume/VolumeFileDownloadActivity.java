@@ -26,6 +26,11 @@ import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
+import com.inspur.emmcloud.util.privates.ShareFile2OutAppUtils;
+import com.umeng.socialize.ShareAction;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.shareboard.SnsPlatform;
+import com.umeng.socialize.utils.ShareBoardlistener;
 
 import org.xutils.common.Callback;
 import org.xutils.http.HttpMethod;
@@ -55,12 +60,16 @@ public class VolumeFileDownloadActivity extends BaseActivity {
     TextView progressText;
     @BindView(R.id.tv_file_name)
     TextView fileNameText;
-    @BindView(R.id.file_type_img)
+    @BindView(R.id.iv_file_type_img_preview)
     ImageView fileTypeImg;
     @BindView(R.id.tv_file_size)
     TextView fileSizeText;
+    @BindView(R.id.tv_share)
+    TextView shareFileTextView;
     @BindView(R.id.tv_file_open_tips)
     TextView fileOpenTipsText;
+    @BindView(R.id.iv_file_type_file_preview)
+    ImageView typeFileImageView;
     private String fileSavePath = "";
     private Callback.Cancelable cancelable;
     private VolumeFile volumeFile;
@@ -97,9 +106,13 @@ public class VolumeFileDownloadActivity extends BaseActivity {
                 url = APIUri.getVolumeFileTypeImgThumbnailUrl(volumeFile, currentDirAbsolutePath);
             }
             fileTypeImg.setTag(url);
+            fileTypeImg.setVisibility(View.VISIBLE);
+            typeFileImageView.setVisibility(View.GONE);
             ImageDisplayUtils.getInstance().displayImageByTag(fileTypeImg, url, R.drawable.baselib_file_type_img);
         } else {
-            fileTypeImg.setImageResource(FileUtils.getFileIconResIdByFormat(volumeFile.getFormat()));
+            typeFileImageView.setImageResource(FileUtils.getFileIconResIdByFormat(volumeFile.getFormat()));
+            typeFileImageView.setVisibility(View.VISIBLE);
+            fileTypeImg.setVisibility(View.GONE);
         }
 
 
@@ -107,6 +120,7 @@ public class VolumeFileDownloadActivity extends BaseActivity {
 
     private void setDownloadingStatus(boolean isDownloaded) {
         if (isDownloaded) {
+            shareFileTextView.setVisibility(View.VISIBLE);
             if (FileUtils.canFileOpenByApp(fileSavePath)) {
                 downloadBtn.setText(R.string.open);
                 fileOpenTipsText.setVisibility(View.GONE);
@@ -117,6 +131,7 @@ public class VolumeFileDownloadActivity extends BaseActivity {
 
             }
         } else {
+            shareFileTextView.setVisibility(View.GONE);
             downloadBtn.setText(R.string.download);
             fileOpenTipsText.setVisibility(View.GONE);
         }
@@ -149,9 +164,35 @@ public class VolumeFileDownloadActivity extends BaseActivity {
                 downloadBtn.setVisibility(View.VISIBLE);
                 downloadStatusLayout.setVisibility(View.GONE);
                 break;
+            case R.id.tv_share:
+                String fileSavePath = FileDownloadManager.getInstance().getDownloadFilePath(
+                        DownloadFileCategory.CATEGORY_VOLUME_FILE, volumeFile.getId(), volumeFile.getName());
+                if (!StringUtils.isBlank(fileSavePath)) {
+                    shareFile(fileSavePath);
+                } else {
+                    ToastUtils.show(getString(R.string.clouddriver_volume_frist_download));
+                }
+                break;
             default:
                 break;
         }
+    }
+
+    public void shareFile(final String filePath) {
+        new ShareAction(this).setDisplayList(
+                SHARE_MEDIA.WEIXIN, SHARE_MEDIA.QQ
+        )
+                .setShareboardclickCallback(new ShareBoardlistener() {
+                    @Override
+                    public void onclick(SnsPlatform snsPlatform, SHARE_MEDIA share_media) {
+                        if (share_media == SHARE_MEDIA.WEIXIN) {
+                            ShareFile2OutAppUtils.shareFile2WeChat(getApplicationContext(), filePath);
+                        } else if (share_media == SHARE_MEDIA.QQ) {
+                            ShareFile2OutAppUtils.shareFileToQQ(getApplicationContext(), filePath);
+                        }
+                    }
+                })
+                .open();
     }
 
     private boolean checkDownloadEnvironment() {
@@ -218,6 +259,7 @@ public class VolumeFileDownloadActivity extends BaseActivity {
                 progressBar.setProgress(0);
                 progressText.setText("");
                 downloadBtn.setVisibility(View.VISIBLE);
+                shareFileTextView.setVisibility(View.VISIBLE);
                 setDownloadingStatus(true);
             }
 
@@ -226,6 +268,7 @@ public class VolumeFileDownloadActivity extends BaseActivity {
                 if (downloadStatusLayout.getVisibility() == View.VISIBLE) {
                     ToastUtils.show(getApplicationContext(), R.string.download_fail);
                     downloadStatusLayout.setVisibility(View.GONE);
+                    shareFileTextView.setVisibility(View.GONE);
                     progressBar.setProgress(0);
                     progressText.setText("");
                     downloadBtn.setVisibility(View.VISIBLE);

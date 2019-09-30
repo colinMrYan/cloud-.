@@ -333,6 +333,8 @@
     <string name="chat_send_email_max_person_tip">当前收件人太多，可能导致邮件发送异常，是否确定发送？</string>
     <string name="chat_more_contacts">更多联系人</string>
     <string name="chat_more_groups">更多群聊</string>
+    <string name="chat_more_private_chat">更多私聊</string>
+    <string name="chat_private_chat">私聊</string>
     <string name="chat_more_content">更多聊天记录</string>
     <string name="chat_search_group_chats">群聊</string>
     <string name="chat_search_mention_all">全部成员</string>
@@ -644,6 +646,7 @@
     <string name="volume_file_transfer">文件传输</string>
     <string name="volume_file_transfer_download_list">下载列表</string>
     <string name="volume_file_transfer_upload_list">上传列表</string>
+    <string name="volume_share_2_qq_wechat">分享</string>
 
     <!--Webex 邮箱-->
     <string name="mail_install_cert"><u>安装数字证书</u></string>

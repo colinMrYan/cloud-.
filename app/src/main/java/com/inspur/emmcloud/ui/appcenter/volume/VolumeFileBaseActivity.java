@@ -200,8 +200,6 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
      * @param volumeFile
      */
     protected void showFileOperationDlg(final VolumeFile volumeFile) {
-        permissionAction = getString(R.string.clouddriver_file_permission_manager);
-        shareTo = getString(R.string.baselib_share_to);
         //我的文件那个网盘不再显示权限管理,共享网盘也要是自己的才能显示权限管理，否则不显示
         ActionSheetDialog.ActionListSheetBuilder builder = new ActionSheetDialog.ActionListSheetBuilder(this);
         for (int i = 0; i < volumeActionHideList.size(); i++) {
@@ -304,6 +302,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
             isVolumeFileDirectory = selectVolumeFileList.get(0).getType().equals(VolumeFile.FILE_TYPE_DIRECTORY);
             isOwner = selectVolumeFileList.get(0).getOwner().equals(BaseApplication.getInstance().getUid());
         }
+        permissionAction = getString(R.string.clouddriver_file_permission_manager);
         downloadAction = getString(R.string.download);
         moveToAction = getString(R.string.move);
         copyAction = getString(R.string.copy);

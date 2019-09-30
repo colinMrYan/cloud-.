@@ -344,7 +344,8 @@
     <string name="meeting_cancel_confirm">取消確認</string>
     <string name="meeting_cancel_reject">取消拒絕</string>
     <string name="chat_group_message_search">查找聊天記錄</string>
-
+    <string name="chat_more_private_chat">更多私聊</string>
+    <string name="chat_private_chat">私聊</string>
     <string name="chat_resend_message">重新發送</string>
 
     <!-- 工作頁面部分 -->
@@ -627,6 +628,7 @@
     <string name="create">新建</string>
     <string name="volume_please_install_qq">請先安裝QQ</string>
     <string name="volume_please_install_wechat">請先安裝微信</string>
+    <string name="volume_share_2_qq_wechat">分享</string>
 
     <!-- 我的頁面部分 -->
     <string name="moments">动态</string>
