@@ -413,9 +413,10 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String[] fileFilterTypes = {VolumeFile.FILTER_TYPE_DOCUNMENT, VolumeFile.FILTER_TYPE_IMAGE, VolumeFile.FILTER_TYPE_AUDIO, VolumeFile.FILTER_TYPE_VIDEO, VolumeFile.FILTER_TYPE_OTHER};
+                int[] filterTypeNameIds = {R.string.docunment, R.string.picture, R.string.audio, R.string.video, R.string.other};
                 Intent intent = new Intent(VolumeFileActivity.this, VolumeFileFilterActvity.class);
                 Bundle bundle = getIntent().getExtras();
-                bundle.putString("title", getString(R.string.app_classification));
+                bundle.putString("title", getString(filterTypeNameIds[position]));
                 bundle.putString("fileFilterType", fileFilterTypes[position]);
                 bundle.putString("currentDirAbsolutePath", currentDirAbsolutePath);
                 intent.putExtras(bundle);
