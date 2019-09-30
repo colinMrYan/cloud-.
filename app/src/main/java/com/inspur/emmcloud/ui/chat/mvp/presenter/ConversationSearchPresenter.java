@@ -18,7 +18,7 @@ public class ConversationSearchPresenter extends BasePresenter<ConversionSearchC
 
     @Override
     public List<Conversation> getConversationData() {
-        List<Conversation> list = ConversationCacheUtils.getConversationList(mView.getContext());
+        List<Conversation> list = ConversationCacheUtils.getConversationListByLastUpdate(mView.getContext());
         Iterator<Conversation> iterator = list.iterator();
         while (iterator.hasNext()) {
             Conversation conversation = iterator.next();

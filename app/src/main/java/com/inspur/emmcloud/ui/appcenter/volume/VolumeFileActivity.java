@@ -137,7 +137,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                     if (!adapter.getMultiselect()) {
                         Bundle bundle = new Bundle();
                         if (volumeFile.getType().equals(VolumeFile.FILE_TYPE_DIRECTORY)) {
-                            boolean isVolumeFileWriteable = VolumeFilePrivilegeUtils.getVolumeFileWriteable(getApplicationContext(), volumeFile);
+                            boolean isVolumeFileWriteable = VolumeFilePrivilegeUtils.getVolumeFileWritable(getApplicationContext(), volumeFile);
                             boolean isVolumeFileReadable = VolumeFilePrivilegeUtils.getVolumeFileReadable(getApplicationContext(), volumeFile);
                             if (isVolumeFileWriteable || isVolumeFileReadable) {
                                 bundle.putSerializable("volume", volume);
@@ -289,7 +289,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                 break;
             case R.id.batch_operation_select_all_text:
                 boolean isSelectAllStatus = getBatchOprationSelectAllText.getText().toString().equals(getString(R.string.clouddriver_select_all));
-                setselectAll(isSelectAllStatus);
+                setSelectAll(isSelectAllStatus);
                 setBottomOperationItemShow(adapter.getSelectVolumeFileList());
                 break;
             default:
@@ -436,9 +436,9 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
      */
     @Override
     protected void setCurrentDirectoryLayoutByPrivilege() {
-        boolean isCurrentDirectoryWriteable = VolumeFilePrivilegeUtils.getVolumeFileWriteable(getApplicationContext(), getVolumeFileListResult);
-        headerOperationLayout.setVisibility(isCurrentDirectoryWriteable ? View.VISIBLE : View.GONE);
-        uploadFileBtn.setVisibility(volumeFileList.size() == 0 && isCurrentDirectoryWriteable ? View.VISIBLE : View.GONE);
+        boolean isCurrentDirectoryWritable = VolumeFilePrivilegeUtils.getVolumeFileWritable(getApplicationContext(), getVolumeFileListResult, volume);
+        headerOperationLayout.setVisibility(isCurrentDirectoryWritable ? View.VISIBLE : View.GONE);
+        uploadFileBtn.setVisibility(volumeFileList.size() == 0 && isCurrentDirectoryWritable ? View.VISIBLE : View.GONE);
     }
 
     /**
@@ -454,7 +454,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         adapter.setMultiselect(isMutiselect);
     }
 
-    private void setselectAll(boolean isSelectAll) {
+    private void setSelectAll(boolean isSelectAll) {
         getBatchOprationSelectAllText.setText(isSelectAll ? R.string.clouddriver_select_nothing : R.string.clouddriver_select_all);
         adapter.setSelectAll(isSelectAll);
         batchOprationHeaderText.setText(getString(R.string.clouddriver_has_selected, adapter.getSelectVolumeFileList().size()));

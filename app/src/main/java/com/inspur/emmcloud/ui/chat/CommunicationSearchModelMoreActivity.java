@@ -406,46 +406,20 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
             });
             dialog.show();
         } else {
+            SearchModel searchModel;
             switch (searchArea) {
                 case SEARCH_PRIVATE_CHAT:
                 case SEARCH_GROUP:
-                    SearchModel searchModel = searchGroupList.get(position);
+                    searchModel = searchGroupList.get(position);
                     handleSearchModelShare(searchModel);
                     break;
                 case SEARCH_CONTACT:
                     Contact contact = searchContactList.get(position);
-                    handleContactShare(contact);
+                    searchModel = contact.contact2SearchModel();
+                    handleSearchModelShare(searchModel);
                     break;
             }
         }
-    }
-
-    private void handleContactShare(final Contact contact) {
-        String name = contact.getName();
-        String headUrl = BaseApplication.getInstance().getUserPhotoUrl(contact.getId());
-        //分享到
-        ShareDialog.Builder builder = new ShareDialog.Builder(this);
-        builder.setUserName(name);
-        builder.setContent(shareContent);
-        builder.setDefaultResId(R.drawable.ic_app_default);
-        builder.setHeadUrl(headUrl);
-        final ShareDialog dialog = builder.build();
-        dialog.setCallBack(new ShareDialog.CallBack() {
-            @Override
-            public void onConfirm(View view) {
-                Intent intent = new Intent();
-                intent.putExtra("contact", contact);
-                setResult(RESULT_OK, intent);
-                dialog.dismiss();
-                finish();
-            }
-
-            @Override
-            public void onCancel() {
-                dialog.dismiss();
-            }
-        });
-        dialog.show();
     }
 
     /**

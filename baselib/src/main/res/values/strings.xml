@@ -552,7 +552,7 @@
     <string name="app_commonly_use_app">是否将移动签到添加到桌面快捷方式，一键签到?</string>
     <string name="no_app">当前没有添加应用</string>
     <string name="app_new_function">新功能</string>
-    <string name="app_update_function">当前版本不支持此功能请  立即升级  到最新版本</string>
+    <string name="app_update_function">当前版本不支持此功能，请立即升级到最新版本</string>
     <string name="app_sort_order">调整顺序</string>
 
     <!--云盘 -->
