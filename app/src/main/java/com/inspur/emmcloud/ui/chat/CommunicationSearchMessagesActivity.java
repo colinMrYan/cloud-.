@@ -97,7 +97,7 @@ public class CommunicationSearchMessagesActivity extends BaseActivity {
                     Contact contact = conversationFromChatContent.getSingleChatContactUser();
                     SearchModel searchModel = contact.contact2SearchModel();
                     displayImg(searchModel, searchModelHeadImage);
-                    String showData = getString(R.string.chat_search_related_messages, "“" + conversationFromChatContent.getConversation().getName() + "”");
+                    String showData = getString(R.string.chat_search_related_messages, "“" + conversationFromChatContent.getSingleChatContactUser().getName() + "”");
                     searchModelNameText.setText(showData);
                     staticNameText.setText(searchModel.getName());
                 }

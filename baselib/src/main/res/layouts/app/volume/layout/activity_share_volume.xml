@@ -37,16 +37,17 @@
 
         <ImageView
             android:id="@+id/add_img"
-            android:layout_width="46dp"
+            android:layout_width="50dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
             android:clickable="true"
             android:onClick="onClick"
-            android:paddingLeft="8dp"
-            android:paddingRight="16dp"
-            android:scaleType="centerInside"
-            android:src="?attr/ic_add"
+            android:paddingBottom="15dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="10dp"
+            android:paddingTop="14dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_volume_head_operation"
             android:tint="?attr/header_text_color" />
     </RelativeLayout>
 
