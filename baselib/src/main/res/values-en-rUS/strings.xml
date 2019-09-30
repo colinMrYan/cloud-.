@@ -328,6 +328,8 @@
     <string name="chat_contact_related_message">%1$d related messages</string>
     <string name="chat_group_member_size">Group Chats (%1$d)</string>
     <string name="chat_search_related_messages">Record(s) for%1$s</string>
+    <string name="chat_more_private_chat">More Private Chats</string>
+    <string name="chat_private_chat">Private Chats</string>
 
     <!-- 会议卡片 -->
     <string name="meeting_has_confirmed">Confirmed</string>
@@ -604,10 +606,16 @@
     <string name="clouddriver_volume_file_filter">Filter</string>
     <string name="clouddriver_volume_group_name">Group Name</string>
     <string name="clouddriver_volume_upload_file">Upload File</string>
+    <string name="clouddriver_volume_upload_image">Upload Image</string>
+    <string name="clouddriver_volume_upload_take_photo">Camera</string>
     <string name="clouddriver_file_permission_manager">Permissions</string>
+    <string name="clouddriver_volume_frist_download">Please download before uploading</string>
     <string name="volume_upload_to_current_directory">Upload to Current Directory</string>
     <string name="volume_file_upload_network_type_warning">Currently not connected to Wi-Fi,uploading will use mobile traffic,continue?</string>
     <string name="volume_file_download_network_type_warning">Currently not connected to Wi-Fi,downloading will use mobile traffic,continue?</string>
+    <string name="volume_file_transfer">File Transfer</string>
+    <string name="volume_file_transfer_download_list">Download Lists</string>
+    <string name="volume_file_transfer_upload_list">Upload Lists</string>
     <string name="create">Create</string>
     <string name="cloud_drive">Cloud Drive</string>
     <string name="video">Video</string>
@@ -624,6 +632,9 @@
     <string name="file_rename">File Rename</string>
     <string name="folder_rename">Folder Rename</string>
     <string name="refresh">Refresh</string>
+    <string name="volume_please_install_qq">Please install QQ</string>
+    <string name="volume_please_install_wechat">Please install Wechat</string>
+    <string name="volume_share_2_qq_wechat">Share</string>
 
 
     <!-- 我的页面部分 -->
@@ -1347,7 +1358,7 @@
     <string name="group_qrcode">QR Code</string>
 
     <string name="user_call">Call</string>
-
+    <string name="cloud_plus_update">%1$s Update</string>
     <string-array name="segment_control_items">
         <item>Low</item>
         <item>Middle</item>

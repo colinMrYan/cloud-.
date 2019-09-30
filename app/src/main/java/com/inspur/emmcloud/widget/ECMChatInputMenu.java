@@ -487,7 +487,7 @@ public class ECMChatInputMenu extends LinearLayout {
      * 根据二进制字符串更新菜单视图
      * 此处与IOS客户端略有不同，IOS客户端当inputs为"2"时则隐藏整个输入面板，没有任何输入入口
      * 服务端允许输入类型1支持，0不支持
-     * 每一位bit代表的意义为（高位）video，voice，command，file，photo，text（低位）
+     * 每一位bit代表的意义为（高位）location mail videocall voicecall video，voice，command，file，photo，text（低位）
      *
      * @param inputs
      */
@@ -522,7 +522,7 @@ public class ECMChatInputMenu extends LinearLayout {
                 inputControl = "11101";
             }
             //控制binaryString长度，防止穿的数字过大
-            int length = inputControl.length() > 7 ? 7 : inputControl.length();
+            int length = inputControl.length() > 10 ? 10 : inputControl.length();
             boolean isInputTextEnable = false;
             boolean isInputPhotoEnable = false;
             boolean isInputFileEnable = false;
@@ -548,7 +548,7 @@ public class ECMChatInputMenu extends LinearLayout {
                     case 5:
                         isVoiceCallEnable = controlValue.endsWith("1");
                         break;
-                    case 3:
+                    case 8:
                         isSendEmailEnable = controlValue.endsWith("1");
                         break;
                     default:

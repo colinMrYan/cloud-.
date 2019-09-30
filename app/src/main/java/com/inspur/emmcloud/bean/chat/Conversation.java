@@ -3,7 +3,9 @@ package com.inspur.emmcloud.bean.chat;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.PinyinUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.SearchModel;
+import com.inspur.emmcloud.util.privates.CommunicationUtils;
 
 import org.json.JSONObject;
 import org.xutils.db.annotation.Column;
@@ -55,7 +57,8 @@ public class Conversation implements Serializable {
     private String avatar = "";
     @Column(name = "pyFull")
     private String pyFull = "";
-
+    @Column(name = "showName")
+    private String showName = "";
     private String draft = "";
 
     public Conversation() {
@@ -85,6 +88,7 @@ public class Conversation implements Serializable {
         this.hide = false;
         this.action = JSONUtils.getString(obj, "action", "");
         this.pyFull = PinyinUtils.getPingYin(name);
+        this.showName = CommunicationUtils.getConversationTitle(this);
     }
 
     public static List<SearchModel> conversationList2SearchModelList(List<Conversation> conversationList) {
@@ -238,12 +242,40 @@ public class Conversation implements Serializable {
         this.pyFull = pyFull;
     }
 
+    public String getShowName() {
+        return showName;
+    }
+
+    public void setShowName(String showName) {
+        this.showName = showName;
+    }
+
     public SearchModel conversation2SearchModel() {
         SearchModel searchModel = new SearchModel();
         searchModel.setId(getId());
-        searchModel.setName(getName());
-        searchModel.setType(searchModel.TYPE_GROUP);
-        searchModel.setIcon(getAvatar());
+        searchModel.setName(getShowName());
+        switch (type) {
+            case TYPE_GROUP:
+                searchModel.setType(SearchModel.TYPE_GROUP);
+                searchModel.setIcon(getAvatar());
+                break;
+            case TYPE_DIRECT:
+                String uid;
+                List<String> memberList = getMemberList();
+                uid = memberList.get(0).equals(BaseApplication.getInstance().getUid()) ?
+                        memberList.get(1) : memberList.get(0);
+                searchModel.setId(uid);
+                searchModel.setType(SearchModel.TYPE_USER);
+                break;
+            case TYPE_CAST:
+                searchModel.setIcon(getAvatar());
+                searchModel.setType(SearchModel.TYPE_STRUCT);
+                break;
+            case TYPE_LINK:
+                searchModel.setIcon(getAvatar());
+                searchModel.setType(SearchModel.TYPE_STRUCT);
+                break;
+        }
         return searchModel;
     }
 

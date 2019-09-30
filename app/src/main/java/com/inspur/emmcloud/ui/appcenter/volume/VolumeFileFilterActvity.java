@@ -25,6 +25,7 @@ public class VolumeFileFilterActvity extends VolumeFileBaseActivity {
         super.onCreate();
         uploadFileBtn.setVisibility(View.GONE);
         headerOperationLayout.setVisibility(View.INVISIBLE);
+        adapter.setShowFileOperationSelcteImage(false);
         setListIemClick();
         registerReceiver();
     }

@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
@@ -22,8 +23,14 @@ import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.FileDownloadManager;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
+import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
+import com.inspur.emmcloud.util.privates.ShareFile2OutAppUtils;
+import com.umeng.socialize.ShareAction;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.shareboard.SnsPlatform;
+import com.umeng.socialize.utils.ShareBoardlistener;
 
 import org.xutils.common.Callback;
 import org.xutils.http.HttpMethod;
@@ -57,11 +64,14 @@ public class VolumeFileDownloadActivity extends BaseActivity {
     ImageView fileTypeImg;
     @BindView(R.id.tv_file_size)
     TextView fileSizeText;
+    @BindView(R.id.tv_share)
+    TextView shareFileTextView;
     @BindView(R.id.tv_file_open_tips)
     TextView fileOpenTipsText;
     private String fileSavePath = "";
     private Callback.Cancelable cancelable;
     private VolumeFile volumeFile;
+    private String currentDirAbsolutePath;
 
 
     @Override
@@ -69,7 +79,8 @@ public class VolumeFileDownloadActivity extends BaseActivity {
         ButterKnife.bind(this);
         volumeFile = (VolumeFile) getIntent().getSerializableExtra("volumeFile");
         fileNameText.setText(volumeFile.getName());
-        fileTypeImg.setImageResource(FileUtils.getFileIconResIdByFileName(volumeFile.getName()));
+        currentDirAbsolutePath = getIntent().getStringExtra("currentDirAbsolutePath");
+        showVolumeFileTypeImg();
         fileSizeText.setText(FileUtils.formatFileSize(volumeFile.getSize()));
         fileSavePath = FileDownloadManager.getInstance().getDownloadFilePath(DownloadFileCategory.CATEGORY_VOLUME_FILE, volumeFile.getId(), volumeFile.getName());
         if (!StringUtils.isBlank(fileSavePath)) {
@@ -84,8 +95,26 @@ public class VolumeFileDownloadActivity extends BaseActivity {
         }
     }
 
+    private void showVolumeFileTypeImg() {
+        if (volumeFile.getFormat().startsWith("image/")) {
+            String url = "";
+            if (volumeFile.getStatus().equals(VolumeFile.STATUS_UPLOADIND)) {
+                url = volumeFile.getLocalFilePath();
+            } else {
+                url = APIUri.getVolumeFileTypeImgThumbnailUrl(volumeFile, currentDirAbsolutePath);
+            }
+            fileTypeImg.setTag(url);
+            ImageDisplayUtils.getInstance().displayImageByTag(fileTypeImg, url, R.drawable.baselib_file_type_img);
+        } else {
+            fileTypeImg.setImageResource(FileUtils.getFileIconResIdByFormat(volumeFile.getFormat()));
+        }
+
+
+    }
+
     private void setDownloadingStatus(boolean isDownloaded) {
         if (isDownloaded) {
+            shareFileTextView.setVisibility(View.VISIBLE);
             if (FileUtils.canFileOpenByApp(fileSavePath)) {
                 downloadBtn.setText(R.string.open);
                 fileOpenTipsText.setVisibility(View.GONE);
@@ -96,6 +125,7 @@ public class VolumeFileDownloadActivity extends BaseActivity {
 
             }
         } else {
+            shareFileTextView.setVisibility(View.GONE);
             downloadBtn.setText(R.string.download);
             fileOpenTipsText.setVisibility(View.GONE);
         }
@@ -128,9 +158,35 @@ public class VolumeFileDownloadActivity extends BaseActivity {
                 downloadBtn.setVisibility(View.VISIBLE);
                 downloadStatusLayout.setVisibility(View.GONE);
                 break;
+            case R.id.tv_share:
+                String fileSavePath = FileDownloadManager.getInstance().getDownloadFilePath(
+                        DownloadFileCategory.CATEGORY_VOLUME_FILE, volumeFile.getId(), volumeFile.getName());
+                if (!StringUtils.isBlank(fileSavePath)) {
+                    shareFile(fileSavePath);
+                } else {
+                    ToastUtils.show(getString(R.string.clouddriver_volume_frist_download));
+                }
+                break;
             default:
                 break;
         }
+    }
+
+    public void shareFile(final String filePath) {
+        new ShareAction(this).setDisplayList(
+                SHARE_MEDIA.WEIXIN, SHARE_MEDIA.QQ
+        )
+                .setShareboardclickCallback(new ShareBoardlistener() {
+                    @Override
+                    public void onclick(SnsPlatform snsPlatform, SHARE_MEDIA share_media) {
+                        if (share_media == SHARE_MEDIA.WEIXIN) {
+                            ShareFile2OutAppUtils.shareFile2WeChat(getApplicationContext(), filePath);
+                        } else if (share_media == SHARE_MEDIA.QQ) {
+                            ShareFile2OutAppUtils.shareFileToQQ(getApplicationContext(), filePath);
+                        }
+                    }
+                })
+                .open();
     }
 
     private boolean checkDownloadEnvironment() {
@@ -171,7 +227,6 @@ public class VolumeFileDownloadActivity extends BaseActivity {
         downloadBtn.setVisibility(View.GONE);
         downloadStatusLayout.setVisibility(View.VISIBLE);
         final String volumeId = getIntent().getStringExtra("volumeId");
-        String currentDirAbsolutePath = getIntent().getStringExtra("currentDirAbsolutePath");
         String source = APIUri.getVolumeFileUploadSTSTokenUrl(volumeId);
         APIDownloadCallBack callBack = new APIDownloadCallBack(getApplicationContext(), source) {
             @Override
@@ -198,6 +253,7 @@ public class VolumeFileDownloadActivity extends BaseActivity {
                 progressBar.setProgress(0);
                 progressText.setText("");
                 downloadBtn.setVisibility(View.VISIBLE);
+                shareFileTextView.setVisibility(View.VISIBLE);
                 setDownloadingStatus(true);
             }
 
@@ -206,6 +262,7 @@ public class VolumeFileDownloadActivity extends BaseActivity {
                 if (downloadStatusLayout.getVisibility() == View.VISIBLE) {
                     ToastUtils.show(getApplicationContext(), R.string.download_fail);
                     downloadStatusLayout.setVisibility(View.GONE);
+                    shareFileTextView.setVisibility(View.GONE);
                     progressBar.setProgress(0);
                     progressText.setText("");
                     downloadBtn.setVisibility(View.VISIBLE);
@@ -222,6 +279,7 @@ public class VolumeFileDownloadActivity extends BaseActivity {
         RequestParams params = ((MyApplication) getApplicationContext()).getHttpRequestParams(source);
         params.addParameter("volumeId", volumeId);
         params.addQueryStringParameter("path", currentDirAbsolutePath);
+        LogUtils.jasonDebug("params==" + params.toString());
         params.setRedirectHandler(new RedirectHandler() {
             @Override
             public RequestParams getRedirectParams(UriRequest uriRequest) throws Throwable {

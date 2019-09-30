@@ -15,6 +15,7 @@
             android:layout_width="44dp"
             android:layout_height="44dp"
             android:layout_centerVertical="true"
+            android:background="@null"
             android:onClick="onClick"
             android:padding="11dp"
             android:scaleType="fitXY"
@@ -48,9 +49,9 @@
                 android:background="@color/white"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:paddingBottom="10dp"
                 android:paddingLeft="16dp"
                 android:paddingTop="10dp"
+                android:paddingBottom="10dp"
                 android:textColor="#333333"
                 android:textSize="17sp" />
 
@@ -73,9 +74,9 @@
                         android:layout_centerVertical="true"
                         android:ellipsize="end"
                         android:maxLines="1"
-                        android:paddingBottom="10dp"
-                        android:paddingRight="10dp"
                         android:paddingTop="10dp"
+                        android:paddingRight="10dp"
+                        android:paddingBottom="10dp"
                         android:text="@string/last_use_time"
                         android:textColor="#333333"
                         android:textSize="17sp" />
@@ -89,16 +90,16 @@
                         android:ellipsize="end"
                         android:gravity="right"
                         android:maxLines="1"
-                        android:paddingBottom="10dp"
-                        android:paddingRight="10dp"
                         android:paddingTop="10dp"
+                        android:paddingRight="10dp"
+                        android:paddingBottom="10dp"
                         android:textColor="#999999"
                         android:textSize="16sp" />
                 </RelativeLayout>
 
                 <View
                     android:layout_width="fill_parent"
-                    android:layout_height="0.5dp"
+                    android:layout_height="0.5px"
                     android:background="@color/color_list_divider" />
 
                 <RelativeLayout
@@ -111,9 +112,9 @@
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:maxLines="1"
-                        android:paddingBottom="10dp"
-                        android:paddingRight="10dp"
                         android:paddingTop="10dp"
+                        android:paddingRight="10dp"
+                        android:paddingBottom="10dp"
                         android:text="@string/device_id"
                         android:textColor="#333333"
                         android:textSize="17sp" />
@@ -126,10 +127,10 @@
                         android:clickable="true"
                         android:gravity="right"
                         android:onClick="onClick"
-                        android:paddingBottom="10dp"
                         android:paddingLeft="15dp"
-                        android:paddingRight="10dp"
                         android:paddingTop="10dp"
+                        android:paddingRight="10dp"
+                        android:paddingBottom="10dp"
                         android:textColor="#999999"
                         android:textSize="16sp" />
                 </RelativeLayout>
@@ -140,9 +141,9 @@
                 android:id="@+id/history_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingBottom="10dp"
                 android:paddingLeft="16dp"
                 android:paddingTop="10dp"
+                android:paddingBottom="10dp"
                 android:text="@string/device_history_use"
                 android:textColor="#333333"
                 android:textSize="15sp"
@@ -166,8 +167,8 @@
                 android:background="@color/white"
                 android:gravity="center"
                 android:onClick="onClick"
-                android:paddingBottom="11dp"
                 android:paddingTop="11dp"
+                android:paddingBottom="11dp"
                 android:text="@string/unbind_this_device"
                 android:textColor="#ff0000"
                 android:textSize="16sp"

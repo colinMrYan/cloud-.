@@ -2,6 +2,7 @@ package com.inspur.emmcloud.ui.chat;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import com.inspur.emmcloud.MediaPlayBaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -15,6 +16,7 @@ import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -33,6 +35,9 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity {
     protected LoadingDialog loadingDlg;
     protected Conversation conversation;
 
+    @BindView(R.id.iv_config)
+    View configView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +51,7 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity {
         initConversationInfo();
         recordUserClickChannel();
         setConversationUnHide();
+        configView.setVisibility(View.VISIBLE);
     }
 
     @Override

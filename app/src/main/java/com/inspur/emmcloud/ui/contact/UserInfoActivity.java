@@ -140,7 +140,7 @@ public class UserInfoActivity extends BaseActivity {
             parentUid = uid;
             contactUser = ContactUserCacheUtils.getContactUserByUid(uid);
         }
-        if (uid.equals("10")) {
+        if (uid.equals("EVERYBODY")) {
             finish();
             return;
         }

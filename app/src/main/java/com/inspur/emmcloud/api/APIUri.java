@@ -927,6 +927,10 @@ public class APIUri {
         return getUrlBaseVolume() + "/" + volumeId + "/file/request";
     }
 
+    public static String getVolumeFileTypeImgThumbnailUrl(VolumeFile volumeFile, String volumeFilePath) {
+        volumeFilePath = StringUtils.utf8Encode(volumeFilePath, volumeFilePath);
+        return getVolumeFileUploadSTSTokenUrl(volumeFile.getVolume()) + "?path=" + volumeFilePath + "&volumeId=" + volumeFile.getVolume() + "&resize=true&w=200&h=200&m=pad";
+    }
 
     public static String getVolumeFileDownloadUrl(VolumeFile volumeFile, String currentDirAbsolutePath) {
         return getUrlBaseVolume() + "/" + volumeFile.getVolume() + "/file/request?path=" + StringUtils.encodeURIComponent(currentDirAbsolutePath + volumeFile.getName());

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.TypedValue;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
@@ -40,7 +41,7 @@ public class CustomDialog extends AlertDialog {
             Field mTitle = mAlertController.getClass().getDeclaredField("mTitleView");
             mTitle.setAccessible(true);
             TextView mTitleView = (TextView) mTitle.get(mAlertController);
-            mTitleView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18);
+            mTitleView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -55,11 +56,11 @@ public class CustomDialog extends AlertDialog {
             mMessage.setAccessible(true);
             TextView mMessageTv = (TextView) mMessage.get(mAlertController);
             int left = DensityUtil.dip2px(24);
-            int top = DensityUtil.dip2px(10);
+            int top = DensityUtil.dip2px(5);
             int right = DensityUtil.dip2px(24);
             int bottom = DensityUtil.dip2px(20);
             mMessageTv.setPadding(left, top, right, bottom);
-            mMessageTv.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
+            mMessageTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
 
         } catch (IllegalAccessException e) {
             e.printStackTrace();
@@ -97,7 +98,9 @@ public class CustomDialog extends AlertDialog {
 
     private void initDialogWidth() {
         Window window = getWindow();
-        if (window == null) return;
+        if (window == null) {
+            return;
+        }
         WindowManager.LayoutParams lp = window.getAttributes();
         lp.width = ViewGroup.LayoutParams.MATCH_PARENT;
         window.setAttributes(lp);
@@ -176,6 +179,8 @@ public class CustomDialog extends AlertDialog {
 
     public static class BaseDialogBuilder extends AlertDialog.Builder {
         private Context context;
+        private View customTitleView;
+
 
         public BaseDialogBuilder(Context context, int themeResId) {
             super(context, themeResId);
@@ -188,11 +193,20 @@ public class CustomDialog extends AlertDialog {
             this.context = context;
         }
 
+        public BaseDialogBuilder setVustomTitleView(View customTitleView) {
+            this.customTitleView = customTitleView;
+            return this;
+        }
+
         @Override
         public AlertDialog show() {
             AlertDialog dialog = super.show();
             dialog.getWindow().setLayout(ResolutionUtils.getWidth(context) / 5 * 4, ViewGroup.LayoutParams.WRAP_CONTENT);
-            setTitleTvAttr(dialog);
+            if (customTitleView != null) {
+                setTitleTvAttr(dialog);
+            } else {
+                dialog.setCustomTitle(customTitleView);
+            }
             setMessageTvAttr(dialog);
             return dialog;
         }

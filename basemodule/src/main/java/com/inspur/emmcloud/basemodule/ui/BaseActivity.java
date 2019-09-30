@@ -1,9 +1,10 @@
 package com.inspur.emmcloud.basemodule.ui;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -25,7 +26,7 @@ import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestM
 
 import java.util.List;
 
-public abstract class BaseActivity extends Activity {
+public abstract class BaseActivity extends AppCompatActivity {
     protected final int STATUS_NORMAL = 1;
     protected final int STATUS_WHITE = 2;
     protected final int STATUS_WHITE_DARK_FONT = 3;
@@ -36,6 +37,8 @@ public abstract class BaseActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
+        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
+
         statusType = getStatusType();
         setTheme();
         super.onCreate(savedInstanceState);
@@ -160,9 +163,10 @@ public abstract class BaseActivity extends Activity {
         setTitleText(getResources().getString(resId));
     }
 
-    private void setTitleText(String title) {
-        TextView titleTv = findViewById(R.id.header_title);
+    public void setTitleText(String title) {
+        TextView titleTv = findViewById(R.id.header_text);
         if (titleTv != null) {
+            titleTv.setVisibility(View.VISIBLE);
             titleTv.setText(title);
         }
     }

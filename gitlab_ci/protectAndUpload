@@ -1,0 +1,96 @@
+#!/usr/bin/env bash
+
+# 如果你对这里的 cache 目录有疑问的话，请看第二篇
+JAVACMD=../keystore/jiagu/java/bin/java # 360加固自带的 java 运行环境
+BASE=../keystore/jiagu/jiagu.jar # 360加固的 jar 包
+NAME=${JIAGU_NAME} # 这里写你的 360加固 的账号
+PASSWORD=${JIAGU_PASSWORD} # 360加固的密码
+API_TOKEN="ba07929c1a8a8d8f4e9456ad1cf1af6e" # fir.im的 token
+
+APK_DIR_PATH=app/build/outputs/apk/release/
+files=$(ls ${APK_DIR_PATH})
+for filename in $files;
+do
+    if [[ $filename =~ "apk" ]];then
+    APK_NAME=$filename
+        APK_PATH=${APK_DIR_PATH}$filename
+    fi
+done
+echo $APK_PATH
+
+
+
+DEST=app/build/outputs/apk/release/  #输出加固包路径
+
+# 打印一下参数看是否正确
+#echo "------ args info ------
+#JAVACMD = ${JAVACMD}
+#BASE = ${BASE}
+#NAME = ${NAME}
+#PASSWORD = ${PASSWORD}
+#APK_PATH = ${APK_PATH}
+#DEST = ${DEST}
+#KEYSTORE_PATH = ${KEY_STORE_FILE_PATH}
+#KEY_PASSWORD = ${KEY_PASSWORD}
+#KEY_ALIAS = ${KEY_ALIAS}
+#STORE_PASSWORD = ${STORE_PASSWORD}"
+chmod 777 ${JAVACMD}
+chmod 777 ${BASE}
+chmod 777 ../keystore/jiagu/java/bin/keytool
+
+
+${JAVACMD} -jar ${BASE} -version
+echo "${JAVACMD} -jar ${BASE} -login ${NAME} ${PASSWORD}"
+${JAVACMD} -jar ${BASE} -login ${NAME} ${PASSWORD}
+
+${JAVACMD} -jar ${BASE} -importsign ${KEY_STORE_FILE_PATH} ${KEY_PASSWORD} ${KEY_ALIAS} ${STORE_PASSWORD} # 配置签名信息
+${JAVACMD} -jar ${BASE} -showsign
+${JAVACMD} -jar ${BASE} -config
+${JAVACMD} -jar ${BASE} -showconfig
+${JAVACMD} -jar ${BASE} -jiagu ${APK_PATH} ${DEST} -autosign
+
+
+#删除直接build出的文件并将加固的后的文件名改为原来的文件名
+rm -rf ${APK_PATH}
+
+files=$(ls ${DEST});
+for filename in $files;
+do
+    if [[ $filename =~ "apk" ]];then
+        mv ${DEST}$filename ${APK_PATH}
+    fi
+done
+
+
+#上传fir.im
+# ios or android
+TYPE="android"
+# App 的 bundleId 或 包名
+BUNDLE_ID="com.inspur.emmcloud"
+
+
+
+# Get upload_url
+credential=$(curl -X "POST" "http://api.fir.im/apps" \
+-H "Content-Type: application/json" \
+-d "{\"type\":\"${TYPE}\", \"bundle_id\":\"${BUNDLE_ID}\", \"api_token\":\"${API_TOKEN}\"}"
+)
+binary_response=$(echo ${credential} | grep -o "binary[^}]*")
+KEY=$(echo ${binary_response} | awk -F '"' '{print $5}')
+TOKEN=$(echo ${binary_response} | awk -F '"' '{print $9}')
+UPLOAD_URL=$(echo ${binary_response} | awk -F '"' '{print $13}')
+
+# Upload package
+echo 'Uploading...'
+echo '✈ -------------------------------------------- ✈'
+response=$(curl -F "key=${KEY}" \
+-F "token=${TOKEN}" \
+-F "file=@${APK_PATH}" \
+-F "x:build=${CI_PIPELINE_ID}" \
+${UPLOAD_URL}
+)
+echo $response;
+
+
+
+

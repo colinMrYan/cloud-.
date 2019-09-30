@@ -30,6 +30,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="6dp"
+            android:background="@null"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:scaleType="centerInside"
@@ -54,6 +55,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="58dp"
+            android:background="@null"
             android:scaleType="centerInside"
             android:src="@drawable/ic_schedule_today"
             android:tint="?attr/header_text_color" />

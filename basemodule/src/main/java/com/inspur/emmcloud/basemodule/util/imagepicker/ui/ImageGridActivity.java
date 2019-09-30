@@ -234,7 +234,10 @@ public class ImageGridActivity extends ImageBaseActivity implements
         } else {
             mBtnPre.setVisibility(View.GONE);
         }
-        mImageGridAdapter.notifyDataSetChanged();
+        if (!imagePicker.isCrop()) {
+            mImageGridAdapter.notifyDataSetChanged();
+        }
+
     }
 
     @Override
