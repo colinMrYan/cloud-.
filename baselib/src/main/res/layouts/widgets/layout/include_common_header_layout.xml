@@ -22,6 +22,8 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
         android:ellipsize="end"
         android:singleLine="true"
         android:textColor="?attr/header_text_color"
