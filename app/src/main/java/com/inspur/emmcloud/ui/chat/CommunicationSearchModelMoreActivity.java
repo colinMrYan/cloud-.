@@ -21,7 +21,6 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
 import com.inspur.emmcloud.baselib.widget.ClearEditText;
@@ -85,7 +84,6 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
     Handler mHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
-            LogUtils.LbcDebug("11111111111111111111111111111111111111");
             mySwipeRefreshLayout.setRefreshing(false);
             return true;
         }
