@@ -60,7 +60,7 @@ public class VolumeFileDownloadActivity extends BaseActivity {
     TextView progressText;
     @BindView(R.id.tv_file_name)
     TextView fileNameText;
-    @BindView(R.id.file_type_img)
+    @BindView(R.id.iv_file_type_img_preview)
     ImageView fileTypeImg;
     @BindView(R.id.tv_file_size)
     TextView fileSizeText;
@@ -68,7 +68,7 @@ public class VolumeFileDownloadActivity extends BaseActivity {
     TextView shareFileTextView;
     @BindView(R.id.tv_file_open_tips)
     TextView fileOpenTipsText;
-    @BindView(R.id.file_type_file)
+    @BindView(R.id.iv_file_type_file_preview)
     ImageView typeFileImageView;
     private String fileSavePath = "";
     private Callback.Cancelable cancelable;
