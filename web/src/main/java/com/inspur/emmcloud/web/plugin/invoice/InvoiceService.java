@@ -9,6 +9,7 @@ import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
 import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
 import com.inspur.emmcloud.basemodule.api.HttpUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.web.R;
 import com.inspur.emmcloud.web.api.WebAPIUri;
 import com.inspur.emmcloud.web.plugin.ImpPlugin;
@@ -41,7 +42,6 @@ public class InvoiceService extends ImpPlugin {
         }
     }
 
-    String appId = "wx4eb8727ea9c26495";
     String wechatAccessToken, wechatTicket, timestamp;
 
     /**
@@ -144,12 +144,11 @@ public class InvoiceService extends ImpPlugin {
      */
     private void skipInvoiceList() {
         //注册app
-        IWXAPI api = WXAPIFactory.createWXAPI(getFragmentContext(), "wx4eb8727ea9c26495", true);
-        api.registerApp(appId);
+        IWXAPI api = WXAPIFactory.createWXAPI(getFragmentContext(), Constant.WECHAT_APPID, false);
 
         List<String> list = new ArrayList();
         list.add("INVOICE");
-        list.add(appId);
+        list.add(Constant.WECHAT_APPID);
         list.add(timestamp);
         list.add("abc");
         list.add(wechatTicket);
@@ -161,7 +160,7 @@ public class InvoiceService extends ImpPlugin {
 
             //拉起微信电子发票列表
             ChooseCardFromWXCardPackage.Req req = new ChooseCardFromWXCardPackage.Req();
-            req.appId = appId;
+            req.appId = Constant.WECHAT_APPID;
             req.cardType = "INVOICE";
             req.cardSign = sha1;
             req.nonceStr = "abc";
