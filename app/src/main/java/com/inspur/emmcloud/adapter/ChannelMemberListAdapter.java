@@ -113,13 +113,14 @@ public class ChannelMemberListAdapter extends BaseAdapter implements SectionInde
             }
             holder.userNameTv.setText(dto.getName());
             setUserDesc(dto, holder.userDescTv);
-
-            String photoUrl = APIUri.getUserIconUrl(MyApplication.getInstance(), dto.getUid());
+            String photoUrl;
             if (dto.getUid().equals("10")) {
-                ImageDisplayUtils.getInstance().displayImage(holder.userHeadImg, null, R.drawable.ic_mention_all);
+                photoUrl = "drawable://" + R.drawable.ic_mention_all;
             } else {
-                ImageDisplayUtils.getInstance().displayImage(holder.userHeadImg, photoUrl, R.drawable.icon_person_default);
+                photoUrl = APIUri.getUserIconUrl(MyApplication.getInstance(), dto.getUid());
             }
+            holder.userHeadImg.setTag(photoUrl);
+            ImageDisplayUtils.getInstance().displayImageByTag(holder.userHeadImg, photoUrl, R.drawable.icon_person_default);
         }
         if (selectedUserList.contains(dto)) {
             holder.selectedImg.setVisibility(View.VISIBLE);

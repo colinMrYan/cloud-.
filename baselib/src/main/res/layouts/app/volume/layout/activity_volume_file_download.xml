@@ -47,7 +47,8 @@
             android:paddingRight="15dp"
             android:text="@string/volume_share_2_qq_wechat"
             android:textColor="?attr/header_text_color"
-            android:textSize="@dimen/header_function_textsize" />
+            android:textSize="@dimen/header_function_textsize"
+            android:visibility="gone" />
     </RelativeLayout>
 
     <LinearLayout
@@ -61,15 +62,16 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="190dp">
-
             <ImageView
                 android:id="@+id/file_type_img"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="190dp"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
-                android:scaleType="centerCrop"
-                android:src="@drawable/baselib_file_type_img" />
+                android:adjustViewBounds="true"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp"
+                android:scaleType="centerCrop" />
         </RelativeLayout>
         <TextView
             android:id="@+id/tv_file_name"
