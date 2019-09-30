@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +27,6 @@ import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
-import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.ui.appcenter.volume.VolumeHomePageActivity;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
@@ -280,6 +280,7 @@ public class ShareFilesActivity extends BaseActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d("zhang", "onActivityResult: ");
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode != RESULT_OK || !NetUtils.isNetworkConnected(getApplicationContext())) {
             return;
@@ -332,14 +333,6 @@ public class ShareFilesActivity extends BaseActivity {
                 boolean isGroup = searchModel.getType().equals(SearchModel.TYPE_GROUP);
                 share2Conversation(userOrChannelId, isGroup);
             }
-
-            Contact contact = (Contact) data.getSerializableExtra("contact");
-            if (contact != null) {
-                String userOrChannelId = contact.getId();
-                boolean isGroup = false;
-                share2Conversation(userOrChannelId, isGroup);
-            }
-
         }
     }
 
