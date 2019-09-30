@@ -494,59 +494,11 @@ public class StringUtils {
      * @return
      */
     public static Spanned getHtmlString(String content, String keyWordsColor, String keyWords) {
-        LogUtils.LbcDebug("content::::" + content);
         String htmlKeyWords = "<font color='" + keyWordsColor + "'>" + keyWords + "</font>";
-        LogUtils.LbcDebug("htmlKeyWords::::" + htmlKeyWords);
         content = content.replace(keyWords, htmlKeyWords);
-        LogUtils.LbcDebug("keyword" + keyWords + "content::::" + content);
         return Html.fromHtml(content);
     }
 
-    /**
-     * 单个特殊字符转义为字符
-     * ^ $ . * + - ? = ! : | \ / ( ) [ ] { }
-     */
-    public static String singleRegexEscape(String str) {
-        String result;
-        if (str.equals("?")) {
-            result = "\\?";
-        } else if (str.equals("+")) {
-            result = "\\+";
-        } else if (str.equals("*")) {
-            result = "\\*";
-        } else if (str.equals("^")) {
-            result = "\\^";
-        } else if (str.equals("$")) {
-            result = "\\$";
-        } else if (str.equals("*")) {
-            result = "\\*";
-        } else if (str.equals("-")) {
-            result = "\\-";
-        } else if (str.equals("!")) {
-            result = "\\!";
-        } else if (str.equals(":")) {
-            result = "\\:";
-        } else if (str.equals("|")) {
-            result = "\\|";
-        } else if (str.equals("\\")) {
-            result = "\\\\";
-        } else if (str.equals("(")) {
-            result = "\\(";
-        } else if (str.equals(")")) {
-            result = "\\)";
-        } else if (str.equals("[")) {
-            result = "\\[";
-        } else if (str.equals("]")) {
-            result = "\\]";
-        } else if (str.equals("{")) {
-            result = "\\{";
-        } else if (str.equals("}")) {
-            result = "\\}";
-        } else {
-            result = str;
-        }
-        return result;
-    }
 
     public static String replaceRegexEscape(String str) {
         String result = str;
