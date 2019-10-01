@@ -309,7 +309,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                             layoutParams.rightMargin = r;
                             layoutParams.width = DensityUtil.dip2px(ChannelVoiceCommunicationActivity.this, 94);
                             layoutParams.height = DensityUtil.dip2px(ChannelVoiceCommunicationActivity.this, 167);
-                            LogUtils.YfcDebug("设置参数");
                             v.setLayoutParams(layoutParams);
                             initx = (int) event.getRawX();
                             inity = (int) event.getRawY();
@@ -588,7 +587,8 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        setupRemoteVideo(uid);
+                        //屏蔽视频
+//                        setupRemoteVideo(uid);
                     }
                 });
             }
@@ -671,7 +671,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         }
         agoraRemoteView = RtcEngine.CreateRendererView(getBaseContext());
         remoteVideoContainer.addView(agoraRemoteView);
-        LogUtils.YfcDebug("设置远程视图");
         voiceCommunicationUtils.getRtcEngine().setupRemoteVideo(new VideoCanvas(agoraRemoteView, VideoCanvas.RENDER_MODE_HIDDEN, uid));
         agoraRemoteView.setTag(uid);
     }
