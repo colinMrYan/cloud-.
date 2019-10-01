@@ -8,6 +8,7 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.ProgressWebView;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.socialize.PlatformConfig;
@@ -45,7 +46,7 @@ public class RecommendAppActivity extends BaseActivity {
                 , "umeng", UMConfigure.DEVICE_TYPE_PHONE, "");
 //        QueuedWork.isUseThreadPool = false;
 //        UMShareAPI.get(this);
-        PlatformConfig.setWeixin("wx4eb8727ea9c26495", "56a0426315f1d0985a1cc1e75e96130d");
+        PlatformConfig.setWeixin(Constant.WECHAT_APPID, "56a0426315f1d0985a1cc1e75e96130d");
         PlatformConfig.setQQZone("1105561850", "1kaw4r1c37SUupFL");
     }
 
