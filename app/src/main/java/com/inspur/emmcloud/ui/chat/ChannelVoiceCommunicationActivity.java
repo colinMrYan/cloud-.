@@ -71,10 +71,7 @@ import io.agora.rtc.video.VideoCanvas;
  */
 public class ChannelVoiceCommunicationActivity extends BaseActivity {
     public static final String VOICE_VIDEO_CALL_AGORA_ID = "channelId";
-    public static final String VOICE_VIDEO_CALL_SCHEME = "ecc-cmd";//scheme
     public static final String VOICE_VIDEO_CALL_TYPE = "voice_video_call_type";//通话类型
-    public static final String VOICE_VIDEO_ROOM_ID = "voice_video_room_id";
-    public static final String VOICE_VIDEO_CMD = "voice_video_cmd";
     public static final String VOICE_VIDEO_UID = "voice_video_UID";
     public static final String VOICE_COMMUNICATION_STATE = "voice_communication_state";//传递页面布局样式的
     public static final String VOICE_TIME = "voice_time";
@@ -445,7 +442,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 localVideoContainer.getLayoutParams().height = DensityUtil.dip2px(this, 167);
                 localVideoContainer.getLayoutParams().width = DensityUtil.dip2px(this, 94);
             }
-            dragLocalVideoView();
+//            dragLocalVideoView();
         }
     }
 
@@ -466,7 +463,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             leaveChannelSuccess(agoraChannelId);
             finish();
         } else if (!StringUtils.isBlank(cmd) && cmd.equals("refuse")) {
-            LogUtils.YfcDebug("接收到拒绝消息");
             changeUserConnectStateByUid(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_REFUSE,
                     customProtocol.getParamMap().get("uid"));
             checkCommunicationFinish();
@@ -485,7 +481,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                     waitAndCommunicationSize = waitAndCommunicationSize + 1;
                 }
             }
-            LogUtils.YfcDebug("waitAndCommunicationSize：" + waitAndCommunicationSize);
             if (waitAndCommunicationSize < 2) {
                 leaveChannelSuccess(agoraChannelId);
             }
@@ -609,9 +604,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     private void changeUserConnectStateByAgoraUid(int connectStateConnected, int agroaUid) {
         if (voiceCommunicationMemberList != null && voiceCommunicationMemberList.size() > 0) {
             for (int i = 0; i < voiceCommunicationMemberList.size(); i++) {
-                LogUtils.YfcDebug("是否需要修改状态：" + (voiceCommunicationMemberList.get(i).getAgoraUid() == agroaUid));
                 if (voiceCommunicationMemberList.get(i).getAgoraUid() == agroaUid) {
-                    LogUtils.YfcDebug("修改状态");
                     voiceCommunicationMemberList.get(i).setConnectState(connectStateConnected);
                     break;
                 }
@@ -628,9 +621,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     private void changeUserConnectStateByUid(int connectStateConnected, String uid) {
         if (voiceCommunicationMemberList != null && voiceCommunicationMemberList.size() > 0) {
             for (int i = 0; i < voiceCommunicationMemberList.size(); i++) {
-                LogUtils.YfcDebug("是否需要修改状态：" + (voiceCommunicationMemberList.get(i).getUserId() == uid));
                 if (voiceCommunicationMemberList.get(i).getUserId().equals(uid)) {
-                    LogUtils.YfcDebug("修改状态");
                     voiceCommunicationMemberList.get(i).setConnectState(connectStateConnected);
                     break;
                 }
@@ -787,7 +778,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 voiceCommunicationUtils.switchCamera();
                 break;
             case R.id.ll_video_answer_phone:
-                LogUtils.YfcDebug("接听电话");
+                LogUtils.YfcDebug("接听视频电话");
                 setupLocalVideo();
                 initCommunicationViewsAndMusicByState(COMMUNICATION_LAYOUT_STATE);
                 voiceCommunicationUtils.joinChannel(inviteeInfoBean.getToken(),
@@ -899,7 +890,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
 
     /**
      * 获取Schema
-     * ecc-cmd://voice_channel?cmd=invite&id=27359bbda1a1455c9d7357501e803383
+     * ecc-cloudplus-cmd:\/\/voice_channel?cmd=invite&channelid=143271038136877057&roomid=257db7ddc478429cab2d2a1ec4ed8626&uid=99999
      * @return
      */
     private String getSchema(String cmd, String channelId, String roomId) {
@@ -919,6 +910,38 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         return jsonArray;
     }
 
+    /**
+     * 向socket发送指令消息
+     *
+     * @param commandType
+     */
+    private void sendCommunicationCommand(String commandType) {
+        WSAPIService.getInstance().sendStartVoiceAndVideoCallMessage(cloudPlusChannelId, agoraChannelId,
+                getSchema(commandType, cloudPlusChannelId, agoraChannelId), getCommunicationType(), getUidArray(voiceCommunicationMemberList));
+    }
+
+    /**
+     * 拒绝之后的后续逻辑处理
+     */
+    private void afterRefuse() {
+        voiceCommunicationUtils.destroy();
+        sendCommunicationCommand("refuse");
+        finish();
+    }
+
+    /**
+     * 销毁之后的逻辑处理
+     */
+    private void afterDestory() {
+        voiceCommunicationUtils.destroy();
+        if (STATE == COMMUNICATION_LAYOUT_STATE) {
+            sendCommunicationCommand("refuse");
+        }
+        if (userCount < 2) {
+            sendCommunicationCommand("destroy");
+        }
+        finish();
+    }
 
     class WebService extends APIInterfaceInstance {
         @Override
@@ -927,14 +950,14 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             VoiceCommunicationJoinChannelInfoBean voiceCommunicationJoinChannelInfoBean = getMyCommunicationInfoBean(getVoiceCommunicationResult);
             if (voiceCommunicationJoinChannelInfoBean != null) {
                 voiceCommunicationUtils.setEncryptionSecret(agoraChannelId);
-                setupLocalVideo();
+                //屏蔽视频通话
+//                setupLocalVideo();
                 voiceCommunicationUtils.joinChannel(voiceCommunicationJoinChannelInfoBean.getToken(),
                         getVoiceCommunicationResult.getChannelId(), voiceCommunicationJoinChannelInfoBean.getUserId(), voiceCommunicationJoinChannelInfoBean.getAgoraUid());
             }
             if (getIntent().getIntExtra(VOICE_COMMUNICATION_STATE, EXCEPTION_STATE) != COME_BACK_FROM_SERVICE) {
-                WSAPIService.getInstance().sendStartVoiceAndVideoCallMessage(cloudPlusChannelId, agoraChannelId,
-                        getSchema("invite", cloudPlusChannelId, agoraChannelId), getCommunicationType(), getUidArray(voiceCommunicationMemberList));
                 voiceCommunicationMemberList.addAll(getVoiceCommunicationResult.getVoiceCommunicationJoinChannelInfoBeanList());
+                sendCommunicationCommand("invite");
                 refreshCommunicationMemberAdapter();
             }
         }
@@ -985,49 +1008,22 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
 
         @Override
         public void returnRefuseVoiceCommunicationChannelSuccess(GetBoolenResult getBoolenResult) {
-            voiceCommunicationUtils.destroy();
-            LogUtils.YfcDebug("cloudPlusChannelId:" + cloudPlusChannelId);
-            WSAPIService.getInstance().sendStartVoiceAndVideoCallMessage(cloudPlusChannelId, agoraChannelId,
-                    getSchema("refuse", cloudPlusChannelId, agoraChannelId), getCommunicationType(), getUidArray(voiceCommunicationMemberList));
-            finish();
+            afterRefuse();
         }
 
         @Override
         public void returnRefuseVoiceCommunicationChannelFail(String error, int errorCode) {
-            voiceCommunicationUtils.destroy();
-            WSAPIService.getInstance().sendStartVoiceAndVideoCallMessage(cloudPlusChannelId, agoraChannelId,
-                    getSchema("refuse", cloudPlusChannelId, agoraChannelId), getCommunicationType(), getUidArray(voiceCommunicationMemberList));
-            finish();
+            afterRefuse();
         }
 
         @Override
         public void returnLeaveVoiceCommunicationChannelSuccess(GetBoolenResult getBoolenResult) {
-            voiceCommunicationUtils.destroy();
-            LogUtils.YfcDebug("cloudPlusChannelId:" + cloudPlusChannelId);
-            if (STATE == COMMUNICATION_LAYOUT_STATE) {
-                LogUtils.YfcDebug("发送拒绝指令" + STATE);
-                WSAPIService.getInstance().sendStartVoiceAndVideoCallMessage(cloudPlusChannelId, agoraChannelId,
-                        getSchema("refuse", cloudPlusChannelId, agoraChannelId), getCommunicationType(), getUidArray(voiceCommunicationMemberList));
-            }
-            if (userCount < 2) {
-                WSAPIService.getInstance().sendStartVoiceAndVideoCallMessage(cloudPlusChannelId, agoraChannelId,
-                        getSchema("destroy", cloudPlusChannelId, agoraChannelId), getCommunicationType(), getUidArray(voiceCommunicationMemberList));
-            }
-            finish();
+            afterDestory();
         }
 
         @Override
         public void returnLeaveVoiceCommunicationChannelFail(String error, int errorCode) {
-            voiceCommunicationUtils.destroy();
-            if (STATE == COMMUNICATION_LAYOUT_STATE) {
-                WSAPIService.getInstance().sendStartVoiceAndVideoCallMessage(cloudPlusChannelId, agoraChannelId,
-                        getSchema("refuse", cloudPlusChannelId, agoraChannelId), getCommunicationType(), getUidArray(voiceCommunicationMemberList));
-            }
-            if (userCount < 2) {
-                WSAPIService.getInstance().sendStartVoiceAndVideoCallMessage(cloudPlusChannelId, agoraChannelId,
-                        getSchema("destroy", cloudPlusChannelId, agoraChannelId), getCommunicationType(), getUidArray(voiceCommunicationMemberList));
-            }
-            finish();
+            afterDestory();
         }
     }
 }

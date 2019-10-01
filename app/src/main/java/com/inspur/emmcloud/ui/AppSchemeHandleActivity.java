@@ -13,7 +13,6 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
@@ -146,7 +145,6 @@ public class AppSchemeHandleActivity extends BaseActivity {
                         handleShareIntent();
                     } else {
                         Uri uri = getIntent().getData();
-                        LogUtils.YfcDebug("接收到通知：" + uri.toString());
                         if (uri == null) {
                             finish();
                             return;
@@ -246,12 +244,6 @@ public class AppSchemeHandleActivity extends BaseActivity {
                                 startVolumeShareActivity(urlList);
                                 break;
                             case "ecc-cloudplus-cmd":
-                                LogUtils.YfcDebug("接收到ecc-cloudplus-cmd");
-                                startVoiceCall(uri.toString());
-                                finish();
-                                break;
-                            case "ecc-cmd":
-                                LogUtils.YfcDebug("接收到ecc-cmd");
                                 startVoiceCall(uri.toString());
                                 finish();
                                 break;
@@ -275,7 +267,6 @@ public class AppSchemeHandleActivity extends BaseActivity {
      * @param content
      */
     private void startVoiceCall(String content) {
-        LogUtils.YfcDebug("content:" + content);
         CustomProtocol customProtocol = new CustomProtocol(content);
         if (customProtocol != null) {
             Intent intent = new Intent();
@@ -285,7 +276,6 @@ public class AppSchemeHandleActivity extends BaseActivity {
             intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_VIDEO_UID, customProtocol.getParamMap().get("uid"));
             intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.INVITEE_LAYOUT_STATE);
             intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_VIDEO_CALL_TYPE, ECMChatInputMenu.VOICE_CALL);
-            intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.INVITEE_LAYOUT_STATE);
             startActivity(intent);
         }
     }

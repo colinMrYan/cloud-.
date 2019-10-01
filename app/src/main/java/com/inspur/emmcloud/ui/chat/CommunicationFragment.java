@@ -35,7 +35,6 @@ import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
@@ -856,8 +855,7 @@ public class CommunicationFragment extends BaseFragment {
             @Override
             public void onPermissionRequestSuccess(List<String> permissions) {
                 CustomProtocol customProtocol = new CustomProtocol(getVoiceAndVideoResult.getContextParamsSchema());
-                LogUtils.YfcDebug("channel:" + getVoiceAndVideoResult.getChannel());
-                if (!StringUtils.isBlank(customProtocol.getParamMap().get("cmd")) && customProtocol.getParamMap().get("cmd").equals("invite")) {
+                if (customProtocol.getProtocol().equals("ecc-cloudplus-cmd") && !StringUtils.isBlank(customProtocol.getParamMap().get("cmd")) && customProtocol.getParamMap().get("cmd").equals("invite")) {
                     startVoiceOrVideoCall(getVoiceAndVideoResult.getContextParamsRoom(), getVoiceAndVideoResult.getContextParamsType(), getVoiceAndVideoResult.getChannel());
                 }
             }
