@@ -251,6 +251,6 @@ public class Constant {
     public static final String SAFE_CENTER_FINGER_PRINT = "safe_center_finger_print";
     //分享内容
     public static final String SHARE_CONTENT = "share_content";
-
+    public static final String WECHAT_APPID = "wx4eb8727ea9c26495";
 
 }

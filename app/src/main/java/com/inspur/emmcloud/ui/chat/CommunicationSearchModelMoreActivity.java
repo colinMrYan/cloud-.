@@ -81,6 +81,13 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
     ListView searchGroupListView;
     @BindView(R.id.refresh_layout)
     MySwipeRefreshLayout mySwipeRefreshLayout;
+    Handler mHandler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            mySwipeRefreshLayout.setRefreshing(false);
+            return true;
+        }
+    });
     private Runnable searchRunnable;
     private List<SearchModel> searchGroupList = new ArrayList<>(); // 群组搜索结果
     private List<Contact> searchContactList = new ArrayList<>(); // 人员搜索结果
@@ -93,7 +100,6 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
     private ContactAdapter contactAdapter;
     private ConversationFromChatContentAdapter conversationFromChatContentAdapter;
     private String shareContent;
-
     private TextView.OnEditorActionListener onEditorActionListener = new TextView.OnEditorActionListener() {
         @Override
         public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -136,6 +142,7 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
         searchEdit.setText(searchText);
         searchEdit.setSelection(searchText.length());
         mySwipeRefreshLayout.setOnLoadListener(this);
+        mySwipeRefreshLayout.setOnRefreshListener(this);
         mySwipeRefreshLayout.setEnabled(true);
     }
 
@@ -168,8 +175,7 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
 
     @Override
     public void onRefresh() {
-        mySwipeRefreshLayout.setLoading(false);
-        mySwipeRefreshLayout.setRefreshing(false);
+        mHandler.sendEmptyMessageDelayed(1, 1000);
     }
 
     private void handMessage() {

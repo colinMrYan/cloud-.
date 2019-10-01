@@ -67,9 +67,8 @@ public class NewsListAdapter extends BaseAdapter {
         holder.title.setTextColor(groupNewsList.get(position).isImportant() ? Color.RED : 0xff203b4f);
         holder.title.setText(groupNewsList.get(position).getTitle());
         String postTime = groupNewsList.get(position).getCreationDate();
-        postTime = TimeUtils.Calendar2TimeString(TimeUtils.timeLong2Calendar(Long.parseLong(postTime)), TimeUtils.getFormat(context, TimeUtils.FORMAT_DEFAULT_DATE));
-        String dataTime = postTime.substring(0, 10);
-        holder.textPoser.setText(groupNewsList.get(position).getAuthor() + "   " + dataTime);
+        postTime = TimeUtils.Calendar2TimeString(TimeUtils.timeLong2Calendar(Long.parseLong(postTime)), TimeUtils.getFormat(context, TimeUtils.FORMAT_YEAR_MONTH_DAY_BY_NEWS));
+        holder.textPoser.setText(groupNewsList.get(position).getAuthor() + "   " + postTime);
         return convertView;
     }
 

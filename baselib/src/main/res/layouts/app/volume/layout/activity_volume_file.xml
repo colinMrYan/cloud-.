@@ -63,7 +63,8 @@
                 <RelativeLayout
                     android:layout_width="48dp"
                     android:layout_height="match_parent"
-                    android:layout_toRightOf="@id/iv_head_operation">
+                    android:layout_toRightOf="@id/iv_head_operation"
+                    android:visibility="gone">
 
                     <RelativeLayout
                         android:id="@+id/rl_tip_view"

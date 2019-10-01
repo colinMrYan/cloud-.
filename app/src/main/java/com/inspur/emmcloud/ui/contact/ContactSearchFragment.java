@@ -1061,6 +1061,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
         Integer defaultIcon = null; // 默认显示图标
         String icon = null;
         String type = searchModel.getType();
+        photoImg.setTag("");
         if (type.equals(SearchModel.TYPE_GROUP)) {
             defaultIcon = R.drawable.icon_channel_group_default;
             File file = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH,
@@ -1068,18 +1069,20 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
             if (file.exists()) {
                 icon = "file://" + file.getAbsolutePath();
                 ImageDisplayUtils.getInstance().displayImageNoCache(photoImg, icon, defaultIcon);
-                return;
+            } else {
+                photoImg.setImageResource(R.drawable.icon_channel_group_default);
             }
         } else if (type.equals(SearchModel.TYPE_STRUCT)) {
-            defaultIcon = R.drawable.ic_contact_struct;
+            photoImg.setImageResource(R.drawable.ic_contact_struct);
         } else {
             defaultIcon = R.drawable.icon_person_default;
             if (!searchModel.getId().equals("null")) {
                 icon = APIUri.getChannelImgUrl(MyApplication.getInstance(), searchModel.getId());
             }
-
+            photoImg.setTag(icon);
+            ImageDisplayUtils.getInstance().displayImageByTag(photoImg, icon, defaultIcon);
         }
-        ImageDisplayUtils.getInstance().displayImage(photoImg, icon, defaultIcon);
+
     }
 
     /**

@@ -225,6 +225,8 @@ public class AppSchemeHandleActivity extends BaseActivity {
                                         ARouter.getInstance().build(Constant.AROUTER_CLASS_GROUP_NEWS).navigation();
                                     } else if (host.equals("volume")) {
                                         IntentUtils.startActivity(AppSchemeHandleActivity.this, VolumeHomePageActivity.class);
+                                    } else {
+                                        showSchemeUnknownWarning();
                                     }
                                 }
                                 finish();
@@ -248,6 +250,7 @@ public class AppSchemeHandleActivity extends BaseActivity {
                                 finish();
                                 break;
                             default:
+                                showSchemeUnknownWarning();
                                 finish();
                                 break;
                         }
@@ -589,6 +592,7 @@ public class AppSchemeHandleActivity extends BaseActivity {
                 }
                 break;
             default:
+                showSchemeUnknownWarning();
                 finish();
                 break;
         }
@@ -630,9 +634,14 @@ public class AppSchemeHandleActivity extends BaseActivity {
                 IntentUtils.startActivity(this, KnowledgeActivity.class, true);
                 break;
             default:
+                showSchemeUnknownWarning();
                 finish();
                 break;
         }
+    }
+
+    private void showSchemeUnknownWarning() {
+        ToastUtils.show(R.string.app_update_function);
     }
 
     @Override

@@ -60,7 +60,7 @@ public class VolumeFileDownloadActivity extends BaseActivity {
     TextView progressText;
     @BindView(R.id.tv_file_name)
     TextView fileNameText;
-    @BindView(R.id.file_type_img)
+    @BindView(R.id.iv_file_type_img_preview)
     ImageView fileTypeImg;
     @BindView(R.id.tv_file_size)
     TextView fileSizeText;
@@ -68,6 +68,8 @@ public class VolumeFileDownloadActivity extends BaseActivity {
     TextView shareFileTextView;
     @BindView(R.id.tv_file_open_tips)
     TextView fileOpenTipsText;
+    @BindView(R.id.iv_file_type_file_preview)
+    ImageView typeFileImageView;
     private String fileSavePath = "";
     private Callback.Cancelable cancelable;
     private VolumeFile volumeFile;
@@ -104,9 +106,13 @@ public class VolumeFileDownloadActivity extends BaseActivity {
                 url = APIUri.getVolumeFileTypeImgThumbnailUrl(volumeFile, currentDirAbsolutePath);
             }
             fileTypeImg.setTag(url);
+            fileTypeImg.setVisibility(View.VISIBLE);
+            typeFileImageView.setVisibility(View.GONE);
             ImageDisplayUtils.getInstance().displayImageByTag(fileTypeImg, url, R.drawable.baselib_file_type_img);
         } else {
-            fileTypeImg.setImageResource(FileUtils.getFileIconResIdByFormat(volumeFile.getFormat()));
+            typeFileImageView.setImageResource(FileUtils.getFileIconResIdByFormat(volumeFile.getFormat()));
+            typeFileImageView.setVisibility(View.VISIBLE);
+            fileTypeImg.setVisibility(View.GONE);
         }
 
 
