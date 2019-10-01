@@ -4,19 +4,18 @@
     android:layout_height="wrap_content"
     android:background="@drawable/selector_list"
     android:orientation="vertical"
-    android:paddingLeft="15dp"
-    android:paddingRight="15dp">
+    android:paddingLeft="15dp">
 
     <TextView
         android:id="@+id/tv_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:paddingBottom="10dp"
-        android:paddingTop="10dp"
         android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
         android:layout_toLeftOf="@+id/num_text"
         android:ellipsize="middle"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
         android:singleLine="true"
         android:textColor="#FF333333"
         android:textSize="@dimen/content_title_textsize" />
@@ -42,11 +41,12 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginLeft="10dp"
+        android:layout_marginRight="15dp"
         android:src="@drawable/ic_arrow_right" />
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"
+        android:layout_height="0.5px"
         android:layout_alignParentBottom="true"
         android:background="@color/color_list_divider" />
 </RelativeLayout>

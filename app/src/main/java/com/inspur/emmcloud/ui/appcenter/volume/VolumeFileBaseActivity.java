@@ -297,7 +297,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         boolean isVolumeFileDirectory = true;
         boolean isOwner = true;
         if (selectVolumeFileList.size() > 0) {
-            isVolumeFileWriteable = VolumeFilePrivilegeUtils.getVolumeFileWriteable(getApplicationContext(), selectVolumeFileList.get(0));
+            isVolumeFileWriteable = VolumeFilePrivilegeUtils.getVolumeFileWritable(getApplicationContext(), selectVolumeFileList.get(0));
             isVolumeFileReadable = VolumeFilePrivilegeUtils.getVolumeFileReadable(getApplicationContext(), selectVolumeFileList.get(0));
             isVolumeFileDirectory = selectVolumeFileList.get(0).getType().equals(VolumeFile.FILE_TYPE_DIRECTORY);
             isOwner = selectVolumeFileList.get(0).getOwner().equals(BaseApplication.getInstance().getUid());
@@ -747,6 +747,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
             apiServiceBase.getVolumeFileList(volume.getId(), path);
         } else {
             swipeRefreshLayout.setRefreshing(false);
+            setCurrentDirectoryLayoutByPrivilege();
         }
     }
 
@@ -830,12 +831,12 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         public void returnVolumeFileListSuccess(GetVolumeFileListResult getVolumeFileListResult) {
             VolumeFileBaseActivity.this.getVolumeFileListResult = getVolumeFileListResult;
             //判断是否可以计算出当前目录的权限，如果不可以则获取网盘中我所属的群组信息
-            if (VolumeFilePrivilegeUtils.canGetVolumeFilePrivilege(getApplicationContext(), volume)) {
-                LoadingDialog.dimissDlg(loadingDlg);
-                setCurrentDirectoryLayoutByPrivilege();
-            } else {
-                getVolumeGroupContainMe();
-            }
+//            if (VolumeFilePrivilegeUtils.canGetVolumeFilePrivilege(getApplicationContext(), volume)) {
+//                LoadingDialog.dimissDlg(loadingDlg);
+//                setCurrentDirectoryLayoutByPrivilege();
+//            } else {
+//            }
+            getVolumeGroupContainMe();
             swipeRefreshLayout.setRefreshing(false);
             if (StringUtils.isBlank(fileFilterType)) {
                 volumeFileList = getVolumeFileListResult.getVolumeFileList();
@@ -859,6 +860,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
             LoadingDialog.dimissDlg(loadingDlg);
             swipeRefreshLayout.setRefreshing(false);
             WebServiceMiddleUtils.hand(getApplicationContext(), error, errorCode);
+            getVolumeGroupContainMe();
         }
 
         @Override

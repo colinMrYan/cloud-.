@@ -831,6 +831,14 @@
             </intent-filter>
         </receiver>
 
+        <receiver
+            android:name=".broadcastreceiver.AppRegister"
+            android:permission="com.tencent.mm.plugin.permission.SEND">
+            <intent-filter>
+                <action android:name="com.tencent.mm.plugin.openapi.Intent.ACTION_REFRESH_WXAPP" />
+            </intent-filter>
+        </receiver>
+
 
         <!--社交分享-->
 
@@ -843,6 +851,7 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
             android:resizeableActivity="true"
+            android:launchMode="singleTask"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name="com.tencent.tauth.AuthActivity"
