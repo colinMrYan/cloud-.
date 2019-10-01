@@ -177,7 +177,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         cloudPlusChannelId = getIntent().getStringExtra(ConversationActivity.CLOUD_PLUS_CHANNEL_ID);
         communicationType = getIntent().getStringExtra(VOICE_VIDEO_CALL_TYPE);
         voiceCommunicationUserInfoBeanList = (List<VoiceCommunicationJoinChannelInfoBean>) getIntent().getSerializableExtra("userList");
-        voiceCommunicationUtils = VoiceCommunicationUtils.getVoiceCommunicationUtils(this, communicationType);
+        voiceCommunicationUtils = VoiceCommunicationUtils.getVoiceCommunicationUtils(communicationType);
         recoverData();
         initViews();
     }

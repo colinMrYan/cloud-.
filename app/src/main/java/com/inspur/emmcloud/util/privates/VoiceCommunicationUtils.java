@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationAudioVolumeInfo;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationRtcStats;
@@ -146,11 +147,11 @@ public class VoiceCommunicationUtils {
      *
      * @return
      */
-    public static VoiceCommunicationUtils getVoiceCommunicationUtils(Context context, String communicationType) {
+    public static VoiceCommunicationUtils getVoiceCommunicationUtils(String communicationType) {
         if (voiceCommunicationUtils == null) {
             synchronized (VoiceCommunicationUtils.class) {
                 if (voiceCommunicationUtils == null) {
-                    voiceCommunicationUtils = new VoiceCommunicationUtils(context);
+                    voiceCommunicationUtils = new VoiceCommunicationUtils(BaseApplication.getInstance());
                 }
             }
         }
