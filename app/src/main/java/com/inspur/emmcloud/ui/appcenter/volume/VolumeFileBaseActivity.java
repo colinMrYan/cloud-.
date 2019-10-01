@@ -324,7 +324,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
                 !isVolumeFileDirectory && (isVolumeFileWriteable || isVolumeFileReadable)));
         volumeActionDataList.add(new VolumeActionData(permissionAction, R.drawable.ic_volume_permission,
                 isVolumeFileDirectory && (isVolumeFileWriteable || isVolumeFileReadable)
-                        && (volumeFrom != MY_VOLUME) && isOwner));
+                        && (volumeFrom != MY_VOLUME) && isOwner && volume.getType().equals("public")));
         for (int i = 0; i < volumeActionDataList.size(); i++) {
             if (!volumeActionDataList.get(i).isShow()) {
                 volumeActionDataList.remove(i);

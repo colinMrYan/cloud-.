@@ -325,7 +325,7 @@
                 android:onClick="onClick"
                 android:padding="12dp"
                 android:text="@string/clouddriver_create_folder"
-                android:textColor="#444444"
+                android:textColor="#36A5F6"
                 android:textSize="15sp" />
 
             <com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButton
