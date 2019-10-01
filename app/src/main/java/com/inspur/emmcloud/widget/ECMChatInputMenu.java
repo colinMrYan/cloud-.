@@ -32,6 +32,7 @@ import com.czt.mp3recorder.MP3Recorder;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
@@ -78,6 +79,8 @@ import butterknife.OnTouch;
  */
 public class ECMChatInputMenu extends LinearLayout {
 
+    public static final String VOICE_CALL = "voice_call";
+    public static final String VIDEO_CALL = "video_call";
     private static final int GELLARY_RESULT = 2;
     private static final int CAMERA_RESULT = 3;
     private static final int CHOOSE_FILE = 4;
@@ -487,7 +490,7 @@ public class ECMChatInputMenu extends LinearLayout {
      * 根据二进制字符串更新菜单视图
      * 此处与IOS客户端略有不同，IOS客户端当inputs为"2"时则隐藏整个输入面板，没有任何输入入口
      * 服务端允许输入类型1支持，0不支持
-     * 每一位bit代表的意义为（高位）location mail videocall voicecall video，voice，command，file，photo，text（低位）
+     * 每一位bit代表的意义为（高位）location mail videocall voicecall null(废弃) null(废弃) video voice command file photo text (低位)
      *
      * @param inputs
      */
@@ -503,11 +506,16 @@ public class ECMChatInputMenu extends LinearLayout {
             //功能组的图标，名称
             int[] functionIconArray = {R.drawable.ic_chat_input_add_gallery,
                     R.drawable.ic_chat_input_add_camera, R.drawable.ic_chat_input_add_file, R.drawable.ic_chat_input_add_voice_2_word,
-                    R.drawable.ic_chat_input_add_mention, R.drawable.ic_chat_input_add_voice_call, R.drawable.ic_chat_input_add_send_email};
+                    R.drawable.ic_chat_input_add_mention, R.drawable.ic_chat_input_add_voice_call, R.drawable.ic_chat_input_add_send_email,
+                    R.drawable.ic_chat_input_add_video};
             String[] functionNameArray = {getContext().getString(R.string.album),
                     getContext().getString(R.string.take_photo),
-                    getContext().getString(R.string.file), getContext().getString(R.string.voice_input), getContext().getString(R.string.mention), getContext().getString(R.string.voice_call), getContext().getString(R.string.send_email)};
-            String[] functionActionArray = {"gallery", "camera", "file", "voice_input", "mention", "voice_call", "send_email"};
+                    getContext().getString(R.string.file), getContext().getString(R.string.voice_input),
+                    getContext().getString(R.string.mention),
+                    getContext().getString(R.string.voice_call),
+                    getContext().getString(R.string.send_email),
+                    "视频通话"};
+            String[] functionActionArray = {"gallery", "camera", "file", "voice_input", "mention", VOICE_CALL, "send_email", VIDEO_CALL};
             String inputControl = "-1";
             if (!StringUtils.isBlank(inputs)) {
                 try {
@@ -521,14 +529,16 @@ public class ECMChatInputMenu extends LinearLayout {
                 //目前开放三位，有可能扩展
                 inputControl = "11101";
             }
+            LogUtils.YfcDebug("inputControl:" + inputControl);
             //控制binaryString长度，防止穿的数字过大
-            int length = inputControl.length() > 10 ? 10 : inputControl.length();
+            int length = inputControl.length() > 12 ? 12 : inputControl.length();
             boolean isInputTextEnable = false;
             boolean isInputPhotoEnable = false;
             boolean isInputFileEnable = false;
             boolean isInputVoiceEnable = false;
             boolean isVoiceCallEnable = false;
             boolean isSendEmailEnable = false;
+            boolean isVideoCallEnable = false;
 
             for (int i = 0; i < length; i++) {
                 String controlValue = inputControl.charAt(i) + "";
@@ -545,10 +555,18 @@ public class ECMChatInputMenu extends LinearLayout {
                     case 4:
                         isInputVoiceEnable = controlValue.equals("1");
                         break;
-                    case 5:
+                    //废弃
+//                    case 5:
+//                        isVoiceCallEnable = controlValue.endsWith("1");
+//                        break;
+                    //废弃
+//                    case 6:
+//                        isVideoCallEnable = controlValue.endsWith("1");
+//                        break;
+                    case 8:
                         isVoiceCallEnable = controlValue.endsWith("1");
                         break;
-                    case 8:
+                    case 10:
                         isSendEmailEnable = controlValue.endsWith("1");
                         break;
                     default:
@@ -587,6 +605,10 @@ public class ECMChatInputMenu extends LinearLayout {
 
             if (isSendEmailEnable) {
                 inputTypeBeanList.add(new InputTypeBean(functionIconArray[6], functionNameArray[6], functionActionArray[6]));
+            }
+
+            if (isVideoCallEnable) {
+                inputTypeBeanList.add(new InputTypeBean(functionIconArray[7], functionNameArray[7], functionActionArray[7]));
             }
 
             if (inputTypeBeanList.size() > 0) {
@@ -629,12 +651,29 @@ public class ECMChatInputMenu extends LinearLayout {
                                 });
                             }
                             break;
-                        case "voice_call":
+                        case VOICE_CALL:
                             if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
                                 PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getContext(), Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
                                     @Override
                                     public void onPermissionRequestSuccess(List<String> permissions) {
-                                        startVoiceCall();
+                                        startVoiceCall(VOICE_CALL);
+                                    }
+
+                                    @Override
+                                    public void onPermissionRequestFail(List<String> permissions) {
+                                        ToastUtils.show(getContext(), PermissionRequestManagerUtils.getInstance().getPermissionToast(getContext(), permissions));
+                                    }
+
+                                });
+                            }
+                            break;
+                        case VIDEO_CALL:
+                            if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+                                String[] videoPermissions = new String[]{Permissions.RECORD_AUDIO, Permissions.CAMERA};
+                                PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getContext(), videoPermissions, new PermissionRequestCallback() {
+                                    @Override
+                                    public void onPermissionRequestSuccess(List<String> permissions) {
+                                        startVoiceCall(VIDEO_CALL);
                                     }
 
                                     @Override
@@ -657,17 +696,16 @@ public class ECMChatInputMenu extends LinearLayout {
         }
     }
 
-    private void startVoiceCall() {
+    private void startVoiceCall(String type) {
         //语音通话
         if (!canMentions) {
-            chatInputMenuListener.onVoiceCommucaiton();
+            if (type.equals(VOICE_CALL)) {
+                chatInputMenuListener.onVoiceCommucaiton();
+            } else if (type.equals(VIDEO_CALL)) {
+                chatInputMenuListener.onVideoCommucaiton();
+            }
         } else {
-            Intent intent = new Intent();
-            intent.setClass(getContext(), MembersActivity.class);
-            intent.putExtra("title", getContext().getString(R.string.voice_communication_choice_members));
-            intent.putExtra(MembersActivity.MEMBER_PAGE_STATE, MembersActivity.SELECT_STATE);
-            intent.putExtra("cid", cid);
-            getContext().startActivity(intent);
+            chatInputMenuListener.onVoiceCommucaiton();
         }
     }
 
@@ -1118,8 +1156,9 @@ public class ECMChatInputMenu extends LinearLayout {
 
         void onSendVoiceRecordMsg(String results, float seconds, String filePath);
 
+        void onVoiceCommucaiton();//语音通话
 
-        void onVoiceCommucaiton();
+        void onVideoCommucaiton();//视频通话
 
         void onChatDraftsClear();
     }

@@ -35,7 +35,6 @@ import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.PersonDto;
-import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
@@ -49,7 +48,6 @@ import com.inspur.emmcloud.widget.slidebar.SideBar;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.Serializable;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -550,29 +548,25 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
                 finish();
                 break;
             case R.id.tv_ok:
-                if (state == MENTIONS_STATE) {
-                    Intent intent = new Intent();
-                    JSONArray jsonArray = new JSONArray();
-                    for (int i = 0; i < selectedUserList.size(); i++) {
-                        JSONObject jsonResult1 = new JSONObject();
-                        try {
-                            jsonResult1.put("uid", selectedUserList.get(i).getUid());
-                            jsonResult1.put("name", selectedUserList.get(i).getName());
-                            jsonArray.put(jsonResult1);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                Intent intent = new Intent();
+                JSONArray jsonArray = new JSONArray();
+                for (int i = 0; i < selectedUserList.size(); i++) {
+                    JSONObject jsonResult1 = new JSONObject();
+                    try {
+                        jsonResult1.put("uid", selectedUserList.get(i).getUid());
+                        jsonResult1.put("name", selectedUserList.get(i).getName());
+                        jsonArray.put(jsonResult1);
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                    intent.putExtra("searchResult", jsonArray.toString());
+                }
+                intent.putExtra("searchResult", jsonArray.toString());
+                if (state == MENTIONS_STATE) {
                     boolean isInputKeyWord = getIntent().getBooleanExtra("isInputKeyWord", false);
                     intent.putExtra("isInputKeyWord", isInputKeyWord);
-                    setResult(RESULT_OK, intent);
-                    finish();
-                    finish();
-                } else {
-                    startCommunication();
                 }
-
+                setResult(RESULT_OK, intent);
+                finish();
                 break;
             case R.id.tv_more_select:
                 okTv.setVisibility(View.VISIBLE);
@@ -581,25 +575,6 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
             default:
                 break;
         }
-    }
-
-    /**
-     * 邀请开始通话
-     */
-    private void startCommunication() {
-        List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList = new ArrayList<>();
-        for (int i = 0; i < selectedUserList.size(); i++) {
-            VoiceCommunicationJoinChannelInfoBean voiceCommunicationJoinChannelInfoBean = new VoiceCommunicationJoinChannelInfoBean();
-            voiceCommunicationJoinChannelInfoBean.setUserName(selectedUserList.get(i).getName());
-            voiceCommunicationJoinChannelInfoBean.setUserId(selectedUserList.get(i).getUid());
-            voiceCommunicationUserInfoBeanList.add(voiceCommunicationJoinChannelInfoBean);
-        }
-        Intent intent = new Intent();
-        intent.setClass(MembersActivity.this, ChannelVoiceCommunicationActivity.class);
-        intent.putExtra("userList", (Serializable) voiceCommunicationUserInfoBeanList);
-        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.INVITER_LAYOUT_STATE);
-        startActivity(intent);
-        finish();
     }
 
     @Override

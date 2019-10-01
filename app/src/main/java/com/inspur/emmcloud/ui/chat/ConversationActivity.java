@@ -120,11 +120,13 @@ public class ConversationActivity extends ConversationBaseActivity {
     private static final int REQUEST_MENTIONS = 5;
 
     private static final int SHARE_SEARCH_RUEST_CODE = 31;
+    private static final int VOICE_CALL_MEMBER_CODE = 32;
 
     private static final int REFRESH_HISTORY_MESSAGE = 6;
     private static final int REFRESH_PUSH_MESSAGE = 7;
     private static final int REFRESH_OFFLINE_MESSAGE = 8;
     private static final int UNREAD_NUMBER_BORDER = 20;
+    public static final String CLOUD_PLUS_CHANNEL_ID = "channel_id";
 
     @BindView(R.id.msg_list)
     RecycleViewForSizeChange msgListView;
@@ -386,22 +388,22 @@ public class ConversationActivity extends ConversationBaseActivity {
 
             @Override
             public void onVoiceCommucaiton() {
-                List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList = new ArrayList<>();
-                List<String> memberList = new ArrayList<>();
-                memberList.add(DirectChannelUtils.getDirctChannelOtherUid(MyApplication.getInstance(), conversation.getName()));
-                memberList.add(MyApplication.getInstance().getUid());
-                List<ContactUser> contactUserList = ContactUserCacheUtils.getContactUserListById(memberList);
-                for (int i = 0; i < contactUserList.size(); i++) {
-                    VoiceCommunicationJoinChannelInfoBean voiceCommunicationJoinChannelInfoBean = new VoiceCommunicationJoinChannelInfoBean();
-                    voiceCommunicationJoinChannelInfoBean.setUserId(contactUserList.get(i).getId());
-                    voiceCommunicationJoinChannelInfoBean.setUserName(contactUserList.get(i).getName());
-                    voiceCommunicationUserInfoBeanList.add(voiceCommunicationJoinChannelInfoBean);
+                if (conversation.getType().equals(Conversation.TYPE_GROUP)) {
+                    Intent intent = new Intent();
+                    intent.setClass(ConversationActivity.this, MembersActivity.class);
+                    intent.putExtra("title", ConversationActivity.this.getString(R.string.voice_communication_choice_members));
+                    intent.putExtra(MembersActivity.MEMBER_PAGE_STATE, MembersActivity.SELECT_STATE);
+                    intent.putExtra("cid", cid);
+                    startActivityForResult(intent, VOICE_CALL_MEMBER_CODE);
+                } else if (conversation.getType().equals(Conversation.TYPE_DIRECT)) {
+                    startVoiceOrVideoCall(ECMChatInputMenu.VOICE_CALL, getDirectCversationJoinChannelInfoBeanList());
                 }
-                Intent intent = new Intent();
-                intent.setClass(ConversationActivity.this, ChannelVoiceCommunicationActivity.class);
-                intent.putExtra("userList", (Serializable) voiceCommunicationUserInfoBeanList);
-                intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.INVITER_LAYOUT_STATE);
-                startActivity(intent);
+            }
+
+            //视频通话没有群聊概念
+            @Override
+            public void onVideoCommucaiton() {
+                startVoiceOrVideoCall(ECMChatInputMenu.VIDEO_CALL, getDirectCversationJoinChannelInfoBeanList());
             }
 
             @Override
@@ -420,6 +422,42 @@ public class ConversationActivity extends ConversationBaseActivity {
                 inputMenuClick(type);
             }
         });
+    }
+
+    /**
+     * 单聊消息
+     *
+     * @return
+     */
+    private List<VoiceCommunicationJoinChannelInfoBean> getDirectCversationJoinChannelInfoBeanList() {
+        List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList = new ArrayList<>();
+        List<String> memberList = new ArrayList<>();
+        memberList.add(DirectChannelUtils.getDirctChannelOtherUid(MyApplication.getInstance(), conversation.getName()));
+        memberList.add(MyApplication.getInstance().getUid());
+        List<ContactUser> contactUserList = ContactUserCacheUtils.getContactUserListById(memberList);
+        for (int i = 0; i < contactUserList.size(); i++) {
+            VoiceCommunicationJoinChannelInfoBean voiceCommunicationJoinChannelInfoBean = new VoiceCommunicationJoinChannelInfoBean();
+            voiceCommunicationJoinChannelInfoBean.setUserId(contactUserList.get(i).getId());
+            voiceCommunicationJoinChannelInfoBean.setUserName(contactUserList.get(i).getName());
+            voiceCommunicationUserInfoBeanList.add(voiceCommunicationJoinChannelInfoBean);
+        }
+        return voiceCommunicationUserInfoBeanList;
+    }
+
+    /**
+     * 根据类型启动电话
+     *
+     * @param type
+     */
+    private void startVoiceOrVideoCall(String type, List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList) {
+
+        Intent intent = new Intent();
+        intent.setClass(ConversationActivity.this, ChannelVoiceCommunicationActivity.class);
+        intent.putExtra("userList", (Serializable) voiceCommunicationUserInfoBeanList);
+        intent.putExtra(CLOUD_PLUS_CHANNEL_ID, cid);
+        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_VIDEO_CALL_TYPE, type);
+        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.INVITER_LAYOUT_STATE);
+        startActivity(intent);
     }
 
     private void inputMenuClick(String type) {
@@ -937,6 +975,24 @@ public class ConversationActivity extends ConversationBaseActivity {
                             }
                         }
                     }
+                    break;
+                case VOICE_CALL_MEMBER_CODE:
+                    List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList = new ArrayList<>();
+                    String voiceResult = data.getStringExtra("searchResult");
+                    JSONArray voiceJsonArray = JSONUtils.getJSONArray(voiceResult, new JSONArray());
+                    for (int i = 0; i < voiceJsonArray.length(); i++) {
+                        try {
+                            String uid = JSONUtils.getString(voiceJsonArray.getString(i), "uid", "");
+                            String name = JSONUtils.getString(voiceJsonArray.getString(i), "name", "");
+                            VoiceCommunicationJoinChannelInfoBean voiceCommunicationJoinChannelInfoBean = new VoiceCommunicationJoinChannelInfoBean();
+                            voiceCommunicationJoinChannelInfoBean.setUserId(uid);
+                            voiceCommunicationJoinChannelInfoBean.setUserName(name);
+                            voiceCommunicationUserInfoBeanList.add(voiceCommunicationJoinChannelInfoBean);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    startVoiceOrVideoCall(ECMChatInputMenu.VOICE_CALL, voiceCommunicationUserInfoBeanList);
                     break;
             }
         } else {
