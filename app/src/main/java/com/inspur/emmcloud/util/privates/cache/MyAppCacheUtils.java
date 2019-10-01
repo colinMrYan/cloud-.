@@ -162,10 +162,8 @@ public class MyAppCacheUtils {
                 return -1;
             } else if (appSortA < appSortB) {
                 return 1;
-            } else if (appSortA == appSortB) {
-                return 0;
             } else {
-                return -1;
+                return 0;
             }
         }
     }
