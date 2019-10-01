@@ -971,17 +971,6 @@ public class ConversationActivity extends ConversationBaseActivity {
     }
 
     private void handleShareResult(Intent data) {
-        Conversation conversation = (Conversation) data.getSerializableExtra("conversation");
-        if (conversation != null) {
-            String userOrChannelId = conversation.getId();
-            boolean isGroup = conversation.getType().equals(Conversation.TYPE_GROUP);
-            if (!isGroup) {
-                userOrChannelId = DirectChannelUtils.getDirctChannelOtherUid(
-                        ConversationActivity.this, conversation.getName());
-            }
-            share2Conversation(userOrChannelId, isGroup);
-        }
-
         SearchModel searchModel = (SearchModel) data.getSerializableExtra("searchModel");
         if (searchModel != null) {
             String userOrChannelId = searchModel.getId();
