@@ -227,6 +227,7 @@ public class Constant {
     public static final String AROUTER_CLASS_WEB_MAIN_TEST = "/web/ScanResultActivity";
 
     public static final String AROUTER_CLASS_CONTACT_SEARCH = "/contact/ContactSearchActivity"; //通讯录选择界面
+    public static final String AROUTER_CLASS_CONVERSATION_SEARCH = "/chat/ConversationSearchActivity"; //最近联系人选择界面
     public static final String AROUTER_CLASS_CONTACT_USERINFO = "/contact/UserInfoActivity";
 
     public static final String AROUTER_CLASS_SETTING_SERVICE_NO_PERMISSION = "/setting/NoPermissionDialogActivity";

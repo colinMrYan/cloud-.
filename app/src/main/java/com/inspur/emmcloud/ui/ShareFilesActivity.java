@@ -33,7 +33,6 @@ import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.ui.chat.mvp.view.ConversationSearchActivity;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
-import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.privates.TabAndAppExistUtils;
 import com.itheima.roundedimageview.RoundedImageView;
 
@@ -316,17 +315,6 @@ public class ShareFilesActivity extends BaseActivity {
                 ToastUtils.show(MyApplication.getInstance(), getString(R.string.baselib_share_fail));
             }
         } else if (requestCode == SHARE_FROM_RECENT_CHAT) {
-            Conversation conversation = (Conversation) data.getSerializableExtra("conversation");
-            if (conversation != null) {
-                String userOrChannelId = conversation.getId();
-                boolean isGroup = conversation.getType().equals(Conversation.TYPE_GROUP);
-                if (!isGroup) {
-                    userOrChannelId = DirectChannelUtils.getDirctChannelOtherUid(
-                            ShareFilesActivity.this, conversation.getName());
-                }
-                share2Conversation(userOrChannelId, isGroup);
-            }
-
             SearchModel searchModel = (SearchModel) data.getSerializableExtra("searchModel");
             if (searchModel != null) {
                 String userOrChannelId = searchModel.getId();
