@@ -6,7 +6,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseMvpActivity;
 import com.inspur.emmcloud.basemodule.util.dialog.ShareDialog;
@@ -24,6 +26,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+@Route(path = Constant.AROUTER_CLASS_CONVERSATION_SEARCH)
 public class ConversationSearchActivity extends BaseMvpActivity<ConversationSearchPresenter> implements ConversionSearchContract.View {
 
     static final int REQUEST_CODE_SHARE = 1;
@@ -71,7 +74,8 @@ public class ConversationSearchActivity extends BaseMvpActivity<ConversationSear
                     @Override
                     public void onConfirm(View view) {
                         Intent intent = new Intent();
-                        intent.putExtra("conversation", conversation);
+                        SearchModel searchModel = conversation.conversation2SearchModel();
+                        intent.putExtra("searchModel", searchModel);
                         setResult(RESULT_OK, intent);
                         dialog.dismiss();
                         finish();

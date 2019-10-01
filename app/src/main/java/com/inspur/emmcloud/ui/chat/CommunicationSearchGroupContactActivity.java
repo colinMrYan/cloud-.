@@ -331,7 +331,8 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
                     @Override
                     public void onConfirm(View view) {
                         Intent intent = new Intent();
-                        intent.putExtra("conversation", conversation);
+                        SearchModel searchModel1 = conversation.conversation2SearchModel();
+                        intent.putExtra("searchModel", searchModel1);
                         setResult(RESULT_OK, intent);
                         dialog.dismiss();
                         finish();
