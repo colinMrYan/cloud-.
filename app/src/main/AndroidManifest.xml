@@ -391,7 +391,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="ecc-cmd" />
+                <data android:scheme="ecc-cloudplus-cmd" />
             </intent-filter>
 
         </activity>

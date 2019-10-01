@@ -7,7 +7,7 @@ import java.util.Map;
  * 自定义协议实体类
  * 包含协议，host，多个参数，参数以&连接，以=作为key，value分隔
  * 示例：
- * ecc-cmd://voice_channel?cmd=join&id=50493cbe1f3d49ad8dd722229c4a3fa1
+ * ecc-cloudplus-cmd:\/\/voice_channel?cmd=invite&channelid=143271038136877057&roomid=257db7ddc478429cab2d2a1ec4ed8626&uid=99999
  * Created by yufuchang on 2018/8/20.
  */
 

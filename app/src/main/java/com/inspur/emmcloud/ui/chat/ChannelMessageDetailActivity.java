@@ -157,6 +157,11 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
             }
 
             @Override
+            public void onVideoCommucaiton() {
+
+            }
+
+            @Override
             public void onChatDraftsClear() {
 
             }

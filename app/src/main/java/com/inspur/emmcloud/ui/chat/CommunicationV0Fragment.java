@@ -72,7 +72,6 @@ import com.inspur.emmcloud.util.privates.ChannelGroupIconUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils.OnCreateGroupChannelListener;
 import com.inspur.emmcloud.util.privates.CheckingNetStateUtils;
-import com.inspur.emmcloud.util.privates.CustomProtocol;
 import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.privates.ScanQrCodeUtils;
 import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
@@ -97,8 +96,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import io.socket.client.Socket;
 
@@ -681,28 +678,6 @@ public class CommunicationV0Fragment extends BaseFragment {
         };
     }
 
-    /**
-     * 判定是
-     *
-     * @param receivedMsg
-     * @return
-     */
-    private CustomProtocol getCommandMessageProtocol(Msg receivedMsg) {
-        String msgBody = receivedMsg.getBody();
-        Pattern pattern = Pattern.compile("\\[[^\\]]+\\]\\([^\\)]+\\)");
-        Matcher matcher = pattern.matcher(msgBody);
-        while (matcher.find()) {
-            String pattenString = matcher.group();
-            int indexBegin = pattenString.indexOf("(");
-            int indexEnd = pattenString.indexOf(")");
-            pattenString = pattenString.substring(indexBegin + 1, indexEnd);
-            CustomProtocol customProtocol = new CustomProtocol(pattenString);
-            if (customProtocol.getProtocol().equals("ecc-cmd") && customProtocol.getParamMap().get("cmd").equals("join")) {
-                return customProtocol;
-            }
-        }
-        return null;
-    }
 
     /**
      * 缓存推送的消息体，消息连续时间段，已读消息的id
