@@ -272,7 +272,7 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
         if (editText == null) {
             editText = new EditText(this);
             FlowLayout.LayoutParams params = new FlowLayout.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT, DensityUtil.dip2px(
+                    ViewGroup.LayoutParams.MATCH_PARENT, DensityUtil.dip2px(
                     this.getApplicationContext(), ViewGroup.LayoutParams.WRAP_CONTENT));
             params.topMargin = DensityUtil.dip2px(this.getApplicationContext(), 2);
             params.bottomMargin = params.topMargin;
