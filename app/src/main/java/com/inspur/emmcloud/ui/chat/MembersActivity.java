@@ -322,11 +322,15 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
                     case SELECT_STATE:
                         PersonDto dto = (filterList.size() != 0) ? filterList.get(position) : personDtoList.get(position);
                         if (!allReadySelectPersonDtoList.contains(dto)) {
-                            if (selectedUserList.size() < TOTAL_MEMBERS_NUM) {
+                            if (selectedUserList.size() < TOTAL_MEMBERS_NUM + 1) {
                                 if (!selectedUserList.contains(dto)) {
-                                    selectedUserList.add(dto);
-                                    newSelectUserList.add(dto);
-                                    updateView(view, View.VISIBLE);
+                                    if (selectedUserList.size() < TOTAL_MEMBERS_NUM) {
+                                        selectedUserList.add(dto);
+                                        newSelectUserList.add(dto);
+                                        updateView(view, View.VISIBLE);
+                                    } else {
+                                        ToastUtils.show(MembersActivity.this, getString(R.string.voice_communication_support_nine_members));
+                                    }
                                 } else {
                                     selectedUserList.remove(dto);
                                     newSelectUserList.remove(dto);
