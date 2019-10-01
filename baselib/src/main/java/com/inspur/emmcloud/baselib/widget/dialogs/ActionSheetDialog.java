@@ -119,7 +119,8 @@ public class ActionSheetDialog extends Dialog {
         private TextView mTitleTv;
         private OnSheetItemClickListener mOnSheetItemClickListener;
         private DialogInterface.OnDismissListener mOnActionSheetDlgDismissListener;
-        private int titleColor = Color.parseColor("#333333");
+        private int titleColor = Color.parseColor("#999999");
+        private int titleSize = 14;
         private int itemColor = Color.parseColor("#333333");
         private int cancelColor = Color.parseColor("#36A5F6");
 
@@ -181,6 +182,11 @@ public class ActionSheetDialog extends Dialog {
             return this;
         }
 
+        public ActionListSheetBuilder setTitleSize(int titleSize) {
+            this.titleSize = titleSize;
+            return this;
+        }
+
         /**
          * 设置标题颜色
          *
@@ -227,6 +233,7 @@ public class ActionSheetDialog extends Dialog {
             View wrapperView = View.inflate(mContext, R.layout.basewidget_actionsheet, null);
             mTitleTv = (TextView) wrapperView.findViewById(R.id.title);
             mTitleTv.setTextColor(titleColor);
+            mTitleTv.setTextSize(titleSize);
             mContainerView = (ListView) wrapperView.findViewById(R.id.sheetList);
             if (mTitle != null && mTitle.length() != 0) {
                 (wrapperView.findViewById(R.id.title_layout)).setVisibility(View.VISIBLE);
