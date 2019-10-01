@@ -234,11 +234,9 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
             case R.id.ibt_back:
                 onBackPressed();
                 break;
+            case R.id.btn_upload_file:
             case R.id.iv_head_operation:
                 showUploadOperationPopWindow(new ArrayList<VolumeFile>());
-                break;
-            case R.id.btn_upload_file:
-                openFileBrowser();
                 break;
             case R.id.iv_down_up_list:
                 break;

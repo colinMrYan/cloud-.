@@ -80,12 +80,18 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
             public void onItemClick(View view, int position) {
                 VolumeFile volumeFile = volumeFileList.get(position);
                 if (volumeFile.getType().equals(VolumeFile.FILE_TYPE_DIRECTORY)) {
-                    Intent intent = new Intent(getApplicationContext(), VolumeFileLocationSelectActivity.class);
-                    Bundle bundle = getIntent().getExtras();
-                    bundle.putString("currentDirAbsolutePath", currentDirAbsolutePath + volumeFile.getName() + "/");
-                    bundle.putString("title", volumeFile.getName());
-                    intent.putExtras(bundle);
-                    startActivityForResult(intent, isFunctionCopy ? REQUEST_COPY_FILE : REQUEST_MOVE_FILE);
+                    boolean isVolumeFileWritable = VolumeFilePrivilegeUtils.getVolumeFileWritable(getApplicationContext(), volumeFile);
+                    if (isVolumeFileWritable) {
+                        Intent intent = new Intent(getApplicationContext(), VolumeFileLocationSelectActivity.class);
+                        Bundle bundle = getIntent().getExtras();
+                        bundle.putString("currentDirAbsolutePath", currentDirAbsolutePath + volumeFile.getName() + "/");
+                        bundle.putString("title", volumeFile.getName());
+                        intent.putExtras(bundle);
+                        startActivityForResult(intent, isFunctionCopy ? REQUEST_COPY_FILE : REQUEST_MOVE_FILE);
+                    } else {
+                        ToastUtils.show(R.string.volume_no_permission);
+                    }
+
                 }
             }
 
