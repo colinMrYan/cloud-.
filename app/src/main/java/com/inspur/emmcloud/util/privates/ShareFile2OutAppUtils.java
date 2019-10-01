@@ -84,8 +84,11 @@ public class ShareFile2OutAppUtils {
                 shareIntent.setComponent(componentName);
                 mContext.startActivity(Intent.createChooser(shareIntent, "Share"));
             } catch (Exception e) {
-                ToastUtils.show(mContext.getString(R.string.volume_please_install_qq));
+                e.printStackTrace();
+                ToastUtils.show(R.string.baselib_share_fail);
             }
+        } else {
+            ToastUtils.show(mContext.getString(R.string.volume_please_install_qq));
         }
     }
 
@@ -113,6 +116,7 @@ public class ShareFile2OutAppUtils {
                 context.startActivity(Intent.createChooser(intent, "Share"));
             } catch (Exception e) {
                 e.printStackTrace();
+                ToastUtils.show(R.string.baselib_share_fail);
             }
         } else {
             ToastUtils.show(context.getString(R.string.volume_please_install_wechat));
