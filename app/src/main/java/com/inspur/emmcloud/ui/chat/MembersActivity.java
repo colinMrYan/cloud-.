@@ -564,6 +564,10 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
                 if (state == MENTIONS_STATE) {
                     boolean isInputKeyWord = getIntent().getBooleanExtra("isInputKeyWord", false);
                     intent.putExtra("isInputKeyWord", isInputKeyWord);
+                } else if (state == SELECT_STATE) {
+                    if (jsonArray.length() < 2) {
+                        ToastUtils.show("频道用户数不能少于2个。");
+                    }
                 }
                 setResult(RESULT_OK, intent);
                 finish();

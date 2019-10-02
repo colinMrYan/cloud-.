@@ -217,11 +217,17 @@ public class SysCalendarAndCloudPlusScheduleSyncUtils {
         event.put(CalendarContract.Events.HAS_ALARM, previousDate>-1);
         //这个是时区，必须有   CalendarContract.Calendars.CALENDAR_TIME_ZONE目前为日历关联的时区 早上10点用华盛顿时间测试  日程在8号
         event.put(CalendarContract.Events.EVENT_TIMEZONE, CalendarContract.Calendars.CALENDAR_TIME_ZONE);
-        Uri updateUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, Long.
-                parseLong(getCalendarId(context, "", scheduleId)));
-        context.getContentResolver().update(updateUri, event, null, null);
-
-        if (previousDate > -1) {
+        String calendarId = getCalendarId(context, "", scheduleId);
+        Uri updateUri = null;
+        //系统日历查的到更新，查不到保存
+        if (!StringUtils.isBlank(calendarId)) {
+            updateUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, Long.
+                    parseLong(getCalendarId(context, "", scheduleId)));
+            context.getContentResolver().update(updateUri, event, null, null);
+        } else {
+            saveCloudSchedule(context, title, description, reminderTime, endTime, scheduleId, isAllDay, previousDate);
+        }
+        if (previousDate > -1 && updateUri != null) {
             //事件提醒的设定
             ContentValues values = new ContentValues();
             values.put(CalendarContract.Reminders.EVENT_ID, ContentUris.parseId(updateUri));

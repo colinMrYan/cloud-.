@@ -49,6 +49,7 @@ import com.inspur.emmcloud.util.privates.CustomProtocol;
 import com.inspur.emmcloud.util.privates.MediaPlayerManagerUtils;
 import com.inspur.emmcloud.util.privates.SuspensionWindowManagerUtils;
 import com.inspur.emmcloud.util.privates.VoiceCommunicationUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
 import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
 
@@ -70,6 +71,10 @@ import io.agora.rtc.video.VideoCanvas;
  * Created by yufuchang on 2018/8/14.
  */
 public class ChannelVoiceCommunicationActivity extends BaseActivity {
+
+    public static final int COMMUNICATION_STATE_ING = 1;
+    public static final int COMMUNICATION_STATE_OVER = 2;
+
     public static final String VOICE_VIDEO_CALL_AGORA_ID = "channelId";
     public static final String VOICE_VIDEO_CALL_TYPE = "voice_video_call_type";//通话类型
     public static final String VOICE_VIDEO_UID = "voice_video_UID";
@@ -456,15 +461,17 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     public void onReceiveVoiceOrVideoCall(final GetVoiceAndVideoResult getVoiceAndVideoResult) {
         CustomProtocol customProtocol = new CustomProtocol(getVoiceAndVideoResult.getContextParamsSchema());
         String cmd = customProtocol.getParamMap().get("cmd");
-        if (!StringUtils.isBlank(cmd) && cmd.equals("destroy")) {
-            changeUserConnectStateByUid(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_LEAVE,
-                    customProtocol.getParamMap().get("uid"));
-            leaveChannelSuccess(agoraChannelId);
-            finish();
-        } else if (!StringUtils.isBlank(cmd) && cmd.equals("refuse")) {
-            changeUserConnectStateByUid(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_REFUSE,
-                    customProtocol.getParamMap().get("uid"));
-            checkCommunicationFinish();
+        if (!StringUtils.isBlank(cmd)) {
+            String uid = customProtocol.getParamMap().get("uid");
+            if (cmd.equals("destroy")) {
+                changeUserConnectStateByUid(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_LEAVE, uid);
+                leaveChannelSuccess(agoraChannelId);
+                finish();
+            } else if (cmd.equals("refuse")) {
+                changeUserConnectStateByUid(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_REFUSE, uid);
+                checkCommunicationFinish();
+                ToastUtils.show(ContactUserCacheUtils.getUserName(uid) + getString(R.string.meeting_has_refused));
+            }
         }
     }
 
@@ -542,15 +549,17 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
 
             @Override
             public void onError(int err) {
-
+                agoraException();
             }
 
             @Override
             public void onConnectionLost() {
+                agoraException();
             }
 
             @Override
             public void onNetworkQuality(int uid, int txQuality, int rxQuality) {
+
                 if (STATE == COMMUNICATION_LAYOUT_STATE) {
                     communicationStateTv.setText((uid == 0 && txQuality <= 2) ? getString(R.string.voice_communication_quality) : "");
                 }
@@ -593,6 +602,14 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 });
             }
         });
+    }
+
+    /**
+     * 处理声网的异常
+     */
+    private void agoraException() {
+        voiceCommunicationUtils.destroy();
+        finish();
     }
 
     /**
@@ -810,6 +827,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
      */
     private void saveCommunicationData() {
         voiceCommunicationUtils.setState(STATE);
+        voiceCommunicationUtils.setCommunicationState(COMMUNICATION_STATE_ING);
         voiceCommunicationUtils.setVoiceCommunicationUserInfoBeanList(voiceCommunicationUserInfoBeanList);
         voiceCommunicationUtils.setChannelId(agoraChannelId);
         voiceCommunicationUtils.setCommunicationType(communicationType);
@@ -841,6 +859,10 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
         mediaPlayerManagerUtils.stop();
+        voiceCommunicationUtils.setCommunicationState(COMMUNICATION_STATE_OVER);
+        if (!SuspensionWindowManagerUtils.getInstance().isShowing()) {
+            afterRefuse();
+        }
     }
 
     /**
@@ -898,13 +920,16 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
 
     /**
      * 获取Uid
+     * 排除掉自己防止自己给自己发命令消息
      *
      * @return
      */
     private JSONArray getUidArray(List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList){
         JSONArray jsonArray = new JSONArray();
         for (int i = 0; i < voiceCommunicationUserInfoBeanList.size(); i++) {
-            jsonArray.put(voiceCommunicationUserInfoBeanList.get(i).getUserId());
+            if (!voiceCommunicationUserInfoBeanList.get(i).getUserId().equals(BaseApplication.getInstance().getUid())) {
+                jsonArray.put(voiceCommunicationUserInfoBeanList.get(i).getUserId());
+            }
         }
         return jsonArray;
     }
@@ -933,10 +958,11 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
      */
     private void afterDestory() {
         voiceCommunicationUtils.destroy();
-        if (STATE == COMMUNICATION_LAYOUT_STATE) {
+        LogUtils.YfcDebug("STATE:" + STATE);
+        if (STATE == COMMUNICATION_LAYOUT_STATE && userCount >= 2) {
             sendCommunicationCommand("refuse");
-        }
-        if (userCount < 2) {
+        } else if (userCount < 2) {
+            //当群里只剩一人时，发出此消息，此时声网channel已经不存在，告知其他人关闭页面
             sendCommunicationCommand("destroy");
         }
         finish();
@@ -964,6 +990,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         @Override
         public void returnGetVoiceCommunicationResultFail(String error, int errorCode) {
             WebServiceMiddleUtils.hand(ChannelVoiceCommunicationActivity.this, error, errorCode);
+            finish();
         }
 
         @Override

@@ -1329,6 +1329,7 @@
     <string name="permission_call_phone_permission">Call Phone</string>
     <string name="permission_storage_permission">Storage</string>
     <string name="permission_next">Next</string>
+    <string name="voice_communication_dialog">Dialing...</string>
 
     <string name="permission_name_calendar">Calendar</string>
     <string name="permission_name_camera">Camera</string>

@@ -34,7 +34,8 @@ public class VoiceCommunicationUtils {
     private List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationMemberList = new ArrayList<>();
     private VoiceCommunicationJoinChannelInfoBean inviteeInfoBean;
     private int userCount = 1;
-    private int state = -1;
+    private int state = -1;//布局状态
+    private int communicationState = -1;//是否还在通话中的状态
     private IRtcEngineEventHandler mRtcEventHandler = new IRtcEngineEventHandler() {
         //其他用户离线回调
         @Override
@@ -410,5 +411,13 @@ public class VoiceCommunicationUtils {
 
     public void setCommunicationType(String communicationType) {
         this.communicationType = communicationType;
+    }
+
+    public int getCommunicationState() {
+        return communicationState;
+    }
+
+    public void setCommunicationState(int communicationState) {
+        this.communicationState = communicationState;
     }
 }
