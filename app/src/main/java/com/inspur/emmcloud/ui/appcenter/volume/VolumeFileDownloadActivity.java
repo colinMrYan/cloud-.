@@ -28,6 +28,7 @@ import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.util.privates.ShareFile2OutAppUtils;
 import com.umeng.socialize.ShareAction;
+import com.umeng.socialize.bean.PlatformName;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.shareboard.SnsPlatform;
 import com.umeng.socialize.utils.ShareBoardlistener;
@@ -179,20 +180,24 @@ public class VolumeFileDownloadActivity extends BaseActivity {
     }
 
     public void shareFile(final String filePath) {
-        new ShareAction(this).setDisplayList(
-                SHARE_MEDIA.WEIXIN, SHARE_MEDIA.QQ
-        )
+        ShareAction shareAction = new ShareAction(this)
                 .setShareboardclickCallback(new ShareBoardlistener() {
                     @Override
                     public void onclick(SnsPlatform snsPlatform, SHARE_MEDIA share_media) {
-                        if (share_media == SHARE_MEDIA.WEIXIN) {
+                        if (snsPlatform.mKeyword.equals("WEIXIN")) {
                             ShareFile2OutAppUtils.shareFile2WeChat(getApplicationContext(), filePath);
-                        } else if (share_media == SHARE_MEDIA.QQ) {
+                        } else if (snsPlatform.mKeyword.equals("QQ")) {
                             ShareFile2OutAppUtils.shareFileToQQ(getApplicationContext(), filePath);
                         }
                     }
-                })
-                .open();
+                });
+        if (AppUtils.isAppInstalled(BaseApplication.getInstance(), ShareFile2OutAppUtils.PACKAGE_WECHAT)) {
+            shareAction.addButton(PlatformName.WEIXIN, "WEIXIN", "umeng_socialize_wechat", "umeng_socialize_wechat");
+        }
+        if (AppUtils.isAppInstalled(BaseApplication.getInstance(), ShareFile2OutAppUtils.PACKAGE_MOBILE_QQ)) {
+            shareAction.addButton(PlatformName.QQ, "QQ", "umeng_socialize_qq", "umeng_socialize_qq");
+        }
+        shareAction.open();
     }
 
     private boolean checkDownloadEnvironment() {

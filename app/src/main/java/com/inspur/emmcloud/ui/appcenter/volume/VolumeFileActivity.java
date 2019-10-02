@@ -133,25 +133,31 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
             @Override
             public void onItemClick(View view, int position) {
                 VolumeFile volumeFile = volumeFileList.get(position);
-                if (volumeFile.getStatus().equals("normal") && adapter.getSelectVolumeFileList().size() == 0) {
-                    if (!adapter.getMultiselect()) {
-                        Bundle bundle = new Bundle();
-                        if (volumeFile.getType().equals(VolumeFile.FILE_TYPE_DIRECTORY)) {
-                            boolean isVolumeFileWriteable = VolumeFilePrivilegeUtils.getVolumeFileWritable(getApplicationContext(), volumeFile);
-                            boolean isVolumeFileReadable = VolumeFilePrivilegeUtils.getVolumeFileReadable(getApplicationContext(), volumeFile);
-                            if (isVolumeFileWriteable || isVolumeFileReadable) {
-                                bundle.putSerializable("volume", volume);
-                                bundle.putSerializable("currentDirAbsolutePath", currentDirAbsolutePath + volumeFile.getName() + "/");
-                                bundle.putSerializable("title", volumeFile.getName());
-                                bundle.putBoolean("isOpenFromParentDirectory", true);
-                                IntentUtils.startActivity(VolumeFileActivity.this, VolumeFileActivity.class, bundle);
+                if (volumeFile.getStatus().equals("normal")) {
+                    if (adapter.getSelectVolumeFileList().size() == 0) {
+                        if (!adapter.getMultiselect()) {
+                            Bundle bundle = new Bundle();
+                            if (volumeFile.getType().equals(VolumeFile.FILE_TYPE_DIRECTORY)) {
+                                boolean isVolumeFileWriteable = VolumeFilePrivilegeUtils.getVolumeFileWritable(getApplicationContext(), volumeFile);
+                                boolean isVolumeFileReadable = VolumeFilePrivilegeUtils.getVolumeFileReadable(getApplicationContext(), volumeFile);
+                                if (isVolumeFileWriteable || isVolumeFileReadable) {
+                                    bundle.putSerializable("volume", volume);
+                                    bundle.putSerializable("currentDirAbsolutePath", currentDirAbsolutePath + volumeFile.getName() + "/");
+                                    bundle.putSerializable("title", volumeFile.getName());
+                                    bundle.putBoolean("isOpenFromParentDirectory", true);
+                                    IntentUtils.startActivity(VolumeFileActivity.this, VolumeFileActivity.class, bundle);
+                                } else {
+                                    ToastUtils.show(R.string.volume_no_permission);
+                                }
                             } else {
-                                ToastUtils.show(R.string.volume_no_permission);
+                                downloadOrOpenVolumeFile(volumeFile);
                             }
-                        } else {
-                            downloadOrOpenVolumeFile(volumeFile);
                         }
+                    } else {
+                        adapter.setVolumeFileSelect(position);
+                        setBottomOperationItemShow(adapter.getSelectVolumeFileList());
                     }
+
                 }
 
             }

@@ -41,6 +41,7 @@ import com.inspur.emmcloud.basemodule.bean.DownloadFileCategory;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.FileDownloadManager;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
@@ -63,6 +64,7 @@ import com.umeng.commonsdk.UMConfigure;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareListener;
+import com.umeng.socialize.bean.PlatformName;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.shareboard.SnsPlatform;
 import com.umeng.socialize.utils.ShareBoardlistener;
@@ -262,20 +264,25 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
 
     public void shareFile(final String filePath) {
         mShareListener = new CustomShareListener(this);
-        new ShareAction(this).setDisplayList(
-                SHARE_MEDIA.WEIXIN, SHARE_MEDIA.QQ
-        )
+        ShareAction shareAction = new ShareAction(this)
                 .setShareboardclickCallback(new ShareBoardlistener() {
                     @Override
                     public void onclick(SnsPlatform snsPlatform, SHARE_MEDIA share_media) {
-                        if (share_media == SHARE_MEDIA.WEIXIN) {
+                        if (snsPlatform.mKeyword.equals("WEIXIN")) {
                             ShareFile2OutAppUtils.shareFile2WeChat(getApplicationContext(), filePath);
-                        } else if (share_media == SHARE_MEDIA.QQ) {
+                        } else if (snsPlatform.mKeyword.equals("QQ")) {
                             ShareFile2OutAppUtils.shareFileToQQ(getApplicationContext(), filePath);
                         }
                     }
-                })
-                .open();
+                });
+        if (AppUtils.isAppInstalled(BaseApplication.getInstance(), ShareFile2OutAppUtils.PACKAGE_WECHAT)) {
+            shareAction.addButton(PlatformName.WEIXIN, "WEIXIN", "umeng_socialize_wechat", "umeng_socialize_wechat");
+        }
+        if (AppUtils.isAppInstalled(BaseApplication.getInstance(), ShareFile2OutAppUtils.PACKAGE_MOBILE_QQ)) {
+            shareAction.addButton(PlatformName.QQ, "QQ", "umeng_socialize_qq", "umeng_socialize_qq");
+        }
+        shareAction.open();
+
     }
 
     /**
