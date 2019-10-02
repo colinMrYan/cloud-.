@@ -76,12 +76,22 @@ public class SuspensionWindowManagerUtils {
     /**
      * 隐藏悬浮窗
      */
-    private void hideCommunicationSmallWindow() {
+    public void hideCommunicationSmallWindow() {
         if (isShowing && null != windowView) {
             windowManager.removeView(windowView);
             isShowing = false;
         }
     }
+
+    /**
+     * 悬浮窗是否还在显示
+     *
+     * @return
+     */
+    public boolean isShowing() {
+        return isShowing;
+    }
+
 
     /**
      * 组装悬浮窗View

@@ -35,6 +35,7 @@ import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
@@ -62,6 +63,7 @@ import com.inspur.emmcloud.bean.chat.GetVoiceAndVideoResult;
 import com.inspur.emmcloud.bean.chat.MatheSet;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.UIConversation;
+import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
 import com.inspur.emmcloud.bean.system.EmmAction;
 import com.inspur.emmcloud.bean.system.EventMessage;
 import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
@@ -77,7 +79,9 @@ import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationGroupIconUtils;
 import com.inspur.emmcloud.util.privates.CustomProtocol;
 import com.inspur.emmcloud.util.privates.ScanQrCodeUtils;
+import com.inspur.emmcloud.util.privates.SuspensionWindowManagerUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
+import com.inspur.emmcloud.util.privates.VoiceCommunicationUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.MessageMatheSetCacheUtils;
@@ -851,20 +855,73 @@ public class CommunicationFragment extends BaseFragment {
     public void onReceiveVoiceOrVideoCall(final GetVoiceAndVideoResult getVoiceAndVideoResult) {
         //接收到消息后告知服务端
         WSAPIService.getInstance().sendReceiveStartVoiceAndVideoCallMessageSuccess(getVoiceAndVideoResult.getTracer());
-        PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getContext(), Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
-            @Override
-            public void onPermissionRequestSuccess(List<String> permissions) {
-                CustomProtocol customProtocol = new CustomProtocol(getVoiceAndVideoResult.getContextParamsSchema());
-                if (customProtocol.getProtocol().equals("ecc-cloudplus-cmd") && !StringUtils.isBlank(customProtocol.getParamMap().get("cmd")) && customProtocol.getParamMap().get("cmd").equals("invite")) {
-                    startVoiceOrVideoCall(getVoiceAndVideoResult.getContextParamsRoom(), getVoiceAndVideoResult.getContextParamsType(), getVoiceAndVideoResult.getChannel());
+        //判断如果在通话中就不再接听新的来电
+        if (VoiceCommunicationUtils.getVoiceCommunicationUtils(ECMChatInputMenu.VOICE_CALL).getCommunicationState() != ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_ING) {
+            PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getContext(), Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
+                @Override
+                public void onPermissionRequestSuccess(List<String> permissions) {
+                    CustomProtocol customProtocol = new CustomProtocol(getVoiceAndVideoResult.getContextParamsSchema());
+                    LogUtils.YfcDebug("接收到消息：" + customProtocol.getParamMap().get("cmd"));
+                    if (customProtocol.getProtocol().equals("ecc-cloudplus-cmd") && !StringUtils.isBlank(customProtocol.getParamMap().get("cmd"))) {
+                        if (customProtocol.getParamMap().get("cmd").equals("invite")) {
+                            startVoiceOrVideoCall(getVoiceAndVideoResult.getContextParamsRoom(), getVoiceAndVideoResult.getContextParamsType(), getVoiceAndVideoResult.getChannel());
+                        } else if (customProtocol.getParamMap().get("cmd").equals("refuse")) {
+                            changeUserConnectStateByUid(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_REFUSE, customProtocol.getParamMap().get("uid"));
+                            checkCommunicationFinish();
+                        } else if (customProtocol.getParamMap().get("cmd").equals("destroy")) {
+                            SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
+                        }
+                    }
+                }
+
+                @Override
+                public void onPermissionRequestFail(List<String> permissions) {
+                    ToastUtils.show(getContext(), PermissionRequestManagerUtils.getInstance().getPermissionToast(getContext(), permissions));
+                }
+            });
+        } else {
+            ToastUtils.show("已经存在语音通话，请稍后再试。");
+        }
+    }
+
+    /**
+     * 修改用户的链接状态
+     * 通过云+uid
+     *
+     * @param connectStateConnected
+     */
+    private void changeUserConnectStateByUid(int connectStateConnected, String uid) {
+        List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationMemberList = VoiceCommunicationUtils
+                .getVoiceCommunicationUtils(ECMChatInputMenu.VOICE_CALL).getVoiceCommunicationMemberList();
+        if (voiceCommunicationMemberList != null && voiceCommunicationMemberList.size() > 0) {
+            for (int i = 0; i < voiceCommunicationMemberList.size(); i++) {
+                if (voiceCommunicationMemberList.get(i).getUserId().equals(uid)) {
+                    voiceCommunicationMemberList.get(i).setConnectState(connectStateConnected);
+                    break;
                 }
             }
+        }
+    }
 
-            @Override
-            public void onPermissionRequestFail(List<String> permissions) {
-                ToastUtils.show(getContext(), PermissionRequestManagerUtils.getInstance().getPermissionToast(getContext(), permissions));
+    /**
+     * 检查是否需要退出
+     */
+    private void checkCommunicationFinish() {
+        List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationMemberList = VoiceCommunicationUtils
+                .getVoiceCommunicationUtils(ECMChatInputMenu.VOICE_CALL).getVoiceCommunicationMemberList();
+        if (voiceCommunicationMemberList != null && voiceCommunicationMemberList.size() > 0) {
+            int waitAndCommunicationSize = 0;
+            for (int i = 0; i < voiceCommunicationMemberList.size(); i++) {
+                if (voiceCommunicationMemberList.get(i).getConnectState() == VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_CONNECTED ||
+                        voiceCommunicationMemberList.get(i).getConnectState() == VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_INIT) {
+                    waitAndCommunicationSize = waitAndCommunicationSize + 1;
+                }
             }
-        });
+            if (waitAndCommunicationSize < 2) {
+                VoiceCommunicationUtils.getVoiceCommunicationUtils(ECMChatInputMenu.VOICE_CALL).destroy();
+                SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
+            }
+        }
     }
 
     private void startVoiceOrVideoCall(String contextParamsRoom, String contextParamsType, String cid) {
