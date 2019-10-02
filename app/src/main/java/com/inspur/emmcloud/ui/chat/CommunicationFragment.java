@@ -35,7 +35,6 @@ import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
@@ -853,6 +852,7 @@ public class CommunicationFragment extends BaseFragment {
     //接收到websocket发过来的消息，拨打音视频电话，被呼叫触发
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveVoiceOrVideoCall(final GetVoiceAndVideoResult getVoiceAndVideoResult) {
+        final CustomProtocol customProtocol = new CustomProtocol(getVoiceAndVideoResult.getContextParamsSchema());
         //接收到消息后告知服务端
         WSAPIService.getInstance().sendReceiveStartVoiceAndVideoCallMessageSuccess(getVoiceAndVideoResult.getTracer());
         //判断如果在通话中就不再接听新的来电
@@ -860,8 +860,6 @@ public class CommunicationFragment extends BaseFragment {
             PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getContext(), Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
                 @Override
                 public void onPermissionRequestSuccess(List<String> permissions) {
-                    CustomProtocol customProtocol = new CustomProtocol(getVoiceAndVideoResult.getContextParamsSchema());
-                    LogUtils.YfcDebug("接收到消息：" + customProtocol.getParamMap().get("cmd"));
                     if (customProtocol.getProtocol().equals("ecc-cloudplus-cmd") && !StringUtils.isBlank(customProtocol.getParamMap().get("cmd"))) {
                         if (customProtocol.getParamMap().get("cmd").equals("invite")) {
                             startVoiceOrVideoCall(getVoiceAndVideoResult.getContextParamsRoom(), getVoiceAndVideoResult.getContextParamsType(), getVoiceAndVideoResult.getChannel());
@@ -880,9 +878,13 @@ public class CommunicationFragment extends BaseFragment {
                 }
             });
         } else {
+            String agoraChannelId = customProtocol.getParamMap().get("roomid");
+            String channelId = customProtocol.getParamMap().get("channelid");
+            VoiceCommunicationUtils.getVoiceCommunicationUtils(ECMChatInputMenu.VOICE_CALL).getVoiceCommunicationChannelInfo(channelId, agoraChannelId);
             ToastUtils.show("已经存在语音通话，请稍后再试。");
         }
     }
+
 
     /**
      * 修改用户的链接状态
