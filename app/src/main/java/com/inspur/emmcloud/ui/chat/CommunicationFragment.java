@@ -78,6 +78,7 @@ import com.inspur.emmcloud.util.privates.ConversationGroupIconUtils;
 import com.inspur.emmcloud.util.privates.CustomProtocol;
 import com.inspur.emmcloud.util.privates.ScanQrCodeUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
+import com.inspur.emmcloud.util.privates.VoiceCommunicationUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.MessageMatheSetCacheUtils;
@@ -851,20 +852,25 @@ public class CommunicationFragment extends BaseFragment {
     public void onReceiveVoiceOrVideoCall(final GetVoiceAndVideoResult getVoiceAndVideoResult) {
         //接收到消息后告知服务端
         WSAPIService.getInstance().sendReceiveStartVoiceAndVideoCallMessageSuccess(getVoiceAndVideoResult.getTracer());
-        PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getContext(), Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
-            @Override
-            public void onPermissionRequestSuccess(List<String> permissions) {
-                CustomProtocol customProtocol = new CustomProtocol(getVoiceAndVideoResult.getContextParamsSchema());
-                if (customProtocol.getProtocol().equals("ecc-cloudplus-cmd") && !StringUtils.isBlank(customProtocol.getParamMap().get("cmd")) && customProtocol.getParamMap().get("cmd").equals("invite")) {
-                    startVoiceOrVideoCall(getVoiceAndVideoResult.getContextParamsRoom(), getVoiceAndVideoResult.getContextParamsType(), getVoiceAndVideoResult.getChannel());
+        //判断如果在通话中就不再接听新的来电
+        if (VoiceCommunicationUtils.getVoiceCommunicationUtils(ECMChatInputMenu.VOICE_CALL).getCommunicationState() != ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_ING) {
+            PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getContext(), Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
+                @Override
+                public void onPermissionRequestSuccess(List<String> permissions) {
+                    CustomProtocol customProtocol = new CustomProtocol(getVoiceAndVideoResult.getContextParamsSchema());
+                    if (customProtocol.getProtocol().equals("ecc-cloudplus-cmd") && !StringUtils.isBlank(customProtocol.getParamMap().get("cmd")) && customProtocol.getParamMap().get("cmd").equals("invite")) {
+                        startVoiceOrVideoCall(getVoiceAndVideoResult.getContextParamsRoom(), getVoiceAndVideoResult.getContextParamsType(), getVoiceAndVideoResult.getChannel());
+                    }
                 }
-            }
 
-            @Override
-            public void onPermissionRequestFail(List<String> permissions) {
-                ToastUtils.show(getContext(), PermissionRequestManagerUtils.getInstance().getPermissionToast(getContext(), permissions));
-            }
-        });
+                @Override
+                public void onPermissionRequestFail(List<String> permissions) {
+                    ToastUtils.show(getContext(), PermissionRequestManagerUtils.getInstance().getPermissionToast(getContext(), permissions));
+                }
+            });
+        } else {
+            ToastUtils.show("已经存在语音通话，请稍后再试。");
+        }
     }
 
     private void startVoiceOrVideoCall(String contextParamsRoom, String contextParamsType, String cid) {
