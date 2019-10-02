@@ -169,6 +169,7 @@ public class InvoiceService extends ImpPlugin {
             req.nonceStr = "abc";
             req.timeStamp = timestamp;
             req.signType = "SHA1";
+            req.canMultiSelect = "1";
 
             if (req.checkArgs()) {
                 api.sendReq(req);

@@ -9,6 +9,7 @@ import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
@@ -157,11 +158,12 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     @BindView(R.id.rl_person_info)
     RelativeLayout personInfoLayout;
     private ChatAPIService apiService;
-    private List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList = new ArrayList<>();
     private String agoraChannelId = "";//声网的channelId
     private String cloudPlusChannelId = "";//云+的Id
     private String communicationType = "";//会话类型 VOICE_CALL或者VIDEO_CALL
     private List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationMemberList = new ArrayList<>();
+    private List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationMemberList1 = new ArrayList<>();
+    private List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationMemberList2 = new ArrayList<>();
     private VoiceCommunicationJoinChannelInfoBean inviteeInfoBean;
     private int userCount = 1;
     private VoiceCommunicationMemberAdapter voiceCommunicationMemberAdapterFirst;
@@ -174,14 +176,17 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     private int initx;//本地视频初始x坐标
     private int inity;//本地视频初始y坐标
 
-
     @Override
     public void onCreate() {
         EventBus.getDefault().register(this);
         ButterKnife.bind(this);
         cloudPlusChannelId = getIntent().getStringExtra(ConversationActivity.CLOUD_PLUS_CHANNEL_ID);
         communicationType = getIntent().getStringExtra(VOICE_VIDEO_CALL_TYPE);
-        voiceCommunicationUserInfoBeanList = (List<VoiceCommunicationJoinChannelInfoBean>) getIntent().getSerializableExtra("userList");
+        List<VoiceCommunicationJoinChannelInfoBean> list =
+                (List<VoiceCommunicationJoinChannelInfoBean>) getIntent().getSerializableExtra("userList");
+        if (list != null) {
+            voiceCommunicationMemberList = list;
+        }
         voiceCommunicationUtils = VoiceCommunicationUtils.getVoiceCommunicationUtils(communicationType);
         recoverData();
         initViews();
@@ -199,10 +204,11 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         STATE = getIntent().getIntExtra(VOICE_COMMUNICATION_STATE, EXCEPTION_STATE);
         if (STATE == COME_BACK_FROM_SERVICE) {
             STATE = voiceCommunicationUtils.getState();
-            voiceCommunicationUserInfoBeanList = voiceCommunicationUtils.getVoiceCommunicationUserInfoBeanList();
+            voiceCommunicationMemberList.clear();
+            voiceCommunicationMemberList = voiceCommunicationUtils.getVoiceCommunicationMemberList();
             agoraChannelId = voiceCommunicationUtils.getChannelId();
             communicationType = voiceCommunicationUtils.getCommunicationType();
-            voiceCommunicationMemberList = voiceCommunicationUtils.getVoiceCommunicationMemberList();
+            refreshCommunicationMemberAdapter();
             inviteeInfoBean = voiceCommunicationUtils.getInviteeInfoBean();
             userCount = voiceCommunicationUtils.getUserCount();
         }
@@ -221,8 +227,8 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         }
         apiService = new ChatAPIService(this);
         apiService.setAPIInterface(new WebService());
-        voiceCommunicationMemberAdapterFirst = new VoiceCommunicationMemberAdapter(this, voiceCommunicationUserInfoBeanList, 0);
-        voiceCommunicationMemberAdapterSecond = new VoiceCommunicationMemberAdapter(this, voiceCommunicationUserInfoBeanList, 0);
+        voiceCommunicationMemberAdapterFirst = new VoiceCommunicationMemberAdapter(this, voiceCommunicationMemberList1, 0);
+        voiceCommunicationMemberAdapterSecond = new VoiceCommunicationMemberAdapter(this, voiceCommunicationMemberList2, 0);
         initCallbacks();
         mediaPlayerManagerUtils = MediaPlayerManagerUtils.getManager();
         mediaPlayerManagerUtils.setMediaPlayerLooping(true);
@@ -231,7 +237,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         firstRecyclerview.setLayoutManager(layoutManager);
         firstRecyclerview.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this, 8)));
         firstRecyclerview.setAdapter(voiceCommunicationMemberAdapterFirst);
-        if (voiceCommunicationMemberList != null && voiceCommunicationMemberList.size() > 5) {
+//        if (voiceCommunicationMemberList != null && voiceCommunicationMemberList.size() > 5) {
             LinearLayoutManager layoutManager2 = new LinearLayoutManager(this);
             layoutManager2.setOrientation(LinearLayoutManager.HORIZONTAL);
             secondRecyclerview.setLayoutManager(layoutManager2);
@@ -242,7 +248,8 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             layoutManagerMembersSecond.setOrientation(LinearLayoutManager.HORIZONTAL);
             communicationMemberSecondRecyclerview.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this, 8)));
             communicationMemberSecondRecyclerview.setLayoutManager(layoutManagerMembersSecond);
-        }
+        refreshCommunicationMemberAdapter();
+//        }
         LinearLayoutManager layoutManagerMemebersFirst = new LinearLayoutManager(this);
         layoutManagerMemebersFirst.setOrientation(LinearLayoutManager.HORIZONTAL);
         communicationMembersFirstRecyclerview.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this, 8)));
@@ -266,6 +273,18 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             communicationTimeChronometer.start();
         }
 //        dragLocalVideoView();
+    }
+
+    private void handlevoiceCommunicationMemberList() {
+        if (voiceCommunicationMemberList != null) {
+            if (voiceCommunicationMemberList.size() <= 5) {
+                voiceCommunicationMemberList1 = voiceCommunicationMemberList;
+                voiceCommunicationMemberList2.clear();
+            } else if (voiceCommunicationMemberList.size() <= 9) {
+                voiceCommunicationMemberList1 = voiceCommunicationMemberList.subList(0, 5);
+                voiceCommunicationMemberList2 = voiceCommunicationMemberList.subList(5, voiceCommunicationMemberList.size());
+            }
+        }
     }
 
     /**
@@ -357,10 +376,10 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         if (NetUtils.isNetworkConnected(this)) {
             try {
                 JSONArray jsonArray = new JSONArray();
-                for (int i = 0; i < voiceCommunicationUserInfoBeanList.size(); i++) {
+                for (int i = 0; i < voiceCommunicationMemberList.size(); i++) {
                     JSONObject jsonObjectUserInfo = new JSONObject();
-                    jsonObjectUserInfo.put("id", voiceCommunicationUserInfoBeanList.get(i).getUserId());
-                    jsonObjectUserInfo.put("name", voiceCommunicationUserInfoBeanList.get(i).getUserName());
+                    jsonObjectUserInfo.put("id", voiceCommunicationMemberList.get(i).getUserId());
+                    jsonObjectUserInfo.put("name", voiceCommunicationMemberList.get(i).getUserName());
                     jsonArray.put(jsonObjectUserInfo);
                 }
                 apiService.getAgoraParams(jsonArray);
@@ -511,7 +530,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             public void onUserJoined(int uid, int elapsed) {
                 for (int i = 0; i < voiceCommunicationMemberList.size(); i++) {
                     if (voiceCommunicationMemberList.get(i).getAgoraUid() == uid) {
-                        voiceCommunicationMemberList.get(i).setUserState(1);
+                        voiceCommunicationMemberList.get(i).setConnectState(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_CONNECTED);
                     }
                 }
                 userCount = userCount + 1;
@@ -559,7 +578,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
 
             @Override
             public void onNetworkQuality(int uid, int txQuality, int rxQuality) {
-
                 if (STATE == COMMUNICATION_LAYOUT_STATE) {
                     communicationStateTv.setText((uid == 0 && txQuality <= 2) ? getString(R.string.voice_communication_quality) : "");
                 }
@@ -640,10 +658,15 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             for (int i = 0; i < voiceCommunicationMemberList.size(); i++) {
                 if (voiceCommunicationMemberList.get(i).getUserId().equals(uid)) {
                     voiceCommunicationMemberList.get(i).setConnectState(connectStateConnected);
+                    if (connectStateConnected > 1) {
+                        voiceCommunicationMemberList.remove(i);
+                        Log.d("zhang", "changeUserConnectStateByUid: remove");
+                    }
                     break;
                 }
             }
         }
+        refreshCommunicationMemberAdapter();
     }
 
     /**
@@ -696,15 +719,21 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
      * 刷新成员adapter
      */
     private void refreshCommunicationMemberAdapter() {
+        handlevoiceCommunicationMemberList();
         if (voiceCommunicationMemberList != null) {
             if (voiceCommunicationMemberList.size() <= 5) {
-                voiceCommunicationMemberAdapterFirst.setMemberDataAndRefresh(voiceCommunicationMemberList, 1);
+                if (voiceCommunicationMemberAdapterFirst != null)
+                    voiceCommunicationMemberAdapterFirst.setMemberDataAndRefresh(voiceCommunicationMemberList1, 1);
             } else if (voiceCommunicationMemberList.size() <= 9) {
-                List<VoiceCommunicationJoinChannelInfoBean> list1 = voiceCommunicationMemberList.subList(0, 5);
-                List<VoiceCommunicationJoinChannelInfoBean> list2 = voiceCommunicationMemberList.subList(5, voiceCommunicationMemberList.size());
-                voiceCommunicationMemberAdapterFirst.setMemberDataAndRefresh(list1, 1);
-                voiceCommunicationMemberAdapterSecond.setMemberDataAndRefresh(list2, 2);
+                if (voiceCommunicationMemberAdapterFirst != null)
+                    voiceCommunicationMemberAdapterFirst.setMemberDataAndRefresh(voiceCommunicationMemberList1, 1);
+                if (voiceCommunicationMemberAdapterSecond != null)
+                    voiceCommunicationMemberAdapterSecond.setMemberDataAndRefresh(voiceCommunicationMemberList2, 2);
             }
+        }
+
+        for (VoiceCommunicationJoinChannelInfoBean item : voiceCommunicationMemberList) {
+            Log.d("zhang", "refreshCommunicationMemberAdapter: 状态 = " + item.getConnectState());
         }
     }
 
@@ -828,7 +857,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     private void saveCommunicationData() {
         voiceCommunicationUtils.setState(STATE);
         voiceCommunicationUtils.setCommunicationState(COMMUNICATION_STATE_ING);
-        voiceCommunicationUtils.setVoiceCommunicationUserInfoBeanList(voiceCommunicationUserInfoBeanList);
         voiceCommunicationUtils.setChannelId(agoraChannelId);
         voiceCommunicationUtils.setCommunicationType(communicationType);
         voiceCommunicationUtils.setVoiceCommunicationMemberList(voiceCommunicationMemberList);
@@ -998,6 +1026,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             agoraChannelId = getVoiceCommunicationResult.getChannelId();
             setInviterInfo(getVoiceCommunicationResult);
             if (getIntent().getIntExtra(VOICE_COMMUNICATION_STATE, EXCEPTION_STATE) != COME_BACK_FROM_SERVICE) {
+                voiceCommunicationMemberList.clear();
                 voiceCommunicationMemberList.addAll(getVoiceCommunicationResult.getVoiceCommunicationJoinChannelInfoBeanList());
                 refreshCommunicationMemberAdapter();
             }
