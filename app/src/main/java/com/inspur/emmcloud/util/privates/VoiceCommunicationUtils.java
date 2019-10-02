@@ -3,12 +3,18 @@ package com.inspur.emmcloud.util.privates;
 import android.content.Context;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.apiservice.ChatAPIService;
+import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.bean.chat.GetVoiceCommunicationResult;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationAudioVolumeInfo;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationRtcStats;
 import com.inspur.emmcloud.interf.OnVoiceCommunicationCallbacks;
+
+import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -420,4 +426,69 @@ public class VoiceCommunicationUtils {
     public void setCommunicationState(int communicationState) {
         this.communicationState = communicationState;
     }
+
+    /**
+     * 获取channel信息
+     *
+     * @param channelId
+     * @param agoraChannelId
+     */
+    public void getVoiceCommunicationChannelInfo(String channelId, String agoraChannelId) {
+        ChatAPIService chatAPIService = new ChatAPIService(BaseApplication.getInstance());
+        WebService webService = new WebService();
+        webService.setArgoaChannelId(agoraChannelId);
+        webService.setChannelId(channelId);
+        chatAPIService.setAPIInterface(webService);
+        chatAPIService.getAgoraChannelInfo(agoraChannelId);
+    }
+
+    /**
+     * 获取Uid
+     * 排除掉自己防止自己给自己发命令消息
+     *
+     * @return
+     */
+    private JSONArray getUidArray(List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList) {
+        JSONArray jsonArray = new JSONArray();
+        for (int i = 0; i < voiceCommunicationUserInfoBeanList.size(); i++) {
+            if (!voiceCommunicationUserInfoBeanList.get(i).getUserId().equals(BaseApplication.getInstance().getUid())) {
+                jsonArray.put(voiceCommunicationUserInfoBeanList.get(i).getUserId());
+            }
+        }
+        return jsonArray;
+    }
+
+    class WebService extends APIInterfaceInstance {
+        private String channelId = "";
+        private String argoaChannelId = "";
+
+        @Override
+        public void returnGetVoiceCommunicationResultSuccess(GetVoiceCommunicationResult getVoiceCommunicationResult) {
+            String scheme = "ecc-cloudplus-cmd://voice_channel?cmd=refuse&channelid=" + channelId + "&roomid=" + argoaChannelId + "&uid=" + BaseApplication.getInstance().getUid();
+            WSAPIService.getInstance().sendStartVoiceAndVideoCallMessage(channelId, argoaChannelId, scheme, "VOICE", getUidArray(getVoiceCommunicationResult.getVoiceCommunicationJoinChannelInfoBeanList()));
+        }
+
+        @Override
+        public void returnGetVoiceCommunicationResultFail(String error, int errorCode) {
+
+        }
+
+        public String getChannelId() {
+            return channelId;
+        }
+
+        public void setChannelId(String channelId) {
+            this.channelId = channelId;
+        }
+
+        public String getArgoaChannelId() {
+            return argoaChannelId;
+        }
+
+        public void setArgoaChannelId(String argoaChannelId) {
+            this.argoaChannelId = argoaChannelId;
+        }
+    }
+
+
 }
