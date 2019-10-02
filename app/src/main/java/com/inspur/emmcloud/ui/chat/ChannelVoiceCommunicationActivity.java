@@ -248,7 +248,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             layoutManagerMembersSecond.setOrientation(LinearLayoutManager.HORIZONTAL);
             communicationMemberSecondRecyclerview.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this, 8)));
             communicationMemberSecondRecyclerview.setLayoutManager(layoutManagerMembersSecond);
-        refreshCommunicationMemberAdapter();
+
 //        }
         LinearLayoutManager layoutManagerMemebersFirst = new LinearLayoutManager(this);
         layoutManagerMemebersFirst.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -732,8 +732,8 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             }
         }
 
-        for (VoiceCommunicationJoinChannelInfoBean item : voiceCommunicationMemberList) {
-            Log.d("zhang", "refreshCommunicationMemberAdapter: 状态 = " + item.getConnectState());
+        for (int i = 0; i < voiceCommunicationMemberList.size(); i++) {
+            Log.d("zhang", "refreshCommunicationMemberAdapter: 状态 = " + voiceCommunicationMemberList.get(i).getConnectState());
         }
     }
 
@@ -1009,6 +1009,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                         getVoiceCommunicationResult.getChannelId(), voiceCommunicationJoinChannelInfoBean.getUserId(), voiceCommunicationJoinChannelInfoBean.getAgoraUid());
             }
             if (getIntent().getIntExtra(VOICE_COMMUNICATION_STATE, EXCEPTION_STATE) != COME_BACK_FROM_SERVICE) {
+                voiceCommunicationMemberList.clear();
                 voiceCommunicationMemberList.addAll(getVoiceCommunicationResult.getVoiceCommunicationJoinChannelInfoBeanList());
                 sendCommunicationCommand("invite");
                 refreshCommunicationMemberAdapter();
