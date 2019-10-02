@@ -609,8 +609,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
      */
     private void agoraException() {
         voiceCommunicationUtils.destroy();
-        //如果是断网这里将执行不通，其他情况应该仍然发送
-        leaveChannelSuccess(agoraChannelId);
         finish();
     }
 
@@ -862,7 +860,9 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         EventBus.getDefault().unregister(this);
         mediaPlayerManagerUtils.stop();
         voiceCommunicationUtils.setCommunicationState(COMMUNICATION_STATE_OVER);
-        afterRefuse();
+        if (!SuspensionWindowManagerUtils.getInstance().isShowing()) {
+            afterRefuse();
+        }
     }
 
     /**
@@ -920,13 +920,16 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
 
     /**
      * 获取Uid
+     * 排除掉自己防止自己给自己发命令消息
      *
      * @return
      */
     private JSONArray getUidArray(List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList){
         JSONArray jsonArray = new JSONArray();
         for (int i = 0; i < voiceCommunicationUserInfoBeanList.size(); i++) {
-            jsonArray.put(voiceCommunicationUserInfoBeanList.get(i).getUserId());
+            if (!voiceCommunicationUserInfoBeanList.get(i).getUserId().equals(BaseApplication.getInstance().getUid())) {
+                jsonArray.put(voiceCommunicationUserInfoBeanList.get(i).getUserId());
+            }
         }
         return jsonArray;
     }
@@ -955,10 +958,11 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
      */
     private void afterDestory() {
         voiceCommunicationUtils.destroy();
-        if (STATE == COMMUNICATION_LAYOUT_STATE) {
+        LogUtils.YfcDebug("STATE:" + STATE);
+        if (STATE == COMMUNICATION_LAYOUT_STATE && userCount >= 2) {
             sendCommunicationCommand("refuse");
-        }
-        if (userCount < 2) {
+        } else if (userCount < 2) {
+            //当群里只剩一人时，发出此消息，此时声网channel已经不存在，告知其他人关闭页面
             sendCommunicationCommand("destroy");
         }
         finish();

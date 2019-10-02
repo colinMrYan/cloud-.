@@ -1336,6 +1336,7 @@
     <string name="permission_name_sensors">身體感測器</string>
     <string name="permission_name_sms">簡訊</string>
     <string name="permission_name_storage">存儲空間</string>
+    <string name="voice_communication_dialog">撥號中...</string>
 
     <!--键盘相关-->
     <string name="emm_keyboard_a2z">abcdefghijklmnopqrstuvwxyz</string>
