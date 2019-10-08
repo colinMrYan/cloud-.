@@ -428,7 +428,7 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
      */
     private void handleSearchModelShare(final SearchModel searchModel) {
         String name = searchModel.getName();
-        String headUrl = searchModel.getIcon();
+        String headUrl = APIUri.getChannelImgUrl(this, searchModel.getId());
         //分享到
         ShareDialog.Builder builder = new ShareDialog.Builder(this);
         builder.setUserName(name);

@@ -314,6 +314,10 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
 
                 handleSearchModelShare(searchModel);
                 break;
+            case R.id.lv_search_private_chat:
+                searchModel = privateChatList.get(position);
+                handleSearchModelShare(searchModel);
+                break;
             case R.id.lv_search_contact_from_chat:
                 ConversationFromChatContent conversationFromChatContent = conversationFromChatContentList.get(position);
                 final Conversation conversation = conversationFromChatContent.getConversation();
@@ -357,7 +361,7 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
      */
     private void handleSearchModelShare(final SearchModel searchModel) {
         String name = searchModel.getName();
-        String headUrl = searchModel.getIcon();
+        String headUrl = APIUri.getChannelImgUrl(this, searchModel.getId());
         //分享到
         ShareDialog.Builder builder = new ShareDialog.Builder(this);
         builder.setUserName(name);
