@@ -403,7 +403,7 @@
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".ui.chat.ConversationActivity"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
@@ -850,8 +850,8 @@
             android:name=".wxapi.WXEntryActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
-            android:resizeableActivity="true"
             android:launchMode="singleTask"
+            android:resizeableActivity="true"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name="com.tencent.tauth.AuthActivity"
