@@ -299,16 +299,6 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
      * 根据所选文件的类型展示操作按钮
      */
     protected void setBottomOperationItemShow(List<VolumeFile> selectVolumeFileList) {
-        boolean isVolumeFileWriteable = false;
-        boolean isVolumeFileReadable = false;
-        boolean isVolumeFileDirectory = true;
-        boolean isOwner = true;
-        if (selectVolumeFileList.size() > 0) {
-            isVolumeFileWriteable = VolumeFilePrivilegeUtils.getVolumeFileWritable(getApplicationContext(), selectVolumeFileList.get(0));
-            isVolumeFileReadable = VolumeFilePrivilegeUtils.getVolumeFileReadable(getApplicationContext(), selectVolumeFileList.get(0));
-            isVolumeFileDirectory = selectVolumeFileList.get(0).getType().equals(VolumeFile.FILE_TYPE_DIRECTORY);
-            isOwner = selectVolumeFileList.get(0).getOwner().equals(BaseApplication.getInstance().getUid());
-        }
         permissionAction = getString(R.string.clouddriver_file_permission_manager);
         downloadAction = getString(R.string.download);
         moveToAction = getString(R.string.move);
@@ -319,6 +309,24 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         shareTo = getString(R.string.baselib_share_to);
         volumeActionDataList.clear();
         volumeActionHideList.clear();
+        boolean isVolumeFileWriteable = true;
+        boolean isVolumeFileReadable = true;
+        boolean isVolumeFileDirectory = true;
+        boolean isOwner = true;
+        for (int i = 0; i < selectVolumeFileList.size(); i++) {
+            if (isVolumeFileWriteable) {
+                isVolumeFileWriteable = VolumeFilePrivilegeUtils.getVolumeFileWritable(getApplicationContext(), selectVolumeFileList.get(i));
+            }
+            if (isVolumeFileReadable) {
+                isVolumeFileReadable = VolumeFilePrivilegeUtils.getVolumeFileReadable(getApplicationContext(), selectVolumeFileList.get(i));
+            }
+            if (isOwner) {
+                isOwner = selectVolumeFileList.get(i).getOwner().equals(BaseApplication.getInstance().getUid());
+            }
+            if (isVolumeFileDirectory) {
+                isVolumeFileDirectory = selectVolumeFileList.get(i).getType().equals(VolumeFile.FILE_TYPE_DIRECTORY);
+            }
+        }
         volumeActionDataList.add(new VolumeActionData(downloadAction, R.drawable.ic_volume_download,
                 selectVolumeFileList.size() == 1 && !isVolumeFileDirectory
                         && (isVolumeFileReadable || isVolumeFileWriteable)));
