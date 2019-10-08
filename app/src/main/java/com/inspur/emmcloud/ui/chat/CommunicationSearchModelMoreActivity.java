@@ -33,7 +33,6 @@ import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
-import com.inspur.emmcloud.basemodule.util.dialog.ShareDialog;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.ConversationFromChatContent;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
@@ -44,6 +43,7 @@ import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.DirectChannelUtils;
+import com.inspur.emmcloud.util.privates.ShareUtil;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
@@ -52,6 +52,7 @@ import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -237,6 +238,16 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
                             case SEARCH_ALL_FROM_CHAT:
                                 conversationFromChatContentList = new ArrayList<>();
                                 conversationFromChatContentList = oriChannelInfoByKeyword(searchText);
+                                //分享过来  去除系统通知
+                                if (!StringUtils.isBlank(shareContent)) {
+                                    Iterator<ConversationFromChatContent> iterator = conversationFromChatContentList.iterator();
+                                    while (iterator.hasNext()) {
+                                        ConversationFromChatContent fromChatContent = iterator.next();
+                                        if (fromChatContent.getConversation().getType().equals(Conversation.TYPE_CAST)) {
+                                            iterator.remove();
+                                        }
+                                    }
+                                }
                                 break;
                             default:
                                 break;
@@ -270,6 +281,15 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
             }
         }
         List<Conversation> conversationList = ConversationCacheUtils.getConversationListByIdList(MyApplication.getInstance(), conversationIdList);
+        if (!StringUtils.isBlank(shareContent)) {
+            Iterator<Conversation> iterator = conversationList.iterator();
+            while (iterator.hasNext()) {
+                Conversation conversation = iterator.next();
+                if (conversation.getType().equals(Conversation.TYPE_CAST)) {
+                    iterator.remove();
+                }
+            }
+        }
         for (int i = 0; i < conversationList.size(); i++) {
             Conversation tempConversation = conversationList.get(i);
             if (cidNumMap.containsKey(tempConversation.getId())) {
@@ -377,33 +397,8 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
         if (searchArea.equals(SEARCH_ALL_FROM_CHAT)) {
             ConversationFromChatContent conversationFromChatContent = conversationFromChatContentList.get(position);
             final Conversation conversation = conversationFromChatContent.getConversation();
-
-            String name = CommunicationUtils.getName(this, conversation);
-            String headUrl = CommunicationUtils.getHeadUrl(conversation);
-            //分享到
-            ShareDialog.Builder builder = new ShareDialog.Builder(this);
-            builder.setUserName(name);
-            builder.setContent(shareContent);
-            builder.setDefaultResId(R.drawable.ic_app_default);
-            builder.setHeadUrl(headUrl);
-            final ShareDialog dialog = builder.build();
-            dialog.setCallBack(new ShareDialog.CallBack() {
-                @Override
-                public void onConfirm(View view) {
-                    Intent intent = new Intent();
-                    SearchModel searchModel = conversation.conversation2SearchModel();
-                    intent.putExtra("searchModel", searchModel);
-                    setResult(RESULT_OK, intent);
-                    dialog.dismiss();
-                    finish();
-                }
-
-                @Override
-                public void onCancel() {
-                    dialog.dismiss();
-                }
-            });
-            dialog.show();
+            SearchModel searchModel = conversation.conversation2SearchModel();
+            ShareUtil.share(this, searchModel, shareContent);
         } else {
             SearchModel searchModel;
             switch (searchArea) {
@@ -427,31 +422,8 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
      * @param searchModel
      */
     private void handleSearchModelShare(final SearchModel searchModel) {
-        String name = searchModel.getName();
-        String headUrl = searchModel.getIcon();
         //分享到
-        ShareDialog.Builder builder = new ShareDialog.Builder(this);
-        builder.setUserName(name);
-        builder.setContent(shareContent);
-        builder.setDefaultResId(R.drawable.ic_app_default);
-        builder.setHeadUrl(headUrl);
-        final ShareDialog dialog = builder.build();
-        dialog.setCallBack(new ShareDialog.CallBack() {
-            @Override
-            public void onConfirm(View view) {
-                Intent intent = new Intent();
-                intent.putExtra("searchModel", searchModel);
-                setResult(RESULT_OK, intent);
-                dialog.dismiss();
-                finish();
-            }
-
-            @Override
-            public void onCancel() {
-                dialog.dismiss();
-            }
-        });
-        dialog.show();
+        ShareUtil.share(this, searchModel, shareContent);
     }
 
     /**
