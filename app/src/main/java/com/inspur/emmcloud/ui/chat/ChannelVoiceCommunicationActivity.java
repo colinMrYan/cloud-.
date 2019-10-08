@@ -173,6 +173,8 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     private SurfaceView agoraLocalView;//视频会话小视图
     private SurfaceView agoraRemoteView;//视频会话大视图
 
+    private boolean isLeaveChannel = false;
+
     private int initx;//本地视频初始x坐标
     private int inity;//本地视频初始y坐标
 
@@ -898,9 +900,9 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         EventBus.getDefault().unregister(this);
         mediaPlayerManagerUtils.stop();
         voiceCommunicationUtils.setCommunicationState(COMMUNICATION_STATE_OVER);
-//        if (!SuspensionWindowManagerUtils.getInstance().isShowing()) {
-//            afterRefuse();
-//        }
+        if (!SuspensionWindowManagerUtils.getInstance().isShowing() && !isLeaveChannel) {
+            afterRefuse();
+        }
     }
 
     /**
@@ -986,6 +988,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
      * 拒绝之后的后续逻辑处理
      */
     private void afterRefuse() {
+        isLeaveChannel = true;
         voiceCommunicationUtils.destroy();
         sendCommunicationCommand("refuse");
         finish();
@@ -1002,6 +1005,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             //当群里只剩一人时，发出此消息，此时声网channel已经不存在，告知其他人关闭页面
             sendCommunicationCommand("destroy");
         }
+        isLeaveChannel = true;
         finish();
     }
 
