@@ -898,9 +898,9 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         EventBus.getDefault().unregister(this);
         mediaPlayerManagerUtils.stop();
         voiceCommunicationUtils.setCommunicationState(COMMUNICATION_STATE_OVER);
-        if (!SuspensionWindowManagerUtils.getInstance().isShowing()) {
-            afterRefuse();
-        }
+//        if (!SuspensionWindowManagerUtils.getInstance().isShowing()) {
+//            afterRefuse();
+//        }
     }
 
     /**
@@ -996,7 +996,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
      */
     private void afterDestory() {
         voiceCommunicationUtils.destroy();
-        LogUtils.YfcDebug("STATE:" + STATE);
         if (STATE == COMMUNICATION_LAYOUT_STATE && userCount >= 2) {
             sendCommunicationCommand("refuse");
         } else if (userCount < 2) {
