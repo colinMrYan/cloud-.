@@ -433,11 +433,12 @@ public class VoiceCommunicationUtils {
      * @param channelId
      * @param agoraChannelId
      */
-    public void getVoiceCommunicationChannelInfo(String channelId, String agoraChannelId) {
+    public void getVoiceCommunicationChannelInfo(String channelId, String agoraChannelId, String fromUid) {
         ChatAPIService chatAPIService = new ChatAPIService(BaseApplication.getInstance());
         WebService webService = new WebService();
         webService.setArgoaChannelId(agoraChannelId);
         webService.setChannelId(channelId);
+        webService.setFromUid(fromUid);
         chatAPIService.setAPIInterface(webService);
         chatAPIService.getAgoraChannelInfo(agoraChannelId);
     }
@@ -448,10 +449,11 @@ public class VoiceCommunicationUtils {
      *
      * @return
      */
-    private JSONArray getUidArray(List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList) {
+    private JSONArray getUidArray(List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList, String fromUid) {
         JSONArray jsonArray = new JSONArray();
         for (int i = 0; i < voiceCommunicationUserInfoBeanList.size(); i++) {
-            if (!voiceCommunicationUserInfoBeanList.get(i).getUserId().equals(BaseApplication.getInstance().getUid())) {
+            boolean isFrom = voiceCommunicationUserInfoBeanList.get(i).getUserId().equals(fromUid);
+            if (!voiceCommunicationUserInfoBeanList.get(i).getUserId().equals(BaseApplication.getInstance().getUid()) && !isFrom) {
                 jsonArray.put(voiceCommunicationUserInfoBeanList.get(i).getUserId());
             }
         }
@@ -461,16 +463,19 @@ public class VoiceCommunicationUtils {
     class WebService extends APIInterfaceInstance {
         private String channelId = "";
         private String argoaChannelId = "";
+        private String fromUid = "";
 
         @Override
-        public void returnGetVoiceCommunicationResultSuccess(GetVoiceCommunicationResult getVoiceCommunicationResult) {
+        public void returnGetVoiceCommunicationChannelInfoSuccess(GetVoiceCommunicationResult getVoiceCommunicationResult) {
             String scheme = "ecc-cloudplus-cmd://voice_channel?cmd=refuse&channelid=" + channelId + "&roomid=" + argoaChannelId + "&uid=" + BaseApplication.getInstance().getUid();
-            WSAPIService.getInstance().sendStartVoiceAndVideoCallMessage(channelId, argoaChannelId, scheme, "VOICE", getUidArray(getVoiceCommunicationResult.getVoiceCommunicationJoinChannelInfoBeanList()));
+
+            if (getVoiceCommunicationResult.getChannelId().equals(argoaChannelId)) {
+                WSAPIService.getInstance().sendStartVoiceAndVideoCallMessage(channelId, argoaChannelId, scheme, "VOICE", getUidArray(getVoiceCommunicationResult.getVoiceCommunicationJoinChannelInfoBeanList(), fromUid));
+            }
         }
 
         @Override
-        public void returnGetVoiceCommunicationResultFail(String error, int errorCode) {
-
+        public void returnGetVoiceCommunicationChannelInfoFail(String error, int errorCode) {
         }
 
         public String getChannelId() {
@@ -487,6 +492,14 @@ public class VoiceCommunicationUtils {
 
         public void setArgoaChannelId(String argoaChannelId) {
             this.argoaChannelId = argoaChannelId;
+        }
+
+        public String getFromUid() {
+            return fromUid;
+        }
+
+        public void setFromUid(String fromUid) {
+            this.fromUid = fromUid;
         }
     }
 

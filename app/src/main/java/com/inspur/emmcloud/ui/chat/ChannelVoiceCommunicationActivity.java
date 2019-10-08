@@ -9,7 +9,6 @@ import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
@@ -190,6 +189,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             voiceCommunicationMemberList = list;
         }
         voiceCommunicationUtils = VoiceCommunicationUtils.getVoiceCommunicationUtils(communicationType);
+        voiceCommunicationUtils.setCommunicationState(COMMUNICATION_STATE_ING);
         recoverData();
         initViews();
     }
@@ -482,7 +482,10 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     public void onReceiveVoiceOrVideoCall(final GetVoiceAndVideoResult getVoiceAndVideoResult) {
         CustomProtocol customProtocol = new CustomProtocol(getVoiceAndVideoResult.getContextParamsSchema());
         String cmd = customProtocol.getParamMap().get("cmd");
-        if (!StringUtils.isBlank(cmd)) {
+//        && getVoiceAndVideoResult.getChannel().equals(agoraChannelId)
+        LogUtils.YfcDebug("EventBus：" + getVoiceAndVideoResult.getContextParamsRoom());
+        LogUtils.YfcDebug("EventBus111111：" + agoraChannelId);
+        if (!StringUtils.isBlank(cmd) && getVoiceAndVideoResult.getContextParamsRoom().equals(agoraChannelId)) {
             String uid = customProtocol.getParamMap().get("uid");
             if (cmd.equals("destroy")) {
                 changeUserConnectStateByUid(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_LEAVE, uid);
@@ -526,6 +529,10 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
 //                if (userCount < 2) {
 //                    leaveChannelSuccess(agoraChannelId);
 //                }
+                if (userCount < 2) {
+                    voiceCommunicationUtils.destroy();
+                    finish();
+                }
             }
 
             @Override
@@ -580,6 +587,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
 
             @Override
             public void onConnectionLost() {
+                LogUtils.YfcDebug("断开连接");
                 agoraException();
             }
 
@@ -589,7 +597,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            communicationStateTv.setText((uid == 0 && txQuality <= 2) ? getString(R.string.voice_communication_quality) : "");
+                            communicationStateTv.setText((uid == 0 && txQuality >= 5) ? getString(R.string.voice_communication_quality) : "");
                         }
                     });
                 }
@@ -672,7 +680,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                     voiceCommunicationMemberList.get(i).setConnectState(connectStateConnected);
                     if (connectStateConnected > 1) {
                         voiceCommunicationMemberList.remove(i);
-                        Log.d("zhang", "changeUserConnectStateByUid: remove");
                     }
                     break;
                 }
@@ -744,9 +751,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             }
         }
 
-        for (int i = 0; i < voiceCommunicationMemberList.size(); i++) {
-            Log.d("zhang", "refreshCommunicationMemberAdapter: 状态 = " + voiceCommunicationMemberList.get(i).getConnectState());
-        }
     }
 
     /**
@@ -902,6 +906,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         voiceCommunicationUtils.setCommunicationState(COMMUNICATION_STATE_OVER);
         if (!SuspensionWindowManagerUtils.getInstance().isShowing() && !isLeaveChannel) {
             afterRefuse();
+            LogUtils.YfcDebug("拒绝");
         }
     }
 
