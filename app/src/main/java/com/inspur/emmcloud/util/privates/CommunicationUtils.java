@@ -523,6 +523,36 @@ public class CommunicationUtils {
         return icon;
     }
 
+    public static String getHeadUrl(SearchModel searchModel) {
+        String icon = null;
+        String type = searchModel.getType();
+        if (type.equals(SearchModel.TYPE_GROUP)) {
+            File file = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH,
+                    MyApplication.getInstance().getTanent() + searchModel.getId() + "_100.png1");
+            if (file.exists()) {
+                icon = "file://" + file.getAbsolutePath();
+            }
+        } else {
+            if (!searchModel.getId().equals("null")) {
+                icon = APIUri.getChannelImgUrl(MyApplication.getInstance(), searchModel.getId());
+            }
+        }
+        return icon;
+    }
+
+    public static int getDefaultHeadUrl(SearchModel searchModel) {
+        Integer defaultIcon = null; // 默认显示图标
+        String type = searchModel.getType();
+        if (type.equals(SearchModel.TYPE_GROUP)) {
+            defaultIcon = R.drawable.icon_channel_group_default;
+        } else if (type.equals(SearchModel.TYPE_STRUCT)) {
+            defaultIcon = R.drawable.ic_contact_sub_struct;
+        } else {
+            defaultIcon = R.drawable.icon_person_default;
+        }
+        return defaultIcon;
+    }
+
     public static String getName(Context context, Conversation conversation) {
         if (conversation.getType().equals(Conversation.TYPE_GROUP)) {
             return conversation.getName();
