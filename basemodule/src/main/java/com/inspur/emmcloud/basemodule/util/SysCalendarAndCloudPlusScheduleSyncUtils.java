@@ -214,7 +214,7 @@ public class SysCalendarAndCloudPlusScheduleSyncUtils {
         event.put(CalendarContract.Events.DTEND, endTime);
         event.put(CalendarContract.Events.ALL_DAY, isAllDay);
         //设置有闹钟提醒
-        event.put(CalendarContract.Events.HAS_ALARM, previousDate>-1);
+        event.put(CalendarContract.Events.HAS_ALARM, previousDate > -1);
         //这个是时区，必须有   CalendarContract.Calendars.CALENDAR_TIME_ZONE目前为日历关联的时区 早上10点用华盛顿时间测试  日程在8号
         event.put(CalendarContract.Events.EVENT_TIMEZONE, CalendarContract.Calendars.CALENDAR_TIME_ZONE);
         String calendarId = getCalendarId(context, "", scheduleId);
@@ -271,6 +271,7 @@ public class SysCalendarAndCloudPlusScheduleSyncUtils {
 
     /**
      * 删除系统日历事件，同时删除关联表数据
+     *
      * @param context
      * @param scheduleId
      */
@@ -377,8 +378,15 @@ public class SysCalendarAndCloudPlusScheduleSyncUtils {
         if (!StringUtils.isBlank(calendarId)) {
             return calendarId;
         }
-        return StringUtils.isBlank(cloudPlusId) ? "" : CalendarIdAndCloudScheduleIdCacheUtils.
-                getCalendarIdByCloudScheduleId(context, cloudPlusId).getCalendarId();
+        if (!StringUtils.isBlank(cloudPlusId)) {
+            CalendarIdAndCloudIdBean calendarIdAndCloudIdBean = CalendarIdAndCloudScheduleIdCacheUtils.
+                    getCalendarIdByCloudScheduleId(context, cloudPlusId);
+            if (calendarIdAndCloudIdBean != null) {
+                return calendarIdAndCloudIdBean.getCalendarId();
+            }
+        }
+
+        return "";
     }
 
     /**
