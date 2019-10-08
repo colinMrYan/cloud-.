@@ -549,9 +549,14 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             }
 
             @Override
-            public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
-                changeUserConnectStateByAgoraUid(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_CONNECTED, uid);
-                joinChannelSuccess(channel);
+            public void onJoinChannelSuccess(final String channel, final int uid, int elapsed) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        changeUserConnectStateByAgoraUid(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_CONNECTED, uid);
+                        joinChannelSuccess(channel);
+                    }
+                });
             }
 
             @Override
@@ -577,9 +582,14 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             }
 
             @Override
-            public void onNetworkQuality(int uid, int txQuality, int rxQuality) {
+            public void onNetworkQuality(final int uid, final int txQuality, int rxQuality) {
                 if (STATE == COMMUNICATION_LAYOUT_STATE) {
-                    communicationStateTv.setText((uid == 0 && txQuality <= 2) ? getString(R.string.voice_communication_quality) : "");
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            communicationStateTv.setText((uid == 0 && txQuality <= 2) ? getString(R.string.voice_communication_quality) : "");
+                        }
+                    });
                 }
             }
 
