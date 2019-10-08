@@ -894,9 +894,27 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
             LoadingDialog.dimissDlg(loadingDlg);
             //更新日历时如果同步开关开着则同步数据，否则关掉
             if (syncCalendarSwitch.isChecked()) {
-                SysCalendarAndCloudPlusScheduleSyncUtils.updateCloudScheduleInSysCalendar(ScheduleAddActivity.this,
-                        schedule.getTitle(), schedule.getNote(), schedule.getStartTime()
-                        , schedule.getEndTime(), schedule.getId(), schedule.getAllDay(), (schedule.getRemindEventObj().getAdvanceTimeSpan() / 60));
+                CalendarIdAndCloudIdBean calendarIdAndCloudIdBean = CalendarIdAndCloudScheduleIdCacheUtils.
+                        getCalendarIdByCloudScheduleId(BaseApplication.getInstance(), schedule.getId());
+                if (calendarIdAndCloudIdBean == null) {
+                    JSONObject jsonObject = SysCalendarAndCloudPlusScheduleSyncUtils.saveCloudSchedule(ScheduleAddActivity.this,
+                            schedule.getTitle(), schedule.getNote(), schedule.getStartTime()
+                            , schedule.getEndTime(), schedule.getId(), schedule.getAllDay(), schedule.getRemindEventObj().getAdvanceTimeSpan() / 60);
+                    try {
+                        CalendarIdAndCloudScheduleIdCacheUtils.saveCalendarIdAndCloudIdBean(
+                                ScheduleAddActivity.this, new CalendarIdAndCloudIdBean(jsonObject.getString(CalendarIdAndCloudIdBean.CLOUD_PLUS_CALENDAR_ID), schedule.getId(),
+                                        jsonObject.getString(CalendarIdAndCloudIdBean.CLOUD_PLUS_SCHEDULE_CALENDAR_ID)));
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                } else {
+                    SysCalendarAndCloudPlusScheduleSyncUtils.updateCloudScheduleInSysCalendar(ScheduleAddActivity.this,
+                            schedule.getTitle(), schedule.getNote(), schedule.getStartTime()
+                            , schedule.getEndTime(), schedule.getId(), schedule.getAllDay(), (schedule.getRemindEventObj().getAdvanceTimeSpan() / 60));
+                }
+
             } else {
                 SysCalendarAndCloudPlusScheduleSyncUtils.deleteCalendarEvent(ScheduleAddActivity.this, schedule.getId());
             }

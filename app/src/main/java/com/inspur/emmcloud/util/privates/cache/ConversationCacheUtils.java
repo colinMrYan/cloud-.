@@ -298,7 +298,8 @@ public class ConversationCacheUtils {
     public static List<Conversation> getConversationListByLastUpdate(Context context) {
         List<Conversation> conversationList = null;
         try {
-            conversationList = DbCacheUtils.getDb(context).selector(Conversation.class).orderBy("lastUpdate", true).findAll();
+            conversationList = DbCacheUtils.getDb(context).selector(Conversation.class)
+                    .where(WhereBuilder.b("type", "=", Conversation.TYPE_DIRECT).or("type", "=", Conversation.TYPE_GROUP)).orderBy("lastUpdate", true).findAll();
         } catch (Exception e) {
             e.printStackTrace();
         }

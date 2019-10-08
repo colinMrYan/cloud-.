@@ -20,12 +20,15 @@ public class ConversationSearchPresenter extends BasePresenter<ConversionSearchC
     public List<Conversation> getConversationData() {
         List<Conversation> list = ConversationCacheUtils.getConversationListByLastUpdate(mView.getContext());
         Iterator<Conversation> iterator = list.iterator();
+        List<Conversation> stickConversationList = new ArrayList<>();
         while (iterator.hasNext()) {
             Conversation conversation = iterator.next();
-            if (conversation.getType().equals(Conversation.TYPE_CAST)) {
+            if (conversation.isStick()) {
+                stickConversationList.add(conversation);
                 iterator.remove();
             }
         }
+        list.addAll(0, stickConversationList);
         mView.showConversationData(list);
         return list;
     }

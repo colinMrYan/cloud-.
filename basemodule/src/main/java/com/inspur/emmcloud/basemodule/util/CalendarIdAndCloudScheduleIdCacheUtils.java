@@ -31,15 +31,14 @@ public class CalendarIdAndCloudScheduleIdCacheUtils {
      * @return
      */
     public static CalendarIdAndCloudIdBean getCalendarIdByCloudScheduleId(Context context, String cloudScheduleId) {
-        CalendarIdAndCloudIdBean calendarIdAndCloudIdBean = new CalendarIdAndCloudIdBean();
         try {
-            calendarIdAndCloudIdBean = DbCacheUtils.getDb(context).selector(CalendarIdAndCloudIdBean.class)
+            return DbCacheUtils.getDb(context).selector(CalendarIdAndCloudIdBean.class)
                     .where("cloudScheduleId", "=", cloudScheduleId)
                     .findFirst();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return calendarIdAndCloudIdBean == null ? new CalendarIdAndCloudIdBean() : calendarIdAndCloudIdBean;
+        return null;
     }
 
     /**
