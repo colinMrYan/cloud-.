@@ -571,6 +571,7 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
                 } else if (state == SELECT_STATE) {
                     if (jsonArray.length() < 2) {
                         ToastUtils.show("频道用户数不能少于2个。");
+                        return;
                     }
                 }
                 setResult(RESULT_OK, intent);
