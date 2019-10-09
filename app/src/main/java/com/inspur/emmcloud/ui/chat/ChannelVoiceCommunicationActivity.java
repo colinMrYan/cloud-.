@@ -40,6 +40,9 @@ import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
+import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.bean.chat.GetVoiceAndVideoResult;
 import com.inspur.emmcloud.bean.chat.GetVoiceCommunicationResult;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationAudioVolumeInfo;
@@ -174,8 +177,8 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
 
     private boolean isLeaveChannel = false;
 
-    private int initx;//本地视频初始x坐标
-    private int inity;//本地视频初始y坐标
+    private int initX;//本地视频初始x坐标
+    private int initY;//本地视频初始y坐标
 
     @Override
     public void onCreate() {
@@ -192,6 +195,18 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         voiceCommunicationUtils.setCommunicationState(COMMUNICATION_STATE_ING);
         recoverData();
         initViews();
+        PermissionRequestManagerUtils.getInstance().requestRuntimePermission(this, Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
+            @Override
+            public void onPermissionRequestSuccess(List<String> permissions) {
+
+            }
+
+            @Override
+            public void onPermissionRequestFail(List<String> permissions) {
+                ToastUtils.show(ChannelVoiceCommunicationActivity.this, PermissionRequestManagerUtils.getInstance().getPermissionToast(ChannelVoiceCommunicationActivity.this, permissions));
+                finish();
+            }
+        });
     }
 
     @Override
@@ -277,7 +292,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
 //        dragLocalVideoView();
     }
 
-    private void handlevoiceCommunicationMemberList() {
+    private void handleVoiceCommunicationMemberList() {
         if (voiceCommunicationMemberList != null) {
             if (voiceCommunicationMemberList.size() <= 5) {
                 voiceCommunicationMemberList1 = voiceCommunicationMemberList;
@@ -299,12 +314,12 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 public boolean onTouch(View v, MotionEvent event) {
                     switch (event.getAction()) {
                         case MotionEvent.ACTION_DOWN:
-                            initx = (int) event.getRawX();
-                            inity = (int) event.getRawY();
+                            initX = (int) event.getRawX();
+                            initY = (int) event.getRawY();
                             break;
                         case MotionEvent.ACTION_MOVE:
-                            int dx = (int) event.getRawX() - initx;
-                            int dy = (int) event.getRawY() - inity;
+                            int dx = (int) event.getRawX() - initX;
+                            int dy = (int) event.getRawY() - initY;
 
                             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) v.getLayoutParams();
 
@@ -336,8 +351,8 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                             layoutParams.width = DensityUtil.dip2px(ChannelVoiceCommunicationActivity.this, 94);
                             layoutParams.height = DensityUtil.dip2px(ChannelVoiceCommunicationActivity.this, 167);
                             v.setLayoutParams(layoutParams);
-                            initx = (int) event.getRawX();
-                            inity = (int) event.getRawY();
+                            initX = (int) event.getRawX();
+                            initY = (int) event.getRawY();
                             v.postInvalidate();
                             break;
                         case MotionEvent.ACTION_CANCEL:
@@ -738,7 +753,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
      * 刷新成员adapter
      */
     private void refreshCommunicationMemberAdapter() {
-        handlevoiceCommunicationMemberList();
+        handleVoiceCommunicationMemberList();
         if (voiceCommunicationMemberList != null) {
             if (voiceCommunicationMemberList.size() <= 5) {
                 if (voiceCommunicationMemberAdapterFirst != null)
@@ -796,7 +811,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 switchFunctionViewUIState(tranVideoImg, tranVideoTv);
                 tranVideoImg.setImageResource(tranVideoImg.isSelected() ? R.drawable.icon_trans_video : R.drawable.icon_trans_video);
                 break;
-            case R.id.img_answer_the_phone:
+            case R.id.img_answer_the_phone:     //接通按键
                 initCommunicationViewsAndMusicByState(COMMUNICATION_LAYOUT_STATE);
                 communicationTimeChronometer.setBase(SystemClock.elapsedRealtime());
                 communicationTimeChronometer.start();
@@ -804,7 +819,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                         agoraChannelId, inviteeInfoBean.getUserId(), inviteeInfoBean.getAgoraUid());
                 break;
             case R.id.ll_video_hung_up:
-            case R.id.img_hung_up:
+            case R.id.img_hung_up:              //挂断按键
                 //先通知S，后退出声网
                 if (answerPhoneImg.getVisibility() == View.VISIBLE) {
                     apiService.refuseAgoraChannel(agoraChannelId);
