@@ -41,7 +41,8 @@ public class ChatRecentAdapter extends RecyclerView.Adapter<ChatRecentAdapter.Vi
         int defaultIcon = conversation.getType().equals(Conversation.TYPE_GROUP) ?
                 R.drawable.icon_channel_group_default : R.drawable.icon_person_default;
         String imageUrl = CommunicationUtils.getHeadUrl(conversation);
-        ImageDisplayUtils.getInstance().displayImage(holder.headImage, imageUrl, defaultIcon);
+        holder.headImage.setTag(imageUrl);
+        ImageDisplayUtils.getInstance().displayImageByTag(holder.headImage, imageUrl, defaultIcon);
         holder.nameTv.setText(CommunicationUtils.getName(context, conversation));
     }
 

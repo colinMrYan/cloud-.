@@ -1,6 +1,8 @@
 package com.inspur.emmcloud.ui.chat;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -523,9 +525,14 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
                     MyApplication.getInstance().getTanent() + searchModel.getId() + "_100.png1");
             if (file.exists()) {
                 icon = "file://" + file.getAbsolutePath();
-                ImageDisplayUtils.getInstance().displayImageNoCache(photoImg, icon, defaultIcon);
-                return;
+                Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+                photoImg.setImageBitmap(bitmap);
+//                ImageDisplayUtils.getInstance().displayImageNoCache(photoImg, icon, defaultIcon);
+
+            } else {
+                photoImg.setImageResource(R.drawable.icon_channel_group_default);
             }
+            return;
         } else if (type.equals(SearchModel.TYPE_STRUCT)) {
             defaultIcon = R.drawable.ic_contact_sub_struct;
         } else {
