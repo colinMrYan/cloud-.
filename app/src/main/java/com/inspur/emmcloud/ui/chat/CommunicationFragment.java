@@ -776,6 +776,9 @@ public class CommunicationFragment extends BaseFragment {
             case Constant.EVENTBUS_TAG_REFRESH_CONVERSATION_ADAPTER:
                 conversationAdapter.notifyDataSetChanged();
                 break;
+            case Constant.EVENTBUS_TAG_REFRESH_CONVERSATION:
+                sortConversationList();
+                break;
             case Constant.EVENTBUS_TAG_UPDATE_CHANNEL_NAME:
                 conversation = (Conversation) eventMessage.getMessageObj();
                 index = displayUIConversationList.indexOf(new UIConversation(conversation.getId()));

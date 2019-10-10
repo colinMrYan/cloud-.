@@ -1438,9 +1438,24 @@ public class ConversationActivity extends ConversationBaseActivity {
                 } else {
                     swipeRefreshLayout.setRefreshing(false);
                 }
+                sendSignalToConversationFragment();
             } else {
                 getHistoryMessageFromLocal();
             }
+        }
+    }
+
+    /**
+     * 判断如果是扫码进群的方式就像沟通列表发送刷新信号
+     */
+    private void sendSignalToConversationFragment() {
+        Intent intent = getIntent();
+        boolean isFromScanCode = false;
+        if (intent != null) {
+            isFromScanCode = intent.getBooleanExtra(EXTRA_COME_FROM_SCANCODE, false);
+        }
+        if (isFromScanCode) {
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_REFRESH_CONVERSATION));
         }
     }
 

@@ -27,6 +27,7 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity {
     public static final String EXTRA_CID = "cid";
     public static final String EXTRA_CONVERSATION = "conversation";
     public static final String EXTRA_NEED_GET_NEW_MESSAGE = "get_new_msg";
+    public static final String EXTRA_COME_FROM_SCANCODE = "com_from_scan_code";
     public static final String EXTRA_UNREAD_MESSAGE = "unread_count";
     public static final String EXTRA_UIMESSAGE = "uimessage";
     public static final String EXTRA_FROM_SERCH = "from_search";
@@ -120,7 +121,12 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity {
             loadingDlg.show();
             ChatAPIService apiService = new ChatAPIService(this);
             apiService.setAPIInterface(new Webservice());
-            apiService.getConversationInfo(cid);
+            Intent intent = getIntent();
+            boolean isFromScanCode = false;
+            if (intent != null) {
+                isFromScanCode = intent.getBooleanExtra(EXTRA_COME_FROM_SCANCODE, false);
+            }
+            apiService.getConversationInfo(cid, isFromScanCode);
         } else {
             finish();
         }
@@ -130,7 +136,7 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity {
 
     private class Webservice extends APIInterfaceInstance {
         @Override
-        public void returnConversationInfoSuccess(Conversation conversation) {
+        public void returnConversationInfoSuccess(Conversation conversation, boolean isFromScanCode) {
             LoadingDialog.dimissDlg(loadingDlg);
             ConversationBaseActivity.this.conversation = conversation;
             initChannelMessage();
