@@ -624,6 +624,7 @@
     <string name="move">Move</string>
     <string name="rename">"Rename"</string>
     <string name="move_to">Move</string>
+    <string name="clouddrive_internal_sharing">Internal haring</string>
     <string name="copy">Copy</string>
     <string name="upload_cancel">Cancel</string>
     <string name="no_file">No Files</string>
