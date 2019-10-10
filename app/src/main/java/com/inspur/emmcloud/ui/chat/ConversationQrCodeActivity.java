@@ -11,8 +11,8 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.baselib.router.Router;
+import com.inspur.emmcloud.baselib.util.BitmapFillet;
 import com.inspur.emmcloud.baselib.util.ImageUtils;
-import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
@@ -92,7 +92,7 @@ public class ConversationQrCodeActivity extends BaseActivity {
      */
     private void getQrCodeContent() {
         if (NetUtils.isNetworkConnected(this)) {
-//            loadingDialog.show();
+            loadingDialog.show();
             ChatAPIService chatAPIService = new ChatAPIService(this);
             chatAPIService.setAPIInterface(new WebService());
             chatAPIService.getInvitationContent(cid);
@@ -183,13 +183,15 @@ public class ConversationQrCodeActivity extends BaseActivity {
     class WebService extends APIInterfaceInstance {
         @Override
         public void returnInvitationContentSuccess(ScanCodeJoinConversationBean scanCodeJoinConversationBean) {
-            LogUtils.YfcDebug("返回成功：" + JSONUtils.toJSONString(scanCodeJoinConversationBean));
             LoadingDialog.dimissDlg(loadingDialog);
             shareUrl = scanCodeJoinConversationBean.getConversationQrCode();
             Router router = Router.getInstance();
             if (router.getService(com.inspur.emmcloud.componentservice.web.WebService.class) != null) {
                 com.inspur.emmcloud.componentservice.web.WebService service = router.getService(com.inspur.emmcloud.componentservice.web.WebService.class);
-                Bitmap bitmap = service.getQrCodeWithContent(scanCodeJoinConversationBean.getConversationQrCode(), SHARE_QR_CODE_SIZE);
+                File file = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH + "/" +
+                        MyApplication.getInstance().getTanent() + cid + "_100.png1");
+                Bitmap logoBitmap = ImageUtils.getBitmapByFile(file);
+                Bitmap bitmap = service.getQrCodeWithContent(scanCodeJoinConversationBean.getConversationQrCode(), BitmapFillet.fillet(logoBitmap, 15, BitmapFillet.CORNER_ALL), SHARE_QR_CODE_SIZE);
                 groupQrCodeImage.setImageBitmap(bitmap);
             }
             shareGroupQrCodeBtn.setVisibility(View.VISIBLE);
@@ -197,7 +199,6 @@ public class ConversationQrCodeActivity extends BaseActivity {
 
         @Override
         public void returnInvitationContentFail(String error, int errorCode) {
-            LogUtils.YfcDebug("返回失败：" + error + "错误码：" + errorCode);
             shareGroupQrCodeBtn.setVisibility(View.GONE);
             //返回失败不消失 微信是这样
 //            LoadingDialog.dimissDlg(loadingDialog);
