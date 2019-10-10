@@ -32,7 +32,6 @@ import com.czt.mp3recorder.MP3Recorder;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
@@ -529,7 +528,6 @@ public class ECMChatInputMenu extends LinearLayout {
                 //目前开放三位，有可能扩展
                 inputControl = "11101";
             }
-            LogUtils.YfcDebug("inputControl:" + inputControl);
             //控制binaryString长度，防止穿的数字过大
             int length = inputControl.length() > 12 ? 12 : inputControl.length();
             boolean isInputTextEnable = false;
