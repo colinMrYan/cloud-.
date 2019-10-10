@@ -19,7 +19,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.VolumeFileAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -53,8 +52,7 @@ import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeGroupResult;
 import com.inspur.emmcloud.bean.appcenter.volume.Volume;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeGroupContainMe;
-import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
-import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
+import com.inspur.emmcloud.ui.chat.mvp.view.ConversationSearchActivity;
 import com.inspur.emmcloud.util.privates.ShareFile2OutAppUtils;
 import com.inspur.emmcloud.util.privates.VolumeFilePrivilegeUtils;
 import com.inspur.emmcloud.util.privates.VolumeFileUploadManager;
@@ -231,19 +229,23 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
      * 分享到频道
      */
     private void shareToFriends(VolumeFile volumeFile) {
-        Intent intent = new Intent();
-        shareToVolumeFile = volumeFile;
-        intent.putExtra(ContactSearchFragment.EXTRA_TYPE, 0);
-        intent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, false);
-        intent.putExtra(ContactSearchFragment.EXTRA_SHOW_COMFIRM_DIALOG_WITH_MESSAGE, volumeFile.getName());
-        intent.putExtra(ContactSearchFragment.EXTRA_SHOW_COMFIRM_DIALOG, true);
-        ArrayList<String> uidList = new ArrayList<>();
-        uidList.add(MyApplication.getInstance().getUid());
-        intent.putStringArrayListExtra(ContactSearchFragment.EXTRA_EXCLUDE_SELECT, uidList);
-        intent.putExtra(ContactSearchFragment.EXTRA_TITLE, getString(R.string.baselib_share_to));
-        intent.setClass(VolumeFileBaseActivity.this,
-                ContactSearchActivity.class);
-        startActivityForResult(intent, SHARE_IMAGE_OR_FILES);
+//        Intent intent = new Intent();
+//        shareToVolumeFile = volumeFile;
+//        intent.putExtra(ContactSearchFragment.EXTRA_TYPE, 0);
+//        intent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, false);
+//        intent.putExtra(ContactSearchFragment.EXTRA_SHOW_COMFIRM_DIALOG_WITH_MESSAGE, volumeFile.getName());
+//        intent.putExtra(ContactSearchFragment.EXTRA_SHOW_COMFIRM_DIALOG, true);
+//        ArrayList<String> uidList = new ArrayList<>();
+//        uidList.add(MyApplication.getInstance().getUid());
+//        intent.putStringArrayListExtra(ContactSearchFragment.EXTRA_EXCLUDE_SELECT, uidList);
+//        intent.putExtra(ContactSearchFragment.EXTRA_TITLE, getString(R.string.baselib_share_to));
+//        intent.setClass(VolumeFileBaseActivity.this,
+//                ContactSearchActivity.class);
+//        startActivityForResult(intent, SHARE_IMAGE_OR_FILES);
+
+        Intent shareIntent = new Intent(this, ConversationSearchActivity.class);
+        shareIntent.putExtra(Constant.SHARE_CONTENT, volumeFile.getName());
+        startActivityForResult(shareIntent, SHARE_IMAGE_OR_FILES);
     }
 
     /**

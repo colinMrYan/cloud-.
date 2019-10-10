@@ -26,9 +26,9 @@ import com.inspur.emmcloud.adapter.VolumeFileAdapter;
 import com.inspur.emmcloud.adapter.VolumeFileFilterPopGridAdapter;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
-import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
@@ -54,8 +54,6 @@ import com.inspur.emmcloud.util.privates.VolumeFileUploadManager;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.io.Serializable;
@@ -491,45 +489,15 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
             } else if (requestCode == REQUEST_SHOW_FILE_FILTER) {  //移动文件
                 getVolumeFileList(false);
             } else if (requestCode == SHARE_IMAGE_OR_FILES) {
-                // shareToVolumeFile searchResult
-                if (data != null) {
-                    String result = data.hasExtra("searchResult") ? data.getStringExtra("searchResult") : "";
-                    try {
-                        String userOrChannelId = "";
-                        boolean isGroup = false;
-                        JSONObject jsonObject = new JSONObject(result);
-                        if (jsonObject.has("people")) {
-                            JSONArray peopleArray = jsonObject.getJSONArray("people");
-                            if (peopleArray.length() > 0) {
-                                JSONObject peopleObj = peopleArray.getJSONObject(0);
-                                userOrChannelId = peopleObj.getString("pid");
-                                isGroup = false;
-                            }
-                        }
-
-                        if (jsonObject.has("channelGroup")) {
-                            JSONArray channelGroupArray = jsonObject
-                                    .getJSONArray("channelGroup");
-                            if (channelGroupArray.length() > 0) {
-                                JSONObject cidObj = channelGroupArray.getJSONObject(0);
-                                userOrChannelId = cidObj.getString("cid");
-                                isGroup = true;
-                            }
-                        }
-                        if (StringUtils.isBlank(userOrChannelId)) {
-                            ToastUtils.show(MyApplication.getInstance(), getString(R.string.baselib_share_fail));
-                        } else {
-                            if (isGroup) {
-                                startChannelActivity(userOrChannelId);
-                            } else {
-                                createDirectChannel(userOrChannelId);
-                            }
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        ToastUtils.show(MyApplication.getInstance(), getString(R.string.baselib_share_fail));
+                SearchModel searchModel = (SearchModel) data.getSerializableExtra("searchModel");
+                if (searchModel != null) {
+                    String userOrChannelId = searchModel.getId();
+                    boolean isGroup = searchModel.getType().equals(SearchModel.TYPE_GROUP);
+                    if (isGroup) {
+                        startChannelActivity(userOrChannelId);
+                    } else {
+                        createDirectChannel(userOrChannelId);
                     }
-                } else {
                 }
             }
         } else if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {  // 图库选择图片返回
