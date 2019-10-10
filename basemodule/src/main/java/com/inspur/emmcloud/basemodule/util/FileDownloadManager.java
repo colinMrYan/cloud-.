@@ -81,4 +81,32 @@ public class FileDownloadManager {
         return downloadFileList;
     }
 
+
+    /**
+     * 删除已下载的文件（实体文件和数据库内容都删除）
+     *
+     * @param filePath
+     */
+    public void deleteDownloadFile(String filePath) {
+        FileDownloadInfoCacheUtils.deleteFileDownloadInfoByFilePath(filePath);
+        File file = new File(filePath);
+        if (file.exists()) {
+            file.delete();
+        }
+    }
+
+    /**
+     * 删除已下载的文件（实体文件和数据库内容都删除）
+     *
+     * @param filePathList
+     */
+    public void deleteDownloadFile(List<String> filePathList) {
+        FileDownloadInfoCacheUtils.deleteFileDownloadInfoByFilePath(filePathList);
+        for (String filePath : filePathList) {
+            File file = new File(filePath);
+            if (file.exists()) {
+                file.delete();
+            }
+        }
+    }
 }
