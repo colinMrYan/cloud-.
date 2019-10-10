@@ -28,6 +28,14 @@ public class FileDownloadInfoCacheUtils {
         }
     }
 
+    public static void deleteFileDownloadInfoByFilePath(List<String> filePathList) {
+        try {
+            DbCacheUtils.getDb().delete(FileDownloadInfo.class, WhereBuilder.b("filePath", "in", filePathList));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void deleteFileDownloadInfo(FileDownloadInfo fileDownloadInfo) {
         try {
             DbCacheUtils.getDb().delete(fileDownloadInfo);
