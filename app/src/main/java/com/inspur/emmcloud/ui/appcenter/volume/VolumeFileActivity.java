@@ -465,7 +465,6 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_OPEN_FILE_BROWSER) {  //文件浏览器选择文件返回
                 if (data.hasExtra("pathList")) {
@@ -491,6 +490,47 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                 uploadFile(imgPath);
             } else if (requestCode == REQUEST_SHOW_FILE_FILTER) {  //移动文件
                 getVolumeFileList(false);
+            } else if (requestCode == SHARE_IMAGE_OR_FILES) {
+                // shareToVolumeFile searchResult
+                if (data != null) {
+                    String result = data.hasExtra("searchResult") ? data.getStringExtra("searchResult") : "";
+                    try {
+                        String userOrChannelId = "";
+                        boolean isGroup = false;
+                        JSONObject jsonObject = new JSONObject(result);
+                        if (jsonObject.has("people")) {
+                            JSONArray peopleArray = jsonObject.getJSONArray("people");
+                            if (peopleArray.length() > 0) {
+                                JSONObject peopleObj = peopleArray.getJSONObject(0);
+                                userOrChannelId = peopleObj.getString("pid");
+                                isGroup = false;
+                            }
+                        }
+
+                        if (jsonObject.has("channelGroup")) {
+                            JSONArray channelGroupArray = jsonObject
+                                    .getJSONArray("channelGroup");
+                            if (channelGroupArray.length() > 0) {
+                                JSONObject cidObj = channelGroupArray.getJSONObject(0);
+                                userOrChannelId = cidObj.getString("cid");
+                                isGroup = true;
+                            }
+                        }
+                        if (StringUtils.isBlank(userOrChannelId)) {
+                            ToastUtils.show(MyApplication.getInstance(), getString(R.string.baselib_share_fail));
+                        } else {
+                            if (isGroup) {
+                                startChannelActivity(userOrChannelId);
+                            } else {
+                                createDirectChannel(userOrChannelId);
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        ToastUtils.show(MyApplication.getInstance(), getString(R.string.baselib_share_fail));
+                    }
+                } else {
+                }
             }
         } else if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {  // 图库选择图片返回
             if (data != null && requestCode == REQUEST_OPEN_GALLERY) {
@@ -511,47 +551,8 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                     uploadFile(imgPath);
                 }
             }
-        } else if (requestCode == SHARE_IMAGE_OR_FILES) {
-            // shareToVolumeFile
-            String result = data.getStringExtra("searchResult");
-            try {
-                String userOrChannelId = "";
-                boolean isGroup = false;
-                JSONObject jsonObject = new JSONObject(result);
-                if (jsonObject.has("people")) {
-                    JSONArray peopleArray = jsonObject.getJSONArray("people");
-                    if (peopleArray.length() > 0) {
-                        JSONObject peopleObj = peopleArray.getJSONObject(0);
-                        userOrChannelId = peopleObj.getString("pid");
-                        isGroup = false;
-                    }
-                }
-
-                if (jsonObject.has("channelGroup")) {
-                    JSONArray channelGroupArray = jsonObject
-                            .getJSONArray("channelGroup");
-                    if (channelGroupArray.length() > 0) {
-                        JSONObject cidObj = channelGroupArray.getJSONObject(0);
-                        userOrChannelId = cidObj.getString("cid");
-                        isGroup = true;
-                    }
-                }
-                if (StringUtils.isBlank(userOrChannelId)) {
-                    ToastUtils.show(MyApplication.getInstance(), getString(R.string.baselib_share_fail));
-                } else {
-                    if (isGroup) {
-                        startChannelActivity(userOrChannelId);
-                    } else {
-                        createDirectChannel(userOrChannelId);
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                ToastUtils.show(MyApplication.getInstance(), getString(R.string.baselib_share_fail));
-            }
         }
-
-    }
+        }
 
     /**
      * 打开channel
