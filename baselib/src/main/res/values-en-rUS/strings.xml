@@ -1287,6 +1287,7 @@
     <string name="voice_communication_choice_members">Select members</string>
     <string name="voice_communication_waitting_answer">Wait for the answer</string>
     <string name="voice_communicaiton_watting_talking">In the call</string>
+    <string name="voice_communication_voice_busy_tip">Voice call in progress, please try again later</string>
     <string name="voice_communication_quality">The quality of current calls is poor.</string>
     <string name="voice_communication_support_nine_members">Cloud + supports nine voice at present.</string>
 

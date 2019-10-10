@@ -1344,6 +1344,7 @@
     <string name="voice_communication_dialog">拨号中...</string>
     <string name="voice_communication_waitting_answer">等待接听</string>
     <string name="voice_communicaiton_watting_talking">通话中</string>
+    <string name="voice_communication_voice_busy_tip">正在语音通话，请稍后再试</string>
     <string name="voice_communication_quality">当前通话质量不佳</string>
     <string name="voice_communication_support_nine_members">云+目前支持九人语音</string>
 
