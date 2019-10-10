@@ -54,6 +54,7 @@ import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
 import com.inspur.emmcloud.util.privates.MediaPlayerUtils;
 import com.inspur.emmcloud.util.privates.Voice2StringMessageUtils;
+import com.inspur.emmcloud.util.privates.VoiceCommunicationUtils;
 import com.inspur.emmcloud.util.privates.audioformat.AndroidMp3ConvertUtils;
 import com.inspur.emmcloud.widget.audiorecord.AudioDialogManager;
 import com.inspur.emmcloud.widget.audiorecord.AudioRecordButton;
@@ -636,6 +637,10 @@ public class ECMChatInputMenu extends LinearLayout {
                             break;
                         case "voice_input":     //语音输入
                             if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+                                if (VoiceCommunicationUtils.getInstance().isVoiceBusy()) {
+                                    ToastUtils.show(R.string.voice_communication_voice_busy_tip);
+                                    return;
+                                }
                                 PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getContext(), Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
                                     @Override
                                     public void onPermissionRequestSuccess(List<String> permissions) {
@@ -651,6 +656,10 @@ public class ECMChatInputMenu extends LinearLayout {
                             break;
                         case VOICE_CALL:
                             if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+                                if (VoiceCommunicationUtils.getInstance().isVoiceBusy()) {
+                                    ToastUtils.show(R.string.voice_communication_voice_busy_tip);
+                                    return;
+                                }
                                 PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getContext(), Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
                                     @Override
                                     public void onPermissionRequestSuccess(List<String> permissions) {
@@ -666,6 +675,10 @@ public class ECMChatInputMenu extends LinearLayout {
                             }
                             break;
                         case VIDEO_CALL:
+                            if (VoiceCommunicationUtils.getInstance().isVoiceBusy()) {
+                                ToastUtils.show(R.string.voice_communication_voice_busy_tip);
+                                return;
+                            }
                             if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
                                 String[] videoPermissions = new String[]{Permissions.RECORD_AUDIO, Permissions.CAMERA};
                                 PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getContext(), videoPermissions, new PermissionRequestCallback() {

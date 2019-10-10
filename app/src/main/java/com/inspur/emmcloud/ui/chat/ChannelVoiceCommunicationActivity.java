@@ -965,8 +965,8 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
         mediaPlayerManagerUtils.stop();
-        VoiceCommunicationUtils.getInstance().setCommunicationState(COMMUNICATION_STATE_OVER);
         if (!SuspensionWindowManagerUtils.getInstance().isShowing() && !isLeaveChannel) {
+            VoiceCommunicationUtils.getInstance().setCommunicationState(COMMUNICATION_STATE_OVER);
             afterRefuse();
         }
     }
