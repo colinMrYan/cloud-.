@@ -242,7 +242,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
 //        intent.setClass(VolumeFileBaseActivity.this,
 //                ContactSearchActivity.class);
 //        startActivityForResult(intent, SHARE_IMAGE_OR_FILES);
-
+        shareToVolumeFile = volumeFile;
         Intent shareIntent = new Intent(this, ConversationSearchActivity.class);
         shareIntent.putExtra(Constant.SHARE_CONTENT, volumeFile.getName());
         startActivityForResult(shareIntent, SHARE_IMAGE_OR_FILES);
