@@ -44,6 +44,7 @@ import com.inspur.emmcloud.componentservice.login.LoginService;
 import com.inspur.emmcloud.componentservice.login.OauthCallBack;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.xutils.http.RequestParams;
 
@@ -1786,7 +1787,14 @@ public class ChatAPIService {
         HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
-                apiInterface.returnShareFileToFriendsFromVolumeSuccess(arg0.toString(), volumeFile);
+                String path = "";
+                try {
+                    JSONObject object = JSONUtils.getJSONObject(new String(arg0));
+                    path = object.getString("path");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                apiInterface.returnShareFileToFriendsFromVolumeSuccess(path, volumeFile);
             }
 
             @Override

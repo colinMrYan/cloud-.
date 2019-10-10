@@ -217,6 +217,16 @@ public class VoiceCommunicationUtils {
     }
 
     /**
+     * 判断当前通话是否在拨号或者通话中
+     *
+     * @return
+     */
+    public boolean isVoiceBusy() {
+        return communicationState == ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_PRE ||
+                communicationState == ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_ING;
+    }
+
+    /**
      * 设置video
      */
     private void setupVideoConfig() {

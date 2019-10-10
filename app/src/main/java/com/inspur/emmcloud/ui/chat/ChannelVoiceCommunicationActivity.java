@@ -4,11 +4,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
+import android.os.CountDownTimer;
 import android.os.SystemClock;
 import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
@@ -213,6 +215,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
 
     private int initX;//本地视频初始x坐标
     private int initY;//本地视频初始y坐标
+    private CountDownTimer countDownTimer;
 
     @Override
     public void onCreate() {
@@ -232,7 +235,19 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         PermissionRequestManagerUtils.getInstance().requestRuntimePermission(this, Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
             @Override
             public void onPermissionRequestSuccess(List<String> permissions) {
+                Log.d("zhang", "onPermissionRequestSuccess: ");
+                countDownTimer = new CountDownTimer(millisInFuture, countDownInterval) {
 
+                    @Override
+                    public void onTick(long millisUntilFinished) {
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        //倒计时结束  TODO
+                    }
+                };
+                countDownTimer.start();
             }
 
             @Override
@@ -963,10 +978,14 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+            countDownTimer = null;
+        }
         EventBus.getDefault().unregister(this);
         mediaPlayerManagerUtils.stop();
-        VoiceCommunicationUtils.getInstance().setCommunicationState(COMMUNICATION_STATE_OVER);
         if (!SuspensionWindowManagerUtils.getInstance().isShowing() && !isLeaveChannel) {
+            VoiceCommunicationUtils.getInstance().setCommunicationState(COMMUNICATION_STATE_OVER);
             afterRefuse();
         }
     }
@@ -1018,6 +1037,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     /**
      * 获取Schema
      * ecc-cloudplus-cmd:\/\/voice_channel?cmd=invite&channelid=143271038136877057&roomid=257db7ddc478429cab2d2a1ec4ed8626&uid=99999
+     *
      * @return
      */
     private String getSchema(String cmd, String channelId, String roomId) {
@@ -1030,7 +1050,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
      *
      * @return
      */
-    private JSONArray getUidArray(List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList){
+    private JSONArray getUidArray(List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList) {
         JSONArray jsonArray = new JSONArray();
         for (int i = 0; i < voiceCommunicationUserInfoBeanList.size(); i++) {
             if (!voiceCommunicationUserInfoBeanList.get(i).getUserId().equals(BaseApplication.getInstance().getUid())) {

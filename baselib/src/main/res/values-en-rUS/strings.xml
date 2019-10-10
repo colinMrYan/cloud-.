@@ -624,6 +624,7 @@
     <string name="move">Move</string>
     <string name="rename">"Rename"</string>
     <string name="move_to">Move</string>
+    <string name="clouddrive_internal_sharing">Internal haring</string>
     <string name="copy">Copy</string>
     <string name="upload_cancel">Cancel</string>
     <string name="no_file">No Files</string>
@@ -1287,6 +1288,7 @@
     <string name="voice_communication_choice_members">Select members</string>
     <string name="voice_communication_waitting_answer">Wait for the answer</string>
     <string name="voice_communicaiton_watting_talking">In the call</string>
+    <string name="voice_communication_voice_busy_tip">Voice call in progress, please try again later</string>
     <string name="voice_communication_quality">The quality of current calls is poor.</string>
     <string name="voice_communication_support_nine_members">Cloud + supports nine voice at present.</string>
 
