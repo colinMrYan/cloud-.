@@ -233,7 +233,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             voiceCommunicationMemberList = list;
         }
         voiceCommunicationUtils = VoiceCommunicationUtils.getInstance();
-        VoiceCommunicationUtils.COMMUNICATION_STATE = COMMUNICATION_STATE_PRE;
+        VoiceCommunicationUtils.getInstance().setCommunicationState(COMMUNICATION_STATE_PRE);
         recoverData();
         initViews();
         PermissionRequestManagerUtils.getInstance().requestRuntimePermission(this, Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
@@ -261,7 +261,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     private void recoverData() {
         STATE = getIntent().getIntExtra(VOICE_COMMUNICATION_STATE, EXCEPTION_STATE);
         if (STATE == COME_BACK_FROM_SERVICE) {
-            VoiceCommunicationUtils.COMMUNICATION_STATE = COMMUNICATION_STATE_ING;
+            VoiceCommunicationUtils.getInstance().setCommunicationState(COMMUNICATION_STATE_ING);
             STATE = voiceCommunicationUtils.getState();
             voiceCommunicationMemberList.clear();
             voiceCommunicationMemberList = voiceCommunicationUtils.getVoiceCommunicationMemberList();
@@ -588,7 +588,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
 //                    leaveChannelSuccess(agoraChannelId);
 //                }
                 if (userCount < 2) {
-                    VoiceCommunicationUtils.COMMUNICATION_STATE = COMMUNICATION_STATE_OVER;
+                    VoiceCommunicationUtils.getInstance().setCommunicationState(COMMUNICATION_STATE_OVER);
                     voiceCommunicationUtils.destroy();
                     finish();
                 }
@@ -606,7 +606,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            VoiceCommunicationUtils.COMMUNICATION_STATE = COMMUNICATION_STATE_ING;
+                            VoiceCommunicationUtils.getInstance().setCommunicationState(COMMUNICATION_STATE_ING);
                             STATE = COMMUNICATION_LAYOUT_STATE;
                             changeFunctionState(COMMUNICATION_LAYOUT_STATE);
                             communicationTimeChronometer.setBase(SystemClock.elapsedRealtime());
@@ -705,7 +705,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
      * 处理声网的异常
      */
     private void agoraException() {
-        VoiceCommunicationUtils.COMMUNICATION_STATE = COMMUNICATION_STATE_OVER;
+        VoiceCommunicationUtils.getInstance().setCommunicationState(COMMUNICATION_STATE_OVER);
         voiceCommunicationUtils.destroy();
         finish();
     }
@@ -857,7 +857,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 tranVideoImg.setImageResource(tranVideoImg.isSelected() ? R.drawable.icon_trans_video : R.drawable.icon_trans_video);
                 break;
             case R.id.img_answer_the_phone:
-                VoiceCommunicationUtils.COMMUNICATION_STATE = COMMUNICATION_STATE_ING;
+                VoiceCommunicationUtils.getInstance().setCommunicationState(COMMUNICATION_STATE_ING);
                 initCommunicationViewsAndMusicByState(COMMUNICATION_LAYOUT_STATE);
                 communicationTimeChronometer.setBase(SystemClock.elapsedRealtime());
                 communicationTimeChronometer.start();
@@ -866,7 +866,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 break;
             case R.id.ll_video_hung_up:
             case R.id.img_hung_up:
-                VoiceCommunicationUtils.COMMUNICATION_STATE = COMMUNICATION_STATE_OVER;
+                VoiceCommunicationUtils.getInstance().setCommunicationState(COMMUNICATION_STATE_OVER);
                 //先通知S，后退出声网
                 if (answerPhoneImg.getVisibility() == View.VISIBLE) {
                     apiService.refuseAgoraChannel(agoraChannelId);
@@ -934,7 +934,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
      */
     private void saveCommunicationData() {
         voiceCommunicationUtils.setState(STATE);
-        VoiceCommunicationUtils.COMMUNICATION_STATE = COMMUNICATION_STATE_ING;
+        VoiceCommunicationUtils.getInstance().setCommunicationState(COMMUNICATION_STATE_ING);
         voiceCommunicationUtils.setAgoraChannelId(agoraChannelId);
         voiceCommunicationUtils.setCommunicationType(communicationType);
         voiceCommunicationUtils.setVoiceCommunicationMemberList(voiceCommunicationMemberList);
@@ -965,7 +965,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
         mediaPlayerManagerUtils.stop();
-        VoiceCommunicationUtils.COMMUNICATION_STATE = COMMUNICATION_STATE_OVER;
+        VoiceCommunicationUtils.getInstance().setCommunicationState(COMMUNICATION_STATE_OVER);
         if (!SuspensionWindowManagerUtils.getInstance().isShowing() && !isLeaveChannel) {
             afterRefuse();
         }

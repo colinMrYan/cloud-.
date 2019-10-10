@@ -856,7 +856,7 @@ public class CommunicationFragment extends BaseFragment {
         //接收到消息后告知服务端
         WSAPIService.getInstance().sendReceiveStartVoiceAndVideoCallMessageSuccess(getVoiceAndVideoResult.getTracer());
         //判断如果在通话中就不再接听新的来电
-        if (VoiceCommunicationUtils.COMMUNICATION_STATE != ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_ING) {
+        if (VoiceCommunicationUtils.getInstance().getCommunicationState() != ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_ING) {
             PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getContext(), Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
                 @Override
                 public void onPermissionRequestSuccess(List<String> permissions) {

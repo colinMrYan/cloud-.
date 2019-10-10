@@ -40,7 +40,7 @@ public class VoiceCommunicationUtils {
      * @see ChannelVoiceCommunicationActivity#COMMUNICATION_STATE_ING
      * @see ChannelVoiceCommunicationActivity#COMMUNICATION_STATE_OVER
      */
-    public static int COMMUNICATION_STATE = -1;
+    private int communicationState = -1;
     private static VoiceCommunicationUtils voiceCommunicationUtils;
     private Context context;
     private RtcEngine mRtcEngine;
@@ -187,13 +187,33 @@ public class VoiceCommunicationUtils {
      */
     private void initializeAgoraEngine() {
         try {
-            mRtcEngine = RtcEngine.create(context, context.getString(R.string.agora_app_id), mRtcEventHandler);
+            if (mRtcEngine == null) {
+                mRtcEngine = RtcEngine.create(context, context.getString(R.string.agora_app_id), mRtcEventHandler);
+            }
+            mRtcEngine.enableAudioVolumeIndication(1000, 3, false);
         } catch (Exception e) {
             LogUtils.YfcDebug("初始化声网异常：" + e.getMessage());
         }
-        if (mRtcEngine != null) {
-            mRtcEngine.enableAudioVolumeIndication(1000, 3, false);
-        }
+    }
+
+    /**
+     * 获取当前音频通话的状态
+     *
+     * @return
+     * @see #communicationState
+     */
+    public int getCommunicationState() {
+        return communicationState;
+    }
+
+    /**
+     * 设置当前音频通话的状态
+     *
+     * @param communicationState
+     * @see #communicationState
+     */
+    public void setCommunicationState(int communicationState) {
+        this.communicationState = communicationState;
     }
 
     /**
