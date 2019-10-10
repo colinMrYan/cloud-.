@@ -276,7 +276,7 @@ public class AppSchemeHandleActivity extends BaseActivity {
             intent.setClass(AppSchemeHandleActivity.this, ChannelVoiceCommunicationActivity.class);
             intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_VIDEO_CALL_AGORA_ID, customProtocol.getParamMap().get("roomid"));
             intent.putExtra(ConversationActivity.CLOUD_PLUS_CHANNEL_ID, customProtocol.getParamMap().get("channelid"));
-            intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_VIDEO_UID, customProtocol.getParamMap().get("uid"));
+            intent.putExtra(ChannelVoiceCommunicationActivity.SCHEMA_FROM_UID, customProtocol.getParamMap().get("uid"));
             intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.INVITEE_LAYOUT_STATE);
             intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_VIDEO_CALL_TYPE, ECMChatInputMenu.VOICE_CALL);
             startActivity(intent);
