@@ -73,14 +73,13 @@ import io.agora.rtc.video.VideoCanvas;
 public class ChannelVoiceCommunicationActivity extends BaseActivity {
 
     /**
-     * 通话三种状态，ing代表通话中，over代表通话结束，pre代表正在邀请未接通或者来了邀请未点击接听的状态，存储在变量
+     * 通话三种状态pre代表正在邀请未接通，ing代表通话中，over代表通话结束，或者来了邀请未点击接听的状态，存储在变量
      *
      * @see VoiceCommunicationUtils#COMMUNICATION_STATE
      */
-    public static final int COMMUNICATION_STATE_ING = 1;
-    public static final int COMMUNICATION_STATE_OVER = 2;
     public static final int COMMUNICATION_STATE_PRE = 0;
-
+    public static final int COMMUNICATION_STATE_ING = 4;
+    public static final int COMMUNICATION_STATE_OVER = 8;
     public static final String VOICE_VIDEO_CALL_AGORA_ID = "channelId";
     /**
      * 通话类型ECMChatInputMenu.VIDEO_CALL或者ECMChatInputMenu.VOICE_CALL
@@ -251,7 +250,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             STATE = voiceCommunicationUtils.getState();
             voiceCommunicationMemberList.clear();
             voiceCommunicationMemberList = voiceCommunicationUtils.getVoiceCommunicationMemberList();
-            agoraChannelId = voiceCommunicationUtils.getChannelId();
+            agoraChannelId = voiceCommunicationUtils.getAgoraChannelId();
             communicationType = voiceCommunicationUtils.getCommunicationType();
             refreshCommunicationMemberAdapter();
             inviteeInfoBean = voiceCommunicationUtils.getInviteeInfoBean();
@@ -921,7 +920,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     private void saveCommunicationData() {
         voiceCommunicationUtils.setState(STATE);
         VoiceCommunicationUtils.COMMUNICATION_STATE = COMMUNICATION_STATE_ING;
-        voiceCommunicationUtils.setChannelId(agoraChannelId);
+        voiceCommunicationUtils.setAgoraChannelId(agoraChannelId);
         voiceCommunicationUtils.setCommunicationType(communicationType);
         voiceCommunicationUtils.setVoiceCommunicationMemberList(voiceCommunicationMemberList);
         voiceCommunicationUtils.setInviteeInfoBean(inviteeInfoBean);

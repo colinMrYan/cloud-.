@@ -36,9 +36,8 @@ public class VoiceCommunicationUtils {
      * 通话状态类型
      * {@link ChannelVoiceCommunicationActivity}
      * 跳转到指定类的指定方法
-     *
-     * @see ChannelVoiceCommunicationActivity#COMMUNICATION_STATE_ING
      * @see ChannelVoiceCommunicationActivity#COMMUNICATION_STATE_PRE
+     * @see ChannelVoiceCommunicationActivity#COMMUNICATION_STATE_ING
      * @see ChannelVoiceCommunicationActivity#COMMUNICATION_STATE_OVER
      */
     public static int COMMUNICATION_STATE = -1;
@@ -48,9 +47,9 @@ public class VoiceCommunicationUtils {
     private OnVoiceCommunicationCallbacks onVoiceCommunicationCallbacks;
     private List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList = new ArrayList<>();
     /**
-     * 声网的channelId
+     * 声网的agoraChannelId
      */
-    private String channelId = "";
+    private String agoraChannelId = "";
     /**
      * 会话类型
      */
@@ -394,12 +393,12 @@ public class VoiceCommunicationUtils {
         this.voiceCommunicationUserInfoBeanList = voiceCommunicationUserInfoBeanList;
     }
 
-    public String getChannelId() {
-        return channelId;
+    public String getAgoraChannelId() {
+        return agoraChannelId;
     }
 
-    public void setChannelId(String channelId) {
-        this.channelId = channelId;
+    public void setAgoraChannelId(String agoraChannelId) {
+        this.agoraChannelId = agoraChannelId;
     }
 
     public List<VoiceCommunicationJoinChannelInfoBean> getVoiceCommunicationMemberList() {
