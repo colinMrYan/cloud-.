@@ -10,7 +10,6 @@ import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
@@ -216,6 +215,10 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     private int initX;//本地视频初始x坐标
     private int initY;//本地视频初始y坐标
     private CountDownTimer countDownTimer;
+    /**
+     * 60s内无响应挂断
+     */
+    private long millisInFuture = 60 * 1000L, countDownInterval = 1000;
 
     @Override
     public void onCreate() {
@@ -235,7 +238,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         PermissionRequestManagerUtils.getInstance().requestRuntimePermission(this, Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
             @Override
             public void onPermissionRequestSuccess(List<String> permissions) {
-                Log.d("zhang", "onPermissionRequestSuccess: ");
                 countDownTimer = new CountDownTimer(millisInFuture, countDownInterval) {
 
                     @Override
@@ -244,7 +246,10 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
 
                     @Override
                     public void onFinish() {
-                        //倒计时结束  TODO
+                        //如果是邀请或被邀请状态，倒计时结束时挂断电话
+                        if (layoutState == INVITEE_LAYOUT_STATE || layoutState == INVITER_LAYOUT_STATE) {
+                            refuseOrLeaveChannel(COMMUNICATION_REFUSE);
+                        }
                     }
                 };
                 countDownTimer.start();
@@ -554,9 +559,13 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 remindEmmServerLeaveChannel(agoraChannelId);
                 finish();
             } else if (cmd.equals("refuse")) {
+                if (layoutState == COMMUNICATION_LAYOUT_STATE) {
+                    ToastUtils.show(ContactUserCacheUtils.getUserName(uid) + getString(R.string.communication_has_leave));
+                } else if (layoutState == INVITEE_LAYOUT_STATE || layoutState == INVITER_LAYOUT_STATE) {
+                    ToastUtils.show(ContactUserCacheUtils.getUserName(uid) + getString(R.string.meeting_has_refused));
+                }
                 changeUserConnectStateByUid(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_REFUSE, uid);
                 checkCommunicationFinish();
-                ToastUtils.show(ContactUserCacheUtils.getUserName(uid) + getString(R.string.meeting_has_refused));
             }
         }
     }

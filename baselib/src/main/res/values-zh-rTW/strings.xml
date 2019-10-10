@@ -1309,6 +1309,7 @@
     <string name="voice_input_hint_speak_now">請説話...</string>
     <string name="voice_input_tip_speak">按下説話</string>
     <string name="voice_input_clear">清空</string>
+    <string name="communication_has_leave">已掛斷</string>
 
     <string name="notification_switch">新消息通知</string>
 
