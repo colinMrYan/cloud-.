@@ -3,6 +3,10 @@ package com.inspur.emmcloud.basemodule.util;
 import com.inspur.emmcloud.basemodule.bean.DownloadFileCategory;
 import com.inspur.emmcloud.basemodule.bean.FileDownloadInfo;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by chenmch on 2019/9/13.
  * 下载文件的存储路径
@@ -53,5 +57,56 @@ public class FileDownloadManager {
         FileDownloadInfoCacheUtils.deleteFileDownloadInfoByFilePath(filePath);
         FileDownloadInfo fileDownloadInfo = new FileDownloadInfo(downloadFileCategory.getValue(), categoryId, fileName, filePath);
         FileDownloadInfoCacheUtils.saveFileDownloadInfo(fileDownloadInfo);
+    }
+
+    /**
+     * 根据业务类型获取所有已下载的且本地还存在的文件下载信息列表,并删除不存在的文件数据
+     *
+     * @param downloadFileCategory
+     * @return
+     */
+    public List<File> getFileDownloadFileList(DownloadFileCategory downloadFileCategory) {
+        List<File> downloadFileList = new ArrayList<>();
+        List<FileDownloadInfo> invalidFileDownloadInfoList = new ArrayList<>();
+        List<FileDownloadInfo> fileDownloadInfoList = FileDownloadInfoCacheUtils.getFileDownloadInfoList(downloadFileCategory.getValue());
+        for (FileDownloadInfo fileDownloadInfo : fileDownloadInfoList) {
+            File file = new File(fileDownloadInfo.getFilePath());
+            if (file.exists()) {
+                downloadFileList.add(file);
+            } else {
+                invalidFileDownloadInfoList.add(fileDownloadInfo);
+            }
+        }
+        FileDownloadInfoCacheUtils.deleteFileDownloadInfoList(invalidFileDownloadInfoList);
+        return downloadFileList;
+    }
+
+
+    /**
+     * 删除已下载的文件（实体文件和数据库内容都删除）
+     *
+     * @param filePath
+     */
+    public void deleteDownloadFile(String filePath) {
+        FileDownloadInfoCacheUtils.deleteFileDownloadInfoByFilePath(filePath);
+        File file = new File(filePath);
+        if (file.exists()) {
+            file.delete();
+        }
+    }
+
+    /**
+     * 删除已下载的文件（实体文件和数据库内容都删除）
+     *
+     * @param filePathList
+     */
+    public void deleteDownloadFile(List<String> filePathList) {
+        FileDownloadInfoCacheUtils.deleteFileDownloadInfoByFilePath(filePathList);
+        for (String filePath : filePathList) {
+            File file = new File(filePath);
+            if (file.exists()) {
+                file.delete();
+            }
+        }
     }
 }

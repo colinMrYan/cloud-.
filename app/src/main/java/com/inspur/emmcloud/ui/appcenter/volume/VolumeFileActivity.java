@@ -33,7 +33,6 @@ import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
-import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
@@ -632,7 +631,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         //VolumeFile mockVolumeFile = getMockVolumeFileData(file);
         //VolumeFileUploadManager.getInstance().uploadFile(mockVolumeFile, filePath, currentDirAbsolutePath);
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-            VolumeFile mockVolumeFile = getMockVolumeFileData(file);
+            VolumeFile mockVolumeFile = VolumeFile.getMockVolumeFile(file, volume.getId());
             VolumeFileUploadManager.getInstance().uploadFile(mockVolumeFile, filePath, currentDirAbsolutePath);
             volumeFileList.add(0, mockVolumeFile);
             initDataBlankLayoutStatus();
@@ -671,26 +670,6 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         }
     }
 
-
-    /**
-     * 生成一个用于上传展示的数据
-     *
-     * @param file
-     * @return
-     */
-    private VolumeFile getMockVolumeFileData(File file) {
-        long time = System.currentTimeMillis();
-        VolumeFile volumeFile = new VolumeFile();
-        volumeFile.setType(VolumeFile.FILE_TYPE_REGULAR);
-        volumeFile.setId(time + "");
-        volumeFile.setCreationDate(time);
-        volumeFile.setName(file.getName());
-        volumeFile.setStatus(VolumeFile.STATUS_UPLOADIND);
-        volumeFile.setVolume(volume.getId());
-        volumeFile.setFormat(FileUtils.getMimeType(file.getName()));
-        volumeFile.setLocalFilePath(file.getAbsolutePath());
-        return volumeFile;
-    }
 
     @Override
     public void onBackPressed() {

@@ -35,7 +35,6 @@ import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
@@ -857,8 +856,7 @@ public class CommunicationFragment extends BaseFragment {
         //接收到消息后告知服务端
         WSAPIService.getInstance().sendReceiveStartVoiceAndVideoCallMessageSuccess(getVoiceAndVideoResult.getTracer());
         //判断如果在通话中就不再接听新的来电
-        LogUtils.YfcDebug("是否正在通话中：" + (VoiceCommunicationUtils.getVoiceCommunicationUtils(ECMChatInputMenu.VOICE_CALL).getCommunicationState() != ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_ING));
-        if (VoiceCommunicationUtils.getVoiceCommunicationUtils(ECMChatInputMenu.VOICE_CALL).getCommunicationState() != ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_ING) {
+        if (VoiceCommunicationUtils.getInstance().getCommunicationState() != ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_ING) {
             PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getContext(), Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
                 @Override
                 public void onPermissionRequestSuccess(List<String> permissions) {
@@ -879,7 +877,7 @@ public class CommunicationFragment extends BaseFragment {
                     String agoraChannelId = customProtocol.getParamMap().get("roomid");
                     String channelId = customProtocol.getParamMap().get("channelid");
                     String fromUid = customProtocol.getParamMap().get("uid");
-                    VoiceCommunicationUtils.getVoiceCommunicationUtils(ECMChatInputMenu.VOICE_CALL).getVoiceCommunicationChannelInfo(channelId, agoraChannelId, fromUid);
+                    VoiceCommunicationUtils.getInstance().getVoiceCommunicationChannelInfo(channelId, agoraChannelId, fromUid);
                     ToastUtils.show(getContext(), PermissionRequestManagerUtils.getInstance().getPermissionToast(getContext(), permissions));
                 }
             });
@@ -887,7 +885,7 @@ public class CommunicationFragment extends BaseFragment {
             String agoraChannelId = customProtocol.getParamMap().get("roomid");
             String channelId = customProtocol.getParamMap().get("channelid");
             String fromUid = customProtocol.getParamMap().get("uid");
-            VoiceCommunicationUtils.getVoiceCommunicationUtils(ECMChatInputMenu.VOICE_CALL).getVoiceCommunicationChannelInfo(channelId, agoraChannelId, fromUid);
+            VoiceCommunicationUtils.getInstance().getVoiceCommunicationChannelInfo(channelId, agoraChannelId, fromUid);
         }
     }
 
@@ -900,7 +898,7 @@ public class CommunicationFragment extends BaseFragment {
      */
     private void changeUserConnectStateByUid(int connectStateConnected, String uid) {
         List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationMemberList = VoiceCommunicationUtils
-                .getVoiceCommunicationUtils(ECMChatInputMenu.VOICE_CALL).getVoiceCommunicationMemberList();
+                .getInstance().getVoiceCommunicationMemberList();
         if (voiceCommunicationMemberList != null && voiceCommunicationMemberList.size() > 0) {
             for (int i = 0; i < voiceCommunicationMemberList.size(); i++) {
                 if (voiceCommunicationMemberList.get(i).getUserId().equals(uid)) {
@@ -916,7 +914,7 @@ public class CommunicationFragment extends BaseFragment {
      */
     private void checkCommunicationFinish() {
         List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationMemberList = VoiceCommunicationUtils
-                .getVoiceCommunicationUtils(ECMChatInputMenu.VOICE_CALL).getVoiceCommunicationMemberList();
+                .getInstance().getVoiceCommunicationMemberList();
         if (voiceCommunicationMemberList != null && voiceCommunicationMemberList.size() > 0) {
             int waitAndCommunicationSize = 0;
             for (int i = 0; i < voiceCommunicationMemberList.size(); i++) {
@@ -926,7 +924,7 @@ public class CommunicationFragment extends BaseFragment {
                 }
             }
             if (waitAndCommunicationSize < 2) {
-                VoiceCommunicationUtils.getVoiceCommunicationUtils(ECMChatInputMenu.VOICE_CALL).destroy();
+                VoiceCommunicationUtils.getInstance().destroy();
                 SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
             }
         }
