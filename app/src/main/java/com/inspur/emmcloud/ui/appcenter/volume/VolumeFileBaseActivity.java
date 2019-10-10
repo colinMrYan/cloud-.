@@ -229,19 +229,6 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
      * 分享到频道
      */
     private void shareToFriends(VolumeFile volumeFile) {
-//        Intent intent = new Intent();
-//        shareToVolumeFile = volumeFile;
-//        intent.putExtra(ContactSearchFragment.EXTRA_TYPE, 0);
-//        intent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, false);
-//        intent.putExtra(ContactSearchFragment.EXTRA_SHOW_COMFIRM_DIALOG_WITH_MESSAGE, volumeFile.getName());
-//        intent.putExtra(ContactSearchFragment.EXTRA_SHOW_COMFIRM_DIALOG, true);
-//        ArrayList<String> uidList = new ArrayList<>();
-//        uidList.add(MyApplication.getInstance().getUid());
-//        intent.putStringArrayListExtra(ContactSearchFragment.EXTRA_EXCLUDE_SELECT, uidList);
-//        intent.putExtra(ContactSearchFragment.EXTRA_TITLE, getString(R.string.baselib_share_to));
-//        intent.setClass(VolumeFileBaseActivity.this,
-//                ContactSearchActivity.class);
-//        startActivityForResult(intent, SHARE_IMAGE_OR_FILES);
         shareToVolumeFile = volumeFile;
         Intent shareIntent = new Intent(this, ConversationSearchActivity.class);
         shareIntent.putExtra(Constant.SHARE_CONTENT, volumeFile.getName());
