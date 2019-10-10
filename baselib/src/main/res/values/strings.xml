@@ -625,6 +625,7 @@
     <string name="volume_upload_to_current_directory">上传到当前目录</string>
     <string name="rename">重命名</string>
     <string name="move_to">移动到</string>
+    <string name="clouddrive_internal_sharing">内部分享</string>
     <string name="copy">复制</string>
     <string name="video">视频</string>
     <string name="audio">音频</string>

@@ -116,21 +116,18 @@ import butterknife.BindView;
 
 public class ConversationActivity extends ConversationBaseActivity {
 
+    public static final String CLOUD_PLUS_CHANNEL_ID = "channel_id";
     private static final int REQUEST_QUIT_CHANNELGROUP = 1;
     private static final int REQUEST_GELLARY = 2;
     private static final int REQUEST_CAMERA = 3;
     private static final int RQQUEST_CHOOSE_FILE = 4;
     private static final int REQUEST_MENTIONS = 5;
-
     private static final int SHARE_SEARCH_RUEST_CODE = 31;
     private static final int VOICE_CALL_MEMBER_CODE = 32;
-
     private static final int REFRESH_HISTORY_MESSAGE = 6;
     private static final int REFRESH_PUSH_MESSAGE = 7;
     private static final int REFRESH_OFFLINE_MESSAGE = 8;
     private static final int UNREAD_NUMBER_BORDER = 20;
-    public static final String CLOUD_PLUS_CHANNEL_ID = "channel_id";
-
     @BindView(R.id.msg_list)
     RecycleViewForSizeChange msgListView;
 
@@ -1616,7 +1613,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
             ChatAPIService apiService = new ChatAPIService(this);
             apiService.setAPIInterface(new WebService());
-            apiService.shareFileToFriendsFromVolume(volumeFile.getVolume(), cid, path, volumeFile);
+            apiService.shareFileToFriendsFromVolume(volumeFile.getVolume(), cid, path + "" + volumeFile.getName(), volumeFile);
         }
     }
 
