@@ -62,20 +62,7 @@ public class VolumeFileUploadManager extends APIInterfaceInstance {
         return instance;
     }
 
-    private static VolumeFile getMockVolumeFile(VolumeFileUpload volumeFileUpload) {
-        long time = System.currentTimeMillis();
-        String filename = FileUtils.getFileName(volumeFileUpload.getLocalFilePath());
-        VolumeFile volumeFile = new VolumeFile();
-        volumeFile.setType(VolumeFile.FILE_TYPE_REGULAR);
-        volumeFile.setId(volumeFileUpload.getId());
-        volumeFile.setCreationDate(time);
-        volumeFile.setName(filename);
-        volumeFile.setStatus(volumeFileUpload.getStatus());
-        volumeFile.setVolume(volumeFileUpload.getVolumeId());
-        volumeFile.setFormat(FileUtils.getMimeType(filename));
-        volumeFile.setLocalFilePath(volumeFileUpload.getLocalFilePath());
-        return volumeFile;
-    }
+
 
     /**
      * 上传文件
@@ -132,7 +119,7 @@ public class VolumeFileUploadManager extends APIInterfaceInstance {
         for (int i = 0; i < volumeFileUploadList.size(); i++) {
             VolumeFileUpload volumeFileUpload = volumeFileUploadList.get(i);
             if (volumeFileUpload.getVolumeId().equals(volumeId) && volumeFileUpload.getVolumeFileParentPath().equals(volumeFileParentPath)) {
-                VolumeFile mockVolumeFile = getMockVolumeFile(volumeFileUpload);
+                VolumeFile mockVolumeFile = VolumeFile.getMockVolumeFile(volumeFileUpload);
                 volumeFileList.add(mockVolumeFile);
             }
         }
@@ -148,7 +135,7 @@ public class VolumeFileUploadManager extends APIInterfaceInstance {
         List<VolumeFile> volumeFileList = new ArrayList<>();
         for (int i = 0; i < volumeFileUploadList.size(); i++) {
             VolumeFileUpload volumeFileUpload = volumeFileUploadList.get(i);
-            VolumeFile mockVolumeFile = getMockVolumeFile(volumeFileUpload);
+            VolumeFile mockVolumeFile = VolumeFile.getMockVolumeFile(volumeFileUpload);
             volumeFileList.add(mockVolumeFile);
 
         }
