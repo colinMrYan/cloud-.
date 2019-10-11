@@ -563,9 +563,10 @@ public class ECMChatInputMenu extends LinearLayout {
 //                    case 6:
 //                        isVideoCallEnable = controlValue.endsWith("1");
 //                        break;
-                    case 8:
-                        isVoiceCallEnable = controlValue.endsWith("1");
-                        break;
+                    //屏蔽语音通话
+//                    case 8:
+//                        isVoiceCallEnable = controlValue.endsWith("1");
+//                        break;
                     case 10:
                         isSendEmailEnable = controlValue.endsWith("1");
                         break;
@@ -599,9 +600,10 @@ public class ECMChatInputMenu extends LinearLayout {
                 inputTypeBeanList.add(new InputTypeBean(functionIconArray[4], functionNameArray[4], functionActionArray[4]));
             }
 
-            if (isVoiceCallEnable) {
-                inputTypeBeanList.add(new InputTypeBean(functionIconArray[5], functionNameArray[5], functionActionArray[5]));
-            }
+            //屏蔽语音通话
+//            if (isVoiceCallEnable) {
+//                inputTypeBeanList.add(new InputTypeBean(functionIconArray[5], functionNameArray[5], functionActionArray[5]));
+//            }
 
             if (isSendEmailEnable) {
                 inputTypeBeanList.add(new InputTypeBean(functionIconArray[6], functionNameArray[6], functionActionArray[6]));
@@ -651,39 +653,41 @@ public class ECMChatInputMenu extends LinearLayout {
                                 });
                             }
                             break;
-                        case VOICE_CALL:
-                            if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-                                PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getContext(), Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
-                                    @Override
-                                    public void onPermissionRequestSuccess(List<String> permissions) {
-                                        startVoiceCall(VOICE_CALL);
-                                    }
 
-                                    @Override
-                                    public void onPermissionRequestFail(List<String> permissions) {
-                                        ToastUtils.show(getContext(), PermissionRequestManagerUtils.getInstance().getPermissionToast(getContext(), permissions));
-                                    }
-
-                                });
-                            }
-                            break;
-                        case VIDEO_CALL:
-                            if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-                                String[] videoPermissions = new String[]{Permissions.RECORD_AUDIO, Permissions.CAMERA};
-                                PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getContext(), videoPermissions, new PermissionRequestCallback() {
-                                    @Override
-                                    public void onPermissionRequestSuccess(List<String> permissions) {
-                                        startVoiceCall(VIDEO_CALL);
-                                    }
-
-                                    @Override
-                                    public void onPermissionRequestFail(List<String> permissions) {
-                                        ToastUtils.show(getContext(), PermissionRequestManagerUtils.getInstance().getPermissionToast(getContext(), permissions));
-                                    }
-
-                                });
-                            }
-                            break;
+                        //屏蔽语音通话
+//                        case VOICE_CALL:
+//                            if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+//                                PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getContext(), Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
+//                                    @Override
+//                                    public void onPermissionRequestSuccess(List<String> permissions) {
+//                                        startVoiceCall(VOICE_CALL);
+//                                    }
+//
+//                                    @Override
+//                                    public void onPermissionRequestFail(List<String> permissions) {
+//                                        ToastUtils.show(getContext(), PermissionRequestManagerUtils.getInstance().getPermissionToast(getContext(), permissions));
+//                                    }
+//
+//                                });
+//                            }
+//                            break;
+//                        case VIDEO_CALL:
+//                            if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+//                                String[] videoPermissions = new String[]{Permissions.RECORD_AUDIO, Permissions.CAMERA};
+//                                PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getContext(), videoPermissions, new PermissionRequestCallback() {
+//                                    @Override
+//                                    public void onPermissionRequestSuccess(List<String> permissions) {
+//                                        startVoiceCall(VIDEO_CALL);
+//                                    }
+//
+//                                    @Override
+//                                    public void onPermissionRequestFail(List<String> permissions) {
+//                                        ToastUtils.show(getContext(), PermissionRequestManagerUtils.getInstance().getPermissionToast(getContext(), permissions));
+//                                    }
+//
+//                                });
+//                            }
+//                            break;
                         case "send_email":
                             inputMenuClickCallback.onInputMenuClick("mail");
                             break;
