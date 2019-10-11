@@ -4,11 +4,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
+import android.os.CountDownTimer;
 import android.os.SystemClock;
 import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
@@ -96,9 +98,13 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
      * 传递页面布局样式的
      */
     public static final String VOICE_COMMUNICATION_STATE = "voice_communication_state";
-    /**通话时长，用来记录Chronometer控件的时间*/
+    /**
+     * 通话时长，用来记录Chronometer控件的时间
+     */
     public static final String VOICE_TIME = "voice_time";
-    /**屏幕宽度*/
+    /**
+     * 屏幕宽度
+     */
     public static final String SCREEN_SIZE = "screen_size";
     /**
      * 邀请人状态布局
@@ -120,9 +126,13 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
      * 异常状态
      */
     private static final int EXCEPTION_STATE = -1;
-    /**请求悬浮窗权限*/
+    /**
+     * 请求悬浮窗权限
+     */
     private static final int REQUEST_WINDOW_PERMISSION = 100;
-    /**表示当前*/
+    /**
+     * 表示当前
+     */
     private static int STATE = -1;
     @BindView(R.id.ll_voice_communication_invite)
     LinearLayout inviteeLinearLayout;
@@ -197,29 +207,49 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
      * 声网的channelId
      */
     private String agoraChannelId = "";
-    /**云+的Id*/
+    /**
+     * 云+的Id
+     */
     private String cloudPlusChannelId = "";
-    /**会话类型 VOICE_CALL或者VIDEO_CALL*/
+    /**
+     * 会话类型 VOICE_CALL或者VIDEO_CALL
+     */
     private String communicationType = "";
     private List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationMemberList = new ArrayList<>();
     private List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationMemberList1 = new ArrayList<>();
     private List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationMemberList2 = new ArrayList<>();
     private VoiceCommunicationJoinChannelInfoBean inviteeInfoBean;
-    /**当前频道里在线的人数*/
+    /**
+     * 当前频道里在线的人数
+     */
     private int userCount = 1;
     private VoiceCommunicationMemberAdapter voiceCommunicationMemberAdapterFirst;
     private VoiceCommunicationMemberAdapter voiceCommunicationMemberAdapterSecond;
     private MediaPlayerManagerUtils mediaPlayerManagerUtils;
     private VoiceCommunicationUtils voiceCommunicationUtils;
-    /**视频会话小视图*/
+    /**
+     * 视频会话小视图
+     */
     private SurfaceView agoraLocalView;
-    /**视频会话大视图*/
+    /**
+     * 视频会话大视图
+     */
     private SurfaceView agoraRemoteView;
 
     private boolean isLeaveChannel = false;
-
-    private int initX;//本地视频初始x坐标
-    private int initY;//本地视频初始y坐标
+    /**
+     * 本地视频初始x坐标
+     */
+    private int initX;
+    /**
+     * 本地视频初始y坐标
+     */
+    private int initY;
+    private CountDownTimer countDownTimer;
+    /**
+     * 60s内无响应挂断
+     */
+    private long millisInFuture = 60 * 1000L, countDownInterval = 1000;
 
     @Override
     public void onCreate() {
@@ -239,7 +269,19 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         PermissionRequestManagerUtils.getInstance().requestRuntimePermission(this, Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
             @Override
             public void onPermissionRequestSuccess(List<String> permissions) {
+                Log.d("zhang", "onPermissionRequestSuccess: ");
+                countDownTimer = new CountDownTimer(millisInFuture, countDownInterval) {
 
+                    @Override
+                    public void onTick(long millisUntilFinished) {
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        //倒计时结束  TODO
+                    }
+                };
+                countDownTimer.start();
             }
 
             @Override
@@ -297,16 +339,16 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         firstRecyclerview.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this, 8)));
         firstRecyclerview.setAdapter(voiceCommunicationMemberAdapterFirst);
 //        if (voiceCommunicationMemberList != null && voiceCommunicationMemberList.size() > 5) {
-            LinearLayoutManager layoutManager2 = new LinearLayoutManager(this);
-            layoutManager2.setOrientation(LinearLayoutManager.HORIZONTAL);
-            secondRecyclerview.setLayoutManager(layoutManager2);
-            secondRecyclerview.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this, 8)));
-            secondRecyclerview.setAdapter(voiceCommunicationMemberAdapterSecond);
+        LinearLayoutManager layoutManager2 = new LinearLayoutManager(this);
+        layoutManager2.setOrientation(LinearLayoutManager.HORIZONTAL);
+        secondRecyclerview.setLayoutManager(layoutManager2);
+        secondRecyclerview.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this, 8)));
+        secondRecyclerview.setAdapter(voiceCommunicationMemberAdapterSecond);
 
-            LinearLayoutManager layoutManagerMembersSecond = new LinearLayoutManager(this);
-            layoutManagerMembersSecond.setOrientation(LinearLayoutManager.HORIZONTAL);
-            communicationMemberSecondRecyclerview.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this, 8)));
-            communicationMemberSecondRecyclerview.setLayoutManager(layoutManagerMembersSecond);
+        LinearLayoutManager layoutManagerMembersSecond = new LinearLayoutManager(this);
+        layoutManagerMembersSecond.setOrientation(LinearLayoutManager.HORIZONTAL);
+        communicationMemberSecondRecyclerview.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this, 8)));
+        communicationMemberSecondRecyclerview.setLayoutManager(layoutManagerMembersSecond);
 
 //        }
         LinearLayoutManager layoutManagerMemebersFirst = new LinearLayoutManager(this);
@@ -963,6 +1005,10 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+            countDownTimer = null;
+        }
         EventBus.getDefault().unregister(this);
         mediaPlayerManagerUtils.stop();
         if (!SuspensionWindowManagerUtils.getInstance().isShowing() && !isLeaveChannel) {
@@ -1018,6 +1064,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     /**
      * 获取Schema
      * ecc-cloudplus-cmd:\/\/voice_channel?cmd=invite&channelid=143271038136877057&roomid=257db7ddc478429cab2d2a1ec4ed8626&uid=99999
+     *
      * @return
      */
     private String getSchema(String cmd, String channelId, String roomId) {
@@ -1030,7 +1077,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
      *
      * @return
      */
-    private JSONArray getUidArray(List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList){
+    private JSONArray getUidArray(List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList) {
         JSONArray jsonArray = new JSONArray();
         for (int i = 0; i < voiceCommunicationUserInfoBeanList.size(); i++) {
             if (!voiceCommunicationUserInfoBeanList.get(i).getUserId().equals(BaseApplication.getInstance().getUid())) {
