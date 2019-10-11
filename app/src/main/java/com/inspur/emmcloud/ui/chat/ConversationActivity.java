@@ -51,6 +51,7 @@ import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.basemodule.util.compressor.Compressor;
 import com.inspur.emmcloud.basemodule.util.imagepicker.ImagePicker;
@@ -116,21 +117,18 @@ import butterknife.BindView;
 
 public class ConversationActivity extends ConversationBaseActivity {
 
+    public static final String CLOUD_PLUS_CHANNEL_ID = "channel_id";
     private static final int REQUEST_QUIT_CHANNELGROUP = 1;
     private static final int REQUEST_GELLARY = 2;
     private static final int REQUEST_CAMERA = 3;
     private static final int RQQUEST_CHOOSE_FILE = 4;
     private static final int REQUEST_MENTIONS = 5;
-
     private static final int SHARE_SEARCH_RUEST_CODE = 31;
     private static final int VOICE_CALL_MEMBER_CODE = 32;
-
     private static final int REFRESH_HISTORY_MESSAGE = 6;
     private static final int REFRESH_PUSH_MESSAGE = 7;
     private static final int REFRESH_OFFLINE_MESSAGE = 8;
     private static final int UNREAD_NUMBER_BORDER = 20;
-    public static final String CLOUD_PLUS_CHANNEL_ID = "channel_id";
-
     @BindView(R.id.msg_list)
     RecycleViewForSizeChange msgListView;
 
@@ -871,6 +869,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                         VolumeFile volumeFile = (VolumeFile) getIntent().getSerializableExtra("share_obj_form_volume");
                         transmitMsgFromVolume(cid, volumeFile, path);
                     } else {
+                        PVCollectModelCacheUtils.saveCollectModel("file", "share");
                         List<String> pathList = getIntent().getStringArrayListExtra("share_paths");
                         for (String url : pathList) {
                             String urlLowerCase = url.toLowerCase();
@@ -880,6 +879,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                     }
                     break;
                 case "link":
+                    PVCollectModelCacheUtils.saveCollectModel("link", "share");
                     String content = getIntent().getExtras().getString(Constant.SHARE_LINK);
                     if (!StringUtils.isBlank(content)) {
                         Message message = CommunicationUtils.combinLocalExtendedLinksMessage(cid, JSONUtils.getString(content, "poster", ""), JSONUtils.getString(content, "title", "")
