@@ -128,10 +128,11 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
         shareVolumeListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                if (selectedShareVolumeList.size() > 0) {
-                    return false;
+                if (selectedShareVolumeList.contains(shareVolumeList.get(position))) {
+                    selectedShareVolumeList.remove(shareVolumeList.get(position));
+                } else {
+                    selectedShareVolumeList.add(shareVolumeList.get(position));
                 }
-                selectedShareVolumeList.add(shareVolumeList.get(position));
                 setBottomOperationItemShow(selectedShareVolumeList);
                 return true;
             }
