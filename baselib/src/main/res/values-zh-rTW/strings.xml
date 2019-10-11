@@ -619,6 +619,7 @@
     <string name="volume_file_transfer_upload_list">上傳列表</string>
     <string name="rename">重命名</string>
     <string name="move_to">移動到</string>
+    <string name="clouddrive_internal_sharing">内部分享</string>
     <string name="copy">複製</string>
     <string name="video">視頻</string>
     <string name="audio">音訊</string>
@@ -1286,6 +1287,7 @@
     <string name="voice_communication_choice_members">選擇成員</string>
     <string name="voice_communication_waitting_answer">等待接聽</string>
     <string name="voice_communicaiton_watting_talking">通話中</string>
+    <string name="voice_communication_voice_busy_tip">正在語音通話，請稍後再試</string>
     <string name="voice_communication_quality">當前通話品質不佳</string>
     <string name="voice_communication_support_nine_members">雲+現時支持九人語音</string>
 
@@ -1308,6 +1310,7 @@
     <string name="voice_input_hint_speak_now">請説話...</string>
     <string name="voice_input_tip_speak">按下説話</string>
     <string name="voice_input_clear">清空</string>
+    <string name="communication_has_leave">已掛斷</string>
 
     <string name="notification_switch">新消息通知</string>
 
@@ -1337,6 +1340,7 @@
     <string name="permission_name_sensors">身體感測器</string>
     <string name="permission_name_sms">簡訊</string>
     <string name="permission_name_storage">存儲空間</string>
+    <string name="voice_communication_dialog">撥號中...</string>
 
     <!--键盘相关-->
     <string name="emm_keyboard_a2z">abcdefghijklmnopqrstuvwxyz</string>

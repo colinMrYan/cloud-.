@@ -35,7 +35,6 @@ import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.PersonDto;
-import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
@@ -49,7 +48,6 @@ import com.inspur.emmcloud.widget.slidebar.SideBar;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.Serializable;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -274,7 +272,7 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
         if (editText == null) {
             editText = new EditText(this);
             FlowLayout.LayoutParams params = new FlowLayout.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT, DensityUtil.dip2px(
+                    ViewGroup.LayoutParams.MATCH_PARENT, DensityUtil.dip2px(
                     this.getApplicationContext(), ViewGroup.LayoutParams.WRAP_CONTENT));
             params.topMargin = DensityUtil.dip2px(this.getApplicationContext(), 2);
             params.bottomMargin = params.topMargin;
@@ -324,11 +322,15 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
                     case SELECT_STATE:
                         PersonDto dto = (filterList.size() != 0) ? filterList.get(position) : personDtoList.get(position);
                         if (!allReadySelectPersonDtoList.contains(dto)) {
-                            if (selectedUserList.size() < TOTAL_MEMBERS_NUM) {
+                            if (selectedUserList.size() < TOTAL_MEMBERS_NUM + 1) {
                                 if (!selectedUserList.contains(dto)) {
-                                    selectedUserList.add(dto);
-                                    newSelectUserList.add(dto);
-                                    updateView(view, View.VISIBLE);
+                                    if (selectedUserList.size() < TOTAL_MEMBERS_NUM) {
+                                        selectedUserList.add(dto);
+                                        newSelectUserList.add(dto);
+                                        updateView(view, View.VISIBLE);
+                                    } else {
+                                        ToastUtils.show(MembersActivity.this, getString(R.string.voice_communication_support_nine_members));
+                                    }
                                 } else {
                                     selectedUserList.remove(dto);
                                     newSelectUserList.remove(dto);
@@ -378,7 +380,7 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
                         break;
                     case CHECK_STATE:
                         String uid = "";
-                        if (searchInputEv.getText().toString().length() > 0) {
+                        if (searchInputEv.getText().toString().length() > 0 || editText.getText().toString().length() > 0) {
                             uid = filterList.get(position).getUid();
                         } else {
                             uid = personDtoList.get(position).getUid();
@@ -550,29 +552,30 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
                 finish();
                 break;
             case R.id.tv_ok:
-                if (state == MENTIONS_STATE) {
-                    Intent intent = new Intent();
-                    JSONArray jsonArray = new JSONArray();
-                    for (int i = 0; i < selectedUserList.size(); i++) {
-                        JSONObject jsonResult1 = new JSONObject();
-                        try {
-                            jsonResult1.put("uid", selectedUserList.get(i).getUid());
-                            jsonResult1.put("name", selectedUserList.get(i).getName());
-                            jsonArray.put(jsonResult1);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                Intent intent = new Intent();
+                JSONArray jsonArray = new JSONArray();
+                for (int i = 0; i < selectedUserList.size(); i++) {
+                    JSONObject jsonResult1 = new JSONObject();
+                    try {
+                        jsonResult1.put("uid", selectedUserList.get(i).getUid());
+                        jsonResult1.put("name", selectedUserList.get(i).getName());
+                        jsonArray.put(jsonResult1);
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                    intent.putExtra("searchResult", jsonArray.toString());
+                }
+                intent.putExtra("searchResult", jsonArray.toString());
+                if (state == MENTIONS_STATE) {
                     boolean isInputKeyWord = getIntent().getBooleanExtra("isInputKeyWord", false);
                     intent.putExtra("isInputKeyWord", isInputKeyWord);
-                    setResult(RESULT_OK, intent);
-                    finish();
-                    finish();
-                } else {
-                    startCommunication();
+                } else if (state == SELECT_STATE) {
+                    if (jsonArray.length() < 2) {
+                        ToastUtils.show("频道用户数不能少于2个。");
+                        return;
+                    }
                 }
-
+                setResult(RESULT_OK, intent);
+                finish();
                 break;
             case R.id.tv_more_select:
                 okTv.setVisibility(View.VISIBLE);
@@ -581,25 +584,6 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
             default:
                 break;
         }
-    }
-
-    /**
-     * 邀请开始通话
-     */
-    private void startCommunication() {
-        List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList = new ArrayList<>();
-        for (int i = 0; i < selectedUserList.size(); i++) {
-            VoiceCommunicationJoinChannelInfoBean voiceCommunicationJoinChannelInfoBean = new VoiceCommunicationJoinChannelInfoBean();
-            voiceCommunicationJoinChannelInfoBean.setUserName(selectedUserList.get(i).getName());
-            voiceCommunicationJoinChannelInfoBean.setUserId(selectedUserList.get(i).getUid());
-            voiceCommunicationUserInfoBeanList.add(voiceCommunicationJoinChannelInfoBean);
-        }
-        Intent intent = new Intent();
-        intent.setClass(MembersActivity.this, ChannelVoiceCommunicationActivity.class);
-        intent.putExtra("userList", (Serializable) voiceCommunicationUserInfoBeanList);
-        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.INVITER_LAYOUT_STATE);
-        startActivity(intent);
-        finish();
     }
 
     @Override

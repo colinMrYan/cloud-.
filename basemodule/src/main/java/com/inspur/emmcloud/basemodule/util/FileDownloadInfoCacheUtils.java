@@ -4,6 +4,9 @@ import com.inspur.emmcloud.basemodule.bean.FileDownloadInfo;
 
 import org.xutils.db.sqlite.WhereBuilder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by chenmch on 2019/9/13.
  */
@@ -25,9 +28,28 @@ public class FileDownloadInfoCacheUtils {
         }
     }
 
+    public static void deleteFileDownloadInfoByFilePath(List<String> filePathList) {
+        try {
+            DbCacheUtils.getDb().delete(FileDownloadInfo.class, WhereBuilder.b("filePath", "in", filePathList));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void deleteFileDownloadInfo(FileDownloadInfo fileDownloadInfo) {
         try {
             DbCacheUtils.getDb().delete(fileDownloadInfo);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void deleteFileDownloadInfoList(List<FileDownloadInfo> fileDownloadInfoList) {
+        try {
+            if (fileDownloadInfoList == null || fileDownloadInfoList.size() == 0) {
+                return;
+            }
+            DbCacheUtils.getDb().delete(fileDownloadInfoList);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -40,6 +62,20 @@ public class FileDownloadInfoCacheUtils {
             e.printStackTrace();
         }
         return null;
+    }
+
+
+    public static List<FileDownloadInfo> getFileDownloadInfoList(String category) {
+        List<FileDownloadInfo> fileDownloadInfoList = null;
+        try {
+            fileDownloadInfoList = DbCacheUtils.getDb().selector(FileDownloadInfo.class).where("category", "=", category).findAll();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (fileDownloadInfoList == null) {
+            fileDownloadInfoList = new ArrayList<>();
+        }
+        return fileDownloadInfoList;
     }
 
 }

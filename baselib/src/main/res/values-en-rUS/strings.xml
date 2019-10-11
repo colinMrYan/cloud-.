@@ -606,8 +606,8 @@
     <string name="file_cannot_move_here">You can not move the file to itself or its subdirectories</string>
     <string name="clouddriver_volume_file_filter">Filter</string>
     <string name="clouddriver_volume_group_name">Group Name</string>
-    <string name="clouddriver_volume_upload_file">Upload File</string>
-    <string name="clouddriver_volume_upload_image">Upload Image</string>
+    <string name="clouddriver_volume_upload_file">Files</string>
+    <string name="clouddriver_volume_upload_image">Album</string>
     <string name="clouddriver_volume_upload_take_photo">Camera</string>
     <string name="clouddriver_file_permission_manager">Permissions</string>
     <string name="clouddriver_volume_frist_download">Please download before uploading</string>
@@ -625,6 +625,7 @@
     <string name="move">Move</string>
     <string name="rename">"Rename"</string>
     <string name="move_to">Move</string>
+    <string name="clouddrive_internal_sharing">Internal haring</string>
     <string name="copy">Copy</string>
     <string name="upload_cancel">Cancel</string>
     <string name="no_file">No Files</string>
@@ -1288,6 +1289,7 @@
     <string name="voice_communication_choice_members">Select members</string>
     <string name="voice_communication_waitting_answer">Wait for the answer</string>
     <string name="voice_communicaiton_watting_talking">In the call</string>
+    <string name="voice_communication_voice_busy_tip">Voice call in progress, please try again later</string>
     <string name="voice_communication_quality">The quality of current calls is poor.</string>
     <string name="voice_communication_support_nine_members">Cloud + supports nine voice at present.</string>
 
@@ -1310,6 +1312,7 @@
     <string name="voice_input_hint_speak_now">Speak now...</string>
     <string name="voice_input_tip_speak">Hold to Talk</string>
     <string name="voice_input_clear">Clear</string>
+    <string name="communication_has_leave">Hung up</string>
 
     <string name="notification_switch">New Notification</string>
     <string name="notification_switch_cant_recive">if closed,you won\'t receive any notifications Close</string>
@@ -1330,6 +1333,7 @@
     <string name="permission_call_phone_permission">Call Phone</string>
     <string name="permission_storage_permission">Storage</string>
     <string name="permission_next">Next</string>
+    <string name="voice_communication_dialog">Dialing...</string>
 
     <string name="permission_name_calendar">Calendar</string>
     <string name="permission_name_camera">Camera</string>

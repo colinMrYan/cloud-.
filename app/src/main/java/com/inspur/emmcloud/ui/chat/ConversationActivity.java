@@ -32,6 +32,7 @@ import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.CustomLoadingView;
@@ -40,6 +41,7 @@ import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButton;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.DownloadFileCategory;
+import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
@@ -71,6 +73,7 @@ import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.interf.ProgressCallback;
 import com.inspur.emmcloud.interf.ResultCallback;
 import com.inspur.emmcloud.push.WebSocketPush;
+import com.inspur.emmcloud.ui.chat.mvp.view.ConversationSearchActivity;
 import com.inspur.emmcloud.ui.chat.pop.PopupWindowList;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
@@ -113,19 +116,18 @@ import butterknife.BindView;
 
 public class ConversationActivity extends ConversationBaseActivity {
 
+    public static final String CLOUD_PLUS_CHANNEL_ID = "channel_id";
     private static final int REQUEST_QUIT_CHANNELGROUP = 1;
     private static final int REQUEST_GELLARY = 2;
     private static final int REQUEST_CAMERA = 3;
     private static final int RQQUEST_CHOOSE_FILE = 4;
     private static final int REQUEST_MENTIONS = 5;
-
     private static final int SHARE_SEARCH_RUEST_CODE = 31;
-
+    private static final int VOICE_CALL_MEMBER_CODE = 32;
     private static final int REFRESH_HISTORY_MESSAGE = 6;
     private static final int REFRESH_PUSH_MESSAGE = 7;
     private static final int REFRESH_OFFLINE_MESSAGE = 8;
     private static final int UNREAD_NUMBER_BORDER = 20;
-
     @BindView(R.id.msg_list)
     RecycleViewForSizeChange msgListView;
 
@@ -386,22 +388,22 @@ public class ConversationActivity extends ConversationBaseActivity {
 
             @Override
             public void onVoiceCommucaiton() {
-                List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList = new ArrayList<>();
-                List<String> memberList = new ArrayList<>();
-                memberList.add(DirectChannelUtils.getDirctChannelOtherUid(MyApplication.getInstance(), conversation.getName()));
-                memberList.add(MyApplication.getInstance().getUid());
-                List<ContactUser> contactUserList = ContactUserCacheUtils.getContactUserListById(memberList);
-                for (int i = 0; i < contactUserList.size(); i++) {
-                    VoiceCommunicationJoinChannelInfoBean voiceCommunicationJoinChannelInfoBean = new VoiceCommunicationJoinChannelInfoBean();
-                    voiceCommunicationJoinChannelInfoBean.setUserId(contactUserList.get(i).getId());
-                    voiceCommunicationJoinChannelInfoBean.setUserName(contactUserList.get(i).getName());
-                    voiceCommunicationUserInfoBeanList.add(voiceCommunicationJoinChannelInfoBean);
+                if (conversation.getType().equals(Conversation.TYPE_GROUP)) {
+                    Intent intent = new Intent();
+                    intent.setClass(ConversationActivity.this, MembersActivity.class);
+                    intent.putExtra("title", ConversationActivity.this.getString(R.string.voice_communication_choice_members));
+                    intent.putExtra(MembersActivity.MEMBER_PAGE_STATE, MembersActivity.SELECT_STATE);
+                    intent.putExtra("cid", cid);
+                    startActivityForResult(intent, VOICE_CALL_MEMBER_CODE);
+                } else if (conversation.getType().equals(Conversation.TYPE_DIRECT)) {
+                    startVoiceOrVideoCall(ECMChatInputMenu.VOICE_CALL, getDirectCversationJoinChannelInfoBeanList());
                 }
-                Intent intent = new Intent();
-                intent.setClass(ConversationActivity.this, ChannelVoiceCommunicationActivity.class);
-                intent.putExtra("userList", (Serializable) voiceCommunicationUserInfoBeanList);
-                intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.INVITER_LAYOUT_STATE);
-                startActivity(intent);
+            }
+
+            //视频通话没有群聊概念
+            @Override
+            public void onVideoCommucaiton() {
+                startVoiceOrVideoCall(ECMChatInputMenu.VIDEO_CALL, getDirectCversationJoinChannelInfoBeanList());
             }
 
             @Override
@@ -420,6 +422,43 @@ public class ConversationActivity extends ConversationBaseActivity {
                 inputMenuClick(type);
             }
         });
+    }
+
+    /**
+     * 单聊消息
+     *
+     * @return
+     */
+    private List<VoiceCommunicationJoinChannelInfoBean> getDirectCversationJoinChannelInfoBeanList() {
+        List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList = new ArrayList<>();
+        List<String> memberList = new ArrayList<>();
+        memberList.add(DirectChannelUtils.getDirctChannelOtherUid(MyApplication.getInstance(), conversation.getName()));
+        memberList.add(MyApplication.getInstance().getUid());
+        List<ContactUser> contactUserList = ContactUserCacheUtils.getContactUserListById(memberList);
+        for (int i = 0; i < contactUserList.size(); i++) {
+            VoiceCommunicationJoinChannelInfoBean voiceCommunicationJoinChannelInfoBean = new VoiceCommunicationJoinChannelInfoBean();
+            voiceCommunicationJoinChannelInfoBean.setUserId(contactUserList.get(i).getId());
+            voiceCommunicationJoinChannelInfoBean.setUserName(contactUserList.get(i).getName());
+            voiceCommunicationUserInfoBeanList.add(voiceCommunicationJoinChannelInfoBean);
+        }
+        return voiceCommunicationUserInfoBeanList;
+    }
+
+    /**
+     * 根据类型启动电话
+     *
+     * @param type
+     */
+    private void startVoiceOrVideoCall(String type, List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList) {
+
+        Intent intent = new Intent();
+        intent.setClass(ConversationActivity.this, ChannelVoiceCommunicationActivity.class);
+        intent.putExtra("userList", (Serializable) voiceCommunicationUserInfoBeanList);
+        LogUtils.YfcDebug("选择人员回来时的人数：" + voiceCommunicationUserInfoBeanList.size());
+        intent.putExtra(CLOUD_PLUS_CHANNEL_ID, cid);
+        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_VIDEO_CALL_TYPE, type);
+        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.INVITER_LAYOUT_STATE);
+        startActivity(intent);
     }
 
     private void inputMenuClick(String type) {
@@ -918,25 +957,44 @@ public class ConversationActivity extends ConversationBaseActivity {
                     break;
                 case SHARE_SEARCH_RUEST_CODE:
                     if (NetUtils.isNetworkConnected(getApplicationContext())) {
-                        String searchResult = data.getStringExtra("searchResult");
-                        JSONObject jsonObject = JSONUtils.getJSONObject(searchResult);
-                        if (jsonObject.has("people")) {
-                            JSONArray peopleArray = JSONUtils.getJSONArray(jsonObject, "people", new JSONArray());
-                            if (peopleArray.length() > 0) {
-                                JSONObject peopleObj = JSONUtils.getJSONObject(peopleArray, 0, new JSONObject());
-                                String pidUid = JSONUtils.getString(peopleObj, "pid", "");
-                                createDirectChannel(pidUid, backUiMessage);
-                            }
-                        }
-                        if (jsonObject.has("channelGroup")) {
-                            JSONArray channelGroupArray = JSONUtils.getJSONArray(jsonObject, "channelGroup", new JSONArray());
-                            if (channelGroupArray.length() > 0) {
-                                JSONObject cidObj = JSONUtils.getJSONObject(channelGroupArray, 0, new JSONObject());
-                                String cid = JSONUtils.getString(cidObj, "cid", "");
-                                transmitMsg(cid, backUiMessage);
-                            }
+                        handleShareResult(data);
+//                        String searchResult = data.getStringExtra("searchResult");
+//                        JSONObject jsonObject = JSONUtils.getJSONObject(searchResult);
+//                        if (jsonObject.has("people")) {
+//                            JSONArray peopleArray = JSONUtils.getJSONArray(jsonObject, "people", new JSONArray());
+//                            if (peopleArray.length() > 0) {
+//                                JSONObject peopleObj = JSONUtils.getJSONObject(peopleArray, 0, new JSONObject());
+//                                String pidUid = JSONUtils.getString(peopleObj, "pid", "");
+//                                createDirectChannel(pidUid, backUiMessage);
+//                            }
+//                        }
+//                        if (jsonObject.has("channelGroup")) {
+//                            JSONArray channelGroupArray = JSONUtils.getJSONArray(jsonObject, "channelGroup", new JSONArray());
+//                            if (channelGroupArray.length() > 0) {
+//                                JSONObject cidObj = JSONUtils.getJSONObject(channelGroupArray, 0, new JSONObject());
+//                                String cid = JSONUtils.getString(cidObj, "cid", "");
+//                                transmitMsg(cid, backUiMessage);
+//                            }
+//                        }
+                    }
+                    break;
+                case VOICE_CALL_MEMBER_CODE:
+                    List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList = new ArrayList<>();
+                    String voiceResult = data.getStringExtra("searchResult");
+                    JSONArray voiceJsonArray = JSONUtils.getJSONArray(voiceResult, new JSONArray());
+                    for (int i = 0; i < voiceJsonArray.length(); i++) {
+                        try {
+                            String uid = JSONUtils.getString(voiceJsonArray.getString(i), "uid", "");
+                            String name = JSONUtils.getString(voiceJsonArray.getString(i), "name", "");
+                            VoiceCommunicationJoinChannelInfoBean voiceCommunicationJoinChannelInfoBean = new VoiceCommunicationJoinChannelInfoBean();
+                            voiceCommunicationJoinChannelInfoBean.setUserId(uid);
+                            voiceCommunicationJoinChannelInfoBean.setUserName(name);
+                            voiceCommunicationUserInfoBeanList.add(voiceCommunicationJoinChannelInfoBean);
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     }
+                    startVoiceOrVideoCall(ECMChatInputMenu.VOICE_CALL, voiceCommunicationUserInfoBeanList);
                     break;
             }
         } else {
@@ -964,6 +1022,27 @@ public class ConversationActivity extends ConversationBaseActivity {
                         combinAndSendMessageWithFile(imgPath, Message.MESSAGE_TYPE_MEDIA_IMAGE, resolutionRatio);
                     }
                 }
+        }
+    }
+
+    private void handleShareResult(Intent data) {
+        SearchModel searchModel = (SearchModel) data.getSerializableExtra("searchModel");
+        if (searchModel != null) {
+            String userOrChannelId = searchModel.getId();
+            boolean isGroup = searchModel.getType().equals(SearchModel.TYPE_GROUP);
+            share2Conversation(userOrChannelId, isGroup);
+        }
+    }
+
+    private void share2Conversation(String userOrChannelId, boolean isGroup) {
+        if (StringUtils.isBlank(userOrChannelId)) {
+            ToastUtils.show(MyApplication.getInstance(), getString(R.string.baselib_share_fail));
+        } else {
+            if (isGroup) {
+                transmitMsg(userOrChannelId, backUiMessage);
+            } else {
+                createDirectChannel(userOrChannelId, backUiMessage);
+            }
         }
     }
 
@@ -1549,7 +1628,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
             ChatAPIService apiService = new ChatAPIService(this);
             apiService.setAPIInterface(new WebService());
-            apiService.shareFileToFriendsFromVolume(volumeFile.getVolume(), cid, path, volumeFile);
+            apiService.shareFileToFriendsFromVolume(volumeFile.getVolume(), cid, path + "" + volumeFile.getName(), volumeFile);
         }
     }
 
@@ -1875,7 +1954,12 @@ public class ConversationActivity extends ConversationBaseActivity {
         intent.putExtra(ContactSearchFragment.EXTRA_TITLE, context.getString(R.string.baselib_share_to));
         intent.setClass(context,
                 ContactSearchActivity.class);
-        startActivityForResult(intent, SHARE_SEARCH_RUEST_CODE);
+//        startActivityForResult(intent, SHARE_SEARCH_RUEST_CODE);
+
+        Intent shareIntent = new Intent(this, ConversationSearchActivity.class);
+        shareIntent.putExtra(Constant.SHARE_CONTENT, result);
+
+        startActivityForResult(shareIntent, SHARE_SEARCH_RUEST_CODE);
     }
 
     class CacheMessageListThread extends Thread {

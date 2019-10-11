@@ -5,6 +5,7 @@ import android.util.Log;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
 import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
 import com.inspur.emmcloud.basemodule.api.HttpUtils;
@@ -106,9 +107,11 @@ public class InvoiceService extends ImpPlugin {
      * 获取微信的accessToken
      */
     private void initInvoice() {
-        String appId = "wx4eb8727ea9c26495";
-        String appSecret = "56a0426315f1d0985a1cc1e75e96130d";
-//        getAccessTokenUrl = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&";
+        IWXAPI api = WXAPIFactory.createWXAPI(getFragmentContext(), Constant.WECHAT_APPID, false);
+        if (!api.isWXAppInstalled()) {
+            ToastUtils.show(R.string.volume_please_install_wechat);
+            return;
+        }
         String completeUrl = WebAPIUri.getWechatTicketUrl();
         RequestParams params = BaseApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
@@ -166,6 +169,7 @@ public class InvoiceService extends ImpPlugin {
             req.nonceStr = "abc";
             req.timeStamp = timestamp;
             req.signType = "SHA1";
+            req.canMultiSelect = "1";
 
             if (req.checkArgs()) {
                 api.sendReq(req);
@@ -230,6 +234,5 @@ public class InvoiceService extends ImpPlugin {
                 e.printStackTrace();
             }
         }
-//        jsCallback(jscb, result);
     }
 }

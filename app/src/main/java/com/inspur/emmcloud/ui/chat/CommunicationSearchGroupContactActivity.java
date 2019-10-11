@@ -1,6 +1,8 @@
 package com.inspur.emmcloud.ui.chat;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -34,7 +36,6 @@ import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
-import com.inspur.emmcloud.basemodule.util.dialog.ShareDialog;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.ConversationFromChatContent;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
@@ -45,6 +46,7 @@ import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.DirectChannelUtils;
+import com.inspur.emmcloud.util.privates.ShareUtil;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
@@ -53,6 +55,7 @@ import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -173,7 +176,8 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
     }
 
     /**
-     * 异步处理数据*/
+     * 异步处理数据
+     */
     private void handMessage() {
         handler = new Handler() {
             @Override
@@ -314,35 +318,15 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
 
                 handleSearchModelShare(searchModel);
                 break;
+            case R.id.lv_search_private_chat:
+                searchModel = privateChatList.get(position);
+                handleSearchModelShare(searchModel);
+                break;
             case R.id.lv_search_contact_from_chat:
                 ConversationFromChatContent conversationFromChatContent = conversationFromChatContentList.get(position);
                 final Conversation conversation = conversationFromChatContent.getConversation();
-
-                String name = CommunicationUtils.getName(this, conversation);
-                String headUrl = CommunicationUtils.getHeadUrl(conversation);
-                //分享到
-                ShareDialog.Builder builder = new ShareDialog.Builder(this);
-                builder.setUserName(name);
-                builder.setContent(shareContent);
-                builder.setDefaultResId(R.drawable.ic_app_default);
-                builder.setHeadUrl(headUrl);
-                final ShareDialog dialog = builder.build();
-                dialog.setCallBack(new ShareDialog.CallBack() {
-                    @Override
-                    public void onConfirm(View view) {
-                        Intent intent = new Intent();
-                        intent.putExtra("conversation", conversation);
-                        setResult(RESULT_OK, intent);
-                        dialog.dismiss();
-                        finish();
-                    }
-
-                    @Override
-                    public void onCancel() {
-                        dialog.dismiss();
-                    }
-                });
-                dialog.show();
+                searchModel = conversation.conversation2SearchModel();
+                ShareUtil.share(this, searchModel, shareContent);
                 break;
             default:
                 break;
@@ -355,31 +339,7 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
      * @param searchModel
      */
     private void handleSearchModelShare(final SearchModel searchModel) {
-        String name = searchModel.getName();
-        String headUrl = searchModel.getIcon();
-        //分享到
-        ShareDialog.Builder builder = new ShareDialog.Builder(this);
-        builder.setUserName(name);
-        builder.setContent(shareContent);
-        builder.setDefaultResId(R.drawable.ic_app_default);
-        builder.setHeadUrl(headUrl);
-        final ShareDialog dialog = builder.build();
-        dialog.setCallBack(new ShareDialog.CallBack() {
-            @Override
-            public void onConfirm(View view) {
-                Intent intent = new Intent();
-                intent.putExtra("searchModel", searchModel);
-                setResult(RESULT_OK, intent);
-                dialog.dismiss();
-                finish();
-            }
-
-            @Override
-            public void onCancel() {
-                dialog.dismiss();
-            }
-        });
-        dialog.show();
+        ShareUtil.share(this, searchModel, shareContent);
     }
 
     /**
@@ -428,7 +388,8 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
     }
 
     /**
-     * 初始化异步方法*/
+     * 初始化异步方法
+     */
     private void initSearchRunnable() {
         searchRunnable = new Runnable() {
             @Override
@@ -465,6 +426,16 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
                                 conversationFromChatContentList.clear();
                                 conversationFromChatContentList = new ArrayList<>();
                                 conversationFromChatContentList = oriChannelInfoByKeyword(searchText);
+                                //分享过来  去除系统通知
+                                if (!StringUtils.isBlank(shareContent)) {
+                                    Iterator<ConversationFromChatContent> iterator = conversationFromChatContentList.iterator();
+                                    while (iterator.hasNext()) {
+                                        ConversationFromChatContent fromChatContent = iterator.next();
+                                        if (fromChatContent.getConversation().getType().equals(Conversation.TYPE_CAST)) {
+                                            iterator.remove();
+                                        }
+                                    }
+                                }
                                 break;
                             case SEARCH_GROUP:
                                 if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
@@ -554,9 +525,14 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
                     MyApplication.getInstance().getTanent() + searchModel.getId() + "_100.png1");
             if (file.exists()) {
                 icon = "file://" + file.getAbsolutePath();
-                ImageDisplayUtils.getInstance().displayImageNoCache(photoImg, icon, defaultIcon);
-                return;
+                Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+                photoImg.setImageBitmap(bitmap);
+//                ImageDisplayUtils.getInstance().displayImageNoCache(photoImg, icon, defaultIcon);
+
+            } else {
+                photoImg.setImageResource(R.drawable.icon_channel_group_default);
             }
+            return;
         } else if (type.equals(SearchModel.TYPE_STRUCT)) {
             defaultIcon = R.drawable.ic_contact_sub_struct;
         } else {
@@ -581,7 +557,8 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
     }
 
     /**
-     * EditText  Watcher*/
+     * EditText  Watcher
+     */
     class SearchWatcher implements TextWatcher {
 
         @Override

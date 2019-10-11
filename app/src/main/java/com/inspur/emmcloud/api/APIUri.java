@@ -58,6 +58,7 @@ public class APIUri {
      */
     public static String getECMChatUrl() {
         return WebServiceRouterManager.getInstance().getClusterChat();
+//        return "http://10.25.12.114:3000/chat";
     }
 
     /**
@@ -1495,8 +1496,7 @@ public class APIUri {
      * @return
      */
     public static String getAgoraUrl() {
-//        return MyApplication.getInstance().getClusterEmm()+"";
-        return "https://emm.inspur.com/api/sys/v6.0/voice/create";
+        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/sys/v6.0/voice/create";
     }
 
     /**
@@ -1505,7 +1505,7 @@ public class APIUri {
      * @return
      */
     public static String getAgoraJoinChannelSuccessUrl() {
-        return "https://emm.inspur.com/api/sys/v6.0/voice/join/";
+        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/sys/v6.0/voice/join/";
     }
 
     /**
@@ -1514,7 +1514,7 @@ public class APIUri {
      * @return
      */
     public static String getAgoraChannelInfoUrl() {
-        return "https://emm.inspur.com/api/sys/v6.0/voice/";
+        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/sys/v6.0/voice/";
     }
 
     /**
@@ -1523,7 +1523,7 @@ public class APIUri {
      * @return
      */
     public static String getAgoraRefuseChannelUrl() {
-        return "https://emm.inspur.com/api/sys/v6.0/voice/refuse/";
+        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/sys/v6.0/voice/refuse/";
     }
 
     /**
@@ -1532,7 +1532,7 @@ public class APIUri {
      * @return
      */
     public static String getAgoraLeaveChannelUrl() {
-        return "https://emm.inspur.com/api/sys/v6.0/voice/leave/";
+        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/sys/v6.0/voice/leave/";
     }
 
 

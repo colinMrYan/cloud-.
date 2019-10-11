@@ -6,16 +6,17 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseMvpActivity;
-import com.inspur.emmcloud.basemodule.util.dialog.ShareDialog;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.ui.chat.CommunicationSearchGroupContactActivity;
 import com.inspur.emmcloud.ui.chat.mvp.adapter.ChatRecentAdapter;
 import com.inspur.emmcloud.ui.chat.mvp.contract.ConversionSearchContract;
 import com.inspur.emmcloud.ui.chat.mvp.presenter.ConversationSearchPresenter;
-import com.inspur.emmcloud.util.privates.CommunicationUtils;
+import com.inspur.emmcloud.util.privates.ShareUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+@Route(path = Constant.AROUTER_CLASS_CONVERSATION_SEARCH)
 public class ConversationSearchActivity extends BaseMvpActivity<ConversationSearchPresenter> implements ConversionSearchContract.View {
 
     static final int REQUEST_CODE_SHARE = 1;
@@ -58,31 +60,8 @@ public class ConversationSearchActivity extends BaseMvpActivity<ConversationSear
             @Override
             public void onItemClick(View view, int position) {
                 final Conversation conversation = list.get(position);
-                String name = CommunicationUtils.getName(getContext(), conversation);
-                String headUrl = CommunicationUtils.getHeadUrl(conversation);
-                //分享到
-                ShareDialog.Builder builder = new ShareDialog.Builder(ConversationSearchActivity.this);
-                builder.setUserName(name);
-                builder.setContent(shareContent);
-                builder.setDefaultResId(R.drawable.ic_app_default);
-                builder.setHeadUrl(headUrl);
-                final ShareDialog dialog = builder.build();
-                dialog.setCallBack(new ShareDialog.CallBack() {
-                    @Override
-                    public void onConfirm(View view) {
-                        Intent intent = new Intent();
-                        intent.putExtra("conversation", conversation);
-                        setResult(RESULT_OK, intent);
-                        dialog.dismiss();
-                        finish();
-                    }
-
-                    @Override
-                    public void onCancel() {
-                        dialog.dismiss();
-                    }
-                });
-                dialog.show();
+                SearchModel searchModel = conversation.conversation2SearchModel();
+                ShareUtil.share(ConversationSearchActivity.this, searchModel, shareContent);
             }
         });
         conversionRecycleView.setAdapter(conversationAdapter);

@@ -3,9 +3,11 @@ package com.inspur.emmcloud.bean.appcenter.volume;
 import com.alibaba.fastjson.TypeReference;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.basemodule.util.FileUtils;
 
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -77,6 +79,43 @@ public class VolumeFile implements Serializable {
             }
         }
         path = JSONUtils.getString(object, "path", "");
+    }
+
+    public static VolumeFile getMockVolumeFile(VolumeFileUpload volumeFileUpload) {
+        long time = System.currentTimeMillis();
+        String filename = FileUtils.getFileName(volumeFileUpload.getLocalFilePath());
+        VolumeFile volumeFile = new VolumeFile();
+        volumeFile.setType(VolumeFile.FILE_TYPE_REGULAR);
+        volumeFile.setId(volumeFileUpload.getId());
+        volumeFile.setCreationDate(time);
+        volumeFile.setName(filename);
+        volumeFile.setStatus(volumeFileUpload.getStatus());
+        volumeFile.setVolume(volumeFileUpload.getVolumeId());
+        volumeFile.setFormat(FileUtils.getMimeType(filename));
+        volumeFile.setSize(FileUtils.getFileSize(volumeFileUpload.getLocalFilePath()));
+        volumeFile.setLocalFilePath(volumeFileUpload.getLocalFilePath());
+        return volumeFile;
+    }
+
+    /**
+     * 生成一个用于上传展示的数据
+     *
+     * @param file
+     * @return
+     */
+    public static VolumeFile getMockVolumeFile(File file, String volumeId) {
+        long time = System.currentTimeMillis();
+        VolumeFile volumeFile = new VolumeFile();
+        volumeFile.setType(VolumeFile.FILE_TYPE_REGULAR);
+        volumeFile.setId(time + "");
+        volumeFile.setCreationDate(time);
+        volumeFile.setName(file.getName());
+        volumeFile.setStatus(VolumeFile.STATUS_UPLOADIND);
+        volumeFile.setVolume(volumeId);
+        volumeFile.setFormat(FileUtils.getMimeType(file.getName()));
+        volumeFile.setLocalFilePath(file.getAbsolutePath());
+        volumeFile.setSize(FileUtils.getFileSize(file.getAbsolutePath()));
+        return volumeFile;
     }
 
     public String getType() {

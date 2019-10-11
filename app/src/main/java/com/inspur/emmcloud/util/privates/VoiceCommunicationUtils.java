@@ -3,17 +3,26 @@ package com.inspur.emmcloud.util.privates;
 import android.content.Context;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.apiservice.ChatAPIService;
+import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.bean.chat.GetVoiceCommunicationResult;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationAudioVolumeInfo;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationRtcStats;
 import com.inspur.emmcloud.interf.OnVoiceCommunicationCallbacks;
+import com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity;
+
+import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import io.agora.rtc.IRtcEngineEventHandler;
 import io.agora.rtc.RtcEngine;
+import io.agora.rtc.video.VideoEncoderConfiguration;
 
 /**
  * 详细回调接口解释见OnVoiceCommunicationCallbacks
@@ -22,15 +31,33 @@ import io.agora.rtc.RtcEngine;
 
 public class VoiceCommunicationUtils {
 
+
+    /**
+     * 通话状态类型
+     * {@link ChannelVoiceCommunicationActivity}
+     * 跳转到指定类的指定方法
+     * @see ChannelVoiceCommunicationActivity#COMMUNICATION_STATE_PRE
+     * @see ChannelVoiceCommunicationActivity#COMMUNICATION_STATE_ING
+     * @see ChannelVoiceCommunicationActivity#COMMUNICATION_STATE_OVER
+     */
+    private int communicationState = -1;
     private static VoiceCommunicationUtils voiceCommunicationUtils;
     private Context context;
     private RtcEngine mRtcEngine;
     private OnVoiceCommunicationCallbacks onVoiceCommunicationCallbacks;
     private List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList = new ArrayList<>();
-    private String channelId = "";//声网的channelId
+    /**
+     * 声网的agoraChannelId
+     */
+    private String agoraChannelId = "";
+    /**
+     * 会话类型
+     */
+    private String communicationType = "";
     private List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationMemberList = new ArrayList<>();
     private VoiceCommunicationJoinChannelInfoBean inviteeInfoBean;
     private int userCount = 1;
+    /**布局状态*/
     private int state = -1;
     private IRtcEngineEventHandler mRtcEventHandler = new IRtcEngineEventHandler() {
         //其他用户离线回调
@@ -125,22 +152,29 @@ public class VoiceCommunicationUtils {
             super.onNetworkQuality(uid, txQuality, rxQuality);
             onVoiceCommunicationCallbacks.onNetworkQuality(uid, txQuality, rxQuality);
         }
+
+        @Override
+        public void onRemoteVideoStateChanged(int uid, int state, int reason, int elapsed) {
+            super.onRemoteVideoStateChanged(uid, state, reason, elapsed);
+            onVoiceCommunicationCallbacks.onRemoteVideoStateChanged(uid, state, reason, elapsed);
+        }
     };
 
-    public VoiceCommunicationUtils(Context context) {
-        this.context = context;
+    private VoiceCommunicationUtils() {
+        this.context = BaseApplication.getInstance();
     }
 
     /**
      * 获得声网控制工具类
+     * 默认只开启语音通话部分
      *
      * @return
      */
-    public static VoiceCommunicationUtils getVoiceCommunicationUtils(Context context) {
+    public static VoiceCommunicationUtils getInstance() {
         if (voiceCommunicationUtils == null) {
             synchronized (VoiceCommunicationUtils.class) {
                 if (voiceCommunicationUtils == null) {
-                    voiceCommunicationUtils = new VoiceCommunicationUtils(context);
+                    voiceCommunicationUtils = new VoiceCommunicationUtils();
                 }
             }
         }
@@ -151,16 +185,93 @@ public class VoiceCommunicationUtils {
     /**
      * 初始化引擎
      */
-    public void initializeAgoraEngine() {
+    private void initializeAgoraEngine() {
         try {
-            mRtcEngine = RtcEngine.create(context, context.getString(R.string.agora_app_id), mRtcEventHandler);
+            if (mRtcEngine == null) {
+                mRtcEngine = RtcEngine.create(context, context.getString(R.string.agora_app_id), mRtcEventHandler);
+            }
+            mRtcEngine.enableAudioVolumeIndication(1000, 3, false);
         } catch (Exception e) {
             LogUtils.YfcDebug("初始化声网异常：" + e.getMessage());
         }
+    }
+
+    /**
+     * 获取当前音频通话的状态
+     *
+     * @return
+     * @see #communicationState
+     */
+    public int getCommunicationState() {
+        return communicationState;
+    }
+
+    /**
+     * 设置当前音频通话的状态
+     *
+     * @param communicationState
+     * @see #communicationState
+     */
+    public void setCommunicationState(int communicationState) {
+        this.communicationState = communicationState;
+    }
+
+    /**
+     * 判断当前通话是否在拨号或者通话中
+     *
+     * @return
+     */
+    public boolean isVoiceBusy() {
+        return communicationState == ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_PRE ||
+                communicationState == ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_ING;
+    }
+
+    /**
+     * 设置video
+     */
+    private void setupVideoConfig() {
+        // In simple use cases, we only need to enable video capturing
+        // and rendering once at the initialization step.
+        // Note: audio recording and playing is enabled by default.
+        mRtcEngine.enableVideo();
+
+        // Please go to this page for detailed explanation
+        // https://docs.agora.io/en/Video/API%20Reference/java/classio_1_1agora_1_1rtc_1_1_rtc_engine.html#af5f4de754e2c1f493096641c5c5c1d8f
+        mRtcEngine.setVideoEncoderConfiguration(new VideoEncoderConfiguration(
+                VideoEncoderConfiguration.VD_640x360,
+                VideoEncoderConfiguration.FRAME_RATE.FRAME_RATE_FPS_15,
+                VideoEncoderConfiguration.STANDARD_BITRATE,
+                VideoEncoderConfiguration.ORIENTATION_MODE.ORIENTATION_MODE_FIXED_PORTRAIT));
+    }
+
+
+    /**
+     * 开启视频通话的配置
+     */
+    public void enableVideo() {
         if (mRtcEngine != null) {
-            mRtcEngine.enableAudioVolumeIndication(1000, 3);
+            /**配置视频通话*/
+            setupVideoConfig();
         }
-//        mRtcEngine.registerLocalUserAccount(context.getString(R.string.agora_app_id),"12345");
+    }
+
+    /**
+     * 关闭视频模块
+     */
+    public void disableVideo() {
+        mRtcEngine.disableVideo();
+    }
+
+    /**
+     * 人声的播放信号音量，可在 0~400 范围内进行调节：
+     * 0：静音
+     * 100：原始音量
+     * 400：最大可为原始音量的 4 倍（自带溢出保护）
+     *
+     * @param volumeLevel
+     */
+    public void adjustPlaybackSignalVolume(int volumeLevel) {
+        mRtcEngine.adjustPlaybackSignalVolume(volumeLevel);
     }
 
     /**
@@ -188,11 +299,23 @@ public class VoiceCommunicationUtils {
 
     /**
      * 设置加密密码
+     * 暂时去掉加密
      *
      * @param secret
      */
     public void setEncryptionSecret(String secret) {
+//        int a = mRtcEngine.setEncryptionSecret("123456");
+//        int b = mRtcEngine.setEncryptionMode("aes-128-ecb");
+//        LogUtils.YfcDebug("setEncryptionSecret:"+a);
+//        LogUtils.YfcDebug("setEncryptionMode:"+b);
         mRtcEngine.setEncryptionSecret(secret);
+    }
+
+    /**
+     * 转换摄像头
+     */
+    public void switchCamera() {
+        mRtcEngine.switchCamera();
     }
 
     /**
@@ -207,11 +330,22 @@ public class VoiceCommunicationUtils {
     }
 
     /**
-     * 打开外放
+     * 打开外放模式
      *
      * @param isSpakerphoneOpen
      */
     public void onSwitchSpeakerphoneClicked(boolean isSpakerphoneOpen) {
+        if (mRtcEngine != null) {
+            mRtcEngine.setEnableSpeakerphone(isSpakerphoneOpen);
+        }
+    }
+
+    /**
+     * 打开外放
+     *
+     * @param isSpakerphoneOpen
+     */
+    public void setEnableSpeakerphone(boolean isSpakerphoneOpen) {
         if (mRtcEngine != null) {
             mRtcEngine.setEnableSpeakerphone(isSpakerphoneOpen);
         }
@@ -238,6 +372,15 @@ public class VoiceCommunicationUtils {
         if (mRtcEngine != null) {
             mRtcEngine.muteAllRemoteAudioStreams(isMuteAllUser);
         }
+    }
+
+    /**
+     * 获取RtcEngine实例
+     *
+     * @return
+     */
+    public RtcEngine getRtcEngine() {
+        return mRtcEngine;
     }
 
     /**
@@ -280,12 +423,12 @@ public class VoiceCommunicationUtils {
         this.voiceCommunicationUserInfoBeanList = voiceCommunicationUserInfoBeanList;
     }
 
-    public String getChannelId() {
-        return channelId;
+    public String getAgoraChannelId() {
+        return agoraChannelId;
     }
 
-    public void setChannelId(String channelId) {
-        this.channelId = channelId;
+    public void setAgoraChannelId(String agoraChannelId) {
+        this.agoraChannelId = agoraChannelId;
     }
 
     public List<VoiceCommunicationJoinChannelInfoBean> getVoiceCommunicationMemberList() {
@@ -319,4 +462,90 @@ public class VoiceCommunicationUtils {
     public void setState(int state) {
         this.state = state;
     }
+
+    public String getCommunicationType() {
+        return communicationType;
+    }
+
+    public void setCommunicationType(String communicationType) {
+        this.communicationType = communicationType;
+    }
+
+    /**
+     * 获取channel信息
+     *
+     * @param channelId
+     * @param agoraChannelId
+     */
+    public void getVoiceCommunicationChannelInfo(String channelId, String agoraChannelId, String fromUid) {
+        ChatAPIService chatAPIService = new ChatAPIService(BaseApplication.getInstance());
+        WebService webService = new WebService();
+        webService.setArgoaChannelId(agoraChannelId);
+        webService.setChannelId(channelId);
+        webService.setFromUid(fromUid);
+        chatAPIService.setAPIInterface(webService);
+        chatAPIService.getAgoraChannelInfo(agoraChannelId);
+    }
+
+    /**
+     * 获取Uid
+     * 排除掉自己防止自己给自己发命令消息
+     *
+     * @return
+     */
+    private JSONArray getUidArray(List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList, String fromUid) {
+        JSONArray jsonArray = new JSONArray();
+        for (int i = 0; i < voiceCommunicationUserInfoBeanList.size(); i++) {
+            boolean isFrom = voiceCommunicationUserInfoBeanList.get(i).getUserId().equals(fromUid);
+            if (!voiceCommunicationUserInfoBeanList.get(i).getUserId().equals(BaseApplication.getInstance().getUid()) && !isFrom) {
+                jsonArray.put(voiceCommunicationUserInfoBeanList.get(i).getUserId());
+            }
+        }
+        return jsonArray;
+    }
+
+    class WebService extends APIInterfaceInstance {
+        private String channelId = "";
+        private String argoaChannelId = "";
+        private String fromUid = "";
+
+        @Override
+        public void returnGetVoiceCommunicationChannelInfoSuccess(GetVoiceCommunicationResult getVoiceCommunicationResult) {
+            String scheme = "ecc-cloudplus-cmd://voice_channel?cmd=refuse&channelid=" + channelId + "&roomid=" + argoaChannelId + "&uid=" + BaseApplication.getInstance().getUid();
+
+            if (getVoiceCommunicationResult.getChannelId().equals(argoaChannelId)) {
+                WSAPIService.getInstance().sendStartVoiceAndVideoCallMessage(channelId, argoaChannelId, scheme, "VOICE", getUidArray(getVoiceCommunicationResult.getVoiceCommunicationJoinChannelInfoBeanList(), fromUid));
+            }
+        }
+
+        @Override
+        public void returnGetVoiceCommunicationChannelInfoFail(String error, int errorCode) {
+        }
+
+        public String getChannelId() {
+            return channelId;
+        }
+
+        public void setChannelId(String channelId) {
+            this.channelId = channelId;
+        }
+
+        public String getArgoaChannelId() {
+            return argoaChannelId;
+        }
+
+        public void setArgoaChannelId(String argoaChannelId) {
+            this.argoaChannelId = argoaChannelId;
+        }
+
+        public String getFromUid() {
+            return fromUid;
+        }
+
+        public void setFromUid(String fromUid) {
+            this.fromUid = fromUid;
+        }
+    }
+
+
 }

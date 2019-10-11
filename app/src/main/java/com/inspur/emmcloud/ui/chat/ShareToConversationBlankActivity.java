@@ -11,9 +11,11 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
-import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
@@ -28,7 +30,6 @@ import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
-import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 
 import org.json.JSONArray;
@@ -84,14 +85,18 @@ public class ShareToConversationBlankActivity extends BaseActivity {
                 title = getString(R.string.baselib_share_link) + " " + title;
                 bundle.putString("show_sure_dialog", "sure");
                 bundle.putString("show_sure_dialog_with_message", title);
+                bundle.putString(Constant.SHARE_CONTENT, title);
                 break;
             case Message.MESSAGE_TYPE_TEXT_PLAIN:
                 String content = getIntent().getStringExtra("content");
                 bundle.putString("show_sure_dialog", "sure");
                 bundle.putString("show_sure_dialog_with_message", content);
+                bundle.putString(Constant.SHARE_CONTENT, content);
                 break;
         }
-        ARouter.getInstance().build(Constant.AROUTER_CLASS_CONTACT_SEARCH).with(bundle).navigation(this, REQUEST_SELECT_CONTACT);
+
+//        ARouter.getInstance().build(Constant.AROUTER_CLASS_CONTACT_SEARCH).with(bundle).navigation(this, REQUEST_SELECT_CONTACT);
+        ARouter.getInstance().build(Constant.AROUTER_CLASS_CONVERSATION_SEARCH).with(bundle).navigation(this, REQUEST_SELECT_CONTACT);
     }
 
 
@@ -99,33 +104,64 @@ public class ShareToConversationBlankActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_SELECT_CONTACT && resultCode == RESULT_OK) {
-            String result = data.getStringExtra("searchResult");
-            JSONObject jsonObject = JSONUtils.getJSONObject(result);
-            if (jsonObject.has("people")) {
-                JSONArray peopleArray = JSONUtils.getJSONArray(jsonObject, "people", new JSONArray());
-                if (peopleArray.length() > 0) {
-                    JSONObject peopleObj = JSONUtils.getJSONObject(peopleArray, 0, new JSONObject());
-                    String uid = JSONUtils.getString(peopleObj, "pid", "");
-                    Conversation conversation = ConversationCacheUtils.getDirectConversationToUser(BaseApplication.getInstance(), uid);
-                    if (conversation == null) {
-                        createDirectChannel(uid);
-                    } else {
-                        cid = conversation.getId();
-                        sendMessage();
-                    }
 
-                }
-            }
-            if (jsonObject.has("channelGroup")) {
-                JSONArray channelGroupArray = JSONUtils.getJSONArray(jsonObject, "channelGroup", new JSONArray());
-                if (channelGroupArray.length() > 0) {
-                    JSONObject cidObj = JSONUtils.getJSONObject(channelGroupArray, 0, new JSONObject());
-                    cid = JSONUtils.getString(cidObj, "cid", "");
-                    sendMessage();
-                }
-            }
+            handleShareResult(data);
+
+//            String result = data.getStringExtra("searchResult");
+//            JSONObject jsonObject = JSONUtils.getJSONObject(result);
+//            if (jsonObject.has("people")) {
+//                JSONArray peopleArray = JSONUtils.getJSONArray(jsonObject, "people", new JSONArray());
+//                if (peopleArray.length() > 0) {
+//                    JSONObject peopleObj = JSONUtils.getJSONObject(peopleArray, 0, new JSONObject());
+//                    String uid = JSONUtils.getString(peopleObj, "pid", "");
+//                    Conversation conversation = ConversationCacheUtils.getDirectConversationToUser(BaseApplication.getInstance(), uid);
+//                    if (conversation == null) {
+//                        createDirectChannel(uid);
+//                    } else {
+//                        cid = conversation.getId();
+//                        sendMessage();
+//                    }
+//
+//                }
+//            }
+//            if (jsonObject.has("channelGroup")) {
+//                JSONArray channelGroupArray = JSONUtils.getJSONArray(jsonObject, "channelGroup", new JSONArray());
+//                if (channelGroupArray.length() > 0) {
+//                    JSONObject cidObj = JSONUtils.getJSONObject(channelGroupArray, 0, new JSONObject());
+//                    cid = JSONUtils.getString(cidObj, "cid", "");
+//                    sendMessage();
+//                }
+//            }
         } else {
             callbackCancel();
+        }
+    }
+
+    private void handleShareResult(Intent data) {
+        SearchModel searchModel = (SearchModel) data.getSerializableExtra("searchModel");
+        if (searchModel != null) {
+            String userOrChannelId = searchModel.getId();
+            boolean isGroup = searchModel.getType().equals(SearchModel.TYPE_GROUP);
+            share2Conversation(userOrChannelId, isGroup);
+        }
+    }
+
+    /**
+     * 分享到聊天界面
+     *
+     * @param userOrChannelId
+     * @param isGroup
+     */
+    private void share2Conversation(String userOrChannelId, boolean isGroup) {
+        if (StringUtils.isBlank(userOrChannelId)) {
+            ToastUtils.show(MyApplication.getInstance(), getString(R.string.baselib_share_fail));
+        } else {
+            if (isGroup) {
+                cid = userOrChannelId;
+                sendMessage();
+            } else {
+                createDirectChannel(userOrChannelId);
+            }
         }
     }
 
@@ -171,7 +207,6 @@ public class ShareToConversationBlankActivity extends BaseActivity {
 
     /**
      * 发送消息
-     *
      */
     private void sendMessage() {
         String type = getIntent().getStringExtra("type");

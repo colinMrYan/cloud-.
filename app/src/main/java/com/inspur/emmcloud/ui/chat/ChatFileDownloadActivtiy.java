@@ -46,7 +46,7 @@ public class ChatFileDownloadActivtiy extends BaseActivity {
     TextView progressText;
     @BindView(R.id.tv_file_name)
     TextView fileNameText;
-    @BindView(R.id.file_type_img)
+    @BindView(R.id.iv_file_type_file_preview)
     ImageView fileTypeImg;
     @BindView(R.id.tv_file_size)
     TextView fileSizeText;

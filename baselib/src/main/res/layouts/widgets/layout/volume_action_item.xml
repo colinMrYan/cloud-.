@@ -9,6 +9,7 @@
         android:layout_width="22dp"
         android:layout_height="22dp"
         android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="2dp"
         android:src="@drawable/ic_volume_more" />
 
     <TextView
@@ -16,5 +17,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="@string/more" />
+        android:text="@string/more"
+        android:textColor="#36A5F6"
+        android:textSize="12sp" />
 </LinearLayout>

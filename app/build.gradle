@@ -55,8 +55,8 @@ android {
         applicationId "com.inspur.emmcloud"
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
-        versionCode 96
-        versionName "4.3.0-beta.2"
+        versionCode 98
+        versionName "4.5.0-rc.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             abiFilters "armeabi-v7a", "x86"

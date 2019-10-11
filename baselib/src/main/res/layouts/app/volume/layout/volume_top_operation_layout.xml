@@ -20,13 +20,16 @@
             android:layout_width="22dp"
             android:layout_height="22dp"
             android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="2dp"
             android:src="@drawable/ic_volume_picture" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="@string/clouddriver_volume_upload_image" />
+            android:text="@string/clouddriver_volume_upload_image"
+            android:textColor="#36A5F6"
+            android:textSize="12sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -41,13 +44,16 @@
             android:layout_width="22dp"
             android:layout_height="22dp"
             android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="2dp"
             android:src="@drawable/ic_volume_photo" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="@string/clouddriver_volume_upload_take_photo" />
+            android:text="@string/clouddriver_volume_upload_take_photo"
+            android:textColor="#36A5F6"
+            android:textSize="12sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -62,13 +68,16 @@
             android:layout_width="22dp"
             android:layout_height="22dp"
             android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="2dp"
             android:src="@drawable/ic_volume_upload_file" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="@string/clouddriver_volume_upload_file" />
+            android:text="@string/clouddriver_volume_upload_file"
+            android:textColor="#36A5F6"
+            android:textSize="12sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -83,13 +92,16 @@
             android:layout_width="22dp"
             android:layout_height="22dp"
             android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="2dp"
             android:src="@drawable/ic_volume_add_folder" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="@string/clouddriver_create_folder" />
+            android:text="@string/clouddriver_create_folder"
+            android:textColor="#36A5F6"
+            android:textSize="12sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -104,13 +116,16 @@
             android:layout_width="22dp"
             android:layout_height="22dp"
             android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="2dp"
             android:src="@drawable/ic_volume_download" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="@string/download" />
+            android:text="@string/download"
+            android:textColor="#36A5F6"
+            android:textSize="12sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -125,13 +140,16 @@
             android:layout_width="22dp"
             android:layout_height="22dp"
             android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="2dp"
             android:src="@drawable/ic_volume_copy" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="@string/copy" />
+            android:text="@string/copy"
+            android:textColor="#36A5F6"
+            android:textSize="12sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -146,13 +164,16 @@
             android:layout_width="22dp"
             android:layout_height="22dp"
             android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="2dp"
             android:src="@drawable/ic_volume_move" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="@string/move" />
+            android:text="@string/move"
+            android:textColor="#36A5F6"
+            android:textSize="12sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -167,13 +188,16 @@
             android:layout_width="22dp"
             android:layout_height="22dp"
             android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="2dp"
             android:src="@drawable/ic_volume_delete" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="@string/delete" />
+            android:text="@string/delete"
+            android:textColor="#36A5F6"
+            android:textSize="12sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -188,13 +212,16 @@
             android:layout_width="22dp"
             android:layout_height="22dp"
             android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="2dp"
             android:src="@drawable/ic_volume_rename" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="@string/rename" />
+            android:text="@string/rename"
+            android:textColor="#36A5F6"
+            android:textSize="12sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -209,13 +236,16 @@
             android:layout_width="22dp"
             android:layout_height="22dp"
             android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="2dp"
             android:src="@drawable/ic_volume_more" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="@string/more" />
+            android:text="@string/more"
+            android:textColor="#36A5F6"
+            android:textSize="12sp" />
     </LinearLayout>
 
 </LinearLayout>

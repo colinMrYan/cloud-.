@@ -49,15 +49,20 @@ import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
+import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.bean.chat.ChannelMessageReadStateResult;
 import com.inspur.emmcloud.bean.chat.ChannelMessageSet;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetConversationListResult;
 import com.inspur.emmcloud.bean.chat.GetOfflineMessageListResult;
 import com.inspur.emmcloud.bean.chat.GetRecentMessageListResult;
+import com.inspur.emmcloud.bean.chat.GetVoiceAndVideoResult;
 import com.inspur.emmcloud.bean.chat.MatheSet;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.UIConversation;
+import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
 import com.inspur.emmcloud.bean.system.EmmAction;
 import com.inspur.emmcloud.bean.system.EventMessage;
 import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
@@ -73,10 +78,13 @@ import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationGroupIconUtils;
 import com.inspur.emmcloud.util.privates.CustomProtocol;
 import com.inspur.emmcloud.util.privates.ScanQrCodeUtils;
+import com.inspur.emmcloud.util.privates.SuspensionWindowManagerUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
+import com.inspur.emmcloud.util.privates.VoiceCommunicationUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.MessageMatheSetCacheUtils;
+import com.inspur.emmcloud.widget.ECMChatInputMenu;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -91,8 +99,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import io.socket.client.Socket;
 
@@ -309,28 +315,6 @@ public class CommunicationFragment extends BaseFragment {
     }
 
 
-    /**
-     * 判定是
-     *
-     * @param receivedMsg
-     * @return
-     */
-    private CustomProtocol getCommandMessageProtocol(Message receivedMsg) {
-        String msgBody = receivedMsg.getContent();
-        Pattern pattern = Pattern.compile("\\[[^\\]]+\\]\\([^\\)]+\\)");
-        Matcher matcher = pattern.matcher(msgBody);
-        while (matcher.find()) {
-            String pattenString = matcher.group();
-            int indexBegin = pattenString.indexOf("(");
-            int indexEnd = pattenString.indexOf(")");
-            pattenString = pattenString.substring(indexBegin + 1, indexEnd);
-            CustomProtocol customProtocol = new CustomProtocol(pattenString);
-            if (customProtocol.getProtocol().equals("ecc-cmd") && customProtocol.getParamMap().get("cmd").equals("join")) {
-                return customProtocol;
-            }
-        }
-        return null;
-    }
 
     /**
      * 弹出频道操作选择框
@@ -826,8 +810,6 @@ public class CommunicationFragment extends BaseFragment {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE)) {
             if (eventMessage.getStatus() == EventMessage.RESULT_OK) {
                 String content = eventMessage.getContent();
-                startVoiceCall(content);
-
                 JSONObject contentObj = JSONUtils.getJSONObject(content);
                 Message receivedWSMessage = new Message(contentObj);
                 //验重处理
@@ -869,22 +851,106 @@ public class CommunicationFragment extends BaseFragment {
         }
     }
 
-    /**
-     * 跳转到
-     *
-     * @param content
-     */
-    private void startVoiceCall(String content) {
-        //消息拦截逻辑，以后应当拦截命令消息，此时注释掉，以后解开注意判空
-        CustomProtocol customProtocol = getCommandMessageProtocol(new Message(JSONUtils.getJSONObject(content)));
-        if (customProtocol != null) {
-//                    MsgReadCreationDateCacheUtils.saveMessageReadCreationDate(getActivity(),receivedMsg.getCid(),receivedMsg.getTime());
-            Intent intent = new Intent();
-            intent.setClass(getActivity(), ChannelVoiceCommunicationActivity.class);
-            intent.putExtra("channelId", customProtocol.getParamMap().get("id"));
-            intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.INVITEE_LAYOUT_STATE);
-            startActivity(intent);
+
+    //接收到websocket发过来的消息，拨打音视频电话，被呼叫触发
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveVoiceOrVideoCall(final GetVoiceAndVideoResult getVoiceAndVideoResult) {
+        final CustomProtocol customProtocol = new CustomProtocol(getVoiceAndVideoResult.getContextParamsSchema());
+        //接收到消息后告知服务端
+        WSAPIService.getInstance().sendReceiveStartVoiceAndVideoCallMessageSuccess(getVoiceAndVideoResult.getTracer());
+        //判断如果在通话中就不再接听新的来电
+        if (VoiceCommunicationUtils.getInstance().getCommunicationState() != ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_ING) {
+            PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getContext(), Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
+                @Override
+                public void onPermissionRequestSuccess(List<String> permissions) {
+                    if (customProtocol.getProtocol().equals("ecc-cloudplus-cmd") && !StringUtils.isBlank(customProtocol.getParamMap().get("cmd"))) {
+                        if (customProtocol.getParamMap().get("cmd").equals("invite")) {
+                            startVoiceOrVideoCall(getVoiceAndVideoResult.getContextParamsRoom(), getVoiceAndVideoResult.getContextParamsType(), getVoiceAndVideoResult.getChannel());
+                        } else if (customProtocol.getParamMap().get("cmd").equals("refuse")) {
+                            changeUserConnectStateByUid(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_REFUSE, customProtocol.getParamMap().get("uid"));
+                            checkCommunicationFinish();
+                        } else if (customProtocol.getParamMap().get("cmd").equals("destroy")) {
+                            SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
+                        }
+                    }
+                }
+
+                @Override
+                public void onPermissionRequestFail(List<String> permissions) {
+                    String agoraChannelId = customProtocol.getParamMap().get("roomid");
+                    String channelId = customProtocol.getParamMap().get("channelid");
+                    String fromUid = customProtocol.getParamMap().get("uid");
+                    VoiceCommunicationUtils.getInstance().getVoiceCommunicationChannelInfo(channelId, agoraChannelId, fromUid);
+                    ToastUtils.show(getContext(), PermissionRequestManagerUtils.getInstance().getPermissionToast(getContext(), permissions));
+                }
+            });
+        } else {
+            String agoraChannelId = customProtocol.getParamMap().get("roomid");
+            String channelId = customProtocol.getParamMap().get("channelid");
+            String fromUid = customProtocol.getParamMap().get("uid");
+            VoiceCommunicationUtils.getInstance().getVoiceCommunicationChannelInfo(channelId, agoraChannelId, fromUid);
         }
+    }
+
+
+    /**
+     * 修改用户的链接状态
+     * 通过云+uid
+     *
+     * @param connectStateConnected
+     */
+    private void changeUserConnectStateByUid(int connectStateConnected, String uid) {
+        List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationMemberList = VoiceCommunicationUtils
+                .getInstance().getVoiceCommunicationMemberList();
+        if (voiceCommunicationMemberList != null && voiceCommunicationMemberList.size() > 0) {
+            for (int i = 0; i < voiceCommunicationMemberList.size(); i++) {
+                if (voiceCommunicationMemberList.get(i).getUserId().equals(uid)) {
+                    voiceCommunicationMemberList.get(i).setConnectState(connectStateConnected);
+                    break;
+                }
+            }
+        }
+    }
+
+    /**
+     * 检查是否需要退出
+     */
+    private void checkCommunicationFinish() {
+        List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationMemberList = VoiceCommunicationUtils
+                .getInstance().getVoiceCommunicationMemberList();
+        if (voiceCommunicationMemberList != null && voiceCommunicationMemberList.size() > 0) {
+            int waitAndCommunicationSize = 0;
+            for (int i = 0; i < voiceCommunicationMemberList.size(); i++) {
+                if (voiceCommunicationMemberList.get(i).getConnectState() == VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_CONNECTED ||
+                        voiceCommunicationMemberList.get(i).getConnectState() == VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_INIT) {
+                    waitAndCommunicationSize = waitAndCommunicationSize + 1;
+                }
+            }
+            if (waitAndCommunicationSize < 2) {
+                VoiceCommunicationUtils.getInstance().destroy();
+                SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
+            }
+        }
+    }
+
+    private void startVoiceOrVideoCall(String contextParamsRoom, String contextParamsType, String cid) {
+        //消息拦截逻辑，以后应当拦截命令消息，此时注释掉，以后解开注意判空
+        Intent intent = new Intent();
+        intent.setClass(getActivity(), ChannelVoiceCommunicationActivity.class);
+        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_VIDEO_CALL_AGORA_ID, contextParamsRoom);
+        intent.putExtra(ConversationActivity.CLOUD_PLUS_CHANNEL_ID, cid);
+        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_VIDEO_CALL_TYPE, getCommunicationType(contextParamsType));
+        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.INVITEE_LAYOUT_STATE);
+        startActivity(intent);
+    }
+
+    private String getCommunicationType(String contextParamsType) {
+        if (contextParamsType.equals("VOICE")) {
+            return ECMChatInputMenu.VOICE_CALL;
+        } else if (contextParamsType.equals("VIDEO")) {
+            return ECMChatInputMenu.VIDEO_CALL;
+        }
+        return ECMChatInputMenu.VOICE_CALL;
     }
 
     //socket断开重连时（如断网联网）会触发此方法

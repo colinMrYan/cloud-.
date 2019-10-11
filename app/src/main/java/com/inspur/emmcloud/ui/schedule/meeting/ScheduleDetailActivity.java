@@ -565,7 +565,7 @@ public class ScheduleDetailActivity extends BaseActivity {
                     IntentUtils.startActivity(ScheduleDetailActivity.this, ScheduleAddActivity.class, bundle, true);
                 } else if (tag.equals(getString(isFromCalendar ? R.string.schedule_calendar_delete : R.string.schedule_meeting_cancel))) {
                     showConfirmClearDialog(scheduleEvent);
-                } else if (tag.equals(getString(R.string.message_create_group))) {
+                } else if (tag.equals(getString(R.string.meeting_create_group_chat))) {
                     new ChatCreateUtils().startGroupChat(ScheduleDetailActivity.this, scheduleEvent, chatGroupId, null);
                 }
                 dialog.dismiss();

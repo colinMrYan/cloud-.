@@ -10,7 +10,9 @@ import android.os.Build;
 import android.support.v4.content.FileProvider;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.util.FileUtils;
 
 import java.io.File;
 import java.util.List;
@@ -72,14 +74,21 @@ public class ShareFile2OutAppUtils {
                 shareIntent.setAction(Intent.ACTION_SEND);
                 shareIntent.putExtra(Intent.EXTRA_STREAM, uriToImage);
                 shareIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                shareIntent.setType("*/*");
+                String format = FileUtils.getMimeType(new File(filePath));
+                if (StringUtils.isBlank(format)) {
+                    format = "*/*";
+                }
+                shareIntent.setType(format);
                 // 遍历所有支持发送图片的应用。找到需要的应用
                 ComponentName componentName = new ComponentName("com.tencent.mobileqq", "com.tencent.mobileqq.activity.JumpActivity");
                 shareIntent.setComponent(componentName);
                 mContext.startActivity(Intent.createChooser(shareIntent, "Share"));
             } catch (Exception e) {
-                ToastUtils.show(mContext.getString(R.string.volume_please_install_qq));
+                e.printStackTrace();
+                ToastUtils.show(R.string.baselib_share_fail);
             }
+        } else {
+            ToastUtils.show(mContext.getString(R.string.volume_please_install_qq));
         }
     }
 
@@ -97,12 +106,17 @@ public class ShareFile2OutAppUtils {
                 ComponentName cop = new ComponentName("com.tencent.mm", "com.tencent.mm.ui.tools.ShareImgUI");
                 intent.setComponent(cop);
                 intent.setAction(Intent.ACTION_SEND);
-                intent.setType("*/*");
+                String format = FileUtils.getMimeType(new File(filePath));
+                if (StringUtils.isBlank(format)) {
+                    format = "*/*";
+                }
+                intent.setType(format);
                 intent.putExtra(Intent.EXTRA_STREAM, uri);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(Intent.createChooser(intent, "Share"));
             } catch (Exception e) {
                 e.printStackTrace();
+                ToastUtils.show(R.string.baselib_share_fail);
             }
         } else {
             ToastUtils.show(context.getString(R.string.volume_please_install_wechat));

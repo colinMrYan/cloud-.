@@ -2,6 +2,7 @@ package com.inspur.emmcloud.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,6 +53,7 @@ public class VoiceCommunicationMemberAdapter extends RecyclerView.Adapter<VoiceC
 
     @Override
     public void onBindViewHolder(VoiceCommunicationHolder holder, int position) {
+        Log.d("zhang", "onBindViewHolder: ");
         setUserHeadImgSize(holder.headImg, index);
         //头像源数据修改为本地，注释掉的是从接口中读取的url
 //        ImageDisplayUtils.getInstance().displayImage(holder.headImg, voiceCommunicationUserInfoBeanList.get(position).getHeadImageUrl(), R.drawable.icon_person_default);
@@ -82,7 +84,7 @@ public class VoiceCommunicationMemberAdapter extends RecyclerView.Adapter<VoiceC
         }
         //当通话人数为两个或者是邀请人的Adapter的时候不显示名字
         holder.nameTv.setVisibility(((index == 1 && voiceCommunicationUserInfoBeanList.size() <= 2) || index == 3) ? View.GONE : View.VISIBLE);
-        if (voiceCommunicationUserInfoBeanList.get(position).getUserState() == 1 ||
+        if (voiceCommunicationUserInfoBeanList.get(position).getConnectState() != 0 ||
                 voiceCommunicationUserInfoBeanList.get(position).getUserId().
                         equals(MyApplication.getInstance().getUid()) || index == 3) {
             holder.avLoadingIndicatorView.hide();
