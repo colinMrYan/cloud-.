@@ -107,7 +107,7 @@ dependencies {
         exclude group: 'org.json', module: 'json'
     }
     api deps.pinyin4j
-    api deps.universalImageLoader
+//    api deps.universalImageLoader
     api(deps.PhotoView) {
         exclude module: 'support-compat'
         exclude module: 'support-core-utils'

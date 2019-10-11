@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.bean.chat.PersonDto;
@@ -81,6 +82,7 @@ public class ChannelMemberListAdapter extends BaseAdapter implements SectionInde
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        LogUtils.jasonDebug("position-==-" + position);
         ViewHolder holder = null;
         if (convertView == null) {
             inflater = (LayoutInflater) mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -114,13 +116,13 @@ public class ChannelMemberListAdapter extends BaseAdapter implements SectionInde
             holder.userNameTv.setText(dto.getName());
             setUserDesc(dto, holder.userDescTv);
             String photoUrl;
+            holder.userHeadImg.setTag("");
             if (dto.getUid().equals("10")) {
-                photoUrl = "drawable://" + R.drawable.ic_mention_all;
+                holder.userHeadImg.setImageResource(R.drawable.ic_mention_all);
             } else {
                 photoUrl = APIUri.getUserIconUrl(MyApplication.getInstance(), dto.getUid());
+                ImageDisplayUtils.getInstance().displayImageByTag(holder.userHeadImg, photoUrl, R.drawable.icon_person_default);
             }
-            holder.userHeadImg.setTag(photoUrl);
-            ImageDisplayUtils.getInstance().displayImageByTag(holder.userHeadImg, photoUrl, R.drawable.icon_person_default);
         }
         if (selectedUserList.contains(dto)) {
             holder.selectedImg.setVisibility(View.VISIBLE);
