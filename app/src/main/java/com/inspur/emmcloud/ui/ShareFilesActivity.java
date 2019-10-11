@@ -132,7 +132,7 @@ public class ShareFilesActivity extends BaseActivity {
     private void showImageLayout(String filePath) {
         imageLayout.setVisibility(View.VISIBLE);
         fileLayout.setVisibility(View.GONE);
-        ImageDisplayUtils.getInstance().displayImage(imageView, uriList.get(0).toString(), R.drawable.ic_app_default);
+        ImageDisplayUtils.getInstance().displayImage(imageView, uriList.get(0).toString(), R.drawable.default_image);
     }
 
     private void showFileLayout(String filePath) {
