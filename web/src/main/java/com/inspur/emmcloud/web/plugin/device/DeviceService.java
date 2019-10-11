@@ -40,8 +40,13 @@ public class DeviceService extends ImpPlugin {
     public String executeAndReturn(String action, JSONObject paramsObject) {
         successCb = JSONUtils.getString(paramsObject, "success", "");
         failCb = JSONUtils.getString(paramsObject, "fail", "");
-        showCallIMPMethodErrorDlg();
-        return "";
+        String res = "";
+        if ("getInfo".equals(action)) {
+            res = conbineDeviceInfo().toString();
+        } else {
+            showCallIMPMethodErrorDlg();
+        }
+        return res;
     }
 
     /**
