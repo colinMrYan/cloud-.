@@ -80,7 +80,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     /**
      * 通话三种状态pre代表正在邀请未接通，ing代表通话中，over代表通话结束，或者来了邀请未点击接听的状态，存储在变量
      *
-     * @see VoiceCommunicationUtils#COMMUNICATION_STATE
+     * @see VoiceCommunicationUtils COMMUNICATION_STATE
      */
     public static final int COMMUNICATION_STATE_PRE = 0;
     public static final int COMMUNICATION_STATE_ING = 4;
@@ -917,26 +917,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 }
                 break;
             case R.id.img_voice_communication_pack_up:
-                saveCommunicationData();
-                if (Build.VERSION.SDK_INT >= 23) {
-                    if (Settings.canDrawOverlays(this)) {
-                        SuspensionWindowManagerUtils.getInstance().showCommunicationSmallWindow(this, ResolutionUtils.getWidth(this),
-                                Long.parseLong(TimeUtils.getChronometerSeconds(communicationTimeChronometer.getText().toString())));
-                        finish();
-                    } else {
-                        new CustomDialog.MessageDialogBuilder(ChannelVoiceCommunicationActivity.this)
-                                .setMessage(getString(R.string.permission_grant_window_alert, AppUtils.getAppName(ChannelVoiceCommunicationActivity.this)))
-                                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        Uri uri = Uri.parse("package:" + getPackageName());
-                                        Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, uri);
-                                        startActivityForResult(intent, REQUEST_WINDOW_PERMISSION);
-                                    }
-                                })
-                                .show();
-                    }
-                }
+                pickUpVoiceCommunication();
                 break;
             case R.id.ll_video_switch_camera:
                 LogUtils.YfcDebug("转换摄像头");
@@ -954,6 +935,29 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 break;
             default:
                 break;
+        }
+    }
+
+    private void pickUpVoiceCommunication() {
+        saveCommunicationData();
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (Settings.canDrawOverlays(this)) {
+                SuspensionWindowManagerUtils.getInstance().showCommunicationSmallWindow(this, ResolutionUtils.getWidth(this),
+                        Long.parseLong(TimeUtils.getChronometerSeconds(communicationTimeChronometer.getText().toString())));
+                finish();
+            } else {
+                new CustomDialog.MessageDialogBuilder(ChannelVoiceCommunicationActivity.this)
+                        .setMessage(getString(R.string.permission_grant_window_alert, AppUtils.getAppName(ChannelVoiceCommunicationActivity.this)))
+                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Uri uri = Uri.parse("package:" + getPackageName());
+                                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, uri);
+                                startActivityForResult(intent, REQUEST_WINDOW_PERMISSION);
+                            }
+                        })
+                        .show();
+            }
         }
     }
 
@@ -999,7 +1003,22 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         //先通知S，后退出声网
-        apiService.leaveAgoraChannel(agoraChannelId);
+//        apiService.leaveAgoraChannel(agoraChannelId);
+//        return;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d("zhang", "onStop: ");
+        if (VoiceCommunicationUtils.getInstance().getCommunicationState() == COMMUNICATION_STATE_ING) {
+            pickUpVoiceCommunication();
+        } else if (!StringUtils.isBlank(agoraChannelId)) {
+            if (NetUtils.isNetworkConnected(this)) {
+                apiService.refuseAgoraChannel(agoraChannelId);
+                VoiceCommunicationUtils.getInstance().setCommunicationState(COMMUNICATION_STATE_OVER);
+            }
+        }
     }
 
     @Override
