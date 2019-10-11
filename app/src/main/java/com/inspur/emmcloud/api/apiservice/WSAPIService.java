@@ -330,8 +330,9 @@ public class WSAPIService {
      * @param schema      自定义
      * @param type        请求类型，音频或视频VIDEO 或 VOICE
      * @param jsonArray   邀请成员
+     * @param action      意图
      */
-    public void sendStartVoiceAndVideoCallMessage(String channelId,String room,String schema,String type,JSONArray jsonArray) {
+    public void sendStartVoiceAndVideoCallMessage(String channelId, String room, String schema, String type, JSONArray jsonArray, String action) {
         try {
             String tracer = CommunicationUtils.getTracer();
             JSONObject object = new JSONObject();
@@ -350,7 +351,7 @@ public class WSAPIService {
             paramObj.put("type",type);
             paramObj.put("to",jsonArray);
             JSONObject bodyObj = new JSONObject();
-            bodyObj.put("action", "server.video.call");
+            bodyObj.put("action", action);
             bodyObj.put("params",paramObj);
             object.put("body",bodyObj);
             EventMessage eventMessage = new EventMessage(tracer, Constant.EVENTBUS_TAG_GET_MESSAGE_COMMENT);

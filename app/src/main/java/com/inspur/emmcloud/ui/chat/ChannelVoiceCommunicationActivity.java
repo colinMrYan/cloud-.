@@ -36,6 +36,7 @@ import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
@@ -1076,7 +1077,25 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
      */
     private void sendCommunicationCommand(String commandType) {
         WSAPIService.getInstance().sendStartVoiceAndVideoCallMessage(cloudPlusChannelId, agoraChannelId,
-                getSchema(commandType, cloudPlusChannelId, agoraChannelId), getCommunicationType(), getUidArray(voiceCommunicationMemberList));
+                getSchema(commandType, cloudPlusChannelId, agoraChannelId), getCommunicationType(), getUidArray(voiceCommunicationMemberList), getActionByCommandType(commandType));
+    }
+
+    /**
+     * 根据命令类型获取action类型
+     *
+     * @param commandType
+     * @return
+     */
+    private String getActionByCommandType(String commandType) {
+        switch (commandType) {
+            case "invite":
+                return Constant.VIDEO_CALL_INVITE;
+            case "refuse":
+                return Constant.VIDEO_CALL_REFUSE;
+            case "destroy":
+                return Constant.VIDEO_CALL_HANG_UP;
+        }
+        return "";
     }
 
     /**
