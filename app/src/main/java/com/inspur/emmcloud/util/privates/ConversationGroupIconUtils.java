@@ -324,12 +324,11 @@ public class ConversationGroupIconUtils {
                 }
                 Bitmap groupBitmap = createGroupIcon(bitmapList);
                 if (groupBitmap != null) {
-                    saveBitmap(conversation.getId(), groupBitmap);
-//                    String iconUrl = saveBitmap(conversation.getId(), groupBitmap);
-//                    if (iconUrl != null){
-//                        //清空原来的缓存
-//                        ImageDisplayUtils.getInstance().clearCache(iconUrl);
-//                    }
+                    String iconUrl = saveBitmap(conversation.getId(), groupBitmap);
+                    if (iconUrl != null) {
+                        //清空原来的缓存
+                        ImageDisplayUtils.getInstance().clearCache(iconUrl);
+                    }
                 }
             }
             return true;
