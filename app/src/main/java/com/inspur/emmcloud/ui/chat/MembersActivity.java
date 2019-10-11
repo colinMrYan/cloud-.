@@ -380,8 +380,7 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
                         break;
                     case CHECK_STATE:
                         String uid = "";
-                        if (searchInputEv.getText().toString().length() > 0 ||
-                                editText.getText().toString().length() > 0) {
+                        if (searchInputEv.getText().toString().length() > 0) {
                             uid = filterList.get(position).getUid();
                         } else {
                             uid = personDtoList.get(position).getUid();
