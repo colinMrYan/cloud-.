@@ -48,7 +48,6 @@ import com.inspur.emmcloud.bean.chat.GetVoiceCommunicationResult;
 import com.inspur.emmcloud.bean.chat.GetWebSocketUrlResult;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.Robot;
-import com.inspur.emmcloud.bean.chat.ScanCodeJoinConversationBean;
 import com.inspur.emmcloud.bean.contact.GetContactOrgListUpateResult;
 import com.inspur.emmcloud.bean.contact.GetContactUserListUpateResult;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
@@ -1477,7 +1476,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnConversationInfoSuccess(Conversation conversation, boolean isFromScanCode) {
+    public void returnConversationInfoSuccess(Conversation conversation) {
     }
 
     @Override
@@ -1828,26 +1827,6 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnCallbackAfterFileUploadFail(String error, int errorCode) {
-
-    }
-
-    @Override
-    public void returnInvitationContentSuccess(ScanCodeJoinConversationBean scanCodeJoinConversationBean) {
-
-    }
-
-    @Override
-    public void returnInvitationContentFail(String error, int errorCode) {
-
-    }
-
-    @Override
-    public void returnJoinConversationSuccess(Conversation conversation) {
-
-    }
-
-    @Override
-    public void returnJoinConversationFail(String error, int errorCode) {
 
     }
 }

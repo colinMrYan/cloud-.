@@ -95,7 +95,6 @@ public class Constant {
     public static final String EVENTBUS_TAG_GET_MESSAGE_COMMENT = "tag_get_message_comment";
     public static final String EVENTBUS_TAG_GET_HISTORY_MESSAGE = "tag_get_history_message";
     public static final String EVENTBUS_TAG_GET_NEW_MESSAGE = "tag_get_new_message";
-    public static final String EVENTBUS_TAG_REFRESH_CONVERSATION = "tag_refresh_conversation";
     public static final String EVENTBUS_TAG_GET_MESSAGE_COMMENT_COUNT = "tag_get_message_comment_count";
     public static final String EVENTBUS_TAG_VIDEO_CALL = "client.video.call";
     public static final String EVENTBUS_TAG_ON_PHOTO_TAB = "tag_on_photo_tab";

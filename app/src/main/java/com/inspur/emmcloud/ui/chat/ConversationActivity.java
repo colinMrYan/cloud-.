@@ -108,7 +108,6 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -1490,16 +1489,13 @@ public class ConversationActivity extends ConversationBaseActivity {
     //接收到websocket发过来的消息，推送消息触发此方法
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveNewMessage(EventMessage eventMessage) {
-        if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_NEW_MESSAGE) && ((HashMap) eventMessage.getExtra()).get("cid").equals(cid)) {
+        if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_NEW_MESSAGE) && eventMessage.getExtra().equals(cid)) {
             if (eventMessage.getStatus() == EventMessage.RESULT_OK) {
                 String content = eventMessage.getContent();
                 GetChannelMessagesResult getChannelMessagesResult = new GetChannelMessagesResult(content);
                 final List<Message> newMessageList = getChannelMessagesResult.getMessageList();
                 new CacheMessageListThread(newMessageList, null, REFRESH_PUSH_MESSAGE).start();
                 WSAPIService.getInstance().setChannelMessgeStateRead(cid);
-            }
-            if ((boolean) ((HashMap) eventMessage.getExtra()).get("isNeedRefreshConversationList")) {
-                EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_REFRESH_CONVERSATION));
             }
         }
     }
@@ -1543,7 +1539,7 @@ public class ConversationActivity extends ConversationBaseActivity {
      */
     private void getNewMessageOfChannel() {
         if (NetUtils.isNetworkConnected(this, false)) {
-            WSAPIService.getInstance().getChannelNewMessage(cid, isFromScanCode);
+            WSAPIService.getInstance().getChannelNewMessage(cid);
         }
     }
 

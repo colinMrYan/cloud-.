@@ -35,7 +35,6 @@ import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
@@ -760,10 +759,6 @@ public class CommunicationFragment extends BaseFragment {
         switch (eventMessage.getAction()) {
             case Constant.EVENTBUS_TAG_REFRESH_CONVERSATION_ADAPTER:
                 conversationAdapter.notifyDataSetChanged();
-                break;
-            case Constant.EVENTBUS_TAG_REFRESH_CONVERSATION:
-                LogUtils.YfcDebug("排序新消息");
-                sortConversationList();
                 break;
             case Constant.EVENTBUS_TAG_UPDATE_CHANNEL_NAME:
                 conversation = (Conversation) eventMessage.getMessageObj();
