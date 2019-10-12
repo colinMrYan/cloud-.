@@ -52,8 +52,8 @@ public class BaseModuleApiUri {
      */
     public static String getUploadPushInfoUrl() {
 
-        return WebServiceRouterManager.getInstance().getClusterClientRegistry() + "/client";
-//        return "http://10.25.12.114:3000/client-registry/rest/v1/client";
+//        return WebServiceRouterManager.getInstance().getClusterClientRegistry() + "/client";
+        return "http://10.25.12.114:3000/client-registry/rest/v1/client";
     }
 
     /**
