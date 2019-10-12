@@ -9,7 +9,7 @@ import java.io.Serializable;
  * Created by chenmch on 2019/10/11.
  */
 @Table(name = "APIRequestRecord")
-public class APIRequestRecord implements Serializable {
+public class ApiRequestRecord implements Serializable {
     @Column(name = "id", isId = true)
     private int id;
     @Column(name = "startTime")
@@ -21,7 +21,7 @@ public class APIRequestRecord implements Serializable {
     @Column(name = "functionID")
     private String functionID = "";
 
-    public APIRequestRecord(long startTime, long endTime, String functionID) {
+    public ApiRequestRecord(long startTime, long endTime, String functionID) {
         this.startTime = startTime;
         this.endTime = endTime;
         this.functionID = functionID;
