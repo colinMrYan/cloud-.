@@ -172,6 +172,7 @@
     <string name="channel_group_image">群圖片</string>
     <string name="channel_group_file">群文件</string>
     <string name="channel_group_members_name">群名稱</string>
+    <string name="channel_group_qrcode">群二維碼</string>
     <string name="channel_set_top"> 置頂</string>
     <string name="message_without_interruption">消息免打擾</string>
     <string name="login_hint_text">用戶名/郵箱/手機號</string>
