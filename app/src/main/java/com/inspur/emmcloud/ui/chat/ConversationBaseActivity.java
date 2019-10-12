@@ -38,6 +38,7 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity {
 
     @BindView(R.id.iv_config)
     View configView;
+    protected boolean isFromScanCode = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +61,8 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity {
         return R.layout.activity_channel;
     }
     protected void initConversationInfo() {
+
+        isFromScanCode = getIntent().getBooleanExtra(EXTRA_COME_FROM_SCANCODE, false);
         if (getIntent().hasExtra(EXTRA_CONVERSATION)) {
             conversation = (Conversation) getIntent().getExtras().getSerializable(EXTRA_CONVERSATION);
             cid = conversation.getId();
@@ -72,7 +75,6 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity {
         } else {
             initChannelMessage();
         }
-
     }
 
     protected void initChannelMessage() {
@@ -121,11 +123,6 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity {
             loadingDlg.show();
             ChatAPIService apiService = new ChatAPIService(this);
             apiService.setAPIInterface(new Webservice());
-            Intent intent = getIntent();
-            boolean isFromScanCode = false;
-            if (intent != null) {
-                isFromScanCode = intent.getBooleanExtra(EXTRA_COME_FROM_SCANCODE, false);
-            }
             apiService.getConversationInfo(cid, isFromScanCode);
         } else {
             finish();
