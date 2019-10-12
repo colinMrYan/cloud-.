@@ -11,7 +11,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Chronometer;
-import android.widget.ImageButton;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
@@ -115,8 +114,8 @@ public class SuspensionWindowManagerUtils {
             }
         };
         //点击事件的监听
-        ImageButton imgBtnPhone = (ImageButton) windowView.findViewById(R.id.img_btn_voice_window);
-        imgBtnPhone.setOnClickListener(clickListener);
+//        ImageButton imgBtnPhone = (ImageButton) windowView.findViewById(R.id.img_btn_voice_window);
+//        imgBtnPhone.setOnClickListener(clickListener);
         windowView.setOnClickListener(clickListener);
         //更新窗口位置的监听
         View.OnTouchListener touchListener = new View.OnTouchListener() {
@@ -140,7 +139,7 @@ public class SuspensionWindowManagerUtils {
                 return false;
             }
         };
-        imgBtnPhone.setOnTouchListener(touchListener);
+//        imgBtnPhone.setOnTouchListener(touchListener);
         windowView.setOnTouchListener(touchListener);
     }
 
@@ -197,7 +196,7 @@ public class SuspensionWindowManagerUtils {
     }
 
     /**
-     * 回到语音通话界面
+     * 回到语音通话界面n
      */
     private void goBackVoiceCommunicationActivity() {
         Intent intent = new Intent();
