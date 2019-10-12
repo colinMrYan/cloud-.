@@ -99,6 +99,8 @@ public abstract class BaseModuleAPICallback implements CommonCallback<byte[]> {
     @Override
     public void onFinished() {
         // TODO Auto-generated method stub
+        long requestDuration = System.currentTimeMillis() - requestTime;
+
     }
 
     /* (non-Javadoc)
