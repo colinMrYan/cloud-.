@@ -36,6 +36,7 @@ import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
@@ -989,6 +990,10 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                         })
                         .show();
             }
+        } else {
+            SuspensionWindowManagerUtils.getInstance().showCommunicationSmallWindow(this, ResolutionUtils.getWidth(this),
+                    Long.parseLong(TimeUtils.getChronometerSeconds(communicationTimeChronometer.getText().toString())));
+            finish();
         }
     }
 
@@ -1043,6 +1048,9 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         super.onPause();
         //已接通
         if (VoiceCommunicationUtils.getInstance().getCommunicationState() == COMMUNICATION_STATE_ING) {
+            if (mediaPlayerManagerUtils != null) {
+                mediaPlayerManagerUtils.stop();
+            }
             pickUpVoiceCommunication();
         } else if (!StringUtils.isBlank(agoraChannelId) && MyApplication.getInstance().getIsActive()) {
             if (!isLeaveChannel) {
@@ -1145,7 +1153,25 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
      */
     private void sendCommunicationCommand(String commandType) {
         WSAPIService.getInstance().sendStartVoiceAndVideoCallMessage(cloudPlusChannelId, agoraChannelId,
-                getSchema(commandType, cloudPlusChannelId, agoraChannelId), getCommunicationType(), getUidArray(voiceCommunicationMemberList));
+                getSchema(commandType, cloudPlusChannelId, agoraChannelId), getCommunicationType(), getUidArray(voiceCommunicationMemberList), getActionByCommandType(commandType));
+    }
+
+    /**
+     * 根据命令类型获取action类型
+     *
+     * @param commandType
+     * @return
+     */
+    private String getActionByCommandType(String commandType) {
+        switch (commandType) {
+            case "invite":
+                return Constant.VIDEO_CALL_INVITE;
+            case "refuse":
+                return Constant.VIDEO_CALL_REFUSE;
+            case "destroy":
+                return Constant.VIDEO_CALL_HANG_UP;
+        }
+        return "";
     }
 
     /**
@@ -1158,6 +1184,9 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             isLeaveChannel = true;
         }
         SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
+        if (mediaPlayerManagerUtils != null) {
+            mediaPlayerManagerUtils.stop();
+        }
         finish();
     }
 
@@ -1179,6 +1208,9 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             }
         }
         SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
+        if (mediaPlayerManagerUtils != null) {
+            mediaPlayerManagerUtils.stop();
+        }
         finish();
     }
 

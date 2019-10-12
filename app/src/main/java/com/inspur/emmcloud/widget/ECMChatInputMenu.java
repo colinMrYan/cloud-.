@@ -490,7 +490,8 @@ public class ECMChatInputMenu extends LinearLayout {
      * 根据二进制字符串更新菜单视图
      * 此处与IOS客户端略有不同，IOS客户端当inputs为"2"时则隐藏整个输入面板，没有任何输入入口
      * 服务端允许输入类型1支持，0不支持
-     * 每一位bit代表的意义为（高位）location mail videocall voicecall null(废弃) null(废弃) video voice command file photo text (低位)
+     * 调整这里时要注意逐位对应，新旧版本兼容
+     * 每一位bit代表的意义为（高位）location mail videocall voicecall null(废弃) null(废弃) video(暂不开放) voice command file photo text (低位)
      *
      * @param inputs
      */

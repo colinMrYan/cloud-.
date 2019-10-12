@@ -255,4 +255,8 @@ public class Constant {
     public static final String SHARE_CONTENT = "share_content";
     public static final String WECHAT_APPID = "wx4eb8727ea9c26495";
 
+    public static final String VIDEO_CALL_INVITE = "server.chat.video-call.invite";
+    public static final String VIDEO_CALL_REFUSE = "server.chat.video-call.refuse";
+    public static final String VIDEO_CALL_HANG_UP = "server.chat.video-call.hang-up";
+
 }
