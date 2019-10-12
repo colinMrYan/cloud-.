@@ -7,6 +7,7 @@ import android.os.StrictMode;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.romadaptation.RomInfoUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.bean.ApiRequestRecord;
 import com.inspur.emmcloud.basemodule.bean.AppException;
 import com.inspur.emmcloud.basemodule.bean.GetAllConfigVersionResult;
 import com.inspur.emmcloud.basemodule.bean.GetLanguageResult;
@@ -433,6 +434,38 @@ public class BaseModuleApiService {
             StrictMode.setVmPolicy(oldVmPolicy);
     }
 
-    public void uploadApiRequestRecord()
+
+    /**
+     * 上传http响应时间日志
+     *
+     * @param content
+     * @param apiRequestRecordList
+     */
+    public void uploadApiRequestRecord(final String content, final List<ApiRequestRecord> apiRequestRecordList) {
+        final String completeUrl = BaseModuleApiUri.getUploadApiRequestRecord();
+        RequestParams params = BaseApplication.getInstance().getHttpRequestParams(completeUrl);
+        params.setAsJsonContent(true);
+        params.setBodyContent(content);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                // TODO Auto-generated method stub
+                apiInterface.returnUploadApiRequestRecordFail();
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnUploadApiRequestRecordSuccess(apiRequestRecordList);
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnUploadApiRequestRecordFail();
+            }
+        });
+    }
 
 }

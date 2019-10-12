@@ -1,5 +1,7 @@
 package com.inspur.emmcloud.basemodule.bean;
 
+
+import org.json.JSONObject;
 import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
 
@@ -20,6 +22,10 @@ public class ApiRequestRecord implements Serializable {
     private int duration = 0;
     @Column(name = "functionID")
     private String functionID = "";
+
+    public ApiRequestRecord() {
+
+    }
 
     public ApiRequestRecord(long startTime, long endTime, String functionID) {
         this.startTime = startTime;
@@ -66,5 +72,18 @@ public class ApiRequestRecord implements Serializable {
 
     public void setFunctionID(String functionID) {
         this.functionID = functionID;
+    }
+
+    public JSONObject toJSONObject() {
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("functionID", functionID);
+            obj.put("duration", duration);
+            obj.put("startTime", startTime);
+            obj.put("endTime", endTime);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return obj;
     }
 }

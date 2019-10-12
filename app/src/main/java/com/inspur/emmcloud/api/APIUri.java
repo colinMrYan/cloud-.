@@ -153,12 +153,12 @@ public class APIUri {
         return getECMDistribution() + "/preference/launch-screen/latest";
     }
 
-    /**
-     * @return
-     */
-    public static String getUploadSplashPageWriteBackLogUrl() {
-        return getECMDistribution() + "/preference/launch-screen/update";
-    }
+//    /**
+//     * @return
+//     */
+//    public static String getUploadSplashPageWriteBackLogUrl() {
+//        return getECMDistribution() + "/preference/launch-screen/update";
+//    }
 
     /**
      * 存储app配置url

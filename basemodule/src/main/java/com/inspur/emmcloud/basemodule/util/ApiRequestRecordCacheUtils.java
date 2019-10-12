@@ -18,10 +18,10 @@ public class ApiRequestRecordCacheUtils {
         }
     }
 
-    public static List<ApiRequestRecord> getApiRequestRecordList() {
+    public static List<ApiRequestRecord> getApiRequestRecordList(int maxSize) {
         List<ApiRequestRecord> apiRequestRecordList = null;
         try {
-            apiRequestRecordList = DbCacheUtils.getDb().findAll(ApiRequestRecord.class);
+            apiRequestRecordList = DbCacheUtils.getDb().selector(ApiRequestRecord.class).where("startTime", ">", 0).limit(maxSize).orderBy("startTime", true).findAll();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -30,5 +30,16 @@ public class ApiRequestRecordCacheUtils {
         }
         return apiRequestRecordList;
 
+    }
+
+    public static void deleteApiRequestRecordList(List<ApiRequestRecord> apiRequestRecordList) {
+        if (apiRequestRecordList == null || apiRequestRecordList.size() == 0) {
+            return;
+        }
+        try {
+            DbCacheUtils.getDb().delete(apiRequestRecordList);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
