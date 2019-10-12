@@ -35,6 +35,7 @@ import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
@@ -49,6 +50,9 @@ import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
+import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.bean.chat.ChannelMessageReadStateResult;
 import com.inspur.emmcloud.bean.chat.ChannelMessageSet;
 import com.inspur.emmcloud.bean.chat.Conversation;
@@ -73,6 +77,7 @@ import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.CheckingNetStateUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationGroupIconUtils;
+import com.inspur.emmcloud.util.privates.CustomProtocol;
 import com.inspur.emmcloud.util.privates.ScanQrCodeUtils;
 import com.inspur.emmcloud.util.privates.SuspensionWindowManagerUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
@@ -756,6 +761,9 @@ public class CommunicationFragment extends BaseFragment {
             case Constant.EVENTBUS_TAG_REFRESH_CONVERSATION_ADAPTER:
                 conversationAdapter.notifyDataSetChanged();
                 break;
+            case Constant.EVENTBUS_TAG_REFRESH_CONVERSATION:
+                sortConversationList();
+                break;
             case Constant.EVENTBUS_TAG_UPDATE_CHANNEL_NAME:
                 conversation = (Conversation) eventMessage.getMessageObj();
                 index = displayUIConversationList.indexOf(new UIConversation(conversation.getId()));
@@ -848,43 +856,41 @@ public class CommunicationFragment extends BaseFragment {
     //接收到websocket发过来的消息，拨打音视频电话，被呼叫触发
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveVoiceOrVideoCall(final GetVoiceAndVideoResult getVoiceAndVideoResult) {
-        //屏蔽语音通话
-//        final CustomProtocol customProtocol = new CustomProtocol(getVoiceAndVideoResult.getContextParamsSchema());
-//        //接收到消息后告知服务端
-//        WSAPIService.getInstance().sendReceiveStartVoiceAndVideoCallMessageSuccess(getVoiceAndVideoResult.getTracer());
-//        //判断如果在通话中就不再接听新的来电
-//        LogUtils.YfcDebug("是否正在通话中：" + (VoiceCommunicationUtils.getVoiceCommunicationUtils(ECMChatInputMenu.VOICE_CALL).getCommunicationState() != ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_ING));
-//        if (VoiceCommunicationUtils.getVoiceCommunicationUtils(ECMChatInputMenu.VOICE_CALL).getCommunicationState() != ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_ING) {
-//            PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getContext(), Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
-//                @Override
-//                public void onPermissionRequestSuccess(List<String> permissions) {
-//                    if (customProtocol.getProtocol().equals("ecc-cloudplus-cmd") && !StringUtils.isBlank(customProtocol.getParamMap().get("cmd"))) {
-//                        if (customProtocol.getParamMap().get("cmd").equals("invite")) {
-//                            startVoiceOrVideoCall(getVoiceAndVideoResult.getContextParamsRoom(), getVoiceAndVideoResult.getContextParamsType(), getVoiceAndVideoResult.getChannel());
-//                        } else if (customProtocol.getParamMap().get("cmd").equals("refuse")) {
-//                            changeUserConnectStateByUid(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_REFUSE, customProtocol.getParamMap().get("uid"));
-//                            checkCommunicationFinish();
-//                        } else if (customProtocol.getParamMap().get("cmd").equals("destroy")) {
-//                            SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
-//                        }
-//                    }
-//                }
-//
-//                @Override
-//                public void onPermissionRequestFail(List<String> permissions) {
-//                    String agoraChannelId = customProtocol.getParamMap().get("roomid");
-//                    String channelId = customProtocol.getParamMap().get("channelid");
-//                    String fromUid = customProtocol.getParamMap().get("uid");
-//                    VoiceCommunicationUtils.getVoiceCommunicationUtils(ECMChatInputMenu.VOICE_CALL).getVoiceCommunicationChannelInfo(channelId, agoraChannelId, fromUid);
-//                    ToastUtils.show(getContext(), PermissionRequestManagerUtils.getInstance().getPermissionToast(getContext(), permissions));
-//                }
-//            });
-//        } else {
-//            String agoraChannelId = customProtocol.getParamMap().get("roomid");
-//            String channelId = customProtocol.getParamMap().get("channelid");
-//            String fromUid = customProtocol.getParamMap().get("uid");
-//            VoiceCommunicationUtils.getVoiceCommunicationUtils(ECMChatInputMenu.VOICE_CALL).getVoiceCommunicationChannelInfo(channelId, agoraChannelId, fromUid);
-//        }
+        final CustomProtocol customProtocol = new CustomProtocol(getVoiceAndVideoResult.getContextParamsSchema());
+        //接收到消息后告知服务端
+        WSAPIService.getInstance().sendReceiveStartVoiceAndVideoCallMessageSuccess(getVoiceAndVideoResult.getTracer());
+        //判断如果在通话中就不再接听新的来电
+        if (VoiceCommunicationUtils.getInstance().getCommunicationState() != ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_ING) {
+            PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getContext(), Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
+                @Override
+                public void onPermissionRequestSuccess(List<String> permissions) {
+                    if (customProtocol.getProtocol().equals("ecc-cloudplus-cmd") && !StringUtils.isBlank(customProtocol.getParamMap().get("cmd"))) {
+                        if (customProtocol.getParamMap().get("cmd").equals("invite")) {
+                            startVoiceOrVideoCall(getVoiceAndVideoResult.getContextParamsRoom(), getVoiceAndVideoResult.getContextParamsType(), getVoiceAndVideoResult.getChannel());
+                        } else if (customProtocol.getParamMap().get("cmd").equals("refuse")) {
+                            changeUserConnectStateByUid(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_REFUSE, customProtocol.getParamMap().get("uid"));
+                            checkCommunicationFinish();
+                        } else if (customProtocol.getParamMap().get("cmd").equals("destroy")) {
+                            SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
+                        }
+                    }
+                }
+
+                @Override
+                public void onPermissionRequestFail(List<String> permissions) {
+                    String agoraChannelId = customProtocol.getParamMap().get("roomid");
+                    String channelId = customProtocol.getParamMap().get("channelid");
+                    String fromUid = customProtocol.getParamMap().get("uid");
+                    VoiceCommunicationUtils.getInstance().getVoiceCommunicationChannelInfo(channelId, agoraChannelId, fromUid);
+                    ToastUtils.show(getContext(), PermissionRequestManagerUtils.getInstance().getPermissionToast(getContext(), permissions));
+                }
+            });
+        } else {
+            String agoraChannelId = customProtocol.getParamMap().get("roomid");
+            String channelId = customProtocol.getParamMap().get("channelid");
+            String fromUid = customProtocol.getParamMap().get("uid");
+            VoiceCommunicationUtils.getInstance().getVoiceCommunicationChannelInfo(channelId, agoraChannelId, fromUid);
+        }
     }
 
 
@@ -896,7 +902,7 @@ public class CommunicationFragment extends BaseFragment {
      */
     private void changeUserConnectStateByUid(int connectStateConnected, String uid) {
         List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationMemberList = VoiceCommunicationUtils
-                .getVoiceCommunicationUtils(ECMChatInputMenu.VOICE_CALL).getVoiceCommunicationMemberList();
+                .getInstance().getVoiceCommunicationMemberList();
         if (voiceCommunicationMemberList != null && voiceCommunicationMemberList.size() > 0) {
             for (int i = 0; i < voiceCommunicationMemberList.size(); i++) {
                 if (voiceCommunicationMemberList.get(i).getUserId().equals(uid)) {
@@ -912,7 +918,7 @@ public class CommunicationFragment extends BaseFragment {
      */
     private void checkCommunicationFinish() {
         List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationMemberList = VoiceCommunicationUtils
-                .getVoiceCommunicationUtils(ECMChatInputMenu.VOICE_CALL).getVoiceCommunicationMemberList();
+                .getInstance().getVoiceCommunicationMemberList();
         if (voiceCommunicationMemberList != null && voiceCommunicationMemberList.size() > 0) {
             int waitAndCommunicationSize = 0;
             for (int i = 0; i < voiceCommunicationMemberList.size(); i++) {
@@ -922,7 +928,7 @@ public class CommunicationFragment extends BaseFragment {
                 }
             }
             if (waitAndCommunicationSize < 2) {
-                VoiceCommunicationUtils.getVoiceCommunicationUtils(ECMChatInputMenu.VOICE_CALL).destroy();
+                VoiceCommunicationUtils.getInstance().destroy();
                 SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
             }
         }

@@ -17,6 +17,7 @@ import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -330,8 +331,9 @@ public class WSAPIService {
      * @param schema      自定义
      * @param type        请求类型，音频或视频VIDEO 或 VOICE
      * @param jsonArray   邀请成员
+     * @param action      意图
      */
-    public void sendStartVoiceAndVideoCallMessage(String channelId,String room,String schema,String type,JSONArray jsonArray) {
+    public void sendStartVoiceAndVideoCallMessage(String channelId, String room, String schema, String type, JSONArray jsonArray, String action) {
         try {
             String tracer = CommunicationUtils.getTracer();
             JSONObject object = new JSONObject();
@@ -350,7 +352,7 @@ public class WSAPIService {
             paramObj.put("type",type);
             paramObj.put("to",jsonArray);
             JSONObject bodyObj = new JSONObject();
-            bodyObj.put("action", "server.video.call");
+            bodyObj.put("action", action);
             bodyObj.put("params",paramObj);
             object.put("body",bodyObj);
             EventMessage eventMessage = new EventMessage(tracer, Constant.EVENTBUS_TAG_GET_MESSAGE_COMMENT);
@@ -427,7 +429,7 @@ public class WSAPIService {
         }
     }
 
-    public void getChannelNewMessage(String cid) {
+    public void getChannelNewMessage(String cid, boolean isNeedRefreshConversationList) {
         try {
             String tracer = CommunicationUtils.getTracer();
             JSONObject object = new JSONObject();
@@ -443,7 +445,10 @@ public class WSAPIService {
             headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
             headerObj.put("tracer", tracer);
             object.put("headers", headerObj);
-            EventMessage eventMessage = new EventMessage(tracer, Constant.EVENTBUS_TAG_GET_NEW_MESSAGE, "", cid);
+            HashMap hashMap = new HashMap();
+            hashMap.put("cid", cid);
+            hashMap.put("isNeedRefreshConversationList", isNeedRefreshConversationList);
+            EventMessage eventMessage = new EventMessage(tracer, Constant.EVENTBUS_TAG_GET_NEW_MESSAGE, "", hashMap);
             WebSocketPush.getInstance().sendEventMessage(eventMessage, object, tracer);
         } catch (Exception e) {
             e.printStackTrace();

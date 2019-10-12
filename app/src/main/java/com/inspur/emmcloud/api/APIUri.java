@@ -1733,4 +1733,15 @@ public class APIUri {
     public static String getVolumeShareFileUrl(String volume, String channel) {
         return getUrlBaseVolume() + "/" + volume + "/file/share/channel/" + channel;
     }
+
+    /**
+     * 得到扫码加群二维码内容的URL
+     *
+     * @param cid
+     * @return
+     */
+    public static String getInvitationUrl(String cid) {
+        return getCreateGroupConversationUrl() + "/" + cid + "/invitation";
+    }
+
 }

@@ -32,7 +32,9 @@ import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.ui.appcenter.ReactNativeAppActivity;
 import com.inspur.emmcloud.ui.appcenter.volume.VolumeHomePageActivity;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
+import com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
+import com.inspur.emmcloud.ui.chat.ConversationBaseActivity;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.ui.find.AnalysisActivity;
@@ -42,9 +44,11 @@ import com.inspur.emmcloud.ui.find.trip.TripInfoActivity;
 import com.inspur.emmcloud.ui.schedule.meeting.ScheduleDetailActivity;
 import com.inspur.emmcloud.ui.schedule.task.TaskAddActivity;
 import com.inspur.emmcloud.util.privates.AppId2AppAndOpenAppUtils;
+import com.inspur.emmcloud.util.privates.CustomProtocol;
 import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.ProfileUtils;
 import com.inspur.emmcloud.util.privates.WebAppUtils;
+import com.inspur.emmcloud.widget.ECMChatInputMenu;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -242,11 +246,21 @@ public class AppSchemeHandleActivity extends BaseActivity {
                                 urlList.add(filePath);
                                 startVolumeShareActivity(urlList);
                                 break;
-                            //屏蔽语音通话
-//                            case "ecc-cloudplus-cmd":
-//                                startVoiceCall(uri.toString());
-//                                finish();
-//                                break;
+                            case "ecc-cloudplus-cmd":
+                                CustomProtocol customProtocol = new CustomProtocol(uri.toString());
+                                if (customProtocol.getHost().equals("voice_channel")) {
+                                    startVoiceCall(uri.toString());
+                                } else if (customProtocol.getHost().equals("jump/chatviewcontroller")) {
+                                    String cid = customProtocol.getParamMap().get("chatroom");
+                                    Intent intent = new Intent();
+                                    intent.putExtra(ConversationBaseActivity.EXTRA_CID, cid);
+                                    intent.putExtra(ConversationActivity.EXTRA_NEED_GET_NEW_MESSAGE, true);
+                                    intent.putExtra(ConversationActivity.EXTRA_COME_FROM_SCANCODE, true);
+                                    intent.setClass(BaseApplication.getInstance(), ConversationActivity.class);
+                                    startActivity(intent);
+                                }
+                                finish();
+                                break;
                             default:
                                 showSchemeUnknownWarning();
                                 finish();
@@ -264,22 +278,21 @@ public class AppSchemeHandleActivity extends BaseActivity {
 
     /**
      * 进入音频通话页面
-     * 屏蔽语音通话
      *
      * @param content
      */
     private void startVoiceCall(String content) {
-//        CustomProtocol customProtocol = new CustomProtocol(content);
-//        if (customProtocol != null) {
-//            Intent intent = new Intent();
-//            intent.setClass(AppSchemeHandleActivity.this, ChannelVoiceCommunicationActivity.class);
-//            intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_VIDEO_CALL_AGORA_ID, customProtocol.getParamMap().get("roomid"));
-//            intent.putExtra(ConversationActivity.CLOUD_PLUS_CHANNEL_ID, customProtocol.getParamMap().get("channelid"));
-//            intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_VIDEO_UID, customProtocol.getParamMap().get("uid"));
-//            intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.INVITEE_LAYOUT_STATE);
-//            intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_VIDEO_CALL_TYPE, ECMChatInputMenu.VOICE_CALL);
-//            startActivity(intent);
-//        }
+        CustomProtocol customProtocol = new CustomProtocol(content);
+        if (customProtocol != null) {
+            Intent intent = new Intent();
+            intent.setClass(AppSchemeHandleActivity.this, ChannelVoiceCommunicationActivity.class);
+            intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_VIDEO_CALL_AGORA_ID, customProtocol.getParamMap().get("roomid"));
+            intent.putExtra(ConversationActivity.CLOUD_PLUS_CHANNEL_ID, customProtocol.getParamMap().get("channelid"));
+            intent.putExtra(ChannelVoiceCommunicationActivity.SCHEMA_FROM_UID, customProtocol.getParamMap().get("uid"));
+            intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.INVITEE_LAYOUT_STATE);
+            intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_VIDEO_CALL_TYPE, ECMChatInputMenu.VOICE_CALL);
+            startActivity(intent);
+        }
     }
 
     /**
@@ -298,7 +311,7 @@ public class AppSchemeHandleActivity extends BaseActivity {
         if (Intent.ACTION_SEND.equals(action)) {
             Uri uri = FileUtils.getShareFileUri(getIntent());
             //如果是text/plain类型则先拦截这种type再进行进一步处理，否则当做文件分享处理
-            if (getIntent().getType().startsWith("text/")) {
+            if (getIntent().getType().equals("text/plain")) {
                 if (uri != null) {
                     uriList.add(GetPathFromUri4kitkat.getPathByUri(MyApplication.getInstance(), uri));
                 } else if (isLinkShare()) {

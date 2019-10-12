@@ -19,7 +19,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.VolumeFileAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -53,8 +52,7 @@ import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeGroupResult;
 import com.inspur.emmcloud.bean.appcenter.volume.Volume;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeGroupContainMe;
-import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
-import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
+import com.inspur.emmcloud.ui.chat.mvp.view.ConversationSearchActivity;
 import com.inspur.emmcloud.util.privates.ShareFile2OutAppUtils;
 import com.inspur.emmcloud.util.privates.VolumeFilePrivilegeUtils;
 import com.inspur.emmcloud.util.privates.VolumeFileUploadManager;
@@ -226,52 +224,40 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
                 .show();
     }
 
-    //处理弹框点击事件
-    private void handleItemClick(String action, VolumeFile volumeFile) {
-        if (action.equals(permissionAction)) {
-            startVolumeFilePermissionManager(volumeFile);
-        } else if (action.equals(shareTo)) {
-            String fileSavePath = FileDownloadManager.getInstance().getDownloadFilePath(DownloadFileCategory.CATEGORY_VOLUME_FILE, volumeFile.getId(), volumeFile.getName());
-            if (!StringUtils.isBlank(fileSavePath)) {
-                shareFile(fileSavePath);
-                adapter.clearSelectedVolumeFileList();
-                adapter.notifyDataSetChanged();
-                setBottomOperationItemShow(new ArrayList<VolumeFile>());
-            } else {
-                ToastUtils.show(getString(R.string.clouddriver_volume_frist_download));
-            }
-        } else if (action.equals(moveToAction)) {
-            //移动到
-            moveFile(adapter.getSelectVolumeFileList());
-        }
-    }
 
+    /**
+     * 分享到频道
+     */
     private void shareToFriends(VolumeFile volumeFile) {
-        Intent intent = new Intent();
         shareToVolumeFile = volumeFile;
-        intent.putExtra(ContactSearchFragment.EXTRA_TYPE, 0);
-        intent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, false);
-        intent.putExtra(ContactSearchFragment.EXTRA_SHOW_COMFIRM_DIALOG_WITH_MESSAGE, volumeFile.getName());
-        intent.putExtra(ContactSearchFragment.EXTRA_SHOW_COMFIRM_DIALOG, true);
-        ArrayList<String> uidList = new ArrayList<>();
-        uidList.add(MyApplication.getInstance().getUid());
-        intent.putStringArrayListExtra(ContactSearchFragment.EXTRA_EXCLUDE_SELECT, uidList);
-        intent.putExtra(ContactSearchFragment.EXTRA_TITLE, getString(R.string.baselib_share_to));
-        intent.setClass(getApplicationContext(),
-                ContactSearchActivity.class);
-        startActivityForResult(intent, SHARE_IMAGE_OR_FILES);
+        Intent shareIntent = new Intent(this, ConversationSearchActivity.class);
+        shareIntent.putExtra(Constant.SHARE_CONTENT, volumeFile.getName());
+        startActivityForResult(shareIntent, SHARE_IMAGE_OR_FILES);
     }
 
-    public void shareFile(final String filePath) {
+    /**
+     * 分享到微信 QQ
+     **/
+    public void shareFile(final String filePath, final VolumeFile volumeFile) {
         mShareListener = new CustomShareListener(this);
         ShareAction shareAction = new ShareAction(this)
                 .setShareboardclickCallback(new ShareBoardlistener() {
                     @Override
                     public void onclick(SnsPlatform snsPlatform, SHARE_MEDIA share_media) {
                         if (snsPlatform.mKeyword.equals("WEIXIN")) {
-                            ShareFile2OutAppUtils.shareFile2WeChat(getApplicationContext(), filePath);
+                            if (!StringUtils.isBlank(filePath)) {
+                                ShareFile2OutAppUtils.shareFile2WeChat(getApplicationContext(), filePath);
+                            } else {
+                                ToastUtils.show(getString(R.string.clouddriver_volume_frist_download));
+                            }
                         } else if (snsPlatform.mKeyword.equals("QQ")) {
-                            ShareFile2OutAppUtils.shareFileToQQ(getApplicationContext(), filePath);
+                            if (!StringUtils.isBlank(filePath)) {
+                                ShareFile2OutAppUtils.shareFileToQQ(getApplicationContext(), filePath);
+                            } else {
+                                ToastUtils.show(getString(R.string.clouddriver_volume_frist_download));
+                            }
+                        } else if (snsPlatform.mKeyword.equals("CLOUDPLUSE")) {
+                            shareToFriends(volumeFile);
                         }
                     }
                 });
@@ -281,6 +267,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         if (AppUtils.isAppInstalled(BaseApplication.getInstance(), ShareFile2OutAppUtils.PACKAGE_MOBILE_QQ)) {
             shareAction.addButton(PlatformName.QQ, "QQ", "umeng_socialize_qq", "umeng_socialize_qq");
         }
+        shareAction.addButton(getString(R.string.clouddrive_internal_sharing), "CLOUDPLUSE", "ic_launcher_share", "ic_launcher_share");
         shareAction.open();
 
     }
@@ -388,14 +375,10 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         } else if (action.equals(shareTo)) {
             String fileSavePath = FileDownloadManager.getInstance().getDownloadFilePath(
                     DownloadFileCategory.CATEGORY_VOLUME_FILE, volumeFile.getId(), volumeFile.getName());
-            if (!StringUtils.isBlank(fileSavePath)) {
-                shareFile(fileSavePath);
+            shareFile(fileSavePath, adapter.getSelectVolumeFileList().get(0));
                 adapter.clearSelectedVolumeFileList();
                 adapter.notifyDataSetChanged();
                 setBottomOperationItemShow(new ArrayList<VolumeFile>());
-            } else {
-                ToastUtils.show(getString(R.string.clouddriver_volume_frist_download));
-            }
         } else if (action.equals(permissionAction)) {
             startVolumeFilePermissionManager(volumeFile);
         }

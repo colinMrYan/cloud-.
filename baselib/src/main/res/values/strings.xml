@@ -340,6 +340,9 @@
     <string name="chat_search_mention_all">全部成员</string>
     <string name="chat_contact_more_select">多选</string>
     <string name="chat_contact_related_message">%1$d条相关的聊天纪录</string>
+    <string name="chat_group_member_size">%1$s(%2$d)</string>
+    <string name="chat_group_qr_code_share">分享二维码</string>
+    <string name="chat_group_welcome_join_group">欢迎进入%1$s群</string>
     <!-- 会议卡片 -->
     <string name="meeting_has_confirmed">已确认</string>
     <string name="meeting_has_refused">已拒绝</string>
@@ -625,6 +628,7 @@
     <string name="volume_upload_to_current_directory">上传到当前目录</string>
     <string name="rename">重命名</string>
     <string name="move_to">移动到</string>
+    <string name="clouddrive_internal_sharing">内部分享</string>
     <string name="copy">复制</string>
     <string name="video">视频</string>
     <string name="audio">音频</string>
@@ -1344,8 +1348,10 @@
     <string name="voice_communication_dialog">拨号中...</string>
     <string name="voice_communication_waitting_answer">等待接听</string>
     <string name="voice_communicaiton_watting_talking">通话中</string>
+    <string name="voice_communication_voice_busy_tip">正在语音通话，请稍后再试</string>
     <string name="voice_communication_quality">当前通话质量不佳</string>
     <string name="voice_communication_support_nine_members">云+目前支持九人语音</string>
+    <string name="communication_has_leave">已挂断</string>
 
     <string name="error_no_sdcard">没有SD卡，无法存储录音数据</string>
     <string name="error_state_record">正在录音中，请先停止录音</string>

@@ -172,6 +172,7 @@
     <string name="channel_group_image">群圖片</string>
     <string name="channel_group_file">群文件</string>
     <string name="channel_group_members_name">群名稱</string>
+    <string name="channel_group_qrcode">群二維碼</string>
     <string name="channel_set_top"> 置頂</string>
     <string name="message_without_interruption">消息免打擾</string>
     <string name="login_hint_text">用戶名/郵箱/手機號</string>
@@ -334,6 +335,9 @@
     <string name="chat_contact_more_select">多選</string>
     <string name="chat_contact_related_message">%1$d條相關的聊天記錄</string>
     <string name="chat_search_related_messages">%1$s的記錄</string>
+    <string name="chat_group_member_size">%1$s(%2$d)</string>
+    <string name="chat_group_qr_code_share">分享二維碼</string>
+    <string name="chat_group_welcome_join_group">歡迎進入%1$s群</string>
     <!-- 會議卡片 -->
     <string name="meeting_has_confirmed">已確認</string>
     <string name="meeting_has_refused">已拒絕</string>
@@ -618,6 +622,7 @@
     <string name="volume_file_transfer_upload_list">上傳列表</string>
     <string name="rename">重命名</string>
     <string name="move_to">移動到</string>
+    <string name="clouddrive_internal_sharing">内部分享</string>
     <string name="copy">複製</string>
     <string name="video">視頻</string>
     <string name="audio">音訊</string>
@@ -1285,6 +1290,7 @@
     <string name="voice_communication_choice_members">選擇成員</string>
     <string name="voice_communication_waitting_answer">等待接聽</string>
     <string name="voice_communicaiton_watting_talking">通話中</string>
+    <string name="voice_communication_voice_busy_tip">正在語音通話，請稍後再試</string>
     <string name="voice_communication_quality">當前通話品質不佳</string>
     <string name="voice_communication_support_nine_members">雲+現時支持九人語音</string>
 
@@ -1307,6 +1313,7 @@
     <string name="voice_input_hint_speak_now">請説話...</string>
     <string name="voice_input_tip_speak">按下説話</string>
     <string name="voice_input_clear">清空</string>
+    <string name="communication_has_leave">已掛斷</string>
 
     <string name="notification_switch">新消息通知</string>
 
