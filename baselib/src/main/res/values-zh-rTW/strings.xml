@@ -172,6 +172,7 @@
     <string name="channel_group_image">群圖片</string>
     <string name="channel_group_file">群文件</string>
     <string name="channel_group_members_name">群名稱</string>
+    <string name="channel_group_qrcode">群二維碼</string>
     <string name="channel_set_top"> 置頂</string>
     <string name="message_without_interruption">消息免打擾</string>
     <string name="login_hint_text">用戶名/郵箱/手機號</string>
@@ -334,6 +335,9 @@
     <string name="chat_contact_more_select">多選</string>
     <string name="chat_contact_related_message">%1$d條相關的聊天記錄</string>
     <string name="chat_search_related_messages">%1$s的記錄</string>
+    <string name="chat_group_member_size">%1$s(%2$d)</string>
+    <string name="chat_group_qr_code_share">分享二維碼</string>
+    <string name="chat_group_welcome_join_group">歡迎進入%1$s群</string>
     <!-- 會議卡片 -->
     <string name="meeting_has_confirmed">已確認</string>
     <string name="meeting_has_refused">已拒絕</string>
