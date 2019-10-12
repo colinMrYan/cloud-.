@@ -7,7 +7,6 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.basemodule.api.BaseModuleAPIInterfaceInstance;
 import com.inspur.emmcloud.basemodule.api.BaseModuleApiService;
@@ -28,6 +27,7 @@ import java.util.List;
 public class ApiRequestRecordUploadUtils extends BaseModuleAPIInterfaceInstance implements AMapLocationListener {
     private Context context;
     private List<ApiRequestRecord> apiRequestRecordList;
+    private AMapLocationClient mLocationClient;
 
     public ApiRequestRecordUploadUtils() {
         context = BaseApplication.getInstance();
@@ -52,7 +52,7 @@ public class ApiRequestRecordUploadUtils extends BaseModuleAPIInterfaceInstance 
     }
 
     private void startLocation() {
-        AMapLocationClient mLocationClient = new AMapLocationClient(context);
+        mLocationClient = new AMapLocationClient(context);
         // 初始化定位参数
         AMapLocationClientOption mLocationOption = new AMapLocationClientOption();
         mLocationOption.setOnceLocation(true);
@@ -74,6 +74,11 @@ public class ApiRequestRecordUploadUtils extends BaseModuleAPIInterfaceInstance 
             lon = aMapLocation.getLongitude() + "";
             lat = aMapLocation.getLatitude() + "";
         }
+        if (mLocationClient != null) {
+            mLocationClient.stopLocation();
+            mLocationClient.onDestroy();
+            mLocationClient = null;
+        }
         String content = getUploadContent(lon, lat);
         upload(content);
     }
@@ -84,9 +89,7 @@ public class ApiRequestRecordUploadUtils extends BaseModuleAPIInterfaceInstance 
             JSONArray array = new JSONArray();
             for (ApiRequestRecord apiRequestRecord : apiRequestRecordList) {
                 array.put(apiRequestRecord.toJSONObject());
-                LogUtils.jasonDebug("apiRequestRecord.toJSONObject()==" + apiRequestRecord.toJSONObject());
             }
-            LogUtils.jasonDebug("array==" + array.toString());
             obj.put("userContent", array);
             obj.put("userID", BaseApplication.getInstance().getUid());
             obj.put("clientType", "Android");
