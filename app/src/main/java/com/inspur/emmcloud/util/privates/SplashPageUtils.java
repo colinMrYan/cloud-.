@@ -6,7 +6,6 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
-import com.inspur.emmcloud.api.apiservice.ReactNativeAPIService;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.api.APIDownloadCallBack;
 import com.inspur.emmcloud.basemodule.bean.ClientConfigItem;
@@ -132,8 +131,8 @@ public class SplashPageUtils {
                             break;
                     }
                     if (filelSha256.equals(sha256Code)) {
-                        writeBackSplashPageLog("FORWARD"
-                                , splashPageBean.getId().getVersion());
+//                        writeBackSplashPageLog("FORWARD"
+//                                , splashPageBean.getId().getVersion());
                         //先把上次的信息取出来，作为旧版数据存储
                         String splashPageInfoOld = PreferencesByUserAndTanentUtils.getString(context, "splash_page_info", "");
                         PreferencesByUserAndTanentUtils.putString(context, "splash_page_info_old", splashPageInfoOld);
@@ -186,21 +185,21 @@ public class SplashPageUtils {
         return name;
     }
 
-    /**
-     * 写回闪屏日志
-     *
-     * @param s
-     */
-    private void writeBackSplashPageLog(String s, String currentVersion) {
-        if (NetUtils.isNetworkConnected(context, false)) {
-            String splashInfoOld = PreferencesByUserAndTanentUtils.getString(context, "splash_page_info_old", "");
-            SplashPageBean splashPageBeanLocalOld = new SplashPageBean(splashInfoOld);
-            String clientId = PreferencesByUserAndTanentUtils.getString(context, Constant.PREF_CLIENTID, "");
-            ReactNativeAPIService reactNativeAPIService = new ReactNativeAPIService(context);
-            reactNativeAPIService.setAPIInterface(new WebService());
-            reactNativeAPIService.writeBackSplashPageVersionChange(splashPageBeanLocalOld.getId().getVersion(), currentVersion, clientId, s);
-        }
-    }
+//    /**
+//     * 写回闪屏日志
+//     *
+//     * @param s
+//     */
+//    private void writeBackSplashPageLog(String s, String currentVersion) {
+//        if (NetUtils.isNetworkConnected(context, false)) {
+//            String splashInfoOld = PreferencesByUserAndTanentUtils.getString(context, "splash_page_info_old", "");
+//            SplashPageBean splashPageBeanLocalOld = new SplashPageBean(splashInfoOld);
+//            String clientId = PreferencesByUserAndTanentUtils.getString(context, Constant.PREF_CLIENTID, "");
+//            ReactNativeAPIService reactNativeAPIService = new ReactNativeAPIService(context);
+//            reactNativeAPIService.setAPIInterface(new WebService());
+//            reactNativeAPIService.writeBackSplashPageVersionChange(splashPageBeanLocalOld.getId().getVersion(), currentVersion, clientId, s);
+//        }
+//    }
 
     /**
      * 检查是否有可以展示的图片

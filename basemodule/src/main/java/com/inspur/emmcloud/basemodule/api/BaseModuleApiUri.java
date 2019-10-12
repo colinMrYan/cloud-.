@@ -94,6 +94,14 @@ public class BaseModuleApiUri {
         return "https://uvc1.inspuronline.com/cpexception";
     }
 
+    /**
+     * 获取http response日志上传url
+     *
+     * @return
+     */
+    public static String getUploadApiRequestRecord() {
+        return "https://uvc1.inspuronline.com/uvc_collect/collect/pvd";
+    }
 
 
     public static String getUserPhoto(Context context, String uid) {

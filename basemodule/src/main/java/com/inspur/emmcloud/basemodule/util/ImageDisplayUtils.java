@@ -17,9 +17,11 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageSize;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+import com.nostra13.universalimageloader.core.assist.ViewScaleType;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
+import com.nostra13.universalimageloader.core.imageaware.NonViewAware;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.utils.DiskCacheUtils;
 import com.nostra13.universalimageloader.utils.L;
@@ -161,7 +163,9 @@ public class ImageDisplayUtils {
         DisplayImageOptions options = getDefaultOptions(defaultDrawableId, uri);
         final String finalUri = uri;
         imageView.setTag(finalUri);
-        ImageLoader.getInstance().loadImage(uri, options, new ImageLoadingListener() {
+        ImageSize imageSize = new ImageSize(0, 0);
+        NonViewAware nonViewAware = new NonViewAware(imageSize, ViewScaleType.FIT_INSIDE);
+        ImageLoader.getInstance().displayImage(uri, nonViewAware, options, new ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String imageUri, View view) {
                 String tagUri = (String) imageView.getTag();
@@ -170,13 +174,13 @@ public class ImageDisplayUtils {
                 }
             }
 
-                @Override
-                public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-                    String tagUri = (String) imageView.getTag();
-                    if (tagUri != null && tagUri.equals(finalUri)) {
-                        imageView.setImageResource(defaultDrawableId);
-                    }
+            @Override
+            public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+                String tagUri = (String) imageView.getTag();
+                if (tagUri != null && tagUri.equals(finalUri)) {
+                    imageView.setImageResource(defaultDrawableId);
                 }
+            }
 
             @Override
             public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
@@ -190,11 +194,10 @@ public class ImageDisplayUtils {
             public void onLoadingCancelled(String imageUri, View view) {
                 String tagUri = (String) imageView.getTag();
                 if (tagUri != null && tagUri.equals(finalUri)) {
-                    displayImageByTag(imageView, finalUri, defaultDrawableId);
+                    imageView.setImageResource(defaultDrawableId);
                 }
             }
         });
-
     }
 
     /**

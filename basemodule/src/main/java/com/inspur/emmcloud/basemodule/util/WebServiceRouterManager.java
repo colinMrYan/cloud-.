@@ -9,6 +9,7 @@ import com.inspur.emmcloud.basemodule.bean.ClusterBean;
 import com.inspur.emmcloud.basemodule.bean.Enterprise;
 import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
 import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -133,6 +134,7 @@ public class WebServiceRouterManager {
                     break;
             }
         }
+        MyAppConfig.initAPIRequestRecordMap();
     }
 
     /**

@@ -60,6 +60,8 @@ public class WebSocketPush {
     private Handler handler;
     private boolean isWebsocketConnecting = false;
     private boolean isWSStatusConnectedV1 = false;
+    //此变量外部不能使用，仅用于作为websocket异常记录使用
+    private boolean isWebsocketConnected = false;
 
     public WebSocketPush() {
         handler = new Handler() {
@@ -302,6 +304,7 @@ public class WebSocketPush {
      * 切换租户的时候直接断开Websocket
      */
     public void closeWebsocket() {
+        isWebsocketConnected = false;
         isWebsocketConnecting = false;
         endTimeCount();
         if (mSocket != null) {
@@ -368,6 +371,7 @@ public class WebSocketPush {
                     // 当第一次连接成功后发送App目前的状态消息
                     sendAppStatus();
                     isWebsocketConnecting = false;
+                    isWebsocketConnected = true;
                 }
             }
         });
@@ -380,6 +384,7 @@ public class WebSocketPush {
                 LogUtils.debug(TAG, "连接成功");
                 int code = JSONUtils.getInt(arg0[0].toString(), "code", 0);
                 if (code == 100) {
+                    isWebsocketConnected = true;
                     isWSStatusConnectedV1 = true;
                     sendWebSocketStatusBroadcast(Socket.EVENT_CONNECT);
                     // 当第一次连接成功后发送App目前的状态消息
@@ -432,7 +437,7 @@ public class WebSocketPush {
                             eventMessage.setStatus(wsPushContent.getStatus());
                             EventBus.getDefault().post(eventMessage);
                             if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE) && eventMessage.getStatus() != EventMessage.RESULT_OK) {
-                                saveWSSendMessageException(2, body, wsPushContent.getStatus());
+                                saveWSSendMessageException("ws_send_message", 2, body, wsPushContent.getStatus());
                             }
                         }
                     } else {
@@ -478,19 +483,26 @@ public class WebSocketPush {
                 isWebsocketConnecting = false;
                 sendWebSocketStatusBroadcast(Socket.EVENT_DISCONNECT);
                 LogUtils.debug(TAG, "断开连接");
-                LogUtils.debug(TAG, arg0[0].toString());
-
+                String error = "";
                 if (arg0[0] != null) {
                     try {
+                        error = arg0[0].toString();
+                        LogUtils.debug(TAG, "arg0[0]==" + error);
                         ((Exception) arg0[0]).printStackTrace();
-                        LogUtils.debug(TAG, "arg0[0]==" + arg0[0].toString());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
+                //存储WebSocket断开异常
+                if (isWebsocketConnected) {
+                    if (StringUtils.isBlank(error)) {
+                        error = "";
+                    }
+                    isWebsocketConnected = false;
+                    saveWSSendMessageException("ws_disconnect_exception", 2, error, 100111);
+                }
             }
         });
-
     }
 
     public void sendEventMessage(EventMessage eventMessage, Object content, String tracer) {
@@ -514,7 +526,7 @@ public class WebSocketPush {
             eventMessage.setStatus(-1);
             EventBus.getDefault().post(eventMessage);
             if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE)) {
-                saveWSSendMessageException(3, timeoutType, 1001);
+                saveWSSendMessageException("ws_send_message", 3, timeoutType, 1001);
             }
         }
     }
@@ -549,11 +561,11 @@ public class WebSocketPush {
         }
     }
 
-    private void saveWSSendMessageException(final int errorLevel, final String error, final int responseCode) {
+    private void saveWSSendMessageException(final String url, final int errorLevel, final String error, final int responseCode) {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                AppExceptionCacheUtils.saveAppException(MyApplication.getInstance(), errorLevel, "ws_send_message", error, responseCode);
+                AppExceptionCacheUtils.saveAppException(MyApplication.getInstance(), errorLevel, url, error, responseCode);
             }
         }).start();
 

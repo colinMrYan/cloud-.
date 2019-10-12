@@ -32,7 +32,6 @@ import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.CustomLoadingView;
@@ -51,6 +50,7 @@ import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.basemodule.util.compressor.Compressor;
 import com.inspur.emmcloud.basemodule.util.imagepicker.ImagePicker;
@@ -452,14 +452,15 @@ public class ConversationActivity extends ConversationBaseActivity {
      */
     private void startVoiceOrVideoCall(String type, List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList) {
 
-        Intent intent = new Intent();
-        intent.setClass(ConversationActivity.this, ChannelVoiceCommunicationActivity.class);
-        intent.putExtra("userList", (Serializable) voiceCommunicationUserInfoBeanList);
-        LogUtils.YfcDebug("选择人员回来时的人数：" + voiceCommunicationUserInfoBeanList.size());
-        intent.putExtra(CLOUD_PLUS_CHANNEL_ID, cid);
-        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_VIDEO_CALL_TYPE, type);
-        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.INVITER_LAYOUT_STATE);
-        startActivity(intent);
+        //屏蔽语音通话
+//        Intent intent = new Intent();
+//        intent.setClass(ConversationActivity.this, ChannelVoiceCommunicationActivity.class);
+//        intent.putExtra("userList", (Serializable) voiceCommunicationUserInfoBeanList);
+//        LogUtils.YfcDebug("选择人员回来时的人数：" + voiceCommunicationUserInfoBeanList.size());
+//        intent.putExtra(CLOUD_PLUS_CHANNEL_ID, cid);
+//        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_VIDEO_CALL_TYPE, type);
+//        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.INVITER_LAYOUT_STATE);
+//        startActivity(intent);
     }
 
     private void inputMenuClick(String type) {
@@ -869,6 +870,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                         VolumeFile volumeFile = (VolumeFile) getIntent().getSerializableExtra("share_obj_form_volume");
                         transmitMsgFromVolume(cid, volumeFile, path);
                     } else {
+                        PVCollectModelCacheUtils.saveCollectModel("file", "share");
                         List<String> pathList = getIntent().getStringArrayListExtra("share_paths");
                         for (String url : pathList) {
                             String urlLowerCase = url.toLowerCase();
@@ -878,6 +880,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                     }
                     break;
                 case "link":
+                    PVCollectModelCacheUtils.saveCollectModel("link", "share");
                     String content = getIntent().getExtras().getString(Constant.SHARE_LINK);
                     if (!StringUtils.isBlank(content)) {
                         Message message = CommunicationUtils.combinLocalExtendedLinksMessage(cid, JSONUtils.getString(content, "poster", ""), JSONUtils.getString(content, "title", "")

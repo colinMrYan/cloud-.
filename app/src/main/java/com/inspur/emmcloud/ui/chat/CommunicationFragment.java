@@ -762,7 +762,6 @@ public class CommunicationFragment extends BaseFragment {
                 conversationAdapter.notifyDataSetChanged();
                 break;
             case Constant.EVENTBUS_TAG_REFRESH_CONVERSATION:
-                LogUtils.YfcDebug("排序新消息");
                 sortConversationList();
                 break;
             case Constant.EVENTBUS_TAG_UPDATE_CHANNEL_NAME:

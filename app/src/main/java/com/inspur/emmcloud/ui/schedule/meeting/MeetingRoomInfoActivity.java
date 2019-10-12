@@ -56,8 +56,8 @@ public class MeetingRoomInfoActivity extends BaseActivity {
 
     public static final String EXTRA_MEETING_ROOM = "extra_meeting_room";
     private static final int REQUEST_MEETING_INFO = 1;
-    private final String dayStartTime = "08:00";
-    private final String dayEndTime = "18:00";
+    private final String dayStartTime = "06:00";
+    private final String dayEndTime = "22:00";
     @BindView(R.id.tv_meeting_room_name)
     TextView meetingRoomNameText;
     @BindView(R.id.tv_meeting_room_floor)
