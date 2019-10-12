@@ -8,7 +8,11 @@ import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.componentservice.communication.CommunicationService;
 import com.inspur.emmcloud.componentservice.communication.ShareToConversationListener;
 import com.inspur.emmcloud.push.WebSocketPush;
+import com.inspur.emmcloud.ui.chat.ConversationActivity;
+import com.inspur.emmcloud.ui.chat.ConversationBaseActivity;
 import com.inspur.emmcloud.ui.chat.ShareToConversationBlankActivity;
+
+import org.json.JSONObject;
 
 /**
  * Created by chenmch on 2019/6/3.
@@ -66,5 +70,25 @@ public class CommunicationServiceImpl implements CommunicationService {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setClass(BaseApplication.getInstance(), ShareToConversationBlankActivity.class);
         ShareToConversationBlankActivity.startActivity(BaseApplication.getInstance(), intent, listener);
+    }
+
+    /**
+     * 扫码后接收来自网页的插件调用
+     *
+     * @param jsonObject
+     */
+    @Override
+    public void openConversationByChannelId(JSONObject jsonObject) {
+        try {
+            String cid = jsonObject.getString("channelId");
+            Intent intent = new Intent();
+            intent.putExtra(ConversationBaseActivity.EXTRA_CID, cid);
+            intent.putExtra(ConversationActivity.EXTRA_NEED_GET_NEW_MESSAGE, true);
+            intent.putExtra(ConversationActivity.EXTRA_COME_FROM_SCANCODE, true);
+            intent.setClass(BaseApplication.getInstance(), ConversationActivity.class);
+            BaseApplication.getInstance().startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
