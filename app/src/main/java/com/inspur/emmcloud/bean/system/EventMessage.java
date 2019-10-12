@@ -30,6 +30,14 @@ public class EventMessage {
         this.extra = extra;
     }
 
+    public EventMessage(String id, String tag, String content, Object extra) {
+        this.id = id;
+        this.tag = tag;
+        this.content = content;
+        this.extra = extra;
+    }
+
+
     public EventMessage(String id, String tag) {
         this.id = id;
         this.tag = tag;
