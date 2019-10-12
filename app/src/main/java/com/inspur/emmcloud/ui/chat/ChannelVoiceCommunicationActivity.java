@@ -990,6 +990,10 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                         })
                         .show();
             }
+        } else {
+            SuspensionWindowManagerUtils.getInstance().showCommunicationSmallWindow(this, ResolutionUtils.getWidth(this),
+                    Long.parseLong(TimeUtils.getChronometerSeconds(communicationTimeChronometer.getText().toString())));
+            finish();
         }
     }
 
@@ -1044,6 +1048,9 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         super.onPause();
         //已接通
         if (VoiceCommunicationUtils.getInstance().getCommunicationState() == COMMUNICATION_STATE_ING) {
+            if (mediaPlayerManagerUtils != null) {
+                mediaPlayerManagerUtils.stop();
+            }
             pickUpVoiceCommunication();
         } else if (!StringUtils.isBlank(agoraChannelId) && MyApplication.getInstance().getIsActive()) {
             if (!isLeaveChannel) {
@@ -1177,6 +1184,9 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             isLeaveChannel = true;
         }
         SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
+        if (mediaPlayerManagerUtils != null) {
+            mediaPlayerManagerUtils.stop();
+        }
         finish();
     }
 
@@ -1198,6 +1208,9 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             }
         }
         SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
+        if (mediaPlayerManagerUtils != null) {
+            mediaPlayerManagerUtils.stop();
+        }
         finish();
     }
 
