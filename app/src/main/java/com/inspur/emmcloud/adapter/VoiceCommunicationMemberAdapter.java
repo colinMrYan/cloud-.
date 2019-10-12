@@ -2,7 +2,6 @@ package com.inspur.emmcloud.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,7 +52,6 @@ public class VoiceCommunicationMemberAdapter extends RecyclerView.Adapter<VoiceC
 
     @Override
     public void onBindViewHolder(VoiceCommunicationHolder holder, int position) {
-        Log.d("zhang", "onBindViewHolder: ");
         setUserHeadImgSize(holder.headImg, index);
         //头像源数据修改为本地，注释掉的是从接口中读取的url
 //        ImageDisplayUtils.getInstance().displayImage(holder.headImg, voiceCommunicationUserInfoBeanList.get(position).getHeadImageUrl(), R.drawable.icon_person_default);
