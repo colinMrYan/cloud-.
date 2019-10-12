@@ -34,7 +34,6 @@ import com.inspur.emmcloud.ui.appcenter.volume.VolumeHomePageActivity;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
 import com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
-import com.inspur.emmcloud.ui.chat.ConversationBaseActivity;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.ui.find.AnalysisActivity;
@@ -247,18 +246,7 @@ public class AppSchemeHandleActivity extends BaseActivity {
                                 startVolumeShareActivity(urlList);
                                 break;
                             case "ecc-cloudplus-cmd":
-                                CustomProtocol customProtocol = new CustomProtocol(uri.toString());
-                                if (customProtocol.getHost().equals("voice_channel")) {
-                                    startVoiceCall(uri.toString());
-                                } else if (customProtocol.getHost().equals("jump/chatviewcontroller")) {
-                                    String cid = customProtocol.getParamMap().get("chatroom");
-                                    Intent intent = new Intent();
-                                    intent.putExtra(ConversationBaseActivity.EXTRA_CID, cid);
-                                    intent.putExtra(ConversationActivity.EXTRA_NEED_GET_NEW_MESSAGE, true);
-                                    intent.putExtra(ConversationActivity.EXTRA_COME_FROM_SCANCODE, true);
-                                    intent.setClass(BaseApplication.getInstance(), ConversationActivity.class);
-                                    startActivity(intent);
-                                }
+                                startVoiceCall(uri.toString());
                                 finish();
                                 break;
                             default:
