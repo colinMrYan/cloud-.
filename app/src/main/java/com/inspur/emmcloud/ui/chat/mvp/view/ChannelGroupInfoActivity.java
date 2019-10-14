@@ -69,6 +69,8 @@ public class ChannelGroupInfoActivity extends BaseMvpActivity<ChannelGroupInfoPr
     SwitchCompat groupStickySwitch;
     @BindView(R.id.switch_group_mute_notification)
     SwitchCompat groupMuteNotificationSwitch;
+    @BindView(R.id.tv_group_quit_title)
+    TextView quitTextView;
     private Conversation conversation;
     private ChannelMembersHeadAdapter channelMembersHeadAdapter;
     private List<String> uiUidList = new ArrayList<>();
@@ -102,6 +104,7 @@ public class ChannelGroupInfoActivity extends BaseMvpActivity<ChannelGroupInfoPr
         groupNameTextView.setText(conversation.getName());
         groupMoreMemberTV.setVisibility(conversation.getMemberList().size() > 13 ? View.VISIBLE : View.GONE);
         isOwner = conversation.getOwner().equals(BaseApplication.getInstance().getUid());
+        quitTextView.setText(conversation.getOwner().equals(MyApplication.getInstance().getUid()) ? getString(R.string.dismiss_group) : getString(R.string.quit_group));
         uiUidList = mPresenter.getGroupUIMembersUid(conversation);
         channelMembersHeadAdapter = new ChannelMembersHeadAdapter(this, isOwner, uiUidList);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(MyApplication.getInstance(), 5);
@@ -187,11 +190,13 @@ public class ChannelGroupInfoActivity extends BaseMvpActivity<ChannelGroupInfoPr
         switch (compoundButton.getId()) {
             case R.id.switch_group_sticky:
                 if (!b == conversation.isStick()) {
+                    loadingDialog.show();
                     mPresenter.setConversationStick(b, conversation.getId());
                 }
                 break;
             case R.id.switch_group_mute_notification:
                 if (!b == conversation.isDnd()) {
+                    loadingDialog.show();
                     mPresenter.setMuteNotification(b, conversation.getId());
                 }
                 break;
@@ -230,6 +235,11 @@ public class ChannelGroupInfoActivity extends BaseMvpActivity<ChannelGroupInfoPr
         titleTextView.setText(data);
     }
 
+    @Override
+    public void finishActivity() {
+        this.finish();
+    }
+
     private void showQuitGroupWarningDlg() {
         new CustomDialog.MessageDialogBuilder(ChannelGroupInfoActivity.this)
                 .setMessage(getString(R.string.quit_group_warning_text))
@@ -242,8 +252,9 @@ public class ChannelGroupInfoActivity extends BaseMvpActivity<ChannelGroupInfoPr
                 .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        loadingDialog.show();
+                        mPresenter.quitGroupChannel();
                         dialog.dismiss();
-                        //quitChannelGroup();
                     }
                 })
                 .show();
@@ -261,8 +272,9 @@ public class ChannelGroupInfoActivity extends BaseMvpActivity<ChannelGroupInfoPr
                 .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        loadingDialog.show();
+                        mPresenter.delChannel();
                         dialog.dismiss();
-                        //deleteConversation();
                     }
                 })
                 .show();
@@ -298,12 +310,14 @@ public class ChannelGroupInfoActivity extends BaseMvpActivity<ChannelGroupInfoPr
                         for (int i = 0; i < addMemberList.size(); i++) {
                             addUidList.add(addMemberList.get(i).getId());
                         }
+                        loadingDialog.show();
                         mPresenter.addGroupMembers(addUidList, conversation.getId());
                     }
                     break;
                 case QEQUEST_DEL_MEMBER:
                     ArrayList<String> delUidList = (ArrayList<String>) data.getSerializableExtra("selectMemList");
                     if (delUidList.size() > 0) {
+                        loadingDialog.show();
                         mPresenter.delGroupMembers(delUidList, conversation.getId());
                     }
                     break;

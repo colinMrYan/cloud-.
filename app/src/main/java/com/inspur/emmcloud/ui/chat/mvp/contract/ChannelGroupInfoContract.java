@@ -23,6 +23,8 @@ public interface ChannelGroupInfoContract {
         void showDNDState(boolean isDND);
 
         void changeConversationTitle(int memberSize);
+
+        void finishActivity();
     }
 
     interface Presenter {
@@ -40,7 +42,7 @@ public interface ChannelGroupInfoContract {
 
         void quitGroupChannel();
 
-        void dismissChannel();
+        void delChannel();
 
 
     }

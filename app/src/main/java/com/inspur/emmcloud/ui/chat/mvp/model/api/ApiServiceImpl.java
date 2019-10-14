@@ -43,7 +43,7 @@ public class ApiServiceImpl implements ApiService.IGroupInfoActivity {
 
     @Override
     public void setMuteNotification(BaseModuleAPICallback apiCallback, boolean muteNotificationState, String conversationId) {
-        final String completeUrl = APIUri.getConversationSetDnd(conversationId);
+        final String completeUrl = ApiUrl.getConversationSetDnd(conversationId);
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
         params.addParameter("dnd", muteNotificationState);
         HttpUtils.request(CloudHttpMethod.PUT, params, apiCallback);
@@ -52,7 +52,7 @@ public class ApiServiceImpl implements ApiService.IGroupInfoActivity {
 
     @Override
     public void addGroupMembers(BaseModuleAPICallback apiCallback, ArrayList<String> uidList, String conversationId) {
-        final String url = APIUri.getModifyGroupMemberUrl(conversationId);
+        final String url = ApiUrl.getModifyGroupMemberUrl(conversationId);
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
         params.addParameter("members", uidList);
         HttpUtils.request(CloudHttpMethod.POST, params, apiCallback);
@@ -61,7 +61,7 @@ public class ApiServiceImpl implements ApiService.IGroupInfoActivity {
 
     @Override
     public void delGroupMembers(BaseModuleAPICallback apiCallback, ArrayList<String> uidList, String conversationId) {
-        final String url = APIUri.getModifyGroupMemberUrl(conversationId);
+        final String url = ApiUrl.getModifyGroupMemberUrl(conversationId);
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
         params.addParameter("members", uidList);
         HttpUtils.request(CloudHttpMethod.DELETE, params, apiCallback);
@@ -69,13 +69,18 @@ public class ApiServiceImpl implements ApiService.IGroupInfoActivity {
     }
 
     @Override
-    public void quitGroupChannel(BaseModuleAPICallback apiCallback) {
-
+    public void quitGroupChannel(BaseModuleAPICallback apiCallback, String conversationId) {
+        String completeUrl = ApiUrl.getQuitChannelGroupUrl(conversationId);
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
+        HttpUtils.request(CloudHttpMethod.DELETE, params, apiCallback);
+        params.setAsJsonContent(true);
     }
 
     @Override
-    public void dismissChannel(BaseModuleAPICallback apiCallback) {
-
+    public void delChannel(BaseModuleAPICallback apiCallback, String conversationId) {
+        String completeUrl = APIUri.getDeleteChannelUrl(conversationId);
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
+        HttpUtils.request(CloudHttpMethod.DELETE, params, apiCallback);
     }
 
     public void refreshToken(OauthCallBack oauthCallBack, long requestTime) {

@@ -62,7 +62,6 @@ public class ChannelGroupInfoPresenter extends BasePresenter<ChannelGroupInfoCon
 
     @Override
     public void setConversationStick(final boolean stickyState, final String channelId) {
-        mView.showLoading();
         String completeUrl = ApiUrl.getConversationSetStick(channelId);
         ApiServiceImpl.getInstance().setConversationStick(new BaseModuleAPICallback(mView.getContext(), completeUrl) {
             @Override
@@ -99,7 +98,6 @@ public class ChannelGroupInfoPresenter extends BasePresenter<ChannelGroupInfoCon
 
     @Override
     public void setMuteNotification(final boolean muteNotificationState, final String channelId) {
-        mView.showLoading();
         String completeUrl = ApiUrl.getConversationSetDnd(channelId);
         ApiServiceImpl.getInstance().setMuteNotification(new BaseModuleAPICallback(mView.getContext(), completeUrl) {
             @Override
@@ -135,7 +133,6 @@ public class ChannelGroupInfoPresenter extends BasePresenter<ChannelGroupInfoCon
 
     @Override
     public void addGroupMembers(final ArrayList<String> uidList, final String conversationId) {
-        mView.showLoading();
         String completeUrl = ApiUrl.getModifyGroupMemberUrl(conversationId);
         ApiServiceImpl.getInstance().addGroupMembers(new BaseModuleAPICallback(mView.getContext(), completeUrl) {
             @Override
@@ -176,7 +173,6 @@ public class ChannelGroupInfoPresenter extends BasePresenter<ChannelGroupInfoCon
 
     @Override
     public void delGroupMembers(final ArrayList<String> uidList, final String conversationId) {
-        mView.showLoading();
         String completeUrl = ApiUrl.getModifyGroupMemberUrl(conversationId);
         ApiServiceImpl.getInstance().addGroupMembers(new BaseModuleAPICallback(mView.getContext(), completeUrl) {
             @Override
@@ -217,11 +213,72 @@ public class ChannelGroupInfoPresenter extends BasePresenter<ChannelGroupInfoCon
 
     @Override
     public void quitGroupChannel() {
+        final String conversationId = mConversation.getId();
+        String completeUrl = ApiUrl.getQuitChannelGroupUrl(mConversation.getId());
+        ApiServiceImpl.getInstance().quitGroupChannel(new BaseModuleAPICallback(mView.getContext(), completeUrl) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                mView.dismissLoading();
+            }
 
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                mView.dismissLoading();
+                WebServiceMiddleUtils.hand(MyApplication.getInstance(), error, responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        quitGroupChannel();
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                ApiServiceImpl.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+        }, conversationId);
     }
 
     @Override
-    public void dismissChannel() {
+    public void delChannel() {
+        final String conversationId = mConversation.getId();
+        String completeUrl = ApiUrl.getDeleteChannelUrl(conversationId);
+        ApiServiceImpl.getInstance().delChannel(new BaseModuleAPICallback(mView.getContext(), completeUrl) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                mView.dismissLoading();
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                mView.dismissLoading();
+                WebServiceMiddleUtils.hand(MyApplication.getInstance(), error, responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        delChannel();
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                ApiServiceImpl.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+        }, conversationId);
 
     }
 }
