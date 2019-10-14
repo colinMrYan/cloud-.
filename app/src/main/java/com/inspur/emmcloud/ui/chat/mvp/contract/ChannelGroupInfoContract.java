@@ -3,6 +3,7 @@ package com.inspur.emmcloud.ui.chat.mvp.contract;
 import com.inspur.emmcloud.basemodule.mvp.BaseView;
 import com.inspur.emmcloud.bean.chat.Conversation;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,12 +16,32 @@ public interface ChannelGroupInfoContract {
     }
 
     interface View extends BaseView {
+        void showGroupMembersHead(List<String> uiUidList);
 
+        void showStickyState(boolean isSticky);
+
+        void showDNDState(boolean isDND);
+
+        void changeConversationTitle(int memberSize);
     }
 
     interface Presenter {
         Conversation getConversation(String uid);
 
-        List<String> getGroupMembersUid(Conversation conversation);
+        List<String> getGroupUIMembersUid(Conversation conversation);
+
+        void setConversationStick(boolean stickyState, String conversationId);
+
+        void setMuteNotification(boolean muteNotificationState, String conversationId);
+
+        void addGroupMembers(ArrayList<String> uidList, String conversationId);
+
+        void delGroupMembers(ArrayList<String> uidList, String conversationId);
+
+        void quitGroupChannel();
+
+        void dismissChannel();
+
+
     }
 }

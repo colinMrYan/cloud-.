@@ -14,8 +14,10 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseMvpActivity;
@@ -32,7 +34,9 @@ import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
+import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -67,14 +71,17 @@ public class ChannelGroupInfoActivity extends BaseMvpActivity<ChannelGroupInfoPr
     SwitchCompat groupMuteNotificationSwitch;
     private Conversation conversation;
     private ChannelMembersHeadAdapter channelMembersHeadAdapter;
-    private List<String> UiUidList = new ArrayList<>();
+    private List<String> uiUidList = new ArrayList<>();
     private boolean isOwner = false;
+    private LoadingDialog loadingDialog;
 
     @Override
     public void onCreate() {
         super.onCreate();
         ButterKnife.bind(this);
+        EventBus.getDefault().register(this);
         mPresenter = new ChannelGroupInfoPresenter();
+        mPresenter.attachView(this);
         init();
     }
 
@@ -88,27 +95,28 @@ public class ChannelGroupInfoActivity extends BaseMvpActivity<ChannelGroupInfoPr
      */
     private void init() {
         String cid = getIntent().getExtras().getString(EXTRA_CID);
+        loadingDialog = new LoadingDialog(this);
         conversation = mPresenter.getConversation(cid);
         String data = getString(R.string.chat_group_info_detail_title, conversation.getMemberList().size());
         titleTextView.setText(data);
         groupNameTextView.setText(conversation.getName());
         groupMoreMemberTV.setVisibility(conversation.getMemberList().size() > 13 ? View.VISIBLE : View.GONE);
         isOwner = conversation.getOwner().equals(BaseApplication.getInstance().getUid());
-        UiUidList = mPresenter.getGroupMembersUid(conversation);
-        channelMembersHeadAdapter = new ChannelMembersHeadAdapter(this, isOwner, UiUidList);
+        uiUidList = mPresenter.getGroupUIMembersUid(conversation);
+        channelMembersHeadAdapter = new ChannelMembersHeadAdapter(this, isOwner, uiUidList);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(MyApplication.getInstance(), 5);
         groupMembersHeadRecyclerView.setLayoutManager(gridLayoutManager);
         channelMembersHeadAdapter.setAdapterListener(new ChannelMembersHeadAdapter.AdapterListener() {
             @Override
             public void onItemClick(View view, int position) {
                 Intent intent = new Intent();
-                if (position == UiUidList.size() - 1 && isOwner) {    /**刪除群成員**/
+                if (position == uiUidList.size() - 1 && isOwner) {    /**刪除群成員**/
                     intent.putExtra("memberUidList", conversation.getMemberList());
                     intent.setClass(getApplicationContext(),
                             ChannelMembersDelActivity.class);
                     startActivityForResult(intent, QEQUEST_DEL_MEMBER);
-                } else if (position == UiUidList.size() - 2 && isOwner
-                        || (position == UiUidList.size() - 1 && !isOwner)) { /**添加群成員**/
+                } else if (position == uiUidList.size() - 2 && isOwner
+                        || (position == uiUidList.size() - 1 && !isOwner)) { /**添加群成員**/
                     intent.putExtra(ContactSearchFragment.EXTRA_TYPE, 2);
                     intent.putExtra(ContactSearchFragment.EXTRA_EXCLUDE_SELECT, conversation.getMemberList());
                     intent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, true);
@@ -117,7 +125,7 @@ public class ChannelGroupInfoActivity extends BaseMvpActivity<ChannelGroupInfoPr
                             ContactSearchActivity.class);
                     startActivityForResult(intent, QEQUEST_ADD_MEMBER);
                 } else {
-                    String uid = UiUidList.get(position);
+                    String uid = uiUidList.get(position);
                     Bundle bundle = new Bundle();
                     bundle.putString("uid", uid);
                     IntentUtils.startActivity(ChannelGroupInfoActivity.this, uid.startsWith("BOT") ?
@@ -126,6 +134,8 @@ public class ChannelGroupInfoActivity extends BaseMvpActivity<ChannelGroupInfoPr
             }
         });
         groupMembersHeadRecyclerView.setAdapter(channelMembersHeadAdapter);
+        groupStickySwitch.setChecked(conversation.isStick());
+        groupMuteNotificationSwitch.setChecked(conversation.isDnd());
         groupStickySwitch.setOnCheckedChangeListener(this);
         groupMuteNotificationSwitch.setOnCheckedChangeListener(this);
     }
@@ -176,12 +186,48 @@ public class ChannelGroupInfoActivity extends BaseMvpActivity<ChannelGroupInfoPr
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         switch (compoundButton.getId()) {
             case R.id.switch_group_sticky:
+                if (!b == conversation.isStick()) {
+                    mPresenter.setConversationStick(b, conversation.getId());
+                }
                 break;
             case R.id.switch_group_mute_notification:
+                if (!b == conversation.isDnd()) {
+                    mPresenter.setMuteNotification(b, conversation.getId());
+                }
                 break;
             default:
                 break;
         }
+    }
+
+
+    @Override
+    public void showGroupMembersHead(List<String> uiUidList) {
+        this.uiUidList = uiUidList;
+        channelMembersHeadAdapter.setUIUidList(uiUidList);
+        channelMembersHeadAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void showStickyState(boolean isSticky) {
+        conversation.setStick(isSticky);
+        groupStickySwitch.setChecked(isSticky);
+        ConversationCacheUtils.setConversationStick(MyApplication.getInstance(), conversation.getId(), isSticky);
+        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_UPDATE_CHANNEL_FOCUS, conversation));
+    }
+
+    @Override
+    public void showDNDState(boolean isDND) {
+        conversation.setDnd(isDND);
+        groupMuteNotificationSwitch.setChecked(conversation.isDnd());
+        ConversationCacheUtils.updateConversationDnd(MyApplication.getInstance(), conversation.getId(), conversation.isDnd());
+        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_UPDATE_CHANNEL_DND, conversation));
+    }
+
+    @Override
+    public void changeConversationTitle(int memberSize) {
+        String data = getString(R.string.chat_group_info_detail_title, conversation.getMemberList().size());
+        titleTextView.setText(data);
     }
 
     private void showQuitGroupWarningDlg() {
@@ -242,16 +288,47 @@ public class ChannelGroupInfoActivity extends BaseMvpActivity<ChannelGroupInfoPr
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        // super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RESULT_OK) {
+        if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case QEQUEST_ADD_MEMBER:
+                    ArrayList<String> addUidList = new ArrayList<>();
+                    List<SearchModel> addMemberList = (List<SearchModel>) data
+                            .getSerializableExtra("selectMemList");
+                    if (addMemberList.size() > 0) {
+                        for (int i = 0; i < addMemberList.size(); i++) {
+                            addUidList.add(addMemberList.get(i).getId());
+                        }
+                        mPresenter.addGroupMembers(addUidList, conversation.getId());
+                    }
                     break;
                 case QEQUEST_DEL_MEMBER:
+                    ArrayList<String> delUidList = (ArrayList<String>) data.getSerializableExtra("selectMemList");
+                    if (delUidList.size() > 0) {
+                        mPresenter.delGroupMembers(delUidList, conversation.getId());
+                    }
                     break;
                 default:
                     break;
             }
         }
+    }
+
+
+    @Override
+    public void showLoading() {
+        loadingDialog.show();
+        super.showLoading();
+    }
+
+    @Override
+    public void dismissLoading() {
+        LoadingDialog.dimissDlg(loadingDialog);
+        super.dismissLoading();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

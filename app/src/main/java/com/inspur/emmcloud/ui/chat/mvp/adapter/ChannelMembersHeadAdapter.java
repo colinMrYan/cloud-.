@@ -33,6 +33,10 @@ public class ChannelMembersHeadAdapter extends RecyclerView.Adapter<ChannelMembe
         this.uidList = uidList;
     }
 
+    public void setUIUidList(List<String> uiIidList) {
+        uidList = uiIidList;
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

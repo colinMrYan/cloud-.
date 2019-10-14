@@ -304,7 +304,6 @@ public class ConversationGroupInfoActivity extends BaseActivity {
                         }
                         addConversationGroupMember(addUidList);
                     }
-
                     break;
 
                 default:
