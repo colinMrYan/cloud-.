@@ -95,6 +95,7 @@ public class Constant {
     public static final String EVENTBUS_TAG_GET_MESSAGE_COMMENT = "tag_get_message_comment";
     public static final String EVENTBUS_TAG_GET_HISTORY_MESSAGE = "tag_get_history_message";
     public static final String EVENTBUS_TAG_GET_NEW_MESSAGE = "tag_get_new_message";
+    public static final String EVENTBUS_TAG_REFRESH_CONVERSATION = "tag_refresh_conversation";
     public static final String EVENTBUS_TAG_GET_MESSAGE_COMMENT_COUNT = "tag_get_message_comment_count";
     public static final String EVENTBUS_TAG_VIDEO_CALL = "client.video.call";
     public static final String EVENTBUS_TAG_ON_PHOTO_TAB = "tag_on_photo_tab";
@@ -253,5 +254,9 @@ public class Constant {
     //分享内容
     public static final String SHARE_CONTENT = "share_content";
     public static final String WECHAT_APPID = "wx4eb8727ea9c26495";
+
+    public static final String VIDEO_CALL_INVITE = "server.chat.video-call.invite";
+    public static final String VIDEO_CALL_REFUSE = "server.chat.video-call.refuse";
+    public static final String VIDEO_CALL_HANG_UP = "server.chat.video-call.hang-up";
 
 }

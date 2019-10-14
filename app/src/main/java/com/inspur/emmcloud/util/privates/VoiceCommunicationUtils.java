@@ -8,6 +8,7 @@ import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.bean.chat.GetVoiceCommunicationResult;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationAudioVolumeInfo;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
@@ -36,6 +37,7 @@ public class VoiceCommunicationUtils {
      * 通话状态类型
      * {@link ChannelVoiceCommunicationActivity}
      * 跳转到指定类的指定方法
+     *
      * @see ChannelVoiceCommunicationActivity#COMMUNICATION_STATE_PRE
      * @see ChannelVoiceCommunicationActivity#COMMUNICATION_STATE_ING
      * @see ChannelVoiceCommunicationActivity#COMMUNICATION_STATE_OVER
@@ -57,18 +59,25 @@ public class VoiceCommunicationUtils {
     private List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationMemberList = new ArrayList<>();
     private VoiceCommunicationJoinChannelInfoBean inviteeInfoBean;
     private int userCount = 1;
-    /**布局状态*/
+    /**
+     * 布局状态
+     */
     private int state = -1;
     private IRtcEngineEventHandler mRtcEventHandler = new IRtcEngineEventHandler() {
         //其他用户离线回调
         @Override
         public void onUserOffline(int uid, int reason) {
+            userCount = userCount - 1;
+            if (userCount < 2) {
+                SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
+            }
             onVoiceCommunicationCallbacks.onUserOffline(uid, reason);
         }
 
         //用户加入频道回调
         @Override
         public void onUserJoined(int uid, int elapsed) {
+            userCount = userCount + 1;
             onVoiceCommunicationCallbacks.onUserJoined(uid, elapsed);
         }
 
@@ -82,6 +91,7 @@ public class VoiceCommunicationUtils {
         //断开重连，重新加入频道成功
         @Override
         public void onRejoinChannelSuccess(String channel, int uid, int elapsed) {
+            userCount = userCount + 1;
             onVoiceCommunicationCallbacks.onRejoinChannelSuccess(channel, uid, elapsed);
         }
 
@@ -110,6 +120,7 @@ public class VoiceCommunicationUtils {
         @Override
         public void onError(int err) {
             super.onError(err);
+            SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
             onVoiceCommunicationCallbacks.onError(err);
         }
 
@@ -117,6 +128,7 @@ public class VoiceCommunicationUtils {
         @Override
         public void onConnectionLost() {
             super.onConnectionLost();
+            SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
             onVoiceCommunicationCallbacks.onConnectionLost();
         }
 
@@ -512,9 +524,8 @@ public class VoiceCommunicationUtils {
         @Override
         public void returnGetVoiceCommunicationChannelInfoSuccess(GetVoiceCommunicationResult getVoiceCommunicationResult) {
             String scheme = "ecc-cloudplus-cmd://voice_channel?cmd=refuse&channelid=" + channelId + "&roomid=" + argoaChannelId + "&uid=" + BaseApplication.getInstance().getUid();
-
             if (getVoiceCommunicationResult.getChannelId().equals(argoaChannelId)) {
-                WSAPIService.getInstance().sendStartVoiceAndVideoCallMessage(channelId, argoaChannelId, scheme, "VOICE", getUidArray(getVoiceCommunicationResult.getVoiceCommunicationJoinChannelInfoBeanList(), fromUid));
+                WSAPIService.getInstance().sendStartVoiceAndVideoCallMessage(channelId, argoaChannelId, scheme, "VOICE", getUidArray(getVoiceCommunicationResult.getVoiceCommunicationJoinChannelInfoBeanList(), fromUid), Constant.VIDEO_CALL_REFUSE);
             }
         }
 

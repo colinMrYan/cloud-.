@@ -109,7 +109,7 @@ public class VolumeFileDownloadActivity extends BaseActivity {
             fileTypeImg.setTag(url);
             fileTypeImg.setVisibility(View.VISIBLE);
             typeFileImageView.setVisibility(View.GONE);
-            ImageDisplayUtils.getInstance().displayImageByTag(fileTypeImg, url, R.drawable.baselib_file_type_img);
+            ImageDisplayUtils.getInstance().displayImage(fileTypeImg, url, R.drawable.baselib_file_type_img);
         } else {
             typeFileImageView.setImageResource(FileUtils.getFileIconResIdByFormat(volumeFile.getFormat()));
             typeFileImageView.setVisibility(View.VISIBLE);

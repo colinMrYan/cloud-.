@@ -11,6 +11,9 @@ import android.content.Context;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.bean.ApiRequestRecord;
+import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.basemodule.util.ApiRequestRecordCacheUtils;
 import com.inspur.emmcloud.basemodule.util.AppExceptionCacheUtils;
 
 import org.xutils.common.Callback.CommonCallback;
@@ -18,6 +21,7 @@ import org.xutils.ex.HttpException;
 
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
+import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
 
@@ -99,6 +103,17 @@ public abstract class BaseModuleAPICallback implements CommonCallback<byte[]> {
     @Override
     public void onFinished() {
         // TODO Auto-generated method stub
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Map<String, String> APIRequestRecordMap = MyAppConfig.getApiRequestRecordMap();
+                String functionID = APIRequestRecordMap.get(url);
+                if (functionID != null) {
+                    ApiRequestRecord apiRequestRecord = new ApiRequestRecord(requestTime, System.currentTimeMillis(), functionID);
+                    ApiRequestRecordCacheUtils.saveApiRequestRecord(apiRequestRecord);
+                }
+            }
+        }).start();
     }
 
     /* (non-Javadoc)

@@ -132,7 +132,7 @@ public class ShareFilesActivity extends BaseActivity {
     private void showImageLayout(String filePath) {
         imageLayout.setVisibility(View.VISIBLE);
         fileLayout.setVisibility(View.GONE);
-        ImageDisplayUtils.getInstance().displayImage(imageView, uriList.get(0).toString(), R.drawable.ic_app_default);
+        ImageDisplayUtils.getInstance().displayImage(imageView, uriList.get(0).toString(), R.drawable.default_image);
     }
 
     private void showFileLayout(String filePath) {
@@ -145,7 +145,7 @@ public class ShareFilesActivity extends BaseActivity {
         } else {
             fileTextView.setVisibility(View.GONE);
         }
-        ImageDisplayUtils.getInstance().displayImage(fileImageView, "drawable://" + FileUtils.getFileIconResIdByFilePath(filePath));
+        fileImageView.setImageResource(FileUtils.getFileIconResIdByFilePath(filePath));
     }
 
     /**
@@ -389,15 +389,14 @@ public class ShareFilesActivity extends BaseActivity {
 
     }
 
-    private String getFileIcon(String filePath) {
-        String iconPath = "";
-        int iconId = FileUtils.getFileIconResIdByFilePath(filePath);
-        if (iconId == R.drawable.baselib_file_type_img) {
-            iconPath = filePath;
+
+    private void showFileIcon(ImageView imageView, String filePath) {
+        int iconResId = FileUtils.getFileIconResIdByFilePath(filePath);
+        if (iconResId == R.drawable.baselib_file_type_img) {
+            ImageDisplayUtils.getInstance().displayImage(imageView, filePath, R.drawable.default_image);
         } else {
-            iconPath = "drawable://" + iconId;
+            imageView.setImageResource(iconResId);
         }
-        return iconPath;
     }
 
 
@@ -420,7 +419,7 @@ public class ShareFilesActivity extends BaseActivity {
 
         @Override
         public void onBindViewHolder(FileHolder holder, int position) {
-            ImageDisplayUtils.getInstance().displayImage(holder.imageView, getFileIcon(uriList.get(position)), R.drawable.default_image);
+            showFileIcon(holder.imageView, uriList.get(position));
         }
 
         @Override
@@ -449,7 +448,7 @@ public class ShareFilesActivity extends BaseActivity {
 
         @Override
         public void onBindViewHolder(FileHolder holder, int position) {
-            ImageDisplayUtils.getInstance().displayImage(holder.imageView, getFileIcon(uriList.get(position)), R.drawable.default_image);
+            showFileIcon(holder.imageView, uriList.get(position));
             // holder.imageView.setImageResource(R.drawable.default_image);
             // Bitmap bm = BitmapFactory.decodeFile(path);
             // image2.setImageBitmap(bm);//不会变形

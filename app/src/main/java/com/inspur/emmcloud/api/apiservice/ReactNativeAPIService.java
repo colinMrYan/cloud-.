@@ -232,49 +232,49 @@ public class ReactNativeAPIService {
         downLoaderUtils.startDownLoad(fromUri, filePath, progressCallback);
     }
 
-    /**
-     * 写回闪屏日志
-     *
-     * @param preVersion
-     * @param currentVersion
-     * @param clientId
-     * @param command
-     */
-    public void writeBackSplashPageVersionChange(final String preVersion, final String currentVersion, final String clientId, final String command) {
-        final String completeUrl = APIUri.getUploadSplashPageWriteBackLogUrl() + "?preVersion=" + preVersion + "&currentVersion=" + currentVersion + "&clientId=" + clientId +
-                "&command=" + command;
-        RequestParams params = ((MyApplication) context.getApplicationContext())
-                .getHttpRequestParams(completeUrl);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
-            @Override
-            public void callbackSuccess(byte[] arg0) {
-                LogUtils.YfcDebug("闪屏写回成功，不需要后续处理");
-            }
-
-            @Override
-            public void callbackFail(String error, int responseCode) {
-                LogUtils.YfcDebug("闪屏写回失败，不需要后续处理" + error + responseCode);
-            }
-
-            @Override
-            public void callbackTokenExpire(long requestTime) {
-                OauthCallBack oauthCallBack = new OauthCallBack() {
-                    @Override
-                    public void reExecute() {
-                        writeBackSplashPageVersionChange(preVersion, currentVersion, clientId, command);
-                    }
-
-                    @Override
-                    public void executeFailCallback() {
-                        callbackFail("", -1);
-                    }
-                };
-                refreshToken(
-                        oauthCallBack, requestTime);
-            }
-
-        });
-    }
+//    /**
+//     * 写回闪屏日志
+//     *
+//     * @param preVersion
+//     * @param currentVersion
+//     * @param clientId
+//     * @param command
+//     */
+//    public void writeBackSplashPageVersionChange(final String preVersion, final String currentVersion, final String clientId, final String command) {
+//        final String completeUrl = APIUri.getUploadSplashPageWriteBackLogUrl() + "?preVersion=" + preVersion + "&currentVersion=" + currentVersion + "&clientId=" + clientId +
+//                "&command=" + command;
+//        RequestParams params = ((MyApplication) context.getApplicationContext())
+//                .getHttpRequestParams(completeUrl);
+//        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
+//            @Override
+//            public void callbackSuccess(byte[] arg0) {
+//                LogUtils.YfcDebug("闪屏写回成功，不需要后续处理");
+//            }
+//
+//            @Override
+//            public void callbackFail(String error, int responseCode) {
+//                LogUtils.YfcDebug("闪屏写回失败，不需要后续处理" + error + responseCode);
+//            }
+//
+//            @Override
+//            public void callbackTokenExpire(long requestTime) {
+//                OauthCallBack oauthCallBack = new OauthCallBack() {
+//                    @Override
+//                    public void reExecute() {
+//                        writeBackSplashPageVersionChange(preVersion, currentVersion, clientId, command);
+//                    }
+//
+//                    @Override
+//                    public void executeFailCallback() {
+//                        callbackFail("", -1);
+//                    }
+//                };
+//                refreshToken(
+//                        oauthCallBack, requestTime);
+//            }
+//
+//        });
+//    }
 
 
 }

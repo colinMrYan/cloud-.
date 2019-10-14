@@ -52,7 +52,6 @@ import com.inspur.emmcloud.bean.chat.GetSendMsgResult;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.Msg;
 import com.inspur.emmcloud.bean.chat.Robot;
-import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
 import com.inspur.emmcloud.broadcastreceiver.MsgReceiver;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
@@ -76,7 +75,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -306,22 +304,23 @@ public class ChannelV0Activity extends BaseActivity {
 
             @Override
             public void onVoiceCommucaiton() {
-                List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList = new ArrayList<>();
-                List<String> memberList = new ArrayList<>();
-                memberList.add(DirectChannelUtils.getDirctChannelOtherUid(MyApplication.getInstance(), channel.getTitle()));
-                memberList.add(MyApplication.getInstance().getUid());
-                List<ContactUser> contactUserList = ContactUserCacheUtils.getContactUserListById(memberList);
-                for (int i = 0; i < contactUserList.size(); i++) {
-                    VoiceCommunicationJoinChannelInfoBean voiceCommunicationJoinChannelInfoBean = new VoiceCommunicationJoinChannelInfoBean();
-                    voiceCommunicationJoinChannelInfoBean.setUserId(contactUserList.get(i).getId());
-                    voiceCommunicationJoinChannelInfoBean.setUserName(contactUserList.get(i).getName());
-                    voiceCommunicationUserInfoBeanList.add(voiceCommunicationJoinChannelInfoBean);
-                }
-                Intent intent = new Intent();
-                intent.setClass(ChannelV0Activity.this, ChannelVoiceCommunicationActivity.class);
-                intent.putExtra("userList", (Serializable) voiceCommunicationUserInfoBeanList);
-                intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.INVITER_LAYOUT_STATE);
-                startActivity(intent);
+                //因为channel v0有onVoiceCommucaiton回调写了如下代码，以后永久屏蔽
+//                List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList = new ArrayList<>();
+//                List<String> memberList = new ArrayList<>();
+//                memberList.add(DirectChannelUtils.getDirctChannelOtherUid(MyApplication.getInstance(), channel.getTitle()));
+//                memberList.add(MyApplication.getInstance().getUid());
+//                List<ContactUser> contactUserList = ContactUserCacheUtils.getContactUserListById(memberList);
+//                for (int i = 0; i < contactUserList.size(); i++) {
+//                    VoiceCommunicationJoinChannelInfoBean voiceCommunicationJoinChannelInfoBean = new VoiceCommunicationJoinChannelInfoBean();
+//                    voiceCommunicationJoinChannelInfoBean.setUserId(contactUserList.get(i).getId());
+//                    voiceCommunicationJoinChannelInfoBean.setUserName(contactUserList.get(i).getName());
+//                    voiceCommunicationUserInfoBeanList.add(voiceCommunicationJoinChannelInfoBean);
+//                }
+//                Intent intent = new Intent();
+//                intent.setClass(ChannelV0Activity.this, ChannelVoiceCommunicationActivity.class);
+//                intent.putExtra("userList", (Serializable) voiceCommunicationUserInfoBeanList);
+//                intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.INVITER_LAYOUT_STATE);
+//                startActivity(intent);
             }
 
             @Override

@@ -32,7 +32,6 @@ import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.CustomLoadingView;
@@ -51,6 +50,7 @@ import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.basemodule.util.compressor.Compressor;
 import com.inspur.emmcloud.basemodule.util.imagepicker.ImagePicker;
@@ -109,6 +109,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -452,14 +453,15 @@ public class ConversationActivity extends ConversationBaseActivity {
      */
     private void startVoiceOrVideoCall(String type, List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList) {
 
-        Intent intent = new Intent();
-        intent.setClass(ConversationActivity.this, ChannelVoiceCommunicationActivity.class);
-        intent.putExtra("userList", (Serializable) voiceCommunicationUserInfoBeanList);
-        LogUtils.YfcDebug("选择人员回来时的人数：" + voiceCommunicationUserInfoBeanList.size());
-        intent.putExtra(CLOUD_PLUS_CHANNEL_ID, cid);
-        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_VIDEO_CALL_TYPE, type);
-        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.INVITER_LAYOUT_STATE);
-        startActivity(intent);
+        //屏蔽语音通话
+//        Intent intent = new Intent();
+//        intent.setClass(ConversationActivity.this, ChannelVoiceCommunicationActivity.class);
+//        intent.putExtra("userList", (Serializable) voiceCommunicationUserInfoBeanList);
+//        LogUtils.YfcDebug("选择人员回来时的人数：" + voiceCommunicationUserInfoBeanList.size());
+//        intent.putExtra(CLOUD_PLUS_CHANNEL_ID, cid);
+//        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_VIDEO_CALL_TYPE, type);
+//        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.INVITER_LAYOUT_STATE);
+//        startActivity(intent);
     }
 
     private void inputMenuClick(String type) {
@@ -869,6 +871,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                         VolumeFile volumeFile = (VolumeFile) getIntent().getSerializableExtra("share_obj_form_volume");
                         transmitMsgFromVolume(cid, volumeFile, path);
                     } else {
+                        PVCollectModelCacheUtils.saveCollectModel("file", "share");
                         List<String> pathList = getIntent().getStringArrayListExtra("share_paths");
                         for (String url : pathList) {
                             String urlLowerCase = url.toLowerCase();
@@ -878,6 +881,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                     }
                     break;
                 case "link":
+                    PVCollectModelCacheUtils.saveCollectModel("link", "share");
                     String content = getIntent().getExtras().getString(Constant.SHARE_LINK);
                     if (!StringUtils.isBlank(content)) {
                         Message message = CommunicationUtils.combinLocalExtendedLinksMessage(cid, JSONUtils.getString(content, "poster", ""), JSONUtils.getString(content, "title", "")
@@ -1490,13 +1494,16 @@ public class ConversationActivity extends ConversationBaseActivity {
     //接收到websocket发过来的消息，推送消息触发此方法
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveNewMessage(EventMessage eventMessage) {
-        if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_NEW_MESSAGE) && eventMessage.getExtra().equals(cid)) {
+        if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_NEW_MESSAGE) && ((HashMap) eventMessage.getExtra()).get("cid").equals(cid)) {
             if (eventMessage.getStatus() == EventMessage.RESULT_OK) {
                 String content = eventMessage.getContent();
                 GetChannelMessagesResult getChannelMessagesResult = new GetChannelMessagesResult(content);
                 final List<Message> newMessageList = getChannelMessagesResult.getMessageList();
                 new CacheMessageListThread(newMessageList, null, REFRESH_PUSH_MESSAGE).start();
                 WSAPIService.getInstance().setChannelMessgeStateRead(cid);
+            }
+            if ((boolean) ((HashMap) eventMessage.getExtra()).get("isNeedRefreshConversationList")) {
+                EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_REFRESH_CONVERSATION));
             }
         }
     }
@@ -1540,7 +1547,7 @@ public class ConversationActivity extends ConversationBaseActivity {
      */
     private void getNewMessageOfChannel() {
         if (NetUtils.isNetworkConnected(this, false)) {
-            WSAPIService.getInstance().getChannelNewMessage(cid);
+            WSAPIService.getInstance().getChannelNewMessage(cid, isFromScanCode);
         }
     }
 
