@@ -167,14 +167,18 @@
     <string name="channel_group_members_name">Group Name</string>
     <string name="channel_set_top">Sticky on Top</string>
     <string name="message_without_interruption">Mute Notifications</string>
+    <string name="channel_single_chat_files">Files</string>
     <string name="login_hint_text">Name/E-mail/Phone</string>
     <string name="modify_group_name">Group Contact Card</string>
     <string name="choose_common_office">common office address</string>
     <string name="please_click_choosing_time">Please click and choose time</string>
+    <string name="channel_group_qrcode">Group QR Code</string>
     <string name="meeting_room">Meeting Room</string>
     <string name="building">Building</string>
     <string name="am">AM</string>
     <string name="please_input_change">Please type change</string>
+    <string name="channel_search_more_group_members">Search More Group Members</string>
+    <string name="channel_set_sticky"> Sticky on Top</string>
     <string name="my_stroke">My Travel</string>
     <string name="title">Title</string>
     <string name="channel_hide_chat">Hide Chat</string>
@@ -275,6 +279,8 @@
     <string name="administrators_of_channel">(administrator)</string>
     <string name="file_no_identifiable">Unrecognized file types</string>
     <string name="long_img">Long</string>
+    <string name="chat_group_info_detail_title">Chat Info(%d)</string>
+    <string name="chat_single_info_detail_title">Chat Detail</string>
     <string name="friend_list">Friends List</string>
     <string name="join_discuss">Join discussion</string>
     <string name="add_new_comment">Add new comments</string>

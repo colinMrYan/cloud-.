@@ -169,13 +169,17 @@
     <string name="tax_ticket_info"> 增值稅專用發票開票資訊</string>
     <string name="channel_group_info">群详情</string>
     <string name="channel_group_name">群名稱</string>
-    <string name="channel_group_image">群圖片</string>
+    <string name="channel_group_image">群聊圖片</string>
     <string name="channel_group_file">群文件</string>
     <string name="channel_group_members_name">群名稱</string>
+    <string name="channel_group_qrcode">群二維碼</string>
     <string name="channel_set_top"> 置頂</string>
     <string name="message_without_interruption">消息免打擾</string>
     <string name="login_hint_text">用戶名/郵箱/手機號</string>
+    <string name="channel_set_sticky">置頂聊天</string>
     <string name="modify_group_name">群名片</string>
+    <string name="channel_single_chat_files">文件</string>
+    <string name="channel_search_more_group_members">查看更多群成員</string>
     <string name="choose_common_office">常用辦公地點</string>
     <string name="please_click_choosing_time">請點擊選擇時間</string>
     <string name="meeting_room">會議室</string>
@@ -269,6 +273,8 @@
     <string name="top"> 置頂</string>
     <string name="chanel_cancel_top"> 取消置頂</string>
     <string name="creat_group">創建群組</string>
+    <string name="chat_group_info_detail_title">聊天詳情(%d)</string>
+    <string name="chat_single_info_detail_title">聊天詳情</string>
     <string name="creat_group_fail">群組創建失敗</string>
     <string name="all_group_member">群成員(%1$d)</string>
     <string name="add_group_member">添加群成員 </string>

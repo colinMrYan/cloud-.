@@ -169,12 +169,16 @@
     <string name="tax_ticket_info"> 增值税专用发票开票信息</string>
     <string name="channel_group_info">群详情</string>
     <string name="channel_group_name">群名称</string>
-    <string name="channel_group_image"> 群图片</string>
+    <string name="channel_group_image"> 群聊图片</string>
     <string name="channel_group_file"> 群文件</string>
     <string name="channel_group_members_name"> 群名称</string>
     <string name="channel_group_qrcode">群二维码</string>
     <string name="channel_set_top"> 置顶</string>
+    <string name="channel_set_sticky"> 置顶聊天</string>
     <string name="message_without_interruption">消息免打扰</string>
+    <string name="channel_single_chat_images">聊天图片</string>
+    <string name="channel_single_chat_files">文件</string>
+    <string name="channel_search_more_group_members">查看更多群成员</string>
     <string name="login_hint_text">用户名/邮箱/手机号</string>
     <string name="modify_group_name">群名片</string>
     <string name="choose_common_office">常用办公地点</string>
@@ -275,6 +279,8 @@
     <string name="all_group_member">群成员(%1$d)</string>
     <string name="add_group_member">添加群成员 </string>
     <string name="channel_group">群组</string>
+    <string name="chat_group_info_detail_title">聊天详情(%d)</string>
+    <string name="chat_single_info_detail_title">聊天详情</string>
     <string name="group_member">群成员列表 </string>
     <string name="group_name_cannot_null">请输入群组名称 </string>
     <string name="channel_unknown_text">您的%1$s暂不支持该消息，请【升级】%1$s最新版本查看</string>
