@@ -32,6 +32,7 @@ import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.CustomLoadingView;
@@ -453,14 +454,14 @@ public class ConversationActivity extends ConversationBaseActivity {
     private void startVoiceOrVideoCall(String type, List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList) {
 
         //屏蔽语音通话
-//        Intent intent = new Intent();
-//        intent.setClass(ConversationActivity.this, ChannelVoiceCommunicationActivity.class);
-//        intent.putExtra("userList", (Serializable) voiceCommunicationUserInfoBeanList);
-//        LogUtils.YfcDebug("选择人员回来时的人数：" + voiceCommunicationUserInfoBeanList.size());
-//        intent.putExtra(CLOUD_PLUS_CHANNEL_ID, cid);
-//        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_VIDEO_CALL_TYPE, type);
-//        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.INVITER_LAYOUT_STATE);
-//        startActivity(intent);
+        Intent intent = new Intent();
+        intent.setClass(ConversationActivity.this, ChannelVoiceCommunicationActivity.class);
+        intent.putExtra("userList", (Serializable) voiceCommunicationUserInfoBeanList);
+        LogUtils.YfcDebug("选择人员回来时的人数：" + voiceCommunicationUserInfoBeanList.size());
+        intent.putExtra(CLOUD_PLUS_CHANNEL_ID, cid);
+        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_VIDEO_CALL_TYPE, type);
+        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.INVITER_LAYOUT_STATE);
+        startActivity(intent);
     }
 
     private void inputMenuClick(String type) {

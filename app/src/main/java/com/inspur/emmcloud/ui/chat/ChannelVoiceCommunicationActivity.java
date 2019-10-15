@@ -285,6 +285,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                     public void onFinish() {
                         //如果是邀请或被邀请状态，倒计时结束时挂断电话
                         if (layoutState == INVITEE_LAYOUT_STATE || layoutState == INVITER_LAYOUT_STATE) {
+                            isLeaveChannel = true;
                             refuseOrLeaveChannel(COMMUNICATION_REFUSE);
                         }
                     }
