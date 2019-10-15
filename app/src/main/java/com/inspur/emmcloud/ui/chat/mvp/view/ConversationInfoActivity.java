@@ -31,7 +31,7 @@ import com.inspur.emmcloud.ui.chat.GroupAlbumActivity;
 import com.inspur.emmcloud.ui.chat.GroupFileActivity;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
 import com.inspur.emmcloud.ui.chat.mvp.adapter.ConversationMembersHeadAdapter;
-import com.inspur.emmcloud.ui.chat.mvp.contract.ConverssationInfoContract;
+import com.inspur.emmcloud.ui.chat.mvp.contract.ConversationInfoContract;
 import com.inspur.emmcloud.ui.chat.mvp.presenter.ConversationInfoPresenter;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
@@ -54,7 +54,7 @@ import butterknife.ButterKnife;
  * Created by libaochao on 2019/10/12.
  */
 
-public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPresenter> implements ConverssationInfoContract.View
+public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPresenter> implements ConversationInfoContract.View
         , CompoundButton.OnCheckedChangeListener {
 
     public static final String EXTRA_CID = "cid";

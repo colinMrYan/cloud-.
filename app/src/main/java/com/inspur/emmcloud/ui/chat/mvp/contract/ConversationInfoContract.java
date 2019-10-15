@@ -11,7 +11,7 @@ import java.util.List;
  * Created by libaochao on 2019/10/12.
  */
 
-public interface ConverssationInfoContract {
+public interface ConversationInfoContract {
     interface Model {
 
     }

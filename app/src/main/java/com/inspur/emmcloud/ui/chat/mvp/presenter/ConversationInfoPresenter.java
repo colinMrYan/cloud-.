@@ -14,7 +14,7 @@ import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.componentservice.login.OauthCallBack;
-import com.inspur.emmcloud.ui.chat.mvp.contract.ConverssationInfoContract;
+import com.inspur.emmcloud.ui.chat.mvp.contract.ConversationInfoContract;
 import com.inspur.emmcloud.ui.chat.mvp.model.api.ApiServiceImpl;
 import com.inspur.emmcloud.ui.chat.mvp.model.api.ApiUrl;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
@@ -32,7 +32,7 @@ import java.util.List;
  * Created by libaochao on 2019/10/12.
  */
 
-public class ConversationInfoPresenter extends BasePresenter<ConverssationInfoContract.View> implements ConverssationInfoContract.Presenter {
+public class ConversationInfoPresenter extends BasePresenter<ConversationInfoContract.View> implements ConversationInfoContract.Presenter {
 
     private static final int QEQUEST_ADD_MEMBER = 2;
     private static final int QEQUEST_DEL_MEMBER = 3;

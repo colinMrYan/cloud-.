@@ -426,7 +426,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
-            android:name=".ui.chat.mvp.view.ChannelGroupInfoActivity"
+            android:name=".ui.chat.mvp.view.ConversationInfoActivity"
             android:configChanges="locale|layoutDirection"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
