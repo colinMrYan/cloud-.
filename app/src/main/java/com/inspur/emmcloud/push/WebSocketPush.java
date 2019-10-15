@@ -14,7 +14,6 @@ import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
-import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.push.PushManagerUtils;
 import com.inspur.emmcloud.basemodule.util.AppExceptionCacheUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
@@ -73,7 +72,7 @@ public class WebSocketPush {
                     Iterator<EventMessage> it = requestEventMessageList.iterator();
                     while (it.hasNext()) {
                         EventMessage eventMessage = it.next();
-                        if (eventMessage.getStartQuestTime() + MyAppConfig.WEBSOCKET_REQUEST_TIMEOUT <= timeCount) {
+                        if (eventMessage.getStartQuestTime() + eventMessage.getTimeout() <= timeCount) {
                             setRequestEventMessageTimeout(eventMessage, "socket_send_timeout");
                             it.remove();
                         }
@@ -180,6 +179,7 @@ public class WebSocketPush {
             IO.Options opts = new IO.Options();
             opts.reconnectionAttempts = 5; // 设置websocket重连次数
             opts.forceNew = true;
+            opts.reconnectionDelay = 10000;
             Map<String, String> query = new HashMap<>();
             try {
                 if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
@@ -506,7 +506,7 @@ public class WebSocketPush {
     }
 
     public void sendEventMessage(EventMessage eventMessage, Object content, String tracer) {
-        if (isSocketConnect()) {
+        if (true) {
             LogUtils.debug(TAG, "eventMessage.getTag()=" + eventMessage.getTag());
             LogUtils.debug(TAG, "eventMessage.content=" + content);
             eventMessage.setStartQuestTime(timeCount);

@@ -315,8 +315,8 @@
     <string name="chat_long_click_copy_text">Copy text</string>
     <string name="communication_search">Search</string>
     <string name="chat_full_image">Full image</string>
-    <string name="chat_transmit_message_success">successfully sent</string>
-    <string name="chat_transmit_message_fail">Failed sent</string>
+    <string name="chat_message_send_success">successfully sent</string>
+    <string name="chat_message_send_fail">Failed sent</string>
     <string name="chat_long_click_reply">Reply</string>
     <string name="chat_group_least_two_person">Group Chat requires at least two or more people</string>
     <string name="chat_send_email_too_many_person_tip">Too many recipients will affect the speed of mail delivery, make sure to send？</string>

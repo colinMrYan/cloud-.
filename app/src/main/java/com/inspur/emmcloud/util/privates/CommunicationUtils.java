@@ -16,7 +16,6 @@ import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.compressor.Compressor;
-import com.inspur.emmcloud.bean.chat.Channel;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.Email;
 import com.inspur.emmcloud.bean.chat.Message;
@@ -48,25 +47,6 @@ import java.util.UUID;
  */
 
 public class CommunicationUtils {
-    /* *
-     * 获取频道名称
-     * @param channel
-     * @return
-     */
-    public static String getChannelDisplayTitle(Channel channel) {
-
-        String title;
-        if (channel.getType().equals("DIRECT")) {
-            title = DirectChannelUtils.getDirectChannelTitle(MyApplication.getInstance(),
-                    channel.getTitle());
-        } else if (channel.getType().equals("SERVICE")) {
-            title = DirectChannelUtils.getRobotInfo(MyApplication.getInstance(), channel.getTitle()).getName();
-        } else {
-            title = channel.getTitle();
-        }
-        return title;
-    }
-
     /**
      * 获取单聊对方的uid
      *
@@ -74,7 +54,7 @@ public class CommunicationUtils {
      * @param title
      * @return
      */
-    public static String getDirctChannelOtherUid(Context context, String title) {
+    public static String getDirectChannelOtherUid(Context context, String title) {
         String otherUid = "";
         try {
             String[] uidArray = title.split("-");
@@ -91,9 +71,10 @@ public class CommunicationUtils {
         return otherUid;
     }
 
-    /* *
+    /**
      * 获取频道名称
-     * @param channel
+     *
+     * @param conversation
      * @return
      */
     public static String getConversationTitle(Conversation conversation) {
@@ -132,7 +113,7 @@ public class CommunicationUtils {
         message.setChannel(cid);
         message.setId(tracer);
         message.setTmpId(tracer);
-        message.setType("comment/text-plain");
+        message.setType(Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN);
         MsgContentComment msgContentComment = new MsgContentComment();
         msgContentComment.setText(text);
         msgContentComment.setMessage(commentedMid);
@@ -151,7 +132,7 @@ public class CommunicationUtils {
         message.setChannel(cid);
         message.setId(tracer);
         message.setTmpId(tracer);
-        message.setType("file/regular-file");
+        message.setType(Message.MESSAGE_TYPE_FILE_REGULAR_FILE);
         message.setLocalPath(localFilePath);
         File file = new File(localFilePath);
         MsgContentRegularFile msgContentRegularFile = new MsgContentRegularFile();
@@ -172,7 +153,6 @@ public class CommunicationUtils {
         message.setTmpId(tracer);
         message.setLocalPath(localFilePath);
         message.setType(Message.MESSAGE_TYPE_MEDIA_VOICE);
-        message.setLocalPath(localFilePath);
         MsgContentMediaVoice msgContentMediaVoice = new MsgContentMediaVoice();
         msgContentMediaVoice.setDuration(duration);
         msgContentMediaVoice.setMedia(localFilePath);
@@ -198,16 +178,16 @@ public class CommunicationUtils {
         int imgWidth = bitmap.getWidth();
         long fileSize = FileUtils.getFileSize(localFilePath);
         bitmap.recycle();
-        int previewImgHight = 0;
+        int previewImgHeight = 0;
         int previewImgWidth = 0;
         long previewFileSize = 0;
         String previewImgPath = localFilePath;
         if (resolutionRatio != null) {
-            previewImgHight = resolutionRatio.getHigh();
+            previewImgHeight = resolutionRatio.getHigh();
             previewImgWidth = resolutionRatio.getWidth();
             previewFileSize = resolutionRatio.getSize();
         } else {
-            previewImgHight = imgHeight;
+            previewImgHeight = imgHeight;
             previewImgWidth = imgWidth;
             previewFileSize = fileSize;
             previewImgPath = localFilePath;
@@ -215,7 +195,7 @@ public class CommunicationUtils {
         //还要转回dp/2
         int thumbnailHeight = 0;
         int thumbnailWidth = 0;
-        ViewGroup.LayoutParams layoutParams = DisplayMediaImageMsg.getImgViewSize(MyApplication.getInstance(), previewImgWidth, previewImgHight);
+        ViewGroup.LayoutParams layoutParams = DisplayMediaImageMsg.getImgViewSize(MyApplication.getInstance(), previewImgWidth, previewImgHeight);
         if (layoutParams.height != 0 && layoutParams.width != 0) {
             thumbnailHeight = (DensityUtil.px2dip(MyApplication.getInstance(), layoutParams.height) / 2);
             thumbnailWidth = (DensityUtil.px2dip(MyApplication.getInstance(), layoutParams.width) / 2);
@@ -224,7 +204,7 @@ public class CommunicationUtils {
         MsgContentMediaImage msgContentMediaImage = new MsgContentMediaImage();
         msgContentMediaImage.setName(file.getName());
 
-        msgContentMediaImage.setPreviewHeight(previewImgHight);
+        msgContentMediaImage.setPreviewHeight(previewImgHeight);
         msgContentMediaImage.setPreviewWidth(previewImgWidth);
         msgContentMediaImage.setPreviewSize(previewFileSize);
         msgContentMediaImage.setPreviewMedia(previewImgPath);
