@@ -135,7 +135,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="8dp"
                     android:layout_toLeftOf="@id/iv_conversation_name_arrow"
-                    android:layout_toRightOf="@id/tv_group_title"
+                    android:layout_toRightOf="@id/tv_conversation_title"
                     android:gravity="right"
                     android:paddingBottom="10dp"
                     android:paddingRight="1dp"
