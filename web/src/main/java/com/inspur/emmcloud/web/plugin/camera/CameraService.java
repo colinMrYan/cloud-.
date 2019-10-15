@@ -86,7 +86,6 @@ public class CameraService extends ImpPlugin {
     private int uploadThumbnailMaxSize = MyAppConfig.UPLOAD_THUMBNAIL_IMG_MAX_SIZE;
     private String watermarkContent, color, background, align, valign;
     private int fontSize;
-    private File cameraFile;
 
     /**
      * 读取图片属性：旋转的角度
@@ -201,7 +200,7 @@ public class CameraService extends ImpPlugin {
         destoryImage();
         String state = Environment.getExternalStorageState();
         if (state.equals(Environment.MEDIA_MOUNTED)) {
-            cameraFile = createCaptureFile(encodingType);
+            File cameraFile = createCaptureFile(encodingType);
             Intent intent = new Intent();
             intent.putExtra(MyCameraActivity.EXTRA_PHOTO_DIRECTORY_PATH, cameraFile.getParent());
             intent.putExtra(MyCameraActivity.EXTRA_PHOTO_NAME, cameraFile.getName());
@@ -343,13 +342,15 @@ public class CameraService extends ImpPlugin {
         // 照相取得图片
         if (requestCode == ImpFragment.CAMERA_SERVICE_CAMERA_REQUEST) {
             if (resultCode == Activity.RESULT_OK) {
-                if (cameraFile != null && cameraFile.exists()) {
+                String originImagePath = intent.getStringExtra(MyCameraActivity.OUT_FILE_PATH);
+                File originImageFile = new File(originImagePath);
+                if (originImageFile != null && originImageFile.exists()) {
                     try {
                         String originImgFileName = PhotoNameUtils.getFileName(getFragmentContext(), encodingType);
                         String thumbnailImgFileName = PhotoNameUtils.getThumbnailFileName(getFragmentContext(), 0, encodingType);
                         LogUtils.jasonDebug("mOriginHeightSize=" + mOriginHeightSize);
                         File originImgFile = new Compressor(getFragmentContext()).setMaxHeight(mOriginHeightSize).setMaxWidth(mOriginWidthtSize).setQuality(mQuality).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
-                                .setCompressFormat(format).compressToFile(cameraFile, originImgFileName);
+                                .setCompressFormat(format).compressToFile(originImageFile, originImgFileName);
                         String originImgPath = originImgFile.getAbsolutePath();
                         if (!StringUtils.isBlank(watermarkContent)) {
                             ImageUtils.createWaterMask(getFragmentContext(), originImgPath, watermarkContent, color, background, align, valign, fontSize);
