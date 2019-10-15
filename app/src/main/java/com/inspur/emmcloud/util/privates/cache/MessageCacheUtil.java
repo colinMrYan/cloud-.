@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.inspur.emmcloud.baselib.util.ListUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.DbCacheUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
@@ -39,6 +40,32 @@ public class MessageCacheUtil {
         return messageList;
     }
 
+    public static List<Message> getMessageListBySendStatus(int sendStatus) {
+        List<Message> messageList = null;
+        try {
+            messageList = DbCacheUtils.getDb(BaseApplication.getInstance()).selector(Message.class).where("sendStatus", "=", sendStatus).findAll();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (messageList == null) {
+            messageList = new ArrayList<>();
+        }
+        return messageList;
+    }
+
+    public static List<Message> getMessageListBySendStatus(int sendStatus, boolean isWaitingSendRetry) {
+        List<Message> messageList = null;
+        try {
+            messageList = DbCacheUtils.getDb(BaseApplication.getInstance()).selector(Message.class).where("sendStatus", "=", sendStatus).and("isWaitingSendRetry", "=", true).orderBy("creationDate", false).findAll();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (messageList == null) {
+            messageList = new ArrayList<>();
+        }
+        return messageList;
+    }
+
 
     /**
      * 存储消息
@@ -64,6 +91,9 @@ public class MessageCacheUtil {
      */
     public static void saveMessageList(Context context, List<Message> messageList) {
         try {
+            if (messageList == null || messageList.size() == 0) {
+                return;
+            }
             DbCacheUtils.getDb(context).saveOrUpdate(messageList);
         } catch (Exception e) {
             e.printStackTrace();

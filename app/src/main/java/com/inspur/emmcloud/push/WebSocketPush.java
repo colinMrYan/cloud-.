@@ -13,6 +13,7 @@ import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.basemodule.bean.EventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.push.PushManagerUtils;
 import com.inspur.emmcloud.basemodule.util.AppExceptionCacheUtils;
@@ -23,10 +24,10 @@ import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.GetVoiceAndVideoResult;
 import com.inspur.emmcloud.bean.chat.WSPushContent;
-import com.inspur.emmcloud.bean.system.EventMessage;
 import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
 import com.inspur.emmcloud.bean.system.badge.GetWebSocketBadgeResult;
 import com.inspur.emmcloud.componentservice.login.LoginService;
+import com.inspur.emmcloud.util.privates.MessageSendManager;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -179,7 +180,6 @@ public class WebSocketPush {
             IO.Options opts = new IO.Options();
             opts.reconnectionAttempts = 5; // 设置websocket重连次数
             opts.forceNew = true;
-            opts.reconnectionDelay = 10000;
             Map<String, String> query = new HashMap<>();
             try {
                 if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
@@ -506,7 +506,7 @@ public class WebSocketPush {
     }
 
     public void sendEventMessage(EventMessage eventMessage, Object content, String tracer) {
-        if (true) {
+        if (isSocketConnect()) {
             LogUtils.debug(TAG, "eventMessage.getTag()=" + eventMessage.getTag());
             LogUtils.debug(TAG, "eventMessage.content=" + content);
             eventMessage.setStartQuestTime(timeCount);
@@ -524,9 +524,10 @@ public class WebSocketPush {
         if (eventMessage != null) {
             eventMessage.setContent("time out");
             eventMessage.setStatus(-1);
-            EventBus.getDefault().post(eventMessage);
             if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE)) {
-                saveWSSendMessageException("ws_send_message", 3, timeoutType, 1001);
+                MessageSendManager.getInstance().addMessageInSendRetry((com.inspur.emmcloud.bean.chat.Message) eventMessage.getExtra());
+            } else {
+                EventBus.getDefault().post(eventMessage);
             }
         }
     }

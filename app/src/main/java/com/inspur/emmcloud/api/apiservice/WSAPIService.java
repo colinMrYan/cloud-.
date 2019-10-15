@@ -2,8 +2,8 @@ package com.inspur.emmcloud.api.apiservice;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.basemodule.bean.EventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
-import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.bean.chat.Message;
@@ -11,7 +11,6 @@ import com.inspur.emmcloud.bean.chat.MsgContentComment;
 import com.inspur.emmcloud.bean.chat.MsgContentExtendedLinks;
 import com.inspur.emmcloud.bean.chat.MsgContentTextPlain;
 import com.inspur.emmcloud.bean.chat.RelatedLink;
-import com.inspur.emmcloud.bean.system.EventMessage;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 
@@ -67,7 +66,7 @@ public class WSAPIService {
 
     }
 
-    public void sendChatTextPlainMsg(Message fakeMessage) {
+    private void sendChatTextPlainMsg(Message fakeMessage) {
         try {
             JSONObject object = new JSONObject();
             JSONObject actionObj = new JSONObject();
@@ -89,15 +88,15 @@ public class WSAPIService {
             }
             bodyObj.put("tmpId", fakeMessage.getId());
             object.put("body", bodyObj);
-            EventMessage eventMessage = new EventMessage(fakeMessage.getId(), Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE, "", fakeMessage.getId());
-            eventMessage.setTimeout(MyAppConfig.WEBSOCKET_REQUEST_TIMEOUT_SEND_MESSAGE);
+            EventMessage eventMessage = new EventMessage(fakeMessage.getId(), Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE, "", fakeMessage);
+//            eventMessage.setTimeout(MyAppConfig.WEBSOCKET_REQUEST_TIMEOUT_SEND_MESSAGE);
             WebSocketPush.getInstance().sendEventMessage(eventMessage, object, fakeMessage.getId());
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void sendChatCommentTextPlainMsg(Message fakeMessage) {
+    private void sendChatCommentTextPlainMsg(Message fakeMessage) {
         try {
             JSONObject object = new JSONObject();
             JSONObject actionObj = new JSONObject();
@@ -120,8 +119,8 @@ public class WSAPIService {
             }
             bodyObj.put("tmpId", fakeMessage.getId());
             object.put("body", bodyObj);
-            EventMessage eventMessage = new EventMessage(fakeMessage.getId(), Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE, "", fakeMessage.getId());
-            eventMessage.setTimeout(MyAppConfig.WEBSOCKET_REQUEST_TIMEOUT_SEND_MESSAGE);
+            EventMessage eventMessage = new EventMessage(fakeMessage.getId(), Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE, "", fakeMessage);
+//            eventMessage.setTimeout(MyAppConfig.WEBSOCKET_REQUEST_TIMEOUT_SEND_MESSAGE);
             WebSocketPush.getInstance().sendEventMessage(eventMessage, object, fakeMessage.getId());
         } catch (Exception e) {
             e.printStackTrace();
@@ -129,7 +128,7 @@ public class WSAPIService {
     }
 
 
-    public void sendChatRegularFileMsg(Message fakeMessage) {
+    private void sendChatRegularFileMsg(Message fakeMessage) {
         try {
             JSONObject object = new JSONObject();
             JSONObject actionObj = new JSONObject();
@@ -148,15 +147,15 @@ public class WSAPIService {
             bodyObj.put("media", fakeMessage.getMsgContentAttachmentFile().getMedia());
             bodyObj.put("tmpId", fakeMessage.getId());
             object.put("body", bodyObj);
-            EventMessage eventMessage = new EventMessage(fakeMessage.getId(), Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE, "", fakeMessage.getId());
-            eventMessage.setTimeout(MyAppConfig.WEBSOCKET_REQUEST_TIMEOUT_SEND_MESSAGE);
+            EventMessage eventMessage = new EventMessage(fakeMessage.getId(), Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE, "", fakeMessage);
+//            eventMessage.setTimeout(MyAppConfig.WEBSOCKET_REQUEST_TIMEOUT_SEND_MESSAGE);
             WebSocketPush.getInstance().sendEventMessage(eventMessage, object, fakeMessage.getId());
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void sendChatMediaVoiceMsg(Message message) {
+    private void sendChatMediaVoiceMsg(Message message) {
         try {
             JSONObject object = new JSONObject();
             JSONObject actionObj = new JSONObject();
@@ -187,15 +186,15 @@ public class WSAPIService {
             bodyObj.put("subtitles", subTitleObj);
             bodyObj.put("tmpId", message.getId());
             object.put("body", bodyObj);
-            EventMessage eventMessage = new EventMessage(message.getId(), Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE, "", message.getId());
-            eventMessage.setTimeout(MyAppConfig.WEBSOCKET_REQUEST_TIMEOUT_SEND_MESSAGE);
+            EventMessage eventMessage = new EventMessage(message.getId(), Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE, "", message);
+//            eventMessage.setTimeout(MyAppConfig.WEBSOCKET_REQUEST_TIMEOUT_SEND_MESSAGE);
             WebSocketPush.getInstance().sendEventMessage(eventMessage, object, message.getId());
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void sendChatExtendedLinksMsg(Message message) {
+    private void sendChatExtendedLinksMsg(Message message) {
         try {
             JSONObject object = new JSONObject();
             JSONObject actionObj = new JSONObject();
@@ -220,15 +219,15 @@ public class WSAPIService {
             }
             bodyObj.put("relatedLinks", array);
             object.put("body", bodyObj);
-            EventMessage eventMessage = new EventMessage(message.getId(), Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE, "", message.getId());
-            eventMessage.setTimeout(MyAppConfig.WEBSOCKET_REQUEST_TIMEOUT_SEND_MESSAGE);
+            EventMessage eventMessage = new EventMessage(message.getId(), Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE, "", message);
+//            eventMessage.setTimeout(MyAppConfig.WEBSOCKET_REQUEST_TIMEOUT_SEND_MESSAGE);
             WebSocketPush.getInstance().sendEventMessage(eventMessage, object, message.getId());
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void sendChatMediaImageMsg(Message fakeMessage) {
+    private void sendChatMediaImageMsg(Message fakeMessage) {
         try {
             JSONObject object = new JSONObject();
             JSONObject actionObj = new JSONObject();
@@ -262,8 +261,8 @@ public class WSAPIService {
             bodyObj.put("raw", rawObj);
             bodyObj.put("tmpId", fakeMessage.getId());
             object.put("body", bodyObj);
-            EventMessage eventMessage = new EventMessage(fakeMessage.getId(), Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE, "", fakeMessage.getId());
-            eventMessage.setTimeout(MyAppConfig.WEBSOCKET_REQUEST_TIMEOUT_SEND_MESSAGE);
+            EventMessage eventMessage = new EventMessage(fakeMessage.getId(), Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE, "", fakeMessage);
+//            eventMessage.setTimeout(MyAppConfig.WEBSOCKET_REQUEST_TIMEOUT_SEND_MESSAGE);
             WebSocketPush.getInstance().sendEventMessage(eventMessage, object, fakeMessage.getId());
         } catch (Exception e) {
             e.printStackTrace();
