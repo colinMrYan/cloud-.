@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.chat.mvp.contract;
 
+import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.basemodule.mvp.BaseView;
 import com.inspur.emmcloud.bean.chat.Conversation;
 
@@ -24,7 +25,13 @@ public interface ChannelGroupInfoContract {
 
         void changeConversationTitle(int memberSize);
 
-        void finishActivity();
+        void updateUiConversation(Conversation conversation);
+
+        void quitGroupSuccess();
+
+        void deleteGroupSuccess();
+
+        void createGroupSuccess(Conversation conversation);
     }
 
     interface Presenter {
@@ -39,6 +46,8 @@ public interface ChannelGroupInfoContract {
         void addGroupMembers(ArrayList<String> uidList, String conversationId);
 
         void delGroupMembers(ArrayList<String> uidList, String conversationId);
+
+        void createGroup(List<SearchModel> addSearchModelList);
 
         void quitGroupChannel();
 

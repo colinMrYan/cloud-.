@@ -1,9 +1,14 @@
 package com.inspur.emmcloud.ui.chat.mvp.presenter;
 
+import android.content.Intent;
+import android.support.annotation.Nullable;
+
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.basemodule.mvp.BasePresenter;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.bean.chat.Conversation;
@@ -12,8 +17,13 @@ import com.inspur.emmcloud.componentservice.login.OauthCallBack;
 import com.inspur.emmcloud.ui.chat.mvp.contract.ChannelGroupInfoContract;
 import com.inspur.emmcloud.ui.chat.mvp.model.api.ApiServiceImpl;
 import com.inspur.emmcloud.ui.chat.mvp.model.api.ApiUrl;
+import com.inspur.emmcloud.util.privates.CommunicationUtils;
+import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +33,9 @@ import java.util.List;
  */
 
 public class ChannelGroupInfoPresenter extends BasePresenter<ChannelGroupInfoContract.View> implements ChannelGroupInfoContract.Presenter {
+
+    private static final int QEQUEST_ADD_MEMBER = 2;
+    private static final int QEQUEST_DEL_MEMBER = 3;
 
     Conversation mConversation = new Conversation();
 
@@ -142,6 +155,7 @@ public class ChannelGroupInfoPresenter extends BasePresenter<ChannelGroupInfoCon
                 memberUidList.addAll(uidList);
                 mConversation.setMembers(JSONUtils.toJSONString(memberUidList));
                 ConversationCacheUtils.setConversationMember(MyApplication.getInstance(), mConversation.getId(), memberUidList);
+                mView.updateUiConversation(mConversation);
                 mView.changeConversationTitle(memberUidList.size());
                 mView.showGroupMembersHead(getGroupUIMembersUid(mConversation));
             }
@@ -174,7 +188,7 @@ public class ChannelGroupInfoPresenter extends BasePresenter<ChannelGroupInfoCon
     @Override
     public void delGroupMembers(final ArrayList<String> uidList, final String conversationId) {
         String completeUrl = ApiUrl.getModifyGroupMemberUrl(conversationId);
-        ApiServiceImpl.getInstance().addGroupMembers(new BaseModuleAPICallback(mView.getContext(), completeUrl) {
+        ApiServiceImpl.getInstance().delGroupMembers(new BaseModuleAPICallback(mView.getContext(), completeUrl) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 mView.dismissLoading();
@@ -182,6 +196,7 @@ public class ChannelGroupInfoPresenter extends BasePresenter<ChannelGroupInfoCon
                 memberUidList.removeAll(uidList);
                 mConversation.setMembers(JSONUtils.toJSONString(memberUidList));
                 ConversationCacheUtils.setConversationMember(MyApplication.getInstance(), mConversation.getId(), memberUidList);
+                mView.updateUiConversation(mConversation);
                 mView.changeConversationTitle(memberUidList.size());
                 mView.showGroupMembersHead(getGroupUIMembersUid(mConversation));
             }
@@ -212,6 +227,43 @@ public class ChannelGroupInfoPresenter extends BasePresenter<ChannelGroupInfoCon
     }
 
     @Override
+    public void createGroup(List<SearchModel> addSearchList) {
+        JSONArray peopleArray = new JSONArray();
+        String uid = CommunicationUtils.getDirctChannelOtherUid(MyApplication.getInstance(), mConversation.getName());
+        ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(uid);
+        JSONObject jsonObjectOther = new JSONObject();
+        try {
+            for (int i = 0; i < addSearchList.size(); i++) {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("pid", addSearchList.get(i).getId());
+                jsonObject.put("name", addSearchList.get(i).getName());
+                peopleArray.put(jsonObject);
+            }
+            jsonObjectOther.put("pid", uid);
+            jsonObjectOther.put("name", contactUser.getName());
+            peopleArray.put(jsonObjectOther);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        // TODO Auto-generated method stub
+        new ConversationCreateUtils().createGroupConversation(mView.getActivity(), peopleArray,
+                new ConversationCreateUtils.OnCreateGroupConversationListener() {
+
+                    @Override
+                    public void createGroupConversationSuccess(Conversation conversation) {
+                        mView.dismissLoading();
+                        mView.createGroupSuccess(conversation);
+                    }
+
+                    @Override
+                    public void createGroupConversationFail() {
+                        mView.dismissLoading();
+                        ToastUtils.show("创建群组失败");
+                    }
+                });
+    }
+
+    @Override
     public void quitGroupChannel() {
         final String conversationId = mConversation.getId();
         String completeUrl = ApiUrl.getQuitChannelGroupUrl(mConversation.getId());
@@ -219,6 +271,7 @@ public class ChannelGroupInfoPresenter extends BasePresenter<ChannelGroupInfoCon
             @Override
             public void callbackSuccess(byte[] arg0) {
                 mView.dismissLoading();
+                mView.quitGroupSuccess();
             }
 
             @Override
@@ -254,6 +307,7 @@ public class ChannelGroupInfoPresenter extends BasePresenter<ChannelGroupInfoCon
             @Override
             public void callbackSuccess(byte[] arg0) {
                 mView.dismissLoading();
+                mView.deleteGroupSuccess();
             }
 
             @Override
@@ -279,6 +333,41 @@ public class ChannelGroupInfoPresenter extends BasePresenter<ChannelGroupInfoCon
                         oauthCallBack, requestTime);
             }
         }, conversationId);
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == -1) {
+            switch (requestCode) {
+                case QEQUEST_ADD_MEMBER:
+                    ArrayList<String> addUidList = new ArrayList<>();
+                    List<SearchModel> addMemberList = (List<SearchModel>) data
+                            .getSerializableExtra("selectMemList");
+                    if (addMemberList.size() > 0) {
+                        for (int i = 0; i < addMemberList.size(); i++) {
+                            addUidList.add(addMemberList.get(i).getId());
+                        }
+                        mView.showLoading();
+                        if (mConversation.getType().equals(Conversation.TYPE_GROUP)) {
+                            addGroupMembers(addUidList, mConversation.getId());
+                        } else if (mConversation.getType().equals(Conversation.TYPE_DIRECT)) {
+                            createGroup(addMemberList);
+                        }
+                    }
+                    break;
+                case QEQUEST_DEL_MEMBER:
+                    ArrayList<String> delUidList = (ArrayList<String>) data.getSerializableExtra("selectMemList");
+                    if (delUidList.size() > 0) {
+                        mView.showLoading();
+                        delGroupMembers(delUidList, mConversation.getId());
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
 
     }
 }

@@ -2,9 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     android:orientation="vertical">
-
 
     <RelativeLayout
         android:id="@+id/rl_header"
@@ -61,7 +59,7 @@
             android:orientation="vertical">
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_group_members_head"
+                android:id="@+id/rv_person_head"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#FFFFFF"
@@ -69,36 +67,7 @@
                 android:paddingRight="16dp"></android.support.v7.widget.RecyclerView>
 
             <RelativeLayout
-                android:id="@+id/rl_more_members"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#FFFFFF"
-                android:onClick="onClick"
-                android:visibility="gone">
-
-                <TextView
-                    android:id="@+id/tv_more_members"
-                    android:layout_width="wrap_content"
-                    android:layout_height="25dp"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
-                    android:gravity="center"
-                    android:text="@string/channel_search_more_group_members"
-                    android:textColor="#999999"
-                    android:textSize="13sp" />
-
-                <ImageView
-                    android:layout_width="9dp"
-                    android:layout_height="9dp"
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@+id/tv_more_members"
-                    android:paddingLeft="4dp"
-                    android:src="@drawable/ic_arrow_right" />
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/rl_group_name"
+                android:id="@+id/rl_person_images"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -107,97 +76,7 @@
                 android:paddingLeft="16dp">
 
                 <TextView
-                    android:id="@+id/tv_group_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:paddingBottom="11dp"
-                    android:paddingTop="11dp"
-                    android:singleLine="true"
-                    android:text="@string/channel_group_name"
-                    android:textColor="#FF333333"
-                    android:textSize="16sp" />
-
-                <ImageView
-                    android:id="@+id/iv_group_name_arrow"
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="2dp"
-                    android:layout_marginRight="16dp"
-                    android:src="@drawable/ic_arrow_right" />
-
-                <TextView
-                    android:id="@+id/tv_group_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="8dp"
-                    android:layout_toLeftOf="@id/iv_group_name_arrow"
-                    android:layout_toRightOf="@id/tv_group_title"
-                    android:gravity="right"
-                    android:paddingBottom="10dp"
-                    android:paddingRight="1dp"
-                    android:paddingTop="8dp"
-                    android:singleLine="true"
-                    android:textColor="#888888"
-                    android:textSize="16sp" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5px"
-                    android:layout_below="@id/tv_group_title"
-                    android:background="@color/color_list_divider" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/rl_group_qr"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#FFFFFF"
-                android:onClick="onClick"
-                android:paddingLeft="16dp">
-
-                <TextView
-                    android:id="@+id/tv_group_qr_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:paddingBottom="11dp"
-                    android:paddingTop="11dp"
-                    android:text="@string/channel_group_qrcode"
-                    android:textColor="#FF333333"
-                    android:textSize="16sp" />
-
-                <ImageView
-                    android:id="@+id/iv_group_qr_arrow"
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="2dp"
-                    android:layout_marginRight="16dp"
-                    android:src="@drawable/ic_arrow_right" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5px"
-                    android:layout_below="@id/tv_group_qr_title"
-                    android:background="@color/color_list_divider" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/rl_group_images"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:background="#FFFFFF"
-                android:onClick="onClick"
-                android:paddingLeft="16dp">
-
-                <TextView
-                    android:id="@+id/tv_group_images"
+                    android:id="@+id/tv_person_images"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
@@ -208,7 +87,7 @@
                     android:textSize="16sp" />
 
                 <ImageView
-                    android:id="@+id/iv_group_search_images"
+                    android:id="@+id/iv_person_search_images"
                     android:layout_width="15dp"
                     android:layout_height="15dp"
                     android:layout_alignParentRight="true"
@@ -225,7 +104,7 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/rl_group_files"
+                android:id="@+id/rl_person_files"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#FFFFFF"
@@ -233,7 +112,7 @@
                 android:paddingLeft="16dp">
 
                 <TextView
-                    android:id="@+id/tv_group_files_title"
+                    android:id="@+id/tv_person_files_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
@@ -244,7 +123,7 @@
                     android:textSize="16sp" />
 
                 <ImageView
-                    android:id="@+id/iv_group_files_arrow"
+                    android:id="@+id/iv_person_files_arrow"
                     android:layout_width="15dp"
                     android:layout_height="15dp"
                     android:layout_alignParentRight="true"
@@ -261,15 +140,16 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/rl_group_search_record"
+                android:id="@+id/rl_person_search_record"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:background="#FFFFFF"
                 android:onClick="onClick"
                 android:paddingLeft="16dp">
 
                 <TextView
-                    android:id="@+id/tv_group_search_record"
+                    android:id="@+id/tv_person_search_record"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
@@ -280,7 +160,7 @@
                     android:textSize="16sp" />
 
                 <ImageView
-                    android:id="@+id/iv_group_search_record"
+                    android:id="@+id/iv_person_search_record"
                     android:layout_width="15dp"
                     android:layout_height="15dp"
                     android:layout_alignParentRight="true"
@@ -292,50 +172,12 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5px"
-                    android:layout_below="@id/tv_group_search_record"
+                    android:layout_below="@id/tv_person_search_record"
                     android:background="@color/color_list_divider" />
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/rl_channel_search_record_have_margin"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:background="#FFFFFF"
-                android:onClick="onClick"
-                android:paddingLeft="16dp"
-                android:visibility="gone">
-
-                <TextView
-                    android:id="@+id/tv_channel_search_record_have_margin"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:paddingBottom="11dp"
-                    android:paddingTop="11dp"
-                    android:text="@string/chat_group_message_search"
-                    android:textColor="#FF333333"
-                    android:textSize="16sp" />
-
-                <ImageView
-                    android:id="@+id/iv_channel_search_record_have_margin"
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="2dp"
-                    android:layout_marginRight="16dp"
-                    android:src="@drawable/ic_arrow_right" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5px"
-                    android:layout_below="@id/tv_channel_search_record_have_margin"
-                    android:background="@color/color_list_divider" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/rl_group_sticky"
+                android:id="@+id/rl_person_sticky"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -344,7 +186,7 @@
                 android:paddingLeft="16dp">
 
                 <TextView
-                    android:id="@+id/tv_group_sticky_title"
+                    android:id="@+id/tv_person_sticky_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
@@ -355,7 +197,7 @@
                     android:textSize="16sp" />
 
                 <android.support.v7.widget.SwitchCompat
-                    android:id="@+id/switch_group_sticky"
+                    android:id="@+id/switch_person_sticky"
                     android:layout_width="51dp"
                     android:layout_height="31dp"
                     android:layout_alignParentRight="true"
@@ -372,7 +214,7 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/rl_group_mute_notification"
+                android:id="@+id/rl_person_mute_notification"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#FFFFFF"
@@ -380,7 +222,7 @@
                 android:paddingLeft="16dp">
 
                 <TextView
-                    android:id="@+id/tv_group_mute_notification_title"
+                    android:id="@+id/tv_person_mute_notification_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
@@ -391,7 +233,7 @@
                     android:textSize="16sp" />
 
                 <android.support.v7.widget.SwitchCompat
-                    android:id="@+id/switch_group_mute_notification"
+                    android:id="@+id/switch_person_mute_notification"
                     android:layout_width="51dp"
                     android:layout_height="31dp"
                     android:layout_alignParentRight="true"
@@ -403,36 +245,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5px"
-                    android:layout_below="@id/tv_group_mute_notification_title"
-                    android:background="@color/color_list_divider" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/rl_group_quit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"
-                android:background="#FFFFFF"
-                android:onClick="onClick">
-
-                <TextView
-                    android:id="@+id/tv_group_quit_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:gravity="center"
-                    android:paddingBottom="11dp"
-                    android:paddingTop="11dp"
-                    android:text="@string/quit_group"
-                    android:textColor="#FF333333"
-                    android:textSize="16sp" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5px"
-                    android:layout_below="@id/tv_group_quit_title"
-                    android:layout_marginLeft="16dp"
+                    android:layout_below="@id/tv_person_mute_notification_title"
                     android:background="@color/color_list_divider" />
             </RelativeLayout>
         </LinearLayout>

@@ -3,6 +3,7 @@ package com.inspur.emmcloud.ui.chat.mvp.model.api;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.router.Router;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
 import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
 import com.inspur.emmcloud.basemodule.api.HttpUtils;
@@ -55,25 +56,27 @@ public class ApiServiceImpl implements ApiService.IGroupInfoActivity {
         final String url = ApiUrl.getModifyGroupMemberUrl(conversationId);
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
         params.addParameter("members", uidList);
-        HttpUtils.request(CloudHttpMethod.POST, params, apiCallback);
         params.setAsJsonContent(true);
+        HttpUtils.request(CloudHttpMethod.POST, params, apiCallback);
+
     }
 
     @Override
     public void delGroupMembers(BaseModuleAPICallback apiCallback, ArrayList<String> uidList, String conversationId) {
         final String url = ApiUrl.getModifyGroupMemberUrl(conversationId);
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
-        params.addParameter("members", uidList);
-        HttpUtils.request(CloudHttpMethod.DELETE, params, apiCallback);
+        params.addParameter("members", JSONUtils.toJSONArray(uidList));
         params.setAsJsonContent(true);
+        HttpUtils.request(CloudHttpMethod.DELETE, params, apiCallback);
+
     }
 
     @Override
     public void quitGroupChannel(BaseModuleAPICallback apiCallback, String conversationId) {
         String completeUrl = ApiUrl.getQuitChannelGroupUrl(conversationId);
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
-        HttpUtils.request(CloudHttpMethod.DELETE, params, apiCallback);
         params.setAsJsonContent(true);
+        HttpUtils.request(CloudHttpMethod.DELETE, params, apiCallback);
     }
 
     @Override

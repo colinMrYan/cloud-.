@@ -53,10 +53,10 @@ public class ChannelMembersHeadAdapter extends RecyclerView.Adapter<ChannelMembe
         String userName;
         String userPhotoUrl;
         if (uidList.get(position).equals("deleteUser")) {
-            userPhotoUrl = "drawable://" + R.drawable.icon_group_delete;
+            userPhotoUrl = "drawable://" + R.drawable.ic_delete_channel_member;
             userName = "";
         } else if (uidList.get(position).equals("addUser")) {
-            userPhotoUrl = "drawable://" + R.drawable.icon_member_add;
+            userPhotoUrl = "drawable://" + R.drawable.ic_add_channel_member;
             userName = "";
         } else {
             uid = uidList.get(position);

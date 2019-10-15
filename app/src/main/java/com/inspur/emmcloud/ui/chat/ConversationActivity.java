@@ -1233,9 +1233,9 @@ public class ConversationActivity extends ConversationBaseActivity {
                 break;
             case Conversation.TYPE_DIRECT:
                 String uid = CommunicationUtils.getDirctChannelOtherUid(MyApplication.getInstance(), conversation.getName());
-                bundle.putString("uid", uid);
+                bundle.putString(ChannelGroupInfoActivity.EXTRA_CID, conversation.getId());
                 IntentUtils.startActivity(ConversationActivity.this,
-                        UserInfoActivity.class, bundle);
+                        ChannelGroupInfoActivity.class, bundle);
                 break;
             case Conversation.TYPE_CAST:
                 bundle.putSerializable(ConversationCastInfoActivity.EXTRA_CID, conversation.getId());

@@ -165,7 +165,6 @@
     <string name="channel_group_image">Images</string>
     <string name="channel_group_file">Files</string>
     <string name="channel_group_members_name">Group Name</string>
-    <string name="channel_group_qrcode">Group QrCode</string>
     <string name="channel_set_top">Sticky on Top</string>
     <string name="message_without_interruption">Mute Notifications</string>
     <string name="channel_single_chat_files">Files</string>
