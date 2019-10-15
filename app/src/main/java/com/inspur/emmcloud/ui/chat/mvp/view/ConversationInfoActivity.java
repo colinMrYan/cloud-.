@@ -71,19 +71,19 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
     TextView groupMoreMemberTV;
     @BindView(R.id.rl_more_members)
     RelativeLayout moreMembersLayout;
-    @BindView(R.id.switch_group_sticky)
+    @BindView(R.id.switch_conversation_sticky)
     SwitchCompat groupStickySwitch;
-    @BindView(R.id.switch_group_mute_notification)
+    @BindView(R.id.switch_conversation_mute_notification)
     SwitchCompat groupMuteNotificationSwitch;
-    @BindView(R.id.tv_group_quit_title)
+    @BindView(R.id.tv_conversation_quit_title)
     TextView quitTextView;
-    @BindView(R.id.rl_group_qr)
+    @BindView(R.id.rl_conversation_qr)
     RelativeLayout groupQRLayout;
-    @BindView(R.id.rl_group_name)
+    @BindView(R.id.rl_conversation_name)
     RelativeLayout groupNameLayout;
-    @BindView(R.id.rl_group_quit)
+    @BindView(R.id.rl_conversation_quit)
     RelativeLayout groupQuitLayout;
-    @BindView(R.id.rl_group_search_record)
+    @BindView(R.id.rl_conversation_search_record)
     RelativeLayout searchRecordLayout;
     @BindView(R.id.rl_channel_search_record_have_margin)
     RelativeLayout searchRecordMarginLayout;
@@ -106,7 +106,7 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_group_info_detail;
+        return R.layout.activity_conversation_info_detail;
     }
 
     /**
@@ -184,24 +184,24 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
             case R.id.ibt_back:
                 finish();
                 break;
-            case R.id.rl_group_name:
+            case R.id.rl_conversation_name:
                 bundle.putString(EXTRA_CID, uiConversation.getId());
                 IntentUtils.startActivity(this,
                         ConversationNameModifyActivity.class, bundle);
                 break;
-            case R.id.rl_group_qr:
+            case R.id.rl_conversation_qr:
                 bundle.putString("cid", uiConversation.getId());
                 bundle.putString("groupName", uiConversation.getShowName());
                 bundle.putInt(MEMBER_SIZE, uiConversation.getMemberList().size());
                 IntentUtils.startActivity(this,
                         ConversationQrCodeActivity.class, bundle);
                 break;
-            case R.id.rl_group_images:
+            case R.id.rl_conversation_images:
                 bundle.putString(EXTRA_CID, uiConversation.getId());
                 IntentUtils.startActivity(this,
                         GroupAlbumActivity.class, bundle);
                 break;
-            case R.id.rl_group_files:
+            case R.id.rl_conversation_files:
                 bundle.putString(EXTRA_CID, uiConversation.getId());
                 IntentUtils.startActivity(this,
                         GroupFileActivity.class, bundle);
@@ -211,7 +211,7 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
                 bundle.putString(EXTRA_CID, uiConversation.getId());
                 IntentUtils.startActivity(this, CommunicationSearchMessagesActivity.class, bundle);
                 break;
-            case R.id.rl_group_quit:
+            case R.id.rl_conversation_quit:
                 if (uiConversation.getOwner().equals(MyApplication.getInstance().getUid())) {
                     showDelGroupWarningDlg();
                 } else {
@@ -233,13 +233,13 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         switch (compoundButton.getId()) {
-            case R.id.switch_group_sticky:
+            case R.id.switch_conversation_sticky:
                 if (!b == uiConversation.isStick()) {
                     loadingDialog.show();
                     mPresenter.setConversationStick(b, uiConversation.getId());
                 }
                 break;
-            case R.id.switch_group_mute_notification:
+            case R.id.switch_conversation_mute_notification:
                 if (!b == uiConversation.isDnd()) {
                     loadingDialog.show();
                     mPresenter.setMuteNotification(b, uiConversation.getId());
