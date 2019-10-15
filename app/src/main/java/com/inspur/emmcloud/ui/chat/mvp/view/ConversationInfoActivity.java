@@ -207,7 +207,7 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
                         GroupFileActivity.class, bundle);
                 break;
             case R.id.rl_channel_search_record_have_margin:
-            case R.id.rl_group_search_record:
+            case R.id.rl_conversation_search_record:
                 bundle.putString(EXTRA_CID, uiConversation.getId());
                 IntentUtils.startActivity(this, CommunicationSearchMessagesActivity.class, bundle);
                 break;
