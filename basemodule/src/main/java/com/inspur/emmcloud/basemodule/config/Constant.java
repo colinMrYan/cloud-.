@@ -43,6 +43,7 @@ public class Constant {
     public static final String PREF_BADGE_NUM_COMMUNICATION = "badge_num_communication";
     public static final String PREF_BADGE_NUM_APPSTORE = "badge_num_appstore";
     public static final String PREF_BADGE_NUM_SNS = "badge_num_sns";
+    public static final String PREF_DESKTOP_BADGE = "push_desktop_badge";
     public static final String PREF_MNM_DOUBLE_VALIADATION = "mdm_double_validation";//是否强制开启手势密码
 
     public static final String PREF_MDM_STATUS_PASS = "isMDMStatusPass";//是否设备管理通过

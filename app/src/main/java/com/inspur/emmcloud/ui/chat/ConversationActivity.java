@@ -1399,7 +1399,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     }
 
     /**
-     * 持久化16秒以上消息的消息状态
+     * 持久化消息状态
      *
      * @param messageSendingList
      */
