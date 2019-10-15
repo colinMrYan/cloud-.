@@ -39,6 +39,7 @@ import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.basemodule.util.ClickRuleUtil;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
@@ -955,6 +956,9 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
      * @param type
      */
     private void refuseOrLeaveChannel(int type) {
+        if (ClickRuleUtil.isFastClick()) {
+            return;
+        }
         switch (type) {
             case COMMUNICATION_REFUSE:
                 if (NetUtils.isNetworkConnected(ChannelVoiceCommunicationActivity.this)) {
