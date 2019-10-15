@@ -39,6 +39,7 @@ import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.basemodule.util.ClickRuleUtil;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
@@ -262,6 +263,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                     public void onFinish() {
                         //如果是邀请或被邀请状态，倒计时结束时挂断电话
                         if (layoutState == INVITEE_LAYOUT_STATE || layoutState == INVITER_LAYOUT_STATE) {
+                            isLeaveChannel = true;
                             refuseOrLeaveChannel(COMMUNICATION_REFUSE);
                         }
                     }
@@ -965,6 +967,9 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
      * @param type
      */
     private void refuseOrLeaveChannel(int type) {
+        if (ClickRuleUtil.isFastClick()) {
+            return;
+        }
         switch (type) {
             case COMMUNICATION_REFUSE:
                 if (NetUtils.isNetworkConnected(ChannelVoiceCommunicationActivity.this)) {

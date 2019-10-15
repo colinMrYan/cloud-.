@@ -410,7 +410,12 @@ public class VoiceCommunicationUtils {
      */
     public void destroy() {
         leaveChannel();
-        RtcEngine.destroy();
+        new android.os.Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                RtcEngine.destroy();
+            }
+        }, 1000);
         mRtcEngine = null;
     }
 
