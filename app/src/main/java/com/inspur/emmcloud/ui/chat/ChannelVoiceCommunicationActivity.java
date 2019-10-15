@@ -252,10 +252,11 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     private int initX;//本地视频初始x坐标
     private int initY;//本地视频初始y坐标
     private CountDownTimer countDownTimer;
+    private CountDownTimer countDownOnlyOneConnectLeftTimer;
     /**
-     * 60s内无响应挂断
+     * 30s内无响应挂断
      */
-    private long millisInFuture = 60 * 1000L, countDownInterval = 1000;
+    private long millisInFuture = 30 * 1000L, countDownInterval = 1000;
 
     @Override
     public void onCreate() {
@@ -589,7 +590,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     public void onReceiveVoiceOrVideoCall(final GetVoiceAndVideoResult getVoiceAndVideoResult) {
         CustomProtocol customProtocol = new CustomProtocol(getVoiceAndVideoResult.getContextParamsSchema());
         String cmd = customProtocol.getParamMap().get("cmd");
-        LogUtils.YfcDebug("cmd:" + cmd);
         if (!StringUtils.isBlank(cmd) && getVoiceAndVideoResult.getContextParamsRoom().equals(agoraChannelId)) {
             String uid = customProtocol.getParamMap().get("uid");
             if (cmd.equals("destroy")) {
@@ -626,6 +626,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 }
             }
             if (waitAndCommunicationSize < 2) {
+                VoiceCommunicationUtils.getInstance().setCommunicationState(COMMUNICATION_STATE_OVER);
                 refuseOrLeaveChannel(COMMUNICATION_LEAVE);
             }
         }
@@ -644,9 +645,16 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
 //                    remindEmmServerLeaveChannel(agoraChannelId);
 //                }
                 if (userCount < 2) {
-                    VoiceCommunicationUtils.getInstance().setCommunicationState(COMMUNICATION_STATE_OVER);
-                    voiceCommunicationUtils.destroy();
-                    finish();
+//                    VoiceCommunicationUtils.getInstance().setCommunicationState(COMMUNICATION_STATE_OVER);
+//                    voiceCommunicationUtils.destroy();
+//                    finish();
+                    checkCommunicationFinish();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            startCountDown();
+                        }
+                    });
                 }
             }
 
@@ -755,6 +763,28 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 });
             }
         });
+    }
+
+    /**
+     * 当在通话中，只剩下一个人在频道中，开始倒计时，倒计时结束时，仍然没有其他人加入，则关闭频道
+     */
+    private void startCountDown() {
+        countDownOnlyOneConnectLeftTimer = new CountDownTimer(20 * 1000L, countDownInterval) {
+
+            @Override
+            public void onTick(long millisUntilFinished) {
+            }
+
+            @Override
+            public void onFinish() {
+                //如果是邀请或被邀请状态，倒计时结束时挂断电话
+                if (layoutState == COMMUNICATION_LAYOUT_STATE && userCount < 2) {
+                    VoiceCommunicationUtils.getInstance().setCommunicationState(COMMUNICATION_STATE_OVER);
+                    refuseOrLeaveChannel(COMMUNICATION_REFUSE);
+                }
+            }
+        };
+        countDownOnlyOneConnectLeftTimer.start();
     }
 
     /**
@@ -1067,6 +1097,10 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         if (countDownTimer != null) {
             countDownTimer.cancel();
             countDownTimer = null;
+        }
+        if (countDownOnlyOneConnectLeftTimer != null) {
+            countDownOnlyOneConnectLeftTimer.cancel();
+            countDownOnlyOneConnectLeftTimer = null;
         }
         EventBus.getDefault().unregister(this);
         mediaPlayerManagerUtils.stop();
