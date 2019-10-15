@@ -769,7 +769,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
      * 当在通话中，只剩下一个人在频道中，开始倒计时，倒计时结束时，仍然没有其他人加入，则关闭频道
      */
     private void startCountDown() {
-        countDownOnlyOneConnectLeftTimer = new CountDownTimer(20 * 1000L, countDownInterval) {
+        countDownOnlyOneConnectLeftTimer = new CountDownTimer(millisInFuture, countDownInterval) {
 
             @Override
             public void onTick(long millisUntilFinished) {
