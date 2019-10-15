@@ -14,7 +14,7 @@ import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.componentservice.login.OauthCallBack;
-import com.inspur.emmcloud.ui.chat.mvp.contract.ChannelGroupInfoContract;
+import com.inspur.emmcloud.ui.chat.mvp.contract.ConverssationInfoContract;
 import com.inspur.emmcloud.ui.chat.mvp.model.api.ApiServiceImpl;
 import com.inspur.emmcloud.ui.chat.mvp.model.api.ApiUrl;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
@@ -32,7 +32,7 @@ import java.util.List;
  * Created by libaochao on 2019/10/12.
  */
 
-public class ChannelGroupInfoPresenter extends BasePresenter<ChannelGroupInfoContract.View> implements ChannelGroupInfoContract.Presenter {
+public class ConversationInfoPresenter extends BasePresenter<ConverssationInfoContract.View> implements ConverssationInfoContract.Presenter {
 
     private static final int QEQUEST_ADD_MEMBER = 2;
     private static final int QEQUEST_DEL_MEMBER = 3;
@@ -50,7 +50,7 @@ public class ChannelGroupInfoPresenter extends BasePresenter<ChannelGroupInfoCon
     }
 
     @Override
-    public List<String> getGroupUIMembersUid(Conversation conversation) {
+    public List<String> getConversationUIMembersUid(Conversation conversation) {
         /**
          * 过滤不存在的群成员算法
          */
@@ -145,7 +145,7 @@ public class ChannelGroupInfoPresenter extends BasePresenter<ChannelGroupInfoCon
     }
 
     @Override
-    public void addGroupMembers(final ArrayList<String> uidList, final String conversationId) {
+    public void addConversationMembers(final ArrayList<String> uidList, final String conversationId) {
         String completeUrl = ApiUrl.getModifyGroupMemberUrl(conversationId);
         ApiServiceImpl.getInstance().addGroupMembers(new BaseModuleAPICallback(mView.getContext(), completeUrl) {
             @Override
@@ -157,7 +157,7 @@ public class ChannelGroupInfoPresenter extends BasePresenter<ChannelGroupInfoCon
                 ConversationCacheUtils.setConversationMember(MyApplication.getInstance(), mConversation.getId(), memberUidList);
                 mView.updateUiConversation(mConversation);
                 mView.changeConversationTitle(memberUidList.size());
-                mView.showGroupMembersHead(getGroupUIMembersUid(mConversation));
+                mView.showGroupMembersHead(getConversationUIMembersUid(mConversation));
             }
 
             @Override
@@ -171,7 +171,7 @@ public class ChannelGroupInfoPresenter extends BasePresenter<ChannelGroupInfoCon
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        addGroupMembers(uidList, conversationId);
+                        addConversationMembers(uidList, conversationId);
                     }
 
                     @Override
@@ -186,7 +186,7 @@ public class ChannelGroupInfoPresenter extends BasePresenter<ChannelGroupInfoCon
     }
 
     @Override
-    public void delGroupMembers(final ArrayList<String> uidList, final String conversationId) {
+    public void delConversationMembers(final ArrayList<String> uidList, final String conversationId) {
         String completeUrl = ApiUrl.getModifyGroupMemberUrl(conversationId);
         ApiServiceImpl.getInstance().delGroupMembers(new BaseModuleAPICallback(mView.getContext(), completeUrl) {
             @Override
@@ -198,7 +198,7 @@ public class ChannelGroupInfoPresenter extends BasePresenter<ChannelGroupInfoCon
                 ConversationCacheUtils.setConversationMember(MyApplication.getInstance(), mConversation.getId(), memberUidList);
                 mView.updateUiConversation(mConversation);
                 mView.changeConversationTitle(memberUidList.size());
-                mView.showGroupMembersHead(getGroupUIMembersUid(mConversation));
+                mView.showGroupMembersHead(getConversationUIMembersUid(mConversation));
             }
 
             @Override
@@ -212,7 +212,7 @@ public class ChannelGroupInfoPresenter extends BasePresenter<ChannelGroupInfoCon
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        addGroupMembers(uidList, conversationId);
+                        addConversationMembers(uidList, conversationId);
                     }
 
                     @Override
@@ -351,7 +351,7 @@ public class ChannelGroupInfoPresenter extends BasePresenter<ChannelGroupInfoCon
                         }
                         mView.showLoading();
                         if (mConversation.getType().equals(Conversation.TYPE_GROUP)) {
-                            addGroupMembers(addUidList, mConversation.getId());
+                            addConversationMembers(addUidList, mConversation.getId());
                         } else if (mConversation.getType().equals(Conversation.TYPE_DIRECT)) {
                             createGroup(addMemberList);
                         }
@@ -361,7 +361,7 @@ public class ChannelGroupInfoPresenter extends BasePresenter<ChannelGroupInfoCon
                     ArrayList<String> delUidList = (ArrayList<String>) data.getSerializableExtra("selectMemList");
                     if (delUidList.size() > 0) {
                         mView.showLoading();
-                        delGroupMembers(delUidList, mConversation.getId());
+                        delConversationMembers(delUidList, mConversation.getId());
                     }
                     break;
                 default:

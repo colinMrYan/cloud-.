@@ -20,14 +20,14 @@ import java.util.List;
  * Created by libaochao on 2019/10/12.
  */
 
-public class ChannelMembersHeadAdapter extends RecyclerView.Adapter<ChannelMembersHeadAdapter.ViewHolder> {
+public class ConversationMembersHeadAdapter extends RecyclerView.Adapter<ConversationMembersHeadAdapter.ViewHolder> {
 
     Context context;
     List<String> uidList;
     boolean isOwner = false;
     AdapterListener adapterListener;
 
-    public ChannelMembersHeadAdapter(Context context, boolean isOwner, List<String> uidList) {
+    public ConversationMembersHeadAdapter(Context context, boolean isOwner, List<String> uidList) {
         this.isOwner = isOwner;
         this.context = context;
         this.uidList = uidList;

@@ -11,7 +11,7 @@ import java.util.List;
  * Created by libaochao on 2019/10/12.
  */
 
-public interface ChannelGroupInfoContract {
+public interface ConverssationInfoContract {
     interface Model {
 
     }
@@ -37,15 +37,15 @@ public interface ChannelGroupInfoContract {
     interface Presenter {
         Conversation getConversation(String uid);
 
-        List<String> getGroupUIMembersUid(Conversation conversation);
+        List<String> getConversationUIMembersUid(Conversation conversation);
 
         void setConversationStick(boolean stickyState, String conversationId);
 
         void setMuteNotification(boolean muteNotificationState, String conversationId);
 
-        void addGroupMembers(ArrayList<String> uidList, String conversationId);
+        void addConversationMembers(ArrayList<String> uidList, String conversationId);
 
-        void delGroupMembers(ArrayList<String> uidList, String conversationId);
+        void delConversationMembers(ArrayList<String> uidList, String conversationId);
 
         void createGroup(List<SearchModel> addSearchModelList);
 

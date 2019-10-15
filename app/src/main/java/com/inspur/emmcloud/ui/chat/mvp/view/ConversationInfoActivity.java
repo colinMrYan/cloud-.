@@ -30,9 +30,9 @@ import com.inspur.emmcloud.ui.chat.ConversationQrCodeActivity;
 import com.inspur.emmcloud.ui.chat.GroupAlbumActivity;
 import com.inspur.emmcloud.ui.chat.GroupFileActivity;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
-import com.inspur.emmcloud.ui.chat.mvp.adapter.ChannelMembersHeadAdapter;
-import com.inspur.emmcloud.ui.chat.mvp.contract.ChannelGroupInfoContract;
-import com.inspur.emmcloud.ui.chat.mvp.presenter.ChannelGroupInfoPresenter;
+import com.inspur.emmcloud.ui.chat.mvp.adapter.ConversationMembersHeadAdapter;
+import com.inspur.emmcloud.ui.chat.mvp.contract.ConverssationInfoContract;
+import com.inspur.emmcloud.ui.chat.mvp.presenter.ConversationInfoPresenter;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
@@ -54,7 +54,7 @@ import butterknife.ButterKnife;
  * Created by libaochao on 2019/10/12.
  */
 
-public class ChannelGroupInfoActivity extends BaseMvpActivity<ChannelGroupInfoPresenter> implements ChannelGroupInfoContract.View
+public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPresenter> implements ConverssationInfoContract.View
         , CompoundButton.OnCheckedChangeListener {
 
     public static final String EXTRA_CID = "cid";
@@ -89,7 +89,7 @@ public class ChannelGroupInfoActivity extends BaseMvpActivity<ChannelGroupInfoPr
     RelativeLayout searchRecordMarginLayout;
 
     private Conversation uiConversation;
-    private ChannelMembersHeadAdapter channelMembersHeadAdapter;
+    private ConversationMembersHeadAdapter channelMembersHeadAdapter;
     private List<String> uiUidList = new ArrayList<>();
     private boolean isOwner = false;
     private LoadingDialog loadingDialog;
@@ -99,7 +99,7 @@ public class ChannelGroupInfoActivity extends BaseMvpActivity<ChannelGroupInfoPr
         super.onCreate();
         ButterKnife.bind(this);
         EventBus.getDefault().register(this);
-        mPresenter = new ChannelGroupInfoPresenter();
+        mPresenter = new ConversationInfoPresenter();
         mPresenter.attachView(this);
         init();
     }
@@ -123,23 +123,28 @@ public class ChannelGroupInfoActivity extends BaseMvpActivity<ChannelGroupInfoPr
             moreMembersLayout.setVisibility(uiConversation.getMemberList().size() > 13 ? View.VISIBLE : View.GONE);
             isOwner = uiConversation.getOwner().equals(BaseApplication.getInstance().getUid());
             quitTextView.setText(isOwner ? getString(R.string.dismiss_group) : getString(R.string.quit_group));
-            uiUidList = mPresenter.getGroupUIMembersUid(uiConversation);
+            uiUidList = mPresenter.getConversationUIMembersUid(uiConversation);
+            groupQRLayout.setVisibility(View.VISIBLE);
+            groupNameLayout.setVisibility(View.VISIBLE);
+            groupQuitLayout.setVisibility(View.VISIBLE);
+            searchRecordLayout.setVisibility(View.VISIBLE);
+            searchRecordMarginLayout.setVisibility(View.GONE);
         } else if (uiConversation.getType().equals(Conversation.TYPE_DIRECT)) {
             isOwner = false;
             String uid = CommunicationUtils.getDirctChannelOtherUid(MyApplication.getInstance(), uiConversation.getName());
             uiUidList.add(uid);
             uiUidList.add("addUser");
             titleTextView.setText(R.string.chat_single_info_detail_title);
+            groupQRLayout.setVisibility(View.GONE);
+            groupNameLayout.setVisibility(View.GONE);
+            groupQuitLayout.setVisibility(View.GONE);
+            searchRecordLayout.setVisibility(View.GONE);
+            searchRecordMarginLayout.setVisibility(View.VISIBLE);
         }
-        groupQRLayout.setVisibility(uiConversation.getType().equals(Conversation.TYPE_GROUP) ? View.VISIBLE : View.GONE);
-        groupNameLayout.setVisibility(uiConversation.getType().equals(Conversation.TYPE_GROUP) ? View.VISIBLE : View.GONE);
-        groupQuitLayout.setVisibility(uiConversation.getType().equals(Conversation.TYPE_GROUP) ? View.VISIBLE : View.GONE);
-        searchRecordLayout.setVisibility(uiConversation.getType().equals(Conversation.TYPE_GROUP) ? View.VISIBLE : View.GONE);
-        searchRecordMarginLayout.setVisibility(uiConversation.getType().equals(Conversation.TYPE_GROUP) ? View.GONE : View.VISIBLE);
-        channelMembersHeadAdapter = new ChannelMembersHeadAdapter(this, isOwner, uiUidList);
+        channelMembersHeadAdapter = new ConversationMembersHeadAdapter(this, isOwner, uiUidList);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(MyApplication.getInstance(), 5);
         groupMembersHeadRecyclerView.setLayoutManager(gridLayoutManager);
-        channelMembersHeadAdapter.setAdapterListener(new ChannelMembersHeadAdapter.AdapterListener() {
+        channelMembersHeadAdapter.setAdapterListener(new ConversationMembersHeadAdapter.AdapterListener() {
             @Override
             public void onItemClick(View view, int position) {
                 Intent intent = new Intent();
@@ -161,7 +166,7 @@ public class ChannelGroupInfoActivity extends BaseMvpActivity<ChannelGroupInfoPr
                     String uid = uiUidList.get(position);
                     Bundle bundle = new Bundle();
                     bundle.putString("uid", uid);
-                    IntentUtils.startActivity(ChannelGroupInfoActivity.this, uid.startsWith("BOT") ?
+                    IntentUtils.startActivity(ConversationInfoActivity.this, uid.startsWith("BOT") ?
                             RobotInfoActivity.class : UserInfoActivity.class, bundle);
                 }
             }
@@ -306,7 +311,7 @@ public class ChannelGroupInfoActivity extends BaseMvpActivity<ChannelGroupInfoPr
     }
 
     private void showQuitGroupWarningDlg() {
-        new CustomDialog.MessageDialogBuilder(ChannelGroupInfoActivity.this)
+        new CustomDialog.MessageDialogBuilder(ConversationInfoActivity.this)
                 .setMessage(getString(R.string.quit_group_warning_text))
                 .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
                     @Override
@@ -326,7 +331,7 @@ public class ChannelGroupInfoActivity extends BaseMvpActivity<ChannelGroupInfoPr
     }
 
     private void showDelGroupWarningDlg() {
-        new CustomDialog.MessageDialogBuilder(ChannelGroupInfoActivity.this)
+        new CustomDialog.MessageDialogBuilder(ConversationInfoActivity.this)
                 .setMessage(getString(R.string.dismiss_group_warning_text))
                 .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
                     @Override
