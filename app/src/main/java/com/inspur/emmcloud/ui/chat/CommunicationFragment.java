@@ -882,7 +882,7 @@ public class CommunicationFragment extends BaseFragment {
             String agoraChannelId = customProtocol.getParamMap().get("roomid");
             String channelId = customProtocol.getParamMap().get("channelid");
             String fromUid = customProtocol.getParamMap().get("uid");
-            VoiceCommunicationUtils.getInstance().getVoiceCommunicationChannelInfo(channelId, agoraChannelId, fromUid);
+            VoiceCommunicationUtils.getInstance().getVoiceCommunicationChannelInfoAndSendRefuseCommand(channelId, agoraChannelId, fromUid);
         }
     }
 
