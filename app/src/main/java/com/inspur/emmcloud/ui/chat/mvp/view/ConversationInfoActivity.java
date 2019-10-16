@@ -116,7 +116,7 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
         loadingDialog = new LoadingDialog(this);
         uiConversation = mPresenter.getConversation(cid);
         if (uiConversation.getType().equals(Conversation.TYPE_GROUP)) {
-            String data = getString(R.string.chat_group_info_detail_title, uiConversation.getMemberList().size());
+            String data = getString(R.string.chat_group_info_detail_title, mPresenter.getConversationRealMemberSize());
             titleTextView.setText(data);
             conversationNameTextView.setText(uiConversation.getName());
             moreMembersLayout.setVisibility(uiConversation.getMemberList().size() > 13 ? View.VISIBLE : View.GONE);
@@ -308,6 +308,7 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
         IntentUtils.startActivity(getActivity(), ConversationActivity.class, bundle);
         finish();
     }
+
 
     private void showQuitGroupWarningDlg() {
         new CustomDialog.MessageDialogBuilder(ConversationInfoActivity.this)

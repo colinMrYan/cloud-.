@@ -166,7 +166,7 @@ public class ConversationInfoPresenter extends BasePresenter<ConversationInfoCon
                 mConversation.setMembers(JSONUtils.toJSONString(memberUidList));
                 ConversationCacheUtils.setConversationMember(MyApplication.getInstance(), mConversation.getId(), memberUidList);
                 mView.updateUiConversation(mConversation);
-                mView.changeConversationTitle(memberUidList.size());
+                mView.changeConversationTitle(getConversationRealMemberSize());
                 mView.showGroupMembersHead(getConversationUIMembersUid(mConversation));
             }
 
@@ -207,7 +207,7 @@ public class ConversationInfoPresenter extends BasePresenter<ConversationInfoCon
                 mConversation.setMembers(JSONUtils.toJSONString(memberUidList));
                 ConversationCacheUtils.setConversationMember(MyApplication.getInstance(), mConversation.getId(), memberUidList);
                 mView.updateUiConversation(mConversation);
-                mView.changeConversationTitle(memberUidList.size());
+                mView.changeConversationTitle(getConversationRealMemberSize());
                 mView.showGroupMembersHead(getConversationUIMembersUid(mConversation));
             }
 
@@ -271,6 +271,13 @@ public class ConversationInfoPresenter extends BasePresenter<ConversationInfoCon
                         ToastUtils.show(R.string.chat_conversation_create_error);
                     }
                 });
+    }
+
+    @Override
+    public int getConversationRealMemberSize() {
+        List<String> memberUidList = mConversation.getMemberList();
+        int memberSize = ContactUserCacheUtils.getContactUserListById(memberUidList).size();
+        return memberSize;
     }
 
     @Override
