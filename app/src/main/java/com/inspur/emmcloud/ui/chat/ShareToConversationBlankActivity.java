@@ -10,9 +10,7 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
-import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.StringUtils;
-import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.SearchModel;
@@ -30,6 +28,7 @@ import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
+import com.inspur.emmcloud.util.privates.MessageSendManager;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 
 import org.json.JSONArray;
@@ -143,6 +142,8 @@ public class ShareToConversationBlankActivity extends BaseActivity {
             String userOrChannelId = searchModel.getId();
             boolean isGroup = searchModel.getType().equals(SearchModel.TYPE_GROUP);
             share2Conversation(userOrChannelId, isGroup);
+        } else {
+            callbackFail();
         }
     }
 
@@ -154,7 +155,7 @@ public class ShareToConversationBlankActivity extends BaseActivity {
      */
     private void share2Conversation(String userOrChannelId, boolean isGroup) {
         if (StringUtils.isBlank(userOrChannelId)) {
-            ToastUtils.show(MyApplication.getInstance(), getString(R.string.baselib_share_fail));
+            callbackFail();
         } else {
             if (isGroup) {
                 cid = userOrChannelId;
@@ -198,6 +199,7 @@ public class ShareToConversationBlankActivity extends BaseActivity {
 
                         @Override
                         public void createDirectChannelFail() {
+                            callbackFail();
                         }
                     });
         }
@@ -226,7 +228,7 @@ public class ShareToConversationBlankActivity extends BaseActivity {
             Message message = CommunicationUtils.combinLocalTextPlainMessage(content, cid, new HashMap<String, String>());
             message.setSendStatus(Message.MESSAGE_SEND_ING);
             MessageCacheUtil.saveMessage(ShareToConversationBlankActivity.this, message);
-            WSAPIService.getInstance().sendChatTextPlainMsg(message);
+            MessageSendManager.getInstance().sendMessage(message);
             notifyMessageDataChanged();
             callbackSuccess();
         } else if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
@@ -259,7 +261,7 @@ public class ShareToConversationBlankActivity extends BaseActivity {
             Message message = CommunicationUtils.combinLocalExtendedLinksMessage(cid, poster, title, subTitle, url);
             message.setSendStatus(Message.MESSAGE_SEND_ING);
             MessageCacheUtil.saveMessage(ShareToConversationBlankActivity.this, message);
-            WSAPIService.getInstance().sendChatExtendedLinksMsg(message);
+            MessageSendManager.getInstance().sendMessage(message);
             notifyMessageDataChanged();
             callbackSuccess();
         } else if (WebServiceRouterManager.getInstance().isV0VersionChat()) {

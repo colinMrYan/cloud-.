@@ -326,8 +326,8 @@
     <string name="chat_long_click_copy_text">複製文字</string>
     <string name="communication_search">搜索</string>
     <string name="chat_full_image">查看原圖</string>
-    <string name="chat_transmit_message_success">已轉發</string>
-    <string name="chat_transmit_message_fail">轉發失敗</string>
+    <string name="chat_message_send_success">已發送</string>
+    <string name="chat_message_send_fail">發送失敗</string>
     <string name="chat_long_click_reply">回复</string>
     <string name="chat_group_least_two_person">群聊至少需要兩人及以上</string>
     <string name="chat_send_email_too_many_person_tip">收件人太多會影響郵件發送速度，確定發送？</string>

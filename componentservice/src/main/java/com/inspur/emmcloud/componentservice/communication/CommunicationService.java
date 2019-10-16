@@ -26,4 +26,6 @@ public interface CommunicationService extends CoreService {
     void shareTxtPlainToConversation(String content, ShareToConversationListener listener);
 
     void openConversationByChannelId(JSONObject jsonObject);
+
+    void MessageSendManagerOnDestroy();
 }
