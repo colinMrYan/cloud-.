@@ -564,10 +564,10 @@ public class ECMChatInputMenu extends LinearLayout {
 //                        isVideoCallEnable = controlValue.endsWith("1");
 //                        break;
                     case 8:
-                        isVoiceCallEnable = controlValue.endsWith("1");
+                        isVoiceCallEnable = controlValue.equals("1");
                         break;
                     case 10:
-                        isSendEmailEnable = controlValue.endsWith("1");
+                        isSendEmailEnable = controlValue.equals("1");
                         break;
                     default:
                         break;
