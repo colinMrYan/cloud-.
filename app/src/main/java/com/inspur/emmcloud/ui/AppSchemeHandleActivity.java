@@ -183,12 +183,13 @@ public class AppSchemeHandleActivity extends BaseActivity {
                                 openWebApp(host, openMode);
                                 break;
                             case "ecc-channel":
-                                bundle.putString("cid", host);
                                 bundle.putBoolean(ConversationActivity.EXTRA_NEED_GET_NEW_MESSAGE, true);
                                 if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
+                                    bundle.putString("cid", host);
                                     IntentUtils.startActivity(AppSchemeHandleActivity.this,
                                             ChannelV0Activity.class, bundle, true);
                                 } else {
+                                    bundle.putString("cid", uri.getAuthority());
                                     IntentUtils.startActivity(AppSchemeHandleActivity.this,
                                             ConversationActivity.class, bundle, true);
                                 }

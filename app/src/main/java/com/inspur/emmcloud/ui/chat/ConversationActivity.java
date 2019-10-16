@@ -74,6 +74,7 @@ import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.interf.ProgressCallback;
 import com.inspur.emmcloud.interf.ResultCallback;
 import com.inspur.emmcloud.push.WebSocketPush;
+import com.inspur.emmcloud.ui.chat.mvp.view.ConversationInfoActivity;
 import com.inspur.emmcloud.ui.chat.mvp.view.ConversationSearchActivity;
 import com.inspur.emmcloud.ui.chat.pop.PopupWindowList;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
@@ -1223,16 +1224,15 @@ public class ConversationActivity extends ConversationBaseActivity {
         Bundle bundle = new Bundle();
         switch (conversation.getType()) {
             case Conversation.TYPE_GROUP:
-                bundle.putSerializable(ConversationGroupInfoActivity.EXTRA_CID, conversation.getId());
-                Intent intent = new Intent(this, ConversationGroupInfoActivity.class);
+                bundle.putSerializable(ConversationInfoActivity.EXTRA_CID, conversation.getId());
+                Intent intent = new Intent(this, ConversationInfoActivity.class);
                 intent.putExtras(bundle);
                 startActivityForResult(intent, REQUEST_QUIT_CHANNELGROUP);
                 break;
             case Conversation.TYPE_DIRECT:
-                String uid = CommunicationUtils.getDirctChannelOtherUid(MyApplication.getInstance(), conversation.getName());
-                bundle.putString("uid", uid);
+                bundle.putString(ConversationInfoActivity.EXTRA_CID, conversation.getId());
                 IntentUtils.startActivity(ConversationActivity.this,
-                        UserInfoActivity.class, bundle);
+                        ConversationInfoActivity.class, bundle);
                 break;
             case Conversation.TYPE_CAST:
                 bundle.putSerializable(ConversationCastInfoActivity.EXTRA_CID, conversation.getId());
