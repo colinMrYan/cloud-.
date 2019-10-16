@@ -66,8 +66,6 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
     TextView titleTextView;
     @BindView(R.id.tv_conversation_name)
     TextView conversationNameTextView;
-    @BindView(R.id.tv_more_members)
-    TextView groupMoreMemberTV;
     @BindView(R.id.rl_more_members)
     RelativeLayout moreMembersLayout;
     @BindView(R.id.switch_conversation_sticky)
@@ -105,7 +103,7 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_conversation_info_detail;
+        return R.layout.activity_conversation_info;
     }
 
     /**

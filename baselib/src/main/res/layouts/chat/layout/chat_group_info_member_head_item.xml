@@ -17,5 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:maxWidth="55dp"
-        android:singleLine="true" />
+        android:singleLine="true"
+        android:textColor="#333333"
+        android:textSize="13sp" />
 </LinearLayout>
