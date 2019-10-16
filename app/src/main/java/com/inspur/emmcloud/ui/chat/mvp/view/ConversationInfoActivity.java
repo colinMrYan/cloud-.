@@ -37,7 +37,6 @@ import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
-import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -61,28 +60,28 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
     public static final String MEMBER_SIZE = "member_size";
     private static final int QEQUEST_ADD_MEMBER = 2;
     private static final int QEQUEST_DEL_MEMBER = 3;
-    @BindView(R.id.rv_group_members_head)
-    RecyclerView groupMembersHeadRecyclerView;
+    @BindView(R.id.rv_conversation_members_head)
+    RecyclerView conversationMembersHeadRecyclerView;
     @BindView(R.id.tv_title)
     TextView titleTextView;
-    @BindView(R.id.tv_group_name)
-    TextView groupNameTextView;
+    @BindView(R.id.tv_conversation_name)
+    TextView conversationNameTextView;
     @BindView(R.id.tv_more_members)
     TextView groupMoreMemberTV;
     @BindView(R.id.rl_more_members)
     RelativeLayout moreMembersLayout;
     @BindView(R.id.switch_conversation_sticky)
-    SwitchCompat groupStickySwitch;
+    SwitchCompat conversationStickySwitch;
     @BindView(R.id.switch_conversation_mute_notification)
-    SwitchCompat groupMuteNotificationSwitch;
+    SwitchCompat conversationMuteNotificationSwitch;
     @BindView(R.id.tv_conversation_quit_title)
     TextView quitTextView;
     @BindView(R.id.rl_conversation_qr)
-    RelativeLayout groupQRLayout;
+    RelativeLayout conversationQRLayout;
     @BindView(R.id.rl_conversation_name)
-    RelativeLayout groupNameLayout;
+    RelativeLayout conversationNameLayout;
     @BindView(R.id.rl_conversation_quit)
-    RelativeLayout groupQuitLayout;
+    RelativeLayout conversationQuitLayout;
     @BindView(R.id.rl_conversation_search_record)
     RelativeLayout searchRecordLayout;
     @BindView(R.id.rl_channel_search_record_have_margin)
@@ -119,31 +118,31 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
         if (uiConversation.getType().equals(Conversation.TYPE_GROUP)) {
             String data = getString(R.string.chat_group_info_detail_title, uiConversation.getMemberList().size());
             titleTextView.setText(data);
-            groupNameTextView.setText(uiConversation.getName());
+            conversationNameTextView.setText(uiConversation.getName());
             moreMembersLayout.setVisibility(uiConversation.getMemberList().size() > 13 ? View.VISIBLE : View.GONE);
             isOwner = uiConversation.getOwner().equals(BaseApplication.getInstance().getUid());
             quitTextView.setText(isOwner ? getString(R.string.dismiss_group) : getString(R.string.quit_group));
             uiUidList = mPresenter.getConversationUIMembersUid(uiConversation);
-            groupQRLayout.setVisibility(View.VISIBLE);
-            groupNameLayout.setVisibility(View.VISIBLE);
-            groupQuitLayout.setVisibility(View.VISIBLE);
+            conversationQRLayout.setVisibility(View.VISIBLE);
+            conversationNameLayout.setVisibility(View.VISIBLE);
+            conversationQuitLayout.setVisibility(View.VISIBLE);
             searchRecordLayout.setVisibility(View.VISIBLE);
             searchRecordMarginLayout.setVisibility(View.GONE);
         } else if (uiConversation.getType().equals(Conversation.TYPE_DIRECT)) {
             isOwner = false;
-            String uid = CommunicationUtils.getDirctChannelOtherUid(MyApplication.getInstance(), uiConversation.getName());
-            uiUidList.add(uid);
-            uiUidList.add("addUser");
+            uiUidList = mPresenter.getConversationSingleChatUIMembersUid(uiConversation);
             titleTextView.setText(R.string.chat_single_info_detail_title);
-            groupQRLayout.setVisibility(View.GONE);
-            groupNameLayout.setVisibility(View.GONE);
-            groupQuitLayout.setVisibility(View.GONE);
+            ((TextView) findViewById(R.id.tv_conversation_files_title)).setText(R.string.file);
+            ((TextView) findViewById(R.id.tv_conversation_images)).setText(R.string.channel_single_chat_images);
+            conversationQRLayout.setVisibility(View.GONE);
+            conversationNameLayout.setVisibility(View.GONE);
+            conversationQuitLayout.setVisibility(View.GONE);
             searchRecordLayout.setVisibility(View.GONE);
             searchRecordMarginLayout.setVisibility(View.VISIBLE);
         }
         channelMembersHeadAdapter = new ConversationMembersHeadAdapter(this, isOwner, uiUidList);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(MyApplication.getInstance(), 5);
-        groupMembersHeadRecyclerView.setLayoutManager(gridLayoutManager);
+        conversationMembersHeadRecyclerView.setLayoutManager(gridLayoutManager);
         channelMembersHeadAdapter.setAdapterListener(new ConversationMembersHeadAdapter.AdapterListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -171,11 +170,11 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
                 }
             }
         });
-        groupMembersHeadRecyclerView.setAdapter(channelMembersHeadAdapter);
-        groupStickySwitch.setChecked(uiConversation.isStick());
-        groupMuteNotificationSwitch.setChecked(uiConversation.isDnd());
-        groupStickySwitch.setOnCheckedChangeListener(this);
-        groupMuteNotificationSwitch.setOnCheckedChangeListener(this);
+        conversationMembersHeadRecyclerView.setAdapter(channelMembersHeadAdapter);
+        conversationStickySwitch.setChecked(uiConversation.isStick());
+        conversationMuteNotificationSwitch.setChecked(uiConversation.isDnd());
+        conversationStickySwitch.setOnCheckedChangeListener(this);
+        conversationMuteNotificationSwitch.setOnCheckedChangeListener(this);
     }
 
     public void onClick(View v) {
@@ -260,7 +259,7 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
     @Override
     public void showStickyState(boolean isSticky) {
         uiConversation.setStick(isSticky);
-        groupStickySwitch.setChecked(isSticky);
+        conversationStickySwitch.setChecked(isSticky);
         ConversationCacheUtils.setConversationStick(MyApplication.getInstance(), uiConversation.getId(), isSticky);
         EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_UPDATE_CHANNEL_FOCUS, uiConversation));
     }
@@ -268,7 +267,7 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
     @Override
     public void showDNDState(boolean isDND) {
         uiConversation.setDnd(isDND);
-        groupMuteNotificationSwitch.setChecked(uiConversation.isDnd());
+        conversationMuteNotificationSwitch.setChecked(uiConversation.isDnd());
         ConversationCacheUtils.updateConversationDnd(MyApplication.getInstance(), uiConversation.getId(), uiConversation.isDnd());
         EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_UPDATE_CHANNEL_DND, uiConversation));
     }
@@ -359,7 +358,7 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
     public void onReciverConversationNameUpdate(SimpleEventMessage eventMessage) {
         if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_UPDATE_CHANNEL_NAME)) {
             String name = ((Conversation) eventMessage.getMessageObj()).getName();
-            groupNameTextView.setText(name);
+            conversationNameTextView.setText(name);
             uiConversation.setName(name);
         }
     }

@@ -39,6 +39,8 @@ public interface ConversationInfoContract {
 
         List<String> getConversationUIMembersUid(Conversation conversation);
 
+        List<String> getConversationSingleChatUIMembersUid(Conversation conversation);
+
         void setConversationStick(boolean stickyState, String conversationId);
 
         void setMuteNotification(boolean muteNotificationState, String conversationId);

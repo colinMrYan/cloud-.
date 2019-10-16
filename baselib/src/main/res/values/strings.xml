@@ -349,6 +349,7 @@
     <string name="chat_group_member_size">%1$s(%2$d)</string>
     <string name="chat_group_qr_code_share">分享二维码</string>
     <string name="chat_group_welcome_join_group">欢迎进入%1$s群</string>
+    <string name="chat_conversation_create_error">创建群组失败</string>
     <!-- 会议卡片 -->
     <string name="meeting_has_confirmed">已确认</string>
     <string name="meeting_has_refused">已拒绝</string>

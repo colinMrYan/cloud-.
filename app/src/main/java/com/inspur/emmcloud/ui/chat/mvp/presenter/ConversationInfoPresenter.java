@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 
 import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
@@ -71,6 +72,15 @@ public class ConversationInfoPresenter extends BasePresenter<ConversationInfoCon
         }
 
         return uiMemberUidList;
+    }
+
+    @Override
+    public List<String> getConversationSingleChatUIMembersUid(Conversation conversation) {
+        List<String> uiUidList = new ArrayList<>();
+        String uid = CommunicationUtils.getDirctChannelOtherUid(MyApplication.getInstance(), conversation.getName());
+        uiUidList.add(uid);
+        uiUidList.add("addUser");
+        return uiUidList;
     }
 
     @Override
@@ -258,7 +268,7 @@ public class ConversationInfoPresenter extends BasePresenter<ConversationInfoCon
                     @Override
                     public void createGroupConversationFail() {
                         mView.dismissLoading();
-                        ToastUtils.show("创建群组失败");
+                        ToastUtils.show(R.string.chat_conversation_create_error);
                     }
                 });
     }
