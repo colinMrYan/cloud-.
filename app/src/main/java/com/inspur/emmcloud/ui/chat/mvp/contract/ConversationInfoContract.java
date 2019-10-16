@@ -32,6 +32,7 @@ public interface ConversationInfoContract {
         void deleteGroupSuccess();
 
         void createGroupSuccess(Conversation conversation);
+
     }
 
     interface Presenter {
@@ -50,6 +51,8 @@ public interface ConversationInfoContract {
         void delConversationMembers(ArrayList<String> uidList, String conversationId);
 
         void createGroup(List<SearchModel> addSearchModelList);
+
+        int getConversationRealMemberSize();
 
         void quitGroupChannel();
 
