@@ -177,7 +177,7 @@
     <string name="building">Building</string>
     <string name="am">AM</string>
     <string name="please_input_change">Please type change</string>
-    <string name="channel_search_more_group_members">Search More Group Members</string>
+    <string name="channel_search_more_group_members">All Members</string>
     <string name="channel_set_sticky"> Sticky on Top</string>
     <string name="my_stroke">My Travel</string>
     <string name="title">Title</string>
@@ -330,6 +330,7 @@
     <string name="chat_more_groups">More Group Chats</string>
     <string name="chat_search_group_chats">Group Chats</string>
     <string name="chat_more_content">More Chat Histories</string>
+    <string name="quit_dismiss_group">Delete and Leave</string>
     <string name="chat_search_mention_all">All</string>
     <string name="chat_contact_more_select">More</string>
     <string name="chat_contact_related_message">%1$d related messages</string>
@@ -352,7 +353,7 @@
     <string name="meeting_cancel_confirm">Cancel Confirmation</string>
     <string name="meeting_cancel_reject">Cancel Rejection</string>
     <string name="chat_resend_message">Resend</string>
-    <string name="chat_group_message_search">Search History</string>
+    <string name="chat_group_message_search">Search Chat History</string>
 
     <!-- 工作页面部分 -->
     <string name="work">Work</string>

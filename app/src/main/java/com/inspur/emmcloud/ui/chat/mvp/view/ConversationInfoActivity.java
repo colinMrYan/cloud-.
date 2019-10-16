@@ -119,7 +119,6 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
             conversationNameTextView.setText(uiConversation.getName());
             moreMembersLayout.setVisibility(uiConversation.getMemberList().size() > 13 ? View.VISIBLE : View.GONE);
             isOwner = uiConversation.getOwner().equals(BaseApplication.getInstance().getUid());
-            quitTextView.setText(isOwner ? getString(R.string.dismiss_group) : getString(R.string.quit_group));
             uiUidList = mPresenter.getConversationUIMembersUid(uiConversation);
             conversationQRLayout.setVisibility(View.VISIBLE);
             conversationNameLayout.setVisibility(View.VISIBLE);
