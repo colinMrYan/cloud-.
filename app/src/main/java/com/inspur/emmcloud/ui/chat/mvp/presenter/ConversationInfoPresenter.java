@@ -77,7 +77,7 @@ public class ConversationInfoPresenter extends BasePresenter<ConversationInfoCon
     @Override
     public List<String> getConversationSingleChatUIMembersUid(Conversation conversation) {
         List<String> uiUidList = new ArrayList<>();
-        String uid = CommunicationUtils.getDirctChannelOtherUid(MyApplication.getInstance(), conversation.getName());
+        String uid = CommunicationUtils.getDirectChannelOtherUid(MyApplication.getInstance(), conversation.getName());
         uiUidList.add(uid);
         uiUidList.add("addUser");
         return uiUidList;
@@ -239,7 +239,7 @@ public class ConversationInfoPresenter extends BasePresenter<ConversationInfoCon
     @Override
     public void createGroup(List<SearchModel> addSearchList) {
         JSONArray peopleArray = new JSONArray();
-        String uid = CommunicationUtils.getDirctChannelOtherUid(MyApplication.getInstance(), mConversation.getName());
+        String uid = CommunicationUtils.getDirectChannelOtherUid(MyApplication.getInstance(), mConversation.getName());
         ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(uid);
         JSONObject jsonObjectOther = new JSONObject();
         try {
