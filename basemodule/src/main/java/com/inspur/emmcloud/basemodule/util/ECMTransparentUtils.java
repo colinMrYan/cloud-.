@@ -5,6 +5,7 @@ import android.content.Context;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.componentservice.app.AppService;
 import com.inspur.emmcloud.componentservice.communication.CommunicationService;
 
@@ -43,6 +44,7 @@ public class ECMTransparentUtils {
                 int badgeNumber = JSONUtils.getInt(transparent, "badge", 0);
                 ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(context, badgeNumber);
             }
+            PVCollectModelCacheUtils.saveCollectModel(JSONUtils.getInt(transparent, "badge", 0) + "", Constant.PREF_DESKTOP_BADGE);
         }
     }
 

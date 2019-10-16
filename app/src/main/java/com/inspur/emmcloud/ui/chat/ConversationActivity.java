@@ -453,12 +453,9 @@ public class ConversationActivity extends ConversationBaseActivity {
      * @param type
      */
     private void startVoiceOrVideoCall(String type, List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList) {
-
-        //屏蔽语音通话
         Intent intent = new Intent();
         intent.setClass(ConversationActivity.this, ChannelVoiceCommunicationActivity.class);
         intent.putExtra("userList", (Serializable) voiceCommunicationUserInfoBeanList);
-        LogUtils.YfcDebug("选择人员回来时的人数：" + voiceCommunicationUserInfoBeanList.size());
         intent.putExtra(CLOUD_PLUS_CHANNEL_ID, cid);
         intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_VIDEO_CALL_TYPE, type);
         intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.INVITER_LAYOUT_STATE);
@@ -1403,7 +1400,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     }
 
     /**
-     * 持久化16秒以上消息的消息状态
+     * 持久化消息状态
      *
      * @param messageSendingList
      */

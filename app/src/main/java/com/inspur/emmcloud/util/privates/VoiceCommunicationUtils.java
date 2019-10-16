@@ -52,6 +52,7 @@ public class VoiceCommunicationUtils {
      * 声网的agoraChannelId
      */
     private String agoraChannelId = "";
+    private String cloudPlusChannelId = "";
     /**
      * 会话类型
      */
@@ -316,10 +317,6 @@ public class VoiceCommunicationUtils {
      * @param secret
      */
     public void setEncryptionSecret(String secret) {
-//        int a = mRtcEngine.setEncryptionSecret("123456");
-//        int b = mRtcEngine.setEncryptionMode("aes-128-ecb");
-//        LogUtils.YfcDebug("setEncryptionSecret:"+a);
-//        LogUtils.YfcDebug("setEncryptionMode:"+b);
         mRtcEngine.setEncryptionSecret(secret);
     }
 
@@ -419,10 +416,6 @@ public class VoiceCommunicationUtils {
         mRtcEngine = null;
     }
 
-    public OnVoiceCommunicationCallbacks getOnVoiceCommunicationCallbacks() {
-        return onVoiceCommunicationCallbacks;
-    }
-
     /**
      * 设置回调
      *
@@ -432,20 +425,20 @@ public class VoiceCommunicationUtils {
         this.onVoiceCommunicationCallbacks = l;
     }
 
-    public List<VoiceCommunicationJoinChannelInfoBean> getVoiceCommunicationUserInfoBeanList() {
-        return voiceCommunicationUserInfoBeanList;
-    }
-
-    public void setVoiceCommunicationUserInfoBeanList(List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList) {
-        this.voiceCommunicationUserInfoBeanList = voiceCommunicationUserInfoBeanList;
-    }
-
     public String getAgoraChannelId() {
         return agoraChannelId;
     }
 
     public void setAgoraChannelId(String agoraChannelId) {
         this.agoraChannelId = agoraChannelId;
+    }
+
+    public String getCloudPlusChannelId() {
+        return cloudPlusChannelId;
+    }
+
+    public void setCloudPlusChannelId(String cloudPlusChannelId) {
+        this.cloudPlusChannelId = cloudPlusChannelId;
     }
 
     public List<VoiceCommunicationJoinChannelInfoBean> getVoiceCommunicationMemberList() {
@@ -494,7 +487,7 @@ public class VoiceCommunicationUtils {
      * @param channelId
      * @param agoraChannelId
      */
-    public void getVoiceCommunicationChannelInfo(String channelId, String agoraChannelId, String fromUid) {
+    public void getVoiceCommunicationChannelInfoAndSendRefuseCommand(String channelId, String agoraChannelId, String fromUid) {
         ChatAPIService chatAPIService = new ChatAPIService(BaseApplication.getInstance());
         WebService webService = new WebService();
         webService.setArgoaChannelId(agoraChannelId);
@@ -546,22 +539,12 @@ public class VoiceCommunicationUtils {
             this.channelId = channelId;
         }
 
-        public String getArgoaChannelId() {
-            return argoaChannelId;
-        }
-
         public void setArgoaChannelId(String argoaChannelId) {
             this.argoaChannelId = argoaChannelId;
-        }
-
-        public String getFromUid() {
-            return fromUid;
         }
 
         public void setFromUid(String fromUid) {
             this.fromUid = fromUid;
         }
     }
-
-
 }
