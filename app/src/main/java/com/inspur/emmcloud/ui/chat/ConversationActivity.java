@@ -32,7 +32,6 @@ import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.CustomLoadingView;
@@ -1224,11 +1223,11 @@ public class ConversationActivity extends ConversationBaseActivity {
         Bundle bundle = new Bundle();
         switch (conversation.getType()) {
             case Conversation.TYPE_GROUP:
-                bundle.putSerializable(ConversationInfoActivity.EXTRA_CID, conversation.getId());
-                Intent intent = new Intent(this, ConversationInfoActivity.class);
-                intent.putExtras(bundle);
-                startActivityForResult(intent, REQUEST_QUIT_CHANNELGROUP);
-                break;
+//                bundle.putSerializable(ConversationInfoActivity.EXTRA_CID, conversation.getId());
+//                Intent intent = new Intent(this, ConversationInfoActivity.class);
+//                intent.putExtras(bundle);
+//                startActivityForResult(intent, REQUEST_QUIT_CHANNELGROUP);
+//                break;
             case Conversation.TYPE_DIRECT:
                 bundle.putString(ConversationInfoActivity.EXTRA_CID, conversation.getId());
                 IntentUtils.startActivity(ConversationActivity.this,

@@ -1328,6 +1328,7 @@
     <string name="share_no_more_than_five">不能上传多于5个文件</string>
     <string name="share_no_share_way">没有能够分享的方式</string>
     <string name="share_to_channel">发送到频道</string>
+    <string name="share_to_chat">发送到聊天</string>
     <string name="share_upload_volume">上传到云盘</string>
     <string name="share_no_suffix">不支持分享无后缀名的文件</string>
     <string name="share_has_not_exist_file">您分享的文件中有不存在的文件，请检查</string>

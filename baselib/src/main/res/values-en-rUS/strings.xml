@@ -1274,6 +1274,7 @@
     <string name="share_no_more_than_five">No more than 5 Files can\'t be uploaded</string>
     <string name="share_no_share_way">There is no way to share it</string>
     <string name="share_to_channel">Send to the Channel</string>
+    <string name="share_to_chat">Send to the Chat</string>
     <string name="share_upload_volume">Upload to the Cloud Drive</string>
     <string name="share_no_suffix">Do not support a file sharing the name without suffix</string>
     <string name="share_has_not_exist_file">There are nonexistent files in the files you shared, please check.</string>

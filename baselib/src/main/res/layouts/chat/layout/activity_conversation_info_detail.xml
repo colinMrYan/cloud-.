@@ -65,8 +65,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#FFFFFF"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"></android.support.v7.widget.RecyclerView>
+                android:paddingBottom="10dp"
+                android:paddingLeft="9dp"
+                android:paddingRight="9dp"></android.support.v7.widget.RecyclerView>
 
             <RelativeLayout
                 android:id="@+id/rl_more_members"
