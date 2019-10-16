@@ -22,6 +22,7 @@ import java.util.List;
 public class PVCollectService extends Service {
 
     private BaseModuleApiService apiService;
+    private static final int UPLOAD_PV_SIZE = 500;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -41,7 +42,7 @@ public class PVCollectService extends Service {
             apiService.setAPIInterface(new WebService());
         }
         if (NetUtils.isNetworkConnected(getApplicationContext(), false)) {
-            collectModelList = PVCollectModelCacheUtils.getCollectModelList(getApplicationContext(), 50);
+            collectModelList = PVCollectModelCacheUtils.getCollectModelList(getApplicationContext(), UPLOAD_PV_SIZE);
             if (collectModelList.size() > 0) {
                 JSONArray collectInfos = PVCollectModelCacheUtils.getCollectModelListJson(getApplicationContext(), collectModelList);
                 JSONObject jsonObject = new JSONObject();
@@ -71,7 +72,7 @@ public class PVCollectService extends Service {
         @Override
         public void returnUploadCollectSuccess(List<PVCollectModel> collectModelList) {
             PVCollectModelCacheUtils.deleteCollectModel(getApplicationContext(), collectModelList);
-            if (collectModelList.size() < 50) {
+            if (collectModelList.size() < UPLOAD_PV_SIZE) {
                 stopSelf();
             } else {
                 uploadPV();

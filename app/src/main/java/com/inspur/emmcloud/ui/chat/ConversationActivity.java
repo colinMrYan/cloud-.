@@ -32,6 +32,7 @@ import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.CustomLoadingView;
@@ -70,6 +71,8 @@ import com.inspur.emmcloud.bean.system.VoiceResult;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.interf.ResultCallback;
+import com.inspur.emmcloud.push.WebSocketPush;
+import com.inspur.emmcloud.ui.chat.mvp.view.ConversationInfoActivity;
 import com.inspur.emmcloud.ui.chat.mvp.view.ConversationSearchActivity;
 import com.inspur.emmcloud.ui.chat.pop.PopupWindowList;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
@@ -267,15 +270,6 @@ public class ConversationActivity extends ConversationBaseActivity {
         }
     }
 
-//    /**
-//     * 获取当前发送状态，需要OSS接口支持
-//     *
-//     * @param message
-//     * @return
-//     */
-//    private int getInitStatus(Message message) {
-//        return ChatFileUploadManagerUtils.getInstance().isMessageResourceUploading(message) ? Message.MESSAGE_SEND_ING : Message.MESSAGE_SEND_FAIL;
-//    }
 
     /**
      * 初始化Views
@@ -432,16 +426,13 @@ public class ConversationActivity extends ConversationBaseActivity {
      * @param type
      */
     private void startVoiceOrVideoCall(String type, List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList) {
-
-        //屏蔽语音通话
-//        Intent intent = new Intent();
-//        intent.setClass(ConversationActivity.this, ChannelVoiceCommunicationActivity.class);
-//        intent.putExtra("userList", (Serializable) voiceCommunicationUserInfoBeanList);
-//        LogUtils.YfcDebug("选择人员回来时的人数：" + voiceCommunicationUserInfoBeanList.size());
-//        intent.putExtra(CLOUD_PLUS_CHANNEL_ID, cid);
-//        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_VIDEO_CALL_TYPE, type);
-//        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.INVITER_LAYOUT_STATE);
-//        startActivity(intent);
+        Intent intent = new Intent();
+        intent.setClass(ConversationActivity.this, ChannelVoiceCommunicationActivity.class);
+        intent.putExtra("userList", (Serializable) voiceCommunicationUserInfoBeanList);
+        intent.putExtra(CLOUD_PLUS_CHANNEL_ID, cid);
+        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_VIDEO_CALL_TYPE, type);
+        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.INVITER_LAYOUT_STATE);
+        startActivity(intent);
     }
 
     private void inputMenuClick(String type) {
@@ -1041,16 +1032,15 @@ public class ConversationActivity extends ConversationBaseActivity {
         Bundle bundle = new Bundle();
         switch (conversation.getType()) {
             case Conversation.TYPE_GROUP:
-                bundle.putSerializable(ConversationGroupInfoActivity.EXTRA_CID, conversation.getId());
-                Intent intent = new Intent(this, ConversationGroupInfoActivity.class);
+                bundle.putSerializable(ConversationInfoActivity.EXTRA_CID, conversation.getId());
+                Intent intent = new Intent(this, ConversationInfoActivity.class);
                 intent.putExtras(bundle);
                 startActivityForResult(intent, REQUEST_QUIT_CHANNELGROUP);
                 break;
             case Conversation.TYPE_DIRECT:
-                String uid = CommunicationUtils.getDirectChannelOtherUid(MyApplication.getInstance(), conversation.getName());
-                bundle.putString("uid", uid);
+                bundle.putString(ConversationInfoActivity.EXTRA_CID, conversation.getId());
                 IntentUtils.startActivity(ConversationActivity.this,
-                        UserInfoActivity.class, bundle);
+                        ConversationInfoActivity.class, bundle);
                 break;
             case Conversation.TYPE_CAST:
                 bundle.putSerializable(ConversationCastInfoActivity.EXTRA_CID, conversation.getId());
@@ -1217,19 +1207,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         swipeRefreshLayout.setRefreshing(false);
     }
 
-    /**
-     * 持久化16秒以上消息的消息状态
-     *
-     * @param messageSendingList
-     */
-    private void persistenceMessageSendStatus(final List<Message> messageSendingList) {
-        new Thread() {
-            @Override
-            public void run() {
-                MessageCacheUtil.saveMessageList(ConversationActivity.this, messageSendingList);
-            }
-        }.start();
-    }
+
 
     //接收到websocket发过来的消息
     @Subscribe(threadMode = ThreadMode.MAIN)
