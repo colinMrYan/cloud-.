@@ -1,0 +1,441 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+
+    <RelativeLayout
+        android:id="@+id/rl_header"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/header_height"
+        android:background="?attr/header_bg">
+
+        <ImageButton
+            android:id="@+id/ibt_back"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_centerVertical="true"
+            android:background="@null"
+            android:onClick="onClick"
+            android:padding="11dp"
+            android:scaleType="fitXY"
+            android:src="?attr/ic_back_btn" />
+
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:textColor="?attr/header_text_color"
+            android:textSize="@dimen/header_textsize" />
+
+
+        <ImageView
+            android:id="@+id/iv_calendar_detail_more"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:adjustViewBounds="true"
+            android:onClick="onClick"
+            android:paddingBottom="17dp"
+            android:paddingLeft="13dp"
+            android:paddingRight="16dp"
+            android:paddingTop="17dp"
+            android:scaleType="fitXY"
+            android:src="?attr/ic_header_option"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_conversation_members_head"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#FFFFFF"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"></android.support.v7.widget.RecyclerView>
+
+            <RelativeLayout
+                android:id="@+id/rl_more_members"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#FFFFFF"
+                android:onClick="onClick"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/tv_more_members"
+                    android:layout_width="wrap_content"
+                    android:layout_height="25dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:text="@string/channel_search_more_group_members"
+                    android:textColor="#999999"
+                    android:textSize="13sp" />
+
+                <ImageView
+                    android:layout_width="9dp"
+                    android:layout_height="9dp"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@+id/tv_more_members"
+                    android:paddingLeft="4dp"
+                    android:src="@drawable/ic_arrow_right" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_conversation_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="#FFFFFF"
+                android:onClick="onClick"
+                android:paddingLeft="16dp">
+
+                <TextView
+                    android:id="@+id/tv_conversation_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:paddingBottom="11dp"
+                    android:paddingTop="11dp"
+                    android:singleLine="true"
+                    android:text="@string/channel_group_name"
+                    android:textColor="#FF333333"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/iv_conversation_name_arrow"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginRight="16dp"
+                    android:src="@drawable/ic_arrow_right" />
+
+                <TextView
+                    android:id="@+id/tv_conversation_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="8dp"
+                    android:layout_toLeftOf="@id/iv_conversation_name_arrow"
+                    android:layout_toRightOf="@id/tv_conversation_title"
+                    android:gravity="right"
+                    android:paddingBottom="10dp"
+                    android:paddingRight="1dp"
+                    android:paddingTop="8dp"
+                    android:singleLine="true"
+                    android:textColor="#888888"
+                    android:textSize="16sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5px"
+                    android:layout_below="@id/tv_conversation_title"
+                    android:background="@color/color_list_divider" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_conversation_qr"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#FFFFFF"
+                android:onClick="onClick"
+                android:paddingLeft="16dp">
+
+                <TextView
+                    android:id="@+id/tv_conversation_qr_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:paddingBottom="11dp"
+                    android:paddingTop="11dp"
+                    android:text="@string/channel_group_qrcode"
+                    android:textColor="#FF333333"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/iv_conversation_qr_arrow"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginRight="16dp"
+                    android:src="@drawable/ic_arrow_right" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5px"
+                    android:layout_below="@id/tv_conversation_qr_title"
+                    android:background="@color/color_list_divider" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_conversation_images"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="#FFFFFF"
+                android:onClick="onClick"
+                android:paddingLeft="16dp">
+
+                <TextView
+                    android:id="@+id/tv_conversation_images"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:paddingBottom="11dp"
+                    android:paddingTop="11dp"
+                    android:text="@string/channel_group_image"
+                    android:textColor="#FF333333"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/iv_conversation_search_images"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginRight="16dp"
+                    android:src="@drawable/ic_arrow_right" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5px"
+                    android:layout_below="@id/tv_conversation_images"
+                    android:background="@color/color_list_divider" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_conversation_files"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#FFFFFF"
+                android:onClick="onClick"
+                android:paddingLeft="16dp">
+
+                <TextView
+                    android:id="@+id/tv_conversation_files_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:paddingBottom="11dp"
+                    android:paddingTop="11dp"
+                    android:text="@string/channel_group_file"
+                    android:textColor="#FF333333"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/iv_conversation_files_arrow"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginRight="16dp"
+                    android:src="@drawable/ic_arrow_right" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5px"
+                    android:layout_below="@id/tv_conversation_files_title"
+                    android:background="@color/color_list_divider" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_conversation_search_record"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#FFFFFF"
+                android:onClick="onClick"
+                android:paddingLeft="16dp">
+
+                <TextView
+                    android:id="@+id/tv_conversation_search_record"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:paddingBottom="11dp"
+                    android:paddingTop="11dp"
+                    android:text="@string/chat_group_message_search"
+                    android:textColor="#FF333333"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/iv_conversation_search_record"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginRight="16dp"
+                    android:src="@drawable/ic_arrow_right" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5px"
+                    android:layout_below="@id/tv_conversation_search_record"
+                    android:background="@color/color_list_divider" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_channel_search_record_have_margin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="#FFFFFF"
+                android:onClick="onClick"
+                android:paddingLeft="16dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/tv_channel_search_record_have_margin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:paddingBottom="11dp"
+                    android:paddingTop="11dp"
+                    android:text="@string/chat_group_message_search"
+                    android:textColor="#FF333333"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/iv_channel_search_record_have_margin"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginRight="16dp"
+                    android:src="@drawable/ic_arrow_right" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5px"
+                    android:layout_below="@id/tv_channel_search_record_have_margin"
+                    android:background="@color/color_list_divider" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_conversation_sticky"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="#FFFFFF"
+                android:onClick="onClick"
+                android:paddingLeft="16dp">
+
+                <TextView
+                    android:id="@+id/tv_conversation_sticky_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:paddingBottom="11dp"
+                    android:paddingTop="11dp"
+                    android:text="@string/channel_set_sticky"
+                    android:textColor="#FF333333"
+                    android:textSize="16sp" />
+
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/switch_conversation_sticky"
+                    android:layout_width="51dp"
+                    android:layout_height="31dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginRight="16dp"
+                    android:src="@drawable/ic_arrow_right" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5px"
+                    android:layout_below="@id/tv_conversation_sticky_title"
+                    android:background="@color/color_list_divider" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_conversation_mute_notification"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#FFFFFF"
+                android:onClick="onClick"
+                android:paddingLeft="16dp">
+
+                <TextView
+                    android:id="@+id/tv_conversation_mute_notification_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:paddingBottom="11dp"
+                    android:paddingTop="11dp"
+                    android:text="@string/message_without_interruption"
+                    android:textColor="#FF333333"
+                    android:textSize="16sp" />
+
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/switch_conversation_mute_notification"
+                    android:layout_width="51dp"
+                    android:layout_height="31dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginRight="16dp"
+                    android:src="@drawable/ic_arrow_right" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5px"
+                    android:layout_below="@id/tv_conversation_mute_notification_title"
+                    android:background="@color/color_list_divider" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_conversation_quit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:background="#FFFFFF"
+                android:onClick="onClick">
+
+                <TextView
+                    android:id="@+id/tv_conversation_quit_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:paddingBottom="11dp"
+                    android:paddingTop="11dp"
+                    android:text="@string/quit_group"
+                    android:textColor="#FF333333"
+                    android:textSize="16sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5px"
+                    android:layout_below="@id/tv_conversation_quit_title"
+                    android:layout_marginLeft="16dp"
+                    android:background="@color/color_list_divider" />
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

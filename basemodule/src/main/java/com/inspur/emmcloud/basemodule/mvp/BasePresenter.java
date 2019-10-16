@@ -2,6 +2,8 @@ package com.inspur.emmcloud.basemodule.mvp;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.support.annotation.Nullable;
 
 public class BasePresenter<V extends BaseView> {
     protected V mView;
@@ -21,5 +23,9 @@ public class BasePresenter<V extends BaseView> {
 
     public boolean isViewAttached() {
         return mView != null;
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+
     }
 }
