@@ -1,8 +1,9 @@
 package com.inspur.emmcloud.util.privates;
 
+import android.os.Handler;
+
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.EventMessage;
@@ -29,7 +30,6 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * Created by chenmch on 2019/10/15.
@@ -37,11 +37,37 @@ import java.util.concurrent.ScheduledExecutorService;
 
 public class MessageSendManager {
     private static MessageSendManager mInstance;
+    private final int interval = 5000;
     //    private OnMessageSendStatusListener onMessageSendStatusListener;
     private List<Message> messageListInSendRetry = new ArrayList<>();
-    private ScheduledExecutorService scheduledExecutorService;
-
+    private Handler handler;
+    private Runnable runnable;
+    //检查消息是否发送超时的Runnable是否正在执行
+    private boolean isCheckMessageSendTimeoutRunning = false;
     private MessageSendManager() {
+        handler = new Handler();
+        runnable = new Runnable() {
+            @Override
+            public void run() {
+                Iterator<Message> it = messageListInSendRetry.iterator();
+                while (it.hasNext()) {
+                    Message message = it.next();
+                    if (isMessageSendTimeout(message)) {
+                        setMessageSendFail(message);
+                        it.remove();
+                    }
+                }
+                if (messageListInSendRetry.size() > 0) {
+                    isCheckMessageSendTimeoutRunning = true;
+                    handler.postDelayed(runnable, interval);
+                } else {
+                    isCheckMessageSendTimeoutRunning = false;
+                    handler.removeCallbacks(runnable);
+                }
+
+
+            }
+        };
     }
 
     public static MessageSendManager getInstance() {
@@ -55,10 +81,30 @@ public class MessageSendManager {
         return mInstance;
     }
 
+    public void startCheckMessageSendTimeout() {
+        if (messageListInSendRetry.size() > 0 && !isCheckMessageSendTimeoutRunning) {
+            handler.postDelayed(runnable, interval);
+            isCheckMessageSendTimeoutRunning = true;
+        }
+    }
+
+
+    public void stopCheckMessageSendTimeout() {
+        if (messageListInSendRetry.size() == 0) {
+            handler.removeCallbacks(runnable);
+            isCheckMessageSendTimeoutRunning = false;
+        }
+    }
+
+
+
+
     /**
      * 每次应用启动时将所有发送中的消息置为等待重发状态中
      */
     public void initMessageStatus() {
+        messageListInSendRetry.clear();
+        stopCheckMessageSendTimeout();
         List<Message> messageListInSendingStatus = MessageCacheUtil.getMessageListBySendStatus(Message.MESSAGE_SEND_ING);
         for (Message message : messageListInSendingStatus) {
             if (isMessageSendTimeout(message)) {
@@ -72,6 +118,10 @@ public class MessageSendManager {
     }
 
 
+    /**
+     * 当WS上线之后重发所有的待发送中地方消息
+     * 注意：必须在WS离线消息获取成功之后
+     */
     public void resendMessageAfterWSOnline() {
         messageListInSendRetry = MessageCacheUtil.getMessageListBySendStatus(Message.MESSAGE_SEND_ING, true);
         for (Message message : messageListInSendRetry) {
@@ -140,6 +190,7 @@ public class MessageSendManager {
             message.setWaitingSendRetry(true);
             MessageCacheUtil.saveMessage(BaseApplication.getInstance(), message);
             messageListInSendRetry.add(message);
+            startCheckMessageSendTimeout();
         }
     }
 
@@ -154,11 +205,13 @@ public class MessageSendManager {
                 }
 
             }
+            stopCheckMessageSendTimeout();
 
         }
     }
 
     private void setMessageSendFail(Message message) {
+        message.setWaitingSendRetry(false);
         message.setSendStatus(Message.MESSAGE_SEND_FAIL);
         EventMessage eventMessage = new EventMessage(message.getId(), Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE, "");
         eventMessage.setStatus(-1);
@@ -303,11 +356,10 @@ public class MessageSendManager {
             @Override
             public void onFail() {
                 //当网络失败或者发送时间已经超过10分钟时
-                if (NetUtils.isNetworkConnected(BaseApplication.getInstance(), false) || isMessageSendTimeout(fakeMessage)) {
-                    setMessageSendFail(fakeMessage);
+                if (!NetUtils.isNetworkConnected(BaseApplication.getInstance(), false)) {
+                    addMessageInSendRetry(fakeMessage);
                 } else {
-                    fakeMessage.setWaitingSendRetry(true);
-                    MessageCacheUtil.saveMessage(BaseApplication.getInstance(), fakeMessage);
+                    setMessageSendFail(fakeMessage);
                 }
             }
         };
@@ -315,26 +367,12 @@ public class MessageSendManager {
     }
 
     private boolean isMessageSendTimeout(Message fakeMessage) {
-        LogUtils.jasonDebug("" + (System.currentTimeMillis() - fakeMessage.getCreationDate() - (MyAppConfig.WEBSOCKET_REQUEST_TIMEOUT_SEND_MESSAGE * 1000)));
         return System.currentTimeMillis() - fakeMessage.getCreationDate() - (MyAppConfig.WEBSOCKET_REQUEST_TIMEOUT_SEND_MESSAGE * 1000) >= 0;
     }
 
-    private class CheckMessageSendTimeoutRunnable implements Runnable {
-        @Override
-        public void run() {
-            if (messageListInSendRetry.size() > 0) {
-                for (Message message : messageListInSendRetry) {
-                    if (isMessageSendTimeout(message)) {
-                        message.setWaitingSendRetry(false);
-                    }
-                }
-            }
-        }
+
+    public void onDestroy() {
+        messageListInSendRetry.clear();
+        stopCheckMessageSendTimeout();
     }
-
-
-//    public interface OnMessageSendStatusListener{
-//        void onMessageSendFail(Message message);
-//        void onMessageSendFail(List<Message>  messageList);
-//    }
 }

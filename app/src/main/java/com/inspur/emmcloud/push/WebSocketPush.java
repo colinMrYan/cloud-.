@@ -178,8 +178,9 @@ public class WebSocketPush {
                     "/chat/socket/handshake";
             sendWebSocketStatusBroadcast(Socket.EVENT_CONNECTING);
             IO.Options opts = new IO.Options();
-            opts.reconnectionAttempts = 5; // 设置websocket重连次数
+            opts.reconnectionAttempts = 10; // 设置websocket重连次数
             opts.forceNew = true;
+            opts.reconnectionDelay = 2000;
             Map<String, String> query = new HashMap<>();
             try {
                 if (WebServiceRouterManager.getInstance().isV0VersionChat()) {

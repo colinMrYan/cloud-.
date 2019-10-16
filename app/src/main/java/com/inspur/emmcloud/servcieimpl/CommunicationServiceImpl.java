@@ -11,6 +11,7 @@ import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.ui.chat.ConversationBaseActivity;
 import com.inspur.emmcloud.ui.chat.ShareToConversationBlankActivity;
+import com.inspur.emmcloud.util.privates.MessageSendManager;
 
 import org.json.JSONObject;
 
@@ -90,5 +91,10 @@ public class CommunicationServiceImpl implements CommunicationService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void MessageSendManagerOnDestroy() {
+        MessageSendManager.getInstance().onDestroy();
     }
 }
