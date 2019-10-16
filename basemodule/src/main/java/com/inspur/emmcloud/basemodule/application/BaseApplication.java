@@ -144,6 +144,7 @@ public abstract class BaseApplication extends MultiDexApplication {
             CommunicationService service = router.getService(CommunicationService.class);
             service.stopPush();
             service.webSocketSignout();
+            service.MessageSendManagerOnDestroy();
         }
         if (router.getService(LoginService.class) != null) {
             LoginService service = router.getService(LoginService.class);

@@ -27,6 +27,7 @@ import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.bean.EventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseFragmentActivity;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
@@ -36,8 +37,8 @@ import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetMessageCommentCountResult;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentMediaImage;
-import com.inspur.emmcloud.bean.system.EventMessage;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
+import com.inspur.emmcloud.util.privates.MessageSendManager;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.widget.ECMChatInputMenuImgComment;
 import com.inspur.emmcloud.widget.HackyViewPager;
@@ -418,7 +419,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
     private void sendComment(String content, Map<String, String> mentionsMap) {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
             Message message = CommunicationUtils.combinLocalCommentTextPlainMessage(cid, imgTypeMessageList.get(pagerPosition).getId(), content, mentionsMap);
-            WSAPIService.getInstance().sendChatCommentTextPlainMsg(message);
+            MessageSendManager.getInstance().sendMessage(message);
             Integer commentCount = commentCountMap.get(imgTypeMessageList.get(pagerPosition).getId());
             if (commentCount == null) {
                 commentCount = 0;

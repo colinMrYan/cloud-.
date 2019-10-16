@@ -75,26 +75,32 @@
                 android:layout_height="wrap_content"
                 android:background="#FFFFFF"
                 android:onClick="onClick"
+                android:paddingBottom="11dp"
                 android:visibility="gone">
 
-                <TextView
-                    android:id="@+id/tv_more_members"
+                <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="25dp"
+                    android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
                     android:gravity="center"
-                    android:text="@string/channel_search_more_group_members"
-                    android:textColor="#999999"
-                    android:textSize="13sp" />
+                    android:orientation="horizontal">
 
-                <ImageView
-                    android:layout_width="9dp"
-                    android:layout_height="9dp"
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@+id/tv_more_members"
-                    android:paddingLeft="4dp"
-                    android:src="@drawable/ic_arrow_right" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/channel_search_more_group_members"
+                        android:textColor="#999999"
+                        android:textSize="13sp" />
+
+                    <ImageView
+                        android:layout_width="6dp"
+                        android:layout_height="12dp"
+                        android:layout_marginLeft="3dp"
+                        android:paddingTop="2dp"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/ic_arrow_right" />
+                </LinearLayout>
+
 
             </RelativeLayout>
 
@@ -412,7 +418,7 @@
                 android:id="@+id/rl_conversation_quit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="28dp"
                 android:layout_marginTop="10dp"
                 android:background="#FFFFFF"
                 android:onClick="onClick">

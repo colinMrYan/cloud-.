@@ -331,8 +331,8 @@
     <string name="chat_long_click_reply">回复</string>
     <string name="chat_full_image">查看原图</string>
     <string name="communication_search">搜索</string>
-    <string name="chat_transmit_message_success">已转发</string>
-    <string name="chat_transmit_message_fail">转发失败</string>
+    <string name="chat_message_send_success">已发送</string>
+    <string name="chat_message_send_fail">发送失败</string>
     <string name="chat_original_picture_download_progress">&#037;%1d</string>
     <string name="chat_group_least_two_person">群聊至少需要2人及以上</string>
     <string name="chat_send_email_too_many_person_tip">收件人太多会影响邮件发送速度，确定发送？</string>

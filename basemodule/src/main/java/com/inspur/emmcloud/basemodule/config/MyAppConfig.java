@@ -51,7 +51,8 @@ public class MyAppConfig {
     public static final int UPLOAD_ORIGIN_IMG_DEFAULT_SIZE = 1280;
     public static final int UPLOAD_THUMBNAIL_IMG_MAX_SIZE = 600;
     public static final int VOLUME_MAX_FILE_NAME_LENGTH = 40;
-    public static final int WEBSOCKET_REQUEST_TIMEOUT = 16;
+    public static final int WEBSOCKET_REQUEST_TIMEOUT_COMMON = 16;
+    public static final int WEBSOCKET_REQUEST_TIMEOUT_SEND_MESSAGE = 600;
     private static final String LOCAL_DOWNLOAD_PATH = Environment
             .getExternalStorageDirectory() + "/IMP-Cloud/download/";
     public static int NETWORK_MOBILE_MAX_SIZE_ALERT = 1024 * 1024 * 50;

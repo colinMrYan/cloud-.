@@ -53,6 +53,7 @@ import com.inspur.emmcloud.service.CoreService;
 import com.inspur.emmcloud.service.LocationService;
 import com.inspur.emmcloud.util.privates.AppConfigUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
+import com.inspur.emmcloud.util.privates.MessageSendManager;
 import com.inspur.emmcloud.util.privates.MyAppWidgetUtils;
 import com.inspur.emmcloud.util.privates.ProfileUtils;
 import com.inspur.emmcloud.util.privates.ReactNativeUtils;
@@ -123,6 +124,7 @@ public class IndexActivity extends IndexBaseActivity {
             }
         }
         initScheduleCalendar();
+        MessageSendManager.getInstance().initMessageStatus();
     }
 
     protected void initScheduleCalendar() {
