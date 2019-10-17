@@ -107,12 +107,16 @@ public class MessageSendManager {
         stopCheckMessageSendTimeout();
         List<Message> messageListInSendingStatus = MessageCacheUtil.getMessageListBySendStatus(Message.MESSAGE_SEND_ING);
         for (Message message : messageListInSendingStatus) {
-            if (isMessageSendTimeout(message)) {
-                message.setSendStatus(Message.MESSAGE_SEND_FAIL);
-                message.setWaitingSendRetry(false);
-            } else {
-                message.setWaitingSendRetry(true);
+            //聊天文件正在上传中不修改任何状态
+            if (!ChatFileUploadManagerUtils.getInstance().isMessageResourceUploading(message)) {
+                if (isMessageSendTimeout(message)) {
+                    message.setSendStatus(Message.MESSAGE_SEND_FAIL);
+                    message.setWaitingSendRetry(false);
+                } else {
+                    message.setWaitingSendRetry(true);
+                }
             }
+
         }
         MessageCacheUtil.saveMessageList(BaseApplication.getInstance(), messageListInSendingStatus);
     }
