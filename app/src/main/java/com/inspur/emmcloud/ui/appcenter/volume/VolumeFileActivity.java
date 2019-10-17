@@ -520,6 +520,8 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                 }
             }
         }
+        /**继续执行父类的OnActivityResult**/
+        super.onActivityResult(requestCode, resultCode, data);
         }
 
     /**

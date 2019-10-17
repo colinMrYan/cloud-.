@@ -360,6 +360,8 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         VolumeFile volumeFile = adapter.getSelectVolumeFileList().get(0);
         if (action.equals(downloadAction)) {
             downloadFile(volumeFile);
+            adapter.clearSelectedVolumeFileList();
+            adapter.notifyDataSetChanged();
         } else if (action.equals(moveToAction)) {
             moveFile(adapter.getSelectVolumeFileList());
         } else if (action.equals(copyAction)) {
@@ -572,17 +574,18 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case REQUEST_COPY_FILE:
                     adapter.clearSelectedVolumeFileList();
                     adapter.notifyDataSetChanged();
+                    setBottomOperationItemShow(new ArrayList<VolumeFile>());
                     break;
                 case REQUEST_MOVE_FILE:
                     adapter.clearSelectedVolumeFileList();
                     volumeFileList.removeAll(moveVolumeFileList);
                     adapter.notifyDataSetChanged();
+                    setBottomOperationItemShow(new ArrayList<VolumeFile>());
                     break;
                 default:
                     break;
