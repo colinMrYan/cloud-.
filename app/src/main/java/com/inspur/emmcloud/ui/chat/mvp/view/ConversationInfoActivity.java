@@ -306,7 +306,6 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
         finish();
     }
 
-
     private void showQuitGroupWarningDlg() {
         new CustomDialog.MessageDialogBuilder(ConversationInfoActivity.this)
                 .setMessage(getString(R.string.quit_group_warning_text))
