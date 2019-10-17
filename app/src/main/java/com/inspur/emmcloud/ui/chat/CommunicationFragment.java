@@ -610,11 +610,11 @@ public class CommunicationFragment extends BaseFragment {
         if (socketStatus.equals(Socket.EVENT_CONNECTING)) {
             titleText.setText(R.string.socket_connecting);
         } else if (socketStatus.equals(Socket.EVENT_CONNECT)) {
+            getMessage();
             //当断开以后连接成功(非第一次连接上)后重新拉取一遍消息
             if (!isFirstConnectWebsockt) {
                 getConversationList();
             }
-            getMessage();
             isFirstConnectWebsockt = false;
             String appTabs = PreferencesByUserAndTanentUtils.getString(getActivity(), Constant.PREF_APP_TAB_BAR_INFO_CURRENT, "");
             if (!StringUtils.isBlank(appTabs)) {
@@ -843,6 +843,8 @@ public class CommunicationFragment extends BaseFragment {
                     if (!MyApplication.getInstance().getCurrentChannelCid().equals(fakeMessage.getChannel())) {
                         fakeMessage.setSendStatus(Message.MESSAGE_SEND_FAIL);
                         MessageCacheUtil.saveMessage(MyApplication.getInstance(), fakeMessage);
+                    } else {
+                        sortConversationList();
                     }
                 }
             }
