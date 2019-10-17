@@ -63,6 +63,10 @@ public class VoiceCommunicationUtils {
     private VoiceCommunicationJoinChannelInfoBean inviteeInfoBean;
     private int userCount = 1;
     /**
+     * 记录通话开始时间
+     */
+    private long connectStartTime = 0;
+    /**
      * 布局状态
      */
     private int layoutState = -1;
@@ -481,6 +485,14 @@ public class VoiceCommunicationUtils {
 
     public void setCommunicationType(String communicationType) {
         this.communicationType = communicationType;
+    }
+
+    public long getConnectStartTime() {
+        return connectStartTime;
+    }
+
+    public void setConnectStartTime(long connectStartTime) {
+        this.connectStartTime = connectStartTime;
     }
 
     /**

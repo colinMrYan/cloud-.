@@ -1322,7 +1322,9 @@
     <string name="voice_input_tip_speak">按下説話</string>
     <string name="voice_input_clear">清空</string>
     <string name="communication_has_leave">已掛斷</string>
-    <string name="voice_communication_notification">語音通話中，輕觸以繼續</string>
+    <string name="voice_communication_notification_group_title">語音通話</string>
+    <string name="voice_communication_notification_group_content">點擊恢復</string>
+    <string name="voice_communication_notification_content">語音通話中，輕觸以繼續</string>
 
     <string name="notification_switch">新消息通知</string>
 

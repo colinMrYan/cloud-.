@@ -1324,7 +1324,9 @@
     <string name="voice_input_tip_speak">Hold to Talk</string>
     <string name="voice_input_clear">Clear</string>
     <string name="communication_has_leave">Hung up</string>
-    <string name="voice_communication_notification">Tap to continue as voice call in progress</string>
+    <string name="voice_communication_notification_group_title">Voice Call</string>
+    <string name="voice_communication_notification_group_content">Tap to recover</string>
+    <string name="voice_communication_notification_content">Tap to continue as voice call in progress</string>
 
     <string name="notification_switch">New Notification</string>
     <string name="notification_switch_cant_recive">if closed,you won\'t receive any notifications Close</string>

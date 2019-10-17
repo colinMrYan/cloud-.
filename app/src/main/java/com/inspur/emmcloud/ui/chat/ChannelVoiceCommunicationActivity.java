@@ -25,7 +25,6 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.VoiceCommunicationMemberAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
@@ -289,6 +288,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     public void onCreate() {
         EventBus.getDefault().register(this);
         ButterKnife.bind(this);
+        voiceCommunicationUtils = VoiceCommunicationUtils.getInstance();
         cloudPlusChannelId = getIntent().getStringExtra(ConversationActivity.CLOUD_PLUS_CHANNEL_ID);
         communicationType = getIntent().getStringExtra(VOICE_VIDEO_CALL_TYPE);
         //如果是邀请者能收到从外面传进来的人员列表
@@ -296,7 +296,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         if (list != null) {
             voiceCommunicationMemberList = list;
         }
-        voiceCommunicationUtils = VoiceCommunicationUtils.getInstance();
         if (voiceCommunicationUtils.getCommunicationState() == -1) {
             voiceCommunicationUtils.setCommunicationState(COMMUNICATION_STATE_PRE);
         }
@@ -305,7 +304,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         voiceCommunicationUtils.setLayoutState(layoutState);
         isFromSmallWindow = getIntent().getBooleanExtra(VOICE_IS_FROM_SMALL_WINDOW, false);
         SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
-        Log.d("zhang", "onCreate: layoutState = " + layoutState);
         recoverData();
         initViews();
         checkHasPermission();
@@ -432,10 +430,12 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             }
         }
         //如果是来自小窗口，则取得已经通话的时长，继续计时
-        if (getIntent().getLongExtra(VOICE_TIME, 0) > 0) {
-            communicationTimeChronometer.setBase(SystemClock.elapsedRealtime() - getIntent().getLongExtra(VOICE_TIME, 0) * 1000);
-            communicationTimeChronometer.start();
-        }
+//        if (getIntent().getLongExtra(VOICE_TIME, 0) > 0) {
+        //通话相差时间
+        long duration = System.currentTimeMillis() - voiceCommunicationUtils.getConnectStartTime();
+        communicationTimeChronometer.setBase(SystemClock.elapsedRealtime() - duration);
+        communicationTimeChronometer.start();
+//        }
 //        dragLocalVideoView();
     }
 
@@ -656,6 +656,8 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             if (cmd.equals("destroy")) {
                 changeUserConnectStateByUid(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_LEAVE, uid);
                 remindEmmServerLeaveChannel(agoraChannelId);
+                voiceCommunicationUtils.setCommunicationState(COMMUNICATION_STATE_OVER);
+                SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
                 finish();
             } else if (cmd.equals("refuse")) {
                 if (layoutState == COMMUNICATION_LAYOUT_STATE) {
@@ -737,6 +739,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                             changeFunctionState(COMMUNICATION_LAYOUT_STATE);
                             communicationTimeChronometer.setBase(SystemClock.elapsedRealtime());
                             communicationTimeChronometer.start();
+                            voiceCommunicationUtils.setConnectStartTime(System.currentTimeMillis());
                             refreshCommunicationMemberAdapter();
                         }
                     });
@@ -1016,6 +1019,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 initCommunicationViews(COMMUNICATION_LAYOUT_STATE);
                 communicationTimeChronometer.setBase(SystemClock.elapsedRealtime());
                 communicationTimeChronometer.start();
+                voiceCommunicationUtils.setConnectStartTime(System.currentTimeMillis());
                 voiceCommunicationUtils.joinChannel(inviteeInfoBean.getToken(),
                         agoraChannelId, inviteeInfoBean.getUserId(), inviteeInfoBean.getAgoraUid());
                 break;
@@ -1140,6 +1144,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
      */
     private void saveCommunicationData() {
         voiceCommunicationUtils.setLayoutState(layoutState);
+        Log.d("zhang", "saveCommunicationData: layoutState = " + layoutState);
         voiceCommunicationUtils.setCommunicationState(voiceCommunicationUtils.getCommunicationState());
         voiceCommunicationUtils.setAgoraChannelId(agoraChannelId);
         voiceCommunicationUtils.setCommunicationType(communicationType);
@@ -1173,19 +1178,19 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         super.onStop();
 
         if (voiceCommunicationUtils.getCommunicationState() != COMMUNICATION_STATE_OVER) {
-            NotifyUtil notifyUtil = new NotifyUtil(BaseApplication.getInstance());
+            NotifyUtil notifyUtil = new NotifyUtil(this);
             String title = "";
             String content = "";
             if (voiceCommunicationMemberList.size() > 2) {  //群聊
-                title = ""; //TODO
-                content = "";
+                title = getString(R.string.voice_communication_notification_group_title);
+                content = getString(R.string.voice_communication_notification_group_content);
             } else if (voiceCommunicationMemberList.size() == 2) {    //单聊
                 for (VoiceCommunicationJoinChannelInfoBean bean : voiceCommunicationMemberList) {
                     if (!bean.getUserId().equals(BaseApplication.getInstance().getUid())) {
                         title = bean.getUserName();
                     }
                 }
-                content = "";
+                content = getString(R.string.voice_communication_notification_content);
             }
             notifyUtil.setNotification(title, content, ChannelVoiceCommunicationActivity.class);
         }
@@ -1205,7 +1210,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         //恢复状态
         if (voiceCommunicationUtils.getCommunicationState() == COMMUNICATION_STATE_OVER) {
             voiceCommunicationUtils.setCommunicationState(-1);
-            voiceCommunicationUtils = null;
         }
         EventBus.getDefault().unregister(this);
         mediaPlayerManagerUtils.stop();
@@ -1219,8 +1223,8 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     private void setInviterInfo(GetVoiceCommunicationResult getVoiceCommunicationResult) {
         VoiceCommunicationJoinChannelInfoBean infoBean = getVoiceCommunicationResult.getVoiceCommunicationJoinChannelInfoBeanList().get(0);
         //头像源数据修改为本地，注释掉的是从接口中读取的url
-//        ImageDisplayUtils.getInstance().displayImage(userHeadImg, infoBean.getHeadImageUrl(), R.drawable.icon_person_default);
-        ImageDisplayUtils.getInstance().displayImage(userHeadImg, APIUri.getUserIconUrl(this, infoBean.getUserId()), R.drawable.icon_person_default);
+        ImageDisplayUtils.getInstance().displayImage(userHeadImg, infoBean.getHeadImageUrl(), R.drawable.icon_person_default);
+//        ImageDisplayUtils.getInstance().displayImage(userHeadImg, APIUri.getUserIconUrl(this, infoBean.getUserId()), R.drawable.icon_person_default);
         userNameTv.setText(infoBean.getUserName());
     }
 

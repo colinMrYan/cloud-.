@@ -218,5 +218,9 @@ public class SuspensionWindowManagerUtils {
         intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_TIME, Long.parseLong(TimeUtils.getChronometerSeconds(chronometer.getText().toString())));
         windowContext.startActivity(intent);
     }
+
+    public Chronometer getChronometer() {
+        return chronometer;
+    }
 }
 
