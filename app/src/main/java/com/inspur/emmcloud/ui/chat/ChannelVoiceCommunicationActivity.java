@@ -53,7 +53,6 @@ import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
 import com.inspur.emmcloud.bean.system.GetBoolenResult;
 import com.inspur.emmcloud.util.privates.CustomProtocol;
 import com.inspur.emmcloud.util.privates.MediaPlayerManagerUtils;
-import com.inspur.emmcloud.util.privates.NotifyUtil;
 import com.inspur.emmcloud.util.privates.SuspensionWindowManagerUtils;
 import com.inspur.emmcloud.util.privates.VoiceCommunicationUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
@@ -1170,29 +1169,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             if (PermissionRequestManagerUtils.getInstance().isHasPermission(this, Permissions.RECORD_AUDIO)) {
                 pickUpVoiceCommunication();
             }
-        }
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-
-        if (voiceCommunicationUtils.getCommunicationState() != COMMUNICATION_STATE_OVER) {
-            NotifyUtil notifyUtil = new NotifyUtil(this);
-            String title = "";
-            String content = "";
-            if (voiceCommunicationMemberList.size() > 2) {  //群聊
-                title = getString(R.string.voice_communication_notification_group_title);
-                content = getString(R.string.voice_communication_notification_group_content);
-            } else if (voiceCommunicationMemberList.size() == 2) {    //单聊
-                for (VoiceCommunicationJoinChannelInfoBean bean : voiceCommunicationMemberList) {
-                    if (!bean.getUserId().equals(BaseApplication.getInstance().getUid())) {
-                        title = bean.getUserName();
-                    }
-                }
-                content = getString(R.string.voice_communication_notification_content);
-            }
-            notifyUtil.setNotification(title, content, ChannelVoiceCommunicationActivity.class);
         }
     }
 

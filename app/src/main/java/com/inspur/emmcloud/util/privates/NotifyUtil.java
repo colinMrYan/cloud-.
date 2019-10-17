@@ -11,8 +11,15 @@ import android.graphics.Color;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
 import com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity;
+
+import java.util.List;
+
+import static com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_OVER;
 
 public class NotifyUtil {
     private NotificationManager notificationManager;
@@ -63,6 +70,29 @@ public class NotifyUtil {
         builder.setContentIntent(pendingIntent);
 
         notificationManager.notify(10000, builder.build());
+    }
+
+    public static void sendNotifyMsg(Context context) {
+        if (VoiceCommunicationUtils.getInstance().getCommunicationState() != COMMUNICATION_STATE_OVER &&
+                VoiceCommunicationUtils.getInstance().getCommunicationState() != -1) {
+            NotifyUtil notifyUtil = new NotifyUtil(context);
+            String title = "";
+            String content = "";
+            List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationMemberList =
+                    VoiceCommunicationUtils.getInstance().getVoiceCommunicationMemberList();
+            if (voiceCommunicationMemberList.size() > 2) {  //群聊
+                title = context.getResources().getString(R.string.voice_communication_notification_group_title);
+                content = context.getResources().getString(R.string.voice_communication_notification_group_content);
+            } else if (voiceCommunicationMemberList.size() == 2) {    //单聊
+                for (VoiceCommunicationJoinChannelInfoBean bean : voiceCommunicationMemberList) {
+                    if (!bean.getUserId().equals(BaseApplication.getInstance().getUid())) {
+                        title = bean.getUserName();
+                    }
+                }
+                content = context.getResources().getString(R.string.voice_communication_notification_content);
+            }
+            notifyUtil.setNotification(title, content, ChannelVoiceCommunicationActivity.class);
+        }
     }
 
 }

@@ -17,6 +17,7 @@ import com.inspur.emmcloud.basemodule.util.ClientIDUtils;
 import com.inspur.emmcloud.basemodule.util.DbCacheUtils;
 import com.inspur.emmcloud.componentservice.app.AppService;
 import com.inspur.emmcloud.componentservice.appcenter.AppcenterService;
+import com.inspur.emmcloud.componentservice.communication.CommunicationService;
 import com.inspur.emmcloud.componentservice.login.LoginService;
 import com.inspur.emmcloud.componentservice.setting.SettingService;
 
@@ -88,6 +89,12 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
                 startUploadPVCollectService(BaseApplication.getInstance());
                 startSyncCommonAppService();
                 new ClientIDUtils(BaseApplication.getInstance()).upload();
+            }
+
+            Router router = Router.getInstance();
+            if (router.getService(CommunicationService.class) != null) {
+                CommunicationService communicationService = router.getService(CommunicationService.class);
+                communicationService.sendVoiceCommunicationNotify();
             }
             //进行app异常上传
             startUploadExceptionService(activity);
