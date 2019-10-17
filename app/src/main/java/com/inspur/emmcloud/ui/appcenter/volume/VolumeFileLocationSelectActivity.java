@@ -216,7 +216,6 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_MOVE_FILE || requestCode == REQUEST_COPY_FILE) {
                 setResult(RESULT_OK);

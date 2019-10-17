@@ -115,17 +115,16 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
         uiConversation = mPresenter.getConversation(cid);
         if (uiConversation.getType().equals(Conversation.TYPE_GROUP)) {
             String data = getString(R.string.chat_group_info_detail_title, mPresenter.getConversationRealMemberSize());
+            isOwner = uiConversation.getOwner().equals(BaseApplication.getInstance().getUid());
             titleTextView.setText(data);
             conversationNameTextView.setText(uiConversation.getName());
-            moreMembersLayout.setVisibility(uiConversation.getMemberList().size() > 13 ? View.VISIBLE : View.GONE);
-            isOwner = uiConversation.getOwner().equals(BaseApplication.getInstance().getUid());
-            quitTextView.setText(isOwner ? getString(R.string.dismiss_group) : getString(R.string.quit_group));
             uiUidList = mPresenter.getConversationUIMembersUid(uiConversation);
             conversationQRLayout.setVisibility(View.VISIBLE);
             conversationNameLayout.setVisibility(View.VISIBLE);
             conversationQuitLayout.setVisibility(View.VISIBLE);
             searchRecordLayout.setVisibility(View.VISIBLE);
             searchRecordMarginLayout.setVisibility(View.GONE);
+            mPresenter.updateSearchMoreState();
         } else if (uiConversation.getType().equals(Conversation.TYPE_DIRECT)) {
             isOwner = false;
             uiUidList = mPresenter.getConversationSingleChatUIMembersUid(uiConversation);
@@ -283,6 +282,11 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
     }
 
     @Override
+    public void updateMoreMembers(boolean isShow) {
+        moreMembersLayout.setVisibility(isShow ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
     public void quitGroupSuccess() {
         ConversationCacheUtils.deleteConversation(MyApplication.getInstance(), uiConversation.getId());
         EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_QUIT_CHANNEL_GROUP, uiConversation));
@@ -306,7 +310,6 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
         IntentUtils.startActivity(getActivity(), ConversationActivity.class, bundle);
         finish();
     }
-
 
     private void showQuitGroupWarningDlg() {
         new CustomDialog.MessageDialogBuilder(ConversationInfoActivity.this)

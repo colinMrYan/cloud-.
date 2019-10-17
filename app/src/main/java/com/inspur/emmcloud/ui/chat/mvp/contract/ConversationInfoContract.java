@@ -27,6 +27,8 @@ public interface ConversationInfoContract {
 
         void updateUiConversation(Conversation conversation);
 
+        void updateMoreMembers(boolean isShow);
+
         void quitGroupSuccess();
 
         void deleteGroupSuccess();
@@ -49,6 +51,8 @@ public interface ConversationInfoContract {
         void addConversationMembers(ArrayList<String> uidList, String conversationId);
 
         void delConversationMembers(ArrayList<String> uidList, String conversationId);
+
+        void updateSearchMoreState();
 
         void createGroup(List<SearchModel> addSearchModelList);
 

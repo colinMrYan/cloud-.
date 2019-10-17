@@ -313,6 +313,7 @@
     <string name="message_type_drafts">[草稿]</string>
     <string name="quit_group">退出群组</string>
     <string name="dismiss_group">解散群组</string>
+    <string name="quit_dismiss_group">删除并退出</string>
     <string name="quit_group_warning_text">确定要退出群组？</string>
     <string name="dismiss_group_warning_text">解散群组后，将会删除群内所有的聊天记录和文件等信息</string>
     <string name="chat_stick_on_top">置顶</string>
@@ -1328,6 +1329,7 @@
     <string name="share_no_more_than_five">不能上传多于5个文件</string>
     <string name="share_no_share_way">没有能够分享的方式</string>
     <string name="share_to_channel">发送到频道</string>
+    <string name="share_to_chat">发送到聊天</string>
     <string name="share_upload_volume">上传到云盘</string>
     <string name="share_no_suffix">不支持分享无后缀名的文件</string>
     <string name="share_has_not_exist_file">您分享的文件中有不存在的文件，请检查</string>
