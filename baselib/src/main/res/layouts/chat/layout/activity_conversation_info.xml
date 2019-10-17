@@ -66,8 +66,8 @@
                 android:layout_height="wrap_content"
                 android:background="#FFFFFF"
                 android:paddingBottom="10dp"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"></android.support.v7.widget.RecyclerView>
+                android:paddingLeft="9dp"
+                android:paddingRight="9dp"></android.support.v7.widget.RecyclerView>
 
             <RelativeLayout
                 android:id="@+id/rl_more_members"
@@ -100,10 +100,13 @@
                         android:scaleType="fitXY"
                         android:src="@drawable/ic_arrow_right" />
                 </LinearLayout>
-
-
             </RelativeLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5px"
+                android:layout_marginLeft="16dp"
+                android:background="@color/color_list_divider" />
             <RelativeLayout
                 android:id="@+id/rl_conversation_name"
                 android:layout_width="match_parent"
@@ -418,7 +421,7 @@
                 android:id="@+id/rl_conversation_quit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="28dp"
+                android:layout_marginBottom="34dp"
                 android:layout_marginTop="10dp"
                 android:background="#FFFFFF"
                 android:onClick="onClick">
@@ -431,8 +434,8 @@
                     android:gravity="center"
                     android:paddingBottom="11dp"
                     android:paddingTop="11dp"
-                    android:text="@string/quit_group"
-                    android:textColor="#FF333333"
+                    android:text="@string/quit_dismiss_group"
+                    android:textColor="@color/red_f3323b"
                     android:textSize="16sp" />
 
                 <View

@@ -34,11 +34,11 @@ import butterknife.ButterKnife;
 
 public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.ViewHolder> {
 
+    public List<VolumeFile> selectVolumeFileList = new ArrayList<>();
     private Context context;
     private List<VolumeFile> volumeFileList;
     private MyItemClickListener mItemClickListener;
     private boolean isMultiselect = false;
-    private List<VolumeFile> selectVolumeFileList = new ArrayList<>();
     private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     private boolean isShowFileOperationDropDownImg = true;
     private boolean isShowFileOperationSelecteImage = true;

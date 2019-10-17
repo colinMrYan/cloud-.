@@ -43,20 +43,20 @@ public class ChatFileUploadManagerUtils extends APIInterfaceInstance {
     }
 
 
-//    /**
-//     * 判断此消息的资源文件是否正在上传中
-//     *
-//     * @param message
-//     * @return
-//     */
-//    public boolean isMessageResourceUploading(Message message) {
-//        for (ChatFileUploadInfo chatFileUploadInfo : chatFileUploadInfoList) {
-//            if (chatFileUploadInfo.getMessage().getId().equals(message.getId())) {
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
+    /**
+     * 判断此消息的资源文件是否正在上传中
+     *
+     * @param message
+     * @return
+     */
+    public boolean isMessageResourceUploading(Message message) {
+        for (ChatFileUploadInfo chatFileUploadInfo : chatFileUploadInfoList) {
+            if (chatFileUploadInfo.getMessage().getId().equals(message.getId())) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     private void callbackSuccess(ChatFileUploadInfo chatFileUploadInfo, VolumeFile volumeFile) {
         if (chatFileUploadInfo.getCallback() != null) {
