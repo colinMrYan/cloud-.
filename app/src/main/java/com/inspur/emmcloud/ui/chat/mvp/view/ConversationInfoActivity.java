@@ -115,16 +115,16 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
         uiConversation = mPresenter.getConversation(cid);
         if (uiConversation.getType().equals(Conversation.TYPE_GROUP)) {
             String data = getString(R.string.chat_group_info_detail_title, mPresenter.getConversationRealMemberSize());
+            isOwner = uiConversation.getOwner().equals(BaseApplication.getInstance().getUid());
             titleTextView.setText(data);
             conversationNameTextView.setText(uiConversation.getName());
-            moreMembersLayout.setVisibility(uiConversation.getMemberList().size() > 13 ? View.VISIBLE : View.GONE);
-            isOwner = uiConversation.getOwner().equals(BaseApplication.getInstance().getUid());
             uiUidList = mPresenter.getConversationUIMembersUid(uiConversation);
             conversationQRLayout.setVisibility(View.VISIBLE);
             conversationNameLayout.setVisibility(View.VISIBLE);
             conversationQuitLayout.setVisibility(View.VISIBLE);
             searchRecordLayout.setVisibility(View.VISIBLE);
             searchRecordMarginLayout.setVisibility(View.GONE);
+            mPresenter.updateSearchMoreState();
         } else if (uiConversation.getType().equals(Conversation.TYPE_DIRECT)) {
             isOwner = false;
             uiUidList = mPresenter.getConversationSingleChatUIMembersUid(uiConversation);
@@ -279,6 +279,11 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
     public void updateUiConversation(Conversation conversation) {
         uiConversation = conversation;
         moreMembersLayout.setVisibility(uiConversation.getMemberList().size() > 13 ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void updateMoreMembers(boolean isShow) {
+        moreMembersLayout.setVisibility(isShow ? View.VISIBLE : View.GONE);
     }
 
     @Override
