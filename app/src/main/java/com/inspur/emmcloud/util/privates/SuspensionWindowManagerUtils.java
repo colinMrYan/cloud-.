@@ -17,6 +17,10 @@ import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity;
 
+import static com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_ING;
+import static com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_OVER;
+import static com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_PRE;
+
 /**
  * 悬浮窗管理类封装
  * Created by yufuchang on 2018/8/29.
@@ -76,7 +80,7 @@ public class SuspensionWindowManagerUtils {
      * 隐藏悬浮窗
      */
     public void hideCommunicationSmallWindow() {
-        if (isShowing && null != windowView) {
+        if (isShowing && null != windowView && windowManager != null) {
             windowManager.removeView(windowView);
             isShowing = false;
         }
@@ -101,8 +105,14 @@ public class SuspensionWindowManagerUtils {
         windowView = LayoutInflater.from(windowContext).inflate(R.layout.service_voice_communication,
                 null);
         chronometer = (Chronometer) windowView.findViewById(R.id.chronometer_voice_communication_time);
-        chronometer.setBase(SystemClock.elapsedRealtime() - passedTime * 1000);
-        chronometer.start();
+        if (VoiceCommunicationUtils.getInstance().getCommunicationState() == COMMUNICATION_STATE_ING) {
+            chronometer.setBase(SystemClock.elapsedRealtime() - passedTime * 1000);
+            chronometer.start();
+        } else if (VoiceCommunicationUtils.getInstance().getCommunicationState() == COMMUNICATION_STATE_PRE) {
+            chronometer.setText(R.string.voice_communication_waitting_answer);
+        } else if (VoiceCommunicationUtils.getInstance().getCommunicationState() == COMMUNICATION_STATE_OVER) {
+            hideCommunicationSmallWindow();
+        }
         View.OnClickListener clickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -202,7 +212,9 @@ public class SuspensionWindowManagerUtils {
         Intent intent = new Intent();
         intent.setClass(windowContext, ChannelVoiceCommunicationActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.COME_BACK_FROM_SERVICE);
+        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_IS_FROM_SMALL_WINDOW, true);
+        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE,
+                VoiceCommunicationUtils.getInstance().getLayoutState());
         intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_TIME, Long.parseLong(TimeUtils.getChronometerSeconds(chronometer.getText().toString())));
         windowContext.startActivity(intent);
     }

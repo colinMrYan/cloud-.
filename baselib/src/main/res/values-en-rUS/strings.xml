@@ -1172,9 +1172,9 @@
     <string name="file_ok">Confirm</string>
     <string name="file_cancel">Cancel</string>
     <string name="file_error">File Error</string>
-    <string name="can_not_pause">The current state can not be suspended</string>
-    <string name="can_not_replay">The current state of play can not be reset</string>
-    <string name="can_not_stop">The current state can not be stopped</string>
+    <string name="can_not_pause">The current layoutState can not be suspended</string>
+    <string name="can_not_replay">The current layoutState of play can not be reset</string>
+    <string name="can_not_stop">The current layoutState can not be stopped</string>
     <string name="turn_on_light">Turn on the light</string>
     <string name="turn_off_light">Turn off the light</string>
     <string name="imp_function_error">Function call error. Please check if Cloud + has been upgraded to the latest version.</string>
