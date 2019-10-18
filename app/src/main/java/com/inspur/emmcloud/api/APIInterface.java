@@ -655,7 +655,7 @@ public interface APIInterface {
     void returnDelConversationGroupMemberFail(String error, int errorCode);
 
 
-    void returnConversationInfoSuccess(Conversation conversation, boolean isFromScanCode);
+    void returnConversationInfoSuccess(Conversation conversation);
 
     void returnConversationInfoFail(String error, int errorCode);
 

@@ -852,6 +852,10 @@ public class CommunicationFragment extends BaseFragment {
                     }
                 }
             }
+            if (!StringUtils.isBlank(MyApplication.getInstance().getCurrentChannelCid())) {
+                SimpleEventMessage simpleEventMessage = new SimpleEventMessage(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE_CONVERSATION, eventMessage);
+                EventBus.getDefault().post(simpleEventMessage);
+            }
         }
     }
 
