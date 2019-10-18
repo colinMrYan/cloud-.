@@ -18,6 +18,7 @@ import com.inspur.emmcloud.adapter.VolumeRecentUseAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
@@ -27,6 +28,7 @@ import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeListResult;
 import com.inspur.emmcloud.bean.appcenter.volume.Volume;
+import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeHomePageDirectory;
 
 import org.greenrobot.eventbus.EventBus;
@@ -56,6 +58,13 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
     private MyAppAPIService apiService;
     private LoadingDialog loadingDlg;
 
+    private boolean isCopyOrMove = false;
+    private Volume copyFromVolume;
+    private String operationFileDirAbsolutePath;
+    private String title;
+    private List<VolumeFile> fromVolumeVolumeFileList = new ArrayList<>();
+
+
     private Volume myVolume;
     private List<Volume> shareVolumeList;
     private BaseAdapter adapter;
@@ -81,6 +90,13 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
     }
 
     private void init() {
+        if (getIntent().hasExtra("isFunctionCopy")) {
+            isCopyOrMove = true;
+            copyFromVolume = (Volume) getIntent().getSerializableExtra("fromVolume");
+            operationFileDirAbsolutePath = getIntent().getStringExtra("operationFileDirAbsolutePath");
+            title = getIntent().getStringExtra("title");
+            fromVolumeVolumeFileList = (List<VolumeFile>) (getIntent().getSerializableExtra("volumeFileList"));
+        }
         loadingDlg = new LoadingDialog(this);
         apiService = new MyAppAPIService(this);
         apiService.setAPIInterface(new WebService());
@@ -105,7 +121,7 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
 
                 switch (position) {
                     case 0:
-                        if (myVolume != null) {
+                        if (myVolume != null && isCopyOrMove == false) {
                             if (uriList != null && uriList.size() > 0) {
                                 bundle.putSerializable("fileShareUriList", (Serializable) uriList);
                                 bundle.putString("operationFileDirAbsolutePath", "/");
@@ -116,14 +132,33 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
                                         bundle);
                             }
                         }
+                        if (isCopyOrMove) {
+                            bundle.putSerializable("fromVolume", copyFromVolume);
+                            bundle.putSerializable("volumeFileList", (Serializable) fromVolumeVolumeFileList);
+                            bundle.putBoolean("isFunctionCopy", true);
+                            bundle.putString("operationFileDirAbsolutePath", operationFileDirAbsolutePath);
+                            IntentUtils.startActivity(VolumeHomePageActivity.this, VolumeFileLocationSelectActivity.class, bundle);
+                        }
                         break;
                     case 1:
-                        bundle.putSerializable("shareVolumeList", (Serializable) shareVolumeList);
-                        if (uriList != null && uriList.size() > 0) {
-                            bundle.putSerializable(Constant.SHARE_FILE_URI_LIST, (Serializable) uriList);
+                        if (isCopyOrMove) {
+                            if (fromVolumeVolumeFileList.size() == 1) {
+                                bundle.putSerializable("fromVolume", copyFromVolume);
+                                bundle.putSerializable("volumeFileList", (Serializable) fromVolumeVolumeFileList);
+                                bundle.putBoolean("isFunctionCopy", true);
+                                bundle.putString("operationFileDirAbsolutePath", operationFileDirAbsolutePath);
+                                IntentUtils.startActivity(VolumeHomePageActivity.this, ShareVolumeActivity.class, bundle);
+                            } else {
+                                ToastUtils.show("多个文件只能复制到本地");
+                            }
+                        } else {
+                            bundle.putSerializable("shareVolumeList", (Serializable) shareVolumeList);
+                            if (uriList != null && uriList.size() > 0) {
+                                bundle.putSerializable(Constant.SHARE_FILE_URI_LIST, (Serializable) uriList);
+                            }
+                            IntentUtils.startActivity(VolumeHomePageActivity.this, ShareVolumeActivity.class,
+                                    bundle);
                         }
-                        IntentUtils.startActivity(VolumeHomePageActivity.this, ShareVolumeActivity.class,
-                                bundle);
                         break;
                     default:
                         break;

@@ -1173,6 +1173,16 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
+    public void returnCopyFileBetweenVolumeSuccess() {
+
+    }
+
+    @Override
+    public void returnCopyFileBetweenVolumeFail(String error, int errorCode) {
+
+    }
+
+    @Override
     public void returnCreateShareVolumeSuccess(Volume volume) {
     }
 

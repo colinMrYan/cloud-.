@@ -156,7 +156,11 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
                     }
                 }
                 if (isFunctionCopy) {
-                    copyFile(operationFileAbsolutePath);
+                    if (fromVolume != null && !fromVolume.getId().equals(volume.getId())) {
+                        copyFileBetweenVolume(operationFileAbsolutePath);
+                    } else {
+                        copyFile(operationFileAbsolutePath);
+                    }
                 } else {
                     moveFile(operationFileAbsolutePath);
                 }
@@ -241,6 +245,23 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
     }
 
     /**
+     * 夸网盘复制
+     **/
+    private void copyFileBetweenVolume(String fileOrgPath) {
+        if (NetUtils.isNetworkConnected(getApplicationContext())) {
+            loadingDlg.show();
+            String path = currentDirAbsolutePath;
+            if (currentDirAbsolutePath.length() > 1) {
+                path = currentDirAbsolutePath.substring(0, currentDirAbsolutePath.length() - 1);
+            }
+            List<VolumeFile> moveVolumeFileList = (List<VolumeFile>) getIntent().getSerializableExtra("volumeFileList");
+            fileOrgPath = fileOrgPath + "/" + moveVolumeFileList.get(0).getName();
+            apiService.copyFileBetweenVolume(fromVolume.getId(), volume.getId(), fileOrgPath, path);
+        }
+    }
+
+
+    /**
      * 移动文件
      *
      * @param operationFileAbsolutePath
@@ -285,6 +306,18 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
 
         @Override
         public void returnCopyFileFail(String error, int errorCode) {
+            LoadingDialog.dimissDlg(loadingDlg);
+            WebServiceMiddleUtils.hand(getApplicationContext(), error, errorCode);
+        }
+
+        @Override
+        public void returnCopyFileBetweenVolumeSuccess() {
+            LoadingDialog.dimissDlg(loadingDlg);
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_VOLUME_FILE_COPY_SUCCESS, ""));
+        }
+
+        @Override
+        public void returnCopyFileBetweenVolumeFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDlg);
             WebServiceMiddleUtils.hand(getApplicationContext(), error, errorCode);
         }

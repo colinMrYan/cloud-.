@@ -102,6 +102,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     protected VolumeFileAdapter adapter;
     protected List<VolumeFile> volumeFileList = new ArrayList<>();//云盘列表
     protected Volume volume;
+    protected Volume fromVolume;
     protected String currentDirAbsolutePath;//当前文件夹路径
     protected String sortType = "sort_by_name_up";
     protected String fileFilterType = "";  //显示的文件类型
@@ -135,6 +136,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     private Dialog fileRenameDlg, createFolderDlg;
     private int volumeFrom = -1;
 
+
     @Override
     public void onCreate() {
         ButterKnife.bind(this);
@@ -156,6 +158,9 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         apiServiceBase = new MyAppAPIService(VolumeFileBaseActivity.this);
         apiServiceBase.setAPIInterface(new WebServiceBase());
         volume = (Volume) getIntent().getSerializableExtra("volume");
+        if (getIntent().hasExtra("fromVolume")) {
+            fromVolume = (Volume) getIntent().getSerializableExtra("fromVolume");
+        }
         volumeFrom = getIntent().getIntExtra(VOLUME_FROM, -1);
         currentDirAbsolutePath = getIntent().getExtras().getString("currentDirAbsolutePath", "/");
         fileFilterType = getIntent().getExtras().getString("fileFilterType", "");
@@ -659,15 +664,25 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
      */
     protected void copyFile(List<VolumeFile> volumeFileList) {
         if (volumeFileList.size() > 0) {
-            Intent intent = new Intent(getApplicationContext(), VolumeFileLocationSelectActivity.class);
+//            Intent intent = new Intent(getApplicationContext(), VolumeFileLocationSelectActivity.class);
+//            Bundle bundle = new Bundle();
+//            bundle.putSerializable("volume", volume);
+//            bundle.putSerializable("volumeFileList", (Serializable) volumeFileList);
+//            bundle.putString("title", getString(R.string.clouddriver_select_copy_position));
+//            bundle.putBoolean("isFunctionCopy", true);
+//            bundle.putString("operationFileDirAbsolutePath", currentDirAbsolutePath);
+//            intent.putExtras(bundle);
+//            startActivityForResult(intent, REQUEST_COPY_FILE);
+            Intent intent = new Intent(getApplicationContext(), VolumeHomePageActivity.class);
             Bundle bundle = new Bundle();
-            bundle.putSerializable("volume", volume);
+            bundle.putSerializable("fromVolume", volume);
             bundle.putSerializable("volumeFileList", (Serializable) volumeFileList);
             bundle.putString("title", getString(R.string.clouddriver_select_copy_position));
             bundle.putBoolean("isFunctionCopy", true);
             bundle.putString("operationFileDirAbsolutePath", currentDirAbsolutePath);
             intent.putExtras(bundle);
-            startActivityForResult(intent, REQUEST_COPY_FILE);
+            startActivity(intent);
+            //startActivityForResult(intent, REQUEST_COPY_FILE);
         }
     }
 
