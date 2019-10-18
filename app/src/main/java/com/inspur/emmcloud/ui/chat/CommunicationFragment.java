@@ -1058,7 +1058,7 @@ public class CommunicationFragment extends BaseFragment {
         if (lastMessageId != null) {
             //如果preferences中还存有离线消息最后一条消息id这个标志代表上一次离线消息没有获取成功，需要从这条消息开始重新获取
             String getOfflineLastMessageId = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_GET_OFFLINE_LAST_MID, "");
-            if (!StringUtils.isBlank(getOfflineLastMessageId)) {
+            if (StringUtils.isBlank(getOfflineLastMessageId)) {
                 PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_GET_OFFLINE_LAST_MID, lastMessageId);
             }
         } else {
