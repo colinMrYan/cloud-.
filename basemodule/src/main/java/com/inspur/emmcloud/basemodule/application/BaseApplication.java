@@ -555,6 +555,12 @@ public abstract class BaseApplication extends MultiDexApplication {
     public void clearNotification() {
         NotificationManager manager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
         manager.cancelAll();
+        //如语音通话中发送通知
+        Router router = Router.getInstance();
+        if (router.getService(CommunicationService.class) != null) {
+            CommunicationService communicationService = router.getService(CommunicationService.class);
+            communicationService.sendVoiceCommunicationNotify();
+        }
         if (AppUtils.getIsXiaoMi()) {
             MiPushClient.clearNotification(this);
         }

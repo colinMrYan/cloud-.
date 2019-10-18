@@ -15,6 +15,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
+import com.inspur.emmcloud.ui.appcenter.volume.VolumeFileActivity;
 import com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity;
 
 import java.util.List;
@@ -22,54 +23,22 @@ import java.util.List;
 import static com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_OVER;
 
 public class NotifyUtil {
-    private NotificationManager notificationManager;
+    private static NotificationManager notificationManager;
     private NotificationChannel mChannel;
     private NotificationCompat.Builder builder;
     private Context context;
-    private String NotificationChannelId = "NotificationChannelId";
-    private String NotificationChannelName = "NotificationChannelName";
+    private String NotificationChannelId = "VoiceNotificationChannelId";
+    private String NotificationChannelName = "VoiceNotificationChannelName";
 
     public NotifyUtil(Context context) {
         this.context = context;
     }
 
-    public void setNotification(String title, String content, Class<?> cls) {
-
-        notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-
-        Intent intent = new Intent();
-        intent.setClass(context, ChannelVoiceCommunicationActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_IS_FROM_SMALL_WINDOW, true);
-        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE,
-                VoiceCommunicationUtils.getInstance().getLayoutState());
-//        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_TIME, Long.parseLong(
-//                TimeUtils.getChronometerSeconds(SuspensionWindowManagerUtils.getInstance().getChronometer().getText().toString())));
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        builder = new NotificationCompat.Builder(context, NotificationChannelId);
-        builder.setOngoing(true);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            mChannel = new NotificationChannel(NotificationChannelId, NotificationChannelName, NotificationManager.IMPORTANCE_LOW);
-            mChannel.setDescription("");
-            mChannel.enableLights(true);
-            mChannel.setLightColor(Color.RED);
-            mChannel.enableVibration(true);
-            notificationManager.createNotificationChannel(mChannel);
+    public static void deleteNotify(Context context) {
+        NotifyUtil notifyUtil = new NotifyUtil(context);
+        if (notificationManager != null) {
+            notificationManager.cancel(10006);
         }
-        builder.setTicker("");//设置信息提示
-        builder.setSmallIcon(AppUtils.getAppIconRes(context));//设置通知提示图标
-        builder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), AppUtils.getAppIconRes(context)));//设置图标
-        builder.setContentTitle(title);//设置标题
-        builder.setContentText(content);//设置文本
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            builder.setShowWhen(true);
-        }
-        builder.setDefaults(Notification.DEFAULT_LIGHTS);//消息提示模式
-        builder.setOnlyAlertOnce(true);
-        builder.setContentIntent(pendingIntent);
-
-        notificationManager.notify(10000, builder.build());
     }
 
     public static void sendNotifyMsg(Context context) {
@@ -93,6 +62,51 @@ public class NotifyUtil {
             }
             notifyUtil.setNotification(title, content, ChannelVoiceCommunicationActivity.class);
         }
+    }
+
+    public static void sendTestNotify(Context context) {
+        NotifyUtil notifyUtil = new NotifyUtil(context);
+        notifyUtil.setNotification("测试title", "测试内容", VolumeFileActivity.class);
+    }
+
+    public void setNotification(String title, String content, Class<?> cls) {
+
+        notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        Intent intent = new Intent();
+        intent.setClass(context, ChannelVoiceCommunicationActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_IS_FROM_SMALL_WINDOW, true);
+        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE,
+                VoiceCommunicationUtils.getInstance().getLayoutState());
+//        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_TIME, Long.parseLong(
+//                TimeUtils.getChronometerSeconds(SuspensionWindowManagerUtils.getInstance().getChronometer().getText().toString())));
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        builder = new NotificationCompat.Builder(context, NotificationChannelId);
+        builder.setOngoing(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            mChannel = new NotificationChannel(NotificationChannelId, NotificationChannelName, NotificationManager.IMPORTANCE_HIGH);
+            mChannel.setDescription("");
+            mChannel.enableLights(true);
+            mChannel.setLightColor(Color.RED);
+            mChannel.enableVibration(true);
+            notificationManager.createNotificationChannel(mChannel);
+        }
+        builder.setTicker("");//设置信息提示
+        builder.setSmallIcon(AppUtils.getAppIconRes(context));//设置通知提示图标
+        builder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), AppUtils.getAppIconRes(context)));//设置图标
+        builder.setContentTitle(title);//设置标题
+        builder.setContentText(content);//设置文本
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            builder.setShowWhen(true);
+        }
+        builder.setDefaults(Notification.DEFAULT_LIGHTS);//消息提示模式
+        builder.setOnlyAlertOnce(true);
+        builder.setAutoCancel(false);
+        builder.setContentIntent(pendingIntent);
+
+        notificationManager.notify(10006, builder.build());
     }
 
 }

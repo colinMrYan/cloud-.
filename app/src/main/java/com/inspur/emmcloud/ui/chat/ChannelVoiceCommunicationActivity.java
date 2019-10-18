@@ -53,6 +53,7 @@ import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
 import com.inspur.emmcloud.bean.system.GetBoolenResult;
 import com.inspur.emmcloud.util.privates.CustomProtocol;
 import com.inspur.emmcloud.util.privates.MediaPlayerManagerUtils;
+import com.inspur.emmcloud.util.privates.NotifyUtil;
 import com.inspur.emmcloud.util.privates.SuspensionWindowManagerUtils;
 import com.inspur.emmcloud.util.privates.VoiceCommunicationUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
@@ -1170,6 +1171,18 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 pickUpVoiceCommunication();
             }
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        NotifyUtil.deleteNotify(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        NotifyUtil.sendNotifyMsg(this);
     }
 
     @Override
