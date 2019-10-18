@@ -515,6 +515,7 @@ public class SettingActivity extends BaseActivity {
                         String imgCachePath = MyAppConfig.LOCAL_CACHE_PATH;
                         String offlineAppPath = MyAppConfig.LOCAL_OFFLINE_APP_PATH;
                         String userSpacePath = MyAppConfig.LOCAL_IMP_USER_OPERATE_DIC;
+                        PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_GET_OFFLINE_LAST_MID, "");
                         DataCleanManager.cleanApplicationData(SettingActivity.this,
                                 msgCachePath, imgCachePath, offlineAppPath, userSpacePath);
                         MyApplication.getInstance().setIsContactReady(false);

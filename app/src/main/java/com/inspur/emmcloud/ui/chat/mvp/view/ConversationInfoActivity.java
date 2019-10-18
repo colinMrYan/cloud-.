@@ -4,10 +4,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -16,6 +15,7 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
+import com.inspur.emmcloud.baselib.widget.NoScrollGridView;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
@@ -61,7 +61,7 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
     private static final int QEQUEST_ADD_MEMBER = 2;
     private static final int QEQUEST_DEL_MEMBER = 3;
     @BindView(R.id.rv_conversation_members_head)
-    RecyclerView conversationMembersHeadRecyclerView;
+    NoScrollGridView conversationMembersHeadRecyclerView;
     @BindView(R.id.tv_title)
     TextView titleTextView;
     @BindView(R.id.tv_conversation_name)
@@ -138,19 +138,18 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
             searchRecordMarginLayout.setVisibility(View.VISIBLE);
         }
         channelMembersHeadAdapter = new ConversationMembersHeadAdapter(this, isOwner, uiUidList);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(MyApplication.getInstance(), 5);
-        conversationMembersHeadRecyclerView.setLayoutManager(gridLayoutManager);
-        channelMembersHeadAdapter.setAdapterListener(new ConversationMembersHeadAdapter.AdapterListener() {
+        conversationMembersHeadRecyclerView.setAdapter(channelMembersHeadAdapter);
+        conversationMembersHeadRecyclerView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(View view, int position) {
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent();
-                if (position == uiUidList.size() - 1 && isOwner) {    /**刪除群成員**/
+                if (i == uiUidList.size() - 1 && isOwner) {    /**刪除群成員**/
                     intent.putExtra("memberUidList", uiConversation.getMemberList());
                     intent.setClass(getApplicationContext(),
                             ChannelMembersDelActivity.class);
                     startActivityForResult(intent, QEQUEST_DEL_MEMBER);
-                } else if (position == uiUidList.size() - 2 && isOwner
-                        || (position == uiUidList.size() - 1 && !isOwner)) { /**添加群成員**/
+                } else if (i == uiUidList.size() - 2 && isOwner
+                        || (i == uiUidList.size() - 1 && !isOwner)) { /**添加群成員**/
                     intent.putExtra(ContactSearchFragment.EXTRA_TYPE, 2);
                     intent.putExtra(ContactSearchFragment.EXTRA_EXCLUDE_SELECT, uiConversation.getMemberList());
                     intent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, true);
@@ -159,7 +158,7 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
                             ContactSearchActivity.class);
                     startActivityForResult(intent, QEQUEST_ADD_MEMBER);
                 } else {
-                    String uid = uiUidList.get(position);
+                    String uid = uiUidList.get(i);
                     Bundle bundle = new Bundle();
                     bundle.putString("uid", uid);
                     IntentUtils.startActivity(ConversationInfoActivity.this, uid.startsWith("BOT") ?
@@ -167,7 +166,6 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
                 }
             }
         });
-        conversationMembersHeadRecyclerView.setAdapter(channelMembersHeadAdapter);
         conversationStickySwitch.setChecked(uiConversation.isStick());
         conversationMuteNotificationSwitch.setChecked(uiConversation.isDnd());
         conversationStickySwitch.setOnCheckedChangeListener(this);
@@ -278,7 +276,7 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
     @Override
     public void updateUiConversation(Conversation conversation) {
         uiConversation = conversation;
-        moreMembersLayout.setVisibility(uiConversation.getMemberList().size() > 13 ? View.VISIBLE : View.GONE);
+        moreMembersLayout.setVisibility(uiConversation.getMemberList().size() > 43 ? View.VISIBLE : View.GONE);
     }
 
     @Override
