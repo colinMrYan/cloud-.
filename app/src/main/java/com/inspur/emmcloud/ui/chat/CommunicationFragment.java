@@ -132,7 +132,6 @@ public class CommunicationFragment extends BaseFragment {
     private ImageView contactImg;
     private TextView contactSearchTextView;
     private CheckingNetStateUtils checkingNetStateUtils;
-    private String lastMessageId;
     private OnClickListener onViewClickListener = new OnClickListener() {
 
         @Override
@@ -1058,13 +1057,11 @@ public class CommunicationFragment extends BaseFragment {
      * 离线消息获取时使用
      */
     private void setLastMessageId() {
-        lastMessageId = MessageCacheUtil.getLastSuccessMessageId(MyApplication.getInstance());
+        String lastMessageId = MessageCacheUtil.getLastSuccessMessageId(MyApplication.getInstance());
         if (lastMessageId != null) {
             //如果preferences中还存有离线消息最后一条消息id这个标志代表上一次离线消息没有获取成功，需要从这条消息开始重新获取
             String getOfflineLastMessageId = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_GET_OFFLINE_LAST_MID, "");
-            if (!StringUtils.isBlank(getOfflineLastMessageId)) {
-                lastMessageId = getOfflineLastMessageId;
-            } else {
+            if (StringUtils.isBlank(getOfflineLastMessageId)) {
                 PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_GET_OFFLINE_LAST_MID, lastMessageId);
             }
         } else {
@@ -1077,7 +1074,8 @@ public class CommunicationFragment extends BaseFragment {
      */
     public void getMessage() {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance()) && WebSocketPush.getInstance().isSocketConnect()) {
-            if (lastMessageId != null) {
+            String lastMessageId = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_GET_OFFLINE_LAST_MID, "");
+            if (!StringUtils.isBlank(lastMessageId)) {
                 //获取离线消息
                 WSAPIService.getInstance().getOfflineMessage(lastMessageId);
             } else {

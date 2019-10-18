@@ -1210,7 +1210,9 @@ public class ConversationActivity extends ConversationBaseActivity {
                         uiMessageList.add(new UIMessage(receivedWSMessage));
                         adapter.setMessageList(uiMessageList);
                         adapter.notifyItemInserted(uiMessageList.size() - 1);
-                        msgListView.MoveToPosition(uiMessageList.size() - 1);
+                        if (!msgListView.canScrollVertically(1)) {
+                            msgListView.MoveToPosition(uiMessageList.size() - 1);
+                        }
                     } else {
                         uiMessageList.remove(index);
                         uiMessageList.add(index, new UIMessage(receivedWSMessage));
