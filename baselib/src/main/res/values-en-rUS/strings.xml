@@ -1173,9 +1173,9 @@
     <string name="file_ok">Confirm</string>
     <string name="file_cancel">Cancel</string>
     <string name="file_error">File Error</string>
-    <string name="can_not_pause">The current state can not be suspended</string>
-    <string name="can_not_replay">The current state of play can not be reset</string>
-    <string name="can_not_stop">The current state can not be stopped</string>
+    <string name="can_not_pause">The current layoutState can not be suspended</string>
+    <string name="can_not_replay">The current layoutState of play can not be reset</string>
+    <string name="can_not_stop">The current layoutState can not be stopped</string>
     <string name="turn_on_light">Turn on the light</string>
     <string name="turn_off_light">Turn off the light</string>
     <string name="imp_function_error">Function call error. Please check if Cloud + has been upgraded to the latest version.</string>
@@ -1324,7 +1324,9 @@
     <string name="voice_input_tip_speak">Hold to Talk</string>
     <string name="voice_input_clear">Clear</string>
     <string name="communication_has_leave">Hung up</string>
-    <string name="voice_communication_notification">Tap to continue as voice call in progress</string>
+    <string name="voice_communication_notification_group_title">Voice Call</string>
+    <string name="voice_communication_notification_group_content">Tap to recover</string>
+    <string name="voice_communication_notification_content">Tap to continue as voice call in progress</string>
 
     <string name="notification_switch">New Notification</string>
     <string name="notification_switch_cant_recive">if closed,you won\'t receive any notifications Close</string>

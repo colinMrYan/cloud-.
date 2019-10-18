@@ -12,6 +12,7 @@ import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.ui.chat.ConversationBaseActivity;
 import com.inspur.emmcloud.ui.chat.ShareToConversationBlankActivity;
 import com.inspur.emmcloud.util.privates.MessageSendManager;
+import com.inspur.emmcloud.util.privates.NotifyUtil;
 
 import org.json.JSONObject;
 
@@ -96,5 +97,10 @@ public class CommunicationServiceImpl implements CommunicationService {
     @Override
     public void MessageSendManagerOnDestroy() {
         MessageSendManager.getInstance().onDestroy();
+    }
+
+    @Override
+    public void sendVoiceCommunicationNotify() {
+        NotifyUtil.sendNotifyMsg(BaseApplication.getInstance());
     }
 }

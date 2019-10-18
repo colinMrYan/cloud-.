@@ -13,6 +13,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -871,11 +872,13 @@ public class CommunicationFragment extends BaseFragment {
                     if (customProtocol.getParamMap().get("cmd").equals("refuse")) {
                         changeUserConnectStateByUid(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_REFUSE, customProtocol.getParamMap().get("uid"));
                         checkCommunicationFinish();
-                        VoiceCommunicationUtils.getInstance().setState(ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_OVER);
+                        VoiceCommunicationUtils.getInstance().setLayoutState(ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_OVER);
+                        Log.d("zhang", "COMMUNICATION_STATE_OVER: 555555 ");
                     } else if (customProtocol.getParamMap().get("cmd").equals("destroy")) {
                         VoiceCommunicationUtils.getInstance().destroy();
                         SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
-                        VoiceCommunicationUtils.getInstance().setState(ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_OVER);
+                        Log.d("zhang", "COMMUNICATION_STATE_OVER: 66666666 ");
+                        VoiceCommunicationUtils.getInstance().setLayoutState(ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_OVER);
                     }
                     return;
                 }

@@ -25,6 +25,8 @@ import io.agora.rtc.IRtcEngineEventHandler;
 import io.agora.rtc.RtcEngine;
 import io.agora.rtc.video.VideoEncoderConfiguration;
 
+import static com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_PRE;
+
 /**
  * 详细回调接口解释见OnVoiceCommunicationCallbacks
  * Created by yufuchang on 2018/8/13.
@@ -61,9 +63,13 @@ public class VoiceCommunicationUtils {
     private VoiceCommunicationJoinChannelInfoBean inviteeInfoBean;
     private int userCount = 1;
     /**
+     * 记录通话开始时间
+     */
+    private long connectStartTime = 0;
+    /**
      * 布局状态
      */
-    private int state = -1;
+    private int layoutState = -1;
     private IRtcEngineEventHandler mRtcEventHandler = new IRtcEngineEventHandler() {
         //其他用户离线回调
         @Override
@@ -235,7 +241,7 @@ public class VoiceCommunicationUtils {
      * @return
      */
     public boolean isVoiceBusy() {
-        return communicationState == ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_PRE ||
+        return communicationState == COMMUNICATION_STATE_PRE ||
                 communicationState == ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_ING;
     }
 
@@ -465,12 +471,12 @@ public class VoiceCommunicationUtils {
         this.userCount = userCount;
     }
 
-    public int getState() {
-        return state;
+    public int getLayoutState() {
+        return layoutState;
     }
 
-    public void setState(int state) {
-        this.state = state;
+    public void setLayoutState(int layoutState) {
+        this.layoutState = layoutState;
     }
 
     public String getCommunicationType() {
@@ -479,6 +485,14 @@ public class VoiceCommunicationUtils {
 
     public void setCommunicationType(String communicationType) {
         this.communicationType = communicationType;
+    }
+
+    public long getConnectStartTime() {
+        return connectStartTime;
+    }
+
+    public void setConnectStartTime(long connectStartTime) {
+        this.connectStartTime = connectStartTime;
     }
 
     /**
