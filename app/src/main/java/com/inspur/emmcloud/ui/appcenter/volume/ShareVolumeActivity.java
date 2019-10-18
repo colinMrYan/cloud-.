@@ -269,7 +269,6 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
             if (getIntent() != null && getIntent().hasExtra(Constant.SHARE_FILE_URI_LIST)) {
                 finish();
             }
-
         }
     }
 
@@ -344,12 +343,20 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && requestCode == UPDATE_VOLUME_NAME) {
-            Volume volume = (Volume) data.getSerializableExtra("volume");
-            int index = shareVolumeList.indexOf(volume);
-            if (index != -1) {
-                shareVolumeList.set(index, volume);
-                adapter.notifyDataSetChanged();
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case VolumeFileBaseActivity.REQUEST_COPY_FILE:
+                    setResult(RESULT_OK);
+                    finish();
+                    break;
+                case UPDATE_VOLUME_NAME:
+                    Volume volume = (Volume) data.getSerializableExtra("volume");
+                    int index = shareVolumeList.indexOf(volume);
+                    if (index != -1) {
+                        shareVolumeList.set(index, volume);
+                        adapter.notifyDataSetChanged();
+                    }
+                    break;
             }
         }
     }

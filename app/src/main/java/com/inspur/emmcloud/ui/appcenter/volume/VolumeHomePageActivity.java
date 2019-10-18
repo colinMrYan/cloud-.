@@ -214,6 +214,7 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case VolumeFileBaseActivity.REQUEST_COPY_FILE:
+                    setResult(RESULT_OK);
                     finish();
                     break;
             }

@@ -314,6 +314,7 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
         public void returnCopyFileBetweenVolumeSuccess() {
             LoadingDialog.dimissDlg(loadingDlg);
             setResult(RESULT_OK);
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_VOLUME_FILE_COPY_SUCCESS, ""));
             finish();
         }
 
