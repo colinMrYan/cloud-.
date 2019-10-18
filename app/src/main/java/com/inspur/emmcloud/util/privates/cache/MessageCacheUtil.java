@@ -315,7 +315,6 @@ public class MessageCacheUtil {
                                                       String cid, Long targetMessageCreationDate, int num) {
         List<Message> messageList = null;
         try {
-
             if (targetMessageCreationDate == null) {
                 messageList = DbCacheUtils.getDb(context).selector(Message.class)
                         .where("channel", "=", cid).and("sendStatus", "!=", Message.MESSAGE_SEND_EDIT).orderBy("creationDate", true)
@@ -331,6 +330,21 @@ public class MessageCacheUtil {
 
         } catch (Exception e) {
             // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        if (messageList == null) {
+            messageList = new ArrayList<>();
+        }
+        return messageList;
+    }
+
+    public static List<Message> getMessageListBeforeCreationDate(Context context, String cid, Long targetMessageCreationDate) {
+        List<Message> messageList = null;
+        try {
+            messageList = DbCacheUtils.getDb(context).selector(Message.class)
+                    .where("creationDate", ">=", targetMessageCreationDate).and("channel", "=", cid)
+                    .orderBy("creationDate", false).findAll();
+        } catch (Exception e) {
             e.printStackTrace();
         }
         if (messageList == null) {

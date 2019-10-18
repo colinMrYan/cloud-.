@@ -172,7 +172,6 @@ public class WebSocketPush {
                 return;
             }
             String url = APIUri.getWebsocketConnectUrl();
-
 //            String url = "http://10.25.12.114:3000";
             String path = WebServiceRouterManager.getInstance().isV0VersionChat() ? "/" + MyApplication.getInstance().getCurrentEnterprise().getCode() + "/socket/handshake" :
                     "/chat/socket/handshake";
@@ -318,6 +317,7 @@ public class WebSocketPush {
             setRequestEventMessageTimeout(eventMessage, "socket_force_close");
         }
         requestEventMessageList.clear();
+        sendWebSocketStatusBroadcast(Socket.EVENT_DISCONNECT);
     }
 
     private void removeListeners() {

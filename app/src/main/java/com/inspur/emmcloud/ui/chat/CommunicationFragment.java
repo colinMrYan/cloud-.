@@ -13,6 +13,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -131,6 +132,7 @@ public class CommunicationFragment extends BaseFragment {
     private ImageView contactImg;
     private TextView contactSearchTextView;
     private CheckingNetStateUtils checkingNetStateUtils;
+    private String lastMessageId;
     private OnClickListener onViewClickListener = new OnClickListener() {
 
         @Override
@@ -183,6 +185,7 @@ public class CommunicationFragment extends BaseFragment {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
+        setLastMessageId();
         initView();
         sortConversationList();// 对Channel 进行排序
         registerMessageFragmentReceiver();
@@ -623,6 +626,7 @@ public class CommunicationFragment extends BaseFragment {
                 titleText.setText(R.string.communicate);
             }
         } else if (socketStatus.equals(Socket.EVENT_DISCONNECT) || socketStatus.equals(Socket.EVENT_CONNECT_ERROR)) {
+            setLastMessageId();
             titleText.setText(R.string.socket_close);
         }
     }
@@ -871,11 +875,13 @@ public class CommunicationFragment extends BaseFragment {
                     if (customProtocol.getParamMap().get("cmd").equals("refuse")) {
                         changeUserConnectStateByUid(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_REFUSE, customProtocol.getParamMap().get("uid"));
                         checkCommunicationFinish();
-                        VoiceCommunicationUtils.getInstance().setState(ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_OVER);
+                        VoiceCommunicationUtils.getInstance().setLayoutState(ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_OVER);
+                        Log.d("zhang", "COMMUNICATION_STATE_OVER: 555555 ");
                     } else if (customProtocol.getParamMap().get("cmd").equals("destroy")) {
                         VoiceCommunicationUtils.getInstance().destroy();
                         SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
-                        VoiceCommunicationUtils.getInstance().setState(ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_OVER);
+                        Log.d("zhang", "COMMUNICATION_STATE_OVER: 66666666 ");
+                        VoiceCommunicationUtils.getInstance().setLayoutState(ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_OVER);
                     }
                     return;
                 }
@@ -1044,22 +1050,33 @@ public class CommunicationFragment extends BaseFragment {
     }
 
     /**
+     * 当WebSocket断开后记录本地最后一条正式消息
+     * 离线消息获取时使用
+     */
+    private void setLastMessageId() {
+        lastMessageId = MessageCacheUtil.getLastSuccessMessageId(MyApplication.getInstance());
+        if (lastMessageId != null) {
+            //如果preferences中还存有离线消息最后一条消息id这个标志代表上一次离线消息没有获取成功，需要从这条消息开始重新获取
+            String getOfflineLastMessageId = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_GET_OFFLINE_LAST_MID, "");
+            if (!StringUtils.isBlank(getOfflineLastMessageId)) {
+                lastMessageId = getOfflineLastMessageId;
+            } else {
+                PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_GET_OFFLINE_LAST_MID, lastMessageId);
+            }
+        } else {
+            PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_GET_OFFLINE_LAST_MID, "");
+        }
+    }
+
+    /**
      * 获取消息
      */
     public void getMessage() {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance()) && WebSocketPush.getInstance().isSocketConnect()) {
-            String lastMessageId = MessageCacheUtil.getLastSuccessMessageId(MyApplication.getInstance());
             if (lastMessageId != null) {
-                //如果preferences中还存有离线消息最后一条消息id这个标志代表上一次离线消息没有获取成功，需要从这条消息开始重新获取
-                String getOfflineLastMessageId = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_GET_OFFLINE_LAST_MID, "");
-                if (StringUtils.isBlank(getOfflineLastMessageId)) {
-                    getOfflineLastMessageId = lastMessageId;
-                    PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_GET_OFFLINE_LAST_MID, lastMessageId);
-                }
                 //获取离线消息
-                WSAPIService.getInstance().getOfflineMessage(getOfflineLastMessageId);
+                WSAPIService.getInstance().getOfflineMessage(lastMessageId);
             } else {
-                PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_GET_OFFLINE_LAST_MID, "");
                 //获取每个频道最近消息
                 WSAPIService.getInstance().getChannelRecentMessage();
             }

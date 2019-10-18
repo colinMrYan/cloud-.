@@ -29,16 +29,15 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity {
     public static final String EXTRA_NEED_GET_NEW_MESSAGE = "get_new_msg";
     public static final String EXTRA_COME_FROM_SCANCODE = "com_from_scan_code";
     public static final String EXTRA_UNREAD_MESSAGE = "unread_count";
-    public static final String EXTRA_UIMESSAGE = "uimessage";
-    public static final String EXTRA_FROM_SERCH = "from_search";
+    public static final String EXTRA_POSITION_MESSAGE = "position_message";
+    public static final String EXTRA_FROM_SEARCH = "from_search";
 
     protected String cid;
     protected LoadingDialog loadingDlg;
     protected Conversation conversation;
-
+    protected boolean isFromScanCode = false;
     @BindView(R.id.iv_config)
     View configView;
-    protected boolean isFromScanCode = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

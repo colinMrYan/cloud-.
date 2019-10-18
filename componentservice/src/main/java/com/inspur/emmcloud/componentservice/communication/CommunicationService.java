@@ -28,4 +28,6 @@ public interface CommunicationService extends CoreService {
     void openConversationByChannelId(JSONObject jsonObject);
 
     void MessageSendManagerOnDestroy();
+
+    void sendVoiceCommunicationNotify();
 }
