@@ -70,7 +70,6 @@ import com.inspur.emmcloud.bean.system.VoiceResult;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.interf.ResultCallback;
-import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.chat.mvp.view.ConversationInfoActivity;
 import com.inspur.emmcloud.ui.chat.mvp.view.ConversationSearchActivity;
 import com.inspur.emmcloud.ui.chat.pop.PopupWindowList;
@@ -1031,15 +1030,11 @@ public class ConversationActivity extends ConversationBaseActivity {
         Bundle bundle = new Bundle();
         switch (conversation.getType()) {
             case Conversation.TYPE_GROUP:
-//                bundle.putSerializable(ConversationInfoActivity.EXTRA_CID, conversation.getId());
-//                Intent intent = new Intent(this, ConversationInfoActivity.class);
-//                intent.putExtras(bundle);
-//                startActivityForResult(intent, REQUEST_QUIT_CHANNELGROUP);
-//                break;
             case Conversation.TYPE_DIRECT:
                 bundle.putString(ConversationInfoActivity.EXTRA_CID, conversation.getId());
-                IntentUtils.startActivity(ConversationActivity.this,
-                        ConversationInfoActivity.class, bundle);
+                Intent intent = new Intent(this, ConversationInfoActivity.class);
+                intent.putExtras(bundle);
+                startActivityForResult(intent, REQUEST_QUIT_CHANNELGROUP);
                 break;
             case Conversation.TYPE_CAST:
                 bundle.putSerializable(ConversationCastInfoActivity.EXTRA_CID, conversation.getId());
