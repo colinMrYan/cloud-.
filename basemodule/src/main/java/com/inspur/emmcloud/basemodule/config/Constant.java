@@ -12,6 +12,7 @@ public class Constant {
     public static final String CONCIG_POS_REPORT_TIME_INTERVAL_ = "PosReportTimeInterval";
     public static final String CONCIG_SHOW_FEEDBACK = "IsShowFeedback";
     public static final String CONCIG_SHOW_CUSTOMER_SERVICE = "IsShowCustomerService";
+    public static final String CONCIG_FORCE_PULL_MESSAGE = "force_pull_message";
     public static final String CONCIG_CLOUD_PLUS_UUID_FILE = Environment.getExternalStorageDirectory() + "/gsp.uuid";
 
 
