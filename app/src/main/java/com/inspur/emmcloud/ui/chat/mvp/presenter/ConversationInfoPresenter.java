@@ -55,11 +55,11 @@ public class ConversationInfoPresenter extends BasePresenter<ConversationInfoCon
         /**
          * 过滤不存在的群成员算法
          */
-        //查三十人，如果不满三十人则查实际人数保证查到的人都是存在的群成员
+        //查实际人数保证查到的人都是存在的群成员
         Boolean isOwner = conversation.getOwner().equals(BaseApplication.getInstance().getUid());
         List<String> conversationMembersList = conversation.getMemberList();
         List<String> uiMemberUidList = new ArrayList<>();
-        List<ContactUser> contactUserList = ContactUserCacheUtils.getContactUserListByIdListOrderBy(conversationMembersList, isOwner ? 13 : 14);
+        List<ContactUser> contactUserList = ContactUserCacheUtils.getContactUserListByIdListOrderBy(conversationMembersList, isOwner ? 43 : 44);
         ArrayList<String> contactUserIdList = new ArrayList<>();
         for (ContactUser contactUser : contactUserList) {
             contactUserIdList.add(contactUser.getId());
@@ -240,7 +240,7 @@ public class ConversationInfoPresenter extends BasePresenter<ConversationInfoCon
     @Override
     public void updateSearchMoreState() {
         Boolean isOwner = mConversation.getOwner().equals(BaseApplication.getInstance().getUid());
-        boolean isShowMoreMember = getConversationRealMemberSize() > (isOwner ? 13 : 14);
+        boolean isShowMoreMember = getConversationRealMemberSize() > (isOwner ? 43 : 44);
         mView.updateMoreMembers(isShowMoreMember);
     }
 

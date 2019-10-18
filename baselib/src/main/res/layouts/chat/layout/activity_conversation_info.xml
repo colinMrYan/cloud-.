@@ -90,15 +90,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/channel_search_more_group_members"
                         android:textColor="#999999"
-                        android:textSize="13sp" />
-
-                    <ImageView
-                        android:layout_width="6dp"
-                        android:layout_height="12dp"
-                        android:layout_marginLeft="3dp"
-                        android:paddingTop="2dp"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/ic_arrow_right" />
+                        android:textSize="15sp" />
                 </LinearLayout>
             </RelativeLayout>
 
