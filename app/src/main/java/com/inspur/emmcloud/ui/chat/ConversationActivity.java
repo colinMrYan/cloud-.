@@ -154,13 +154,10 @@ public class ConversationActivity extends ConversationBaseActivity {
     private PopupWindowList mPopupWindowList; //仿微信长按处理
 
     private UIMessage backUiMessage = null;
-    private boolean isGetNewMessage = true;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -173,6 +170,9 @@ public class ConversationActivity extends ConversationBaseActivity {
         handler = new Handler() {
             @Override
             public void handleMessage(android.os.Message msg) {
+                if (adapter == null) {
+                    return;
+                }
                 switch (msg.what) {
                     case REFRESH_HISTORY_MESSAGE:
                         List<UIMessage> historyUIMessageList = (List<UIMessage>) msg.obj;
@@ -210,6 +210,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         super.onNewIntent(intent);
         setIntent(intent);
         initConversationInfo();
+        MyApplication.getInstance().setCurrentChannelCid(cid);
     }
 
     @Override
@@ -245,7 +246,8 @@ public class ConversationActivity extends ConversationBaseActivity {
         }
         uiMessageList = UIMessage.MessageList2UIMessageList(cacheMessageList);
         adapter.setMessageList(uiMessageList);
-        msgListView.MoveToPosition(position);
+        adapter.notifyDataSetChanged();
+        msgListView.scrollToPosition(position);
     }
 
 
@@ -1183,11 +1185,14 @@ public class ConversationActivity extends ConversationBaseActivity {
     }
 
 
-
     //接收到websocket发过来的消息
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceiveWSMessage(EventMessage eventMessage) {
-        if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE)) {
+    public void onReceiveWSMessage(SimpleEventMessage simpleEventMessage) {
+        if (simpleEventMessage.getAction().equals(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE_CONVERSATION)) {
+            if (adapter == null) {
+                return;
+            }
+            EventMessage eventMessage = (EventMessage) simpleEventMessage.getMessageObj();
             if (eventMessage.getStatus() == 200) {
                 String content = eventMessage.getContent();
                 JSONObject contentObj = JSONUtils.getJSONObject(content);
@@ -1209,9 +1214,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                         uiMessageList.add(new UIMessage(receivedWSMessage));
                         adapter.setMessageList(uiMessageList);
                         adapter.notifyItemInserted(uiMessageList.size() - 1);
-                        if (!msgListView.canScrollVertically(1)) {
-                            msgListView.MoveToPosition(uiMessageList.size() - 1);
-                        }
+                        msgListView.MoveToPosition(uiMessageList.size() - 1);
                     } else {
                         uiMessageList.remove(index);
                         uiMessageList.add(index, new UIMessage(receivedWSMessage));
@@ -1308,7 +1311,9 @@ public class ConversationActivity extends ConversationBaseActivity {
      */
     private void getNewMessageOfChannel() {
         if (NetUtils.isNetworkConnected(this, false)) {
-            WSAPIService.getInstance().getChannelNewMessage(cid, isFromScanCode);
+            //获取完消息之后，需要刷新沟通页列表，防止新的频道不显示
+            boolean isReFreshConversationList = getIntent().getBooleanExtra(EXTRA_COME_FROM_SCANCODE, false);
+            WSAPIService.getInstance().getChannelNewMessage(cid, isReFreshConversationList);
         }
     }
 
