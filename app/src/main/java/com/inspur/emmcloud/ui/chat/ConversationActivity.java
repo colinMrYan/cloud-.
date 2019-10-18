@@ -1007,15 +1007,11 @@ public class ConversationActivity extends ConversationBaseActivity {
         Bundle bundle = new Bundle();
         switch (conversation.getType()) {
             case Conversation.TYPE_GROUP:
-//                bundle.putSerializable(ConversationInfoActivity.EXTRA_CID, conversation.getId());
-//                Intent intent = new Intent(this, ConversationInfoActivity.class);
-//                intent.putExtras(bundle);
-//                startActivityForResult(intent, REQUEST_QUIT_CHANNELGROUP);
-//                break;
             case Conversation.TYPE_DIRECT:
                 bundle.putString(ConversationInfoActivity.EXTRA_CID, conversation.getId());
-                IntentUtils.startActivity(ConversationActivity.this,
-                        ConversationInfoActivity.class, bundle);
+                Intent intent = new Intent(this, ConversationInfoActivity.class);
+                intent.putExtras(bundle);
+                startActivityForResult(intent, REQUEST_QUIT_CHANNELGROUP);
                 break;
             case Conversation.TYPE_CAST:
                 bundle.putSerializable(ConversationCastInfoActivity.EXTRA_CID, conversation.getId());
