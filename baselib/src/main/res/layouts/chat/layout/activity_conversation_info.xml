@@ -70,6 +70,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="#FFFFFF"
+                    android:listSelector="@android:color/transparent"
                     android:numColumns="5"
                     android:paddingBottom="10dp"
                     android:paddingLeft="9dp"
