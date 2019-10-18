@@ -1,7 +1,9 @@
 package com.inspur.emmcloud.ui.appcenter.volume;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
@@ -118,6 +120,12 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
                 if (getIntent() != null && getIntent().hasExtra(Constant.SHARE_FILE_URI_LIST)) {
                     uriList = (List<Uri>) getIntent().getSerializableExtra(Constant.SHARE_FILE_URI_LIST);
                 }
+                if (isCopyOrMove) {
+                    bundle.putSerializable("fromVolume", copyFromVolume);
+                    bundle.putSerializable("volumeFileList", (Serializable) fromVolumeVolumeFileList);
+                    bundle.putBoolean("isFunctionCopy", true);
+                    bundle.putString("operationFileDirAbsolutePath", operationFileDirAbsolutePath);
+                }
 
                 switch (position) {
                     case 0:
@@ -133,23 +141,19 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
                             }
                         }
                         if (isCopyOrMove) {
-                            bundle.putSerializable("fromVolume", copyFromVolume);
-                            bundle.putSerializable("volumeFileList", (Serializable) fromVolumeVolumeFileList);
-                            bundle.putBoolean("isFunctionCopy", true);
-                            bundle.putString("operationFileDirAbsolutePath", operationFileDirAbsolutePath);
-                            IntentUtils.startActivity(VolumeHomePageActivity.this, VolumeFileLocationSelectActivity.class, bundle);
+                            Intent intent = new Intent(VolumeHomePageActivity.this, VolumeFileLocationSelectActivity.class);
+                            intent.putExtras(bundle);
+                            startActivityForResult(intent, VolumeFileBaseActivity.REQUEST_COPY_FILE);
                         }
                         break;
                     case 1:
                         if (isCopyOrMove) {
                             if (fromVolumeVolumeFileList.size() == 1) {
-                                bundle.putSerializable("fromVolume", copyFromVolume);
-                                bundle.putSerializable("volumeFileList", (Serializable) fromVolumeVolumeFileList);
-                                bundle.putBoolean("isFunctionCopy", true);
-                                bundle.putString("operationFileDirAbsolutePath", operationFileDirAbsolutePath);
-                                IntentUtils.startActivity(VolumeHomePageActivity.this, ShareVolumeActivity.class, bundle);
+                                Intent intent = new Intent(VolumeHomePageActivity.this, ShareVolumeActivity.class);
+                                intent.putExtras(bundle);
+                                startActivityForResult(intent, VolumeFileBaseActivity.REQUEST_COPY_FILE);
                             } else {
-                                ToastUtils.show("多个文件只能复制到本地");
+                                ToastUtils.show("仅支持一个文件或文件夹");
                             }
                         } else {
                             bundle.putSerializable("shareVolumeList", (Serializable) shareVolumeList);
@@ -202,6 +206,18 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
     @Override
     public void onRefresh() {
         getVolumeList(false);
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case VolumeFileBaseActivity.REQUEST_COPY_FILE:
+                    finish();
+                    break;
+            }
+        }
     }
 
     /**

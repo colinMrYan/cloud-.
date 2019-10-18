@@ -255,7 +255,7 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
                 path = currentDirAbsolutePath.substring(0, currentDirAbsolutePath.length() - 1);
             }
             List<VolumeFile> moveVolumeFileList = (List<VolumeFile>) getIntent().getSerializableExtra("volumeFileList");
-            fileOrgPath = fileOrgPath + "/" + moveVolumeFileList.get(0).getName();
+            fileOrgPath = fileOrgPath + moveVolumeFileList.get(0).getName();
             apiService.copyFileBetweenVolume(fromVolume.getId(), volume.getId(), fileOrgPath, path);
         }
     }
@@ -313,7 +313,8 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
         @Override
         public void returnCopyFileBetweenVolumeSuccess() {
             LoadingDialog.dimissDlg(loadingDlg);
-            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_VOLUME_FILE_COPY_SUCCESS, ""));
+            setResult(RESULT_OK);
+            finish();
         }
 
         @Override
