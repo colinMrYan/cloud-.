@@ -39,6 +39,7 @@ import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
+import com.inspur.emmcloud.basemodule.bean.EventMessage;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
@@ -61,7 +62,6 @@ import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.UIConversation;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
 import com.inspur.emmcloud.bean.system.EmmAction;
-import com.inspur.emmcloud.bean.system.EventMessage;
 import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.bean.system.MainTabProperty;
 import com.inspur.emmcloud.bean.system.MainTabResult;
@@ -73,6 +73,7 @@ import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.CheckingNetStateUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationGroupIconUtils;
+import com.inspur.emmcloud.util.privates.MessageSendManager;
 import com.inspur.emmcloud.util.privates.ScanQrCodeUtils;
 import com.inspur.emmcloud.util.privates.SuspensionWindowManagerUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
@@ -90,7 +91,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -181,6 +181,7 @@ public class CommunicationFragment extends BaseFragment {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
+        setLastMessageId();
         initView();
         sortConversationList();// 对Channel 进行排序
         registerMessageFragmentReceiver();
@@ -262,7 +263,6 @@ public class CommunicationFragment extends BaseFragment {
                     String type = conversation.getType();
                     if (type.equals(Conversation.TYPE_CAST) || type.equals(Conversation.TYPE_DIRECT) || type.equals(Conversation.TYPE_GROUP)) {
                         Bundle bundle = new Bundle();
-                        bundle.putSerializable(ConversationBaseActivity.EXTRA_UNREAD_MESSAGE, (Serializable) MessageCacheUtil.getAllUnReadMessage(getActivity(), conversation.getId()));
                         bundle.putSerializable(ConversationActivity.EXTRA_CONVERSATION, conversation);
                         IntentUtils.startActivity(getActivity(), ConversationActivity.class, bundle);
                     } else if (conversation.getType().equals(Conversation.TYPE_LINK)) {
@@ -592,7 +592,7 @@ public class CommunicationFragment extends BaseFragment {
      */
     private void cacheReceiveMessage(Message receivedWSMessage) {
         // TODO Auto-generated method stub
-        Message channelNewMessage = MessageCacheUtil.getNewMessge(MyApplication.getInstance(), receivedWSMessage.getChannel());
+        Message channelNewMessage = MessageCacheUtil.getNewMessage(MyApplication.getInstance(), receivedWSMessage.getChannel());
 //        MessageCacheUtil.saveMessage(MyApplication.getInstance(), receivedWSMessage);
         Long ChannelMessageMatheSetStart = (channelNewMessage == null) ? receivedWSMessage.getCreationDate() : channelNewMessage.getCreationDate();
         MessageMatheSetCacheUtils.add(MyApplication.getInstance(),
@@ -608,11 +608,11 @@ public class CommunicationFragment extends BaseFragment {
         if (socketStatus.equals(Socket.EVENT_CONNECTING)) {
             titleText.setText(R.string.socket_connecting);
         } else if (socketStatus.equals(Socket.EVENT_CONNECT)) {
+            getMessage();
             //当断开以后连接成功(非第一次连接上)后重新拉取一遍消息
             if (!isFirstConnectWebsockt) {
                 getConversationList();
             }
-            getMessage();
             isFirstConnectWebsockt = false;
             String appTabs = PreferencesByUserAndTanentUtils.getString(getActivity(), Constant.PREF_APP_TAB_BAR_INFO_CURRENT, "");
             if (!StringUtils.isBlank(appTabs)) {
@@ -621,6 +621,7 @@ public class CommunicationFragment extends BaseFragment {
                 titleText.setText(R.string.communicate);
             }
         } else if (socketStatus.equals(Socket.EVENT_DISCONNECT) || socketStatus.equals(Socket.EVENT_CONNECT_ERROR)) {
+            setLastMessageId();
             titleText.setText(R.string.socket_close);
         }
     }
@@ -756,6 +757,9 @@ public class CommunicationFragment extends BaseFragment {
             case Constant.EVENTBUS_TAG_REFRESH_CONVERSATION_ADAPTER:
                 conversationAdapter.notifyDataSetChanged();
                 break;
+            case Constant.EVENTBUS_TAG_REFRESH_CONVERSATION:
+                sortConversationList();
+                break;
             case Constant.EVENTBUS_TAG_UPDATE_CHANNEL_NAME:
                 conversation = (Conversation) eventMessage.getMessageObj();
                 index = displayUIConversationList.indexOf(new UIConversation(conversation.getId()));
@@ -805,6 +809,7 @@ public class CommunicationFragment extends BaseFragment {
                 String content = eventMessage.getContent();
                 JSONObject contentObj = JSONUtils.getJSONObject(content);
                 Message receivedWSMessage = new Message(contentObj);
+                MessageSendManager.getInstance().removeMessageInSendRetry(receivedWSMessage);
                 //验重处理
                 if (MessageCacheUtil.getMessageByMid(MyApplication.getInstance(), receivedWSMessage.getId()) == null) {
                     if (MyApplication.getInstance().getCurrentChannelCid().equals(receivedWSMessage.getChannel())) {
@@ -837,10 +842,15 @@ public class CommunicationFragment extends BaseFragment {
                     if (!MyApplication.getInstance().getCurrentChannelCid().equals(fakeMessage.getChannel())) {
                         fakeMessage.setSendStatus(Message.MESSAGE_SEND_FAIL);
                         MessageCacheUtil.saveMessage(MyApplication.getInstance(), fakeMessage);
+                    } else {
+                        sortConversationList();
                     }
                 }
             }
-
+            if (!StringUtils.isBlank(MyApplication.getInstance().getCurrentChannelCid())) {
+                SimpleEventMessage simpleEventMessage = new SimpleEventMessage(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE_CONVERSATION, eventMessage);
+                EventBus.getDefault().post(simpleEventMessage);
+            }
         }
     }
 
@@ -852,38 +862,36 @@ public class CommunicationFragment extends BaseFragment {
 //        final CustomProtocol customProtocol = new CustomProtocol(getVoiceAndVideoResult.getContextParamsSchema());
 //        //接收到消息后告知服务端
 //        WSAPIService.getInstance().sendReceiveStartVoiceAndVideoCallMessageSuccess(getVoiceAndVideoResult.getTracer());
+//
 //        //判断如果在通话中就不再接听新的来电
-//        LogUtils.YfcDebug("是否正在通话中：" + (VoiceCommunicationUtils.getVoiceCommunicationUtils(ECMChatInputMenu.VOICE_CALL).getCommunicationState() != ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_ING));
-//        if (VoiceCommunicationUtils.getVoiceCommunicationUtils(ECMChatInputMenu.VOICE_CALL).getCommunicationState() != ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_ING) {
-//            PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getContext(), Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
-//                @Override
-//                public void onPermissionRequestSuccess(List<String> permissions) {
-//                    if (customProtocol.getProtocol().equals("ecc-cloudplus-cmd") && !StringUtils.isBlank(customProtocol.getParamMap().get("cmd"))) {
-//                        if (customProtocol.getParamMap().get("cmd").equals("invite")) {
-//                            startVoiceOrVideoCall(getVoiceAndVideoResult.getContextParamsRoom(), getVoiceAndVideoResult.getContextParamsType(), getVoiceAndVideoResult.getChannel());
-//                        } else if (customProtocol.getParamMap().get("cmd").equals("refuse")) {
-//                            changeUserConnectStateByUid(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_REFUSE, customProtocol.getParamMap().get("uid"));
-//                            checkCommunicationFinish();
-//                        } else if (customProtocol.getParamMap().get("cmd").equals("destroy")) {
-//                            SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
-//                        }
+//        if (VoiceCommunicationUtils.getInstance().getCommunicationState() != ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_ING) {
+//            if (customProtocol.getProtocol().equals("ecc-cloudplus-cmd") && !StringUtils.isBlank(customProtocol.getParamMap().get("cmd")) &&
+//                    customProtocol.getParamMap().get("cmd").equals("invite")) {
+//                startVoiceOrVideoCall(getVoiceAndVideoResult.getContextParamsRoom(), getVoiceAndVideoResult.getContextParamsType(), getVoiceAndVideoResult.getChannel());
+//            }
+//        } else {
+//            if (SuspensionWindowManagerUtils.getInstance().isShowing()) {
+//                if (customProtocol.getProtocol().equals("ecc-cloudplus-cmd") && !StringUtils.isBlank(customProtocol.getParamMap().get("cmd"))) {
+//                    if (customProtocol.getParamMap().get("cmd").equals("refuse")) {
+//                        changeUserConnectStateByUid(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_REFUSE, customProtocol.getParamMap().get("uid"));
+//                        checkCommunicationFinish();
+//                        VoiceCommunicationUtils.getInstance().setLayoutState(ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_OVER);
+//                        Log.d("zhang", "COMMUNICATION_STATE_OVER: 555555 ");
+//                    } else if (customProtocol.getParamMap().get("cmd").equals("destroy")) {
+//                        VoiceCommunicationUtils.getInstance().destroy();
+//                        SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
+//                        Log.d("zhang", "COMMUNICATION_STATE_OVER: 66666666 ");
+//                        VoiceCommunicationUtils.getInstance().setLayoutState(ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_OVER);
 //                    }
+//                    return;
 //                }
 //
-//                @Override
-//                public void onPermissionRequestFail(List<String> permissions) {
-//                    String agoraChannelId = customProtocol.getParamMap().get("roomid");
-//                    String channelId = customProtocol.getParamMap().get("channelid");
-//                    String fromUid = customProtocol.getParamMap().get("uid");
-//                    VoiceCommunicationUtils.getVoiceCommunicationUtils(ECMChatInputMenu.VOICE_CALL).getVoiceCommunicationChannelInfo(channelId, agoraChannelId, fromUid);
-//                    ToastUtils.show(getContext(), PermissionRequestManagerUtils.getInstance().getPermissionToast(getContext(), permissions));
-//                }
-//            });
-//        } else {
+//            }
+//            //正在通话中  三者打进电话 发拒绝消息
 //            String agoraChannelId = customProtocol.getParamMap().get("roomid");
 //            String channelId = customProtocol.getParamMap().get("channelid");
 //            String fromUid = customProtocol.getParamMap().get("uid");
-//            VoiceCommunicationUtils.getVoiceCommunicationUtils(ECMChatInputMenu.VOICE_CALL).getVoiceCommunicationChannelInfo(channelId, agoraChannelId, fromUid);
+//            VoiceCommunicationUtils.getInstance().getVoiceCommunicationChannelInfoAndSendRefuseCommand(channelId, agoraChannelId, fromUid);
 //        }
     }
 
@@ -896,7 +904,7 @@ public class CommunicationFragment extends BaseFragment {
      */
     private void changeUserConnectStateByUid(int connectStateConnected, String uid) {
         List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationMemberList = VoiceCommunicationUtils
-                .getVoiceCommunicationUtils(ECMChatInputMenu.VOICE_CALL).getVoiceCommunicationMemberList();
+                .getInstance().getVoiceCommunicationMemberList();
         if (voiceCommunicationMemberList != null && voiceCommunicationMemberList.size() > 0) {
             for (int i = 0; i < voiceCommunicationMemberList.size(); i++) {
                 if (voiceCommunicationMemberList.get(i).getUserId().equals(uid)) {
@@ -912,7 +920,7 @@ public class CommunicationFragment extends BaseFragment {
      */
     private void checkCommunicationFinish() {
         List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationMemberList = VoiceCommunicationUtils
-                .getVoiceCommunicationUtils(ECMChatInputMenu.VOICE_CALL).getVoiceCommunicationMemberList();
+                .getInstance().getVoiceCommunicationMemberList();
         if (voiceCommunicationMemberList != null && voiceCommunicationMemberList.size() > 0) {
             int waitAndCommunicationSize = 0;
             for (int i = 0; i < voiceCommunicationMemberList.size(); i++) {
@@ -922,7 +930,7 @@ public class CommunicationFragment extends BaseFragment {
                 }
             }
             if (waitAndCommunicationSize < 2) {
-                VoiceCommunicationUtils.getVoiceCommunicationUtils(ECMChatInputMenu.VOICE_CALL).destroy();
+                VoiceCommunicationUtils.getInstance().destroy();
                 SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
             }
         }
@@ -981,6 +989,7 @@ public class CommunicationFragment extends BaseFragment {
                         new DownLoaderUtils().startDownLoad(source, fileSavePath, null);
                     }
                 }
+                MessageSendManager.getInstance().resendMessageAfterWSOnline();
             }
 
         }
@@ -1041,22 +1050,32 @@ public class CommunicationFragment extends BaseFragment {
     }
 
     /**
+     * 当WebSocket断开后记录本地最后一条正式消息
+     * 离线消息获取时使用
+     */
+    private void setLastMessageId() {
+        String lastMessageId = MessageCacheUtil.getLastSuccessMessageId(MyApplication.getInstance());
+        if (lastMessageId != null) {
+            //如果preferences中还存有离线消息最后一条消息id这个标志代表上一次离线消息没有获取成功，需要从这条消息开始重新获取
+            String getOfflineLastMessageId = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_GET_OFFLINE_LAST_MID, "");
+            if (StringUtils.isBlank(getOfflineLastMessageId)) {
+                PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_GET_OFFLINE_LAST_MID, lastMessageId);
+            }
+        } else {
+            PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_GET_OFFLINE_LAST_MID, "");
+        }
+    }
+
+    /**
      * 获取消息
      */
     public void getMessage() {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance()) && WebSocketPush.getInstance().isSocketConnect()) {
-            String lastMessageId = MessageCacheUtil.getLastSuccessMessageId(MyApplication.getInstance());
-            if (lastMessageId != null) {
-                //如果preferences中还存有离线消息最后一条消息id这个标志代表上一次离线消息没有获取成功，需要从这条消息开始重新获取
-                String getOfflineLastMessageId = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_GET_OFFLINE_LAST_MID, "");
-                if (StringUtils.isBlank(getOfflineLastMessageId)) {
-                    getOfflineLastMessageId = lastMessageId;
-                    PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_GET_OFFLINE_LAST_MID, lastMessageId);
-                }
+            String lastMessageId = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_GET_OFFLINE_LAST_MID, "");
+            if (!StringUtils.isBlank(lastMessageId)) {
                 //获取离线消息
-                WSAPIService.getInstance().getOfflineMessage(getOfflineLastMessageId);
+                WSAPIService.getInstance().getOfflineMessage(lastMessageId);
             } else {
-                PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_GET_OFFLINE_LAST_MID, "");
                 //获取每个频道最近消息
                 WSAPIService.getInstance().getChannelRecentMessage();
             }

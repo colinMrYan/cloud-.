@@ -30,6 +30,7 @@ import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
+import com.inspur.emmcloud.basemodule.bean.EventMessage;
 import com.inspur.emmcloud.basemodule.bean.Language;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
@@ -45,7 +46,6 @@ import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.mine.GetExperienceUpgradeFlagResult;
 import com.inspur.emmcloud.bean.system.AppConfig;
-import com.inspur.emmcloud.bean.system.EventMessage;
 import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
 import com.inspur.emmcloud.bean.system.navibar.NaviBarScheme;
 import com.inspur.emmcloud.service.CoreService;
@@ -515,6 +515,7 @@ public class SettingActivity extends BaseActivity {
                         String imgCachePath = MyAppConfig.LOCAL_CACHE_PATH;
                         String offlineAppPath = MyAppConfig.LOCAL_OFFLINE_APP_PATH;
                         String userSpacePath = MyAppConfig.LOCAL_IMP_USER_OPERATE_DIC;
+                        PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_GET_OFFLINE_LAST_MID, "");
                         DataCleanManager.cleanApplicationData(SettingActivity.this,
                                 msgCachePath, imgCachePath, offlineAppPath, userSpacePath);
                         MyApplication.getInstance().setIsContactReady(false);

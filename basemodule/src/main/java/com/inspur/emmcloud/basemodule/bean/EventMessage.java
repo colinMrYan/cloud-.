@@ -1,5 +1,7 @@
 package com.inspur.emmcloud.basemodule.bean;
 
+import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+
 /**
  * Created by chenmch on 2018/4/28.
  */
@@ -12,6 +14,9 @@ public class EventMessage {
     private int status = 200;
     private Object extra = "";
     private int startQuestTime = 0;
+    //以秒为单位
+    private int timeout = MyAppConfig.WEBSOCKET_REQUEST_TIMEOUT_COMMON;
+
 
     public EventMessage(String id) {
         this.id = id;
@@ -23,12 +28,20 @@ public class EventMessage {
         this.content = content;
     }
 
-    public EventMessage(String id, String tag, String content, String extra) {
+//    public EventMessage(String id, String tag, String content, String extra) {
+//        this.id = id;
+//        this.tag = tag;
+//        this.content = content;
+//        this.extra = extra;
+//    }
+
+    public EventMessage(String id, String tag, String content, Object extra) {
         this.id = id;
         this.tag = tag;
         this.content = content;
         this.extra = extra;
     }
+
 
     public EventMessage(String id, String tag) {
         this.id = id;
@@ -83,15 +96,26 @@ public class EventMessage {
         this.startQuestTime = startQuestTime;
     }
 
+    public int getTimeout() {
+        return timeout;
+    }
+
+    public void setTimeout(int timeout) {
+        this.timeout = timeout;
+    }
+
+    @Override
     public boolean equals(Object other) { // 重写equals方法，后面最好重写hashCode方法
 
-        if (this == other) // 先检查是否其自反性，后比较other是否为空。这样效率高
+        if (this == other) { // 先检查是否其自反性，后比较other是否为空。这样效率高
             return true;
-        if (other == null)
+        }
+        if (other == null) {
             return false;
-        if (!(other instanceof EventMessage))
+        }
+        if (!(other instanceof EventMessage)) {
             return false;
-
+        }
         final EventMessage otherEventMessage = (EventMessage) other;
         return getId().equals(otherEventMessage.getId());
     }

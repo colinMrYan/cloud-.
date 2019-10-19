@@ -11,12 +11,15 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Chronometer;
-import android.widget.ImageButton;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity;
+
+import static com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_ING;
+import static com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_OVER;
+import static com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_PRE;
 
 /**
  * 悬浮窗管理类封装
@@ -77,7 +80,7 @@ public class SuspensionWindowManagerUtils {
      * 隐藏悬浮窗
      */
     public void hideCommunicationSmallWindow() {
-        if (isShowing && null != windowView) {
+        if (isShowing && null != windowView && windowManager != null) {
             windowManager.removeView(windowView);
             isShowing = false;
         }
@@ -102,8 +105,14 @@ public class SuspensionWindowManagerUtils {
         windowView = LayoutInflater.from(windowContext).inflate(R.layout.service_voice_communication,
                 null);
         chronometer = (Chronometer) windowView.findViewById(R.id.chronometer_voice_communication_time);
-        chronometer.setBase(SystemClock.elapsedRealtime() - passedTime * 1000);
-        chronometer.start();
+        if (VoiceCommunicationUtils.getInstance().getCommunicationState() == COMMUNICATION_STATE_ING) {
+            chronometer.setBase(SystemClock.elapsedRealtime() - passedTime * 1000);
+            chronometer.start();
+        } else if (VoiceCommunicationUtils.getInstance().getCommunicationState() == COMMUNICATION_STATE_PRE) {
+            chronometer.setText(R.string.voice_communication_waitting_answer);
+        } else if (VoiceCommunicationUtils.getInstance().getCommunicationState() == COMMUNICATION_STATE_OVER) {
+            hideCommunicationSmallWindow();
+        }
         View.OnClickListener clickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -115,8 +124,8 @@ public class SuspensionWindowManagerUtils {
             }
         };
         //点击事件的监听
-        ImageButton imgBtnPhone = (ImageButton) windowView.findViewById(R.id.img_btn_voice_window);
-        imgBtnPhone.setOnClickListener(clickListener);
+//        ImageButton imgBtnPhone = (ImageButton) windowView.findViewById(R.id.img_btn_voice_window);
+//        imgBtnPhone.setOnClickListener(clickListener);
         windowView.setOnClickListener(clickListener);
         //更新窗口位置的监听
         View.OnTouchListener touchListener = new View.OnTouchListener() {
@@ -140,7 +149,7 @@ public class SuspensionWindowManagerUtils {
                 return false;
             }
         };
-        imgBtnPhone.setOnTouchListener(touchListener);
+//        imgBtnPhone.setOnTouchListener(touchListener);
         windowView.setOnTouchListener(touchListener);
     }
 
@@ -197,15 +206,21 @@ public class SuspensionWindowManagerUtils {
     }
 
     /**
-     * 回到语音通话界面
+     * 回到语音通话界面n
      */
     private void goBackVoiceCommunicationActivity() {
         Intent intent = new Intent();
         intent.setClass(windowContext, ChannelVoiceCommunicationActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.COME_BACK_FROM_SERVICE);
+        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_IS_FROM_SMALL_WINDOW, true);
+        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE,
+                VoiceCommunicationUtils.getInstance().getLayoutState());
         intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_TIME, Long.parseLong(TimeUtils.getChronometerSeconds(chronometer.getText().toString())));
         windowContext.startActivity(intent);
+    }
+
+    public Chronometer getChronometer() {
+        return chronometer;
     }
 }
 

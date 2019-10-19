@@ -53,11 +53,14 @@ public class Message implements Serializable {
     @Column(name = "read")
     private int read = 0;  //0 未读，1 已读
     @Column(name = "sendStatus")
-    private int sendStatus = 1;//0 发送中  1发送成功  2发送失败 字段扩展
+    private int sendStatus = 1;//0 发送中  1发送成功  2发送失败 3 编辑中   字段扩展
     @Column(name = "localPath")
     private String localPath = "";
     @Column(name = "showContent")
     private String showContent = "";
+    //是否处于重复等待重发状态中
+    @Column(name = "isWaitingSendRetry")
+    private boolean isWaitingSendRetry = false;
     private String tmpId = "";
 
     public Message() {
@@ -268,6 +271,14 @@ public class Message implements Serializable {
 
     public void setLocalPath(String localPath) {
         this.localPath = localPath;
+    }
+
+    public boolean isWaitingSendRetry() {
+        return isWaitingSendRetry;
+    }
+
+    public void setWaitingSendRetry(boolean waitingSendRetry) {
+        isWaitingSendRetry = waitingSendRetry;
     }
 
     public String getTmpId() {

@@ -38,12 +38,14 @@ import com.inspur.emmcloud.bean.chat.GetNewsImgResult;
 import com.inspur.emmcloud.bean.chat.GetSendMsgResult;
 import com.inspur.emmcloud.bean.chat.GetVoiceCommunicationResult;
 import com.inspur.emmcloud.bean.chat.Message;
+import com.inspur.emmcloud.bean.chat.ScanCodeJoinConversationBean;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.system.GetBoolenResult;
 import com.inspur.emmcloud.componentservice.login.LoginService;
 import com.inspur.emmcloud.componentservice.login.OauthCallBack;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.xutils.http.RequestParams;
 
@@ -1277,14 +1279,12 @@ public class ChatAPIService {
         HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, compelteUrl) {
             @Override
             public void callbackSuccess(byte[] arg0) {
-                LogUtils.YfcDebug("离开成功：" + new String(arg0));
-                apiInterface.returnLeaveVoiceCommunicationChannelSuccess(new GetBoolenResult(new String(arg0)));
+//                apiInterface.returnLeaveVoiceCommunicationChannelSuccess(new GetBoolenResult(new String(arg0)));
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                LogUtils.YfcDebug("离开失败：" + error + responseCode);
-                apiInterface.returnLeaveVoiceCommunicationChannelFail(error, responseCode);
+//                apiInterface.returnLeaveVoiceCommunicationChannelFail(error, responseCode);
             }
 
             @Override
@@ -1788,7 +1788,14 @@ public class ChatAPIService {
         HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
-                apiInterface.returnShareFileToFriendsFromVolumeSuccess(arg0.toString(), volumeFile);
+                String path = "";
+                try {
+                    JSONObject object = JSONUtils.getJSONObject(new String(arg0));
+                    path = object.getString("path");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                apiInterface.returnShareFileToFriendsFromVolumeSuccess(path, volumeFile);
             }
 
             @Override
@@ -1815,5 +1822,42 @@ public class ChatAPIService {
         });
     }
 
+    /**
+     * 获取扫码加群二维码内容
+     *
+     * @param cid
+     */
+    public void getInvitationContent(final String cid) {
+        String url = APIUri.getInvitationUrl(cid);
+        LogUtils.YfcDebug("URL:" + url);
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, url) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnInvitationContentSuccess(new ScanCodeJoinConversationBean(new String(arg0)));
+            }
 
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnInvitationContentFail(error, responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getInvitationContent(cid);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                refreshToken(
+                        oauthCallBack, requestTime);
+            }
+        });
+    }
 }

@@ -127,15 +127,13 @@ public class CommunicationSearchMessagesActivity extends BaseActivity {
                     if (conversationFromChatContent.getConversation().getType().equals(Conversation.TYPE_GROUP)) {
                         Bundle bundle = new Bundle();
                         bundle.putString(ConversationActivity.EXTRA_CID, conversationFromChatContent.getConversation().getId());
-                        bundle.putSerializable(ConversationActivity.EXTRA_UIMESSAGE, uiMessage);
-                        bundle.putSerializable(ConversationActivity.EXTRA_FROM_SERCH, "1111");
+                        bundle.putSerializable(ConversationActivity.EXTRA_POSITION_MESSAGE, uiMessage);
                         dismissSoftKeyboard();
                         IntentUtils.startActivity(CommunicationSearchMessagesActivity.this, ConversationActivity.class, bundle, true);
                     } else {
                         Bundle bundle = new Bundle();
                         bundle.putString(ConversationActivity.EXTRA_CID, conversationFromChatContent.getConversation().getId());
-                        bundle.putSerializable(ConversationActivity.EXTRA_UIMESSAGE, uiMessage);
-                        bundle.putSerializable(ConversationActivity.EXTRA_FROM_SERCH, "1111");
+                        bundle.putSerializable(ConversationActivity.EXTRA_POSITION_MESSAGE, uiMessage);
                         dismissSoftKeyboard();
                         IntentUtils.startActivity(CommunicationSearchMessagesActivity.this, ConversationActivity.class, bundle, true);
                     }

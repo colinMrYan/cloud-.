@@ -13,8 +13,8 @@ import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.basemodule.bean.EventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
-import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.push.PushManagerUtils;
 import com.inspur.emmcloud.basemodule.util.AppExceptionCacheUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
@@ -24,10 +24,10 @@ import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.GetVoiceAndVideoResult;
 import com.inspur.emmcloud.bean.chat.WSPushContent;
-import com.inspur.emmcloud.bean.system.EventMessage;
 import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
 import com.inspur.emmcloud.bean.system.badge.GetWebSocketBadgeResult;
 import com.inspur.emmcloud.componentservice.login.LoginService;
+import com.inspur.emmcloud.util.privates.MessageSendManager;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -73,7 +73,7 @@ public class WebSocketPush {
                     Iterator<EventMessage> it = requestEventMessageList.iterator();
                     while (it.hasNext()) {
                         EventMessage eventMessage = it.next();
-                        if (eventMessage.getStartQuestTime() + MyAppConfig.WEBSOCKET_REQUEST_TIMEOUT <= timeCount) {
+                        if (eventMessage.getStartQuestTime() + eventMessage.getTimeout() <= timeCount) {
                             setRequestEventMessageTimeout(eventMessage, "socket_send_timeout");
                             it.remove();
                         }
@@ -172,14 +172,14 @@ public class WebSocketPush {
                 return;
             }
             String url = APIUri.getWebsocketConnectUrl();
-
 //            String url = "http://10.25.12.114:3000";
             String path = WebServiceRouterManager.getInstance().isV0VersionChat() ? "/" + MyApplication.getInstance().getCurrentEnterprise().getCode() + "/socket/handshake" :
                     "/chat/socket/handshake";
             sendWebSocketStatusBroadcast(Socket.EVENT_CONNECTING);
             IO.Options opts = new IO.Options();
-            opts.reconnectionAttempts = 5; // 设置websocket重连次数
+            opts.reconnectionAttempts = 10; // 设置websocket重连次数
             opts.forceNew = true;
+            opts.reconnectionDelay = 2000;
             Map<String, String> query = new HashMap<>();
             try {
                 if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
@@ -317,6 +317,7 @@ public class WebSocketPush {
             setRequestEventMessageTimeout(eventMessage, "socket_force_close");
         }
         requestEventMessageList.clear();
+        sendWebSocketStatusBroadcast(Socket.EVENT_DISCONNECT);
     }
 
     private void removeListeners() {
@@ -524,9 +525,10 @@ public class WebSocketPush {
         if (eventMessage != null) {
             eventMessage.setContent("time out");
             eventMessage.setStatus(-1);
-            EventBus.getDefault().post(eventMessage);
             if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE)) {
-                saveWSSendMessageException("ws_send_message", 3, timeoutType, 1001);
+                MessageSendManager.getInstance().addMessageInSendRetry((com.inspur.emmcloud.bean.chat.Message) eventMessage.getExtra());
+            } else {
+                EventBus.getDefault().post(eventMessage);
             }
         }
     }

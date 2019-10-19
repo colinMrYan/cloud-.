@@ -10,7 +10,6 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
@@ -45,7 +44,6 @@ import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
-import com.inspur.emmcloud.basemodule.bean.EventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppWebConfig;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
@@ -67,8 +65,6 @@ import com.inspur.emmcloud.news.bean.GroupNews;
 import com.inspur.emmcloud.news.bean.NewsIntrcutionUpdateEvent;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONObject;
 
 import java.lang.reflect.Method;
@@ -99,7 +95,6 @@ public class NewsWebDetailActivity extends BaseActivity {
     private String originalEditorComment = "";
     private GroupNews groupNews;
     private Dialog instructionDialog;
-    private String fakeMessageId;
     private WebSettings settings;
     private Map<String, String> webViewHeaders;
     private RelativeLayout loadingLayout;
@@ -134,11 +129,6 @@ public class NewsWebDetailActivity extends BaseActivity {
                 }));
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        EventBus.getDefault().register(this);
-    }
 
     @Override
     public void onCreate() {
@@ -891,99 +881,6 @@ public class NewsWebDetailActivity extends BaseActivity {
         }
     }
 
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == SHARE_SEARCH_RUEST_CODE && resultCode == RESULT_OK
-//                && NetUtils.isNetworkConnected(getApplicationContext())) {
-//            String result = data.getStringExtra("searchResult");
-//            JSONObject jsonObject = JSONUtils.getJSONObject(result);
-//            if (jsonObject.has("people")) {
-//                JSONArray peopleArray = JSONUtils.getJSONArray(jsonObject, "people", new JSONArray());
-//                if (peopleArray.length() > 0) {
-//                    JSONObject peopleObj = JSONUtils.getJSONObject(peopleArray, 0, new JSONObject());
-//                    String uid = JSONUtils.getString(peopleObj, "pid", "");
-//                    createDirectChannel(uid);
-//                }
-//            }
-//            if (jsonObject.has("channelGroup")) {
-//                JSONArray channelGroupArray = JSONUtils.getJSONArray(jsonObject, "channelGroup", new JSONArray());
-//                if (channelGroupArray.length() > 0) {
-//                    JSONObject cidObj = JSONUtils.getJSONObject(channelGroupArray, 0, new JSONObject());
-//                    String cid = JSONUtils.getString(cidObj, "cid", "");
-//                    sendMsg(cid);
-//                }
-//            }
-//        }
-//    }
-
-//    /**
-//     * 创建单聊
-//     *
-//     * @param uid
-//     */
-//    private void createDirectChannel(String uid) {
-//        if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
-//            new ConversationCreateUtils().createDirectConversation(NewsWebDetailActivity.this, uid,
-//                    new ConversationCreateUtils.OnCreateDirectConversationListener() {
-//                        @Override
-//                        public void createDirectConversationSuccess(Conversation conversation) {
-//                            sendMsg(conversation.getId());
-//                        }
-//
-//                        @Override
-//                        public void createDirectConversationFail() {
-//
-//                        }
-//                    });
-//        } else {
-//            new ChatCreateUtils().createDirectChannel(NewsWebDetailActivity.this, uid,
-//                    new OnCreateDirectChannelListener() {
-//                        @Override
-//                        public void createDirectChannelSuccess(GetCreateSingleChannelResult getCreateSingleChannelResult) {
-//                            sendMsg(getCreateSingleChannelResult.getCid());
-//                        }
-//
-//                        @Override
-//                        public void createDirectChannelFail() {
-//                            //showShareFailToast();
-//                        }
-//                    });
-//        }
-//
-//    }
-
-//    /**
-//     * 发送新闻分享
-//     *
-//     * @param cid
-//     */
-//    private void sendMsg(String cid) {
-//        if (NetUtils.isNetworkConnected(getApplicationContext())) {
-//            if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
-//                ChatAPIService apiService = new ChatAPIService(
-//                        NewsWebDetailActivity.this);
-//                apiService.setAPIInterface(new WebService());
-//                JSONObject jsonObject = new JSONObject();
-//                try {
-//                    jsonObject.put("url", url);
-//                    jsonObject.put("poster", groupNews.getPoster());
-//                    jsonObject.put("digest", groupNews.getSummary());
-//                    jsonObject.put("title", groupNews.getTitle());
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//                apiService.sendMsg(cid, jsonObject.toString(), "res_link", System.currentTimeMillis() + "");
-//            } else {
-//                String poster = StringUtils.isBlank(groupNews.getPoster()) ? "" : NewsAPIUri.getPreviewUrl(groupNews.getPoster());
-//                Message message = CommunicationUtils.combinLocalExtendedLinksMessage(cid, poster, groupNews.getTitle(), groupNews.getSummary(), url);
-//                fakeMessageId = message.getId();
-//                WSAPIService.getInstance().sendChatExtendedLinksMsg(message);
-//            }
-//
-//        }
-//
-//    }
 
     /**
      * 弹出分享失败toast
@@ -1037,29 +934,8 @@ public class NewsWebDetailActivity extends BaseActivity {
             webView.destroy();
             webView = null;
         }
-        EventBus.getDefault().unregister(this);
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        EventBus.getDefault().unregister(this);
-    }
-
-    //接收到websocket发过来的消息
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceiveWSMessage(EventMessage eventMessage) {
-        if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE)) {
-            if (fakeMessageId != null && String.valueOf(eventMessage.getId()).equals(fakeMessageId)) {
-                if (eventMessage.getStatus() == 200) {
-                    ToastUtils.show(NewsWebDetailActivity.this, getString(R.string.baselib_share_success));
-                } else {
-                    showShareFailToast();
-                }
-            }
-        }
-
-    }
 
     /**
      * API为16的方法访问

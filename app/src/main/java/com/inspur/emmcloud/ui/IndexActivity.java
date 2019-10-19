@@ -24,6 +24,7 @@ import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.push.PushManagerUtils;
 import com.inspur.emmcloud.basemodule.service.PVCollectService;
+import com.inspur.emmcloud.basemodule.util.ApiRequestRecordUploadUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.ClientConfigUpdateUtils;
 import com.inspur.emmcloud.basemodule.util.ClientIDUtils;
@@ -52,6 +53,7 @@ import com.inspur.emmcloud.service.CoreService;
 import com.inspur.emmcloud.service.LocationService;
 import com.inspur.emmcloud.util.privates.AppConfigUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
+import com.inspur.emmcloud.util.privates.MessageSendManager;
 import com.inspur.emmcloud.util.privates.MyAppWidgetUtils;
 import com.inspur.emmcloud.util.privates.ProfileUtils;
 import com.inspur.emmcloud.util.privates.ReactNativeUtils;
@@ -92,6 +94,7 @@ public class IndexActivity extends IndexBaseActivity {
         initView();
         getInitData();
         startService();
+        uploadApiRequestRecord();
     }
 
     private void getNaviTabData(String naviTabSaveConfigVersion) {
@@ -121,6 +124,7 @@ public class IndexActivity extends IndexBaseActivity {
             }
         }
         initScheduleCalendar();
+        MessageSendManager.getInstance().initMessageStatus();
     }
 
     protected void initScheduleCalendar() {
@@ -315,6 +319,18 @@ public class IndexActivity extends IndexBaseActivity {
         intent.putExtra("command", "sync_all_base_data_success");
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 
+    }
+
+    /**
+     * 上传http响应事件日志
+     */
+    private void uploadApiRequestRecord() {
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                new ApiRequestRecordUploadUtils().start();
+            }
+        });
     }
 
     @Override

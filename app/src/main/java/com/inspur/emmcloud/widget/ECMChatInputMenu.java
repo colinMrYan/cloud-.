@@ -32,7 +32,6 @@ import com.czt.mp3recorder.MP3Recorder;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
@@ -55,6 +54,7 @@ import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
 import com.inspur.emmcloud.util.privates.MediaPlayerUtils;
 import com.inspur.emmcloud.util.privates.Voice2StringMessageUtils;
+import com.inspur.emmcloud.util.privates.VoiceCommunicationUtils;
 import com.inspur.emmcloud.util.privates.audioformat.AndroidMp3ConvertUtils;
 import com.inspur.emmcloud.widget.audiorecord.AudioDialogManager;
 import com.inspur.emmcloud.widget.audiorecord.AudioRecordButton;
@@ -490,7 +490,8 @@ public class ECMChatInputMenu extends LinearLayout {
      * 根据二进制字符串更新菜单视图
      * 此处与IOS客户端略有不同，IOS客户端当inputs为"2"时则隐藏整个输入面板，没有任何输入入口
      * 服务端允许输入类型1支持，0不支持
-     * 每一位bit代表的意义为（高位）location mail videocall voicecall null(废弃) null(废弃) video voice command file photo text (低位)
+     * 调整这里时要注意逐位对应，新旧版本兼容
+     * 每一位bit代表的意义为（高位）location mail videocall voicecall null(废弃) null(废弃) video(暂不开放) voice command file photo text (低位)
      *
      * @param inputs
      */
@@ -529,7 +530,6 @@ public class ECMChatInputMenu extends LinearLayout {
                 //目前开放三位，有可能扩展
                 inputControl = "11101";
             }
-            LogUtils.YfcDebug("inputControl:" + inputControl);
             //控制binaryString长度，防止穿的数字过大
             int length = inputControl.length() > 12 ? 12 : inputControl.length();
             boolean isInputTextEnable = false;
@@ -564,11 +564,11 @@ public class ECMChatInputMenu extends LinearLayout {
 //                        isVideoCallEnable = controlValue.endsWith("1");
 //                        break;
                     //屏蔽语音通话
-//                    case 8:
-//                        isVoiceCallEnable = controlValue.endsWith("1");
+                    //case 8:
+//                        isVoiceCallEnable = controlValue.equals("1");
 //                        break;
                     case 10:
-                        isSendEmailEnable = controlValue.endsWith("1");
+                        isSendEmailEnable = controlValue.equals("1");
                         break;
                     default:
                         break;
@@ -600,10 +600,9 @@ public class ECMChatInputMenu extends LinearLayout {
                 inputTypeBeanList.add(new InputTypeBean(functionIconArray[4], functionNameArray[4], functionActionArray[4]));
             }
 
-            //屏蔽语音通话
-//            if (isVoiceCallEnable) {
-//                inputTypeBeanList.add(new InputTypeBean(functionIconArray[5], functionNameArray[5], functionActionArray[5]));
-//            }
+            if (isVoiceCallEnable) {
+                inputTypeBeanList.add(new InputTypeBean(functionIconArray[5], functionNameArray[5], functionActionArray[5]));
+            }
 
             if (isSendEmailEnable) {
                 inputTypeBeanList.add(new InputTypeBean(functionIconArray[6], functionNameArray[6], functionActionArray[6]));
@@ -640,6 +639,10 @@ public class ECMChatInputMenu extends LinearLayout {
                             break;
                         case "voice_input":     //语音输入
                             if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+                                if (VoiceCommunicationUtils.getInstance().isVoiceBusy()) {
+                                    ToastUtils.show(R.string.voice_communication_voice_busy_tip);
+                                    return;
+                                }
                                 PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getContext(), Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
                                     @Override
                                     public void onPermissionRequestSuccess(List<String> permissions) {
@@ -653,41 +656,47 @@ public class ECMChatInputMenu extends LinearLayout {
                                 });
                             }
                             break;
+                        case VOICE_CALL:
+                            if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+                                if (VoiceCommunicationUtils.getInstance().isVoiceBusy()) {
+                                    ToastUtils.show(R.string.voice_communication_voice_busy_tip);
+                                    return;
+                                }
+                                PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getContext(), Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
+                                    @Override
+                                    public void onPermissionRequestSuccess(List<String> permissions) {
+                                        startVoiceCall(VOICE_CALL);
+                                    }
 
-                        //屏蔽语音通话
-//                        case VOICE_CALL:
-//                            if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-//                                PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getContext(), Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
-//                                    @Override
-//                                    public void onPermissionRequestSuccess(List<String> permissions) {
-//                                        startVoiceCall(VOICE_CALL);
-//                                    }
-//
-//                                    @Override
-//                                    public void onPermissionRequestFail(List<String> permissions) {
-//                                        ToastUtils.show(getContext(), PermissionRequestManagerUtils.getInstance().getPermissionToast(getContext(), permissions));
-//                                    }
-//
-//                                });
-//                            }
-//                            break;
-//                        case VIDEO_CALL:
-//                            if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-//                                String[] videoPermissions = new String[]{Permissions.RECORD_AUDIO, Permissions.CAMERA};
-//                                PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getContext(), videoPermissions, new PermissionRequestCallback() {
-//                                    @Override
-//                                    public void onPermissionRequestSuccess(List<String> permissions) {
-//                                        startVoiceCall(VIDEO_CALL);
-//                                    }
-//
-//                                    @Override
-//                                    public void onPermissionRequestFail(List<String> permissions) {
-//                                        ToastUtils.show(getContext(), PermissionRequestManagerUtils.getInstance().getPermissionToast(getContext(), permissions));
-//                                    }
-//
-//                                });
-//                            }
-//                            break;
+                                    @Override
+                                    public void onPermissionRequestFail(List<String> permissions) {
+                                        ToastUtils.show(getContext(), PermissionRequestManagerUtils.getInstance().getPermissionToast(getContext(), permissions));
+                                    }
+
+                                });
+                            }
+                            break;
+                        case VIDEO_CALL:
+                            if (VoiceCommunicationUtils.getInstance().isVoiceBusy()) {
+                                ToastUtils.show(R.string.voice_communication_voice_busy_tip);
+                                return;
+                            }
+                            if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+                                String[] videoPermissions = new String[]{Permissions.RECORD_AUDIO, Permissions.CAMERA};
+                                PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getContext(), videoPermissions, new PermissionRequestCallback() {
+                                    @Override
+                                    public void onPermissionRequestSuccess(List<String> permissions) {
+                                        startVoiceCall(VIDEO_CALL);
+                                    }
+
+                                    @Override
+                                    public void onPermissionRequestFail(List<String> permissions) {
+                                        ToastUtils.show(getContext(), PermissionRequestManagerUtils.getInstance().getPermissionToast(getContext(), permissions));
+                                    }
+
+                                });
+                            }
+                            break;
                         case "send_email":
                             inputMenuClickCallback.onInputMenuClick("mail");
                             break;

@@ -141,7 +141,7 @@ public class APIUri {
 
 
     public static String getAppConfigUrl(boolean isGetCommonAppConfig, boolean isGetWebAutoRotate) {
-        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/sys/v6.0/config/array?key=PosReportTimeInterval" + (isGetCommonAppConfig ? "&key=CommonFunctions" : "") + (isGetWebAutoRotate ? "&key=WebAutoRotate" : "");
+        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/sys/v6.0/config/array?key=PosReportTimeInterval" + (isGetCommonAppConfig ? "&key=CommonFunctions" : "") + (isGetWebAutoRotate ? "&key=WebAutoRotate" : "") + "&key=force_pull_message";
     }
 
     /**
@@ -153,12 +153,12 @@ public class APIUri {
         return getECMDistribution() + "/preference/launch-screen/latest";
     }
 
-    /**
-     * @return
-     */
-    public static String getUploadSplashPageWriteBackLogUrl() {
-        return getECMDistribution() + "/preference/launch-screen/update";
-    }
+//    /**
+//     * @return
+//     */
+//    public static String getUploadSplashPageWriteBackLogUrl() {
+//        return getECMDistribution() + "/preference/launch-screen/update";
+//    }
 
     /**
      * 存储app配置url
@@ -1733,4 +1733,15 @@ public class APIUri {
     public static String getVolumeShareFileUrl(String volume, String channel) {
         return getUrlBaseVolume() + "/" + volume + "/file/share/channel/" + channel;
     }
+
+    /**
+     * 得到扫码加群二维码内容的URL
+     *
+     * @param cid
+     * @return
+     */
+    public static String getInvitationUrl(String cid) {
+        return getCreateGroupConversationUrl() + "/" + cid + "/invitation";
+    }
+
 }
