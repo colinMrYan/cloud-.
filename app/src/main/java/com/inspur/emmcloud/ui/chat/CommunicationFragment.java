@@ -92,7 +92,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -265,7 +264,6 @@ public class CommunicationFragment extends BaseFragment {
                     String type = conversation.getType();
                     if (type.equals(Conversation.TYPE_CAST) || type.equals(Conversation.TYPE_DIRECT) || type.equals(Conversation.TYPE_GROUP)) {
                         Bundle bundle = new Bundle();
-                        bundle.putSerializable(ConversationBaseActivity.EXTRA_UNREAD_MESSAGE, (Serializable) MessageCacheUtil.getAllUnReadMessage(getActivity(), conversation.getId()));
                         bundle.putSerializable(ConversationActivity.EXTRA_CONVERSATION, conversation);
                         IntentUtils.startActivity(getActivity(), ConversationActivity.class, bundle);
                     } else if (conversation.getType().equals(Conversation.TYPE_LINK)) {
@@ -595,7 +593,7 @@ public class CommunicationFragment extends BaseFragment {
      */
     private void cacheReceiveMessage(Message receivedWSMessage) {
         // TODO Auto-generated method stub
-        Message channelNewMessage = MessageCacheUtil.getNewMessge(MyApplication.getInstance(), receivedWSMessage.getChannel());
+        Message channelNewMessage = MessageCacheUtil.getNewMessage(MyApplication.getInstance(), receivedWSMessage.getChannel());
 //        MessageCacheUtil.saveMessage(MyApplication.getInstance(), receivedWSMessage);
         Long ChannelMessageMatheSetStart = (channelNewMessage == null) ? receivedWSMessage.getCreationDate() : channelNewMessage.getCreationDate();
         MessageMatheSetCacheUtils.add(MyApplication.getInstance(),

@@ -126,7 +126,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     private static final int REFRESH_HISTORY_MESSAGE = 6;
     private static final int REFRESH_NEW_MESSAGE = 7;
     private static final int REFRESH_OFFLINE_MESSAGE = 8;
-    private static final int COUNT_EVERY_PAGE = 15;
+    private static final int COUNT_EVERY_PAGE = 20;
     @BindView(R.id.msg_list)
     RecycleViewForSizeChange msgListView;
 
@@ -232,7 +232,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         List<Message> cacheMessageList;
         if (getIntent().hasExtra(EXTRA_POSITION_MESSAGE)) {
             UIMessage uiMessage = (UIMessage) getIntent().getSerializableExtra(EXTRA_POSITION_MESSAGE);
-            cacheMessageList = MessageCacheUtil.getMessageListBeforeCreationDate(BaseApplication.getInstance(), cid, uiMessage.getCreationDate());
+            cacheMessageList = MessageCacheUtil.getFutureMessageList(BaseApplication.getInstance(), cid, uiMessage.getCreationDate());
             if (cacheMessageList.size() < COUNT_EVERY_PAGE) {
                 cacheMessageList = MessageCacheUtil.getHistoryMessageList(BaseApplication.getInstance(), cid, null, COUNT_EVERY_PAGE);
             }
@@ -260,29 +260,29 @@ public class ConversationActivity extends ConversationBaseActivity {
         setChannelTitle();
         initMsgListView();
         sendMsgFromShare();
-        setUnReadMessageCount();
+//        setUnReadMessageCount();
     }
 
-    private void setUnReadMessageCount() {
-        if (getIntent().hasExtra(EXTRA_UNREAD_MESSAGE)) {
-            final List<Message> unReadMessageList = (List<Message>) getIntent().getSerializableExtra(EXTRA_UNREAD_MESSAGE);
-//            unreadRoundBtn.setVisibility(unReadMessageList.size() > UNREAD_NUMBER_BORDER ? View.VISIBLE : View.GONE);
-            unreadRoundBtn.setText(getString(R.string.chat_conversation_unread_count, unReadMessageList.size()));
-            unreadRoundBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    List<UIMessage> unReadMessageUIList = UIMessage.MessageList2UIMessageList(unReadMessageList);
-                    uiMessageList.clear();
-                    uiMessageList.addAll(unReadMessageUIList);
-                    adapter.setMessageList(uiMessageList);
-                    adapter.notifyDataSetChanged();
-                    msgListView.MoveToPosition(0);
-                    unreadRoundBtn.setVisibility(View.GONE);
-                    msgListView.scrollToPosition(0);
-                }
-            });
-        }
-    }
+//    private void setUnReadMessageCount() {
+//        if (getIntent().hasExtra(EXTRA_UNREAD_MESSAGE)) {
+//            final List<Message> unReadMessageList = (List<Message>) getIntent().getSerializableExtra(EXTRA_UNREAD_MESSAGE);
+////            unreadRoundBtn.setVisibility(unReadMessageList.size() > UNREAD_NUMBER_BORDER ? View.VISIBLE : View.GONE);
+//            unreadRoundBtn.setText(getString(R.string.chat_conversation_unread_count, unReadMessageList.size()));
+//            unreadRoundBtn.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    List<UIMessage> unReadMessageUIList = UIMessage.MessageList2UIMessageList(unReadMessageList);
+//                    uiMessageList.clear();
+//                    uiMessageList.addAll(unReadMessageUIList);
+//                    adapter.setMessageList(uiMessageList);
+//                    adapter.notifyDataSetChanged();
+//                    msgListView.MoveToPosition(0);
+//                    unreadRoundBtn.setVisibility(View.GONE);
+//                    msgListView.scrollToPosition(0);
+//                }
+//            });
+//        }
+//    }
 
 
     /**
@@ -1175,7 +1175,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     private void getHistoryMessageFromLocal() {
         if (uiMessageList.size() > 0) {
             List<Message> messageList = MessageCacheUtil.getHistoryMessageList(
-                    MyApplication.getInstance(), cid, uiMessageList.get(0).getCreationDate(), COUNT_EVERY_PAGE);
+                    MyApplication.getInstance(), cid, uiMessageList.get(0).getMessage(), COUNT_EVERY_PAGE);
             uiMessageList.addAll(0, UIMessage.MessageList2UIMessageList(messageList));
             adapter.setMessageList(uiMessageList);
             adapter.notifyItemRangeInserted(0, messageList.size());
@@ -1751,7 +1751,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 android.os.Message message = null;
                 switch (refreshType) {
                     case REFRESH_HISTORY_MESSAGE:
-                        List<Message> historyMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, uiMessageList.get(0).getMessage().getCreationDate(), COUNT_EVERY_PAGE);
+                        List<Message> historyMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, uiMessageList.get(0).getMessage(), COUNT_EVERY_PAGE);
                         List<UIMessage> historyUIMessageList = UIMessage.MessageList2UIMessageList(historyMessageList);
                         message = handler.obtainMessage(refreshType, historyUIMessageList);
                         break;
