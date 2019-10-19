@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.chat;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -76,6 +77,12 @@ import io.agora.rtc.video.VideoCanvas;
 
 /**
  * Created by yufuchang on 2018/8/14.
+ * 截止191018
+ * 能进入这个页面的入口有：
+ * @see ConversationActivity#startVoiceOrVideoCall(String, List)
+ * @see SuspensionWindowManagerUtils#goBackVoiceCommunicationActivity()
+ * @see NotifyUtil#sendNotifyMsg(Context)
+ * @see CommunicationFragment#onReceiveVoiceOrVideoCall(GetVoiceAndVideoResult)
  */
 public class ChannelVoiceCommunicationActivity extends BaseActivity {
 
@@ -136,11 +143,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
      */
     public static final int COMMUNICATION_LAYOUT_STATE = 2;
     /**
-     * 从小窗口回到聊天页面的状态
-     */
-    public static final int COME_BACK_FROM_SERVICE = 3;
-    /**
-     * 异常状态
+     * 异常状态，主要给自己用，如果有地方调用本页面，又没有传状态值是这个默认状态
      */
     private static final int EXCEPTION_STATE = -1;
     /**
@@ -148,7 +151,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
      */
     private static final int REQUEST_WINDOW_PERMISSION = 100;
     /**
-     * 表示当前
+     * 表示当前布局状态
      */
     private int layoutState = -1;
     /**
