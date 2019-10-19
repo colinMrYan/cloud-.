@@ -1794,7 +1794,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             msgContentRegularFile.setName(volumeFile.getName());
             msgContentRegularFile.setSize(volumeFile.getSize());
             msgContentRegularFile.setMedia(newPath);
-            Message fakeMessage = CommunicationUtils.combineTransmitRegularFileMessage(cid, newPath, msgContentRegularFile);
+            Message fakeMessage = CommunicationUtils.combineTransmitRegularFileMessage(cid, "", msgContentRegularFile);
             addLocalMessage(fakeMessage, Message.MESSAGE_SEND_ING);
             MessageSendManager.getInstance().sendMessage(fakeMessage);
         }
