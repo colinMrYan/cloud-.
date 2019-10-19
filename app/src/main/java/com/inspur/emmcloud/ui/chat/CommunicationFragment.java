@@ -13,7 +13,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -74,7 +73,6 @@ import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.CheckingNetStateUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationGroupIconUtils;
-import com.inspur.emmcloud.util.privates.CustomProtocol;
 import com.inspur.emmcloud.util.privates.MessageSendManager;
 import com.inspur.emmcloud.util.privates.ScanQrCodeUtils;
 import com.inspur.emmcloud.util.privates.SuspensionWindowManagerUtils;
@@ -862,40 +860,41 @@ public class CommunicationFragment extends BaseFragment {
     //接收到websocket发过来的消息，拨打音视频电话，被呼叫触发
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveVoiceOrVideoCall(final GetVoiceAndVideoResult getVoiceAndVideoResult) {
-        final CustomProtocol customProtocol = new CustomProtocol(getVoiceAndVideoResult.getContextParamsSchema());
-        //接收到消息后告知服务端
-        WSAPIService.getInstance().sendReceiveStartVoiceAndVideoCallMessageSuccess(getVoiceAndVideoResult.getTracer());
-
-        //判断如果在通话中就不再接听新的来电
-        if (VoiceCommunicationUtils.getInstance().getCommunicationState() != ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_ING) {
-            if (customProtocol.getProtocol().equals("ecc-cloudplus-cmd") && !StringUtils.isBlank(customProtocol.getParamMap().get("cmd")) &&
-                    customProtocol.getParamMap().get("cmd").equals("invite")) {
-                startVoiceOrVideoCall(getVoiceAndVideoResult.getContextParamsRoom(), getVoiceAndVideoResult.getContextParamsType(), getVoiceAndVideoResult.getChannel());
-            }
-        } else {
-            if (SuspensionWindowManagerUtils.getInstance().isShowing()) {
-                if (customProtocol.getProtocol().equals("ecc-cloudplus-cmd") && !StringUtils.isBlank(customProtocol.getParamMap().get("cmd"))) {
-                    if (customProtocol.getParamMap().get("cmd").equals("refuse")) {
-                        changeUserConnectStateByUid(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_REFUSE, customProtocol.getParamMap().get("uid"));
-                        checkCommunicationFinish();
-                        VoiceCommunicationUtils.getInstance().setLayoutState(ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_OVER);
-                        Log.d("zhang", "COMMUNICATION_STATE_OVER: 555555 ");
-                    } else if (customProtocol.getParamMap().get("cmd").equals("destroy")) {
-                        VoiceCommunicationUtils.getInstance().destroy();
-                        SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
-                        Log.d("zhang", "COMMUNICATION_STATE_OVER: 66666666 ");
-                        VoiceCommunicationUtils.getInstance().setLayoutState(ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_OVER);
-                    }
-                    return;
-                }
-
-            }
-            //正在通话中  三者打进电话 发拒绝消息
-            String agoraChannelId = customProtocol.getParamMap().get("roomid");
-            String channelId = customProtocol.getParamMap().get("channelid");
-            String fromUid = customProtocol.getParamMap().get("uid");
-            VoiceCommunicationUtils.getInstance().getVoiceCommunicationChannelInfoAndSendRefuseCommand(channelId, agoraChannelId, fromUid);
-        }
+        //屏蔽语音通话
+//        final CustomProtocol customProtocol = new CustomProtocol(getVoiceAndVideoResult.getContextParamsSchema());
+//        //接收到消息后告知服务端
+//        WSAPIService.getInstance().sendReceiveStartVoiceAndVideoCallMessageSuccess(getVoiceAndVideoResult.getTracer());
+//
+//        //判断如果在通话中就不再接听新的来电
+//        if (VoiceCommunicationUtils.getInstance().getCommunicationState() != ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_ING) {
+//            if (customProtocol.getProtocol().equals("ecc-cloudplus-cmd") && !StringUtils.isBlank(customProtocol.getParamMap().get("cmd")) &&
+//                    customProtocol.getParamMap().get("cmd").equals("invite")) {
+//                startVoiceOrVideoCall(getVoiceAndVideoResult.getContextParamsRoom(), getVoiceAndVideoResult.getContextParamsType(), getVoiceAndVideoResult.getChannel());
+//            }
+//        } else {
+//            if (SuspensionWindowManagerUtils.getInstance().isShowing()) {
+//                if (customProtocol.getProtocol().equals("ecc-cloudplus-cmd") && !StringUtils.isBlank(customProtocol.getParamMap().get("cmd"))) {
+//                    if (customProtocol.getParamMap().get("cmd").equals("refuse")) {
+//                        changeUserConnectStateByUid(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_REFUSE, customProtocol.getParamMap().get("uid"));
+//                        checkCommunicationFinish();
+//                        VoiceCommunicationUtils.getInstance().setLayoutState(ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_OVER);
+//                        Log.d("zhang", "COMMUNICATION_STATE_OVER: 555555 ");
+//                    } else if (customProtocol.getParamMap().get("cmd").equals("destroy")) {
+//                        VoiceCommunicationUtils.getInstance().destroy();
+//                        SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
+//                        Log.d("zhang", "COMMUNICATION_STATE_OVER: 66666666 ");
+//                        VoiceCommunicationUtils.getInstance().setLayoutState(ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_OVER);
+//                    }
+//                    return;
+//                }
+//
+//            }
+//            //正在通话中  三者打进电话 发拒绝消息
+//            String agoraChannelId = customProtocol.getParamMap().get("roomid");
+//            String channelId = customProtocol.getParamMap().get("channelid");
+//            String fromUid = customProtocol.getParamMap().get("uid");
+//            VoiceCommunicationUtils.getInstance().getVoiceCommunicationChannelInfoAndSendRefuseCommand(channelId, agoraChannelId, fromUid);
+//        }
     }
 
 
