@@ -11,7 +11,9 @@ package com.inspur.emmcloud.basemodule.config;
 import android.content.Context;
 import android.os.Environment;
 
+import com.inspur.emmcloud.basemodule.api.BaseModuleApiUri;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -49,10 +51,12 @@ public class MyAppConfig {
     public static final int UPLOAD_ORIGIN_IMG_DEFAULT_SIZE = 1280;
     public static final int UPLOAD_THUMBNAIL_IMG_MAX_SIZE = 600;
     public static final int VOLUME_MAX_FILE_NAME_LENGTH = 40;
-    public static final int WEBSOCKET_REQUEST_TIMEOUT = 16;
+    public static final int WEBSOCKET_REQUEST_TIMEOUT_COMMON = 16;
+    public static final int WEBSOCKET_REQUEST_TIMEOUT_SEND_MESSAGE = 600;
     private static final String LOCAL_DOWNLOAD_PATH = Environment
             .getExternalStorageDirectory() + "/IMP-Cloud/download/";
     public static int NETWORK_MOBILE_MAX_SIZE_ALERT = 1024 * 1024 * 50;
+    private static Map<String, String> apiRequestRecordMap = new HashMap<>();
 
 
     public static Map<String, String> getLocalLanguageMap() {
@@ -135,5 +139,25 @@ public class MyAppConfig {
 
     public static String getChannelDrafsPreKey(String cid) {
         return "drafts" + cid;
+    }
+
+    public static void initAPIRequestRecordMap() {
+        apiRequestRecordMap.clear();
+        String loginUrl = WebServiceRouterManager.getInstance().getIDMUrl() + "oauth2.0/token";
+        String profileUrl = WebServiceRouterManager.getInstance().getIDMUrl() + "oauth2.0/profile";
+        String checkConfigUrl = WebServiceRouterManager.getInstance().getClusterEmm() + "api/sys/v6.0/config/Check";
+        String registerDeviceUrl = BaseModuleApiUri.getRegisterPushTokenUrl();
+        String getChannelUrl = WebServiceRouterManager.getInstance().getClusterChat() + "/api/v1/channel";
+        String getUserAppUrl = WebServiceRouterManager.getInstance().getClusterEmm() + "api/mam/v3.1/imp_app/userApps";
+        apiRequestRecordMap.put(loginUrl, "Login");
+        apiRequestRecordMap.put(profileUrl, "Profile");
+        apiRequestRecordMap.put(checkConfigUrl, "CheckConfig");
+        apiRequestRecordMap.put(registerDeviceUrl, "RegisterDevice");
+        apiRequestRecordMap.put(getChannelUrl, "Getchannel");
+        apiRequestRecordMap.put(getUserAppUrl, "GetUserApp");
+    }
+
+    public static Map<String, String> getApiRequestRecordMap() {
+        return apiRequestRecordMap;
     }
 }

@@ -27,6 +27,7 @@ import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
 import com.inspur.emmcloud.baselib.widget.ScrollViewWithListView;
 import com.inspur.emmcloud.basemodule.bean.DownloadFileCategory;
+import com.inspur.emmcloud.basemodule.bean.EventMessage;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
@@ -39,11 +40,11 @@ import com.inspur.emmcloud.bean.chat.GetMessageCommentResult;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentMediaImage;
 import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
-import com.inspur.emmcloud.bean.system.EventMessage;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
+import com.inspur.emmcloud.util.privates.MessageSendManager;
 import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
@@ -352,8 +353,6 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
      * 发出评论
      */
     private void sendComment(String text, Map<String, String> mentionsMap) {
-
-//        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
         Message message = CommunicationUtils.combinLocalCommentTextPlainMessage(cid, mid, text, mentionsMap);
         handleUnSendMessage(message, Message.MESSAGE_SEND_ING);
         commentList.add(message);
@@ -370,8 +369,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
             }
         });
         InputMethodUtils.hide(ChannelMessageDetailActivity.this);
-        WSAPIService.getInstance().sendChatCommentTextPlainMsg(message);
-//        }
+        MessageSendManager.getInstance().sendMessage(message);
     }
 
     /**

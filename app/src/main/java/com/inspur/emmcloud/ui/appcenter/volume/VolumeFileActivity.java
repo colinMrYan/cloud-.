@@ -26,21 +26,17 @@ import com.inspur.emmcloud.adapter.VolumeFileAdapter;
 import com.inspur.emmcloud.adapter.VolumeFileFilterPopGridAdapter;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
-import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
-import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
-import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
-import com.inspur.emmcloud.basemodule.util.compressor.Compressor;
 import com.inspur.emmcloud.basemodule.util.imagepicker.ImagePicker;
 import com.inspur.emmcloud.basemodule.util.imagepicker.bean.ImageItem;
-import com.inspur.emmcloud.basemodule.util.imagepicker.ui.ImageGridActivity;
 import com.inspur.emmcloud.basemodule.util.mycamera.MyCameraActivity;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFileUpload;
@@ -55,8 +51,6 @@ import com.inspur.emmcloud.util.privates.VolumeFileUploadManager;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.io.Serializable;
@@ -466,7 +460,6 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_OPEN_FILE_BROWSER) {  //文件浏览器选择文件返回
                 if (data.hasExtra("pathList")) {
@@ -482,77 +475,34 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
             } else if (requestCode == REQUEST_OPEN_CEMERA //拍照返回
                     && NetUtils.isNetworkConnected(getApplicationContext())) {
                 String imgPath = data.getExtras().getString(MyCameraActivity.OUT_FILE_PATH);
-                try {
-                    File file = new Compressor(VolumeFileActivity.this).setMaxHeight(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setMaxWidth(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
-                            .compressToFile(new File(imgPath));
-                    imgPath = file.getAbsolutePath();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
                 uploadFile(imgPath);
             } else if (requestCode == REQUEST_SHOW_FILE_FILTER) {  //移动文件
                 getVolumeFileList(false);
-            }
-        } else if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {  // 图库选择图片返回
-            if (data != null && requestCode == REQUEST_OPEN_GALLERY) {
-                Boolean originalPicture = data.getBooleanExtra(ImageGridActivity.EXTRA_ORIGINAL_PICTURE, false);
-                ArrayList<ImageItem> imageItemList = (ArrayList<ImageItem>) data
-                        .getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
-                for (int i = 0; i < imageItemList.size(); i++) {
-                    String imgPath = imageItemList.get(i).path;
-                    if (!originalPicture) {
-                        try {
-                            File file = new Compressor(VolumeFileActivity.this).setMaxHeight(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setMaxWidth(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
-                                    .compressToFile(new File(imgPath));
-                            imgPath = file.getAbsolutePath();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    uploadFile(imgPath);
-                }
-            }
-        } else if (requestCode == SHARE_IMAGE_OR_FILES) {
-            // shareToVolumeFile
-            String result = data.getStringExtra("searchResult");
-            try {
-                String userOrChannelId = "";
-                boolean isGroup = false;
-                JSONObject jsonObject = new JSONObject(result);
-                if (jsonObject.has("people")) {
-                    JSONArray peopleArray = jsonObject.getJSONArray("people");
-                    if (peopleArray.length() > 0) {
-                        JSONObject peopleObj = peopleArray.getJSONObject(0);
-                        userOrChannelId = peopleObj.getString("pid");
-                        isGroup = false;
-                    }
-                }
-
-                if (jsonObject.has("channelGroup")) {
-                    JSONArray channelGroupArray = jsonObject
-                            .getJSONArray("channelGroup");
-                    if (channelGroupArray.length() > 0) {
-                        JSONObject cidObj = channelGroupArray.getJSONObject(0);
-                        userOrChannelId = cidObj.getString("cid");
-                        isGroup = true;
-                    }
-                }
-                if (StringUtils.isBlank(userOrChannelId)) {
-                    ToastUtils.show(MyApplication.getInstance(), getString(R.string.baselib_share_fail));
-                } else {
+            } else if (requestCode == SHARE_IMAGE_OR_FILES) {
+                SearchModel searchModel = (SearchModel) data.getSerializableExtra("searchModel");
+                if (searchModel != null) {
+                    String userOrChannelId = searchModel.getId();
+                    boolean isGroup = searchModel.getType().equals(SearchModel.TYPE_GROUP);
                     if (isGroup) {
                         startChannelActivity(userOrChannelId);
                     } else {
                         createDirectChannel(userOrChannelId);
                     }
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                ToastUtils.show(MyApplication.getInstance(), getString(R.string.baselib_share_fail));
+            }
+        } else if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {  // 图库选择图片返回
+            if (data != null && requestCode == REQUEST_OPEN_GALLERY) {
+                ArrayList<ImageItem> imageItemList = (ArrayList<ImageItem>) data
+                        .getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
+                for (int i = 0; i < imageItemList.size(); i++) {
+                    String imgPath = imageItemList.get(i).path;
+                    uploadFile(imgPath);
+                }
             }
         }
-
-    }
+        /**继续执行父类的OnActivityResult**/
+        super.onActivityResult(requestCode, resultCode, data);
+        }
 
     /**
      * 打开channel
@@ -631,7 +581,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         //VolumeFile mockVolumeFile = getMockVolumeFileData(file);
         //VolumeFileUploadManager.getInstance().uploadFile(mockVolumeFile, filePath, currentDirAbsolutePath);
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-            VolumeFile mockVolumeFile = getMockVolumeFileData(file);
+            VolumeFile mockVolumeFile = VolumeFile.getMockVolumeFile(file, volume.getId());
             VolumeFileUploadManager.getInstance().uploadFile(mockVolumeFile, filePath, currentDirAbsolutePath);
             volumeFileList.add(0, mockVolumeFile);
             initDataBlankLayoutStatus();
@@ -670,26 +620,6 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         }
     }
 
-
-    /**
-     * 生成一个用于上传展示的数据
-     *
-     * @param file
-     * @return
-     */
-    private VolumeFile getMockVolumeFileData(File file) {
-        long time = System.currentTimeMillis();
-        VolumeFile volumeFile = new VolumeFile();
-        volumeFile.setType(VolumeFile.FILE_TYPE_REGULAR);
-        volumeFile.setId(time + "");
-        volumeFile.setCreationDate(time);
-        volumeFile.setName(file.getName());
-        volumeFile.setStatus(VolumeFile.STATUS_UPLOADIND);
-        volumeFile.setVolume(volume.getId());
-        volumeFile.setFormat(FileUtils.getMimeType(file.getName()));
-        volumeFile.setLocalFilePath(file.getAbsolutePath());
-        return volumeFile;
-    }
 
     @Override
     public void onBackPressed() {

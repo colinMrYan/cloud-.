@@ -2,7 +2,6 @@ package com.inspur.emmcloud.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +11,6 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
@@ -53,11 +51,10 @@ public class VoiceCommunicationMemberAdapter extends RecyclerView.Adapter<VoiceC
 
     @Override
     public void onBindViewHolder(VoiceCommunicationHolder holder, int position) {
-        Log.d("zhang", "onBindViewHolder: ");
         setUserHeadImgSize(holder.headImg, index);
         //头像源数据修改为本地，注释掉的是从接口中读取的url
-//        ImageDisplayUtils.getInstance().displayImage(holder.headImg, voiceCommunicationUserInfoBeanList.get(position).getHeadImageUrl(), R.drawable.icon_person_default);
-        ImageDisplayUtils.getInstance().displayImage(holder.headImg, APIUri.getUserIconUrl(MyApplication.getInstance(), voiceCommunicationUserInfoBeanList.get(position).getUserId()), R.drawable.icon_person_default);
+        ImageDisplayUtils.getInstance().displayImage(holder.headImg, voiceCommunicationUserInfoBeanList.get(position).getHeadImageUrl(), R.drawable.icon_person_default);
+//        ImageDisplayUtils.getInstance().displayImage(holder.headImg, APIUri.getUserIconUrl(MyApplication.getInstance(), voiceCommunicationUserInfoBeanList.get(position).getUserId()), R.drawable.icon_person_default);
         holder.nameTv.setText(voiceCommunicationUserInfoBeanList.get(position).getUserName());
         //音量控制逻辑
         int volume = voiceCommunicationUserInfoBeanList.get(position).getVolume();

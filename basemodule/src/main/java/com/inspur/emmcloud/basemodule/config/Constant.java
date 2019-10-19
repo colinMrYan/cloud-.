@@ -12,6 +12,7 @@ public class Constant {
     public static final String CONCIG_POS_REPORT_TIME_INTERVAL_ = "PosReportTimeInterval";
     public static final String CONCIG_SHOW_FEEDBACK = "IsShowFeedback";
     public static final String CONCIG_SHOW_CUSTOMER_SERVICE = "IsShowCustomerService";
+    public static final String CONCIG_FORCE_PULL_MESSAGE = "force_pull_message";
     public static final String CONCIG_CLOUD_PLUS_UUID_FILE = Environment.getExternalStorageDirectory() + "/gsp.uuid";
 
 
@@ -43,6 +44,7 @@ public class Constant {
     public static final String PREF_BADGE_NUM_COMMUNICATION = "badge_num_communication";
     public static final String PREF_BADGE_NUM_APPSTORE = "badge_num_appstore";
     public static final String PREF_BADGE_NUM_SNS = "badge_num_sns";
+    public static final String PREF_DESKTOP_BADGE = "push_desktop_badge";
     public static final String PREF_MNM_DOUBLE_VALIADATION = "mdm_double_validation";//是否强制开启手势密码
 
     public static final String PREF_MDM_STATUS_PASS = "isMDMStatusPass";//是否设备管理通过
@@ -89,12 +91,14 @@ public class Constant {
     public static final String DEFAULT_CLUSTER_ID = "https://id.inspuronline.com/";//ID默认
 
     public static final String EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE = "tag_reveive_single_ws_message";
+    public static final String EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE_CONVERSATION = "tag_reveive_single_ws_message_conversation";
     public static final String EVENTBUS_TAG_GET_OFFLINE_WS_MESSAGE = "tag_get_offline_ws_message";
     public static final String EVENTBUS_TAG_GET_CHANNEL_RECENT_MESSAGE = "tag_get_channel_recent_message";
     public static final String EVENTBUS_TAG_GET_MESSAGE_BY_ID = "tag_get_message_by_id";
     public static final String EVENTBUS_TAG_GET_MESSAGE_COMMENT = "tag_get_message_comment";
     public static final String EVENTBUS_TAG_GET_HISTORY_MESSAGE = "tag_get_history_message";
     public static final String EVENTBUS_TAG_GET_NEW_MESSAGE = "tag_get_new_message";
+    public static final String EVENTBUS_TAG_REFRESH_CONVERSATION = "tag_refresh_conversation";
     public static final String EVENTBUS_TAG_GET_MESSAGE_COMMENT_COUNT = "tag_get_message_comment_count";
     public static final String EVENTBUS_TAG_VIDEO_CALL = "client.video.call";
     public static final String EVENTBUS_TAG_ON_PHOTO_TAB = "tag_on_photo_tab";
@@ -253,5 +257,9 @@ public class Constant {
     //分享内容
     public static final String SHARE_CONTENT = "share_content";
     public static final String WECHAT_APPID = "wx4eb8727ea9c26495";
+
+    public static final String VIDEO_CALL_INVITE = "server.chat.video-call.invite";
+    public static final String VIDEO_CALL_REFUSE = "server.chat.video-call.refuse";
+    public static final String VIDEO_CALL_HANG_UP = "server.chat.video-call.hang-up";
 
 }

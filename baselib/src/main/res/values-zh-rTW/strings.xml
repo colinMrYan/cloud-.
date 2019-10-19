@@ -169,13 +169,17 @@
     <string name="tax_ticket_info"> 增值稅專用發票開票資訊</string>
     <string name="channel_group_info">群详情</string>
     <string name="channel_group_name">群名稱</string>
-    <string name="channel_group_image">群圖片</string>
+    <string name="channel_group_image">群聊圖片</string>
     <string name="channel_group_file">群文件</string>
     <string name="channel_group_members_name">群名稱</string>
+    <string name="channel_group_qrcode">群二維碼</string>
     <string name="channel_set_top"> 置頂</string>
     <string name="message_without_interruption">消息免打擾</string>
     <string name="login_hint_text">用戶名/郵箱/手機號</string>
+    <string name="channel_set_sticky">置頂聊天</string>
     <string name="modify_group_name">群名片</string>
+    <string name="channel_single_chat_files">文件</string>
+    <string name="channel_search_more_group_members">查看更多群成員</string>
     <string name="choose_common_office">常用辦公地點</string>
     <string name="please_click_choosing_time">請點擊選擇時間</string>
     <string name="meeting_room">會議室</string>
@@ -269,6 +273,8 @@
     <string name="top"> 置頂</string>
     <string name="chanel_cancel_top"> 取消置頂</string>
     <string name="creat_group">創建群組</string>
+    <string name="chat_group_info_detail_title">聊天詳情(%d)</string>
+    <string name="chat_single_info_detail_title">聊天詳情</string>
     <string name="creat_group_fail">群組創建失敗</string>
     <string name="all_group_member">群成員(%1$d)</string>
     <string name="add_group_member">添加群成員 </string>
@@ -307,6 +313,7 @@
     <string name="dismiss_group">解散群組</string>
     <string name="quit_group_warning_text">確定要退出群组？</string>
     <string name="dismiss_group_warning_text">解散群組後，將會删除群內所有的聊天記錄和檔案等資訊</string>
+    <string name="quit_dismiss_group">刪除並退出</string>
     <string name="chat_stick_on_top">置頂</string>
     <string name="chat_remove">移除</string>
     <string name="chat_remove_from_top">取消置頂</string>
@@ -320,8 +327,8 @@
     <string name="chat_long_click_copy_text">複製文字</string>
     <string name="communication_search">搜索</string>
     <string name="chat_full_image">查看原圖</string>
-    <string name="chat_transmit_message_success">已轉發</string>
-    <string name="chat_transmit_message_fail">轉發失敗</string>
+    <string name="chat_message_send_success">已發送</string>
+    <string name="chat_message_send_fail">發送失敗</string>
     <string name="chat_long_click_reply">回复</string>
     <string name="chat_group_least_two_person">群聊至少需要兩人及以上</string>
     <string name="chat_send_email_too_many_person_tip">收件人太多會影響郵件發送速度，確定發送？</string>
@@ -334,6 +341,10 @@
     <string name="chat_contact_more_select">多選</string>
     <string name="chat_contact_related_message">%1$d條相關的聊天記錄</string>
     <string name="chat_search_related_messages">%1$s的記錄</string>
+    <string name="chat_group_member_size">%1$s(%2$d)</string>
+    <string name="chat_group_qr_code_share">分享二維碼</string>
+    <string name="chat_group_welcome_join_group">歡迎進入%1$s群</string>
+    <string name="chat_conversation_create_error">創建群組失敗</string>
     <!-- 會議卡片 -->
     <string name="meeting_has_confirmed">已確認</string>
     <string name="meeting_has_refused">已拒絕</string>
@@ -618,6 +629,7 @@
     <string name="volume_file_transfer_upload_list">上傳列表</string>
     <string name="rename">重命名</string>
     <string name="move_to">移動到</string>
+    <string name="clouddrive_internal_sharing">内部分享</string>
     <string name="copy">複製</string>
     <string name="video">視頻</string>
     <string name="audio">音訊</string>
@@ -1261,6 +1273,7 @@
     <string name="share_no_more_than_five">不能上傳多於5個文件</string>
     <string name="share_no_share_way">沒有能够分享的管道</string>
     <string name="share_to_channel">發送到頻道</string>
+    <string name="share_to_chat">發送到聊天</string>
     <string name="share_upload_volume">上傳到雲盤</string>
     <string name="share_no_suffix">不支持分享無后綴名的檔案</string>
     <string name="share_has_not_exist_file">您分享的檔案中有不存在的檔案，請檢查</string>
@@ -1285,6 +1298,7 @@
     <string name="voice_communication_choice_members">選擇成員</string>
     <string name="voice_communication_waitting_answer">等待接聽</string>
     <string name="voice_communicaiton_watting_talking">通話中</string>
+    <string name="voice_communication_voice_busy_tip">正在語音通話，請稍後再試</string>
     <string name="voice_communication_quality">當前通話品質不佳</string>
     <string name="voice_communication_support_nine_members">雲+現時支持九人語音</string>
 
@@ -1307,6 +1321,10 @@
     <string name="voice_input_hint_speak_now">請説話...</string>
     <string name="voice_input_tip_speak">按下説話</string>
     <string name="voice_input_clear">清空</string>
+    <string name="communication_has_leave">已掛斷</string>
+    <string name="voice_communication_notification_group_title">語音通話</string>
+    <string name="voice_communication_notification_group_content">點擊恢復</string>
+    <string name="voice_communication_notification_content">語音通話中，輕觸以繼續</string>
 
     <string name="notification_switch">新消息通知</string>
 

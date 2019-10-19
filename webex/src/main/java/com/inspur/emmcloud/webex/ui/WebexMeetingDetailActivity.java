@@ -25,7 +25,6 @@ import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.baselib.widget.popmenu.DropPopMenu;
 import com.inspur.emmcloud.baselib.widget.popmenu.MenuItem;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
-import com.inspur.emmcloud.basemodule.bean.EventMessage;
 import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
@@ -52,10 +51,6 @@ import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.shareboard.SnsPlatform;
 import com.umeng.socialize.utils.ShareBoardlistener;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
@@ -100,7 +95,6 @@ public class WebexMeetingDetailActivity extends BaseActivity {
     private boolean isOwner = false;
     private LoadingDialog loadingDialog;
     private WebexAPIService apiService;
-    private String fakeMessageId;
     private String shareContent;
 
     @Override
@@ -117,7 +111,6 @@ public class WebexMeetingDetailActivity extends BaseActivity {
         apiService.setAPIInterface(new WebService());
         showWebexMeetingDetial();
         getWebexMeeting();
-        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -378,25 +371,6 @@ public class WebexMeetingDetailActivity extends BaseActivity {
         UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        EventBus.getDefault().unregister(this);
-    }
-
-    //接收到websocket发过来的消息
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceiveWSMessage(EventMessage eventMessage) {
-        if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE)) {
-            if (fakeMessageId != null && String.valueOf(eventMessage.getId()).equals(fakeMessageId)) {
-                if (eventMessage.getStatus() == 200) {
-                    ToastUtils.show(WebexMeetingDetailActivity.this, R.string.baselib_share_success);
-                } else {
-                    ToastUtils.show(WebexMeetingDetailActivity.this, R.string.baselib_share_fail);
-                }
-            }
-        }
-    }
 
     private void getWebexMeeting() {
         if (NetUtils.isNetworkConnected(BaseApplication.getInstance())) {

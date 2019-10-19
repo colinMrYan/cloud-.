@@ -307,7 +307,7 @@ public class ChannelV0Activity extends BaseActivity {
                 //因为channel v0有onVoiceCommucaiton回调写了如下代码，以后永久屏蔽
 //                List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList = new ArrayList<>();
 //                List<String> memberList = new ArrayList<>();
-//                memberList.add(DirectChannelUtils.getDirctChannelOtherUid(MyApplication.getInstance(), channel.getTitle()));
+//                memberList.add(DirectChannelUtils.getDirectChannelOtherUid(MyApplication.getInstance(), channel.getTitle()));
 //                memberList.add(MyApplication.getInstance().getUid());
 //                List<ContactUser> contactUserList = ContactUserCacheUtils.getContactUserListById(memberList);
 //                for (int i = 0; i < contactUserList.size(); i++) {
