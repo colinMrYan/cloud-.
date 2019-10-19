@@ -72,10 +72,10 @@ public class MiPushReceiver extends PushMessageReceiver {
         LogUtils.debug(TAG,"onReceivePassThroughMessage is called. " + message.toString());
         if (!TextUtils.isEmpty(message.getTopic())) {
             mTopic = message.getTopic();
-            ECMTransparentUtils.handleTransparentMsg(context, mTopic);
         } else if (!TextUtils.isEmpty(message.getAlias())) {
             mAlias = message.getAlias();
         }
+        ECMTransparentUtils.handleTransparentMsg(context, message.getContent());
     }
 
     @Override
