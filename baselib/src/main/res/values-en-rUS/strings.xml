@@ -167,6 +167,7 @@
     <string name="channel_group_members_name">Group Name</string>
     <string name="channel_set_top">Sticky on Top</string>
     <string name="message_without_interruption">Mute Notifications</string>
+    <string name="channel_single_chat_images">Images</string>
     <string name="channel_single_chat_files">Files</string>
     <string name="login_hint_text">Name/E-mail/Phone</string>
     <string name="modify_group_name">Group Contact Card</string>
