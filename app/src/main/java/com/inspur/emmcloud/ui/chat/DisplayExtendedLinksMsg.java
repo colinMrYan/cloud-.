@@ -38,13 +38,13 @@ public class DisplayExtendedLinksMsg {
         MsgContentExtendedLinks msgContentExtendedLinks = message.getMsgContentExtendedLinks();
         String title = msgContentExtendedLinks.getTitle();
         String subTitle = msgContentExtendedLinks.getSubtitle();
+        subTitle = StringUtils.isBlank(subTitle) ? title : subTitle;
         String poster = msgContentExtendedLinks.getPoster();
         TextView linkTitleText = (TextView) cardContentView
                 .findViewById(R.id.tv_news_card_title);
         TextView linkDigestText = (TextView) cardContentView
                 .findViewById(R.id.tv_news_card_digest);
         linkTitleText.setText(StringUtils.isBlank(title) ? context.getString(R.string.share_default_title) : title);
-
         ImageView linkImg = (ImageView) cardContentView
                 .findViewById(R.id.img_news_card);
         if (!StringUtils.isBlank(poster)) {
@@ -52,12 +52,7 @@ public class DisplayExtendedLinksMsg {
         } else {
             linkImg.setVisibility(View.GONE);
         }
-
-        if (!StringUtils.isBlank(subTitle)) {
-            linkDigestText.setText(subTitle);
-        } else {
-            linkDigestText.setVisibility(View.GONE);
-        }
+        linkDigestText.setText(subTitle);
         return cardContentView;
     }
 
