@@ -66,7 +66,7 @@ import butterknife.ButterKnife;
  * Created by libaochao on 2019/8/9.
  */
 
-public class CommunicationSearchGroupContactActivity extends BaseActivity implements View.OnClickListener, ListView.OnItemClickListener {
+public class SearchActivity extends BaseActivity implements View.OnClickListener, ListView.OnItemClickListener {
 
     public static final String SEARCH_ALL = "search_all";
     public static final String SEARCH_CONTACT = "search_contact";
@@ -126,7 +126,7 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
         public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
             // TODO Auto-generated method stub
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                InputMethodUtils.hide(CommunicationSearchGroupContactActivity.this);
+                InputMethodUtils.hide(SearchActivity.this);
                 return true;
             }
             return false;
@@ -208,6 +208,7 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
                         groupAdapter.notifyDataSetChanged();
                         contactAdapter.notifyDataSetChanged();
                         conversationFromChatContentAdapter.notifyDataSetChanged();
+                        privateChatAdapter.notifyDataSetChanged();
                         break;
                     case CLEAR_DATA:
                         break;
@@ -274,7 +275,7 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
                 IntentUtils.startActivity(this, UserInfoActivity.class, bundle);
                 break;
             case R.id.lv_search_contact_from_chat:
-                Intent intent = new Intent(CommunicationSearchGroupContactActivity.this, CommunicationSearchMessagesActivity.class);
+                Intent intent = new Intent(SearchActivity.this, CommunicationSearchMessagesActivity.class);
                 intent.putExtra(SEARCH_ALL_FROM_CHAT, conversationFromChatContentList.get(i));
                 intent.putExtra(SEARCH_CONTENT, searchText);
                 startActivity(intent);
@@ -348,7 +349,7 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
     private void startChannelActivity(String cid) {
         Bundle bundle = new Bundle();
         bundle.putString("cid", cid);
-        IntentUtils.startActivity(CommunicationSearchGroupContactActivity.this, WebServiceRouterManager.getInstance().isV0VersionChat() ?
+        IntentUtils.startActivity(SearchActivity.this, WebServiceRouterManager.getInstance().isV0VersionChat() ?
                 ChannelV0Activity.class : ConversationActivity.class, bundle, true);
     }
 
@@ -359,7 +360,7 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
      */
     private void createDirectChannel(String uid) {
         if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
-            new ConversationCreateUtils().createDirectConversation(CommunicationSearchGroupContactActivity.this, uid,
+            new ConversationCreateUtils().createDirectConversation(SearchActivity.this, uid,
                     new ConversationCreateUtils.OnCreateDirectConversationListener() {
                         @Override
                         public void createDirectConversationSuccess(Conversation conversation) {
@@ -372,7 +373,7 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
                         }
                     });
         } else {
-            new ChatCreateUtils().createDirectChannel(CommunicationSearchGroupContactActivity.this, uid,
+            new ChatCreateUtils().createDirectChannel(SearchActivity.this, uid,
                     new ChatCreateUtils.OnCreateDirectChannelListener() {
                         @Override
                         public void createDirectChannelSuccess(GetCreateSingleChannelResult getCreateSingleChannelResult) {
@@ -631,7 +632,7 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
         public View getView(int i, View view, ViewGroup viewGroup) {
             SearchHolder searchHolder = new SearchHolder();
             if (view == null) {
-                view = LayoutInflater.from(CommunicationSearchGroupContactActivity.this).inflate(R.layout.communication_search_contact_item, null);
+                view = LayoutInflater.from(SearchActivity.this).inflate(R.layout.communication_search_contact_item, null);
                 searchHolder.headImageView = view.findViewById(R.id.iv_contact_head);
                 searchHolder.nameTextView = view.findViewById(R.id.tv_contact_name);
                 searchHolder.detailTextView = view.findViewById(R.id.tv_contact_detail);
@@ -678,7 +679,7 @@ public class CommunicationSearchGroupContactActivity extends BaseActivity implem
         public View getView(int i, View view, ViewGroup viewGroup) {
             SearchHolder searchHolder = new SearchHolder();
             if (view == null) {
-                view = LayoutInflater.from(CommunicationSearchGroupContactActivity.this).inflate(R.layout.communication_search_contact_item, null);
+                view = LayoutInflater.from(SearchActivity.this).inflate(R.layout.communication_search_contact_item, null);
                 searchHolder.headImageView = view.findViewById(R.id.iv_contact_head);
                 searchHolder.nameTextView = view.findViewById(R.id.tv_contact_name);
                 searchHolder.detailTextView = view.findViewById(R.id.tv_contact_detail);

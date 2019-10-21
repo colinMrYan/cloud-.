@@ -169,7 +169,7 @@ public class CommunicationFragment extends BaseFragment {
                     popupWindow.dismiss();
                     break;
                 case R.id.tv_search_contact:
-                    IntentUtils.startActivity(getActivity(), CommunicationSearchGroupContactActivity.class);
+                    IntentUtils.startActivity(getActivity(), SearchActivity.class);
                     break;
                 default:
                     break;

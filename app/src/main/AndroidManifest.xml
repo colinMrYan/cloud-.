@@ -461,7 +461,7 @@
             android:windowSoftInputMode="adjustResize|stateHidden" />
 
         <activity
-            android:name=".ui.chat.CommunicationSearchGroupContactActivity"
+            android:name=".ui.chat.SearchActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
