@@ -28,7 +28,7 @@ import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
 import com.inspur.emmcloud.bean.chat.Conversation;
-import com.inspur.emmcloud.bean.chat.ConversationFromChatContent;
+import com.inspur.emmcloud.bean.chat.ConversationWithMessageNum;
 import com.inspur.emmcloud.bean.chat.UIConversation;
 import com.inspur.emmcloud.bean.chat.UIMessage;
 import com.inspur.emmcloud.bean.contact.Contact;
@@ -66,7 +66,7 @@ public class CommunicationSearchMessagesActivity extends BaseActivity {
     RelativeLayout channelSubRelativeLayout;
 
     private List<com.inspur.emmcloud.bean.chat.Message> searchMessagesList = new ArrayList<>(); // 群组搜索结果
-    private ConversationFromChatContent conversationFromChatContent;
+    private ConversationWithMessageNum conversationFromChatContent;
     private GroupMessageSearchAdapter groupMessageSearchAdapter;
     private String searchText;
     private TextView.OnEditorActionListener onEditorActionListener = new TextView.OnEditorActionListener() {
@@ -85,8 +85,8 @@ public class CommunicationSearchMessagesActivity extends BaseActivity {
     public void onCreate() {
         ButterKnife.bind(this);
         ImmersionBar.with(this).statusBarColor(R.color.search_contact_header_bg).statusBarDarkFont(true, 0.2f).navigationBarColor(R.color.white).navigationBarDarkIcon(true, 1.0f).init();
-        if (getIntent().hasExtra(SEARCH_ALL_FROM_CHAT)) {                      //直接傳 ConversationFromChatContent
-            conversationFromChatContent = (ConversationFromChatContent) getIntent().getSerializableExtra(SEARCH_ALL_FROM_CHAT);
+        if (getIntent().hasExtra(SEARCH_ALL_FROM_CHAT)) {                      //直接傳 ConversationWithMessageNum
+            conversationFromChatContent = (ConversationWithMessageNum) getIntent().getSerializableExtra(SEARCH_ALL_FROM_CHAT);
             if (conversationFromChatContent.getConversation().getType().equals(Conversation.TYPE_GROUP)) {
                 displayImg(conversationFromChatContent.getConversation().conversation2SearchModel(), searchModelHeadImage);
                 String showData = getString(R.string.chat_search_related_messages, "“" + conversationFromChatContent.getConversation().getName() + "”");
@@ -112,7 +112,7 @@ public class CommunicationSearchMessagesActivity extends BaseActivity {
             channelSubRelativeLayout.setVisibility(View.GONE);
             String cid = getIntent().getStringExtra(ConversationGroupInfoActivity.EXTRA_CID);
             Conversation conversation = ConversationCacheUtils.getConversation(this, cid);
-            conversationFromChatContent = new ConversationFromChatContent(conversation, 0);
+            conversationFromChatContent = new ConversationWithMessageNum(conversation, 0);
 
         }
         groupMessageSearchAdapter = new GroupMessageSearchAdapter(this);
