@@ -350,6 +350,7 @@ public class ConversationCacheUtils {
 
             try {
                 String searchStr = "";
+                String searchStrPYFull = "%" + searchText + "%";
                 for (int i = 0; i < searchText.length(); i++) {
                     if (i < searchText.length() - 1) {
                         searchStr += "%" + searchText.charAt(i);
@@ -358,8 +359,9 @@ public class ConversationCacheUtils {
                     }
                 }
                 conversationList = DbCacheUtils.getDb(context).selector(Conversation.class)
-                        .where("showName", "like", searchStr)
-                        .and(WhereBuilder.b("type", "=", Conversation.TYPE_GROUP)).orderBy("lastUpdate", true).findAll();
+                        .where("type", "=", Conversation.TYPE_GROUP)
+                        .and(WhereBuilder.b("showName", "like", searchStr).or("pyFull", "like", searchStrPYFull))
+                        .orderBy("lastUpdate", true).findAll();
             } catch (Exception e) {
                 // TODO: handle exception
                 e.printStackTrace();
@@ -378,6 +380,7 @@ public class ConversationCacheUtils {
 
             try {
                 String searchStr = "";
+                String searchStrPYFull = "%" + searchText + "%";
                 for (int i = 0; i < searchText.length(); i++) {
                     if (i < searchText.length() - 1) {
                         searchStr += "%" + searchText.charAt(i);
@@ -386,8 +389,9 @@ public class ConversationCacheUtils {
                     }
                 }
                 conversationList = DbCacheUtils.getDb(context).selector(Conversation.class)
-                        .where("showName", "like", searchStr)
-                        .and(WhereBuilder.b("type", "=", Conversation.TYPE_DIRECT)).orderBy("lastUpdate", true).findAll();
+                        .where("type", "=", Conversation.TYPE_DIRECT)
+                        .and(WhereBuilder.b("showName", "like", searchStr).or("pyFull", "like", searchStrPYFull))
+                        .orderBy("lastUpdate", true).findAll();
             } catch (Exception e) {
                 // TODO: handle exception
                 e.printStackTrace();

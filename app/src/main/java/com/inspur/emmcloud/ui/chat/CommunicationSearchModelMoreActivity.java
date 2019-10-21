@@ -34,7 +34,7 @@ import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.Conversation;
-import com.inspur.emmcloud.bean.chat.ConversationFromChatContent;
+import com.inspur.emmcloud.bean.chat.ConversationWithMessageNum;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.chat.UIConversation;
 import com.inspur.emmcloud.bean.contact.Contact;
@@ -92,7 +92,7 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
     private Runnable searchRunnable;
     private List<SearchModel> searchGroupList = new ArrayList<>(); // 群组搜索结果
     private List<Contact> searchContactList = new ArrayList<>(); // 人员搜索结果
-    private List<ConversationFromChatContent> conversationFromChatContentList = new ArrayList<>();//搜索消息
+    private List<ConversationWithMessageNum> conversationFromChatContentList = new ArrayList<>();//搜索消息
     private String searchArea = SEARCH_GROUP;
     private String searchText;
     private Handler handler;
@@ -240,9 +240,9 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
                                 conversationFromChatContentList = oriChannelInfoByKeyword(searchText);
                                 //分享过来  去除系统通知
                                 if (!StringUtils.isBlank(shareContent)) {
-                                    Iterator<ConversationFromChatContent> iterator = conversationFromChatContentList.iterator();
+                                    Iterator<ConversationWithMessageNum> iterator = conversationFromChatContentList.iterator();
                                     while (iterator.hasNext()) {
-                                        ConversationFromChatContent fromChatContent = iterator.next();
+                                        ConversationWithMessageNum fromChatContent = iterator.next();
                                         if (fromChatContent.getConversation().getType().equals(Conversation.TYPE_CAST)) {
                                             iterator.remove();
                                         }
@@ -261,10 +261,10 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
         };
     }
 
-    private List<ConversationFromChatContent> oriChannelInfoByKeyword(String searchData) {
+    private List<ConversationWithMessageNum> oriChannelInfoByKeyword(String searchData) {
         Map<String, Integer> cidNumMap = new HashMap<>();
         List<com.inspur.emmcloud.bean.chat.Message> allMessageListByKeyword = new ArrayList<>();
-        List<ConversationFromChatContent> conversationFromChatContentList = new ArrayList<>();
+        List<ConversationWithMessageNum> conversationFromChatContentList = new ArrayList<>();
         List<String> conversationIdList = new ArrayList<>();
         allMessageListByKeyword = MessageCacheUtil.getMessagesListByKeyword(MyApplication.getInstance(), searchData);
         if (allMessageListByKeyword != null) {
@@ -293,8 +293,8 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
         for (int i = 0; i < conversationList.size(); i++) {
             Conversation tempConversation = conversationList.get(i);
             if (cidNumMap.containsKey(tempConversation.getId())) {
-                ConversationFromChatContent conversationFromChatContent =
-                        new ConversationFromChatContent(tempConversation, cidNumMap.get(tempConversation.getId()));
+                ConversationWithMessageNum conversationFromChatContent =
+                        new ConversationWithMessageNum(tempConversation, cidNumMap.get(tempConversation.getId()));
                 if (tempConversation.getType().equals(Conversation.TYPE_DIRECT)) {
                     conversationFromChatContent.initSingleChatContact();
                 }
@@ -395,7 +395,7 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
 
     private void handleShare(int position) {
         if (searchArea.equals(SEARCH_ALL_FROM_CHAT)) {
-            ConversationFromChatContent conversationFromChatContent = conversationFromChatContentList.get(position);
+            ConversationWithMessageNum conversationFromChatContent = conversationFromChatContentList.get(position);
             final Conversation conversation = conversationFromChatContent.getConversation();
             SearchModel searchModel = conversation.conversation2SearchModel();
             ShareUtil.share(this, searchModel, shareContent);

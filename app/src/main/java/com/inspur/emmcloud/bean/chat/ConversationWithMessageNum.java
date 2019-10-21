@@ -14,12 +14,13 @@ import java.io.Serializable;
  * Created by libaochao on 2019/8/23.
  */
 
-public class ConversationFromChatContent implements Serializable {
+public class ConversationWithMessageNum implements Serializable {
 
     private Conversation conversation = new Conversation();
     private int messageNum = 0;
     private Contact singleChatContactUser;
-    public ConversationFromChatContent(Conversation conversation, int messageNum) {
+
+    public ConversationWithMessageNum(Conversation conversation, int messageNum) {
         this.conversation = conversation;
         this.messageNum = messageNum;
     }

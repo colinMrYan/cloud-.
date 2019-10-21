@@ -12,7 +12,7 @@ import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseMvpActivity;
 import com.inspur.emmcloud.bean.chat.Conversation;
-import com.inspur.emmcloud.ui.chat.CommunicationSearchGroupContactActivity;
+import com.inspur.emmcloud.ui.chat.SearchActivity;
 import com.inspur.emmcloud.ui.chat.mvp.adapter.ChatRecentAdapter;
 import com.inspur.emmcloud.ui.chat.mvp.contract.ConversionSearchContract;
 import com.inspur.emmcloud.ui.chat.mvp.presenter.ConversationSearchPresenter;
@@ -81,7 +81,7 @@ public class ConversationSearchActivity extends BaseMvpActivity<ConversationSear
                 finish();
                 break;
             case R.id.tv_search_contact:
-                Intent intent = new Intent(this, CommunicationSearchGroupContactActivity.class);
+                Intent intent = new Intent(this, SearchActivity.class);
                 intent.putExtra(Constant.SHARE_CONTENT, shareContent);
                 startActivityForResult(intent, REQUEST_CODE_SHARE);
                 break;

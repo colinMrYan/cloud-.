@@ -87,8 +87,8 @@ public class Conversation implements Serializable {
         this.stick = JSONUtils.getBoolean(obj, "stick", false);
         this.hide = false;
         this.action = JSONUtils.getString(obj, "action", "");
-        this.pyFull = PinyinUtils.getPingYin(name);
         this.showName = CommunicationUtils.getConversationTitle(this);
+        this.pyFull = PinyinUtils.getPingYin(showName);
     }
 
     public static List<SearchModel> conversationList2SearchModelList(List<Conversation> conversationList) {
