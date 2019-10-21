@@ -1302,6 +1302,7 @@
     <string name="voice_communication_voice_busy_tip">正在語音通話，請稍後再試</string>
     <string name="voice_communication_quality">當前通話品質不佳</string>
     <string name="voice_communication_support_nine_members">雲+現時支持九人語音</string>
+    <string name="voice_communication_more_than_two">語音通話用戶數不能少於2個。</string>
 
     <string name="error_no_sdcard">沒有SD卡，無法存儲錄音數據</string>
     <string name="error_state_record">正在錄音中，請先停止錄音</string>
