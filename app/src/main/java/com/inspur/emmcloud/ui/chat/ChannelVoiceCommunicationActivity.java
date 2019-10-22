@@ -29,7 +29,6 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
-import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ResolutionUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
@@ -53,6 +52,7 @@ import com.inspur.emmcloud.bean.chat.GetVoiceCommunicationResult;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationAudioVolumeInfo;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
 import com.inspur.emmcloud.bean.system.GetBoolenResult;
+import com.inspur.emmcloud.ui.AppSchemeHandleActivity;
 import com.inspur.emmcloud.util.privates.CustomProtocol;
 import com.inspur.emmcloud.util.privates.MediaPlayerManagerUtils;
 import com.inspur.emmcloud.util.privates.NotifyUtil;
@@ -84,6 +84,7 @@ import io.agora.rtc.video.VideoCanvas;
  * @see SuspensionWindowManagerUtils#goBackVoiceCommunicationActivity()
  * @see NotifyUtil#sendNotifyMsg(Context)
  * @see CommunicationFragment#onReceiveVoiceOrVideoCall(GetVoiceAndVideoResult)
+ * @see AppSchemeHandleActivity#openScheme()
  */
 public class ChannelVoiceCommunicationActivity extends BaseActivity {
 
@@ -293,6 +294,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         EventBus.getDefault().register(this);
         ButterKnife.bind(this);
         voiceCommunicationUtils = VoiceCommunicationUtils.getInstance();
+        voiceCommunicationUtils.initializeAgoraEngine();
         cloudPlusChannelId = getIntent().getStringExtra(ConversationActivity.CLOUD_PLUS_CHANNEL_ID);
         communicationType = getIntent().getStringExtra(VOICE_VIDEO_CALL_TYPE);
         //如果是邀请者能收到从外面传进来的人员列表
@@ -662,7 +664,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
 
         CustomProtocol customProtocol = new CustomProtocol(getVoiceAndVideoResult.getContextParamsSchema());
         String cmd = customProtocol.getParamMap().get("cmd");
-        LogUtils.YfcDebug("收到拒绝消息：" + cmd);
         if (!StringUtils.isBlank(cmd) && getVoiceAndVideoResult.getContextParamsRoom().equals(agoraChannelId)) {
             String uid = customProtocol.getParamMap().get("uid");
             if (cmd.equals("destroy")) {
@@ -682,7 +683,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                     //接听方
                     ToastUtils.show(ContactUserCacheUtils.getUserName(uid) + getString(R.string.meeting_has_refused));
                 }
-                LogUtils.YfcDebug("收到拒绝消息");
                 changeUserConnectStateByUid(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_REFUSE, uid);
                 checkCommunicationFinish();
             }
@@ -734,7 +734,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
 
             @Override
             public void onUserJoined(int uid, int elapsed) {
-                LogUtils.YfcDebug("有新的用户加入");
                 for (int i = 0; i < voiceCommunicationMemberList.size(); i++) {
                     if (voiceCommunicationMemberList.get(i).getAgoraUid() == uid) {
                         voiceCommunicationMemberList.get(i).setConnectState(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_CONNECTED);
@@ -761,7 +760,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
 
             @Override
             public void onJoinChannelSuccess(final String channel, final int uid, int elapsed) {
-                LogUtils.YfcDebug("用户加入成功");
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -826,7 +824,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                                     voiceCommunicationMemberList.get(i).setVolume(0);
                                 }
                             }
-//                            refreshCommunicationMemberAdapter();
+                            refreshCommunicationMemberAdapter();
                         }
                     }
                 });
@@ -894,7 +892,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         if (voiceCommunicationMemberList != null && voiceCommunicationMemberList.size() > 0) {
             for (int i = 0; i < voiceCommunicationMemberList.size(); i++) {
                 if (voiceCommunicationMemberList.get(i).getAgoraUid() == agroaUid) {
-                    LogUtils.YfcDebug("修改状态");
                     voiceCommunicationMemberList.get(i).setConnectState(connectStateConnected);
                     if (connectStateConnected > 1) {
                         voiceCommunicationMemberList.remove(i);
@@ -968,7 +965,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
      * 刷新成员adapter，有人加入，退出，声音变化都通过这个方法来刷新
      */
     private void refreshCommunicationMemberAdapter() {
-        LogUtils.YfcDebug("刷新状态");
         handleVoiceCommunicationMemberList();
         if (voiceCommunicationMemberList != null) {
             if (voiceCommunicationMemberList.size() <= 5) {
@@ -1036,10 +1032,8 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 communicationTimeChronometer.setBase(SystemClock.elapsedRealtime());
                 communicationTimeChronometer.start();
                 voiceCommunicationUtils.setConnectStartTime(System.currentTimeMillis());
-                handsFreeTv.setText(agoraChannelId);
-                LogUtils.YfcDebug("接听电话时成员信息：" + JSONUtils.toJSONString(inviteeInfoBean));
-                LogUtils.YfcDebug("接听通话结果：" + VoiceCommunicationUtils.getInstance().joinChannel(inviteeInfoBean.getToken(),
-                        agoraChannelId, inviteeInfoBean.getUserId(), inviteeInfoBean.getAgoraUid()));
+                voiceCommunicationUtils.joinChannel(inviteeInfoBean.getToken(),
+                        agoraChannelId, inviteeInfoBean.getUserId(), inviteeInfoBean.getAgoraUid());
                 break;
             case R.id.ll_video_hung_up:
             case R.id.img_hung_up:
@@ -1374,14 +1368,11 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         @Override
         public void returnGetVoiceCommunicationResultSuccess(GetVoiceCommunicationResult getVoiceCommunicationResult) {
             agoraChannelId = getVoiceCommunicationResult.getChannelId();
-            handsFreeTv.setText(agoraChannelId);
-            LogUtils.YfcDebug("创建频道时频道id：" + agoraChannelId);
             VoiceCommunicationJoinChannelInfoBean voiceCommunicationJoinChannelInfoBean = getMyCommunicationInfoBean(getVoiceCommunicationResult);
             if (voiceCommunicationJoinChannelInfoBean != null) {
                 voiceCommunicationUtils.setEncryptionSecret(agoraChannelId);
                 //屏蔽视频通话
 //                setupLocalVideo();
-                LogUtils.YfcDebug("创建频道时自己的信息：" + JSONUtils.toJSONString(voiceCommunicationJoinChannelInfoBean));
                 voiceCommunicationUtils.joinChannel(voiceCommunicationJoinChannelInfoBean.getToken(),
                         getVoiceCommunicationResult.getChannelId(), voiceCommunicationJoinChannelInfoBean.getUserId(), voiceCommunicationJoinChannelInfoBean.getAgoraUid());
             } else {

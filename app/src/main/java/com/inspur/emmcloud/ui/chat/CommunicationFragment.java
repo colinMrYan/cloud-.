@@ -36,6 +36,7 @@ import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
@@ -877,13 +878,13 @@ public class CommunicationFragment extends BaseFragment {
                     if (customProtocol.getParamMap().get("cmd").equals("refuse")) {
                         changeUserConnectStateByUid(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_REFUSE, customProtocol.getParamMap().get("uid"));
                         checkCommunicationFinish();
-                        VoiceCommunicationUtils.getInstance().setLayoutState(ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_OVER);
+                        VoiceCommunicationUtils.getInstance().setCommunicationState(ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_OVER);
                         Log.d("zhang", "COMMUNICATION_STATE_OVER: 555555 ");
                     } else if (customProtocol.getParamMap().get("cmd").equals("destroy")) {
                         VoiceCommunicationUtils.getInstance().destroy();
                         SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
                         Log.d("zhang", "COMMUNICATION_STATE_OVER: 66666666 ");
-                        VoiceCommunicationUtils.getInstance().setLayoutState(ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_OVER);
+                        VoiceCommunicationUtils.getInstance().setCommunicationState(ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_OVER);
                     }
                     return;
                 }
@@ -894,6 +895,15 @@ public class CommunicationFragment extends BaseFragment {
             String channelId = customProtocol.getParamMap().get("channelid");
             String fromUid = customProtocol.getParamMap().get("uid");
             VoiceCommunicationUtils.getInstance().getVoiceCommunicationChannelInfoAndSendRefuseCommand(channelId, agoraChannelId, fromUid);
+        }
+    }
+
+    //来自VoiceCommunicationUtils
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onRefreshVoiceCallSmallWindow(final SimpleEventMessage simpleEventMessage) {
+        if (simpleEventMessage.getAction().equals(Constant.EVENTBUS_TAG_REFRESH_VOICE_CALL_SMALL_WINDOW)) {
+            LogUtils.YfcDebug("刷新小窗");
+            SuspensionWindowManagerUtils.getInstance().refreshSmallWindow();
         }
     }
 

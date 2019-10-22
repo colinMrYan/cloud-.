@@ -8,6 +8,7 @@ import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.bean.chat.GetVoiceCommunicationResult;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationAudioVolumeInfo;
@@ -16,6 +17,7 @@ import com.inspur.emmcloud.bean.chat.VoiceCommunicationRtcStats;
 import com.inspur.emmcloud.interf.OnVoiceCommunicationCallbacks;
 import com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 
 import java.util.ArrayList;
@@ -25,6 +27,7 @@ import io.agora.rtc.IRtcEngineEventHandler;
 import io.agora.rtc.RtcEngine;
 import io.agora.rtc.video.VideoEncoderConfiguration;
 
+import static com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_ING;
 import static com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_PRE;
 
 /**
@@ -85,6 +88,12 @@ public class VoiceCommunicationUtils {
         @Override
         public void onUserJoined(int uid, int elapsed) {
             userCount = userCount + 1;
+            if (userCount >= 2 && communicationState == COMMUNICATION_STATE_PRE && SuspensionWindowManagerUtils.getInstance().isShowing()) {
+                //发送到CommunicationFragment
+                SimpleEventMessage simpleEventMessage = new SimpleEventMessage(Constant.EVENTBUS_TAG_REFRESH_VOICE_CALL_SMALL_WINDOW);
+                EventBus.getDefault().post(simpleEventMessage);
+                communicationState = COMMUNICATION_STATE_ING;
+            }
             onVoiceCommunicationCallbacks.onUserJoined(uid, elapsed);
         }
 
@@ -197,19 +206,19 @@ public class VoiceCommunicationUtils {
                 }
             }
         }
-        voiceCommunicationUtils.initializeAgoraEngine();
+//        voiceCommunicationUtils.initializeAgoraEngine();
         return voiceCommunicationUtils;
     }
 
     /**
      * 初始化引擎
      */
-    private void initializeAgoraEngine() {
+    public void initializeAgoraEngine() {
         try {
             if (mRtcEngine == null) {
                 mRtcEngine = RtcEngine.create(context, context.getString(R.string.agora_app_id), mRtcEventHandler);
+                mRtcEngine.enableAudioVolumeIndication(1000, 3, false);
             }
-            mRtcEngine.enableAudioVolumeIndication(1000, 3, false);
         } catch (Exception e) {
             LogUtils.YfcDebug("初始化声网异常：" + e.getMessage());
         }
