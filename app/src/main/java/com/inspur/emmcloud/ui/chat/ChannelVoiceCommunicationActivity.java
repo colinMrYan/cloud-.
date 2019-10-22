@@ -29,6 +29,7 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ResolutionUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
@@ -733,6 +734,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
 
             @Override
             public void onUserJoined(int uid, int elapsed) {
+                LogUtils.YfcDebug("有新的用户加入");
                 for (int i = 0; i < voiceCommunicationMemberList.size(); i++) {
                     if (voiceCommunicationMemberList.get(i).getAgoraUid() == uid) {
                         voiceCommunicationMemberList.get(i).setConnectState(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_CONNECTED);
@@ -759,6 +761,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
 
             @Override
             public void onJoinChannelSuccess(final String channel, final int uid, int elapsed) {
+                LogUtils.YfcDebug("用户加入成功");
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -823,7 +826,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                                     voiceCommunicationMemberList.get(i).setVolume(0);
                                 }
                             }
-                            refreshCommunicationMemberAdapter();
+//                            refreshCommunicationMemberAdapter();
                         }
                     }
                 });
@@ -891,6 +894,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         if (voiceCommunicationMemberList != null && voiceCommunicationMemberList.size() > 0) {
             for (int i = 0; i < voiceCommunicationMemberList.size(); i++) {
                 if (voiceCommunicationMemberList.get(i).getAgoraUid() == agroaUid) {
+                    LogUtils.YfcDebug("修改状态");
                     voiceCommunicationMemberList.get(i).setConnectState(connectStateConnected);
                     if (connectStateConnected > 1) {
                         voiceCommunicationMemberList.remove(i);
@@ -964,6 +968,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
      * 刷新成员adapter，有人加入，退出，声音变化都通过这个方法来刷新
      */
     private void refreshCommunicationMemberAdapter() {
+        LogUtils.YfcDebug("刷新状态");
         handleVoiceCommunicationMemberList();
         if (voiceCommunicationMemberList != null) {
             if (voiceCommunicationMemberList.size() <= 5) {
@@ -1031,8 +1036,10 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 communicationTimeChronometer.setBase(SystemClock.elapsedRealtime());
                 communicationTimeChronometer.start();
                 voiceCommunicationUtils.setConnectStartTime(System.currentTimeMillis());
-                voiceCommunicationUtils.joinChannel(inviteeInfoBean.getToken(),
-                        agoraChannelId, inviteeInfoBean.getUserId(), inviteeInfoBean.getAgoraUid());
+                handsFreeTv.setText(agoraChannelId);
+                LogUtils.YfcDebug("接听电话时成员信息：" + JSONUtils.toJSONString(inviteeInfoBean));
+                LogUtils.YfcDebug("接听通话结果：" + VoiceCommunicationUtils.getInstance().joinChannel(inviteeInfoBean.getToken(),
+                        agoraChannelId, inviteeInfoBean.getUserId(), inviteeInfoBean.getAgoraUid()));
                 break;
             case R.id.ll_video_hung_up:
             case R.id.img_hung_up:
@@ -1367,11 +1374,14 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         @Override
         public void returnGetVoiceCommunicationResultSuccess(GetVoiceCommunicationResult getVoiceCommunicationResult) {
             agoraChannelId = getVoiceCommunicationResult.getChannelId();
+            handsFreeTv.setText(agoraChannelId);
+            LogUtils.YfcDebug("创建频道时频道id：" + agoraChannelId);
             VoiceCommunicationJoinChannelInfoBean voiceCommunicationJoinChannelInfoBean = getMyCommunicationInfoBean(getVoiceCommunicationResult);
             if (voiceCommunicationJoinChannelInfoBean != null) {
                 voiceCommunicationUtils.setEncryptionSecret(agoraChannelId);
                 //屏蔽视频通话
 //                setupLocalVideo();
+                LogUtils.YfcDebug("创建频道时自己的信息：" + JSONUtils.toJSONString(voiceCommunicationJoinChannelInfoBean));
                 voiceCommunicationUtils.joinChannel(voiceCommunicationJoinChannelInfoBean.getToken(),
                         getVoiceCommunicationResult.getChannelId(), voiceCommunicationJoinChannelInfoBean.getUserId(), voiceCommunicationJoinChannelInfoBean.getAgoraUid());
             } else {
