@@ -361,8 +361,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:paddingTop="11dp"
                     android:paddingBottom="11dp"
+                    android:paddingTop="11dp"
                     android:text="自启动选项"
                     android:textColor="#333333"
                     android:textSize="16sp" />
@@ -431,7 +431,6 @@
             android:layout_marginRight="25dp"
             android:elevation="1dp"
             android:gravity="center"
-            android:onClick="onClick"
             android:text="@string/quit_check"
             android:textAllCaps="false"
             android:textColor="@android:color/white"

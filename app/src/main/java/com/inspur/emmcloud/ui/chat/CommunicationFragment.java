@@ -108,7 +108,7 @@ public class CommunicationFragment extends BaseFragment {
     private static final int CREAT_CHANNEL_GROUP = 1;
     private static final int RERESH_GROUP_ICON = 2;
     private static final int SORT_CONVERSATION_COMPLETE = 3;
-    private static final int SORT_CONVERSATION_LIST = 4;
+    private static final int CACHE_MESSAGE_SUCCESS = 4;
     private static final int REQUEST_SCAN_LOGIN_QRCODE_RESULT = 5;
     private static final int CACHE_CONVERSATION_LIST_SUCCESS = 6;
     private View rootView;
@@ -568,8 +568,14 @@ public class CommunicationFragment extends BaseFragment {
                         conversationAdapter.setData(displayUIConversationList);
                         conversationAdapter.notifyDataSetChanged();
                         break;
-                    case SORT_CONVERSATION_LIST:
-                        sortConversationList();
+                    case CACHE_MESSAGE_SUCCESS:
+                        if (msg.obj != null) {
+                            List<Message> messageList = (List<Message>) msg.obj;
+                            if (messageList != null && messageList.size() > 0) {
+                                sortConversationList();
+                            }
+                        }
+                        MessageSendManager.getInstance().resendMessageAfterWSOnline();
                         break;
                     case CACHE_CONVERSATION_LIST_SUCCESS:
                         sortConversationList();
@@ -958,7 +964,7 @@ public class CommunicationFragment extends BaseFragment {
 
     //socket断开重连时（如断网联网）会触发此方法
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReiceveWSOfflineMessage(EventMessage eventMessage) {
+    public void onReceiveWSOfflineMessage(EventMessage eventMessage) {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_OFFLINE_WS_MESSAGE)) {
             if (eventMessage.getStatus() == EventMessage.RESULT_OK) {
                 //清空离线消息最后一条消息标志位
@@ -989,7 +995,6 @@ public class CommunicationFragment extends BaseFragment {
                         new DownLoaderUtils().startDownLoad(source, fileSavePath, null);
                     }
                 }
-                MessageSendManager.getInstance().resendMessageAfterWSOnline();
             }
 
         }
@@ -1219,9 +1224,10 @@ public class CommunicationFragment extends BaseFragment {
                             MessageMatheSetCacheUtils.add(MyApplication.getInstance(), channelMessageSet.getCid(), channelMessageSet.getMatheSet());
                         }
                     }
-                    if (handler != null) {
-                        handler.sendEmptyMessage(SORT_CONVERSATION_LIST);
-                    }
+                }
+                if (handler != null) {
+                    android.os.Message message = handler.obtainMessage(CACHE_MESSAGE_SUCCESS, messageList);
+                    message.sendToTarget();
                 }
             } catch (Exception e) {
                 e.printStackTrace();

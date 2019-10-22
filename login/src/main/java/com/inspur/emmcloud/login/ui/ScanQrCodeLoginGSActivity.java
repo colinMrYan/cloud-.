@@ -15,8 +15,12 @@ import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.login.R;
+import com.inspur.emmcloud.login.R2;
 import com.inspur.emmcloud.login.api.LoginAPIInterfaceImpl;
 import com.inspur.emmcloud.login.api.LoginAPIService;
+
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * 扫码登录页面
@@ -33,6 +37,7 @@ public class ScanQrCodeLoginGSActivity extends BaseActivity {
 
     @Override
     public void onCreate() {
+        ButterKnife.bind(this);
         loadingDlg = new LoadingDialog(this);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
     }
@@ -46,6 +51,7 @@ public class ScanQrCodeLoginGSActivity extends BaseActivity {
         return STATUS_WHITE_DARK_FONT;
     }
 
+    @OnClick(R2.id.login_btn)
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.back_text) {

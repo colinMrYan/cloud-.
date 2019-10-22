@@ -29,6 +29,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by chenmch on 2018/10/11.
@@ -76,6 +77,15 @@ public class WebexAddExternalAttendeesActivity extends BaseActivity {
         return R.layout.webex_activity_add_external_attendees;
     }
 
+    @OnClick(R2.id.bt_add_attendees)
+    public void onAddAttendeesClick(View v) {
+        String email = addAttendeesEdit.getText().toString();
+        if (addAttendees(email)) {
+            addAttendeesEdit.setText("");
+        }
+    }
+
+
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.ibt_back) {
@@ -86,13 +96,6 @@ public class WebexAddExternalAttendeesActivity extends BaseActivity {
             intent.putExtra(EXTRA_ATTENDEES_LIST, (Serializable) webexAttendeesList);
             setResult(Activity.RESULT_OK, intent);
             finish();
-
-        } else if (i == R.id.bt_add_attendees) {
-            String email = addAttendeesEdit.getText().toString();
-            if (addAttendees(email)) {
-                addAttendeesEdit.setText("");
-            }
-
 
         }
     }
