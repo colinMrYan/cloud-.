@@ -958,32 +958,37 @@ public class FileUtils {
      * @param mime
      */
     public static void openFile(Activity context, File file, String mime, boolean isNeedStartActivityForResult) {
-        if (canFileOpenByApp(file)) {
-            Bundle bundle = new Bundle();
-            bundle.putInt("image_index", 0);
-            ArrayList<String> urlList = new ArrayList<>();
-            urlList.add("file://" + file.getAbsolutePath());
-            bundle.putStringArrayList("image_urls", urlList);
-            ARouter.getInstance().build(Constant.AROUTER_CLASS_COMMUNICATION_IMAGEPAGER).with(bundle);
-            return;
-        }
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        //判断是否是AndroidN以及更高的版本
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            Uri contentUri = FileProvider.getUriForFile(context, context.getPackageName() + ".fileprovider", file);
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-            intent.setDataAndType(contentUri, mime);
-        } else {
-            intent.setDataAndType(Uri.fromFile(file), mime);
-        }
-        if (context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
-            if (isNeedStartActivityForResult) {
-                context.startActivityForResult(intent, 5);
-            } else {
-                context.startActivity(intent);
+        try {
+            if (canFileOpenByApp(file)) {
+                Bundle bundle = new Bundle();
+                bundle.putInt("image_index", 0);
+                ArrayList<String> urlList = new ArrayList<>();
+                urlList.add("file://" + file.getAbsolutePath());
+                bundle.putStringArrayList("image_urls", urlList);
+                ARouter.getInstance().build(Constant.AROUTER_CLASS_COMMUNICATION_IMAGEPAGER).with(bundle);
+                return;
             }
-        } else {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            //判断是否是AndroidN以及更高的版本
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                Uri contentUri = FileProvider.getUriForFile(context, context.getPackageName() + ".fileprovider", file);
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                intent.setDataAndType(contentUri, mime);
+            } else {
+                intent.setDataAndType(Uri.fromFile(file), mime);
+            }
+            if (context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
+                if (isNeedStartActivityForResult) {
+                    context.startActivityForResult(intent, 5);
+                } else {
+                    context.startActivity(intent);
+                }
+            } else {
+                ToastUtils.show(context, context.getString(R.string.chat_file_open_fail_tip));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
             ToastUtils.show(context, context.getString(R.string.chat_file_open_fail_tip));
         }
     }
