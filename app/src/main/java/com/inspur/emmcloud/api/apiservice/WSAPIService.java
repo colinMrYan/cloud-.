@@ -287,6 +287,7 @@ public class WSAPIService {
             headerObj.put("tracer", tracer);
             object.put("headers", headerObj);
             EventMessage eventMessage = new EventMessage(tracer, Constant.EVENTBUS_TAG_GET_OFFLINE_WS_MESSAGE);
+            eventMessage.setTimeout(50);
             WebSocketPush.getInstance().sendEventMessage(eventMessage, object, tracer);
         } catch (Exception e) {
             e.printStackTrace();
@@ -309,6 +310,7 @@ public class WSAPIService {
             headerObj.put("tracer", tracer);
             object.put("headers", headerObj);
             EventMessage eventMessage = new EventMessage(tracer, Constant.EVENTBUS_TAG_GET_CHANNEL_RECENT_MESSAGE);
+            eventMessage.setTimeout(50);
             WebSocketPush.getInstance().sendEventMessage(eventMessage, object, tracer);
         } catch (Exception e) {
             e.printStackTrace();
