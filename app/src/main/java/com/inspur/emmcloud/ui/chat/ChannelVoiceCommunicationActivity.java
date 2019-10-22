@@ -619,6 +619,14 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             //如果是通话中则“通话中”文字显示一下就不再显示
             communicationStateTv.setText(state == COMMUNICATION_LAYOUT_STATE ? "" : communicationStateTv.getText());
             if (state == INVITER_LAYOUT_STATE || state == INVITEE_LAYOUT_STATE) {
+                switch (state) {
+                    case INVITER_LAYOUT_STATE:
+                        mediaPlayerManagerUtils.changeToEarpieceModeNoStop();
+                        break;
+                    case INVITEE_LAYOUT_STATE:
+                        mediaPlayerManagerUtils.changeToSpeakerMode();
+                        break;
+                }
                 mediaPlayerManagerUtils.play(R.raw.voice_communication_watting_answer, null);
             } else {
                 mediaPlayerManagerUtils.stop();
