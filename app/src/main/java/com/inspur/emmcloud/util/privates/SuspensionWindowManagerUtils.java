@@ -84,8 +84,8 @@ public class SuspensionWindowManagerUtils {
         if (isShowing && null != windowView && windowManager != null) {
             windowManager.removeView(windowView);
             isShowing = false;
-            NotifyUtil.deleteNotify(windowContext);
         }
+        NotifyUtil.deleteNotify(windowContext);
     }
 
     /**
@@ -160,7 +160,6 @@ public class SuspensionWindowManagerUtils {
      * 刷新小窗开始计时
      */
     public void refreshSmallWindow() {
-        LogUtils.YfcDebug("刷新小窗");
         if (chronometer != null) {
             LogUtils.YfcDebug("重置计时器");
             chronometer.setBase(SystemClock.elapsedRealtime());
