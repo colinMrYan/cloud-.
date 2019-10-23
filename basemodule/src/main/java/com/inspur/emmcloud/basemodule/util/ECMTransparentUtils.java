@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.componentservice.app.AppService;
@@ -44,6 +45,7 @@ public class ECMTransparentUtils {
                 int badgeNumber = JSONUtils.getInt(transparent, "badge", 0);
                 ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(context, badgeNumber);
             }
+            LogUtils.YfcDebug("存储pv：" + (JSONUtils.getInt(transparent, "badge", 0) + "" + Constant.PREF_DESKTOP_BADGE));
             PVCollectModelCacheUtils.saveCollectModel(JSONUtils.getInt(transparent, "badge", 0) + "", Constant.PREF_DESKTOP_BADGE);
         }
     }

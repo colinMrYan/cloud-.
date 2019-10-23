@@ -36,6 +36,7 @@ import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
@@ -93,7 +94,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -171,7 +171,7 @@ public class CommunicationFragment extends BaseFragment {
                     popupWindow.dismiss();
                     break;
                 case R.id.tv_search_contact:
-                    IntentUtils.startActivity(getActivity(), CommunicationSearchGroupContactActivity.class);
+                    IntentUtils.startActivity(getActivity(), SearchActivity.class);
                     break;
                 default:
                     break;
@@ -184,6 +184,7 @@ public class CommunicationFragment extends BaseFragment {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
+        setLastMessageId();
         initView();
         sortConversationList();// 对Channel 进行排序
         registerMessageFragmentReceiver();
@@ -265,7 +266,6 @@ public class CommunicationFragment extends BaseFragment {
                     String type = conversation.getType();
                     if (type.equals(Conversation.TYPE_CAST) || type.equals(Conversation.TYPE_DIRECT) || type.equals(Conversation.TYPE_GROUP)) {
                         Bundle bundle = new Bundle();
-                        bundle.putSerializable(ConversationBaseActivity.EXTRA_UNREAD_MESSAGE, (Serializable) MessageCacheUtil.getAllUnReadMessage(getActivity(), conversation.getId()));
                         bundle.putSerializable(ConversationActivity.EXTRA_CONVERSATION, conversation);
                         IntentUtils.startActivity(getActivity(), ConversationActivity.class, bundle);
                     } else if (conversation.getType().equals(Conversation.TYPE_LINK)) {
@@ -595,7 +595,7 @@ public class CommunicationFragment extends BaseFragment {
      */
     private void cacheReceiveMessage(Message receivedWSMessage) {
         // TODO Auto-generated method stub
-        Message channelNewMessage = MessageCacheUtil.getNewMessge(MyApplication.getInstance(), receivedWSMessage.getChannel());
+        Message channelNewMessage = MessageCacheUtil.getNewMessage(MyApplication.getInstance(), receivedWSMessage.getChannel());
 //        MessageCacheUtil.saveMessage(MyApplication.getInstance(), receivedWSMessage);
         Long ChannelMessageMatheSetStart = (channelNewMessage == null) ? receivedWSMessage.getCreationDate() : channelNewMessage.getCreationDate();
         MessageMatheSetCacheUtils.add(MyApplication.getInstance(),
@@ -624,6 +624,7 @@ public class CommunicationFragment extends BaseFragment {
                 titleText.setText(R.string.communicate);
             }
         } else if (socketStatus.equals(Socket.EVENT_DISCONNECT) || socketStatus.equals(Socket.EVENT_CONNECT_ERROR)) {
+            setLastMessageId();
             titleText.setText(R.string.socket_close);
         }
     }
@@ -849,6 +850,10 @@ public class CommunicationFragment extends BaseFragment {
                     }
                 }
             }
+            if (!StringUtils.isBlank(MyApplication.getInstance().getCurrentChannelCid())) {
+                SimpleEventMessage simpleEventMessage = new SimpleEventMessage(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE_CONVERSATION, eventMessage);
+                EventBus.getDefault().post(simpleEventMessage);
+            }
         }
     }
 
@@ -856,6 +861,7 @@ public class CommunicationFragment extends BaseFragment {
     //接收到websocket发过来的消息，拨打音视频电话，被呼叫触发
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveVoiceOrVideoCall(final GetVoiceAndVideoResult getVoiceAndVideoResult) {
+        //屏蔽语音通话
         final CustomProtocol customProtocol = new CustomProtocol(getVoiceAndVideoResult.getContextParamsSchema());
         //接收到消息后告知服务端
         WSAPIService.getInstance().sendReceiveStartVoiceAndVideoCallMessageSuccess(getVoiceAndVideoResult.getTracer());
@@ -872,13 +878,13 @@ public class CommunicationFragment extends BaseFragment {
                     if (customProtocol.getParamMap().get("cmd").equals("refuse")) {
                         changeUserConnectStateByUid(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_REFUSE, customProtocol.getParamMap().get("uid"));
                         checkCommunicationFinish();
-                        VoiceCommunicationUtils.getInstance().setLayoutState(ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_OVER);
+                        VoiceCommunicationUtils.getInstance().setCommunicationState(ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_OVER);
                         Log.d("zhang", "COMMUNICATION_STATE_OVER: 555555 ");
                     } else if (customProtocol.getParamMap().get("cmd").equals("destroy")) {
                         VoiceCommunicationUtils.getInstance().destroy();
                         SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
                         Log.d("zhang", "COMMUNICATION_STATE_OVER: 66666666 ");
-                        VoiceCommunicationUtils.getInstance().setLayoutState(ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_OVER);
+                        VoiceCommunicationUtils.getInstance().setCommunicationState(ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_OVER);
                     }
                     return;
                 }
@@ -889,6 +895,15 @@ public class CommunicationFragment extends BaseFragment {
             String channelId = customProtocol.getParamMap().get("channelid");
             String fromUid = customProtocol.getParamMap().get("uid");
             VoiceCommunicationUtils.getInstance().getVoiceCommunicationChannelInfoAndSendRefuseCommand(channelId, agoraChannelId, fromUid);
+        }
+    }
+
+    //来自VoiceCommunicationUtils
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onRefreshVoiceCallSmallWindow(final SimpleEventMessage simpleEventMessage) {
+        if (simpleEventMessage.getAction().equals(Constant.EVENTBUS_TAG_REFRESH_VOICE_CALL_SMALL_WINDOW)) {
+            LogUtils.YfcDebug("刷新小窗");
+            SuspensionWindowManagerUtils.getInstance().refreshSmallWindow();
         }
     }
 
@@ -1047,22 +1062,32 @@ public class CommunicationFragment extends BaseFragment {
     }
 
     /**
+     * 当WebSocket断开后记录本地最后一条正式消息
+     * 离线消息获取时使用
+     */
+    private void setLastMessageId() {
+        String lastMessageId = MessageCacheUtil.getLastSuccessMessageId(MyApplication.getInstance());
+        if (lastMessageId != null) {
+            //如果preferences中还存有离线消息最后一条消息id这个标志代表上一次离线消息没有获取成功，需要从这条消息开始重新获取
+            String getOfflineLastMessageId = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_GET_OFFLINE_LAST_MID, "");
+            if (StringUtils.isBlank(getOfflineLastMessageId)) {
+                PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_GET_OFFLINE_LAST_MID, lastMessageId);
+            }
+        } else {
+            PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_GET_OFFLINE_LAST_MID, "");
+        }
+    }
+
+    /**
      * 获取消息
      */
     public void getMessage() {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance()) && WebSocketPush.getInstance().isSocketConnect()) {
-            String lastMessageId = MessageCacheUtil.getLastSuccessMessageId(MyApplication.getInstance());
-            if (lastMessageId != null) {
-                //如果preferences中还存有离线消息最后一条消息id这个标志代表上一次离线消息没有获取成功，需要从这条消息开始重新获取
-                String getOfflineLastMessageId = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_GET_OFFLINE_LAST_MID, "");
-                if (StringUtils.isBlank(getOfflineLastMessageId)) {
-                    getOfflineLastMessageId = lastMessageId;
-                    PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_GET_OFFLINE_LAST_MID, lastMessageId);
-                }
+            String lastMessageId = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_GET_OFFLINE_LAST_MID, "");
+            if (!StringUtils.isBlank(lastMessageId)) {
                 //获取离线消息
-                WSAPIService.getInstance().getOfflineMessage(getOfflineLastMessageId);
+                WSAPIService.getInstance().getOfflineMessage(lastMessageId);
             } else {
-                PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_GET_OFFLINE_LAST_MID, "");
                 //获取每个频道最近消息
                 WSAPIService.getInstance().getChannelRecentMessage();
             }

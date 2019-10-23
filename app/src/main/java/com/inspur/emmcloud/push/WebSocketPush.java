@@ -317,6 +317,7 @@ public class WebSocketPush {
             setRequestEventMessageTimeout(eventMessage, "socket_force_close");
         }
         requestEventMessageList.clear();
+        sendWebSocketStatusBroadcast(Socket.EVENT_DISCONNECT);
     }
 
     private void removeListeners() {

@@ -49,6 +49,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/iv_group_image"
         android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
         android:layout_marginTop="5dp"
         android:ellipsize="middle"
         android:singleLine="true"

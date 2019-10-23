@@ -16,6 +16,8 @@ import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 
+import org.greenrobot.eventbus.EventBus;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -29,16 +31,14 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity {
     public static final String EXTRA_NEED_GET_NEW_MESSAGE = "get_new_msg";
     public static final String EXTRA_COME_FROM_SCANCODE = "com_from_scan_code";
     public static final String EXTRA_UNREAD_MESSAGE = "unread_count";
-    public static final String EXTRA_UIMESSAGE = "uimessage";
-    public static final String EXTRA_FROM_SERCH = "from_search";
+    public static final String EXTRA_POSITION_MESSAGE = "position_message";
+    public static final String EXTRA_FROM_SEARCH = "from_search";
 
     protected String cid;
     protected LoadingDialog loadingDlg;
     protected Conversation conversation;
-
     @BindView(R.id.iv_config)
     View configView;
-    protected boolean isFromScanCode = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +50,7 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity {
         super.onCreate();
         ButterKnife.bind(this);
         loadingDlg = new LoadingDialog(this);
+        EventBus.getDefault().register(this);
         initConversationInfo();
         recordUserClickChannel();
         setConversationUnHide();
@@ -61,8 +62,6 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity {
         return R.layout.activity_channel;
     }
     protected void initConversationInfo() {
-
-        isFromScanCode = getIntent().getBooleanExtra(EXTRA_COME_FROM_SCANCODE, false);
         if (getIntent().hasExtra(EXTRA_CONVERSATION)) {
             conversation = (Conversation) getIntent().getExtras().getSerializable(EXTRA_CONVERSATION);
             cid = conversation.getId();
@@ -70,6 +69,7 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity {
             cid = getIntent().getExtras().getString(EXTRA_CID);
             conversation = ConversationCacheUtils.getConversation(MyApplication.getInstance(), cid);
         }
+        MyApplication.getInstance().setCurrentChannelCid(cid);
         if (conversation == null) {
             getConversationInfo();
         } else {
@@ -103,7 +103,7 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        MyApplication.getInstance().setCurrentChannelCid(cid);
+
     }
 
     /**
@@ -123,7 +123,7 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity {
             loadingDlg.show();
             ChatAPIService apiService = new ChatAPIService(this);
             apiService.setAPIInterface(new Webservice());
-            apiService.getConversationInfo(cid, isFromScanCode);
+            apiService.getConversationInfo(cid);
         } else {
             finish();
         }
@@ -133,7 +133,7 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity {
 
     private class Webservice extends APIInterfaceInstance {
         @Override
-        public void returnConversationInfoSuccess(Conversation conversation, boolean isFromScanCode) {
+        public void returnConversationInfoSuccess(Conversation conversation) {
             LoadingDialog.dimissDlg(loadingDlg);
             ConversationBaseActivity.this.conversation = conversation;
             initChannelMessage();

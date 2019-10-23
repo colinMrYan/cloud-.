@@ -9,7 +9,7 @@ import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.DbCacheUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.bean.chat.Conversation;
-import com.inspur.emmcloud.bean.chat.ConversationFromChatContent;
+import com.inspur.emmcloud.bean.chat.ConversationWithMessageNum;
 import com.inspur.emmcloud.bean.chat.MatheSet;
 import com.inspur.emmcloud.bean.chat.Message;
 
@@ -56,7 +56,7 @@ public class MessageCacheUtil {
     public static List<Message> getMessageListBySendStatus(int sendStatus, boolean isWaitingSendRetry) {
         List<Message> messageList = null;
         try {
-            messageList = DbCacheUtils.getDb(BaseApplication.getInstance()).selector(Message.class).where("sendStatus", "=", sendStatus).and("isWaitingSendRetry", "=", true).orderBy("creationDate", false).findAll();
+            messageList = DbCacheUtils.getDb(BaseApplication.getInstance()).selector(Message.class).where("sendStatus", "=", sendStatus).and("isWaitingSendRetry", "=", isWaitingSendRetry).orderBy("creationDate", false).findAll();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -101,17 +101,6 @@ public class MessageCacheUtil {
     }
 
 
-    /**
-     * 存储消息列表
-     *
-     * @param context
-     * @param messageList
-     * @param targetMessageCreationDate
-     */
-    public static void saveMessageList(final Context context,
-                                       final List<Message> messageList, final Long targetMessageCreationDate) {
-        saveMessageList(context, messageList, targetMessageCreationDate, true);
-    }
 
     /**
      * 存储消息列表
@@ -198,8 +187,6 @@ public class MessageCacheUtil {
                     .and("channel", "=", cid).orderBy("creationDate", true).findFirst();
             if (lastReadMessage != null) {
                 lastReadMessageCreationDate = lastReadMessage.getCreationDate();
-
-
             }
             unreadCount = DbCacheUtils.getDb(context).selector(Message.class).
                     where("creationDate", ">", lastReadMessageCreationDate)
@@ -211,18 +198,6 @@ public class MessageCacheUtil {
         return unreadCount;
     }
 
-    public static List<Message> getAllUnReadMessage(Context context, String cid) {
-        List<Message> unReadMessageList = new ArrayList<>();
-        try {
-            Message lastReadMessage = DbCacheUtils.getDb(context).selector(Message.class).where("read", "=", 1)
-                    .and("channel", "=", cid).orderBy("creationDate", true).findFirst();
-            unReadMessageList.addAll(DbCacheUtils.getDb(context).selector(Message.class).
-                    where("creationDate", ">", lastReadMessage.getCreationDate()).and("channel", "=", cid).findAll());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return unReadMessageList;
-    }
 
     /**
      * 设置消息已读
@@ -248,22 +223,24 @@ public class MessageCacheUtil {
      *
      * @param context
      * @param cid
-     * @param targetMessageCreationDate
+     * @param message
      * @param num
      * @return
      */
     public static List<Message> getHistoryMessageListIncludeEditingMessage(Context context,
-                                                                           String cid, Long targetMessageCreationDate, int num) {
+                                                                           String cid, Message message, int num) {
         List<Message> messageList = null;
         try {
-            if (targetMessageCreationDate == null) {
+            if (message == null) {
                 messageList = DbCacheUtils.getDb(context).selector(Message.class)
-                        .where("channel", "=", cid).orderBy("creationDate", true)
+                        .where("channel", "=", cid).orderBy("creationDate", true).orderBy("id", true)
                         .limit(num).findAll();
             } else {
+                long creationDate = message.getCreationDate();
                 messageList = DbCacheUtils.getDb(context).selector(Message.class)
-                        .where("creationDate", "<", targetMessageCreationDate).and("channel", "=", cid)
-                        .orderBy("creationDate", true).limit(num).findAll();
+                        .where("channel", "=", cid)
+                        .and(WhereBuilder.b("creationDate", "<", creationDate).or(WhereBuilder.b("creationDate", "=", creationDate).and("id", "<", message.getId())))
+                        .orderBy("creationDate", true).orderBy("id", true).limit(num).findAll();
             }
             if (messageList != null && messageList.size() > 1) {
                 Collections.reverse(messageList);
@@ -279,51 +256,30 @@ public class MessageCacheUtil {
         return messageList;
     }
 
-
-    public static List<Message> getHistoryMessageListByTime(Context context, String cid, Long startTime, Long endTime) {
-        List<Message> messageList = null;
-        try {
-            messageList = DbCacheUtils.getDb(context).selector(Message.class)
-                    .where("channel", "=", cid)
-                    .and("creationDate", "<=", endTime)
-                    .and("creationDate", ">=", startTime)
-                    .orderBy("creationDate", true).findAll();
-            if (messageList != null && messageList.size() > 1) {
-                Collections.reverse(messageList);
-            }
-
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        if (messageList == null) {
-            messageList = new ArrayList<>();
-        }
-        return messageList;
-    }
 
     /**
      * 获取历史消息列表，给ConversationActivity用，包含发送成功，发送失败，发送中三种状态，不包含编辑状态
      *
      * @param context
      * @param cid
-     * @param targetMessageCreationDate
+     * @param message
      * @param num
      * @return
      */
     public static List<Message> getHistoryMessageList(Context context,
-                                                      String cid, Long targetMessageCreationDate, int num) {
+                                                      String cid, Message message, int num) {
         List<Message> messageList = null;
         try {
-
-            if (targetMessageCreationDate == null) {
+            if (message == null) {
                 messageList = DbCacheUtils.getDb(context).selector(Message.class)
-                        .where("channel", "=", cid).and("sendStatus", "!=", Message.MESSAGE_SEND_EDIT).orderBy("creationDate", true)
+                        .where("channel", "=", cid).and("sendStatus", "!=", Message.MESSAGE_SEND_EDIT).orderBy("creationDate", true).orderBy("id", true)
                         .limit(num).findAll();
             } else {
+                long creationDate = message.getCreationDate();
                 messageList = DbCacheUtils.getDb(context).selector(Message.class)
-                        .where("creationDate", "<", targetMessageCreationDate).and("channel", "=", cid).and("sendStatus", "!=", Message.MESSAGE_SEND_EDIT)
-                        .orderBy("creationDate", true).limit(num).findAll();
+                        .where("channel", "=", cid).and("sendStatus", "!=", Message.MESSAGE_SEND_EDIT)
+                        .and(WhereBuilder.b("creationDate", "<", creationDate).or(WhereBuilder.b("creationDate", "=", creationDate).and("id", "<", message.getId())))
+                        .orderBy("creationDate", true).orderBy("id", true).limit(num).findAll();
             }
             if (messageList != null && messageList.size() > 1) {
                 Collections.reverse(messageList);
@@ -339,36 +295,13 @@ public class MessageCacheUtil {
         return messageList;
     }
 
-
-    /**
-     * 获取历史消息列表，给ConversationActivity用，包含发送成功，发送失败，发送中三种状态，不包含编辑状态
-     *
-     * @param context
-     * @param cid
-     * @param targetMessageCreationDate
-     * @return
-     */
-    public static List<Message> getHistoryMessageList(Context context,
-                                                      String cid, Long targetMessageCreationDate) {
+    public static List<Message> getFutureMessageList(Context context, String cid, Long targetMessageCreationDate) {
         List<Message> messageList = null;
         try {
-
-            if (targetMessageCreationDate == null) {
-                messageList = DbCacheUtils.getDb(context).selector(Message.class)
-                        .where("channel", "=", cid).and("sendStatus", "!=", Message.MESSAGE_SEND_EDIT).orderBy("creationDate", true)
-                        .findAll();
-            } else {
-                messageList = DbCacheUtils.getDb(context).selector(Message.class)
-                        .where("creationDate", "<", targetMessageCreationDate).and("channel", "=", cid).and("sendStatus", "!=", Message.MESSAGE_SEND_EDIT)
-                        .orderBy("creationDate", true)
-                        .findAll();
-            }
-            if (messageList != null && messageList.size() > 1) {
-                Collections.reverse(messageList);
-            }
-
+            messageList = DbCacheUtils.getDb(context).selector(Message.class)
+                    .where("creationDate", ">=", targetMessageCreationDate).and("channel", "=", cid)
+                    .orderBy("creationDate", false).orderBy("id", false).findAll();
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         if (messageList == null) {
@@ -376,6 +309,44 @@ public class MessageCacheUtil {
         }
         return messageList;
     }
+
+
+//    /**
+//     * 获取历史消息列表，给ConversationActivity用，包含发送成功，发送失败，发送中三种状态，不包含编辑状态
+//     *
+//     * @param context
+//     * @param cid
+//     * @param targetMessageCreationDate
+//     * @return
+//     */
+//    public static List<Message> getHistoryMessageList(Context context,
+//                                                      String cid, Long targetMessageCreationDate) {
+//        List<Message> messageList = null;
+//        try {
+//
+//            if (targetMessageCreationDate == null) {
+//                messageList = DbCacheUtils.getDb(context).selector(Message.class)
+//                        .where("channel", "=", cid).and("sendStatus", "!=", Message.MESSAGE_SEND_EDIT).orderBy("creationDate", true)
+//                        .findAll();
+//            } else {
+//                messageList = DbCacheUtils.getDb(context).selector(Message.class)
+//                        .where("creationDate", "<", targetMessageCreationDate).and("channel", "=", cid).and("sendStatus", "!=", Message.MESSAGE_SEND_EDIT)
+//                        .orderBy("creationDate", true)
+//                        .findAll();
+//            }
+//            if (messageList != null && messageList.size() > 1) {
+//                Collections.reverse(messageList);
+//            }
+//
+//        } catch (Exception e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        }
+//        if (messageList == null) {
+//            messageList = new ArrayList<>();
+//        }
+//        return messageList;
+//    }
 
 
     /**
@@ -385,13 +356,13 @@ public class MessageCacheUtil {
      * @param cid
      * @return
      */
-    public static Message getNewMessge(Context context, String cid) {
+    public static Message getNewMessage(Context context, String cid) {
         Message message = null;
         try {
             message = DbCacheUtils.getDb(context).selector(Message.class)
                     .where("channel", "=", cid)
                     .and("sendStatus", "=", Message.MESSAGE_SEND_SUCCESS)
-                    .orderBy("creationDate", true).findFirst();
+                    .orderBy("creationDate", true).orderBy("id", true).findFirst();
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -720,56 +691,6 @@ public class MessageCacheUtil {
         }
     }
 
-    /**
-     * 查找所有文本类型的消息
-     *
-     * @param context
-     * @param cid
-     * @return
-     */
-    public static List<Message> getGroupMessageWithType(Context context, String cid) {
-        List<Message> messageList = new ArrayList<>();
-        try {
-            messageList = DbCacheUtils.getDb(context).selector(Message.class)
-                    .where("channel", "=", cid)
-                    .and(WhereBuilder.b("type", "=", Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN)
-                            .or("type", "=", Message.MESSAGE_TYPE_TEXT_MARKDOWN)
-                            .or("type", "=", Message.MESSAGE_TYPE_TEXT_PLAIN))
-                    .orderBy("creationDate", true)
-                    .findAll();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if (messageList == null) {
-            messageList = new ArrayList<>();
-        }
-        return messageList;
-    }
-
-    /**
-     * 获取发送中和发送失败的消息
-     *
-     * @param context
-     * @param cid
-     * @return
-     */
-    public static List<Message> getGroupMessageWithStatus(Context context, String cid) {
-        List<Message> messageList = new ArrayList<>();
-        try {
-            messageList = DbCacheUtils.getDb(context).selector(Message.class)
-                    .where("channel", "=", cid)
-                    .and(WhereBuilder.b("sendStatus", "=", Message.MESSAGE_SEND_ING)
-                            .or("sendStatus", "=", Message.MESSAGE_SEND_FAIL))
-                    .orderBy("creationDate", true)
-                    .findAll();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if (messageList == null) {
-            messageList = new ArrayList<>();
-        }
-        return messageList;
-    }
 
 
     /**
@@ -784,14 +705,17 @@ public class MessageCacheUtil {
             List<Message> messageList1 = DbCacheUtils.getDb(context).selector(Message.class)
                     .where("type", "=", Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN)
                     .and(WhereBuilder.b("showContent", "like", "%" + content + "%"))
+                    .and(WhereBuilder.b("sendStatus", "=", 1))
                     .findAll();
             List<Message> messageList2 = DbCacheUtils.getDb(context).selector(Message.class)
                     .where("type", "=", Message.MESSAGE_TYPE_TEXT_MARKDOWN)
                     .and(WhereBuilder.b("showContent", "like", "%" + content + "%"))
+                    .and(WhereBuilder.b("sendStatus", "=", 1))
                     .findAll();
             List<Message> messageList3 = DbCacheUtils.getDb(context).selector(Message.class)
                     .where("type", "=", Message.MESSAGE_TYPE_TEXT_PLAIN)
                     .and(WhereBuilder.b("showContent", "like", "%" + content + "%"))
+                    .and(WhereBuilder.b("sendStatus", "=", 1))
                     .findAll();
             messageList.addAll(messageList1);
             messageList.addAll(messageList2);
@@ -816,6 +740,7 @@ public class MessageCacheUtil {
                     .and(WhereBuilder.b("type", "=", Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN)
                             .or("type", "=", Message.MESSAGE_TYPE_TEXT_MARKDOWN)
                             .or("type", "=", Message.MESSAGE_TYPE_TEXT_PLAIN))
+                    .and(WhereBuilder.b("sendStatus", "=", 1))
                     .and(WhereBuilder.b("showContent", "like", "%" + content + "%"))
                     .findAll();
             if (messageList != null) {
@@ -831,9 +756,9 @@ public class MessageCacheUtil {
     /**
      * 根据内容查找记录
      */
-    public static List<ConversationFromChatContent> getConversationListByContent(Context context, String content) {
+    public static List<ConversationWithMessageNum> getConversationListByContent(Context context, String content) {
         Map<String, Integer> cidNumMap = new HashMap<>();
-        List<ConversationFromChatContent> conversationFromChatContentList = new ArrayList<>();
+        List<ConversationWithMessageNum> conversationFromChatContentList = new ArrayList<>();
         try {
             List<Message> messageList;
             List<String> conversationIdList = new ArrayList<>();
@@ -858,8 +783,8 @@ public class MessageCacheUtil {
             for (int i = 0; i < conversationList.size(); i++) {
                 Conversation tempConversation = conversationList.get(i);
                 if (cidNumMap.containsKey(tempConversation.getId())) {
-                    ConversationFromChatContent conversationFromChatContent =
-                            new ConversationFromChatContent(tempConversation, cidNumMap.get(tempConversation.getId()));
+                    ConversationWithMessageNum conversationFromChatContent =
+                            new ConversationWithMessageNum(tempConversation, cidNumMap.get(tempConversation.getId()));
                     if (tempConversation.getType().equals(Conversation.TYPE_DIRECT)) {
                         conversationFromChatContent.initSingleChatContact();
                     }

@@ -70,7 +70,6 @@ import com.inspur.emmcloud.bean.system.VoiceResult;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.interf.ResultCallback;
-import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.chat.mvp.view.ConversationInfoActivity;
 import com.inspur.emmcloud.ui.chat.mvp.view.ConversationSearchActivity;
 import com.inspur.emmcloud.ui.chat.pop.PopupWindowList;
@@ -87,6 +86,7 @@ import com.inspur.emmcloud.util.privates.NotificationUpgradeUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
 import com.inspur.emmcloud.util.privates.Voice2StringMessageUtils;
 import com.inspur.emmcloud.util.privates.audioformat.AudioMp3ToPcm;
+import com.inspur.emmcloud.util.privates.cache.AppConfigCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
@@ -108,7 +108,6 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -125,9 +124,9 @@ public class ConversationActivity extends ConversationBaseActivity {
     private static final int SHARE_SEARCH_RUEST_CODE = 31;
     private static final int VOICE_CALL_MEMBER_CODE = 32;
     private static final int REFRESH_HISTORY_MESSAGE = 6;
-    private static final int REFRESH_PUSH_MESSAGE = 7;
+    private static final int REFRESH_NEW_MESSAGE = 7;
     private static final int REFRESH_OFFLINE_MESSAGE = 8;
-    private static final int UNREAD_NUMBER_BORDER = 20;
+    private static final int COUNT_EVERY_PAGE = 20;
     @BindView(R.id.msg_list)
     RecycleViewForSizeChange msgListView;
 
@@ -159,7 +158,6 @@ public class ConversationActivity extends ConversationBaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -172,6 +170,9 @@ public class ConversationActivity extends ConversationBaseActivity {
         handler = new Handler() {
             @Override
             public void handleMessage(android.os.Message msg) {
+                if (adapter == null) {
+                    return;
+                }
                 switch (msg.what) {
                     case REFRESH_HISTORY_MESSAGE:
                         List<UIMessage> historyUIMessageList = (List<UIMessage>) msg.obj;
@@ -183,43 +184,16 @@ public class ConversationActivity extends ConversationBaseActivity {
                         }
                         swipeRefreshLayout.setRefreshing(false);
                         break;
-                    case REFRESH_PUSH_MESSAGE:
-                        uiMessageList = (List<UIMessage>) msg.obj;
+                    case REFRESH_NEW_MESSAGE:
+                        showMessageList();
+                        break;
+                    case REFRESH_OFFLINE_MESSAGE:
+                        List<Message> cacheMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, null, COUNT_EVERY_PAGE);
+                        uiMessageList = UIMessage.MessageList2UIMessageList(cacheMessageList);
                         adapter.setMessageList(uiMessageList);
                         adapter.notifyDataSetChanged();
                         msgListView.scrollToPosition(uiMessageList.size() - 1);
                         WSAPIService.getInstance().setChannelMessgeStateRead(cid);
-                        break;
-                    case REFRESH_OFFLINE_MESSAGE:
-                        if (adapter == null) {
-                            return;
-                        }
-                        List<Message> offlineMessageList = (List<Message>) msg.obj;
-                        Iterator<Message> it = offlineMessageList.iterator();
-                        if (uiMessageList.size() > 0) {
-                            while (it.hasNext()) {
-                                //发送成功的消息去重去重
-                                Message offlineMessage = it.next();
-                                if (uiMessageList.contains(new UIMessage(offlineMessage.getId()))) {
-                                    it.remove();
-                                } else {
-                                    //离线消息获取后，更改对应的未发送成功状态的消息
-                                    int index = uiMessageList.indexOf((new UIMessage(offlineMessage.getTmpId())));
-                                    if (index != -1) {
-                                        uiMessageList.get(index).setSendStatus(Message.MESSAGE_SEND_SUCCESS);
-                                        it.remove();
-                                    }
-                                }
-                            }
-                        }
-                        if (offlineMessageList.size() > 0) {
-                            List<UIMessage> offlineUIMessageList = UIMessage.MessageList2UIMessageList(offlineMessageList);
-                            uiMessageList.addAll(offlineUIMessageList);
-                            adapter.setMessageList(uiMessageList);
-                            adapter.notifyDataSetChanged();
-                            msgListView.MoveToPosition(uiMessageList.size() - 1);
-                            WSAPIService.getInstance().setChannelMessgeStateRead(cid);
-                        }
                         break;
                     default:
                         break;
@@ -236,37 +210,44 @@ public class ConversationActivity extends ConversationBaseActivity {
         super.onNewIntent(intent);
         setIntent(intent);
         initConversationInfo();
+        MyApplication.getInstance().setCurrentChannelCid(cid);
     }
 
     @Override
     protected void initChannelMessage() {
-        List<Message> cacheMessageList;
-        UIMessage uiMessage = null;
-        if (getIntent().hasExtra(EXTRA_UIMESSAGE)) {
-            uiMessage = (UIMessage) getIntent().getSerializableExtra(EXTRA_UIMESSAGE);
-            cacheMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, null);
-        } else {
-            cacheMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, null, 20);
+        initViews();
+        showMessageList();
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+            //根据服务端配置是否强制拉取最新消息
+            String isForcePullMessage = AppConfigCacheUtils.getAppConfigValue(BaseApplication.getInstance(), Constant.CONCIG_FORCE_PULL_MESSAGE, "true");
+            if (getIntent().hasExtra(EXTRA_NEED_GET_NEW_MESSAGE) || isForcePullMessage.equals("true")) {
+                getNewMessageOfChannel();
+            }
+
         }
-        if (cacheMessageList == null) {
-            cacheMessageList = new ArrayList<>();
+    }
+
+    private void showMessageList() {
+        int position = -1;
+        List<Message> cacheMessageList;
+        if (getIntent().hasExtra(EXTRA_POSITION_MESSAGE)) {
+            UIMessage uiMessage = (UIMessage) getIntent().getSerializableExtra(EXTRA_POSITION_MESSAGE);
+            cacheMessageList = MessageCacheUtil.getFutureMessageList(BaseApplication.getInstance(), cid, uiMessage.getCreationDate());
+            if (cacheMessageList.size() < COUNT_EVERY_PAGE) {
+                cacheMessageList = MessageCacheUtil.getHistoryMessageList(BaseApplication.getInstance(), cid, null, COUNT_EVERY_PAGE);
+            }
+            position = cacheMessageList.indexOf(uiMessage.getMessage());
+        } else {
+            cacheMessageList = MessageCacheUtil.getHistoryMessageList(BaseApplication.getInstance(), cid, null, COUNT_EVERY_PAGE);
+
+        }
+        if (position == -1) {
+            position = cacheMessageList.size() - 1;
         }
         uiMessageList = UIMessage.MessageList2UIMessageList(cacheMessageList);
-        initViews();
-        if (getIntent().hasExtra(EXTRA_NEED_GET_NEW_MESSAGE) && NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-            getNewMessageOfChannel();
-        }
-        if (uiMessage != null) {
-            final int position = uiMessageList.indexOf(uiMessage);
-            if (position != -1) {
-                msgListView.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        msgListView.MoveToPosition(position);
-                    }
-                });
-            }
-        }
+        adapter.setMessageList(uiMessageList);
+        adapter.notifyDataSetChanged();
+        msgListView.scrollToPosition(position);
     }
 
 
@@ -279,29 +260,29 @@ public class ConversationActivity extends ConversationBaseActivity {
         setChannelTitle();
         initMsgListView();
         sendMsgFromShare();
-        setUnReadMessageCount();
+//        setUnReadMessageCount();
     }
 
-    private void setUnReadMessageCount() {
-        if (getIntent().hasExtra(EXTRA_UNREAD_MESSAGE)) {
-            final List<Message> unReadMessageList = (List<Message>) getIntent().getSerializableExtra(EXTRA_UNREAD_MESSAGE);
-//            unreadRoundBtn.setVisibility(unReadMessageList.size() > UNREAD_NUMBER_BORDER ? View.VISIBLE : View.GONE);
-            unreadRoundBtn.setText(getString(R.string.chat_conversation_unread_count, unReadMessageList.size()));
-            unreadRoundBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    List<UIMessage> unReadMessageUIList = UIMessage.MessageList2UIMessageList(unReadMessageList);
-                    uiMessageList.clear();
-                    uiMessageList.addAll(unReadMessageUIList);
-                    adapter.setMessageList(uiMessageList);
-                    adapter.notifyDataSetChanged();
-                    msgListView.MoveToPosition(0);
-                    unreadRoundBtn.setVisibility(View.GONE);
-                    msgListView.scrollToPosition(0);
-                }
-            });
-        }
-    }
+//    private void setUnReadMessageCount() {
+//        if (getIntent().hasExtra(EXTRA_UNREAD_MESSAGE)) {
+//            final List<Message> unReadMessageList = (List<Message>) getIntent().getSerializableExtra(EXTRA_UNREAD_MESSAGE);
+////            unreadRoundBtn.setVisibility(unReadMessageList.size() > UNREAD_NUMBER_BORDER ? View.VISIBLE : View.GONE);
+//            unreadRoundBtn.setText(getString(R.string.chat_conversation_unread_count, unReadMessageList.size()));
+//            unreadRoundBtn.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    List<UIMessage> unReadMessageUIList = UIMessage.MessageList2UIMessageList(unReadMessageList);
+//                    uiMessageList.clear();
+//                    uiMessageList.addAll(unReadMessageUIList);
+//                    adapter.setMessageList(uiMessageList);
+//                    adapter.notifyDataSetChanged();
+//                    msgListView.MoveToPosition(0);
+//                    unreadRoundBtn.setVisibility(View.GONE);
+//                    msgListView.scrollToPosition(0);
+//                }
+//            });
+//        }
+//    }
 
 
     /**
@@ -542,7 +523,6 @@ public class ConversationActivity extends ConversationBaseActivity {
                 backUiMessage = uiMessage;
                 int[] operationsId = getCardLongClickOperations(uiMessage);
                 if (operationsId.length > 0 && uiMessage.getSendStatus() == 1) {
-//                    showLongClickOperationsDialog(operationsId, ConversationActivity.this, uiMessage);
                     showLongClickDialog(operationsId, uiMessage, view);
                 }
                 return true;
@@ -572,9 +552,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 }
             }
         });
-        adapter.setMessageList(uiMessageList);
         msgListView.setAdapter(adapter);
-        msgListView.MoveToPosition(uiMessageList.size() - 1);
     }
 
     /**
@@ -1031,15 +1009,11 @@ public class ConversationActivity extends ConversationBaseActivity {
         Bundle bundle = new Bundle();
         switch (conversation.getType()) {
             case Conversation.TYPE_GROUP:
-//                bundle.putSerializable(ConversationInfoActivity.EXTRA_CID, conversation.getId());
-//                Intent intent = new Intent(this, ConversationInfoActivity.class);
-//                intent.putExtras(bundle);
-//                startActivityForResult(intent, REQUEST_QUIT_CHANNELGROUP);
-//                break;
             case Conversation.TYPE_DIRECT:
                 bundle.putString(ConversationInfoActivity.EXTRA_CID, conversation.getId());
-                IntentUtils.startActivity(ConversationActivity.this,
-                        ConversationInfoActivity.class, bundle);
+                Intent intent = new Intent(this, ConversationInfoActivity.class);
+                intent.putExtras(bundle);
+                startActivityForResult(intent, REQUEST_QUIT_CHANNELGROUP);
                 break;
             case Conversation.TYPE_CAST:
                 bundle.putSerializable(ConversationCastInfoActivity.EXTRA_CID, conversation.getId());
@@ -1171,7 +1145,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         //当有网络并且本地没有连续消息时，网络获取
         if ((NetUtils.isNetworkConnected(MyApplication.getInstance(), false) &&
                 !(uiMessageList.size() > 0 && MessageCacheUtil.isDataInLocal(ConversationActivity.this, cid, uiMessageList
-                        .get(0).getCreationDate(), 20)))) {
+                        .get(0).getCreationDate(), COUNT_EVERY_PAGE)))) {
             WSAPIService.getInstance().getHistoryMessage(cid, getNewMessageId());
         } else {
             getHistoryMessageFromLocal();
@@ -1197,7 +1171,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     private void getHistoryMessageFromLocal() {
         if (uiMessageList.size() > 0) {
             List<Message> messageList = MessageCacheUtil.getHistoryMessageList(
-                    MyApplication.getInstance(), cid, uiMessageList.get(0).getCreationDate(), 20);
+                    MyApplication.getInstance(), cid, uiMessageList.get(0).getMessage(), COUNT_EVERY_PAGE);
             uiMessageList.addAll(0, UIMessage.MessageList2UIMessageList(messageList));
             adapter.setMessageList(uiMessageList);
             adapter.notifyItemRangeInserted(0, messageList.size());
@@ -1207,11 +1181,14 @@ public class ConversationActivity extends ConversationBaseActivity {
     }
 
 
-
     //接收到websocket发过来的消息
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceiveWSMessage(EventMessage eventMessage) {
-        if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE)) {
+    public void onReceiveWSMessage(SimpleEventMessage simpleEventMessage) {
+        if (simpleEventMessage.getAction().equals(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE_CONVERSATION)) {
+            if (adapter == null) {
+                return;
+            }
+            EventMessage eventMessage = (EventMessage) simpleEventMessage.getMessageObj();
             if (eventMessage.getStatus() == 200) {
                 String content = eventMessage.getContent();
                 JSONObject contentObj = JSONUtils.getJSONObject(content);
@@ -1233,7 +1210,9 @@ public class ConversationActivity extends ConversationBaseActivity {
                         uiMessageList.add(new UIMessage(receivedWSMessage));
                         adapter.setMessageList(uiMessageList);
                         adapter.notifyItemInserted(uiMessageList.size() - 1);
-                        msgListView.MoveToPosition(uiMessageList.size() - 1);
+                        if (!msgListView.canScrollVertically(1)) {
+                            msgListView.MoveToPosition(uiMessageList.size() - 1);
+                        }
                     } else {
                         uiMessageList.remove(index);
                         uiMessageList.add(index, new UIMessage(receivedWSMessage));
@@ -1282,7 +1261,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 String content = eventMessage.getContent();
                 GetChannelMessagesResult getChannelMessagesResult = new GetChannelMessagesResult(content);
                 final List<Message> newMessageList = getChannelMessagesResult.getMessageList();
-                new CacheMessageListThread(newMessageList, null, REFRESH_PUSH_MESSAGE).start();
+                new CacheMessageListThread(newMessageList, null, REFRESH_NEW_MESSAGE).start();
                 WSAPIService.getInstance().setChannelMessgeStateRead(cid);
             }
             if ((boolean) ((HashMap) eventMessage.getExtra()).get("isNeedRefreshConversationList")) {
@@ -1330,7 +1309,9 @@ public class ConversationActivity extends ConversationBaseActivity {
      */
     private void getNewMessageOfChannel() {
         if (NetUtils.isNetworkConnected(this, false)) {
-            WSAPIService.getInstance().getChannelNewMessage(cid, isFromScanCode);
+            //获取完消息之后，需要刷新沟通页列表，防止新的频道不显示
+            boolean isReFreshConversationList = getIntent().getBooleanExtra(EXTRA_COME_FROM_SCANCODE, false);
+            WSAPIService.getInstance().getChannelNewMessage(cid, isReFreshConversationList);
         }
     }
 
@@ -1766,18 +1747,19 @@ public class ConversationActivity extends ConversationBaseActivity {
                 android.os.Message message = null;
                 switch (refreshType) {
                     case REFRESH_HISTORY_MESSAGE:
-                        List<Message> historyMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, uiMessageList.get(0).getMessage().getCreationDate(), 20);
+                        List<Message> historyMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, uiMessageList.get(0).getMessage(), COUNT_EVERY_PAGE);
                         List<UIMessage> historyUIMessageList = UIMessage.MessageList2UIMessageList(historyMessageList);
                         message = handler.obtainMessage(refreshType, historyUIMessageList);
                         break;
-                    case REFRESH_PUSH_MESSAGE:
-                        List<Message> cacheMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, null, 20);
-                        List<UIMessage> newUIMessageList = UIMessage.MessageList2UIMessageList(cacheMessageList);
-                        message = handler.obtainMessage(refreshType, newUIMessageList);
-                        break;
                     case REFRESH_OFFLINE_MESSAGE:
-                        message = handler.obtainMessage(refreshType, messageList);
-                        break;
+                    case REFRESH_NEW_MESSAGE:
+//                        List<Message> cacheMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, null, 20);
+//                        List<UIMessage> newUIMessageList = UIMessage.MessageList2UIMessageList(cacheMessageList);
+                        message = handler.obtainMessage(refreshType);
+//                        break;
+//                    case REFRESH_OFFLINE_MESSAGE:
+//                        message = handler.obtainMessage(refreshType, messageList);
+//                        break;
                 }
                 message.sendToTarget();
             }
@@ -1812,7 +1794,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             msgContentRegularFile.setName(volumeFile.getName());
             msgContentRegularFile.setSize(volumeFile.getSize());
             msgContentRegularFile.setMedia(newPath);
-            Message fakeMessage = CommunicationUtils.combineTransmitRegularFileMessage(cid, newPath, msgContentRegularFile);
+            Message fakeMessage = CommunicationUtils.combineTransmitRegularFileMessage(cid, "", msgContentRegularFile);
             addLocalMessage(fakeMessage, Message.MESSAGE_SEND_ING);
             MessageSendManager.getInstance().sendMessage(fakeMessage);
         }

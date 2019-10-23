@@ -230,6 +230,7 @@ public class CommunicationUtils {
         message.setId(tracer);
         message.setTmpId(tracer);
         message.setType(Message.MESSAGE_TYPE_MEDIA_IMAGE);
+        message.setLocalPath("");
         MsgContentMediaImage contentMediaImage = new MsgContentMediaImage();
         contentMediaImage.setName(msgContentMediaImage.getName());
         contentMediaImage.setRawHeight(msgContentMediaImage.getRawHeight());
@@ -256,13 +257,13 @@ public class CommunicationUtils {
         message.setId(tracer);
         message.setTmpId(tracer);
         message.setType("file/regular-file");
-        message.setLocalPath(localFilePath);
+        message.setLocalPath("");
 
         MsgContentRegularFile msgContentRegularFile = new MsgContentRegularFile();
         msgContentRegularFile.setCategory(orgMsgContentRegularFile.getCategory());
         msgContentRegularFile.setName(orgMsgContentRegularFile.getName());
         msgContentRegularFile.setSize(orgMsgContentRegularFile.getSize());
-        msgContentRegularFile.setMedia(localFilePath);
+        msgContentRegularFile.setMedia(orgMsgContentRegularFile.getMedia());
         message.setContent(msgContentRegularFile.toString());
         return message;
     }

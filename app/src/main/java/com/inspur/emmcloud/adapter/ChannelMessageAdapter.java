@@ -72,9 +72,9 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         });
     }
 
-    public void setMessageList(List<UIMessage> UImessageList) {
+    public void setMessageList(List<UIMessage> UIMessageList) {
         this.UIMessageList.clear();
-        this.UIMessageList.addAll(UImessageList);
+        this.UIMessageList.addAll(UIMessageList);
     }
 
     public void setChannelData(String channelType, ECMChatInputMenu chatInputMenu) {

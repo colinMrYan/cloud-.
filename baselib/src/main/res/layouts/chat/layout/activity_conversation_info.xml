@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
@@ -57,17 +57,25 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_conversation_members_head"
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#FFFFFF"
-                android:paddingBottom="10dp"
-                android:paddingLeft="9dp"
-                android:paddingRight="9dp"></android.support.v7.widget.RecyclerView>
+                android:descendantFocusability="blocksDescendants">
+
+                <com.inspur.emmcloud.baselib.widget.NoScrollGridView
+                    android:id="@+id/rv_conversation_members_head"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#FFFFFF"
+                    android:listSelector="@android:color/transparent"
+                    android:numColumns="5"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="9dp"
+                    android:paddingRight="9dp"></com.inspur.emmcloud.baselib.widget.NoScrollGridView>
+            </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/rl_more_members"
@@ -88,17 +96,10 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:includeFontPadding="false"
                         android:text="@string/channel_search_more_group_members"
                         android:textColor="#999999"
-                        android:textSize="13sp" />
-
-                    <ImageView
-                        android:layout_width="6dp"
-                        android:layout_height="12dp"
-                        android:layout_marginLeft="3dp"
-                        android:paddingTop="2dp"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/ic_arrow_right" />
+                        android:textSize="15sp" />
                 </LinearLayout>
             </RelativeLayout>
 
