@@ -51,6 +51,7 @@ import com.inspur.emmcloud.basemodule.widget.richedit.InsertModel;
 import com.inspur.emmcloud.bean.chat.InputTypeBean;
 import com.inspur.emmcloud.bean.system.VoiceResult;
 import com.inspur.emmcloud.interf.OnVoiceResultCallback;
+import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
 import com.inspur.emmcloud.util.privates.MediaPlayerUtils;
 import com.inspur.emmcloud.util.privates.Voice2StringMessageUtils;
@@ -638,7 +639,7 @@ public class ECMChatInputMenu extends LinearLayout {
                             openMentionPage(false);
                             break;
                         case "voice_input":     //语音输入
-                            if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+                            if (NetUtils.isNetworkConnected(MyApplication.getInstance()) && WebSocketPush.getInstance().isSocketConnect()) {
                                 if (VoiceCommunicationUtils.getInstance().isVoiceBusy()) {
                                     ToastUtils.show(R.string.voice_communication_voice_busy_tip);
                                     return;
