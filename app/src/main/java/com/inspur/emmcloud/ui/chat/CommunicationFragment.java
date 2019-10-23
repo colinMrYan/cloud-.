@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.chat;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -96,6 +97,12 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import io.socket.client.Socket;
 
 import static android.app.Activity.RESULT_OK;
@@ -311,7 +318,6 @@ public class CommunicationFragment extends BaseFragment {
     }
 
 
-
     /**
      * 弹出频道操作选择框
      *
@@ -481,60 +487,64 @@ public class CommunicationFragment extends BaseFragment {
      */
     private void sortConversationList() {
         // TODO Auto-generated method stub
-        Thread sortConversationThread = new Thread() {
+        Observable.create(new ObservableOnSubscribe<List<UIConversation>>() {
             @Override
-            public void run() {
-                try {
-                    List<Conversation> conversationList = ConversationCacheUtils.getConversationList(MyApplication.getInstance());
-                    List<UIConversation> uiConversationList = new ArrayList<>();
-                    if (conversationList.size() > 0) {
-                        uiConversationList = UIConversation.conversationList2UIConversationList(conversationList);
-                        ConversationCacheUtils.saveConversationList(MyApplication.getInstance(), conversationList);
-                        List<UIConversation> stickUIConversationList = new ArrayList<>();
-                        Iterator<UIConversation> it = uiConversationList.iterator();
-                        while (it.hasNext()) {
-                            UIConversation uiConversation = it.next();
-                            Conversation conversation = uiConversation.getConversation();
-                            if (conversation.isHide()) {
-                                if (uiConversation.getUnReadCount() != 0) {
-                                    conversation.setHide(false);
-                                    conversation.setDraft(getDraftWords(conversation));
-                                    ConversationCacheUtils.saveConversation(MyApplication.getInstance(), conversation);
-                                } else {
-                                    it.remove();
-                                    continue;
-                                }
-                            } else if (conversation.isStick()) {
-                                uiConversation.getConversation().setDraft(getDraftWords(conversation));
-                                stickUIConversationList.add(uiConversation);
+            public void subscribe(ObservableEmitter<List<UIConversation>> emitter) throws Exception {
+                List<Conversation> conversationList = ConversationCacheUtils.getConversationList(MyApplication.getInstance());
+                List<UIConversation> uiConversationList = new ArrayList<>();
+                if (conversationList.size() > 0) {
+                    uiConversationList = UIConversation.conversationList2UIConversationList(conversationList);
+                    ConversationCacheUtils.saveConversationList(MyApplication.getInstance(), conversationList);
+                    List<UIConversation> stickUIConversationList = new ArrayList<>();
+                    Iterator<UIConversation> it = uiConversationList.iterator();
+                    while (it.hasNext()) {
+                        UIConversation uiConversation = it.next();
+                        Conversation conversation = uiConversation.getConversation();
+                        if (conversation.isHide()) {
+                            if (uiConversation.getUnReadCount() != 0) {
+                                conversation.setHide(false);
+                                conversation.setDraft(getDraftWords(conversation));
+                                ConversationCacheUtils.saveConversation(MyApplication.getInstance(), conversation);
+                            } else {
                                 it.remove();
                                 continue;
                             }
+                        } else if (conversation.isStick()) {
                             uiConversation.getConversation().setDraft(getDraftWords(conversation));
-                            if (uiConversation.getMessageList().size() == 0) {
-                                //当会话内没有消息时，如果是单聊或者不是owner的群聊，则进行隐藏
-                                if (conversation.getType().equals(Conversation.TYPE_DIRECT) ||
-                                        (conversation.getType().equals(CREAT_CHANNEL_GROUP) && conversation.getOwner().equals(MyApplication.getInstance().getUid()))) {
-                                    it.remove();
-                                    continue;
-                                }
+                            stickUIConversationList.add(uiConversation);
+                            it.remove();
+                            continue;
+                        }
+                        uiConversation.getConversation().setDraft(getDraftWords(conversation));
+                        if (uiConversation.getMessageList().size() == 0) {
+                            //当会话内没有消息时，如果是单聊或者不是owner的群聊，则进行隐藏
+                            if (conversation.getType().equals(Conversation.TYPE_DIRECT) ||
+                                    (conversation.getType().equals(CREAT_CHANNEL_GROUP) && conversation.getOwner().equals(MyApplication.getInstance().getUid()))) {
+                                it.remove();
+                                continue;
                             }
                         }
-                        Collections.sort(stickUIConversationList, new UIConversation().new SortComparator());
-                        Collections.sort(uiConversationList, new UIConversation().new SortComparator());
-                        uiConversationList.addAll(0, stickUIConversationList);
                     }
-                    if (handler != null) {
-                        android.os.Message message = handler.obtainMessage(SORT_CONVERSATION_COMPLETE, uiConversationList);
-                        message.sendToTarget();
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    Collections.sort(stickUIConversationList, new UIConversation().new SortComparator());
+                    Collections.sort(uiConversationList, new UIConversation().new SortComparator());
+                    uiConversationList.addAll(0, stickUIConversationList);
                 }
             }
-        };
-        sortConversationThread.start();
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<UIConversation>>() {
+                    @Override
+                    public void accept(List<UIConversation> uiConversationList) throws Exception {
+                        conversationAdapter.setData(displayUIConversationList);
+                        conversationAdapter.notifyDataSetChanged();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+
+                    }
+                });
+
     }
 
     /**
@@ -563,11 +573,11 @@ public class CommunicationFragment extends BaseFragment {
                             conversationAdapter.notifyDataSetChanged();
                         }
                         break;
-                    case SORT_CONVERSATION_COMPLETE:
-                        displayUIConversationList = (List<UIConversation>) msg.obj;
-                        conversationAdapter.setData(displayUIConversationList);
-                        conversationAdapter.notifyDataSetChanged();
-                        break;
+//                    case SORT_CONVERSATION_COMPLETE:
+//                        displayUIConversationList = (List<UIConversation>) msg.obj;
+//                        conversationAdapter.setData(displayUIConversationList);
+//                        conversationAdapter.notifyDataSetChanged();
+//                        break;
                     case CACHE_MESSAGE_SUCCESS:
                         if (msg.obj != null) {
                             List<Message> messageList = (List<Message>) msg.obj;
@@ -577,11 +587,9 @@ public class CommunicationFragment extends BaseFragment {
                         }
                         MessageSendManager.getInstance().resendMessageAfterWSOnline();
                         break;
-                    case CACHE_CONVERSATION_LIST_SUCCESS:
-                        sortConversationList();
-                        List<Conversation> conversationList = (List<Conversation>) msg.obj;
-                        createGroupIcon(conversationList);
-                        break;
+//                    case CACHE_CONVERSATION_LIST_SUCCESS:
+
+//                        break;
                     default:
                         break;
                 }
@@ -637,12 +645,12 @@ public class CommunicationFragment extends BaseFragment {
      */
     private void setAllConversationRead() {
         // TODO Auto-generated method stub
-        new Thread(new Runnable() {
+        Observable.create(new ObservableOnSubscribe<Void>() {
             @Override
-            public void run() {
+            public void subscribe(ObservableEmitter<Void> emitter) throws Exception {
                 MessageCacheUtil.setAllMessageRead(MyApplication.getInstance());
             }
-        }).start();
+        }).subscribeOn(Schedulers.io()).subscribe();
         for (UIConversation uiConversation : displayUIConversationList) {
             if (uiConversation.getUnReadCount() != 0) {
                 uiConversation.setUnReadCount(0);
@@ -661,12 +669,12 @@ public class CommunicationFragment extends BaseFragment {
     private void setConversationRead(int position, final UIConversation uiConversation) {
         if (uiConversation.getUnReadCount() > 0) {
             WSAPIService.getInstance().setChannelMessgeStateRead(uiConversation.getId());
-            new Thread(new Runnable() {
+            Observable.create(new ObservableOnSubscribe<Void>() {
                 @Override
-                public void run() {
+                public void subscribe(ObservableEmitter<Void> emitter) throws Exception {
                     MessageCacheUtil.setChannelMessageRead(MyApplication.getInstance(), uiConversation.getId());
                 }
-            }).start();
+            }).subscribeOn(Schedulers.io()).subscribe();
             uiConversation.setUnReadCount(0);
             conversationAdapter.setData(displayUIConversationList);
             conversationAdapter.notifyRealItemChanged(position);
@@ -691,7 +699,7 @@ public class CommunicationFragment extends BaseFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         // TODO Auto-generated method stub
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == getActivity().RESULT_OK
+        if (resultCode == Activity.RESULT_OK
                 && requestCode == CREAT_CHANNEL_GROUP) {
             // 创建群组
             String searchResult = data.getExtras().getString("searchResult");
@@ -1107,13 +1115,13 @@ public class CommunicationFragment extends BaseFragment {
      * @param uiConversation
      */
     private void setConversationHide(final UIConversation uiConversation) {
-        new Thread(new Runnable() {
+        Observable.create(new ObservableOnSubscribe<Void>() {
             @Override
-            public void run() {
+            public void subscribe(ObservableEmitter<Void> emitter) throws Exception {
                 ConversationCacheUtils.updateConversationHide(MyApplication.getInstance(), uiConversation.getId(), true);
                 MessageCacheUtil.setChannelMessageRead(MyApplication.getInstance(), uiConversation.getId());
             }
-        }).start();
+        }).subscribeOn(Schedulers.io()).subscribe();
         int index = displayUIConversationList.indexOf(uiConversation);
         if (index != -1) {
             long unReadCount = displayUIConversationList.get(index).getUnReadCount();
@@ -1124,46 +1132,51 @@ public class CommunicationFragment extends BaseFragment {
                 WSAPIService.getInstance().setChannelMessgeStateRead(uiConversation.getId());
             }
         }
-//        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-//            loadingDlg.show();
-//            apiService.setConversationHide(id, true);
-//        }
     }
 
-    class CacheConversationThread extends Thread {
-        private GetConversationListResult getConversationListResult;
 
-        public CacheConversationThread(GetConversationListResult getConversationListResult) {
-            this.getConversationListResult = getConversationListResult;
-        }
-
-        @Override
-        public void run() {
-            List<Conversation> conversationList = getConversationListResult.getConversationList();
-            List<Conversation> cacheConversationList = ConversationCacheUtils.getConversationList(MyApplication.getInstance());
-            //将数据库中Conversation隐藏状态赋值给从网络拉取的最新数据
-            for (Conversation conversation : conversationList) {
-                int index = cacheConversationList.indexOf(conversation);
-                if (index != -1) {
-                    conversation.setHide(cacheConversationList.get(index).isHide());
+    private void cacheConversationList(final GetConversationListResult getConversationListResult) {
+        Observable.create(new ObservableOnSubscribe<List<Conversation>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<Conversation>> emitter) throws Exception {
+                List<Conversation> conversationList = getConversationListResult.getConversationList();
+                List<Conversation> cacheConversationList = ConversationCacheUtils.getConversationList(MyApplication.getInstance());
+                //将数据库中Conversation隐藏状态赋值给从网络拉取的最新数据
+                for (Conversation conversation : conversationList) {
+                    int index = cacheConversationList.indexOf(conversation);
+                    if (index != -1) {
+                        conversation.setHide(cacheConversationList.get(index).isHide());
+                    }
                 }
-            }
-            ConversationCacheUtils.saveConversationList(MyApplication.getInstance(), conversationList);
-            //服务端和本地数据取交集
-            List<Conversation> intersectionConversationList = new ArrayList<>();
-            intersectionConversationList.addAll(conversationList);
-            intersectionConversationList.retainAll(cacheConversationList);
-            cacheConversationList.removeAll(intersectionConversationList);
-            ConversationCacheUtils.deleteConversationList(MyApplication.getInstance(), cacheConversationList);
-            if (handler != null) {
+                ConversationCacheUtils.saveConversationList(MyApplication.getInstance(), conversationList);
+                //服务端和本地数据取交集
+                List<Conversation> intersectionConversationList = new ArrayList<>();
+                intersectionConversationList.addAll(conversationList);
+                intersectionConversationList.retainAll(cacheConversationList);
+                cacheConversationList.removeAll(intersectionConversationList);
+                ConversationCacheUtils.deleteConversationList(MyApplication.getInstance(), cacheConversationList);
                 if (isGroupIconCreate) {
                     conversationList.removeAll(intersectionConversationList);
                 }
-                android.os.Message message = handler.obtainMessage(CACHE_CONVERSATION_LIST_SUCCESS, conversationList);
-                message.sendToTarget();
+                emitter.onNext(conversationList);
+                emitter.onComplete();
             }
-        }
+        })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Consumer<List<Conversation>>() {
+                    @Override
+                    public void accept(List<Conversation> conversationList) throws Exception {
+                        sortConversationList();
+                        createGroupIcon(conversationList);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                    }
+                });
     }
+
 
     /**
      * 接受创建群组头像的icon
@@ -1240,7 +1253,7 @@ public class CommunicationFragment extends BaseFragment {
         public void returnConversationListSuccess(GetConversationListResult getConversationListResult) {
             if (getActivity() != null) {
                 swipeRefreshLayout.setRefreshing(false);
-                new CacheConversationThread(getConversationListResult).run();
+                cacheConversationList(getConversationListResult);
             }
         }
 

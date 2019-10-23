@@ -153,4 +153,6 @@ dependencies {
     api (deps.S3.aws_android_sdk_mobile_client){ transitive = true }
     api (deps.S3.aws_auth){ transitive = true }
     api deps.wechatOpenSdk
+    api deps.rx.rxjava
+    api deps.rx.rxandroid
 }
