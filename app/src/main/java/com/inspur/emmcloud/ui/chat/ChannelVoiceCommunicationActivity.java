@@ -197,7 +197,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
      * @see ChannelVoiceCommunicationActivity#onCreate()
      */
     private boolean isLeaveChannel = false;
-    private CountDownTimer countDownTimer;
     private CountDownTimer countDownOnlyOneConnectLeftTimer;
     /**
      * 本地视频初始x坐标
@@ -322,21 +321,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         PermissionRequestManagerUtils.getInstance().requestRuntimePermission(this, Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
             @Override
             public void onPermissionRequestSuccess(List<String> permissions) {
-                countDownTimer = new CountDownTimer(millisInFuture, countDownInterval) {
-                    @Override
-                    public void onTick(long millisUntilFinished) {
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        //如果是邀请或被邀请状态，倒计时结束时挂断电话
-                        if (layoutState == INVITEE_LAYOUT_STATE || layoutState == INVITER_LAYOUT_STATE) {
-                            isLeaveChannel = true;
-                            refuseOrLeaveChannel(COMMUNICATION_REFUSE);
-                        }
-                    }
-                };
-                countDownTimer.start();
+                voiceCommunicationUtils.startCountDownTimer();
             }
 
             @Override
@@ -370,6 +355,20 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             inviteeInfoBean = voiceCommunicationUtils.getInviteeInfoBean();
             userCount = voiceCommunicationUtils.getUserCount();
             cloudPlusChannelId = voiceCommunicationUtils.getCloudPlusChannelId();
+            if (layoutState == INVITER_LAYOUT_STATE || layoutState == INVITEE_LAYOUT_STATE) {
+                //头像源数据修改为本地，注释掉的是从接口中读取的url，约定的，第0个为邀请者
+                ImageDisplayUtils.getInstance().displayImage(userHeadImg, voiceCommunicationMemberList.get(0).getHeadImageUrl(), R.drawable.icon_person_default);
+                //ImageDisplayUtils.getInstance().displayImage(userHeadImg, APIUri.getUserIconUrl(this, infoBean.getUserId()), R.drawable.icon_person_default);
+                userNameTv.setText(voiceCommunicationMemberList.get(0).getUserName());
+                if (voiceCommunicationMemberList.size() <= 5) {
+                    communicationMembersFirstRecyclerview.setAdapter(new VoiceCommunicationMemberAdapter(ChannelVoiceCommunicationActivity.this, voiceCommunicationMemberList, 3));
+                } else if (voiceCommunicationMemberList.size() <= 9) {
+                    List<VoiceCommunicationJoinChannelInfoBean> list1 = voiceCommunicationMemberList.subList(0, 5);
+                    List<VoiceCommunicationJoinChannelInfoBean> list2 = voiceCommunicationMemberList.subList(5, voiceCommunicationMemberList.size());
+                    communicationMembersFirstRecyclerview.setAdapter(new VoiceCommunicationMemberAdapter(ChannelVoiceCommunicationActivity.this, list1, 3));
+                    communicationMemberSecondRecyclerview.setAdapter(new VoiceCommunicationMemberAdapter(ChannelVoiceCommunicationActivity.this, list2, 3));
+                }
+            }
         }
     }
 
@@ -841,6 +840,15 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                     }
                 });
             }
+
+            @Override
+            public void onCountDownTimerFinish() {
+                //如果是邀请或被邀请状态，倒计时结束时挂断电话
+                if (layoutState == INVITEE_LAYOUT_STATE || layoutState == INVITER_LAYOUT_STATE) {
+                    isLeaveChannel = true;
+                    refuseOrLeaveChannel(COMMUNICATION_REFUSE);
+                }
+            }
         });
     }
 
@@ -1178,7 +1186,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
 
         Log.d("zhang", "onPause: layoutState = " + layoutState);
         Log.d("zhang", "onPause: voiceCommunicationUtils.getCommunicationState() = " + voiceCommunicationUtils.getCommunicationState());
-        if (voiceCommunicationUtils.getCommunicationState() != COMMUNICATION_STATE_OVER) {
+        if (voiceCommunicationUtils.getCommunicationState() != COMMUNICATION_STATE_OVER && voiceCommunicationUtils.getCommunicationState() != -1) {
             if (PermissionRequestManagerUtils.getInstance().isHasPermission(this, Permissions.RECORD_AUDIO)) {
                 pickUpVoiceCommunication();
             }
@@ -1200,10 +1208,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (countDownTimer != null) {
-            countDownTimer.cancel();
-            countDownTimer = null;
-        }
         if (countDownOnlyOneConnectLeftTimer != null) {
             countDownOnlyOneConnectLeftTimer.cancel();
             countDownOnlyOneConnectLeftTimer = null;

@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.util.privates;
 
 import android.content.Context;
+import android.os.CountDownTimer;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -73,6 +74,11 @@ public class VoiceCommunicationUtils {
      * 布局状态
      */
     private int layoutState = -1;
+    private CountDownTimer countDownTimer;
+    /**
+     * 30s内无响应挂断 总时长：millisInFuture，隔多长时间回调一次countDownInterval
+     */
+    private long millisInFuture = 30 * 1000L, countDownInterval = 1000;
     private IRtcEngineEventHandler mRtcEventHandler = new IRtcEngineEventHandler() {
         //其他用户离线回调
         @Override
@@ -227,6 +233,37 @@ public class VoiceCommunicationUtils {
         }
     }
 
+    /**
+     * 启动计时器
+     */
+    public void startCountDownTimer() {
+        countDownTimer = new CountDownTimer(millisInFuture, countDownInterval) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+            }
+
+            @Override
+            public void onFinish() {
+//                //如果是邀请或被邀请状态，倒计时结束时挂断电话
+//                if (layoutState == INVITEE_LAYOUT_STATE || layoutState == INVITER_LAYOUT_STATE) {
+//                    isLeaveChannel = true;
+//                    refuseOrLeaveChannel(COMMUNICATION_REFUSE);
+//                }
+                if (communicationState == COMMUNICATION_STATE_PRE) {
+                    if (onVoiceCommunicationCallbacks != null) {
+                        onVoiceCommunicationCallbacks.onCountDownTimerFinish();
+                    }
+                    SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
+                    destroy();
+                }
+                if (countDownTimer != null) {
+                    countDownTimer.cancel();
+                    countDownTimer = null;
+                }
+            }
+        };
+        countDownTimer.start();
+    }
     /**
      * 获取当前音频通话的状态
      *
@@ -424,6 +461,10 @@ public class VoiceCommunicationUtils {
      * 离开频道销毁资源
      */
     public void destroy() {
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+            countDownTimer = null;
+        }
         leaveChannel();
         new android.os.Handler().postDelayed(new Runnable() {
             @Override
