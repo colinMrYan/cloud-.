@@ -9,7 +9,7 @@ import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.DbCacheUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.bean.chat.Conversation;
-import com.inspur.emmcloud.bean.chat.ConversationFromChatContent;
+import com.inspur.emmcloud.bean.chat.ConversationWithMessageNum;
 import com.inspur.emmcloud.bean.chat.MatheSet;
 import com.inspur.emmcloud.bean.chat.Message;
 
@@ -756,9 +756,9 @@ public class MessageCacheUtil {
     /**
      * 根据内容查找记录
      */
-    public static List<ConversationFromChatContent> getConversationListByContent(Context context, String content) {
+    public static List<ConversationWithMessageNum> getConversationListByContent(Context context, String content) {
         Map<String, Integer> cidNumMap = new HashMap<>();
-        List<ConversationFromChatContent> conversationFromChatContentList = new ArrayList<>();
+        List<ConversationWithMessageNum> conversationFromChatContentList = new ArrayList<>();
         try {
             List<Message> messageList;
             List<String> conversationIdList = new ArrayList<>();
@@ -783,8 +783,8 @@ public class MessageCacheUtil {
             for (int i = 0; i < conversationList.size(); i++) {
                 Conversation tempConversation = conversationList.get(i);
                 if (cidNumMap.containsKey(tempConversation.getId())) {
-                    ConversationFromChatContent conversationFromChatContent =
-                            new ConversationFromChatContent(tempConversation, cidNumMap.get(tempConversation.getId()));
+                    ConversationWithMessageNum conversationFromChatContent =
+                            new ConversationWithMessageNum(tempConversation, cidNumMap.get(tempConversation.getId()));
                     if (tempConversation.getType().equals(Conversation.TYPE_DIRECT)) {
                         conversationFromChatContent.initSingleChatContact();
                     }

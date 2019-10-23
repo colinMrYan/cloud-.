@@ -374,7 +374,7 @@ public class AppSchemeHandleActivity extends BaseActivity {
             }
             shareLinkMap.put("title", titleStr);
             shareLinkMap.put("url", urlStr);
-            shareLinkMap.put("digest", digest);
+            shareLinkMap.put("digest", StringUtils.isBlank(digest) ? titleStr : digest);
         }
         return shareLinkMap;
     }

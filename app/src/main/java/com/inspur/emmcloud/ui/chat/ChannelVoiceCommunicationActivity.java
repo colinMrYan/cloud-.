@@ -52,6 +52,7 @@ import com.inspur.emmcloud.bean.chat.GetVoiceCommunicationResult;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationAudioVolumeInfo;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
 import com.inspur.emmcloud.bean.system.GetBoolenResult;
+import com.inspur.emmcloud.ui.AppSchemeHandleActivity;
 import com.inspur.emmcloud.util.privates.CustomProtocol;
 import com.inspur.emmcloud.util.privates.MediaPlayerManagerUtils;
 import com.inspur.emmcloud.util.privates.NotifyUtil;
@@ -83,6 +84,7 @@ import io.agora.rtc.video.VideoCanvas;
  * @see SuspensionWindowManagerUtils#goBackVoiceCommunicationActivity()
  * @see NotifyUtil#sendNotifyMsg(Context)
  * @see CommunicationFragment#onReceiveVoiceOrVideoCall(GetVoiceAndVideoResult)
+ * @see AppSchemeHandleActivity#openScheme()
  */
 public class ChannelVoiceCommunicationActivity extends BaseActivity {
 
@@ -292,6 +294,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         EventBus.getDefault().register(this);
         ButterKnife.bind(this);
         voiceCommunicationUtils = VoiceCommunicationUtils.getInstance();
+        voiceCommunicationUtils.initializeAgoraEngine();
         cloudPlusChannelId = getIntent().getStringExtra(ConversationActivity.CLOUD_PLUS_CHANNEL_ID);
         communicationType = getIntent().getStringExtra(VOICE_VIDEO_CALL_TYPE);
         //如果是邀请者能收到从外面传进来的人员列表
@@ -619,6 +622,14 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             //如果是通话中则“通话中”文字显示一下就不再显示
             communicationStateTv.setText(state == COMMUNICATION_LAYOUT_STATE ? "" : communicationStateTv.getText());
             if (state == INVITER_LAYOUT_STATE || state == INVITEE_LAYOUT_STATE) {
+                switch (state) {
+                    case INVITER_LAYOUT_STATE:
+                        mediaPlayerManagerUtils.changeToEarpieceModeNoStop();
+                        break;
+                    case INVITEE_LAYOUT_STATE:
+                        mediaPlayerManagerUtils.changeToSpeakerMode();
+                        break;
+                }
                 mediaPlayerManagerUtils.play(R.raw.voice_communication_watting_answer, null);
             } else {
                 mediaPlayerManagerUtils.stop();
@@ -653,7 +664,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
 
         CustomProtocol customProtocol = new CustomProtocol(getVoiceAndVideoResult.getContextParamsSchema());
         String cmd = customProtocol.getParamMap().get("cmd");
-        LogUtils.YfcDebug("收到拒绝消息：" + cmd);
         if (!StringUtils.isBlank(cmd) && getVoiceAndVideoResult.getContextParamsRoom().equals(agoraChannelId)) {
             String uid = customProtocol.getParamMap().get("uid");
             if (cmd.equals("destroy")) {
@@ -673,7 +683,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                     //接听方
                     ToastUtils.show(ContactUserCacheUtils.getUserName(uid) + getString(R.string.meeting_has_refused));
                 }
-                LogUtils.YfcDebug("收到拒绝消息");
                 changeUserConnectStateByUid(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_REFUSE, uid);
                 checkCommunicationFinish();
             }

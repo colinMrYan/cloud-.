@@ -14,6 +14,7 @@ import android.widget.Chronometer;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity;
 
@@ -83,6 +84,7 @@ public class SuspensionWindowManagerUtils {
         if (isShowing && null != windowView && windowManager != null) {
             windowManager.removeView(windowView);
             isShowing = false;
+            NotifyUtil.deleteNotify(windowContext);
         }
     }
 
@@ -151,6 +153,19 @@ public class SuspensionWindowManagerUtils {
         };
 //        imgBtnPhone.setOnTouchListener(touchListener);
         windowView.setOnTouchListener(touchListener);
+    }
+
+    /**
+     * 未接听状态进入小窗，对方接听后
+     * 刷新小窗开始计时
+     */
+    public void refreshSmallWindow() {
+        LogUtils.YfcDebug("刷新小窗");
+        if (chronometer != null) {
+            LogUtils.YfcDebug("重置计时器");
+            chronometer.setBase(SystemClock.elapsedRealtime());
+            chronometer.start();
+        }
     }
 
     /**

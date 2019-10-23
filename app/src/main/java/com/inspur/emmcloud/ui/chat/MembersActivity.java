@@ -570,7 +570,7 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
                     intent.putExtra("isInputKeyWord", isInputKeyWord);
                 } else if (state == SELECT_STATE) {
                     if (jsonArray.length() < 2) {
-                        ToastUtils.show("频道用户数不能少于2个。");
+                        ToastUtils.show(R.string.voice_communication_more_than_two);
                         return;
                     }
                 }
