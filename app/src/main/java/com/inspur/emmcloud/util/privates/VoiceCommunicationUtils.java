@@ -79,6 +79,7 @@ public class VoiceCommunicationUtils {
         public void onUserOffline(int uid, int reason) {
             userCount = userCount - 1;
             if (userCount < 2) {
+                destroy();
                 SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
             }
             onVoiceCommunicationCallbacks.onUserOffline(uid, reason);
@@ -136,6 +137,7 @@ public class VoiceCommunicationUtils {
         @Override
         public void onError(int err) {
             super.onError(err);
+            destroy();
             SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
             onVoiceCommunicationCallbacks.onError(err);
         }
@@ -144,6 +146,7 @@ public class VoiceCommunicationUtils {
         @Override
         public void onConnectionLost() {
             super.onConnectionLost();
+            destroy();
             SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
             onVoiceCommunicationCallbacks.onConnectionLost();
         }
@@ -429,6 +432,8 @@ public class VoiceCommunicationUtils {
             }
         }, 1000);
         mRtcEngine = null;
+        communicationState = -1;
+        layoutState = -1;
     }
 
     /**
