@@ -139,6 +139,8 @@ public class ECMChatInputMenu extends LinearLayout {
     ImageView emotionDeleteImg;
     @BindView(R.id.emotion_grid)
     GridView emotionGrid;
+    @BindView(R.id.emotion_btn)
+    ImageButton emotionBtn;
     EmotionAdapter emotionAdapter;
     private int voiceInputStatus = 1;
     private boolean canMentions = false;
@@ -762,7 +764,7 @@ public class ECMChatInputMenu extends LinearLayout {
 
     private void startVoice2Word() {
         inputEdit.setVisibility(INVISIBLE);
-        addMenuLayout.setVisibility(GONE);
+        hideAddMenuLayout();
         voiceInputLayout.setVisibility(View.VISIBLE);
         voiceInputStatus = VOICE_INPUT_STATUS_NORMAL;
         initVoiceInputView();
@@ -916,7 +918,7 @@ public class ECMChatInputMenu extends LinearLayout {
                 if (view.getTag() == null || (int) view.getTag() == TAG_KEYBOARD_INPUT) {
                     setVoiceInputStatus(TAG_VOICE_INPUT);
                     if (addMenuLayout.isShown()) {
-                        addMenuLayout.setVisibility(View.GONE);
+                        hideAddMenuLayout();
                     } else if (InputMethodUtils.isSoftInputShow((Activity) getContext())) {
                         InputMethodUtils.hide((Activity) getContext());
                     }
@@ -938,15 +940,43 @@ public class ECMChatInputMenu extends LinearLayout {
                 break;
             case R.id.add_btn:
                 if (addMenuLayout.isShown()) {
-                    setOtherLayoutHeightLock(true);
-                    setAddMenuLayoutShow(false);
-                    setOtherLayoutHeightLock(false);
+                    if (viewpagerLayout.getVisibility() == View.VISIBLE) {
+                        setOtherLayoutHeightLock(true);
+                        setAddMenuLayoutShow(false);
+                        setOtherLayoutHeightLock(false);
+                    } else {
+                        changeAddMenuLayoutContent(false);
+                    }
+
                 } else if (InputMethodUtils.isSoftInputShow((Activity) getContext())) {
                     setOtherLayoutHeightLock(true);
                     setAddMenuLayoutShow(true);
                     setOtherLayoutHeightLock(false);
+                    changeAddMenuLayoutContent(false);
                 } else {
                     setAddMenuLayoutShow(true);
+                    changeAddMenuLayoutContent(false);
+                }
+                setVoiceInputStatus(TAG_KEYBOARD_INPUT);
+                break;
+            case R.id.emotion_btn:
+                if (addMenuLayout.isShown()) {
+                    if (viewpagerLayout.getVisibility() == View.VISIBLE) {
+                        changeAddMenuLayoutContent(true);
+                    } else {
+                        setOtherLayoutHeightLock(true);
+                        setAddMenuLayoutShow(false);
+                        setOtherLayoutHeightLock(false);
+                    }
+
+                } else if (InputMethodUtils.isSoftInputShow((Activity) getContext())) {
+                    setOtherLayoutHeightLock(true);
+                    setAddMenuLayoutShow(true);
+                    setOtherLayoutHeightLock(false);
+                    changeAddMenuLayoutContent(true);
+                } else {
+                    setAddMenuLayoutShow(true);
+                    changeAddMenuLayoutContent(true);
                 }
                 setVoiceInputStatus(TAG_KEYBOARD_INPUT);
                 break;
@@ -972,19 +1002,7 @@ public class ECMChatInputMenu extends LinearLayout {
                 voiceInputEt.setText("");
                 stopVoiceInput();
                 break;
-            case R.id.emotion_btn:    //表情  zyj  TODO
-                if (emotionLayout.isShown()) {
-                    setOtherLayoutHeightLock(true);
-                    setAddMenuLayoutShow(false);
-                    setOtherLayoutHeightLock(false);
-                } else if (InputMethodUtils.isSoftInputShow((Activity) getContext())) {
-                    setOtherLayoutHeightLock(true);
-                    setAddMenuLayoutShow(true);
-                    setOtherLayoutHeightLock(false);
-                } else {
-                    emotionLayout.setVisibility(VISIBLE);
-                }
-                break;
+
             case R.id.emotion_delete:  //表情删除
                 EmotionUtil.deleteSingleEmojcon(inputEdit);
                 break;
@@ -992,6 +1010,18 @@ public class ECMChatInputMenu extends LinearLayout {
                 break;
         }
     }
+
+    /**
+     * 更改添加Menu
+     *
+     * @param isShowEmotion
+     */
+    private void changeAddMenuLayoutContent(boolean isShowEmotion) {
+        viewpagerLayout.setVisibility(isShowEmotion ? View.GONE : View.VISIBLE);
+        emotionLayout.setVisibility(isShowEmotion ? View.VISIBLE : View.GONE);
+        emotionBtn.setImageResource(isShowEmotion ? R.drawable.ic_chat_input_keyboard : R.drawable.ic_chat_btn_emotion);
+    }
+
 
     @OnTouch({R.id.volume_level_img})
     public boolean onTouch(View v, MotionEvent event) {
@@ -1046,7 +1076,7 @@ public class ECMChatInputMenu extends LinearLayout {
             public boolean onTouch(View v, MotionEvent event) {
                 hideVoiceInputLayout();
                 if (addMenuLayout.getVisibility() != View.GONE) {
-                    addMenuLayout.setVisibility(View.GONE);
+                    hideAddMenuLayout();
                 }
                 InputMethodUtils.hide((Activity) getContext());
                 return false;
@@ -1091,10 +1121,6 @@ public class ECMChatInputMenu extends LinearLayout {
         return addMenuLayout.isShown();
     }
 
-    public boolean isVoiceInputLayoutShow() {
-        return voiceInputLayout.isShown();
-    }
-
     public void setAddMenuLayoutShow(boolean isShow) {
         if (isShow) {
             int softInputHeight = InputMethodUtils.getSupportSoftInputHeight((Activity) getContext());
@@ -1106,14 +1132,20 @@ public class ECMChatInputMenu extends LinearLayout {
             addMenuLayout.getLayoutParams().height = softInputHeight;
             addMenuLayout.setVisibility(View.VISIBLE);
         } else if (addMenuLayout.isShown()) {
-            addMenuLayout.setVisibility(View.GONE);
+            hideAddMenuLayout();
             InputMethodUtils.display((Activity) getContext(), inputEdit, 0);
+            emotionBtn.setImageResource(R.drawable.ic_chat_btn_emotion);
         }
 
     }
 
+    public boolean isVoiceInputLayoutShow() {
+        return voiceInputLayout.isShown();
+    }
+
     public void hideAddMenuLayout() {
         addMenuLayout.setVisibility(View.GONE);
+        emotionBtn.setImageResource(R.drawable.ic_chat_btn_emotion);
     }
 
     public void hideVoiceInputLayout() {
