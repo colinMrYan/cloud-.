@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/emotion_container"
+    android:layout_width="match_parent"
+    android:layout_height="274dp"
+    android:background="#f5f5f5"
+    android:paddingLeft="10dp"
+    android:paddingTop="25dp"
+    android:paddingRight="10dp"
+    android:visibility="gone">
+
+    <GridView
+        android:id="@+id/emotion_grid"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:cacheColorHint="@android:color/transparent"
+        android:columnWidth="45dip"
+        android:horizontalSpacing="0dip"
+        android:numColumns="auto_fit"
+        android:scrollbars="vertical"
+        android:verticalSpacing="0dip" />
+
+    <ImageView
+        android:id="@+id/emotion_delete"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="30dp"
+        android:src="@drawable/icon_splash_skip" />
+
+
+</RelativeLayout>
+
+

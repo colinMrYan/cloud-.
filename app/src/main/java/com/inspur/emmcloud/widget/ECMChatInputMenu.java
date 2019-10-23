@@ -22,6 +22,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -52,6 +53,8 @@ import com.inspur.emmcloud.bean.chat.InputTypeBean;
 import com.inspur.emmcloud.bean.system.VoiceResult;
 import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
+import com.inspur.emmcloud.ui.chat.emotion.EmotionAdapter;
+import com.inspur.emmcloud.ui.chat.emotion.EmotionUtil;
 import com.inspur.emmcloud.util.privates.MediaPlayerUtils;
 import com.inspur.emmcloud.util.privates.Voice2StringMessageUtils;
 import com.inspur.emmcloud.util.privates.VoiceCommunicationUtils;
@@ -62,6 +65,7 @@ import com.inspur.emmcloud.widget.waveprogress.VoiceCompleteView;
 import com.inspur.emmcloud.widget.waveprogress.WaterWaveProgress;
 import com.itheima.roundedimageview.RoundedImageView;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -128,6 +132,13 @@ public class ECMChatInputMenu extends LinearLayout {
     TextView voiceInputClean;
     @BindView(R.id.voice_input_send)
     TextView voiceInputSend;
+    @BindView(R.id.emotion_container)
+    RelativeLayout emotionLayout;
+    @BindView(R.id.emotion_delete)
+    ImageView emotionDeleteImg;
+    @BindView(R.id.emotion_grid)
+    GridView emotionGrid;
+    EmotionAdapter emotionAdapter;
     private int voiceInputStatus = 1;
     private boolean canMentions = false;
     private ChatInputMenuListener chatInputMenuListener;
@@ -170,6 +181,7 @@ public class ECMChatInputMenu extends LinearLayout {
         initInputEdit();
         initVoiceInput();
         initAudioRecord();
+        initEmotion();
     }
 
     //initVoiceInput
@@ -330,6 +342,31 @@ public class ECMChatInputMenu extends LinearLayout {
         languageList.add(getContext().getString(R.string.voice_input_language_mandarin));   //普通話
         languageList.add(getContext().getString(R.string.voice_input_language_english));    //英語
 //        languageList.add(getContext().getString(R.string.voice_input_language_cantonese));  //粵語
+    }
+
+    /**
+     * 初始化表情相关
+     */
+    private void initEmotion() {
+        List<String> resList = EmotionUtil.getExpressionRes(35);
+        emotionAdapter = new EmotionAdapter(getContext(), 1, resList);
+        emotionGrid.setAdapter(emotionAdapter);
+
+        emotionGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String filename = emotionAdapter.getItem(position);
+
+                try {
+                    Class clz = Class.forName("com.inspur.emmcloud.ui.chat.emotion.EmotionUtil");
+                    Field field = clz.getField(filename);
+                    inputEdit.append(EmotionUtil.getSmiledText(getContext(), (String) field.get(null)));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -871,7 +908,7 @@ public class ECMChatInputMenu extends LinearLayout {
     }
 
     @OnClick({R.id.voice_btn, R.id.send_msg_btn, R.id.add_btn, R.id.voice_input_close_img, R.id.voice_input_language,
-            R.id.voice_input_clear, R.id.voice_input_send})
+            R.id.voice_input_clear, R.id.voice_input_send, R.id.emotion_btn, R.id.emotion_delete})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.voice_btn:
@@ -933,6 +970,22 @@ public class ECMChatInputMenu extends LinearLayout {
                 }
                 voiceInputEt.setText("");
                 stopVoiceInput();
+                break;
+            case R.id.emotion_btn:    //表情  zyj  TODO
+                if (emotionLayout.isShown()) {
+                    setOtherLayoutHeightLock(true);
+                    setAddMenuLayoutShow(false);
+                    setOtherLayoutHeightLock(false);
+                } else if (InputMethodUtils.isSoftInputShow((Activity) getContext())) {
+                    setOtherLayoutHeightLock(true);
+                    setAddMenuLayoutShow(true);
+                    setOtherLayoutHeightLock(false);
+                } else {
+                    emotionLayout.setVisibility(VISIBLE);
+                }
+                break;
+            case R.id.emotion_delete:  //表情删除
+                EmotionUtil.deleteSingleEmojcon(inputEdit);
                 break;
             default:
                 break;
