@@ -30,7 +30,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="15dp"
-                    android:text="最近使用"
+                    android:text="@string/chat_emotion_recent_tip"
                     android:textColor="@color/grey_a5a5a5"
                     android:textSize="12sp" />
 
@@ -53,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:paddingLeft="15dp"
-                android:text="所有表情"
+                android:text="@string/chat_emotion_total_tip"
                 android:textColor="@color/grey_a5a5a5"
                 android:textSize="12sp" />
 
