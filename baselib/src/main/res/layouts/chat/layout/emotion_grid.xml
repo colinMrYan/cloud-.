@@ -67,11 +67,11 @@
                     android:id="@+id/emotion_grid"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:columnWidth="51dp"
                     android:cacheColorHint="@android:color/transparent"
-                    android:paddingBottom="50dp"
+                    android:columnWidth="51dp"
                     android:horizontalSpacing="0dip"
                     android:numColumns="auto_fit"
+                    android:paddingBottom="50dp"
                     android:scrollbars="vertical"
                     android:verticalSpacing="10dp" />
 
@@ -87,12 +87,16 @@
         android:layout_alignParentBottom="true">
 
         <ImageView
-            android:id="@+id/emotion_delete"
             android:layout_width="100dp"
-            android:layout_height="50dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="30dp"
-            android:src="@drawable/icon_splash_skip" />
+            android:layout_height="80dp"
+            android:src="@drawable/emotion_delete_shadow" />
+
+        <ImageView
+            android:id="@+id/emotion_delete"
+            android:layout_width="55dp"
+            android:layout_height="43dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/emotion_delete" />
     </RelativeLayout>
 
 </RelativeLayout>
