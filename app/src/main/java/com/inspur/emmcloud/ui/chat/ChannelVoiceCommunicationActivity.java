@@ -1,8 +1,11 @@
 package com.inspur.emmcloud.ui.chat;
 
+import android.bluetooth.BluetoothHeadset;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.CountDownTimer;
@@ -52,6 +55,7 @@ import com.inspur.emmcloud.bean.chat.GetVoiceCommunicationResult;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationAudioVolumeInfo;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
 import com.inspur.emmcloud.bean.system.GetBoolenResult;
+import com.inspur.emmcloud.broadcastreceiver.VoiceCommunicationHeadSetReceiver;
 import com.inspur.emmcloud.ui.AppSchemeHandleActivity;
 import com.inspur.emmcloud.util.privates.CustomProtocol;
 import com.inspur.emmcloud.util.privates.MediaPlayerManagerUtils;
@@ -124,10 +128,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
      * 传递页面是否来自小窗
      */
     public static final String VOICE_IS_FROM_SMALL_WINDOW = "voice_is_from_window";
-    /**
-     * 通话时长，用来记录Chronometer控件的时间
-     */
-    public static final String VOICE_TIME = "voice_time";
     /**
      * 屏幕宽度
      */
@@ -287,6 +287,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     private VoiceCommunicationMemberAdapter voiceCommunicationMemberAdapterSecond;
     private MediaPlayerManagerUtils mediaPlayerManagerUtils;
     private VoiceCommunicationUtils voiceCommunicationUtils;
+    private VoiceCommunicationHeadSetReceiver receiver;
 
     @Override
     public void onCreate() {
@@ -312,6 +313,19 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         recoverData();
         initViews();
         checkHasPermission();
+        registerReceiver();
+    }
+
+    /**
+     * 注册耳机插拔监听
+     */
+    public void registerReceiver() {
+        receiver = new VoiceCommunicationHeadSetReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_HEADSET_PLUG);
+        filter.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
+        filter.addAction(BluetoothHeadset.ACTION_CONNECTION_STATE_CHANGED);
+        registerReceiver(receiver, filter);
     }
 
     /**
@@ -328,6 +342,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             public void onPermissionRequestFail(List<String> permissions) {
                 ToastUtils.show(ChannelVoiceCommunicationActivity.this, PermissionRequestManagerUtils.getInstance().getPermissionToast(ChannelVoiceCommunicationActivity.this, permissions));
                 if (!isFinishing()) {
+                    voiceCommunicationUtils.setCommunicationState(COMMUNICATION_STATE_OVER);
                     finish();
                 }
             }
@@ -885,8 +900,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     private void agoraException() {
         voiceCommunicationUtils.setCommunicationState(COMMUNICATION_STATE_OVER);
         Log.d("zhang", "COMMUNICATION_STATE_OVER: 33333333 ");
-        voiceCommunicationUtils.destroy();
-        SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
         finish();
     }
 
@@ -1122,7 +1135,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         if (Build.VERSION.SDK_INT >= 23) {
             if (Settings.canDrawOverlays(this)) {
                 Log.d("zhang", "pickUpVoiceCommunication: ");
-                SuspensionWindowManagerUtils.getInstance().showCommunicationSmallWindow(this, ResolutionUtils.getWidth(this),
+                SuspensionWindowManagerUtils.getInstance().showCommunicationSmallWindow(ResolutionUtils.getWidth(this),
                         Long.parseLong(TimeUtils.getChronometerSeconds(communicationTimeChronometer.getText().toString())));
                 finish();
             } else {
@@ -1139,7 +1152,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                         .show();
             }
         } else {
-            SuspensionWindowManagerUtils.getInstance().showCommunicationSmallWindow(this, ResolutionUtils.getWidth(this),
+            SuspensionWindowManagerUtils.getInstance().showCommunicationSmallWindow(ResolutionUtils.getWidth(this),
                     Long.parseLong(TimeUtils.getChronometerSeconds(communicationTimeChronometer.getText().toString())));
             finish();
         }
@@ -1150,7 +1163,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_WINDOW_PERMISSION) {
             if (Build.VERSION.SDK_INT >= 23 && Settings.canDrawOverlays(this)) {
-                SuspensionWindowManagerUtils.getInstance().showCommunicationSmallWindow(this, ResolutionUtils.getWidth(this),
+                SuspensionWindowManagerUtils.getInstance().showCommunicationSmallWindow(ResolutionUtils.getWidth(this),
                         Long.parseLong(TimeUtils.getChronometerSeconds(communicationTimeChronometer.getText().toString())));
                 finish();
             } else {
@@ -1203,6 +1216,9 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     protected void onStop() {
         super.onStop();
         NotifyUtil.sendNotifyMsg(this);
+        if (receiver != null) {
+            unregisterReceiver(receiver);
+        }
     }
 
     @Override
