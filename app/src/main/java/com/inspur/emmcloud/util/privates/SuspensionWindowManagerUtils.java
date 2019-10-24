@@ -41,6 +41,10 @@ public class SuspensionWindowManagerUtils {
     private long beginTime = 0;//touch开始时间
     private boolean isTouchEvent = false;//判定touch事件的标志
 
+    public SuspensionWindowManagerUtils() {
+        this.windowContext = BaseApplication.getInstance();
+    }
+
     /**
      * 获取悬浮窗实例
      *
@@ -66,7 +70,6 @@ public class SuspensionWindowManagerUtils {
     public void showCommunicationSmallWindow(int screenWidthSize, long time) {
         this.screenWidthSize = screenWidthSize;
         this.passedTime = time;
-        this.windowContext = BaseApplication.getInstance();
         if (isShowing) {
             return;
         }
