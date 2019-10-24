@@ -16,40 +16,45 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class EmotionUtil {
+    public static final String ee_2 = "[撇嘴]";
     public static final String ee_1 = "[微笑]";
-    public static final String ee_2 = "[调皮]";
-    public static final String ee_3 = "[呲牙]";
-    public static final String ee_4 = "[偷笑]";
-    public static final String ee_5 = "[撇嘴]";
+    public static final String ee_3 = "[色]";
+    public static final String ee_4 = "[得意]";
+    public static final String ee_5 = "[流泪]";
+    public static final String ee_7 = "[瞌睡]";
     public static final String ee_6 = "[害羞]";
-    public static final String ee_7 = "[奋斗]";
-    public static final String ee_8 = "[再见]";
-    public static final String ee_9 = "[抠鼻]";
-    public static final String ee_10 = "[疑问]";
-    public static final String ee_11 = "[坏笑]";
-    public static final String ee_12 = "[鄙视]";
-    public static final String ee_13 = "[捂脸]";
-    public static final String ee_14 = "[奸笑]";
-    public static final String ee_15 = "[机智]";
-    public static final String ee_16 = "[嘿哈]";
-    public static final String ee_17 = "[破涕为笑]";
-    public static final String ee_18 = "[流泪]";
-    public static final String ee_19 = "[发怒]";
-    public static final String ee_20 = "[色]";
-    public static final String ee_21 = "[睡]";
-    public static final String ee_22 = "[晕]";
-    public static final String ee_23 = "[鼓掌]";
-    public static final String ee_24 = "[惊恐]";
-    public static final String ee_25 = "[得意]";
-    public static final String ee_26 = "[礼物]";
-    public static final String ee_27 = "[玫瑰]";
-    public static final String ee_28 = "[爱心]";
-    public static final String ee_29 = "[咖啡]";
-    public static final String ee_30 = "[强]";
-    public static final String ee_31 = "[太阳]";
-    public static final String ee_32 = "[OK]";
-    public static final String ee_33 = "[蛋糕]";
-    public static final String ee_34 = "[拥抱]";
+    public static final String ee_8 = "[发怒]";
+    public static final String ee_9 = "[调皮]";
+    public static final String ee_10 = "[呲牙]";
+    public static final String ee_11 = "[略尴尬]";
+    public static final String ee_12 = "[偷笑]";
+    public static final String ee_13 = "[惊恐]";
+    public static final String ee_14 = "[了然于胸]";
+    public static final String ee_15 = "[奋斗]";
+    public static final String ee_16 = "[疑问]";
+    public static final String ee_17 = "[晕]";
+    public static final String ee_18 = "[再见]";
+    public static final String ee_19 = "[抠鼻]";
+    public static final String ee_20 = "[鼓掌]";
+    public static final String ee_21 = "[坏笑]";
+    public static final String ee_22 = "[鄙视]";
+    public static final String ee_23 = "[咖啡]";
+    public static final String ee_24 = "[玫瑰]";
+    public static final String ee_25 = "[爱心]";
+    public static final String ee_26 = "[蛋糕]";
+    public static final String ee_27 = "[太阳]";
+    public static final String ee_28 = "[抱抱]";
+    public static final String ee_29 = "[强]";
+    public static final String ee_30 = "[OK]";
+    public static final String ee_31 = "[笑哭]";
+    public static final String ee_32 = "[嘿哈]";
+    public static final String ee_33 = "[捂脸]";
+    public static final String ee_34 = "[斜眼笑]";
+    public static final String ee_35 = "[机智]";
+    public static final String ee_36 = "[庆祝]";
+    public static final String ee_37 = "[礼物]";
+    public static final String ee_38 = "[吃饭]";
+    private static final int MAX_COUNT = 38;
 
     private static final Map<Pattern, Integer> emoticons = new HashMap<>();
     private static final Spannable.Factory spannableFactory = Spannable.Factory.getInstance();
@@ -89,6 +94,10 @@ public class EmotionUtil {
         addPattern(emoticons, ee_32, R.drawable.ee_32);
         addPattern(emoticons, ee_33, R.drawable.ee_33);
         addPattern(emoticons, ee_34, R.drawable.ee_34);
+        addPattern(emoticons, ee_35, R.drawable.ee_35);
+        addPattern(emoticons, ee_36, R.drawable.ee_36);
+        addPattern(emoticons, ee_37, R.drawable.ee_37);
+        addPattern(emoticons, ee_38, R.drawable.ee_38);
     }
 
     private static void addPattern(Map<Pattern, Integer> map, String smile,
@@ -142,17 +151,14 @@ public class EmotionUtil {
 
     /**
      * 获取所有表情资源
-     *
-     * @param getSum
      * @return
      */
-    public static List<String> getExpressionRes(int getSum) {
+    public static List<String> getExpressionRes() {
         List<String> resList = new ArrayList<>();
-        for (int x = 1; x <= getSum; x++) {
+        for (int x = 1; x <= MAX_COUNT; x++) {
             String filename = "ee_" + x;
 
             resList.add(filename);
-
         }
         return resList;
     }
