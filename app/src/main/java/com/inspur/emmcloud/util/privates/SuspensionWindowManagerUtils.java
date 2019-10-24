@@ -16,6 +16,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity;
 
 import static com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_ING;
@@ -60,14 +61,13 @@ public class SuspensionWindowManagerUtils {
     /**
      * 显示悬浮窗
      *
-     * @param context
      * @param screenWidthSize
      * @param time
      */
-    public void showCommunicationSmallWindow(Context context, int screenWidthSize, long time) {
+    public void showCommunicationSmallWindow(int screenWidthSize, long time) {
         this.screenWidthSize = screenWidthSize;
         this.passedTime = time;
-        this.windowContext = context;
+        this.windowContext = BaseApplication.getInstance();
         if (isShowing) {
             return;
         }
@@ -234,7 +234,9 @@ public class SuspensionWindowManagerUtils {
         intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE,
                 VoiceCommunicationUtils.getInstance().getLayoutState());
         intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_TIME, Long.parseLong(TimeUtils.getChronometerSeconds(chronometer.getText().toString())));
+        LogUtils.YfcDebug("准备跳转");
         windowContext.startActivity(intent);
+        LogUtils.YfcDebug("跳转完成");
     }
 
     public Chronometer getChronometer() {

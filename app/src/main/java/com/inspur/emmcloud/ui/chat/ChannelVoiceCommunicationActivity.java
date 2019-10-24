@@ -1122,7 +1122,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         if (Build.VERSION.SDK_INT >= 23) {
             if (Settings.canDrawOverlays(this)) {
                 Log.d("zhang", "pickUpVoiceCommunication: ");
-                SuspensionWindowManagerUtils.getInstance().showCommunicationSmallWindow(this, ResolutionUtils.getWidth(this),
+                SuspensionWindowManagerUtils.getInstance().showCommunicationSmallWindow(ResolutionUtils.getWidth(this),
                         Long.parseLong(TimeUtils.getChronometerSeconds(communicationTimeChronometer.getText().toString())));
                 finish();
             } else {
@@ -1139,7 +1139,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                         .show();
             }
         } else {
-            SuspensionWindowManagerUtils.getInstance().showCommunicationSmallWindow(this, ResolutionUtils.getWidth(this),
+            SuspensionWindowManagerUtils.getInstance().showCommunicationSmallWindow(ResolutionUtils.getWidth(this),
                     Long.parseLong(TimeUtils.getChronometerSeconds(communicationTimeChronometer.getText().toString())));
             finish();
         }
@@ -1150,7 +1150,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_WINDOW_PERMISSION) {
             if (Build.VERSION.SDK_INT >= 23 && Settings.canDrawOverlays(this)) {
-                SuspensionWindowManagerUtils.getInstance().showCommunicationSmallWindow(this, ResolutionUtils.getWidth(this),
+                SuspensionWindowManagerUtils.getInstance().showCommunicationSmallWindow(ResolutionUtils.getWidth(this),
                         Long.parseLong(TimeUtils.getChronometerSeconds(communicationTimeChronometer.getText().toString())));
                 finish();
             } else {
