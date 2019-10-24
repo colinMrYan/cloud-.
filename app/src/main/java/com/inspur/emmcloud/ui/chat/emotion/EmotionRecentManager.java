@@ -13,7 +13,7 @@ public class EmotionRecentManager extends ArrayList<String> {
     private static final String DELIMITER = ",";
     private static final String PREFERENCE_EMOTION_NAME = "emotion_pref";
     private static final String PREF_RECENT = "recent_emotion";
-    private static final int MAX_SAVE_RECENT_EMOTION_SIZE = 8;
+    private static final int MAX_SAVE_RECENT_EMOTION_SIZE = 7;
     private static volatile EmotionRecentManager instance;
     private Context mContext;
 

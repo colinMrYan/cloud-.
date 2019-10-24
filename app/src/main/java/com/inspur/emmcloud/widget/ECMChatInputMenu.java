@@ -363,7 +363,7 @@ public class ECMChatInputMenu extends LinearLayout {
         emotionRecentGrid.setAdapter(emotionRecentAdapter);
         emotionRecentGrid.setOnItemClickListener(new OnEmotionItemClickListener());
 
-        List<String> resList = EmotionUtil.getExpressionRes(35);
+        List<String> resList = EmotionUtil.getExpressionRes();
         emotionAdapter = new EmotionAdapter(getContext(), 1, resList);
         emotionGrid.setAdapter(emotionAdapter);
         emotionGrid.setOnItemClickListener(new OnEmotionItemClickListener());
