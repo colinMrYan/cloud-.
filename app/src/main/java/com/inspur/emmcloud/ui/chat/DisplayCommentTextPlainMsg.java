@@ -16,6 +16,7 @@ import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentComment;
+import com.inspur.emmcloud.ui.chat.emotion.EmotionUtil;
 import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
 import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
@@ -56,7 +57,8 @@ public class DisplayCommentTextPlainMsg {
         commentTitleText.setTextColor(context.getResources().getColor(
                 isMyMsg ? R.color.white : R.color.black));
         SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(text, message.getMsgContentTextPlain().getMentionsMap());
-        commentContentText.setText(spannableString);
+        Spannable span = EmotionUtil.getSmiledText(context, spannableString);
+        commentContentText.setText(span);
         TransHtmlToTextUtils.stripUnderlines(
                 commentContentText, context.getResources().getColor(isMyMsg ? R.color.hightlight_in_blue_bg
                         : R.color.header_bg_blue));
