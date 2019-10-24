@@ -47,6 +47,7 @@ import com.inspur.emmcloud.util.privates.AppId2AppAndOpenAppUtils;
 import com.inspur.emmcloud.util.privates.CustomProtocol;
 import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.ProfileUtils;
+import com.inspur.emmcloud.util.privates.VoiceCommunicationUtils;
 import com.inspur.emmcloud.util.privates.WebAppUtils;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
 
@@ -260,6 +261,17 @@ public class AppSchemeHandleActivity extends BaseActivity {
                                     intent.setClass(BaseApplication.getInstance(), ConversationActivity.class);
                                     startActivity(intent);
                                 }
+                                finish();
+                                break;
+
+                            case "ecc-cloudplus-cmd-voice-call":
+                                Intent intentVoiceCall = new Intent();
+                                intentVoiceCall.setClass(AppSchemeHandleActivity.this, ChannelVoiceCommunicationActivity.class);
+                                intentVoiceCall.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                intentVoiceCall.putExtra(ChannelVoiceCommunicationActivity.VOICE_IS_FROM_SMALL_WINDOW, true);
+                                intentVoiceCall.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE,
+                                        VoiceCommunicationUtils.getInstance().getLayoutState());
+                                startActivity(intentVoiceCall);
                                 finish();
                                 break;
                             default:

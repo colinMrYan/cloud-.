@@ -152,9 +152,9 @@ public class VoiceCommunicationUtils {
         @Override
         public void onConnectionLost() {
             super.onConnectionLost();
+            onVoiceCommunicationCallbacks.onConnectionLost();
             destroy();
             SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
-            onVoiceCommunicationCallbacks.onConnectionLost();
         }
 
         //当你被服务端禁掉连接的权限时，会触发该回调。意外掉线之后，SDK 会自动进行重连，重连多次都失败之后，该回调会被触发，判定为连接不可用。
@@ -576,7 +576,7 @@ public class VoiceCommunicationUtils {
         JSONArray jsonArray = new JSONArray();
         for (int i = 0; i < voiceCommunicationUserInfoBeanList.size(); i++) {
             boolean isFrom = voiceCommunicationUserInfoBeanList.get(i).getUserId().equals(fromUid);
-            if (!voiceCommunicationUserInfoBeanList.get(i).getUserId().equals(BaseApplication.getInstance().getUid()) && !isFrom) {
+            if (!voiceCommunicationUserInfoBeanList.get(i).getUserId().equals(BaseApplication.getInstance().getUid())) {
                 jsonArray.put(voiceCommunicationUserInfoBeanList.get(i).getUserId());
             }
         }

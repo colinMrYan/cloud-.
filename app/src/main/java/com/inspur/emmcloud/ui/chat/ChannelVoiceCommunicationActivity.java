@@ -125,10 +125,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
      */
     public static final String VOICE_IS_FROM_SMALL_WINDOW = "voice_is_from_window";
     /**
-     * 通话时长，用来记录Chronometer控件的时间
-     */
-    public static final String VOICE_TIME = "voice_time";
-    /**
      * 屏幕宽度
      */
     public static final String SCREEN_SIZE = "screen_size";
@@ -328,6 +324,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             public void onPermissionRequestFail(List<String> permissions) {
                 ToastUtils.show(ChannelVoiceCommunicationActivity.this, PermissionRequestManagerUtils.getInstance().getPermissionToast(ChannelVoiceCommunicationActivity.this, permissions));
                 if (!isFinishing()) {
+                    voiceCommunicationUtils.setCommunicationState(COMMUNICATION_STATE_OVER);
                     finish();
                 }
             }
@@ -885,8 +882,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     private void agoraException() {
         voiceCommunicationUtils.setCommunicationState(COMMUNICATION_STATE_OVER);
         Log.d("zhang", "COMMUNICATION_STATE_OVER: 33333333 ");
-        voiceCommunicationUtils.destroy();
-        SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
         finish();
     }
 

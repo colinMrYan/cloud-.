@@ -15,7 +15,6 @@ import android.widget.Chronometer;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.LogUtils;
-import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity;
 
@@ -227,16 +226,33 @@ public class SuspensionWindowManagerUtils {
      * 回到语音通话界面n
      */
     private void goBackVoiceCommunicationActivity() {
-        Intent intent = new Intent();
-        intent.setClass(windowContext, ChannelVoiceCommunicationActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_IS_FROM_SMALL_WINDOW, true);
-        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE,
-                VoiceCommunicationUtils.getInstance().getLayoutState());
-        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_TIME, Long.parseLong(TimeUtils.getChronometerSeconds(chronometer.getText().toString())));
-        LogUtils.YfcDebug("准备跳转");
-        windowContext.startActivity(intent);
-        LogUtils.YfcDebug("跳转完成");
+        try {
+//            Uri uri=Uri.parse("ecc-cloudplus-cmd-voice-call://123");
+//            Intent intent=new Intent(Intent.ACTION_VIEW,uri);
+            Intent intent = Intent.parseUri("ecc-cloudplus-cmd-voice-call://voice_call", Intent.URI_INTENT_SCHEME);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_IS_FROM_SMALL_WINDOW, true);
+            intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE,
+                    VoiceCommunicationUtils.getInstance().getLayoutState());
+            LogUtils.YfcDebug("准备启动SchemeActivity");
+            windowContext.startActivity(intent);
+//            Intent intent = new Intent(windowContext, .class);
+//            Intent intent = Intent.parseUri("ecc-cloudplus-cmd-voice-call://123", Intent.URI_INTENT_SCHEME);
+//            intent.setClass(windowContext,AppSchemeHandleActivity.class);
+//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            PendingIntent pendingIntent =
+//                    PendingIntent.getActivity(windowContext, 0, intent, 0);
+//            try {
+//                pendingIntent.send();
+//            } catch (PendingIntent.CanceledException e) {
+//                e.printStackTrace();
+//            }
+
+            LogUtils.YfcDebug("启动应用");
+        } catch (Exception e) {
+            LogUtils.YfcDebug("捕获异常：" + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     public Chronometer getChronometer() {
