@@ -40,7 +40,7 @@
                     android:layout_height="50dp"
                     android:layout_marginTop="10dp"
                     android:cacheColorHint="@android:color/transparent"
-                    android:columnWidth="45dip"
+                    android:columnWidth="51dp"
                     android:horizontalSpacing="0dip"
                     android:numColumns="auto_fit"
                     android:scrollbars="vertical"
@@ -67,12 +67,13 @@
                     android:id="@+id/emotion_grid"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:columnWidth="51dp"
                     android:cacheColorHint="@android:color/transparent"
-                    android:columnWidth="45dip"
+                    android:paddingBottom="50dp"
                     android:horizontalSpacing="0dip"
                     android:numColumns="auto_fit"
                     android:scrollbars="vertical"
-                    android:verticalSpacing="0dip" />
+                    android:verticalSpacing="10dp" />
 
             </RelativeLayout>
 
