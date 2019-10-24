@@ -16,7 +16,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class EmotionUtil {
-    public static final String ee_1111 = "[微笑]";
+    public static final String ee_1 = "[微笑]";
     public static final String ee_2 = "[调皮]";
     public static final String ee_3 = "[呲牙]";
     public static final String ee_4 = "[偷笑]";
@@ -55,7 +55,7 @@ public class EmotionUtil {
     private static final Spannable.Factory spannableFactory = Spannable.Factory.getInstance();
 
     static {
-        addPattern(emoticons, ee_1111, R.drawable.ee_1);
+        addPattern(emoticons, ee_1, R.drawable.ee_1);
         addPattern(emoticons, ee_2, R.drawable.ee_2);
         addPattern(emoticons, ee_3, R.drawable.ee_3);
         addPattern(emoticons, ee_4, R.drawable.ee_4);
