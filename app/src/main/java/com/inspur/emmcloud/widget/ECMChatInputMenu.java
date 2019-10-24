@@ -139,6 +139,8 @@ public class ECMChatInputMenu extends LinearLayout {
     View emotionLayout;
     @BindView(R.id.emotion_delete)
     ImageView emotionDeleteImg;
+    @BindView(R.id.emotion_recent_layout)
+    View emotionRecentLayout;
     @BindView(R.id.emotion_recent_grid)
     NoScrollGridView emotionRecentGrid;
     @BindView(R.id.emotion_grid)
@@ -357,7 +359,6 @@ public class ECMChatInputMenu extends LinearLayout {
      */
     private void initEmotion() {
         EmotionRecentManager recentManager = EmotionRecentManager.getInstance(getContext());
-        W
         emotionRecentAdapter = new EmotionAdapter(getContext(), 1, recentManager);
         emotionRecentGrid.setAdapter(emotionRecentAdapter);
         emotionRecentGrid.setOnItemClickListener(new OnEmotionItemClickListener());
@@ -994,6 +995,7 @@ public class ECMChatInputMenu extends LinearLayout {
      */
     private void handleEmotionStatus() {
         if (emotionRecentAdapter != null) {
+            emotionRecentLayout.setVisibility(EmotionRecentManager.getInstance(getContext()).size() > 0 ? VISIBLE : GONE);
             emotionRecentAdapter.notifyDataSetChanged();
         }
         if (addMenuLayout.isShown()) {
@@ -1021,7 +1023,8 @@ public class ECMChatInputMenu extends LinearLayout {
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            String filename = emotionAdapter.getItem(position);
+            String filename = (parent.getId() == R.id.emotion_recent_grid ?
+                    emotionRecentAdapter.getItem(position) : emotionAdapter.getItem(position));
             int selectionStart = inputEdit.getSelectionStart();// 获取光标的位置
             try {
                 Class clz = Class.forName("com.inspur.emmcloud.ui.chat.emotion.EmotionUtil");
