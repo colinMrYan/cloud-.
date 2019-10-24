@@ -82,7 +82,11 @@ public class SuspensionWindowManagerUtils {
      */
     public void hideCommunicationSmallWindow() {
         if (isShowing && null != windowView && windowManager != null) {
-            windowManager.removeView(windowView);
+            try {
+                windowManager.removeView(windowView);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             isShowing = false;
         }
         NotifyUtil.deleteNotify(windowContext);
