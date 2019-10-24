@@ -72,15 +72,17 @@ public class NotifyUtil {
     public void setNotification(String title, String content, Class<?> cls) {
 
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        Intent intent = null;
+        try {
+            intent = Intent.parseUri("ecc-cloudplus-cmd-voice-call://voice_call", Intent.URI_INTENT_SCHEME);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_IS_FROM_SMALL_WINDOW, true);
+            intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE,
+                    VoiceCommunicationUtils.getInstance().getLayoutState());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        Intent intent = new Intent();
-        intent.setClass(context, ChannelVoiceCommunicationActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_IS_FROM_SMALL_WINDOW, true);
-        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE,
-                VoiceCommunicationUtils.getInstance().getLayoutState());
-//        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_TIME, Long.parseLong(
-//                TimeUtils.getChronometerSeconds(SuspensionWindowManagerUtils.getInstance().getChronometer().getText().toString())));
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         builder = new NotificationCompat.Builder(context, NotificationChannelId);
@@ -105,7 +107,6 @@ public class NotifyUtil {
         builder.setOnlyAlertOnce(true);
         builder.setAutoCancel(false);
         builder.setContentIntent(pendingIntent);
-
         notificationManager.notify(10006, builder.build());
     }
 
