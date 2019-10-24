@@ -516,6 +516,24 @@ public abstract class BaseApplication extends MultiDexApplication {
         }
     }
 
+    /**
+     * 判断一个Activity是否存在
+     *
+     * @param targetActivity
+     */
+    public boolean isActivityExist(Class targetActivity) {
+        try {
+            for (Activity activity : activityList) {
+                if (targetActivity.getCanonicalName().endsWith(activity.getLocalClassName())) {
+                    return true;
+                }
+            }
+        } catch (Exception e) {
+            LogUtils.exceptionDebug(TAG, e.toString());
+        }
+        return false;
+    }
+
     public void closeActivity(String activityName) {
         try {
             for (Activity activity : activityList) {
