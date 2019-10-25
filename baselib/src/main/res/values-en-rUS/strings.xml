@@ -345,7 +345,7 @@
     <string name="chat_emotion_recent_tip">Recently Used</string>
     <string name="chat_emotion_total_tip">All Stickers</string>
     <string name="chat_filemanager_native">Native Files</string>
-    <string name="chat_filemanager_volume">My Volume</string>
+    <string name="chat_filemanager_volume">Cloud Disk</string>
 
     <!-- 会议卡片 -->
     <string name="meeting_has_confirmed">Confirmed</string>
