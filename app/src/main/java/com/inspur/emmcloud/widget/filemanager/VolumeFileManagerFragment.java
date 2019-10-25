@@ -101,16 +101,16 @@ public class VolumeFileManagerFragment extends Fragment {
 
             @Override
             public void onItemClick(View view, int position) {
-                if (volumeFileList.get(position).getType().equals(VolumeFile.FILE_TYPE_DIRECTORY)) {
-                    isBack = false;
-                    refreshTitleState(volumeFileList.get(position).getName(), currentDirAbsolutePath);
-                    currentDirAbsolutePath = titleAdapter.getCurrentPath();  /**获取当前路径**/
-                    getVolumeFileList(true);
-                } else if (volumeFileList.get(position).getType().equals(VolumeFile.FILE_TYPE_REGULAR)) {
-                    volumeFileSelected.add(volumeFileList.get(position));
-                    returnSelectResult();
-                } else {
-
+                if (NetUtils.isNetworkConnected(getContext()) && volume != null) {
+                    if (volumeFileList.get(position).getType().equals(VolumeFile.FILE_TYPE_DIRECTORY)) {
+                        isBack = false;
+                        refreshTitleState(volumeFileList.get(position).getName(), currentDirAbsolutePath);
+                        currentDirAbsolutePath = titleAdapter.getCurrentPath();  /**获取当前路径**/
+                        getVolumeFileList(true);
+                    } else if (volumeFileList.get(position).getType().equals(VolumeFile.FILE_TYPE_REGULAR)) {
+                        volumeFileSelected.add(volumeFileList.get(position));
+                        returnSelectResult();
+                    }
                 }
             }
 
@@ -138,17 +138,18 @@ public class VolumeFileManagerFragment extends Fragment {
         titleAdapter.setOnItemClickListener(new RecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, RecyclerView.ViewHolder viewHolder, int position) {
-                isBack = true;
-                backlist.clear();
-                int count = titleAdapter.getItemCount();
-                int removeCount = count - position - 1;
-                for (int i = 0; i < removeCount; i++) {
-                    backlist.add(titleAdapter.getLast());
-                    titleAdapter.removeLast();
+                if (NetUtils.isNetworkConnected(getContext()) && volume != null && volume != null) {
+                    isBack = true;
+                    backlist.clear();
+                    int count = titleAdapter.getItemCount();
+                    int removeCount = count - position - 1;
+                    for (int i = 0; i < removeCount; i++) {
+                        backlist.add(titleAdapter.getLast());
+                        titleAdapter.removeLast();
+                    }
+                    currentDirAbsolutePath = titleAdapter.getCurrentPath();  /**获取当前路径**/
+                    getVolumeFileList(true);
                 }
-                /**删除完成后刷新数据**/
-                currentDirAbsolutePath = titleAdapter.getCurrentPath();  /**获取当前路径**/
-                getVolumeFileList(true);
             }
         });
 
@@ -212,7 +213,7 @@ public class VolumeFileManagerFragment extends Fragment {
 
     /**获取文件列表**/
     protected void getVolumeFileList(boolean isShowDlg) {
-        if (NetUtils.isNetworkConnected(getContext())) {
+        if (NetUtils.isNetworkConnected(getContext()) && volume != null) {
             loadingDlg.show(isShowDlg);
             String path = currentDirAbsolutePath;
             if (currentDirAbsolutePath.length() > 1) {
