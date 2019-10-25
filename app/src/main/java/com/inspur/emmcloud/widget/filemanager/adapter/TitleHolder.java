@@ -3,7 +3,7 @@ package com.inspur.emmcloud.widget.filemanager.adapter;
 import android.view.View;
 import android.widget.TextView;
 
-import com.inspur.emmcloud.web.R;
+
 import com.inspur.emmcloud.widget.filemanager.adapter.base.RecyclerViewAdapter;
 import com.inspur.emmcloud.widget.filemanager.adapter.base.RecyclerViewHolder;
 import com.inspur.emmcloud.widget.filemanager.bean.TitlePath;

@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.inspur.emmcloud.web.R;
+import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.widget.filemanager.adapter.base.RecyclerViewAdapter;
 import com.inspur.emmcloud.widget.filemanager.bean.TitlePath;
 
@@ -28,7 +28,7 @@ public class TitleAdapter extends RecyclerViewAdapter {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mLayoutInflater.inflate(R.layout.web_filemanager_title_holder, parent, false);
+        View view = mLayoutInflater.inflate(R.layout.filemanager_with_volume_title_holder, parent, false);
         return new TitleHolder(view);
     }
 

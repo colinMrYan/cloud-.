@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.ui.BaseFragment;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
@@ -68,11 +67,6 @@ public class NativeFileManagerFragment extends BaseFragment {
         titleRecyclerview.setLayoutManager(layoutManager);
         titleAdapter = new TitleAdapter(getActivity(), new ArrayList<TitlePath>());
         titleRecyclerview.setAdapter(titleAdapter);
-//        okText =  rootView.findViewById(R.id.tv_ok);
-//        if (1 == maximum) {
-//            okText.setVisibility(View.GONE);
-//        }
-        // setOKTextStatus();
         fileRecyclerView = rootView.findViewById(R.id.rcv_file);
         fileAdapter = new FileAdapter(getActivity(), beanList, selectFileBeanList, maximum);
         fileRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
