@@ -268,5 +268,4 @@ public class NativeFileManagerFragment extends BaseFragment {
 
     }
 
-
 }
