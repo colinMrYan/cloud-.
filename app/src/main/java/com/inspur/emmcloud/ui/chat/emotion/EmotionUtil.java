@@ -16,6 +16,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class EmotionUtil {
+    static volatile EmotionUtil instance;
+    private Context context;
     public static final String ee_2 = "[撇嘴]";
     public static final String ee_1 = "[微笑]";
     public static final String ee_3 = "[色]";
@@ -58,6 +60,21 @@ public class EmotionUtil {
 
     private static final Map<Pattern, Integer> emoticons = new HashMap<>();
     private static final Spannable.Factory spannableFactory = Spannable.Factory.getInstance();
+
+    public EmotionUtil(Context context) {
+        this.context = context;
+    }
+
+    public static EmotionUtil getInstance(Context context) {
+        if (instance == null) {
+            synchronized (EmotionUtil.class) {
+                if (instance == null) {
+                    instance = new EmotionUtil(context);
+                }
+            }
+        }
+        return instance;
+    }
 
     static {
         addPattern(emoticons, ee_1, R.drawable.ee_1);
@@ -105,14 +122,14 @@ public class EmotionUtil {
         map.put(Pattern.compile(Pattern.quote(smile)), resource);
     }
 
-    public static boolean addSmiles(Context context, Spannable spannable) {
+    public boolean addSmiles(Context context, Spannable spannable, float textSize) {
         boolean hasChanges = false;
         for (Map.Entry<Pattern, Integer> entry : emoticons.entrySet()) {
             Matcher matcher = entry.getKey().matcher(spannable);
             while (matcher.find()) {
                 boolean set = true;
                 for (ImageSpan span : spannable.getSpans(matcher.start(),
-                        matcher.end(), ImageSpan.class))
+                        matcher.end(), ImageSpan.class)) {
                     if (spannable.getSpanStart(span) >= matcher.start()
                             && spannable.getSpanEnd(span) <= matcher.end())
                         spannable.removeSpan(span);
@@ -120,9 +137,15 @@ public class EmotionUtil {
                         set = false;
                         break;
                     }
+                }
                 if (set) {
                     hasChanges = true;
-                    spannable.setSpan(new ImageSpan(context, entry.getValue()),
+//                    spannable.setSpan(new CenterAlignImageSpan(context, entry.getValue(), 2), matcher.start(), matcher.end(),
+//                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    EmotionSpan span = new EmotionSpan(context, entry.getValue(),
+                            (int) (textSize * 1.2f), (int) (textSize * 1.2f));
+                    span.setTranslateY(2);
+                    spannable.setSpan(span,
                             matcher.start(), matcher.end(),
                             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
@@ -131,13 +154,13 @@ public class EmotionUtil {
         return hasChanges;
     }
 
-    public static Spannable getSmiledText(Context context, CharSequence text) {
+    public Spannable getSmiledText(CharSequence text, float textSize) {
         Spannable spannable = spannableFactory.newSpannable(text);
-        addSmiles(context, spannable);
+        addSmiles(context, spannable, textSize);
         return spannable;
     }
 
-    public static boolean containsKey(String key) {
+    public boolean containsKey(String key) {
         boolean b = false;
         for (Map.Entry<Pattern, Integer> entry : emoticons.entrySet()) {
             Matcher matcher = entry.getKey().matcher(key);
@@ -153,7 +176,7 @@ public class EmotionUtil {
      * 获取所有表情资源
      * @return
      */
-    public static List<String> getExpressionRes() {
+    public List<String> getExpressionRes() {
         List<String> resList = new ArrayList<>();
         for (int x = 1; x <= MAX_COUNT; x++) {
             String filename = "ee_" + x;
@@ -168,7 +191,7 @@ public class EmotionUtil {
      *
      * @param mEditTextContent
      */
-    public static void deleteSingleEmojcon(ChatInputEdit mEditTextContent) {
+    public void deleteSingleEmojcon(ChatInputEdit mEditTextContent) {
         if (!StringUtils.isBlank(mEditTextContent.getText().toString())) {
 
             int selectionStart = mEditTextContent.getSelectionStart();// 获取光标的位置
@@ -179,7 +202,7 @@ public class EmotionUtil {
                 int i = tempStr.lastIndexOf("[");// 获取最后一个表情的位置
                 if (i != -1) {
                     CharSequence cs = tempStr.substring(i, selectionStart);
-                    if (EmotionUtil.containsKey(cs.toString()) && tempStr.endsWith("]"))
+                    if (containsKey(cs.toString()) && tempStr.endsWith("]"))
                         mEditTextContent.getEditableText().delete(i, selectionStart);
                     else
                         mEditTextContent.getEditableText().delete(selectionStart - 1,
