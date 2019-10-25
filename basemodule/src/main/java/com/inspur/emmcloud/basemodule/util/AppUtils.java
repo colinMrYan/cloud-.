@@ -562,6 +562,7 @@ public class AppUtils {
         ARouter.getInstance().build(Constant.AROUTER_CLASS_WEB_FILEMANAGER).with(bundle).navigation(activity, requestCode);
     }
 
+
     /**
      * 调用图库
      */
