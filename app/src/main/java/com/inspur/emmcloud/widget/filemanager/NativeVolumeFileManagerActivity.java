@@ -40,6 +40,7 @@ public class NativeVolumeFileManagerActivity extends BaseFragmentActivity implem
     @Override
     public void onCreate() {
         setContentView(R.layout.activity_native_volume_file_manager);
+        setStatus();
         fileTablayout = findViewById(R.id.tl_files_source);
         fileViewPager = findViewById(R.id.viewpager_file_fragment);
         okTextView = findViewById(R.id.tv_ok);
