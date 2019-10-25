@@ -40,19 +40,16 @@ public class NativeFileManagerFragment extends BaseFragment {
     public static final String EXTRA_FILTER_FILE_TYPE = "extra_filter_file_type";
     private RecyclerView titleRecyclerview;
     private RecyclerView fileRecyclerView;
-    //private TextView okText;
     private FileAdapter fileAdapter;
     private List<FileBean> beanList = new ArrayList<>();
     private File rootFile;
     private LinearLayout empty_rel;
-    private int PERMISSION_CODE_WRITE_EXTERNAL_STORAGE = 100;
     private String rootPath;
     private boolean isStatusSelect = true;
     private int maximum = 1;
     private ArrayList<String> filterFileTypeList = new ArrayList<>();
     private TitleAdapter titleAdapter;
     private List<FileBean> selectFileBeanList = new ArrayList<>();
-
     private View rootView;
 
     @Override
@@ -80,7 +77,6 @@ public class NativeFileManagerFragment extends BaseFragment {
                 FileType fileType = file.getFileType();
                 if (fileType == FileType.directory) {
                     getFile(file.getPath());
-
                     refreshTitleState(file.getName(), file.getPath());
                 } else {
                     if (isStatusSelect) {

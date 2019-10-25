@@ -54,7 +54,7 @@ public class NativeVolumeFileManagerActivity extends BaseFragmentActivity implem
         fragmentList.add(nativeFileManagerFragment);
         fragmentList.add(volumeFileManagerFragment);
         fileFragmentPagerAdapter = new FileFragmentPagerAdapter(this.getSupportFragmentManager(), fragmentList);
-        fileTablayout.addTab(fileTablayout.newTab().setText(getString(R.string.chat_filemanager_native)), true);
+        fileTablayout.addTab(fileTablayout.newTab().setText(getString(com.inspur.emmcloud.web.R.string.internal_shared_storage)), true);
         fileTablayout.addTab(fileTablayout.newTab().setText(getString(R.string.chat_filemanager_volume)), false);
         fileTablayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
