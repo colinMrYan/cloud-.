@@ -50,7 +50,6 @@ public class VolumeFileManagerFragment extends Fragment {
     private MyAppAPIService apiServiceBase;
     private Volume volume;
     private List<TitlePath> backlist = new ArrayList<>();
-
     private int maximum = 1;
     private View rootView;
 
@@ -73,7 +72,7 @@ public class VolumeFileManagerFragment extends Fragment {
         fileAdapter.setCurrentDirAbsolutePath(currentDirAbsolutePath);
         fileRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         fileRecyclerView.setAdapter(fileAdapter);
-        refreshTitleState("我的网盘", currentDirAbsolutePath);
+        refreshTitleState(getString(R.string.chat_filemanager_volume), currentDirAbsolutePath);
         loadingDlg = new LoadingDialog(getContext());
         apiServiceBase = new MyAppAPIService(getContext());
         apiServiceBase.setAPIInterface(new WebServiceBase());
@@ -87,7 +86,6 @@ public class VolumeFileManagerFragment extends Fragment {
                     currentDirAbsolutePath = titleAdapter.getCurrentPath();  /**获取当前路径**/
                     getVolumeFileList(true);
                 } else if (volumeFileList.get(position).getType().equals(VolumeFile.FILE_TYPE_REGULAR)) {
-                    /**发起请求**/
                     volumeFileSelected.add(volumeFileList.get(position));
                     returnSelectResult();
                 } else {
@@ -223,9 +221,6 @@ public class VolumeFileManagerFragment extends Fragment {
                     currentDirAbsolutePath = titleAdapter.getCurrentPath();
                 }
             }
-
         }
-
     }
-
 }

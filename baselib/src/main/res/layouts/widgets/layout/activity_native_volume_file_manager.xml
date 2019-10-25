@@ -45,7 +45,8 @@
             android:paddingRight="15dp"
             android:text="@string/complete"
             android:textColor="?attr/header_text_color"
-            android:textSize="@dimen/header_function_textsize" />
+            android:textSize="@dimen/header_function_textsize"
+            android:visibility="gone" />
     </RelativeLayout>
 
     <RelativeLayout

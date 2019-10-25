@@ -192,17 +192,6 @@ public class NativeFileManagerFragment extends BaseFragment {
     }
 
 
-//    @Override
-//    public void onBackPressed() {
-//        List<TitlePath> titlePathList = (List<TitlePath>) titleAdapter.getAdapterData();
-//        if (titlePathList.size() == 1) {
-//            finish();
-//        } else {
-//            titleAdapter.removeItem(titlePathList.size() - 1);
-//            getFile(titlePathList.get(titlePathList.size() - 1).getPath());
-//        }
-//    }
-
     public class FileComparator implements Comparator {
         @Override
         public int compare(Object o, Object t1) {

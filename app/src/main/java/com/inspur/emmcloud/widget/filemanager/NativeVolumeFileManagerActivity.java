@@ -54,8 +54,8 @@ public class NativeVolumeFileManagerActivity extends BaseFragmentActivity implem
         fragmentList.add(nativeFileManagerFragment);
         fragmentList.add(volumeFileManagerFragment);
         fileFragmentPagerAdapter = new FileFragmentPagerAdapter(this.getSupportFragmentManager(), fragmentList);
-        fileTablayout.addTab(fileTablayout.newTab().setText("本地文件"), true);
-        fileTablayout.addTab(fileTablayout.newTab().setText("我的网盘"), false);
+        fileTablayout.addTab(fileTablayout.newTab().setText(getString(R.string.chat_filemanager_native)), true);
+        fileTablayout.addTab(fileTablayout.newTab().setText(getString(R.string.chat_filemanager_volume)), false);
         fileTablayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
