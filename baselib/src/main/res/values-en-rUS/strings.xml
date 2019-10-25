@@ -1344,6 +1344,8 @@
     <string name="permission_grant_fail">You have forbidden granting %1$s %2$s permission</string>
     <string name="permission_grant_window_alert">Please grant %1$s suspension window permission</string>
     <string name="permission_grant_window_fail">You have forbidden granting %1$s suspension window permission</string>
+    <string name="permission_grant_background_start">Please grant %1$s background pop-up permission</string>
+    <string name="permission_grant_background_start_fail">You have disabled granting %1$s background pop-up permission</string>
 
     <string name="permission_open_cloud_plus">Open %1$s</string>
     <string name="permission_necessary_permission">In order for you to use the %1$s properly, you need the following permissions</string>

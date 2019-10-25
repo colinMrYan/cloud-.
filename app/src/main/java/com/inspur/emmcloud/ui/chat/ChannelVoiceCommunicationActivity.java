@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.SystemClock;
 import android.provider.Settings;
+import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -152,6 +153,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
      * 请求悬浮窗权限
      */
     private static final int REQUEST_WINDOW_PERMISSION = 100;
+    private static final int REQUEST_BACKGROUND_WINDOWS = 101;
     /**
      * 表示当前布局状态
      */
@@ -1135,9 +1137,10 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         if (Build.VERSION.SDK_INT >= 23) {
             if (Settings.canDrawOverlays(this)) {
                 Log.d("zhang", "pickUpVoiceCommunication: ");
-                SuspensionWindowManagerUtils.getInstance().showCommunicationSmallWindow(ResolutionUtils.getWidth(this),
-                        Long.parseLong(TimeUtils.getChronometerSeconds(communicationTimeChronometer.getText().toString())));
-                finish();
+//                SuspensionWindowManagerUtils.getInstance().showCommunicationSmallWindow(ResolutionUtils.getWidth(this),
+//                        Long.parseLong(TimeUtils.getChronometerSeconds(communicationTimeChronometer.getText().toString())));
+//                finish();
+                checkCanBackGroundStart();
             } else {
                 new CustomDialog.MessageDialogBuilder(ChannelVoiceCommunicationActivity.this)
                         .setMessage(getString(R.string.permission_grant_window_alert, AppUtils.getAppName(ChannelVoiceCommunicationActivity.this)))
@@ -1158,14 +1161,43 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    private void checkCanBackGroundStart() {
+        if (AppUtils.canBackgroundStart(this)) {
+            SuspensionWindowManagerUtils.getInstance().showCommunicationSmallWindow(ResolutionUtils.getWidth(this),
+                    Long.parseLong(TimeUtils.getChronometerSeconds(communicationTimeChronometer.getText().toString())));
+            finish();
+        } else {
+            new CustomDialog.MessageDialogBuilder(ChannelVoiceCommunicationActivity.this)
+                    .setMessage(getString(R.string.permission_grant_background_start, AppUtils.getAppName(ChannelVoiceCommunicationActivity.this)))
+                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION).setData(Uri.parse("package:" + getPackageName()));
+                            startActivityForResult(intent, REQUEST_BACKGROUND_WINDOWS);
+                            startActivityForResult(intent, REQUEST_WINDOW_PERMISSION);
+                        }
+                    })
+                    .show();
+
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_WINDOW_PERMISSION) {
             if (Build.VERSION.SDK_INT >= 23 && Settings.canDrawOverlays(this)) {
-                SuspensionWindowManagerUtils.getInstance().showCommunicationSmallWindow(ResolutionUtils.getWidth(this),
-                        Long.parseLong(TimeUtils.getChronometerSeconds(communicationTimeChronometer.getText().toString())));
-                finish();
+                checkCanBackGroundStart();
+            } else if (requestCode == REQUEST_BACKGROUND_WINDOWS) {
+                if (AppUtils.canBackgroundStart(this)) {
+                    SuspensionWindowManagerUtils.getInstance().showCommunicationSmallWindow(ResolutionUtils.getWidth(this),
+                            Long.parseLong(TimeUtils.getChronometerSeconds(communicationTimeChronometer.getText().toString())));
+                    finish();
+                } else {
+                    ToastUtils.show(getString(R.string.permission_grant_background_start_fail, AppUtils.getAppName(ChannelVoiceCommunicationActivity.this)));
+                }
             } else {
                 ToastUtils.show(getString(R.string.permission_grant_window_fail, AppUtils.getAppName(ChannelVoiceCommunicationActivity.this)));
             }
@@ -1216,9 +1248,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     protected void onStop() {
         super.onStop();
         NotifyUtil.sendNotifyMsg(this);
-        if (receiver != null) {
-            unregisterReceiver(receiver);
-        }
     }
 
     @Override
@@ -1231,6 +1260,9 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         //恢复状态
         if (voiceCommunicationUtils.getCommunicationState() == COMMUNICATION_STATE_OVER) {
             voiceCommunicationUtils.setCommunicationState(-1);
+        }
+        if (receiver != null) {
+            unregisterReceiver(receiver);
         }
         EventBus.getDefault().unregister(this);
         mediaPlayerManagerUtils.stop();
