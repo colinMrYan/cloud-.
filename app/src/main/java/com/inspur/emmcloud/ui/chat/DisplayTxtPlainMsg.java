@@ -47,7 +47,7 @@ public class DisplayTxtPlainMsg {
         contentText.setFocusable(false);
         contentText.setFocusableInTouchMode(false);
         SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(text, message.getMsgContentTextPlain().getMentionsMap());
-        Spannable span = EmotionUtil.getSmiledText(context, spannableString);
+        Spannable span = EmotionUtil.getInstance(context).getSmiledText(spannableString, contentText.getTextSize());
         contentText.setText(span);
         TransHtmlToTextUtils.stripUnderlines(
                 contentText, context.getResources().getColor(isMyMsg ? R.color.hightlight_in_blue_bg

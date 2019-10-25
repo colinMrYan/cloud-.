@@ -135,7 +135,7 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
         emotionRecentGrid.setAdapter(emotionRecentAdapter);
         emotionRecentGrid.setOnItemClickListener(new OnEmotionItemClickListener());
 
-        List<String> resList = EmotionUtil.getExpressionRes();
+        List<String> resList = EmotionUtil.getInstance(getContext()).getExpressionRes();
         emotionAdapter = new EmotionAdapter(getContext(), 1, resList);
         emotionGrid.setAdapter(emotionAdapter);
         emotionGrid.setOnItemClickListener(new OnEmotionItemClickListener());
@@ -243,7 +243,7 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
                 handleEmotionStatus();
                 break;
             case R.id.emotion_delete:  //表情删除
-                EmotionUtil.deleteSingleEmojcon(inputEdit);
+                EmotionUtil.getInstance(getContext()).deleteSingleEmojcon(inputEdit);
                 break;
             case R.id.at_people_btn:    //@某人
                 if (canMentions) {
@@ -309,7 +309,7 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
             try {
                 Class clz = Class.forName("com.inspur.emmcloud.ui.chat.emotion.EmotionUtil");
                 Field field = clz.getField(filename);
-                Spannable span = EmotionUtil.getSmiledText(getContext(), (String) field.get(null));
+                Spannable span = EmotionUtil.getInstance(getContext()).getSmiledText((String) field.get(null), inputEdit.getTextSize());
                 if (selectionStart < 0 || selectionStart >= inputEdit.length()) {
                     inputEdit.getEditableText().append(span);
                 } else {
