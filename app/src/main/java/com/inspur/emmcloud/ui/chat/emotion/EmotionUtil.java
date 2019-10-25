@@ -58,7 +58,7 @@ public class EmotionUtil {
     public static final String ee_38 = "[吃饭]";
     public static final String ee_39 = "[欢庆]";
     public static final String ee_40 = "[面包]";
-    private static final int MAX_COUNT = 38;
+    private static final int MAX_COUNT = 40;
 
     private static final Map<Pattern, Integer> emoticons = new HashMap<>();
     private static final Spannable.Factory spannableFactory = Spannable.Factory.getInstance();
