@@ -562,6 +562,14 @@ public class AppUtils {
         ARouter.getInstance().build(Constant.AROUTER_CLASS_WEB_FILEMANAGER).with(bundle).navigation(activity, requestCode);
     }
 
+    /**
+     * 调用文件系统
+     */
+    public static void openFileSystemWithVolume(Activity activity, int requestCode, int maximum) {
+        Bundle bundle = new Bundle();
+        bundle.putInt("extra_maximum", maximum);
+        ARouter.getInstance().build(Constant.AROUTER_CLASS_FILEMANAGER_WITH_VOLUME).with(bundle).navigation(activity, requestCode);
+    }
 
     /**
      * 调用图库

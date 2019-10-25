@@ -226,6 +226,8 @@ public class Constant {
     public static final String AROUTER_CLASS_LOGIN_BY_SMS = "/login/LoginBySmsActivity";
 
 
+    public static final String AROUTER_CLASS_FILEMANAGER_WITH_VOLUME = "/App/FileManagerActivity";
+
     public static final String AROUTER_CLASS_WEB_FILEMANAGER = "/web/FileManagerActivity";
     public static final String AROUTER_CLASS_WEB_SCANRESULT = "/web/ScanResultActivity";
     public static final String AROUTER_CLASS_WEB_MAIN = "/web/ImpActivity";

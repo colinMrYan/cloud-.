@@ -48,7 +48,7 @@ public class NativeFileManagerFragment extends BaseFragment {
     private int PERMISSION_CODE_WRITE_EXTERNAL_STORAGE = 100;
     private String rootPath;
     private boolean isStatusSelect = true;
-    private int maximum = 3;
+    private int maximum = 1;
     private ArrayList<String> filterFileTypeList = new ArrayList<>();
     private TitleAdapter titleAdapter;
     private List<FileBean> selectFileBeanList = new ArrayList<>();
@@ -96,13 +96,11 @@ public class NativeFileManagerFragment extends BaseFragment {
                         }
                         if (selectFileBeanList.contains(file)) {
                             selectFileBeanList.remove(file);
-                            // setOKTextStatus();
                             fileAdapter.notifyItemChanged(position);
                         } else if (selectFileBeanList.size() == maximum) {
                             ToastUtils.show(getActivity(), getString(com.inspur.emmcloud.web.R.string.file_select_limit_warning, maximum));
                         } else {
                             selectFileBeanList.add(file);
-                            // setOKTextStatus();
                             fileAdapter.notifyItemChanged(position);
                         }
                     } else {

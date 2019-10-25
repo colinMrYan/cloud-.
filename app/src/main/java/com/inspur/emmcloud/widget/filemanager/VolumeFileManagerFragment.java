@@ -65,6 +65,7 @@ public class VolumeFileManagerFragment extends Fragment {
         titleRecyclerview.setAdapter(titleAdapter);
         fileRecyclerView = rootView.findViewById(R.id.rcv_file);
         fileAdapter = new VolumeFileAdapter(getContext(), volumeFileList);
+        fileAdapter.setCurrentDirAbsolutePath(currentDirAbsolutePath);
         fileRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         fileRecyclerView.setAdapter(fileAdapter);
         refreshTitleState("我的网盘", currentDirAbsolutePath);
@@ -183,6 +184,7 @@ public class VolumeFileManagerFragment extends Fragment {
                 volumeFileList = getVolumeFileListResult.getVolumeFileFilterList(fileFilterType);
             }
             fileAdapter.setVolumeFileList(volumeFileList);
+            fileAdapter.setCurrentDirAbsolutePath(currentDirAbsolutePath);
             fileAdapter.notifyDataSetChanged();
             titleAdapter.notifyDataSetChanged();
         }
