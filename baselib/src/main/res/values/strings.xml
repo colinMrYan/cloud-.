@@ -351,8 +351,11 @@
     <string name="chat_group_qr_code_share">分享二维码</string>
     <string name="chat_group_welcome_join_group">欢迎进入%1$s群</string>
     <string name="chat_conversation_create_error">创建群组失败</string>
+    <string name="chat_emotion_recent_tip">最近使用</string>
+    <string name="chat_emotion_total_tip">所有表情</string>
     <string name="chat_filemanager_native">本地文件</string>
     <string name="chat_filemanager_volume">我的网盘</string>
+
     <!-- 会议卡片 -->
     <string name="meeting_has_confirmed">已确认</string>
     <string name="meeting_has_refused">已拒绝</string>

@@ -394,6 +394,15 @@
                 <data android:scheme="ecc-cloudplus-cmd" />
             </intent-filter>
 
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="ecc-cloudplus-cmd-voice-call" />
+            </intent-filter>
+
         </activity>
         <activity
             android:name=".ui.chat.ChannelV0Activity"

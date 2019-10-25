@@ -1,35 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/emotion_container"
     android:layout_width="match_parent"
-    android:layout_height="274dp"
+    android:layout_height="wrap_content"
     android:background="#f5f5f5"
-    android:paddingLeft="10dp"
-    android:paddingTop="25dp"
-    android:paddingRight="10dp"
-    android:visibility="gone">
+    android:visibility="gone"
+    tools:ignore="MissingDefaultResource">
 
-    <GridView
-        android:id="@+id/emotion_grid"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:cacheColorHint="@android:color/transparent"
-        android:columnWidth="45dip"
-        android:horizontalSpacing="0dip"
-        android:numColumns="auto_fit"
-        android:scrollbars="vertical"
-        android:verticalSpacing="0dip" />
+        android:layout_height="wrap_content"
+        android:scrollbars="none">
 
-    <ImageView
-        android:id="@+id/emotion_delete"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/emotion_recent_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="15dp"
+                    android:text="@string/chat_emotion_recent_tip"
+                    android:textColor="@color/grey_a5a5a5"
+                    android:textSize="12sp" />
+
+                <com.inspur.emmcloud.baselib.widget.NoScrollGridView
+                    android:id="@+id/emotion_recent_grid"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="10dp"
+                    android:cacheColorHint="@android:color/transparent"
+                    android:columnWidth="51dp"
+                    android:horizontalSpacing="0dip"
+                    android:numColumns="auto_fit"
+                    android:scrollbars="vertical"
+                    android:verticalSpacing="0dip" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:paddingLeft="15dp"
+                android:text="@string/chat_emotion_total_tip"
+                android:textColor="@color/grey_a5a5a5"
+                android:textSize="12sp" />
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp">
+
+                <com.inspur.emmcloud.baselib.widget.NoScrollGridView
+                    android:id="@+id/emotion_grid"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:cacheColorHint="@android:color/transparent"
+                    android:columnWidth="51dp"
+                    android:horizontalSpacing="0dip"
+                    android:numColumns="auto_fit"
+                    android:paddingBottom="50dp"
+                    android:scrollbars="vertical"
+                    android:verticalSpacing="10dp" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="30dp"
-        android:src="@drawable/icon_splash_skip" />
+        android:layout_alignParentBottom="true">
 
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="80dp"
+            android:src="@drawable/emotion_delete_shadow" />
+
+        <ImageView
+            android:id="@+id/emotion_delete"
+            android:layout_width="55dp"
+            android:layout_height="43dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/emotion_delete" />
+    </RelativeLayout>
 
 </RelativeLayout>
 

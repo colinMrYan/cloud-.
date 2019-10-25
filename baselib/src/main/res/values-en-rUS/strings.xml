@@ -342,6 +342,8 @@
     <string name="chat_private_chat">Private Chats</string>
     <string name="chat_group_welcome_join_group">Welcome to group %1$s</string>
     <string name="chat_conversation_create_error">Create Chat Group Fail</string>
+    <string name="chat_emotion_recent_tip">Recently Used</string>
+    <string name="chat_emotion_total_tip">All Stickers</string>
     <string name="chat_filemanager_native">Native Files</string>
     <string name="chat_filemanager_volume">My Volume</string>
 

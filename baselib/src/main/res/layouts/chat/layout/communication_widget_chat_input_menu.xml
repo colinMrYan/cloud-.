@@ -18,27 +18,81 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
-            android:paddingTop="7dp"
-            android:paddingBottom="5dp">
+            android:paddingTop="6dp"
+            android:paddingBottom="7dp">
 
             <ImageButton
                 android:id="@+id/voice_btn"
-                android:layout_width="43dp"
-                android:layout_height="31dp"
+                android:layout_width="42dp"
+                android:layout_height="27dp"
                 android:layout_centerVertical="true"
                 android:background="@null"
                 android:paddingLeft="10dp"
-                android:paddingRight="2dp"
+                android:paddingRight="5dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/ic_chat_input_voice" />
+
+            <LinearLayout
+                android:id="@+id/right_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/voice_btn"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="5dp"
+                android:gravity="center_vertical">
+
+                <ImageButton
+                    android:id="@+id/emotion_btn"
+                    android:layout_width="37dp"
+                    android:layout_height="37dp"
+                    android:background="@null"
+                    android:clickable="true"
+                    android:onClick="onClick"
+                    android:padding="5dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_chat_btn_emotion" />
+
+                <Button
+                    android:id="@+id/send_msg_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@drawable/bg_chat_input_send_btn_disable"
+                    android:gravity="center"
+                    android:minWidth="0dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:text="@string/send"
+                    android:textAllCaps="false"
+                    android:textColor="#ffffff"
+                    android:textSize="14sp"
+                    android:visibility="gone" />
+
+                <ImageButton
+                    android:id="@+id/add_btn"
+                    android:layout_width="37dp"
+                    android:layout_height="37dp"
+                    android:background="@null"
+                    android:clickable="true"
+                    android:onClick="onClick"
+                    android:paddingLeft="5dp"
+                    android:paddingTop="5dp"
+                    android:paddingRight="5dp"
+                    android:paddingBottom="5dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_chat_btn_add" />
+
+            </LinearLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="8dp"
+                android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:layout_toLeftOf="@+id/right_layout"
+                android:layout_toLeftOf="@id/right_layout"
                 android:layout_toRightOf="@id/voice_btn">
 
                 <com.inspur.emmcloud.widget.ChatInputEdit
@@ -73,58 +127,6 @@
                     android:textSize="16sp"
                     android:visibility="gone" />
             </RelativeLayout>
-
-
-            <RelativeLayout
-                android:id="@+id/right_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="7dp">
-
-                <Button
-                    android:id="@+id/send_msg_btn"
-                    android:layout_width="41dp"
-                    android:layout_height="35dp"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/bg_chat_input_send_btn_disable"
-                    android:gravity="center"
-                    android:text="@string/send"
-                    android:textAllCaps="false"
-                    android:textColor="#ffffff"
-                    android:textSize="13sp"
-                    android:visibility="gone" />
-
-                <ImageButton
-                    android:id="@+id/emotion_btn"
-                    android:layout_width="41dp"
-                    android:layout_height="31dp"
-                    android:layout_centerVertical="true"
-                    android:background="@null"
-                    android:clickable="true"
-                    android:onClick="onClick"
-                    android:paddingLeft="4dp"
-                    android:paddingRight="6dp"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/ic_chat_btn_emotion" />
-
-                <ImageButton
-                    android:id="@+id/add_btn"
-                    android:layout_width="41dp"
-                    android:layout_height="31dp"
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@+id/emotion_btn"
-                    android:background="@null"
-                    android:clickable="true"
-                    android:onClick="onClick"
-                    android:paddingLeft="4dp"
-                    android:paddingRight="6dp"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/ic_chat_btn_add" />
-            </RelativeLayout>
-
         </RelativeLayout>
 
         <FrameLayout
@@ -136,19 +138,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="274dp"
                 android:background="#f5f5f5"
-                android:paddingLeft="20dp"
-                android:paddingTop="25dp"
-                android:paddingRight="20dp"
                 android:visibility="gone">
 
                 <com.inspur.emmcloud.widget.ECMChatInputMenuViewpageLayout
                     android:id="@+id/viewpager_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="25dp"
+                    android:layout_marginRight="20dp" />
+
+                <include layout="@layout/emotion_grid" />
             </RelativeLayout>
-
-            <include layout="@layout/emotion_grid" />
-
         </FrameLayout>
 
     </LinearLayout>
