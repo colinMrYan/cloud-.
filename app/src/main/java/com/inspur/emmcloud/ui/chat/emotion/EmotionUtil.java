@@ -56,6 +56,8 @@ public class EmotionUtil {
     public static final String ee_36 = "[庆祝]";
     public static final String ee_37 = "[礼物]";
     public static final String ee_38 = "[吃饭]";
+    public static final String ee_39 = "[欢庆]";
+    public static final String ee_40 = "[面包]";
     private static final int MAX_COUNT = 38;
 
     private static final Map<Pattern, Integer> emoticons = new HashMap<>();
@@ -115,6 +117,8 @@ public class EmotionUtil {
         addPattern(emoticons, ee_36, R.drawable.ee_36);
         addPattern(emoticons, ee_37, R.drawable.ee_37);
         addPattern(emoticons, ee_38, R.drawable.ee_38);
+        addPattern(emoticons, ee_39, R.drawable.ee_39);
+        addPattern(emoticons, ee_40, R.drawable.ee_40);
     }
 
     private static void addPattern(Map<Pattern, Integer> map, String smile,
