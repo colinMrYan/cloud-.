@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.ui.BaseFragment;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.widget.filemanager.adapter.FileAdapter;
@@ -81,18 +80,10 @@ public class NativeFileManagerFragment extends BaseFragment {
                 } else {
                     if (isStatusSelect) {
                         if (maximum == 1) {
+                            selectFileBeanList.clear();
                             selectFileBeanList.add(file);
                             returnSelectResult();
                             return;
-                        }
-                        if (selectFileBeanList.contains(file)) {
-                            selectFileBeanList.remove(file);
-                            fileAdapter.notifyItemChanged(position);
-                        } else if (selectFileBeanList.size() == maximum) {
-                            ToastUtils.show(getActivity(), getString(com.inspur.emmcloud.web.R.string.file_select_limit_warning, maximum));
-                        } else {
-                            selectFileBeanList.add(file);
-                            fileAdapter.notifyItemChanged(position);
                         }
                     } else {
                         FileUtils.openFile(getActivity(), file.getPath());
@@ -106,7 +97,6 @@ public class NativeFileManagerFragment extends BaseFragment {
             public void onItemClick(View view, RecyclerView.ViewHolder viewHolder, int position) {
                 TitlePath titlePath = (TitlePath) titleAdapter.getItem(position);
                 getFile(titlePath.getPath());
-
                 int count = titleAdapter.getItemCount();
                 int removeCount = count - position - 1;
                 for (int i = 0; i < removeCount; i++) {
@@ -114,7 +104,6 @@ public class NativeFileManagerFragment extends BaseFragment {
                 }
             }
         });
-
         rootPath = Environment.getExternalStorageDirectory().
                 getAbsolutePath();
         refreshTitleState(getString(com.inspur.emmcloud.web.R.string.internal_shared_storage), rootPath);
