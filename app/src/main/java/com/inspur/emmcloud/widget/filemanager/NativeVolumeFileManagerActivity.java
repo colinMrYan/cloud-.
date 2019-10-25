@@ -108,7 +108,7 @@ public class NativeVolumeFileManagerActivity extends BaseFragmentActivity implem
 
     /**
      * 获取云盘列表
-     */
+     **/
     private void getVolumeList(boolean isShowDlg) {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
             loadingDialog.show(isShowDlg);

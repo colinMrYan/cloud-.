@@ -37,12 +37,24 @@ import static android.app.Activity.RESULT_OK;
 public class VolumeFileManagerFragment extends Fragment {
 
     protected VolumeFileAdapter fileAdapter;
-    protected List<VolumeFile> volumeFileList = new ArrayList<>();//云盘列表
-    protected String currentDirAbsolutePath;//当前文件夹路径
+    protected List<VolumeFile> volumeFileList = new ArrayList<>();
+    /**
+     * 云盘列表
+     **/
+    protected String currentDirAbsolutePath;
+    /**
+     * 当前文件夹路径
+     **/
     protected GetVolumeFileListResult getVolumeFileListResult;
-    protected String fileFilterType = "";  //显示的文件类型
-    protected List<VolumeFile> volumeFileSelected = new ArrayList<>();//云盘列表
-    boolean isBack = false;
+    protected String fileFilterType = "";
+    /**
+     * 显示的文件类型
+     **/
+    protected List<VolumeFile> volumeFileSelected = new ArrayList<>();
+    /**
+     * 云盘列表
+     **/
+    boolean isBack = false;      /**是否为返回文件夹上一级**/
     private RecyclerView titleRecyclerview;
     private RecyclerView fileRecyclerView;
     private TitleAdapter titleAdapter;
@@ -133,6 +145,7 @@ public class VolumeFileManagerFragment extends Fragment {
 
     }
 
+    /**返回结果**/
     private void returnSelectResult() {
         Intent intent = new Intent();
         intent.putExtra("isNativeFile", false);
@@ -156,13 +169,13 @@ public class VolumeFileManagerFragment extends Fragment {
         return rootView;
     }
 
-
+   /**获取当前的网盘**/
     public void setMyVolume(Volume volume) {
         this.volume = volume;
         getVolumeFileList(false);
     }
 
-
+    /**刷新导航条状态**/
     void refreshTitleState(String title, String path) {
         TitlePath filePath = new TitlePath();
         filePath.setNameState(title + "/");
@@ -171,9 +184,7 @@ public class VolumeFileManagerFragment extends Fragment {
         titleRecyclerview.smoothScrollToPosition(titleAdapter.getItemCount());
     }
 
-    /**
-     * 获取文件列表
-     */
+    /**获取文件列表**/
     protected void getVolumeFileList(boolean isShowDlg) {
         if (NetUtils.isNetworkConnected(getContext())) {
             loadingDlg.show(isShowDlg);

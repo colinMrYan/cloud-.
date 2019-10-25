@@ -147,16 +147,6 @@ public class NativeFileManagerFragment extends BaseFragment {
         }
     }
 
-//    private void setOKTextStatus() {
-//        if (selectFileBeanList.size() == 0) {
-//            okText.setClickable(false);
-//            okText.setText(com.inspur.emmcloud.web.R.string.complete);
-//        } else {
-//            okText.setClickable(true);
-//            okText.setText(getString(com.inspur.emmcloud.web.R.string.complete) + "(" + selectFileBeanList.size() + ")");
-//        }
-//    }
-
     public void onClick(View v) {
         int i = v.getId();
         if (i == com.inspur.emmcloud.web.R.id.ibt_back) {
