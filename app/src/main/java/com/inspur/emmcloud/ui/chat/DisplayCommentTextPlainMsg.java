@@ -57,7 +57,7 @@ public class DisplayCommentTextPlainMsg {
         commentTitleText.setTextColor(context.getResources().getColor(
                 isMyMsg ? R.color.white : R.color.black));
         SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(text, message.getMsgContentTextPlain().getMentionsMap());
-        Spannable span = EmotionUtil.getSmiledText(context, spannableString);
+        Spannable span = EmotionUtil.getInstance(context).getSmiledText(spannableString, commentTitleText.getTextSize());
         commentContentText.setText(span);
         TransHtmlToTextUtils.stripUnderlines(
                 commentContentText, context.getResources().getColor(isMyMsg ? R.color.hightlight_in_blue_bg

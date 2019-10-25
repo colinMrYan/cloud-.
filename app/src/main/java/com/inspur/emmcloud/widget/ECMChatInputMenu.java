@@ -364,7 +364,7 @@ public class ECMChatInputMenu extends LinearLayout {
         emotionRecentGrid.setAdapter(emotionRecentAdapter);
         emotionRecentGrid.setOnItemClickListener(new OnEmotionItemClickListener());
 
-        List<String> resList = EmotionUtil.getExpressionRes();
+        List<String> resList = EmotionUtil.getInstance(getContext()).getExpressionRes();
         emotionAdapter = new EmotionAdapter(getContext(), 1, resList);
         emotionGrid.setAdapter(emotionAdapter);
         emotionGrid.setOnItemClickListener(new OnEmotionItemClickListener());
@@ -985,7 +985,7 @@ public class ECMChatInputMenu extends LinearLayout {
                 break;
 
             case R.id.emotion_delete:  //表情删除
-                EmotionUtil.deleteSingleEmojcon(inputEdit);
+                EmotionUtil.getInstance(getContext()).deleteSingleEmojcon(inputEdit);
                 break;
             default:
                 break;
@@ -1019,6 +1019,29 @@ public class ECMChatInputMenu extends LinearLayout {
             changeAddMenuLayoutContent(true);
         }
         setVoiceInputStatus(TAG_KEYBOARD_INPUT);
+    }
+
+    class OnEmotionItemClickListener implements AdapterView.OnItemClickListener {
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            String filename = (parent.getId() == R.id.emotion_recent_grid ?
+                    emotionRecentAdapter.getItem(position) : emotionAdapter.getItem(position));
+            int selectionStart = inputEdit.getSelectionStart();// 获取光标的位置
+            try {
+                Class clz = Class.forName("com.inspur.emmcloud.ui.chat.emotion.EmotionUtil");
+                Field field = clz.getField(filename);
+                Spannable span = EmotionUtil.getInstance(getContext()).getSmiledText((String) field.get(null), inputEdit.getTextSize());
+                if (selectionStart < 0 || selectionStart >= inputEdit.length()) {
+                    inputEdit.getEditableText().append(span);
+                } else {
+                    inputEdit.getEditableText().insert(selectionStart, span);
+                }
+                EmotionRecentManager.getInstance(getContext()).addItem(filename);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
@@ -1268,28 +1291,5 @@ public class ECMChatInputMenu extends LinearLayout {
         void onVideoCommucaiton();//视频通话
 
         void onChatDraftsClear();
-    }
-
-    class OnEmotionItemClickListener implements AdapterView.OnItemClickListener {
-
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            String filename = (parent.getId() == R.id.emotion_recent_grid ?
-                    emotionRecentAdapter.getItem(position) : emotionAdapter.getItem(position));
-            int selectionStart = inputEdit.getSelectionStart();// 获取光标的位置
-            try {
-                Class clz = Class.forName("com.inspur.emmcloud.ui.chat.emotion.EmotionUtil");
-                Field field = clz.getField(filename);
-                Spannable span = EmotionUtil.getSmiledText(getContext(), (String) field.get(null));
-                if (selectionStart < 0 || selectionStart >= inputEdit.length()) {
-                    inputEdit.getEditableText().append(span);
-                } else {
-                    inputEdit.getEditableText().insert(selectionStart, span);
-                }
-                EmotionRecentManager.getInstance(getContext()).addItem(filename);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
     }
 }

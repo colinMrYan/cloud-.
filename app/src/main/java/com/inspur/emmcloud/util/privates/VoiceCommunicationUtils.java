@@ -88,12 +88,15 @@ public class VoiceCommunicationUtils {
                 destroy();
                 SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
             }
-            onVoiceCommunicationCallbacks.onUserOffline(uid, reason);
+            if (onVoiceCommunicationCallbacks != null) {
+                onVoiceCommunicationCallbacks.onUserOffline(uid, reason);
+            }
         }
 
         //用户加入频道回调
         @Override
         public void onUserJoined(int uid, int elapsed) {
+            LogUtils.YfcDebug("用户加入频道：" + uid);
             userCount = userCount + 1;
             if (userCount >= 2 && communicationState == COMMUNICATION_STATE_PRE && SuspensionWindowManagerUtils.getInstance().isShowing()) {
                 //发送到CommunicationFragment
@@ -101,21 +104,27 @@ public class VoiceCommunicationUtils {
                 EventBus.getDefault().post(simpleEventMessage);
                 communicationState = COMMUNICATION_STATE_ING;
             }
-            onVoiceCommunicationCallbacks.onUserJoined(uid, elapsed);
+            if (onVoiceCommunicationCallbacks != null) {
+                onVoiceCommunicationCallbacks.onUserJoined(uid, elapsed);
+            }
         }
 
         //加入频道成功
         @Override
         public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
 //            userCount = userCount + 1;
-            onVoiceCommunicationCallbacks.onJoinChannelSuccess(channel, uid, elapsed);
+            if (onVoiceCommunicationCallbacks != null) {
+                onVoiceCommunicationCallbacks.onJoinChannelSuccess(channel, uid, elapsed);
+            }
         }
 
         //断开重连，重新加入频道成功
         @Override
         public void onRejoinChannelSuccess(String channel, int uid, int elapsed) {
             userCount = userCount + 1;
-            onVoiceCommunicationCallbacks.onRejoinChannelSuccess(channel, uid, elapsed);
+            if (onVoiceCommunicationCallbacks != null) {
+                onVoiceCommunicationCallbacks.onRejoinChannelSuccess(channel, uid, elapsed);
+            }
         }
 
         //每隔两秒钟返回一次频道内的状态信息
@@ -123,20 +132,26 @@ public class VoiceCommunicationUtils {
         public void onRtcStats(RtcStats stats) {
             VoiceCommunicationRtcStats statsCloudPlus = new VoiceCommunicationRtcStats();
             statsCloudPlus.users = stats.users;
-            onVoiceCommunicationCallbacks.onRtcStats(statsCloudPlus);
+            if (onVoiceCommunicationCallbacks != null) {
+                onVoiceCommunicationCallbacks.onRtcStats(statsCloudPlus);
+            }
         }
 
         //静音监听
         @Override
         public void onUserMuteAudio(int uid, boolean muted) {
-            onVoiceCommunicationCallbacks.onUserMuteAudio(uid, muted);
+            if (onVoiceCommunicationCallbacks != null) {
+                onVoiceCommunicationCallbacks.onUserMuteAudio(uid, muted);
+            }
         }
 
         //warning信息
         @Override
         public void onWarning(int warn) {
             super.onWarning(warn);
-            onVoiceCommunicationCallbacks.onWarning(warn);
+            if (onVoiceCommunicationCallbacks != null) {
+                onVoiceCommunicationCallbacks.onWarning(warn);
+            }
         }
 
         //error信息
@@ -145,7 +160,9 @@ public class VoiceCommunicationUtils {
             super.onError(err);
             destroy();
             SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
-            onVoiceCommunicationCallbacks.onError(err);
+            if (onVoiceCommunicationCallbacks != null) {
+                onVoiceCommunicationCallbacks.onError(err);
+            }
         }
 
         //失去连接信息
@@ -161,14 +178,18 @@ public class VoiceCommunicationUtils {
         @Override
         public void onConnectionBanned() {
             super.onConnectionBanned();
-            onVoiceCommunicationCallbacks.onConnectionBanned();
+            if (onVoiceCommunicationCallbacks != null) {
+                onVoiceCommunicationCallbacks.onConnectionBanned();
+            }
         }
 
         //网络质量回调
         @Override
         public void onLastmileQuality(int quality) {
             super.onLastmileQuality(quality);
-            onVoiceCommunicationCallbacks.onLastmileQuality(quality);
+            if (onVoiceCommunicationCallbacks != null) {
+                onVoiceCommunicationCallbacks.onLastmileQuality(quality);
+            }
         }
 
         //提示谁在说话及其音量。默认禁用。可以通过 enableAudioVolumeIndication 方法设置。
@@ -181,19 +202,25 @@ public class VoiceCommunicationUtils {
                 info.volume = speakers[i].volume;
                 voiceCommunicationAudioVolumeInfos[i] = info;
             }
-            onVoiceCommunicationCallbacks.onAudioVolumeIndication(voiceCommunicationAudioVolumeInfos, totalVolume);
+            if (onVoiceCommunicationCallbacks != null) {
+                onVoiceCommunicationCallbacks.onAudioVolumeIndication(voiceCommunicationAudioVolumeInfos, totalVolume);
+            }
         }
 
         @Override
         public void onNetworkQuality(int uid, int txQuality, int rxQuality) {
             super.onNetworkQuality(uid, txQuality, rxQuality);
-            onVoiceCommunicationCallbacks.onNetworkQuality(uid, txQuality, rxQuality);
+            if (onVoiceCommunicationCallbacks != null) {
+                onVoiceCommunicationCallbacks.onNetworkQuality(uid, txQuality, rxQuality);
+            }
         }
 
         @Override
         public void onRemoteVideoStateChanged(int uid, int state, int reason, int elapsed) {
             super.onRemoteVideoStateChanged(uid, state, reason, elapsed);
-            onVoiceCommunicationCallbacks.onRemoteVideoStateChanged(uid, state, reason, elapsed);
+            if (onVoiceCommunicationCallbacks != null) {
+                onVoiceCommunicationCallbacks.onRemoteVideoStateChanged(uid, state, reason, elapsed);
+            }
         }
     };
 
@@ -298,18 +325,20 @@ public class VoiceCommunicationUtils {
      * 设置video
      */
     private void setupVideoConfig() {
-        // In simple use cases, we only need to enable video capturing
-        // and rendering once at the initialization step.
-        // Note: audio recording and playing is enabled by default.
-        mRtcEngine.enableVideo();
+        if (mRtcEngine != null) {
+            // In simple use cases, we only need to enable video capturing
+            // and rendering once at the initialization step.
+            // Note: audio recording and playing is enabled by default.
+            mRtcEngine.enableVideo();
 
-        // Please go to this page for detailed explanation
-        // https://docs.agora.io/en/Video/API%20Reference/java/classio_1_1agora_1_1rtc_1_1_rtc_engine.html#af5f4de754e2c1f493096641c5c5c1d8f
-        mRtcEngine.setVideoEncoderConfiguration(new VideoEncoderConfiguration(
-                VideoEncoderConfiguration.VD_640x360,
-                VideoEncoderConfiguration.FRAME_RATE.FRAME_RATE_FPS_15,
-                VideoEncoderConfiguration.STANDARD_BITRATE,
-                VideoEncoderConfiguration.ORIENTATION_MODE.ORIENTATION_MODE_FIXED_PORTRAIT));
+            // Please go to this page for detailed explanation
+            // https://docs.agora.io/en/Video/API%20Reference/java/classio_1_1agora_1_1rtc_1_1_rtc_engine.html#af5f4de754e2c1f493096641c5c5c1d8f
+            mRtcEngine.setVideoEncoderConfiguration(new VideoEncoderConfiguration(
+                    VideoEncoderConfiguration.VD_640x360,
+                    VideoEncoderConfiguration.FRAME_RATE.FRAME_RATE_FPS_15,
+                    VideoEncoderConfiguration.STANDARD_BITRATE,
+                    VideoEncoderConfiguration.ORIENTATION_MODE.ORIENTATION_MODE_FIXED_PORTRAIT));
+        }
     }
 
 
@@ -327,7 +356,9 @@ public class VoiceCommunicationUtils {
      * 关闭视频模块
      */
     public void disableVideo() {
-        mRtcEngine.disableVideo();
+        if (mRtcEngine != null) {
+            mRtcEngine.disableVideo();
+        }
     }
 
     /**
@@ -339,7 +370,9 @@ public class VoiceCommunicationUtils {
      * @param volumeLevel
      */
     public void adjustPlaybackSignalVolume(int volumeLevel) {
-        mRtcEngine.adjustPlaybackSignalVolume(volumeLevel);
+        if (mRtcEngine != null) {
+            mRtcEngine.adjustPlaybackSignalVolume(volumeLevel);
+        }
     }
 
     /**
@@ -372,14 +405,18 @@ public class VoiceCommunicationUtils {
      * @param secret
      */
     public void setEncryptionSecret(String secret) {
-        mRtcEngine.setEncryptionSecret(secret);
+        if (mRtcEngine != null) {
+            mRtcEngine.setEncryptionSecret(secret);
+        }
     }
 
     /**
      * 转换摄像头
      */
     public void switchCamera() {
-        mRtcEngine.switchCamera();
+        if (mRtcEngine != null) {
+            mRtcEngine.switchCamera();
+        }
     }
 
     /**
@@ -475,6 +512,12 @@ public class VoiceCommunicationUtils {
         mRtcEngine = null;
         communicationState = -1;
         layoutState = -1;
+        onVoiceCommunicationCallbacks = null;
+        communicationState = -1;
+        agoraChannelId = "";
+        cloudPlusChannelId = "";
+        userCount = 1;
+        connectStartTime = 0;
     }
 
     /**
