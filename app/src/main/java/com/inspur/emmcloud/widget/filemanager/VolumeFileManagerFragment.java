@@ -26,6 +26,7 @@ import com.inspur.emmcloud.widget.filemanager.bean.TitlePath;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
@@ -36,6 +37,10 @@ import static android.app.Activity.RESULT_OK;
 
 public class VolumeFileManagerFragment extends Fragment {
 
+    protected static final String SORT_BY_NAME_UP = "sort_by_name_up";
+    protected static final String SORT_BY_NAME_DOWN = "sort_by_name_down";
+    protected static final String SORT_BY_TIME_UP = "sort_by_time_up";
+    protected static final String SORT_BY_TIME_DOWN = "sort_by_time_down";
     protected VolumeFileAdapter fileAdapter;
     protected List<VolumeFile> volumeFileList = new ArrayList<>();
     /**
@@ -54,7 +59,11 @@ public class VolumeFileManagerFragment extends Fragment {
     /**
      * 云盘列表
      **/
-    boolean isBack = false;      /**是否为返回文件夹上一级**/
+    boolean isBack = false;
+    String sortType = SORT_BY_NAME_UP;
+    /**
+     * 是否为返回文件夹上一级
+     **/
     private RecyclerView titleRecyclerview;
     private RecyclerView fileRecyclerView;
     private TitleAdapter titleAdapter;
@@ -170,9 +179,26 @@ public class VolumeFileManagerFragment extends Fragment {
     }
 
    /**获取当前的网盘**/
-    public void setMyVolume(Volume volume) {
-        this.volume = volume;
-        getVolumeFileList(false);
+   public void setMyVolume(Volume volume) {
+       this.volume = volume;
+       getVolumeFileList(false);
+   }
+
+    /**
+     * 文件排序,可以被继承此Activity的实例重写进行排序
+     */
+    protected void sortVolumeFileList() {
+        List<VolumeFile> VolumeFileNormalList = new ArrayList<>();
+        for (int i = 0; i < volumeFileList.size(); i++) {
+            VolumeFile volumeFile = volumeFileList.get(i);
+            if (volumeFile.getStatus().equals("normal")) {
+                VolumeFileNormalList.add(volumeFile);
+            }
+        }
+
+        Collections.sort(VolumeFileNormalList, new FileSortComparable());
+        volumeFileList.clear();
+        volumeFileList.addAll(VolumeFileNormalList);
     }
 
     /**刷新导航条状态**/
@@ -196,6 +222,48 @@ public class VolumeFileManagerFragment extends Fragment {
         }
     }
 
+    private class FileSortComparable implements Comparator<VolumeFile> {
+        @Override
+        public int compare(VolumeFile volumeFileA, VolumeFile volumeFileB) {
+            int sortResult = 0;
+            if (volumeFileA.getType().equals(VolumeFile.FILE_TYPE_DIRECTORY) && volumeFileB.getType().equals(VolumeFile.FILE_TYPE_REGULAR)) {
+                sortResult = -1;
+            } else if (volumeFileB.getType().equals(VolumeFile.FILE_TYPE_DIRECTORY) && volumeFileA.getType().equals(VolumeFile.FILE_TYPE_REGULAR)) {
+                sortResult = 1;
+            } else {
+                switch (sortType) {
+                    case SORT_BY_NAME_UP:
+                        sortResult = volumeFileA.getName().toLowerCase().compareTo(volumeFileB.getName().toLowerCase().toString());
+                        break;
+                    case SORT_BY_NAME_DOWN:
+                        sortResult = 0 - volumeFileA.getName().toLowerCase().compareTo(volumeFileB.getName().toLowerCase().toString());
+                        break;
+                    case SORT_BY_TIME_DOWN:
+                        if (volumeFileA.getCreationDate() == volumeFileB.getCreationDate()) {
+                            sortResult = 0;
+                        } else if (volumeFileA.getCreationDate() < volumeFileB.getCreationDate()) {
+                            sortResult = 1;
+                        } else {
+                            sortResult = -1;
+                        }
+                        break;
+                    case SORT_BY_TIME_UP:
+                        if (volumeFileA.getCreationDate() == volumeFileB.getCreationDate()) {
+                            sortResult = 0;
+                        } else if (volumeFileA.getCreationDate() < volumeFileB.getCreationDate()) {
+                            sortResult = -1;
+                        } else {
+                            sortResult = 1;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            return sortResult;
+        }
+    }
+
     private class WebServiceBase extends APIInterfaceInstance {
         @Override
         public void returnVolumeFileListSuccess(GetVolumeFileListResult volumeFileListResult) {
@@ -208,6 +276,7 @@ public class VolumeFileManagerFragment extends Fragment {
             } else {
                 volumeFileList = getVolumeFileListResult.getVolumeFileFilterList(fileFilterType);
             }
+            sortVolumeFileList();
             fileAdapter.setVolumeFileList(volumeFileList);
             fileAdapter.setCurrentDirAbsolutePath(currentDirAbsolutePath);
             fileAdapter.notifyDataSetChanged();
