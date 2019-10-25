@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.ui.BaseFragment;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
@@ -171,6 +172,7 @@ public class NativeFileManagerFragment extends BaseFragment {
             pathList.add(fileBean.getPath());
         }
         Intent intent = new Intent();
+        intent.putExtra("isNativeFile", true);
         intent.putStringArrayListExtra("pathList", pathList);
         getActivity().setResult(RESULT_OK, intent);
         getActivity().finish();

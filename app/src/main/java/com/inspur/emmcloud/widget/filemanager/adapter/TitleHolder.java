@@ -3,7 +3,7 @@ package com.inspur.emmcloud.widget.filemanager.adapter;
 import android.view.View;
 import android.widget.TextView;
 
-
+import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.widget.filemanager.adapter.base.RecyclerViewAdapter;
 import com.inspur.emmcloud.widget.filemanager.adapter.base.RecyclerViewHolder;
 import com.inspur.emmcloud.widget.filemanager.bean.TitlePath;
@@ -19,8 +19,7 @@ public class TitleHolder extends RecyclerViewHolder<TitleHolder> {
 
     public TitleHolder(View itemView) {
         super(itemView);
-
-        textView = (TextView) itemView.findViewById(R.id.title_Name);
+        textView = (TextView) itemView.findViewById(R.id.tv_title_ame);
     }
 
     @Override

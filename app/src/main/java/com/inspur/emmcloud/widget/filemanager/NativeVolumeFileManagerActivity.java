@@ -7,12 +7,10 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.alibaba.android.arouter.facade.annotation.Route;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
-import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseFragmentActivity;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeListResult;
@@ -25,7 +23,7 @@ import java.util.List;
 /**
  * Created by libaochao on 2019/10/23.
  */
-@Route(path = Constant.AROUTER_CLASS_FILEMANAGER_WITH_VOLUME)
+
 public class NativeVolumeFileManagerActivity extends BaseFragmentActivity implements View.OnClickListener {
 
     NativeFileManagerFragment nativeFileManagerFragment;

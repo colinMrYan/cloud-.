@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.widget.filemanager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,9 +23,12 @@ import com.inspur.emmcloud.widget.filemanager.adapter.TitleAdapter;
 import com.inspur.emmcloud.widget.filemanager.adapter.base.RecyclerViewAdapter;
 import com.inspur.emmcloud.widget.filemanager.bean.TitlePath;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by libaochao on 2019/10/23.
@@ -37,7 +41,7 @@ public class VolumeFileManagerFragment extends Fragment {
     protected String currentDirAbsolutePath;//当前文件夹路径
     protected GetVolumeFileListResult getVolumeFileListResult;
     protected String fileFilterType = "";  //显示的文件类型
-    protected List<VolumeFile> volumeFilePath = new ArrayList<>();//云盘列表
+    protected List<VolumeFile> volumeFileSelected = new ArrayList<>();//云盘列表
     boolean isBack = false;
     private RecyclerView titleRecyclerview;
     private RecyclerView fileRecyclerView;
@@ -65,6 +69,7 @@ public class VolumeFileManagerFragment extends Fragment {
         titleRecyclerview.setAdapter(titleAdapter);
         fileRecyclerView = rootView.findViewById(R.id.rcv_file);
         fileAdapter = new VolumeFileAdapter(getContext(), volumeFileList);
+        fileAdapter.setShowFileOperationSelcteImage(false);
         fileAdapter.setCurrentDirAbsolutePath(currentDirAbsolutePath);
         fileRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         fileRecyclerView.setAdapter(fileAdapter);
@@ -82,7 +87,9 @@ public class VolumeFileManagerFragment extends Fragment {
                     currentDirAbsolutePath = titleAdapter.getCurrentPath();  /**获取当前路径**/
                     getVolumeFileList(true);
                 } else if (volumeFileList.get(position).getType().equals(VolumeFile.FILE_TYPE_REGULAR)) {
-
+                    /**发起请求**/
+                    volumeFileSelected.add(volumeFileList.get(position));
+                    returnSelectResult();
                 } else {
 
                 }
@@ -126,6 +133,15 @@ public class VolumeFileManagerFragment extends Fragment {
             }
         });
 
+    }
+
+    private void returnSelectResult() {
+        Intent intent = new Intent();
+        intent.putExtra("isNativeFile", false);
+        intent.putExtra("volumeFileList", (Serializable) volumeFileSelected);
+        intent.putExtra("currentPath", currentDirAbsolutePath);
+        getActivity().setResult(RESULT_OK, intent);
+        getActivity().finish();
     }
 
     @Override

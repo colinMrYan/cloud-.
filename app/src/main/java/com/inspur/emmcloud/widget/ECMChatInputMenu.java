@@ -62,6 +62,7 @@ import com.inspur.emmcloud.util.privates.VoiceCommunicationUtils;
 import com.inspur.emmcloud.util.privates.audioformat.AndroidMp3ConvertUtils;
 import com.inspur.emmcloud.widget.audiorecord.AudioDialogManager;
 import com.inspur.emmcloud.widget.audiorecord.AudioRecordButton;
+import com.inspur.emmcloud.widget.filemanager.NativeVolumeFileManagerActivity;
 import com.inspur.emmcloud.widget.waveprogress.VoiceCompleteView;
 import com.inspur.emmcloud.widget.waveprogress.WaterWaveProgress;
 import com.itheima.roundedimageview.RoundedImageView;
@@ -670,7 +671,9 @@ public class ECMChatInputMenu extends LinearLayout {
                             AppUtils.openCamera((Activity) getContext(), fileName, CAMERA_RESULT);
                             break;
                         case "file":
-                             AppUtils.openFileSystemWithVolume((Activity) getContext(), CHOOSE_FILE,1);
+                            Intent intent = new Intent(getContext(), NativeVolumeFileManagerActivity.class);
+                            ((Activity) getContext()).startActivityForResult(intent, CHOOSE_FILE);
+                            //AppUtils.openFileSystemWithVolume((Activity) getContext(), CHOOSE_FILE,1);
                             break;
                         case "mention":
                             openMentionPage(false);
