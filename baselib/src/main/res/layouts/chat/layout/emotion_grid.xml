@@ -39,7 +39,7 @@
                 <com.inspur.emmcloud.baselib.widget.NoScrollGridView
                     android:id="@+id/emotion_recent_grid"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="48dp"
                     android:layout_marginTop="0dp"
                     android:cacheColorHint="@android:color/transparent"
                     android:columnWidth="51dp"
@@ -70,7 +70,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:cacheColorHint="@android:color/transparent"
-                    android:columnWidth="51dp"
+                    android:columnWidth="48dp"
                     android:horizontalSpacing="0dip"
                     android:numColumns="auto_fit"
                     android:paddingBottom="50dp"
