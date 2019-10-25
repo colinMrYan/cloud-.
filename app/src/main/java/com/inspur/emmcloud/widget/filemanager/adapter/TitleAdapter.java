@@ -90,7 +90,6 @@ public class TitleAdapter extends RecyclerViewAdapter {
 
     public String getCurrentPath() {
         String path = "/";
-        ;
         if (list.size() > 0) {
             for (int i = 1; i < list.size(); i++) {
                 path = path + list.get(i).getNameState();
