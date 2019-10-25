@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.InputFilter;
+import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -23,6 +24,7 @@ import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.widget.MyForegroundColorSpan;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.widget.richedit.InsertModel;
+import com.inspur.emmcloud.ui.chat.emotion.EmotionUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -115,7 +117,9 @@ public class ChatInputEdit extends EditText {
             String copyText = clip.getPrimaryClip().getItemAt(0).getText().toString();
             SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(getText());
             spannableStringBuilder.insert(lastCursorPosion, copyText);
-            setText(spannableStringBuilder);
+            Spannable span = EmotionUtil.getInstance(mContext).getSmiledText(spannableStringBuilder, getTextSize());
+            setText(span);
+            setSelection(span.length());
             return true;
         } else if (id == android.R.id.cut) {
             removeInsertModelByDeleteContent(getSelectionStart(), getSelectionEnd());
@@ -389,7 +393,7 @@ public class ChatInputEdit extends EditText {
     /**
      * 根据keyword获取InsertModel
      *
-     * @param keyword
+     * @param insertId
      * @return
      */
     private InsertModel getInsertModel(String insertId) {

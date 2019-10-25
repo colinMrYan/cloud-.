@@ -64,6 +64,7 @@ import com.inspur.emmcloud.util.privates.VoiceCommunicationUtils;
 import com.inspur.emmcloud.util.privates.audioformat.AndroidMp3ConvertUtils;
 import com.inspur.emmcloud.widget.audiorecord.AudioDialogManager;
 import com.inspur.emmcloud.widget.audiorecord.AudioRecordButton;
+import com.inspur.emmcloud.widget.filemanager.NativeVolumeFileManagerActivity;
 import com.inspur.emmcloud.widget.waveprogress.VoiceCompleteView;
 import com.inspur.emmcloud.widget.waveprogress.WaterWaveProgress;
 import com.itheima.roundedimageview.RoundedImageView;
@@ -363,7 +364,7 @@ public class ECMChatInputMenu extends LinearLayout {
         emotionRecentGrid.setAdapter(emotionRecentAdapter);
         emotionRecentGrid.setOnItemClickListener(new OnEmotionItemClickListener());
 
-        List<String> resList = EmotionUtil.getExpressionRes(35);
+        List<String> resList = EmotionUtil.getInstance(getContext()).getExpressionRes();
         emotionAdapter = new EmotionAdapter(getContext(), 1, resList);
         emotionGrid.setAdapter(emotionAdapter);
         emotionGrid.setOnItemClickListener(new OnEmotionItemClickListener());
@@ -669,7 +670,8 @@ public class ECMChatInputMenu extends LinearLayout {
                             AppUtils.openCamera((Activity) getContext(), fileName, CAMERA_RESULT);
                             break;
                         case "file":
-                            AppUtils.openFileSystem((Activity) getContext(), CHOOSE_FILE, 5);
+                            Intent intent = new Intent(getContext(), NativeVolumeFileManagerActivity.class);
+                            ((Activity) getContext()).startActivityForResult(intent, CHOOSE_FILE);
                             break;
                         case "mention":
                             openMentionPage(false);
@@ -983,7 +985,7 @@ public class ECMChatInputMenu extends LinearLayout {
                 break;
 
             case R.id.emotion_delete:  //表情删除
-                EmotionUtil.deleteSingleEmojcon(inputEdit);
+                EmotionUtil.getInstance(getContext()).deleteSingleEmojcon(inputEdit);
                 break;
             default:
                 break;
@@ -1029,7 +1031,7 @@ public class ECMChatInputMenu extends LinearLayout {
             try {
                 Class clz = Class.forName("com.inspur.emmcloud.ui.chat.emotion.EmotionUtil");
                 Field field = clz.getField(filename);
-                Spannable span = EmotionUtil.getSmiledText(getContext(), (String) field.get(null));
+                Spannable span = EmotionUtil.getInstance(getContext()).getSmiledText((String) field.get(null), inputEdit.getTextSize());
                 if (selectionStart < 0 || selectionStart >= inputEdit.length()) {
                     inputEdit.getEditableText().append(span);
                 } else {
@@ -1052,7 +1054,6 @@ public class ECMChatInputMenu extends LinearLayout {
         emotionLayout.setVisibility(isShowEmotion ? View.VISIBLE : View.GONE);
         emotionBtn.setImageResource(isShowEmotion ? R.drawable.ic_chat_input_keyboard : R.drawable.ic_chat_btn_emotion);
     }
-
 
     @OnTouch({R.id.volume_level_img})
     public boolean onTouch(View v, MotionEvent event) {
@@ -1097,7 +1098,6 @@ public class ECMChatInputMenu extends LinearLayout {
         }
         return mentionsUidList;
     }
-
 
     public void setOtherLayoutView(View otherLayoutView, View listContentView) {
         this.otherLayoutView = otherLayoutView;

@@ -10,22 +10,31 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.text.Spannable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.baselib.widget.NoScrollGridView;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.widget.richedit.InsertModel;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
+import com.inspur.emmcloud.ui.chat.emotion.EmotionAdapter;
+import com.inspur.emmcloud.ui.chat.emotion.EmotionRecentManager;
+import com.inspur.emmcloud.ui.chat.emotion.EmotionUtil;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +61,25 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
 
     @BindView(R.id.rl_add_menu)
     RelativeLayout addMenuLayout;
+    /**
+     * 表情相关
+     */
+    @BindView(R.id.emotion_container)
+    View emotionLayout;
+    @BindView(R.id.emotion_delete)
+    ImageView emotionDeleteImg;
+    @BindView(R.id.emotion_recent_layout)
+    View emotionRecentLayout;
+    @BindView(R.id.emotion_recent_grid)
+    NoScrollGridView emotionRecentGrid;
+    @BindView(R.id.emotion_grid)
+    NoScrollGridView emotionGrid;
+    @BindView(R.id.emotion_btn)
+    ImageButton emotionBtn;
+    EmotionAdapter emotionAdapter;
+    EmotionAdapter emotionRecentAdapter;
+    @BindView(R.id.at_people_btn)
+    ImageButton atPeopleBtn;
 
     private boolean canMentions = false;
     private ChatInputMenuListener chatInputMenuListener;
@@ -77,6 +105,7 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
         View view = LayoutInflater.from(context).inflate(R.layout.communication_widget_chat_input_menu_img_comment, this, true);
         ButterKnife.bind(this, view);
         initInputEdit();
+        initEmotion();
         sendBtn.setEnabled(false);
     }
 
@@ -98,6 +127,18 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
                 }
             }
         });
+    }
+
+    private void initEmotion() {
+        EmotionRecentManager recentManager = EmotionRecentManager.getInstance(getContext());
+        emotionRecentAdapter = new EmotionAdapter(getContext(), 1, recentManager);
+        emotionRecentGrid.setAdapter(emotionRecentAdapter);
+        emotionRecentGrid.setOnItemClickListener(new OnEmotionItemClickListener());
+
+        List<String> resList = EmotionUtil.getInstance(getContext()).getExpressionRes();
+        emotionAdapter = new EmotionAdapter(getContext(), 1, resList);
+        emotionGrid.setAdapter(emotionAdapter);
+        emotionGrid.setOnItemClickListener(new OnEmotionItemClickListener());
     }
 
     public ChatInputEdit getChatInputEdit() {
@@ -180,7 +221,7 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
         }
     }
 
-    @OnClick({R.id.bt_send, R.id.bt_cancel})
+    @OnClick({R.id.bt_send, R.id.bt_cancel, R.id.emotion_btn, R.id.emotion_delete, R.id.at_people_btn})
     public void onViewClick(View view) {
         switch (view.getId()) {
             case R.id.bt_send:
@@ -198,9 +239,32 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
                     chatInputMenuListener.hideChatInputMenu();
                 }
                 break;
+            case R.id.emotion_btn:
+                handleEmotionStatus();
+                break;
+            case R.id.emotion_delete:  //表情删除
+                EmotionUtil.getInstance(getContext()).deleteSingleEmojcon(inputEdit);
+                break;
+            case R.id.at_people_btn:    //@某人
+                if (canMentions) {
+                    openMentionPage(true);
+                }
+                break;
             default:
                 break;
         }
+    }
+
+    /**
+     * 点击menu里的表情
+     */
+    private void handleEmotionStatus() {
+        if (emotionRecentAdapter != null) {
+            emotionRecentLayout.setVisibility(EmotionRecentManager.getInstance(getContext()).size() > 0 ? VISIBLE : GONE);
+            emotionRecentAdapter.notifyDataSetChanged();
+        }
+
+        emotionLayout.setVisibility(VISIBLE);
     }
 
 
@@ -233,6 +297,29 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
             mentionsUidList.add(insertModel.getInsertId());
         }
         return mentionsUidList;
+    }
+
+    class OnEmotionItemClickListener implements AdapterView.OnItemClickListener {
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            String filename = (parent.getId() == R.id.emotion_recent_grid ?
+                    emotionRecentAdapter.getItem(position) : emotionAdapter.getItem(position));
+            int selectionStart = inputEdit.getSelectionStart();// 获取光标的位置
+            try {
+                Class clz = Class.forName("com.inspur.emmcloud.ui.chat.emotion.EmotionUtil");
+                Field field = clz.getField(filename);
+                Spannable span = EmotionUtil.getInstance(getContext()).getSmiledText((String) field.get(null), inputEdit.getTextSize());
+                if (selectionStart < 0 || selectionStart >= inputEdit.length()) {
+                    inputEdit.getEditableText().append(span);
+                } else {
+                    inputEdit.getEditableText().insert(selectionStart, span);
+                }
+                EmotionRecentManager.getInstance(getContext()).addItem(filename);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 
