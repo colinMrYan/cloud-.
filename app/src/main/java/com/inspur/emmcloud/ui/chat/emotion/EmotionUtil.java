@@ -147,7 +147,7 @@ public class EmotionUtil {
 //                    spannable.setSpan(new CenterAlignImageSpan(context, entry.getValue(), 2), matcher.start(), matcher.end(),
 //                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     EmotionSpan span = new EmotionSpan(context, entry.getValue(),
-                            (int) (textSize * 1.2f), (int) (textSize * 1.2f));
+                            (int) (textSize * 1.4f), (int) (textSize * 1.4f));
                     span.setTranslateY(2);
                     spannable.setSpan(span,
                             matcher.start(), matcher.end(),

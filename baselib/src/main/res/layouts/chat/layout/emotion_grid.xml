@@ -17,21 +17,22 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
             android:orientation="vertical">
 
             <LinearLayout
                 android:id="@+id/emotion_recent_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="-15dp"
                 android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="15dp"
+                    android:paddingLeft="8dp"
                     android:text="@string/chat_emotion_recent_tip"
                     android:textColor="@color/grey_a5a5a5"
                     android:textSize="14sp" />
@@ -44,6 +45,7 @@
                     android:cacheColorHint="@android:color/transparent"
                     android:horizontalSpacing="0dp"
                     android:numColumns="7"
+                    android:listSelector="@color/transparent"
                     android:scrollbars="vertical"
                     android:verticalSpacing="0dp" />
 
@@ -52,8 +54,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="0dp"
-                android:paddingLeft="15dp"
+                android:layout_marginTop="15dp"
+                android:paddingLeft="8dp"
                 android:text="@string/chat_emotion_total_tip"
                 android:textColor="@color/grey_a5a5a5"
                 android:textSize="14sp" />
@@ -73,7 +75,8 @@
                     android:numColumns="7"
                     android:paddingBottom="50dp"
                     android:scrollbars="vertical"
-                    android:verticalSpacing="-8dp" />
+                    android:listSelector="@color/transparent"
+                    android:verticalSpacing="0dp" />
 
             </RelativeLayout>
 
@@ -87,9 +90,10 @@
         android:layout_alignParentBottom="true">
 
         <ImageView
-            android:layout_width="110dp"
+            android:layout_width="130dp"
             android:layout_height="88dp"
             android:layout_alignParentRight="true"
+            android:layout_marginRight="2dp"
             android:src="@drawable/emotion_delete_shadow" />
 
         <ImageView
@@ -98,7 +102,7 @@
             android:layout_height="50dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="18dp"
+            android:layout_marginRight="15dp"
             android:src="@drawable/emotion_delete" />
     </RelativeLayout>
 
