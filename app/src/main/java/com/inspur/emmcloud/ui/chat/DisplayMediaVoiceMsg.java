@@ -43,7 +43,7 @@ public class DisplayMediaVoiceMsg {
     public static View getView(final Context context, final UIMessage uiMessage, final ChannelMessageAdapter.MyItemClickListener mItemClickListener) {
         final Message message = uiMessage.getMessage();
         final boolean isMyMsg = message.getFromUser().equals(MyApplication.getInstance().getUid());
-        View cardContentView = LayoutInflater.from(context).inflate(R.layout.chat_msg_card_child_media_voice_view, null);
+        final View cardContentView = LayoutInflater.from(context).inflate(R.layout.chat_msg_card_child_media_voice_view, null);
         final BubbleLayout voiceBubbleLayout = (BubbleLayout) cardContentView.findViewById(R.id.bl_voice);
         voiceBubbleLayout.setArrowDirection(isMyMsg ? ArrowDirection.RIGHT : ArrowDirection.LEFT);
         voiceBubbleLayout.setBubbleColor(context.getResources().getColor(isMyMsg ? R.color.bg_my_card : R.color.bg_other_card));
@@ -136,8 +136,8 @@ public class DisplayMediaVoiceMsg {
                 if (MediaPlayerManagerUtils.getManager().isPlaying()) {
                     MediaPlayerManagerUtils.getManager().stop();
                 }
-                if (uiMessage.getSendStatus() == 1 && mItemClickListener != null) {
-                    mItemClickListener.onMediaVoiceReRecognize(uiMessage, voiceBubbleLayout, downloadLoadingView);
+                if (mItemClickListener != null) {
+                    mItemClickListener.onMediaVoiceReRecognize(uiMessage, cardContentView, downloadLoadingView);
                 }
                 return false;
             }

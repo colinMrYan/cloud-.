@@ -22,6 +22,12 @@ import java.util.List;
 
 public class ResolutionUtils {
 
+    /**
+     * 判断是否是全面屏
+     */
+    private volatile static boolean mHasCheckAllScreen;
+    private volatile static boolean mIsAllScreenDevice;
+
     public static int getWidth(Context context) {
         Resources resources = context.getResources();
         DisplayMetrics dm = resources.getDisplayMetrics();
@@ -141,11 +147,6 @@ public class ResolutionUtils {
     }
 
     /**
-     * 判断是否是全面屏
-     */
-    private volatile static boolean mHasCheckAllScreen;
-
-    /**
      * 获取navigationbar 的高度
      *
      * @return
@@ -164,8 +165,6 @@ public class ResolutionUtils {
             return 0;
         }
     }
-
-    private volatile static boolean mIsAllScreenDevice;
 
     /**
      * 判断设备是否存在NavigationBar(虚拟导航栏)

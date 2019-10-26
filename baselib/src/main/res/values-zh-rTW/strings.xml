@@ -324,6 +324,8 @@
     <string name="chat_conversation_unread_count">%1$d條新消息</string>
     <string name="chat_long_click_copy">複製</string>
     <string name="chat_long_click_transmit">轉發</string>
+    <string name="chat_long_click_recall">撤回</string>
+    <string name="recall_fail_for_timeout">發送時間超過2分鐘的消息，不能被撤回。</string>
     <string name="chat_long_click_schedule">添加到日程</string>
     <string name="chat_long_click_copy_text">複製文字</string>
     <string name="communication_search">搜索</string>
@@ -1314,7 +1316,7 @@
     <string name="voice_word_tran">正在語音轉文字</string>
     <string name="voice_word_setting">語音自動識別</string>
     <string name="voice_audio_record_unavailiable">當前錄音設備不可用，請檢查錄音許可權是否開啟</string>
-    <string name="voice_to_word">轉文字</string>
+    <string name="voice_to_word">轉換為文字（僅普通話）</string>
     <!--语音输入改造-->
     <string name="voice_input_language_mandarin">普通話</string>
     <string name="voice_input_language_cantonese">粵語</string>

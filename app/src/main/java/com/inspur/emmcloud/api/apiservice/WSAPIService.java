@@ -548,4 +548,37 @@ public class WSAPIService {
         }
     }
 
+
+    /**
+     * 消息撤回
+     *
+     * @param cid
+     * @param mid
+     */
+    public void recallMessage(String cid, String mid) {
+        try {
+            JSONObject object = new JSONObject();
+            try {
+                String tracer = CommunicationUtils.getTracer();
+                JSONObject actionObj = new JSONObject();
+                actionObj.put("method", "post");
+                actionObj.put("path", "/command/server");
+                object.put("action", actionObj);
+                JSONObject headerObj = new JSONObject();
+                headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
+                headerObj.put("tracer", tracer);
+                object.put("headers", headerObj);
+                JSONObject bodyObject = new JSONObject();
+                bodyObject.put("messageId", mid);
+                bodyObject.put("channelId", cid);
+                object.put("body", bodyObject);
+                EventMessage eventMessage = new EventMessage(tracer, Constant.EVENTBUS_TAG_RECALL_MESSAGE, "", "");
+                WebSocketPush.getInstance().sendEventMessage(eventMessage, object, tracer);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

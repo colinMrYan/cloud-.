@@ -13,13 +13,9 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.SpannableString;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
@@ -29,9 +25,9 @@ import com.inspur.emmcloud.adapter.ChannelMessageAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
-import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.CustomLoadingView;
@@ -70,6 +66,7 @@ import com.inspur.emmcloud.bean.system.VoiceResult;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.interf.ResultCallback;
+import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.chat.mvp.view.ConversationInfoActivity;
 import com.inspur.emmcloud.ui.chat.mvp.view.ConversationSearchActivity;
 import com.inspur.emmcloud.ui.chat.pop.PopupWindowList;
@@ -95,7 +92,6 @@ import com.inspur.emmcloud.widget.ECMChatInputMenu;
 import com.inspur.emmcloud.widget.ECMChatInputMenu.ChatInputMenuListener;
 import com.inspur.emmcloud.widget.ECMChatInputMenuCallback;
 import com.inspur.emmcloud.widget.RecycleViewForSizeChange;
-import com.inspur.emmcloud.widget.bubble.BubbleLayout;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -150,7 +146,6 @@ public class ConversationActivity extends ConversationBaseActivity {
     private boolean isSpecialUser = false; //小智机器人进行特殊处理
     private BroadcastReceiver refreshNameReceiver;
     private PopupWindow mediaVoiceReRecognizerPop;
-    private PopupWindow resendMessagePop;
     private PopupWindowList mPopupWindowList; //仿微信长按处理
 
     private UIMessage backUiMessage = null;
@@ -502,13 +497,16 @@ public class ConversationActivity extends ConversationBaseActivity {
             @Override
             public void onMessageResend(UIMessage uiMessage, View view) {
                 if (uiMessage.getSendStatus() == Message.MESSAGE_SEND_FAIL) {
-                    showResendMessageDlg(uiMessage, view);
+                    onCardItemLongClick(view, uiMessage);
                 }
             }
 
             @Override
-            public void onMediaVoiceReRecognize(UIMessage uiMessage, BubbleLayout bubbleLayout, CustomLoadingView downloadLoadingView) {
-                showMediaVoiceReRecognizerPop(uiMessage, bubbleLayout, downloadLoadingView);
+            public void onMediaVoiceReRecognize(UIMessage uiMessage, View view, CustomLoadingView downloadLoadingView) {
+                List<Integer> operationIdList = getMessageOperationIdList(uiMessage);
+                if (operationIdList.size() > 0) {
+                    showMessageOperationDlg(operationIdList, uiMessage, view, downloadLoadingView);
+                }
             }
 
             @Override
@@ -520,10 +518,11 @@ public class ConversationActivity extends ConversationBaseActivity {
 
             @Override
             public boolean onCardItemLongClick(View view, UIMessage uiMessage) {
+                LogUtils.jasonDebug("onCardItemLongClick----------------------");
                 backUiMessage = uiMessage;
-                int[] operationsId = getCardLongClickOperations(uiMessage);
-                if (operationsId.length > 0 && uiMessage.getSendStatus() == 1) {
-                    showLongClickDialog(operationsId, uiMessage, view);
+                List<Integer> operationIdList = getMessageOperationIdList(uiMessage);
+                if (operationIdList.size() > 0) {
+                    showMessageOperationDlg(operationIdList, uiMessage, view, null);
                 }
                 return true;
             }
@@ -555,46 +554,6 @@ public class ConversationActivity extends ConversationBaseActivity {
         msgListView.setAdapter(adapter);
     }
 
-    /**
-     * 弹出消息重新发送提示框
-     *
-     * @param uiMessage
-     */
-    private void showResendMessageDlg(final UIMessage uiMessage, View view) {
-        View contentView = LayoutInflater.from(this).inflate(R.layout.pop_voice_to_text_view, null);
-        ((TextView) contentView.findViewById(R.id.tv_pop_title)).setText(getString(R.string.chat_resend_message));
-        contentView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-        resendMessagePop = new PopupWindow(contentView,
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT, true);
-        resendMessagePop.setTouchable(true);
-        resendMessagePop.setOutsideTouchable(true);
-        resendMessagePop.setTouchInterceptor(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return false;
-            }
-        });
-        int[] location = new int[2];
-        view.getLocationOnScreen(location);
-        int popWidth = resendMessagePop.getContentView().getMeasuredWidth();
-        int popHeight = resendMessagePop.getContentView().getMeasuredHeight();
-        BubbleLayout resendMessageBubbleLayout = contentView.findViewById(R.id.bl_voice_to_text);
-        resendMessageBubbleLayout.setArrowPosition(popWidth / 2 - DensityUtil.dip2px(MyApplication.getInstance(), 9));
-        resendMessagePop.showAtLocation(view, Gravity.NO_GRAVITY, location[0] +
-                view.getWidth() / 2 - popWidth / 2, location[1] -
-                popHeight - DensityUtil.dip2px(MyApplication.getInstance(), 5));
-        resendMessagePop.showAsDropDown(view);
-        resendMessageBubbleLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                resendMessagePop.dismiss();
-                resendMessage(uiMessage);
-            }
-        });
-
-    }
-
 
     /**
      * 消息重新发送
@@ -603,15 +562,18 @@ public class ConversationActivity extends ConversationBaseActivity {
      */
     private void resendMessage(UIMessage uiMessage) {
         // TODO Auto-generated method stub
-        Message message = uiMessage.getMessage();
-        String messageType = message.getType();
-        if (!FileUtils.isFileExist(message.getLocalPath()) && (messageType.equals(Message.MESSAGE_TYPE_FILE_REGULAR_FILE)
+//        Message message = uiMessage.getMessage();
+        String messageType = uiMessage.getMessage().getType();
+        if (!FileUtils.isFileExist(uiMessage.getMessage().getLocalPath()) && (messageType.equals(Message.MESSAGE_TYPE_FILE_REGULAR_FILE)
                 || messageType.equals(Message.MESSAGE_TYPE_MEDIA_IMAGE) || messageType.equals(Message.MESSAGE_TYPE_MEDIA_VOICE))) {
             ToastUtils.show(ConversationActivity.this, getString(R.string.resend_file_failed));
             return;
         }
         uiMessage.setSendStatus(Message.MESSAGE_SEND_ING);
-        setMessageSendStatusAndSendTime(message, Message.MESSAGE_SEND_ING);
+        long creationDate = System.currentTimeMillis();
+        uiMessage.getMessage().setCreationDate(creationDate);
+        uiMessage.setCreationDate(creationDate);
+        setMessageSendStatusAndSendTime(uiMessage.getMessage(), Message.MESSAGE_SEND_ING);
         int position = uiMessageList.indexOf(uiMessage);
         if (position != uiMessageList.size() - 1) {
             uiMessageList.remove(position);
@@ -627,55 +589,29 @@ public class ConversationActivity extends ConversationBaseActivity {
     }
 
 
-    private void showMediaVoiceReRecognizerPop(final UIMessage uiMessage, BubbleLayout anchor, final CustomLoadingView downloadLoadingView) {
-        View contentView = LayoutInflater.from(this).inflate(R.layout.pop_voice_to_text_view, null);
-        contentView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-        mediaVoiceReRecognizerPop = new PopupWindow(contentView,
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT, true);
-        mediaVoiceReRecognizerPop.setTouchable(true);
-        mediaVoiceReRecognizerPop.setOutsideTouchable(true);
-        mediaVoiceReRecognizerPop.setTouchInterceptor(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return false;
-            }
-        });
-        int[] location = new int[2];
-        anchor.getLocationOnScreen(location);
-        int popWidth = mediaVoiceReRecognizerPop.getContentView().getMeasuredWidth();
-        int popHeight = mediaVoiceReRecognizerPop.getContentView().getMeasuredHeight();
-        BubbleLayout voice2TextBubble = (BubbleLayout) contentView.findViewById(R.id.bl_voice_to_text);
-        voice2TextBubble.setArrowPosition(popWidth / 2 - DensityUtil.dip2px(MyApplication.getInstance(), 9));
-        mediaVoiceReRecognizerPop.showAtLocation(anchor, Gravity.NO_GRAVITY, location[0] + anchor.getWidth() / 2 - popWidth / 2, location[1] - popHeight - DensityUtil.dip2px(MyApplication.getInstance(), 5));
-        voice2TextBubble.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mediaVoiceReRecognizerPop.dismiss();
-                String mp3FileSavePath = MyAppConfig.getCacheVoiceFilePath(uiMessage.getMessage().getChannel(), uiMessage.getMessage().getId());
-                //如果原文件不存在，不进行重新识别
-                if (!FileUtils.isFileExist(mp3FileSavePath)) {
-                    return;
-                }
-                final String pcmFileSavePath = MyAppConfig.getCacheVoicePCMFilePath(uiMessage.getMessage().getChannel(), uiMessage.getMessage().getId());
+    private void recognizerMediaVoiceMessage(final UIMessage uiMessage, final CustomLoadingView downloadLoadingView) {
+        String mp3FileSavePath = MyAppConfig.getCacheVoiceFilePath(uiMessage.getMessage().getChannel(), uiMessage.getMessage().getId());
+        //如果原文件不存在，不进行重新识别
+        if (!FileUtils.isFileExist(mp3FileSavePath)) {
+            return;
+        }
+        final String pcmFileSavePath = MyAppConfig.getCacheVoicePCMFilePath(uiMessage.getMessage().getChannel(), uiMessage.getMessage().getId());
 
-                if (!FileUtils.isFileExist(pcmFileSavePath)) {
-                    new AudioMp3ToPcm().startMp3ToPCM(mp3FileSavePath, pcmFileSavePath, new ResultCallback() {
-                        @Override
-                        public void onSuccess() {
-                            voiceToWord(pcmFileSavePath, uiMessage, downloadLoadingView);
-                        }
-
-                        @Override
-                        public void onFail() {
-
-                        }
-                    });
-                } else {
+        if (!FileUtils.isFileExist(pcmFileSavePath)) {
+            new AudioMp3ToPcm().startMp3ToPCM(mp3FileSavePath, pcmFileSavePath, new ResultCallback() {
+                @Override
+                public void onSuccess() {
                     voiceToWord(pcmFileSavePath, uiMessage, downloadLoadingView);
                 }
-            }
-        });
+
+                @Override
+                public void onFail() {
+
+                }
+            });
+        } else {
+            voiceToWord(pcmFileSavePath, uiMessage, downloadLoadingView);
+        }
     }
 
     private void voiceToWord(String filePath, final UIMessage uiMessage, final CustomLoadingView downloadLoadingView) {
@@ -1459,38 +1395,55 @@ public class ConversationActivity extends ConversationBaseActivity {
     /**
      * Card 长按事件弹出dialogCard LongClick
      */
-    private int[] getCardLongClickOperations(final UIMessage uiMessage) {
+    private List<Integer> getMessageOperationIdList(final UIMessage uiMessage) {
         Message message = uiMessage.getMessage();
         String type = message.getType();
-        int[] items = new int[0];
-        switch (type) {
-            case Message.MESSAGE_TYPE_TEXT_PLAIN:
-                items = new int[]{R.string.chat_long_click_copy, R.string.chat_long_click_transmit, R.string.chat_long_click_schedule};
-                break;
-            case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
-                items = new int[]{R.string.chat_long_click_copy, R.string.chat_long_click_transmit, R.string.chat_long_click_schedule};
-                break;
-            case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
-                items = new int[]{R.string.chat_long_click_transmit};
-                break;
-            case Message.MESSAGE_TYPE_EXTENDED_CONTACT_CARD:
-                break;
-            case Message.MESSAGE_TYPE_EXTENDED_ACTIONS:
-                break;
-            case Message.MESSAGE_TYPE_MEDIA_IMAGE:
-                items = new int[]{R.string.chat_long_click_transmit, R.string.chat_long_click_reply};
-                break;
-            case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
-                break;
-            case Message.MESSAGE_TYPE_EXTENDED_LINKS:
-                items = new int[]{R.string.chat_long_click_transmit};
-                break;
-            case Message.MESSAGE_TYPE_MEDIA_VOICE:
-                break;
-            default:
-                break;
+        ArrayList<Integer> OperationIdList = new ArrayList<>();
+        if (uiMessage.getSendStatus() == Message.MESSAGE_SEND_FAIL) {
+            OperationIdList.add(R.string.chat_resend_message);
+            OperationIdList.add(R.string.delete);
+        } else if (uiMessage.getSendStatus() == Message.MESSAGE_SEND_ING) {
+            OperationIdList.add(R.string.delete);
+        } else if (uiMessage.getSendStatus() == Message.MESSAGE_SEND_SUCCESS) {
+            switch (type) {
+                case Message.MESSAGE_TYPE_TEXT_PLAIN:
+                    OperationIdList.add(R.string.chat_long_click_copy);
+                    OperationIdList.add(R.string.chat_long_click_transmit);
+                    OperationIdList.add(R.string.chat_long_click_schedule);
+                    break;
+                case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
+                    OperationIdList.add(R.string.chat_long_click_transmit);
+                    OperationIdList.add(R.string.chat_long_click_schedule);
+                    break;
+                case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
+                    OperationIdList.add(R.string.chat_long_click_transmit);
+                    break;
+                case Message.MESSAGE_TYPE_EXTENDED_CONTACT_CARD:
+                    break;
+                case Message.MESSAGE_TYPE_EXTENDED_ACTIONS:
+                    break;
+                case Message.MESSAGE_TYPE_MEDIA_IMAGE:
+                    OperationIdList.add(R.string.chat_long_click_transmit);
+                    OperationIdList.add(R.string.chat_long_click_reply);
+                    break;
+                case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
+                    break;
+                case Message.MESSAGE_TYPE_EXTENDED_LINKS:
+                    OperationIdList.add(R.string.chat_long_click_transmit);
+                    break;
+                case Message.MESSAGE_TYPE_MEDIA_VOICE:
+                    break;
+                default:
+                    break;
+            }
+            if (System.currentTimeMillis() - uiMessage.getCreationDate() < 120000) {
+                OperationIdList.add(R.string.chat_long_click_recall);
+            }
+            if (uiMessage.getMessage().getType().equals(Message.MESSAGE_TYPE_MEDIA_VOICE)) {
+                OperationIdList.add(R.string.voice_to_word);
+            }
         }
-        return items;
+        return OperationIdList;
     }
 
     /**
@@ -1580,23 +1533,16 @@ public class ConversationActivity extends ConversationBaseActivity {
     /**
      * 仿微信长按处理
      */
-    private void showLongClickDialog(final int[] operationsId, final UIMessage uiMessage, View view) {
-        final String[] operations = new String[operationsId.length];
-        for (int i = 0; i < operationsId.length; i++) {
-            String operation = getResources().getString(operationsId[i]);
-            operations[i] = operation;
-        }
-
-        List<String> dataList = new ArrayList<>();
-        for (int i = 0; i < operationsId.length; i++) {
-            String operation = getResources().getString(operationsId[i]);
-            dataList.add(operation);
-        }
+    private void showMessageOperationDlg(final List<Integer> operationIdList, final UIMessage uiMessage, View view, final CustomLoadingView downloadLoadingView) {
         if (mPopupWindowList == null) {
             mPopupWindowList = new PopupWindowList(view.getContext());
         }
+        List<String> operationList = new ArrayList<>();
+        for (Integer operationId : operationIdList) {
+            operationList.add(getString(operationId));
+        }
         mPopupWindowList.setAnchorView(view);
-        mPopupWindowList.setItemData(dataList);
+        mPopupWindowList.setItemData(operationList);
         mPopupWindowList.setModal(true);
         mPopupWindowList.show();
         mPopupWindowList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -1607,7 +1553,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 if (StringUtils.isBlank(content)) {
                     content = "";
                 }
-                switch (operationsId[position]) {
+                switch (operationIdList.get(position)) {
                     case R.string.chat_long_click_copy:
                         copyToClipboard(ConversationActivity.this, content);
                         break;
@@ -1623,11 +1569,34 @@ public class ConversationActivity extends ConversationBaseActivity {
                     case R.string.chat_long_click_reply:
                         replyMessage(uiMessage.getMessage());
                         break;
+                    case R.string.chat_long_click_recall:
+                        recallMessage(uiMessage);
+                        break;
+                    case R.string.voice_to_word:
+                        recognizerMediaVoiceMessage(uiMessage, downloadLoadingView);
+                        break;
+                    case R.string.chat_resend_message:
+                        resendMessage(uiMessage);
+                        break;
+                    case R.string.delete:
+                        removeMessage(uiMessage);
+                        break;
                 }
                 mPopupWindowList.hide();
             }
         });
+    }
 
+
+    private void removeMessage(UIMessage uiMessage) {
+        int index = uiMessageList.indexOf(uiMessage);
+        if (index != -1) {
+            uiMessageList.remove(index);
+            adapter.setMessageList(uiMessageList);
+            adapter.notifyItemRemoved(index);
+        }
+        MessageCacheUtil.deleteMessageById(uiMessage.getId());
+        notifyCommucationFragmentMessageSendStatus();
     }
 
     private String uiMessage2Content(UIMessage uiMessage) {
@@ -1725,6 +1694,15 @@ public class ConversationActivity extends ConversationBaseActivity {
         shareIntent.putExtra(Constant.SHARE_CONTENT, result);
 
         startActivityForResult(shareIntent, SHARE_SEARCH_RUEST_CODE);
+    }
+
+    private void recallMessage(UIMessage uiMessage) {
+        if (WebSocketPush.getInstance().isSocketConnect()) {
+            loadingDlg.show();
+            WSAPIService.getInstance().recallMessage(uiMessage.getMessage().getChannel(), uiMessage.getMessage().getId());
+        } else {
+            loadingDlg.dismiss();
+        }
     }
 
     class CacheMessageListThread extends Thread {

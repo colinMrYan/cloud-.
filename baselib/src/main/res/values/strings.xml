@@ -327,6 +327,8 @@
     <string name="chat_group_message_search">查找聊天记录</string>
     <string name="chat_long_click_copy">复制</string>
     <string name="chat_long_click_transmit">转发</string>
+    <string name="chat_long_click_recall">撤回</string>
+    <string name="recall_fail_for_timeout">发送时间超过2分钟的消息，不能被撤回。</string>
     <string name="chat_long_click_schedule">添加到日程</string>
     <string name="chat_long_click_copy_text">复制文字</string>
     <string name="chat_long_click_reply">回复</string>
@@ -1376,7 +1378,7 @@
     <string name="voice_word_tran">正在语音转文字</string>
     <string name="voice_word_setting">语音自动识别</string>
     <string name="voice_audio_record_unavailiable">当前录音设备不可用，请检查录音权限是否开启</string>
-    <string name="voice_to_word">转文字</string>
+    <string name="voice_to_word">转换为文字（仅普通话）</string>
     <!--语音输入改造-->
     <string name="voice_input_language_mandarin">普通话</string>
     <string name="voice_input_language_cantonese">粤语</string>

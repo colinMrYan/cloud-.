@@ -488,6 +488,7 @@ public class CommunicationFragment extends BaseFragment {
             @Override
             public void run() {
                 try {
+                    LogUtils.jasonDebug("sortConversationList--------------");
                     List<Conversation> conversationList = ConversationCacheUtils.getConversationList(MyApplication.getInstance());
                     List<UIConversation> uiConversationList = new ArrayList<>();
                     if (conversationList.size() > 0) {
