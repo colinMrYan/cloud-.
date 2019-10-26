@@ -736,9 +736,19 @@ public class ConversationActivity extends ConversationBaseActivity {
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case RQQUEST_CHOOSE_FILE:
-                    List<String> filePathList = data.getStringArrayListExtra("pathList");
-                    for (String filepath : filePathList) {
-                        combinAndSendMessageWithFile(filepath, Message.MESSAGE_TYPE_FILE_REGULAR_FILE, null);
+                    if (data.hasExtra("isNativeFile")) {
+                        if (data.getBooleanExtra("isNativeFile", false)) {
+                            List<String> filePathList = data.getStringArrayListExtra("pathList");
+                            for (String filepath : filePathList) {
+                                combinAndSendMessageWithFile(filepath, Message.MESSAGE_TYPE_FILE_REGULAR_FILE, null);
+                            }
+                        } else {
+                            List<VolumeFile> volumeFileList = (List<VolumeFile>) data.getSerializableExtra("volumeFileList");
+                            String currentPath = data.getStringExtra("currentPath");
+                            for (int i = 0; i < volumeFileList.size(); i++) {
+                                transmitMsgFromVolume(cid, volumeFileList.get(0), currentPath);
+                            }
+                        }
                     }
                     break;
                 case REQUEST_CAMERA:

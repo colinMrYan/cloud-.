@@ -348,6 +348,10 @@
     <string name="chat_group_qr_code_share">分享二維碼</string>
     <string name="chat_group_welcome_join_group">歡迎進入%1$s群</string>
     <string name="chat_conversation_create_error">創建群組失敗</string>
+    <string name="chat_emotion_recent_tip">最近使用</string>
+    <string name="chat_emotion_total_tip">所有表情</string>
+    <string name="chat_filemanager_native">本地文件</string>
+    <string name="chat_filemanager_volume">企業雲盤</string>
     <!-- 會議卡片 -->
     <string name="meeting_has_confirmed">已確認</string>
     <string name="meeting_has_refused">已拒絕</string>
@@ -1341,6 +1345,8 @@
     <string name="permission_grant_fail">您已禁止授予%1$s %2$s許可權</string>
     <string name="permission_grant_window_alert">請您授予%1$s懸浮窗許可權</string>
     <string name="permission_grant_window_fail">您已禁止授予%1$s懸浮窗許可權</string>
+    <string name="permission_grant_background_start">請您授予%1$s後臺彈出介面許可權</string>
+    <string name="permission_grant_background_start_fail">您已禁止授予%1$s後臺彈出介面許可權</string>
 
     <string name="permission_open_cloud_plus">開啟%1$s</string>
     <string name="permission_necessary_permission">為了您能正常使用%1$s，需要以下許可權</string>
