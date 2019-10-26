@@ -11,6 +11,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import butterknife.OnClick;
+
 /**
  * Created by yufuchang on 2017/9/7.
  */
@@ -32,6 +34,7 @@ public class CreateGestureGuideActivity extends BaseActivity {
         return R.layout.activity_create_gesture_guide;
     }
 
+    @OnClick(R.id.bt_create_gesture)
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ibt_back:

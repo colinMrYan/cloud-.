@@ -132,6 +132,9 @@ public class IndexActivity extends IndexBaseActivity {
         if (scheduleCalendarList.size() == 0) {
             scheduleCalendarList.add(new ScheduleCalendar(CalendarColor.BLUE, "", "", "", AccountType.APP_SCHEDULE));
             scheduleCalendarList.add(new ScheduleCalendar(CalendarColor.ORANGE, "", "", "", AccountType.APP_MEETING));
+            String account = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, "");
+            String password = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_PASSWORD, "");
+            scheduleCalendarList.add(new ScheduleCalendar(CalendarColor.GREEN, account, account, password, AccountType.EXCHANGE));
             ScheduleCalendarCacheUtils.saveScheduleCalendarList(BaseApplication.getInstance(), scheduleCalendarList);
         }
     }
