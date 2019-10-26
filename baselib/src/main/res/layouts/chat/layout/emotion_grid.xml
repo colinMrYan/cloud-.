@@ -17,8 +17,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="6dp"
-            android:paddingRight="6dp"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
             android:orientation="vertical">
 
             <LinearLayout
@@ -32,7 +32,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="8dp"
+                    android:paddingLeft="11dp"
                     android:text="@string/chat_emotion_recent_tip"
                     android:textColor="@color/grey_a5a5a5"
                     android:textSize="14sp" />
@@ -55,7 +55,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:paddingLeft="8dp"
+                android:paddingLeft="11dp"
                 android:text="@string/chat_emotion_total_tip"
                 android:textColor="@color/grey_a5a5a5"
                 android:textSize="14sp" />
@@ -76,7 +76,7 @@
                     android:paddingBottom="50dp"
                     android:scrollbars="vertical"
                     android:listSelector="@color/transparent"
-                    android:verticalSpacing="0dp" />
+                    android:verticalSpacing="-10dp" />
 
             </RelativeLayout>
 
