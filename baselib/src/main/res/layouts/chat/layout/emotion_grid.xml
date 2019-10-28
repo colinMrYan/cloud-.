@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#f5f5f5"
-    android:visibility="visible"
+    android:visibility="gone"
     tools:ignore="MissingDefaultResource">
 
     <ScrollView
@@ -85,16 +85,17 @@
 
     <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true">
 
         <ImageView
-            android:layout_width="130dp"
-            android:layout_height="88dp"
+            android:layout_width="110dp"
+            android:layout_height="100dp"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="2dp"
-            android:src="@drawable/emotion_delete_shadow" />
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="0dp"
+            android:background="@drawable/emotion_delete_shadow" />
 
         <ImageView
             android:id="@+id/emotion_delete"
@@ -102,7 +103,7 @@
             android:layout_height="50dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="15dp"
+            android:layout_marginRight="17dp"
             android:src="@drawable/emotion_delete" />
     </RelativeLayout>
 
