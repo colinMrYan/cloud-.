@@ -11,6 +11,7 @@ import com.inspur.emmcloud.bean.chat.MsgContentComment;
 import com.inspur.emmcloud.bean.chat.MsgContentExtendedLinks;
 import com.inspur.emmcloud.bean.chat.MsgContentTextPlain;
 import com.inspur.emmcloud.bean.chat.RelatedLink;
+import com.inspur.emmcloud.bean.chat.UIMessage;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 
@@ -554,10 +555,9 @@ public class WSAPIService {
     /**
      * 消息撤回
      *
-     * @param cid
-     * @param mid
+     * @param uiMessage
      */
-    public void recallMessage(String cid, String mid) {
+    public void recallMessage(UIMessage uiMessage) {
         try {
             JSONObject object = new JSONObject();
             try {
@@ -571,10 +571,10 @@ public class WSAPIService {
                 headerObj.put("tracer", tracer);
                 object.put("headers", headerObj);
                 JSONObject bodyObject = new JSONObject();
-                bodyObject.put("messageId", mid);
-                bodyObject.put("channelId", cid);
+                bodyObject.put("messageId", uiMessage.getMessage().getId());
+                bodyObject.put("channelId", uiMessage.getMessage().getChannel());
                 object.put("body", bodyObject);
-                EventMessage eventMessage = new EventMessage(tracer, Constant.EVENTBUS_TAG_RECALL_MESSAGE, "", "");
+                EventMessage eventMessage = new EventMessage(tracer, Constant.EVENTBUS_TAG_RECALL_MESSAGE, "", uiMessage);
                 WebSocketPush.getInstance().sendEventMessage(eventMessage, object, tracer);
             } catch (Exception e) {
                 e.printStackTrace();

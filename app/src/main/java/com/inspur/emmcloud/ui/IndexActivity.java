@@ -30,7 +30,6 @@ import com.inspur.emmcloud.basemodule.util.ClientConfigUpdateUtils;
 import com.inspur.emmcloud.basemodule.util.ClientIDUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
-import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.Conversation;
@@ -639,7 +638,7 @@ public class IndexActivity extends IndexBaseActivity {
             if (handler != null) {
                 handler.sendEmptyMessage(SYNC_ALL_BASE_DATA_SUCCESS);
             }
-            WebServiceMiddleUtils.hand(IndexActivity.this, error, errorCode);
+//            WebServiceMiddleUtils.hand(IndexActivity.this, error, errorCode);
         }
 
         @Override
@@ -652,7 +651,7 @@ public class IndexActivity extends IndexBaseActivity {
             if (handler != null) {
                 handler.sendEmptyMessage(SYNC_ALL_BASE_DATA_SUCCESS);
             }
-            WebServiceMiddleUtils.hand(IndexActivity.this, error, errorCode);
+//            WebServiceMiddleUtils.hand(IndexActivity.this, error, errorCode);
         }
 
 

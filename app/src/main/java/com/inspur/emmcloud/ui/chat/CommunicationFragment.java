@@ -121,6 +121,8 @@ public class CommunicationFragment extends BaseFragment {
     private static final int CACHE_MESSAGE_SUCCESS = 4;
     private static final int REQUEST_SCAN_LOGIN_QRCODE_RESULT = 5;
     private static final int CACHE_CONVERSATION_LIST_SUCCESS = 6;
+    //代表最近消息或者离线消息获取成功
+    private static final String FLAG_GET_MESSAGE_SUCCESS = "get_message_success";
     private View rootView;
     private RecyclerView conversionRecycleView;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -531,20 +533,22 @@ public class CommunicationFragment extends BaseFragment {
                     Collections.sort(stickUIConversationList, new UIConversation().new SortComparator());
                     Collections.sort(uiConversationList, new UIConversation().new SortComparator());
                     uiConversationList.addAll(0, stickUIConversationList);
+
                 }
+                emitter.onNext(uiConversationList);
             }
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<UIConversation>>() {
                     @Override
                     public void accept(List<UIConversation> uiConversationList) throws Exception {
+                        displayUIConversationList = uiConversationList;
                         conversationAdapter.setData(displayUIConversationList);
                         conversationAdapter.notifyDataSetChanged();
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-
                     }
                 });
 
@@ -982,7 +986,6 @@ public class CommunicationFragment extends BaseFragment {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_OFFLINE_WS_MESSAGE)) {
             if (eventMessage.getStatus() == EventMessage.RESULT_OK) {
                 //清空离线消息最后一条消息标志位
-                PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_GET_OFFLINE_LAST_MID, "");
                 String content = eventMessage.getContent();
                 GetOfflineMessageListResult getOfflineMessageListResult = new GetOfflineMessageListResult(content);
                 List<Message> offlineMessageList = getOfflineMessageListResult.getMessageList();
@@ -1077,9 +1080,10 @@ public class CommunicationFragment extends BaseFragment {
         if (lastMessageId != null) {
             //如果preferences中还存有离线消息最后一条消息id这个标志代表上一次离线消息没有获取成功，需要从这条消息开始重新获取
             String getOfflineLastMessageId = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_GET_OFFLINE_LAST_MID, "");
-            if (StringUtils.isBlank(getOfflineLastMessageId)) {
-                PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_GET_OFFLINE_LAST_MID, lastMessageId);
+            if (!StringUtils.isBlank(getOfflineLastMessageId) && !getOfflineLastMessageId.equals(FLAG_GET_MESSAGE_SUCCESS)) {
+                lastMessageId = getOfflineLastMessageId;
             }
+            PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_GET_OFFLINE_LAST_MID, lastMessageId);
         } else {
             PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_GET_OFFLINE_LAST_MID, "");
         }
@@ -1091,12 +1095,11 @@ public class CommunicationFragment extends BaseFragment {
     public void getMessage() {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance()) && WebSocketPush.getInstance().isSocketConnect()) {
             String lastMessageId = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_GET_OFFLINE_LAST_MID, "");
-            if (!StringUtils.isBlank(lastMessageId)) {
+            if (StringUtils.isBlank(lastMessageId)) {
+                WSAPIService.getInstance().getChannelRecentMessage();
+            } else if (!lastMessageId.equals(FLAG_GET_MESSAGE_SUCCESS)) {
                 //获取离线消息
                 WSAPIService.getInstance().getOfflineMessage(lastMessageId);
-            } else {
-                //获取每个频道最近消息
-                WSAPIService.getInstance().getChannelRecentMessage();
             }
         }
 
@@ -1165,7 +1168,6 @@ public class CommunicationFragment extends BaseFragment {
                     conversationList.removeAll(intersectionConversationList);
                 }
                 emitter.onNext(conversationList);
-                emitter.onComplete();
             }
         })
                 .observeOn(AndroidSchedulers.mainThread())
@@ -1244,6 +1246,7 @@ public class CommunicationFragment extends BaseFragment {
                         }
                     }
                 }
+                PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_GET_OFFLINE_LAST_MID, FLAG_GET_MESSAGE_SUCCESS);
                 if (handler != null) {
                     android.os.Message message = handler.obtainMessage(CACHE_MESSAGE_SUCCESS, messageList);
                     message.sendToTarget();

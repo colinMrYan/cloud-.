@@ -1048,87 +1048,23 @@ public class ConversationActivity extends ConversationBaseActivity {
     }
 
 
-    @Override
-    public void onBackPressed() {
-        // TODO Auto-generated method stub
-        if (chatInputMenu.isAddMenuLayoutShow()) {
-            chatInputMenu.hideAddMenuLayout();
-            return;
-        }
-        if (chatInputMenu.isVoiceInput()) {
-            chatInputMenu.stopVoiceInput();
-            if (chatInputMenu.isVoiceInputLayoutShow()) {
-                chatInputMenu.hideVoiceInputLayout();
-            }
-            return;
-        }
-        if (InputMethodUtils.isSoftInputShow(ConversationActivity.this)) {
-            InputMethodUtils.hide(ConversationActivity.this);
-            return;
-        }
-        finishActivity();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (handler != null) {
-            handler = null;
-        }
-        if (refreshNameReceiver != null) {
-            LocalBroadcastManager.getInstance(this).unregisterReceiver(refreshNameReceiver);
-            refreshNameReceiver = null;
-        }
-        chatInputMenu.releaseVoiceInput();
-        EventBus.getDefault().unregister(this);
-    }
-
-
-    /**
-     * 获取历史消息
-     */
-    private void getHistoryMessage() {
-        //当有网络并且本地没有连续消息时，网络获取
-        if ((NetUtils.isNetworkConnected(MyApplication.getInstance(), false) &&
-                !(uiMessageList.size() > 0 && MessageCacheUtil.isDataInLocal(ConversationActivity.this, cid, uiMessageList
-                        .get(0).getCreationDate(), COUNT_EVERY_PAGE)))) {
-            WSAPIService.getInstance().getHistoryMessage(cid, getNewMessageId());
-        } else {
-            getHistoryMessageFromLocal();
-        }
-    }
-
-    /**
-     * 获取本地发送成功的消息id
-     *
-     * @return
-     */
-    private String getNewMessageId() {
-        if (uiMessageList.size() > 0) {
-            for (UIMessage uiMessage : uiMessageList) {
-                if (uiMessage.getMessage().getSendStatus() == Message.MESSAGE_SEND_SUCCESS) {
-                    return uiMessage.getMessage().getId();
-                }
-            }
-        }
-        return "";
-    }
-
-    private void getHistoryMessageFromLocal() {
-        if (uiMessageList.size() > 0) {
-            List<Message> messageList = MessageCacheUtil.getHistoryMessageList(
-                    MyApplication.getInstance(), cid, uiMessageList.get(0).getMessage(), COUNT_EVERY_PAGE);
-            uiMessageList.addAll(0, UIMessage.MessageList2UIMessageList(messageList));
-            adapter.setMessageList(uiMessageList);
-            adapter.notifyItemRangeInserted(0, messageList.size());
-            msgListView.scrollToPosition(messageList.size() - 1);
-        }
-        swipeRefreshLayout.setRefreshing(false);
-    }
-
-
-    //接收到websocket发过来的消息
     @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveSimpleMessage(SimpleEventMessage simpleEventMessage) {
+        switch (simpleEventMessage.getAction()) {
+            //接收当前频道的消息
+            case Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE_CONVERSATION:
+                onReceiveWSMessage(simpleEventMessage);
+                break;
+            //接收到从沟通页面传来的离线消息，如断网联网时会触发此方法
+            case Constant.EVENTBUS_TAG_CURRENT_CHANNEL_OFFLINE_MESSAGE:
+                final List<Message> offlineMessageList = (List<Message>) simpleEventMessage.getMessageObj();
+                WSAPIService.getInstance().setChannelMessgeStateRead(cid);
+                new CacheMessageListThread(offlineMessageList, null, REFRESH_OFFLINE_MESSAGE).start();
+                break;
+        }
+    }
+
+
     public void onReceiveWSMessage(SimpleEventMessage simpleEventMessage) {
         if (simpleEventMessage.getAction().equals(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE_CONVERSATION)) {
             if (adapter == null) {
@@ -1181,9 +1117,99 @@ public class ConversationActivity extends ConversationBaseActivity {
 
     }
 
+
+    @Override
+    public void onBackPressed() {
+        // TODO Auto-generated method stub
+        if (chatInputMenu.isAddMenuLayoutShow()) {
+            chatInputMenu.hideAddMenuLayout();
+            return;
+        }
+        if (chatInputMenu.isVoiceInput()) {
+            chatInputMenu.stopVoiceInput();
+            if (chatInputMenu.isVoiceInputLayoutShow()) {
+                chatInputMenu.hideVoiceInputLayout();
+            }
+            return;
+        }
+        if (InputMethodUtils.isSoftInputShow(ConversationActivity.this)) {
+            InputMethodUtils.hide(ConversationActivity.this);
+            return;
+        }
+        finishActivity();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (handler != null) {
+            handler = null;
+        }
+        if (refreshNameReceiver != null) {
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(refreshNameReceiver);
+            refreshNameReceiver = null;
+        }
+        chatInputMenu.releaseVoiceInput();
+        EventBus.getDefault().unregister(this);
+    }
+
+
+    /**
+     * 获取历史消息
+     */
+    private void getHistoryMessage() {
+        //当有网络并且本地没有连续消息时，网络获取
+        if ((NetUtils.isNetworkConnected(MyApplication.getInstance(), false) &&
+                !(uiMessageList.size() > 0 && MessageCacheUtil.isDataInLocal(ConversationActivity.this, cid, uiMessageList
+                        .get(0).getCreationDate(), COUNT_EVERY_PAGE)))) {
+            // 获取本地发送成功的消息id
+            String newMessageId = "";
+            for (UIMessage uiMessage : uiMessageList) {
+                if (uiMessage.getMessage().getSendStatus() == Message.MESSAGE_SEND_SUCCESS) {
+                    newMessageId = uiMessage.getMessage().getId();
+                    break;
+                }
+            }
+            WSAPIService.getInstance().getHistoryMessage(cid, newMessageId);
+        } else {
+            getHistoryMessageFromLocal();
+        }
+    }
+
+
+    /**
+     * 从本地获取历史消息
+     */
+    private void getHistoryMessageFromLocal() {
+        if (uiMessageList.size() > 0) {
+            List<Message> messageList = MessageCacheUtil.getHistoryMessageList(
+                    MyApplication.getInstance(), cid, uiMessageList.get(0).getMessage(), COUNT_EVERY_PAGE);
+            uiMessageList.addAll(0, UIMessage.MessageList2UIMessageList(messageList));
+            adapter.setMessageList(uiMessageList);
+            adapter.notifyItemRangeInserted(0, messageList.size());
+            msgListView.scrollToPosition(messageList.size() - 1);
+        }
+        swipeRefreshLayout.setRefreshing(false);
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onResponseRecallMessage(EventMessage eventMessage) {
+        if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_RECALL_MESSAGE)) {
+            loadingDlg.dismiss();
+            if (eventMessage.getStatus() == EventMessage.RESULT_OK) {
+                UIMessage uiMessage = (UIMessage) eventMessage.getExtra();
+
+            } else {
+                ToastUtils.show("消息撤回失败");
+            }
+        }
+    }
+
+
     //接收到websocket发过来的消息，根据评论获取被评论的消息时触发此方法
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onGetMessageById(EventMessage eventMessage) {
+    public void onResponseGetMessageById(EventMessage eventMessage) {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_MESSAGE_BY_ID)) {
             if (eventMessage.getStatus() == EventMessage.RESULT_OK) {
                 String content = eventMessage.getContent();
@@ -1201,7 +1227,7 @@ public class ConversationActivity extends ConversationBaseActivity {
 
     //接收到websocket发过来的消息，推送消息触发此方法
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceiveNewMessage(EventMessage eventMessage) {
+    public void onResponseNewMessage(EventMessage eventMessage) {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_NEW_MESSAGE) && ((HashMap) eventMessage.getExtra()).get("cid").equals(cid)) {
             if (eventMessage.getStatus() == EventMessage.RESULT_OK) {
                 String content = eventMessage.getContent();
@@ -1218,7 +1244,7 @@ public class ConversationActivity extends ConversationBaseActivity {
 
     //接收到websocket发过来的消息，下拉获取消息触发此方法
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceiveHistoryMessage(EventMessage eventMessage) {
+    public void onResponseHistoryMessage(EventMessage eventMessage) {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_HISTORY_MESSAGE) && eventMessage.getExtra().equals(cid)) {
             if (eventMessage.getStatus() == EventMessage.RESULT_OK) {
                 String content = eventMessage.getContent();
@@ -1240,15 +1266,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     }
 
 
-    //接收到从沟通页面传来的离线消息，如断网联网时会触发此方法
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceiveWSOfflineMessage(SimpleEventMessage eventMessage) {
-        if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_CURRENT_CHANNEL_OFFLINE_MESSAGE)) {
-            final List<Message> offlineMessageList = (List<Message>) eventMessage.getMessageObj();
-            WSAPIService.getInstance().setChannelMessgeStateRead(cid);
-            new CacheMessageListThread(offlineMessageList, null, REFRESH_OFFLINE_MESSAGE).start();
-        }
-    }
+
 
     /**
      * 获取此频道的最新消息
@@ -1580,7 +1598,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                         replyMessage(uiMessage.getMessage());
                         break;
                     case R.string.chat_long_click_recall:
-                        recallMessage(uiMessage);
+                        requestToRecallMessage(uiMessage);
                         break;
                     case R.string.voice_to_word:
                         recognizerMediaVoiceMessage(uiMessage, downloadLoadingView);
@@ -1589,7 +1607,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                         resendMessage(uiMessage);
                         break;
                     case R.string.delete:
-                        removeMessage(uiMessage);
+                        removeSendFailMessage(uiMessage);
                         break;
                 }
                 mPopupWindowList.hide();
@@ -1598,7 +1616,12 @@ public class ConversationActivity extends ConversationBaseActivity {
     }
 
 
-    private void removeMessage(UIMessage uiMessage) {
+    /**
+     * 删除发送失败的消息
+     *
+     * @param uiMessage
+     */
+    private void removeSendFailMessage(UIMessage uiMessage) {
         int index = uiMessageList.indexOf(uiMessage);
         if (index != -1) {
             uiMessageList.remove(index);
@@ -1607,6 +1630,11 @@ public class ConversationActivity extends ConversationBaseActivity {
         }
         MessageCacheUtil.deleteMessageById(uiMessage.getId());
         notifyCommucationFragmentMessageSendStatus();
+    }
+
+
+    private void recallMessage(UIMessage uiMessage) {
+
     }
 
     private String uiMessage2Content(UIMessage uiMessage) {
@@ -1706,10 +1734,10 @@ public class ConversationActivity extends ConversationBaseActivity {
         startActivityForResult(shareIntent, SHARE_SEARCH_RUEST_CODE);
     }
 
-    private void recallMessage(UIMessage uiMessage) {
+    private void requestToRecallMessage(UIMessage uiMessage) {
         if (WebSocketPush.getInstance().isSocketConnect()) {
             loadingDlg.show();
-            WSAPIService.getInstance().recallMessage(uiMessage.getMessage().getChannel(), uiMessage.getMessage().getId());
+            WSAPIService.getInstance().recallMessage(uiMessage);
         } else {
             loadingDlg.dismiss();
         }
