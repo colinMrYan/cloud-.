@@ -151,7 +151,7 @@ public class ECMChatInputMenu extends LinearLayout {
     EmotionAdapter emotionAdapter;
     EmotionAdapter emotionRecentAdapter;
     private int voiceInputStatus = 1;
-    private boolean canMentions = false;
+    private boolean isGroup = false;
     private ChatInputMenuListener chatInputMenuListener;
     private List<InputTypeBean> inputTypeBeanList = new ArrayList<>();
     private View otherLayoutView;
@@ -220,7 +220,7 @@ public class ECMChatInputMenu extends LinearLayout {
                 sendMsgBtn.setEnabled(!isContentBlank);
                 sendMsgBtn.setBackgroundResource(isContentBlank ? R.drawable.bg_chat_input_send_btn_disable : R.drawable.bg_chat_input_send_btn_enable);
                 addBtn.setVisibility(isContentBlank ? VISIBLE : GONE);
-                if (canMentions && count == 1) {
+                if (isGroup && count == 1) {
                     String inputWord = s.toString().substring(start, start + count);
                     if (inputWord.equals("@")) {
                         openMentionPage(true);
@@ -492,11 +492,11 @@ public class ECMChatInputMenu extends LinearLayout {
     /**
      * 设置是否可以@
      *
-     * @param canMentions
+     * @param isGroup
      * @param cid
      */
-    public void setCanMentions(boolean canMentions, String cid) {
-        this.canMentions = canMentions;
+    public void setIsGroup(boolean isGroup, String cid) {
+        this.isGroup = isGroup;
         this.cid = cid;
     }
 
@@ -634,7 +634,7 @@ public class ECMChatInputMenu extends LinearLayout {
                 sendMsgBtn.setEnabled(false);
             }
             //如果是群组的话添加@功能
-            if (canMentions) {
+            if (isGroup) {
                 inputTypeBeanList.add(new InputTypeBean(functionIconArray[4], functionNameArray[4], functionActionArray[4]));
             }
 
@@ -750,7 +750,7 @@ public class ECMChatInputMenu extends LinearLayout {
 
     private void startVoiceCall(String type) {
         //语音通话
-        if (!canMentions) {
+        if (!isGroup) {
             if (type.equals(VOICE_CALL)) {
                 chatInputMenuListener.onVoiceCommucaiton();
             } else if (type.equals(VIDEO_CALL)) {

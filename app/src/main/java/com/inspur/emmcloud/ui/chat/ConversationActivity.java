@@ -321,9 +321,9 @@ public class ConversationActivity extends ConversationBaseActivity {
         chatInputMenu.setSpecialUser(isSpecialUser);
         chatInputMenu.setOtherLayoutView(swipeRefreshLayout, msgListView);
         if (conversation.getType().equals(Conversation.TYPE_GROUP)) {
-            chatInputMenu.setCanMentions(true, cid);
+            chatInputMenu.setIsGroup(true, cid);
         } else {
-            chatInputMenu.setCanMentions(false, "");
+            chatInputMenu.setIsGroup(false, "");
         }
         chatInputMenu.setChatInputMenuListener(new ChatInputMenuListener() {
 

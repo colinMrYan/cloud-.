@@ -1426,7 +1426,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 //屏蔽视频通话
 //                setupLocalVideo();
                 voiceCommunicationUtils.joinChannel(voiceCommunicationJoinChannelInfoBean.getToken(),
-                        getVoiceCommunicationResult.getChannelId(), voiceCommunicationJoinChannelInfoBean.getUserId(), voiceCommunicationJoinChannelInfoBean.getAgoraUid());
+                        agoraChannelId, voiceCommunicationJoinChannelInfoBean.getUserId(), voiceCommunicationJoinChannelInfoBean.getAgoraUid());
             } else {
                 finish();
             }

@@ -137,7 +137,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
         String channelType = ConversationCacheUtils.getConversationType(MyApplication.getInstance(),
                 cid);
         if (channelType.equals("GROUP")) {
-            chatInputMenu.setCanMentions(true, cid);
+            chatInputMenu.setIsGroup(true, cid);
         }
         chatInputMenu.hideAddMenuLayout();
         chatInputMenu.setChatInputMenuListener(new ECMChatInputMenu.ChatInputMenuListener() {
