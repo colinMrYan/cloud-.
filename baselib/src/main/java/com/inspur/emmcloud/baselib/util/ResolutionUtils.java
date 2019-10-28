@@ -11,9 +11,6 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.DisplayCutout;
-import android.view.KeyCharacterMap;
-import android.view.KeyEvent;
-import android.view.ViewConfiguration;
 import android.view.WindowInsets;
 import android.view.WindowManager;
 
@@ -146,25 +143,6 @@ public class ResolutionUtils {
         return dpi;
     }
 
-    /**
-     * 获取navigationbar 的高度
-     *
-     * @return
-     */
-    public static int getNavigationBarHeight(Context context) {
-        boolean hasMenuKey = ViewConfiguration.get(context).hasPermanentMenuKey();
-        boolean hasBackKey = KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK);
-        //判断是否有虚拟按钮
-        if (!hasMenuKey) {
-            Resources resources = context.getResources();
-            int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
-            //获取NavigationBar的高度
-            int height = resources.getDimensionPixelSize(resourceId);
-            return height;
-        } else {
-            return 0;
-        }
-    }
 
     /**
      * 判断设备是否存在NavigationBar(虚拟导航栏)
