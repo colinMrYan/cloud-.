@@ -58,6 +58,18 @@ public class ChatFileUploadManagerUtils extends APIInterfaceInstance {
         return false;
     }
 
+    public void cancelVolumeFileUploadService(Message message) {
+        for (ChatFileUploadInfo chatFileUploadInfo : chatFileUploadInfoList) {
+            if (chatFileUploadInfo.getMessage().getId().equals(message.getId())) {
+                chatFileUploadInfo.setCallback(null);
+                if (chatFileUploadInfo.getVolumeFileUploadService() != null) {
+                    chatFileUploadInfo.getVolumeFileUploadService().onDestroy();
+                }
+            }
+        }
+    }
+
+
     private void callbackSuccess(ChatFileUploadInfo chatFileUploadInfo, VolumeFile volumeFile) {
         if (chatFileUploadInfo.getCallback() != null) {
             chatFileUploadInfo.getCallback().onSuccess(volumeFile);
@@ -122,6 +134,7 @@ public class ChatFileUploadManagerUtils extends APIInterfaceInstance {
      */
     private void startUpload(GetVolumeFileUploadTokenResult getVolumeFileUploadTokenResult, final ChatFileUploadInfo chatFileUploadInfo) {
         VolumeFileUploadService volumeFileUploadService = getVolumeFileUploadService(getVolumeFileUploadTokenResult, null);
+        chatFileUploadInfo.setVolumeFileUploadService(volumeFileUploadService);
         volumeFileUploadService.setProgressCallback(new ProgressCallback() {
             @Override
             public void onSuccess(VolumeFile volumeFile) {

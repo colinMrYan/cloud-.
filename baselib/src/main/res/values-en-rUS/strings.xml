@@ -317,6 +317,8 @@
     <string name="chat_conversation_unread_count">%1$d new messages</string>
     <string name="chat_long_click_copy">Copy</string>
     <string name="chat_long_click_transmit">Forward</string>
+    <string name="chat_long_click_recall">Recall</string>
+    <string name="recall_fail_for_timeout">You cannot recall a sent message after two miniutes.</string>
     <string name="chat_long_click_schedule">Add to Calendar</string>
     <string name="chat_long_click_copy_text">Copy text</string>
     <string name="communication_search">Search</string>

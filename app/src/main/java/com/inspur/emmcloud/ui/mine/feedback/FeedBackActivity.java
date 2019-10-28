@@ -17,6 +17,7 @@ import com.inspur.emmcloud.basemodule.util.NetUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class FeedBackActivity extends BaseActivity {
     @BindView(R.id.et_feedback_content)
@@ -78,6 +79,7 @@ public class FeedBackActivity extends BaseActivity {
         return R.layout.activity_feedback;
     }
 
+    @OnClick(R.id.bt_submit_feedback)
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ibt_back:

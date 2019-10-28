@@ -106,7 +106,7 @@ public class NativeFileManagerFragment extends BaseFragment {
         });
         rootPath = Environment.getExternalStorageDirectory().
                 getAbsolutePath();
-        refreshTitleState(getString(com.inspur.emmcloud.web.R.string.internal_shared_storage), rootPath);
+        refreshTitleState(getString(R.string.internal_shared_storage), rootPath);
         getFile(rootPath);
     }
 
@@ -134,8 +134,8 @@ public class NativeFileManagerFragment extends BaseFragment {
 
     public void onClick(View v) {
         int i = v.getId();
-        if (i == com.inspur.emmcloud.web.R.id.ibt_back) {
-        } else if (i == com.inspur.emmcloud.web.R.id.tv_ok) {
+        if (i == R.id.ibt_back) {
+        } else if (i == R.id.tv_ok) {
             returnSelectResult();
 
         }

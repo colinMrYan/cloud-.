@@ -8,9 +8,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
-import com.inspur.emmcloud.web.R;
 import com.inspur.emmcloud.widget.filemanager.FileUtil;
 import com.inspur.emmcloud.widget.filemanager.adapter.base.RecyclerViewAdapter;
 import com.inspur.emmcloud.widget.filemanager.bean.FileBean;
