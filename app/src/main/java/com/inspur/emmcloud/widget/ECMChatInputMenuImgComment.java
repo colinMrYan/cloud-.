@@ -195,6 +195,7 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
     public void setCanMentions(boolean canMentions, String cid) {
         this.canMentions = canMentions;
         this.cid = cid;
+        atPeopleBtn.setVisibility(canMentions ? VISIBLE : GONE);
     }
 
     public void showSoftInput(boolean isShow) {
