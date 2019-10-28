@@ -286,11 +286,13 @@ public class ImagePagerActivity extends BaseFragmentActivity {
         softKeyboardStateHelper.addSoftKeyboardStateListener(new SoftKeyboardStateHelper.SoftKeyboardStateListener() {
             @Override
             public void onSoftKeyboardOpened(int keyboardHeightInPx) {
+                LogUtils.jasonDebug("onSoftKeyboardOpened===");
                 ecmChatInputMenu.setAddMenuLayoutShow(true);
             }
 
             @Override
             public void onSoftKeyboardClosed() {
+                LogUtils.jasonDebug("onSoftKeyboardClosed===");
                 ecmChatInputMenu.setAddMenuLayoutShow(false);
             }
         });
