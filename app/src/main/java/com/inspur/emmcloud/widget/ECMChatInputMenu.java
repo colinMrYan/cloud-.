@@ -11,7 +11,9 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Handler;
+import android.provider.Settings;
 import android.text.Editable;
 import android.text.Spannable;
 import android.util.AttributeSet;
@@ -696,6 +698,12 @@ public class ECMChatInputMenu extends LinearLayout {
                             }
                             break;
                         case VOICE_CALL:
+                            //当没有悬浮窗权限或者小米手机上没有后台弹出界面权限时先请求权限
+                            if ((Build.VERSION.SDK_INT >= 23 && !Settings.canDrawOverlays(getContext())) ||
+                                    (Build.VERSION.SDK_INT >= 19 && !AppUtils.canBackgroundStart(getContext()))) {
+                                chatInputMenuListener.onNoSmallWindowPermission();
+                                return;
+                            }
                             if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
                                 if (VoiceCommunicationUtils.getInstance().isVoiceBusy()) {
                                     ToastUtils.show(R.string.voice_communication_voice_busy_tip);
@@ -716,6 +724,12 @@ public class ECMChatInputMenu extends LinearLayout {
                             }
                             break;
                         case VIDEO_CALL:
+                            //当没有悬浮窗权限或者小米手机上没有后台弹出界面权限时先请求权限
+                            if ((Build.VERSION.SDK_INT >= 23 && !Settings.canDrawOverlays(getContext())) ||
+                                    (Build.VERSION.SDK_INT >= 19 && AppUtils.canBackgroundStart(getContext()))) {
+                                chatInputMenuListener.onNoSmallWindowPermission();
+                                return;
+                            }
                             if (VoiceCommunicationUtils.getInstance().isVoiceBusy()) {
                                 ToastUtils.show(R.string.voice_communication_voice_busy_tip);
                                 return;
@@ -747,6 +761,7 @@ public class ECMChatInputMenu extends LinearLayout {
             viewpagerLayout.setInputTypeBeanList(inputTypeBeanList);
         }
     }
+
 
     private void startVoiceCall(String type) {
         //语音通话
@@ -1291,5 +1306,7 @@ public class ECMChatInputMenu extends LinearLayout {
         void onVideoCommucaiton();//视频通话
 
         void onChatDraftsClear();
+
+        void onNoSmallWindowPermission();
     }
 }

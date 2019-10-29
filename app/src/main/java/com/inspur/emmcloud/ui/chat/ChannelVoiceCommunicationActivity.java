@@ -33,6 +33,7 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ResolutionUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
@@ -365,7 +366,8 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             voiceCommunicationUtils.setCommunicationState(voiceCommunicationUtils.getCommunicationState());
             layoutState = voiceCommunicationUtils.getLayoutState();
             voiceCommunicationMemberList.clear();
-            voiceCommunicationMemberList = voiceCommunicationUtils.getVoiceCommunicationMemberList();
+            voiceCommunicationMemberList.addAll(voiceCommunicationUtils.getVoiceCommunicationMemberList());
+            LogUtils.YfcDebug("恢复时数据状态：" + JSONUtils.toJSONString(voiceCommunicationMemberList));
             agoraChannelId = voiceCommunicationUtils.getAgoraChannelId();
             communicationType = voiceCommunicationUtils.getCommunicationType();
             refreshCommunicationMemberAdapter();
@@ -749,7 +751,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             }
 
             @Override
-            public void onUserJoined(int uid, int elapsed) {
+            public void onUserJoined(final int uid, int elapsed) {
                 for (int i = 0; i < voiceCommunicationMemberList.size(); i++) {
                     if (voiceCommunicationMemberList.get(i).getAgoraUid() == uid) {
                         voiceCommunicationMemberList.get(i).setConnectState(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_CONNECTED);
@@ -760,15 +762,17 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            voiceCommunicationUtils.setCommunicationState(COMMUNICATION_STATE_ING);
-                            Log.d("zhang", "onUserJoined run: layoutState = " + layoutState);
-                            layoutState = COMMUNICATION_LAYOUT_STATE;
-                            voiceCommunicationUtils.setLayoutState(layoutState);
-                            changeFunctionState(COMMUNICATION_LAYOUT_STATE);
-                            communicationTimeChronometer.setBase(SystemClock.elapsedRealtime());
-                            communicationTimeChronometer.start();
-                            voiceCommunicationUtils.setConnectStartTime(System.currentTimeMillis());
-                            refreshCommunicationMemberAdapter();
+                            if (layoutState == INVITER_LAYOUT_STATE || isMySelf(uid) || voiceCommunicationUtils.getCommunicationState() == COMMUNICATION_STATE_ING) {
+                                voiceCommunicationUtils.setCommunicationState(COMMUNICATION_STATE_ING);
+                                Log.d("zhang", "onUserJoined run: layoutState = " + layoutState);
+                                layoutState = COMMUNICATION_LAYOUT_STATE;
+                                voiceCommunicationUtils.setLayoutState(layoutState);
+                                changeFunctionState(COMMUNICATION_LAYOUT_STATE);
+                                communicationTimeChronometer.setBase(SystemClock.elapsedRealtime());
+                                communicationTimeChronometer.start();
+                                voiceCommunicationUtils.setConnectStartTime(System.currentTimeMillis());
+                                refreshCommunicationMemberAdapter();
+                            }
                         }
                     });
                 }
@@ -865,8 +869,29 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                     isLeaveChannel = true;
                     refuseOrLeaveChannel(COMMUNICATION_REFUSE);
                 }
+                for (int i = 0; i < voiceCommunicationMemberList.size(); i++) {
+                    if (voiceCommunicationMemberList.get(i).getConnectState() == VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_INIT) {
+                        voiceCommunicationMemberList.get(i).setConnectState(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_LEAVE);
+                    }
+                }
+                refreshCommunicationMemberAdapter();
             }
         });
+    }
+
+    /**
+     * 如果加入频道的是自己
+     *
+     * @param uid
+     * @return
+     */
+    private boolean isMySelf(int uid) {
+        for (VoiceCommunicationJoinChannelInfoBean voiceCommunicationJoinChannelInfoBean : voiceCommunicationMemberList) {
+            if (voiceCommunicationJoinChannelInfoBean.getAgoraUid() == uid) {
+                return voiceCommunicationJoinChannelInfoBean.getUserId().equals(BaseApplication.getInstance().getUid());
+            }
+        }
+        return false;
     }
 
     /**
@@ -1069,6 +1094,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 Log.d("zhang", "COMMUNICATION_STATE_OVER: 4444444 ");
                 break;
             case R.id.img_voice_communication_pack_up:
+                saveCommunicationData();
                 pickUpVoiceCommunication();
                 break;
             case R.id.ll_video_switch_camera:
@@ -1133,7 +1159,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
      * 应用进入小窗口状态，出发时机是onPause和用户自己点击小窗口
      */
     private void pickUpVoiceCommunication() {
-        saveCommunicationData();
         if (Build.VERSION.SDK_INT >= 23) {
             if (Settings.canDrawOverlays(this)) {
                 Log.d("zhang", "pickUpVoiceCommunication: ");
@@ -1151,13 +1176,21 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                                 Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, uri);
                                 startActivityForResult(intent, REQUEST_WINDOW_PERMISSION);
                             }
-                        })
+                        }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }})
                         .show();
             }
         } else {
-            SuspensionWindowManagerUtils.getInstance().showCommunicationSmallWindow(ResolutionUtils.getWidth(this),
-                    Long.parseLong(TimeUtils.getChronometerSeconds(communicationTimeChronometer.getText().toString())));
-            finish();
+            if (Build.VERSION.SDK_INT >= 19) {
+                checkCanBackGroundStart();
+            } else {
+                SuspensionWindowManagerUtils.getInstance().showCommunicationSmallWindow(ResolutionUtils.getWidth(this),
+                        Long.parseLong(TimeUtils.getChronometerSeconds(communicationTimeChronometer.getText().toString())));
+                finish();
+            }
         }
     }
 
@@ -1173,12 +1206,15 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                     .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION).setData(Uri.parse("package:" + getPackageName()));
+                            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).setData(Uri.parse("package:" + getPackageName()));
                             startActivityForResult(intent, REQUEST_BACKGROUND_WINDOWS);
-                            startActivityForResult(intent, REQUEST_WINDOW_PERMISSION);
                         }
-                    })
-                    .show();
+                    }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            }).show();
 
         }
     }
@@ -1217,6 +1253,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         voiceCommunicationUtils.setInviteeInfoBean(inviteeInfoBean);
         voiceCommunicationUtils.setUserCount(userCount);
         voiceCommunicationUtils.setCloudPlusChannelId(cloudPlusChannelId);
+        LogUtils.YfcDebug("保存时，人员数据状态：" + JSONUtils.toJSONString(voiceCommunicationMemberList));
     }
 
     @Override
@@ -1228,14 +1265,30 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 mediaPlayerManagerUtils.stop();
             }
         }
-
         Log.d("zhang", "onPause: layoutState = " + layoutState);
         Log.d("zhang", "onPause: voiceCommunicationUtils.getCommunicationState() = " + voiceCommunicationUtils.getCommunicationState());
         if (voiceCommunicationUtils.getCommunicationState() != COMMUNICATION_STATE_OVER && voiceCommunicationUtils.getCommunicationState() != -1) {
-            if (PermissionRequestManagerUtils.getInstance().isHasPermission(this, Permissions.RECORD_AUDIO)) {
-                pickUpVoiceCommunication();
+            saveCommunicationData();
+            if (Build.VERSION.SDK_INT >= 23) {
+                if (Settings.canDrawOverlays(this) && AppUtils.canBackgroundStart(this)) {
+                    showSmallWindow();
+                }
+            } else {
+                if (Build.VERSION.SDK_INT >= 19) {
+                    if (AppUtils.canBackgroundStart(this)) {
+                        showSmallWindow();
+                    }
+                } else {
+                    showSmallWindow();
+                }
             }
         }
+    }
+
+    private void showSmallWindow() {
+        SuspensionWindowManagerUtils.getInstance().showCommunicationSmallWindow(ResolutionUtils.getWidth(this),
+                Long.parseLong(TimeUtils.getChronometerSeconds(communicationTimeChronometer.getText().toString())));
+        finish();
     }
 
     @Override

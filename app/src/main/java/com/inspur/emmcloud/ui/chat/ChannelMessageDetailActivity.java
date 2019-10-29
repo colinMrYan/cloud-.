@@ -166,6 +166,11 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
             public void onChatDraftsClear() {
 
             }
+
+            @Override
+            public void onNoSmallWindowPermission() {
+
+            }
         });
         chatInputMenu.setInputLayout("1", false);
     }

@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
 import com.wang.avi.AVLoadingIndicatorView;
@@ -146,9 +147,28 @@ public class VoiceCommunicationMemberAdapter extends RecyclerView.Adapter<VoiceC
      * @param index
      */
     public void setMemberDataAndRefresh(List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationJoinChannelInfoBeanList, int index) {
-        this.voiceCommunicationUserInfoBeanList = voiceCommunicationJoinChannelInfoBeanList;
+        this.voiceCommunicationUserInfoBeanList.clear();
+        this.voiceCommunicationUserInfoBeanList.addAll(getInitAndConnected(voiceCommunicationJoinChannelInfoBeanList));
+        LogUtils.YfcDebug("刷新时数据个数：" + this.voiceCommunicationUserInfoBeanList.size());
         this.index = index;
         notifyDataSetChanged();
+    }
+
+    /**
+     * 取出所有等待中和已经接通的人员
+     *
+     * @param voiceCommunicationJoinChannelInfoBeanList
+     * @return
+     */
+    private List<VoiceCommunicationJoinChannelInfoBean> getInitAndConnected(List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationJoinChannelInfoBeanList) {
+        List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationJoinChannelInfoBeans = new ArrayList<>();
+        for (VoiceCommunicationJoinChannelInfoBean voiceCommunicationJoinChannelInfoBean : voiceCommunicationJoinChannelInfoBeanList) {
+            int state = voiceCommunicationJoinChannelInfoBean.getConnectState();
+            if (state == VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_INIT || state == VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_CONNECTED) {
+                voiceCommunicationJoinChannelInfoBeans.add(voiceCommunicationJoinChannelInfoBean);
+            }
+        }
+        return voiceCommunicationJoinChannelInfoBeans;
     }
 
     public class VoiceCommunicationHolder extends RecyclerView.ViewHolder {

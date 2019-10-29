@@ -83,6 +83,7 @@ public class VoiceCommunicationUtils {
         //其他用户离线回调
         @Override
         public void onUserOffline(int uid, int reason) {
+            changeUserConnectStateByAgoraUid(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_LEAVE, uid);
             userCount = userCount - 1;
             if (userCount < 2) {
                 destroy();
@@ -97,6 +98,11 @@ public class VoiceCommunicationUtils {
         @Override
         public void onUserJoined(int uid, int elapsed) {
             LogUtils.YfcDebug("用户加入频道：" + uid);
+            for (int i = 0; i < voiceCommunicationMemberList.size(); i++) {
+                if (voiceCommunicationMemberList.get(i).getAgoraUid() == uid) {
+                    voiceCommunicationMemberList.get(i).setConnectState(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_CONNECTED);
+                }
+            }
             userCount = userCount + 1;
             if (userCount >= 2 && communicationState == COMMUNICATION_STATE_PRE && SuspensionWindowManagerUtils.getInstance().isShowing()) {
                 //发送到CommunicationFragment
@@ -224,6 +230,24 @@ public class VoiceCommunicationUtils {
         }
     };
 
+    /**
+     * 修改用户的链接状态
+     * 通过agoraUid
+     *
+     * @param connectStateConnected
+     */
+    private void changeUserConnectStateByAgoraUid(int connectStateConnected, int agroaUid) {
+        if (voiceCommunicationMemberList != null && voiceCommunicationMemberList.size() > 0) {
+            for (int i = 0; i < voiceCommunicationMemberList.size(); i++) {
+                if (voiceCommunicationMemberList.get(i).getAgoraUid() == agroaUid) {
+                    LogUtils.YfcDebug("有用户离开了频道：" + agroaUid);
+                    voiceCommunicationMemberList.get(i).setConnectState(connectStateConnected);
+                    break;
+                }
+            }
+        }
+    }
+
     private VoiceCommunicationUtils() {
         this.context = BaseApplication.getInstance();
     }
@@ -276,10 +300,15 @@ public class VoiceCommunicationUtils {
 //                    isLeaveChannel = true;
 //                    refuseOrLeaveChannel(COMMUNICATION_REFUSE);
 //                }
-                if (communicationState == COMMUNICATION_STATE_PRE) {
-                    if (onVoiceCommunicationCallbacks != null) {
-                        onVoiceCommunicationCallbacks.onCountDownTimerFinish();
+                for (int i = 0; i < voiceCommunicationMemberList.size(); i++) {
+                    if (voiceCommunicationMemberList.get(i).getConnectState() == VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_INIT) {
+                        voiceCommunicationMemberList.get(i).setConnectState(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_LEAVE);
                     }
+                }
+                if (onVoiceCommunicationCallbacks != null) {
+                    onVoiceCommunicationCallbacks.onCountDownTimerFinish();
+                }
+                if (communicationState == COMMUNICATION_STATE_PRE) {
                     SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
                     destroy();
                 }
@@ -518,6 +547,7 @@ public class VoiceCommunicationUtils {
         cloudPlusChannelId = "";
         userCount = 1;
         connectStartTime = 0;
+        voiceCommunicationUtils = null;
     }
 
     /**
