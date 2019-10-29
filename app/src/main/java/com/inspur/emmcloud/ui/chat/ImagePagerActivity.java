@@ -3,7 +3,6 @@ package com.inspur.emmcloud.ui.chat;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -32,6 +32,7 @@ import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseFragmentActivity;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
+import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetMessageCommentCountResult;
@@ -42,6 +43,7 @@ import com.inspur.emmcloud.util.privates.MessageSendManager;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.widget.ECMChatInputMenuImgComment;
 import com.inspur.emmcloud.widget.HackyViewPager;
+import com.inspur.emmcloud.widget.SoftKeyboardStateHelper;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -86,6 +88,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
     private boolean isHasTransformIn = false;
     private Dialog commentInputDlg;
     private View mainView;
+    private LinearLayout inputLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -126,6 +129,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
     private void init() {
         mainView = findViewById(R.id.main_layout);
         mainView.setBackgroundColor(Color.parseColor("#000000"));
+        initEcmChatInputMenu();
         initIntentData();
         originalPictureDownLoadTextView = findViewById(R.id.tv_original_picture_download_progress);
         functionLayout = (RelativeLayout) findViewById(R.id.function_layout);
@@ -204,8 +208,8 @@ public class ImagePagerActivity extends BaseFragmentActivity {
                 startActivityForResult(intent, CHECK_IMG_COMMENT);
                 break;
             case R.id.write_comment_layout:
-                showCommentInputDlg();
-
+                inputLayout.setVisibility(View.VISIBLE);
+                InputMethodUtils.display(this, ecmChatInputMenu.getChatInputEdit());
                 break;
             case R.id.tv_original_picture_download_progress:
                 LogUtils.LbcDebug("下载图片");
@@ -224,40 +228,41 @@ public class ImagePagerActivity extends BaseFragmentActivity {
      * 显示评论输入框
      */
     private void showCommentInputDlg() {
-        View view = getLayoutInflater().inflate(R.layout.communication_dialog_chat_img_input, null);
-        commentInputDlg = new Dialog(this, R.style.transparentFrameWindowStyle);
-        //commentInputDlg = new Dialog(this, ,android.R.style.Theme_Holo_Light_Dialog); lbc
-        commentInputDlg.setContentView(view, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT));
-        initEcmChatInputMenu();
-        Window window = commentInputDlg.getWindow();
-        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-        window.setBackgroundDrawable(new ColorDrawable(0));
-        // 设置显示动画
-        window.setWindowAnimations(R.style.main_menu_animstyle);
-        WindowManager.LayoutParams wl = window.getAttributes();
-        wl.x = 0;
-        wl.y = getWindowManager().getDefaultDisplay().getHeight();
-        window.getDecorView().setPadding(0, 0, 0, 0);
-        // 以下这两句是为了保证按钮可以水平满屏
-        wl.width = WindowManager.LayoutParams.MATCH_PARENT;
-        wl.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        // 设置Dialog的透明度
-        wl.dimAmount = 0.1f;
-        commentInputDlg.getWindow().setAttributes(wl);
-        commentInputDlg.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-        // 设置显示位置
-        commentInputDlg.onWindowAttributesChanged(wl);
-        // 设置点击外围解散
-        commentInputDlg.setCanceledOnTouchOutside(true);
-        commentInputDlg.show();
+//        View view = getLayoutInflater().inflate(R.layout.communication_dialog_chat_img_input, null);
+//        commentInputDlg = new Dialog(this, R.style.transparentFrameWindowStyle);
+//        //commentInputDlg = new Dialog(this, ,android.R.style.Theme_Holo_Light_Dialog); lbc
+//        commentInputDlg.setContentView(view, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+//                ViewGroup.LayoutParams.WRAP_CONTENT));
+//        initEcmChatInputMenu();
+//        Window window = commentInputDlg.getWindow();
+//        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+//        window.setBackgroundDrawable(new ColorDrawable(0));
+//        // 设置显示动画
+//        window.setWindowAnimations(R.style.main_menu_animstyle);
+//        WindowManager.LayoutParams wl = window.getAttributes();
+//        wl.x = 0;
+//        wl.y = getWindowManager().getDefaultDisplay().getHeight();
+//        window.getDecorView().setPadding(0, 0, 0, 0);
+//        // 以下这两句是为了保证按钮可以水平满屏
+//        wl.width = WindowManager.LayoutParams.MATCH_PARENT;
+//        wl.height = WindowManager.LayoutParams.WRAP_CONTENT;
+//        // 设置Dialog的透明度
+//        wl.dimAmount = 0.1f;
+//        commentInputDlg.getWindow().setAttributes(wl);
+//        commentInputDlg.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+//        // 设置显示位置
+//        commentInputDlg.onWindowAttributesChanged(wl);
+//        // 设置点击外围解散
+//        commentInputDlg.setCanceledOnTouchOutside(true);
+//        commentInputDlg.show();
     }
 
     /**
      * 初始化评论输入框
      */
     private void initEcmChatInputMenu() {
-        ecmChatInputMenu = (ECMChatInputMenuImgComment) commentInputDlg.findViewById(R.id.chat_input_menu);
+        inputLayout = findViewById(R.id.ll_input);
+        ecmChatInputMenu = findViewById(R.id.chat_input_menu);
         String conversationType = ConversationCacheUtils.getConversationType(getApplicationContext(), cid);
         if (conversationType != null && conversationType.equals(Conversation.TYPE_GROUP)) {
             ecmChatInputMenu.setCanMentions(true, cid);
@@ -281,20 +286,21 @@ public class ImagePagerActivity extends BaseFragmentActivity {
                 commentInputDlg.dismiss();
             }
         });
-//        final SoftKeyboardStateHelper softKeyboardStateHelper = new SoftKeyboardStateHelper(findViewById(R.id.main_layout));
-//        softKeyboardStateHelper.addSoftKeyboardStateListener(new SoftKeyboardStateHelper.SoftKeyboardStateListener() {
-//            @Override
-//            public void onSoftKeyboardOpened(int keyboardHeightInPx) {
-//                LogUtils.jasonDebug("onSoftKeyboardOpened===");
-//                ecmChatInputMenu.setAddMenuLayoutShow(true);
-//            }
-//
-//            @Override
-//            public void onSoftKeyboardClosed() {
-//                LogUtils.jasonDebug("onSoftKeyboardClosed===");
+        final SoftKeyboardStateHelper softKeyboardStateHelper = new SoftKeyboardStateHelper(findViewById(R.id.main_layout));
+        softKeyboardStateHelper.addSoftKeyboardStateListener(new SoftKeyboardStateHelper.SoftKeyboardStateListener() {
+            @Override
+            public void onSoftKeyboardOpened(int keyboardHeightInPx) {
+                LogUtils.jasonDebug("onSoftKeyboardOpened===");
+                ecmChatInputMenu.setAddMenuLayoutShow(true);
+            }
+
+            @Override
+            public void onSoftKeyboardClosed() {
+                ecmChatInputMenu.onSoftKeyboardClosed();
+                LogUtils.jasonDebug("onSoftKeyboardClosed===");
 //                ecmChatInputMenu.setAddMenuLayoutShow(false);
-//            }
-//        });
+            }
+        });
     }
 
     /**

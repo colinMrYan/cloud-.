@@ -13,8 +13,10 @@ import android.os.Build;
 import android.support.v4.content.FileProvider;
 
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.Res;
+import com.inspur.emmcloud.web.R;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -475,6 +477,8 @@ public class FileOpen {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            } else {
+                ToastUtils.show(context, context.getString(R.string.chat_file_open_fail_tip));
             }
         }
 

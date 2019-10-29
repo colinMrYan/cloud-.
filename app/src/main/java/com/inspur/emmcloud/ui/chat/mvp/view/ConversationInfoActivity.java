@@ -97,6 +97,10 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
         EventBus.getDefault().register(this);
         mPresenter = new ConversationInfoPresenter();
         mPresenter.attachView(this);
+        String cid = getIntent().getExtras().getString(EXTRA_CID);
+        loadingDialog = new LoadingDialog(this);
+        mPresenter.getConversationInfo(cid);
+        uiConversation = mPresenter.getConversation(cid);
         init();
     }
 
@@ -109,9 +113,6 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
      * 初始化
      */
     private void init() {
-        String cid = getIntent().getExtras().getString(EXTRA_CID);
-        loadingDialog = new LoadingDialog(this);
-        uiConversation = mPresenter.getConversation(cid);
         if (uiConversation.getType().equals(Conversation.TYPE_GROUP)) {
             String data = getString(R.string.chat_group_info_detail_title, mPresenter.getConversationRealMemberSize());
             isOwner = uiConversation.getOwner().equals(BaseApplication.getInstance().getUid());
@@ -221,6 +222,12 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
             default:
                 break;
         }
+    }
+
+    @Override
+    public void initView(Conversation conversation) {
+        uiConversation = conversation;
+        init();
     }
 
     @Override
