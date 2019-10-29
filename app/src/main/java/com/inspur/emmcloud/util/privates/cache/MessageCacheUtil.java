@@ -757,6 +757,7 @@ public class MessageCacheUtil {
                             .or("type", "=", Message.MESSAGE_TYPE_TEXT_MARKDOWN)
                             .or("type", "=", Message.MESSAGE_TYPE_TEXT_PLAIN))
                     .and(WhereBuilder.b("sendStatus", "=", 1))
+                    .and(WhereBuilder.b("recallFrom", "=", null))
                     .and(WhereBuilder.b("showContent", "like", "%" + content + "%"))
                     .findAll();
             if (messageList != null) {
