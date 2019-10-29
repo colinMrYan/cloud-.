@@ -15,15 +15,23 @@ public class WSCommand {
     private String fromName;
     private String action;
     private String params;
+    private String from;
+    private String tracer;
+    private String request;
 
-    public WSCommand(String body) {
-        JSONObject obj = JSONUtils.getJSONObject(body);
-        this.id = JSONUtils.getString(obj, "id", "");
-        this.channel = JSONUtils.getString(obj, "channel", "");
-        JSONObject fromObj = JSONUtils.getJSONObject(obj, "from", new JSONObject());
+    public WSCommand(String request) {
+        this.request = request;
+        JSONObject requestObj = JSONUtils.getJSONObject(request);
+        JSONObject headerObj = JSONUtils.getJSONObject(requestObj, "headers", new JSONObject());
+        tracer = JSONUtils.getString(headerObj, "tracer", "");
+        JSONObject bodyObj = JSONUtils.getJSONObject(requestObj, "body", new JSONObject());
+        this.id = JSONUtils.getString(bodyObj, "id", "");
+        this.channel = JSONUtils.getString(bodyObj, "channel", "");
+        from = JSONUtils.getString(bodyObj, "from", "");
+        JSONObject fromObj = JSONUtils.getJSONObject(bodyObj, "from", new JSONObject());
         this.fromUid = JSONUtils.getString(fromObj, "id", "");
         this.fromName = JSONUtils.getString(fromObj, "name", "");
-        JSONObject contextObj = JSONUtils.getJSONObject(obj, "context", new JSONObject());
+        JSONObject contextObj = JSONUtils.getJSONObject(bodyObj, "context", new JSONObject());
         this.action = JSONUtils.getString(contextObj, "action", "");
         this.params = JSONUtils.getString(contextObj, "params", "");
     }
@@ -74,5 +82,29 @@ public class WSCommand {
 
     public void setParams(String params) {
         this.params = params;
+    }
+
+    public String getFrom() {
+        return from;
+    }
+
+    public void setFrom(String from) {
+        this.from = from;
+    }
+
+    public String getTracer() {
+        return tracer;
+    }
+
+    public void setTracer(String tracer) {
+        this.tracer = tracer;
+    }
+
+    public String getRequest() {
+        return request;
+    }
+
+    public void setRequest(String request) {
+        this.request = request;
     }
 }

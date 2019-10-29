@@ -1347,7 +1347,7 @@ public class MyAppAPIService {
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnUpdateVolumeGroupPermissionFail(error, responseCode);
+                apiInterface.returnCallbackAfterFileUploadFail(error, responseCode);
             }
 
             @Override

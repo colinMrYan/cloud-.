@@ -630,6 +630,19 @@ public class MessageCacheUtil {
         return messageList;
     }
 
+    public static List<Message> getMessageListWithNoRecall(Context context, List<String> midList) {
+        List<Message> messageList = new ArrayList<>();
+        try {
+            if (midList != null && midList.size() > 0) {
+                messageList = DbCacheUtils.getDb(context).selector(Message.class).where("id", "in", midList).and("recallFrom", "=", "").findAll();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return messageList;
+    }
+
     /**
      * 真实消息回来后，如果是重发消息需要更新本地消息的id，如果是直接过来的消息需要存储消息
      *
