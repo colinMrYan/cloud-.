@@ -433,7 +433,7 @@ public class MessageCacheUtil {
      */
     public static List<Message> getImgTypeMessageList(Context context, String cid) {
 
-        return getImgTypeMessageList(context, cid, true);
+        return getImgTypeMessageList(context, cid, false);
 
     }
 

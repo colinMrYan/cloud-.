@@ -72,9 +72,9 @@ public class GroupAlbumAdapter extends RecyclerView.Adapter<GroupAlbumAdapter.Al
             public int compare(String lhs, String rhs) {
                 int i = lhs.compareTo(rhs);
                 if (i > 0) {
-                    return -1;
-                } else {
                     return 1;
+                } else {
+                    return -1;
                 }
             }
         });
