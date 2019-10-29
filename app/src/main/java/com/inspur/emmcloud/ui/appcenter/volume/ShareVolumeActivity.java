@@ -36,6 +36,7 @@ import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
@@ -420,6 +421,7 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
     class Holder {
         ImageView imageView;
         TextView textView;
+        TextView volumeSizeView;
     }
 
     private class Adapter extends BaseAdapter {
@@ -446,6 +448,7 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
                 convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.app_volume_share_item_view, null);
                 holder.imageView = convertView.findViewById(R.id.file_operation_drop_down_img);
                 holder.textView = convertView.findViewById(R.id.tv_name);
+                holder.volumeSizeView = convertView.findViewById(R.id.tv_volume_size);
                 convertView.setTag(holder);
             } else {
                 holder = (Holder) convertView.getTag();
@@ -457,8 +460,9 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
                 holder.imageView.setImageResource(haveSelectedVolume ? R.drawable.ic_select_yes : R.drawable.ic_select_no);
             }
 
-//            String volumeUsedSize = FileUtils.formatFileSize(myVolume.getQuotaUsed());
-//            String volumeMaxSize = FileUtils.formatFileSize(myVolume.getQuotaTotal());
+            String volumeUsedSize = FileUtils.formatFileSize(shareVolumeList.get(position).getQuotaUsed());
+            String volumeMaxSize = FileUtils.formatFileSize(shareVolumeList.get(position).getQuotaTotal());
+            holder.volumeSizeView.setText(volumeUsedSize + " / " + volumeMaxSize);
             holder.textView.setText(shareVolumeList.get(position).getName());
             holder.imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
