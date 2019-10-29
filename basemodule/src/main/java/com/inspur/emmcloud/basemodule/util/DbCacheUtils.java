@@ -118,7 +118,7 @@ public class DbCacheUtils {
                             }
                             if (oldVersion < 23) {
                                 if (tableIsExist(db, "Message")) {
-                                    db.execNonQuery("ALTER TABLE Message ADD COLUMN isWaitingSendRetry INTEGER DEFAULT 0");
+                                    db.execNonQuery("ALTER TABLE Message ADD COLUMN recallFrom INTEGER DEFAULT ''");
                                 }
                             }
                         } catch (Exception e) {
