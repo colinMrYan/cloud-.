@@ -358,6 +358,12 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
         getVolumeList(false);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getVolumeList(false);
+    }
+
     /**
      * 获取云盘列表
      */
@@ -450,6 +456,9 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
                 boolean haveSelectedVolume = selectedShareVolumeList.contains(shareVolumeList.get(position));
                 holder.imageView.setImageResource(haveSelectedVolume ? R.drawable.ic_select_yes : R.drawable.ic_select_no);
             }
+
+//            String volumeUsedSize = FileUtils.formatFileSize(myVolume.getQuotaUsed());
+//            String volumeMaxSize = FileUtils.formatFileSize(myVolume.getQuotaTotal());
             holder.textView.setText(shareVolumeList.get(position).getName());
             holder.imageView.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -461,7 +461,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                             default:
                                 break;
                         }
-                        if (handler != null) {
+                        if (handler != null && !StringUtils.isBlank(searchText)) {
                             handler.sendEmptyMessage(REFRESH_DATA);
                         }
                     }
@@ -576,7 +576,8 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             searchText = searchEdit.getText().toString().trim();
             if (!StringUtils.isBlank(searchText)) {
                 long currentTime = System.currentTimeMillis();
-                if (currentTime - lastSearchTime > 500) {
+                Long timeDiffer = currentTime - lastSearchTime;
+                if (timeDiffer > 500) {
                     handler.post(searchRunnable);
                 } else {
                     handler.removeCallbacks(searchRunnable);
@@ -586,11 +587,11 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             } else {
                 lastSearchTime = 0;
                 handler.removeCallbacks(searchRunnable);
-                handler.sendEmptyMessage(REFRESH_DATA);
                 contactList.clear();
                 groupConversationList.clear();
                 directConversationList.clear();
                 conversationFromChatContentList.clear();
+                handler.sendEmptyMessage(REFRESH_DATA);
             }
         }
     }
