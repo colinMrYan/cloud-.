@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.widget.CustomLoadingView;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
@@ -25,6 +26,7 @@ import com.inspur.emmcloud.ui.chat.DisplayExtendedDecideMsg;
 import com.inspur.emmcloud.ui.chat.DisplayExtendedLinksMsg;
 import com.inspur.emmcloud.ui.chat.DisplayMediaImageMsg;
 import com.inspur.emmcloud.ui.chat.DisplayMediaVoiceMsg;
+import com.inspur.emmcloud.ui.chat.DisplayRecallMsg;
 import com.inspur.emmcloud.ui.chat.DisplayRegularFileMsg;
 import com.inspur.emmcloud.ui.chat.DisplayResUnknownMsg;
 import com.inspur.emmcloud.ui.chat.DisplayTxtMarkdownMsg;
@@ -75,10 +77,6 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         this.UIMessageList.addAll(UIMessageList);
     }
 
-    public void setChannelData(String channelType, ECMChatInputMenu chatInputMenu) {
-        this.channelType = channelType;
-        this.chatInputMenu = chatInputMenu;
-    }
 
     public UIMessage getItemData(int position) {
         return this.UIMessageList.get(position);
@@ -159,68 +157,71 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         holder.cardParentLayout.setLayoutParams(params);
         holder.cardLayout.removeAllViewsInLayout();
         holder.cardLayout.removeAllViews();
-        View cardContentView;
-        String type = message.getType();
-        switch (type) {
-            case Message.MESSAGE_TYPE_TEXT_PLAIN:
-                cardContentView = DisplayTxtPlainMsg.getView(context,
-                        message);
-                break;
-            case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
-                cardContentView = DisplayTxtMarkdownMsg.getView(context,
-                        message, uiMessage.getMarkDownLinkList());
-                break;
-            case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
-                cardContentView = DisplayRegularFileMsg.getView(context,
-                        message, uiMessage.getSendStatus(), false);
-                break;
-            case Message.MESSAGE_TYPE_EXTENDED_CONTACT_CARD:
-                cardContentView = DisplayAttachmentCardMsg.getView(context,
-                        message);
-                break;
-            case Message.MESSAGE_TYPE_EXTENDED_ACTIONS:
-                cardContentView = DisplayExtendedActionsMsg.getInstance(context).getView(message);
-                break;
-            case Message.MESSAGE_TYPE_EXTENDED_SELECTED:
-                cardContentView = DisplayExtendedDecideMsg.getView(message, context);
-                break;
-            case Message.MESSAGE_TYPE_MEDIA_IMAGE:
-                cardContentView = DisplayMediaImageMsg.getView(context, uiMessage);
-                break;
-            case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
-                cardContentView = DisplayCommentTextPlainMsg.getView(context, message);
-                break;
-            case Message.MESSAGE_TYPE_EXTENDED_LINKS:
-                cardContentView = DisplayExtendedLinksMsg.getView(context, message);
-                break;
-            case Message.MESSAGE_TYPE_MEDIA_VOICE:
-                cardContentView = DisplayMediaVoiceMsg.getView(context, uiMessage, mItemClickListener);
-                break;
-            default:
-                cardContentView = DisplayResUnknownMsg.getView(context, isMyMsg);
-                break;
+        View cardContentView = null;
+        if (StringUtils.isBlank(uiMessage.getMessage().getRecallFrom())) {
+            String type = message.getType();
+            switch (type) {
+                case Message.MESSAGE_TYPE_TEXT_PLAIN:
+                    cardContentView = DisplayTxtPlainMsg.getView(context,
+                            message);
+                    break;
+                case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
+                    cardContentView = DisplayTxtMarkdownMsg.getView(context,
+                            message, uiMessage.getMarkDownLinkList());
+                    break;
+                case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
+                    cardContentView = DisplayRegularFileMsg.getView(context,
+                            message, uiMessage.getSendStatus(), false);
+                    break;
+                case Message.MESSAGE_TYPE_EXTENDED_CONTACT_CARD:
+                    cardContentView = DisplayAttachmentCardMsg.getView(context,
+                            message);
+                    break;
+                case Message.MESSAGE_TYPE_EXTENDED_ACTIONS:
+                    cardContentView = DisplayExtendedActionsMsg.getInstance(context).getView(message);
+                    break;
+                case Message.MESSAGE_TYPE_EXTENDED_SELECTED:
+                    cardContentView = DisplayExtendedDecideMsg.getView(message, context);
+                    break;
+                case Message.MESSAGE_TYPE_MEDIA_IMAGE:
+                    cardContentView = DisplayMediaImageMsg.getView(context, uiMessage);
+                    break;
+                case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
+                    cardContentView = DisplayCommentTextPlainMsg.getView(context, message);
+                    break;
+                case Message.MESSAGE_TYPE_EXTENDED_LINKS:
+                    cardContentView = DisplayExtendedLinksMsg.getView(context, message);
+                    break;
+                case Message.MESSAGE_TYPE_MEDIA_VOICE:
+                    cardContentView = DisplayMediaVoiceMsg.getView(context, uiMessage, mItemClickListener);
+                    break;
+                default:
+                    cardContentView = DisplayResUnknownMsg.getView(context, isMyMsg);
+                    break;
+            }
+            cardContentView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    if (mItemClickListener != null) {
+                        mItemClickListener.onCardItemLongClick(view, uiMessage);
+                    }
+                    return true;
+                }
+            });
+            cardContentView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (mItemClickListener != null) {
+                        mItemClickListener.onCardItemClick(view, uiMessage);
+                    }
+
+                }
+            });
+        } else {
+            cardContentView = DisplayRecallMsg.getView(context, uiMessage);
         }
-
-
         holder.cardLayout.addView(cardContentView);
-        cardContentView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                if (mItemClickListener != null) {
-                    mItemClickListener.onCardItemLongClick(view, uiMessage);
-                }
-                return true;
-            }
-        });
-        cardContentView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mItemClickListener != null) {
-                    mItemClickListener.onCardItemClick(view, uiMessage);
-                }
 
-            }
-        });
     }
 
     /**

@@ -81,6 +81,7 @@
     <string name="file_open_by_other_app">用其他应用打开</string>
     <string name="file_open_by_other_app_tips">%1$s暂时不能打开该文件请使用其他应用打开</string>
     <string name="try_again">再试一次</string>
+    <string name="you">你</string>
 
     <!-- 公共部分 -->
     <string name="year">年</string>
@@ -328,6 +329,7 @@
     <string name="chat_long_click_copy">复制</string>
     <string name="chat_long_click_transmit">转发</string>
     <string name="chat_long_click_recall">撤回</string>
+    <string name="chat_info_message_status_recall">%1$s撤回了一条消息</string>
     <string name="recall_fail_for_timeout">发送时间超过2分钟的消息，不能被撤回。</string>
     <string name="chat_long_click_schedule">添加到日程</string>
     <string name="chat_long_click_copy_text">复制文字</string>
