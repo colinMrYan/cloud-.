@@ -27,6 +27,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by libaochao on 2019/4/8.
@@ -111,6 +112,7 @@ public class TaskTagsManageActivity extends BaseActivity {
         }
     }
 
+    @OnClick(R.id.bt_add_tags)
     public void onClick(View v) {
         Intent intent = new Intent();
         switch (v.getId()) {

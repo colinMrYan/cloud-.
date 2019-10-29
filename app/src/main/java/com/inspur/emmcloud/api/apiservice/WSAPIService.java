@@ -11,6 +11,7 @@ import com.inspur.emmcloud.bean.chat.MsgContentComment;
 import com.inspur.emmcloud.bean.chat.MsgContentExtendedLinks;
 import com.inspur.emmcloud.bean.chat.MsgContentTextPlain;
 import com.inspur.emmcloud.bean.chat.RelatedLink;
+import com.inspur.emmcloud.bean.chat.UIMessage;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 
@@ -287,6 +288,7 @@ public class WSAPIService {
             headerObj.put("tracer", tracer);
             object.put("headers", headerObj);
             EventMessage eventMessage = new EventMessage(tracer, Constant.EVENTBUS_TAG_GET_OFFLINE_WS_MESSAGE);
+            eventMessage.setTimeout(50);
             WebSocketPush.getInstance().sendEventMessage(eventMessage, object, tracer);
         } catch (Exception e) {
             e.printStackTrace();
@@ -309,6 +311,7 @@ public class WSAPIService {
             headerObj.put("tracer", tracer);
             object.put("headers", headerObj);
             EventMessage eventMessage = new EventMessage(tracer, Constant.EVENTBUS_TAG_GET_CHANNEL_RECENT_MESSAGE);
+            eventMessage.setTimeout(50);
             WebSocketPush.getInstance().sendEventMessage(eventMessage, object, tracer);
         } catch (Exception e) {
             e.printStackTrace();
@@ -548,4 +551,36 @@ public class WSAPIService {
         }
     }
 
+
+    /**
+     * 消息撤回
+     *
+     * @param uiMessage
+     */
+    public void recallMessage(UIMessage uiMessage) {
+        try {
+            JSONObject object = new JSONObject();
+            try {
+                String tracer = CommunicationUtils.getTracer();
+                JSONObject actionObj = new JSONObject();
+                actionObj.put("method", "post");
+                actionObj.put("path", "/command/server");
+                object.put("action", actionObj);
+                JSONObject headerObj = new JSONObject();
+                headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
+                headerObj.put("tracer", tracer);
+                object.put("headers", headerObj);
+                JSONObject bodyObject = new JSONObject();
+                bodyObject.put("messageId", uiMessage.getMessage().getId());
+                bodyObject.put("channelId", uiMessage.getMessage().getChannel());
+                object.put("body", bodyObject);
+                EventMessage eventMessage = new EventMessage(tracer, Constant.EVENTBUS_TAG_RECALL_MESSAGE, "", uiMessage);
+                WebSocketPush.getInstance().sendEventMessage(eventMessage, object, tracer);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

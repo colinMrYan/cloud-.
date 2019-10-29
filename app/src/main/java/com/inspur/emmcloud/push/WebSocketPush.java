@@ -14,6 +14,7 @@ import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.bean.EventMessage;
+import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.push.PushManagerUtils;
 import com.inspur.emmcloud.basemodule.util.AppExceptionCacheUtils;
@@ -23,6 +24,7 @@ import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.GetVoiceAndVideoResult;
+import com.inspur.emmcloud.bean.chat.WSCommand;
 import com.inspur.emmcloud.bean.chat.WSPushContent;
 import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
 import com.inspur.emmcloud.bean.system.badge.GetWebSocketBadgeResult;
@@ -451,8 +453,8 @@ public class WebSocketPush {
                                 break;
                             case "/channel/message/state/unread":
                                 if (wsPushContent.getMethod().equals("delete")) {
-                                    EventMessage eventMessagea = new EventMessage("", Constant.EVENTBUS_TAG_RECERIVER_MESSAGE_STATE_READ, wsPushContent.getBody());
-                                    EventBus.getDefault().post(eventMessagea);
+                                    EventMessage eventMessage = new EventMessage("", Constant.EVENTBUS_TAG_RECERIVER_MESSAGE_STATE_READ, wsPushContent.getBody());
+                                    EventBus.getDefault().post(eventMessage);
                                 }
                                 break;
                             case "/unread-count":
@@ -464,10 +466,23 @@ public class WebSocketPush {
                                 break;
                             case "/command/client":
                                 if (wsPushContent.getMethod().equals("post")) {
-                                    GetVoiceAndVideoResult getVoiceAndVideoResult = new GetVoiceAndVideoResult(wsPushContent.getTracer(), wsPushContent.getBody());
-                                    EventBus.getDefault().post(getVoiceAndVideoResult);
+                                    WSCommand wsCommand = new WSCommand(wsPushContent.getBody());
+                                    switch (wsCommand.getAction()) {
+                                        case "client.chat.video-call.refuse":
+                                        case "client.chat.video-call.invite":
+                                        case "client.chat.video-call.hang-up":
+                                            GetVoiceAndVideoResult getVoiceAndVideoResult = new GetVoiceAndVideoResult(wsPushContent.getTracer(), wsPushContent.getBody());
+                                            EventBus.getDefault().post(getVoiceAndVideoResult);
+                                            break;
+                                        case "client.chat.message.recall":
+                                            SimpleEventMessage eventMessage = new SimpleEventMessage(Constant.EVENTBUS_TAG_RECALL_MESSAGE, wsCommand.getParams());
+                                            EventBus.getDefault().post(eventMessage);
+                                            break;
+                                    }
+
                                 }
                                 break;
+
                         }
                     }
                 } catch (Exception e) {

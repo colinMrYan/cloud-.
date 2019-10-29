@@ -65,6 +65,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class SettingActivity extends BaseActivity {
 
@@ -346,6 +347,7 @@ public class SettingActivity extends BaseActivity {
         };
     }
 
+    @OnClick(R.id.bt_setting_signout)
     public void onClick(View v) {
         // TODO Auto-generated method stub
         switch (v.getId()) {

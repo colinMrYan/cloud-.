@@ -30,7 +30,6 @@ import com.inspur.emmcloud.basemodule.util.ClientConfigUpdateUtils;
 import com.inspur.emmcloud.basemodule.util.ClientIDUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
-import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.Conversation;
@@ -132,6 +131,9 @@ public class IndexActivity extends IndexBaseActivity {
         if (scheduleCalendarList.size() == 0) {
             scheduleCalendarList.add(new ScheduleCalendar(CalendarColor.BLUE, "", "", "", AccountType.APP_SCHEDULE));
             scheduleCalendarList.add(new ScheduleCalendar(CalendarColor.ORANGE, "", "", "", AccountType.APP_MEETING));
+            String account = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, "");
+            String password = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_PASSWORD, "");
+            scheduleCalendarList.add(new ScheduleCalendar(CalendarColor.GREEN, account, account, password, AccountType.EXCHANGE));
             ScheduleCalendarCacheUtils.saveScheduleCalendarList(BaseApplication.getInstance(), scheduleCalendarList);
         }
     }
@@ -636,7 +638,7 @@ public class IndexActivity extends IndexBaseActivity {
             if (handler != null) {
                 handler.sendEmptyMessage(SYNC_ALL_BASE_DATA_SUCCESS);
             }
-            WebServiceMiddleUtils.hand(IndexActivity.this, error, errorCode);
+//            WebServiceMiddleUtils.hand(IndexActivity.this, error, errorCode);
         }
 
         @Override
@@ -649,7 +651,7 @@ public class IndexActivity extends IndexBaseActivity {
             if (handler != null) {
                 handler.sendEmptyMessage(SYNC_ALL_BASE_DATA_SUCCESS);
             }
-            WebServiceMiddleUtils.hand(IndexActivity.this, error, errorCode);
+//            WebServiceMiddleUtils.hand(IndexActivity.this, error, errorCode);
         }
 
 

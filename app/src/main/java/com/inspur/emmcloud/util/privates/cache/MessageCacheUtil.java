@@ -643,7 +643,7 @@ public class MessageCacheUtil {
             if (messageTmp.getType().equals(Message.MESSAGE_TYPE_MEDIA_VOICE)) {
                 deleteLocalVoiceFile(message);
             }
-            //更新本地假消息，把id改成真消息的id，并把发送状态改为发送成功，creationDate保持假消息的时间即可
+            //更新本地假消息，把id改成真消息的id，并把发送状态改为发送成功
             try {
                 DbCacheUtils.getDb(context).update(Message.class, WhereBuilder.b("id", "=", message.getTmpId())
                         , new KeyValue("id", message.getId()), new KeyValue("sendStatus", Message.MESSAGE_SEND_SUCCESS), new KeyValue("creationDate", message.getCreationDate()));
@@ -823,6 +823,15 @@ public class MessageCacheUtil {
             messageList = new ArrayList<>();
         }
         return messageList;
+    }
+
+    public static void deleteMessageById(String mid) {
+        try {
+            DbCacheUtils.getDb().deleteById(Message.class, mid);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
 }

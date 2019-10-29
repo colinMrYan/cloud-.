@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
+import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.ResolutionUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
@@ -80,7 +81,7 @@ public class InputMethodUtils {
             boolean isHideNavigationBar = Settings.Global.getInt(activity.getContentResolver(), "force_fsg_nav_bar", 0) != 0;
             screenHeight = ResolutionUtils.getHeight(activity);
             if (!isHideNavigationBar) {
-                screenHeight = screenHeight - ResolutionUtils.getNavigationBarHeight(activity);
+                screenHeight = screenHeight - ImmersionBar.getNavigationBarHeight(activity);
             }
         } else {
             screenHeight = displayMetrics.heightPixels;
