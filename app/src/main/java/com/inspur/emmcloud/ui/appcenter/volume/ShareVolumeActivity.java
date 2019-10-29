@@ -130,12 +130,27 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 if (selectedShareVolumeList.contains(shareVolumeList.get(position))) {
-                    selectedShareVolumeList.remove(shareVolumeList.get(position));
+                    selectedShareVolumeList.clear();
                 } else {
+                    selectedShareVolumeList.clear();
                     selectedShareVolumeList.add(shareVolumeList.get(position));
                 }
                 setBottomOperationItemShow(selectedShareVolumeList);
                 return true;
+            }
+        });
+        shareVolumeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                if (selectedShareVolumeList.size() > 0) {
+                    if (selectedShareVolumeList.contains(shareVolumeList.get(i))) {
+                        selectedShareVolumeList.clear();
+                    } else {
+                        selectedShareVolumeList.clear();
+                        selectedShareVolumeList.add(shareVolumeList.get(i));
+                    }
+                    setBottomOperationItemShow(selectedShareVolumeList);
+                }
             }
         });
     }
@@ -468,8 +483,9 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
                 @Override
                 public void onClick(View v) {
                     if (selectedShareVolumeList.contains(shareVolumeList.get(position))) {
-                        selectedShareVolumeList.remove(shareVolumeList.get(position));
+                        selectedShareVolumeList.clear();
                     } else {
+                        selectedShareVolumeList.clear();
                         selectedShareVolumeList.add(shareVolumeList.get(position));
                     }
                     setBottomOperationItemShow(selectedShareVolumeList);
