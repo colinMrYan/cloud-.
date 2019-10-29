@@ -17,6 +17,7 @@ import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileListResult;
+import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeListResult;
 import com.inspur.emmcloud.bean.appcenter.volume.Volume;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.widget.filemanager.adapter.TitleAdapter;
@@ -179,6 +180,14 @@ public class VolumeFileManagerFragment extends Fragment {
         return rootView;
     }
 
+    public void getMyVolume() {
+        if (NetUtils.isNetworkConnected(getContext()) && volume == null) {
+            loadingDlg.show();
+            apiServiceBase.getVolumeList();
+        }
+    }
+
+
    /**获取当前的网盘**/
    public void setMyVolume(Volume volume) {
        this.volume = volume;
@@ -266,6 +275,22 @@ public class VolumeFileManagerFragment extends Fragment {
     }
 
     private class WebServiceBase extends APIInterfaceInstance {
+
+        @Override
+        public void returnVolumeListSuccess(GetVolumeListResult getVolumeListResult) {
+            volume = getVolumeListResult.getMyVolume();
+            getVolumeFileList(true);
+
+        }
+
+        @Override
+        public void returnVolumeListFail(String error, int errorCode) {
+            LoadingDialog.dimissDlg(loadingDlg);
+            volume = null;
+            getVolumeFileList(false);
+
+        }
+
         @Override
         public void returnVolumeFileListSuccess(GetVolumeFileListResult volumeFileListResult) {
             LoadingDialog.dimissDlg(loadingDlg);
