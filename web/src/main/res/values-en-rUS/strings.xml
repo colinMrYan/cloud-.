@@ -11,4 +11,5 @@
     <string name="web_gps_closed">GPS has been turned off</string>
     <!--短视频录制-->
     <string name="web_video_record_fail">record failed</string>
+    <string name="web_sure_to_download">Do you want to download the file</string>
 </resources>

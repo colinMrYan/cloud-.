@@ -11,5 +11,7 @@
     <!--短视频录制-->
     <string name="web_video_record_fail">录制失败</string>
 
+    <string name="web_sure_to_download">是否下载文件？</string>
+
 </resources>
 
