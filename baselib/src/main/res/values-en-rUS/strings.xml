@@ -74,6 +74,7 @@
     <string name="upgrade_install_now">Install</string>
     <string name="upgrade_install_next_time">Next Time</string>
     <string name="try_again">Try Again</string>
+    <string name="you">You</string>
 
     <!-- 公共部分 -->
     <string name="year">Year</string>
@@ -318,6 +319,7 @@
     <string name="chat_long_click_copy">Copy</string>
     <string name="chat_long_click_transmit">Forward</string>
     <string name="chat_long_click_recall">Recall</string>
+    <string name="chat_info_message_status_recall">%1$s recalled a message</string>
     <string name="recall_fail_for_timeout">You cannot recall a sent message after two miniutes.</string>
     <string name="chat_long_click_schedule">Add to Calendar</string>
     <string name="chat_long_click_copy_text">Copy text</string>

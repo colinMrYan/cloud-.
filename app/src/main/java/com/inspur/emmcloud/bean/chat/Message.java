@@ -2,7 +2,10 @@ package com.inspur.emmcloud.bean.chat;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
 import com.inspur.emmcloud.util.privates.richtext.markdown.MarkDown;
 
@@ -61,6 +64,8 @@ public class Message implements Serializable {
     //是否处于重复等待重发状态中
     @Column(name = "isWaitingSendRetry")
     private boolean isWaitingSendRetry = false;
+    @Column(name = "recallFrom")
+    private String recallFrom = "";
     private String tmpId = "";
 
     public Message() {
@@ -281,6 +286,40 @@ public class Message implements Serializable {
         isWaitingSendRetry = waitingSendRetry;
     }
 
+    public String getRecallFrom() {
+        return recallFrom;
+    }
+
+    public void setRecallFrom(String recallFrom) {
+        this.recallFrom = recallFrom;
+    }
+
+    public void setRecallFromSelf() {
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("id", BaseApplication.getInstance().getUid());
+            String name = PreferencesUtils.getString(BaseApplication.getInstance(), "userRealName", "");
+            obj.put("name", name);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        this.recallFrom = obj.toString();
+    }
+
+    public String getRecallFromUid() {
+        if (!StringUtils.isBlank(recallFrom)) {
+            return JSONUtils.getString(recallFrom, "id", "");
+        }
+        return "";
+    }
+
+    public String getRecallFromUserName() {
+        if (!StringUtils.isBlank(recallFrom)) {
+            return JSONUtils.getString(recallFrom, "name", "");
+        }
+        return "";
+    }
+
     public String getTmpId() {
         return tmpId;
     }
@@ -325,5 +364,7 @@ public class Message implements Serializable {
 
         return bodyObj.toString();
     }
+
+
 }
 

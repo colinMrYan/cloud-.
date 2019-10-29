@@ -53,6 +53,7 @@ import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.bean.WSCommandBatch;
 import com.inspur.emmcloud.bean.chat.ChannelMessageReadStateResult;
 import com.inspur.emmcloud.bean.chat.ChannelMessageSet;
 import com.inspur.emmcloud.bean.chat.Conversation;
@@ -64,6 +65,7 @@ import com.inspur.emmcloud.bean.chat.MatheSet;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.UIConversation;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
+import com.inspur.emmcloud.bean.chat.WSCommand;
 import com.inspur.emmcloud.bean.system.EmmAction;
 import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.bean.system.MainTabProperty;
@@ -680,6 +682,87 @@ public class CommunicationFragment extends BaseFragment {
         }
     }
 
+    /**
+     * 处理批量命令消息
+     *
+     * @param wsCommandBatch
+     */
+    private void handCommandBatch(final WSCommandBatch wsCommandBatch) {
+        Observable.create(new ObservableOnSubscribe<List<Message>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<Message>> emitter) throws Exception {
+                List<WSCommand> wsCommandList = wsCommandBatch.getWsCommandList();
+                List<WSCommand> recallMessageWsCommandList = new ArrayList<>();
+                List<String> recallMessageMidList = new ArrayList<>();
+                List<Message> recallMessageMidListForCurrentChannel = new ArrayList<>();
+                for (WSCommand wsCommand : wsCommandList) {
+                    if (wsCommand.getAction().equals("client.chat.message.recall")) {
+                        recallMessageWsCommandList.add(wsCommand);
+                        String recallMessageParams = wsCommand.getParams();
+                        String mid = JSONUtils.getString(recallMessageParams, "messageId", "");
+                        recallMessageMidList.add(mid);
+                    }
+                }
+                List<Message> recallMessageList = MessageCacheUtil.getMessageListWithNoRecall(BaseApplication.getInstance(), recallMessageMidList);
+                for (Message message : recallMessageList) {
+                    for (WSCommand wsCommand : wsCommandList) {
+                        String recallMessageParams = wsCommand.getParams();
+                        String mid = JSONUtils.getString(recallMessageParams, "messageId", "");
+                        if (message.getId().equals(mid)) {
+                            message.setRecallFrom(wsCommand.getFrom());
+                            message.setRead(Message.MESSAGE_READ);
+                            break;
+                        }
+                    }
+                    if (message.getChannel().equals(BaseApplication.getInstance().getCurrentChannelCid())) {
+                        recallMessageMidListForCurrentChannel.add(message);
+                    }
+                }
+                MessageCacheUtil.saveMessageList(BaseApplication.getInstance(), recallMessageList);
+                emitter.onNext(recallMessageMidListForCurrentChannel);
+            }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<Message>>() {
+                    @Override
+                    public void accept(List<Message> messageList) throws Exception {
+                        if (messageList.size() > 0) {
+                            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_CURRENT_CHANNEL_COMMAND_BATCH_MESSAGE, messageList));
+                        }
+                        sortConversationList();
+                        WSAPIService.getInstance().commandBatchFinishCallback(wsCommandBatch);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+
+                    }
+                });
+
+    }
+
+
+    /**
+     * 撤回消息
+     *
+     * @param wsCommand
+     */
+    private void recallMessage(WSCommand wsCommand) {
+        String recallMessageParams = wsCommand.getParams();
+        String cid = wsCommand.getChannel();
+        String mid = JSONUtils.getString(recallMessageParams, "messageId", "");
+        Message message = MessageCacheUtil.getMessageByMid(BaseApplication.getInstance(), mid);
+        if (message != null) {
+            message.setRecallFrom(wsCommand.getFrom());
+            message.setRead(Message.MESSAGE_READ);
+            MessageCacheUtil.saveMessage(BaseApplication.getInstance(), message);
+            sortConversationList();
+        }
+        if (BaseApplication.getInstance().getCurrentChannelCid().equals(cid)) {
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_CURRENT_CHANNEL_RECALL_MESSAGE, message));
+        }
+    }
+
     @Override
     public void onDestroy() {
         // TODO Auto-generated method stub
@@ -811,6 +894,16 @@ public class CommunicationFragment extends BaseFragment {
                 conversation = (Conversation) eventMessage.getMessageObj();
                 notifyConversationChange(conversation);
                 break;
+            case Constant.EVENTBUS_TAG_RECALL_MESSAGE:
+                WSCommand wsCommand = (WSCommand) eventMessage.getMessageObj();
+                recallMessage(wsCommand);
+                WSAPIService.getInstance().commandFinishCallback(wsCommand);
+                break;
+            case Constant.EVENTBUS_TAG_COMMAND_BATCH_MESSAGE:
+                WSCommandBatch wsCommandBatch = (WSCommandBatch) eventMessage.getMessageObj();
+                handCommandBatch(wsCommandBatch);
+                break;
+
         }
     }
 
