@@ -17,6 +17,9 @@ public interface ConversationInfoContract {
     }
 
     interface View extends BaseView {
+
+        void initView(Conversation conversation);
+
         void showGroupMembersHead(List<String> uiUidList);
 
         void showStickyState(boolean isSticky);
@@ -55,6 +58,8 @@ public interface ConversationInfoContract {
         void updateSearchMoreState();
 
         void createGroup(List<SearchModel> addSearchModelList);
+
+        void getConversationInfo(String cid);
 
         int getConversationRealMemberSize();
 

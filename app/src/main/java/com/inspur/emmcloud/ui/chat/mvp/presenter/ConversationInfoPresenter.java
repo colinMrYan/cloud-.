@@ -244,6 +244,38 @@ public class ConversationInfoPresenter extends BasePresenter<ConversationInfoCon
         mView.updateMoreMembers(isShowMoreMember);
     }
 
+    @Override
+    public void getConversationInfo(final String cid) {
+        String completeUrl = ApiUrl.getQuitChannelGroupUrl(cid);
+        ApiServiceImpl.getInstance().getConversationInfo(new BaseModuleAPICallback(mView.getContext(), completeUrl) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getConversationInfo(cid);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                ApiServiceImpl.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+        }, cid);
+    }
 
     @Override
     public void createGroup(List<SearchModel> addSearchList) {
