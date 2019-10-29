@@ -775,7 +775,6 @@ public class ConversationActivity extends ConversationBaseActivity {
     protected void onActivityResult(int requestCode, int resultCode,
                                     final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        LogUtils.YfcDebug("resultCode:" + resultCode);
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case RQQUEST_CHOOSE_FILE:
