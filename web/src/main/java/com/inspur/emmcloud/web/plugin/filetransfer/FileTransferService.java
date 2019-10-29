@@ -32,7 +32,6 @@ import com.inspur.emmcloud.web.ui.ImpFragment;
 import com.inspur.emmcloud.web.util.StrUtil;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
@@ -424,7 +423,7 @@ public class FileTransferService extends ImpPlugin {
             }
 //            filepath = "/IMP-Cloud/download/";
             filepath = FilePathUtils.BASE_PATH;
-        } catch (JSONException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         // 判断是否含有sd卡
@@ -623,12 +622,11 @@ public class FileTransferService extends ImpPlugin {
      * @throws Exception
      */
     private void downLoadFile(String urlString) {
-        LogUtils.YfcDebug("下载地址：" + urlString);
         clearFiles(fileName);
         if (StrUtil.strIsNotNull(fileName)) {
-            file = new File(absoluteFilePath);
-        } else {
             file = new File(absoluteFilePath + fileName);
+        } else {
+            file = new File(absoluteFilePath);
         }
         final RequestParams params = BaseApplication.getInstance().getHttpRequestParams(urlString);
         // 断点下载
