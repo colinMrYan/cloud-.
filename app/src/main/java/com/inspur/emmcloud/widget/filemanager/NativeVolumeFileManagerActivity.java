@@ -8,12 +8,9 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.ui.BaseFragmentActivity;
-import com.inspur.emmcloud.basemodule.util.NetUtils;
-import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeListResult;
 import com.inspur.emmcloud.bean.appcenter.volume.Volume;
 import com.inspur.emmcloud.widget.filemanager.adapter.FileFragmentPagerAdapter;
 
@@ -81,6 +78,9 @@ public class NativeVolumeFileManagerActivity extends BaseFragmentActivity implem
             @Override
             public void onPageSelected(int i) {
                 fileTablayout.getTabAt(i).select();
+                if (i == 1) {
+                    volumeFileManagerFragment.getMyVolume();
+                }
             }
 
             @Override
@@ -89,10 +89,6 @@ public class NativeVolumeFileManagerActivity extends BaseFragmentActivity implem
             }
         });
         fileViewPager.setAdapter(fileFragmentPagerAdapter);
-        loadingDialog = new LoadingDialog(this);
-        apiService = new MyAppAPIService(this);
-        apiService.setAPIInterface(new WebService());
-        getVolumeList(true);
     }
 
     @Override
@@ -104,31 +100,6 @@ public class NativeVolumeFileManagerActivity extends BaseFragmentActivity implem
             case R.id.ibt_back:
                 finish();
                 break;
-        }
-    }
-
-    /**
-     * 获取云盘列表
-     **/
-    private void getVolumeList(boolean isShowDlg) {
-        if (NetUtils.isNetworkConnected(getApplicationContext())) {
-            loadingDialog.show(isShowDlg);
-            apiService.getVolumeList();
-        }
-    }
-
-    private class WebService extends APIInterfaceInstance {
-        @Override
-        public void returnVolumeListSuccess(GetVolumeListResult getVolumeListResult) {
-            LoadingDialog.dimissDlg(loadingDialog);
-            myVolume = getVolumeListResult.getMyVolume();
-            volumeFileManagerFragment.setMyVolume(myVolume);
-        }
-
-        @Override
-        public void returnVolumeListFail(String error, int errorCode) {
-            LoadingDialog.dimissDlg(loadingDialog);
-            volumeFileManagerFragment.setMyVolume(null);
         }
     }
 }

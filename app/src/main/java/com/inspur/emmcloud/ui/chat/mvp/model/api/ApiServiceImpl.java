@@ -72,6 +72,13 @@ public class ApiServiceImpl implements ApiService.IGroupInfoActivity {
     }
 
     @Override
+    public void getConversationInfo(BaseModuleAPICallback apiCallback, String cId) {
+        String completeUrl = ApiUrl.getConversationInfoUrl(cId);
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
+        HttpUtils.request(CloudHttpMethod.GET, params, apiCallback);
+    }
+
+    @Override
     public void quitGroupChannel(BaseModuleAPICallback apiCallback, String conversationId) {
         String completeUrl = ApiUrl.getQuitChannelGroupUrl(conversationId);
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
