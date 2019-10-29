@@ -152,6 +152,7 @@ public class ECMChatInputMenu extends LinearLayout {
     ImageButton emotionBtn;
     EmotionAdapter emotionAdapter;
     EmotionAdapter emotionRecentAdapter;
+    ArrayList<String> recentEmotionList = new ArrayList<>();
     private int voiceInputStatus = 1;
     private boolean isGroup = false;
     private ChatInputMenuListener chatInputMenuListener;
@@ -362,7 +363,8 @@ public class ECMChatInputMenu extends LinearLayout {
      */
     private void initEmotion() {
         EmotionRecentManager recentManager = EmotionRecentManager.getInstance(getContext());
-        emotionRecentAdapter = new EmotionAdapter(getContext(), 1, recentManager);
+        recentEmotionList.addAll(recentManager);
+        emotionRecentAdapter = new EmotionAdapter(getContext(), 1, recentEmotionList);
         emotionRecentGrid.setAdapter(emotionRecentAdapter);
         emotionRecentGrid.setOnItemClickListener(new OnEmotionItemClickListener());
 
@@ -1012,7 +1014,10 @@ public class ECMChatInputMenu extends LinearLayout {
      */
     private void handleEmotionStatus() {
         if (emotionRecentAdapter != null) {
-            emotionRecentLayout.setVisibility(EmotionRecentManager.getInstance(getContext()).size() > 0 ? VISIBLE : GONE);
+            EmotionRecentManager recentManager = EmotionRecentManager.getInstance(getContext());
+            recentEmotionList.clear();
+            recentEmotionList.addAll(recentManager);
+            emotionRecentLayout.setVisibility(recentManager.size() > 0 ? VISIBLE : GONE);
             emotionRecentAdapter.notifyDataSetChanged();
         }
         if (addMenuLayout.isShown()) {
