@@ -23,6 +23,7 @@ import com.inspur.emmcloud.basemodule.util.ClientIDUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
+import com.inspur.emmcloud.bean.WSCommandBatch;
 import com.inspur.emmcloud.bean.chat.GetVoiceAndVideoResult;
 import com.inspur.emmcloud.bean.chat.WSCommand;
 import com.inspur.emmcloud.bean.chat.WSPushContent;
@@ -435,13 +436,17 @@ public class WebSocketPush {
                         if (index != -1) {
                             EventMessage eventMessage = requestEventMessageList.get(index);
                             requestEventMessageList.remove(index);
-                            String body = wsPushContent.getBody();
-                            eventMessage.setContent(body);
-                            eventMessage.setStatus(wsPushContent.getStatus());
-                            EventBus.getDefault().post(eventMessage);
-                            if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE) && eventMessage.getStatus() != EventMessage.RESULT_OK) {
-                                saveWSSendMessageException("ws_send_message", 2, body, wsPushContent.getStatus());
+                            //如果Tag为空，代表客户端不处理请求返回
+                            if (!StringUtils.isBlank(eventMessage.getTag())) {
+                                String body = wsPushContent.getBody();
+                                eventMessage.setContent(body);
+                                eventMessage.setStatus(wsPushContent.getStatus());
+                                EventBus.getDefault().post(eventMessage);
+                                if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE) && eventMessage.getStatus() != EventMessage.RESULT_OK) {
+                                    saveWSSendMessageException("ws_send_message", 2, body, wsPushContent.getStatus());
+                                }
                             }
+
                         }
                     } else {
                         switch (path) {
@@ -466,7 +471,7 @@ public class WebSocketPush {
                                 break;
                             case "/command/client":
                                 if (wsPushContent.getMethod().equals("post")) {
-                                    WSCommand wsCommand = new WSCommand(wsPushContent.getBody());
+                                    WSCommand wsCommand = new WSCommand(arg0[0].toString());
                                     switch (wsCommand.getAction()) {
                                         case "client.chat.video-call.refuse":
                                         case "client.chat.video-call.invite":
@@ -475,11 +480,18 @@ public class WebSocketPush {
                                             EventBus.getDefault().post(getVoiceAndVideoResult);
                                             break;
                                         case "client.chat.message.recall":
-                                            SimpleEventMessage eventMessage = new SimpleEventMessage(Constant.EVENTBUS_TAG_RECALL_MESSAGE, wsCommand.getParams());
+                                            SimpleEventMessage eventMessage = new SimpleEventMessage(Constant.EVENTBUS_TAG_RECALL_MESSAGE, wsCommand);
                                             EventBus.getDefault().post(eventMessage);
                                             break;
                                     }
 
+                                }
+                                break;
+                            case "/command/client/backlog":
+                                if (wsPushContent.getMethod().equals("post")) {
+                                    WSCommandBatch wsCommandBatch = new WSCommandBatch(arg0[0].toString());
+                                    SimpleEventMessage eventMessage = new SimpleEventMessage(Constant.EVENTBUS_TAG_COMMAND_BATCH_MESSAGE, wsCommandBatch);
+                                    EventBus.getDefault().post(eventMessage);
                                 }
                                 break;
 
@@ -530,7 +542,6 @@ public class WebSocketPush {
             startTimeCount();
             sendContent(content);
         } else {
-            LogUtils.jasonDebug("isSocketConnect=false");
             setRequestEventMessageTimeout(eventMessage, "socket_disconnect");
             startWebSocket();
         }

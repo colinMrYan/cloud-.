@@ -88,47 +88,52 @@ public class UIConversation implements Serializable {
             Message message = messageList.get(messageList.size() - 1);
             String fromUserName = "";
             String messageType = message.getType();
-            if (type.equals(Conversation.TYPE_GROUP) && !message.getFromUser().equals(MyApplication.getInstance().getUid())) {
-                fromUserName = ContactUserCacheUtils.getUserName(message.getFromUser()) + "：";
+            if (!StringUtils.isBlank(message.getRecallFrom())) {
+                content = CommunicationUtils.getRecallMessageShowContent(message);
+            } else {
+                if (type.equals(Conversation.TYPE_GROUP) && !message.getFromUser().equals(MyApplication.getInstance().getUid())) {
+                    fromUserName = ContactUserCacheUtils.getUserName(message.getFromUser()) + "：";
+                }
+                switch (messageType) {
+                    case Message.MESSAGE_TYPE_TEXT_PLAIN:
+                        content = ChatMsgContentUtils.mentionsAndUrl2Span(message.getMsgContentTextPlain().getText(), message.getMsgContentTextPlain().getMentionsMap()).toString();
+                        break;
+                    case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
+                        SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(message.getMsgContentTextMarkdown().getText(), message.getMsgContentTextMarkdown().getMentionsMap());
+                        content = spannableString.toString();
+                        if (!StringUtils.isBlank(content)) {
+                            content = MarkDown.fromMarkdown(content);
+                        }
+                        break;
+                    case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
+                        content = MyApplication.getInstance().getString(R.string.send_a_comment);
+                        break;
+                    case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
+                        content = MyApplication.getInstance().getString(R.string.send_a_file);
+                        break;
+                    case Message.MESSAGE_TYPE_MEDIA_IMAGE:
+                        content = MyApplication.getInstance().getString(R.string.send_a_picture);
+                        break;
+                    case Message.MESSAGE_TYPE_EXTENDED_LINKS:
+                        content = MyApplication.getInstance().getString(R.string.send_a_link);
+                        break;
+                    case Message.MESSAGE_TYPE_EXTENDED_CONTACT_CARD:
+                        content = MyApplication.getInstance().getString(R.string.send_a_link);
+                        break;
+                    case Message.MESSAGE_TYPE_MEDIA_VOICE:
+                        content = MyApplication.getInstance().getString(R.string.send_a_voice);
+                        break;
+                    case Message.MESSAGE_TYPE_EXTENDED_SELECTED:
+                        content = MyApplication.getInstance().getString(R.string.send_action_message);
+                        break;
+                    default:
+                        content = MyApplication.getInstance()
+                                .getString(R.string.send_a_message_of_unknown_type);
+                        break;
+                }
+                content = fromUserName + content;
             }
-            switch (messageType) {
-                case Message.MESSAGE_TYPE_TEXT_PLAIN:
-                    content = ChatMsgContentUtils.mentionsAndUrl2Span(message.getMsgContentTextPlain().getText(), message.getMsgContentTextPlain().getMentionsMap()).toString();
-                    break;
-                case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
-                    SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(message.getMsgContentTextMarkdown().getText(), message.getMsgContentTextMarkdown().getMentionsMap());
-                    content = spannableString.toString();
-                    if (!StringUtils.isBlank(content)) {
-                        content = MarkDown.fromMarkdown(content);
-                    }
-                    break;
-                case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
-                    content = MyApplication.getInstance().getString(R.string.send_a_comment);
-                    break;
-                case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
-                    content = MyApplication.getInstance().getString(R.string.send_a_file);
-                    break;
-                case Message.MESSAGE_TYPE_MEDIA_IMAGE:
-                    content = MyApplication.getInstance().getString(R.string.send_a_picture);
-                    break;
-                case Message.MESSAGE_TYPE_EXTENDED_LINKS:
-                    content = MyApplication.getInstance().getString(R.string.send_a_link);
-                    break;
-                case Message.MESSAGE_TYPE_EXTENDED_CONTACT_CARD:
-                    content = MyApplication.getInstance().getString(R.string.send_a_link);
-                    break;
-                case Message.MESSAGE_TYPE_MEDIA_VOICE:
-                    content = MyApplication.getInstance().getString(R.string.send_a_voice);
-                    break;
-                case Message.MESSAGE_TYPE_EXTENDED_SELECTED:
-                    content = MyApplication.getInstance().getString(R.string.send_action_message);
-                    break;
-                default:
-                    content = MyApplication.getInstance()
-                            .getString(R.string.send_a_message_of_unknown_type);
-                    break;
-            }
-            content = fromUserName + content;
+
         } else {
             if (type.equals(Conversation.TYPE_CAST)) {
                 content = MyApplication.getInstance().getString(R.string.welcome_to_attention) + " " + title;
@@ -136,7 +141,6 @@ public class UIConversation implements Serializable {
                 content = MyApplication.getInstance().getString(R.string.group_no_message);
             } else if (type.equals(Conversation.TYPE_LINK)) {
                 content = MyApplication.getInstance().getString(R.string.welcome_to) + " " + title;
-                ;
             } else {
                 content = MyApplication.getInstance().getString(R.string.direct_no_message);
             }
