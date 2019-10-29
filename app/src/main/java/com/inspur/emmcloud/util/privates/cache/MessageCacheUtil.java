@@ -719,19 +719,19 @@ public class MessageCacheUtil {
                     .where("type", "=", Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN)
                     .and(WhereBuilder.b("showContent", "like", "%" + content + "%"))
                     .and(WhereBuilder.b("sendStatus", "=", 1))
-                    .and(WhereBuilder.b("recallFrom", "!=", null))
+                    .and(WhereBuilder.b("recallFrom", "=", null))
                     .findAll();
             List<Message> messageList2 = DbCacheUtils.getDb(context).selector(Message.class)
                     .where("type", "=", Message.MESSAGE_TYPE_TEXT_MARKDOWN)
                     .and(WhereBuilder.b("showContent", "like", "%" + content + "%"))
                     .and(WhereBuilder.b("sendStatus", "=", 1))
-                    .and(WhereBuilder.b("recallFrom", "!=", null))
+                    .and(WhereBuilder.b("recallFrom", "=", null))
                     .findAll();
             List<Message> messageList3 = DbCacheUtils.getDb(context).selector(Message.class)
                     .where("type", "=", Message.MESSAGE_TYPE_TEXT_PLAIN)
                     .and(WhereBuilder.b("showContent", "like", "%" + content + "%"))
                     .and(WhereBuilder.b("sendStatus", "=", 1))
-                    .and(WhereBuilder.b("recallFrom", "!=", null))
+                    .and(WhereBuilder.b("recallFrom", "=", null))
                     .findAll();
             messageList.addAll(messageList1);
             messageList.addAll(messageList2);
