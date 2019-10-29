@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
@@ -247,22 +246,17 @@ public class ConversationInfoPresenter extends BasePresenter<ConversationInfoCon
 
     @Override
     public void getConversationInfo(final String cid) {
-        mView.showLoading();
         String completeUrl = ApiUrl.getQuitChannelGroupUrl(cid);
         ApiServiceImpl.getInstance().getConversationInfo(new BaseModuleAPICallback(mView.getContext(), completeUrl) {
             @Override
             public void callbackSuccess(byte[] arg0) {
-                LogUtils.LbcDebug("111111111111111111111111111");
                 JSONObject object = JSONUtils.getJSONObject(new String(arg0));
                 mConversation = new Conversation(object);
-                mView.dismissLoading();
                 mView.initView(mConversation);
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                LogUtils.LbcDebug("222222222222222222222222222222");
-                mView.dismissLoading();
                 mConversation = ConversationCacheUtils.getConversation(MyApplication.getInstance(), cid);
                 mView.initView(mConversation);
             }

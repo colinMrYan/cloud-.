@@ -100,8 +100,8 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
         String cid = getIntent().getExtras().getString(EXTRA_CID);
         loadingDialog = new LoadingDialog(this);
         mPresenter.getConversationInfo(cid);
-        //uiConversation = mPresenter.getConversation(cid);
-        // init();
+        uiConversation = mPresenter.getConversation(cid);
+        init();
     }
 
     @Override
