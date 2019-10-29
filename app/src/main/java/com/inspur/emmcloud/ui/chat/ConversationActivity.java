@@ -7,13 +7,16 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.SpannableString;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
@@ -41,6 +44,7 @@ import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.FileDownloadManager;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
@@ -123,6 +127,12 @@ public class ConversationActivity extends ConversationBaseActivity {
     private static final int REFRESH_NEW_MESSAGE = 7;
     private static final int REFRESH_OFFLINE_MESSAGE = 8;
     private static final int COUNT_EVERY_PAGE = 20;
+
+    /**
+     * 请求悬浮窗权限
+     */
+    private static final int REQUEST_WINDOW_PERMISSION = 100;
+    private static final int REQUEST_BACKGROUND_WINDOWS = 101;
     @BindView(R.id.msg_list)
     RecycleViewForSizeChange msgListView;
 
@@ -316,9 +326,9 @@ public class ConversationActivity extends ConversationBaseActivity {
         chatInputMenu.setSpecialUser(isSpecialUser);
         chatInputMenu.setOtherLayoutView(swipeRefreshLayout, msgListView);
         if (conversation.getType().equals(Conversation.TYPE_GROUP)) {
-            chatInputMenu.setCanMentions(true, cid);
+            chatInputMenu.setIsGroup(true, cid);
         } else {
-            chatInputMenu.setCanMentions(false, "");
+            chatInputMenu.setIsGroup(false, "");
         }
         chatInputMenu.setChatInputMenuListener(new ChatInputMenuListener() {
 
@@ -361,6 +371,24 @@ public class ConversationActivity extends ConversationBaseActivity {
             public void onChatDraftsClear() {
                 setChatDrafts();
             }
+
+            @Override
+            public void onNoSmallWindowPermission() {
+                if (Build.VERSION.SDK_INT >= 23) {
+                    if (!Settings.canDrawOverlays(ConversationActivity.this)) {
+                        showRequestSmallWindowDialog();
+                    } else {
+                        if (!AppUtils.canBackgroundStart(ConversationActivity.this)) {
+                            showRequestBackGroundDialog();
+                        }
+                    }
+                } else if (Build.VERSION.SDK_INT >= 19) {
+                    if (!AppUtils.canBackgroundStart(ConversationActivity.this)) {
+                        showRequestBackGroundDialog();
+                    }
+                }
+
+            }
         });
         chatInputMenu.setInputLayout(conversation.getInput(), false);
         String draftMessageContent = MessageCacheUtil.getDraftByCid(ConversationActivity.this, cid);
@@ -373,6 +401,42 @@ public class ConversationActivity extends ConversationBaseActivity {
                 inputMenuClick(type);
             }
         });
+    }
+
+    private void showRequestSmallWindowDialog() {
+        new CustomDialog.MessageDialogBuilder(this)
+                .setMessage(getString(R.string.permission_grant_window_alert, AppUtils.getAppName(this)))
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Uri uri = Uri.parse("package:" + getPackageName());
+                        Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, uri);
+                        startActivityForResult(intent, REQUEST_WINDOW_PERMISSION);
+                    }
+                }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        })
+                .show();
+    }
+
+    private void showRequestBackGroundDialog() {
+        new CustomDialog.MessageDialogBuilder(this)
+                .setMessage(getString(R.string.permission_grant_background_start, AppUtils.getAppName(this)))
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).setData(Uri.parse("package:" + getPackageName()));
+                        startActivityForResult(intent, REQUEST_BACKGROUND_WINDOWS);
+                    }
+                }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        }).show();
     }
 
     /**
@@ -462,28 +526,6 @@ public class ConversationActivity extends ConversationBaseActivity {
     }
 
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceiveSimpleEventMessageMessage(SimpleEventMessage eventMessage) {
-        switch (eventMessage.getAction()) {
-            case Constant.EVENTBUS_TAG_SEND_ACTION_CONTENT_MESSAGE:
-                String actionContent = (String) eventMessage.getMessageObj();
-                sendMessageWithText(actionContent, true, null);
-                break;
-            case Constant.EVENTBUS_TAG_UPDATE_CHANNEL_NAME:
-                String name = ((Conversation) eventMessage.getMessageObj()).getName();
-                conversation.setName(name);
-                headerText.setText(name);
-                break;
-            case Constant.EVENTBUS_TAG_COMMENT_MESSAGE:
-                Message message = (Message) eventMessage.getMessageObj();
-                uiMessageList.add(new UIMessage(message));
-                adapter.setMessageList(uiMessageList);
-                adapter.notifyItemInserted(uiMessageList.size() - 1);
-                msgListView.MoveToPosition(uiMessageList.size() - 1);
-                break;
-        }
-
-    }
 
 
     /**
@@ -518,25 +560,27 @@ public class ConversationActivity extends ConversationBaseActivity {
 
             @Override
             public boolean onCardItemLongClick(View view, UIMessage uiMessage) {
-                LogUtils.jasonDebug("onCardItemLongClick----------------------");
-                backUiMessage = uiMessage;
-                List<Integer> operationIdList = getMessageOperationIdList(uiMessage);
-                if (operationIdList.size() > 0) {
-                    showMessageOperationDlg(operationIdList, uiMessage, view, null);
+                if (StringUtils.isBlank(uiMessage.getMessage().getRecallFrom())) {
+                    backUiMessage = uiMessage;
+                    List<Integer> operationIdList = getMessageOperationIdList(uiMessage);
+                    if (operationIdList.size() > 0) {
+                        showMessageOperationDlg(operationIdList, uiMessage, view, null);
+                    }
                 }
+
                 return true;
             }
 
             @Override
             public void onCardItemClick(View view, UIMessage uiMessage) {
-                if (uiMessage.getSendStatus() == 1) {
+                if (StringUtils.isBlank(uiMessage.getMessage().getRecallFrom()) && uiMessage.getSendStatus() == 1) {
                     CardClickOperation(ConversationActivity.this, view, uiMessage);
                 }
             }
 
             @Override
             public void onCardItemLayoutClick(View view, UIMessage uiMessage) {
-                if (uiMessage.getSendStatus() == 1) {
+                if (StringUtils.isBlank(uiMessage.getMessage().getRecallFrom()) && uiMessage.getSendStatus() == 1) {
                     Message message = uiMessage.getMessage();
                     switch (message.getType()) {
                         case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
@@ -655,7 +699,6 @@ public class ConversationActivity extends ConversationBaseActivity {
 
             @Override
             public void onVoiceLevelChange(int volume) {
-
             }
 
             @Override
@@ -797,6 +840,27 @@ public class ConversationActivity extends ConversationBaseActivity {
                     }
                     startVoiceOrVideoCall(ECMChatInputMenu.VOICE_CALL, voiceCommunicationUserInfoBeanList);
                     break;
+                //去掉主动弹出窗口
+//                case REQUEST_WINDOW_PERMISSION:
+//                    if (Build.VERSION.SDK_INT >= 23 ) {
+//                        if(!Settings.canDrawOverlays(this)){
+//                            showRequestBackGroundDialog();
+//                        }else{
+//                            if(!AppUtils.canBackgroundStart(this)){
+//                                showRequestBackGroundDialog();
+//                            }
+//                        }
+//                    }else if(Build.VERSION.SDK_INT >= 19){
+//                        if(!AppUtils.canBackgroundStart(this)){
+//                            showRequestBackGroundDialog();
+//                        }
+//                    }
+//                    break;
+//                case REQUEST_BACKGROUND_WINDOWS:
+//                    if(Build.VERSION.SDK_INT >= 19 && !AppUtils.canBackgroundStart(this)){
+//                        showRequestBackGroundDialog();
+//                    }
+//                    break;
             }
         } else {
             // 图库选择图片返回
@@ -824,6 +888,26 @@ public class ConversationActivity extends ConversationBaseActivity {
                     }
                 }
             }
+            //不主动弹出
+//            else if(requestCode == REQUEST_WINDOW_PERMISSION){
+//                if (Build.VERSION.SDK_INT >= 23 ) {
+//                    if(!Settings.canDrawOverlays(this)){
+//                        showRequestBackGroundDialog();
+//                    }else{
+//                        if(!AppUtils.canBackgroundStart(this)){
+//                            showRequestBackGroundDialog();
+//                        }
+//                    }
+//                }else if(Build.VERSION.SDK_INT >= 19){
+//                    if(!AppUtils.canBackgroundStart(this)){
+//                        showRequestBackGroundDialog();
+//                    }
+//                }
+//            }else if(requestCode == REQUEST_BACKGROUND_WINDOWS){
+//                if(Build.VERSION.SDK_INT >= 19 && !AppUtils.canBackgroundStart(this)){
+//                    showRequestBackGroundDialog();
+//                }
+//            }
         }
     }
 
@@ -1061,6 +1145,52 @@ public class ConversationActivity extends ConversationBaseActivity {
                 WSAPIService.getInstance().setChannelMessgeStateRead(cid);
                 new CacheMessageListThread(offlineMessageList, null, REFRESH_OFFLINE_MESSAGE).start();
                 break;
+            case Constant.EVENTBUS_TAG_CURRENT_CHANNEL_RECALL_MESSAGE:
+                Message recallMessage = (Message) simpleEventMessage.getMessageObj();
+                int index = getMessageIndex(recallMessage);
+                if (index != -1) {
+                    UIMessage recallUIMessage = uiMessageList.get(index);
+                    if (StringUtils.isBlank(recallUIMessage.getMessage().getRecallFrom())) {
+                        UIMessage uiMessage = new UIMessage(recallMessage);
+                        uiMessageList.remove(index);
+                        uiMessageList.add(index, uiMessage);
+                        adapter.setMessageList(uiMessageList);
+                        adapter.notifyItemChanged(index);
+                    }
+                }
+                break;
+
+            case Constant.EVENTBUS_TAG_CURRENT_CHANNEL_COMMAND_BATCH_MESSAGE:
+                List<Message> messageList = (List<Message>) simpleEventMessage.getMessageObj();
+                for (Message message : messageList) {
+                    int position = getMessageIndex(message);
+                    if (position != -1) {
+                        UIMessage uiMessage = new UIMessage(message);
+                        uiMessageList.remove(position);
+                        uiMessageList.add(position, uiMessage);
+                    }
+                }
+                adapter.setMessageList(uiMessageList);
+                adapter.notifyDataSetChanged();
+                break;
+
+            case Constant.EVENTBUS_TAG_SEND_ACTION_CONTENT_MESSAGE:
+                String actionContent = (String) simpleEventMessage.getMessageObj();
+                sendMessageWithText(actionContent, true, null);
+                break;
+            case Constant.EVENTBUS_TAG_UPDATE_CHANNEL_NAME:
+                String name = ((Conversation) simpleEventMessage.getMessageObj()).getName();
+                conversation.setName(name);
+                headerText.setText(name);
+                break;
+            case Constant.EVENTBUS_TAG_COMMENT_MESSAGE:
+                Message message = (Message) simpleEventMessage.getMessageObj();
+                uiMessageList.add(new UIMessage(message));
+                adapter.setMessageList(uiMessageList);
+                adapter.notifyItemInserted(uiMessageList.size() - 1);
+                msgListView.MoveToPosition(uiMessageList.size() - 1);
+                break;
+
         }
     }
 
@@ -1198,10 +1328,23 @@ public class ConversationActivity extends ConversationBaseActivity {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_RECALL_MESSAGE)) {
             loadingDlg.dismiss();
             if (eventMessage.getStatus() == EventMessage.RESULT_OK) {
-                UIMessage uiMessage = (UIMessage) eventMessage.getExtra();
-
+                Message recallMessage = (Message) eventMessage.getExtra();
+                recallMessage.setRecallFromSelf();
+                recallMessage.setRead(Message.MESSAGE_READ);
+                int index = getMessageIndex(recallMessage);
+                if (index != -1) {
+                    UIMessage uiMessage = new UIMessage(recallMessage);
+                    uiMessageList.remove(index);
+                    uiMessageList.add(index, uiMessage);
+                    adapter.setMessageList(uiMessageList);
+                    adapter.notifyItemChanged(index);
+                }
+                MessageCacheUtil.saveMessage(BaseApplication.getInstance(), recallMessage);
+                if (index == uiMessageList.size() - 1) {
+                    notifyCommucationFragmentMessageSendStatus();
+                }
             } else {
-                ToastUtils.show("消息撤回失败");
+                showInfoDlg("消息撤回失败");
             }
         }
     }
@@ -1264,8 +1407,6 @@ public class ConversationActivity extends ConversationBaseActivity {
             }
         }
     }
-
-
 
 
     /**
@@ -1426,52 +1567,52 @@ public class ConversationActivity extends ConversationBaseActivity {
     private List<Integer> getMessageOperationIdList(final UIMessage uiMessage) {
         Message message = uiMessage.getMessage();
         String type = message.getType();
-        ArrayList<Integer> OperationIdList = new ArrayList<>();
+        ArrayList<Integer> operationIdList = new ArrayList<>();
         if (uiMessage.getSendStatus() == Message.MESSAGE_SEND_FAIL) {
-            OperationIdList.add(R.string.chat_resend_message);
-            OperationIdList.add(R.string.delete);
+            operationIdList.add(R.string.chat_resend_message);
+            operationIdList.add(R.string.delete);
         } else if (uiMessage.getSendStatus() == Message.MESSAGE_SEND_ING) {
-            OperationIdList.add(R.string.delete);
+            // operationIdList.add(R.string.delete);
         } else if (uiMessage.getSendStatus() == Message.MESSAGE_SEND_SUCCESS) {
             switch (type) {
                 case Message.MESSAGE_TYPE_TEXT_PLAIN:
-                    OperationIdList.add(R.string.chat_long_click_copy);
-                    OperationIdList.add(R.string.chat_long_click_transmit);
-                    OperationIdList.add(R.string.chat_long_click_schedule);
+                    operationIdList.add(R.string.chat_long_click_copy);
+                    operationIdList.add(R.string.chat_long_click_transmit);
+                    operationIdList.add(R.string.chat_long_click_schedule);
                     break;
                 case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
-                    OperationIdList.add(R.string.chat_long_click_transmit);
-                    OperationIdList.add(R.string.chat_long_click_schedule);
+                    operationIdList.add(R.string.chat_long_click_transmit);
+                    operationIdList.add(R.string.chat_long_click_schedule);
                     break;
                 case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
-                    OperationIdList.add(R.string.chat_long_click_transmit);
+                    operationIdList.add(R.string.chat_long_click_transmit);
                     break;
                 case Message.MESSAGE_TYPE_EXTENDED_CONTACT_CARD:
                     break;
                 case Message.MESSAGE_TYPE_EXTENDED_ACTIONS:
                     break;
                 case Message.MESSAGE_TYPE_MEDIA_IMAGE:
-                    OperationIdList.add(R.string.chat_long_click_transmit);
-                    OperationIdList.add(R.string.chat_long_click_reply);
+                    operationIdList.add(R.string.chat_long_click_transmit);
+                    operationIdList.add(R.string.chat_long_click_reply);
                     break;
                 case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
                     break;
                 case Message.MESSAGE_TYPE_EXTENDED_LINKS:
-                    OperationIdList.add(R.string.chat_long_click_transmit);
+                    operationIdList.add(R.string.chat_long_click_transmit);
                     break;
                 case Message.MESSAGE_TYPE_MEDIA_VOICE:
                     break;
                 default:
                     break;
             }
-            if (System.currentTimeMillis() - uiMessage.getCreationDate() < 120000) {
-                OperationIdList.add(R.string.chat_long_click_recall);
+            if (uiMessage.getMessage().getFromUser().equals(BaseApplication.getInstance().getUid()) && System.currentTimeMillis() - uiMessage.getCreationDate() < 120000) {
+                operationIdList.add(R.string.chat_long_click_recall);
             }
             if (uiMessage.getMessage().getType().equals(Message.MESSAGE_TYPE_MEDIA_VOICE)) {
-                OperationIdList.add(R.string.voice_to_word);
+                operationIdList.add(R.string.voice_to_word);
             }
         }
-        return OperationIdList;
+        return operationIdList;
     }
 
     /**
@@ -1598,7 +1739,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                         replyMessage(uiMessage.getMessage());
                         break;
                     case R.string.chat_long_click_recall:
-                        requestToRecallMessage(uiMessage);
+                        requestToRecallMessage(uiMessage.getMessage());
                         break;
                     case R.string.voice_to_word:
                         recognizerMediaVoiceMessage(uiMessage, downloadLoadingView);
@@ -1613,6 +1754,22 @@ public class ConversationActivity extends ConversationBaseActivity {
                 mPopupWindowList.hide();
             }
         });
+    }
+
+    private void showInfoDlg(String info) {
+        new CustomDialog.MessageDialogBuilder(ConversationActivity.this)
+                .setMessage(info)
+                .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+    }
+
+    private int getMessageIndex(Message message) {
+        return uiMessageList.indexOf(new UIMessage(message.getId()));
     }
 
 
@@ -1630,11 +1787,6 @@ public class ConversationActivity extends ConversationBaseActivity {
         }
         MessageCacheUtil.deleteMessageById(uiMessage.getId());
         notifyCommucationFragmentMessageSendStatus();
-    }
-
-
-    private void recallMessage(UIMessage uiMessage) {
-
     }
 
     private String uiMessage2Content(UIMessage uiMessage) {
@@ -1734,12 +1886,17 @@ public class ConversationActivity extends ConversationBaseActivity {
         startActivityForResult(shareIntent, SHARE_SEARCH_RUEST_CODE);
     }
 
-    private void requestToRecallMessage(UIMessage uiMessage) {
-        if (WebSocketPush.getInstance().isSocketConnect()) {
+    private void requestToRecallMessage(Message message) {
+        if (System.currentTimeMillis() - message.getCreationDate() >= 120000) {
+            showInfoDlg(getString(R.string.recall_fail_for_timeout));
+        } else if (WebSocketPush.getInstance().isSocketConnect()) {
             loadingDlg.show();
-            WSAPIService.getInstance().recallMessage(uiMessage);
+            loadingDlg.getWindow().setFlags(
+                    WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM,
+                    WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+            WSAPIService.getInstance().recallMessage(message);
         } else {
-            loadingDlg.dismiss();
+            ToastUtils.show(R.string.network_exception);
         }
     }
 

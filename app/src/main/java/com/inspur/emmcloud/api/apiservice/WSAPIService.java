@@ -6,12 +6,13 @@ import com.inspur.emmcloud.basemodule.bean.EventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.bean.WSCommandBatch;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentComment;
 import com.inspur.emmcloud.bean.chat.MsgContentExtendedLinks;
 import com.inspur.emmcloud.bean.chat.MsgContentTextPlain;
 import com.inspur.emmcloud.bean.chat.RelatedLink;
-import com.inspur.emmcloud.bean.chat.UIMessage;
+import com.inspur.emmcloud.bean.chat.WSCommand;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 
@@ -19,6 +20,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -555,9 +557,9 @@ public class WSAPIService {
     /**
      * 消息撤回
      *
-     * @param uiMessage
+     * @param message
      */
-    public void recallMessage(UIMessage uiMessage) {
+    public void recallMessage(Message message) {
         try {
             JSONObject object = new JSONObject();
             try {
@@ -571,10 +573,13 @@ public class WSAPIService {
                 headerObj.put("tracer", tracer);
                 object.put("headers", headerObj);
                 JSONObject bodyObject = new JSONObject();
-                bodyObject.put("messageId", uiMessage.getMessage().getId());
-                bodyObject.put("channelId", uiMessage.getMessage().getChannel());
+                bodyObject.put("action", "server.chat.message.recall");
+                JSONObject paramsObj = new JSONObject();
+                paramsObj.put("messageId", message.getId());
+                paramsObj.put("channelId", message.getChannel());
+                bodyObject.put("params", paramsObj);
                 object.put("body", bodyObject);
-                EventMessage eventMessage = new EventMessage(tracer, Constant.EVENTBUS_TAG_RECALL_MESSAGE, "", uiMessage);
+                EventMessage eventMessage = new EventMessage(tracer, Constant.EVENTBUS_TAG_RECALL_MESSAGE, "", message);
                 WebSocketPush.getInstance().sendEventMessage(eventMessage, object, tracer);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -583,4 +588,67 @@ public class WSAPIService {
             e.printStackTrace();
         }
     }
+
+
+    /**
+     * 告诉服务端某个命令消息处理完毕
+     *
+     * @param wsCommand
+     */
+    public void commandFinishCallback(WSCommand wsCommand) {
+        JSONObject object = new JSONObject();
+        try {
+            JSONObject actionObj = new JSONObject();
+            actionObj.put("status", 200);
+            object.put("action", actionObj);
+            JSONObject headerObj = new JSONObject();
+            headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
+            headerObj.put("tracer", wsCommand.getTracer());
+            object.put("headers", headerObj);
+            JSONObject bodyObject = new JSONObject();
+            bodyObject.put("request", JSONUtils.getJSONObject(wsCommand.getRequest()));
+            bodyObject.put("result", "ok");
+            object.put("body", bodyObject);
+            String tracer = CommunicationUtils.getTracer();
+            EventMessage eventMessage = new EventMessage(tracer);
+            WebSocketPush.getInstance().sendEventMessage(eventMessage, object, tracer);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 告诉服务端批量命令消息处理完毕
+     *
+     * @param wsCommandBatch
+     */
+    public void commandBatchFinishCallback(WSCommandBatch wsCommandBatch) {
+        JSONObject object = new JSONObject();
+        try {
+            JSONObject actionObj = new JSONObject();
+            actionObj.put("status", 200);
+            object.put("action", actionObj);
+            JSONObject headerObj = new JSONObject();
+            headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
+            headerObj.put("tracer", wsCommandBatch.getTracer());
+            object.put("headers", headerObj);
+            JSONObject bodyObject = new JSONObject();
+            bodyObject.put("request", JSONUtils.getJSONObject(wsCommandBatch.getRequest()));
+            List<WSCommand> wsCommandList = wsCommandBatch.getWsCommandList();
+            JSONArray array = new JSONArray();
+            for (WSCommand wsCommand : wsCommandList) {
+                if (wsCommand.getAction().equals("client.chat.message.recall")) {
+                    array.put(wsCommand.getTracer());
+                }
+            }
+            bodyObject.put("finished", array);
+            object.put("body", bodyObject);
+            String tracer = CommunicationUtils.getTracer();
+            EventMessage eventMessage = new EventMessage(tracer);
+            WebSocketPush.getInstance().sendEventMessage(eventMessage, object, tracer);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

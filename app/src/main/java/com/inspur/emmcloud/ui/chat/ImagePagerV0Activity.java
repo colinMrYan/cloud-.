@@ -91,7 +91,7 @@ public class ImagePagerV0Activity extends BaseFragmentActivity {
             lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
             getWindow().setAttributes(lp);
         }
-        setContentView(R.layout.activity_image_pager);
+        setContentView(R.layout.activity_image_pager_v0);
         EventBus.getDefault().register(this);
         init();
     }

@@ -80,6 +80,7 @@
     <string name="upgrade_install_now">立即安裝</string>
     <string name="upgrade_install_next_time">下次安裝</string>
     <string name="try_again">再試一次</string>
+    <string name="you">你</string>
 
 
     <!-- 公共部分 -->
@@ -325,6 +326,7 @@
     <string name="chat_long_click_copy">複製</string>
     <string name="chat_long_click_transmit">轉發</string>
     <string name="chat_long_click_recall">撤回</string>
+    <string name="chat_info_message_status_recall">%1$s撤回了一條消息</string>
     <string name="recall_fail_for_timeout">發送時間超過2分鐘的消息，不能被撤回。</string>
     <string name="chat_long_click_schedule">添加到日程</string>
     <string name="chat_long_click_copy_text">複製文字</string>

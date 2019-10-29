@@ -274,6 +274,8 @@ public class AppSchemeHandleActivity extends BaseActivity {
                                 startActivity(intentVoiceCall);
                                 finish();
                                 break;
+                            case "impcloud":
+                                break;
                             default:
                                 showSchemeUnknownWarning();
                                 finish();

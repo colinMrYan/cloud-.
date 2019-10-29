@@ -433,7 +433,7 @@ public class MessageCacheUtil {
      */
     public static List<Message> getImgTypeMessageList(Context context, String cid) {
 
-        return getImgTypeMessageList(context, cid, true);
+        return getImgTypeMessageList(context, cid, false);
 
     }
 
@@ -455,6 +455,7 @@ public class MessageCacheUtil {
                             .or("type", "=", "res_image")
                             .or("type", "=", "media/image"))
                     .and("sendStatus", "=", Message.MESSAGE_SEND_SUCCESS)
+                    .and("recallFrom", "=", "")
                     .orderBy("creationDate", desc).findAll();
         } catch (Exception e) {
             // TODO Auto-generated catch block
@@ -481,6 +482,7 @@ public class MessageCacheUtil {
                     .where("channel", "=", cid).and(WhereBuilder.b("type", "=", "res_file")
                             .or("type", "=", "file/regular-file"))
                     .and("sendStatus", "=", Message.MESSAGE_SEND_SUCCESS)
+                    .and("recallFrom", "=", "")
                     .orderBy("creationDate", true).findAll();
         } catch (Exception e) {
             // TODO Auto-generated catch block
@@ -630,6 +632,19 @@ public class MessageCacheUtil {
         return messageList;
     }
 
+    public static List<Message> getMessageListWithNoRecall(Context context, List<String> midList) {
+        List<Message> messageList = new ArrayList<>();
+        try {
+            if (midList != null && midList.size() > 0) {
+                messageList = DbCacheUtils.getDb(context).selector(Message.class).where("id", "in", midList).and("recallFrom", "=", "").findAll();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return messageList;
+    }
+
     /**
      * 真实消息回来后，如果是重发消息需要更新本地消息的id，如果是直接过来的消息需要存储消息
      *
@@ -706,16 +721,19 @@ public class MessageCacheUtil {
                     .where("type", "=", Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN)
                     .and(WhereBuilder.b("showContent", "like", "%" + content + "%"))
                     .and(WhereBuilder.b("sendStatus", "=", 1))
+                    .and(WhereBuilder.b("recallFrom", "=", ""))
                     .findAll();
             List<Message> messageList2 = DbCacheUtils.getDb(context).selector(Message.class)
                     .where("type", "=", Message.MESSAGE_TYPE_TEXT_MARKDOWN)
                     .and(WhereBuilder.b("showContent", "like", "%" + content + "%"))
                     .and(WhereBuilder.b("sendStatus", "=", 1))
+                    .and(WhereBuilder.b("recallFrom", "=", ""))
                     .findAll();
             List<Message> messageList3 = DbCacheUtils.getDb(context).selector(Message.class)
                     .where("type", "=", Message.MESSAGE_TYPE_TEXT_PLAIN)
                     .and(WhereBuilder.b("showContent", "like", "%" + content + "%"))
                     .and(WhereBuilder.b("sendStatus", "=", 1))
+                    .and(WhereBuilder.b("recallFrom", "=", ""))
                     .findAll();
             messageList.addAll(messageList1);
             messageList.addAll(messageList2);
@@ -741,6 +759,7 @@ public class MessageCacheUtil {
                             .or("type", "=", Message.MESSAGE_TYPE_TEXT_MARKDOWN)
                             .or("type", "=", Message.MESSAGE_TYPE_TEXT_PLAIN))
                     .and(WhereBuilder.b("sendStatus", "=", 1))
+                    .and(WhereBuilder.b("recallFrom", "=", ""))
                     .and(WhereBuilder.b("showContent", "like", "%" + content + "%"))
                     .findAll();
             if (messageList != null) {

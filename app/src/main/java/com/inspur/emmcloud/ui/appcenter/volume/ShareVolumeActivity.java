@@ -36,6 +36,7 @@ import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
@@ -106,31 +107,40 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (selectedShareVolumeList.size() > 0) {
-                    return;
-                }
-                List<Uri> shareUriList = null;
-                if (getIntent() != null && getIntent().hasExtra(Constant.SHARE_FILE_URI_LIST)) {
-                    shareUriList = (List<Uri>) getIntent().getSerializableExtra(Constant.SHARE_FILE_URI_LIST);
-                }
-                Volume volume = shareVolumeList.get(position);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("volume", volume);
-                bundle.putString("title", volume.getName());
-                if (shareUriList != null && shareUriList.size() > 0) {
-                    bundle.putSerializable("fileShareUriList", (Serializable) shareUriList);
-                    bundle.putString("operationFileDirAbsolutePath", "/");
-                    IntentUtils.startActivity(ShareVolumeActivity.this, VolumeFileLocationSelectActivity.class, bundle);
+                    if (selectedShareVolumeList.contains(shareVolumeList.get(position))) {
+                        selectedShareVolumeList.clear();
+                    } else {
+                        selectedShareVolumeList.clear();
+                        selectedShareVolumeList.add(shareVolumeList.get(position));
+                    }
+                    setBottomOperationItemShow(selectedShareVolumeList);
                 } else {
-                    IntentUtils.startActivity(ShareVolumeActivity.this, VolumeFileActivity.class, bundle);
+                    List<Uri> shareUriList = null;
+                    if (getIntent() != null && getIntent().hasExtra(Constant.SHARE_FILE_URI_LIST)) {
+                        shareUriList = (List<Uri>) getIntent().getSerializableExtra(Constant.SHARE_FILE_URI_LIST);
+                    }
+                    Volume volume = shareVolumeList.get(position);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("volume", volume);
+                    bundle.putString("title", volume.getName());
+                    if (shareUriList != null && shareUriList.size() > 0) {
+                        bundle.putSerializable("fileShareUriList", (Serializable) shareUriList);
+                        bundle.putString("operationFileDirAbsolutePath", "/");
+                        IntentUtils.startActivity(ShareVolumeActivity.this, VolumeFileLocationSelectActivity.class, bundle);
+                    } else {
+                        IntentUtils.startActivity(ShareVolumeActivity.this, VolumeFileActivity.class, bundle);
+                    }
                 }
+
             }
         });
         shareVolumeListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 if (selectedShareVolumeList.contains(shareVolumeList.get(position))) {
-                    selectedShareVolumeList.remove(shareVolumeList.get(position));
+                    selectedShareVolumeList.clear();
                 } else {
+                    selectedShareVolumeList.clear();
                     selectedShareVolumeList.add(shareVolumeList.get(position));
                 }
                 setBottomOperationItemShow(selectedShareVolumeList);
@@ -358,6 +368,12 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
         getVolumeList(false);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getVolumeList(false);
+    }
+
     /**
      * 获取云盘列表
      */
@@ -414,6 +430,7 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
     class Holder {
         ImageView imageView;
         TextView textView;
+        TextView volumeSizeView;
     }
 
     private class Adapter extends BaseAdapter {
@@ -440,6 +457,7 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
                 convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.app_volume_share_item_view, null);
                 holder.imageView = convertView.findViewById(R.id.file_operation_drop_down_img);
                 holder.textView = convertView.findViewById(R.id.tv_name);
+                holder.volumeSizeView = convertView.findViewById(R.id.tv_volume_size);
                 convertView.setTag(holder);
             } else {
                 holder = (Holder) convertView.getTag();
@@ -450,13 +468,18 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
                 boolean haveSelectedVolume = selectedShareVolumeList.contains(shareVolumeList.get(position));
                 holder.imageView.setImageResource(haveSelectedVolume ? R.drawable.ic_select_yes : R.drawable.ic_select_no);
             }
+
+            String volumeUsedSize = FileUtils.formatFileSize(shareVolumeList.get(position).getQuotaUsed());
+            String volumeMaxSize = FileUtils.formatFileSize(shareVolumeList.get(position).getQuotaTotal());
+            holder.volumeSizeView.setText(volumeUsedSize + " / " + volumeMaxSize);
             holder.textView.setText(shareVolumeList.get(position).getName());
             holder.imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (selectedShareVolumeList.contains(shareVolumeList.get(position))) {
-                        selectedShareVolumeList.remove(shareVolumeList.get(position));
+                        selectedShareVolumeList.clear();
                     } else {
+                        selectedShareVolumeList.clear();
                         selectedShareVolumeList.add(shareVolumeList.get(position));
                     }
                     setBottomOperationItemShow(selectedShareVolumeList);

@@ -13,6 +13,7 @@ import android.graphics.Color;
 import android.text.Spannable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -23,6 +24,7 @@ import android.widget.RelativeLayout;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.widget.NoScrollGridView;
 import com.inspur.emmcloud.basemodule.config.Constant;
@@ -80,10 +82,12 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
     EmotionAdapter emotionRecentAdapter;
     @BindView(R.id.at_people_btn)
     ImageButton atPeopleBtn;
+    ArrayList<String> recentEmotionList = new ArrayList<>();
 
     private boolean canMentions = false;
     private ChatInputMenuListener chatInputMenuListener;
     private String cid = "";
+    private boolean isAppCloseSoft = false;
 
     public ECMChatInputMenuImgComment(Context context) {
         this(context, null);
@@ -106,10 +110,23 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
         ButterKnife.bind(this, view);
         initInputEdit();
         initEmotion();
+        setAddMenuLayoutShow(true);
         sendBtn.setEnabled(false);
     }
 
     private void initInputEdit() {
+        inputEdit.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    if (addMenuLayout.getVisibility() != View.VISIBLE) {
+                        setAddMenuLayoutShow(true);
+                    }
+
+                }
+                return false;
+            }
+        });
         inputEdit.setFocusable(true);
         inputEdit.setFocusableInTouchMode(true);
         inputEdit.requestFocus();
@@ -131,13 +148,15 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
 
     private void initEmotion() {
         EmotionRecentManager recentManager = EmotionRecentManager.getInstance(getContext());
-        emotionRecentAdapter = new EmotionAdapter(getContext(), 1, recentManager);
+        recentEmotionList.addAll(recentManager);
+        emotionRecentAdapter = new EmotionAdapter(getContext(), 1, recentEmotionList);
         emotionRecentGrid.setAdapter(emotionRecentAdapter);
         emotionRecentGrid.setOnItemClickListener(new OnEmotionItemClickListener());
 
         List<String> resList = EmotionUtil.getInstance(getContext()).getExpressionRes();
         emotionAdapter = new EmotionAdapter(getContext(), 1, resList);
         emotionGrid.setAdapter(emotionAdapter);
+        emotionGrid.setVisibility(VISIBLE);
         emotionGrid.setOnItemClickListener(new OnEmotionItemClickListener());
     }
 
@@ -165,9 +184,18 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
 
     }
 
+
     public void setChatInputMenuListener(
             ChatInputMenuListener chatInputMenuListener) {
         this.chatInputMenuListener = chatInputMenuListener;
+    }
+
+    public void onSoftKeyboardClosed() {
+        if (isAppCloseSoft == true) {
+            isAppCloseSoft = false;
+        } else {
+            setAddMenuLayoutShow(false);
+        }
     }
 
     public void setAddMenuLayoutShow(boolean isShow) {
@@ -181,7 +209,12 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
             addMenuLayout.setVisibility(View.VISIBLE);
         } else if (addMenuLayout.isShown()) {
             addMenuLayout.setVisibility(View.GONE);
-            InputMethodUtils.hide((Activity) getContext());
+            if (InputMethodUtils.isSoftInputShow((Activity) getContext())) {
+                isAppCloseSoft = true;
+                LogUtils.jasonDebug("close------------------");
+                InputMethodUtils.hide(getContext(), addMenuLayout);
+            }
+
         }
 
     }
@@ -198,14 +231,24 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
         atPeopleBtn.setVisibility(canMentions ? VISIBLE : GONE);
     }
 
+    /**
+     * 软键盘是否显示
+     *
+     * @param isShow
+     */
     public void showSoftInput(boolean isShow) {
         if (isShow) {
+            isAppCloseSoft = false;
             InputMethodUtils.display((Activity) getContext(), inputEdit, 0);
         } else {
-            InputMethodUtils.hide((Activity) getContext());
+            isAppCloseSoft = true;
+            LogUtils.jasonDebug("close------------------");
+            InputMethodUtils.hide(getContext(), inputEdit);
         }
 
     }
+
+
 
     /**
      * 添加mentions
@@ -261,11 +304,27 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
      */
     private void handleEmotionStatus() {
         if (emotionRecentAdapter != null) {
-            emotionRecentLayout.setVisibility(EmotionRecentManager.getInstance(getContext()).size() > 0 ? VISIBLE : GONE);
+            EmotionRecentManager recentManager = EmotionRecentManager.getInstance(getContext());
+            recentEmotionList.clear();
+            recentEmotionList.addAll(recentManager);
+            emotionRecentLayout.setVisibility(recentManager.size() > 0 ? VISIBLE : GONE);
             emotionRecentAdapter.notifyDataSetChanged();
         }
+        if (addMenuLayout.isShown()) {
+            if (InputMethodUtils.isSoftInputShow((Activity) getContext())) {
+                showSoftInput(false);
+            } else {
+                showSoftInput(true);
+            }
+        } else {
+            showSoftInput(false);
+            setAddMenuLayoutShow(true);
+        }
+    }
 
-        emotionLayout.setVisibility(VISIBLE);
+    public void hideAddMenuLayout() {
+        addMenuLayout.setVisibility(View.GONE);
+        emotionBtn.setImageResource(R.drawable.ic_chat_btn_emotion);
     }
 
 
@@ -300,6 +359,12 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
         return mentionsUidList;
     }
 
+    public interface ChatInputMenuListener {
+        void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList, Map<String, String> mentionsMap);
+
+        void hideChatInputMenu();
+    }
+
     class OnEmotionItemClickListener implements AdapterView.OnItemClickListener {
 
         @Override
@@ -321,13 +386,6 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
                 e.printStackTrace();
             }
         }
-    }
-
-
-    public interface ChatInputMenuListener {
-        void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList, Map<String, String> mentionsMap);
-
-        void hideChatInputMenu();
     }
 
 

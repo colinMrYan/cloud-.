@@ -2,7 +2,10 @@ package com.inspur.emmcloud.web.webview;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
+import android.content.ContextWrapper;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
@@ -23,9 +26,11 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.baselib.util.ParseHtmlUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.Language;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.web.R;
 import com.inspur.emmcloud.web.plugin.PluginMgr;
 import com.inspur.emmcloud.web.ui.ImpCallBackInterface;
 import com.inspur.emmcloud.web.ui.JsInterface;
@@ -406,6 +411,27 @@ public class ImpWebView extends WebView {
         super.onScrollChanged(l, t, oldl, oldt);
     }
 
+    private void download(String url) {
+        try {
+            JSONObject object = new JSONObject();
+            object.put("url", url);
+            pluginMgr.execute("FileTransferService", "download", object.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Activity getActivity() {
+        if (!(context instanceof Activity) && context instanceof ContextWrapper) {
+            context = ((ContextWrapper) context).getBaseContext();
+        }
+
+        if (context instanceof Activity) {
+            return (Activity) context;
+        }
+        return null;
+    }
+
     /**
      * API为16的方法访问
      */
@@ -443,14 +469,28 @@ public class ImpWebView extends WebView {
     private class MyWebViewDownLoadListener implements DownloadListener {
 
         @Override
-        public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype,
+        public void onDownloadStart(final String url, String userAgent, String contentDisposition, String mimetype,
                                     long contentLength) {
-            try {
-                JSONObject object = new JSONObject();
-                object.put("url", url);
-                pluginMgr.execute("FileTransferService", "download", object.toString());
-            } catch (Exception e) {
-                e.printStackTrace();
+            if (getActivity() != null) {
+                new CustomDialog.MessageDialogBuilder(getActivity())
+                        .setMessage(R.string.web_sure_to_download)
+                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                download(url);
+                            }
+                        })
+                        .show();
+
+            } else {
+                download(url);
             }
 
         }

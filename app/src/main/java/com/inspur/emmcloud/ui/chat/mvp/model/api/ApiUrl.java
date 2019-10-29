@@ -75,5 +75,15 @@ public class ApiUrl {
         return getECMChatConversationBaseUrl() + "/channel/group/" + id + "/member";
     }
 
+    /**
+     * 获取会话信息
+     *
+     * @param id
+     * @return
+     */
+    public static String getConversationInfoUrl(String id) {
+        return getECMChatConversationBaseUrl() + "/channel/" + id;
+    }
+
 
 }
