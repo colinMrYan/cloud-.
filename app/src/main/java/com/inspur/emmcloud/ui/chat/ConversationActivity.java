@@ -7,8 +7,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -41,6 +43,7 @@ import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.FileDownloadManager;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
@@ -123,6 +126,12 @@ public class ConversationActivity extends ConversationBaseActivity {
     private static final int REFRESH_NEW_MESSAGE = 7;
     private static final int REFRESH_OFFLINE_MESSAGE = 8;
     private static final int COUNT_EVERY_PAGE = 20;
+
+    /**
+     * 请求悬浮窗权限
+     */
+    private static final int REQUEST_WINDOW_PERMISSION = 100;
+    private static final int REQUEST_BACKGROUND_WINDOWS = 101;
     @BindView(R.id.msg_list)
     RecycleViewForSizeChange msgListView;
 
@@ -316,9 +325,9 @@ public class ConversationActivity extends ConversationBaseActivity {
         chatInputMenu.setSpecialUser(isSpecialUser);
         chatInputMenu.setOtherLayoutView(swipeRefreshLayout, msgListView);
         if (conversation.getType().equals(Conversation.TYPE_GROUP)) {
-            chatInputMenu.setCanMentions(true, cid);
+            chatInputMenu.setIsGroup(true, cid);
         } else {
-            chatInputMenu.setCanMentions(false, "");
+            chatInputMenu.setIsGroup(false, "");
         }
         chatInputMenu.setChatInputMenuListener(new ChatInputMenuListener() {
 
@@ -361,6 +370,24 @@ public class ConversationActivity extends ConversationBaseActivity {
             public void onChatDraftsClear() {
                 setChatDrafts();
             }
+
+            @Override
+            public void onNoSmallWindowPermission() {
+                if (Build.VERSION.SDK_INT >= 23) {
+                    if (!Settings.canDrawOverlays(ConversationActivity.this)) {
+                        showRequestSmallWindowDialog();
+                    } else {
+                        if (!AppUtils.canBackgroundStart(ConversationActivity.this)) {
+                            showRequestBackGroundDialog();
+                        }
+                    }
+                } else if (Build.VERSION.SDK_INT >= 19) {
+                    if (!AppUtils.canBackgroundStart(ConversationActivity.this)) {
+                        showRequestBackGroundDialog();
+                    }
+                }
+
+            }
         });
         chatInputMenu.setInputLayout(conversation.getInput(), false);
         String draftMessageContent = MessageCacheUtil.getDraftByCid(ConversationActivity.this, cid);
@@ -373,6 +400,42 @@ public class ConversationActivity extends ConversationBaseActivity {
                 inputMenuClick(type);
             }
         });
+    }
+
+    private void showRequestSmallWindowDialog() {
+        new CustomDialog.MessageDialogBuilder(this)
+                .setMessage(getString(R.string.permission_grant_window_alert, AppUtils.getAppName(this)))
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Uri uri = Uri.parse("package:" + getPackageName());
+                        Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, uri);
+                        startActivityForResult(intent, REQUEST_WINDOW_PERMISSION);
+                    }
+                }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        })
+                .show();
+    }
+
+    private void showRequestBackGroundDialog() {
+        new CustomDialog.MessageDialogBuilder(this)
+                .setMessage(getString(R.string.permission_grant_background_start, AppUtils.getAppName(this)))
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).setData(Uri.parse("package:" + getPackageName()));
+                        startActivityForResult(intent, REQUEST_BACKGROUND_WINDOWS);
+                    }
+                }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        }).show();
     }
 
     /**
@@ -635,7 +698,6 @@ public class ConversationActivity extends ConversationBaseActivity {
 
             @Override
             public void onVoiceLevelChange(int volume) {
-
             }
 
             @Override
@@ -713,6 +775,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     protected void onActivityResult(int requestCode, int resultCode,
                                     final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        LogUtils.YfcDebug("resultCode:" + resultCode);
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case RQQUEST_CHOOSE_FILE:
@@ -777,6 +840,27 @@ public class ConversationActivity extends ConversationBaseActivity {
                     }
                     startVoiceOrVideoCall(ECMChatInputMenu.VOICE_CALL, voiceCommunicationUserInfoBeanList);
                     break;
+                //去掉主动弹出窗口
+//                case REQUEST_WINDOW_PERMISSION:
+//                    if (Build.VERSION.SDK_INT >= 23 ) {
+//                        if(!Settings.canDrawOverlays(this)){
+//                            showRequestBackGroundDialog();
+//                        }else{
+//                            if(!AppUtils.canBackgroundStart(this)){
+//                                showRequestBackGroundDialog();
+//                            }
+//                        }
+//                    }else if(Build.VERSION.SDK_INT >= 19){
+//                        if(!AppUtils.canBackgroundStart(this)){
+//                            showRequestBackGroundDialog();
+//                        }
+//                    }
+//                    break;
+//                case REQUEST_BACKGROUND_WINDOWS:
+//                    if(Build.VERSION.SDK_INT >= 19 && !AppUtils.canBackgroundStart(this)){
+//                        showRequestBackGroundDialog();
+//                    }
+//                    break;
             }
         } else {
             // 图库选择图片返回
@@ -804,6 +888,26 @@ public class ConversationActivity extends ConversationBaseActivity {
                     }
                 }
             }
+            //不主动弹出
+//            else if(requestCode == REQUEST_WINDOW_PERMISSION){
+//                if (Build.VERSION.SDK_INT >= 23 ) {
+//                    if(!Settings.canDrawOverlays(this)){
+//                        showRequestBackGroundDialog();
+//                    }else{
+//                        if(!AppUtils.canBackgroundStart(this)){
+//                            showRequestBackGroundDialog();
+//                        }
+//                    }
+//                }else if(Build.VERSION.SDK_INT >= 19){
+//                    if(!AppUtils.canBackgroundStart(this)){
+//                        showRequestBackGroundDialog();
+//                    }
+//                }
+//            }else if(requestCode == REQUEST_BACKGROUND_WINDOWS){
+//                if(Build.VERSION.SDK_INT >= 19 && !AppUtils.canBackgroundStart(this)){
+//                    showRequestBackGroundDialog();
+//                }
+//            }
         }
     }
 
