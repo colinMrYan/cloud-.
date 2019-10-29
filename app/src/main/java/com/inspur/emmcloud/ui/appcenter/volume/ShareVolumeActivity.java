@@ -107,23 +107,31 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (selectedShareVolumeList.size() > 0) {
-                    return;
-                }
-                List<Uri> shareUriList = null;
-                if (getIntent() != null && getIntent().hasExtra(Constant.SHARE_FILE_URI_LIST)) {
-                    shareUriList = (List<Uri>) getIntent().getSerializableExtra(Constant.SHARE_FILE_URI_LIST);
-                }
-                Volume volume = shareVolumeList.get(position);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("volume", volume);
-                bundle.putString("title", volume.getName());
-                if (shareUriList != null && shareUriList.size() > 0) {
-                    bundle.putSerializable("fileShareUriList", (Serializable) shareUriList);
-                    bundle.putString("operationFileDirAbsolutePath", "/");
-                    IntentUtils.startActivity(ShareVolumeActivity.this, VolumeFileLocationSelectActivity.class, bundle);
+                    if (selectedShareVolumeList.contains(shareVolumeList.get(position))) {
+                        selectedShareVolumeList.clear();
+                    } else {
+                        selectedShareVolumeList.clear();
+                        selectedShareVolumeList.add(shareVolumeList.get(position));
+                    }
+                    setBottomOperationItemShow(selectedShareVolumeList);
                 } else {
-                    IntentUtils.startActivity(ShareVolumeActivity.this, VolumeFileActivity.class, bundle);
+                    List<Uri> shareUriList = null;
+                    if (getIntent() != null && getIntent().hasExtra(Constant.SHARE_FILE_URI_LIST)) {
+                        shareUriList = (List<Uri>) getIntent().getSerializableExtra(Constant.SHARE_FILE_URI_LIST);
+                    }
+                    Volume volume = shareVolumeList.get(position);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("volume", volume);
+                    bundle.putString("title", volume.getName());
+                    if (shareUriList != null && shareUriList.size() > 0) {
+                        bundle.putSerializable("fileShareUriList", (Serializable) shareUriList);
+                        bundle.putString("operationFileDirAbsolutePath", "/");
+                        IntentUtils.startActivity(ShareVolumeActivity.this, VolumeFileLocationSelectActivity.class, bundle);
+                    } else {
+                        IntentUtils.startActivity(ShareVolumeActivity.this, VolumeFileActivity.class, bundle);
+                    }
                 }
+
             }
         });
         shareVolumeListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -137,20 +145,6 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
                 }
                 setBottomOperationItemShow(selectedShareVolumeList);
                 return true;
-            }
-        });
-        shareVolumeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                if (selectedShareVolumeList.size() > 0) {
-                    if (selectedShareVolumeList.contains(shareVolumeList.get(i))) {
-                        selectedShareVolumeList.clear();
-                    } else {
-                        selectedShareVolumeList.clear();
-                        selectedShareVolumeList.add(shareVolumeList.get(i));
-                    }
-                    setBottomOperationItemShow(selectedShareVolumeList);
-                }
             }
         });
     }
