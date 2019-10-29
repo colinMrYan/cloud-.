@@ -455,6 +455,7 @@ public class MessageCacheUtil {
                             .or("type", "=", "res_image")
                             .or("type", "=", "media/image"))
                     .and("sendStatus", "=", Message.MESSAGE_SEND_SUCCESS)
+                    .and("recallFrom", "=", "")
                     .orderBy("creationDate", desc).findAll();
         } catch (Exception e) {
             // TODO Auto-generated catch block
@@ -481,6 +482,7 @@ public class MessageCacheUtil {
                     .where("channel", "=", cid).and(WhereBuilder.b("type", "=", "res_file")
                             .or("type", "=", "file/regular-file"))
                     .and("sendStatus", "=", Message.MESSAGE_SEND_SUCCESS)
+                    .and("recallFrom", "=", "")
                     .orderBy("creationDate", true).findAll();
         } catch (Exception e) {
             // TODO Auto-generated catch block

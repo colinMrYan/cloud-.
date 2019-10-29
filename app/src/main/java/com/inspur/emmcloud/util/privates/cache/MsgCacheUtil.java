@@ -66,7 +66,6 @@ public class MsgCacheUtil {
     /**
      * @param context
      * @param channelID 所属的频道
-     * @param targetID  目表消息的id
      * @param num       获取消息记录的条数
      * @return
      */
@@ -122,7 +121,6 @@ public class MsgCacheUtil {
     /**
      * @param context
      * @param channelID 所属频道
-     * @param targetId  目标消息id
      * @param num       加载历史记录的条数
      * @return 本地是否有足够多的缓存的数据
      */
@@ -180,7 +178,6 @@ public class MsgCacheUtil {
      *
      * @param context
      * @param cid
-     * @param mid
      * @return
      */
     public static int getNewerMsgCount(Context context, String cid, long targetMessageReadCreationDate) {
@@ -249,7 +246,8 @@ public class MsgCacheUtil {
         try {
 
             fileTypeMsgList = DbCacheUtils.getDb(context).selector(Msg.class)
-                    .where("cid", "=", cid).and("type", "=", "res_file")
+                    .where("cid", "=", cid)
+                    .and("type", "=", "res_file")
                     .orderBy("time", true).findAll();
         } catch (Exception e) {
             // TODO Auto-generated catch block
