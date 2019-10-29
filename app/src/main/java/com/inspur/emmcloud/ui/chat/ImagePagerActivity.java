@@ -42,7 +42,6 @@ import com.inspur.emmcloud.util.privates.MessageSendManager;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.widget.ECMChatInputMenuImgComment;
 import com.inspur.emmcloud.widget.HackyViewPager;
-import com.inspur.emmcloud.widget.SoftKeyboardStateHelper;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -282,20 +281,20 @@ public class ImagePagerActivity extends BaseFragmentActivity {
                 commentInputDlg.dismiss();
             }
         });
-        final SoftKeyboardStateHelper softKeyboardStateHelper = new SoftKeyboardStateHelper(findViewById(R.id.main_layout));
-        softKeyboardStateHelper.addSoftKeyboardStateListener(new SoftKeyboardStateHelper.SoftKeyboardStateListener() {
-            @Override
-            public void onSoftKeyboardOpened(int keyboardHeightInPx) {
-                LogUtils.jasonDebug("onSoftKeyboardOpened===");
-                ecmChatInputMenu.setAddMenuLayoutShow(true);
-            }
-
-            @Override
-            public void onSoftKeyboardClosed() {
-                LogUtils.jasonDebug("onSoftKeyboardClosed===");
-                ecmChatInputMenu.setAddMenuLayoutShow(false);
-            }
-        });
+//        final SoftKeyboardStateHelper softKeyboardStateHelper = new SoftKeyboardStateHelper(findViewById(R.id.main_layout));
+//        softKeyboardStateHelper.addSoftKeyboardStateListener(new SoftKeyboardStateHelper.SoftKeyboardStateListener() {
+//            @Override
+//            public void onSoftKeyboardOpened(int keyboardHeightInPx) {
+//                LogUtils.jasonDebug("onSoftKeyboardOpened===");
+//                ecmChatInputMenu.setAddMenuLayoutShow(true);
+//            }
+//
+//            @Override
+//            public void onSoftKeyboardClosed() {
+//                LogUtils.jasonDebug("onSoftKeyboardClosed===");
+//                ecmChatInputMenu.setAddMenuLayoutShow(false);
+//            }
+//        });
     }
 
     /**
