@@ -147,8 +147,7 @@ public class VoiceCommunicationMemberAdapter extends RecyclerView.Adapter<VoiceC
      * @param index
      */
     public void setMemberDataAndRefresh(List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationJoinChannelInfoBeanList, int index) {
-        this.voiceCommunicationUserInfoBeanList.clear();
-        this.voiceCommunicationUserInfoBeanList.addAll(getInitAndConnected(voiceCommunicationJoinChannelInfoBeanList));
+        this.voiceCommunicationUserInfoBeanList = getInitAndConnected(voiceCommunicationJoinChannelInfoBeanList);
         LogUtils.YfcDebug("刷新时数据个数：" + this.voiceCommunicationUserInfoBeanList.size());
         this.index = index;
         notifyDataSetChanged();
