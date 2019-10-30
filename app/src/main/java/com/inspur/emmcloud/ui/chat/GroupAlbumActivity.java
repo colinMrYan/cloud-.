@@ -13,7 +13,6 @@ import com.inspur.emmcloud.adapter.GroupAlbumAdapter;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.GroupUtils;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
@@ -117,8 +116,9 @@ public class GroupAlbumActivity extends BaseActivity {
             for (Message message : imgTypeMessageList) {
                 MsgContentMediaImage msgContentMediaImage = message.getMsgContentMediaImage();
                 String url = APIUri.getChatFileResouceUrl(message.getChannel(), message.getMsgContentMediaImage().getRawMedia());
-                if (msgContentMediaImage.getPreviewHeight() != 0 && msgContentMediaImage.getPreviewWidth() != 0) {
-                    LogUtils.LbcDebug("拼写 Preview 路径");
+                if (msgContentMediaImage.getPreviewHeight() != 0 && msgContentMediaImage.getPreviewWidth() != 0
+                        && msgContentMediaImage.getRawWidth() != msgContentMediaImage.getPreviewWidth()
+                        && msgContentMediaImage.getRawHeight() != msgContentMediaImage.getPreviewHeight()) {
                     url = url + "&resize=true&w=" + msgContentMediaImage.getPreviewWidth() + "&h=" + msgContentMediaImage.getPreviewHeight();
                 }
                 imgUrlList.add(url);

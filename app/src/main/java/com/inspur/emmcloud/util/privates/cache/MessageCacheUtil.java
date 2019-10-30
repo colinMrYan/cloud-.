@@ -433,7 +433,7 @@ public class MessageCacheUtil {
      */
     public static List<Message> getImgTypeMessageList(Context context, String cid) {
 
-        return getImgTypeMessageList(context, cid, true);
+        return getImgTypeMessageList(context, cid, false);
 
     }
 
@@ -455,6 +455,7 @@ public class MessageCacheUtil {
                             .or("type", "=", "res_image")
                             .or("type", "=", "media/image"))
                     .and("sendStatus", "=", Message.MESSAGE_SEND_SUCCESS)
+                    .and("recallFrom", "=", "")
                     .orderBy("creationDate", desc).findAll();
         } catch (Exception e) {
             // TODO Auto-generated catch block
@@ -481,6 +482,7 @@ public class MessageCacheUtil {
                     .where("channel", "=", cid).and(WhereBuilder.b("type", "=", "res_file")
                             .or("type", "=", "file/regular-file"))
                     .and("sendStatus", "=", Message.MESSAGE_SEND_SUCCESS)
+                    .and("recallFrom", "=", "")
                     .orderBy("creationDate", true).findAll();
         } catch (Exception e) {
             // TODO Auto-generated catch block
@@ -719,16 +721,19 @@ public class MessageCacheUtil {
                     .where("type", "=", Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN)
                     .and(WhereBuilder.b("showContent", "like", "%" + content + "%"))
                     .and(WhereBuilder.b("sendStatus", "=", 1))
+                    .and(WhereBuilder.b("recallFrom", "=", ""))
                     .findAll();
             List<Message> messageList2 = DbCacheUtils.getDb(context).selector(Message.class)
                     .where("type", "=", Message.MESSAGE_TYPE_TEXT_MARKDOWN)
                     .and(WhereBuilder.b("showContent", "like", "%" + content + "%"))
                     .and(WhereBuilder.b("sendStatus", "=", 1))
+                    .and(WhereBuilder.b("recallFrom", "=", ""))
                     .findAll();
             List<Message> messageList3 = DbCacheUtils.getDb(context).selector(Message.class)
                     .where("type", "=", Message.MESSAGE_TYPE_TEXT_PLAIN)
                     .and(WhereBuilder.b("showContent", "like", "%" + content + "%"))
                     .and(WhereBuilder.b("sendStatus", "=", 1))
+                    .and(WhereBuilder.b("recallFrom", "=", ""))
                     .findAll();
             messageList.addAll(messageList1);
             messageList.addAll(messageList2);
@@ -754,6 +759,7 @@ public class MessageCacheUtil {
                             .or("type", "=", Message.MESSAGE_TYPE_TEXT_MARKDOWN)
                             .or("type", "=", Message.MESSAGE_TYPE_TEXT_PLAIN))
                     .and(WhereBuilder.b("sendStatus", "=", 1))
+                    .and(WhereBuilder.b("recallFrom", "=", ""))
                     .and(WhereBuilder.b("showContent", "like", "%" + content + "%"))
                     .findAll();
             if (messageList != null) {

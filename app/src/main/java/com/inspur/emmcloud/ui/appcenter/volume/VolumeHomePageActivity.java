@@ -169,6 +169,12 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
         getVolumeList(false);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getVolumeList(false);
+    }
+
     /**
      * 获取云盘列表
      */

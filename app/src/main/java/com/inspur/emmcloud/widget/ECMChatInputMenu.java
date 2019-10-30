@@ -152,6 +152,7 @@ public class ECMChatInputMenu extends LinearLayout {
     ImageButton emotionBtn;
     EmotionAdapter emotionAdapter;
     EmotionAdapter emotionRecentAdapter;
+    ArrayList<String> recentEmotionList = new ArrayList<>();
     private int voiceInputStatus = 1;
     private boolean isGroup = false;
     private ChatInputMenuListener chatInputMenuListener;
@@ -362,7 +363,8 @@ public class ECMChatInputMenu extends LinearLayout {
      */
     private void initEmotion() {
         EmotionRecentManager recentManager = EmotionRecentManager.getInstance(getContext());
-        emotionRecentAdapter = new EmotionAdapter(getContext(), 1, recentManager);
+        recentEmotionList.addAll(recentManager);
+        emotionRecentAdapter = new EmotionAdapter(getContext(), 1, recentEmotionList);
         emotionRecentGrid.setAdapter(emotionRecentAdapter);
         emotionRecentGrid.setOnItemClickListener(new OnEmotionItemClickListener());
 
@@ -1012,7 +1014,10 @@ public class ECMChatInputMenu extends LinearLayout {
      */
     private void handleEmotionStatus() {
         if (emotionRecentAdapter != null) {
-            emotionRecentLayout.setVisibility(EmotionRecentManager.getInstance(getContext()).size() > 0 ? VISIBLE : GONE);
+            EmotionRecentManager recentManager = EmotionRecentManager.getInstance(getContext());
+            recentEmotionList.clear();
+            recentEmotionList.addAll(recentManager);
+            emotionRecentLayout.setVisibility(recentManager.size() > 0 ? VISIBLE : GONE);
             emotionRecentAdapter.notifyDataSetChanged();
         }
         if (addMenuLayout.isShown()) {
@@ -1034,29 +1039,6 @@ public class ECMChatInputMenu extends LinearLayout {
             changeAddMenuLayoutContent(true);
         }
         setVoiceInputStatus(TAG_KEYBOARD_INPUT);
-    }
-
-    class OnEmotionItemClickListener implements AdapterView.OnItemClickListener {
-
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            String filename = (parent.getId() == R.id.emotion_recent_grid ?
-                    emotionRecentAdapter.getItem(position) : emotionAdapter.getItem(position));
-            int selectionStart = inputEdit.getSelectionStart();// 获取光标的位置
-            try {
-                Class clz = Class.forName("com.inspur.emmcloud.ui.chat.emotion.EmotionUtil");
-                Field field = clz.getField(filename);
-                Spannable span = EmotionUtil.getInstance(getContext()).getSmiledText((String) field.get(null), inputEdit.getTextSize());
-                if (selectionStart < 0 || selectionStart >= inputEdit.length()) {
-                    inputEdit.getEditableText().append(span);
-                } else {
-                    inputEdit.getEditableText().insert(selectionStart, span);
-                }
-                EmotionRecentManager.getInstance(getContext()).addItem(filename);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     /**
@@ -1128,16 +1110,18 @@ public class ECMChatInputMenu extends LinearLayout {
                 return false;
             }
         });
+        if (listContentView != null) {
+            listContentView.setOnTouchListener(new OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    hideVoiceInputLayout();
+                    hideAddMenuLayout();
+                    InputMethodUtils.hide((Activity) getContext());
+                    return false;
+                }
+            });
+        }
 
-        listContentView.setOnTouchListener(new OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                hideVoiceInputLayout();
-                hideAddMenuLayout();
-                InputMethodUtils.hide((Activity) getContext());
-                return false;
-            }
-        });
     }
 
     public void setChatInputMenuListener(
@@ -1308,5 +1292,28 @@ public class ECMChatInputMenu extends LinearLayout {
         void onChatDraftsClear();
 
         void onNoSmallWindowPermission();
+    }
+
+    class OnEmotionItemClickListener implements AdapterView.OnItemClickListener {
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            String filename = (parent.getId() == R.id.emotion_recent_grid ?
+                    emotionRecentAdapter.getItem(position) : emotionAdapter.getItem(position));
+            int selectionStart = inputEdit.getSelectionStart();// 获取光标的位置
+            try {
+                Class clz = Class.forName("com.inspur.emmcloud.ui.chat.emotion.EmotionUtil");
+                Field field = clz.getField(filename);
+                Spannable span = EmotionUtil.getInstance(getContext()).getSmiledText((String) field.get(null), inputEdit.getTextSize());
+                if (selectionStart < 0 || selectionStart >= inputEdit.length()) {
+                    inputEdit.getEditableText().append(span);
+                } else {
+                    inputEdit.getEditableText().insert(selectionStart, span);
+                }
+                EmotionRecentManager.getInstance(getContext()).addItem(filename);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

@@ -58,7 +58,16 @@ public class EmotionUtil {
     public static final String ee_38 = "[吃饭]";
     public static final String ee_39 = "[欢庆]";
     public static final String ee_40 = "[面包]";
-    private static final int MAX_COUNT = 40;
+    public static final String ee_41 = "[666]";
+    public static final String ee_42 = "[爱你]";
+    public static final String ee_43 = "[拍手]";
+    public static final String ee_44 = "[玫瑰凋谢]";
+    public static final String ee_45 = "[拳头]";
+    public static final String ee_46 = "[握手]";
+    public static final String ee_47 = "[耶]";
+    public static final String ee_48 = "[月亮]";
+    public static final String ee_49 = "[NO]";
+    private static final int MAX_COUNT = 49;
 
     private static final Map<Pattern, Integer> emoticons = new HashMap<>();
     private static final Spannable.Factory spannableFactory = Spannable.Factory.getInstance();
@@ -119,6 +128,15 @@ public class EmotionUtil {
         addPattern(emoticons, ee_38, R.drawable.ee_38);
         addPattern(emoticons, ee_39, R.drawable.ee_39);
         addPattern(emoticons, ee_40, R.drawable.ee_40);
+        addPattern(emoticons, ee_41, R.drawable.ee_41);
+        addPattern(emoticons, ee_42, R.drawable.ee_42);
+        addPattern(emoticons, ee_43, R.drawable.ee_43);
+        addPattern(emoticons, ee_44, R.drawable.ee_44);
+        addPattern(emoticons, ee_45, R.drawable.ee_45);
+        addPattern(emoticons, ee_46, R.drawable.ee_46);
+        addPattern(emoticons, ee_47, R.drawable.ee_47);
+        addPattern(emoticons, ee_48, R.drawable.ee_48);
+        addPattern(emoticons, ee_49, R.drawable.ee_49);
     }
 
     private static void addPattern(Map<Pattern, Integer> map, String smile,

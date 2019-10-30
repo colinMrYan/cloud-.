@@ -37,11 +37,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.math.BigInteger;
+import java.net.HttpURLConnection;
 import java.security.MessageDigest;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 
 /**
  * File Utils
@@ -1537,5 +1539,46 @@ public class FileUtils {
         File srcDir = new File(src);
         boolean isOk = srcDir.renameTo(new File(dest));
         return isOk;
+    }
+
+    /**
+     * url里获取文件名
+     * 先以头部filename为准
+     * 没有则取connection里的名字
+     * 再没有则生成一个.tmp名字
+     *
+     * @param urlConnection
+     * @return
+     */
+    private String getFileName(HttpURLConnection urlConnection) {
+        String filename = null;
+        String headField = urlConnection.getHeaderField("Content-Disposition");
+        if (!StringUtils.isBlank(headField)) {
+            headField = headField.toLowerCase();
+            if (headField.contains("filename=")) {
+                //有些下载链接检测到的文件名带双引号，此处给去掉
+                try {
+                    filename = headField.split("filename=")[1];
+                    if (filename.length() > 2 && filename.startsWith("\"") && filename.endsWith("\"")) {
+                        filename = filename.substring(1, filename.length() - 1);
+                    }
+                    return filename;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+        filename = urlConnection.getURL().getFile();
+        if (filename.contains("/")) {
+            String[] array = filename.split("/");
+            filename = array[array.length - 1];
+
+        }
+        if (StringUtils.isBlank(filename)) {
+            // 默认取一个文件名
+            filename = UUID.randomUUID() + ".tmp";
+        }
+        return filename;
     }
 }

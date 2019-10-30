@@ -133,6 +133,7 @@ public class ChatInputEdit extends EditText {
      * 初始化控件,一些监听
      */
     private void initView() {
+        setLineSpacing(0, 1.2f);
         this.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count,
