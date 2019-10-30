@@ -134,6 +134,10 @@ public class LanguageManager extends BaseModuleAPIInterfaceInstance {
         PreferencesByTanentUtils.putString(BaseApplication.getInstance(), Constant.PREF_CURRENT_LANGUAGE_NAME, saveLanguageName);
     }
 
+    public boolean isAppLanguageEnglish() {
+        return getCurrentAppLanguage().startsWith("en");
+    }
+
     private boolean isNeedUpdate() {
         boolean isLanguageUpdate = ClientConfigUpdateUtils.getInstance().isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_LANGUAGE);
         //统一更新功能检测到语言需要更新
@@ -289,6 +293,7 @@ public class LanguageManager extends BaseModuleAPIInterfaceInstance {
 
     /**
      * 获取当前应用语言
+     *
      * @return
      */
     public String getCurrentAppLanguage() {
@@ -317,6 +322,7 @@ public class LanguageManager extends BaseModuleAPIInterfaceInstance {
     public void setVoiceInputLanguage(String language) {
         PreferencesByTanentUtils.putString(BaseApplication.getInstance(), Constant.PREF_VOICE_INPUT_LANGUAGE, language);
     }
+
     /**
      * 从本地获取缓存的服务端支持语音列表
      *
