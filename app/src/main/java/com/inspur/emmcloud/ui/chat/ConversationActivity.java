@@ -48,6 +48,7 @@ import com.inspur.emmcloud.basemodule.util.FileDownloadManager;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
+import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
@@ -1607,7 +1608,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             if (uiMessage.getMessage().getFromUser().equals(BaseApplication.getInstance().getUid()) && System.currentTimeMillis() - uiMessage.getCreationDate() < 120000) {
                 operationIdList.add(R.string.chat_long_click_recall);
             }
-            if (uiMessage.getMessage().getType().equals(Message.MESSAGE_TYPE_MEDIA_VOICE)) {
+            if (uiMessage.getMessage().getType().equals(Message.MESSAGE_TYPE_MEDIA_VOICE) && !LanguageManager.getInstance().isAppLanguageEnglish()) {
                 operationIdList.add(R.string.voice_to_word);
             }
         }
