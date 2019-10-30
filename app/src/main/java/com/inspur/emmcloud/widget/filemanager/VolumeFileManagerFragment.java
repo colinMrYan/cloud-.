@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.adapter.VolumeFileAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.baselib.util.StringUtils;
@@ -21,6 +20,7 @@ import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeListResult;
 import com.inspur.emmcloud.bean.appcenter.volume.Volume;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.widget.filemanager.adapter.TitleAdapter;
+import com.inspur.emmcloud.widget.filemanager.adapter.VolumeFileInManagerAdapter;
 import com.inspur.emmcloud.widget.filemanager.adapter.base.RecyclerViewAdapter;
 import com.inspur.emmcloud.widget.filemanager.bean.TitlePath;
 
@@ -42,7 +42,7 @@ public class VolumeFileManagerFragment extends Fragment {
     protected static final String SORT_BY_NAME_DOWN = "sort_by_name_down";
     protected static final String SORT_BY_TIME_UP = "sort_by_time_up";
     protected static final String SORT_BY_TIME_DOWN = "sort_by_time_down";
-    protected VolumeFileAdapter fileAdapter;
+    protected VolumeFileInManagerAdapter fileAdapter;
     protected List<VolumeFile> volumeFileList = new ArrayList<>();
     /**
      * 云盘列表
@@ -89,7 +89,7 @@ public class VolumeFileManagerFragment extends Fragment {
         titleAdapter = new TitleAdapter(getActivity(), new ArrayList<TitlePath>());
         titleRecyclerview.setAdapter(titleAdapter);
         fileRecyclerView = rootView.findViewById(R.id.rcv_file);
-        fileAdapter = new VolumeFileAdapter(getContext(), volumeFileList);
+        fileAdapter = new VolumeFileInManagerAdapter(getContext(), volumeFileList);
         fileAdapter.setShowFileOperationSelcteImage(false);
         fileAdapter.setCurrentDirAbsolutePath(currentDirAbsolutePath);
         fileRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -98,7 +98,7 @@ public class VolumeFileManagerFragment extends Fragment {
         loadingDlg = new LoadingDialog(getContext());
         apiServiceBase = new MyAppAPIService(getContext());
         apiServiceBase.setAPIInterface(new WebServiceBase());
-        fileAdapter.setItemClickListener(new VolumeFileAdapter.MyItemClickListener() {
+        fileAdapter.setItemClickListener(new VolumeFileInManagerAdapter.MyItemClickListener() {
 
             @Override
             public void onItemClick(View view, int position) {
@@ -117,16 +117,6 @@ public class VolumeFileManagerFragment extends Fragment {
 
             @Override
             public void onItemLongClick(View view, int position) {
-
-            }
-
-            @Override
-            public void onItemDropDownImgClick(View view, int position) {
-
-            }
-
-            @Override
-            public void onItemOperationTextClick(View view, int position) {
 
             }
 
