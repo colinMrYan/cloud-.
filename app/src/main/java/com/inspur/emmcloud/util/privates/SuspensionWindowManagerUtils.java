@@ -151,7 +151,7 @@ public class SuspensionWindowManagerUtils {
                         windowManager.updateViewLayout(windowView, params);
                         break;
                     case MotionEvent.ACTION_UP:
-                        isTouchEvent = (System.currentTimeMillis() - beginTime) > 100;
+                        isTouchEvent = (System.currentTimeMillis() - beginTime) > 300;
                         break;
                 }
                 return false;

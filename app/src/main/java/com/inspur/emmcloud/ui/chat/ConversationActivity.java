@@ -30,7 +30,6 @@ import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.CustomLoadingView;
@@ -1295,7 +1294,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             // 获取本地发送成功的消息id
             String newMessageId = "";
             for (UIMessage uiMessage : uiMessageList) {
-                if (uiMessage.getMessage().getSendStatus() == Message.MESSAGE_SEND_SUCCESS) {
+                if (uiMessage.getMessage().getSendStatus() == Message.MESSAGE_SEND_SUCCESS && StringUtils.isBlank(uiMessage.getMessage().getRecallFrom())) {
                     newMessageId = uiMessage.getMessage().getId();
                     break;
                 }
@@ -1920,7 +1919,12 @@ public class ConversationActivity extends ConversationBaseActivity {
                 android.os.Message message = null;
                 switch (refreshType) {
                     case REFRESH_HISTORY_MESSAGE:
-                        List<Message> historyMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, uiMessageList.get(0).getMessage(), COUNT_EVERY_PAGE);
+                        List<Message> historyMessageList = null;
+                        if (uiMessageList.size() == 0) {
+                            historyMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, null, COUNT_EVERY_PAGE);
+                        } else {
+                            historyMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, uiMessageList.get(0).getMessage(), COUNT_EVERY_PAGE);
+                        }
                         List<UIMessage> historyUIMessageList = UIMessage.MessageList2UIMessageList(historyMessageList);
                         message = handler.obtainMessage(refreshType, historyUIMessageList);
                         break;
