@@ -411,7 +411,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         initAgoraCallbacks();
         //响铃控制
         mediaPlayerManagerUtils = MediaPlayerManagerUtils.getManager();
-        mediaPlayerManagerUtils.setMediaPlayerLooping(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         firstRecyclerview.setLayoutManager(layoutManager);
@@ -648,7 +647,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                         mediaPlayerManagerUtils.changeToSpeakerMode();
                         break;
                 }
-                mediaPlayerManagerUtils.play(R.raw.voice_communication_watting_answer, null);
+                mediaPlayerManagerUtils.play(R.raw.voice_communication_watting_answer, null, true);
             } else {
                 mediaPlayerManagerUtils.stop();
             }
