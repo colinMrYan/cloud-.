@@ -108,9 +108,9 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
         // TODO Auto-generated method stub
         View view = LayoutInflater.from(context).inflate(R.layout.communication_widget_chat_input_menu_img_comment, this, true);
         ButterKnife.bind(this, view);
+        setAddMenuLayoutShow(true);
         initInputEdit();
         initEmotion();
-        setAddMenuLayoutShow(true);
         sendBtn.setEnabled(false);
     }
 
@@ -284,7 +284,6 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
                 }
                 break;
             case R.id.bt_cancel:
-                setAddMenuLayoutShow(false);
                 showEmotionLayout(false);
                 InputMethodUtils.hide(getContext(), addMenuLayout);
                 if (chatInputMenuListener != null) {
@@ -328,8 +327,8 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
                 showEmotionLayout(false);
             }
         } else {
-            showSoftInput(false);
             setAddMenuLayoutShow(true);
+            showSoftInput(false);
             showEmotionLayout(true);
         }
     }
