@@ -87,7 +87,7 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
     public void onCreate() {
         ButterKnife.bind(this);
         initView();
-        getVolumeList(true);
+        getVolumeList(true, true);
     }
 
     @Override
@@ -365,20 +365,20 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
 
     @Override
     public void onRefresh() {
-        getVolumeList(false);
+        getVolumeList(false, true);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        getVolumeList(false);
+        getVolumeList(false, false);
     }
 
     /**
      * 获取云盘列表
      */
-    private void getVolumeList(boolean isShowDlg) {
-        if (NetUtils.isNetworkConnected(getApplicationContext())) {
+    private void getVolumeList(boolean isShowDlg, boolean isShowNetToast) {
+        if (NetUtils.isNetworkConnected(getApplicationContext(), isShowNetToast)) {
             loadingDlg.show(isShowDlg);
             apiService.getVolumeList();
         } else {
