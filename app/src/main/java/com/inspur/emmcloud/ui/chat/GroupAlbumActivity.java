@@ -116,7 +116,9 @@ public class GroupAlbumActivity extends BaseActivity {
             for (Message message : imgTypeMessageList) {
                 MsgContentMediaImage msgContentMediaImage = message.getMsgContentMediaImage();
                 String url = APIUri.getChatFileResouceUrl(message.getChannel(), message.getMsgContentMediaImage().getRawMedia());
-                if (msgContentMediaImage.getPreviewHeight() != 0 && msgContentMediaImage.getPreviewWidth() != 0) {
+                if (msgContentMediaImage.getPreviewHeight() != 0 && msgContentMediaImage.getPreviewWidth() != 0
+                        && msgContentMediaImage.getRawWidth() != msgContentMediaImage.getPreviewWidth()
+                        && msgContentMediaImage.getRawHeight() != msgContentMediaImage.getPreviewHeight()) {
                     url = url + "&resize=true&w=" + msgContentMediaImage.getPreviewWidth() + "&h=" + msgContentMediaImage.getPreviewHeight();
                 }
                 imgUrlList.add(url);
