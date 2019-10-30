@@ -119,24 +119,29 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
      * @param holder
      */
     public void showRefreshingImg(final ViewHolder holder, final UIMessage uiMessage) {
-        if (uiMessage.getSendStatus() == 0) {
-            holder.sendStatusLayout.setVisibility(View.VISIBLE);
-            holder.sendFailImg.setVisibility(View.GONE);
-            holder.sendingLoadingView.setVisibility(View.VISIBLE);
-        } else if (uiMessage.getSendStatus() == 2) {
-            holder.sendStatusLayout.setVisibility(View.VISIBLE);
-            holder.sendFailImg.setVisibility(View.VISIBLE);
-            holder.sendingLoadingView.setVisibility(View.GONE);
-        } else {
-            boolean isMyMsg = uiMessage.getMessage().getFromUser().equals(MyApplication.getInstance().getUid());
-            holder.sendStatusLayout.setVisibility(isMyMsg ? View.INVISIBLE : View.GONE);
-        }
-        holder.sendStatusLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                holder.onMessageResendClick(uiMessage);
+        if (StringUtils.isBlank(uiMessage.getMessage().getRecallFrom())) {
+            if (uiMessage.getSendStatus() == 0) {
+                holder.sendStatusLayout.setVisibility(View.VISIBLE);
+                holder.sendFailImg.setVisibility(View.GONE);
+                holder.sendingLoadingView.setVisibility(View.VISIBLE);
+            } else if (uiMessage.getSendStatus() == 2) {
+                holder.sendStatusLayout.setVisibility(View.VISIBLE);
+                holder.sendFailImg.setVisibility(View.VISIBLE);
+                holder.sendingLoadingView.setVisibility(View.GONE);
+            } else {
+                boolean isMyMsg = uiMessage.getMessage().getFromUser().equals(MyApplication.getInstance().getUid());
+                holder.sendStatusLayout.setVisibility(isMyMsg ? View.INVISIBLE : View.GONE);
             }
-        });
+            holder.sendStatusLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    holder.onMessageResendClick(uiMessage);
+                }
+            });
+        } else {
+            holder.sendStatusLayout.setVisibility(View.GONE);
+        }
+
     }
 
     /**
@@ -153,7 +158,13 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         //此处实际执行params.removeRule();
         params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
         params.addRule(RelativeLayout.ALIGN_LEFT, 0);
-        params.addRule(isMyMsg ? RelativeLayout.ALIGN_PARENT_RIGHT : RelativeLayout.ALIGN_LEFT);
+        params.addRule(RelativeLayout.CENTER_HORIZONTAL, 0);
+        if (StringUtils.isBlank(message.getRecallFrom())) {
+            params.addRule(isMyMsg ? RelativeLayout.ALIGN_PARENT_RIGHT : RelativeLayout.ALIGN_LEFT);
+        } else {
+            params.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        }
+
         holder.cardParentLayout.setLayoutParams(params);
         holder.cardLayout.removeAllViewsInLayout();
         holder.cardLayout.removeAllViews();
@@ -254,7 +265,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
     private void showUserName(ViewHolder holder, UIMessage UIMessage) {
         // TODO Auto-generated method stub
         if (channelType.equals("GROUP") && !UIMessage.getMessage().getFromUser().equals(
-                MyApplication.getInstance().getUid())) {
+                MyApplication.getInstance().getUid()) && StringUtils.isBlank(UIMessage.getMessage().getRecallFrom())) {
             holder.senderNameText.setVisibility(View.VISIBLE);
             holder.senderNameText.setText(UIMessage.getSenderName());
         } else {
@@ -271,8 +282,14 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         // TODO Auto-generated method stub
         final String fromUser = UImessage.getMessage().getFromUser();
         boolean isMyMsg = MyApplication.getInstance().getUid().equals(fromUser);
-        holder.senderPhotoImgRight.setVisibility(isMyMsg ? View.VISIBLE : View.INVISIBLE);
-        holder.senderPhotoImgLeft.setVisibility(isMyMsg ? View.GONE : View.VISIBLE);
+        if (StringUtils.isBlank(UImessage.getMessage().getRecallFrom())) {
+            holder.senderPhotoImgRight.setVisibility(isMyMsg ? View.VISIBLE : View.INVISIBLE);
+            holder.senderPhotoImgLeft.setVisibility(isMyMsg ? View.GONE : View.VISIBLE);
+        } else {
+            holder.senderPhotoImgRight.setVisibility(View.GONE);
+            holder.senderPhotoImgLeft.setVisibility(View.GONE);
+        }
+
         ImageView senderPhotoImg = isMyMsg ? holder.senderPhotoImgRight : holder.senderPhotoImgLeft;
         ImageDisplayUtils.getInstance().displayImage(senderPhotoImg,
                 UImessage.getSenderPhotoUrl(), R.drawable.icon_person_default);
