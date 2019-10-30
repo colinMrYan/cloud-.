@@ -99,7 +99,7 @@
         android:layout_height="274dp"
         android:layout_below="@id/middle_layout"
         android:paddingLeft="0dp"
-        android:paddingTop="25dp"
+        android:paddingTop="0dp"
         android:paddingRight="0dp"
         android:visibility="gone">
 
