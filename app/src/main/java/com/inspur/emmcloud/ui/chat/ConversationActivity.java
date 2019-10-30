@@ -1343,7 +1343,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                     notifyCommucationFragmentMessageSendStatus();
                 }
             } else {
-                showInfoDlg("消息撤回失败");
+                showInfoDlg(getString(R.string.recall_message_fail));
             }
         }
     }

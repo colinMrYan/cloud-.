@@ -126,7 +126,7 @@ public class WebServiceRouterManager {
                     break;
                 //消息服务的client注册
                 case ECM_CLIENT_REGISTRY:
-                    setClusterClientRegistry(serviceUrl);
+                    setClusterClientRegistry("http://10.25.12.114:3000/client-registry/rest/v1");
                     break;
                 //机器人
                 case ECM_BOT:
@@ -178,6 +178,7 @@ public class WebServiceRouterManager {
             }
         }
         if (serviceName.equals(ECM_CHAT)) {
+            differentUrlByType = "http://10.25.12.114:3000/chat";
             Uri clusterBeanUri = Uri.parse(differentUrlByType);
             setClusterChat(differentUrlByType);
             String chatUrl = clusterBeanUri.getScheme() + "://" + clusterBeanUri.getAuthority();

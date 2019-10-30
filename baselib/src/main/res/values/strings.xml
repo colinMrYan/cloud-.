@@ -331,6 +331,7 @@
     <string name="chat_long_click_recall">撤回</string>
     <string name="chat_info_message_status_recall">%1$s撤回了一条消息</string>
     <string name="recall_fail_for_timeout">发送时间超过2分钟的消息，不能被撤回。</string>
+    <string name="recall_message_fail">消息撤回失败</string>
     <string name="chat_long_click_schedule">添加到日程</string>
     <string name="chat_long_click_copy_text">复制文字</string>
     <string name="chat_long_click_reply">回复</string>
