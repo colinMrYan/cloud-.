@@ -53,11 +53,13 @@ import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.WSCommandBatch;
 import com.inspur.emmcloud.bean.chat.ChannelMessageReadStateResult;
 import com.inspur.emmcloud.bean.chat.ChannelMessageSet;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetConversationListResult;
+import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.chat.GetOfflineMessageListResult;
 import com.inspur.emmcloud.bean.chat.GetRecentMessageListResult;
 import com.inspur.emmcloud.bean.chat.GetVoiceAndVideoResult;
@@ -71,10 +73,12 @@ import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.bean.system.MainTabProperty;
 import com.inspur.emmcloud.bean.system.MainTabResult;
 import com.inspur.emmcloud.push.WebSocketPush;
+import com.inspur.emmcloud.ui.ShareFilesActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.ui.mine.setting.NetWorkStateDetailActivity;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
+import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.CheckingNetStateUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationGroupIconUtils;
@@ -97,6 +101,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -791,7 +796,16 @@ public class CommunicationFragment extends BaseFragment {
 
                 if (peopleArray.length() > 0
                         && NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-                    creatGroupChannel(peopleArray);
+                    if (peopleArray.length() == 1) {    //单聊
+                        String userOrChannelId = "";
+                        if (peopleArray.length() > 0) {
+                            JSONObject peopleObj = peopleArray.getJSONObject(0);
+                            userOrChannelId = peopleObj.getString("pid");
+                        }
+                        createDirectChannel(userOrChannelId);
+                    } else if (peopleArray.length() > 1) {        //大于2人群聊
+                        creatGroupChannel(peopleArray);
+                    }
                 }
             } catch (JSONException e) {
                 // TODO Auto-generated catch block
@@ -810,6 +824,51 @@ public class CommunicationFragment extends BaseFragment {
                 }
             }
         }
+    }
+
+    /**
+     * 打开channel
+     */
+    private void startChannelActivity(String cid) {
+        Bundle bundle = new Bundle();
+        bundle.putString("cid", cid);
+        IntentUtils.startActivity(getActivity(), WebServiceRouterManager.getInstance().isV0VersionChat() ?
+                ChannelV0Activity.class : ConversationActivity.class, bundle, false);
+    }
+
+    /**
+     * 创建单聊
+     *
+     * @param uid
+     */
+    private void createDirectChannel(String uid) {
+        if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
+            new ConversationCreateUtils().createDirectConversation(getActivity(), uid,
+                    new ConversationCreateUtils.OnCreateDirectConversationListener() {
+                        @Override
+                        public void createDirectConversationSuccess(Conversation conversation) {
+                            startChannelActivity(conversation.getId());
+                        }
+
+                        @Override
+                        public void createDirectConversationFail() {
+
+                        }
+                    });
+        } else {
+            new ChatCreateUtils().createDirectChannel(getActivity(), uid,
+                    new ChatCreateUtils.OnCreateDirectChannelListener() {
+                        @Override
+                        public void createDirectChannelSuccess(GetCreateSingleChannelResult getCreateSingleChannelResult) {
+                            startChannelActivity(getCreateSingleChannelResult.getCid());
+                        }
+
+                        @Override
+                        public void createDirectChannelFail() {
+                        }
+                    });
+        }
+
     }
 
     /**

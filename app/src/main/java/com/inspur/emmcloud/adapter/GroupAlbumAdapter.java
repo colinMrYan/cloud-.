@@ -104,7 +104,9 @@ public class GroupAlbumAdapter extends RecyclerView.Adapter<GroupAlbumAdapter.Al
             for (Message message : messageGroupByDayMap.get(itemName)) {
                 String url = APIUri.getChatFileResouceUrl(message.getChannel(), message.getMsgContentMediaImage().getRawMedia());
                 MsgContentMediaImage msgContentMediaImage = message.getMsgContentMediaImage();
-                if (message.getMsgContentMediaImage().getPreviewHeight() != 0) {
+                if (message.getMsgContentMediaImage().getPreviewHeight() != 0
+                        && message.getMsgContentMediaImage().getPreviewHeight() != message.getMsgContentMediaImage().getRawHeight()
+                        && message.getMsgContentMediaImage().getPreviewWidth() != message.getMsgContentMediaImage().getRawWidth()) {
                     url = url + "&resize=true&w=" + msgContentMediaImage.getPreviewWidth() + "&h=" + msgContentMediaImage.getPreviewHeight();
                 }
                 imgUrlList.add(url);

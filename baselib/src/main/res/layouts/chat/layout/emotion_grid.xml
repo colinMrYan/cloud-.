@@ -74,7 +74,7 @@
                     android:cacheColorHint="@android:color/transparent"
                     android:horizontalSpacing="0dip"
                     android:numColumns="7"
-                    android:paddingBottom="50dp"
+                    android:paddingBottom="80dp"
                     android:scrollbars="vertical"
                     android:listSelector="@color/transparent"
                     android:verticalSpacing="-10dp" />
