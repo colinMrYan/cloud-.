@@ -221,6 +221,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
                 inputLayout.setVisibility(View.GONE);
                 if (ecmChatInputMenu != null) {
                     ecmChatInputMenu.showSoftInput(false);
+                    ecmChatInputMenu.getChatInputEdit().setText("");
                 }
                 break;
             default:

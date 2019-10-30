@@ -290,6 +290,7 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
                 if (chatInputMenuListener != null) {
                     chatInputMenuListener.hideChatInputMenu();
                 }
+                inputEdit.setText("");
                 break;
             case R.id.emotion_btn:
                 handleEmotionStatus();
