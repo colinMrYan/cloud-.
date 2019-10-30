@@ -318,7 +318,7 @@
     <string name="quit_group_warning_text">确定要退出群组？</string>
     <string name="dismiss_group_warning_text">解散群组后，将会删除群内所有的聊天记录和文件等信息</string>
     <string name="chat_stick_on_top">置顶</string>
-    <string name="chat_remove">移除</string>
+    <string name="chat_remove">隐藏</string>
     <string name="chat_remove_from_top">取消置顶</string>
     <string name="no_chat_content">暂无聊天内容</string>
     <string name="msg_key_search_member">请输入关键字</string>
@@ -332,6 +332,8 @@
     <string name="chat_info_message_status_recall">%1$s撤回了一条消息</string>
     <string name="recall_fail_for_timeout">发送时间超过2分钟的消息，不能被撤回。</string>
     <string name="recall_message_fail">消息撤回失败</string>
+    <string name="message_has_been_recalled">此消息已撤回</string>
+    <string name="message_get_fail">消息获取失败</string>
     <string name="chat_long_click_schedule">添加到日程</string>
     <string name="chat_long_click_copy_text">复制文字</string>
     <string name="chat_long_click_reply">回复</string>

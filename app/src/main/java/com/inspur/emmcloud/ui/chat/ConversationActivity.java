@@ -1675,6 +1675,12 @@ public class ConversationActivity extends ConversationBaseActivity {
                 //当消息处于发送中状态时无法点击
                 if (messageSendStatus == Message.MESSAGE_SEND_SUCCESS) {
                     String mid = message.getMsgContentComment().getMessage();
+                    Message commentedMessage = MessageCacheUtil.getMessageByMid(MyApplication.getInstance(), mid);
+                    //如果此条消息已被撤回，则进行提示
+                    if (commentedMessage != null && !StringUtils.isBlank(commentedMessage.getRecallFrom())) {
+                        ToastUtils.show(R.string.message_has_been_recalled);
+                        return;
+                    }
                     bundle.putString("mid", mid);
                     bundle.putString(EXTRA_CID, message.getChannel());
                     IntentUtils.startActivity(ConversationActivity.this,
