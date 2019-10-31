@@ -718,6 +718,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                     waitAndCommunicationSize = waitAndCommunicationSize + 1;
                 }
             }
+            LogUtils.YfcDebug("等待和已接通人数：" + waitAndCommunicationSize);
             if (waitAndCommunicationSize < 2) {
                 voiceCommunicationUtils.setCommunicationState(COMMUNICATION_STATE_OVER);
                 Log.d("zhang", "COMMUNICATION_STATE_OVER: 000000 ");

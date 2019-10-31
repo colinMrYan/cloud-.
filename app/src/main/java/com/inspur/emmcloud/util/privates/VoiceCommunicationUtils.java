@@ -87,12 +87,12 @@ public class VoiceCommunicationUtils {
             changeUserConnectStateByAgoraUid(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_LEAVE, uid);
             userCount = userCount - 1;
             LogUtils.YfcDebug("频道剩余人数：" + userCount);
+            if (onVoiceCommunicationCallbacks != null) {
+                onVoiceCommunicationCallbacks.onUserOffline(uid, reason);
+            }
             if (userCount < 2) {
                 destroy();
                 SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
-            }
-            if (onVoiceCommunicationCallbacks != null) {
-                onVoiceCommunicationCallbacks.onUserOffline(uid, reason);
             }
         }
 
@@ -167,11 +167,11 @@ public class VoiceCommunicationUtils {
         @Override
         public void onError(int err) {
             super.onError(err);
-            destroy();
-            SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
             if (onVoiceCommunicationCallbacks != null) {
                 onVoiceCommunicationCallbacks.onError(err);
             }
+            destroy();
+            SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
         }
 
         //失去连接信息
