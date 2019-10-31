@@ -4,13 +4,13 @@
     android:layout_height="wrap_content"
     android:background="@drawable/shape_voice_communication_round">
 
-    <ImageButton
+    <ImageView
         android:id="@+id/img_btn_voice_window"
         android:layout_width="22dp"
         android:layout_height="22dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="27dp"
-        android:background="@drawable/icon_void_commucation_back" />
+        android:src="@drawable/icon_void_commucation_back" />
 
     <Chronometer
         android:id="@+id/chronometer_voice_communication_time"
