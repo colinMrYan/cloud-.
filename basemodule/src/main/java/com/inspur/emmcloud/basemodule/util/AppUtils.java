@@ -898,7 +898,7 @@ public class AppUtils {
      */
     public static boolean getIsVoiceWordOpen() {
         return PreferencesByUserAndTanentUtils.getBoolean(BaseApplication.getInstance(),
-                Constant.PREF_APP_OPEN_VOICE_WORD_SWITCH, false);
+                Constant.PREF_APP_OPEN_VOICE_WORD_SWITCH, false) && !LanguageManager.getInstance().isAppLanguageEnglish();
     }
 
     /**

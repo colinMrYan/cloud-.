@@ -253,6 +253,7 @@ public class ECMChatInputMenu extends LinearLayout {
                     audioDialogManager = new AudioDialogManager(getContext());
                     audioDialogManager.showVoice2WordProgressDialog();
                     //转写和转文件格式同时进行
+                    voice2StringMessageUtils.setNeedChangeLanguage(false);
                     voice2StringMessageUtils.startVoiceListeningByVoiceFile(seconds, filePath);
                     AndroidMp3ConvertUtils.with(getContext()).setCallBack(new AndroidMp3ConvertUtils.AndroidMp3ConvertCallback() {
                         @Override
@@ -1061,6 +1062,7 @@ public class ECMChatInputMenu extends LinearLayout {
                 initVoiceInputView();
                 voiceInputEt.setHint(getContext().getString(R.string.voice_input_hint_prepare));
                 mediaPlayerUtils.playVoiceOn();
+                voice2StringMessageUtils.setNeedChangeLanguage(true);
                 voice2StringMessageUtils.startVoiceListening();
                 break;
             case MotionEvent.ACTION_UP:
@@ -1263,6 +1265,7 @@ public class ECMChatInputMenu extends LinearLayout {
                     LanguageManager.getInstance().setVoiceInputLanguage("en");
                 }
                 voice2StringMessageUtils.setLanguage(LanguageManager.getInstance().getVoiceInputLanguage());
+                voice2StringMessageUtils.setNeedChangeLanguage(true);
                 dialog.dismiss();
             }
         };

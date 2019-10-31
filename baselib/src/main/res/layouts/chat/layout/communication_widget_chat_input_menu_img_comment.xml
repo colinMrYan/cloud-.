@@ -68,27 +68,24 @@
 
         <ImageButton
             android:id="@+id/emotion_btn"
-            android:layout_width="37dp"
-            android:layout_height="37dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:background="@null"
             android:clickable="true"
             android:onClick="onClick"
-            android:padding="5dp"
+            android:padding="8dp"
             android:scaleType="fitXY"
             android:src="@drawable/comment_image_emotion" />
 
         <ImageButton
             android:id="@+id/at_people_btn"
-            android:layout_width="37dp"
-            android:layout_height="37dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_marginLeft="20dp"
             android:background="@null"
             android:clickable="true"
             android:onClick="onClick"
-            android:paddingLeft="5dp"
-            android:paddingTop="5dp"
-            android:paddingRight="5dp"
-            android:paddingBottom="5dp"
+            android:padding="8dp"
             android:scaleType="fitXY"
             android:src="@drawable/comment_image_at" />
     </LinearLayout>

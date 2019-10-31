@@ -37,6 +37,7 @@ import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
@@ -73,7 +74,6 @@ import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.bean.system.MainTabProperty;
 import com.inspur.emmcloud.bean.system.MainTabResult;
 import com.inspur.emmcloud.push.WebSocketPush;
-import com.inspur.emmcloud.ui.ShareFilesActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.ui.mine.setting.NetWorkStateDetailActivity;
@@ -101,7 +101,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -207,6 +206,8 @@ public class CommunicationFragment extends BaseFragment {
         getConversationList();
         setHeaderFunctionOptions(null);
         checkingNetStateUtils = new CheckingNetStateUtils(getContext(), NetUtils.pingUrls, NetUtils.httpUrls);
+        //将此句挪到此处，为了防止广播注册太晚接收不到WS状态，这里重新获取下
+        showSocketStatusInTitle(WebSocketPush.getInstance().getWebsocketStatus());
     }
 
     /**
@@ -235,7 +236,6 @@ public class CommunicationFragment extends BaseFragment {
         initPullRefreshLayout();
         initRecycleView();
         loadingDlg = new LoadingDialog(getActivity());
-        showSocketStatusInTitle(WebSocketPush.getInstance().getWebsocketStatus());
     }
 
     /**
@@ -1028,20 +1028,22 @@ public class CommunicationFragment extends BaseFragment {
         //接收到消息后告知服务端
         WSAPIService.getInstance().sendReceiveStartVoiceAndVideoCallMessageSuccess(getVoiceAndVideoResult.getTracer());
 
+        LogUtils.YfcDebug("收到命令消息：" + JSONUtils.toJSONString(getVoiceAndVideoResult));
         //判断如果在通话中就不再接听新的来电
-        if (VoiceCommunicationUtils.getInstance().getCommunicationState() != ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_ING) {
+        if (!VoiceCommunicationUtils.getInstance().isVoiceBusy()) {
             if (customProtocol.getProtocol().equals("ecc-cloudplus-cmd") && !StringUtils.isBlank(customProtocol.getParamMap().get("cmd")) &&
                     customProtocol.getParamMap().get("cmd").equals("invite")) {
                 startVoiceOrVideoCall(getVoiceAndVideoResult.getContextParamsRoom(), getVoiceAndVideoResult.getContextParamsType(), getVoiceAndVideoResult.getChannel());
             }
         } else {
+            LogUtils.YfcDebug("11111111111111：" + customProtocol.getParamMap().get("cmd"));
+            LogUtils.YfcDebug("isActivityExist：" + BaseApplication.getInstance().isActivityExist(ChannelVoiceCommunicationActivity.class));
             //当ChannelVoiceCommunicationActivity页面不存在的情况下处理refuse和destroy
             if (!BaseApplication.getInstance().isActivityExist(ChannelVoiceCommunicationActivity.class)) {
                 if (customProtocol.getProtocol().equals("ecc-cloudplus-cmd") && !StringUtils.isBlank(customProtocol.getParamMap().get("cmd"))) {
                     if (customProtocol.getParamMap().get("cmd").equals("refuse")) {
                         changeUserConnectStateByUid(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_REFUSE, customProtocol.getParamMap().get("uid"));
                         checkCommunicationFinish();
-                        VoiceCommunicationUtils.getInstance().setCommunicationState(ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_OVER);
                         Log.d("zhang", "COMMUNICATION_STATE_OVER: 555555 ");
                         return;
                     } else if (customProtocol.getParamMap().get("cmd").equals("destroy")) {
@@ -1108,6 +1110,7 @@ public class CommunicationFragment extends BaseFragment {
             if (waitAndCommunicationSize < 2) {
                 VoiceCommunicationUtils.getInstance().destroy();
                 SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
+                VoiceCommunicationUtils.getInstance().setCommunicationState(ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_OVER);
             }
         }
     }
