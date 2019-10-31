@@ -87,7 +87,7 @@ import com.inspur.emmcloud.util.privates.MessageSendManager;
 import com.inspur.emmcloud.util.privates.ScanQrCodeUtils;
 import com.inspur.emmcloud.util.privates.SuspensionWindowManagerUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
-import com.inspur.emmcloud.util.privates.VoiceCommunicationUtils;
+import com.inspur.emmcloud.util.privates.VoiceCommunicationManager;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.MessageMatheSetCacheUtils;
@@ -1030,14 +1030,12 @@ public class CommunicationFragment extends BaseFragment {
 
         LogUtils.YfcDebug("收到命令消息：" + JSONUtils.toJSONString(getVoiceAndVideoResult));
         //判断如果在通话中就不再接听新的来电
-        if (!VoiceCommunicationUtils.getInstance().isVoiceBusy()) {
+        if (!VoiceCommunicationManager.getInstance().isVoiceBusy()) {
             if (customProtocol.getProtocol().equals("ecc-cloudplus-cmd") && !StringUtils.isBlank(customProtocol.getParamMap().get("cmd")) &&
                     customProtocol.getParamMap().get("cmd").equals("invite")) {
                 startVoiceOrVideoCall(getVoiceAndVideoResult.getContextParamsRoom(), getVoiceAndVideoResult.getContextParamsType(), getVoiceAndVideoResult.getChannel());
             }
         } else {
-            LogUtils.YfcDebug("11111111111111：" + customProtocol.getParamMap().get("cmd"));
-            LogUtils.YfcDebug("isActivityExist：" + BaseApplication.getInstance().isActivityExist(ChannelVoiceCommunicationActivity.class));
             //当ChannelVoiceCommunicationActivity页面不存在的情况下处理refuse和destroy
             if (!BaseApplication.getInstance().isActivityExist(ChannelVoiceCommunicationActivity.class)) {
                 if (customProtocol.getProtocol().equals("ecc-cloudplus-cmd") && !StringUtils.isBlank(customProtocol.getParamMap().get("cmd"))) {
@@ -1047,10 +1045,10 @@ public class CommunicationFragment extends BaseFragment {
                         Log.d("zhang", "COMMUNICATION_STATE_OVER: 555555 ");
                         return;
                     } else if (customProtocol.getParamMap().get("cmd").equals("destroy")) {
-                        VoiceCommunicationUtils.getInstance().destroy();
+                        VoiceCommunicationManager.getInstance().destroy();
                         SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
                         Log.d("zhang", "COMMUNICATION_STATE_OVER: 66666666 ");
-                        VoiceCommunicationUtils.getInstance().setCommunicationState(ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_OVER);
+                        VoiceCommunicationManager.getInstance().setCommunicationState(ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_OVER);
                         return;
                     }
                 }
@@ -1060,12 +1058,12 @@ public class CommunicationFragment extends BaseFragment {
                 String agoraChannelId = customProtocol.getParamMap().get("roomid");
                 String channelId = customProtocol.getParamMap().get("channelid");
                 String fromUid = customProtocol.getParamMap().get("uid");
-                VoiceCommunicationUtils.getInstance().getVoiceCommunicationChannelInfoAndSendRefuseCommand(channelId, agoraChannelId, fromUid);
+                VoiceCommunicationManager.getInstance().getVoiceCommunicationChannelInfoAndSendRefuseCommand(channelId, agoraChannelId, fromUid);
             }
         }
     }
 
-    //来自VoiceCommunicationUtils
+    //来自VoiceCommunicationManager
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onRefreshVoiceCallSmallWindow(final SimpleEventMessage simpleEventMessage) {
         if (simpleEventMessage.getAction().equals(Constant.EVENTBUS_TAG_REFRESH_VOICE_CALL_SMALL_WINDOW)) {
@@ -1081,7 +1079,7 @@ public class CommunicationFragment extends BaseFragment {
      * @param connectStateConnected
      */
     private void changeUserConnectStateByUid(int connectStateConnected, String uid) {
-        List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationMemberList = VoiceCommunicationUtils
+        List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationMemberList = VoiceCommunicationManager
                 .getInstance().getVoiceCommunicationMemberList();
         if (voiceCommunicationMemberList != null && voiceCommunicationMemberList.size() > 0) {
             for (int i = 0; i < voiceCommunicationMemberList.size(); i++) {
@@ -1097,7 +1095,7 @@ public class CommunicationFragment extends BaseFragment {
      * 检查是否需要退出
      */
     private void checkCommunicationFinish() {
-        List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationMemberList = VoiceCommunicationUtils
+        List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationMemberList = VoiceCommunicationManager
                 .getInstance().getVoiceCommunicationMemberList();
         if (voiceCommunicationMemberList != null && voiceCommunicationMemberList.size() > 0) {
             int waitAndCommunicationSize = 0;
@@ -1108,9 +1106,9 @@ public class CommunicationFragment extends BaseFragment {
                 }
             }
             if (waitAndCommunicationSize < 2) {
-                VoiceCommunicationUtils.getInstance().destroy();
+                VoiceCommunicationManager.getInstance().destroy();
                 SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
-                VoiceCommunicationUtils.getInstance().setCommunicationState(ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_OVER);
+                VoiceCommunicationManager.getInstance().setCommunicationState(ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_OVER);
             }
         }
     }

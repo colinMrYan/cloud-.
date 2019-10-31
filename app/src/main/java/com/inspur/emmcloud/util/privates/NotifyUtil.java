@@ -42,13 +42,13 @@ public class NotifyUtil {
     }
 
     public static void sendNotifyMsg(Context context) {
-        if (VoiceCommunicationUtils.getInstance().getCommunicationState() != COMMUNICATION_STATE_OVER &&
-                VoiceCommunicationUtils.getInstance().getCommunicationState() != -1) {
+        if (VoiceCommunicationManager.getInstance().getCommunicationState() != COMMUNICATION_STATE_OVER &&
+                VoiceCommunicationManager.getInstance().getCommunicationState() != -1) {
             NotifyUtil notifyUtil = new NotifyUtil(context);
             String title = "";
             String content = "";
             List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationMemberList =
-                    VoiceCommunicationUtils.getInstance().getVoiceCommunicationMemberList();
+                    VoiceCommunicationManager.getInstance().getVoiceCommunicationMemberList();
             if (voiceCommunicationMemberList.size() > 2) {  //群聊
                 title = context.getResources().getString(R.string.voice_communication_notification_group_title);
                 content = context.getResources().getString(R.string.voice_communication_notification_group_content);
@@ -78,7 +78,7 @@ public class NotifyUtil {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_IS_FROM_SMALL_WINDOW, true);
             intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE,
-                    VoiceCommunicationUtils.getInstance().getLayoutState());
+                    VoiceCommunicationManager.getInstance().getLayoutState());
         } catch (Exception e) {
             e.printStackTrace();
         }

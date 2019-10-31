@@ -762,6 +762,7 @@ public class MessageCacheUtil {
                     .and(WhereBuilder.b("sendStatus", "=", 1))
                     .and(WhereBuilder.b("recallFrom", "=", ""))
                     .and(WhereBuilder.b("showContent", "like", "%" + content + "%"))
+                    .orderBy("creationDate", true)
                     .findAll();
             if (messageList != null) {
                 return messageList;

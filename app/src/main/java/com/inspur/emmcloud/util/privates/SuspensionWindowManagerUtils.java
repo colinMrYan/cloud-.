@@ -113,12 +113,12 @@ public class SuspensionWindowManagerUtils {
         windowView = LayoutInflater.from(windowContext).inflate(R.layout.service_voice_communication,
                 null);
         chronometer = (Chronometer) windowView.findViewById(R.id.chronometer_voice_communication_time);
-        if (VoiceCommunicationUtils.getInstance().getCommunicationState() == COMMUNICATION_STATE_ING) {
+        if (VoiceCommunicationManager.getInstance().getCommunicationState() == COMMUNICATION_STATE_ING) {
             chronometer.setBase(SystemClock.elapsedRealtime() - passedTime * 1000);
             chronometer.start();
-        } else if (VoiceCommunicationUtils.getInstance().getCommunicationState() == COMMUNICATION_STATE_PRE) {
+        } else if (VoiceCommunicationManager.getInstance().getCommunicationState() == COMMUNICATION_STATE_PRE) {
             chronometer.setText(R.string.voice_communication_waitting_answer);
-        } else if (VoiceCommunicationUtils.getInstance().getCommunicationState() == COMMUNICATION_STATE_OVER) {
+        } else if (VoiceCommunicationManager.getInstance().getCommunicationState() == COMMUNICATION_STATE_OVER) {
             hideCommunicationSmallWindow();
         }
         View.OnClickListener clickListener = new View.OnClickListener() {
@@ -236,7 +236,7 @@ public class SuspensionWindowManagerUtils {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_IS_FROM_SMALL_WINDOW, true);
             intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE,
-                    VoiceCommunicationUtils.getInstance().getLayoutState());
+                    VoiceCommunicationManager.getInstance().getLayoutState());
             LogUtils.YfcDebug("准备启动SchemeActivity");
             windowContext.startActivity(intent);
 //            Intent intent = new Intent(windowContext, .class);
