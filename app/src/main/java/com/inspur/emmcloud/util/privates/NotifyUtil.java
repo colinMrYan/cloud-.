@@ -92,7 +92,7 @@ public class NotifyUtil {
             mChannel.setDescription("");
             mChannel.enableLights(true);
             mChannel.setLightColor(Color.RED);
-            mChannel.enableVibration(true);
+            mChannel.enableVibration(false);
             notificationManager.createNotificationChannel(mChannel);
         }
         builder.setTicker("");//设置信息提示
