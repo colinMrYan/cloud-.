@@ -206,6 +206,8 @@ public class CommunicationFragment extends BaseFragment {
         getConversationList();
         setHeaderFunctionOptions(null);
         checkingNetStateUtils = new CheckingNetStateUtils(getContext(), NetUtils.pingUrls, NetUtils.httpUrls);
+        //将此句挪到此处，为了防止广播注册太晚接收不到WS状态，这里重新获取下
+        showSocketStatusInTitle(WebSocketPush.getInstance().getWebsocketStatus());
     }
 
     /**
@@ -234,7 +236,6 @@ public class CommunicationFragment extends BaseFragment {
         initPullRefreshLayout();
         initRecycleView();
         loadingDlg = new LoadingDialog(getActivity());
-        showSocketStatusInTitle(WebSocketPush.getInstance().getWebsocketStatus());
     }
 
     /**

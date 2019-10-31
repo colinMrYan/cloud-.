@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.Base64;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.bean.schedule.Schedule;
@@ -120,7 +119,6 @@ public class CalendarUtils {
                     if (!StringUtils.isBlank(exchangeAccount) && !StringUtils.isBlank(exchangePassword)) {
                         exchangeAuthHeaderValue = exchangeAccount + ":" + exchangePassword;
                         exchangeAuthHeaderValue = Base64.encodeToString(exchangeAuthHeaderValue.getBytes(), Base64.NO_WRAP);
-                        LogUtils.jasonDebug("exchangeAuthHeaderValue==" + exchangeAuthHeaderValue);
                     }
                     break;
                 default:
