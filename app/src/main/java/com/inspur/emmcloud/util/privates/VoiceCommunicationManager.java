@@ -92,7 +92,7 @@ public class VoiceCommunicationManager {
             if (onVoiceCommunicationCallbacks != null) {
                 onVoiceCommunicationCallbacks.onUserOffline(uid, reason);
             }
-            if (userCount < 2) {
+            if (getWaitAndConnectedNumber() < 2) {
                 destroy();
                 SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
             }
@@ -122,7 +122,6 @@ public class VoiceCommunicationManager {
         //加入频道成功
         @Override
         public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
-            LogUtils.YfcDebug("channel:" + channel);
 //            userCount = userCount + 1;
             if (onVoiceCommunicationCallbacks != null) {
                 onVoiceCommunicationCallbacks.onJoinChannelSuccess(channel, uid, elapsed);
@@ -236,6 +235,41 @@ public class VoiceCommunicationManager {
     };
 
     /**
+     * 获取等待中和通话中的人员数量
+     *
+     * @return
+     */
+    private int getWaitAndConnectedNumber() {
+        int number = 0;
+        if (voiceCommunicationMemberList != null) {
+            for (VoiceCommunicationJoinChannelInfoBean voiceCommunicationJoinChannelInfoBean : voiceCommunicationMemberList) {
+                int state = voiceCommunicationJoinChannelInfoBean.getConnectState();
+                if (state == VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_INIT || state == VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_CONNECTED) {
+                    number = number + 1;
+                }
+            }
+        }
+        return number;
+    }
+
+    /**
+     * 获取已经进入通话中的人员数量
+     *
+     * @return
+     */
+    private int getConnectedNumber() {
+        int number = 0;
+        if (voiceCommunicationMemberList != null) {
+            for (VoiceCommunicationJoinChannelInfoBean voiceCommunicationJoinChannelInfoBean : voiceCommunicationMemberList) {
+                if (voiceCommunicationJoinChannelInfoBean.getConnectState() == VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_CONNECTED) {
+                    number = number + 1;
+                }
+            }
+        }
+        return number;
+    }
+
+    /**
      * 修改用户的链接状态
      * 通过agoraUid
      *
@@ -245,7 +279,6 @@ public class VoiceCommunicationManager {
         if (voiceCommunicationMemberList != null && voiceCommunicationMemberList.size() > 0) {
             for (int i = 0; i < voiceCommunicationMemberList.size(); i++) {
                 if (voiceCommunicationMemberList.get(i).getAgoraUid() == agroaUid) {
-                    LogUtils.YfcDebug("有用户离开了频道：" + agroaUid);
                     voiceCommunicationMemberList.get(i).setConnectState(connectStateConnected);
                     break;
                 }

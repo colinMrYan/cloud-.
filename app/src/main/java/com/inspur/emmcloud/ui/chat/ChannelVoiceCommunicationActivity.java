@@ -762,7 +762,9 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                         }
                     });
                 }
+                LogUtils.YfcDebug("用户加入，停止音乐");
                 if (mediaPlayerManagerUtils != null) {
+                    LogUtils.YfcDebug("11111111111111");
                     mediaPlayerManagerUtils.stop();
                 }
             }
@@ -857,7 +859,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 //如果是邀请或被邀请状态，倒计时结束时挂断电话
                 if (layoutState == INVITEE_LAYOUT_STATE || layoutState == INVITER_LAYOUT_STATE) {
                     isLeaveChannel = true;
-//                    refuseOrLeaveChannel(COMMUNICATION_LEAVE);
+                    refuseOrLeaveChannel(COMMUNICATION_LEAVE);
                 }
                 List<VoiceCommunicationJoinChannelInfoBean> totalList = voiceCommunicationManager.getVoiceCommunicationMemberList();
                 for (int i = 0; i < totalList.size(); i++) {
@@ -928,7 +930,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
      * @param connectStateConnected
      */
     private void changeUserConnectStateByAgoraUid(int connectStateConnected, int agroaUid) {
-
         if (voiceCommunicationManager.getVoiceCommunicationMemberList().size() > 0) {
             for (int i = 0; i < voiceCommunicationManager.getVoiceCommunicationMemberList().size(); i++) {
                 if (voiceCommunicationManager.getVoiceCommunicationMemberList().get(i).getAgoraUid() == agroaUid) {
@@ -1314,7 +1315,9 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             unregisterReceiver(receiver);
         }
         EventBus.getDefault().unregister(this);
-        mediaPlayerManagerUtils.stop();
+        if (mediaPlayerManagerUtils != null) {
+            mediaPlayerManagerUtils.stop();
+        }
     }
 
     /**
