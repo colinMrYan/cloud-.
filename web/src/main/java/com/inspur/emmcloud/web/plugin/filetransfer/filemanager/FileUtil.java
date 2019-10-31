@@ -90,9 +90,11 @@ public class FileUtil {
         int count = 0;
         if (file.isDirectory()) {
             File[] files = file.listFiles();
-            for (File f : files) {
-                if (f.isHidden()) continue;
-                count++;
+            if (files != null) {
+                for (File f : files) {
+                    if (f.isHidden()) continue;
+                    count++;
+                }
             }
         }
         return count;

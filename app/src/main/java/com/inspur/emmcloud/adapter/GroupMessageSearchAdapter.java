@@ -53,8 +53,12 @@ public class GroupMessageSearchAdapter extends RecyclerView.Adapter<GroupMessage
         ImageDisplayUtils.getInstance().displayImage(holder.headImg, uiMessage.getSenderPhotoUrl(), R.drawable.icon_person_default);
         holder.groupMessageUserNameText.setText(groupUIMessageList.get(position).getSenderName());
         Spanned contentSpan = getContent(uiMessage.getMessage());
-        contentSpan = EmotionUtil.getInstance(context).getSmiledText(contentSpan, holder.groupMessageContentText.getTextSize());
-        holder.groupMessageContentText.setText(contentSpan);
+        if (contentSpan != null) {
+            contentSpan = EmotionUtil.getInstance(context).getSmiledText(contentSpan, holder.groupMessageContentText.getTextSize());
+            holder.groupMessageContentText.setText(contentSpan);
+        } else {
+            holder.groupMessageContentText.setText(uiMessage.getMessage().getShowContent());
+        }
         String messageSendTime = TimeUtils.getChannelMsgDisplayTime(context, uiMessage.getCreationDate());
         holder.groupMessageTimeText.setText(messageSendTime);
         holder.groupMessageLayout.setOnClickListener(new View.OnClickListener() {
