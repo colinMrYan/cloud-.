@@ -264,14 +264,12 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
      * @param isInputKeyWord
      */
     public void addMentions(String uid, String name, boolean isInputKeyWord) {
-        setAddMenuLayoutShow(true);
         Log.d("zhang", "addMentions: ");
         if (uid != null && name != null) {
             InsertModel insertModel;
             insertModel = new InsertModel("@", (System.currentTimeMillis() - MENTIONS_BASE_TIME) + "", name, uid);
             inputEdit.insertSpecialStr(isInputKeyWord, insertModel);
         }
-        inputEdit.setFocusableInTouchMode(true);
     }
 
     @OnClick({R.id.bt_send, R.id.bt_cancel, R.id.emotion_btn, R.id.emotion_delete, R.id.at_people_btn})
@@ -302,6 +300,7 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
                 EmotionUtil.getInstance(getContext()).deleteSingleEmojcon(inputEdit);
                 break;
             case R.id.at_people_btn:    //@某人
+                setAddMenuLayoutShow(false);
                 if (canMentions) {
                     openMentionPage(false);
                 }
