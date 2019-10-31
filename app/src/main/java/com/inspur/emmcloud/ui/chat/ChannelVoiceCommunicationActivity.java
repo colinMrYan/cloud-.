@@ -855,10 +855,11 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             @Override
             public void onCountDownTimerFinish() {
                 //如果是邀请或被邀请状态，倒计时结束时挂断电话
-                if (layoutState == INVITEE_LAYOUT_STATE || layoutState == INVITER_LAYOUT_STATE) {
+                if (layoutState == INVITEE_LAYOUT_STATE || layoutState == INVITER_LAYOUT_STATE || voiceCommunicationManager.getConnectedNumber() < 2) {
                     isLeaveChannel = true;
                     refuseOrLeaveChannel(COMMUNICATION_LEAVE);
                 }
+                //把仍在等待中的人置为离开状态
                 List<VoiceCommunicationJoinChannelInfoBean> totalList = voiceCommunicationManager.getVoiceCommunicationMemberList();
                 for (int i = 0; i < totalList.size(); i++) {
                     if (totalList.get(i).getConnectState() == VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_INIT) {

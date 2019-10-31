@@ -257,7 +257,7 @@ public class VoiceCommunicationManager {
      *
      * @return
      */
-    private int getConnectedNumber() {
+    public int getConnectedNumber() {
         int number = 0;
         if (voiceCommunicationMemberList != null) {
             for (VoiceCommunicationJoinChannelInfoBean voiceCommunicationJoinChannelInfoBean : voiceCommunicationMemberList) {
