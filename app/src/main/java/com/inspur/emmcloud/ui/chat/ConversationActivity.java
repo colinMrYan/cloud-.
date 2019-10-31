@@ -1605,7 +1605,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 default:
                     break;
             }
-            if (uiMessage.getMessage().getFromUser().equals(BaseApplication.getInstance().getUid()) && System.currentTimeMillis() - uiMessage.getCreationDate() < 120000) {
+            if (uiMessage.getMessage().getFromUser().equals(BaseApplication.getInstance().getUid()) && System.currentTimeMillis() - uiMessage.getCreationDate() < 120000000) {
                 operationIdList.add(R.string.chat_long_click_recall);
             }
             if (uiMessage.getMessage().getType().equals(Message.MESSAGE_TYPE_MEDIA_VOICE) && !LanguageManager.getInstance().isAppLanguageEnglish()) {
@@ -1893,7 +1893,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     }
 
     private void requestToRecallMessage(Message message) {
-        if (System.currentTimeMillis() - message.getCreationDate() >= 120000) {
+        if (System.currentTimeMillis() - message.getCreationDate() >= 120000000) {
             showInfoDlg(getString(R.string.recall_fail_for_timeout));
         } else if (WebSocketPush.getInstance().isSocketConnect()) {
             loadingDlg.show();
