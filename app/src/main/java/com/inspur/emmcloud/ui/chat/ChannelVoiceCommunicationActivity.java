@@ -762,9 +762,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                         }
                     });
                 }
-                LogUtils.YfcDebug("用户加入，停止音乐");
                 if (mediaPlayerManagerUtils != null) {
-                    LogUtils.YfcDebug("11111111111111");
                     mediaPlayerManagerUtils.stop();
                 }
             }
