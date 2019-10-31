@@ -62,7 +62,7 @@ import com.inspur.emmcloud.ui.chat.emotion.EmotionRecentManager;
 import com.inspur.emmcloud.ui.chat.emotion.EmotionUtil;
 import com.inspur.emmcloud.util.privates.MediaPlayerUtils;
 import com.inspur.emmcloud.util.privates.Voice2StringMessageUtils;
-import com.inspur.emmcloud.util.privates.VoiceCommunicationUtils;
+import com.inspur.emmcloud.util.privates.VoiceCommunicationManager;
 import com.inspur.emmcloud.util.privates.audioformat.AndroidMp3ConvertUtils;
 import com.inspur.emmcloud.widget.audiorecord.AudioDialogManager;
 import com.inspur.emmcloud.widget.audiorecord.AudioRecordButton;
@@ -683,7 +683,7 @@ public class ECMChatInputMenu extends LinearLayout {
                             break;
                         case "voice_input":     //语音输入
                             if (NetUtils.isNetworkConnected(MyApplication.getInstance()) && WebSocketPush.getInstance().isSocketConnect()) {
-                                if (VoiceCommunicationUtils.getInstance().isVoiceBusy()) {
+                                if (VoiceCommunicationManager.getInstance().isVoiceBusy()) {
                                     ToastUtils.show(R.string.voice_communication_voice_busy_tip);
                                     return;
                                 }
@@ -708,7 +708,7 @@ public class ECMChatInputMenu extends LinearLayout {
                                 return;
                             }
                             if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-                                if (VoiceCommunicationUtils.getInstance().isVoiceBusy()) {
+                                if (VoiceCommunicationManager.getInstance().isVoiceBusy()) {
                                     ToastUtils.show(R.string.voice_communication_voice_busy_tip);
                                     return;
                                 }
@@ -733,7 +733,7 @@ public class ECMChatInputMenu extends LinearLayout {
                                 chatInputMenuListener.onNoSmallWindowPermission();
                                 return;
                             }
-                            if (VoiceCommunicationUtils.getInstance().isVoiceBusy()) {
+                            if (VoiceCommunicationManager.getInstance().isVoiceBusy()) {
                                 ToastUtils.show(R.string.voice_communication_voice_busy_tip);
                                 return;
                             }

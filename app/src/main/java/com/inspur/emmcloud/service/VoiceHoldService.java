@@ -21,7 +21,7 @@ import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity;
 import com.inspur.emmcloud.util.privates.NotifyUtil;
-import com.inspur.emmcloud.util.privates.VoiceCommunicationUtils;
+import com.inspur.emmcloud.util.privates.VoiceCommunicationManager;
 
 public class VoiceHoldService extends Service {
     private RelativeLayout relativeLayoutVoiceHold;
@@ -167,7 +167,7 @@ public class VoiceHoldService extends Service {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_IS_FROM_SMALL_WINDOW, true);
             intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE,
-                    VoiceCommunicationUtils.getInstance().getLayoutState());
+                    VoiceCommunicationManager.getInstance().getLayoutState());
 //            intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_TIME, Long.parseLong(TimeUtils.getChronometerSeconds(chronometer.getText().toString())));
             LogUtils.YfcDebug("准备启动SchemeActivity");
             startActivity(intent);
