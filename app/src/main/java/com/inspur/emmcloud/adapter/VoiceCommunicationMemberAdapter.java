@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
 import com.wang.avi.AVLoadingIndicatorView;
@@ -148,7 +147,6 @@ public class VoiceCommunicationMemberAdapter extends RecyclerView.Adapter<VoiceC
      */
     public void setMemberDataAndRefresh(List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationJoinChannelInfoBeanList, int index) {
         this.voiceCommunicationUserInfoBeanList = getInitAndConnected(voiceCommunicationJoinChannelInfoBeanList);
-        LogUtils.YfcDebug("刷新时数据个数：" + this.voiceCommunicationUserInfoBeanList.size());
         this.index = index;
         notifyDataSetChanged();
     }

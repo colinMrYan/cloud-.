@@ -11,6 +11,7 @@ import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.chat.GetVoiceCommunicationResult;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationAudioVolumeInfo;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
@@ -64,6 +65,8 @@ public class VoiceCommunicationUtils {
      */
     private String communicationType = "";
     private List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationMemberList = new ArrayList<>();
+    private List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationMemberListTop = new ArrayList<>();
+    private List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationMemberListBottom = new ArrayList<>();
     private VoiceCommunicationJoinChannelInfoBean inviteeInfoBean;
     private int userCount = 1;
     /**
@@ -85,6 +88,7 @@ public class VoiceCommunicationUtils {
         public void onUserOffline(int uid, int reason) {
             changeUserConnectStateByAgoraUid(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_LEAVE, uid);
             userCount = userCount - 1;
+            LogUtils.YfcDebug("频道剩余人数：" + userCount);
             if (userCount < 2) {
                 destroy();
                 SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
@@ -118,6 +122,7 @@ public class VoiceCommunicationUtils {
         //加入频道成功
         @Override
         public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
+            LogUtils.YfcDebug("channel:" + channel);
 //            userCount = userCount + 1;
             if (onVoiceCommunicationCallbacks != null) {
                 onVoiceCommunicationCallbacks.onJoinChannelSuccess(channel, uid, elapsed);
@@ -309,6 +314,7 @@ public class VoiceCommunicationUtils {
                     onVoiceCommunicationCallbacks.onCountDownTimerFinish();
                 }
                 if (communicationState == COMMUNICATION_STATE_PRE) {
+                    remindEmmServerLeaveChannel(agoraChannelId);
                     SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
                     destroy();
                 }
@@ -532,12 +538,13 @@ public class VoiceCommunicationUtils {
             countDownTimer = null;
         }
         leaveChannel();
-        new android.os.Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                RtcEngine.destroy();
-            }
-        }, 1000);
+        RtcEngine.destroy();
+//        new android.os.Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                RtcEngine.destroy();
+//            }
+//        }, 1000);
         mRtcEngine = null;
         communicationState = -1;
         layoutState = -1;
@@ -548,6 +555,29 @@ public class VoiceCommunicationUtils {
         userCount = 1;
         connectStartTime = 0;
         voiceCommunicationUtils = null;
+    }
+
+    /**
+     * 分解通话成员，小于等于5人和多于5人时list有所不同为了适应通话人数两行且居中的UI
+     */
+    public void handleVoiceCommunicationMemberList() {
+        if (voiceCommunicationMemberList.size() > 0) {
+            if (voiceCommunicationMemberList.size() <= 5) {
+                voiceCommunicationMemberListTop = voiceCommunicationMemberList;
+                voiceCommunicationMemberListBottom.clear();
+            } else if (voiceCommunicationUtils.getVoiceCommunicationMemberList().size() <= 9) {
+                voiceCommunicationMemberListTop = voiceCommunicationMemberList.subList(0, 5);
+                voiceCommunicationMemberListBottom = voiceCommunicationMemberList.subList(5, voiceCommunicationMemberList.size());
+            }
+        }
+    }
+
+    public List<VoiceCommunicationJoinChannelInfoBean> getVoiceCommunicationMemberListTop() {
+        return voiceCommunicationMemberListTop;
+    }
+
+    public List<VoiceCommunicationJoinChannelInfoBean> getVoiceCommunicationMemberListBottom() {
+        return voiceCommunicationMemberListBottom;
     }
 
     /**
@@ -581,6 +611,7 @@ public class VoiceCommunicationUtils {
 
     public void setVoiceCommunicationMemberList(List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationMemberList) {
         this.voiceCommunicationMemberList = voiceCommunicationMemberList;
+        handleVoiceCommunicationMemberList();
     }
 
     public VoiceCommunicationJoinChannelInfoBean getInviteeInfoBean() {
@@ -624,6 +655,18 @@ public class VoiceCommunicationUtils {
     }
 
     /**
+     * 通知EmmServer用户离开频道
+     *
+     * @param agoraChannelId
+     */
+    private void remindEmmServerLeaveChannel(String agoraChannelId) {
+        if (NetUtils.isNetworkConnected(BaseApplication.getInstance())) {
+            ChatAPIService chatAPIService = new ChatAPIService(BaseApplication.getInstance());
+            chatAPIService.leaveAgoraChannel(agoraChannelId);
+        }
+    }
+
+    /**
      * 获取channel信息
      *
      * @param channelId
@@ -647,12 +690,12 @@ public class VoiceCommunicationUtils {
      */
     private JSONArray getUidArray(List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList, String fromUid) {
         JSONArray jsonArray = new JSONArray();
-        for (int i = 0; i < voiceCommunicationUserInfoBeanList.size(); i++) {
-            boolean isFrom = voiceCommunicationUserInfoBeanList.get(i).getUserId().equals(fromUid);
-            if (!voiceCommunicationUserInfoBeanList.get(i).getUserId().equals(BaseApplication.getInstance().getUid())) {
-                jsonArray.put(voiceCommunicationUserInfoBeanList.get(i).getUserId());
-            }
-        }
+//        for (int i = 0; i < voiceCommunicationUserInfoBeanList.size(); i++) {
+//            if (!voiceCommunicationUserInfoBeanList.get(i).getUserId().equals(BaseApplication.getInstance().getUid())) {
+//                jsonArray.put(voiceCommunicationUserInfoBeanList.get(i).getUserId());
+//            }
+//        }
+        jsonArray.put(fromUid);
         return jsonArray;
     }
 

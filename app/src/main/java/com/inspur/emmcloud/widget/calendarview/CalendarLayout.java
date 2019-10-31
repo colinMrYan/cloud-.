@@ -40,7 +40,6 @@ import android.widget.AbsListView;
 import android.widget.LinearLayout;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 
 
 /**
@@ -324,10 +323,7 @@ public class CalendarLayout extends LinearLayout {
                     mLastY = y;
                     return super.onTouchEvent(event);
                 }
-                LogUtils.jasonDebug("00000000000000000000000000000000000000000000");
-                LogUtils.jasonDebug("mContentView.getTranslationY()=====" + mContentView.getTranslationY());
                 if (mContentView.getTranslationY() == 0) {
-                    LogUtils.jasonDebug("111111111111111111111111111");
                     requestLayout();
                 }
                 //否则按比例平移

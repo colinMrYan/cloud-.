@@ -186,7 +186,7 @@ public class SettingActivity extends BaseActivity {
         apiService.setAPIInterface(new WebService());
         setWebAutoRotateState();
         webRotateSwitch.setOnCheckedChangeListener(onCheckedChangeListener);
-        if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
+        if (WebServiceRouterManager.getInstance().isV1xVersionChat() && !LanguageManager.getInstance().isAppLanguageEnglish()) {
             voice2WordLayout.setVisibility(View.VISIBLE);
             voice2WordSwitch.setChecked(AppUtils.getIsVoiceWordOpen());
             voice2WordSwitch.setOnCheckedChangeListener(onCheckedChangeListener);

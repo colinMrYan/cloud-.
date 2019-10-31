@@ -252,7 +252,7 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
 
     public void showEmotionLayout(boolean isShow) {
         emotionLayout.setVisibility(isShow ? VISIBLE : GONE);
-        emotionBtn.setImageResource(isShow ? R.drawable.ic_chat_input_keyboard : R.drawable.comment_image_emotion);
+        emotionBtn.setImageResource(isShow ? R.drawable.comment_image_keyboard : R.drawable.comment_image_emotion);
     }
 
     /**
