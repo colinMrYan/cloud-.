@@ -1079,8 +1079,11 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 communicationTimeChronometer.setBase(SystemClock.elapsedRealtime());
                 communicationTimeChronometer.start();
                 voiceCommunicationUtils.setConnectStartTime(System.currentTimeMillis());
-                voiceCommunicationUtils.joinChannel(inviteeInfoBean.getToken(),
+                int joinState = voiceCommunicationUtils.joinChannel(inviteeInfoBean.getToken(),
                         agoraChannelId, inviteeInfoBean.getUserId(), inviteeInfoBean.getAgoraUid());
+                if (joinState == 0) {
+                    remindEmmServerJoinChannel(agoraChannelId);
+                }
                 break;
             case R.id.ll_video_hung_up:
             case R.id.img_hung_up:
@@ -1490,6 +1493,8 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
 
         @Override
         public void returnGetVoiceCommunicationResultFail(String error, int errorCode) {
+            SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
+            voiceCommunicationUtils.destroy();
             WebServiceMiddleUtils.hand(ChannelVoiceCommunicationActivity.this, error, errorCode);
             finish();
         }
@@ -1514,6 +1519,8 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
 
         @Override
         public void returnGetVoiceCommunicationChannelInfoFail(String error, int errorCode) {
+            SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
+            voiceCommunicationUtils.destroy();
             WebServiceMiddleUtils.hand(ChannelVoiceCommunicationActivity.this, error, errorCode);
             finish();
         }

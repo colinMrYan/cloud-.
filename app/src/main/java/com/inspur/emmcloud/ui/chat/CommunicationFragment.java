@@ -37,6 +37,7 @@ import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
@@ -969,13 +970,16 @@ public class CommunicationFragment extends BaseFragment {
         //接收到消息后告知服务端
         WSAPIService.getInstance().sendReceiveStartVoiceAndVideoCallMessageSuccess(getVoiceAndVideoResult.getTracer());
 
+        LogUtils.YfcDebug("收到命令消息：" + JSONUtils.toJSONString(getVoiceAndVideoResult));
         //判断如果在通话中就不再接听新的来电
-        if (VoiceCommunicationUtils.getInstance().getCommunicationState() != ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_ING) {
+        if (!VoiceCommunicationUtils.getInstance().isVoiceBusy()) {
             if (customProtocol.getProtocol().equals("ecc-cloudplus-cmd") && !StringUtils.isBlank(customProtocol.getParamMap().get("cmd")) &&
                     customProtocol.getParamMap().get("cmd").equals("invite")) {
                 startVoiceOrVideoCall(getVoiceAndVideoResult.getContextParamsRoom(), getVoiceAndVideoResult.getContextParamsType(), getVoiceAndVideoResult.getChannel());
             }
         } else {
+            LogUtils.YfcDebug("11111111111111：" + customProtocol.getParamMap().get("cmd"));
+            LogUtils.YfcDebug("isActivityExist：" + BaseApplication.getInstance().isActivityExist(ChannelVoiceCommunicationActivity.class));
             //当ChannelVoiceCommunicationActivity页面不存在的情况下处理refuse和destroy
             if (!BaseApplication.getInstance().isActivityExist(ChannelVoiceCommunicationActivity.class)) {
                 if (customProtocol.getProtocol().equals("ecc-cloudplus-cmd") && !StringUtils.isBlank(customProtocol.getParamMap().get("cmd"))) {
