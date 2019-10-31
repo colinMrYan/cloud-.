@@ -23,7 +23,6 @@ import com.inspur.emmcloud.basemodule.config.Constant;
  */
 public class InputMethodUtils {
     public static void hide(Activity activity) {
-        Log.d("zhang", "hide: ");
         try {
             //解决关闭软键盘抛出异常的问题
             View view = activity.getWindow().peekDecorView();
@@ -61,7 +60,6 @@ public class InputMethodUtils {
     }
 
     public static void display(final Activity activity, final EditText editText, int delay) {
-        Log.d("zhang", "display: ");
         try {
             editText.postDelayed(new Runnable() {
                 @Override
@@ -111,7 +109,6 @@ public class InputMethodUtils {
         }
         if (softInputHeight > 0) {
             PreferencesUtils.putInt(activity, Constant.PREF_SOFT_INPUT_HEIGHT, softInputHeight);
-            Log.d("zhang", "softInputHeight==" + softInputHeight);
         }
         return softInputHeight;
     }

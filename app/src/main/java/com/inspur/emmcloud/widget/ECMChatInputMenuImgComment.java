@@ -6,6 +6,7 @@
  */
 package com.inspur.emmcloud.widget;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -47,7 +48,6 @@ import java.util.regex.Pattern;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
 
 /**
  * com.inspur.emmcloud.widget.ECMChatInputMenu create at 2016年11月24日 上午10:25:52
@@ -115,6 +115,7 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
         sendBtn.setEnabled(false);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void initInputEdit() {
         inputEdit.setOnTouchListener(new OnTouchListener() {
             @Override
@@ -123,7 +124,6 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
                     if (addMenuLayout.getVisibility() != View.VISIBLE) {
                         setAddMenuLayoutShow(true);
                     }
-
                 }
                 return false;
             }
@@ -177,17 +177,13 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
         intent.putExtra("cid", cid);
         intent.putExtra(MembersActivity.MEMBER_PAGE_STATE, MembersActivity.MENTIONS_STATE);
         intent.putExtra("isInputKeyWord", isInputKeyWord);
-        ((Activity) getContext()).overridePendingTransition(
-                R.anim.activity_open, 0);
+        ((Activity) getContext()).overridePendingTransition(R.anim.activity_open, 0);
 
-        ((Activity) getContext()).startActivityForResult(intent,
-                MENTIONS_RESULT);
-
+        ((Activity) getContext()).startActivityForResult(intent, MENTIONS_RESULT);
     }
 
 
-    public void setChatInputMenuListener(
-            ChatInputMenuListener chatInputMenuListener) {
+    public void setChatInputMenuListener(ChatInputMenuListener chatInputMenuListener) {
         this.chatInputMenuListener = chatInputMenuListener;
     }
 
@@ -218,9 +214,7 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
                 LogUtils.jasonDebug("close------------------");
                 InputMethodUtils.hide(getContext(), addMenuLayout);
             }
-
         }
-
     }
 
     /**
@@ -264,14 +258,12 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
      * @param isInputKeyWord
      */
     public void addMentions(String uid, String name, boolean isInputKeyWord) {
-        setAddMenuLayoutShow(true);
         Log.d("zhang", "addMentions: ");
         if (uid != null && name != null) {
             InsertModel insertModel;
             insertModel = new InsertModel("@", (System.currentTimeMillis() - MENTIONS_BASE_TIME) + "", name, uid);
             inputEdit.insertSpecialStr(isInputKeyWord, insertModel);
         }
-        inputEdit.setFocusableInTouchMode(true);
     }
 
     @OnClick({R.id.bt_send, R.id.bt_cancel, R.id.emotion_btn, R.id.emotion_delete, R.id.at_people_btn})
@@ -294,6 +286,7 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
                     chatInputMenuListener.hideChatInputMenu();
                 }
                 inputEdit.setText("");
+                inputEdit.clearInsertModelList();
                 break;
             case R.id.emotion_btn:
                 handleEmotionStatus();
@@ -302,6 +295,7 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
                 EmotionUtil.getInstance(getContext()).deleteSingleEmojcon(inputEdit);
                 break;
             case R.id.at_people_btn:    //@某人
+                setAddMenuLayoutShow(false);
                 if (canMentions) {
                     openMentionPage(false);
                 }
@@ -396,6 +390,4 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
             }
         }
     }
-
-
 }
