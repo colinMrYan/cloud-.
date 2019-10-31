@@ -108,9 +108,9 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
         // TODO Auto-generated method stub
         View view = LayoutInflater.from(context).inflate(R.layout.communication_widget_chat_input_menu_img_comment, this, true);
         ButterKnife.bind(this, view);
+        setAddMenuLayoutShow(true);
         initInputEdit();
         initEmotion();
-        setAddMenuLayoutShow(true);
         sendBtn.setEnabled(false);
     }
 
@@ -207,6 +207,9 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
             }
             addMenuLayout.getLayoutParams().height = softInputHeight;
             addMenuLayout.setVisibility(View.VISIBLE);
+            if (InputMethodUtils.isSoftInputShow((Activity) getContext())) {
+                showEmotionLayout(false);
+            }
         } else if (addMenuLayout.isShown()) {
             addMenuLayout.setVisibility(View.GONE);
             if (InputMethodUtils.isSoftInputShow((Activity) getContext())) {
@@ -245,10 +248,12 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
             LogUtils.jasonDebug("close------------------");
             InputMethodUtils.hide(getContext(), inputEdit);
         }
-
     }
 
-
+    public void showEmotionLayout(boolean isShow) {
+        emotionLayout.setVisibility(isShow ? VISIBLE : GONE);
+        emotionBtn.setImageResource(isShow ? R.drawable.ic_chat_input_keyboard : R.drawable.comment_image_emotion);
+    }
 
     /**
      * 添加mentions
@@ -279,9 +284,12 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
                 }
                 break;
             case R.id.bt_cancel:
+                showEmotionLayout(false);
+                InputMethodUtils.hide(getContext(), addMenuLayout);
                 if (chatInputMenuListener != null) {
                     chatInputMenuListener.hideChatInputMenu();
                 }
+                inputEdit.setText("");
                 break;
             case R.id.emotion_btn:
                 handleEmotionStatus();
@@ -291,7 +299,7 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
                 break;
             case R.id.at_people_btn:    //@某人
                 if (canMentions) {
-                    openMentionPage(true);
+                    openMentionPage(false);
                 }
                 break;
             default:
@@ -313,20 +321,17 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
         if (addMenuLayout.isShown()) {
             if (InputMethodUtils.isSoftInputShow((Activity) getContext())) {
                 showSoftInput(false);
+                showEmotionLayout(true);
             } else {
                 showSoftInput(true);
+                showEmotionLayout(false);
             }
         } else {
-            showSoftInput(false);
             setAddMenuLayoutShow(true);
+            showSoftInput(false);
+            showEmotionLayout(true);
         }
     }
-
-    public void hideAddMenuLayout() {
-        addMenuLayout.setVisibility(View.GONE);
-        emotionBtn.setImageResource(R.drawable.ic_chat_btn_emotion);
-    }
-
 
     /**
      * 获取content中urlList

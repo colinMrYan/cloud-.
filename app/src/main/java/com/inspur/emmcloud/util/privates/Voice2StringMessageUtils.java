@@ -139,6 +139,10 @@ public class Voice2StringMessageUtils {
         if (StringUtils.isBlank(language)) {
             language = LanguageManager.getInstance().getCurrentAppLanguage();
         }
+        // 设置语言
+        speechRecognizer.setParameter(SpeechConstant.LANGUAGE, "zh_cn");
+        // 设置语言区域
+        speechRecognizer.setParameter(SpeechConstant.ACCENT, "mandarin");
         setLanguage(language);
         //来自本地录音文件时，前后端时间都设置为60s，其他情况使用默认值
         // 设置语音前端点:静音超时时间，即用户多长时间不说话则当做超时处理

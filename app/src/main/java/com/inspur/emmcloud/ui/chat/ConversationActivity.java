@@ -48,6 +48,7 @@ import com.inspur.emmcloud.basemodule.util.FileDownloadManager;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
+import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
@@ -1343,7 +1344,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                     notifyCommucationFragmentMessageSendStatus();
                 }
             } else {
-                showInfoDlg("消息撤回失败");
+                showInfoDlg(getString(R.string.recall_message_fail));
             }
         }
     }
@@ -1607,7 +1608,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             if (uiMessage.getMessage().getFromUser().equals(BaseApplication.getInstance().getUid()) && System.currentTimeMillis() - uiMessage.getCreationDate() < 120000) {
                 operationIdList.add(R.string.chat_long_click_recall);
             }
-            if (uiMessage.getMessage().getType().equals(Message.MESSAGE_TYPE_MEDIA_VOICE)) {
+            if (uiMessage.getMessage().getType().equals(Message.MESSAGE_TYPE_MEDIA_VOICE) && !LanguageManager.getInstance().isAppLanguageEnglish()) {
                 operationIdList.add(R.string.voice_to_word);
             }
         }
@@ -1675,6 +1676,12 @@ public class ConversationActivity extends ConversationBaseActivity {
                 //当消息处于发送中状态时无法点击
                 if (messageSendStatus == Message.MESSAGE_SEND_SUCCESS) {
                     String mid = message.getMsgContentComment().getMessage();
+                    Message commentedMessage = MessageCacheUtil.getMessageByMid(MyApplication.getInstance(), mid);
+                    //如果此条消息已被撤回，则进行提示
+                    if (commentedMessage != null && !StringUtils.isBlank(commentedMessage.getRecallFrom())) {
+                        ToastUtils.show(R.string.message_has_been_recalled);
+                        return;
+                    }
                     bundle.putString("mid", mid);
                     bundle.putString(EXTRA_CID, message.getChannel());
                     IntentUtils.startActivity(ConversationActivity.this,

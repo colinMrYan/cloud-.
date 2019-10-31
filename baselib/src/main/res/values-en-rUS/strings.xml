@@ -309,7 +309,7 @@
     <string name="quit_group_warning_text">Confirm to leave team?</string>
     <string name="dismiss_group_warning_text">After Dismiss Group,all the chat history and files will be deleted</string>
     <string name="chat_stick_on_top">Sticky on Top</string>
-    <string name="chat_remove">Delete</string>
+    <string name="chat_remove">Hide</string>
     <string name="chat_remove_from_top">Remove from Top</string>
     <string name="no_chat_content">No chat content</string>
     <string name="send_email">Mail</string>
@@ -320,7 +320,10 @@
     <string name="chat_long_click_transmit">Forward</string>
     <string name="chat_long_click_recall">Recall</string>
     <string name="chat_info_message_status_recall">%1$s recalled a message</string>
-    <string name="recall_fail_for_timeout">You cannot recall a sent message after two miniutes.</string>
+    <string name="recall_fail_for_timeout">You cannot recall a sent message after two minutes.</string>
+    <string name="recall_message_fail">Message recall failed</string>
+    <string name="message_has_been_recalled">This message has been recalled</string>
+    <string name="message_get_fail">Message get failed</string>
     <string name="chat_long_click_schedule">Add to Calendar</string>
     <string name="chat_long_click_copy_text">Copy text</string>
     <string name="communication_search">Search</string>
