@@ -65,6 +65,7 @@ public class Voice2StringMessageUtils {
     private String voiceFilePath = "";
     private int voiceState = -1;
     private int audioSimpleRate = 16000;
+    private boolean needChangeLanguage = false;
 
     public Voice2StringMessageUtils(Context context) {
         this.context = context;
@@ -78,8 +79,8 @@ public class Voice2StringMessageUtils {
         // 使用SpeechRecognizer对象，可根据回调消息自定义界面；
         if (speechRecognizer == null) {
             speechRecognizer = SpeechRecognizer.createRecognizer(context, initListener);
-            setParam(VOICE_FROM_XUNFEI);
         }
+        setParam(VOICE_FROM_XUNFEI);
         speechRecognizer.startListening(recognizerListener);
         voiceState = MSG_FROM_XUNFEI;
     }
@@ -139,11 +140,12 @@ public class Voice2StringMessageUtils {
         if (StringUtils.isBlank(language)) {
             language = LanguageManager.getInstance().getCurrentAppLanguage();
         }
-        // 设置语言
-        speechRecognizer.setParameter(SpeechConstant.LANGUAGE, "zh_cn");
-        // 设置语言区域
-        speechRecognizer.setParameter(SpeechConstant.ACCENT, "mandarin");
-        setLanguage(language);
+        Log.d("zhang", "setParam: needChangeLanguage = " + needChangeLanguage);
+        if (needChangeLanguage) {
+            setLanguage(language);
+        } else {
+            setLanguage("zh-Hans");
+        }
         //来自本地录音文件时，前后端时间都设置为60s，其他情况使用默认值
         // 设置语音前端点:静音超时时间，即用户多长时间不说话则当做超时处理
         speechRecognizer.setParameter(SpeechConstant.VAD_BOS, "10000");
@@ -163,7 +165,12 @@ public class Voice2StringMessageUtils {
         speechRecognizer.setParameter(SpeechConstant.ASR_AUDIO_PATH, Environment.getExternalStorageDirectory() + "");
     }
 
+    public void setNeedChangeLanguage(boolean needChangeLanguage) {
+        this.needChangeLanguage = needChangeLanguage;
+    }
+
     public void setLanguage(String type) {
+        Log.d("zhang", "setLanguage: needChangeLanguage = " + needChangeLanguage);
         switch (type) {
             case "zh-Hans":
                 // 设置语言
