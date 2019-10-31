@@ -1036,8 +1036,6 @@ public class CommunicationFragment extends BaseFragment {
                 startVoiceOrVideoCall(getVoiceAndVideoResult.getContextParamsRoom(), getVoiceAndVideoResult.getContextParamsType(), getVoiceAndVideoResult.getChannel());
             }
         } else {
-            LogUtils.YfcDebug("11111111111111：" + customProtocol.getParamMap().get("cmd"));
-            LogUtils.YfcDebug("isActivityExist：" + BaseApplication.getInstance().isActivityExist(ChannelVoiceCommunicationActivity.class));
             //当ChannelVoiceCommunicationActivity页面不存在的情况下处理refuse和destroy
             if (!BaseApplication.getInstance().isActivityExist(ChannelVoiceCommunicationActivity.class)) {
                 if (customProtocol.getProtocol().equals("ecc-cloudplus-cmd") && !StringUtils.isBlank(customProtocol.getParamMap().get("cmd"))) {
