@@ -1482,6 +1482,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             } else {
                 finish();
             }
+            LogUtils.YfcDebug("返回的列表信息：" + JSONUtils.toJSONString(getVoiceCommunicationResult.getVoiceCommunicationJoinChannelInfoBeanList()));
             voiceCommunicationManager.getVoiceCommunicationMemberList().clear();
             voiceCommunicationManager.getVoiceCommunicationMemberList().addAll(getVoiceCommunicationResult.getVoiceCommunicationJoinChannelInfoBeanList());
             sendCommunicationCommand("invite");

@@ -81,7 +81,7 @@ public class VoiceCommunicationMemberAdapter extends RecyclerView.Adapter<VoiceC
         }
         //当通话人数为两个或者是邀请人的Adapter的时候不显示名字
         holder.nameTv.setVisibility(((index == 1 && voiceCommunicationUserInfoBeanList.size() <= 2) || index == 3) ? View.GONE : View.VISIBLE);
-        if (voiceCommunicationUserInfoBeanList.get(position).getConnectState() != 0 ||
+        if (voiceCommunicationUserInfoBeanList.get(position).getConnectState() == VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_CONNECTED ||
                 voiceCommunicationUserInfoBeanList.get(position).getUserId().
                         equals(MyApplication.getInstance().getUid()) || index == 3) {
             holder.avLoadingIndicatorView.hide();
