@@ -65,6 +65,8 @@ public class VoiceCommunicationUtils {
      */
     private String communicationType = "";
     private List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationMemberList = new ArrayList<>();
+    private List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationMemberListTop = new ArrayList<>();
+    private List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationMemberListBottom = new ArrayList<>();
     private VoiceCommunicationJoinChannelInfoBean inviteeInfoBean;
     private int userCount = 1;
     /**
@@ -556,6 +558,29 @@ public class VoiceCommunicationUtils {
     }
 
     /**
+     * 分解通话成员，小于等于5人和多于5人时list有所不同为了适应通话人数两行且居中的UI
+     */
+    public void handleVoiceCommunicationMemberList() {
+        if (voiceCommunicationMemberList.size() > 0) {
+            if (voiceCommunicationMemberList.size() <= 5) {
+                voiceCommunicationMemberListTop = voiceCommunicationMemberList;
+                voiceCommunicationMemberListBottom.clear();
+            } else if (voiceCommunicationUtils.getVoiceCommunicationMemberList().size() <= 9) {
+                voiceCommunicationMemberListTop = voiceCommunicationMemberList.subList(0, 5);
+                voiceCommunicationMemberListBottom = voiceCommunicationMemberList.subList(5, voiceCommunicationMemberList.size());
+            }
+        }
+    }
+
+    public List<VoiceCommunicationJoinChannelInfoBean> getVoiceCommunicationMemberListTop() {
+        return voiceCommunicationMemberListTop;
+    }
+
+    public List<VoiceCommunicationJoinChannelInfoBean> getVoiceCommunicationMemberListBottom() {
+        return voiceCommunicationMemberListBottom;
+    }
+
+    /**
      * 设置回调
      *
      * @param l
@@ -586,6 +611,7 @@ public class VoiceCommunicationUtils {
 
     public void setVoiceCommunicationMemberList(List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationMemberList) {
         this.voiceCommunicationMemberList = voiceCommunicationMemberList;
+        handleVoiceCommunicationMemberList();
     }
 
     public VoiceCommunicationJoinChannelInfoBean getInviteeInfoBean() {
