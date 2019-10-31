@@ -37,7 +37,7 @@ import static com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity.COMM
  * Created by yufuchang on 2018/8/13.
  */
 
-public class VoiceCommunicationUtils {
+public class VoiceCommunicationManager {
 
 
     /**
@@ -50,7 +50,7 @@ public class VoiceCommunicationUtils {
      * @see ChannelVoiceCommunicationActivity#COMMUNICATION_STATE_OVER
      */
     private int communicationState = -1;
-    private static VoiceCommunicationUtils voiceCommunicationUtils;
+    private static VoiceCommunicationManager voiceCommunicationManager;
     private Context context;
     private RtcEngine mRtcEngine;
     private OnVoiceCommunicationCallbacks onVoiceCommunicationCallbacks;
@@ -253,7 +253,7 @@ public class VoiceCommunicationUtils {
         }
     }
 
-    private VoiceCommunicationUtils() {
+    private VoiceCommunicationManager() {
         this.context = BaseApplication.getInstance();
     }
 
@@ -263,16 +263,16 @@ public class VoiceCommunicationUtils {
      *
      * @return
      */
-    public static VoiceCommunicationUtils getInstance() {
-        if (voiceCommunicationUtils == null) {
-            synchronized (VoiceCommunicationUtils.class) {
-                if (voiceCommunicationUtils == null) {
-                    voiceCommunicationUtils = new VoiceCommunicationUtils();
+    public static VoiceCommunicationManager getInstance() {
+        if (voiceCommunicationManager == null) {
+            synchronized (VoiceCommunicationManager.class) {
+                if (voiceCommunicationManager == null) {
+                    voiceCommunicationManager = new VoiceCommunicationManager();
                 }
             }
         }
-//        voiceCommunicationUtils.initializeAgoraEngine();
-        return voiceCommunicationUtils;
+//        voiceCommunicationManager.initializeAgoraEngine();
+        return voiceCommunicationManager;
     }
 
     /**
@@ -554,7 +554,7 @@ public class VoiceCommunicationUtils {
         cloudPlusChannelId = "";
         userCount = 1;
         connectStartTime = 0;
-        voiceCommunicationUtils = null;
+        voiceCommunicationManager = null;
     }
 
     /**
@@ -565,7 +565,7 @@ public class VoiceCommunicationUtils {
             if (voiceCommunicationMemberList.size() <= 5) {
                 voiceCommunicationMemberListTop = voiceCommunicationMemberList;
                 voiceCommunicationMemberListBottom.clear();
-            } else if (voiceCommunicationUtils.getVoiceCommunicationMemberList().size() <= 9) {
+            } else if (voiceCommunicationManager.getVoiceCommunicationMemberList().size() <= 9) {
                 voiceCommunicationMemberListTop = voiceCommunicationMemberList.subList(0, 5);
                 voiceCommunicationMemberListBottom = voiceCommunicationMemberList.subList(5, voiceCommunicationMemberList.size());
             }
