@@ -780,7 +780,7 @@ public class ECMChatInputMenu extends LinearLayout {
     }
 
     private void startVoice2Word() {
-        inputEdit.setVisibility(INVISIBLE);
+//        inputEdit.setVisibility(INVISIBLE);
         hideAddMenuLayout();
         voiceInputLayout.setVisibility(View.VISIBLE);
         voiceInputStatus = VOICE_INPUT_STATUS_NORMAL;
@@ -980,7 +980,7 @@ public class ECMChatInputMenu extends LinearLayout {
                 handleEmotionStatus();
                 break;
             case R.id.voice_input_close_img:
-                inputEdit.setVisibility(VISIBLE);
+//                inputEdit.setVisibility(VISIBLE);
                 voiceInputEt.setText("");
                 voiceInputLayout.setVisibility(View.GONE);
                 voice2StringMessageUtils.stopListening();

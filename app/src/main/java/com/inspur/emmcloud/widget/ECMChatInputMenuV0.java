@@ -72,6 +72,8 @@ public class ECMChatInputMenuV0 extends LinearLayout {
 
     @BindView(R.id.voice_btn)
     ImageButton voiceImgBtn;
+    @BindView(R.id.emotion_btn)
+    ImageButton emotionBtn;
 
     @BindView(R.id.add_btn)
     ImageButton addBtn;
@@ -126,6 +128,7 @@ public class ECMChatInputMenuV0 extends LinearLayout {
         initInputEdit();
         initVoiceInput();
         initViewpageLayout();
+        emotionBtn.setVisibility(GONE);
     }
 
     private void initInputEdit() {
