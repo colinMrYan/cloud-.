@@ -24,6 +24,7 @@ import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
 import com.inspur.emmcloud.baselib.widget.ScrollViewWithListView;
 import com.inspur.emmcloud.basemodule.bean.DownloadFileCategory;
@@ -463,7 +464,8 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
                     handMsgData();
                 }
             } else {
-//                WebServiceMiddleUtils.hand(MyApplication.getInstance(), eventMessage.getContent(), eventMessage.getStatus());
+                ToastUtils.show(R.string.message_get_fail);
+                finish();
             }
 
         }
