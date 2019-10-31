@@ -1344,7 +1344,15 @@ public class ConversationActivity extends ConversationBaseActivity {
                     notifyCommucationFragmentMessageSendStatus();
                 }
             } else {
-                showInfoDlg(getString(R.string.recall_message_fail));
+                String error = eventMessage.getContent();
+                int errorCode = JSONUtils.getInt(error, "errorCode", -1);
+                String errorMessage = null;
+                if (errorCode == 40302) {
+                    errorMessage = getString(R.string.recall_fail_for_timeout);
+                } else {
+                    errorMessage = getString(R.string.recall_message_fail);
+                }
+                showInfoDlg(errorMessage);
             }
         }
     }

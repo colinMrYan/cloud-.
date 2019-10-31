@@ -207,6 +207,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
                 break;
             case R.id.write_comment_layout:
                 inputLayout.setVisibility(View.VISIBLE);
+                ecmChatInputMenu.setAddMenuLayoutShow(true);
                 InputMethodUtils.display(this, ecmChatInputMenu.getChatInputEdit());
                 break;
             case R.id.tv_original_picture_download_progress:
@@ -222,6 +223,8 @@ public class ImagePagerActivity extends BaseFragmentActivity {
                 if (ecmChatInputMenu != null) {
                     ecmChatInputMenu.showSoftInput(false);
                     ecmChatInputMenu.getChatInputEdit().setText("");
+                    ecmChatInputMenu.getChatInputEdit().clearInsertModelList();
+                    ecmChatInputMenu.setAddMenuLayoutShow(true);
                 }
                 break;
             default:
