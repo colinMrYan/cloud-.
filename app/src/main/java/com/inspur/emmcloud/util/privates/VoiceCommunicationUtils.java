@@ -664,11 +664,12 @@ public class VoiceCommunicationUtils {
      */
     private JSONArray getUidArray(List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList, String fromUid) {
         JSONArray jsonArray = new JSONArray();
-        for (int i = 0; i < voiceCommunicationUserInfoBeanList.size(); i++) {
-            if (!voiceCommunicationUserInfoBeanList.get(i).getUserId().equals(BaseApplication.getInstance().getUid())) {
-                jsonArray.put(voiceCommunicationUserInfoBeanList.get(i).getUserId());
-            }
-        }
+//        for (int i = 0; i < voiceCommunicationUserInfoBeanList.size(); i++) {
+//            if (!voiceCommunicationUserInfoBeanList.get(i).getUserId().equals(BaseApplication.getInstance().getUid())) {
+//                jsonArray.put(voiceCommunicationUserInfoBeanList.get(i).getUserId());
+//            }
+//        }
+        jsonArray.put(fromUid);
         return jsonArray;
     }
 

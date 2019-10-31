@@ -775,6 +775,9 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                         }
                     });
                 }
+                if (mediaPlayerManagerUtils != null) {
+                    mediaPlayerManagerUtils.stop();
+                }
             }
 
             @Override
@@ -866,7 +869,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 //如果是邀请或被邀请状态，倒计时结束时挂断电话
                 if (layoutState == INVITEE_LAYOUT_STATE || layoutState == INVITER_LAYOUT_STATE) {
                     isLeaveChannel = true;
-                    refuseOrLeaveChannel(COMMUNICATION_REFUSE);
+//                    refuseOrLeaveChannel(COMMUNICATION_LEAVE);
                 }
                 for (int i = 0; i < voiceCommunicationMemberList.size(); i++) {
                     if (voiceCommunicationMemberList.get(i).getConnectState() == VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_INIT) {
@@ -913,7 +916,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 if (layoutState == COMMUNICATION_LAYOUT_STATE && userCount < 2) {
                     voiceCommunicationUtils.setCommunicationState(COMMUNICATION_STATE_OVER);
                     Log.d("zhang", "COMMUNICATION_STATE_OVER: 22222222 ");
-                    refuseOrLeaveChannel(COMMUNICATION_REFUSE);
+                    refuseOrLeaveChannel(COMMUNICATION_LEAVE);
                 }
             }
         };

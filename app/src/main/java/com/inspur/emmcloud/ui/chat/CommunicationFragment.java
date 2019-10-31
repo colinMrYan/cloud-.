@@ -1044,7 +1044,6 @@ public class CommunicationFragment extends BaseFragment {
                     if (customProtocol.getParamMap().get("cmd").equals("refuse")) {
                         changeUserConnectStateByUid(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_REFUSE, customProtocol.getParamMap().get("uid"));
                         checkCommunicationFinish();
-                        VoiceCommunicationUtils.getInstance().setCommunicationState(ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_OVER);
                         Log.d("zhang", "COMMUNICATION_STATE_OVER: 555555 ");
                         return;
                     } else if (customProtocol.getParamMap().get("cmd").equals("destroy")) {
@@ -1111,6 +1110,7 @@ public class CommunicationFragment extends BaseFragment {
             if (waitAndCommunicationSize < 2) {
                 VoiceCommunicationUtils.getInstance().destroy();
                 SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
+                VoiceCommunicationUtils.getInstance().setCommunicationState(ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_OVER);
             }
         }
     }
