@@ -325,6 +325,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         initViews();
         checkHasPermission();
         registerReceiver();
+        SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
     }
 
     /**
@@ -1276,13 +1277,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         voiceCommunicationManager.setInviteeInfoBean(inviteeInfoBean);
         voiceCommunicationManager.setUserCount(userCount);
         voiceCommunicationManager.setCloudPlusChannelId(cloudPlusChannelId);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        NotifyUtil.deleteNotify(this);
-        SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
     }
 
     @Override
