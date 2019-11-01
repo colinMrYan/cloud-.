@@ -21,8 +21,6 @@ import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
-import com.inspur.emmcloud.basemodule.api.APIDownloadCallBack;
-import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.Res;
@@ -32,19 +30,25 @@ import com.inspur.emmcloud.web.ui.ImpFragment;
 import com.inspur.emmcloud.web.util.StrUtil;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
-import org.xutils.http.app.RedirectHandler;
-import org.xutils.http.request.UriRequest;
 import org.xutils.x;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLDecoder;
 import java.text.DecimalFormat;
 import java.text.Format;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -157,10 +161,11 @@ public class FileTransferService extends ImpPlugin {
                         fileDownloadDlg.dismiss();
                     }
                     if (!StrUtil.strIsNotNull(saveFileCallBack)) {
-                        new FileOpen(getActivity(), reallyPath, fileType).showOpenDialog();
+                        if (getActivity() != null) {
+                            new FileOpen(getActivity(), reallyPath, fileType).showOpenDialog();
+                        }
                     }
                     fileInfo = (String) msg.obj;
-                    LogUtils.YfcDebug("文件信息：" + fileInfo);
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -423,7 +428,7 @@ public class FileTransferService extends ImpPlugin {
             }
 //            filepath = "/IMP-Cloud/download/";
             filepath = FilePathUtils.BASE_PATH;
-        } catch (Exception e) {
+        } catch (JSONException e) {
             e.printStackTrace();
         }
         // 判断是否含有sd卡
@@ -615,72 +620,97 @@ public class FileTransferService extends ImpPlugin {
 
     /**
      * 下载文件
-     * 文件名先以指定的文件名为准，如果没有指定文件名则以自动命名为准
+     * 文件名先以指定的文件名为准，如果没有指定文件名则以getFileName方法里返回的为准
      *
      * @param urlString 下载的url
      * @return 返回文件下载的详细路径
      * @throws Exception
      */
     private void downLoadFile(String urlString) {
-        clearFiles(fileName);
-        if (StrUtil.strIsNotNull(fileName)) {
-            file = new File(absoluteFilePath + fileName);
-        } else {
-            file = new File(absoluteFilePath);
-        }
-        final RequestParams params = BaseApplication.getInstance().getHttpRequestParams(urlString);
-        // 断点下载
-        params.setAutoResume(true);
-        params.setSaveFilePath(file.getAbsolutePath());
-        if (!StrUtil.strIsNotNull(fileName)) {
-            //如果指定名称是空自动重命名
-            params.setAutoRename(true);
-        }
-        params.setCancelFast(true);
-        String cookie = PreferencesUtils.getString(getFragmentContext(), "web_cookie", "");
-        if (!StringUtils.isBlank(cookie)) {
-            params.addHeader("Cookie", cookie);
-        }
-        //重定向监听
-        params.setRedirectHandler(new RedirectHandler() {
-            @Override
-            public RequestParams getRedirectParams(UriRequest uriRequest) throws Throwable {
-                String locationUrl = uriRequest.getResponseHeader("Location");
-                params.setUri(locationUrl);
-                return params;
+        // 已下载的大小
+        long downnum = 0;
+        // 下载百分比
+        int downcount = 0;
+        URL url = null;
+        InputStream inputStream = null;
+        HttpURLConnection urlConnection = null;
+        OutputStream outputStream = null;
+        try {
+            LogUtils.jasonDebug("是否主线程==" + (Looper.myLooper() == Looper.getMainLooper()));
+            //替换空格
+            url = new URL(urlString);
+            urlConnection = (HttpURLConnection) url.openConnection();
+            String cookie = PreferencesUtils.getString(getFragmentContext(), "web_cookie", "");
+            if (!StringUtils.isBlank(cookie)) {
+                urlConnection.setRequestProperty("Cookie", cookie);
             }
-        });
-        APIDownloadCallBack callback = new APIDownloadCallBack(urlString) {
-
-            @Override
-            public void callbackSuccess(File file) {
-                reallyPath = file.getAbsolutePath();
-                // 下载成功，将下载成功的文件相关信息返回前台
-                fileType = FileUtils.getMimeType(file);
-                Message msg = handler.obtainMessage(2);
-                msg.obj = file.getPath();
-                handler.sendMessage(msg);
+            String filename = getFileName(urlConnection);
+            filename = URLDecoder.decode(filename, "UTF-8");   //防止文件名乱码
+            String[] array = filename.split("\\.");
+            int arrayLength = array.length;
+            fileType = array[arrayLength - 1];
+            if (!StrUtil.strIsNotNull(fileType)) {
+                fileType = urlConnection.getContentType();
             }
-
-            @Override
-            public void callbackError(Throwable arg0, boolean arg1) {
-                LogUtils.YfcDebug("下载失败：" + arg0.getMessage());
-                LogUtils.YfcDebug("下载失败：" + JSONUtils.toJSONString(arg0));
+            clearFiles(filename);
+            if (StrUtil.strIsNotNull(fileName)) {
+                file = new File(absoluteFilePath + fileName);
+            } else {
+                file = new File(absoluteFilePath + filename);
+            }
+            reallyPath = file.getAbsolutePath();
+            long length = urlConnection.getContentLength();
+            totalSize = length;
+            if (urlConnection.getResponseCode() >= 400) {
                 handler.sendEmptyMessage(1);
-            }
-
-            @Override
-            public void callbackLoading(long total, long current, boolean isUploading) {
-                totalSize = total;
-                downloadSize = current;
-                progress = (int) (current * 100 / (float) total);
-                // 更新进度
-                if (fileDownloadDlg != null && fileDownloadDlg.isShowing()) {
-                    handler.sendEmptyMessage(0);
+                return;
+            } else {
+                inputStream = urlConnection.getInputStream();
+                outputStream = new FileOutputStream(file);
+                byte buffer[] = new byte[1024];
+                int readsize = 0;
+                while (!stopConn && (readsize = inputStream.read(buffer)) > 0) {
+                    outputStream.write(buffer, 0, readsize);
+                    downnum += readsize;
+                    if ((downcount == 0)
+                            || (int) (downnum * 100 / length) - 1 > downcount) {
+                        downcount += 1;
+                        progress = (int) (downnum * 100 / (float) length);
+                        downloadSize = downnum;
+                        // 更新进度
+                        if (fileDownloadDlg != null
+                                && fileDownloadDlg.isShowing()) {
+                            handler.sendEmptyMessage(0);
+                        }
+                    }
+                }
+                if (!stopConn) {
+                    // 下载成功，将下载成功的文件相关信息返回前台
+                    Message msg = handler.obtainMessage(2);
+                    msg.obj = file.getPath();
+                    handler.sendMessage(msg);
                 }
             }
-        };
-        x.http().get(params, callback);
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            handler.sendEmptyMessage(1);
+        } finally {
+            try {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+                if (outputStream != null) {
+                    outputStream.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
@@ -696,6 +726,47 @@ public class FileTransferService extends ImpPlugin {
             FileUtils.deleteFile(absoluteFilePath + fileNameWithoutExtension + "." + fileExtension + "-shm");
             FileUtils.deleteFile(absoluteFilePath + fileNameWithoutExtension + "." + fileExtension + "-wal");
         }
+    }
+
+    /**
+     * url里获取文件名
+     * 先以头部filename为准
+     * 没有则取connection里的名字
+     * 再没有则生成一个.tmp名字
+     *
+     * @param urlConnection
+     * @return
+     */
+    private String getFileName(HttpURLConnection urlConnection) {
+        String filename = null;
+        String headField = urlConnection.getHeaderField("Content-Disposition");
+        if (!StringUtils.isBlank(headField)) {
+            headField = headField.toLowerCase();
+            if (headField.contains("filename=")) {
+                //有些下载链接检测到的文件名带双引号，此处给去掉
+                try {
+                    filename = headField.split("filename=")[1];
+                    if (filename.length() > 2 && filename.startsWith("\"") && filename.endsWith("\"")) {
+                        filename = filename.substring(1, filename.length() - 1);
+                    }
+                    return filename;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+        filename = urlConnection.getURL().getFile();
+        if (filename.contains("/")) {
+            String[] array = filename.split("/");
+            filename = array[array.length - 1];
+
+        }
+        if (StringUtils.isBlank(filename)) {
+            // 默认取一个文件名
+            filename = UUID.randomUUID() + ".tmp";
+        }
+        return filename;
     }
 
     /**
