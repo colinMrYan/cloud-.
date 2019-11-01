@@ -297,6 +297,16 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         ButterKnife.bind(this);
         voiceCommunicationManager = VoiceCommunicationManager.getInstance();
         voiceCommunicationManager.initializeAgoraEngine();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        init();
+        NotifyUtil.deleteNotify(this);
+    }
+
+    private void init() {
         cloudPlusChannelId = getIntent().getStringExtra(ConversationActivity.CLOUD_PLUS_CHANNEL_ID);
         communicationType = getIntent().getStringExtra(VOICE_VIDEO_CALL_TYPE);
         //如果是邀请者能收到从外面传进来的人员列表
@@ -1268,12 +1278,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         voiceCommunicationManager.setCloudPlusChannelId(cloudPlusChannelId);
     }
 
-    private void showSmallWindow() {
-        SuspensionWindowManagerUtils.getInstance().showCommunicationSmallWindow(ResolutionUtils.getWidth(this),
-                Long.parseLong(TimeUtils.getChronometerSeconds(communicationTimeChronometer.getText().toString())));
-        finish();
-    }
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -1308,7 +1312,12 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 }
             }
         }
-        NotifyUtil.sendNotifyMsg(this);
+    }
+
+    private void showSmallWindow() {
+        SuspensionWindowManagerUtils.getInstance().showCommunicationSmallWindow(ResolutionUtils.getWidth(this),
+                Long.parseLong(TimeUtils.getChronometerSeconds(communicationTimeChronometer.getText().toString())));
+        finish();
     }
 
     @Override
@@ -1477,7 +1486,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        Log.d("zhang", "onNewIntent: ");
+        setIntent(intent);
     }
 
     class WebService extends APIInterfaceInstance {
@@ -1518,7 +1527,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
 
         @Override
         public void returnGetVoiceCommunicationChannelInfoSuccess(GetVoiceCommunicationResult getVoiceCommunicationResult) {
-            LogUtils.YfcDebug("接口返回数据：" + JSONUtils.toJSONString(getVoiceCommunicationResult));
             LoadingDialog.dimissDlg(loadingDialog);
             //当所有人都不处于接通状态，就认为点通知进来也应该关闭通话
             boolean isChannelExist = false;
