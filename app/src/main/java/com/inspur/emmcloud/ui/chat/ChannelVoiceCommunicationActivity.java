@@ -294,13 +294,14 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         ButterKnife.bind(this);
         voiceCommunicationManager = VoiceCommunicationManager.getInstance();
         voiceCommunicationManager.initializeAgoraEngine();
+        init();
         registerReceiver();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        init();
+        checkHasPermission();
         NotifyUtil.deleteNotify(this);
     }
 
@@ -324,7 +325,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         isFromSmallWindow = getIntent().getBooleanExtra(VOICE_IS_FROM_SMALL_WINDOW, false);
         recoverData();
         initViews();
-        checkHasPermission();
         SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
     }
 
@@ -344,10 +344,11 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
      * 检查权限
      */
     private void checkHasPermission() {
+        voiceCommunicationManager.startCountDownTimer();
         PermissionRequestManagerUtils.getInstance().requestRuntimePermission(this, Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
             @Override
             public void onPermissionRequestSuccess(List<String> permissions) {
-                voiceCommunicationManager.startCountDownTimer();
+
             }
 
             @Override
@@ -1495,6 +1496,11 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
+    }
+
+    @Override
+    public void onBackPressed() {
+
     }
 
     class WebService extends APIInterfaceInstance {
