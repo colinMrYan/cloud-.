@@ -776,6 +776,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        sendCommunicationCommand("invite");
                         //检查加入的如果是自己才启动计时器
                         for (int i = 0; i < voiceCommunicationManager.getVoiceCommunicationMemberList().size(); i++) {
                             if (voiceCommunicationManager.getVoiceCommunicationMemberList().get(i).getUserId().equals(MyApplication.getInstance().getUid())
@@ -1495,7 +1496,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 voiceCommunicationManager.getVoiceCommunicationMemberList().clear();
                 voiceCommunicationManager.getVoiceCommunicationMemberList().addAll(getVoiceCommunicationResult.getVoiceCommunicationJoinChannelInfoBeanList());
                 if (isJoinChannelSuccess == 0) {
-                    sendCommunicationCommand("invite");
                     refreshCommunicationMemberAdapter();
                 } else {
                     voiceCommunicationManager.destroy();
@@ -1518,6 +1518,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
 
         @Override
         public void returnGetVoiceCommunicationChannelInfoSuccess(GetVoiceCommunicationResult getVoiceCommunicationResult) {
+            LogUtils.YfcDebug("接口返回数据：" + JSONUtils.toJSONString(getVoiceCommunicationResult));
             LoadingDialog.dimissDlg(loadingDialog);
             //当所有人都不处于接通状态，就认为点通知进来也应该关闭通话
             boolean isChannelExist = false;
