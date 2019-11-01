@@ -416,7 +416,7 @@ public class WSAPIService {
             JSONObject bodyObj = new JSONObject();
             bodyObj.put("result","ok");
             object.put("body",bodyObj);
-            EventMessage eventMessage = new EventMessage(tracer, Constant.EVENTBUS_TAG_GET_MESSAGE_COMMENT);
+            EventMessage eventMessage = new EventMessage(tracer, Constant.EVENTBUS_TAG_SEND_VOICE_CALL_MESSAGE);
             WebSocketPush.getInstance().sendEventMessage(eventMessage, object, tracer);
         } catch (Exception e) {
             e.printStackTrace();

@@ -54,7 +54,6 @@ public class VoiceCommunicationManager {
     private Context context;
     private RtcEngine mRtcEngine;
     private OnVoiceCommunicationCallbacks onVoiceCommunicationCallbacks;
-    private List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList = new ArrayList<>();
     /**
      * 声网的agoraChannelId
      */
@@ -81,7 +80,7 @@ public class VoiceCommunicationManager {
     /**
      * 30s内无响应挂断 总时长：millisInFuture，隔多长时间回调一次countDownInterval
      */
-    private long millisInFuture = 30 * 1000L, countDownInterval = 1000, millisInFutureInviter = 40 * 1000L;
+    private long millisInFuture = 60 * 1000L, countDownInterval = 1000, millisInFutureInviter = 65 * 1000L;
     private IRtcEngineEventHandler mRtcEventHandler = new IRtcEngineEventHandler() {
         //其他用户离线回调
         @Override
