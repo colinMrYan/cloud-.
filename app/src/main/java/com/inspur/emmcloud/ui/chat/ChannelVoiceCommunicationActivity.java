@@ -1497,8 +1497,12 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 if (isJoinChannelSuccess == 0) {
                     sendCommunicationCommand("invite");
                     refreshCommunicationMemberAdapter();
+                } else {
+                    voiceCommunicationManager.destroy();
+                    finish();
                 }
             } else {
+                voiceCommunicationManager.destroy();
                 finish();
             }
         }
