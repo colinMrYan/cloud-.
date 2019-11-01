@@ -30,6 +30,7 @@ import io.agora.rtc.RtcEngine;
 import io.agora.rtc.video.VideoEncoderConfiguration;
 
 import static com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_ING;
+import static com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_OVER;
 import static com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_PRE;
 
 /**
@@ -92,6 +93,7 @@ public class VoiceCommunicationManager {
                 onVoiceCommunicationCallbacks.onUserOffline(uid, reason);
             }
             if (getWaitAndConnectedNumber() < 2) {
+                communicationState = COMMUNICATION_STATE_OVER;
                 destroy();
                 SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
             }
