@@ -232,10 +232,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     Chronometer communicationTimeChronometer;
     @BindView(R.id.ll_voice_communication_function_group)
     LinearLayout functionLinearLayout;
-    /**
-     * 30s内无响应挂断 总时长：millisInFuture，隔多长时间回调一次countDownInterval
-     */
-    private long millisInFuture = 30 * 1000L, countDownInterval = 1000;
+    boolean needTimerStartFlag = true;
     @BindView(R.id.tv_an_excuse)
     TextView excuseTv;
     @BindView(R.id.img_hands_free)
@@ -297,13 +294,14 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         ButterKnife.bind(this);
         voiceCommunicationManager = VoiceCommunicationManager.getInstance();
         voiceCommunicationManager.initializeAgoraEngine();
+        init();
         registerReceiver();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        init();
+        checkHasPermission();
         NotifyUtil.deleteNotify(this);
     }
 
@@ -327,7 +325,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         isFromSmallWindow = getIntent().getBooleanExtra(VOICE_IS_FROM_SMALL_WINDOW, false);
         recoverData();
         initViews();
-        checkHasPermission();
         SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
     }
 
@@ -347,10 +344,11 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
      * 检查权限
      */
     private void checkHasPermission() {
+        voiceCommunicationManager.startCountDownTimer();
         PermissionRequestManagerUtils.getInstance().requestRuntimePermission(this, Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
             @Override
             public void onPermissionRequestSuccess(List<String> permissions) {
-                voiceCommunicationManager.startCountDownTimer();
+
             }
 
             @Override
@@ -401,80 +399,10 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             }
         }
     }
-
     /**
-     * 初始化Views
+     * 30s内无响应挂断 总时长：millisInFuture，隔多长时间回调一次countDownInterval
      */
-    private void initViews() {
-        loadingDialog = new LoadingDialog(this);
-        //根据communicationType切换语音通话和视频通话布局
-        if (communicationType.equals(ECMChatInputMenu.VIDEO_CALL)) {
-            videoCallLayout.setVisibility(View.VISIBLE);
-            voiceCallLayout.setVisibility(View.GONE);
-        } else if (communicationType.equals(ECMChatInputMenu.VOICE_CALL)) {
-            voiceCallLayout.setVisibility(View.VISIBLE);
-            videoCallLayout.setVisibility(View.GONE);
-        }
-        apiService = new ChatAPIService(this);
-        apiService.setAPIInterface(new WebService());
-        voiceCommunicationMemberAdapterFirst = new VoiceCommunicationMemberAdapter(this,
-                voiceCommunicationManager.getVoiceCommunicationMemberListTop(), 0);
-        voiceCommunicationMemberAdapterSecond = new VoiceCommunicationMemberAdapter(this,
-                voiceCommunicationManager.getVoiceCommunicationMemberListBottom(), 0);
-        //初始化声网的callBacks
-        initAgoraCallbacks();
-        //响铃控制
-        mediaPlayerManagerUtils = MediaPlayerManagerUtils.getManager();
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        firstRecyclerview.setLayoutManager(layoutManager);
-        firstRecyclerview.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this, 8)));
-        firstRecyclerview.setAdapter(voiceCommunicationMemberAdapterFirst);
-
-        LinearLayoutManager layoutManager2 = new LinearLayoutManager(this);
-        layoutManager2.setOrientation(LinearLayoutManager.HORIZONTAL);
-        secondRecyclerview.setLayoutManager(layoutManager2);
-        secondRecyclerview.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this, 8)));
-        secondRecyclerview.setAdapter(voiceCommunicationMemberAdapterSecond);
-
-        LinearLayoutManager layoutManagerMembersSecond = new LinearLayoutManager(this);
-        layoutManagerMembersSecond.setOrientation(LinearLayoutManager.HORIZONTAL);
-        communicationMemberSecondRecyclerview.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this, 8)));
-        communicationMemberSecondRecyclerview.setLayoutManager(layoutManagerMembersSecond);
-
-        LinearLayoutManager layoutManagerMemebersFirst = new LinearLayoutManager(this);
-        layoutManagerMemebersFirst.setOrientation(LinearLayoutManager.HORIZONTAL);
-        communicationMembersFirstRecyclerview.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this, 8)));
-        communicationMembersFirstRecyclerview.setLayoutManager(layoutManagerMemebersFirst);
-        Log.d("zhang", "initViews: layoutState = " + layoutState);
-        initCommunicationViews(layoutState);
-        initFunctionState();
-        //第一次打开ChannelVoiceCommunicationActivity时，如果是邀请人状态，则刷新Adapter并创建频道
-        //如果是被邀请人状态则获取声网的channelId获取频道信息
-        if (!isFromSmallWindow) {
-            switch (layoutState) {
-                case INVITER_LAYOUT_STATE:
-                    refreshCommunicationMemberAdapter();
-                    createChannel();
-                    break;
-                case INVITEE_LAYOUT_STATE:
-                    String agoraChannelId = getIntent().getStringExtra(VOICE_VIDEO_CALL_AGORA_ID);
-                    voiceCommunicationManager.setEncryptionSecret(agoraChannelId);
-                    getChannelInfoByChannelId(agoraChannelId);
-                    break;
-                default:
-                    break;
-            }
-        }
-        //如果是来自小窗口，则取得已经通话的时长，继续计时
-//        if (getIntent().getLongExtra(VOICE_TIME, 0) > 0) {
-        //通话相差时间
-        long duration = System.currentTimeMillis() - voiceCommunicationManager.getConnectStartTime();
-        communicationTimeChronometer.setBase(SystemClock.elapsedRealtime() - duration);
-        communicationTimeChronometer.start();
-//        }
-//        dragLocalVideoView();
-    }
+    private long millisInFuture = 60 * 1000L, countDownInterval = 1000;
 
     /**
      * 本地视频窗口拖动功能，目前还有问题
@@ -736,6 +664,82 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     }
 
     /**
+     * 初始化Views
+     */
+    private void initViews() {
+        loadingDialog = new LoadingDialog(this);
+        //根据communicationType切换语音通话和视频通话布局
+        if (communicationType.equals(ECMChatInputMenu.VIDEO_CALL)) {
+            videoCallLayout.setVisibility(View.VISIBLE);
+            voiceCallLayout.setVisibility(View.GONE);
+        } else if (communicationType.equals(ECMChatInputMenu.VOICE_CALL)) {
+            voiceCallLayout.setVisibility(View.VISIBLE);
+            videoCallLayout.setVisibility(View.GONE);
+        }
+        apiService = new ChatAPIService(this);
+        apiService.setAPIInterface(new WebService());
+        voiceCommunicationMemberAdapterFirst = new VoiceCommunicationMemberAdapter(this,
+                voiceCommunicationManager.getVoiceCommunicationMemberListTop(), 0);
+        voiceCommunicationMemberAdapterSecond = new VoiceCommunicationMemberAdapter(this,
+                voiceCommunicationManager.getVoiceCommunicationMemberListBottom(), 0);
+        //初始化声网的callBacks
+        initAgoraCallbacks();
+        //响铃控制
+        mediaPlayerManagerUtils = MediaPlayerManagerUtils.getManager();
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        firstRecyclerview.setLayoutManager(layoutManager);
+        firstRecyclerview.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this, 8)));
+        firstRecyclerview.setAdapter(voiceCommunicationMemberAdapterFirst);
+
+        LinearLayoutManager layoutManager2 = new LinearLayoutManager(this);
+        layoutManager2.setOrientation(LinearLayoutManager.HORIZONTAL);
+        secondRecyclerview.setLayoutManager(layoutManager2);
+        secondRecyclerview.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this, 8)));
+        secondRecyclerview.setAdapter(voiceCommunicationMemberAdapterSecond);
+
+        LinearLayoutManager layoutManagerMembersSecond = new LinearLayoutManager(this);
+        layoutManagerMembersSecond.setOrientation(LinearLayoutManager.HORIZONTAL);
+        communicationMemberSecondRecyclerview.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this, 8)));
+        communicationMemberSecondRecyclerview.setLayoutManager(layoutManagerMembersSecond);
+
+        LinearLayoutManager layoutManagerMemebersFirst = new LinearLayoutManager(this);
+        layoutManagerMemebersFirst.setOrientation(LinearLayoutManager.HORIZONTAL);
+        communicationMembersFirstRecyclerview.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this, 8)));
+        communicationMembersFirstRecyclerview.setLayoutManager(layoutManagerMemebersFirst);
+        Log.d("zhang", "initViews: layoutState = " + layoutState);
+        initCommunicationViews(layoutState);
+        initFunctionState();
+        //第一次打开ChannelVoiceCommunicationActivity时，如果是邀请人状态，则刷新Adapter并创建频道
+        //如果是被邀请人状态则获取声网的channelId获取频道信息
+        if (!isFromSmallWindow) {
+            switch (layoutState) {
+                case INVITER_LAYOUT_STATE:
+                    refreshCommunicationMemberAdapter();
+                    createChannel();
+                    break;
+                case INVITEE_LAYOUT_STATE:
+                    String agoraChannelId = getIntent().getStringExtra(VOICE_VIDEO_CALL_AGORA_ID);
+                    voiceCommunicationManager.setEncryptionSecret(agoraChannelId);
+                    getChannelInfoByChannelId(agoraChannelId);
+                    break;
+                default:
+                    break;
+            }
+        }
+        //如果是来自小窗口，则取得已经通话的时长，继续计时
+//        if (getIntent().getLongExtra(VOICE_TIME, 0) > 0) {
+        //通话相差时间
+        if (isFromSmallWindow) {
+            long duration = System.currentTimeMillis() - voiceCommunicationManager.getConnectStartTime();
+            communicationTimeChronometer.setBase(SystemClock.elapsedRealtime() - duration);
+            communicationTimeChronometer.start();
+        }
+//        }
+//        dragLocalVideoView();
+    }
+
+    /**
      * 初始化回调
      */
     private void initAgoraCallbacks() {
@@ -765,10 +769,16 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                     }
                 }
                 userCount = userCount + 1;
+                if (voiceCommunicationManager.isInviter() && needTimerStartFlag && userCount == 2) {
+                    needTimerStartFlag = false;
+                    communicationTimeChronometer.setBase(SystemClock.elapsedRealtime());
+                    communicationTimeChronometer.start();
+                }
                 if (userCount >= 2) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+
                             if (layoutState == INVITER_LAYOUT_STATE || isMySelf(uid) || voiceCommunicationManager.getCommunicationState() == COMMUNICATION_STATE_ING) {
                                 voiceCommunicationManager.setCommunicationState(COMMUNICATION_STATE_ING);
                                 Log.d("zhang", "onUserJoined run: layoutState = " + layoutState);
@@ -1486,6 +1496,11 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
+    }
+
+    @Override
+    public void onBackPressed() {
+
     }
 
     class WebService extends APIInterfaceInstance {
