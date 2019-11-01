@@ -297,6 +297,16 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         ButterKnife.bind(this);
         voiceCommunicationManager = VoiceCommunicationManager.getInstance();
         voiceCommunicationManager.initializeAgoraEngine();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        init();
+        NotifyUtil.deleteNotify(this);
+    }
+
+    private void init() {
         cloudPlusChannelId = getIntent().getStringExtra(ConversationActivity.CLOUD_PLUS_CHANNEL_ID);
         communicationType = getIntent().getStringExtra(VOICE_VIDEO_CALL_TYPE);
         //如果是邀请者能收到从外面传进来的人员列表
@@ -1296,12 +1306,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        NotifyUtil.deleteNotify(this);
-    }
-
-    @Override
     protected void onStop() {
         super.onStop();
         NotifyUtil.sendNotifyMsg(this);
@@ -1473,7 +1477,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        Log.d("zhang", "onNewIntent: ");
+        setIntent(intent);
     }
 
     class WebService extends APIInterfaceInstance {
