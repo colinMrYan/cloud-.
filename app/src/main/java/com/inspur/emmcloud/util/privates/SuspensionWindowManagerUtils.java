@@ -258,8 +258,8 @@ public class SuspensionWindowManagerUtils {
         }
     }
 
-    public Chronometer getChronometer() {
-        return chronometer;
-    }
+//    public Chronometer getChronometer() {
+//        return chronometer;
+//    }
 }
 

@@ -762,9 +762,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                                 layoutState = COMMUNICATION_LAYOUT_STATE;
                                 voiceCommunicationManager.setLayoutState(layoutState);
                                 changeFunctionState(COMMUNICATION_LAYOUT_STATE);
-                                communicationTimeChronometer.setBase(SystemClock.elapsedRealtime());
-                                communicationTimeChronometer.start();
-                                voiceCommunicationManager.setConnectStartTime(System.currentTimeMillis());
                                 refreshCommunicationMemberAdapter();
                             }
                         }
@@ -780,6 +777,15 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        //检查加入的如果是自己才启动计时器
+                        for (int i = 0; i < voiceCommunicationManager.getVoiceCommunicationMemberList().size(); i++) {
+                            if (voiceCommunicationManager.getVoiceCommunicationMemberList().get(i).getUserId().equals(MyApplication.getInstance().getUid())
+                                    && voiceCommunicationManager.getVoiceCommunicationMemberList().get(i).getAgoraUid() == uid) {
+                                communicationTimeChronometer.setBase(SystemClock.elapsedRealtime());
+                                communicationTimeChronometer.start();
+                                voiceCommunicationManager.setConnectStartTime(System.currentTimeMillis());
+                            }
+                        }
                         changeUserConnectStateByAgoraUid(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_CONNECTED, uid);
                         remindEmmServerJoinChannel(channel);
                     }
@@ -1292,6 +1298,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     private void showSmallWindow() {
         SuspensionWindowManagerUtils.getInstance().showCommunicationSmallWindow(ResolutionUtils.getWidth(this),
                 Long.parseLong(TimeUtils.getChronometerSeconds(communicationTimeChronometer.getText().toString())));
+        LogUtils.YfcDebug("7777777777777777777777");
         finish();
     }
 
