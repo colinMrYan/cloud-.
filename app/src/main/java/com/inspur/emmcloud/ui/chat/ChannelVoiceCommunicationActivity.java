@@ -297,6 +297,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         ButterKnife.bind(this);
         voiceCommunicationManager = VoiceCommunicationManager.getInstance();
         voiceCommunicationManager.initializeAgoraEngine();
+        registerReceiver();
     }
 
     @Override
@@ -314,17 +315,19 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         if (list != null) {
             voiceCommunicationManager.setVoiceCommunicationMemberList(list);
         }
+        //当是-1时，先赋初始值，然后后面
         if (voiceCommunicationManager.getCommunicationState() == -1) {
             voiceCommunicationManager.setCommunicationState(COMMUNICATION_STATE_PRE);
+        } else {
+            //TODO 是否去掉-1
+            voiceCommunicationManager.setCommunicationState(voiceCommunicationManager.getCommunicationState());
         }
-        voiceCommunicationManager.setCommunicationState(voiceCommunicationManager.getCommunicationState());
         layoutState = getIntent().getIntExtra(VOICE_COMMUNICATION_STATE, EXCEPTION_STATE);
         voiceCommunicationManager.setLayoutState(layoutState);
         isFromSmallWindow = getIntent().getBooleanExtra(VOICE_IS_FROM_SMALL_WINDOW, false);
         recoverData();
         initViews();
         checkHasPermission();
-        registerReceiver();
         SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
     }
 
@@ -787,7 +790,9 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        sendCommunicationCommand("invite");
+                        if (voiceCommunicationManager.isInviter()) {
+                            sendCommunicationCommand("invite");
+                        }
                         //检查加入的如果是自己才启动计时器
                         for (int i = 0; i < voiceCommunicationManager.getVoiceCommunicationMemberList().size(); i++) {
                             if (voiceCommunicationManager.getVoiceCommunicationMemberList().get(i).getUserId().equals(MyApplication.getInstance().getUid())

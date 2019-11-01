@@ -96,6 +96,7 @@ public class Constant {
     public static final String EVENTBUS_TAG_GET_CHANNEL_RECENT_MESSAGE = "tag_get_channel_recent_message";
     public static final String EVENTBUS_TAG_GET_MESSAGE_BY_ID = "tag_get_message_by_id";
     public static final String EVENTBUS_TAG_GET_MESSAGE_COMMENT = "tag_get_message_comment";
+    public static final String EVENTBUS_TAG_SEND_VOICE_CALL_MESSAGE = "tag_send_voice_call_mesage";
     public static final String EVENTBUS_TAG_GET_HISTORY_MESSAGE = "tag_get_history_message";
     public static final String EVENTBUS_TAG_GET_NEW_MESSAGE = "tag_get_new_message";
     public static final String EVENTBUS_TAG_REFRESH_CONVERSATION = "tag_refresh_conversation";
