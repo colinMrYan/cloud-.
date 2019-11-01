@@ -81,7 +81,7 @@ public class VoiceCommunicationManager {
     /**
      * 30s内无响应挂断 总时长：millisInFuture，隔多长时间回调一次countDownInterval
      */
-    private long millisInFuture = 30 * 1000L, countDownInterval = 1000;
+    private long millisInFuture = 30 * 1000L, countDownInterval = 1000, millisInFutureInviter = 40 * 1000L;
     private IRtcEngineEventHandler mRtcEventHandler = new IRtcEngineEventHandler() {
         //其他用户离线回调
         @Override
@@ -326,7 +326,8 @@ public class VoiceCommunicationManager {
      * 启动计时器
      */
     public void startCountDownTimer() {
-        countDownTimer = new CountDownTimer(millisInFuture, countDownInterval) {
+        //主叫方计时40秒，被叫方30秒
+        countDownTimer = new CountDownTimer(isInviter() ? millisInFutureInviter : millisInFuture, countDownInterval) {
             @Override
             public void onTick(long millisUntilFinished) {
             }
@@ -359,6 +360,20 @@ public class VoiceCommunicationManager {
         };
         countDownTimer.start();
     }
+
+    /**
+     * 自己是否主呼叫方
+     *
+     * @return
+     */
+    public boolean isInviter() {
+        if (voiceCommunicationMemberList != null && voiceCommunicationMemberList.size() > 0
+                && voiceCommunicationMemberList.get(0).getUserId().equals(BaseApplication.getInstance().getUid())) {
+            return true;
+        }
+        return false;
+    }
+
     /**
      * 获取当前音频通话的状态
      *
