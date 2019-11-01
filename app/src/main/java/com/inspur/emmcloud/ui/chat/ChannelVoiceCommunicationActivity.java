@@ -40,6 +40,7 @@ import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
+import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
@@ -288,6 +289,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     private MediaPlayerManagerUtils mediaPlayerManagerUtils;
     private VoiceCommunicationManager voiceCommunicationManager;
     private VoiceCommunicationHeadSetReceiver receiver;
+    private LoadingDialog loadingDialog;
 
     @Override
     public void onCreate() {
@@ -391,6 +393,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
      * 初始化Views
      */
     private void initViews() {
+        loadingDialog = new LoadingDialog(this);
         //根据communicationType切换语音通话和视频通话布局
         if (communicationType.equals(ECMChatInputMenu.VIDEO_CALL)) {
             videoCallLayout.setVisibility(View.VISIBLE);
@@ -539,6 +542,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
      */
     private void getChannelInfoByChannelId(String agoraChannelId) {
         if (NetUtils.isNetworkConnected(this)) {
+            loadingDialog.show();
             apiService.getAgoraChannelInfo(agoraChannelId);
         }
     }
@@ -558,6 +562,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                     jsonObjectUserInfo.put("name", totalList.get(i).getUserName());
                     jsonArray.put(jsonObjectUserInfo);
                 }
+                loadingDialog.show();
                 apiService.getAgoraParams(jsonArray);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -674,15 +679,18 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
                 finish();
             } else if (cmd.equals("refuse")) {
-                if (layoutState == COMMUNICATION_LAYOUT_STATE) {
-                    ToastUtils.show(ContactUserCacheUtils.getUserName(uid) + getString(R.string.communication_has_leave));
-                } else if (layoutState == INVITER_LAYOUT_STATE) {
-                    //拨打方
-                    ToastUtils.show(ContactUserCacheUtils.getUserName(uid) + getString(R.string.meeting_has_refused));
-                } else if (layoutState == INVITEE_LAYOUT_STATE &&
-                        answerPhoneImg.getVisibility() != View.VISIBLE) {
-                    //接听方
-                    ToastUtils.show(ContactUserCacheUtils.getUserName(uid) + getString(R.string.meeting_has_refused));
+                String name = ContactUserCacheUtils.getUserName(uid);
+                if (!StringUtils.isBlank(name)) {
+                    if (layoutState == COMMUNICATION_LAYOUT_STATE) {
+                        ToastUtils.show(name + getString(R.string.communication_has_leave));
+                    } else if (layoutState == INVITER_LAYOUT_STATE) {
+                        //拨打方
+                        ToastUtils.show(name + getString(R.string.meeting_has_refused));
+                    } else if (layoutState == INVITEE_LAYOUT_STATE &&
+                            answerPhoneImg.getVisibility() != View.VISIBLE) {
+                        //接听方
+                        ToastUtils.show(name + getString(R.string.meeting_has_refused));
+                    }
                 }
                 changeUserConnectStateByUid(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_REFUSE, uid);
                 checkCommunicationFinish();
@@ -1471,6 +1479,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     class WebService extends APIInterfaceInstance {
         @Override
         public void returnGetVoiceCommunicationResultSuccess(GetVoiceCommunicationResult getVoiceCommunicationResult) {
+            LoadingDialog.dimissDlg(loadingDialog);
             agoraChannelId = getVoiceCommunicationResult.getChannelId();
             VoiceCommunicationJoinChannelInfoBean voiceCommunicationJoinChannelInfoBean = getMyCommunicationInfoBean(getVoiceCommunicationResult);
             if (voiceCommunicationJoinChannelInfoBean != null) {
@@ -1482,7 +1491,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             } else {
                 finish();
             }
-            LogUtils.YfcDebug("返回的列表信息：" + JSONUtils.toJSONString(getVoiceCommunicationResult.getVoiceCommunicationJoinChannelInfoBeanList()));
             voiceCommunicationManager.getVoiceCommunicationMemberList().clear();
             voiceCommunicationManager.getVoiceCommunicationMemberList().addAll(getVoiceCommunicationResult.getVoiceCommunicationJoinChannelInfoBeanList());
             sendCommunicationCommand("invite");
@@ -1491,6 +1499,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
 
         @Override
         public void returnGetVoiceCommunicationResultFail(String error, int errorCode) {
+            LoadingDialog.dimissDlg(loadingDialog);
             SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
             voiceCommunicationManager.destroy();
             WebServiceMiddleUtils.hand(ChannelVoiceCommunicationActivity.this, error, errorCode);
@@ -1499,6 +1508,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
 
         @Override
         public void returnGetVoiceCommunicationChannelInfoSuccess(GetVoiceCommunicationResult getVoiceCommunicationResult) {
+            LoadingDialog.dimissDlg(loadingDialog);
             agoraChannelId = getVoiceCommunicationResult.getChannelId();
             setInviterInfo(getVoiceCommunicationResult);
             voiceCommunicationManager.getVoiceCommunicationMemberList().clear();
@@ -1519,6 +1529,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
 
         @Override
         public void returnGetVoiceCommunicationChannelInfoFail(String error, int errorCode) {
+            LoadingDialog.dimissDlg(loadingDialog);
             SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
             voiceCommunicationManager.destroy();
             WebServiceMiddleUtils.hand(ChannelVoiceCommunicationActivity.this, error, errorCode);
