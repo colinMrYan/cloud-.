@@ -88,6 +88,7 @@ import com.inspur.emmcloud.util.privates.ScanQrCodeUtils;
 import com.inspur.emmcloud.util.privates.SuspensionWindowManagerUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
 import com.inspur.emmcloud.util.privates.VoiceCommunicationManager;
+import com.inspur.emmcloud.util.privates.VoiceCommunicationToastUtil;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.MessageMatheSetCacheUtils;
@@ -115,9 +116,6 @@ import io.reactivex.schedulers.Schedulers;
 import io.socket.client.Socket;
 
 import static android.app.Activity.RESULT_OK;
-import static com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_ING;
-import static com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_OVER;
-import static com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_PRE;
 
 /**
  * 沟通页面
@@ -1043,17 +1041,17 @@ public class CommunicationFragment extends BaseFragment {
             if (!BaseApplication.getInstance().isActivityExist(ChannelVoiceCommunicationActivity.class)) {
                 if (customProtocol.getProtocol().equals("ecc-cloudplus-cmd") && !StringUtils.isBlank(customProtocol.getParamMap().get("cmd"))) {
                     if (customProtocol.getParamMap().get("cmd").equals("refuse")) {
-                        showToast("refuse");
                         changeUserConnectStateByUid(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_REFUSE, customProtocol.getParamMap().get("uid"));
                         checkCommunicationFinish();
                         Log.d("zhang", "COMMUNICATION_STATE_OVER: 555555 ");
+                        VoiceCommunicationToastUtil.showToast("refuse");
                         return;
                     } else if (customProtocol.getParamMap().get("cmd").equals("destroy")) {
-                        showToast("destroy");
                         VoiceCommunicationManager.getInstance().destroy();
                         SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
                         Log.d("zhang", "COMMUNICATION_STATE_OVER: 66666666 ");
                         VoiceCommunicationManager.getInstance().setCommunicationState(ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_OVER);
+                        VoiceCommunicationToastUtil.showToast("destroy");
                         return;
                     }
                 }
@@ -1064,66 +1062,6 @@ public class CommunicationFragment extends BaseFragment {
                 String channelId = customProtocol.getParamMap().get("channelid");
                 String fromUid = customProtocol.getParamMap().get("uid");
                 VoiceCommunicationManager.getInstance().getVoiceCommunicationChannelInfoAndSendRefuseCommand(channelId, agoraChannelId, fromUid);
-            }
-        }
-    }
-
-    private void showToast(String type) {
-        if (BaseApplication.getInstance().isActivityExist(ChannelVoiceCommunicationActivity.class)) {
-            return;
-        }
-        if (type.equals("refuse")) {        //收到拒绝消息
-            if (VoiceCommunicationManager.getInstance().isInviter()) {      //邀请者
-                if (VoiceCommunicationManager.getInstance().getVoiceCommunicationMemberList().size() == 2) {    //但了事
-                    switch (VoiceCommunicationManager.getInstance().getCommunicationState()) {
-                        case COMMUNICATION_STATE_PRE:
-                            ToastUtils.show("聊天已取消");
-                            break;
-                        case COMMUNICATION_STATE_ING:
-                            ToastUtils.show("聊天结束");
-                            break;
-                        case COMMUNICATION_STATE_OVER:
-                            ToastUtils.show("通话已结束");
-                            break;
-                        default:
-                            break;
-                    }
-                } else {    //TODO：群聊时暂不提示
-                    switch (VoiceCommunicationManager.getInstance().getCommunicationState()) {
-                        case COMMUNICATION_STATE_OVER:
-                            ToastUtils.show("通话已结束");
-                            break;
-                    }
-                }
-            } else {        //被邀请者
-                if (VoiceCommunicationManager.getInstance().getVoiceCommunicationMemberList().size() == 2) {
-                    ToastUtils.show("对方以挂断，通话结束");
-                }
-            }
-
-        } else if (type.equals("destroy")) {        //收到拒绝消息
-            if (VoiceCommunicationManager.getInstance().isInviter()) {      //邀请者
-                switch (VoiceCommunicationManager.getInstance().getCommunicationState()) {
-                    case COMMUNICATION_STATE_PRE:
-                        ToastUtils.show("聊天已取消");
-                        break;
-                    case COMMUNICATION_STATE_ING:
-                        //单聊时提示   TODO：群聊时暂不提示
-                        if (VoiceCommunicationManager.getInstance().getVoiceCommunicationMemberList().size() == 2) {
-                            ToastUtils.show("聊天结束");
-                        }
-                        break;
-                    case COMMUNICATION_STATE_OVER:
-                        ToastUtils.show("聊天结束");
-                        break;
-                    default:
-                        break;
-                }
-
-            } else {            //被邀请者
-                if (VoiceCommunicationManager.getInstance().getVoiceCommunicationMemberList().size() == 2) {
-                    ToastUtils.show("对方以挂断，通话结束");
-                }
             }
         }
     }
