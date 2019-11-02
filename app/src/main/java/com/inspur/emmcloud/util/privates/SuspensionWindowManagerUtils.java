@@ -230,8 +230,10 @@ public class SuspensionWindowManagerUtils {
      */
     private void goBackVoiceCommunicationActivity() {
         try {
-//            Uri uri=Uri.parse("ecc-cloudplus-cmd-voice-call://123");
-//            Intent intent=new Intent(Intent.ACTION_VIEW,uri);
+            if (VoiceCommunicationManager.getInstance().getCommunicationState() == COMMUNICATION_STATE_OVER) {
+                hideCommunicationSmallWindow();
+                return;
+            }
             Intent intent = Intent.parseUri("ecc-cloudplus-cmd-voice-call://voice_call", Intent.URI_INTENT_SCHEME);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_IS_FROM_SMALL_WINDOW, true);

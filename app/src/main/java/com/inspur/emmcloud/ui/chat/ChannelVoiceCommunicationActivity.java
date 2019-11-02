@@ -471,9 +471,22 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
      * 如是否免提，是否静音
      */
     private void initFunctionState() {
-        voiceCommunicationManager.muteLocalAudioStream(false);
+        if (voiceCommunicationManager.getLayoutState() == COMMUNICATION_LAYOUT_STATE) {
+            int colorUnSelected = ContextCompat.getColor(this, R.color.voice_communication_function_default);
+            int colorSelected = ContextCompat.getColor(this, R.color.voice_communication_function_select);
+
+            handsFreeImg.setSelected(voiceCommunicationManager.isHandsFree());
+            muteImg.setSelected(voiceCommunicationManager.isMute());
+            handsFreeImg.setClickable(voiceCommunicationManager.getLayoutState() == COMMUNICATION_LAYOUT_STATE);
+            muteImg.setClickable(voiceCommunicationManager.getLayoutState() == COMMUNICATION_LAYOUT_STATE);
+            handsFreeImg.setImageResource(voiceCommunicationManager.isHandsFree() ? R.drawable.icon_hands_free_selected : R.drawable.icon_hands_free_unselected);
+            handsFreeTv.setTextColor(voiceCommunicationManager.isHandsFree() ? colorSelected : colorUnSelected);
+            muteImg.setImageResource(voiceCommunicationManager.isMute() ? R.drawable.icon_mute_selected : R.drawable.icon_mute_unselcected);
+            muteTv.setTextColor(voiceCommunicationManager.isMute() ? colorSelected : colorUnSelected);
+        }
+        voiceCommunicationManager.muteLocalAudioStream(voiceCommunicationManager.isMute());
         voiceCommunicationManager.muteAllRemoteAudioStreams(false);
-        voiceCommunicationManager.onSwitchSpeakerphoneClicked(false);
+        voiceCommunicationManager.onSwitchSpeakerphoneClicked(voiceCommunicationManager.isHandsFree());
     }
 
     /**
@@ -762,6 +775,9 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
 
             @Override
             public void onUserJoined(final int uid, int elapsed) {
+                if (mediaPlayerManagerUtils != null) {
+                    mediaPlayerManagerUtils.stop();
+                }
                 List<VoiceCommunicationJoinChannelInfoBean> totalList = voiceCommunicationManager.getVoiceCommunicationMemberList();
                 for (int i = 0; i < totalList.size(); i++) {
                     if (totalList.get(i).getAgoraUid() == uid) {
@@ -789,9 +805,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                             }
                         }
                     });
-                }
-                if (mediaPlayerManagerUtils != null) {
-                    mediaPlayerManagerUtils.stop();
                 }
             }
 
@@ -1093,13 +1106,17 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 voiceCommunicationManager.muteAllRemoteAudioStreams(excuseImg.isSelected());
                 excuseImg.setImageResource(excuseImg.isSelected() ? R.drawable.icon_excuse_selected : R.drawable.icon_excuse_unselected);
                 break;
+            case R.id.tv_hands_free:
             case R.id.img_hands_free:
                 switchFunctionViewUIState(handsFreeImg, handsFreeTv);
+                voiceCommunicationManager.setHandsFree(handsFreeImg.isSelected());
                 voiceCommunicationManager.onSwitchSpeakerphoneClicked(handsFreeImg.isSelected());
                 handsFreeImg.setImageResource(handsFreeImg.isSelected() ? R.drawable.icon_hands_free_selected : R.drawable.icon_hands_free_unselected);
                 break;
+            case R.id.tv_mute:
             case R.id.img_mute:
                 switchFunctionViewUIState(muteImg, muteTv);
+                voiceCommunicationManager.setMute(muteImg.isSelected());
                 voiceCommunicationManager.muteLocalAudioStream(muteImg.isSelected());
                 muteImg.setImageResource(muteImg.isSelected() ? R.drawable.icon_mute_selected : R.drawable.icon_mute_unselcected);
                 break;
@@ -1197,38 +1214,40 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
      * 应用进入小窗口状态，出发时机是onPause和用户自己点击小窗口
      */
     private void pickUpVoiceCommunication() {
-        if (Build.VERSION.SDK_INT >= 23) {
-            if (Settings.canDrawOverlays(this)) {
-                Log.d("zhang", "pickUpVoiceCommunication: ");
+        if (voiceCommunicationManager.getCommunicationState() != COMMUNICATION_STATE_OVER && voiceCommunicationManager.getCommunicationState() != -1) {
+            if (Build.VERSION.SDK_INT >= 23) {
+                if (Settings.canDrawOverlays(this)) {
+                    Log.d("zhang", "pickUpVoiceCommunication: ");
 //                SuspensionWindowManagerUtils.getInstance().showCommunicationSmallWindow(ResolutionUtils.getWidth(this),
 //                        Long.parseLong(TimeUtils.getChronometerSeconds(communicationTimeChronometer.getText().toString())));
 //                finish();
-                checkCanBackGroundStart();
+                    checkCanBackGroundStart();
+                } else {
+                    new CustomDialog.MessageDialogBuilder(ChannelVoiceCommunicationActivity.this)
+                            .setMessage(getString(R.string.permission_grant_window_alert, AppUtils.getAppName(ChannelVoiceCommunicationActivity.this)))
+                            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Uri uri = Uri.parse("package:" + getPackageName());
+                                    Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, uri);
+                                    startActivityForResult(intent, REQUEST_WINDOW_PERMISSION);
+                                }
+                            }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                            .show();
+                }
             } else {
-                new CustomDialog.MessageDialogBuilder(ChannelVoiceCommunicationActivity.this)
-                        .setMessage(getString(R.string.permission_grant_window_alert, AppUtils.getAppName(ChannelVoiceCommunicationActivity.this)))
-                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Uri uri = Uri.parse("package:" + getPackageName());
-                                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, uri);
-                                startActivityForResult(intent, REQUEST_WINDOW_PERMISSION);
-                            }
-                        }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
-                        .show();
-            }
-        } else {
-            if (Build.VERSION.SDK_INT >= 19) {
-                checkCanBackGroundStart();
-            } else {
-                SuspensionWindowManagerUtils.getInstance().showCommunicationSmallWindow(ResolutionUtils.getWidth(this),
-                        Long.parseLong(TimeUtils.getChronometerSeconds(communicationTimeChronometer.getText().toString())));
-                finish();
+                if (Build.VERSION.SDK_INT >= 19) {
+                    checkCanBackGroundStart();
+                } else {
+                    SuspensionWindowManagerUtils.getInstance().showCommunicationSmallWindow(ResolutionUtils.getWidth(this),
+                            Long.parseLong(TimeUtils.getChronometerSeconds(communicationTimeChronometer.getText().toString())));
+                    finish();
+                }
             }
         }
     }
