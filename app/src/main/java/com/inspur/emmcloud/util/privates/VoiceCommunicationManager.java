@@ -78,6 +78,8 @@ public class VoiceCommunicationManager {
      */
     private int layoutState = -1;
     private CountDownTimer countDownTimer;
+    private boolean isHandsFree = false;
+    private boolean isMute = false;
     /**
      * 30s内无响应挂断 总时长：millisInFuture，隔多长时间回调一次countDownInterval
      */
@@ -604,6 +606,8 @@ public class VoiceCommunicationManager {
         userCount = 1;
         connectStartTime = 0;
         voiceCommunicationManager = null;
+        isHandsFree = false;
+        isMute = false;
     }
 
     /**
@@ -627,6 +631,22 @@ public class VoiceCommunicationManager {
 
     public List<VoiceCommunicationJoinChannelInfoBean> getVoiceCommunicationMemberListBottom() {
         return voiceCommunicationMemberListBottom;
+    }
+
+    public boolean isHandsFree() {
+        return isHandsFree;
+    }
+
+    public void setHandsFree(boolean handsFree) {
+        isHandsFree = handsFree;
+    }
+
+    public boolean isMute() {
+        return isMute;
+    }
+
+    public void setMute(boolean mute) {
+        isMute = mute;
     }
 
     /**
