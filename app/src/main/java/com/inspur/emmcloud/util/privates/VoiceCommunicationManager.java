@@ -3,6 +3,7 @@ package com.inspur.emmcloud.util.privates;
 import android.content.Context;
 import android.os.CountDownTimer;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
@@ -96,7 +97,9 @@ public class VoiceCommunicationManager {
                 communicationState = COMMUNICATION_STATE_OVER;
                 destroy();
                 SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
-                VoiceCommunicationToastUtil.showToast("destroy");
+                if (!MyApplication.getInstance().getIsActive()) {
+                    VoiceCommunicationToastUtil.showToast("destroy");
+                }
             }
         }
 
