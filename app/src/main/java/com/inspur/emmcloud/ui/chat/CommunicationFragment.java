@@ -1045,6 +1045,7 @@ public class CommunicationFragment extends BaseFragment {
                         Log.d("zhang", "COMMUNICATION_STATE_OVER: 555555 ");
                         return;
                     } else if (customProtocol.getParamMap().get("cmd").equals("destroy")) {
+                        Log.d("zhang", "fragment onReceiveVoiceOrVideoCall: destroy");
                         VoiceCommunicationManager.getInstance().destroy();
                         SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
                         Log.d("zhang", "COMMUNICATION_STATE_OVER: 66666666 ");
