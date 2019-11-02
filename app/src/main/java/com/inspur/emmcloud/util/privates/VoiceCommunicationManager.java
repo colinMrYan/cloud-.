@@ -96,6 +96,7 @@ public class VoiceCommunicationManager {
                 communicationState = COMMUNICATION_STATE_OVER;
                 destroy();
                 SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
+                VoiceCommunicationToastUtil.showToast("destroy");
             }
         }
 

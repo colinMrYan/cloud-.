@@ -88,6 +88,7 @@ import com.inspur.emmcloud.util.privates.ScanQrCodeUtils;
 import com.inspur.emmcloud.util.privates.SuspensionWindowManagerUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
 import com.inspur.emmcloud.util.privates.VoiceCommunicationManager;
+import com.inspur.emmcloud.util.privates.VoiceCommunicationToastUtil;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.MessageMatheSetCacheUtils;
@@ -1043,12 +1044,14 @@ public class CommunicationFragment extends BaseFragment {
                         changeUserConnectStateByUid(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_REFUSE, customProtocol.getParamMap().get("uid"));
                         checkCommunicationFinish();
                         Log.d("zhang", "COMMUNICATION_STATE_OVER: 555555 ");
+                        VoiceCommunicationToastUtil.showToast("refuse");
                         return;
                     } else if (customProtocol.getParamMap().get("cmd").equals("destroy")) {
                         VoiceCommunicationManager.getInstance().destroy();
                         SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
                         Log.d("zhang", "COMMUNICATION_STATE_OVER: 66666666 ");
                         VoiceCommunicationManager.getInstance().setCommunicationState(ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_OVER);
+                        VoiceCommunicationToastUtil.showToast("destroy");
                         return;
                     }
                 }
