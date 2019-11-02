@@ -96,8 +96,12 @@ public class VoiceCommunicationManager {
             }
             if (getWaitAndConnectedNumber() < 2) {
                 communicationState = COMMUNICATION_STATE_OVER;
-                destroy();
                 SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
+                destroy();
+                //防止在声网回调和小窗打开Activity同步进行，接收到回调没关上Activity的情况
+                if (BaseApplication.getInstance().isActivityExist(ChannelVoiceCommunicationActivity.class)) {
+                    BaseApplication.getInstance().closeActivity(ChannelVoiceCommunicationActivity.class.getSimpleName());
+                }
             }
         }
 

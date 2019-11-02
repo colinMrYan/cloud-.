@@ -471,15 +471,19 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
      * 如是否免提，是否静音
      */
     private void initFunctionState() {
-        int colorUnSelected = ContextCompat.getColor(this, R.color.voice_communication_function_default);
-        int colorSelected = ContextCompat.getColor(this, R.color.voice_communication_function_select);
+        if (voiceCommunicationManager.getLayoutState() == COMMUNICATION_LAYOUT_STATE) {
+            int colorUnSelected = ContextCompat.getColor(this, R.color.voice_communication_function_default);
+            int colorSelected = ContextCompat.getColor(this, R.color.voice_communication_function_select);
 
-        handsFreeImg.setClickable(voiceCommunicationManager.getLayoutState() == COMMUNICATION_LAYOUT_STATE);
-        muteImg.setClickable(voiceCommunicationManager.getLayoutState() == COMMUNICATION_LAYOUT_STATE);
-        handsFreeImg.setImageResource(voiceCommunicationManager.isHandsFree() ? R.drawable.icon_hands_free_selected : R.drawable.icon_hands_free_unselected);
-        handsFreeTv.setTextColor(voiceCommunicationManager.isHandsFree() ? colorSelected : colorUnSelected);
-        muteImg.setImageResource(voiceCommunicationManager.isMute() ? R.drawable.icon_mute_selected : R.drawable.icon_mute_unselcected);
-        muteTv.setTextColor(voiceCommunicationManager.isMute() ? colorSelected : colorUnSelected);
+            handsFreeImg.setSelected(voiceCommunicationManager.isHandsFree());
+            muteImg.setSelected(voiceCommunicationManager.isMute());
+            handsFreeImg.setClickable(voiceCommunicationManager.getLayoutState() == COMMUNICATION_LAYOUT_STATE);
+            muteImg.setClickable(voiceCommunicationManager.getLayoutState() == COMMUNICATION_LAYOUT_STATE);
+            handsFreeImg.setImageResource(voiceCommunicationManager.isHandsFree() ? R.drawable.icon_hands_free_selected : R.drawable.icon_hands_free_unselected);
+            handsFreeTv.setTextColor(voiceCommunicationManager.isHandsFree() ? colorSelected : colorUnSelected);
+            muteImg.setImageResource(voiceCommunicationManager.isMute() ? R.drawable.icon_mute_selected : R.drawable.icon_mute_unselcected);
+            muteTv.setTextColor(voiceCommunicationManager.isMute() ? colorSelected : colorUnSelected);
+        }
         voiceCommunicationManager.muteLocalAudioStream(voiceCommunicationManager.isMute());
         voiceCommunicationManager.muteAllRemoteAudioStreams(false);
         voiceCommunicationManager.onSwitchSpeakerphoneClicked(voiceCommunicationManager.isHandsFree());
@@ -771,6 +775,9 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
 
             @Override
             public void onUserJoined(final int uid, int elapsed) {
+                if (mediaPlayerManagerUtils != null) {
+                    mediaPlayerManagerUtils.stop();
+                }
                 List<VoiceCommunicationJoinChannelInfoBean> totalList = voiceCommunicationManager.getVoiceCommunicationMemberList();
                 for (int i = 0; i < totalList.size(); i++) {
                     if (totalList.get(i).getAgoraUid() == uid) {
@@ -798,9 +805,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                             }
                         }
                     });
-                }
-                if (mediaPlayerManagerUtils != null) {
-                    mediaPlayerManagerUtils.stop();
                 }
             }
 
