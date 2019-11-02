@@ -1106,12 +1106,14 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 voiceCommunicationManager.muteAllRemoteAudioStreams(excuseImg.isSelected());
                 excuseImg.setImageResource(excuseImg.isSelected() ? R.drawable.icon_excuse_selected : R.drawable.icon_excuse_unselected);
                 break;
+            case R.id.tv_hands_free:
             case R.id.img_hands_free:
                 switchFunctionViewUIState(handsFreeImg, handsFreeTv);
                 voiceCommunicationManager.setHandsFree(handsFreeImg.isSelected());
                 voiceCommunicationManager.onSwitchSpeakerphoneClicked(handsFreeImg.isSelected());
                 handsFreeImg.setImageResource(handsFreeImg.isSelected() ? R.drawable.icon_hands_free_selected : R.drawable.icon_hands_free_unselected);
                 break;
+            case R.id.tv_mute:
             case R.id.img_mute:
                 switchFunctionViewUIState(muteImg, muteTv);
                 voiceCommunicationManager.setMute(muteImg.isSelected());
