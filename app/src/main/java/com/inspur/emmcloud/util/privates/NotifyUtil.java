@@ -49,6 +49,9 @@ public class NotifyUtil {
             String content = "";
             List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationMemberList =
                     VoiceCommunicationManager.getInstance().getVoiceCommunicationMemberList();
+            if (voiceCommunicationMemberList == null) {
+                return;
+            }
             if (voiceCommunicationMemberList.size() > 2) {  //群聊
                 title = context.getResources().getString(R.string.voice_communication_notification_group_title);
                 content = context.getResources().getString(R.string.voice_communication_notification_group_content);
@@ -59,6 +62,8 @@ public class NotifyUtil {
                     }
                 }
                 content = context.getResources().getString(R.string.voice_communication_notification_content);
+            } else {
+                return;
             }
             notifyUtil.setNotification(title, content, ChannelVoiceCommunicationActivity.class);
         }

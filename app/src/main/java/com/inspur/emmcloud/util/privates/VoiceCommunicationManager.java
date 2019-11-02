@@ -102,6 +102,7 @@ public class VoiceCommunicationManager {
                 if (BaseApplication.getInstance().isActivityExist(ChannelVoiceCommunicationActivity.class)) {
                     BaseApplication.getInstance().closeActivity(ChannelVoiceCommunicationActivity.class.getSimpleName());
                 }
+                VoiceCommunicationToastUtil.showToast("destroy");
             }
         }
 
