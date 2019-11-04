@@ -74,21 +74,14 @@ public class LargeImageView extends View implements BlockImageLoader.OnImageLoad
     private ScaleHelper scaleHelper;
     private AccelerateInterpolator accelerateInterpolator;
     private DecelerateInterpolator decelerateInterpolator;
-
-    @Override
-    public int getDrawingCacheQuality() {
-        return super.getDrawingCacheQuality();
-    }
-
     private Drawable originDrawable;
-
     private boolean isAttachedWindow;
     private List<BlockImageLoader.DrawData> drawDatas = new ArrayList<>();
     private Rect imageRect = new Rect();
     private OnClickListener onClickListener;
     private OnLongClickListener onLongClickListener;
     private CriticalScaleValueHook criticalScaleValueHook;
-    private OnFlingDownListe onFlingDownLister;
+    private OnFlingDownListener onFlingDownLister;
     private ScaleGestureDetector.OnScaleGestureListener onScaleGestureListener = new ScaleGestureDetector.OnScaleGestureListener() {
         @Override
         public boolean onScale(ScaleGestureDetector detector) {
@@ -221,7 +214,6 @@ public class LargeImageView extends View implements BlockImageLoader.OnImageLoad
             return true;
         }
     };
-
     public LargeImageView(Context context) {
         this(context, null);
     }
@@ -248,6 +240,11 @@ public class LargeImageView extends View implements BlockImageLoader.OnImageLoad
         paint = new Paint();
         paint.setColor(Color.GRAY);
         paint.setAntiAlias(true);
+    }
+
+    @Override
+    public int getDrawingCacheQuality() {
+        return super.getDrawingCacheQuality();
     }
 
     @Override
@@ -582,7 +579,6 @@ public class LargeImageView extends View implements BlockImageLoader.OnImageLoad
                 imageBlockImageLoader.loadImageBlocks(drawDatas, imageScale, imageRect, viewWidth, viewHeight);
             }
             if (BlockImageLoader.DEBUG) {
-                LogUtils.jasonDebug("drawDatas==" + drawDatas.size());
                 for (int i = 0; i < drawDatas.size(); i++) {
                     BlockImageLoader.DrawData data = drawDatas.get(i);
                     Rect drawRect = data.imageRect;
@@ -873,11 +869,11 @@ public class LargeImageView extends View implements BlockImageLoader.OnImageLoad
         this.onDoubleClickListener = onDoubleClickListener;
     }
 
-    public OnFlingDownListe getOnFlingDownLister() {
+    public OnFlingDownListener getOnFlingDownLister() {
         return onFlingDownLister;
     }
 
-    public void setOnFlingDownLister(OnFlingDownListe onFlingDownLister) {
+    public void setOnFlingDownLister(OnFlingDownListener onFlingDownLister) {
         this.onFlingDownLister = onFlingDownLister;
     }
 
@@ -916,7 +912,7 @@ public class LargeImageView extends View implements BlockImageLoader.OnImageLoad
         boolean onDoubleClick(LargeImageView view, MotionEvent event);
     }
 
-    public interface OnFlingDownListe {
+    public interface OnFlingDownListener {
         void onFlingDown();
     }
 }

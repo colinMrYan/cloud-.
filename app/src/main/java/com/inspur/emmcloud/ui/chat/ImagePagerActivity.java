@@ -163,7 +163,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
             @Override
             public void loadingComplete(String url) {
                 if (imgTypeMessageList.size() > 0 && urlList.get(pagerPosition).equals(url)) {
-                    originalPictureDownLoadTextView.setText("下载完成");
+                    originalPictureDownLoadTextView.setText(R.string.download_success);
                     originalPictureDownLoadTextView.setVisibility(View.GONE);
                 }
             }
