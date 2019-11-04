@@ -20,7 +20,6 @@ import com.inspur.emmcloud.adapter.VolumeRecentUseAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
-import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
@@ -148,13 +147,9 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
                         break;
                     case 1:
                         if (isCopyOrMove) {
-                            if (fromVolumeVolumeFileList.size() == 1) {
                                 Intent intent = new Intent(VolumeHomePageActivity.this, ShareVolumeActivity.class);
                                 intent.putExtras(bundle);
                                 startActivityForResult(intent, VolumeFileBaseActivity.REQUEST_COPY_FILE);
-                            } else {
-                                ToastUtils.show("仅支持一个文件或文件夹");
-                            }
                         } else {
                             bundle.putSerializable("shareVolumeList", (Serializable) shareVolumeList);
                             if (uriList != null && uriList.size() > 0) {

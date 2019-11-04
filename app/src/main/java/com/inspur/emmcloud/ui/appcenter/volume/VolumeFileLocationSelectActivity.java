@@ -58,6 +58,9 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
     private MyAppAPIService apiService;
 
     private List<Uri> shareUriList = new ArrayList<>();
+    private int copyFileSize = 0;
+    private int copyReturnFileSize = 0;
+    private int returnErrorFileSize = 0;
 
     @Override
     public void onCreate() {
@@ -256,8 +259,13 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
                 path = currentDirAbsolutePath.substring(0, currentDirAbsolutePath.length() - 1);
             }
             List<VolumeFile> moveVolumeFileList = (List<VolumeFile>) getIntent().getSerializableExtra("volumeFileList");
-            fileOrgPath = fileOrgPath + moveVolumeFileList.get(0).getName();
-            apiService.copyFileBetweenVolume(fromVolume.getId(), volume.getId(), fileOrgPath, path);
+            copyFileSize = moveVolumeFileList.size();
+            copyReturnFileSize = 0;
+            returnErrorFileSize = 0;
+            for (int i = 0; i < moveVolumeFileList.size(); i++) {
+                String srcVolumeFilePath = fileOrgPath + moveVolumeFileList.get(i).getName();
+                apiService.copyFileBetweenVolume(fromVolume.getId(), volume.getId(), srcVolumeFilePath, path);
+            }
         }
     }
 
@@ -276,6 +284,13 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
             }
             List<VolumeFile> moveVolumeFileList = (List<VolumeFile>) getIntent().getSerializableExtra("volumeFileList");
             apiService.moveVolumeFile(volume.getId(), operationFileAbsolutePath, moveVolumeFileList, path);
+        }
+    }
+
+    private void copyErrorToastShow() {
+        if (returnErrorFileSize != 0) {
+            String showErrorDetail = String.format(getString(R.string.volume_copy_between_volume_error_toast), returnErrorFileSize);
+            ToastUtils.show(showErrorDetail);
         }
     }
 
@@ -313,16 +328,27 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
 
         @Override
         public void returnCopyFileBetweenVolumeSuccess() {
-            LoadingDialog.dimissDlg(loadingDlg);
-            setResult(RESULT_OK);
-            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_VOLUME_FILE_COPY_SUCCESS, ""));
-            finish();
+            copyReturnFileSize++;
+            if (copyReturnFileSize == copyFileSize) {
+                copyErrorToastShow();
+                LoadingDialog.dimissDlg(loadingDlg);
+                setResult(RESULT_OK);
+                EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_VOLUME_FILE_COPY_SUCCESS, ""));
+                finish();
+            }
         }
 
         @Override
         public void returnCopyFileBetweenVolumeFail(String error, int errorCode) {
-            LoadingDialog.dimissDlg(loadingDlg);
-            WebServiceMiddleUtils.hand(getApplicationContext(), error, errorCode);
+            copyReturnFileSize++;
+            returnErrorFileSize++;
+            if (copyReturnFileSize == copyFileSize) {
+                copyErrorToastShow();
+                LoadingDialog.dimissDlg(loadingDlg);
+                setResult(RESULT_OK);
+                EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_VOLUME_FILE_COPY_SUCCESS, ""));
+                finish();
+            }
         }
     }
 }
