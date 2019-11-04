@@ -136,7 +136,6 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     private Dialog fileRenameDlg, createFolderDlg;
     private int volumeFrom = -1;
 
-
     @Override
     public void onCreate() {
         ButterKnife.bind(this);
@@ -673,15 +672,6 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
      */
     protected void copyFile(List<VolumeFile> volumeFileList) {
         if (volumeFileList.size() > 0) {
-//            Intent intent = new Intent(getApplicationContext(), VolumeFileLocationSelectActivity.class);
-//            Bundle bundle = new Bundle();
-//            bundle.putSerializable("volume", volume);
-//            bundle.putSerializable("volumeFileList", (Serializable) volumeFileList);
-//            bundle.putString("title", getString(R.string.clouddriver_select_copy_position));
-//            bundle.putBoolean("isFunctionCopy", true);
-//            bundle.putString("operationFileDirAbsolutePath", currentDirAbsolutePath);
-//            intent.putExtras(bundle);
-//            startActivityForResult(intent, REQUEST_COPY_FILE);
             Intent intent = new Intent(getApplicationContext(), VolumeHomePageActivity.class);
             Bundle bundle = new Bundle();
             bundle.putSerializable("fromVolume", volume);
@@ -690,7 +680,6 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
             bundle.putBoolean("isFunctionCopy", true);
             bundle.putString("operationFileDirAbsolutePath", currentDirAbsolutePath);
             intent.putExtras(bundle);
-            //startActivity(intent);
             startActivityForResult(intent, REQUEST_COPY_FILE);
         }
     }
