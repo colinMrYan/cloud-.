@@ -10,12 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.adapter.VolumeFileAdapter;
+import com.inspur.emmcloud.adapter.VolumeFileTransferAdapter;
+import com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout;
 import com.inspur.emmcloud.basemodule.ui.BaseMvpFragment;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.ui.appcenter.volume.contract.VolumeFileTransferContract;
 import com.inspur.emmcloud.ui.appcenter.volume.presenter.VolumeFileTransferPresenter;
-import com.inspur.emmcloud.util.privates.VolumeFileUploadManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,13 +23,22 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+/**
+ * 文件传输
+ *
+ * @author zhangyj.lc
+ */
 public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransferPresenter> implements VolumeFileTransferContract.View {
     int currentIndex = 0;
+    @BindView(R.id.volume_file_transfer_empty_layout)
+    View noDataLayout;
+    @BindView(R.id.refresh_layout)
+    MySwipeRefreshLayout refreshLayout;
     @BindView(R.id.volume_file_transfer_recycler)
     RecyclerView recyclerView;
-    VolumeFileAdapter adapter;
+    VolumeFileTransferAdapter adapter;
 
-    List<VolumeFile> volumeFileList = new ArrayList<>();//云盘列表
+    List<VolumeFile> volumeFileList = new ArrayList<>();
     VolumeFileTransferPresenter presenter;
 
 
@@ -52,20 +61,22 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
             currentIndex = getArguments().getInt("position");
         }
 
-        switch (currentIndex) {
-            case 0:
-
-                break;
-            case 1:
-                volumeFileList = VolumeFileUploadManager.getInstance().getAllUploadVolumeFile();
-                break;
-            case 2:
-
-                break;
-        }
+        volumeFileList = presenter.getVolumeFileList(currentIndex);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adapter = new VolumeFileAdapter(getActivity(), volumeFileList);
+        adapter = new VolumeFileTransferAdapter(getActivity(), volumeFileList);
         recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void showNoDataLayout() {
+        noDataLayout.setVisibility(View.VISIBLE);
+        refreshLayout.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showListLayout() {
+        noDataLayout.setVisibility(View.GONE);
+        refreshLayout.setVisibility(View.VISIBLE);
     }
 }

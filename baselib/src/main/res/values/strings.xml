@@ -672,6 +672,7 @@
     <string name="volume_file_transfer">文件传输</string>
     <string name="volume_file_transfer_download_list">下载列表</string>
     <string name="volume_file_transfer_upload_list">上传列表</string>
+    <string name="volume_file_transfer_list_wait_tip">正在等待&#8230;</string>
     <string name="volume_share_2_qq_wechat">分享</string>
 
     <!--Webex 邮箱-->

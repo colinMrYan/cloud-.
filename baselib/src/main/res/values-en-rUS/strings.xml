@@ -641,6 +641,7 @@
     <string name="volume_file_transfer">File Transfer</string>
     <string name="volume_file_transfer_download_list">Download Lists</string>
     <string name="volume_file_transfer_upload_list">Upload Lists</string>
+    <string name="volume_file_transfer_list_wait_tip">Waiting&#8230;</string>
     <string name="create">Create</string>
     <string name="cloud_drive">Cloud Drive</string>
     <string name="video">Video</string>

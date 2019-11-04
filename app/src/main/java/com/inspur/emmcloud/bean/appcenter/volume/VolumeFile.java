@@ -29,6 +29,9 @@ public class VolumeFile implements Serializable {
     public static final String STATUS_UPLOADIND = "uploading";
     public static final String STATUS_UPLOAD_FAIL = "upload_fail";
     public static final String STATUS_UPLOAD_PAUSE = "upload_pause";
+    public static final String STATUS_DOWNLOADING = "uploading";
+    public static final String STATUS_DOWNLOAD_FAIL = "upload_fail";
+    public static final String STATUS_DOWNLOAD_PAUSE = "upload_pause";
     private String id = "";
     private String type = "";
     private String name = "";
@@ -47,6 +50,28 @@ public class VolumeFile implements Serializable {
     private String owner = "";
     private String path = "";
     private String localFilePath = "";
+    private String volumeFileParentPath = "";
+
+    public static VolumeFile getMockVolumeFile(VolumeFileUpload volumeFileUpload) {
+        long time = System.currentTimeMillis();
+        String filename = FileUtils.getFileName(volumeFileUpload.getLocalFilePath());
+        VolumeFile volumeFile = new VolumeFile();
+        volumeFile.setType(VolumeFile.FILE_TYPE_REGULAR);
+        volumeFile.setId(volumeFileUpload.getId());
+        volumeFile.setCreationDate(time);
+        volumeFile.setName(filename);
+        volumeFile.setStatus(volumeFileUpload.getStatus());
+        volumeFile.setVolume(volumeFileUpload.getVolumeId());
+        volumeFile.setFormat(FileUtils.getMimeType(filename));
+        volumeFile.setSize(FileUtils.getFileSize(volumeFileUpload.getLocalFilePath()));
+        volumeFile.setLocalFilePath(volumeFileUpload.getLocalFilePath());
+        volumeFile.setVolumeFileParentPath(volumeFileUpload.getVolumeFileParentPath());
+        return volumeFile;
+    }
+
+    public String getVolumeFileParentPath() {
+        return volumeFileParentPath;
+    }
 
     public VolumeFile() {
     }
@@ -81,20 +106,8 @@ public class VolumeFile implements Serializable {
         path = JSONUtils.getString(object, "path", "");
     }
 
-    public static VolumeFile getMockVolumeFile(VolumeFileUpload volumeFileUpload) {
-        long time = System.currentTimeMillis();
-        String filename = FileUtils.getFileName(volumeFileUpload.getLocalFilePath());
-        VolumeFile volumeFile = new VolumeFile();
-        volumeFile.setType(VolumeFile.FILE_TYPE_REGULAR);
-        volumeFile.setId(volumeFileUpload.getId());
-        volumeFile.setCreationDate(time);
-        volumeFile.setName(filename);
-        volumeFile.setStatus(volumeFileUpload.getStatus());
-        volumeFile.setVolume(volumeFileUpload.getVolumeId());
-        volumeFile.setFormat(FileUtils.getMimeType(filename));
-        volumeFile.setSize(FileUtils.getFileSize(volumeFileUpload.getLocalFilePath()));
-        volumeFile.setLocalFilePath(volumeFileUpload.getLocalFilePath());
-        return volumeFile;
+    public void setVolumeFileParentPath(String volumeFileParentPath) {
+        this.volumeFileParentPath = volumeFileParentPath;
     }
 
     /**
