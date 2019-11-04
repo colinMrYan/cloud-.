@@ -581,10 +581,16 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
-                case REQUEST_COPY_FILE:
+                case REQUEST_COPY_FILE:                         /**复制失败VolumeFiles 返回进行重新选择复制**/
                     adapter.clearSelectedVolumeFileList();
                     adapter.notifyDataSetChanged();
-                    setBottomOperationItemShow(new ArrayList<VolumeFile>());
+                    List<VolumeFile> copyVolumeResultFileList = new ArrayList<>();
+                    if (data.hasExtra("copyFailedFiles")) {
+                        copyVolumeResultFileList = (List<VolumeFile>) data.getSerializableExtra("copyFailedFiles");
+                    }
+                    adapter.setSelectVolumeFileList(copyVolumeResultFileList);
+                    adapter.notifyDataSetChanged();
+                    setBottomOperationItemShow(copyVolumeResultFileList);
                     break;
                 case REQUEST_MOVE_FILE:
                     adapter.clearSelectedVolumeFileList();

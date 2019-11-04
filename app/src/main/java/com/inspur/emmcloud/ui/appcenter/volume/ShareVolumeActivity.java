@@ -357,7 +357,7 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case VolumeFileBaseActivity.REQUEST_COPY_FILE:
-                    setResult(RESULT_OK);
+                    setResult(RESULT_OK, data);
                     finish();
                     break;
                 case UPDATE_VOLUME_NAME:

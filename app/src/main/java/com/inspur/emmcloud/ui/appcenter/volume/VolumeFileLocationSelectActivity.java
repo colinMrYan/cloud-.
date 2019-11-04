@@ -53,10 +53,9 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
     TextView locationSelectCancelText;
     @BindView(R.id.path_text)
     TextView pathText;
-
+    List<VolumeFile> copyErrorFiles = new ArrayList<>();
     private boolean isFunctionCopy;//判断是复制还是移动功能
     private MyAppAPIService apiService;
-
     private List<Uri> shareUriList = new ArrayList<>();
     private int copyFileSize = 0;
     private int copyReturnFileSize = 0;
@@ -147,7 +146,7 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
                 break;
             case R.id.btn_location_select_to:
                 String operationFileAbsolutePath = getIntent().getStringExtra("operationFileDirAbsolutePath");
-                if (operationFileAbsolutePath.equals(currentDirAbsolutePath)) {
+                if (operationFileAbsolutePath.equals(currentDirAbsolutePath) && volume.getId().equals(fromVolume.getId())) {
                     ToastUtils.show(getApplicationContext(), R.string.file_exist_current_directory);
                     return;
                 }
@@ -227,7 +226,7 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_MOVE_FILE || requestCode == REQUEST_COPY_FILE) {
-                setResult(RESULT_OK);
+                setResult(RESULT_OK, data);
                 finish();
             }
         }
@@ -264,7 +263,7 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
             }
             for (int i = 0; i < moveVolumeFileList.size(); i++) {
                 String srcVolumeFilePath = fileOrgPath + moveVolumeFileList.get(i).getName();
-                apiService.copyFileBetweenVolume(fromVolume.getId(), volume.getId(), srcVolumeFilePath, path);
+                apiService.copyFileBetweenVolume(moveVolumeFileList.get(i), fromVolume.getId(), volume.getId(), srcVolumeFilePath, path);
             }
         }
     }
@@ -335,21 +334,24 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
             if (copyReturnFileSize == copyFileSize) {
                 copyErrorToastShow();
                 LoadingDialog.dimissDlg(loadingDlg);
-                setResult(RESULT_OK);
-                EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_VOLUME_FILE_COPY_SUCCESS, ""));
+                Intent intentResult = new Intent();
+                intentResult.putExtra("copyFailedFiles", (Serializable) copyErrorFiles);
+                setResult(RESULT_OK, intentResult);
                 finish();
             }
         }
 
         @Override
-        public void returnCopyFileBetweenVolumeFail(String error, int errorCode) {
+        public void returnCopyFileBetweenVolumeFail(String error, int errorCode, VolumeFile volumeFile) {
             copyReturnFileSize++;
             returnErrorFileSize++;
+            copyErrorFiles.add(volumeFile);
             if (copyReturnFileSize == copyFileSize) {
                 copyErrorToastShow();
                 LoadingDialog.dimissDlg(loadingDlg);
-                setResult(RESULT_OK);
-                EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_VOLUME_FILE_COPY_SUCCESS, ""));
+                Intent intentResult = new Intent();
+                intentResult.putExtra("copyFailedFiles", (Serializable) copyErrorFiles);
+                setResult(RESULT_OK, intentResult);
                 finish();
             }
         }

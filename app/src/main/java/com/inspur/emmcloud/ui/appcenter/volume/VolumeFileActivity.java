@@ -625,8 +625,13 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
             List<VolumeFile> volumeFileUploadList = VolumeFileUploadManager.getInstance().getCurrentFolderUploadVolumeFile(volume.getId(), currentDirAbsolutePath);
             tipViewLayout.setVisibility(volumeFileUploadList.size() > 0 ? View.VISIBLE : View.GONE);
         } else if (simpleEventMessage.getAction().equals(Constant.EVENTBUS_TAG_VOLUME_FILE_COPY_SUCCESS)) {
-            adapter.clearSelectedVolumeFileList();
-            adapter.notifyDataSetChanged();
+//            adapter.clearSelectedVolumeFileList();
+//            List<VolumeFile> copyVolumeFileList = (List<VolumeFile>)(simpleEventMessage.getMessageObj());
+//            if(copyVolumeFileList!=null&&copyVolumeFileList.size()>0){
+//                boolean b = adapter.getMultiselect();
+//                adapter.setSelectVolumeFileList(copyVolumeFileList);
+//            }
+//            adapter.notifyDataSetChanged();
         }
     }
 

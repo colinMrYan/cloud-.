@@ -688,7 +688,7 @@ public class MyAppAPIService {
     /**
      * 夸网盘复制文件
      **/
-    public void copyFileBetweenVolume(final String fromVolumeId, final String toVolumeId, final String srcVolumeFilePath, final String desVolumeFilePath) {
+    public void copyFileBetweenVolume(final VolumeFile copyVolumeFile, final String fromVolumeId, final String toVolumeId, final String srcVolumeFilePath, final String desVolumeFilePath) {
         final String url = APIUri.getCopyFileBetweenVolumeUrl(fromVolumeId, toVolumeId);
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
         params.addQueryStringParameter("path", srcVolumeFilePath);
@@ -702,7 +702,7 @@ public class MyAppAPIService {
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnCopyFileBetweenVolumeFail(error, responseCode);
+                apiInterface.returnCopyFileBetweenVolumeFail(error, responseCode, copyVolumeFile);
             }
 
             @Override
@@ -710,7 +710,7 @@ public class MyAppAPIService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        copyFileBetweenVolume(fromVolumeId, toVolumeId, srcVolumeFilePath, desVolumeFilePath);
+                        copyFileBetweenVolume(copyVolumeFile, fromVolumeId, toVolumeId, srcVolumeFilePath, desVolumeFilePath);
                     }
 
                     @Override

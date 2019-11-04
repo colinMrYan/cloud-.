@@ -516,7 +516,7 @@ public interface APIInterface {
 
     void returnCopyFileBetweenVolumeSuccess();
 
-    void returnCopyFileBetweenVolumeFail(String error, int errorCode);
+    void returnCopyFileBetweenVolumeFail(String error, int errorCode, VolumeFile volumeFile);
 
     void returnRecommendAppWidgetListSuccess(GetRecommendAppWidgetListResult getRecommendAppWidgetListResult);
 

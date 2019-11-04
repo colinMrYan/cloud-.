@@ -1178,7 +1178,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnCopyFileBetweenVolumeFail(String error, int errorCode) {
+    public void returnCopyFileBetweenVolumeFail(String error, int errorCode, VolumeFile volumeFile) {
 
     }
 
