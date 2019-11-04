@@ -102,6 +102,11 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
         return selectVolumeFileList;
     }
 
+    public void setSelectVolumeFileList(List<VolumeFile> selectVolumeFileList) {
+        this.selectVolumeFileList = selectVolumeFileList;
+        notifyDataSetChanged();
+    }
+
     public void clearSelectedVolumeFileList() {
         selectVolumeFileList.clear();
     }
