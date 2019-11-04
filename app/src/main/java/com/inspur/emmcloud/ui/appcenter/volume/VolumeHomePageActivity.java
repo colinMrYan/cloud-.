@@ -91,12 +91,12 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
     }
 
     private void init() {
-        if (getIntent().hasExtra("isFunctionCopy")) {
+        if (getIntent().hasExtra(VolumeFileBaseActivity.EXTRA_IS_FUNCTION_COPY)) {
             isCopyOrMove = true;
-            copyFromVolume = (Volume) getIntent().getSerializableExtra("fromVolume");
-            operationFileDirAbsolutePath = getIntent().getStringExtra("operationFileDirAbsolutePath");
-            title = getIntent().getStringExtra("title");
-            fromVolumeVolumeFileList = (List<VolumeFile>) (getIntent().getSerializableExtra("volumeFileList"));
+            copyFromVolume = (Volume) getIntent().getSerializableExtra(VolumeFileBaseActivity.EXTRA_FROM_VOLUME);
+            operationFileDirAbsolutePath = getIntent().getStringExtra(VolumeFileBaseActivity.EXTRA_OPERATION_FILE_DIR_ABS_PATH);
+            title = getIntent().getStringExtra(VolumeFileBaseActivity.EXTRA_VOLUME_FILE_TITLE);
+            fromVolumeVolumeFileList = (List<VolumeFile>) (getIntent().getSerializableExtra(VolumeFileBaseActivity.EXTRA_VOLUME_FILE_LIST));
         }
         loadingDlg = new LoadingDialog(this);
         apiService = new MyAppAPIService(this);
@@ -120,10 +120,10 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
                     uriList = (List<Uri>) getIntent().getSerializableExtra(Constant.SHARE_FILE_URI_LIST);
                 }
                 if (isCopyOrMove) {
-                    bundle.putSerializable("fromVolume", copyFromVolume);
-                    bundle.putSerializable("volumeFileList", (Serializable) fromVolumeVolumeFileList);
-                    bundle.putBoolean("isFunctionCopy", true);
-                    bundle.putString("operationFileDirAbsolutePath", operationFileDirAbsolutePath);
+                    bundle.putSerializable(VolumeFileBaseActivity.EXTRA_FROM_VOLUME, copyFromVolume);
+                    bundle.putSerializable(VolumeFileBaseActivity.EXTRA_VOLUME_FILE_LIST, (Serializable) fromVolumeVolumeFileList);
+                    bundle.putBoolean(VolumeFileBaseActivity.EXTRA_IS_FUNCTION_COPY, true);
+                    bundle.putString(VolumeFileBaseActivity.EXTRA_OPERATION_FILE_DIR_ABS_PATH, operationFileDirAbsolutePath);
                 }
 
                 switch (position) {

@@ -145,7 +145,7 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
                 showCreateFolderDlg();
                 break;
             case R.id.btn_location_select_to:
-                String operationFileAbsolutePath = getIntent().getStringExtra("operationFileDirAbsolutePath");
+                String operationFileAbsolutePath = getIntent().getStringExtra(EXTRA_OPERATION_FILE_DIR_ABS_PATH);
                 if (operationFileAbsolutePath.equals(currentDirAbsolutePath) && volume.getId().equals(fromVolume.getId())) {
                     ToastUtils.show(getApplicationContext(), R.string.file_exist_current_directory);
                     return;
@@ -255,7 +255,7 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
             copyReturnFileSize = 0;
             returnErrorFileSize = 0;
             loadingDlg.show();
-            List<VolumeFile> moveVolumeFileList = (List<VolumeFile>) getIntent().getSerializableExtra("volumeFileList");
+            List<VolumeFile> moveVolumeFileList = (List<VolumeFile>) getIntent().getSerializableExtra(EXTRA_VOLUME_FILE_LIST);
             copyFileSize = moveVolumeFileList.size();
             String path = currentDirAbsolutePath;
             if (currentDirAbsolutePath.length() > 1) {
