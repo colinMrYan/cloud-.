@@ -209,7 +209,6 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
         getVolumeList(false, false);
     }
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (resultCode == RESULT_OK) {
