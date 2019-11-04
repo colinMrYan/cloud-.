@@ -658,6 +658,7 @@
     <string name="volume_please_install_qq">請先安裝QQ</string>
     <string name="volume_please_install_wechat">請先安裝微信</string>
     <string name="volume_share_2_qq_wechat">分享</string>
+    <string name="volume_copy_between_volume_error_toast">%1$d 個文件複製失敗</string>
 
     <!-- 我的頁面部分 -->
     <string name="moments">动态</string>

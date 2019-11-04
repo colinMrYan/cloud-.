@@ -684,6 +684,47 @@ public class MyAppAPIService {
         });
     }
 
+
+    /**
+     * 夸网盘复制文件
+     **/
+    public void copyFileBetweenVolume(final VolumeFile copyVolumeFile, final String fromVolumeId, final String toVolumeId, final String srcVolumeFilePath, final String desVolumeFilePath) {
+        final String url = APIUri.getCopyFileBetweenVolumeUrl(fromVolumeId, toVolumeId);
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
+        params.addQueryStringParameter("path", srcVolumeFilePath);
+        params.addQueryStringParameter("to", desVolumeFilePath);
+        params.setAsJsonContent(true);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, url) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnCopyFileBetweenVolumeSuccess();
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnCopyFileBetweenVolumeFail(error, responseCode, copyVolumeFile);
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        copyFileBetweenVolume(copyVolumeFile, fromVolumeId, toVolumeId, srcVolumeFilePath, desVolumeFilePath);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+        });
+    }
+
     /**
      * 创建文件夹
      *

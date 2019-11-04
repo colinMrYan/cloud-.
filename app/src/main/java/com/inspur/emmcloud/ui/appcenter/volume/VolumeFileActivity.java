@@ -183,14 +183,14 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
             @Override
             public void onItemOperationTextClick(View view, int position) {
                 VolumeFile volumeFile = volumeFileList.get(position);
-                if (volumeFile.getStatus().equals(VolumeFile.STATUS_UPLOADIND)) {
+                if (volumeFile.getStatus().equals(VolumeFile.STATUS_UPLOAD_IND)) {
                     //取消上传
                     VolumeFileUploadManager.getInstance().cancelVolumeFileUploadService(volumeFile);
                     volumeFileList.remove(position);
                     adapter.notifyItemRemoved(position);
                 } else if (NetUtils.isNetworkConnected(VolumeFileActivity.this)) {
                     //重新上传
-                    volumeFile.setStatus(VolumeFile.STATUS_UPLOADIND);
+                    volumeFile.setStatus(VolumeFile.STATUS_UPLOAD_IND);
                     VolumeFileUploadManager.getInstance().reUploadFile(volumeFile);
                     adapter.notifyItemChanged(position);
                 }

@@ -662,6 +662,7 @@
     <string name="volume_please_install_qq">Please install QQ</string>
     <string name="volume_please_install_wechat">Please install Wechat</string>
     <string name="volume_share_2_qq_wechat">Share</string>
+    <string name="volume_copy_between_volume_error_toast">%1$d Files copy unsuccessfully</string>
 
 
     <!-- 我的页面部分 -->
