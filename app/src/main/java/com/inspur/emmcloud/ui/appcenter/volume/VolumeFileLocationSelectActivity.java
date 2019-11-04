@@ -253,15 +253,15 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
      **/
     private void copyFileBetweenVolume(String fileOrgPath) {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
+            copyReturnFileSize = 0;
+            returnErrorFileSize = 0;
             loadingDlg.show();
+            List<VolumeFile> moveVolumeFileList = (List<VolumeFile>) getIntent().getSerializableExtra("volumeFileList");
+            copyFileSize = moveVolumeFileList.size();
             String path = currentDirAbsolutePath;
             if (currentDirAbsolutePath.length() > 1) {
                 path = currentDirAbsolutePath.substring(0, currentDirAbsolutePath.length() - 1);
             }
-            List<VolumeFile> moveVolumeFileList = (List<VolumeFile>) getIntent().getSerializableExtra("volumeFileList");
-            copyFileSize = moveVolumeFileList.size();
-            copyReturnFileSize = 0;
-            returnErrorFileSize = 0;
             for (int i = 0; i < moveVolumeFileList.size(); i++) {
                 String srcVolumeFilePath = fileOrgPath + moveVolumeFileList.get(i).getName();
                 apiService.copyFileBetweenVolume(fromVolume.getId(), volume.getId(), srcVolumeFilePath, path);
@@ -287,6 +287,9 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
         }
     }
 
+    /**
+     * 复制异常提醒Toast
+     **/
     private void copyErrorToastShow() {
         if (returnErrorFileSize != 0) {
             String showErrorDetail = String.format(getString(R.string.volume_copy_between_volume_error_toast), returnErrorFileSize);
