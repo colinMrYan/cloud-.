@@ -69,7 +69,7 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
 
         if (volumeFile.getFormat().startsWith("image/")) {
             String url = "";
-            if (volumeFile.getStatus().equals(VolumeFile.STATUS_UPLOADIND)) {
+            if (volumeFile.getStatus().equals(VolumeFile.STATUS_UPLOAD_IND)) {
                 url = volumeFile.getLocalFilePath();
             } else {
                 String path = volumeFile.getLocalFilePath() + volumeFile.getName();
@@ -94,7 +94,7 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
     }
 
     private void showVolumeFileSpeed(final TextView speedTv, final CircleProgressBar progressBar, final VolumeFile volumeFile) {
-        if (volumeFile.getStatus().equals(VolumeFile.STATUS_UPLOADIND)) {
+        if (volumeFile.getStatus().equals(VolumeFile.STATUS_UPLOAD_IND)) {
             speedTv.setVisibility(View.VISIBLE);
             VolumeFileUploadManager.getInstance().setBusinessProgressCallback(volumeFile, new ProgressCallback() {
                 @Override
@@ -104,7 +104,7 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
 
                 @Override
                 public void onLoading(int progress, String uploadSpeed) {
-                    if (volumeFile.getStatus().equals(VolumeFile.STATUS_UPLOADIND)) {
+                    if (volumeFile.getStatus().equals(VolumeFile.STATUS_UPLOAD_IND)) {
                         speedTv.setText(uploadSpeed);
                     }
                     Log.d("zhang", "onLoading: progress = " + progress);
@@ -162,16 +162,16 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
             switch (v.getId()) {
                 case R.id.volume_file_transfer_item_status:
                     String status = volumeFile.getStatus();
-                    if (status.equals(VolumeFile.STATUS_UPLOADIND)) {
+                    if (status.equals(VolumeFile.STATUS_UPLOAD_IND)) {
                         //点击上传
                         fileList.get(position).setStatus(VolumeFile.STATUS_UPLOAD_PAUSE);
                         progressBar.setStatus(CircleProgressBar.Status.Pause);
                         VolumeFileUploadManager.getInstance().pauseVolumeFileUploadService(volumeFile);
                     } else if (status.equals(VolumeFile.STATUS_UPLOAD_PAUSE)) {
-                        fileList.get(position).setStatus(VolumeFile.STATUS_UPLOADIND);
+                        fileList.get(position).setStatus(VolumeFile.STATUS_UPLOAD_IND);
                         progressBar.setStatus(CircleProgressBar.Status.Uploading);
                         VolumeFileUploadManager.getInstance().reUploadFile(volumeFile);
-                    } else if (status.equals(VolumeFile.STATUS_DOWNLOADING)) {
+                    } else if (status.equals(VolumeFile.STATUS_DOWNLOAD_IND)) {
                         //点击下载中
                         fileList.get(position).setStatus(VolumeFile.STATUS_DOWNLOAD_PAUSE);
                         progressBar.setStatus(CircleProgressBar.Status.Pause);
