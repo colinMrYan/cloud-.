@@ -24,6 +24,7 @@ import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
 import com.inspur.emmcloud.baselib.widget.ScrollViewWithListView;
 import com.inspur.emmcloud.basemodule.bean.DownloadFileCategory;
@@ -137,7 +138,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
         String channelType = ConversationCacheUtils.getConversationType(MyApplication.getInstance(),
                 cid);
         if (channelType.equals("GROUP")) {
-            chatInputMenu.setCanMentions(true, cid);
+            chatInputMenu.setIsGroup(true, cid);
         }
         chatInputMenu.hideAddMenuLayout();
         chatInputMenu.setChatInputMenuListener(new ECMChatInputMenu.ChatInputMenuListener() {
@@ -164,6 +165,11 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
 
             @Override
             public void onChatDraftsClear() {
+
+            }
+
+            @Override
+            public void onNoSmallWindowPermission() {
 
             }
         });
@@ -458,7 +464,8 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
                     handMsgData();
                 }
             } else {
-//                WebServiceMiddleUtils.hand(MyApplication.getInstance(), eventMessage.getContent(), eventMessage.getStatus());
+                ToastUtils.show(R.string.message_get_fail);
+                finish();
             }
 
         }

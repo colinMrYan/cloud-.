@@ -145,7 +145,7 @@ public class PopupWindowList {
             textView.measure(0, 0);
             maxItemWidth = maxItemWidth > textView.getMeasuredWidth() ? maxItemWidth : textView.getMeasuredWidth();
         }
-        maxItemWidth = maxItemWidth > mPopupWindowWidth * 3 / 2 ? mPopupWindowWidth * 3 / 2 : maxItemWidth;
+        maxItemWidth = maxItemWidth > mPopupWindowWidth * 7 / 3 ? mPopupWindowWidth * 7 / 3 : maxItemWidth;
         mPopupWindowWidth = mPopupWindowWidth > maxItemWidth ? mPopupWindowWidth : maxItemWidth;
         mPopupWindowHeight = mItemData.size() * mPopView.getMeasuredHeight();
         if (mPopupWindowHeight > mDeviceHeight / 2) {

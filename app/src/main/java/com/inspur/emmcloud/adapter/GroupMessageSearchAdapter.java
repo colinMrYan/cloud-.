@@ -17,6 +17,7 @@ import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.UIMessage;
+import com.inspur.emmcloud.ui.chat.emotion.EmotionUtil;
 import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
 
 import java.util.ArrayList;
@@ -51,7 +52,13 @@ public class GroupMessageSearchAdapter extends RecyclerView.Adapter<GroupMessage
         final UIMessage uiMessage = groupUIMessageList.get(position);
         ImageDisplayUtils.getInstance().displayImage(holder.headImg, uiMessage.getSenderPhotoUrl(), R.drawable.icon_person_default);
         holder.groupMessageUserNameText.setText(groupUIMessageList.get(position).getSenderName());
-        holder.groupMessageContentText.setText(getContent(uiMessage.getMessage()));
+        Spanned contentSpan = getContent(uiMessage.getMessage());
+        if (contentSpan != null) {
+            contentSpan = EmotionUtil.getInstance(context).getSmiledText(contentSpan, holder.groupMessageContentText.getTextSize());
+            holder.groupMessageContentText.setText(contentSpan);
+        } else {
+            holder.groupMessageContentText.setText(uiMessage.getMessage().getShowContent());
+        }
         String messageSendTime = TimeUtils.getChannelMsgDisplayTime(context, uiMessage.getCreationDate());
         holder.groupMessageTimeText.setText(messageSendTime);
         holder.groupMessageLayout.setOnClickListener(new View.OnClickListener() {

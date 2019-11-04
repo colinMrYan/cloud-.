@@ -564,10 +564,17 @@ public class ChannelV0Activity extends BaseActivity {
             } else if (requestCode == MENTIONS_RESULT) {
                 // @返回
                 String result = data.getStringExtra("searchResult");
-                String uid = JSONUtils.getString(result, "uid", null);
-                String name = JSONUtils.getString(result, "name", null);
-                boolean isInputKeyWord = data.getBooleanExtra("isInputKeyWord", false);
-                chatInputMenu.addMentions(uid, name, isInputKeyWord);
+                JSONArray jsonArray = JSONUtils.getJSONArray(result, new JSONArray());
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    try {
+                        String uid = JSONUtils.getString(jsonArray.getString(i), "uid", null);
+                        String name = JSONUtils.getString(jsonArray.getString(i), "name", null);
+                        boolean isInputKeyWord = data.getBooleanExtra("isInputKeyWord", false);
+                        chatInputMenu.addMentions(uid, name, isInputKeyWord);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
             } else if (requestCode == REQUEST_QUIT_CHANNELGROUP) {
                 finish();
             }

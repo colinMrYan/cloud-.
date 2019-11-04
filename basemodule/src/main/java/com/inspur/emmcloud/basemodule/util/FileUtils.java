@@ -37,11 +37,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.math.BigInteger;
+import java.net.HttpURLConnection;
 import java.security.MessageDigest;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 
 /**
  * File Utils
@@ -958,32 +960,37 @@ public class FileUtils {
      * @param mime
      */
     public static void openFile(Activity context, File file, String mime, boolean isNeedStartActivityForResult) {
-        if (canFileOpenByApp(file)) {
-            Bundle bundle = new Bundle();
-            bundle.putInt("image_index", 0);
-            ArrayList<String> urlList = new ArrayList<>();
-            urlList.add("file://" + file.getAbsolutePath());
-            bundle.putStringArrayList("image_urls", urlList);
-            ARouter.getInstance().build(Constant.AROUTER_CLASS_COMMUNICATION_IMAGEPAGER).with(bundle);
-            return;
-        }
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        //判断是否是AndroidN以及更高的版本
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            Uri contentUri = FileProvider.getUriForFile(context, context.getPackageName() + ".fileprovider", file);
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-            intent.setDataAndType(contentUri, mime);
-        } else {
-            intent.setDataAndType(Uri.fromFile(file), mime);
-        }
-        if (context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
-            if (isNeedStartActivityForResult) {
-                context.startActivityForResult(intent, 5);
-            } else {
-                context.startActivity(intent);
+        try {
+            if (canFileOpenByApp(file)) {
+                Bundle bundle = new Bundle();
+                bundle.putInt("image_index", 0);
+                ArrayList<String> urlList = new ArrayList<>();
+                urlList.add("file://" + file.getAbsolutePath());
+                bundle.putStringArrayList("image_urls", urlList);
+                ARouter.getInstance().build(Constant.AROUTER_CLASS_COMMUNICATION_IMAGEPAGER).with(bundle);
+                return;
             }
-        } else {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            //判断是否是AndroidN以及更高的版本
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                Uri contentUri = FileProvider.getUriForFile(context, context.getPackageName() + ".fileprovider", file);
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                intent.setDataAndType(contentUri, mime);
+            } else {
+                intent.setDataAndType(Uri.fromFile(file), mime);
+            }
+            if (context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
+                if (isNeedStartActivityForResult) {
+                    context.startActivityForResult(intent, 5);
+                } else {
+                    context.startActivity(intent);
+                }
+            } else {
+                ToastUtils.show(context, context.getString(R.string.chat_file_open_fail_tip));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
             ToastUtils.show(context, context.getString(R.string.chat_file_open_fail_tip));
         }
     }
@@ -1532,5 +1539,46 @@ public class FileUtils {
         File srcDir = new File(src);
         boolean isOk = srcDir.renameTo(new File(dest));
         return isOk;
+    }
+
+    /**
+     * url里获取文件名
+     * 先以头部filename为准
+     * 没有则取connection里的名字
+     * 再没有则生成一个.tmp名字
+     *
+     * @param urlConnection
+     * @return
+     */
+    private String getFileName(HttpURLConnection urlConnection) {
+        String filename = null;
+        String headField = urlConnection.getHeaderField("Content-Disposition");
+        if (!StringUtils.isBlank(headField)) {
+            headField = headField.toLowerCase();
+            if (headField.contains("filename=")) {
+                //有些下载链接检测到的文件名带双引号，此处给去掉
+                try {
+                    filename = headField.split("filename=")[1];
+                    if (filename.length() > 2 && filename.startsWith("\"") && filename.endsWith("\"")) {
+                        filename = filename.substring(1, filename.length() - 1);
+                    }
+                    return filename;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+        filename = urlConnection.getURL().getFile();
+        if (filename.contains("/")) {
+            String[] array = filename.split("/");
+            filename = array[array.length - 1];
+
+        }
+        if (StringUtils.isBlank(filename)) {
+            // 默认取一个文件名
+            filename = UUID.randomUUID() + ".tmp";
+        }
+        return filename;
     }
 }

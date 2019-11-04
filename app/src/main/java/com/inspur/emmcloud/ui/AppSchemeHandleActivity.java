@@ -47,6 +47,7 @@ import com.inspur.emmcloud.util.privates.AppId2AppAndOpenAppUtils;
 import com.inspur.emmcloud.util.privates.CustomProtocol;
 import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.ProfileUtils;
+import com.inspur.emmcloud.util.privates.VoiceCommunicationManager;
 import com.inspur.emmcloud.util.privates.WebAppUtils;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
 
@@ -262,6 +263,19 @@ public class AppSchemeHandleActivity extends BaseActivity {
                                 }
                                 finish();
                                 break;
+
+                            case "ecc-cloudplus-cmd-voice-call":
+                                Intent intentVoiceCall = new Intent();
+                                intentVoiceCall.setClass(AppSchemeHandleActivity.this, ChannelVoiceCommunicationActivity.class);
+                                intentVoiceCall.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                intentVoiceCall.putExtra(ChannelVoiceCommunicationActivity.VOICE_IS_FROM_SMALL_WINDOW, true);
+                                intentVoiceCall.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE,
+                                        VoiceCommunicationManager.getInstance().getLayoutState());
+                                startActivity(intentVoiceCall);
+                                finish();
+                                break;
+                            case "impcloud":
+                                break;
                             default:
                                 showSchemeUnknownWarning();
                                 finish();
@@ -374,7 +388,7 @@ public class AppSchemeHandleActivity extends BaseActivity {
             }
             shareLinkMap.put("title", titleStr);
             shareLinkMap.put("url", urlStr);
-            shareLinkMap.put("digest", digest);
+            shareLinkMap.put("digest", StringUtils.isBlank(digest) ? titleStr : digest);
         }
         return shareLinkMap;
     }

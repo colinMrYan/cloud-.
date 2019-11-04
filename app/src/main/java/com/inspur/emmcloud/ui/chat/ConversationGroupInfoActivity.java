@@ -242,11 +242,11 @@ public class ConversationGroupInfoActivity extends BaseActivity {
                 IntentUtils.startActivity(ConversationGroupInfoActivity.this, CommunicationSearchMessagesActivity.class, bundle);
                 break;
             case R.id.ll_group_qrcode:
-                bundle.putString("cid", conversation.getId());
-                bundle.putString("groupName", conversation.getShowName());
-                bundle.putInt(MEMBER_SIZE, conversation.getMemberList().size());
-                IntentUtils.startActivity(ConversationGroupInfoActivity.this,
-                        ConversationQrCodeActivity.class, bundle);
+//                bundle.putString("cid", conversation.getId());
+//                bundle.putString("groupName", conversation.getShowName());
+//                bundle.putInt(MEMBER_SIZE, conversation.getMemberList().size());
+//                IntentUtils.startActivity(ConversationGroupInfoActivity.this,
+//                        ConversationQrCodeActivity.class, bundle);
                 break;
             default:
                 break;

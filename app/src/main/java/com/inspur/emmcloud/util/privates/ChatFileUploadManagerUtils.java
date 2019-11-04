@@ -43,20 +43,32 @@ public class ChatFileUploadManagerUtils extends APIInterfaceInstance {
     }
 
 
-//    /**
-//     * 判断此消息的资源文件是否正在上传中
-//     *
-//     * @param message
-//     * @return
-//     */
-//    public boolean isMessageResourceUploading(Message message) {
-//        for (ChatFileUploadInfo chatFileUploadInfo : chatFileUploadInfoList) {
-//            if (chatFileUploadInfo.getMessage().getId().equals(message.getId())) {
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
+    /**
+     * 判断此消息的资源文件是否正在上传中
+     *
+     * @param message
+     * @return
+     */
+    public boolean isMessageResourceUploading(Message message) {
+        for (ChatFileUploadInfo chatFileUploadInfo : chatFileUploadInfoList) {
+            if (chatFileUploadInfo.getMessage().getId().equals(message.getId())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void cancelVolumeFileUploadService(Message message) {
+        for (ChatFileUploadInfo chatFileUploadInfo : chatFileUploadInfoList) {
+            if (chatFileUploadInfo.getMessage().getId().equals(message.getId())) {
+                chatFileUploadInfo.setCallback(null);
+                if (chatFileUploadInfo.getVolumeFileUploadService() != null) {
+                    chatFileUploadInfo.getVolumeFileUploadService().onDestroy();
+                }
+            }
+        }
+    }
+
 
     private void callbackSuccess(ChatFileUploadInfo chatFileUploadInfo, VolumeFile volumeFile) {
         if (chatFileUploadInfo.getCallback() != null) {
@@ -122,6 +134,7 @@ public class ChatFileUploadManagerUtils extends APIInterfaceInstance {
      */
     private void startUpload(GetVolumeFileUploadTokenResult getVolumeFileUploadTokenResult, final ChatFileUploadInfo chatFileUploadInfo) {
         VolumeFileUploadService volumeFileUploadService = getVolumeFileUploadService(getVolumeFileUploadTokenResult, null);
+        chatFileUploadInfo.setVolumeFileUploadService(volumeFileUploadService);
         volumeFileUploadService.setProgressCallback(new ProgressCallback() {
             @Override
             public void onSuccess(VolumeFile volumeFile) {

@@ -22,6 +22,8 @@ import android.os.Binder;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Process;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
@@ -563,6 +565,15 @@ public class AppUtils {
     }
 
     /**
+     * 调用文件系统
+     */
+    public static void openFileSystemWithVolume(Activity activity, int requestCode, int maximum) {
+        Bundle bundle = new Bundle();
+        bundle.putInt("extra_maximum", maximum);
+        ARouter.getInstance().build(Constant.AROUTER_CLASS_FILEMANAGER_WITH_VOLUME).with(bundle).navigation(activity, requestCode);
+    }
+
+    /**
      * 调用图库
      */
     public static void openGallery(Activity activity, int limit, int requestCode) {
@@ -887,7 +898,7 @@ public class AppUtils {
      */
     public static boolean getIsVoiceWordOpen() {
         return PreferencesByUserAndTanentUtils.getBoolean(BaseApplication.getInstance(),
-                Constant.PREF_APP_OPEN_VOICE_WORD_SWITCH, false);
+                Constant.PREF_APP_OPEN_VOICE_WORD_SWITCH, false) && !LanguageManager.getInstance().isAppLanguageEnglish();
     }
 
     /**
@@ -993,5 +1004,32 @@ public class AppUtils {
         ClipboardManager cmb = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
         cmb.setPrimaryClip(ClipData.newPlainText(null, content));
         ToastUtils.show(context, R.string.copyed_to_paste_board);
+    }
+
+    /**
+     * MIUI判断是否有后台弹出窗口的权限，亲测华为mate9，vivo Z1使用这个方法会报内容为null的异常
+     * 华为手机没有后台弹出权限，vivo Z1有但是不开没有影响，所以如果不是小米手机直接返回了true
+     *
+     * @param context
+     * @return
+     */
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    public static boolean canBackgroundStart(Context context) {
+        if (getIsXiaoMi()) {
+            AppOpsManager ops = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
+            try {
+                int op = 10021; // >= 23
+                // ops.checkOpNoThrow(op, uid, packageName)
+                Method method = ops.getClass().getMethod("checkOpNoThrow", new Class[]
+                        {int.class, int.class, String.class}
+                );
+                Integer result = (Integer) method.invoke(ops, op, Process.myUid(), context.getPackageName());
+                return result == AppOpsManager.MODE_ALLOWED;
+            } catch (Exception e) {
+                LogUtils.YfcDebug("异常：" + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+        return true;
     }
 }

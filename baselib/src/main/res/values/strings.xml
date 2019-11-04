@@ -81,6 +81,7 @@
     <string name="file_open_by_other_app">用其他应用打开</string>
     <string name="file_open_by_other_app_tips">%1$s暂时不能打开该文件请使用其他应用打开</string>
     <string name="try_again">再试一次</string>
+    <string name="you">你</string>
 
     <!-- 公共部分 -->
     <string name="year">年</string>
@@ -313,10 +314,11 @@
     <string name="message_type_drafts">[草稿]</string>
     <string name="quit_group">退出群组</string>
     <string name="dismiss_group">解散群组</string>
+    <string name="quit_dismiss_group">删除并退出</string>
     <string name="quit_group_warning_text">确定要退出群组？</string>
     <string name="dismiss_group_warning_text">解散群组后，将会删除群内所有的聊天记录和文件等信息</string>
     <string name="chat_stick_on_top">置顶</string>
-    <string name="chat_remove">移除</string>
+    <string name="chat_remove">隐藏</string>
     <string name="chat_remove_from_top">取消置顶</string>
     <string name="no_chat_content">暂无聊天内容</string>
     <string name="msg_key_search_member">请输入关键字</string>
@@ -326,6 +328,12 @@
     <string name="chat_group_message_search">查找聊天记录</string>
     <string name="chat_long_click_copy">复制</string>
     <string name="chat_long_click_transmit">转发</string>
+    <string name="chat_long_click_recall">撤回</string>
+    <string name="chat_info_message_status_recall">%1$s撤回了一条消息</string>
+    <string name="recall_fail_for_timeout">发送时间超过2分钟的消息，不能被撤回。</string>
+    <string name="recall_message_fail">消息撤回失败</string>
+    <string name="message_has_been_recalled">此消息已撤回</string>
+    <string name="message_get_fail">消息获取失败</string>
     <string name="chat_long_click_schedule">添加到日程</string>
     <string name="chat_long_click_copy_text">复制文字</string>
     <string name="chat_long_click_reply">回复</string>
@@ -350,6 +358,13 @@
     <string name="chat_group_qr_code_share">分享二维码</string>
     <string name="chat_group_welcome_join_group">欢迎进入%1$s群</string>
     <string name="chat_conversation_create_error">创建群组失败</string>
+    <string name="chat_emotion_recent_tip">最近使用</string>
+    <string name="chat_emotion_total_tip">所有表情</string>
+    <string name="chat_filemanager_native">本地文件</string>
+    <string name="chat_filemanager_volume">企业云盘</string>
+    <!--语音通话提示-->
+    <string name="voice_communication_end">聊天已结束</string>
+
     <!-- 会议卡片 -->
     <string name="meeting_has_confirmed">已确认</string>
     <string name="meeting_has_refused">已拒绝</string>
@@ -1328,6 +1343,7 @@
     <string name="share_no_more_than_five">不能上传多于5个文件</string>
     <string name="share_no_share_way">没有能够分享的方式</string>
     <string name="share_to_channel">发送到频道</string>
+    <string name="share_to_chat">发送到聊天</string>
     <string name="share_upload_volume">上传到云盘</string>
     <string name="share_no_suffix">不支持分享无后缀名的文件</string>
     <string name="share_has_not_exist_file">您分享的文件中有不存在的文件，请检查</string>
@@ -1359,6 +1375,10 @@
     <string name="voice_communication_quality">当前通话质量不佳</string>
     <string name="voice_communication_support_nine_members">云+目前支持九人语音</string>
     <string name="communication_has_leave">已挂断</string>
+    <string name="voice_communication_notification_group_title">语音通话</string>
+    <string name="voice_communication_notification_group_content">点击恢复</string>
+    <string name="voice_communication_notification_content">语音通话中，轻击以继续</string>
+    <string name="voice_communication_more_than_two">语音通话用户数不能少于2个。</string>
 
     <string name="error_no_sdcard">没有SD卡，无法存储录音数据</string>
     <string name="error_state_record">正在录音中，请先停止录音</string>
@@ -1370,7 +1390,7 @@
     <string name="voice_word_tran">正在语音转文字</string>
     <string name="voice_word_setting">语音自动识别</string>
     <string name="voice_audio_record_unavailiable">当前录音设备不可用，请检查录音权限是否开启</string>
-    <string name="voice_to_word">转文字</string>
+    <string name="voice_to_word">转换为文字（仅普通话）</string>
     <!--语音输入改造-->
     <string name="voice_input_language_mandarin">普通话</string>
     <string name="voice_input_language_cantonese">粤语</string>
@@ -1400,6 +1420,8 @@
     <string name="permission_next">下一步</string>
     <string name="permission_grant_window_alert">请您授予%1$s悬浮窗权限</string>
     <string name="permission_grant_window_fail">您已禁止授予%1$s 悬浮窗权限</string>
+    <string name="permission_grant_background_start">请您授予%1$s后台弹出界面权限</string>
+    <string name="permission_grant_background_start_fail">您已禁止授予%1$s 后台弹出界面权限</string>
 
     <string name="permission_name_calendar">日历</string>
     <string name="permission_name_camera">相机</string>

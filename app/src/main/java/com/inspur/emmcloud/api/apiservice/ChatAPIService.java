@@ -1554,7 +1554,7 @@ public class ChatAPIService {
      *
      * @param id
      */
-    public void getConversationInfo(final String id, final boolean isFromScanCode) {
+    public void getConversationInfo(final String id) {
         final String completeUrl = APIUri.getConversationInfoUrl(id);
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
@@ -1564,7 +1564,7 @@ public class ChatAPIService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        getConversationInfo(id, isFromScanCode);
+                        getConversationInfo(id);
                     }
 
                     @Override
@@ -1580,7 +1580,7 @@ public class ChatAPIService {
             public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
                 JSONObject object = JSONUtils.getJSONObject(new String(arg0));
-                apiInterface.returnConversationInfoSuccess(new Conversation(object), isFromScanCode);
+                apiInterface.returnConversationInfoSuccess(new Conversation(object));
             }
 
             @Override

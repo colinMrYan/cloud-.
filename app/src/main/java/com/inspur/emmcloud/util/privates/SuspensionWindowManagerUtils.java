@@ -14,8 +14,13 @@ import android.widget.Chronometer;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
-import com.inspur.emmcloud.baselib.util.TimeUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity;
+
+import static com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_ING;
+import static com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_OVER;
+import static com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_PRE;
 
 /**
  * 悬浮窗管理类封装
@@ -36,6 +41,10 @@ public class SuspensionWindowManagerUtils {
     private long beginTime = 0;//touch开始时间
     private boolean isTouchEvent = false;//判定touch事件的标志
 
+    public SuspensionWindowManagerUtils() {
+        this.windowContext = BaseApplication.getInstance();
+    }
+
     /**
      * 获取悬浮窗实例
      *
@@ -55,14 +64,12 @@ public class SuspensionWindowManagerUtils {
     /**
      * 显示悬浮窗
      *
-     * @param context
      * @param screenWidthSize
      * @param time
      */
-    public void showCommunicationSmallWindow(Context context, int screenWidthSize, long time) {
+    public void showCommunicationSmallWindow(int screenWidthSize, long time) {
         this.screenWidthSize = screenWidthSize;
         this.passedTime = time;
-        this.windowContext = context;
         if (isShowing) {
             return;
         }
@@ -76,10 +83,15 @@ public class SuspensionWindowManagerUtils {
      * 隐藏悬浮窗
      */
     public void hideCommunicationSmallWindow() {
-        if (isShowing && null != windowView) {
-            windowManager.removeView(windowView);
+        if (isShowing && null != windowView && windowManager != null) {
+            try {
+                windowManager.removeView(windowView);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             isShowing = false;
         }
+        NotifyUtil.deleteNotify(windowContext);
     }
 
     /**
@@ -101,8 +113,14 @@ public class SuspensionWindowManagerUtils {
         windowView = LayoutInflater.from(windowContext).inflate(R.layout.service_voice_communication,
                 null);
         chronometer = (Chronometer) windowView.findViewById(R.id.chronometer_voice_communication_time);
-        chronometer.setBase(SystemClock.elapsedRealtime() - passedTime * 1000);
-        chronometer.start();
+        if (VoiceCommunicationManager.getInstance().getCommunicationState() == COMMUNICATION_STATE_ING) {
+            chronometer.setBase(SystemClock.elapsedRealtime() - passedTime * 1000);
+            chronometer.start();
+        } else if (VoiceCommunicationManager.getInstance().getCommunicationState() == COMMUNICATION_STATE_PRE) {
+            chronometer.setText(R.string.voice_communication_waitting_answer);
+        } else if (VoiceCommunicationManager.getInstance().getCommunicationState() == COMMUNICATION_STATE_OVER) {
+            hideCommunicationSmallWindow();
+        }
         View.OnClickListener clickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -133,7 +151,7 @@ public class SuspensionWindowManagerUtils {
                         windowManager.updateViewLayout(windowView, params);
                         break;
                     case MotionEvent.ACTION_UP:
-                        isTouchEvent = (System.currentTimeMillis() - beginTime) > 100;
+                        isTouchEvent = (System.currentTimeMillis() - beginTime) > 300;
                         break;
                 }
                 return false;
@@ -141,6 +159,18 @@ public class SuspensionWindowManagerUtils {
         };
 //        imgBtnPhone.setOnTouchListener(touchListener);
         windowView.setOnTouchListener(touchListener);
+    }
+
+    /**
+     * 未接听状态进入小窗，对方接听后
+     * 刷新小窗开始计时
+     */
+    public void refreshSmallWindow() {
+        if (chronometer != null) {
+            LogUtils.YfcDebug("重置计时器");
+            chronometer.setBase(SystemClock.elapsedRealtime());
+            chronometer.start();
+        }
     }
 
     /**
@@ -199,12 +229,39 @@ public class SuspensionWindowManagerUtils {
      * 回到语音通话界面n
      */
     private void goBackVoiceCommunicationActivity() {
-        Intent intent = new Intent();
-        intent.setClass(windowContext, ChannelVoiceCommunicationActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.COME_BACK_FROM_SERVICE);
-        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_TIME, Long.parseLong(TimeUtils.getChronometerSeconds(chronometer.getText().toString())));
-        windowContext.startActivity(intent);
+        try {
+            if (VoiceCommunicationManager.getInstance().getCommunicationState() == COMMUNICATION_STATE_OVER) {
+                hideCommunicationSmallWindow();
+                return;
+            }
+            Intent intent = Intent.parseUri("ecc-cloudplus-cmd-voice-call://voice_call", Intent.URI_INTENT_SCHEME);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_IS_FROM_SMALL_WINDOW, true);
+            intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE,
+                    VoiceCommunicationManager.getInstance().getLayoutState());
+            LogUtils.YfcDebug("准备启动SchemeActivity");
+            windowContext.startActivity(intent);
+//            Intent intent = new Intent(windowContext, .class);
+//            Intent intent = Intent.parseUri("ecc-cloudplus-cmd-voice-call://123", Intent.URI_INTENT_SCHEME);
+//            intent.setClass(windowContext,AppSchemeHandleActivity.class);
+//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            PendingIntent pendingIntent =
+//                    PendingIntent.getActivity(windowContext, 0, intent, 0);
+//            try {
+//                pendingIntent.send();
+//            } catch (PendingIntent.CanceledException e) {
+//                e.printStackTrace();
+//            }
+
+            LogUtils.YfcDebug("启动应用");
+        } catch (Exception e) {
+            LogUtils.YfcDebug("捕获异常：" + e.getMessage());
+            e.printStackTrace();
+        }
     }
+
+//    public Chronometer getChronometer() {
+//        return chronometer;
+//    }
 }
 

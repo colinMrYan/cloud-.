@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.widget.CustomLoadingView;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
@@ -26,6 +26,7 @@ import com.inspur.emmcloud.ui.chat.DisplayExtendedDecideMsg;
 import com.inspur.emmcloud.ui.chat.DisplayExtendedLinksMsg;
 import com.inspur.emmcloud.ui.chat.DisplayMediaImageMsg;
 import com.inspur.emmcloud.ui.chat.DisplayMediaVoiceMsg;
+import com.inspur.emmcloud.ui.chat.DisplayRecallMsg;
 import com.inspur.emmcloud.ui.chat.DisplayRegularFileMsg;
 import com.inspur.emmcloud.ui.chat.DisplayResUnknownMsg;
 import com.inspur.emmcloud.ui.chat.DisplayTxtMarkdownMsg;
@@ -33,7 +34,6 @@ import com.inspur.emmcloud.ui.chat.DisplayTxtPlainMsg;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
-import com.inspur.emmcloud.widget.bubble.BubbleLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,15 +72,11 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         });
     }
 
-    public void setMessageList(List<UIMessage> UImessageList) {
+    public void setMessageList(List<UIMessage> UIMessageList) {
         this.UIMessageList.clear();
-        this.UIMessageList.addAll(UImessageList);
+        this.UIMessageList.addAll(UIMessageList);
     }
 
-    public void setChannelData(String channelType, ECMChatInputMenu chatInputMenu) {
-        this.channelType = channelType;
-        this.chatInputMenu = chatInputMenu;
-    }
 
     public UIMessage getItemData(int position) {
         return this.UIMessageList.get(position);
@@ -123,24 +119,29 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
      * @param holder
      */
     public void showRefreshingImg(final ViewHolder holder, final UIMessage uiMessage) {
-        if (uiMessage.getSendStatus() == 0) {
-            holder.sendStatusLayout.setVisibility(View.VISIBLE);
-            holder.sendFailImg.setVisibility(View.GONE);
-            holder.sendingLoadingView.setVisibility(View.VISIBLE);
-        } else if (uiMessage.getSendStatus() == 2) {
-            holder.sendStatusLayout.setVisibility(View.VISIBLE);
-            holder.sendFailImg.setVisibility(View.VISIBLE);
-            holder.sendingLoadingView.setVisibility(View.GONE);
-        } else {
-            boolean isMyMsg = uiMessage.getMessage().getFromUser().equals(MyApplication.getInstance().getUid());
-            holder.sendStatusLayout.setVisibility(isMyMsg ? View.INVISIBLE : View.GONE);
-        }
-        holder.sendStatusLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                holder.onMessageResendClick(uiMessage);
+        if (StringUtils.isBlank(uiMessage.getMessage().getRecallFrom())) {
+            if (uiMessage.getSendStatus() == 0) {
+                holder.sendStatusLayout.setVisibility(View.VISIBLE);
+                holder.sendFailImg.setVisibility(View.GONE);
+                holder.sendingLoadingView.setVisibility(View.VISIBLE);
+            } else if (uiMessage.getSendStatus() == 2) {
+                holder.sendStatusLayout.setVisibility(View.VISIBLE);
+                holder.sendFailImg.setVisibility(View.VISIBLE);
+                holder.sendingLoadingView.setVisibility(View.GONE);
+            } else {
+                boolean isMyMsg = uiMessage.getMessage().getFromUser().equals(MyApplication.getInstance().getUid());
+                holder.sendStatusLayout.setVisibility(isMyMsg ? View.INVISIBLE : View.GONE);
             }
-        });
+            holder.sendStatusLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    holder.onMessageResendClick(uiMessage);
+                }
+            });
+        } else {
+            holder.sendStatusLayout.setVisibility(View.GONE);
+        }
+
     }
 
     /**
@@ -157,73 +158,81 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         //此处实际执行params.removeRule();
         params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
         params.addRule(RelativeLayout.ALIGN_LEFT, 0);
-        params.addRule(isMyMsg ? RelativeLayout.ALIGN_PARENT_RIGHT : RelativeLayout.ALIGN_LEFT);
+        params.addRule(RelativeLayout.CENTER_HORIZONTAL, 0);
+        if (StringUtils.isBlank(message.getRecallFrom())) {
+            params.addRule(isMyMsg ? RelativeLayout.ALIGN_PARENT_RIGHT : RelativeLayout.ALIGN_LEFT);
+        } else {
+            params.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        }
+
         holder.cardParentLayout.setLayoutParams(params);
         holder.cardLayout.removeAllViewsInLayout();
         holder.cardLayout.removeAllViews();
-        View cardContentView;
-        String type = message.getType();
-        switch (type) {
-            case Message.MESSAGE_TYPE_TEXT_PLAIN:
-                cardContentView = DisplayTxtPlainMsg.getView(context,
-                        message);
-                break;
-            case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
-                cardContentView = DisplayTxtMarkdownMsg.getView(context,
-                        message, uiMessage.getMarkDownLinkList());
-                break;
-            case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
-                cardContentView = DisplayRegularFileMsg.getView(context,
-                        message, uiMessage.getSendStatus(), false);
-                break;
-            case Message.MESSAGE_TYPE_EXTENDED_CONTACT_CARD:
-                cardContentView = DisplayAttachmentCardMsg.getView(context,
-                        message);
-                break;
-            case Message.MESSAGE_TYPE_EXTENDED_ACTIONS:
-                cardContentView = DisplayExtendedActionsMsg.getInstance(context).getView(message);
-                break;
-            case Message.MESSAGE_TYPE_EXTENDED_SELECTED:
-                LogUtils.YfcDebug("v1决策卡片");
-                cardContentView = DisplayExtendedDecideMsg.getView(message, context);
-                break;
-            case Message.MESSAGE_TYPE_MEDIA_IMAGE:
-                cardContentView = DisplayMediaImageMsg.getView(context, uiMessage);
-                break;
-            case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
-                cardContentView = DisplayCommentTextPlainMsg.getView(context, message);
-                break;
-            case Message.MESSAGE_TYPE_EXTENDED_LINKS:
-                cardContentView = DisplayExtendedLinksMsg.getView(context, message);
-                break;
-            case Message.MESSAGE_TYPE_MEDIA_VOICE:
-                cardContentView = DisplayMediaVoiceMsg.getView(context, uiMessage, mItemClickListener);
-                break;
-            default:
-                cardContentView = DisplayResUnknownMsg.getView(context, isMyMsg);
-                break;
+        View cardContentView = null;
+        if (StringUtils.isBlank(uiMessage.getMessage().getRecallFrom())) {
+            String type = message.getType();
+            switch (type) {
+                case Message.MESSAGE_TYPE_TEXT_PLAIN:
+                    cardContentView = DisplayTxtPlainMsg.getView(context,
+                            message);
+                    break;
+                case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
+                    cardContentView = DisplayTxtMarkdownMsg.getView(context,
+                            message, uiMessage.getMarkDownLinkList());
+                    break;
+                case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
+                    cardContentView = DisplayRegularFileMsg.getView(context,
+                            message, uiMessage.getSendStatus(), false);
+                    break;
+                case Message.MESSAGE_TYPE_EXTENDED_CONTACT_CARD:
+                    cardContentView = DisplayAttachmentCardMsg.getView(context,
+                            message);
+                    break;
+                case Message.MESSAGE_TYPE_EXTENDED_ACTIONS:
+                    cardContentView = DisplayExtendedActionsMsg.getInstance(context).getView(message);
+                    break;
+                case Message.MESSAGE_TYPE_EXTENDED_SELECTED:
+                    cardContentView = DisplayExtendedDecideMsg.getView(message, context);
+                    break;
+                case Message.MESSAGE_TYPE_MEDIA_IMAGE:
+                    cardContentView = DisplayMediaImageMsg.getView(context, uiMessage);
+                    break;
+                case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
+                    cardContentView = DisplayCommentTextPlainMsg.getView(context, message);
+                    break;
+                case Message.MESSAGE_TYPE_EXTENDED_LINKS:
+                    cardContentView = DisplayExtendedLinksMsg.getView(context, message);
+                    break;
+                case Message.MESSAGE_TYPE_MEDIA_VOICE:
+                    cardContentView = DisplayMediaVoiceMsg.getView(context, uiMessage, mItemClickListener);
+                    break;
+                default:
+                    cardContentView = DisplayResUnknownMsg.getView(context, isMyMsg);
+                    break;
+            }
+            cardContentView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    if (mItemClickListener != null) {
+                        mItemClickListener.onCardItemLongClick(view, uiMessage);
+                    }
+                    return true;
+                }
+            });
+            cardContentView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (mItemClickListener != null) {
+                        mItemClickListener.onCardItemClick(view, uiMessage);
+                    }
+
+                }
+            });
+        } else {
+            cardContentView = DisplayRecallMsg.getView(context, uiMessage);
         }
-
-
         holder.cardLayout.addView(cardContentView);
-        cardContentView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                if (mItemClickListener != null) {
-                    mItemClickListener.onCardItemLongClick(view, uiMessage);
-                }
-                return true;
-            }
-        });
-        cardContentView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mItemClickListener != null) {
-                    mItemClickListener.onCardItemClick(view, uiMessage);
-                }
 
-            }
-        });
     }
 
     /**
@@ -256,7 +265,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
     private void showUserName(ViewHolder holder, UIMessage UIMessage) {
         // TODO Auto-generated method stub
         if (channelType.equals("GROUP") && !UIMessage.getMessage().getFromUser().equals(
-                MyApplication.getInstance().getUid())) {
+                MyApplication.getInstance().getUid()) && StringUtils.isBlank(UIMessage.getMessage().getRecallFrom())) {
             holder.senderNameText.setVisibility(View.VISIBLE);
             holder.senderNameText.setText(UIMessage.getSenderName());
         } else {
@@ -273,8 +282,14 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         // TODO Auto-generated method stub
         final String fromUser = UImessage.getMessage().getFromUser();
         boolean isMyMsg = MyApplication.getInstance().getUid().equals(fromUser);
-        holder.senderPhotoImgRight.setVisibility(isMyMsg ? View.VISIBLE : View.INVISIBLE);
-        holder.senderPhotoImgLeft.setVisibility(isMyMsg ? View.GONE : View.VISIBLE);
+        if (StringUtils.isBlank(UImessage.getMessage().getRecallFrom())) {
+            holder.senderPhotoImgRight.setVisibility(isMyMsg ? View.VISIBLE : View.INVISIBLE);
+            holder.senderPhotoImgLeft.setVisibility(isMyMsg ? View.GONE : View.VISIBLE);
+        } else {
+            holder.senderPhotoImgRight.setVisibility(View.GONE);
+            holder.senderPhotoImgLeft.setVisibility(View.GONE);
+        }
+
         ImageView senderPhotoImg = isMyMsg ? holder.senderPhotoImgRight : holder.senderPhotoImgLeft;
         ImageDisplayUtils.getInstance().displayImage(senderPhotoImg,
                 UImessage.getSenderPhotoUrl(), R.drawable.icon_person_default);
@@ -317,7 +332,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
 
         void onMessageResend(UIMessage uiMessage, View view);
 
-        void onMediaVoiceReRecognize(UIMessage uiMessage, BubbleLayout bubbleLayout, CustomLoadingView downloadLoadingView);
+        void onMediaVoiceReRecognize(UIMessage uiMessage, View view, CustomLoadingView downloadLoadingView);
 
         void onAdapterDataSizeChange();
     }

@@ -23,7 +23,7 @@ public class UpgradeNotificationUtils {
     private NotificationCompat.Builder builder;
     private int notificationId = 10000;
     private String NotificationChannelId = "NotificationChannelId";
-    private String NotificationChannelName = "NotificationChannelName";
+    private String NotificationChannelName = "Notifications";
 
     public UpgradeNotificationUtils(Context context, int id) {
         this.context = context;

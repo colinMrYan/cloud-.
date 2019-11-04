@@ -10,8 +10,8 @@
         android:layout_height="wrap_content"
         android:background="@null"
         android:paddingLeft="15dp"
-        android:paddingRight="15dp"
         android:paddingTop="13dp"
+        android:paddingRight="15dp"
         android:text="@string/cancel"
         android:textColor="@color/black"
         android:textSize="17sp" />
@@ -34,8 +34,8 @@
         android:layout_alignParentRight="true"
         android:background="@null"
         android:paddingLeft="15dp"
-        android:paddingRight="15dp"
         android:paddingTop="13dp"
+        android:paddingRight="15dp"
         android:text="@string/send"
         android:textColor="#999999"
         android:textSize="17sp" />
@@ -49,20 +49,60 @@
         android:background="#f6f6f6"
         android:gravity="top"
         android:hint="@string/add_new_comment"
-        android:paddingBottom="6dp"
         android:paddingLeft="10dp"
-        android:paddingRight="10dp"
         android:paddingTop="6dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="6dp"
         android:textColor="@color/black"
         android:textSize="17sp" />
+
+    <LinearLayout
+        android:id="@+id/middle_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/input_edit"
+        android:layout_marginLeft="15dp"
+        android:layout_marginBottom="20dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/emotion_btn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@null"
+            android:clickable="true"
+            android:onClick="onClick"
+            android:padding="8dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/comment_image_emotion" />
+
+        <ImageButton
+            android:id="@+id/at_people_btn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="20dp"
+            android:background="@null"
+            android:clickable="true"
+            android:onClick="onClick"
+            android:padding="8dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/comment_image_at" />
+    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/rl_add_menu"
         android:layout_width="match_parent"
         android:layout_height="274dp"
-        android:layout_below="@id/input_edit"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:paddingTop="25dp"
-        android:visibility="gone"></RelativeLayout>
+        android:layout_below="@id/middle_layout"
+        android:paddingLeft="0dp"
+        android:paddingTop="0dp"
+        android:paddingRight="0dp"
+        android:visibility="gone">
+
+        <include layout="@layout/emotion_grid" />
+
+    </RelativeLayout>
+
+
 </RelativeLayout>

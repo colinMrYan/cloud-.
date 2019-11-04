@@ -49,4 +49,7 @@ public interface OnVoiceCommunicationCallbacks {
 
     //远端用户视频状态已变化回调
     void onRemoteVideoStateChanged(int uid, int state, int reason, int elapsed);
+
+    //统一的倒计时，倒计时结束时回调
+    void onCountDownTimerFinish();
 }

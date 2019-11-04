@@ -12,6 +12,7 @@ public class Constant {
     public static final String CONCIG_POS_REPORT_TIME_INTERVAL_ = "PosReportTimeInterval";
     public static final String CONCIG_SHOW_FEEDBACK = "IsShowFeedback";
     public static final String CONCIG_SHOW_CUSTOMER_SERVICE = "IsShowCustomerService";
+    public static final String CONCIG_FORCE_PULL_MESSAGE = "force_pull_message";
     public static final String CONCIG_CLOUD_PLUS_UUID_FILE = Environment.getExternalStorageDirectory() + "/gsp.uuid";
 
 
@@ -90,14 +91,20 @@ public class Constant {
     public static final String DEFAULT_CLUSTER_ID = "https://id.inspuronline.com/";//ID默认
 
     public static final String EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE = "tag_reveive_single_ws_message";
+    public static final String EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE_CONVERSATION = "tag_reveive_single_ws_message_conversation";
     public static final String EVENTBUS_TAG_GET_OFFLINE_WS_MESSAGE = "tag_get_offline_ws_message";
     public static final String EVENTBUS_TAG_GET_CHANNEL_RECENT_MESSAGE = "tag_get_channel_recent_message";
     public static final String EVENTBUS_TAG_GET_MESSAGE_BY_ID = "tag_get_message_by_id";
     public static final String EVENTBUS_TAG_GET_MESSAGE_COMMENT = "tag_get_message_comment";
+    public static final String EVENTBUS_TAG_SEND_VOICE_CALL_MESSAGE = "tag_send_voice_call_mesage";
     public static final String EVENTBUS_TAG_GET_HISTORY_MESSAGE = "tag_get_history_message";
     public static final String EVENTBUS_TAG_GET_NEW_MESSAGE = "tag_get_new_message";
     public static final String EVENTBUS_TAG_REFRESH_CONVERSATION = "tag_refresh_conversation";
     public static final String EVENTBUS_TAG_GET_MESSAGE_COMMENT_COUNT = "tag_get_message_comment_count";
+    public static final String EVENTBUS_TAG_RECALL_MESSAGE = "tag_recall_message";
+    public static final String EVENTBUS_TAG_CURRENT_CHANNEL_RECALL_MESSAGE = "tag_current_channel_recall_message";
+    public static final String EVENTBUS_TAG_COMMAND_BATCH_MESSAGE = "tag_command_batch_message";
+    public static final String EVENTBUS_TAG_CURRENT_CHANNEL_COMMAND_BATCH_MESSAGE = "tag_current_channel_command_batch_message";
     public static final String EVENTBUS_TAG_VIDEO_CALL = "client.video.call";
     public static final String EVENTBUS_TAG_ON_PHOTO_TAB = "tag_on_photo_tab";
     public static final String EVENTBUS_TAG_ON_PHOTO_CLOSE = "tag_on_photo_close";
@@ -143,6 +150,7 @@ public class Constant {
     public static final String EVENTBUS_TAG_VOLUME_FILE_COPY_SUCCESS = "tag_volume_file_copy_success";
     public static final String EVENTBUS_TAG_VOLUME_ = "tag_volume_upload";
     public static final String EVENTBUS_TAG_WECHAT_RESULT = "tag_wechat_result";
+    public static final String EVENTBUS_TAG_REFRESH_VOICE_CALL_SMALL_WINDOW = "tag_wechat_result";
     public static final String SERVICE_VERSION_CHAT_V0 = "v0";
     public static final String SERVICE_VERSION_CHAT_V1 = "v1";
 
@@ -223,6 +231,8 @@ public class Constant {
     public static final String AROUTER_CLASS_LOGIN_GS = "/login/ScanQrCodeLoginGSActivity";
     public static final String AROUTER_CLASS_LOGIN_BY_SMS = "/login/LoginBySmsActivity";
 
+
+    public static final String AROUTER_CLASS_FILEMANAGER_WITH_VOLUME = "/App/NativeVolumeFileManagerActivity";
 
     public static final String AROUTER_CLASS_WEB_FILEMANAGER = "/web/FileManagerActivity";
     public static final String AROUTER_CLASS_WEB_SCANRESULT = "/web/ScanResultActivity";

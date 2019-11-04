@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.view.Gravity;
@@ -17,8 +18,10 @@ import android.widget.RelativeLayout;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
-import com.inspur.emmcloud.baselib.util.TimeUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity;
+import com.inspur.emmcloud.util.privates.NotifyUtil;
+import com.inspur.emmcloud.util.privates.VoiceCommunicationManager;
 
 public class VoiceHoldService extends Service {
     private RelativeLayout relativeLayoutVoiceHold;
@@ -45,7 +48,7 @@ public class VoiceHoldService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        baseTime = intent.getLongExtra(ChannelVoiceCommunicationActivity.VOICE_TIME, 0);
+//        baseTime = intent.getLongExtra(ChannelVoiceCommunicationActivity.VOICE_TIME, 0);
         screenSize = intent.getIntExtra(ChannelVoiceCommunicationActivity.SCREEN_SIZE, 0);
         initViews();
         createToucher();
@@ -73,13 +76,17 @@ public class VoiceHoldService extends Service {
         params = new WindowManager.LayoutParams();
         windowManager = (WindowManager) getApplication().getSystemService(Context.WINDOW_SERVICE);
         //设置type.系统提示型窗口，一般都在应用程序窗口之上.
-        params.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {//6.0
+            params.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+        } else {
+            params.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
+        }
         //设置效果为背景透明.
         params.format = PixelFormat.RGBA_8888;
         //设置flags.不可聚焦及不可使用按钮对悬浮窗进行操控.
         params.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
         //设置窗口初始停靠位置.
-        params.gravity = Gravity.LEFT | Gravity.TOP;
+        params.gravity = Gravity.RIGHT | Gravity.TOP;
         params.x = screenSize - DensityUtil.dip2px(this, 74);
         params.y = DensityUtil.dip2px(this, 4);
         //设置悬浮窗口长宽数据.
@@ -124,6 +131,7 @@ public class VoiceHoldService extends Service {
 //                    LogUtils.YfcDebug("即将关闭");
 //                    stopSelf();
 //                }
+                LogUtils.YfcDebug("回到应用中");
                 goBackVoiceCommunicationActivity();
             }
         };
@@ -147,11 +155,26 @@ public class VoiceHoldService extends Service {
      * 回到
      */
     private void goBackVoiceCommunicationActivity() {
-        Intent intent = new Intent(getBaseContext(), ChannelVoiceCommunicationActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.COME_BACK_FROM_SERVICE);
-        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_TIME, Long.parseLong(TimeUtils.getChronometerSeconds(chronometer.getText().toString())));
-        getApplication().startActivity(intent);
+//        Intent intent = new Intent(getBaseContext(), ChannelVoiceCommunicationActivity.class);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+////        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.COME_BACK_FROM_SERVICE);
+//        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_TIME, Long.parseLong(TimeUtils.getChronometerSeconds(chronometer.getText().toString())));
+//        startActivity(intent);
+
+        Intent intent = null;
+        try {
+            intent = Intent.parseUri("ecc-cloudplus-cmd-voice-call://123", Intent.URI_INTENT_SCHEME);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_IS_FROM_SMALL_WINDOW, true);
+            intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE,
+                    VoiceCommunicationManager.getInstance().getLayoutState());
+//            intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_TIME, Long.parseLong(TimeUtils.getChronometerSeconds(chronometer.getText().toString())));
+            LogUtils.YfcDebug("准备启动SchemeActivity");
+            startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         stopSelf();
     }
 
@@ -160,6 +183,7 @@ public class VoiceHoldService extends Service {
     public void onDestroy() {
         if (imageButtonVoiceCommunication != null) {
             windowManager.removeView(relativeLayoutVoiceHold);
+            NotifyUtil.deleteNotify(this);
         }
         super.onDestroy();
     }

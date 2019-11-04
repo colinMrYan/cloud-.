@@ -65,6 +65,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class SettingActivity extends BaseActivity {
 
@@ -185,7 +186,7 @@ public class SettingActivity extends BaseActivity {
         apiService.setAPIInterface(new WebService());
         setWebAutoRotateState();
         webRotateSwitch.setOnCheckedChangeListener(onCheckedChangeListener);
-        if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
+        if (WebServiceRouterManager.getInstance().isV1xVersionChat() && !LanguageManager.getInstance().isAppLanguageEnglish()) {
             voice2WordLayout.setVisibility(View.VISIBLE);
             voice2WordSwitch.setChecked(AppUtils.getIsVoiceWordOpen());
             voice2WordSwitch.setOnCheckedChangeListener(onCheckedChangeListener);
@@ -346,6 +347,7 @@ public class SettingActivity extends BaseActivity {
         };
     }
 
+    @OnClick(R.id.bt_setting_signout)
     public void onClick(View v) {
         // TODO Auto-generated method stub
         switch (v.getId()) {
@@ -515,6 +517,7 @@ public class SettingActivity extends BaseActivity {
                         String imgCachePath = MyAppConfig.LOCAL_CACHE_PATH;
                         String offlineAppPath = MyAppConfig.LOCAL_OFFLINE_APP_PATH;
                         String userSpacePath = MyAppConfig.LOCAL_IMP_USER_OPERATE_DIC;
+                        PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_GET_OFFLINE_LAST_MID, "");
                         DataCleanManager.cleanApplicationData(SettingActivity.this,
                                 msgCachePath, imgCachePath, offlineAppPath, userSpacePath);
                         MyApplication.getInstance().setIsContactReady(false);

@@ -4,6 +4,8 @@ import android.graphics.Rect;
 import android.view.View;
 import android.view.ViewTreeObserver;
 
+import com.inspur.emmcloud.baselib.util.DensityUtil;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -35,10 +37,10 @@ public class SoftKeyboardStateHelper implements ViewTreeObserver.OnGlobalLayoutL
         activityRootView.getWindowVisibleDisplayFrame(r);
 
         final int heightDiff = activityRootView.getRootView().getHeight() - (r.bottom - r.top);
-        if (!isSoftKeyboardOpened && heightDiff > 100) { // if more than 100 pixels, its probably a keyboard...
+        if (!isSoftKeyboardOpened && heightDiff > DensityUtil.dip2px(100)) { // if more than 100 pixels, its probably a keyboard...
             isSoftKeyboardOpened = true;
             notifyOnSoftKeyboardOpened(heightDiff);
-        } else if (isSoftKeyboardOpened && heightDiff < 100) {
+        } else if (isSoftKeyboardOpened && heightDiff < DensityUtil.dip2px(100)) {
             isSoftKeyboardOpened = false;
             notifyOnSoftKeyboardClosed();
         }

@@ -21,6 +21,8 @@ public class ApiService {
 
         void delGroupMembers(BaseModuleAPICallback apiCallback, ArrayList<String> uidList, String conversationId);
 
+        void getConversationInfo(BaseModuleAPICallback apiCallback, String cId);
+
         void quitGroupChannel(BaseModuleAPICallback apiCallback, String conversationId);
 
         void delChannel(BaseModuleAPICallback apiCallback, String conversationId);

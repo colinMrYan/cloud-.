@@ -14,7 +14,6 @@ import android.content.res.Resources;
 import android.os.Build;
 import android.os.LocaleList;
 
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.api.BaseModuleAPIInterfaceInstance;
@@ -90,7 +89,6 @@ public class LanguageManager extends BaseModuleAPIInterfaceInstance {
         configuration.setLocale(locale);
         configuration.setLocales(new LocaleList(locale));
         configuration.fontScale = 1.0f;
-        LogUtils.jasonDebug("updateResources===" + locale.toString());
         return context.createConfigurationContext(configuration);
     }
 
@@ -132,6 +130,10 @@ public class LanguageManager extends BaseModuleAPIInterfaceInstance {
 
     public void setCurrentLanguageName(String saveLanguageName) {
         PreferencesByTanentUtils.putString(BaseApplication.getInstance(), Constant.PREF_CURRENT_LANGUAGE_NAME, saveLanguageName);
+    }
+
+    public boolean isAppLanguageEnglish() {
+        return getCurrentAppLanguage().startsWith("en");
     }
 
     private boolean isNeedUpdate() {
@@ -289,6 +291,7 @@ public class LanguageManager extends BaseModuleAPIInterfaceInstance {
 
     /**
      * 获取当前应用语言
+     *
      * @return
      */
     public String getCurrentAppLanguage() {
@@ -317,6 +320,7 @@ public class LanguageManager extends BaseModuleAPIInterfaceInstance {
     public void setVoiceInputLanguage(String language) {
         PreferencesByTanentUtils.putString(BaseApplication.getInstance(), Constant.PREF_VOICE_INPUT_LANGUAGE, language);
     }
+
     /**
      * 从本地获取缓存的服务端支持语音列表
      *

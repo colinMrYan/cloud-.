@@ -12,6 +12,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
@@ -87,6 +88,16 @@ public class CommunicationUtils {
         return title;
     }
 
+    public static String getRecallMessageShowContent(Message message) {
+        boolean isMyMsg = message.getFromUser().equals(MyApplication.getInstance().getUid());
+        String username = "";
+        if (isMyMsg) {
+            username = BaseApplication.getInstance().getString(R.string.you);
+        } else {
+            username = '"' + ContactUserCacheUtils.getUserName(message.getFromUser()) + '"';
+        }
+        return BaseApplication.getInstance().getString(R.string.chat_info_message_status_recall, username);
+    }
 
     public static Message combinLocalTextPlainMessage(String text, String cid, Map<String, String> mentionsMap) {
         String tracer = getTracer();
@@ -230,6 +241,7 @@ public class CommunicationUtils {
         message.setId(tracer);
         message.setTmpId(tracer);
         message.setType(Message.MESSAGE_TYPE_MEDIA_IMAGE);
+        message.setLocalPath("");
         MsgContentMediaImage contentMediaImage = new MsgContentMediaImage();
         contentMediaImage.setName(msgContentMediaImage.getName());
         contentMediaImage.setRawHeight(msgContentMediaImage.getRawHeight());
@@ -256,13 +268,13 @@ public class CommunicationUtils {
         message.setId(tracer);
         message.setTmpId(tracer);
         message.setType("file/regular-file");
-        message.setLocalPath(localFilePath);
+        message.setLocalPath("");
 
         MsgContentRegularFile msgContentRegularFile = new MsgContentRegularFile();
         msgContentRegularFile.setCategory(orgMsgContentRegularFile.getCategory());
         msgContentRegularFile.setName(orgMsgContentRegularFile.getName());
         msgContentRegularFile.setSize(orgMsgContentRegularFile.getSize());
-        msgContentRegularFile.setMedia(localFilePath);
+        msgContentRegularFile.setMedia(orgMsgContentRegularFile.getMedia());
         message.setContent(msgContentRegularFile.toString());
         return message;
     }

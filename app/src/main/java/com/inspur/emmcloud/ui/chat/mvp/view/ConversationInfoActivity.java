@@ -4,10 +4,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -16,6 +15,7 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
+import com.inspur.emmcloud.baselib.widget.NoScrollGridView;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
@@ -26,7 +26,6 @@ import com.inspur.emmcloud.ui.chat.ChannelMembersDelActivity;
 import com.inspur.emmcloud.ui.chat.CommunicationSearchMessagesActivity;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.ui.chat.ConversationNameModifyActivity;
-import com.inspur.emmcloud.ui.chat.ConversationQrCodeActivity;
 import com.inspur.emmcloud.ui.chat.GroupAlbumActivity;
 import com.inspur.emmcloud.ui.chat.GroupFileActivity;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
@@ -61,7 +60,7 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
     private static final int QEQUEST_ADD_MEMBER = 2;
     private static final int QEQUEST_DEL_MEMBER = 3;
     @BindView(R.id.rv_conversation_members_head)
-    RecyclerView conversationMembersHeadRecyclerView;
+    NoScrollGridView conversationMembersHeadRecyclerView;
     @BindView(R.id.tv_title)
     TextView titleTextView;
     @BindView(R.id.tv_conversation_name)
@@ -98,6 +97,10 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
         EventBus.getDefault().register(this);
         mPresenter = new ConversationInfoPresenter();
         mPresenter.attachView(this);
+        String cid = getIntent().getExtras().getString(EXTRA_CID);
+        loadingDialog = new LoadingDialog(this);
+        mPresenter.getConversationInfo(cid);
+        uiConversation = mPresenter.getConversation(cid);
         init();
     }
 
@@ -110,22 +113,18 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
      * 初始化
      */
     private void init() {
-        String cid = getIntent().getExtras().getString(EXTRA_CID);
-        loadingDialog = new LoadingDialog(this);
-        uiConversation = mPresenter.getConversation(cid);
         if (uiConversation.getType().equals(Conversation.TYPE_GROUP)) {
             String data = getString(R.string.chat_group_info_detail_title, mPresenter.getConversationRealMemberSize());
+            isOwner = uiConversation.getOwner().equals(BaseApplication.getInstance().getUid());
             titleTextView.setText(data);
             conversationNameTextView.setText(uiConversation.getName());
-            moreMembersLayout.setVisibility(uiConversation.getMemberList().size() > 13 ? View.VISIBLE : View.GONE);
-            isOwner = uiConversation.getOwner().equals(BaseApplication.getInstance().getUid());
-            quitTextView.setText(isOwner ? getString(R.string.dismiss_group) : getString(R.string.quit_group));
             uiUidList = mPresenter.getConversationUIMembersUid(uiConversation);
             conversationQRLayout.setVisibility(View.VISIBLE);
             conversationNameLayout.setVisibility(View.VISIBLE);
             conversationQuitLayout.setVisibility(View.VISIBLE);
             searchRecordLayout.setVisibility(View.VISIBLE);
             searchRecordMarginLayout.setVisibility(View.GONE);
+            mPresenter.updateSearchMoreState();
         } else if (uiConversation.getType().equals(Conversation.TYPE_DIRECT)) {
             isOwner = false;
             uiUidList = mPresenter.getConversationSingleChatUIMembersUid(uiConversation);
@@ -139,19 +138,18 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
             searchRecordMarginLayout.setVisibility(View.VISIBLE);
         }
         channelMembersHeadAdapter = new ConversationMembersHeadAdapter(this, isOwner, uiUidList);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(MyApplication.getInstance(), 5);
-        conversationMembersHeadRecyclerView.setLayoutManager(gridLayoutManager);
-        channelMembersHeadAdapter.setAdapterListener(new ConversationMembersHeadAdapter.AdapterListener() {
+        conversationMembersHeadRecyclerView.setAdapter(channelMembersHeadAdapter);
+        conversationMembersHeadRecyclerView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(View view, int position) {
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent();
-                if (position == uiUidList.size() - 1 && isOwner) {    /**刪除群成員**/
+                if (i == uiUidList.size() - 1 && isOwner) {    /**刪除群成員**/
                     intent.putExtra("memberUidList", uiConversation.getMemberList());
                     intent.setClass(getApplicationContext(),
                             ChannelMembersDelActivity.class);
                     startActivityForResult(intent, QEQUEST_DEL_MEMBER);
-                } else if (position == uiUidList.size() - 2 && isOwner
-                        || (position == uiUidList.size() - 1 && !isOwner)) { /**添加群成員**/
+                } else if (i == uiUidList.size() - 2 && isOwner
+                        || (i == uiUidList.size() - 1 && !isOwner)) { /**添加群成員**/
                     intent.putExtra(ContactSearchFragment.EXTRA_TYPE, 2);
                     intent.putExtra(ContactSearchFragment.EXTRA_EXCLUDE_SELECT, uiConversation.getMemberList());
                     intent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, true);
@@ -160,7 +158,7 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
                             ContactSearchActivity.class);
                     startActivityForResult(intent, QEQUEST_ADD_MEMBER);
                 } else {
-                    String uid = uiUidList.get(position);
+                    String uid = uiUidList.get(i);
                     Bundle bundle = new Bundle();
                     bundle.putString("uid", uid);
                     IntentUtils.startActivity(ConversationInfoActivity.this, uid.startsWith("BOT") ?
@@ -168,7 +166,6 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
                 }
             }
         });
-        conversationMembersHeadRecyclerView.setAdapter(channelMembersHeadAdapter);
         conversationStickySwitch.setChecked(uiConversation.isStick());
         conversationMuteNotificationSwitch.setChecked(uiConversation.isDnd());
         conversationStickySwitch.setOnCheckedChangeListener(this);
@@ -187,11 +184,11 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
                         ConversationNameModifyActivity.class, bundle);
                 break;
             case R.id.rl_conversation_qr:
-                bundle.putString("cid", uiConversation.getId());
-                bundle.putString("groupName", uiConversation.getShowName());
-                bundle.putInt(MEMBER_SIZE, uiConversation.getMemberList().size());
-                IntentUtils.startActivity(this,
-                        ConversationQrCodeActivity.class, bundle);
+//                bundle.putString("cid", uiConversation.getId());
+//                bundle.putString("groupName", uiConversation.getShowName());
+//                bundle.putInt(MEMBER_SIZE, uiConversation.getMemberList().size());
+//                IntentUtils.startActivity(this,
+//                        ConversationQrCodeActivity.class, bundle);
                 break;
             case R.id.rl_conversation_images:
                 bundle.putString(EXTRA_CID, uiConversation.getId());
@@ -225,6 +222,12 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
             default:
                 break;
         }
+    }
+
+    @Override
+    public void initView(Conversation conversation) {
+        uiConversation = conversation;
+        init();
     }
 
     @Override
@@ -279,7 +282,12 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
     @Override
     public void updateUiConversation(Conversation conversation) {
         uiConversation = conversation;
-        moreMembersLayout.setVisibility(uiConversation.getMemberList().size() > 13 ? View.VISIBLE : View.GONE);
+        moreMembersLayout.setVisibility(uiConversation.getMemberList().size() > 43 ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void updateMoreMembers(boolean isShow) {
+        moreMembersLayout.setVisibility(isShow ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -306,7 +314,6 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
         IntentUtils.startActivity(getActivity(), ConversationActivity.class, bundle);
         finish();
     }
-
 
     private void showQuitGroupWarningDlg() {
         new CustomDialog.MessageDialogBuilder(ConversationInfoActivity.this)

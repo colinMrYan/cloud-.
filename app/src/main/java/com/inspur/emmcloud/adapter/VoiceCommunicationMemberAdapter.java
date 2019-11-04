@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
@@ -54,8 +53,8 @@ public class VoiceCommunicationMemberAdapter extends RecyclerView.Adapter<VoiceC
     public void onBindViewHolder(VoiceCommunicationHolder holder, int position) {
         setUserHeadImgSize(holder.headImg, index);
         //头像源数据修改为本地，注释掉的是从接口中读取的url
-//        ImageDisplayUtils.getInstance().displayImage(holder.headImg, voiceCommunicationUserInfoBeanList.get(position).getHeadImageUrl(), R.drawable.icon_person_default);
-        ImageDisplayUtils.getInstance().displayImage(holder.headImg, APIUri.getUserIconUrl(MyApplication.getInstance(), voiceCommunicationUserInfoBeanList.get(position).getUserId()), R.drawable.icon_person_default);
+        ImageDisplayUtils.getInstance().displayImage(holder.headImg, voiceCommunicationUserInfoBeanList.get(position).getHeadImageUrl(), R.drawable.icon_person_default);
+//        ImageDisplayUtils.getInstance().displayImage(holder.headImg, APIUri.getUserIconUrl(MyApplication.getInstance(), voiceCommunicationUserInfoBeanList.get(position).getUserId()), R.drawable.icon_person_default);
         holder.nameTv.setText(voiceCommunicationUserInfoBeanList.get(position).getUserName());
         //音量控制逻辑
         int volume = voiceCommunicationUserInfoBeanList.get(position).getVolume();
@@ -82,7 +81,7 @@ public class VoiceCommunicationMemberAdapter extends RecyclerView.Adapter<VoiceC
         }
         //当通话人数为两个或者是邀请人的Adapter的时候不显示名字
         holder.nameTv.setVisibility(((index == 1 && voiceCommunicationUserInfoBeanList.size() <= 2) || index == 3) ? View.GONE : View.VISIBLE);
-        if (voiceCommunicationUserInfoBeanList.get(position).getConnectState() != 0 ||
+        if (voiceCommunicationUserInfoBeanList.get(position).getConnectState() == VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_CONNECTED ||
                 voiceCommunicationUserInfoBeanList.get(position).getUserId().
                         equals(MyApplication.getInstance().getUid()) || index == 3) {
             holder.avLoadingIndicatorView.hide();
@@ -147,9 +146,26 @@ public class VoiceCommunicationMemberAdapter extends RecyclerView.Adapter<VoiceC
      * @param index
      */
     public void setMemberDataAndRefresh(List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationJoinChannelInfoBeanList, int index) {
-        this.voiceCommunicationUserInfoBeanList = voiceCommunicationJoinChannelInfoBeanList;
+        this.voiceCommunicationUserInfoBeanList = getInitAndConnected(voiceCommunicationJoinChannelInfoBeanList);
         this.index = index;
         notifyDataSetChanged();
+    }
+
+    /**
+     * 取出所有等待中和已经接通的人员
+     *
+     * @param voiceCommunicationJoinChannelInfoBeanList
+     * @return
+     */
+    private List<VoiceCommunicationJoinChannelInfoBean> getInitAndConnected(List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationJoinChannelInfoBeanList) {
+        List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationJoinChannelInfoBeans = new ArrayList<>();
+        for (VoiceCommunicationJoinChannelInfoBean voiceCommunicationJoinChannelInfoBean : voiceCommunicationJoinChannelInfoBeanList) {
+            int state = voiceCommunicationJoinChannelInfoBean.getConnectState();
+            if (state == VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_INIT || state == VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_CONNECTED) {
+                voiceCommunicationJoinChannelInfoBeans.add(voiceCommunicationJoinChannelInfoBean);
+            }
+        }
+        return voiceCommunicationJoinChannelInfoBeans;
     }
 
     public class VoiceCommunicationHolder extends RecyclerView.ViewHolder {

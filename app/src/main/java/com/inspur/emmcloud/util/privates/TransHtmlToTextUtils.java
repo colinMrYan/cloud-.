@@ -5,6 +5,8 @@ import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.ui.chat.emotion.EmotionUtil;
 import com.inspur.emmcloud.widget.spans.URLClickableSpan;
 
 
@@ -18,6 +20,7 @@ public class TransHtmlToTextUtils {
      */
     public static void stripUnderlines(TextView textView, int color) {
         Spannable spannable = new SpannableString(textView.getText());
+        spannable = EmotionUtil.getInstance(BaseApplication.getInstance()).getSmiledText(spannable, textView.getTextSize());
         URLClickableSpan[] spans = spannable.getSpans(0, spannable.length(), URLClickableSpan.class);
         for (URLClickableSpan span : spans) {
             int start = spannable.getSpanStart(span);

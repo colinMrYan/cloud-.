@@ -114,6 +114,10 @@ buildscript {
                     'aws_android_sdk_core': 'com.amazonaws:aws-android-sdk-core:2.15.2',
                     'aws_android_sdk_mobile_client': 'com.amazonaws:aws-android-sdk-mobile-client:2.15.2@aar',
                     'aws_auth':'com.amazonaws:aws-android-sdk-auth-userpools:2.15.2@aar'
+            ],
+            rx:[
+                    'rxjava':'io.reactivex.rxjava2:rxjava:2.2.13',
+                    'rxandroid':'io.reactivex.rxjava2:rxandroid:2.1.1'
             ]
     ]
 

@@ -83,7 +83,7 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
     public void onCreate() {
         ButterKnife.bind(this);
         init();
-        getVolumeList(true);
+        getVolumeList(true, true);
     }
 
     @Override
@@ -205,7 +205,13 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
 
     @Override
     public void onRefresh() {
-        getVolumeList(false);
+        getVolumeList(false, true);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getVolumeList(false, false);
     }
 
 
@@ -224,8 +230,8 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
     /**
      * 获取云盘列表
      */
-    private void getVolumeList(boolean isShowDlg) {
-        if (NetUtils.isNetworkConnected(getApplicationContext())) {
+    private void getVolumeList(boolean isShowDlg, boolean isShowNetToast) {
+        if (NetUtils.isNetworkConnected(getApplicationContext(), isShowNetToast)) {
             loadingDlg.show(isShowDlg);
             apiService.getVolumeList();
         } else {

@@ -11,6 +11,9 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
+import com.gyf.barlibrary.ImmersionBar;
+import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.ResolutionUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
@@ -25,13 +28,22 @@ public class InputMethodUtils {
             View view = activity.getWindow().peekDecorView();
             if (view != null) {
                 InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-                inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
             }
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
         }
 
+    }
+
+    public static void hide(Context context, View view) {
+        if (view == null) {
+            return;
+        }
+
+        InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
     /**
@@ -69,25 +81,28 @@ public class InputMethodUtils {
     }
 
     public static int getSupportSoftInputHeight(Activity activity) {
+        int screenHeight = 0;
         Rect r = new Rect();
         activity.getWindow().getDecorView()
                 .getWindowVisibleDisplayFrame(r);
         DisplayMetrics displayMetrics = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int screenHeight = displayMetrics.heightPixels;
         //消息手机需要特殊处理：如果小米手机隐藏了NavigationBar，就在获取到的高度基础上加上NavigationBar的高度
-        if (AppUtils.getIsXiaoMi() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+        if (AppUtils.getIsXiaoMi() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             boolean isHideNavigationBar = Settings.Global.getInt(activity.getContentResolver(), "force_fsg_nav_bar", 0) != 0;
-            if (isHideNavigationBar) {
-                int navigationBarHeight = ResolutionUtils.getNavigationBarHeight(activity);
-                screenHeight = screenHeight + navigationBarHeight;
+            screenHeight = ResolutionUtils.getHeight(activity);
+            if (!isHideNavigationBar) {
+                screenHeight = screenHeight - ImmersionBar.getNavigationBarHeight(activity);
+            }
+        } else {
+            screenHeight = displayMetrics.heightPixels;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                screenHeight = screenHeight + ResolutionUtils.getStatusBarHeightAboutAndroidP(activity);
             }
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            screenHeight = screenHeight + ResolutionUtils.getStatusBarHeightAboutAndroidP(activity);
-        }
+        LogUtils.jasonDebug("ResolutionUtils.getStatusBarHeightAboutAndroidP(activity)=" + ResolutionUtils.getStatusBarHeightAboutAndroidP(activity));
         int softInputHeight = screenHeight - r.bottom;
-        if (softInputHeight < 200) {
+        if (softInputHeight < DensityUtil.dip2px(100)) {
             softInputHeight = 0;
             Log.w("EmotionInputDetector",
                     "Warning: value of softInputHeight is below zero!");

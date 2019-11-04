@@ -1487,7 +1487,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnConversationInfoSuccess(Conversation conversation, boolean isFromScanCode) {
+    public void returnConversationInfoSuccess(Conversation conversation) {
     }
 
     @Override

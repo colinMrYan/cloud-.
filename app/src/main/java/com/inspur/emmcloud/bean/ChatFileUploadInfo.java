@@ -2,6 +2,7 @@ package com.inspur.emmcloud.bean;
 
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.interf.ProgressCallback;
+import com.inspur.emmcloud.interf.VolumeFileUploadService;
 
 /**
  * Created by chenmch on 2019/8/20.
@@ -10,6 +11,7 @@ import com.inspur.emmcloud.interf.ProgressCallback;
 public class ChatFileUploadInfo {
     private Message message;
     private ProgressCallback callback;
+    private VolumeFileUploadService volumeFileUploadService;
 
     public ChatFileUploadInfo(Message message, ProgressCallback callback) {
         this.message = message;
@@ -22,6 +24,14 @@ public class ChatFileUploadInfo {
 
     public void setMessage(Message message) {
         this.message = message;
+    }
+
+    public VolumeFileUploadService getVolumeFileUploadService() {
+        return volumeFileUploadService;
+    }
+
+    public void setVolumeFileUploadService(VolumeFileUploadService volumeFileUploadService) {
+        this.volumeFileUploadService = volumeFileUploadService;
     }
 
     public ProgressCallback getCallback() {

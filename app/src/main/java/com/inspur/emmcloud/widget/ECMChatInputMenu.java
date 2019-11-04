@@ -11,8 +11,11 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Handler;
+import android.provider.Settings;
 import android.text.Editable;
+import android.text.Spannable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -35,6 +38,7 @@ import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.baselib.widget.NoScrollGridView;
 import com.inspur.emmcloud.baselib.widget.dialogs.ActionSheetDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
@@ -51,17 +55,23 @@ import com.inspur.emmcloud.basemodule.widget.richedit.InsertModel;
 import com.inspur.emmcloud.bean.chat.InputTypeBean;
 import com.inspur.emmcloud.bean.system.VoiceResult;
 import com.inspur.emmcloud.interf.OnVoiceResultCallback;
+import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
+import com.inspur.emmcloud.ui.chat.emotion.EmotionAdapter;
+import com.inspur.emmcloud.ui.chat.emotion.EmotionRecentManager;
+import com.inspur.emmcloud.ui.chat.emotion.EmotionUtil;
 import com.inspur.emmcloud.util.privates.MediaPlayerUtils;
 import com.inspur.emmcloud.util.privates.Voice2StringMessageUtils;
-import com.inspur.emmcloud.util.privates.VoiceCommunicationUtils;
+import com.inspur.emmcloud.util.privates.VoiceCommunicationManager;
 import com.inspur.emmcloud.util.privates.audioformat.AndroidMp3ConvertUtils;
 import com.inspur.emmcloud.widget.audiorecord.AudioDialogManager;
 import com.inspur.emmcloud.widget.audiorecord.AudioRecordButton;
+import com.inspur.emmcloud.widget.filemanager.NativeVolumeFileManagerActivity;
 import com.inspur.emmcloud.widget.waveprogress.VoiceCompleteView;
 import com.inspur.emmcloud.widget.waveprogress.WaterWaveProgress;
 import com.itheima.roundedimageview.RoundedImageView;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -128,8 +138,23 @@ public class ECMChatInputMenu extends LinearLayout {
     TextView voiceInputClean;
     @BindView(R.id.voice_input_send)
     TextView voiceInputSend;
+    @BindView(R.id.emotion_container)
+    View emotionLayout;
+    @BindView(R.id.emotion_delete)
+    ImageView emotionDeleteImg;
+    @BindView(R.id.emotion_recent_layout)
+    View emotionRecentLayout;
+    @BindView(R.id.emotion_recent_grid)
+    NoScrollGridView emotionRecentGrid;
+    @BindView(R.id.emotion_grid)
+    NoScrollGridView emotionGrid;
+    @BindView(R.id.emotion_btn)
+    ImageButton emotionBtn;
+    EmotionAdapter emotionAdapter;
+    EmotionAdapter emotionRecentAdapter;
+    ArrayList<String> recentEmotionList = new ArrayList<>();
     private int voiceInputStatus = 1;
-    private boolean canMentions = false;
+    private boolean isGroup = false;
     private ChatInputMenuListener chatInputMenuListener;
     private List<InputTypeBean> inputTypeBeanList = new ArrayList<>();
     private View otherLayoutView;
@@ -170,6 +195,7 @@ public class ECMChatInputMenu extends LinearLayout {
         initInputEdit();
         initVoiceInput();
         initAudioRecord();
+        initEmotion();
     }
 
     //initVoiceInput
@@ -197,7 +223,7 @@ public class ECMChatInputMenu extends LinearLayout {
                 sendMsgBtn.setEnabled(!isContentBlank);
                 sendMsgBtn.setBackgroundResource(isContentBlank ? R.drawable.bg_chat_input_send_btn_disable : R.drawable.bg_chat_input_send_btn_enable);
                 addBtn.setVisibility(isContentBlank ? VISIBLE : GONE);
-                if (canMentions && count == 1) {
+                if (isGroup && count == 1) {
                     String inputWord = s.toString().substring(start, start + count);
                     if (inputWord.equals("@")) {
                         openMentionPage(true);
@@ -227,6 +253,7 @@ public class ECMChatInputMenu extends LinearLayout {
                     audioDialogManager = new AudioDialogManager(getContext());
                     audioDialogManager.showVoice2WordProgressDialog();
                     //转写和转文件格式同时进行
+                    voice2StringMessageUtils.setNeedChangeLanguage(false);
                     voice2StringMessageUtils.startVoiceListeningByVoiceFile(seconds, filePath);
                     AndroidMp3ConvertUtils.with(getContext()).setCallBack(new AndroidMp3ConvertUtils.AndroidMp3ConvertCallback() {
                         @Override
@@ -330,6 +357,22 @@ public class ECMChatInputMenu extends LinearLayout {
         languageList.add(getContext().getString(R.string.voice_input_language_mandarin));   //普通話
         languageList.add(getContext().getString(R.string.voice_input_language_english));    //英語
 //        languageList.add(getContext().getString(R.string.voice_input_language_cantonese));  //粵語
+    }
+
+    /**
+     * 初始化表情相关
+     */
+    private void initEmotion() {
+        EmotionRecentManager recentManager = EmotionRecentManager.getInstance(getContext());
+        recentEmotionList.addAll(recentManager);
+        emotionRecentAdapter = new EmotionAdapter(getContext(), 1, recentEmotionList);
+        emotionRecentGrid.setAdapter(emotionRecentAdapter);
+        emotionRecentGrid.setOnItemClickListener(new OnEmotionItemClickListener());
+
+        List<String> resList = EmotionUtil.getInstance(getContext()).getExpressionRes();
+        emotionAdapter = new EmotionAdapter(getContext(), 1, resList);
+        emotionGrid.setAdapter(emotionAdapter);
+        emotionGrid.setOnItemClickListener(new OnEmotionItemClickListener());
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -454,11 +497,11 @@ public class ECMChatInputMenu extends LinearLayout {
     /**
      * 设置是否可以@
      *
-     * @param canMentions
+     * @param isGroup
      * @param cid
      */
-    public void setCanMentions(boolean canMentions, String cid) {
-        this.canMentions = canMentions;
+    public void setIsGroup(boolean isGroup, String cid) {
+        this.isGroup = isGroup;
         this.cid = cid;
     }
 
@@ -563,6 +606,7 @@ public class ECMChatInputMenu extends LinearLayout {
 //                    case 6:
 //                        isVideoCallEnable = controlValue.endsWith("1");
 //                        break;
+                    //屏蔽语音通话
                     case 8:
                         isVoiceCallEnable = controlValue.equals("1");
                         break;
@@ -595,7 +639,7 @@ public class ECMChatInputMenu extends LinearLayout {
                 sendMsgBtn.setEnabled(false);
             }
             //如果是群组的话添加@功能
-            if (canMentions) {
+            if (isGroup) {
                 inputTypeBeanList.add(new InputTypeBean(functionIconArray[4], functionNameArray[4], functionActionArray[4]));
             }
 
@@ -631,14 +675,15 @@ public class ECMChatInputMenu extends LinearLayout {
                             AppUtils.openCamera((Activity) getContext(), fileName, CAMERA_RESULT);
                             break;
                         case "file":
-                            AppUtils.openFileSystem((Activity) getContext(), CHOOSE_FILE, 5);
+                            Intent intent = new Intent(getContext(), NativeVolumeFileManagerActivity.class);
+                            ((Activity) getContext()).startActivityForResult(intent, CHOOSE_FILE);
                             break;
                         case "mention":
                             openMentionPage(false);
                             break;
                         case "voice_input":     //语音输入
-                            if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-                                if (VoiceCommunicationUtils.getInstance().isVoiceBusy()) {
+                            if (NetUtils.isNetworkConnected(MyApplication.getInstance()) && WebSocketPush.getInstance().isSocketConnect()) {
+                                if (VoiceCommunicationManager.getInstance().isVoiceBusy()) {
                                     ToastUtils.show(R.string.voice_communication_voice_busy_tip);
                                     return;
                                 }
@@ -656,8 +701,14 @@ public class ECMChatInputMenu extends LinearLayout {
                             }
                             break;
                         case VOICE_CALL:
+                            //当没有悬浮窗权限或者小米手机上没有后台弹出界面权限时先请求权限
+                            if ((Build.VERSION.SDK_INT >= 23 && !Settings.canDrawOverlays(getContext())) ||
+                                    (Build.VERSION.SDK_INT >= 19 && !AppUtils.canBackgroundStart(getContext()))) {
+                                chatInputMenuListener.onNoSmallWindowPermission();
+                                return;
+                            }
                             if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-                                if (VoiceCommunicationUtils.getInstance().isVoiceBusy()) {
+                                if (VoiceCommunicationManager.getInstance().isVoiceBusy()) {
                                     ToastUtils.show(R.string.voice_communication_voice_busy_tip);
                                     return;
                                 }
@@ -676,7 +727,13 @@ public class ECMChatInputMenu extends LinearLayout {
                             }
                             break;
                         case VIDEO_CALL:
-                            if (VoiceCommunicationUtils.getInstance().isVoiceBusy()) {
+                            //当没有悬浮窗权限或者小米手机上没有后台弹出界面权限时先请求权限
+                            if ((Build.VERSION.SDK_INT >= 23 && !Settings.canDrawOverlays(getContext())) ||
+                                    (Build.VERSION.SDK_INT >= 19 && AppUtils.canBackgroundStart(getContext()))) {
+                                chatInputMenuListener.onNoSmallWindowPermission();
+                                return;
+                            }
+                            if (VoiceCommunicationManager.getInstance().isVoiceBusy()) {
                                 ToastUtils.show(R.string.voice_communication_voice_busy_tip);
                                 return;
                             }
@@ -708,9 +765,10 @@ public class ECMChatInputMenu extends LinearLayout {
         }
     }
 
+
     private void startVoiceCall(String type) {
         //语音通话
-        if (!canMentions) {
+        if (!isGroup) {
             if (type.equals(VOICE_CALL)) {
                 chatInputMenuListener.onVoiceCommucaiton();
             } else if (type.equals(VIDEO_CALL)) {
@@ -722,8 +780,8 @@ public class ECMChatInputMenu extends LinearLayout {
     }
 
     private void startVoice2Word() {
-        inputEdit.setVisibility(INVISIBLE);
-        addMenuLayout.setVisibility(GONE);
+//        inputEdit.setVisibility(INVISIBLE);
+        hideAddMenuLayout();
         voiceInputLayout.setVisibility(View.VISIBLE);
         voiceInputStatus = VOICE_INPUT_STATUS_NORMAL;
         initVoiceInputView();
@@ -870,14 +928,14 @@ public class ECMChatInputMenu extends LinearLayout {
     }
 
     @OnClick({R.id.voice_btn, R.id.send_msg_btn, R.id.add_btn, R.id.voice_input_close_img, R.id.voice_input_language,
-            R.id.voice_input_clear, R.id.voice_input_send})
+            R.id.voice_input_clear, R.id.voice_input_send, R.id.emotion_btn, R.id.emotion_delete})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.voice_btn:
                 if (view.getTag() == null || (int) view.getTag() == TAG_KEYBOARD_INPUT) {
                     setVoiceInputStatus(TAG_VOICE_INPUT);
                     if (addMenuLayout.isShown()) {
-                        addMenuLayout.setVisibility(View.GONE);
+                        hideAddMenuLayout();
                     } else if (InputMethodUtils.isSoftInputShow((Activity) getContext())) {
                         InputMethodUtils.hide((Activity) getContext());
                     }
@@ -899,20 +957,30 @@ public class ECMChatInputMenu extends LinearLayout {
                 break;
             case R.id.add_btn:
                 if (addMenuLayout.isShown()) {
-                    setOtherLayoutHeightLock(true);
-                    setAddMenuLayoutShow(false);
-                    setOtherLayoutHeightLock(false);
+                    if (viewpagerLayout.getVisibility() == View.VISIBLE) {
+                        setOtherLayoutHeightLock(true);
+                        setAddMenuLayoutShow(false);
+                        setOtherLayoutHeightLock(false);
+                    } else {
+                        changeAddMenuLayoutContent(false);
+                    }
+
                 } else if (InputMethodUtils.isSoftInputShow((Activity) getContext())) {
                     setOtherLayoutHeightLock(true);
                     setAddMenuLayoutShow(true);
                     setOtherLayoutHeightLock(false);
+                    changeAddMenuLayoutContent(false);
                 } else {
                     setAddMenuLayoutShow(true);
+                    changeAddMenuLayoutContent(false);
                 }
                 setVoiceInputStatus(TAG_KEYBOARD_INPUT);
                 break;
+            case R.id.emotion_btn:
+                handleEmotionStatus();
+                break;
             case R.id.voice_input_close_img:
-                inputEdit.setVisibility(VISIBLE);
+//                inputEdit.setVisibility(VISIBLE);
                 voiceInputEt.setText("");
                 voiceInputLayout.setVisibility(View.GONE);
                 voice2StringMessageUtils.stopListening();
@@ -933,9 +1001,56 @@ public class ECMChatInputMenu extends LinearLayout {
                 voiceInputEt.setText("");
                 stopVoiceInput();
                 break;
+
+            case R.id.emotion_delete:  //表情删除
+                EmotionUtil.getInstance(getContext()).deleteSingleEmojcon(inputEdit);
+                break;
             default:
                 break;
         }
+    }
+
+    /**
+     * 点击menu里的表情
+     */
+    private void handleEmotionStatus() {
+        if (emotionRecentAdapter != null) {
+            EmotionRecentManager recentManager = EmotionRecentManager.getInstance(getContext());
+            recentEmotionList.clear();
+            recentEmotionList.addAll(recentManager);
+            emotionRecentLayout.setVisibility(recentManager.size() > 0 ? VISIBLE : GONE);
+            emotionRecentAdapter.notifyDataSetChanged();
+        }
+        if (addMenuLayout.isShown()) {
+            if (viewpagerLayout.getVisibility() == View.VISIBLE) {
+                changeAddMenuLayoutContent(true);
+            } else {
+                setOtherLayoutHeightLock(true);
+                setAddMenuLayoutShow(false);
+                setOtherLayoutHeightLock(false);
+            }
+
+        } else if (InputMethodUtils.isSoftInputShow((Activity) getContext())) {
+            setOtherLayoutHeightLock(true);
+            setAddMenuLayoutShow(true);
+            setOtherLayoutHeightLock(false);
+            changeAddMenuLayoutContent(true);
+        } else {
+            setAddMenuLayoutShow(true);
+            changeAddMenuLayoutContent(true);
+        }
+        setVoiceInputStatus(TAG_KEYBOARD_INPUT);
+    }
+
+    /**
+     * 更改添加Menu
+     *
+     * @param isShowEmotion
+     */
+    private void changeAddMenuLayoutContent(boolean isShowEmotion) {
+        viewpagerLayout.setVisibility(isShowEmotion ? View.GONE : View.VISIBLE);
+        emotionLayout.setVisibility(isShowEmotion ? View.VISIBLE : View.GONE);
+        emotionBtn.setImageResource(isShowEmotion ? R.drawable.ic_chat_input_keyboard : R.drawable.ic_chat_btn_emotion);
     }
 
     @OnTouch({R.id.volume_level_img})
@@ -947,6 +1062,7 @@ public class ECMChatInputMenu extends LinearLayout {
                 initVoiceInputView();
                 voiceInputEt.setHint(getContext().getString(R.string.voice_input_hint_prepare));
                 mediaPlayerUtils.playVoiceOn();
+                voice2StringMessageUtils.setNeedChangeLanguage(true);
                 voice2StringMessageUtils.startVoiceListening();
                 break;
             case MotionEvent.ACTION_UP:
@@ -982,7 +1098,6 @@ public class ECMChatInputMenu extends LinearLayout {
         return mentionsUidList;
     }
 
-
     public void setOtherLayoutView(View otherLayoutView, View listContentView) {
         this.otherLayoutView = otherLayoutView;
         //当View有touch事件时把软键盘和输入菜单隐藏
@@ -991,22 +1106,24 @@ public class ECMChatInputMenu extends LinearLayout {
             public boolean onTouch(View v, MotionEvent event) {
                 hideVoiceInputLayout();
                 if (addMenuLayout.getVisibility() != View.GONE) {
-                    addMenuLayout.setVisibility(View.GONE);
+                    hideAddMenuLayout();
                 }
                 InputMethodUtils.hide((Activity) getContext());
                 return false;
             }
         });
+        if (listContentView != null) {
+            listContentView.setOnTouchListener(new OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    hideVoiceInputLayout();
+                    hideAddMenuLayout();
+                    InputMethodUtils.hide((Activity) getContext());
+                    return false;
+                }
+            });
+        }
 
-        listContentView.setOnTouchListener(new OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                hideVoiceInputLayout();
-                hideAddMenuLayout();
-                InputMethodUtils.hide((Activity) getContext());
-                return false;
-            }
-        });
     }
 
     public void setChatInputMenuListener(
@@ -1036,10 +1153,6 @@ public class ECMChatInputMenu extends LinearLayout {
         return addMenuLayout.isShown();
     }
 
-    public boolean isVoiceInputLayoutShow() {
-        return voiceInputLayout.isShown();
-    }
-
     public void setAddMenuLayoutShow(boolean isShow) {
         if (isShow) {
             int softInputHeight = InputMethodUtils.getSupportSoftInputHeight((Activity) getContext());
@@ -1051,14 +1164,20 @@ public class ECMChatInputMenu extends LinearLayout {
             addMenuLayout.getLayoutParams().height = softInputHeight;
             addMenuLayout.setVisibility(View.VISIBLE);
         } else if (addMenuLayout.isShown()) {
-            addMenuLayout.setVisibility(View.GONE);
+            hideAddMenuLayout();
             InputMethodUtils.display((Activity) getContext(), inputEdit, 0);
+            emotionBtn.setImageResource(R.drawable.ic_chat_btn_emotion);
         }
 
     }
 
+    public boolean isVoiceInputLayoutShow() {
+        return voiceInputLayout.isShown();
+    }
+
     public void hideAddMenuLayout() {
         addMenuLayout.setVisibility(View.GONE);
+        emotionBtn.setImageResource(R.drawable.ic_chat_btn_emotion);
     }
 
     public void hideVoiceInputLayout() {
@@ -1146,6 +1265,7 @@ public class ECMChatInputMenu extends LinearLayout {
                     LanguageManager.getInstance().setVoiceInputLanguage("en");
                 }
                 voice2StringMessageUtils.setLanguage(LanguageManager.getInstance().getVoiceInputLanguage());
+                voice2StringMessageUtils.setNeedChangeLanguage(true);
                 dialog.dismiss();
             }
         };
@@ -1173,5 +1293,30 @@ public class ECMChatInputMenu extends LinearLayout {
         void onVideoCommucaiton();//视频通话
 
         void onChatDraftsClear();
+
+        void onNoSmallWindowPermission();
+    }
+
+    class OnEmotionItemClickListener implements AdapterView.OnItemClickListener {
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            String filename = (parent.getId() == R.id.emotion_recent_grid ?
+                    emotionRecentAdapter.getItem(position) : emotionAdapter.getItem(position));
+            int selectionStart = inputEdit.getSelectionStart();// 获取光标的位置
+            try {
+                Class clz = Class.forName("com.inspur.emmcloud.ui.chat.emotion.EmotionUtil");
+                Field field = clz.getField(filename);
+                Spannable span = EmotionUtil.getInstance(getContext()).getSmiledText((String) field.get(null), inputEdit.getTextSize());
+                if (selectionStart < 0 || selectionStart >= inputEdit.length()) {
+                    inputEdit.getEditableText().append(span);
+                } else {
+                    inputEdit.getEditableText().insert(selectionStart, span);
+                }
+                EmotionRecentManager.getInstance(getContext()).addItem(filename);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

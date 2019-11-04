@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import com.huawei.hms.support.api.push.PushReceiver;
 import com.inspur.emmcloud.baselib.router.Router;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.ClientIDUtils;
@@ -45,6 +46,7 @@ public class HuaWeiPushReceiver extends PushReceiver {
      */
     @Override
     public boolean onPushMsg(Context context, byte[] msg, Bundle bundle) {
+        LogUtils.YfcDebug("收到华为透传消息" + new String(msg));
         ECMTransparentUtils.handleTransparentMsg(context, msg);
         return false;
     }

@@ -80,6 +80,7 @@
     <string name="upgrade_install_now">立即安裝</string>
     <string name="upgrade_install_next_time">下次安裝</string>
     <string name="try_again">再試一次</string>
+    <string name="you">你</string>
 
 
     <!-- 公共部分 -->
@@ -178,6 +179,7 @@
     <string name="login_hint_text">用戶名/郵箱/手機號</string>
     <string name="channel_set_sticky">置頂聊天</string>
     <string name="modify_group_name">群名片</string>
+    <string name="channel_single_chat_images">聊天圖片</string>
     <string name="channel_single_chat_files">文件</string>
     <string name="channel_search_more_group_members">查看更多群成員</string>
     <string name="choose_common_office">常用辦公地點</string>
@@ -313,8 +315,9 @@
     <string name="dismiss_group">解散群組</string>
     <string name="quit_group_warning_text">確定要退出群组？</string>
     <string name="dismiss_group_warning_text">解散群組後，將會删除群內所有的聊天記錄和檔案等資訊</string>
+    <string name="quit_dismiss_group">刪除並退出</string>
     <string name="chat_stick_on_top">置頂</string>
-    <string name="chat_remove">移除</string>
+    <string name="chat_remove">隱藏</string>
     <string name="chat_remove_from_top">取消置頂</string>
     <string name="no_chat_content">暫無聊天內容</string>
     <string name="msg_key_search_member">請輸入關鍵字</string>
@@ -322,6 +325,12 @@
     <string name="chat_conversation_unread_count">%1$d條新消息</string>
     <string name="chat_long_click_copy">複製</string>
     <string name="chat_long_click_transmit">轉發</string>
+    <string name="chat_long_click_recall">撤回</string>
+    <string name="chat_info_message_status_recall">%1$s撤回了一條消息</string>
+    <string name="recall_fail_for_timeout">發送時間超過2分鐘的消息，不能被撤回。</string>
+    <string name="recall_message_fail">消息撤回失敗</string>
+    <string name="message_has_been_recalled">此消息已撤回</string>
+    <string name="message_get_fail">消息獲取失敗</string>
     <string name="chat_long_click_schedule">添加到日程</string>
     <string name="chat_long_click_copy_text">複製文字</string>
     <string name="communication_search">搜索</string>
@@ -344,6 +353,13 @@
     <string name="chat_group_qr_code_share">分享二維碼</string>
     <string name="chat_group_welcome_join_group">歡迎進入%1$s群</string>
     <string name="chat_conversation_create_error">創建群組失敗</string>
+    <string name="chat_emotion_recent_tip">最近使用</string>
+    <string name="chat_emotion_total_tip">所有表情</string>
+    <string name="chat_filemanager_native">本地文件</string>
+    <string name="chat_filemanager_volume">企業雲盤</string>
+    <!--语音通话提示-->
+    <string name="voice_communication_end">聊天已結束</string>
+
     <!-- 會議卡片 -->
     <string name="meeting_has_confirmed">已確認</string>
     <string name="meeting_has_refused">已拒絕</string>
@@ -1272,6 +1288,7 @@
     <string name="share_no_more_than_five">不能上傳多於5個文件</string>
     <string name="share_no_share_way">沒有能够分享的管道</string>
     <string name="share_to_channel">發送到頻道</string>
+    <string name="share_to_chat">發送到聊天</string>
     <string name="share_upload_volume">上傳到雲盤</string>
     <string name="share_no_suffix">不支持分享無后綴名的檔案</string>
     <string name="share_has_not_exist_file">您分享的檔案中有不存在的檔案，請檢查</string>
@@ -1299,6 +1316,7 @@
     <string name="voice_communication_voice_busy_tip">正在語音通話，請稍後再試</string>
     <string name="voice_communication_quality">當前通話品質不佳</string>
     <string name="voice_communication_support_nine_members">雲+現時支持九人語音</string>
+    <string name="voice_communication_more_than_two">語音通話用戶數不能少於2個。</string>
 
     <string name="error_no_sdcard">沒有SD卡，無法存儲錄音數據</string>
     <string name="error_state_record">正在錄音中，請先停止錄音</string>
@@ -1310,7 +1328,7 @@
     <string name="voice_word_tran">正在語音轉文字</string>
     <string name="voice_word_setting">語音自動識別</string>
     <string name="voice_audio_record_unavailiable">當前錄音設備不可用，請檢查錄音許可權是否開啟</string>
-    <string name="voice_to_word">轉文字</string>
+    <string name="voice_to_word">轉換為文字（僅普通話）</string>
     <!--语音输入改造-->
     <string name="voice_input_language_mandarin">普通話</string>
     <string name="voice_input_language_cantonese">粵語</string>
@@ -1320,6 +1338,9 @@
     <string name="voice_input_tip_speak">按下説話</string>
     <string name="voice_input_clear">清空</string>
     <string name="communication_has_leave">已掛斷</string>
+    <string name="voice_communication_notification_group_title">語音通話</string>
+    <string name="voice_communication_notification_group_content">點擊恢復</string>
+    <string name="voice_communication_notification_content">語音通話中，輕觸以繼續</string>
 
     <string name="notification_switch">新消息通知</string>
 
@@ -1332,6 +1353,8 @@
     <string name="permission_grant_fail">您已禁止授予%1$s %2$s許可權</string>
     <string name="permission_grant_window_alert">請您授予%1$s懸浮窗許可權</string>
     <string name="permission_grant_window_fail">您已禁止授予%1$s懸浮窗許可權</string>
+    <string name="permission_grant_background_start">請您授予%1$s後臺彈出介面許可權</string>
+    <string name="permission_grant_background_start_fail">您已禁止授予%1$s後臺彈出介面許可權</string>
 
     <string name="permission_open_cloud_plus">開啟%1$s</string>
     <string name="permission_necessary_permission">為了您能正常使用%1$s，需要以下許可權</string>

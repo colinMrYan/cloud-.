@@ -75,6 +75,11 @@ public class LargeImageView extends View implements BlockImageLoader.OnImageLoad
     private AccelerateInterpolator accelerateInterpolator;
     private DecelerateInterpolator decelerateInterpolator;
 
+    @Override
+    public int getDrawingCacheQuality() {
+        return super.getDrawingCacheQuality();
+    }
+
     private Drawable originDrawable;
 
     private boolean isAttachedWindow;
@@ -523,7 +528,11 @@ public class LargeImageView extends View implements BlockImageLoader.OnImageLoad
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        drawCanvas(canvas);
+        try {
+            drawCanvas(canvas);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void drawCanvas(Canvas canvas) {

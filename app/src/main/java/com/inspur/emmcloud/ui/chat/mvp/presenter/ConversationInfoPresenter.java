@@ -55,16 +55,17 @@ public class ConversationInfoPresenter extends BasePresenter<ConversationInfoCon
         /**
          * 过滤不存在的群成员算法
          */
-        //查三十人，如果不满三十人则查实际人数保证查到的人都是存在的群成员
+        //查实际人数保证查到的人都是存在的群成员
+        Boolean isOwner = conversation.getOwner().equals(BaseApplication.getInstance().getUid());
         List<String> conversationMembersList = conversation.getMemberList();
         List<String> uiMemberUidList = new ArrayList<>();
-        List<ContactUser> contactUserList = ContactUserCacheUtils.getContactUserListByIdListOrderBy(conversationMembersList, 13);
+        List<ContactUser> contactUserList = ContactUserCacheUtils.getContactUserListByIdListOrderBy(conversationMembersList, isOwner ? 43 : 44);
         ArrayList<String> contactUserIdList = new ArrayList<>();
         for (ContactUser contactUser : contactUserList) {
             contactUserIdList.add(contactUser.getId());
         }
         uiMemberUidList.addAll(contactUserIdList);
-        if (conversation.getOwner().equals(BaseApplication.getInstance().getUid())) {
+        if (isOwner) {
             uiMemberUidList.add("addUser");
             uiMemberUidList.add("deleteUser");
         } else {
@@ -234,6 +235,49 @@ public class ConversationInfoPresenter extends BasePresenter<ConversationInfoCon
                         oauthCallBack, requestTime);
             }
         }, uidList, conversationId);
+    }
+
+    @Override
+    public void updateSearchMoreState() {
+        Boolean isOwner = mConversation.getOwner().equals(BaseApplication.getInstance().getUid());
+        boolean isShowMoreMember = getConversationRealMemberSize() > (isOwner ? 43 : 44);
+        mView.updateMoreMembers(isShowMoreMember);
+    }
+
+    @Override
+    public void getConversationInfo(final String cid) {
+        String completeUrl = ApiUrl.getQuitChannelGroupUrl(cid);
+        ApiServiceImpl.getInstance().getConversationInfo(new BaseModuleAPICallback(mView.getContext(), completeUrl) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                JSONObject object = JSONUtils.getJSONObject(new String(arg0));
+                mConversation = new Conversation(object);
+                mView.initView(mConversation);
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                mConversation = ConversationCacheUtils.getConversation(MyApplication.getInstance(), cid);
+                mView.initView(mConversation);
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getConversationInfo(cid);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                ApiServiceImpl.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+        }, cid);
     }
 
     @Override

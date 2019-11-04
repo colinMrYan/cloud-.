@@ -133,6 +133,19 @@ public class MediaPlayerManagerUtils {
      */
     public void play(int rawResId, PlayCallback callback) {
         String rawFileUri = "android.resource://" + MyApplication.getInstance().getPackageName() + "/" + rawResId;
+        setMediaPlayerLooping(false);
+        play(rawFileUri, callback);
+    }
+
+    /**
+     * 播放音乐
+     *
+     * @param rawResId raw目录下的文件id
+     * @param callback
+     */
+    public void play(int rawResId, PlayCallback callback, boolean isLooping) {
+        String rawFileUri = "android.resource://" + MyApplication.getInstance().getPackageName() + "/" + rawResId;
+        setMediaPlayerLooping(isLooping);
         play(rawFileUri, callback);
     }
 

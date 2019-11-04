@@ -494,9 +494,17 @@ public class StringUtils {
      * @return
      */
     public static Spanned getHtmlString(String content, String keyWordsColor, String keyWords) {
-        String htmlKeyWords = "<font color='" + keyWordsColor + "'>" + keyWords + "</font>";
-        content = content.replace(keyWords, htmlKeyWords);
-        return Html.fromHtml(content);
+        String lowerCaseLetterKeyWords = keyWords.toLowerCase();
+        String lowerCaseLetterContent = content.toLowerCase();
+        int indexContent = lowerCaseLetterContent.indexOf(lowerCaseLetterKeyWords);
+        int lastIndex = indexContent + keyWords.length();
+        String newKeyWords = content.substring(indexContent, lastIndex);
+        String htmlKeyWords = "<font color='" + keyWordsColor + "'>" + newKeyWords + "</font>";
+        String startStr = "";
+        startStr = content.substring(0, indexContent);
+        String endStr = content.substring(lastIndex);
+        String resultData = startStr + htmlKeyWords + endStr;
+        return Html.fromHtml(resultData);
     }
 
 

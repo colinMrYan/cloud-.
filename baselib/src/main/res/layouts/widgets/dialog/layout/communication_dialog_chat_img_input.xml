@@ -9,7 +9,5 @@
     <com.inspur.emmcloud.widget.ECMChatInputMenuImgComment
         android:id="@+id/chat_input_menu"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></com.inspur.emmcloud.widget.ECMChatInputMenuImgComment>
-
-
+        android:layout_height="wrap_content" />
 </LinearLayout>

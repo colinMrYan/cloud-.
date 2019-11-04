@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
@@ -160,7 +161,9 @@ public class FileTransferService extends ImpPlugin {
                         fileDownloadDlg.dismiss();
                     }
                     if (!StrUtil.strIsNotNull(saveFileCallBack)) {
-                        new FileOpen(getActivity(), reallyPath, fileType).showOpenDialog();
+                        if (getActivity() != null) {
+                            new FileOpen(getActivity(), reallyPath, fileType).showOpenDialog();
+                        }
                     }
                     fileInfo = (String) msg.obj;
                     getActivity().runOnUiThread(new Runnable() {
@@ -637,6 +640,10 @@ public class FileTransferService extends ImpPlugin {
             //替换空格
             url = new URL(urlString);
             urlConnection = (HttpURLConnection) url.openConnection();
+            String cookie = PreferencesUtils.getString(getFragmentContext(), "web_cookie", "");
+            if (!StringUtils.isBlank(cookie)) {
+                urlConnection.setRequestProperty("Cookie", cookie);
+            }
             String filename = getFileName(urlConnection);
             filename = URLDecoder.decode(filename, "UTF-8");   //防止文件名乱码
             String[] array = filename.split("\\.");

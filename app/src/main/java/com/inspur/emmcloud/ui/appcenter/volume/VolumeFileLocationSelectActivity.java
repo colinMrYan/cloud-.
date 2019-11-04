@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 
 /**
@@ -125,6 +126,7 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
         locationSelectToBtn.setVisibility(shareUriList.size() > 0 ? View.GONE : View.VISIBLE);
     }
 
+    @OnClick({R.id.btn_location_select_to, R.id.btn_location_select_upload_to})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ibt_back:
@@ -220,7 +222,6 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_MOVE_FILE || requestCode == REQUEST_COPY_FILE) {
                 setResult(RESULT_OK);
