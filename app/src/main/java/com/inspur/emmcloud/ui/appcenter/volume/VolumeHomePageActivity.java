@@ -48,7 +48,6 @@ import butterknife.ButterKnife;
  * 云盘首页
  */
 public class VolumeHomePageActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener {
-
     @BindView(R.id.refresh_layout)
     SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.list)
