@@ -93,6 +93,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
     public static final String EXTRA_TYPE = "select_content";
     public static final String EXTRA_CONTAIN_ME = "isContainMe";
     public static final String EXTRA_HAS_SELECT = "hasSearchResult";
+    public static final String EXTRA_HAS_SELECT_STATIC = "hasSearchResultStatic";
     public static final String EXTRA_EXCLUDE_SELECT = "excludeContactUidList";
     public static final String EXTRA_LIMIT = "select_limit";
     public static final String EXTRA_SHOW_COMFIRM_DIALOG = "show_sure_dialog";
@@ -156,6 +157,9 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
     private long lastSearchTime = 0L;
     private List<String> excludeContactUidList = new ArrayList<>();
     private List<Contact> excludeContactList = new ArrayList<>();//不显示某些数据
+    private List<String> selectStaticContactUidList = new ArrayList<>();
+    private List<Contact> selectStaticContactList = new ArrayList<>();//显示灰色选中
+    private List<SearchModel> selectStaticSearchModelList = new ArrayList<>();//显示灰色选中
     private long lastBackTime;
     private int selectLimit = 5000;
 
@@ -288,7 +292,16 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
             if (intent.hasExtra(EXTRA_EXCLUDE_SELECT)) {
                 excludeContactUidList = (List<String>) intent.getExtras().getSerializable(EXTRA_EXCLUDE_SELECT);
                 excludeContactList = Contact.contactUserList2ContactList(ContactUserCacheUtils.getContactUserListById(excludeContactUidList));
+            }
 
+            if (intent.hasExtra(EXTRA_HAS_SELECT_STATIC)) {
+                selectStaticContactUidList = (List<String>) intent.getExtras().getSerializable(EXTRA_HAS_SELECT_STATIC);
+                selectStaticContactList = Contact.contactUserList2ContactList(ContactUserCacheUtils.getContactUserListById(selectStaticContactUidList));
+                if (selectStaticContactList != null && selectStaticContactList.size() > 0) {
+                    for (int i = 0; i < selectStaticContactList.size(); i++) {
+                        selectStaticSearchModelList.add(selectStaticContactList.get(i).contact2SearchModel());
+                    }
+                }
             }
             if (intent.hasExtra(EXTRA_SHOW_COMFIRM_DIALOG)) {
                 isShowConfirmDialog = true;
@@ -409,6 +422,10 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
             public boolean onItemLongClick(AdapterView<?> parent, View view,
                                            int position, long id) {
                 // TODO Auto-generated method stub
+                SearchModel searchModel = commonContactList.get(position);
+                if (selectStaticSearchModelList.contains(searchModel)) {
+                    return true;
+                }
                 showRecentChannelOperationDlg(position);
                 return true;
             }
@@ -589,6 +606,9 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                 CommonContactCacheUtils.saveCommonContact(
                         getActivity().getApplicationContext(), searchModel);
                 checkInfoOrEnterChannel(searchModel);
+                return;
+            }
+            if (selectStaticContactList.contains(searchModel)) {
                 return;
             }
             if (!selectMemList.contains(searchModel)) {
@@ -1442,12 +1462,18 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
 
             if (searchModel != null) {
                 displayImg(searchModel, viewHolder.photoImg);
-                if (selectMemList.contains(searchModel)) {
+                if (selectStaticSearchModelList.contains(searchModel)) {
+                    viewHolder.selectedImg.setImageResource(R.drawable.icon_self_selected);
                     viewHolder.selectedImg.setVisibility(View.VISIBLE);
                     viewHolder.nameText.setTextColor(Color.parseColor("#0f7bca"));
                 } else {
-                    viewHolder.selectedImg.setVisibility(View.INVISIBLE);
-                    viewHolder.nameText.setTextColor(Color.parseColor("#030303"));
+                    if (selectMemList.contains(searchModel)) {
+                        viewHolder.selectedImg.setVisibility(View.VISIBLE);
+                        viewHolder.nameText.setTextColor(Color.parseColor("#0f7bca"));
+                    } else {
+                        viewHolder.selectedImg.setVisibility(View.INVISIBLE);
+                        viewHolder.nameText.setTextColor(Color.parseColor("#030303"));
+                    }
                 }
 
             }
@@ -1498,15 +1524,20 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
             SearchModel searchModel = commonContactList.get(position);
             viewHolder.nameText.setText(getCompleteName(searchModel));
             displayImg(searchModel, viewHolder.photoImg);
-            if (selectMemList.contains(searchModel)) {
+            if (selectStaticSearchModelList.contains(searchModel)) {                /**如果有静态不可操作人员先处理 选中时为灰色 √ **/
+                viewHolder.selectedImg.setImageResource(R.drawable.icon_self_selected);
                 viewHolder.selectedImg.setVisibility(View.VISIBLE);
                 viewHolder.nameText.setTextColor(Color.parseColor("#0f7bca"));
             } else {
-                viewHolder.selectedImg.setVisibility(View.INVISIBLE);
-                viewHolder.nameText.setTextColor(Color.parseColor("#030303"));
+                if (selectMemList.contains(searchModel)) {
+                    viewHolder.selectedImg.setVisibility(View.VISIBLE);
+                    viewHolder.nameText.setTextColor(Color.parseColor("#0f7bca"));
+                } else {
+                    viewHolder.selectedImg.setVisibility(View.INVISIBLE);
+                    viewHolder.nameText.setTextColor(Color.parseColor("#030303"));
+                }
             }
             CommunicationUtils.setUserDescText(searchModel, viewHolder.descTv, true);
-
             return convertView;
         }
     }
