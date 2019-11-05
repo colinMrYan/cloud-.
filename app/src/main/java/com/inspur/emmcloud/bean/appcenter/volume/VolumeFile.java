@@ -69,6 +69,8 @@ public class VolumeFile implements Serializable {
     private String path = "";
     @Column(name = "downloadProgress")
     private int downloadProgress = -1;
+    @Column(name = "volumeFileAbsolutePath")
+    private String volumeFileAbsolutePath = "";
     private String localFilePath = "";
     private Map<String, Integer> groupPrivilegeMap = new HashMap<>();
     public VolumeFile() {
@@ -299,6 +301,14 @@ public class VolumeFile implements Serializable {
 
     public void setDownloadProgress(int downloadProgress) {
         this.downloadProgress = downloadProgress;
+    }
+
+    public String getVolumeFileAbsolutePath() {
+        return volumeFileAbsolutePath;
+    }
+
+    public void setVolumeFileAbsolutePath(String volumeFileAbsolutePath) {
+        this.volumeFileAbsolutePath = volumeFileAbsolutePath;
     }
 
     public boolean equals(Object other) { // 重写equals方法，后面最好重写hashCode方法

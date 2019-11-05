@@ -526,8 +526,6 @@ public class ConversationActivity extends ConversationBaseActivity {
     }
 
 
-
-
     /**
      * 初始化消息列表UI
      */
@@ -574,7 +572,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             @Override
             public void onCardItemClick(View view, UIMessage uiMessage) {
                 if (StringUtils.isBlank(uiMessage.getMessage().getRecallFrom()) && uiMessage.getSendStatus() == 1) {
-                    CardClickOperation(ConversationActivity.this, view, uiMessage);
+                    ConversationActivity.this.onCardItemClick(ConversationActivity.this, view, uiMessage);
                 }
             }
 
@@ -1580,7 +1578,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             operationIdList.add(R.string.chat_resend_message);
             operationIdList.add(R.string.delete);
         } else if (uiMessage.getSendStatus() == Message.MESSAGE_SEND_ING) {
-            // operationIdList.add(R.string.delete);
+            operationIdList.add(R.string.delete);
         } else if (uiMessage.getSendStatus() == Message.MESSAGE_SEND_SUCCESS) {
             switch (type) {
                 case Message.MESSAGE_TYPE_TEXT_PLAIN:
@@ -1626,7 +1624,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     /**
      * Card 点击事件 及处理
      */
-    private void CardClickOperation(final Context context, View view, final UIMessage uiMessage) {
+    private void onCardItemClick(final Context context, View view, final UIMessage uiMessage) {
         Message message = uiMessage.getMessage();
         int messageSendStatus = uiMessage.getSendStatus();
         Bundle bundle = new Bundle();
@@ -1762,7 +1760,12 @@ public class ConversationActivity extends ConversationBaseActivity {
                         resendMessage(uiMessage);
                         break;
                     case R.string.delete:
-                        removeSendFailMessage(uiMessage);
+                        if (uiMessage.getSendStatus() == Message.MESSAGE_SEND_FAIL) {
+                            removeSendFailMessage(uiMessage);
+                        } else {
+                            recallSendingMessage(uiMessage);
+                        }
+
                         break;
                 }
                 mPopupWindowList.hide();
@@ -1801,6 +1804,11 @@ public class ConversationActivity extends ConversationBaseActivity {
         }
         MessageCacheUtil.deleteMessageById(uiMessage.getId());
         notifyCommucationFragmentMessageSendStatus();
+    }
+
+    private void recallSendingMessage(UIMessage uiMessage) {
+        MessageSendManager.getInstance().recallSendingMessage(uiMessage.getMessage());
+        removeSendFailMessage(uiMessage);
     }
 
     private String uiMessage2Content(UIMessage uiMessage) {

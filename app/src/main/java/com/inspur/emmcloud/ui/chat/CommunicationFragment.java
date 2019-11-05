@@ -974,7 +974,7 @@ public class CommunicationFragment extends BaseFragment {
                 String content = eventMessage.getContent();
                 JSONObject contentObj = JSONUtils.getJSONObject(content);
                 Message receivedWSMessage = new Message(contentObj);
-                MessageSendManager.getInstance().removeMessageInSendRetry(receivedWSMessage);
+                MessageSendManager.getInstance().onMessageSendSuccess(receivedWSMessage);
                 //验重处理
                 if (MessageCacheUtil.getMessageByMid(MyApplication.getInstance(), receivedWSMessage.getId()) == null) {
                     if (MyApplication.getInstance().getCurrentChannelCid().equals(receivedWSMessage.getChannel())) {
