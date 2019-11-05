@@ -51,6 +51,7 @@ import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
+import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetVoiceAndVideoResult;
 import com.inspur.emmcloud.bean.chat.GetVoiceCommunicationResult;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationAudioVolumeInfo;
@@ -176,6 +177,10 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
      * 云+的Id
      */
     private String cloudPlusChannelId = "";
+    /**
+     * 指明发起此会话的channel是单聊还是群聊
+     */
+    private String directOrGroupType = "";
     /**
      * 会话类型 VOICE_CALL或者VIDEO_CALL
      */
@@ -309,6 +314,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     private void init() {
         cloudPlusChannelId = getIntent().getStringExtra(ConversationActivity.CLOUD_PLUS_CHANNEL_ID);
         communicationType = getIntent().getStringExtra(VOICE_VIDEO_CALL_TYPE);
+        directOrGroupType = new Conversation(cloudPlusChannelId).getType();
         //如果是邀请者能收到从外面传进来的人员列表
         List<VoiceCommunicationJoinChannelInfoBean> list = (List<VoiceCommunicationJoinChannelInfoBean>) getIntent().getSerializableExtra("userList");
         if (list != null) {
