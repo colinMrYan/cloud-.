@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:ignore="MissingDefaultResource">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -72,7 +74,8 @@
             android:layout_gravity="center_vertical"
             android:gravity="center"
             android:orientation="horizontal"
-            android:padding="15dp">
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp">
 
             <com.inspur.emmcloud.baselib.widget.progressbar.CircleProgressBar
                 android:id="@+id/volume_file_transfer_item_progressBar"

@@ -3,6 +3,7 @@ package com.inspur.emmcloud.bean.appcenter.volume;
 import com.alibaba.fastjson.TypeReference;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.widget.progressbar.CircleProgressBar;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 
 import org.json.JSONObject;
@@ -67,10 +68,11 @@ public class VolumeFile implements Serializable {
     private String owner = "";
     @Column(name = "path")
     private String path = "";
-    @Column(name = "downloadProgress")
-    private int downloadProgress = -1;
+    @Column(name = "progress")
+    private int progress = 0;
     private String localFilePath = "";
     private Map<String, Integer> groupPrivilegeMap = new HashMap<>();
+
     public VolumeFile() {
     }
 
@@ -113,6 +115,7 @@ public class VolumeFile implements Serializable {
         volumeFile.setCreationDate(time);
         volumeFile.setName(filename);
         volumeFile.setStatus(volumeFileUpload.getStatus());
+        volumeFile.setProgress(volumeFileUpload.getProgress());
         volumeFile.setVolume(volumeFileUpload.getVolumeId());
         volumeFile.setFormat(FileUtils.getMimeType(filename));
         volumeFile.setSize(FileUtils.getFileSize(volumeFileUpload.getLocalFilePath()));
@@ -293,12 +296,40 @@ public class VolumeFile implements Serializable {
         this.groups = groups;
     }
 
-    public int getDownloadProgress() {
-        return downloadProgress;
+    public int getProgress() {
+        return progress;
     }
 
-    public void setDownloadProgress(int downloadProgress) {
-        this.downloadProgress = downloadProgress;
+    public void setProgress(int progress) {
+        this.progress = progress;
+    }
+
+    public CircleProgressBar.Status transfer2ProgressStatus(String status) {
+        CircleProgressBar.Status pbStatus = CircleProgressBar.Status.Starting;
+        switch (status) {
+            case STATUS_NORMAL:
+                pbStatus = CircleProgressBar.Status.Starting;
+                break;
+            case STATUS_UPLOAD_IND:
+                pbStatus = CircleProgressBar.Status.Uploading;
+                break;
+            case STATUS_DOWNLOAD_IND:
+                pbStatus = CircleProgressBar.Status.Downloading;
+                break;
+            case STATUS_UPLOAD_FAIL:
+            case STATUS_DOWNLOAD_FAIL:
+                pbStatus = CircleProgressBar.Status.End;
+                break;
+            case STATUS_UPLOAD_PAUSE:
+            case STATUS_DOWNLOAD_PAUSE:
+                pbStatus = CircleProgressBar.Status.Pause;
+                break;
+            default:
+                pbStatus = CircleProgressBar.Status.Starting;
+                break;
+        }
+
+        return pbStatus;
     }
 
     public boolean equals(Object other) { // 重写equals方法，后面最好重写hashCode方法

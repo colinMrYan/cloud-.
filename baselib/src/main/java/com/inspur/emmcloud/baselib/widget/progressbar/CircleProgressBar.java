@@ -29,7 +29,6 @@ public class CircleProgressBar extends ProgressBar {
     private Path mPath;
     private int mRadius = DensityUtil.dip2px(13);
 
-
     public CircleProgressBar(Context context) {
         this(context, null);
     }
@@ -108,7 +107,7 @@ public class CircleProgressBar extends ProgressBar {
         // draw reached bar
         mPaint.setColor(mReachedBarColor);
         mPaint.setStrokeWidth(mReachedProgressBarHeight);
-        float sweepAngle = getProgress() * 1.0f / getMax() * 360 - 90;
+        float sweepAngle = getProgress() * 1.0f / getMax() * 360;
         canvas.drawArc(new RectF(0, 0, mRadius * 2, mRadius * 2), -90,
                 sweepAngle, false, mPaint);
         canvas.restore();

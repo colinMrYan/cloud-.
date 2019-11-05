@@ -11,7 +11,9 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.progressbar.CircleProgressBar;
+import com.inspur.emmcloud.basemodule.util.ClickRuleUtil;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
@@ -50,12 +52,14 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         VolumeFile volumeFile = fileList.get(position);
+        holder.itemView.setTag(position);
         //显示图标
         showVolumeFileTypeImg(holder.icon, volumeFile);
         holder.nameTv.setText(volumeFile.getName());
         showVolumeFileDesc(holder.descTv, volumeFile);
-        showVolumeFileSpeed(holder.speedTv, holder.progressBar, volumeFile);
-        holder.statusLayout.setOnClickListener(new OnClickListener(volumeFile, position, holder.progressBar));
+        holder.progressBar.setProgress(volumeFile.getProgress());
+        showVolumeFileSpeed(holder, volumeFile);
+        holder.statusLayout.setOnClickListener(new OnClickListener(position));
     }
 
     @Override
@@ -85,6 +89,12 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
         imageView.setImageResource(fileIconResId);
     }
 
+    /**
+     * 文件描述  正在等待 or 文件大小
+     *
+     * @param descTv
+     * @param volumeFile
+     */
     private void showVolumeFileDesc(TextView descTv, VolumeFile volumeFile) {
         if (volumeFile.getStatus().equals(VolumeFile.STATUS_UPLOAD_PAUSE) || volumeFile.getStatus().equals(VolumeFile.STATUS_DOWNLOAD_PAUSE)) {
             descTv.setText(R.string.volume_file_transfer_list_wait_tip);
@@ -93,32 +103,44 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
         }
     }
 
-    private void showVolumeFileSpeed(final TextView speedTv, final CircleProgressBar progressBar, final VolumeFile volumeFile) {
+    private void showVolumeFileSpeed(final ViewHolder holder, final VolumeFile volumeFile) {
+        holder.progressBar.setStatus(volumeFile.transfer2ProgressStatus(volumeFile.getStatus()));
+        if (volumeFile.getProgress() == -1) {
+            holder.progressBar.setProgress(0);
+        } else {
+            holder.progressBar.setProgress(volumeFile.getProgress());
+        }
         if (volumeFile.getStatus().equals(VolumeFile.STATUS_UPLOAD_IND)) {
-            speedTv.setVisibility(View.VISIBLE);
+            holder.speedTv.setVisibility(View.VISIBLE);
+            holder.speedTv.setText("10 K/S");
+            Log.d("zhang", "showVolumeFileSpeed: 10K/S");
             VolumeFileUploadManager.getInstance().setBusinessProgressCallback(volumeFile, new ProgressCallback() {
                 @Override
                 public void onSuccess(VolumeFile volumeFile) {
-                    progressBar.setStatus(CircleProgressBar.Status.End);
+                    holder.progressBar.setStatus(CircleProgressBar.Status.End);
                 }
 
                 @Override
                 public void onLoading(int progress, String uploadSpeed) {
                     if (volumeFile.getStatus().equals(VolumeFile.STATUS_UPLOAD_IND)) {
-                        speedTv.setText(uploadSpeed);
+                        if (!StringUtils.isBlank(uploadSpeed)) {
+                            holder.speedTv.setText(uploadSpeed);
+                        }
                     }
-                    Log.d("zhang", "onLoading: progress = " + progress);
-                    progressBar.setStatus(CircleProgressBar.Status.Uploading);
-                    progressBar.setProgress(progress);
+                    Log.d("zhang", "onLoading: progress = " + progress
+                            + ",uploadSpeed = " + uploadSpeed + ",status = " + volumeFile.getStatus());
+                    if (progress > 0) {
+                        holder.progressBar.setProgress(progress);
+                    }
                 }
 
                 @Override
                 public void onFail() {
-
+                    holder.progressBar.setStatus(CircleProgressBar.Status.End);
                 }
             });
         } else {
-            speedTv.setVisibility(View.GONE);
+            holder.speedTv.setVisibility(View.GONE);
         }
     }
 
@@ -147,40 +169,43 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
     }
 
     class OnClickListener implements View.OnClickListener {
-        private VolumeFile volumeFile;
         private int position;
-        private CircleProgressBar progressBar;
 
-        public OnClickListener(VolumeFile volumeFile, int position, CircleProgressBar progressBar) {
-            this.volumeFile = volumeFile;
+        public OnClickListener(int position) {
             this.position = position;
-            this.progressBar = progressBar;
         }
 
         @Override
         public void onClick(View v) {
+            if (ClickRuleUtil.isFastClick()) {
+                return;
+            }
             switch (v.getId()) {
                 case R.id.volume_file_transfer_item_status:
-                    String status = volumeFile.getStatus();
-                    if (status.equals(VolumeFile.STATUS_UPLOAD_IND)) {
-                        //点击上传
-                        fileList.get(position).setStatus(VolumeFile.STATUS_UPLOAD_PAUSE);
-                        progressBar.setStatus(CircleProgressBar.Status.Pause);
-                        VolumeFileUploadManager.getInstance().pauseVolumeFileUploadService(volumeFile);
-                    } else if (status.equals(VolumeFile.STATUS_UPLOAD_PAUSE)) {
-                        fileList.get(position).setStatus(VolumeFile.STATUS_UPLOAD_IND);
-                        progressBar.setStatus(CircleProgressBar.Status.Uploading);
-                        VolumeFileUploadManager.getInstance().reUploadFile(volumeFile);
-                    } else if (status.equals(VolumeFile.STATUS_DOWNLOAD_IND)) {
-                        //点击下载中
-                        fileList.get(position).setStatus(VolumeFile.STATUS_DOWNLOAD_PAUSE);
-                        progressBar.setStatus(CircleProgressBar.Status.Pause);
-                    } else if (status.equals(VolumeFile.STATUS_NORMAL)) {
-
-                    }
+                    changeStatus();
+                    notifyItemChanged(position);
                     break;
                 default:
                     break;
+            }
+        }
+
+        private void changeStatus() {
+            VolumeFile volumeFile = fileList.get(position);
+            String status = volumeFile.getStatus();
+            if (status.equals(VolumeFile.STATUS_UPLOAD_IND)) {
+                //暂停上传
+                fileList.get(position).setStatus(VolumeFile.STATUS_UPLOAD_PAUSE);
+                VolumeFileUploadManager.getInstance().pauseVolumeFileUploadService(volumeFile);
+            } else if (status.equals(VolumeFile.STATUS_UPLOAD_PAUSE)) {
+                //开始上传
+                fileList.get(position).setStatus(VolumeFile.STATUS_UPLOAD_IND);
+                VolumeFileUploadManager.getInstance().reUploadFile(volumeFile);
+            } else if (status.equals(VolumeFile.STATUS_DOWNLOAD_IND)) {
+                //点击下载中
+                fileList.get(position).setStatus(VolumeFile.STATUS_DOWNLOAD_PAUSE);
+            } else if (status.equals(VolumeFile.STATUS_NORMAL)) {
+
             }
         }
     }
