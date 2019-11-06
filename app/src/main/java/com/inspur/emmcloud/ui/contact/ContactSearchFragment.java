@@ -295,7 +295,6 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                     }
                 }
             }
-
             if (intent.hasExtra(EXTRA_SHOW_COMFIRM_DIALOG)) {
                 isShowConfirmDialog = true;
             }
