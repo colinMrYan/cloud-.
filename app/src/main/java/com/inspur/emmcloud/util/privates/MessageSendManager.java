@@ -40,10 +40,12 @@ public class MessageSendManager {
     private final int interval = 5000;
     //    private OnMessageSendStatusListener onMessageSendStatusListener;
     private List<Message> messageListInSendRetry = new ArrayList<>();
+    private List<Message> recallSendingMessageList = new ArrayList<>();
     private Handler handler;
     private Runnable runnable;
     //检查消息是否发送超时的Runnable是否正在执行
     private boolean isCheckMessageSendTimeoutRunning = false;
+
     private MessageSendManager() {
         handler = new Handler();
         runnable = new Runnable() {
@@ -81,6 +83,17 @@ public class MessageSendManager {
         return mInstance;
     }
 
+    public void recallSendingMessage(Message message) {
+        if (messageListInSendRetry.contains(message)) {
+            messageListInSendRetry.remove(message);
+        } else if (ChatFileUploadManagerUtils.getInstance().isMessageResourceUploading(message)) {
+            ChatFileUploadManagerUtils.getInstance().cancelVolumeFileUploadService(message);
+        } else {
+            recallSendingMessageList.add(message);
+        }
+
+    }
+
     public void startCheckMessageSendTimeout() {
         if (messageListInSendRetry.size() > 0 && !isCheckMessageSendTimeoutRunning) {
             handler.postDelayed(runnable, interval);
@@ -95,8 +108,6 @@ public class MessageSendManager {
             isCheckMessageSendTimeoutRunning = false;
         }
     }
-
-
 
 
     /**
@@ -167,11 +178,16 @@ public class MessageSendManager {
                 CommonCallBack commonCallBack = new CommonCallBack() {
                     @Override
                     public void execute() {
-                        if (message.getMsgContentMediaVoice().getMedia().equals(message.getLocalPath())) {
-                            sendMessageWithFile(message);
+                        if (!recallSendingMessageList.contains(message)) {
+                            if (message.getMsgContentMediaVoice().getMedia().equals(message.getLocalPath())) {
+                                sendMessageWithFile(message);
+                            } else {
+                                WSAPIService.getInstance().sendMessage(message);
+                            }
                         } else {
-                            WSAPIService.getInstance().sendMessage(message);
+                            recallSendingMessageList.remove(message);
                         }
+
                     }
                 };
                 convertMediaVoiceFile(message, commonCallBack);
@@ -187,31 +203,41 @@ public class MessageSendManager {
         }
     }
 
+//    private void sendMessage(Message message){
+//        WSAPIService.getInstance().sendMessage(message);
+//    }
+
     public void addMessageInSendRetry(Message message) {
-        if (isMessageSendTimeout(message)) {
-            setMessageSendFail(message);
+        if (!recallSendingMessageList.contains(message)) {
+            if (isMessageSendTimeout(message)) {
+                setMessageSendFail(message);
+            } else {
+                message.setWaitingSendRetry(true);
+                MessageCacheUtil.saveMessage(BaseApplication.getInstance(), message);
+                messageListInSendRetry.add(message);
+                startCheckMessageSendTimeout();
+            }
         } else {
-            message.setWaitingSendRetry(true);
-            MessageCacheUtil.saveMessage(BaseApplication.getInstance(), message);
-            messageListInSendRetry.add(message);
-            startCheckMessageSendTimeout();
+            recallSendingMessageList.remove(message);
+
         }
     }
 
-    public void removeMessageInSendRetry(Message message) {
-        if (messageListInSendRetry.size() > 0 && message.getFromUser().equals(BaseApplication.getInstance().getUid())) {
-            Iterator<Message> it = messageListInSendRetry.iterator();
-            while (it.hasNext()) {
-                Message fakeMessage = it.next();
-                if (message.getTmpId().equals(fakeMessage.getId())) {
-                    it.remove();
-                    break;
-                }
-
+    public void onMessageSendSuccess(Message message) {
+        if (message.getFromUser().equals(BaseApplication.getInstance().getUid())) {
+            Message fakeMessage = new Message();
+            fakeMessage.setId(message.getTmpId());
+            if (messageListInSendRetry.size() > 0) {
+                messageListInSendRetry.remove(fakeMessage);
+                stopCheckMessageSendTimeout();
+                //todo
             }
-            stopCheckMessageSendTimeout();
+            if (recallSendingMessageList.size() > 0) {
+                recallSendingMessageList.remove(fakeMessage);
+            }
 
         }
+
     }
 
     private void setMessageSendFail(Message message) {
@@ -359,15 +385,25 @@ public class MessageSendManager {
 
             @Override
             public void onFail() {
-                //当网络失败或者发送时间已经超过10分钟时
-                if (!NetUtils.isNetworkConnected(BaseApplication.getInstance(), false)) {
-                    addMessageInSendRetry(fakeMessage);
+                if (!recallSendingMessageList.contains(fakeMessage)) {
+                    //当网络失败或者发送时间已经超过10分钟时
+                    if (!NetUtils.isNetworkConnected(BaseApplication.getInstance(), false)) {
+                        addMessageInSendRetry(fakeMessage);
+                    } else {
+                        setMessageSendFail(fakeMessage);
+                    }
                 } else {
-                    setMessageSendFail(fakeMessage);
+                    recallSendingMessageList.remove(fakeMessage);
                 }
+
             }
         };
-        ChatFileUploadManagerUtils.getInstance().uploadResFile(fakeMessage, progressCallback);
+
+        if (!recallSendingMessageList.contains(fakeMessage)) {
+            ChatFileUploadManagerUtils.getInstance().uploadResFile(fakeMessage, progressCallback);
+        } else {
+            recallSendingMessageList.remove(fakeMessage);
+        }
     }
 
     private boolean isMessageSendTimeout(Message fakeMessage) {
@@ -377,6 +413,7 @@ public class MessageSendManager {
 
     public void onDestroy() {
         messageListInSendRetry.clear();
+        recallSendingMessageList.clear();
         stopCheckMessageSendTimeout();
     }
 }

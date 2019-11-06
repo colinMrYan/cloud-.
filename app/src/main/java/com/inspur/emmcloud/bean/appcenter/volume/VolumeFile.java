@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by chenmch on 2017/11/16.
@@ -68,11 +69,12 @@ public class VolumeFile implements Serializable {
     private String owner = "";
     @Column(name = "path")
     private String path = "";
-    @Column(name = "progress")
-    private int progress = 0;
+    @Column(name = "downloadProgress")
+    private int downloadProgress = -1;
+    @Column(name = "volumeFileAbsolutePath")
+    private String volumeFileAbsolutePath = "";
     private String localFilePath = "";
     private Map<String, Integer> groupPrivilegeMap = new HashMap<>();
-
     public VolumeFile() {
     }
 
@@ -107,12 +109,11 @@ public class VolumeFile implements Serializable {
     }
 
     public static VolumeFile getMockVolumeFile(VolumeFileUpload volumeFileUpload) {
-        long time = System.currentTimeMillis();
         String filename = FileUtils.getFileName(volumeFileUpload.getLocalFilePath());
         VolumeFile volumeFile = new VolumeFile();
         volumeFile.setType(VolumeFile.FILE_TYPE_REGULAR);
-        volumeFile.setId(volumeFileUpload.getId());
-        volumeFile.setCreationDate(time);
+        volumeFile.setId(UUID.randomUUID() + "");
+        volumeFile.setCreationDate(System.currentTimeMillis());
         volumeFile.setName(filename);
         volumeFile.setStatus(volumeFileUpload.getStatus());
         volumeFile.setProgress(volumeFileUpload.getProgress());
@@ -130,11 +131,10 @@ public class VolumeFile implements Serializable {
      * @return
      */
     public static VolumeFile getMockVolumeFile(File file, String volumeId) {
-        long time = System.currentTimeMillis();
         VolumeFile volumeFile = new VolumeFile();
         volumeFile.setType(VolumeFile.FILE_TYPE_REGULAR);
-        volumeFile.setId(time + "");
-        volumeFile.setCreationDate(time);
+        volumeFile.setId(UUID.randomUUID() + "");
+        volumeFile.setCreationDate(System.currentTimeMillis());
         volumeFile.setName(file.getName());
         volumeFile.setStatus(VolumeFile.STATUS_UPLOAD_IND);
         volumeFile.setVolume(volumeId);
@@ -296,12 +296,20 @@ public class VolumeFile implements Serializable {
         this.groups = groups;
     }
 
-    public int getProgress() {
-        return progress;
+    public int getDownloadProgress() {
+        return downloadProgress;
     }
 
-    public void setProgress(int progress) {
-        this.progress = progress;
+    public void setDownloadProgress(int downloadProgress) {
+        this.downloadProgress = downloadProgress;
+    }
+
+    public String getVolumeFileAbsolutePath() {
+        return volumeFileAbsolutePath;
+    }
+
+    public void setVolumeFileAbsolutePath(String volumeFileAbsolutePath) {
+        this.volumeFileAbsolutePath = volumeFileAbsolutePath;
     }
 
     public CircleProgressBar.Status transfer2ProgressStatus(String status) {
