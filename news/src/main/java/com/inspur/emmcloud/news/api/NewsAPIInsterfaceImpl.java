@@ -3,7 +3,6 @@ package com.inspur.emmcloud.news.api;
 import com.inspur.emmcloud.news.bean.GetGroupNewsDetailResult;
 import com.inspur.emmcloud.news.bean.GetNewsInstructionResult;
 import com.inspur.emmcloud.news.bean.GetNewsTitleResult;
-import com.inspur.emmcloud.news.bean.GetSendMsgResult;
 
 public class NewsAPIInsterfaceImpl implements NewsAPIInterface {
     @Override
@@ -36,13 +35,4 @@ public class NewsAPIInsterfaceImpl implements NewsAPIInterface {
 
     }
 
-    @Override
-    public void returnSendMsgSuccess(GetSendMsgResult getSendMsgResult, String fakeMessageId) {
-
-    }
-
-    @Override
-    public void returnSendMsgFail(String error, String fakeMessageId, int errorCode) {
-
-    }
 }
