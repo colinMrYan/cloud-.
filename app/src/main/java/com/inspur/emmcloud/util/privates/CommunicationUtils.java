@@ -261,7 +261,7 @@ public class CommunicationUtils {
         return message;
     }
 
-    public static Message combineTransmitRegularFileMessage(String cid, String localFilePath, MsgContentRegularFile orgMsgContentRegularFile) {
+    public static Message combineTransmitRegularFileMessage(String cid, String newPath, MsgContentRegularFile orgMsgContentRegularFile) {
         String tracer = getTracer();
         Message message = combinLocalMessageCommon();
         message.setChannel(cid);
@@ -274,7 +274,7 @@ public class CommunicationUtils {
         msgContentRegularFile.setCategory(orgMsgContentRegularFile.getCategory());
         msgContentRegularFile.setName(orgMsgContentRegularFile.getName());
         msgContentRegularFile.setSize(orgMsgContentRegularFile.getSize());
-        msgContentRegularFile.setMedia(localFilePath);
+        msgContentRegularFile.setMedia(newPath);
         message.setContent(msgContentRegularFile.toString());
         return message;
     }
