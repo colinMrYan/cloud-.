@@ -1379,6 +1379,8 @@
     <string name="voice_communication_notification_group_content">点击恢复</string>
     <string name="voice_communication_notification_content">语音通话中，轻击以继续</string>
     <string name="voice_communication_more_than_two">语音通话用户数不能少于2个。</string>
+    <string name="voice_communication_hung_up_direct">挂断</string>
+    <string name="voice_communication_answer_phone_direct">接听</string>
 
     <string name="error_no_sdcard">没有SD卡，无法存储录音数据</string>
     <string name="error_state_record">正在录音中，请先停止录音</string>

@@ -64,6 +64,7 @@ import com.inspur.emmcloud.util.privates.NotifyUtil;
 import com.inspur.emmcloud.util.privates.SuspensionWindowManagerUtils;
 import com.inspur.emmcloud.util.privates.VoiceCommunicationManager;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
 import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
 
@@ -277,6 +278,10 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     ImageView videoPackUpImg;
     @BindView(R.id.rl_person_info)
     RelativeLayout personInfoLayout;
+    @BindView(R.id.rl_voice_communication_operate)
+    RelativeLayout groupAnswerOrHungUpLayout;
+    @BindView(R.id.ll_voice_communication_function_direct)
+    LinearLayout directFunctionLayout;
     private ChatAPIService apiService;
     private VoiceCommunicationJoinChannelInfoBean inviteeInfoBean;
     /**
@@ -314,7 +319,9 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     private void init() {
         cloudPlusChannelId = getIntent().getStringExtra(ConversationActivity.CLOUD_PLUS_CHANNEL_ID);
         communicationType = getIntent().getStringExtra(VOICE_VIDEO_CALL_TYPE);
-        directOrGroupType = new Conversation(cloudPlusChannelId).getType();
+        LogUtils.YfcDebug("云+channelId：" + cloudPlusChannelId);
+        directOrGroupType = ConversationCacheUtils.getConversationType(this, cloudPlusChannelId);
+        LogUtils.YfcDebug("type的类型：" + directOrGroupType);
         //如果是邀请者能收到从外面传进来的人员列表
         List<VoiceCommunicationJoinChannelInfoBean> list = (List<VoiceCommunicationJoinChannelInfoBean>) getIntent().getSerializableExtra("userList");
         if (list != null) {
@@ -704,6 +711,11 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         layoutManagerMemebersFirst.setOrientation(LinearLayoutManager.HORIZONTAL);
         communicationMembersFirstRecyclerview.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this, 8)));
         communicationMembersFirstRecyclerview.setLayoutManager(layoutManagerMemebersFirst);
+
+        directFunctionLayout.setVisibility(directOrGroupType.equals(Conversation.TYPE_DIRECT) ? View.VISIBLE : View.GONE);
+        groupAnswerOrHungUpLayout.setVisibility(directOrGroupType.equals(Conversation.TYPE_GROUP) ? View.VISIBLE : View.GONE);
+        functionLinearLayout.setVisibility(directOrGroupType.equals(Conversation.TYPE_GROUP) ? View.VISIBLE : View.GONE);
+
         Log.d("zhang", "initViews: layoutState = " + layoutState);
         initCommunicationViews(layoutState);
         initFunctionState();
