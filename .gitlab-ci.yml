@@ -27,7 +27,7 @@ assembleRelease:
 #        - master
 #        - dev
   tags:
-    - ios
+    - android_emmcloud
 
 
 protectAndUpload:
@@ -43,7 +43,7 @@ protectAndUpload:
 #        - master
 #        - dev
   tags:
-    - ios
+    - android_emmcloud
 
 
 
@@ -56,7 +56,7 @@ sendMail:
 #         - master
 #         - dev
  tags:
-     - ios
+     - android_emmcloud
 
 
 
