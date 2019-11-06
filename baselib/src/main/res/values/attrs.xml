@@ -423,4 +423,13 @@
         <attr name="ringColor" format="color" />
         <attr name="ringBgColor" format="color" />
     </declare-styleable>
+
+    <!--圆形进度条-->
+    <declare-styleable name="CusCircleProgressBar">
+        <attr name="circle_progress_unreached_color" format="color" />
+        <attr name="circle_progress_reached_color" format="color" />
+        <attr name="circle_progress_reached_bar_height" format="dimension" />
+        <attr name="circle_progress_unreached_bar_height" format="dimension" />
+        <attr name="circle_progress_radius" format="dimension" />
+    </declare-styleable>
 </resources>

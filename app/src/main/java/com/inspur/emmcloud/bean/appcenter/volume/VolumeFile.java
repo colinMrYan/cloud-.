@@ -3,14 +3,17 @@ package com.inspur.emmcloud.bean.appcenter.volume;
 import com.alibaba.fastjson.TypeReference;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.widget.progressbar.CircleProgressBar;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 
 import org.json.JSONObject;
+import org.xutils.db.annotation.Column;
 
 import java.io.File;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by chenmch on 2017/11/16.
@@ -26,28 +29,52 @@ public class VolumeFile implements Serializable {
     public static final String FILTER_TYPE_VIDEO = "filter_video";
     public static final String FILTER_TYPE_OTHER = "filter_other";
     public static final String STATUS_NORMAL = "normal";
-    public static final String STATUS_UPLOADIND = "uploading";
+    public static final String STATUS_UPLOAD_IND = "uploading";
     public static final String STATUS_UPLOAD_FAIL = "upload_fail";
     public static final String STATUS_UPLOAD_PAUSE = "upload_pause";
+    public static final String STATUS_DOWNLOAD_IND = "downloading";
+    public static final String STATUS_DOWNLOAD_FAIL = "download_fail";
+    public static final String STATUS_DOWNLOAD_PAUSE = "download_pause";
+    @Column(name = "id", isId = true)
     private String id = "";
+    @Column(name = "type")
     private String type = "";
+    @Column(name = "name")
     private String name = "";
+    @Column(name = "resource")
     private String resource = "";
+    @Column(name = "parent")
     private String parent = "";
+    @Column(name = "creationDate")
     private long creationDate = 0L;
+    @Column(name = "lastUpdate")
     private long lastUpdate = 0L;
+    @Column(name = "privilege")
     private String privilege = "";
+    @Column(name = "format")
     private String format = "";
+    @Column(name = "size")
     private long size = 0L;
+    @Column(name = "volume")
     private String volume = "";
+    @Column(name = "status")
     private String status = STATUS_NORMAL;
-    private Map<String, Integer> groupPrivilegeMap = new HashMap<>();
+    @Column(name = "groups")
+    private String groups = "";
+    @Column(name = "ownerPrivilege")
     private int ownerPrivilege = 0;
+    @Column(name = "othersPrivilege")
     private int othersPrivilege = 0;
+    @Column(name = "owner")
     private String owner = "";
+    @Column(name = "path")
     private String path = "";
+    @Column(name = "progress")
+    private int progress = -1;
+    @Column(name = "volumeFileAbsolutePath")
+    private String volumeFileAbsolutePath = "";
     private String localFilePath = "";
-
+    private Map<String, Integer> groupPrivilegeMap = new HashMap<>();
     public VolumeFile() {
     }
 
@@ -70,9 +97,9 @@ public class VolumeFile implements Serializable {
         this.ownerPrivilege = JSONUtils.getInt(object, "ownerPrivilege", 0);
         this.othersPrivilege = JSONUtils.getInt(object, "othersPrivilege", 0);
         this.owner = JSONUtils.getString(object, "owner", "");
-        String groupPrivilegeJson = JSONUtils.getString(object, "groups", "");
-        if (!StringUtils.isBlank(groupPrivilegeJson)) {
-            groupPrivilegeMap = JSONUtils.parseObject(groupPrivilegeJson, new TypeReference<Map<String, Integer>>() {
+        groups = JSONUtils.getString(object, "groups", "");
+        if (!StringUtils.isBlank(groups)) {
+            groupPrivilegeMap = JSONUtils.parseObject(groups, new TypeReference<Map<String, Integer>>() {
             });
             if (groupPrivilegeMap == null) {
                 groupPrivilegeMap = new HashMap<>();
@@ -82,14 +109,14 @@ public class VolumeFile implements Serializable {
     }
 
     public static VolumeFile getMockVolumeFile(VolumeFileUpload volumeFileUpload) {
-        long time = System.currentTimeMillis();
         String filename = FileUtils.getFileName(volumeFileUpload.getLocalFilePath());
         VolumeFile volumeFile = new VolumeFile();
         volumeFile.setType(VolumeFile.FILE_TYPE_REGULAR);
-        volumeFile.setId(volumeFileUpload.getId());
-        volumeFile.setCreationDate(time);
+        volumeFile.setId(UUID.randomUUID() + "");
+        volumeFile.setCreationDate(System.currentTimeMillis());
         volumeFile.setName(filename);
         volumeFile.setStatus(volumeFileUpload.getStatus());
+        volumeFile.setProgress(volumeFileUpload.getProgress());
         volumeFile.setVolume(volumeFileUpload.getVolumeId());
         volumeFile.setFormat(FileUtils.getMimeType(filename));
         volumeFile.setSize(FileUtils.getFileSize(volumeFileUpload.getLocalFilePath()));
@@ -104,13 +131,12 @@ public class VolumeFile implements Serializable {
      * @return
      */
     public static VolumeFile getMockVolumeFile(File file, String volumeId) {
-        long time = System.currentTimeMillis();
         VolumeFile volumeFile = new VolumeFile();
         volumeFile.setType(VolumeFile.FILE_TYPE_REGULAR);
-        volumeFile.setId(time + "");
-        volumeFile.setCreationDate(time);
+        volumeFile.setId(UUID.randomUUID() + "");
+        volumeFile.setCreationDate(System.currentTimeMillis());
         volumeFile.setName(file.getName());
-        volumeFile.setStatus(VolumeFile.STATUS_UPLOADIND);
+        volumeFile.setStatus(VolumeFile.STATUS_UPLOAD_IND);
         volumeFile.setVolume(volumeId);
         volumeFile.setFormat(FileUtils.getMimeType(file.getName()));
         volumeFile.setLocalFilePath(file.getAbsolutePath());
@@ -260,6 +286,58 @@ public class VolumeFile implements Serializable {
 
     public void setLocalFilePath(String localFilePath) {
         this.localFilePath = localFilePath;
+    }
+
+    public String getGroups() {
+        return groups;
+    }
+
+    public void setGroups(String groups) {
+        this.groups = groups;
+    }
+
+    public int getProgress() {
+        return progress;
+    }
+
+    public void setProgress(int progress) {
+        this.progress = progress;
+    }
+
+    public String getVolumeFileAbsolutePath() {
+        return volumeFileAbsolutePath;
+    }
+
+    public void setVolumeFileAbsolutePath(String volumeFileAbsolutePath) {
+        this.volumeFileAbsolutePath = volumeFileAbsolutePath;
+    }
+
+    public CircleProgressBar.Status transfer2ProgressStatus(String status) {
+        CircleProgressBar.Status pbStatus = CircleProgressBar.Status.Starting;
+        switch (status) {
+            case STATUS_NORMAL:
+                pbStatus = CircleProgressBar.Status.Starting;
+                break;
+            case STATUS_UPLOAD_IND:
+                pbStatus = CircleProgressBar.Status.Uploading;
+                break;
+            case STATUS_DOWNLOAD_IND:
+                pbStatus = CircleProgressBar.Status.Downloading;
+                break;
+            case STATUS_UPLOAD_FAIL:
+            case STATUS_DOWNLOAD_FAIL:
+                pbStatus = CircleProgressBar.Status.End;
+                break;
+            case STATUS_UPLOAD_PAUSE:
+            case STATUS_DOWNLOAD_PAUSE:
+                pbStatus = CircleProgressBar.Status.Pause;
+                break;
+            default:
+                pbStatus = CircleProgressBar.Status.Starting;
+                break;
+        }
+
+        return pbStatus;
     }
 
     public boolean equals(Object other) { // 重写equals方法，后面最好重写hashCode方法

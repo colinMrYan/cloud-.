@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -25,6 +27,7 @@ import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
 import com.inspur.emmcloud.widget.largeimage.LargeImageView;
+import com.inspur.emmcloud.widget.largeimage.factory.FileBitmapDecoderFactory;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -151,7 +154,7 @@ public class ImageDetailFragment extends Fragment {
                 EventBus.getDefault().post(eventMessage);
             }
         });
-        mImageView.setOnFlingDownLister(new LargeImageView.OnFlingDownListe() {
+        mImageView.setOnFlingDownLister(new LargeImageView.OnFlingDownListener() {
             @Override
             public void onFlingDown() {
                 closeImg();
@@ -268,13 +271,19 @@ public class ImageDetailFragment extends Fragment {
                 .cacheInMemory(true)
                 .cacheOnDisk(true)
                 .build();
-
+        LogUtils.jasonDebug("rawUrl==" + rawUrl);
+        LogUtils.jasonDebug("mImageUrl==" + mImageUrl);
         if (!StringUtils.isBlank(rawUrl) && ImageDisplayUtils.getInstance().isHaveCacheImage(rawUrl)) {
             String path = ImageDisplayUtils.getInstance().getCacheImageFile(rawUrl).getAbsolutePath();
             try {
-                FileInputStream fis = new FileInputStream(path);
-                Bitmap bitmap = BitmapFactory.decodeStream(fis);
-                mImageView.setImage(bitmap);
+                Drawable previewDrawable = null;
+                if (mImageUrl != null && !mImageUrl.equals(rawUrl) && ImageDisplayUtils.getInstance().isHaveCacheImage(mImageUrl)) {
+                    String previewFilePath = ImageDisplayUtils.getInstance().getCacheImageFile(mImageUrl).getAbsolutePath();
+                    FileInputStream fis = new FileInputStream(previewFilePath);
+                    Bitmap bitmap = BitmapFactory.decodeStream(fis);
+                    previewDrawable = new BitmapDrawable(getActivity().getResources(), bitmap);
+                }
+                mImageView.setImage(new FileBitmapDecoderFactory(path), previewDrawable);
             } catch (Exception e) {
                 e.printStackTrace();
                 mImageView.setImage(R.drawable.default_image);

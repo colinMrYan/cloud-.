@@ -101,7 +101,7 @@ public class VolumeFileDownloadActivity extends BaseActivity {
     private void showVolumeFileTypeImg() {
         if (volumeFile.getFormat().startsWith("image/")) {
             String url = "";
-            if (volumeFile.getStatus().equals(VolumeFile.STATUS_UPLOADIND)) {
+            if (volumeFile.getStatus().equals(VolumeFile.STATUS_UPLOAD_IND)) {
                 url = volumeFile.getLocalFilePath();
             } else {
                 url = APIUri.getVolumeFileTypeImgThumbnailUrl(volumeFile, currentDirAbsolutePath);

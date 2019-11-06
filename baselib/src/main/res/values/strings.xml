@@ -672,7 +672,9 @@
     <string name="volume_file_transfer">文件传输</string>
     <string name="volume_file_transfer_download_list">下载列表</string>
     <string name="volume_file_transfer_upload_list">上传列表</string>
+    <string name="volume_file_transfer_list_wait_tip">正在等待&#8230;</string>
     <string name="volume_share_2_qq_wechat">分享</string>
+    <string name="volume_copy_between_volume_error_toast">%1$d 个文件复制失败</string>
 
     <!--Webex 邮箱-->
     <string name="mail_install_cert"><u>安装数字证书</u></string>

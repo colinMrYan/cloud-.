@@ -2,6 +2,7 @@ package com.inspur.emmcloud.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -102,6 +103,11 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
         return selectVolumeFileList;
     }
 
+    public void setSelectVolumeFileList(List<VolumeFile> selectVolumeFileList) {
+        this.selectVolumeFileList = selectVolumeFileList;
+        notifyDataSetChanged();
+    }
+
     public void clearSelectedVolumeFileList() {
         selectVolumeFileList.clear();
     }
@@ -178,6 +184,9 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
         holder.fileOperationDropDownImg.setVisibility(View.GONE);
         holder.fileSelcetImg.setVisibility(isShowFileOperationSelecteImage && isStatusNomal ? View.VISIBLE : View.GONE);
         if (selectVolumeFileList.size() > 0) {
+            if (selectVolumeFileList.contains(volumeFile)) {
+                Log.d("zhang", "onBindViewHolder: position = " + position);
+            }
             holder.fileSelcetImg.setImageResource(selectVolumeFileList.contains(volumeFile) ? R.drawable.ic_select_yes : R.drawable.ic_select_no);
         } else {
             holder.fileSelcetImg.setImageResource(R.drawable.ic_volume_no_selected);
@@ -194,13 +203,13 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
         holder.fileTimeText.setText(fileTime);
         if (!isStatusNomal) {
             LogUtils.jasonDebug("volumeFileStatus==" + volumeFileStatus);
-            boolean isStutasUploading = volumeFileStatus.equals(VolumeFile.STATUS_UPLOADIND);
+            boolean isStutasUploading = volumeFileStatus.equals(VolumeFile.STATUS_UPLOAD_IND);
             holder.uploadOperationText.setText(isStutasUploading ? R.string.upload_cancel : R.string.clouddriver_upload_again);
             holder.uploadProgressBar.setProgress(0);
             holder.uploadProgressBar.setVisibility(View.GONE);
             holder.uploadStatusText.setVisibility(View.VISIBLE);
             holder.uploadStatusText.setText(isStutasUploading ? R.string.clouddriver_upload_waiting : R.string.clouddriver_upload_fail);
-            if (volumeFileStatus.equals(VolumeFile.STATUS_UPLOADIND)) {
+            if (volumeFileStatus.equals(VolumeFile.STATUS_UPLOAD_IND)) {
                 VolumeFileUploadManager.getInstance().setBusinessProgressCallback(volumeFile, new ProgressCallback() {
                     @Override
                     public void onSuccess(VolumeFile newVolumeFile) {
@@ -233,7 +242,7 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
         } else {
             if (volumeFile.getFormat().startsWith("image/")) {
                 String url = "";
-                if (volumeFile.getStatus().equals(VolumeFile.STATUS_UPLOADIND)) {
+                if (volumeFile.getStatus().equals(VolumeFile.STATUS_UPLOAD_IND)) {
                     url = volumeFile.getLocalFilePath();
                 } else {
                     String path = currentDirAbsolutePath + volumeFile.getName();
