@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.util.privates;
 
 import android.os.Handler;
+import android.util.Log;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -63,7 +64,6 @@ public class VolumeFileUploadManager extends APIInterfaceInstance {
     }
 
 
-
     /**
      * 上传文件
      *
@@ -91,6 +91,7 @@ public class VolumeFileUploadManager extends APIInterfaceInstance {
      * @param mockVolumeFile
      */
     public void reUploadFile(VolumeFile mockVolumeFile) {
+        Log.d("zhang", "reUploadFile: ");
         for (int i = 0; i < volumeFileUploadList.size(); i++) {
             VolumeFileUpload volumeFileUpload = volumeFileUploadList.get(i);
             if (volumeFileUpload.getId().equals(mockVolumeFile.getId())) {
@@ -165,6 +166,7 @@ public class VolumeFileUploadManager extends APIInterfaceInstance {
     }
 
     public void pauseVolumeFileUploadService(VolumeFile mockVolumeFile) {
+        Log.d("zhang", "pauseVolumeFileUploadService: ");
         if (mockVolumeFile != null) {
             for (int i = 0; i < volumeFileUploadList.size(); i++) {
                 VolumeFileUpload volumeFileUpload = volumeFileUploadList.get(i);

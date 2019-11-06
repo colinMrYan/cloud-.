@@ -3,6 +3,7 @@ package com.inspur.emmcloud.bean.appcenter.volume;
 import com.alibaba.fastjson.TypeReference;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.widget.progressbar.CircleProgressBar;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 
 import org.json.JSONObject;
@@ -12,6 +13,7 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by chenmch on 2017/11/16.
@@ -67,8 +69,8 @@ public class VolumeFile implements Serializable {
     private String owner = "";
     @Column(name = "path")
     private String path = "";
-    @Column(name = "downloadProgress")
-    private int downloadProgress = -1;
+    @Column(name = "progress")
+    private int progress = -1;
     @Column(name = "volumeFileAbsolutePath")
     private String volumeFileAbsolutePath = "";
     private String localFilePath = "";
@@ -107,14 +109,14 @@ public class VolumeFile implements Serializable {
     }
 
     public static VolumeFile getMockVolumeFile(VolumeFileUpload volumeFileUpload) {
-        long time = System.currentTimeMillis();
         String filename = FileUtils.getFileName(volumeFileUpload.getLocalFilePath());
         VolumeFile volumeFile = new VolumeFile();
         volumeFile.setType(VolumeFile.FILE_TYPE_REGULAR);
-        volumeFile.setId(volumeFileUpload.getId());
-        volumeFile.setCreationDate(time);
+        volumeFile.setId(UUID.randomUUID() + "");
+        volumeFile.setCreationDate(System.currentTimeMillis());
         volumeFile.setName(filename);
         volumeFile.setStatus(volumeFileUpload.getStatus());
+        volumeFile.setProgress(volumeFileUpload.getProgress());
         volumeFile.setVolume(volumeFileUpload.getVolumeId());
         volumeFile.setFormat(FileUtils.getMimeType(filename));
         volumeFile.setSize(FileUtils.getFileSize(volumeFileUpload.getLocalFilePath()));
@@ -129,11 +131,10 @@ public class VolumeFile implements Serializable {
      * @return
      */
     public static VolumeFile getMockVolumeFile(File file, String volumeId) {
-        long time = System.currentTimeMillis();
         VolumeFile volumeFile = new VolumeFile();
         volumeFile.setType(VolumeFile.FILE_TYPE_REGULAR);
-        volumeFile.setId(time + "");
-        volumeFile.setCreationDate(time);
+        volumeFile.setId(UUID.randomUUID() + "");
+        volumeFile.setCreationDate(System.currentTimeMillis());
         volumeFile.setName(file.getName());
         volumeFile.setStatus(VolumeFile.STATUS_UPLOAD_IND);
         volumeFile.setVolume(volumeId);
@@ -295,12 +296,12 @@ public class VolumeFile implements Serializable {
         this.groups = groups;
     }
 
-    public int getDownloadProgress() {
-        return downloadProgress;
+    public int getProgress() {
+        return progress;
     }
 
-    public void setDownloadProgress(int downloadProgress) {
-        this.downloadProgress = downloadProgress;
+    public void setProgress(int progress) {
+        this.progress = progress;
     }
 
     public String getVolumeFileAbsolutePath() {
@@ -309,6 +310,34 @@ public class VolumeFile implements Serializable {
 
     public void setVolumeFileAbsolutePath(String volumeFileAbsolutePath) {
         this.volumeFileAbsolutePath = volumeFileAbsolutePath;
+    }
+
+    public CircleProgressBar.Status transfer2ProgressStatus(String status) {
+        CircleProgressBar.Status pbStatus = CircleProgressBar.Status.Starting;
+        switch (status) {
+            case STATUS_NORMAL:
+                pbStatus = CircleProgressBar.Status.Starting;
+                break;
+            case STATUS_UPLOAD_IND:
+                pbStatus = CircleProgressBar.Status.Uploading;
+                break;
+            case STATUS_DOWNLOAD_IND:
+                pbStatus = CircleProgressBar.Status.Downloading;
+                break;
+            case STATUS_UPLOAD_FAIL:
+            case STATUS_DOWNLOAD_FAIL:
+                pbStatus = CircleProgressBar.Status.End;
+                break;
+            case STATUS_UPLOAD_PAUSE:
+            case STATUS_DOWNLOAD_PAUSE:
+                pbStatus = CircleProgressBar.Status.Pause;
+                break;
+            default:
+                pbStatus = CircleProgressBar.Status.Starting;
+                break;
+        }
+
+        return pbStatus;
     }
 
     public boolean equals(Object other) { // 重写equals方法，后面最好重写hashCode方法
