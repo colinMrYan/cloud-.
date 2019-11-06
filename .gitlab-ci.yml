@@ -27,7 +27,7 @@ assembleRelease:
 #        - master
 #        - dev
   tags:
-    - ios
+    - android_emmcloud
 
 
 protectAndUpload:
