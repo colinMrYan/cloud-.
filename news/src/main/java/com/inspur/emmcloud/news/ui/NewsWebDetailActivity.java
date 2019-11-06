@@ -60,7 +60,6 @@ import com.inspur.emmcloud.news.api.NewsAPIInsterfaceImpl;
 import com.inspur.emmcloud.news.api.NewsAPIUri;
 import com.inspur.emmcloud.news.api.NewsApiService;
 import com.inspur.emmcloud.news.bean.GetNewsInstructionResult;
-import com.inspur.emmcloud.news.bean.GetSendMsgResult;
 import com.inspur.emmcloud.news.bean.GroupNews;
 import com.inspur.emmcloud.news.bean.NewsIntrcutionUpdateEvent;
 
@@ -1021,22 +1020,6 @@ public class NewsWebDetailActivity extends BaseActivity {
     }
 
     class WebService extends NewsAPIInsterfaceImpl {
-        @Override
-        public void returnSendMsgSuccess(GetSendMsgResult getSendMsgResult,
-                                         String fakeMessageId) {
-            if (loadingDlg != null && loadingDlg.isShowing()) {
-                loadingDlg.dismiss();
-            }
-            ToastUtils.show(NewsWebDetailActivity.this, getString(R.string.baselib_share_success));
-        }
-
-        @Override
-        public void returnSendMsgFail(String error, String fakeMessageId, int errorCode) {
-            if (loadingDlg != null && loadingDlg.isShowing()) {
-                loadingDlg.dismiss();
-            }
-            showShareFailToast();
-        }
 
         @Override
         public void returnNewsInstructionSuccess(GetNewsInstructionResult getNewsInstructionResult) {
