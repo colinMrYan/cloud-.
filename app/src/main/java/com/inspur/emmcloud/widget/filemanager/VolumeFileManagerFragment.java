@@ -146,6 +146,18 @@ public class VolumeFileManagerFragment extends Fragment {
 
     }
 
+    public void onBackPress() {
+        if (NetUtils.isNetworkConnected(getContext())) {
+            if (titleAdapter.getItemCount() > 1) {
+                titleAdapter.removeLast();
+                currentDirAbsolutePath = titleAdapter.getCurrentPath();  /**获取当前路径**/
+                getVolumeFileList(true);
+            } else {
+                getActivity().finish();
+            }
+        }
+    }
+
     /**返回结果**/
     private void returnSelectResult() {
         Intent intent = new Intent();
@@ -176,7 +188,6 @@ public class VolumeFileManagerFragment extends Fragment {
             apiServiceBase.getVolumeList();
         }
     }
-
 
    /**获取当前的网盘**/
    public void setMyVolume(Volume volume) {
