@@ -30,6 +30,8 @@ import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.ListUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.CustomLoadingView;
@@ -249,10 +251,15 @@ public class ConversationActivity extends ConversationBaseActivity {
         if (position == -1) {
             position = cacheMessageList.size() - 1;
         }
-        uiMessageList = UIMessage.MessageList2UIMessageList(cacheMessageList);
-        adapter.setMessageList(uiMessageList);
-        adapter.notifyDataSetChanged();
-        msgListView.scrollToPosition(position);
+        List<UIMessage> uiMessageListNew = UIMessage.MessageList2UIMessageList(cacheMessageList);
+        LogUtils.jasonDebug("ListUtils.isListEqual(uiMessageListNew,uiMessageList)=" + ListUtils.isListEqual(uiMessageListNew, uiMessageList));
+        if (!ListUtils.isListEqual(uiMessageListNew, uiMessageList)) {
+            uiMessageList = uiMessageListNew;
+            adapter.setMessageList(uiMessageList);
+            adapter.notifyDataSetChanged();
+            msgListView.scrollToPosition(position);
+        }
+
     }
 
 
@@ -973,6 +980,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         uiMessage.setMessage(message);
         uiMessage.setId(message.getId());
         uiMessage.setSendStatus(1);
+        uiMessage.setCreationDate(message.getCreationDate());
         int firstItemPosition = linearLayoutManager.findFirstVisibleItemPosition();
         if (index - firstItemPosition >= 0) {
             View view = msgListView.getChildAt(index - firstItemPosition);
@@ -1591,6 +1599,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                     operationIdList.add(R.string.chat_long_click_schedule);
                     break;
                 case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
+
                     operationIdList.add(R.string.chat_long_click_transmit);
                     break;
                 case Message.MESSAGE_TYPE_EXTENDED_CONTACT_CARD:
@@ -1607,15 +1616,15 @@ public class ConversationActivity extends ConversationBaseActivity {
                     operationIdList.add(R.string.chat_long_click_transmit);
                     break;
                 case Message.MESSAGE_TYPE_MEDIA_VOICE:
+                    if (!LanguageManager.getInstance().isAppLanguageEnglish()) {
+                        operationIdList.add(R.string.voice_to_word);
+                    }
                     break;
                 default:
                     break;
             }
             if (uiMessage.getMessage().getFromUser().equals(BaseApplication.getInstance().getUid()) && System.currentTimeMillis() - uiMessage.getCreationDate() < 120000) {
                 operationIdList.add(R.string.chat_long_click_recall);
-            }
-            if (uiMessage.getMessage().getType().equals(Message.MESSAGE_TYPE_MEDIA_VOICE) && !LanguageManager.getInstance().isAppLanguageEnglish()) {
-                operationIdList.add(R.string.voice_to_word);
             }
         }
         return operationIdList;

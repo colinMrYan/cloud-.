@@ -6,4 +6,4 @@
     android:lineSpacingMultiplier="1.2"
     android:padding="10dp"
     android:textColor="#97A3B4"
-    android:textSize="15sp" />
+    android:textSize="14sp" />
