@@ -69,8 +69,8 @@ public class VolumeFile implements Serializable {
     private String owner = "";
     @Column(name = "path")
     private String path = "";
-    @Column(name = "downloadProgress")
-    private int downloadProgress = -1;
+    @Column(name = "progress")
+    private int progress = -1;
     @Column(name = "volumeFileAbsolutePath")
     private String volumeFileAbsolutePath = "";
     private String localFilePath = "";
@@ -296,12 +296,12 @@ public class VolumeFile implements Serializable {
         this.groups = groups;
     }
 
-    public int getDownloadProgress() {
-        return downloadProgress;
+    public int getProgress() {
+        return progress;
     }
 
-    public void setDownloadProgress(int downloadProgress) {
-        this.downloadProgress = downloadProgress;
+    public void setProgress(int progress) {
+        this.progress = progress;
     }
 
     public String getVolumeFileAbsolutePath() {
