@@ -19,7 +19,11 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-
+/**
+ * 文件传输列表
+ *
+ * @author zhangyj.lc
+ */
 public class VolumeFileTransferActivity extends BaseMvpActivity {
 
     @BindView(R.id.tl_file_transfer)
@@ -105,6 +109,8 @@ public class VolumeFileTransferActivity extends BaseMvpActivity {
         switch (v.getId()) {
             case R.id.ibt_back:
                 finish();
+                break;
+            default:
                 break;
         }
     }

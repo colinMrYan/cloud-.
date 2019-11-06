@@ -42,6 +42,7 @@ import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFileUpload;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
+import com.inspur.emmcloud.ui.appcenter.volume.view.VolumeFileTransferActivity;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
@@ -182,14 +183,14 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
             @Override
             public void onItemOperationTextClick(View view, int position) {
                 VolumeFile volumeFile = volumeFileList.get(position);
-                if (volumeFile.getStatus().equals(VolumeFile.STATUS_UPLOADIND)) {
+                if (volumeFile.getStatus().equals(VolumeFile.STATUS_UPLOAD_IND)) {
                     //取消上传
                     VolumeFileUploadManager.getInstance().cancelVolumeFileUploadService(volumeFile);
                     volumeFileList.remove(position);
                     adapter.notifyItemRemoved(position);
                 } else if (NetUtils.isNetworkConnected(VolumeFileActivity.this)) {
                     //重新上传
-                    volumeFile.setStatus(VolumeFile.STATUS_UPLOADIND);
+                    volumeFile.setStatus(VolumeFile.STATUS_UPLOAD_IND);
                     VolumeFileUploadManager.getInstance().reUploadFile(volumeFile);
                     adapter.notifyItemChanged(position);
                 }
@@ -245,6 +246,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                 showUploadOperationPopWindow(new ArrayList<VolumeFile>());
                 break;
             case R.id.iv_down_up_list:
+                startActivity(new Intent(this, VolumeFileTransferActivity.class));
                 break;
             case R.id.operation_sort_text:
                 showSortOperationPop();
