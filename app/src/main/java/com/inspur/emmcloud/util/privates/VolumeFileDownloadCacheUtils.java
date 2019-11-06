@@ -17,7 +17,7 @@ public class VolumeFileDownloadCacheUtils {
      *
      * @return
      */
-    public List<VolumeFile> getVolumeFileListInDownloading() {
+    public static List<VolumeFile> getVolumeFileListInDownloading() {
         List<VolumeFile> volumeFileList = null;
         try {
             volumeFileList = DbCacheUtils.getDb().findAll(VolumeFile.class);
@@ -30,7 +30,7 @@ public class VolumeFileDownloadCacheUtils {
         return volumeFileList;
     }
 
-    public void saveVolumeFile(VolumeFile volumeFile) {
+    public static void saveVolumeFile(VolumeFile volumeFile) {
         try {
             if (volumeFile != null) {
                 DbCacheUtils.getDb().saveOrUpdate(volumeFile);
@@ -40,7 +40,7 @@ public class VolumeFileDownloadCacheUtils {
         }
     }
 
-    public void deleteVolumeFile(VolumeFile volumeFile) {
+    public static void deleteVolumeFile(VolumeFile volumeFile) {
         try {
             if (volumeFile != null) {
                 DbCacheUtils.getDb().delete(volumeFile);
@@ -50,7 +50,7 @@ public class VolumeFileDownloadCacheUtils {
         }
     }
 
-    public void saveVolumeFileList(List<VolumeFile> volumeFileList) {
+    public static void saveVolumeFileList(List<VolumeFile> volumeFileList) {
         try {
             if (volumeFileList != null && volumeFileList.size() > 0) {
                 DbCacheUtils.getDb().saveOrUpdate(volumeFileList);

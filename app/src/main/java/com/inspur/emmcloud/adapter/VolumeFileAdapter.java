@@ -2,6 +2,7 @@ package com.inspur.emmcloud.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -183,6 +184,9 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
         holder.fileOperationDropDownImg.setVisibility(View.GONE);
         holder.fileSelcetImg.setVisibility(isShowFileOperationSelecteImage && isStatusNomal ? View.VISIBLE : View.GONE);
         if (selectVolumeFileList.size() > 0) {
+            if (selectVolumeFileList.contains(volumeFile)) {
+                Log.d("zhang", "onBindViewHolder: position = " + position);
+            }
             holder.fileSelcetImg.setImageResource(selectVolumeFileList.contains(volumeFile) ? R.drawable.ic_select_yes : R.drawable.ic_select_no);
         } else {
             holder.fileSelcetImg.setImageResource(R.drawable.ic_volume_no_selected);
