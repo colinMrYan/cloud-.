@@ -93,7 +93,6 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
     public static final String EXTRA_TYPE = "select_content";
     public static final String EXTRA_CONTAIN_ME = "isContainMe";
     public static final String EXTRA_HAS_SELECT = "hasSearchResult";
-    public static final String EXTRA_HAS_SELECT_STATIC = "hasSearchResultStatic";
     public static final String EXTRA_EXCLUDE_SELECT = "excludeContactUidList";
     public static final String EXTRA_LIMIT = "select_limit";
     public static final String EXTRA_SHOW_COMFIRM_DIALOG = "show_sure_dialog";
@@ -157,9 +156,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
     private long lastSearchTime = 0L;
     private List<String> excludeContactUidList = new ArrayList<>();
     private List<Contact> excludeContactList = new ArrayList<>();//不显示某些数据
-    private List<String> selectStaticContactUidList = new ArrayList<>();
-    private List<Contact> selectStaticContactList = new ArrayList<>();//显示灰色选中
-    private List<SearchModel> selectStaticSearchModelList = new ArrayList<>();//显示灰色选中
+    private List<SearchModel> excludeSearchModelList = new ArrayList<>();//显示灰色选中
     private long lastBackTime;
     private int selectLimit = 5000;
 
@@ -292,17 +289,13 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
             if (intent.hasExtra(EXTRA_EXCLUDE_SELECT)) {
                 excludeContactUidList = (List<String>) intent.getExtras().getSerializable(EXTRA_EXCLUDE_SELECT);
                 excludeContactList = Contact.contactUserList2ContactList(ContactUserCacheUtils.getContactUserListById(excludeContactUidList));
-            }
-
-            if (intent.hasExtra(EXTRA_HAS_SELECT_STATIC)) {
-                selectStaticContactUidList = (List<String>) intent.getExtras().getSerializable(EXTRA_HAS_SELECT_STATIC);
-                selectStaticContactList = Contact.contactUserList2ContactList(ContactUserCacheUtils.getContactUserListById(selectStaticContactUidList));
-                if (selectStaticContactList != null && selectStaticContactList.size() > 0) {
-                    for (int i = 0; i < selectStaticContactList.size(); i++) {
-                        selectStaticSearchModelList.add(selectStaticContactList.get(i).contact2SearchModel());
+                if (excludeContactList != null && excludeContactList.size() > 0) {
+                    for (int i = 0; i < excludeContactList.size(); i++) {
+                        excludeSearchModelList.add(excludeContactList.get(i).contact2SearchModel());
                     }
                 }
             }
+
             if (intent.hasExtra(EXTRA_SHOW_COMFIRM_DIALOG)) {
                 isShowConfirmDialog = true;
             }
@@ -399,7 +392,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
         // TODO Auto-generated method stub
         secondTitleText.setText(getString(R.string.recently_used));
         commonContactList = CommonContactCacheUtils.getCommonContactList(
-                getActivity().getApplicationContext(), 5, searchContent, excludeContactList);
+                getActivity().getApplicationContext(), 5, searchContent, null);
         secondGroupListAdapter = new SecondGroupListAdapter();
         secondGroupListView.setAdapter(secondGroupListAdapter);
         secondGroupListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -423,14 +416,22 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                                            int position, long id) {
                 // TODO Auto-generated method stub
                 SearchModel searchModel = commonContactList.get(position);
-                if (selectStaticSearchModelList.contains(searchModel)) {
-                    return true;
+                if (!isHaveStaticSearchModel(searchModel)) {
+                    showRecentChannelOperationDlg(position);
                 }
-                showRecentChannelOperationDlg(position);
                 return true;
             }
 
         });
+    }
+
+    private boolean isHaveStaticSearchModel(SearchModel searchModel) {
+        for (int i = 0; i < excludeSearchModelList.size(); i++) {
+            if (excludeSearchModelList.get(i).getId().equals(searchModel.getId())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void showRecentChannelOperationDlg(final int position) {
@@ -608,7 +609,8 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                 checkInfoOrEnterChannel(searchModel);
                 return;
             }
-            if (selectStaticContactList.contains(searchModel)) {
+
+            if (isHaveStaticSearchModel(searchModel)) {
                 return;
             }
             if (!selectMemList.contains(searchModel)) {
@@ -748,7 +750,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                                     searchChannelGroupList = ConversationCacheUtils.getSearchConversationSearchModelList(MyApplication.getInstance(), searchText);
                                 }
 
-                                searchContactList = ContactUserCacheUtils.getSearchContact(searchText, excludeContactList, 4);
+                                searchContactList = ContactUserCacheUtils.getSearchContact(searchText, null, 4);
                                 break;
                             case SEARCH_CHANNELGROUP:
                                 if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
@@ -760,7 +762,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                                 }
                                 break;
                             case SEARCH_CONTACT:
-                                searchContactList = ContactUserCacheUtils.getSearchContact(searchText, excludeContactList, 4);
+                                searchContactList = ContactUserCacheUtils.getSearchContact(searchText, null, 4);
                                 break;
 
                             default:
@@ -1462,10 +1464,10 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
 
             if (searchModel != null) {
                 displayImg(searchModel, viewHolder.photoImg);
-                if (selectStaticSearchModelList.contains(searchModel)) {
+                if (isHaveStaticSearchModel(searchModel)) {
                     viewHolder.selectedImg.setImageResource(R.drawable.icon_self_selected);
                     viewHolder.selectedImg.setVisibility(View.VISIBLE);
-                    viewHolder.nameText.setTextColor(Color.parseColor("#0f7bca"));
+                    viewHolder.nameText.setTextColor(Color.parseColor("#030303"));
                 } else {
                     if (selectMemList.contains(searchModel)) {
                         viewHolder.selectedImg.setVisibility(View.VISIBLE);
@@ -1524,10 +1526,10 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
             SearchModel searchModel = commonContactList.get(position);
             viewHolder.nameText.setText(getCompleteName(searchModel));
             displayImg(searchModel, viewHolder.photoImg);
-            if (selectStaticSearchModelList.contains(searchModel)) {                /**如果有静态不可操作人员先处理 选中时为灰色 √ **/
+            if (isHaveStaticSearchModel(searchModel)) {                /**如果有静态不可操作人员先处理 选中时为灰色 √ **/
                 viewHolder.selectedImg.setImageResource(R.drawable.icon_self_selected);
                 viewHolder.selectedImg.setVisibility(View.VISIBLE);
-                viewHolder.nameText.setTextColor(Color.parseColor("#0f7bca"));
+                viewHolder.nameText.setTextColor(Color.parseColor("#030303"));
             } else {
                 if (selectMemList.contains(searchModel)) {
                     viewHolder.selectedImg.setVisibility(View.VISIBLE);
@@ -1604,11 +1606,18 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
             displayImg(searchModel, viewHolder.photoImg);
             viewHolder.nameText.setText(getCompleteName(searchModel));
             CommunicationUtils.setUserDescText(searchModel, viewHolder.descTv, true);
-            if (selectMemList.contains(searchModel)) {
+            if (isHaveStaticSearchModel(searchModel)) {                /**如果有静态不可操作人员先处理 选中时为灰色 √ **/
+                viewHolder.selectedImg.setImageResource(R.drawable.icon_self_selected);
                 viewHolder.selectedImg.setVisibility(View.VISIBLE);
+                viewHolder.nameText.setTextColor(Color.parseColor("#030303"));
             } else {
-                viewHolder.selectedImg.setVisibility(View.INVISIBLE);
+                if (selectMemList.contains(searchModel)) {
+                    viewHolder.selectedImg.setVisibility(View.VISIBLE);
+                } else {
+                    viewHolder.selectedImg.setVisibility(View.INVISIBLE);
+                }
             }
+
             return convertView;
         }
     }

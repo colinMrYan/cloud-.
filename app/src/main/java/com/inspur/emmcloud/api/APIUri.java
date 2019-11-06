@@ -595,7 +595,7 @@ public class APIUri {
      * 获取转发文件
      */
     public static String getTransmitFileUrl(String channelId, String fileType) {
-        return "https://api.inspuronline.com/" + "chat/rest/v1" + "/channel/" + channelId + "/" + fileType + "/share";
+        return getECMChatUrl() + "/rest/v1" + "/channel/" + channelId + "/" + fileType + "/share";
     }
 
 

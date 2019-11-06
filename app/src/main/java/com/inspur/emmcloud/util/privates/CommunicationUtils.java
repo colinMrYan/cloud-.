@@ -274,7 +274,7 @@ public class CommunicationUtils {
         msgContentRegularFile.setCategory(orgMsgContentRegularFile.getCategory());
         msgContentRegularFile.setName(orgMsgContentRegularFile.getName());
         msgContentRegularFile.setSize(orgMsgContentRegularFile.getSize());
-        msgContentRegularFile.setMedia(orgMsgContentRegularFile.getMedia());
+        msgContentRegularFile.setMedia(localFilePath);
         message.setContent(msgContentRegularFile.toString());
         return message;
     }
