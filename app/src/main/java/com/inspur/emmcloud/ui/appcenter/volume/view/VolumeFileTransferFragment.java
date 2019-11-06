@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.ui.appcenter.volume.view;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -25,7 +24,6 @@ import com.inspur.emmcloud.baselib.widget.dialogs.ActionSheetDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.DownloadFileCategory;
-import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.ui.BaseMvpFragment;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
@@ -35,8 +33,8 @@ import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.ui.appcenter.volume.contract.VolumeFileTransferContract;
 import com.inspur.emmcloud.ui.appcenter.volume.presenter.VolumeFileTransferPresenter;
-import com.inspur.emmcloud.ui.chat.mvp.view.ConversationSearchActivity;
 import com.inspur.emmcloud.util.privates.ShareFile2OutAppUtils;
+import com.inspur.emmcloud.util.privates.ShareUtil;
 import com.inspur.emmcloud.util.privates.VolumeFileUploadManager;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareListener;
@@ -229,8 +227,7 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
                 showFileDelWranibgDlg(downloadedAdapter.getSelectVolumeFileList());
             }
         } else if (action.equals(shareTo)) {
-            String fileSavePath = FileDownloadManager.getInstance().getDownloadFilePath(
-                    DownloadFileCategory.CATEGORY_VOLUME_FILE, volumeFile.getId(), volumeFile.getName());
+            String fileSavePath = volumeFile.getLocalFilePath();
             shareFile(fileSavePath, downloadedAdapter.getSelectVolumeFileList().get(0));
             downloadedAdapter.clearSelectedVolumeFileList();
             downloadedAdapter.notifyDataSetChanged();
@@ -322,9 +319,14 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
      * 分享到频道
      */
     private void shareToFriends(VolumeFile volumeFile) {
-        Intent shareIntent = new Intent(getActivity(), ConversationSearchActivity.class);
-        shareIntent.putExtra(Constant.SHARE_CONTENT, volumeFile.getName());
-        startActivityForResult(shareIntent, SHARE_IMAGE_OR_FILES);
+        List<String> urlList = new ArrayList<>();
+        String filePath = volumeFile.getLocalFilePath();
+        if (StringUtils.isBlank(filePath) || !FileUtils.isFileExist(filePath)) {
+            ToastUtils.show(getActivity(), getString(R.string.share_not_support));
+            return;
+        }
+        urlList.add(filePath);
+        ShareUtil.startVolumeShareActivity(getActivity(), urlList);
     }
 
     /**
