@@ -1584,7 +1584,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             operationIdList.add(R.string.chat_resend_message);
             operationIdList.add(R.string.delete);
         } else if (uiMessage.getSendStatus() == Message.MESSAGE_SEND_ING) {
-            operationIdList.add(R.string.delete);
+            //operationIdList.add(R.string.delete);
         } else if (uiMessage.getSendStatus() == Message.MESSAGE_SEND_SUCCESS) {
             switch (type) {
                 case Message.MESSAGE_TYPE_TEXT_PLAIN:
@@ -1770,7 +1770,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                         if (uiMessage.getSendStatus() == Message.MESSAGE_SEND_FAIL) {
                             removeSendFailMessage(uiMessage);
                         } else {
-                            recallSendingMessage(uiMessage);
+                            //recallSendingMessage(uiMessage);
                         }
 
                         break;
