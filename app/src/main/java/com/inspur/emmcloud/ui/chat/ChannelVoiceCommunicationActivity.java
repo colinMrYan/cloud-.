@@ -335,9 +335,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     private void init() {
         cloudPlusChannelId = getIntent().getStringExtra(ConversationActivity.CLOUD_PLUS_CHANNEL_ID);
         communicationType = getIntent().getStringExtra(VOICE_VIDEO_CALL_TYPE);
-        LogUtils.YfcDebug("云+channelId：" + cloudPlusChannelId);
         directOrGroupType = ConversationCacheUtils.getConversationType(this, cloudPlusChannelId);
-        LogUtils.YfcDebug("type的类型：" + directOrGroupType);
         //如果是邀请者能收到从外面传进来的人员列表
         List<VoiceCommunicationJoinChannelInfoBean> list = (List<VoiceCommunicationJoinChannelInfoBean>) getIntent().getSerializableExtra("userList");
         if (list != null) {
@@ -616,7 +614,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 directMuteImg.setImageResource(state == COMMUNICATION_LAYOUT_STATE ? R.drawable.icon_direct_mute : R.drawable.icon_direct_mute_unavailable);
                 directMuteTv.setTextColor(state == COMMUNICATION_LAYOUT_STATE ? colorNormal : colorUnavailiable);
             }
-
 
             //如果是通话中则“通话中”文字显示一下就不再显示
             communicationStateTv.setText(state == COMMUNICATION_LAYOUT_STATE ? "" : communicationStateTv.getText());
