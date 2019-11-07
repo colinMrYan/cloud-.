@@ -108,6 +108,7 @@ class OrgStrContactAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         convertView = LayoutInflater.from(adpContext).inflate(R.layout.contact_org_structure_item, null);
+        convertView.setClickable(false);
         ImageView logImage = (ImageView) convertView.findViewById(R.id.iv_org_item_flag);
         ImageView lineImage = (ImageView) convertView.findViewById(R.id.iv_org_item_line);
         TextView Name = (TextView) convertView.findViewById(R.id.tv_org_item_name);
