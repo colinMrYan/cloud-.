@@ -127,7 +127,6 @@ public class VoiceCommunicationManager {
         //加入频道成功
         @Override
         public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
-//            userCount = userCount + 1;
             changeUserConnectStateByAgoraUid(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_CONNECTED, uid);
             if (onVoiceCommunicationCallbacks != null) {
                 onVoiceCommunicationCallbacks.onJoinChannelSuccess(channel, uid, elapsed);
@@ -846,11 +845,6 @@ public class VoiceCommunicationManager {
      */
     private JSONArray getUidArray(List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList, String fromUid) {
         JSONArray jsonArray = new JSONArray();
-//        for (int i = 0; i < voiceCommunicationUserInfoBeanList.size(); i++) {
-//            if (!voiceCommunicationUserInfoBeanList.get(i).getUserId().equals(BaseApplication.getInstance().getUid())) {
-//                jsonArray.put(voiceCommunicationUserInfoBeanList.get(i).getUserId());
-//            }
-//        }
         jsonArray.put(fromUid);
         return jsonArray;
     }
