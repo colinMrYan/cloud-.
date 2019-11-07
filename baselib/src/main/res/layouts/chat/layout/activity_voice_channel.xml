@@ -121,14 +121,13 @@
                 android:overScrollMode="never" />
         </LinearLayout>
 
-
         <TextView
             android:id="@+id/tv_voice_communication_state"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/tv_voice_communication_time"
+            android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="136dp"
             android:text=""
             android:textColor="#333333"
             android:textSize="16sp" />
@@ -137,10 +136,10 @@
             android:id="@+id/tv_voice_communication_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/ll_voice_communication_function_group"
             android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="38dp"
+            android:layout_marginBottom="136dp"
             android:textColor="#333333"
             android:textSize="16sp" />
 
@@ -154,9 +153,11 @@
             android:orientation="horizontal">
 
             <LinearLayout
+                android:id="@+id/ll_group_mute"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:onClick="onClick"
                 android:orientation="vertical">
 
                 <ImageView
@@ -164,7 +165,6 @@
                     android:layout_width="38dp"
                     android:layout_height="38dp"
                     android:layout_gravity="center_horizontal"
-                    android:onClick="onClick"
                     android:padding="2dp"
                     android:src="@drawable/icon_mute_unselcected" />
 
@@ -174,16 +174,17 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="13dp"
-                    android:onClick="onClick"
                     android:text="@string/voice_communication_mute"
                     android:textColor="#333333"
                     android:textSize="13sp" />
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/ll_group_an_excuse"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:onClick="onClick"
                 android:orientation="vertical"
                 android:visibility="gone">
 
@@ -192,7 +193,6 @@
                     android:layout_width="38dp"
                     android:layout_height="38dp"
                     android:layout_gravity="center_horizontal"
-                    android:onClick="onClick"
                     android:padding="2dp"
                     android:src="@drawable/icon_excuse_unselected" />
 
@@ -202,14 +202,15 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="13dp"
-                    android:onClick="onClick"
                     android:text="@string/voice_communication_excuse"
                     android:textColor="#333333"
                     android:textSize="13sp" />
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/ll_group_hands_free"
                 android:layout_width="0dp"
+                android:onClick="onClick"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical">
@@ -219,7 +220,6 @@
                     android:layout_width="38dp"
                     android:layout_height="38dp"
                     android:layout_gravity="center_horizontal"
-                    android:onClick="onClick"
                     android:padding="2dp"
                     android:src="@drawable/icon_hands_free_unselected" />
 
@@ -229,7 +229,6 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="13dp"
-                    android:onClick="onClick"
                     android:text="@string/voice_communication_hands_free"
                     android:textColor="#333333"
                     android:textSize="13sp" />
@@ -237,9 +236,11 @@
 
 
             <LinearLayout
+                android:id="@+id/ll_group_tran_video"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:onClick="onClick"
                 android:orientation="vertical"
                 android:visibility="gone">
 
@@ -248,7 +249,6 @@
                     android:layout_width="38dp"
                     android:layout_height="38dp"
                     android:layout_gravity="center_horizontal"
-                    android:onClick="onClick"
                     android:padding="2dp"
                     android:src="@drawable/icon_trans_video" />
 
@@ -305,24 +305,26 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:onClick="onClick"
                 android:orientation="vertical">
 
                 <ImageView
                     android:id="@+id/img_mute_direct"
                     android:layout_width="64dp"
                     android:layout_height="64dp"
+                    android:clickable="false"
                     android:layout_gravity="center_horizontal"
-                    android:onClick="onClick"
                     android:padding="2dp"
-                    android:src="@drawable/icon_mute_unselcected" />
+                    android:src="@drawable/icon_direct_mute" />
 
                 <TextView
                     android:id="@+id/tv_mute_direct"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
+                    android:clickable="false"
                     android:layout_marginTop="13dp"
-                    android:onClick="onClick"
+                    android:gravity="center_horizontal"
                     android:text="@string/voice_communication_mute"
                     android:textColor="#333333"
                     android:textSize="13sp" />
@@ -333,6 +335,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:onClick="onClick"
                 android:orientation="vertical">
 
                 <ImageView
@@ -340,7 +343,6 @@
                     android:layout_width="64dp"
                     android:layout_height="64dp"
                     android:layout_gravity="center_horizontal"
-                    android:onClick="onClick"
                     android:padding="2dp"
                     android:src="@drawable/icon_hung_up" />
 
@@ -349,8 +351,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
+                    android:gravity="center_horizontal"
                     android:layout_marginTop="13dp"
-                    android:onClick="onClick"
                     android:text="@string/voice_communication_hung_up_direct"
                     android:textColor="#333333"
                     android:textSize="13sp" />
@@ -361,6 +363,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:onClick="onClick"
                 android:orientation="vertical">
 
                 <ImageView
@@ -368,7 +371,6 @@
                     android:layout_width="64dp"
                     android:layout_height="64dp"
                     android:layout_gravity="center_horizontal"
-                    android:onClick="onClick"
                     android:padding="2dp"
                     android:src="@drawable/icon_answer_the_phone" />
 
@@ -377,8 +379,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
+                    android:gravity="center_horizontal"
                     android:layout_marginTop="13dp"
-                    android:onClick="onClick"
                     android:text="@string/voice_communication_answer_phone_direct"
                     android:textColor="#333333"
                     android:textSize="13sp" />
@@ -389,6 +391,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:onClick="onClick"
                 android:orientation="vertical">
 
                 <ImageView
@@ -396,16 +399,18 @@
                     android:layout_width="64dp"
                     android:layout_height="64dp"
                     android:layout_gravity="center_horizontal"
-                    android:onClick="onClick"
+                    android:clickable="false"
                     android:padding="2dp"
-                    android:src="@drawable/icon_hands_free_unselected" />
+                    android:src="@drawable/icon_direct_hands_free" />
 
                 <TextView
-                    android:id="@+id/tv_huands_free_direct"
+                    android:id="@+id/tv_hands_free_direct"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
+                    android:clickable="false"
                     android:layout_marginTop="13dp"
+                    android:gravity="center_horizontal"
                     android:text="@string/voice_communication_hands_free"
                     android:textColor="#333333"
                     android:textSize="13sp" />

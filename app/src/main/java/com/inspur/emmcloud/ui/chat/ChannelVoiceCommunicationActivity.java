@@ -282,6 +282,22 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     RelativeLayout groupAnswerOrHungUpLayout;
     @BindView(R.id.ll_voice_communication_function_direct)
     LinearLayout directFunctionLayout;
+    @BindView(R.id.ll_mute_direct)
+    LinearLayout directMuteLayout;
+    @BindView(R.id.ll_hung_up_direct)
+    LinearLayout directHungUpLayout;
+    @BindView(R.id.ll_answer_phone_direct)
+    LinearLayout directAnswerPhoneLayout;
+    @BindView(R.id.ll_hands_free_direct)
+    LinearLayout directHansFreeLayout;
+    @BindView(R.id.img_mute_direct)
+    ImageView directMuteImg;
+    @BindView(R.id.tv_mute_direct)
+    TextView directMuteTv;
+    @BindView(R.id.img_hands_free_direct)
+    ImageView directHandFreeImg;
+    @BindView(R.id.tv_hands_free_direct)
+    TextView directHandFreeTv;
     private ChatAPIService apiService;
     private VoiceCommunicationJoinChannelInfoBean inviteeInfoBean;
     /**
@@ -394,6 +410,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             refreshCommunicationMemberAdapter();
             inviteeInfoBean = voiceCommunicationManager.getInviteeInfoBean();
             cloudPlusChannelId = voiceCommunicationManager.getCloudPlusChannelId();
+            directOrGroupType = ConversationCacheUtils.getConversationType(this, cloudPlusChannelId);
             if (layoutState == INVITER_LAYOUT_STATE || layoutState == INVITEE_LAYOUT_STATE) {
                 ImageDisplayUtils.getInstance().displayImage(userHeadImg, totalList.get(0).getHeadImageUrl(), R.drawable.icon_person_default);
                 userNameTv.setText(totalList.get(0).getUserName());
@@ -479,14 +496,21 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         if (voiceCommunicationManager.getLayoutState() == COMMUNICATION_LAYOUT_STATE) {
             int colorUnSelected = ContextCompat.getColor(this, R.color.voice_communication_function_default);
             int colorSelected = ContextCompat.getColor(this, R.color.voice_communication_function_select);
-            handsFreeImg.setSelected(voiceCommunicationManager.isHandsFree());
-            muteImg.setSelected(voiceCommunicationManager.isMute());
-            handsFreeImg.setClickable(voiceCommunicationManager.getLayoutState() == COMMUNICATION_LAYOUT_STATE);
-            muteImg.setClickable(voiceCommunicationManager.getLayoutState() == COMMUNICATION_LAYOUT_STATE);
-            handsFreeImg.setImageResource(voiceCommunicationManager.isHandsFree() ? R.drawable.icon_hands_free_selected : R.drawable.icon_hands_free_unselected);
-            handsFreeTv.setTextColor(voiceCommunicationManager.isHandsFree() ? colorSelected : colorUnSelected);
-            muteImg.setImageResource(voiceCommunicationManager.isMute() ? R.drawable.icon_mute_selected : R.drawable.icon_mute_unselcected);
-            muteTv.setTextColor(voiceCommunicationManager.isMute() ? colorSelected : colorUnSelected);
+            if (directOrGroupType.equals(Conversation.TYPE_GROUP)) {
+                handsFreeImg.setSelected(voiceCommunicationManager.isHandsFree());
+                muteImg.setSelected(voiceCommunicationManager.isMute());
+                handsFreeImg.setImageResource(voiceCommunicationManager.isHandsFree() ? R.drawable.icon_hands_free_selected : R.drawable.icon_hands_free_unselected);
+                handsFreeTv.setTextColor(voiceCommunicationManager.isHandsFree() ? colorSelected : colorUnSelected);
+                muteImg.setImageResource(voiceCommunicationManager.isMute() ? R.drawable.icon_mute_selected : R.drawable.icon_mute_unselcected);
+                muteTv.setTextColor(voiceCommunicationManager.isMute() ? colorSelected : colorUnSelected);
+            } else if (directOrGroupType.equals(Conversation.TYPE_DIRECT)) {
+                directHandFreeImg.setSelected(voiceCommunicationManager.isHandsFree());
+                directMuteImg.setSelected(voiceCommunicationManager.isMute());
+                directHandFreeImg.setImageResource(voiceCommunicationManager.isHandsFree() ? R.drawable.icon_direct_hands_free_selected : R.drawable.icon_direct_hands_free);
+                directHandFreeTv.setTextColor(voiceCommunicationManager.isHandsFree() ? colorSelected : colorUnSelected);
+                directMuteImg.setImageResource(voiceCommunicationManager.isMute() ? R.drawable.icon_direct_mute_selected : R.drawable.icon_direct_mute);
+                directMuteTv.setTextColor(voiceCommunicationManager.isMute() ? colorSelected : colorUnSelected);
+            }
         }
         voiceCommunicationManager.muteLocalAudioStream(voiceCommunicationManager.isMute());
         voiceCommunicationManager.muteAllRemoteAudioStreams(false);
@@ -559,8 +583,8 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         if (communicationType.equals(ECMChatInputMenu.VOICE_CALL)) {
             inviteeLinearLayout.setVisibility(state == INVITEE_LAYOUT_STATE ? View.VISIBLE : View.GONE);
             inviteMembersGroupLinearLayout.setVisibility((state == INVITER_LAYOUT_STATE || state == COMMUNICATION_LAYOUT_STATE) ? View.VISIBLE : View.GONE);
-            communicationMembersLinearLayout.setVisibility(state == INVITEE_LAYOUT_STATE ? View.VISIBLE : View.GONE);
-            functionLinearLayout.setVisibility((state == INVITER_LAYOUT_STATE || state == COMMUNICATION_LAYOUT_STATE) ? View.VISIBLE : View.GONE);
+            communicationMembersLinearLayout.setVisibility(state == INVITEE_LAYOUT_STATE && directOrGroupType.equals(Conversation.TYPE_GROUP) ? View.VISIBLE : View.GONE);
+            functionLinearLayout.setVisibility((state == INVITER_LAYOUT_STATE || state == COMMUNICATION_LAYOUT_STATE) && directOrGroupType.equals(Conversation.TYPE_GROUP) ? View.VISIBLE : View.GONE);
             communicationStateTv.setVisibility((state == INVITER_LAYOUT_STATE || state == COMMUNICATION_LAYOUT_STATE) ? View.VISIBLE : View.GONE);
             communicationTimeChronometer.setVisibility(state == COMMUNICATION_LAYOUT_STATE ? View.VISIBLE : View.GONE);
 
@@ -569,20 +593,30 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             communicationStateTv.setText(state == INVITER_LAYOUT_STATE ? getString(R.string.voice_communication_dialog) :
                     (state == INVITEE_LAYOUT_STATE ? getString(R.string.voice_communication_waitting_answer) :
                             (state == COMMUNICATION_LAYOUT_STATE ? getString(R.string.voice_communicaiton_watting_talking) : "")));
-            answerPhoneImg.setVisibility((state == INVITEE_LAYOUT_STATE) ? View.VISIBLE : View.GONE);
             int colorNormal = ContextCompat.getColor(this, R.color.voice_communication_function_default);
             int colorUnavailiable = ContextCompat.getColor(this, R.color.voice_communication_function_unavailiable_text);
-            excuseImg.setImageResource(state == COMMUNICATION_LAYOUT_STATE ? R.drawable.icon_excuse_unselected : R.drawable.icon_excuse_unavailable);
-            excuseTv.setTextColor(state == COMMUNICATION_LAYOUT_STATE ? colorNormal : colorUnavailiable);
-            excuseImg.setClickable(state == COMMUNICATION_LAYOUT_STATE);
+            if (directOrGroupType.equals(Conversation.TYPE_GROUP)) {
+                answerPhoneImg.setVisibility((state == INVITEE_LAYOUT_STATE) ? View.VISIBLE : View.GONE);
 
-            handsFreeImg.setImageResource(state == COMMUNICATION_LAYOUT_STATE ? R.drawable.icon_hands_free_unselected : R.drawable.icon_hands_free_unavailable);
-            handsFreeTv.setTextColor(state == COMMUNICATION_LAYOUT_STATE ? colorNormal : colorUnavailiable);
-            handsFreeImg.setClickable(state == COMMUNICATION_LAYOUT_STATE);
+                excuseImg.setImageResource(state == COMMUNICATION_LAYOUT_STATE ? R.drawable.icon_excuse_unselected : R.drawable.icon_excuse_unavailable);
+                excuseTv.setTextColor(state == COMMUNICATION_LAYOUT_STATE ? colorNormal : colorUnavailiable);
 
-            muteImg.setImageResource(state == COMMUNICATION_LAYOUT_STATE ? R.drawable.icon_mute_unselcected : R.drawable.icon_mute_unavaiable);
-            muteTv.setTextColor(state == COMMUNICATION_LAYOUT_STATE ? colorNormal : colorUnavailiable);
-            muteImg.setClickable(state == COMMUNICATION_LAYOUT_STATE);
+                handsFreeImg.setImageResource(state == COMMUNICATION_LAYOUT_STATE ? R.drawable.icon_hands_free_unselected : R.drawable.icon_hands_free_unavailable);
+                handsFreeTv.setTextColor(state == COMMUNICATION_LAYOUT_STATE ? colorNormal : colorUnavailiable);
+
+                muteImg.setImageResource(state == COMMUNICATION_LAYOUT_STATE ? R.drawable.icon_mute_unselcected : R.drawable.icon_mute_unavaiable);
+                muteTv.setTextColor(state == COMMUNICATION_LAYOUT_STATE ? colorNormal : colorUnavailiable);
+            } else if (directOrGroupType.equals(Conversation.TYPE_DIRECT)) {
+                directMuteLayout.setVisibility(state == COMMUNICATION_LAYOUT_STATE || state == INVITER_LAYOUT_STATE ? View.VISIBLE : View.GONE);
+                directHansFreeLayout.setVisibility(state == COMMUNICATION_LAYOUT_STATE || state == INVITER_LAYOUT_STATE ? View.VISIBLE : View.GONE);
+                directAnswerPhoneLayout.setVisibility(state == INVITEE_LAYOUT_STATE ? View.VISIBLE : View.GONE);
+                directHandFreeImg.setImageResource(state == COMMUNICATION_LAYOUT_STATE ? R.drawable.icon_direct_hands_free : R.drawable.icon_direct_hands_free_unavailable);
+                directHandFreeTv.setTextColor(state == COMMUNICATION_LAYOUT_STATE ? colorNormal : colorUnavailiable);
+
+                directMuteImg.setImageResource(state == COMMUNICATION_LAYOUT_STATE ? R.drawable.icon_direct_mute : R.drawable.icon_direct_mute_unavailable);
+                directMuteTv.setTextColor(state == COMMUNICATION_LAYOUT_STATE ? colorNormal : colorUnavailiable);
+            }
+
 
             //如果是通话中则“通话中”文字显示一下就不再显示
             communicationStateTv.setText(state == COMMUNICATION_LAYOUT_STATE ? "" : communicationStateTv.getText());
@@ -632,6 +666,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             if (cmd.equals("destroy")) {
                 changeUserConnectStateByUid(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_LEAVE, uid);
                 voiceCommunicationManager.setCommunicationState(COMMUNICATION_STATE_OVER);
+                voiceCommunicationManager.destroy();
                 SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
                 finish();
             } else if (cmd.equals("refuse")) {
@@ -719,6 +754,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         Log.d("zhang", "initViews: layoutState = " + layoutState);
         initCommunicationViews(layoutState);
         initFunctionState();
+        initTimeAndTextLocation();
         //第一次打开ChannelVoiceCommunicationActivity时，如果是邀请人状态，则刷新Adapter并创建频道
         //如果是被邀请人状态则获取声网的channelId获取频道信息
         if (!isFromSmallWindow) {
@@ -746,6 +782,23 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         }
 //        }
 //        dragLocalVideoView();
+    }
+
+    /**
+     * 设置计时器和提示语的位置
+     */
+    private void initTimeAndTextLocation() {
+        RelativeLayout.LayoutParams tvParams = (RelativeLayout.LayoutParams) communicationStateTv.getLayoutParams();
+        RelativeLayout.LayoutParams chronometerParams = (RelativeLayout.LayoutParams) communicationTimeChronometer.getLayoutParams();
+        if (directOrGroupType.equals(Conversation.TYPE_DIRECT)) {
+            tvParams.setMargins(0, 0, 0, DensityUtil.dip2px(136));
+            chronometerParams.setMargins(0, 0, 0, DensityUtil.dip2px(136));
+        } else if (directOrGroupType.equals(Conversation.TYPE_GROUP)) {
+            tvParams.setMargins(0, 0, 0, DensityUtil.dip2px(235));
+            chronometerParams.setMargins(0, 0, 0, DensityUtil.dip2px(235));
+        }
+        communicationStateTv.setLayoutParams(tvParams);
+        communicationTimeChronometer.setLayoutParams(chronometerParams);
     }
 
     /**
@@ -1048,24 +1101,39 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 voiceCommunicationManager.muteAllRemoteAudioStreams(excuseImg.isSelected());
                 excuseImg.setImageResource(excuseImg.isSelected() ? R.drawable.icon_excuse_selected : R.drawable.icon_excuse_unselected);
                 break;
-            case R.id.tv_hands_free:
-            case R.id.img_hands_free:
-                switchFunctionViewUIState(handsFreeImg, handsFreeTv);
-                voiceCommunicationManager.setHandsFree(handsFreeImg.isSelected());
-                voiceCommunicationManager.onSwitchSpeakerphoneClicked(handsFreeImg.isSelected());
-                handsFreeImg.setImageResource(handsFreeImg.isSelected() ? R.drawable.icon_hands_free_selected : R.drawable.icon_hands_free_unselected);
+            case R.id.ll_hands_free_direct:
+            case R.id.ll_group_hands_free:
+                if (directOrGroupType.equals(Conversation.TYPE_GROUP)) {
+                    switchFunctionViewUIState(handsFreeImg, handsFreeTv);
+                    voiceCommunicationManager.setHandsFree(handsFreeImg.isSelected());
+                    voiceCommunicationManager.onSwitchSpeakerphoneClicked(handsFreeImg.isSelected());
+                    handsFreeImg.setImageResource(handsFreeImg.isSelected() ? R.drawable.icon_hands_free_selected : R.drawable.icon_hands_free_unselected);
+                } else if (directOrGroupType.equals(Conversation.TYPE_DIRECT)) {
+                    switchFunctionViewUIState(directHandFreeImg, directHandFreeTv);
+                    voiceCommunicationManager.setHandsFree(directHandFreeImg.isSelected());
+                    voiceCommunicationManager.onSwitchSpeakerphoneClicked(directHandFreeImg.isSelected());
+                    directHandFreeImg.setImageResource(directHandFreeImg.isSelected() ? R.drawable.icon_direct_hands_free_selected : R.drawable.icon_direct_hands_free);
+                }
                 break;
-            case R.id.tv_mute:
-            case R.id.img_mute:
-                switchFunctionViewUIState(muteImg, muteTv);
-                voiceCommunicationManager.setMute(muteImg.isSelected());
-                voiceCommunicationManager.muteLocalAudioStream(muteImg.isSelected());
-                muteImg.setImageResource(muteImg.isSelected() ? R.drawable.icon_mute_selected : R.drawable.icon_mute_unselcected);
+            case R.id.ll_mute_direct:
+            case R.id.ll_group_mute:
+                if (directOrGroupType.equals(Conversation.TYPE_GROUP)) {
+                    switchFunctionViewUIState(muteImg, muteTv);
+                    voiceCommunicationManager.setMute(muteImg.isSelected());
+                    voiceCommunicationManager.muteLocalAudioStream(muteImg.isSelected());
+                    muteImg.setImageResource(muteImg.isSelected() ? R.drawable.icon_mute_selected : R.drawable.icon_mute_unselcected);
+                } else if (directOrGroupType.equals(Conversation.TYPE_DIRECT)) {
+                    switchFunctionViewUIState(directMuteImg, directMuteTv);
+                    voiceCommunicationManager.setMute(directMuteImg.isSelected());
+                    voiceCommunicationManager.muteLocalAudioStream(directMuteImg.isSelected());
+                    directMuteImg.setImageResource(directMuteImg.isSelected() ? R.drawable.icon_direct_mute_selected : R.drawable.icon_direct_mute);
+                }
                 break;
             case R.id.img_tran_video:
                 switchFunctionViewUIState(tranVideoImg, tranVideoTv);
                 tranVideoImg.setImageResource(tranVideoImg.isSelected() ? R.drawable.icon_trans_video : R.drawable.icon_trans_video);
                 break;
+            case R.id.ll_answer_phone_direct:
             case R.id.img_answer_the_phone:
                 voiceCommunicationManager.setCommunicationState(COMMUNICATION_STATE_ING);
                 initCommunicationViews(COMMUNICATION_LAYOUT_STATE);
@@ -1078,6 +1146,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                     refuseOrLeaveChannel(COMMUNICATION_REFUSE);
                 }
                 break;
+            case R.id.ll_hung_up_direct:
             case R.id.ll_video_hung_up:
             case R.id.img_hung_up:
                 if (answerPhoneImg.getVisibility() == View.VISIBLE) {
