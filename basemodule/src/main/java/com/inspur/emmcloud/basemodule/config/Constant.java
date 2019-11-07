@@ -152,6 +152,14 @@ public class Constant {
     public static final String EVENTBUS_TAG_REFRESH_VOICE_CALL_SMALL_WINDOW = "tag_wechat_result";
     public static final String SERVICE_VERSION_CHAT_V0 = "v0";
     public static final String SERVICE_VERSION_CHAT_V1 = "v1";
+    public static final String COMMAND_ECC_CLOUDPLUS_CMD = "ecc-cloudplus-cmd";
+    public static final String COMMAND_INVITE = "invite";
+    public static final String COMMAND_REFUSE = "refuse";
+    public static final String COMMAND_DESTROY = "destroy";
+    public static final String COMMAND_CMD = "cmd";
+    public static final String COMMAND_UID = "uid";
+    public static final String COMMAND_CHANNEL_ID = "channelid";
+    public static final String COMMAND_ROOM_ID = "roomid";
 
     public static final String APP_TAB_TYPE_NATIVE = "native";
     public static final String APP_TAB_TYPE_RN = "react-native";

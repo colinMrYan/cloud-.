@@ -112,7 +112,15 @@ public class NativeFileManagerFragment extends BaseFragment {
 
     public void onBackPress() {
         if (titleAdapter.getItemCount() > 1) {
-            titleAdapter.removeLast();
+            int index = titleAdapter.getItemCount();
+            index = index - 2;
+            TitlePath titlePath = (TitlePath) titleAdapter.getItem(index);
+            getFile(titlePath.getPath());
+            int count = titleAdapter.getItemCount();
+            int removeCount = count - index - 1;
+            for (int i = 0; i < removeCount; i++) {
+                titleAdapter.removeLast();
+            }
         } else {
             getActivity().finish();
         }
