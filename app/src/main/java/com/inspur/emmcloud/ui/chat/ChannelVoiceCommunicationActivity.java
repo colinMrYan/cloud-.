@@ -1312,11 +1312,8 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        //已接通，停止音乐，关闭activity，打开小窗口
-        if (voiceCommunicationManager.getCommunicationState() == COMMUNICATION_STATE_ING) {
-            if (mediaPlayerManagerUtils != null) {
-                mediaPlayerManagerUtils.stop();
-            }
+        if (mediaPlayerManagerUtils != null) {
+            mediaPlayerManagerUtils.stop();
         }
         Log.d("zhang", "onPause: layoutState = " + layoutState);
         Log.d("zhang", "onPause: voiceCommunicationManager.getCommunicationState() = " + voiceCommunicationManager.getCommunicationState());
@@ -1325,11 +1322,15 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             if (Build.VERSION.SDK_INT >= 23) {
                 if (Settings.canDrawOverlays(this) && AppUtils.canBackgroundStart(this)) {
                     showSmallWindowAndCloseActivity();
+                } else {
+                    finish();
                 }
             } else {
                 if (Build.VERSION.SDK_INT >= 19) {
                     if (AppUtils.canBackgroundStart(this)) {
                         showSmallWindowAndCloseActivity();
+                    } else {
+                        finish();
                     }
                 } else {
                     showSmallWindowAndCloseActivity();
@@ -1362,9 +1363,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             unregisterReceiver(receiver);
         }
         EventBus.getDefault().unregister(this);
-        if (mediaPlayerManagerUtils != null) {
-            mediaPlayerManagerUtils.stop();
-        }
     }
 
     /**
