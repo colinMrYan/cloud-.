@@ -267,7 +267,7 @@ public class CommunicationUtils {
         message.setChannel(cid);
         message.setId(tracer);
         message.setTmpId(tracer);
-        message.setType("file/regular-file");
+        message.setType(Message.MESSAGE_TYPE_FILE_REGULAR_FILE);
         message.setLocalPath("");
 
         MsgContentRegularFile msgContentRegularFile = new MsgContentRegularFile();
@@ -286,7 +286,7 @@ public class CommunicationUtils {
         message.setChannel(cid);
         message.setId(tracer);
         message.setTmpId(tracer);
-        message.setType("extended/links");
+        message.setType(Message.MESSAGE_TYPE_EXTENDED_LINKS);
         MsgContentExtendedLinks msgContentExtendedLinks = new MsgContentExtendedLinks();
         msgContentExtendedLinks.setPoster(poster);
         msgContentExtendedLinks.setTitle(title);
@@ -302,7 +302,7 @@ public class CommunicationUtils {
         message.setChannel(cid);
         message.setId(tracer);
         message.setTmpId(tracer);
-        message.setType("extended/links");
+        message.setType(Message.MESSAGE_TYPE_EXTENDED_LINKS);
         message.setContent(content);
         return message;
     }

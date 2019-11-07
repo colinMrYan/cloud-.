@@ -3,7 +3,6 @@ package com.inspur.emmcloud.news.api;
 import com.inspur.emmcloud.news.bean.GetGroupNewsDetailResult;
 import com.inspur.emmcloud.news.bean.GetNewsInstructionResult;
 import com.inspur.emmcloud.news.bean.GetNewsTitleResult;
-import com.inspur.emmcloud.news.bean.GetSendMsgResult;
 
 public interface NewsAPIInterface {
     void returnGroupNewsTitleSuccess(GetNewsTitleResult getNewsTitleResult);
@@ -19,7 +18,4 @@ public interface NewsAPIInterface {
 
     void returnNewsInstructionFail(String error, int errorCode);
 
-    void returnSendMsgSuccess(GetSendMsgResult getSendMsgResult, String fakeMessageId);
-
-    void returnSendMsgFail(String error, String fakeMessageId, int errorCode);
 }
