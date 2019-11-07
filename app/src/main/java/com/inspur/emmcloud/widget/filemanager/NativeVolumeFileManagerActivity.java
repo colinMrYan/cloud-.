@@ -102,4 +102,16 @@ public class NativeVolumeFileManagerActivity extends BaseFragmentActivity implem
                 break;
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        switch (fileViewPager.getCurrentItem()) {
+            case 0:
+                nativeFileManagerFragment.onBackPress();
+                break;
+            case 1:
+                volumeFileManagerFragment.onBackPress();
+                break;
+        }
+    }
 }
