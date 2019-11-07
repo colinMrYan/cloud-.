@@ -33,7 +33,6 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
-import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ResolutionUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
@@ -43,7 +42,6 @@ import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
-import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.ClickRuleUtil;
@@ -53,11 +51,11 @@ import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
+import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetVoiceAndVideoResult;
 import com.inspur.emmcloud.bean.chat.GetVoiceCommunicationResult;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationAudioVolumeInfo;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
-import com.inspur.emmcloud.bean.system.GetBoolenResult;
 import com.inspur.emmcloud.broadcastreceiver.VoiceCommunicationHeadSetReceiver;
 import com.inspur.emmcloud.ui.AppSchemeHandleActivity;
 import com.inspur.emmcloud.util.privates.CustomProtocol;
@@ -66,6 +64,7 @@ import com.inspur.emmcloud.util.privates.NotifyUtil;
 import com.inspur.emmcloud.util.privates.SuspensionWindowManagerUtils;
 import com.inspur.emmcloud.util.privates.VoiceCommunicationManager;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
 import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
 
@@ -180,6 +179,10 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
      */
     private String cloudPlusChannelId = "";
     /**
+     * 指明发起此会话的channel是单聊还是群聊
+     */
+    private String directOrGroupType = "";
+    /**
      * 会话类型 VOICE_CALL或者VIDEO_CALL
      */
     private String communicationType = "";
@@ -275,18 +278,42 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     ImageView videoPackUpImg;
     @BindView(R.id.rl_person_info)
     RelativeLayout personInfoLayout;
+    @BindView(R.id.rl_voice_communication_operate)
+    RelativeLayout groupAnswerOrHungUpLayout;
+    @BindView(R.id.ll_voice_communication_function_direct)
+    LinearLayout directFunctionLayout;
+    @BindView(R.id.ll_mute_direct)
+    LinearLayout directMuteLayout;
+    @BindView(R.id.ll_hung_up_direct)
+    LinearLayout directHungUpLayout;
+    @BindView(R.id.ll_answer_phone_direct)
+    LinearLayout directAnswerPhoneLayout;
+    @BindView(R.id.ll_hands_free_direct)
+    LinearLayout directHansFreeLayout;
+    @BindView(R.id.img_mute_direct)
+    ImageView directMuteImg;
+    @BindView(R.id.tv_mute_direct)
+    TextView directMuteTv;
+    @BindView(R.id.img_hands_free_direct)
+    ImageView directHandFreeImg;
+    @BindView(R.id.tv_hands_free_direct)
+    TextView directHandFreeTv;
     private ChatAPIService apiService;
     private VoiceCommunicationJoinChannelInfoBean inviteeInfoBean;
     /**
      * 当前频道里在线的人数
      */
-    private int userCount = 1;
+//    private int userCount = 1;
     private VoiceCommunicationMemberAdapter voiceCommunicationMemberAdapterFirst;
     private VoiceCommunicationMemberAdapter voiceCommunicationMemberAdapterSecond;
     private MediaPlayerManagerUtils mediaPlayerManagerUtils;
     private VoiceCommunicationManager voiceCommunicationManager;
     private VoiceCommunicationHeadSetReceiver receiver;
     private LoadingDialog loadingDialog;
+    /**
+     * 60s内无响应挂断 总时长：millisInFuture，隔多长时间回调一次countDownInterval
+     */
+    private long millisInFuture = 60 * 1000L, countDownInterval = 1000;
 
     @Override
     public void onCreate() {
@@ -308,6 +335,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     private void init() {
         cloudPlusChannelId = getIntent().getStringExtra(ConversationActivity.CLOUD_PLUS_CHANNEL_ID);
         communicationType = getIntent().getStringExtra(VOICE_VIDEO_CALL_TYPE);
+        directOrGroupType = ConversationCacheUtils.getConversationType(this, cloudPlusChannelId);
         //如果是邀请者能收到从外面传进来的人员列表
         List<VoiceCommunicationJoinChannelInfoBean> list = (List<VoiceCommunicationJoinChannelInfoBean>) getIntent().getSerializableExtra("userList");
         if (list != null) {
@@ -348,7 +376,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         PermissionRequestManagerUtils.getInstance().requestRuntimePermission(this, Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
             @Override
             public void onPermissionRequestSuccess(List<String> permissions) {
-
             }
 
             @Override
@@ -376,17 +403,14 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             voiceCommunicationManager.setCommunicationState(voiceCommunicationManager.getCommunicationState());
             layoutState = voiceCommunicationManager.getLayoutState();
             List<VoiceCommunicationJoinChannelInfoBean> totalList = voiceCommunicationManager.getVoiceCommunicationMemberList();
-            LogUtils.YfcDebug("恢复时数据状态：" + JSONUtils.toJSONString(totalList));
             agoraChannelId = voiceCommunicationManager.getAgoraChannelId();
             communicationType = voiceCommunicationManager.getCommunicationType();
             refreshCommunicationMemberAdapter();
             inviteeInfoBean = voiceCommunicationManager.getInviteeInfoBean();
-            userCount = voiceCommunicationManager.getUserCount();
             cloudPlusChannelId = voiceCommunicationManager.getCloudPlusChannelId();
+            directOrGroupType = ConversationCacheUtils.getConversationType(this, cloudPlusChannelId);
             if (layoutState == INVITER_LAYOUT_STATE || layoutState == INVITEE_LAYOUT_STATE) {
-                //头像源数据修改为本地，注释掉的是从接口中读取的url，约定的，第0个为邀请者
                 ImageDisplayUtils.getInstance().displayImage(userHeadImg, totalList.get(0).getHeadImageUrl(), R.drawable.icon_person_default);
-                //ImageDisplayUtils.getInstance().displayImage(userHeadImg, APIUri.getUserIconUrl(this, infoBean.getUserId()), R.drawable.icon_person_default);
                 userNameTv.setText(totalList.get(0).getUserName());
                 if (totalList.size() <= 5) {
                     communicationMembersFirstRecyclerview.setAdapter(new VoiceCommunicationMemberAdapter(ChannelVoiceCommunicationActivity.this, totalList, 3));
@@ -399,10 +423,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             }
         }
     }
-    /**
-     * 30s内无响应挂断 总时长：millisInFuture，隔多长时间回调一次countDownInterval
-     */
-    private long millisInFuture = 60 * 1000L, countDownInterval = 1000;
 
     /**
      * 本地视频窗口拖动功能，目前还有问题
@@ -467,22 +487,28 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     }
 
     /**
-     * 初始化功能模块的初始值
+     * 初始化功能模块的初始值，如果正在通话中则需要判断是不是要恢复语音通话状态
      * 如是否免提，是否静音
      */
     private void initFunctionState() {
         if (voiceCommunicationManager.getLayoutState() == COMMUNICATION_LAYOUT_STATE) {
             int colorUnSelected = ContextCompat.getColor(this, R.color.voice_communication_function_default);
             int colorSelected = ContextCompat.getColor(this, R.color.voice_communication_function_select);
-
-            handsFreeImg.setSelected(voiceCommunicationManager.isHandsFree());
-            muteImg.setSelected(voiceCommunicationManager.isMute());
-            handsFreeImg.setClickable(voiceCommunicationManager.getLayoutState() == COMMUNICATION_LAYOUT_STATE);
-            muteImg.setClickable(voiceCommunicationManager.getLayoutState() == COMMUNICATION_LAYOUT_STATE);
-            handsFreeImg.setImageResource(voiceCommunicationManager.isHandsFree() ? R.drawable.icon_hands_free_selected : R.drawable.icon_hands_free_unselected);
-            handsFreeTv.setTextColor(voiceCommunicationManager.isHandsFree() ? colorSelected : colorUnSelected);
-            muteImg.setImageResource(voiceCommunicationManager.isMute() ? R.drawable.icon_mute_selected : R.drawable.icon_mute_unselcected);
-            muteTv.setTextColor(voiceCommunicationManager.isMute() ? colorSelected : colorUnSelected);
+            if (directOrGroupType.equals(Conversation.TYPE_GROUP)) {
+                handsFreeImg.setSelected(voiceCommunicationManager.isHandsFree());
+                muteImg.setSelected(voiceCommunicationManager.isMute());
+                handsFreeImg.setImageResource(voiceCommunicationManager.isHandsFree() ? R.drawable.icon_hands_free_selected : R.drawable.icon_hands_free_unselected);
+                handsFreeTv.setTextColor(voiceCommunicationManager.isHandsFree() ? colorSelected : colorUnSelected);
+                muteImg.setImageResource(voiceCommunicationManager.isMute() ? R.drawable.icon_mute_selected : R.drawable.icon_mute_unselcected);
+                muteTv.setTextColor(voiceCommunicationManager.isMute() ? colorSelected : colorUnSelected);
+            } else if (directOrGroupType.equals(Conversation.TYPE_DIRECT)) {
+                directHandFreeImg.setSelected(voiceCommunicationManager.isHandsFree());
+                directMuteImg.setSelected(voiceCommunicationManager.isMute());
+                directHandFreeImg.setImageResource(voiceCommunicationManager.isHandsFree() ? R.drawable.icon_direct_hands_free_selected : R.drawable.icon_direct_hands_free);
+                directHandFreeTv.setTextColor(voiceCommunicationManager.isHandsFree() ? colorSelected : colorUnSelected);
+                directMuteImg.setImageResource(voiceCommunicationManager.isMute() ? R.drawable.icon_direct_mute_selected : R.drawable.icon_direct_mute);
+                directMuteTv.setTextColor(voiceCommunicationManager.isMute() ? colorSelected : colorUnSelected);
+            }
         }
         voiceCommunicationManager.muteLocalAudioStream(voiceCommunicationManager.isMute());
         voiceCommunicationManager.muteAllRemoteAudioStreams(false);
@@ -502,7 +528,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     }
 
     /**
-     * 创建频道
+     * 创建频道，由主叫方调用
      */
     private void createChannel() {
         Log.d("zhang", "createChannel: ");
@@ -532,6 +558,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     private void initCommunicationViews(int state) {
         if (state == EXCEPTION_STATE) {
             finish();
+            return;
         }
         layoutState = state;
         voiceCommunicationManager.setLayoutState(layoutState);
@@ -554,8 +581,8 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         if (communicationType.equals(ECMChatInputMenu.VOICE_CALL)) {
             inviteeLinearLayout.setVisibility(state == INVITEE_LAYOUT_STATE ? View.VISIBLE : View.GONE);
             inviteMembersGroupLinearLayout.setVisibility((state == INVITER_LAYOUT_STATE || state == COMMUNICATION_LAYOUT_STATE) ? View.VISIBLE : View.GONE);
-            communicationMembersLinearLayout.setVisibility(state == INVITEE_LAYOUT_STATE ? View.VISIBLE : View.GONE);
-            functionLinearLayout.setVisibility((state == INVITER_LAYOUT_STATE || state == COMMUNICATION_LAYOUT_STATE) ? View.VISIBLE : View.GONE);
+            communicationMembersLinearLayout.setVisibility(state == INVITEE_LAYOUT_STATE && directOrGroupType.equals(Conversation.TYPE_GROUP) ? View.VISIBLE : View.GONE);
+            functionLinearLayout.setVisibility((state == INVITER_LAYOUT_STATE || state == COMMUNICATION_LAYOUT_STATE) && directOrGroupType.equals(Conversation.TYPE_GROUP) ? View.VISIBLE : View.GONE);
             communicationStateTv.setVisibility((state == INVITER_LAYOUT_STATE || state == COMMUNICATION_LAYOUT_STATE) ? View.VISIBLE : View.GONE);
             communicationTimeChronometer.setVisibility(state == COMMUNICATION_LAYOUT_STATE ? View.VISIBLE : View.GONE);
 
@@ -564,20 +591,29 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             communicationStateTv.setText(state == INVITER_LAYOUT_STATE ? getString(R.string.voice_communication_dialog) :
                     (state == INVITEE_LAYOUT_STATE ? getString(R.string.voice_communication_waitting_answer) :
                             (state == COMMUNICATION_LAYOUT_STATE ? getString(R.string.voice_communicaiton_watting_talking) : "")));
-            answerPhoneImg.setVisibility((state == INVITEE_LAYOUT_STATE) ? View.VISIBLE : View.GONE);
             int colorNormal = ContextCompat.getColor(this, R.color.voice_communication_function_default);
             int colorUnavailiable = ContextCompat.getColor(this, R.color.voice_communication_function_unavailiable_text);
-            excuseImg.setImageResource(state == COMMUNICATION_LAYOUT_STATE ? R.drawable.icon_excuse_unselected : R.drawable.icon_excuse_unavailable);
-            excuseTv.setTextColor(state == COMMUNICATION_LAYOUT_STATE ? colorNormal : colorUnavailiable);
-            excuseImg.setClickable(state == COMMUNICATION_LAYOUT_STATE);
+            if (directOrGroupType.equals(Conversation.TYPE_GROUP)) {
+                answerPhoneImg.setVisibility((state == INVITEE_LAYOUT_STATE) ? View.VISIBLE : View.GONE);
 
-            handsFreeImg.setImageResource(state == COMMUNICATION_LAYOUT_STATE ? R.drawable.icon_hands_free_unselected : R.drawable.icon_hands_free_unavailable);
-            handsFreeTv.setTextColor(state == COMMUNICATION_LAYOUT_STATE ? colorNormal : colorUnavailiable);
-            handsFreeImg.setClickable(state == COMMUNICATION_LAYOUT_STATE);
+                excuseImg.setImageResource(state == COMMUNICATION_LAYOUT_STATE ? R.drawable.icon_excuse_unselected : R.drawable.icon_excuse_unavailable);
+                excuseTv.setTextColor(state == COMMUNICATION_LAYOUT_STATE ? colorNormal : colorUnavailiable);
 
-            muteImg.setImageResource(state == COMMUNICATION_LAYOUT_STATE ? R.drawable.icon_mute_unselcected : R.drawable.icon_mute_unavaiable);
-            muteTv.setTextColor(state == COMMUNICATION_LAYOUT_STATE ? colorNormal : colorUnavailiable);
-            muteImg.setClickable(state == COMMUNICATION_LAYOUT_STATE);
+                handsFreeImg.setImageResource(state == COMMUNICATION_LAYOUT_STATE ? R.drawable.icon_hands_free_unselected : R.drawable.icon_hands_free_unavailable);
+                handsFreeTv.setTextColor(state == COMMUNICATION_LAYOUT_STATE ? colorNormal : colorUnavailiable);
+
+                muteImg.setImageResource(state == COMMUNICATION_LAYOUT_STATE ? R.drawable.icon_mute_unselcected : R.drawable.icon_mute_unavaiable);
+                muteTv.setTextColor(state == COMMUNICATION_LAYOUT_STATE ? colorNormal : colorUnavailiable);
+            } else if (directOrGroupType.equals(Conversation.TYPE_DIRECT)) {
+                directMuteLayout.setVisibility(state == COMMUNICATION_LAYOUT_STATE || state == INVITER_LAYOUT_STATE ? View.VISIBLE : View.GONE);
+                directHansFreeLayout.setVisibility(state == COMMUNICATION_LAYOUT_STATE || state == INVITER_LAYOUT_STATE ? View.VISIBLE : View.GONE);
+                directAnswerPhoneLayout.setVisibility(state == INVITEE_LAYOUT_STATE ? View.VISIBLE : View.GONE);
+                directHandFreeImg.setImageResource(state == COMMUNICATION_LAYOUT_STATE ? R.drawable.icon_direct_hands_free : R.drawable.icon_direct_hands_free_unavailable);
+                directHandFreeTv.setTextColor(state == COMMUNICATION_LAYOUT_STATE ? colorNormal : colorUnavailiable);
+
+                directMuteImg.setImageResource(state == COMMUNICATION_LAYOUT_STATE ? R.drawable.icon_direct_mute : R.drawable.icon_direct_mute_unavailable);
+                directMuteTv.setTextColor(state == COMMUNICATION_LAYOUT_STATE ? colorNormal : colorUnavailiable);
+            }
 
             //如果是通话中则“通话中”文字显示一下就不再显示
             communicationStateTv.setText(state == COMMUNICATION_LAYOUT_STATE ? "" : communicationStateTv.getText());
@@ -601,7 +637,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             videoHungUp.setVisibility((state == COMMUNICATION_LAYOUT_STATE || state == INVITER_LAYOUT_STATE || state == INVITEE_LAYOUT_STATE) ? View.VISIBLE : View.GONE);
             answerVideoPhoneLayout.setVisibility(state == INVITEE_LAYOUT_STATE ? View.VISIBLE : View.GONE);
             switchCameraLayout.setVisibility(state == COMMUNICATION_LAYOUT_STATE ? View.VISIBLE : View.GONE);
-//            videoPackUpImg.setVisibility(state == COMMUNICATION_LAYOUT_STATE ? View.VISIBLE : View.GONE);
             videoPackUpImg.setVisibility(View.GONE);
             personInfoLayout.setVisibility((state == INVITER_LAYOUT_STATE || state == INVITEE_LAYOUT_STATE) ? View.VISIBLE : View.GONE);
             if (state == COMMUNICATION_LAYOUT_STATE) {
@@ -621,15 +656,14 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     //多人通话中，收到refuse消息，则弹出相关提示，并检查是否应该finish，收到destroy消息则改变状态，并结束通话
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveVoiceOrVideoCall(final GetVoiceAndVideoResult getVoiceAndVideoResult) {
-
         CustomProtocol customProtocol = new CustomProtocol(getVoiceAndVideoResult.getContextParamsSchema());
         String cmd = customProtocol.getParamMap().get("cmd");
         if (!StringUtils.isBlank(cmd) && getVoiceAndVideoResult.getContextParamsRoom().equals(agoraChannelId)) {
             String uid = customProtocol.getParamMap().get("uid");
             if (cmd.equals("destroy")) {
                 changeUserConnectStateByUid(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_LEAVE, uid);
-                remindEmmServerLeaveChannel(agoraChannelId);
                 voiceCommunicationManager.setCommunicationState(COMMUNICATION_STATE_OVER);
+                voiceCommunicationManager.destroy();
                 SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
                 finish();
             } else if (cmd.equals("refuse")) {
@@ -656,22 +690,11 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
      * 检查是否需要退出，当通话中的人数和等待人数之和小于2则退出
      */
     private boolean checkCommunicationFinish() {
-        List<VoiceCommunicationJoinChannelInfoBean> totalList = voiceCommunicationManager.getVoiceCommunicationMemberList();
-        if (totalList != null && totalList.size() > 0) {
-            int waitAndCommunicationSize = 0;
-            for (int i = 0; i < totalList.size(); i++) {
-                if (totalList.get(i).getConnectState() == VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_CONNECTED ||
-                        totalList.get(i).getConnectState() == VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_INIT) {
-                    waitAndCommunicationSize = waitAndCommunicationSize + 1;
-                }
-            }
-            LogUtils.YfcDebug("等待和已接通人数：" + waitAndCommunicationSize);
-            if (waitAndCommunicationSize < 2) {
-                voiceCommunicationManager.setCommunicationState(COMMUNICATION_STATE_OVER);
-                Log.d("zhang", "COMMUNICATION_STATE_OVER: 000000 ");
-                refuseOrLeaveChannel(COMMUNICATION_LEAVE);
-                return true;
-            }
+        if (voiceCommunicationManager.getWaitAndConnectedNumber() < 2) {
+            voiceCommunicationManager.setCommunicationState(COMMUNICATION_STATE_OVER);
+            Log.d("zhang", "COMMUNICATION_STATE_OVER: 000000 ");
+            refuseOrLeaveChannel(COMMUNICATION_LEAVE);
+            return true;
         }
         return false;
     }
@@ -720,9 +743,15 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         layoutManagerMemebersFirst.setOrientation(LinearLayoutManager.HORIZONTAL);
         communicationMembersFirstRecyclerview.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this, 8)));
         communicationMembersFirstRecyclerview.setLayoutManager(layoutManagerMemebersFirst);
+
+        directFunctionLayout.setVisibility(directOrGroupType.equals(Conversation.TYPE_DIRECT) ? View.VISIBLE : View.GONE);
+        groupAnswerOrHungUpLayout.setVisibility(directOrGroupType.equals(Conversation.TYPE_GROUP) ? View.VISIBLE : View.GONE);
+        functionLinearLayout.setVisibility(directOrGroupType.equals(Conversation.TYPE_GROUP) ? View.VISIBLE : View.GONE);
+
         Log.d("zhang", "initViews: layoutState = " + layoutState);
         initCommunicationViews(layoutState);
         initFunctionState();
+        initTimeAndTextLocation();
         //第一次打开ChannelVoiceCommunicationActivity时，如果是邀请人状态，则刷新Adapter并创建频道
         //如果是被邀请人状态则获取声网的channelId获取频道信息
         if (!isFromSmallWindow) {
@@ -753,14 +782,31 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     }
 
     /**
+     * 设置计时器和提示语的位置
+     */
+    private void initTimeAndTextLocation() {
+        RelativeLayout.LayoutParams tvParams = (RelativeLayout.LayoutParams) communicationStateTv.getLayoutParams();
+        RelativeLayout.LayoutParams chronometerParams = (RelativeLayout.LayoutParams) communicationTimeChronometer.getLayoutParams();
+        if (directOrGroupType.equals(Conversation.TYPE_DIRECT)) {
+            tvParams.setMargins(0, 0, 0, DensityUtil.dip2px(136));
+            chronometerParams.setMargins(0, 0, 0, DensityUtil.dip2px(136));
+        } else if (directOrGroupType.equals(Conversation.TYPE_GROUP)) {
+            tvParams.setMargins(0, 0, 0, DensityUtil.dip2px(235));
+            chronometerParams.setMargins(0, 0, 0, DensityUtil.dip2px(235));
+        }
+        communicationStateTv.setLayoutParams(tvParams);
+        communicationTimeChronometer.setLayoutParams(chronometerParams);
+    }
+
+    /**
      * 初始化回调
      */
     private void initAgoraCallbacks() {
         voiceCommunicationManager.setOnVoiceCommunicationCallbacks(new OnVoiceCommunicationCallbacksImpl() {
             @Override
             public void onUserOffline(int uid, int reason) {
-                userCount = userCount - 1;
-                if (userCount < 2) {
+//                userCount = userCount - 1;
+                if (voiceCommunicationManager.getUserCount() < 2) {
                     boolean isFinish = checkCommunicationFinish();
                     if (!isFinish) {
                         runOnUiThread(new Runnable() {
@@ -778,23 +824,15 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 if (mediaPlayerManagerUtils != null) {
                     mediaPlayerManagerUtils.stop();
                 }
-                List<VoiceCommunicationJoinChannelInfoBean> totalList = voiceCommunicationManager.getVoiceCommunicationMemberList();
-                for (int i = 0; i < totalList.size(); i++) {
-                    if (totalList.get(i).getAgoraUid() == uid) {
-                        totalList.get(i).setConnectState(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_CONNECTED);
-                    }
-                }
-                userCount = userCount + 1;
-                if (voiceCommunicationManager.isInviter() && needTimerStartFlag && userCount == 2) {
-                    needTimerStartFlag = false;
-                    communicationTimeChronometer.setBase(SystemClock.elapsedRealtime());
-                    communicationTimeChronometer.start();
-                }
-                if (userCount >= 2) {
+                if (voiceCommunicationManager.getUserCount() >= 2) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-
+                            if (voiceCommunicationManager.isInviter() && needTimerStartFlag && voiceCommunicationManager.getUserCount() == 2) {
+                                needTimerStartFlag = false;
+                                communicationTimeChronometer.setBase(SystemClock.elapsedRealtime());
+                                communicationTimeChronometer.start();
+                            }
                             if (layoutState == INVITER_LAYOUT_STATE || isMySelf(uid) || voiceCommunicationManager.getCommunicationState() == COMMUNICATION_STATE_ING) {
                                 voiceCommunicationManager.setCommunicationState(COMMUNICATION_STATE_ING);
                                 Log.d("zhang", "onUserJoined run: layoutState = " + layoutState);
@@ -813,6 +851,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        //邀请成功后再发出邀请消息
                         if (voiceCommunicationManager.isInviter()) {
                             sendCommunicationCommand("invite");
                         }
@@ -825,17 +864,14 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                                 voiceCommunicationManager.setConnectStartTime(System.currentTimeMillis());
                             }
                         }
-                        changeUserConnectStateByAgoraUid(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_CONNECTED, uid);
-                        remindEmmServerJoinChannel(channel);
+                        refreshCommunicationMemberAdapter();
                     }
                 });
             }
 
             @Override
             public void onRejoinChannelSuccess(String channel, int uid, int elapsed) {
-                changeUserConnectStateByAgoraUid(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_CONNECTED, uid);
-                userCount = userCount + 1;
-                remindEmmServerJoinChannel(channel);
+                refreshCommunicationMemberAdapter();
             }
 
             @Override
@@ -948,7 +984,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             countDownOnlyOneConnectLeftTimer = null;
         }
         countDownOnlyOneConnectLeftTimer = new CountDownTimer(millisInFuture, countDownInterval) {
-
             @Override
             public void onTick(long millisUntilFinished) {
             }
@@ -956,7 +991,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             @Override
             public void onFinish() {
                 //如果是邀请或被邀请状态，倒计时结束时挂断电话
-                if (layoutState == COMMUNICATION_LAYOUT_STATE && userCount < 2) {
+                if (layoutState == COMMUNICATION_LAYOUT_STATE && voiceCommunicationManager.getUserCount() < 2) {
                     voiceCommunicationManager.setCommunicationState(COMMUNICATION_STATE_OVER);
                     Log.d("zhang", "COMMUNICATION_STATE_OVER: 22222222 ");
                     refuseOrLeaveChannel(COMMUNICATION_LEAVE);
@@ -973,27 +1008,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         voiceCommunicationManager.setCommunicationState(COMMUNICATION_STATE_OVER);
         Log.d("zhang", "COMMUNICATION_STATE_OVER: 33333333 ");
         finish();
-    }
-
-    /**
-     * 修改用户的链接状态
-     * 通过agoraUid
-     *
-     * @param connectStateConnected
-     */
-    private void changeUserConnectStateByAgoraUid(int connectStateConnected, int agroaUid) {
-        if (voiceCommunicationManager.getVoiceCommunicationMemberList().size() > 0) {
-            for (int i = 0; i < voiceCommunicationManager.getVoiceCommunicationMemberList().size(); i++) {
-                if (voiceCommunicationManager.getVoiceCommunicationMemberList().get(i).getAgoraUid() == agroaUid) {
-                    voiceCommunicationManager.getVoiceCommunicationMemberList().get(i).setConnectState(connectStateConnected);
-                    if (connectStateConnected > 1) {
-                        voiceCommunicationManager.getVoiceCommunicationMemberList().remove(i);
-                    }
-                    break;
-                }
-            }
-            refreshCommunicationMemberAdapter();
-        }
     }
 
     /**
@@ -1077,28 +1091,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
 
     }
 
-    /**
-     * 通知EmmServer用户加入频道
-     *
-     * @param agoraChannelId
-     */
-    private void remindEmmServerJoinChannel(String agoraChannelId) {
-        if (NetUtils.isNetworkConnected(this)) {
-            apiService.remindServerJoinChannelSuccess(agoraChannelId);
-        }
-    }
-
-    /**
-     * 通知EmmServer用户离开频道
-     *
-     * @param agoraChannelId
-     */
-    private void remindEmmServerLeaveChannel(String agoraChannelId) {
-        if (NetUtils.isNetworkConnected(this)) {
-            apiService.leaveAgoraChannel(agoraChannelId);
-        }
-    }
-
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.img_an_excuse:
@@ -1106,24 +1098,39 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 voiceCommunicationManager.muteAllRemoteAudioStreams(excuseImg.isSelected());
                 excuseImg.setImageResource(excuseImg.isSelected() ? R.drawable.icon_excuse_selected : R.drawable.icon_excuse_unselected);
                 break;
-            case R.id.tv_hands_free:
-            case R.id.img_hands_free:
-                switchFunctionViewUIState(handsFreeImg, handsFreeTv);
-                voiceCommunicationManager.setHandsFree(handsFreeImg.isSelected());
-                voiceCommunicationManager.onSwitchSpeakerphoneClicked(handsFreeImg.isSelected());
-                handsFreeImg.setImageResource(handsFreeImg.isSelected() ? R.drawable.icon_hands_free_selected : R.drawable.icon_hands_free_unselected);
+            case R.id.ll_hands_free_direct:
+            case R.id.ll_group_hands_free:
+                if (directOrGroupType.equals(Conversation.TYPE_GROUP)) {
+                    switchFunctionViewUIState(handsFreeImg, handsFreeTv);
+                    voiceCommunicationManager.setHandsFree(handsFreeImg.isSelected());
+                    voiceCommunicationManager.onSwitchSpeakerphoneClicked(handsFreeImg.isSelected());
+                    handsFreeImg.setImageResource(handsFreeImg.isSelected() ? R.drawable.icon_hands_free_selected : R.drawable.icon_hands_free_unselected);
+                } else if (directOrGroupType.equals(Conversation.TYPE_DIRECT)) {
+                    switchFunctionViewUIState(directHandFreeImg, directHandFreeTv);
+                    voiceCommunicationManager.setHandsFree(directHandFreeImg.isSelected());
+                    voiceCommunicationManager.onSwitchSpeakerphoneClicked(directHandFreeImg.isSelected());
+                    directHandFreeImg.setImageResource(directHandFreeImg.isSelected() ? R.drawable.icon_direct_hands_free_selected : R.drawable.icon_direct_hands_free);
+                }
                 break;
-            case R.id.tv_mute:
-            case R.id.img_mute:
-                switchFunctionViewUIState(muteImg, muteTv);
-                voiceCommunicationManager.setMute(muteImg.isSelected());
-                voiceCommunicationManager.muteLocalAudioStream(muteImg.isSelected());
-                muteImg.setImageResource(muteImg.isSelected() ? R.drawable.icon_mute_selected : R.drawable.icon_mute_unselcected);
+            case R.id.ll_mute_direct:
+            case R.id.ll_group_mute:
+                if (directOrGroupType.equals(Conversation.TYPE_GROUP)) {
+                    switchFunctionViewUIState(muteImg, muteTv);
+                    voiceCommunicationManager.setMute(muteImg.isSelected());
+                    voiceCommunicationManager.muteLocalAudioStream(muteImg.isSelected());
+                    muteImg.setImageResource(muteImg.isSelected() ? R.drawable.icon_mute_selected : R.drawable.icon_mute_unselcected);
+                } else if (directOrGroupType.equals(Conversation.TYPE_DIRECT)) {
+                    switchFunctionViewUIState(directMuteImg, directMuteTv);
+                    voiceCommunicationManager.setMute(directMuteImg.isSelected());
+                    voiceCommunicationManager.muteLocalAudioStream(directMuteImg.isSelected());
+                    directMuteImg.setImageResource(directMuteImg.isSelected() ? R.drawable.icon_direct_mute_selected : R.drawable.icon_direct_mute);
+                }
                 break;
             case R.id.img_tran_video:
                 switchFunctionViewUIState(tranVideoImg, tranVideoTv);
                 tranVideoImg.setImageResource(tranVideoImg.isSelected() ? R.drawable.icon_trans_video : R.drawable.icon_trans_video);
                 break;
+            case R.id.ll_answer_phone_direct:
             case R.id.img_answer_the_phone:
                 voiceCommunicationManager.setCommunicationState(COMMUNICATION_STATE_ING);
                 initCommunicationViews(COMMUNICATION_LAYOUT_STATE);
@@ -1132,12 +1139,11 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 voiceCommunicationManager.setConnectStartTime(System.currentTimeMillis());
                 int joinState = voiceCommunicationManager.joinChannel(inviteeInfoBean.getToken(),
                         agoraChannelId, inviteeInfoBean.getUserId(), inviteeInfoBean.getAgoraUid());
-                if (joinState == 0) {
-                    remindEmmServerJoinChannel(agoraChannelId);
-                } else {
+                if (joinState != 0) {
                     refuseOrLeaveChannel(COMMUNICATION_REFUSE);
                 }
                 break;
+            case R.id.ll_hung_up_direct:
             case R.id.ll_video_hung_up:
             case R.id.img_hung_up:
                 if (answerPhoneImg.getVisibility() == View.VISIBLE) {
@@ -1202,7 +1208,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 afterRefuse();
                 break;
             case COMMUNICATION_LEAVE:
-                remindEmmServerLeaveChannel(agoraChannelId);
                 afterLeave();
                 break;
             default:
@@ -1218,9 +1223,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             if (Build.VERSION.SDK_INT >= 23) {
                 if (Settings.canDrawOverlays(this)) {
                     Log.d("zhang", "pickUpVoiceCommunication: ");
-//                SuspensionWindowManagerUtils.getInstance().showCommunicationSmallWindow(ResolutionUtils.getWidth(this),
-//                        Long.parseLong(TimeUtils.getChronometerSeconds(communicationTimeChronometer.getText().toString())));
-//                finish();
                     checkCanBackGroundStart();
                 } else {
                     new CustomDialog.MessageDialogBuilder(ChannelVoiceCommunicationActivity.this)
@@ -1244,20 +1246,19 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 if (Build.VERSION.SDK_INT >= 19) {
                     checkCanBackGroundStart();
                 } else {
-                    SuspensionWindowManagerUtils.getInstance().showCommunicationSmallWindow(ResolutionUtils.getWidth(this),
-                            Long.parseLong(TimeUtils.getChronometerSeconds(communicationTimeChronometer.getText().toString())));
-                    finish();
+                    showSmallWindowAndCloseActivity();
                 }
             }
         }
     }
 
+    /**
+     * 针对小米的判断
+     */
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void checkCanBackGroundStart() {
         if (AppUtils.canBackgroundStart(this)) {
-            SuspensionWindowManagerUtils.getInstance().showCommunicationSmallWindow(ResolutionUtils.getWidth(this),
-                    Long.parseLong(TimeUtils.getChronometerSeconds(communicationTimeChronometer.getText().toString())));
-            finish();
+            showSmallWindowAndCloseActivity();
         } else {
             new CustomDialog.MessageDialogBuilder(ChannelVoiceCommunicationActivity.this)
                     .setMessage(getString(R.string.permission_grant_background_start, AppUtils.getAppName(ChannelVoiceCommunicationActivity.this)))
@@ -1273,7 +1274,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                     dialog.dismiss();
                 }
             }).show();
-
         }
     }
 
@@ -1286,9 +1286,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 checkCanBackGroundStart();
             } else if (requestCode == REQUEST_BACKGROUND_WINDOWS) {
                 if (AppUtils.canBackgroundStart(this)) {
-                    SuspensionWindowManagerUtils.getInstance().showCommunicationSmallWindow(ResolutionUtils.getWidth(this),
-                            Long.parseLong(TimeUtils.getChronometerSeconds(communicationTimeChronometer.getText().toString())));
-                    finish();
+                    showSmallWindowAndCloseActivity();
                 } else {
                     ToastUtils.show(getString(R.string.permission_grant_background_start_fail, AppUtils.getAppName(ChannelVoiceCommunicationActivity.this)));
                 }
@@ -1307,20 +1305,15 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         voiceCommunicationManager.setCommunicationState(voiceCommunicationManager.getCommunicationState());
         voiceCommunicationManager.setAgoraChannelId(agoraChannelId);
         voiceCommunicationManager.setCommunicationType(communicationType);
-//        voiceCommunicationManager.setVoiceCommunicationMemberList(voiceCommunicationMemberList);
         voiceCommunicationManager.setInviteeInfoBean(inviteeInfoBean);
-        voiceCommunicationManager.setUserCount(userCount);
         voiceCommunicationManager.setCloudPlusChannelId(cloudPlusChannelId);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        //已接通，停止音乐，关闭activity，打开小窗口
-        if (voiceCommunicationManager.getCommunicationState() == COMMUNICATION_STATE_ING) {
-            if (mediaPlayerManagerUtils != null) {
-                mediaPlayerManagerUtils.stop();
-            }
+        if (mediaPlayerManagerUtils != null) {
+            mediaPlayerManagerUtils.stop();
         }
         Log.d("zhang", "onPause: layoutState = " + layoutState);
         Log.d("zhang", "onPause: voiceCommunicationManager.getCommunicationState() = " + voiceCommunicationManager.getCommunicationState());
@@ -1328,21 +1321,28 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             saveCommunicationData();
             if (Build.VERSION.SDK_INT >= 23) {
                 if (Settings.canDrawOverlays(this) && AppUtils.canBackgroundStart(this)) {
-                    showSmallWindow();
+                    showSmallWindowAndCloseActivity();
+                } else {
+                    finish();
                 }
             } else {
                 if (Build.VERSION.SDK_INT >= 19) {
                     if (AppUtils.canBackgroundStart(this)) {
-                        showSmallWindow();
+                        showSmallWindowAndCloseActivity();
+                    } else {
+                        finish();
                     }
                 } else {
-                    showSmallWindow();
+                    showSmallWindowAndCloseActivity();
                 }
             }
         }
     }
 
-    private void showSmallWindow() {
+    /**
+     * 展示小窗，关闭Activity
+     */
+    private void showSmallWindowAndCloseActivity() {
         SuspensionWindowManagerUtils.getInstance().showCommunicationSmallWindow(ResolutionUtils.getWidth(this),
                 Long.parseLong(TimeUtils.getChronometerSeconds(communicationTimeChronometer.getText().toString())));
         finish();
@@ -1363,9 +1363,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             unregisterReceiver(receiver);
         }
         EventBus.getDefault().unregister(this);
-        if (mediaPlayerManagerUtils != null) {
-            mediaPlayerManagerUtils.stop();
-        }
     }
 
     /**
@@ -1375,9 +1372,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
      */
     private void setInviterInfo(GetVoiceCommunicationResult getVoiceCommunicationResult) {
         VoiceCommunicationJoinChannelInfoBean infoBean = getVoiceCommunicationResult.getVoiceCommunicationJoinChannelInfoBeanList().get(0);
-        //头像源数据修改为本地，注释掉的是从接口中读取的url
         ImageDisplayUtils.getInstance().displayImage(userHeadImg, infoBean.getHeadImageUrl(), R.drawable.icon_person_default);
-//        ImageDisplayUtils.getInstance().displayImage(userHeadImg, APIUri.getUserIconUrl(this, infoBean.getUserId()), R.drawable.icon_person_default);
         userNameTv.setText(infoBean.getUserName());
     }
 
@@ -1398,73 +1393,14 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     }
 
     /**
-     * 获取通信类型，默认是语音通话
-     *
-     * @return
-     */
-    private String getCommunicationType() {
-        if (communicationType.equals(ECMChatInputMenu.VIDEO_CALL)) {
-            return "VIDEO";
-        } else if (communicationType.equals(ECMChatInputMenu.VOICE_CALL)) {
-            return "VOICE";
-        } else {
-            return "VOICE";
-        }
-    }
-
-    /**
-     * 获取Schema
-     * ecc-cloudplus-cmd:\/\/voice_channel?cmd=invite&channelid=143271038136877057&roomid=257db7ddc478429cab2d2a1ec4ed8626&uid=99999
-     *
-     * @return
-     */
-    private String getSchema(String cmd, String channelId, String roomId) {
-        return "ecc-cloudplus-cmd://voice_channel?cmd=" + cmd + "&channelid=" + channelId + "&roomid=" + roomId + "&uid=" + BaseApplication.getInstance().getUid();
-    }
-
-    /**
-     * 获取Uid
-     * 排除掉自己防止自己给自己发命令消息
-     *
-     * @return
-     */
-    private JSONArray getUidArray(List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList) {
-        JSONArray jsonArray = new JSONArray();
-        for (int i = 0; i < voiceCommunicationUserInfoBeanList.size(); i++) {
-            if (!voiceCommunicationUserInfoBeanList.get(i).getUserId().equals(BaseApplication.getInstance().getUid())) {
-                jsonArray.put(voiceCommunicationUserInfoBeanList.get(i).getUserId());
-            }
-        }
-        return jsonArray;
-    }
-
-    /**
      * 向socket发送指令消息
      *
      * @param commandType
      */
     private void sendCommunicationCommand(String commandType) {
         WSAPIService.getInstance().sendStartVoiceAndVideoCallMessage(cloudPlusChannelId, agoraChannelId,
-                getSchema(commandType, cloudPlusChannelId, agoraChannelId), getCommunicationType(), getUidArray(
-                        voiceCommunicationManager.getVoiceCommunicationMemberList()), getActionByCommandType(commandType));
-    }
-
-    /**
-     * 根据命令类型获取action类型
-     *
-     * @param commandType
-     * @return
-     */
-    private String getActionByCommandType(String commandType) {
-        switch (commandType) {
-            case "invite":
-                return Constant.VIDEO_CALL_INVITE;
-            case "refuse":
-                return Constant.VIDEO_CALL_REFUSE;
-            case "destroy":
-                return Constant.VIDEO_CALL_HANG_UP;
-        }
-        return "";
+                voiceCommunicationManager.getSchema(commandType, cloudPlusChannelId, agoraChannelId), voiceCommunicationManager.getVoiceVideoCommunicationType(), voiceCommunicationManager.getUidArray(
+                        voiceCommunicationManager.getVoiceCommunicationMemberList()), voiceCommunicationManager.getActionByCommandType(commandType));
     }
 
     /**
@@ -1490,12 +1426,12 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
      */
     private void afterLeave() {
         voiceCommunicationManager.destroy();
-        if (layoutState == COMMUNICATION_LAYOUT_STATE && userCount >= 2) {
+        if (layoutState == COMMUNICATION_LAYOUT_STATE && voiceCommunicationManager.getUserCount() >= 2) {
             if (!isLeaveChannel) {
                 sendCommunicationCommand("refuse");
                 isLeaveChannel = true;
             }
-        } else if (userCount < 2) {
+        } else if (voiceCommunicationManager.getUserCount() < 2) {
             //当群里只剩一人时，发出此消息，此时声网channel已经不存在，告知其他人关闭页面
             if (!isLeaveChannel) {
                 sendCommunicationCommand("destroy");
@@ -1519,15 +1455,28 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
+    }
 
+    /**
+     * 主叫方创建频道失败，或者被叫方获取频道信息失败的处理
+     *
+     * @param error
+     * @param errorCode
+     */
+    private void createChannelOrGetChannelInfoFail(String error, int errorCode) {
+        LoadingDialog.dimissDlg(loadingDialog);
+        SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
+        voiceCommunicationManager.destroy();
+        WebServiceMiddleUtils.hand(ChannelVoiceCommunicationActivity.this, error, errorCode);
+        finish();
     }
 
     class WebService extends APIInterfaceInstance {
         @Override
         public void returnGetVoiceCommunicationResultSuccess(GetVoiceCommunicationResult getVoiceCommunicationResult) {
             LoadingDialog.dimissDlg(loadingDialog);
-
             agoraChannelId = getVoiceCommunicationResult.getChannelId();
+            voiceCommunicationManager.setAgoraChannelId(agoraChannelId);
             VoiceCommunicationJoinChannelInfoBean voiceCommunicationJoinChannelInfoBean = getMyCommunicationInfoBean(getVoiceCommunicationResult);
             if (voiceCommunicationJoinChannelInfoBean != null) {
                 voiceCommunicationManager.setEncryptionSecret(agoraChannelId);
@@ -1551,11 +1500,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
 
         @Override
         public void returnGetVoiceCommunicationResultFail(String error, int errorCode) {
-            LoadingDialog.dimissDlg(loadingDialog);
-            SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
-            voiceCommunicationManager.destroy();
-            WebServiceMiddleUtils.hand(ChannelVoiceCommunicationActivity.this, error, errorCode);
-            finish();
+            createChannelOrGetChannelInfoFail(error, errorCode);
         }
 
         @Override
@@ -1573,6 +1518,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 refuseOrLeaveChannel(COMMUNICATION_REFUSE);
             } else {
                 agoraChannelId = getVoiceCommunicationResult.getChannelId();
+                voiceCommunicationManager.setAgoraChannelId(agoraChannelId);
                 setInviterInfo(getVoiceCommunicationResult);
                 voiceCommunicationManager.getVoiceCommunicationMemberList().clear();
                 voiceCommunicationManager.getVoiceCommunicationMemberList().addAll(getVoiceCommunicationResult.getVoiceCommunicationJoinChannelInfoBeanList());
@@ -1593,21 +1539,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
 
         @Override
         public void returnGetVoiceCommunicationChannelInfoFail(String error, int errorCode) {
-            LoadingDialog.dimissDlg(loadingDialog);
-            SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
-            voiceCommunicationManager.destroy();
-            WebServiceMiddleUtils.hand(ChannelVoiceCommunicationActivity.this, error, errorCode);
-            finish();
+            createChannelOrGetChannelInfoFail(error, errorCode);
         }
-
-        @Override
-        public void returnJoinVoiceCommunicationChannelSuccess(GetBoolenResult getBoolenResult) {
-        }
-
-        @Override
-        public void returnJoinVoiceCommunicationChannelFail(String error, int errorCode) {
-            WebServiceMiddleUtils.hand(ChannelVoiceCommunicationActivity.this, error, errorCode);
-        }
-
     }
 }
