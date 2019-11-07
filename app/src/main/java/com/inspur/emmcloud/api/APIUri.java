@@ -595,7 +595,7 @@ public class APIUri {
      * 获取转发文件
      */
     public static String getTransmitFileUrl(String channelId, String fileType) {
-        return "https://api.inspuronline.com/" + "chat/rest/v1" + "/channel/" + channelId + "/" + fileType + "/share";
+        return getECMChatUrl() + "/rest/v1" + "/channel/" + channelId + "/" + fileType + "/share";
     }
 
 
@@ -973,6 +973,13 @@ public class APIUri {
      */
     public static String getCopyVolumeFileUrl(String volumeId) {
         return getUrlBaseVolume() + "/" + volumeId + "/file/duplication";
+    }
+
+    /**
+     * 夸网盘复制文件或者文件夹的Url
+     ***/
+    public static String getCopyFileBetweenVolumeUrl(String fromVolumeId, String toVolumeId) {
+        return getUrlBaseVolume() + "/" + fromVolumeId + "/file/share/volume/" + toVolumeId;
     }
 
     /**

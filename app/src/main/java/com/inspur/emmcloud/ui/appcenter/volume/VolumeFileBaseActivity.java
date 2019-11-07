@@ -88,6 +88,11 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
 
     public static final String VOLUME_FROM = "volume_from";
     public static final int MY_VOLUME = 0;
+    public static final String EXTRA_FROM_VOLUME = "fromVolume";
+    public static final String EXTRA_VOLUME_FILE_LIST = "volumeFileList";
+    public static final String EXTRA_VOLUME_FILE_TITLE = "title";
+    public static final String EXTRA_IS_FUNCTION_COPY = "isFunctionCopy";
+    public static final String EXTRA_OPERATION_FILE_DIR_ABS_PATH = "operationFileDirAbsolutePath";
     protected static final int REQUEST_MOVE_FILE = 5;
     protected static final int REQUEST_COPY_FILE = 6;
     protected static final int SHARE_IMAGE_OR_FILES = 7;
@@ -102,6 +107,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     protected VolumeFileAdapter adapter;
     protected List<VolumeFile> volumeFileList = new ArrayList<>();//云盘列表
     protected Volume volume;
+    protected Volume fromVolume;
     protected String currentDirAbsolutePath;//当前文件夹路径
     protected String sortType = "sort_by_name_up";
     protected String fileFilterType = "";  //显示的文件类型
@@ -156,6 +162,9 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         apiServiceBase = new MyAppAPIService(VolumeFileBaseActivity.this);
         apiServiceBase.setAPIInterface(new WebServiceBase());
         volume = (Volume) getIntent().getSerializableExtra("volume");
+        if (getIntent().hasExtra(EXTRA_FROM_VOLUME)) {
+            fromVolume = (Volume) getIntent().getSerializableExtra(EXTRA_FROM_VOLUME);
+        }
         volumeFrom = getIntent().getIntExtra(VOLUME_FROM, -1);
         currentDirAbsolutePath = getIntent().getExtras().getString("currentDirAbsolutePath", "/");
         fileFilterType = getIntent().getExtras().getString("fileFilterType", "");
@@ -576,10 +585,16 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
-                case REQUEST_COPY_FILE:
+                case REQUEST_COPY_FILE:                         /**复制失败VolumeFiles 返回进行重新选择复制**/
                     adapter.clearSelectedVolumeFileList();
                     adapter.notifyDataSetChanged();
-                    setBottomOperationItemShow(new ArrayList<VolumeFile>());
+                    List<VolumeFile> copyVolumeResultFileList = new ArrayList<>();
+                    if (data.hasExtra("copyFailedFiles")) {
+                        copyVolumeResultFileList = (List<VolumeFile>) data.getSerializableExtra("copyFailedFiles");
+                    }
+                    adapter.setSelectVolumeFileList(copyVolumeResultFileList);
+                    adapter.notifyDataSetChanged();
+                    setBottomOperationItemShow(copyVolumeResultFileList);
                     break;
                 case REQUEST_MOVE_FILE:
                     adapter.clearSelectedVolumeFileList();
@@ -646,10 +661,10 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
             Intent intent = new Intent(getApplicationContext(), VolumeFileLocationSelectActivity.class);
             Bundle bundle = new Bundle();
             bundle.putSerializable("volume", volume);
-            bundle.putSerializable("volumeFileList", (Serializable) moveVolumeFileList);
-            bundle.putString("title", getString(R.string.clouddriver_select_move_position));
-            bundle.putString("operationFileDirAbsolutePath", currentDirAbsolutePath);
-            bundle.putBoolean("isFunctionCopy", false);
+            bundle.putSerializable(EXTRA_VOLUME_FILE_LIST, (Serializable) moveVolumeFileList);
+            bundle.putString(EXTRA_VOLUME_FILE_TITLE, getString(R.string.clouddriver_select_move_position));
+            bundle.putString(EXTRA_OPERATION_FILE_DIR_ABS_PATH, currentDirAbsolutePath);
+            bundle.putBoolean(EXTRA_IS_FUNCTION_COPY, false);
             intent.putExtras(bundle);
             startActivityForResult(intent, REQUEST_MOVE_FILE);
         }
@@ -662,13 +677,13 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
      */
     protected void copyFile(List<VolumeFile> volumeFileList) {
         if (volumeFileList.size() > 0) {
-            Intent intent = new Intent(getApplicationContext(), VolumeFileLocationSelectActivity.class);
+            Intent intent = new Intent(getApplicationContext(), VolumeHomePageActivity.class);
             Bundle bundle = new Bundle();
-            bundle.putSerializable("volume", volume);
-            bundle.putSerializable("volumeFileList", (Serializable) volumeFileList);
-            bundle.putString("title", getString(R.string.clouddriver_select_copy_position));
-            bundle.putBoolean("isFunctionCopy", true);
-            bundle.putString("operationFileDirAbsolutePath", currentDirAbsolutePath);
+            bundle.putSerializable(EXTRA_FROM_VOLUME, volume);
+            bundle.putSerializable(EXTRA_VOLUME_FILE_LIST, (Serializable) volumeFileList);
+            bundle.putString(EXTRA_VOLUME_FILE_TITLE, getString(R.string.clouddriver_select_copy_position));
+            bundle.putBoolean(EXTRA_IS_FUNCTION_COPY, true);
+            bundle.putString(EXTRA_OPERATION_FILE_DIR_ABS_PATH, currentDirAbsolutePath);
             intent.putExtras(bundle);
             startActivityForResult(intent, REQUEST_COPY_FILE);
         }
