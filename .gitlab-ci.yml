@@ -23,11 +23,11 @@ assembleRelease:
   artifacts:
     paths:
     - app/build/outputs/
-#  only:
-#        - master
-#        - dev
+  only:
+        - master
+        - dev
   tags:
-    - android_emmcloud
+    - ios
 
 
 protectAndUpload:
@@ -39,11 +39,11 @@ protectAndUpload:
 #    paths:
 #      - app/build/outputs/apk/release/
   retry: 2
-#  only:
-#        - master
-#        - dev
+  only:
+        - master
+        - dev
   tags:
-    - android_emmcloud
+    - ios
 
 
 
@@ -52,12 +52,11 @@ sendMail:
  script:
    - chmod +x ./gitlab_ci/sendMail.py
    - python ./gitlab_ci/sendMail.py
-# only:
-#         - master
-#         - dev
+ only:
+         - master
+         - dev
  tags:
-     - android_emmcloud
-
+     - ios
 
 
 #debugTests:
