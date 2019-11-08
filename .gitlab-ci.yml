@@ -35,9 +35,9 @@ protectAndUpload:
   script:
     - chmod +x ./gitlab_ci/protectAndUpload
     - ./gitlab_ci/protectAndUpload
-  artifacts:
-    paths:
-      - app/build/outputs/apk/release/
+#  artifacts:
+#    paths:
+#      - app/build/outputs/apk/release/
   retry: 2
   only:
         - master
@@ -52,6 +52,7 @@ sendMail:
  script:
    - chmod +x ./gitlab_ci/sendMail.py
    - python ./gitlab_ci/sendMail.py
+ dependencies: []
  only:
          - master
          - dev

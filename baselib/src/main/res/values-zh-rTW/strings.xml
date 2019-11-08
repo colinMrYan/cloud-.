@@ -181,7 +181,7 @@
     <string name="modify_group_name">群名片</string>
     <string name="channel_single_chat_images">聊天圖片</string>
     <string name="channel_single_chat_files">文件</string>
-    <string name="channel_search_more_group_members">查看更多群成員</string>
+    <string name="channel_search_more_group_members">查看全部群成員</string>
     <string name="choose_common_office">常用辦公地點</string>
     <string name="please_click_choosing_time">請點擊選擇時間</string>
     <string name="meeting_room">會議室</string>
@@ -1319,6 +1319,8 @@
     <string name="voice_communication_quality">當前通話品質不佳</string>
     <string name="voice_communication_support_nine_members">雲+現時支持九人語音</string>
     <string name="voice_communication_more_than_two">語音通話用戶數不能少於2個。</string>
+    <string name="voice_communication_hung_up_direct">掛斷</string>
+    <string name="voice_communication_answer_phone_direct">接聽</string>
 
     <string name="error_no_sdcard">沒有SD卡，無法存儲錄音數據</string>
     <string name="error_state_record">正在錄音中，請先停止錄音</string>

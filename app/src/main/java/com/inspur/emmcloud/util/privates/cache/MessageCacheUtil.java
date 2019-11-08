@@ -587,18 +587,12 @@ public class MessageCacheUtil {
                 messageTmpIdList.add(message.getTmpId());
             }
             List<Message> localFakeMessageList = getLocalFakeMessageList(context, cid, messageTmpIdList);
-            for (int i = 0; i < messageList.size(); i++) {
-                for (int j = 0; j < localFakeMessageList.size(); j++) {
-                    //去掉修改时间逻辑
-//                    if (messageList.get(i).getTmpId().equals(localFakeMessageList.get(j).getTmpId())) {
-//                        messageList.get(i).setCreationDate(localFakeMessageList.get(j).getCreationDate());
-//                    }
-                    if (messageList.get(i).getType().equals(Message.MESSAGE_TYPE_MEDIA_VOICE)) {
-                        deleteLocalVoiceFile(messageList.get(i));
-                    }
+            for (Message message : localFakeMessageList) {
+                if (message.equals(Message.MESSAGE_TYPE_MEDIA_VOICE)) {
+                    deleteLocalVoiceFile(message);
                 }
             }
-            deleteFakeMessageList(context, localFakeMessageList);
+            deleteMessageList(context, localFakeMessageList);
             saveMessageList(context, messageList, targetMessageCreationDate, isUpdate);
         }
     }
@@ -612,7 +606,7 @@ public class MessageCacheUtil {
     private static List<Message> getLocalFakeMessageList(Context context, String cid, List<String> messgeTmpIdList) {
         List<Message> messageList = new ArrayList<>();
         try {
-            if (StringUtils.isBlank(cid)) {
+            if (!StringUtils.isBlank(cid)) {
                 messageList = DbCacheUtils.getDb(context).selector(Message.class)
                         .where("channel", "=", cid)
                         .and(WhereBuilder.b("sendStatus", "=", Message.MESSAGE_SEND_FAIL).or("sendStatus", "=", Message.MESSAGE_SEND_ING))
@@ -677,16 +671,12 @@ public class MessageCacheUtil {
      * @param context
      * @param messageList
      */
-    public static void deleteFakeMessageList(final Context context, final List<Message> messageList) {
+    public static void deleteMessageList(final Context context, final List<Message> messageList) {
         if (messageList == null || messageList.size() == 0) {
             return;
         }
-        List<String> idList = new ArrayList<>();
-        for (Message message : messageList) {
-            idList.add(message.getTmpId());
-        }
         try {
-            DbCacheUtils.getDb(context).delete(Message.class, WhereBuilder.b("id", "in", idList));
+            DbCacheUtils.getDb(context).delete(messageList);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -703,6 +693,7 @@ public class MessageCacheUtil {
         for (int i = 0; i < localFilePathList.size(); i++) {
             if (sendSuccessMp3FileName.equals(FileUtils.getFileNameWithoutExtension(localFilePathList.get(i)))) {
                 FileUtils.deleteFile(localFilePathList.get(i));
+                break;
             }
         }
     }

@@ -261,20 +261,20 @@ public class CommunicationUtils {
         return message;
     }
 
-    public static Message combineTransmitRegularFileMessage(String cid, String localFilePath, MsgContentRegularFile orgMsgContentRegularFile) {
+    public static Message combineTransmitRegularFileMessage(String cid, String newPath, MsgContentRegularFile orgMsgContentRegularFile) {
         String tracer = getTracer();
         Message message = combinLocalMessageCommon();
         message.setChannel(cid);
         message.setId(tracer);
         message.setTmpId(tracer);
-        message.setType("file/regular-file");
+        message.setType(Message.MESSAGE_TYPE_FILE_REGULAR_FILE);
         message.setLocalPath("");
 
         MsgContentRegularFile msgContentRegularFile = new MsgContentRegularFile();
         msgContentRegularFile.setCategory(orgMsgContentRegularFile.getCategory());
         msgContentRegularFile.setName(orgMsgContentRegularFile.getName());
         msgContentRegularFile.setSize(orgMsgContentRegularFile.getSize());
-        msgContentRegularFile.setMedia(orgMsgContentRegularFile.getMedia());
+        msgContentRegularFile.setMedia(newPath);
         message.setContent(msgContentRegularFile.toString());
         return message;
     }
@@ -286,7 +286,7 @@ public class CommunicationUtils {
         message.setChannel(cid);
         message.setId(tracer);
         message.setTmpId(tracer);
-        message.setType("extended/links");
+        message.setType(Message.MESSAGE_TYPE_EXTENDED_LINKS);
         MsgContentExtendedLinks msgContentExtendedLinks = new MsgContentExtendedLinks();
         msgContentExtendedLinks.setPoster(poster);
         msgContentExtendedLinks.setTitle(title);
@@ -302,7 +302,7 @@ public class CommunicationUtils {
         message.setChannel(cid);
         message.setId(tracer);
         message.setTmpId(tracer);
-        message.setType("extended/links");
+        message.setType(Message.MESSAGE_TYPE_EXTENDED_LINKS);
         message.setContent(content);
         return message;
     }

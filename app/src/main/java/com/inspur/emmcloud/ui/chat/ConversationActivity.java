@@ -31,7 +31,6 @@ import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.ListUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.CustomLoadingView;
@@ -252,7 +251,6 @@ public class ConversationActivity extends ConversationBaseActivity {
             position = cacheMessageList.size() - 1;
         }
         List<UIMessage> uiMessageListNew = UIMessage.MessageList2UIMessageList(cacheMessageList);
-        LogUtils.jasonDebug("ListUtils.isListEqual(uiMessageListNew,uiMessageList)=" + ListUtils.isListEqual(uiMessageListNew, uiMessageList));
         if (!ListUtils.isListEqual(uiMessageListNew, uiMessageList)) {
             uiMessageList = uiMessageListNew;
             adapter.setMessageList(uiMessageList);
@@ -1147,9 +1145,9 @@ public class ConversationActivity extends ConversationBaseActivity {
                 break;
             //接收到从沟通页面传来的离线消息，如断网联网时会触发此方法
             case Constant.EVENTBUS_TAG_CURRENT_CHANNEL_OFFLINE_MESSAGE:
-                final List<Message> offlineMessageList = (List<Message>) simpleEventMessage.getMessageObj();
                 WSAPIService.getInstance().setChannelMessgeStateRead(cid);
-                new CacheMessageListThread(offlineMessageList, null, REFRESH_OFFLINE_MESSAGE).start();
+                android.os.Message osMessage = handler.obtainMessage(REFRESH_OFFLINE_MESSAGE);
+                osMessage.sendToTarget();
                 break;
             case Constant.EVENTBUS_TAG_CURRENT_CHANNEL_RECALL_MESSAGE:
                 Message recallMessage = (Message) simpleEventMessage.getMessageObj();
@@ -1586,7 +1584,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             operationIdList.add(R.string.chat_resend_message);
             operationIdList.add(R.string.delete);
         } else if (uiMessage.getSendStatus() == Message.MESSAGE_SEND_ING) {
-            operationIdList.add(R.string.delete);
+            //operationIdList.add(R.string.delete);
         } else if (uiMessage.getSendStatus() == Message.MESSAGE_SEND_SUCCESS) {
             switch (type) {
                 case Message.MESSAGE_TYPE_TEXT_PLAIN:
@@ -1772,7 +1770,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                         if (uiMessage.getSendStatus() == Message.MESSAGE_SEND_FAIL) {
                             removeSendFailMessage(uiMessage);
                         } else {
-                            recallSendingMessage(uiMessage);
+                            //recallSendingMessage(uiMessage);
                         }
 
                         break;
@@ -2003,7 +2001,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             msgContentRegularFile.setName(volumeFile.getName());
             msgContentRegularFile.setSize(volumeFile.getSize());
             msgContentRegularFile.setMedia(newPath);
-            Message fakeMessage = CommunicationUtils.combineTransmitRegularFileMessage(cid, "", msgContentRegularFile);
+            Message fakeMessage = CommunicationUtils.combineTransmitRegularFileMessage(cid, newPath, msgContentRegularFile);
             addLocalMessage(fakeMessage, Message.MESSAGE_SEND_ING);
             MessageSendManager.getInstance().sendMessage(fakeMessage);
         }

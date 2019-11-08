@@ -110,6 +110,23 @@ public class NativeFileManagerFragment extends BaseFragment {
         getFile(rootPath);
     }
 
+    public void onBackPress() {
+        if (titleAdapter.getItemCount() > 1) {
+            int index = titleAdapter.getItemCount();
+            index = index - 2;
+            TitlePath titlePath = (TitlePath) titleAdapter.getItem(index);
+            getFile(titlePath.getPath());
+            int count = titleAdapter.getItemCount();
+            int removeCount = count - index - 1;
+            for (int i = 0; i < removeCount; i++) {
+                titleAdapter.removeLast();
+            }
+        } else {
+            getActivity().finish();
+        }
+
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -124,6 +141,9 @@ public class NativeFileManagerFragment extends BaseFragment {
         return rootView;
     }
 
+    /**
+     * 数据初始化
+     */
     private void getIntentParam() {
         maximum = getActivity().getIntent().getIntExtra(EXTRA_MAXIMUM, 1);
         filterFileTypeList = getActivity().getIntent().getStringArrayListExtra(EXTRA_FILTER_FILE_TYPE);
@@ -132,6 +152,7 @@ public class NativeFileManagerFragment extends BaseFragment {
         }
     }
 
+    /**点击事件**/
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.ibt_back) {
@@ -141,6 +162,7 @@ public class NativeFileManagerFragment extends BaseFragment {
         }
     }
 
+    /**返回选择结果**/
     private void returnSelectResult() {
         ArrayList<String> pathList = new ArrayList<>();
         for (FileBean fileBean : selectFileBeanList) {
@@ -158,6 +180,7 @@ public class NativeFileManagerFragment extends BaseFragment {
         new MyTask(rootFile, filterFileTypeList).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "");
     }
 
+    /**刷新文件导航条**/
     void refreshTitleState(String title, String path) {
         TitlePath filePath = new TitlePath();
         filePath.setNameState(title + " /");
