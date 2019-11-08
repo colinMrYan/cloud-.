@@ -262,7 +262,7 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
         uiConversation.setStick(isSticky);
         conversationStickySwitch.setChecked(isSticky);
         ConversationCacheUtils.setConversationStick(MyApplication.getInstance(), uiConversation.getId(), isSticky);
-        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_UPDATE_CHANNEL_FOCUS, uiConversation));
+        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_CONVERSATION_SELF_DATA_CHANGED, uiConversation));
     }
 
     @Override

@@ -276,9 +276,9 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
      * 创建一个回调接口
      */
     public interface AdapterListener {
-        void onItemClick(View view, int position);
+        void onItemClick(View view, UIConversation uiConversation);
 
-        boolean onItemLongClick(View view, int position);
+        boolean onItemLongClick(View view, UIConversation uiConversation);
 
         void onDataChange();
 
@@ -330,10 +330,10 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
                     if (0 == getAdapterPosition()) {
                         adapterListener.onNetExceptionWightClick();   //点击进入新的Activity
                     } else {
-                        adapterListener.onItemClick(v, getAdapterPosition() - 1);
+                        adapterListener.onItemClick(v, uiConversationList.get(getAdapterPosition() - 1));
                     }
                 } else {
-                    adapterListener.onItemClick(v, getAdapterPosition());
+                    adapterListener.onItemClick(v, uiConversationList.get(getAdapterPosition()));
                 }
             }
         }
@@ -347,10 +347,10 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
                         return true;
                     } else {
                         //网络异常状态
-                        return adapterListener.onItemLongClick(v, getAdapterPosition() - 1);
+                        return adapterListener.onItemLongClick(v, uiConversationList.get(getAdapterPosition() - 1));
                     }
                 } else {
-                    return adapterListener.onItemLongClick(v, getAdapterPosition());
+                    return adapterListener.onItemLongClick(v, uiConversationList.get(getAdapterPosition()));
                 }
 
             }
