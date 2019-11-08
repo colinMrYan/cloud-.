@@ -17,13 +17,13 @@ import com.inspur.emmcloud.adapter.VolumeFileTransferAdapter;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
-import com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout;
 import com.inspur.emmcloud.baselib.widget.VolumeActionData;
 import com.inspur.emmcloud.baselib.widget.VolumeActionLayout;
 import com.inspur.emmcloud.baselib.widget.dialogs.ActionSheetDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.DownloadFileCategory;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.ui.BaseMvpFragment;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
@@ -71,8 +71,6 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
     VolumeActionLayout volumeActionLayout;
     CustomShareListener mShareListener;
 
-    @BindView(R.id.refresh_layout)
-    MySwipeRefreshLayout refreshLayout;
     @BindView(R.id.volume_file_transfer_recycler)
     RecyclerView recyclerView;
     VolumeFileTransferAdapter adapter;
@@ -108,8 +106,11 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         switch (currentIndex) {
             case 0:
+                adapter = new VolumeFileTransferAdapter(getActivity(), volumeFileList, Constant.TYPE_DOWNLOAD);
+                recyclerView.setAdapter(adapter);
+                break;
             case 1:
-                adapter = new VolumeFileTransferAdapter(getActivity(), volumeFileList);
+                adapter = new VolumeFileTransferAdapter(getActivity(), volumeFileList, Constant.TYPE_UPLOAD);
                 recyclerView.setAdapter(adapter);
                 break;
             case 2:
@@ -375,13 +376,13 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
     @Override
     public void showNoDataLayout() {
         noDataLayout.setVisibility(View.VISIBLE);
-        refreshLayout.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.GONE);
     }
 
     @Override
     public void showListLayout() {
         noDataLayout.setVisibility(View.GONE);
-        refreshLayout.setVisibility(View.VISIBLE);
+        recyclerView.setVisibility(View.VISIBLE);
     }
 
     private static class CustomShareListener implements UMShareListener {

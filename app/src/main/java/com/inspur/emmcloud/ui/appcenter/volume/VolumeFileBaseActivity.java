@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.VolumeFileAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -54,6 +55,7 @@ import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeGroupContainMe;
 import com.inspur.emmcloud.ui.chat.mvp.view.ConversationSearchActivity;
 import com.inspur.emmcloud.util.privates.ShareFile2OutAppUtils;
+import com.inspur.emmcloud.util.privates.VolumeFileDownloadManager;
 import com.inspur.emmcloud.util.privates.VolumeFilePrivilegeUtils;
 import com.inspur.emmcloud.util.privates.VolumeFileUploadManager;
 import com.inspur.emmcloud.util.privates.cache.VolumeGroupContainMeCacheUtils;
@@ -368,7 +370,10 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     private void handleVolumeAction(String action) {
         VolumeFile volumeFile = adapter.getSelectVolumeFileList().get(0);
         if (action.equals(downloadAction)) {
-            downloadFile(volumeFile);
+            //批量下载
+            for (VolumeFile file : adapter.getSelectVolumeFileList()) {
+                downloadFile(file);
+            }
             adapter.clearSelectedVolumeFileList();
             adapter.notifyDataSetChanged();
         } else if (action.equals(moveToAction)) {
@@ -638,16 +643,19 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
 
     /**
      * 文件下载
-     *
-     * @param volumeFile
      */
     protected void downloadFile(VolumeFile volumeFile) {
-        Bundle bundle = new Bundle();
-        bundle.putString("volumeId", volume.getId());
-        bundle.putSerializable("volumeFile", volumeFile);
-        bundle.putString("currentDirAbsolutePath", currentDirAbsolutePath + volumeFile.getName());
-        bundle.putBoolean("isStartDownload", true);
-        IntentUtils.startActivity(VolumeFileBaseActivity.this, VolumeFileDownloadActivity.class, bundle);
+//        Bundle bundle = new Bundle();
+//        bundle.putString("volumeId", volume.getId());
+//        bundle.putSerializable("volumeFile", volumeFile);
+//        bundle.putString("currentDirAbsolutePath", currentDirAbsolutePath + volumeFile.getName());
+//        bundle.putBoolean("isStartDownload", true);
+//        IntentUtils.startActivity(VolumeFileBaseActivity.this, VolumeFileDownloadActivity.class, bundle);
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+            volumeFile.setVolumeFileAbsolutePath(currentDirAbsolutePath + volumeFile.getName());
+            VolumeFileDownloadManager.getInstance().downloadFile(volumeFile,
+                    currentDirAbsolutePath + volumeFile.getName());
+        }
     }
 
     /**

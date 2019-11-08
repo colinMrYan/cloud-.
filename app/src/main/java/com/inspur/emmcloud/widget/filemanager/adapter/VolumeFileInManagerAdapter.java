@@ -177,7 +177,7 @@ public class VolumeFileInManagerAdapter extends RecyclerView.Adapter<VolumeFileI
                     }
 
                     @Override
-                    public void onLoading(int progress, String uploadSpeed) {
+                    public void onLoading(int progress, String speed) {
                     }
 
                     @Override
