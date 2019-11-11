@@ -144,7 +144,7 @@ public class ConversationCastInfoActivity extends BaseActivity implements Compou
             conversation.setStick(isStick);
             stickSwitch.setChecked(isStick);
             ConversationCacheUtils.setConversationStick(MyApplication.getInstance(), id, isStick);
-            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_UPDATE_CHANNEL_FOCUS, conversation));
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_CONVERSATION_SELF_DATA_CHANGED, conversation));
         }
 
         @Override

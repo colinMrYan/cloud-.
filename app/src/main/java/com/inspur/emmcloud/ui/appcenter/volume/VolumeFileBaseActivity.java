@@ -272,10 +272,10 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
                         }
                     }
                 });
-        if (AppUtils.isAppInstalled(BaseApplication.getInstance(), ShareFile2OutAppUtils.PACKAGE_WECHAT)) {
+        if (AppUtils.isAvilibleByPackageName(BaseApplication.getInstance(), ShareFile2OutAppUtils.PACKAGE_WECHAT)) {
             shareAction.addButton(PlatformName.WEIXIN, "WEIXIN", "umeng_socialize_wechat", "umeng_socialize_wechat");
         }
-        if (AppUtils.isAppInstalled(BaseApplication.getInstance(), ShareFile2OutAppUtils.PACKAGE_MOBILE_QQ)) {
+        if (AppUtils.isAvilibleByPackageName(BaseApplication.getInstance(), ShareFile2OutAppUtils.PACKAGE_MOBILE_QQ)) {
             shareAction.addButton(PlatformName.QQ, "QQ", "umeng_socialize_qq", "umeng_socialize_qq");
         }
         shareAction.addButton(getString(R.string.clouddrive_internal_sharing), "CLOUDPLUSE", "ic_launcher_share", "ic_launcher_share");

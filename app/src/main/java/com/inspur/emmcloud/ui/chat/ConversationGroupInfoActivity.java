@@ -56,9 +56,9 @@ import butterknife.ButterKnife;
 public class ConversationGroupInfoActivity extends BaseActivity {
 
     public static final String EXTRA_CID = "cid";
+    public static final String MEMBER_SIZE = "member_size";
     private static final int QEQUEST_ADD_MEMBER = 2;
     private static final int QEQUEST_DEL_MEMBER = 3;
-    public static final String MEMBER_SIZE = "member_size";
     @BindView(R.id.gv_member)
     NoScrollGridView memberGrid;
     @BindView(R.id.tv_member)
@@ -454,7 +454,7 @@ public class ConversationGroupInfoActivity extends BaseActivity {
             conversation.setStick(isStick);
             stickSwitch.setChecked(isStick);
             ConversationCacheUtils.setConversationStick(MyApplication.getInstance(), id, isStick);
-            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_UPDATE_CHANNEL_FOCUS, conversation));
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_CONVERSATION_SELF_DATA_CHANGED, conversation));
         }
 
         @Override

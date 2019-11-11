@@ -172,11 +172,6 @@ public class LargeImageView extends View implements BlockImageLoader.OnImageLoad
 
 
             }
-
-            LogUtils.jasonDebug("getScale()===" + getScale());
-            LogUtils.jasonDebug("MotionEventCompat.getPointerCount(e1)==" + e1.getPointerCount());
-            LogUtils.jasonDebug("MotionEventCompat.getPointerCount(e2)==" + e2.getPointerCount());
-
             fling((int) -velocityX, (int) -velocityY);
             return true;
         }

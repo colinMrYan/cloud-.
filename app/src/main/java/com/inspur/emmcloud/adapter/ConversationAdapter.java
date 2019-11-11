@@ -18,6 +18,7 @@ import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.bean.chat.Conversation;
@@ -179,6 +180,10 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
                 } else {
                     holder.photoImg.setImageResource(R.drawable.icon_channel_group_default);
                 }
+            } else if (uiConversation.getConversation().getType().equals(Conversation.TYPE_TRANSFER)) { /**文件传输助手**/
+                String conversationName = BaseApplication.getInstance().getString(R.string.chat_file_transfer);
+                holder.titleText.setText(conversationName);
+                ImageDisplayUtils.getInstance().displayImageByTag(holder.photoImg, uiConversation.getIcon(), R.drawable.icon_channel_group_default);
             } else {
                 ImageDisplayUtils.getInstance().displayImageByTag(holder.photoImg, uiConversation.getIcon(), isConversationTypeGroup ? R.drawable.icon_channel_group_default : R.drawable.icon_person_default);
             }
@@ -276,9 +281,9 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
      * 创建一个回调接口
      */
     public interface AdapterListener {
-        void onItemClick(View view, int position);
+        void onItemClick(View view, UIConversation uiConversation);
 
-        boolean onItemLongClick(View view, int position);
+        boolean onItemLongClick(View view, UIConversation uiConversation);
 
         void onDataChange();
 
@@ -330,10 +335,10 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
                     if (0 == getAdapterPosition()) {
                         adapterListener.onNetExceptionWightClick();   //点击进入新的Activity
                     } else {
-                        adapterListener.onItemClick(v, getAdapterPosition() - 1);
+                        adapterListener.onItemClick(v, uiConversationList.get(getAdapterPosition() - 1));
                     }
                 } else {
-                    adapterListener.onItemClick(v, getAdapterPosition());
+                    adapterListener.onItemClick(v, uiConversationList.get(getAdapterPosition()));
                 }
             }
         }
@@ -347,10 +352,10 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
                         return true;
                     } else {
                         //网络异常状态
-                        return adapterListener.onItemLongClick(v, getAdapterPosition() - 1);
+                        return adapterListener.onItemLongClick(v, uiConversationList.get(getAdapterPosition() - 1));
                     }
                 } else {
-                    return adapterListener.onItemLongClick(v, getAdapterPosition());
+                    return adapterListener.onItemLongClick(v, uiConversationList.get(getAdapterPosition()));
                 }
 
             }

@@ -192,6 +192,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                         break;
                     case REFRESH_NEW_MESSAGE:
                         showMessageList();
+                        notifyConversationListChange();
                         break;
                     case REFRESH_OFFLINE_MESSAGE:
                         List<Message> cacheMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, null, COUNT_EVERY_PAGE);
@@ -1030,10 +1031,13 @@ public class ConversationActivity extends ConversationBaseActivity {
             draftMessage.setRead(Message.MESSAGE_READ);
             draftMessage.setCreationDate(System.currentTimeMillis());
             MessageCacheUtil.saveMessage(ConversationActivity.this, draftMessage);
+            notifyConversationListChange();
         } else if (StringUtils.isBlank(inputContent) && !StringUtils.isBlank(lastDraft)) {
             MessageCacheUtil.deleteDraftMessageByCid(ConversationActivity.this, cid);
+            notifyConversationListChange();
         }
-        notifyCommucationFragmentMessageSendStatus();
+
+
     }
 
     /**
@@ -1108,14 +1112,12 @@ public class ConversationActivity extends ConversationBaseActivity {
         //发送中，无网,发送消息失败
         message.setSendStatus(status);
         MessageCacheUtil.saveMessage(ConversationActivity.this, message);
-        notifyCommucationFragmentMessageSendStatus();
+        notifyConversationListChange();
     }
 
-    private void notifyCommucationFragmentMessageSendStatus() {
+    private void notifyConversationListChange() {
         // 通知沟通页面更新列表状态
-        Intent intent = new Intent("message_notify");
-        intent.putExtra("command", "sort_session_list");
-        LocalBroadcastManager.getInstance(ConversationActivity.this).sendBroadcast(intent);
+        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_CONVERSATION_MESSAGE_DATA_CHANGED, conversation));
     }
 
     /**
@@ -1129,7 +1131,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         int index = uiMessageList.indexOf(fakeUIMessage);
         if (index != -1) {
             uiMessageList.get(index).setSendStatus(Message.MESSAGE_SEND_FAIL);
-            setMessageSendStatusAndSendTime(uiMessageList.get(index).getMessage(), Message.MESSAGE_SEND_FAIL);
+            uiMessageList.get(index).getMessage().setSendStatus(Message.MESSAGE_SEND_FAIL);
             adapter.setMessageList(uiMessageList);
             adapter.notifyItemChanged(index);
         }
@@ -1245,6 +1247,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 }
                 WSAPIService.getInstance().setChannelMessgeStateRead(cid);
             } else {
+                //此方法中有对于这条消息的判断，如果非此频道的消息则不会有任何处理
                 setMessageSendFailStatus(String.valueOf(eventMessage.getId()));
             }
         }
@@ -1345,7 +1348,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 }
                 MessageCacheUtil.saveMessage(BaseApplication.getInstance(), recallMessage);
                 if (index == uiMessageList.size() - 1) {
-                    notifyCommucationFragmentMessageSendStatus();
+                    notifyConversationListChange();
                 }
             } else {
                 String error = eventMessage.getContent();
@@ -1391,9 +1394,6 @@ public class ConversationActivity extends ConversationBaseActivity {
                 new CacheMessageListThread(newMessageList, null, REFRESH_NEW_MESSAGE).start();
                 WSAPIService.getInstance().setChannelMessgeStateRead(cid);
             }
-            if ((boolean) ((HashMap) eventMessage.getExtra()).get("isNeedRefreshConversationList")) {
-                EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_REFRESH_CONVERSATION));
-            }
         }
     }
 
@@ -1426,9 +1426,7 @@ public class ConversationActivity extends ConversationBaseActivity {
      */
     private void getNewMessageOfChannel() {
         if (NetUtils.isNetworkConnected(this, false)) {
-            //获取完消息之后，需要刷新沟通页列表，防止新的频道不显示
-            boolean isReFreshConversationList = getIntent().getBooleanExtra(EXTRA_COME_FROM_SCANCODE, false);
-            WSAPIService.getInstance().getChannelNewMessage(cid, isReFreshConversationList);
+            WSAPIService.getInstance().getChannelNewMessage(cid);
         }
     }
 
@@ -1810,7 +1808,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             adapter.notifyItemRemoved(index);
         }
         MessageCacheUtil.deleteMessageById(uiMessage.getId());
-        notifyCommucationFragmentMessageSendStatus();
+        notifyConversationListChange();
     }
 
     private void recallSendingMessage(UIMessage uiMessage) {
