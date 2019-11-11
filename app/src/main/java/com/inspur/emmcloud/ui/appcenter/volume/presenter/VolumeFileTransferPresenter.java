@@ -10,6 +10,7 @@ import com.inspur.emmcloud.util.privates.VolumeFileUploadManager;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -46,6 +47,7 @@ public class VolumeFileTransferPresenter extends BasePresenter<VolumeFileTransfe
         }
         if (list.size() > 0) {
             mView.showListLayout();
+            Collections.reverse(list);
         } else {
             mView.showNoDataLayout();
         }

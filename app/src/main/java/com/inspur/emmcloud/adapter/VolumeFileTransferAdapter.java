@@ -25,6 +25,7 @@ import com.inspur.emmcloud.util.privates.VolumeFileDownloadCacheUtils;
 import com.inspur.emmcloud.util.privates.VolumeFileDownloadManager;
 import com.inspur.emmcloud.util.privates.VolumeFileUploadManager;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -118,16 +119,14 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
         } else {
             holder.progressBar.setProgress(volumeFile.getProgress());
         }
+        holder.speedTv.setVisibility(volumeFile.getStatus().equals(VolumeFile.STATUS_UPLOAD_IND) ||
+                volumeFile.getStatus().equals(VolumeFile.STATUS_DOWNLOAD_IND) ? View.VISIBLE : View.GONE);
         if (volumeFile.getStatus().equals(VolumeFile.STATUS_UPLOAD_IND) ||
                 volumeFile.getStatus().equals(VolumeFile.STATUS_UPLOAD_PAUSE)) {
-            holder.speedTv.setVisibility(View.VISIBLE);
-//            holder.speedTv.setText("10 K/S");
             handleUploadCallback(holder, volumeFile);
         } else if (volumeFile.getStatus().equals(VolumeFile.STATUS_DOWNLOAD_IND) ||
                 volumeFile.getStatus().equals(VolumeFile.STATUS_DOWNLOAD_PAUSE)) {
-            holder.speedTv.setVisibility(View.VISIBLE);
             handleDownloadCallback(holder, volumeFile);
-
         } else {
             holder.speedTv.setVisibility(View.GONE);
         }
@@ -175,6 +174,7 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
         VolumeFileDownloadManager.getInstance().setBusinessProgressCallback(volumeFile, new ProgressCallback() {
             @Override
             public void onSuccess(VolumeFile volumeFile) {
+                Log.d("zhang", "handleDownloadCallback onSuccess: ");
                 int position = (int) holder.statusLayout.getTag();
                 holder.progressBar.setStatus(CircleProgressBar.Status.End);
                 fileList.remove(position);
@@ -223,15 +223,18 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
             fileList.get(position).setStatus(VolumeFile.STATUS_DOWNLOAD_PAUSE);
             Log.d("zhang", "changeStatus: cancelDownloadVolumeFile");
             VolumeFileDownloadManager.getInstance().cancelDownloadVolumeFile(volumeFile);
+            VolumeFileDownloadCacheUtils.saveVolumeFile(volumeFile);
         } else if (status.equals(VolumeFile.STATUS_DOWNLOAD_PAUSE)) {
             //继续下载
             fileList.get(position).setStatus(VolumeFile.STATUS_DOWNLOAD_IND);
             Log.d("zhang", "changeStatus: downloadFile");
             volumeFile.setStatus(VolumeFile.STATUS_DOWNLOAD_IND);
             VolumeFileDownloadManager.getInstance().reDownloadFile(volumeFile, volumeFile.getVolumeFileAbsolutePath());
+            VolumeFileDownloadCacheUtils.saveVolumeFile(volumeFile);
         } else if (status.equals(VolumeFile.STATUS_NORMAL)) {
 
         }
+
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
@@ -291,6 +294,13 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
                             } else if (type.equals(Constant.TYPE_DOWNLOAD)) {
                                 VolumeFileDownloadManager.getInstance().cancelDownloadVolumeFile(volumeFile);
                                 VolumeFileDownloadCacheUtils.deleteVolumeFile(volumeFile);
+                                if (!StringUtils.isBlank(volumeFile.getLocalFilePath())) {
+                                    String tmpFilePath = volumeFile.getLocalFilePath() + ".tmp";
+                                    File localTmpDownloadFile = new File(tmpFilePath);
+                                    if (localTmpDownloadFile.exists()) {
+                                        localTmpDownloadFile.delete();
+                                    }
+                                }
                             }
                             fileList.remove(position);
                             notifyItemRemoved(position);

@@ -34,8 +34,6 @@ public class VolumeFileDownloadManager extends APIInterfaceInstance {
     private List<VolumeFile> volumeFileDownloadList = new ArrayList<>();
     private MyAppAPIService apiService;
 
-    private long lastTime = 0L;
-
     public static VolumeFileDownloadManager getInstance() {
         if (instance == null) {
             synchronized (VolumeFileDownloadManager.class) {
@@ -46,8 +44,6 @@ public class VolumeFileDownloadManager extends APIInterfaceInstance {
         }
         return instance;
     }
-
-    private long completeSize = 0L;
 
     public VolumeFileDownloadManager() {
         apiService = new MyAppAPIService(MyApplication.getInstance());
@@ -92,6 +88,7 @@ public class VolumeFileDownloadManager extends APIInterfaceInstance {
                     }
                     downloadVolumeFile.setBusinessProgressCallback(businessProgressCallback);
                 }
+                break;
             }
         }
     }
@@ -134,18 +131,29 @@ public class VolumeFileDownloadManager extends APIInterfaceInstance {
     public void downloadFile(final VolumeFile volumeFile, String currentDirAbsolutePath, boolean isReload) {
         final String fileSavePath = MyAppConfig.getFileDownloadByUserAndTanentDirPath() +
                 FileUtils.getNoDuplicateFileNameInDir(MyAppConfig.getFileDownloadByUserAndTanentDirPath(), volumeFile.getName());
+        Log.d("zhang", "downloadFile: fileSavePath = " + fileSavePath);
         volumeFile.setLocalFilePath(fileSavePath);
         volumeFile.setStatus(VolumeFile.STATUS_DOWNLOAD_IND);
+        volumeFile.setLastRecordTime(System.currentTimeMillis());
+        volumeFile.setCompleteSize(volumeFile.getProgress() / 100 * volumeFile.getSize());
         if (!isReload) {
             volumeFileDownloadList.add(volumeFile);
+        } else {
+            for (int i = 0; i < volumeFileDownloadList.size(); i++) {
+                VolumeFile downloadVolumeFile = volumeFileDownloadList.get(i);
+                if (volumeFile.getId().equals(downloadVolumeFile.getId())) {
+                    downloadVolumeFile.setStatus(VolumeFile.STATUS_DOWNLOAD_IND);
+                    downloadVolumeFile.setLastRecordTime(volumeFile.getLastRecordTime());
+                    downloadVolumeFile.setCompleteSize(volumeFile.getCompleteSize());
+                    VolumeFileDownloadCacheUtils.saveVolumeFile(downloadVolumeFile);
+                    break;
+                }
+            }
         }
+
         final String volumeId = volumeFile.getVolume();
         String source = APIUri.getVolumeFileUploadSTSTokenUrl(volumeId);
-
-        lastTime = System.currentTimeMillis();
-        completeSize = volumeFile.getProgress() / 100 * volumeFile.getSize();
         APIDownloadCallBack callBack = getAPIDownloadCallBack(source, volumeFile, fileSavePath);
-
         RequestParams params = BaseApplication.getInstance().getHttpRequestParams(source);
         params.addParameter("volumeId", volumeId);
         params.addQueryStringParameter("path", currentDirAbsolutePath);
@@ -168,6 +176,7 @@ public class VolumeFileDownloadManager extends APIInterfaceInstance {
             if (volumeFile.getId().equals(downloadVolumeFile.getId())) {
                 downloadVolumeFile.setCancelable(cancelable);
                 VolumeFileDownloadCacheUtils.saveVolumeFile(downloadVolumeFile);
+                break;
             }
         }
     }
@@ -183,21 +192,22 @@ public class VolumeFileDownloadManager extends APIInterfaceInstance {
             @Override
             public void callbackLoading(long total, long current, boolean isUploading) {
                 int progress = (int) (current * 100.0 / total);
-                String totalSize = FileUtils.formatFileSize(total);
-                String currentSize = FileUtils.formatFileSize(current);
-                String speed = FileUtils.formatFileSize((current - completeSize) * 1000 / (System.currentTimeMillis() - lastTime)) + "/S";
 
                 for (int i = 0; i < volumeFileDownloadList.size(); i++) {
                     VolumeFile downloadVolumeFile = volumeFileDownloadList.get(i);
                     if (volumeFile.getId().equals(downloadVolumeFile.getId())) {
+                        String speed = FileUtils.formatFileSize((current - downloadVolumeFile.getCompleteSize()) * 1000 /
+                                (System.currentTimeMillis() - downloadVolumeFile.getLastRecordTime())) + "/S";
                         if (downloadVolumeFile.getBusinessProgressCallback() != null) {
                             downloadVolumeFile.getBusinessProgressCallback().onLoading(progress, speed);
                         }
+                        downloadVolumeFile.setProgress(progress);
+                        downloadVolumeFile.setLastRecordTime(System.currentTimeMillis());
+                        downloadVolumeFile.setCompleteSize(current);
+                        VolumeFileDownloadCacheUtils.saveVolumeFile(downloadVolumeFile);
+                        break;
                     }
                 }
-
-                lastTime = System.currentTimeMillis();
-                completeSize = current;
             }
 
             @Override
@@ -205,8 +215,6 @@ public class VolumeFileDownloadManager extends APIInterfaceInstance {
                 Log.d("zhang", "onSuccess: 下载成功");
                 FileDownloadManager.getInstance().saveDownloadFileInfo(DownloadFileCategory.CATEGORY_VOLUME_FILE,
                         volumeFile.getId(), volumeFile.getName(), fileSavePath);
-                VolumeFileDownloadCacheUtils.deleteVolumeFile(volumeFile);
-                volumeFileDownloadList.remove(volumeFile);
                 ToastUtils.show(BaseApplication.getInstance(), R.string.download_success);
                 for (int i = 0; i < volumeFileDownloadList.size(); i++) {
                     VolumeFile downloadVolumeFile = volumeFileDownloadList.get(i);
@@ -214,7 +222,9 @@ public class VolumeFileDownloadManager extends APIInterfaceInstance {
                         if (downloadVolumeFile.getBusinessProgressCallback() != null) {
                             downloadVolumeFile.getBusinessProgressCallback().onSuccess(volumeFile);
                         }
+                        VolumeFileDownloadCacheUtils.deleteVolumeFile(volumeFile);
                         volumeFileDownloadList.remove(volumeFile);
+                        break;
                     }
                 }
 
@@ -229,6 +239,7 @@ public class VolumeFileDownloadManager extends APIInterfaceInstance {
                         if (downloadVolumeFile.getBusinessProgressCallback() != null) {
                             downloadVolumeFile.getBusinessProgressCallback().onFail();
                         }
+                        break;
                     }
                 }
             }
