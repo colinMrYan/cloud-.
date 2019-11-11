@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.ui.appcenter.volume;
 
 import android.content.DialogInterface;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -9,11 +8,14 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
+import com.inspur.emmcloud.basemodule.api.APIDownloadCallBack;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.DownloadFileCategory;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
@@ -24,9 +26,7 @@ import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
-import com.inspur.emmcloud.interf.ProgressCallback;
 import com.inspur.emmcloud.util.privates.ShareFile2OutAppUtils;
-import com.inspur.emmcloud.util.privates.VolumeFileDownloadManager;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.bean.PlatformName;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -34,6 +34,13 @@ import com.umeng.socialize.shareboard.SnsPlatform;
 import com.umeng.socialize.utils.ShareBoardlistener;
 
 import org.xutils.common.Callback;
+import org.xutils.http.HttpMethod;
+import org.xutils.http.RequestParams;
+import org.xutils.http.app.RedirectHandler;
+import org.xutils.http.request.UriRequest;
+import org.xutils.x;
+
+import java.io.File;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -227,95 +234,97 @@ public class VolumeFileDownloadActivity extends BaseActivity {
      * 下载文件
      */
     private void downloadFile() {
-        downloadBtn.setVisibility(View.GONE);
-        downloadStatusLayout.setVisibility(View.VISIBLE);
-//        final String volumeId = getIntent().getStringExtra("volumeId");
-//        String source = APIUri.getVolumeFileUploadSTSTokenUrl(volumeId);
-        volumeFile.setStatus(VolumeFile.STATUS_DOWNLOAD_IND);
-        VolumeFileDownloadManager.getInstance().downloadFile(volumeFile, currentDirAbsolutePath);
-        VolumeFileDownloadManager.getInstance().setBusinessProgressCallback(volumeFile, new ProgressCallback() {
-            @Override
-            public void onSuccess(VolumeFile volumeFile) {
-                Log.d("zhang", "Activity onSuccess: ");
-            }
-
-            @Override
-            public void onLoading(int progress, String speed) {
-                Log.d("zhang", "Activity downLoading: progress = " + progress
-                        + ",speed = " + speed + ",status = " + volumeFile.getStatus());
-            }
-
-            @Override
-            public void onFail() {
-                Log.d("zhang", "Activity onFail: ");
-            }
-        });
-//        APIDownloadCallBack callBack = new APIDownloadCallBack(getApplicationContext(), source) {
+//        downloadBtn.setVisibility(View.GONE);
+//        downloadStatusLayout.setVisibility(View.VISIBLE);
+//        volumeFile.setStatus(VolumeFile.STATUS_DOWNLOAD_IND);
+//        VolumeFileDownloadManager.getInstance().downloadFile(volumeFile, currentDirAbsolutePath);
+//        VolumeFileDownloadManager.getInstance().setBusinessProgressCallback(volumeFile, new ProgressCallback() {
 //            @Override
-//            public void callbackStart() {
-//                progressBar.setProgress(0);
-//                progressText.setText("");
+//            public void onSuccess(VolumeFile volumeFile) {
+//                Log.d("zhang", "Activity onSuccess: ");
 //            }
 //
 //            @Override
-//            public void callbackLoading(long total, long current, boolean isUploading) {
-//                int progress = (int) (current * 100.0 / total);
-//                progressBar.setProgress(progress);
-//                String totalSize = FileUtils.formatFileSize(total);
-//                String currentSize = FileUtils.formatFileSize(current);
-//                progressText.setText(getString(R.string.clouddriver_downloading_status, currentSize, totalSize));
-//
+//            public void onLoading(int progress, String speed) {
+//                Log.d("zhang", "Activity downLoading: progress = " + progress
+//                        + ",speed = " + speed + ",status = " + volumeFile.getStatus());
 //            }
 //
 //            @Override
-//            public void callbackSuccess(File file) {
-//                FileDownloadManager.getInstance().saveDownloadFileInfo(DownloadFileCategory.CATEGORY_VOLUME_FILE, volumeFile.getId(), volumeFile.getName(), fileSavePath);
-//                ToastUtils.show(getApplicationContext(), R.string.download_success);
-//                downloadStatusLayout.setVisibility(View.GONE);
-//                progressBar.setProgress(0);
-//                progressText.setText("");
-//                downloadBtn.setVisibility(View.VISIBLE);
-//                shareFileTextView.setVisibility(View.VISIBLE);
-//                setDownloadingStatus(true);
-//                VolumeFileDownloadCacheUtils.deleteVolumeFile(volumeFile);
-//            }
-//
-//            @Override
-//            public void callbackError(Throwable arg0, boolean arg1) {
-//                if (downloadStatusLayout.getVisibility() == View.VISIBLE) {
-//                    ToastUtils.show(getApplicationContext(), R.string.download_fail);
-//                    downloadStatusLayout.setVisibility(View.GONE);
-//                    shareFileTextView.setVisibility(View.GONE);
-//                    progressBar.setProgress(0);
-//                    progressText.setText("");
-//                    downloadBtn.setVisibility(View.VISIBLE);
-//                    setDownloadingStatus(false);
-//                }
-//            }
-//
-//            @Override
-//            public void callbackCanceled(CancelledException e) {
-//
-//            }
-//        };
-//
-//        RequestParams params = ((MyApplication) getApplicationContext()).getHttpRequestParams(source);
-//        params.addParameter("volumeId", volumeId);
-//        params.addQueryStringParameter("path", currentDirAbsolutePath);
-//        LogUtils.jasonDebug("params==" + params.toString());
-//        params.setRedirectHandler(new RedirectHandler() {
-//            @Override
-//            public RequestParams getRedirectParams(UriRequest uriRequest) throws Throwable {
-//                String locationUrl = uriRequest.getResponseHeader("Location");
-//                RequestParams params = new RequestParams(locationUrl);
-//                params.setAutoResume(true);// 断点下载
-//                params.setSaveFilePath(fileSavePath);
-//                params.setCancelFast(true);
-//                params.setMethod(HttpMethod.GET);
-//                return params;
+//            public void onFail() {
+//                Log.d("zhang", "Activity onFail: ");
 //            }
 //        });
-//        cancelable = x.http().get(params, callBack);
+        //zyj 恢复之前 TODO
+        downloadBtn.setVisibility(View.GONE);
+        downloadStatusLayout.setVisibility(View.VISIBLE);
+        final String volumeId = getIntent().getStringExtra("volumeId");
+        String source = APIUri.getVolumeFileUploadSTSTokenUrl(volumeId);
+        APIDownloadCallBack callBack = new APIDownloadCallBack(getApplicationContext(), source) {
+            @Override
+            public void callbackStart() {
+                progressBar.setProgress(0);
+                progressText.setText("");
+            }
+
+            @Override
+            public void callbackLoading(long total, long current, boolean isUploading) {
+                int progress = (int) (current * 100.0 / total);
+                progressBar.setProgress(progress);
+                String totalSize = FileUtils.formatFileSize(total);
+                String currentSize = FileUtils.formatFileSize(current);
+                progressText.setText(getString(R.string.clouddriver_downloading_status, currentSize, totalSize));
+
+            }
+
+            @Override
+            public void callbackSuccess(File file) {
+                FileDownloadManager.getInstance().saveDownloadFileInfo(DownloadFileCategory.CATEGORY_VOLUME_FILE, volumeFile.getId(), volumeFile.getName(), fileSavePath);
+                ToastUtils.show(getApplicationContext(), R.string.download_success);
+                downloadStatusLayout.setVisibility(View.GONE);
+                progressBar.setProgress(0);
+                progressText.setText("");
+                downloadBtn.setVisibility(View.VISIBLE);
+                shareFileTextView.setVisibility(View.VISIBLE);
+                setDownloadingStatus(true);
+            }
+
+            @Override
+            public void callbackError(Throwable arg0, boolean arg1) {
+                if (downloadStatusLayout.getVisibility() == View.VISIBLE) {
+                    ToastUtils.show(getApplicationContext(), R.string.download_fail);
+                    downloadStatusLayout.setVisibility(View.GONE);
+                    shareFileTextView.setVisibility(View.GONE);
+                    progressBar.setProgress(0);
+                    progressText.setText("");
+                    downloadBtn.setVisibility(View.VISIBLE);
+                    setDownloadingStatus(false);
+                }
+            }
+
+            @Override
+            public void callbackCanceled(CancelledException e) {
+
+            }
+        };
+
+        RequestParams params = ((MyApplication) getApplicationContext()).getHttpRequestParams(source);
+        params.addParameter("volumeId", volumeId);
+        params.addQueryStringParameter("path", currentDirAbsolutePath);
+        LogUtils.jasonDebug("params==" + params.toString());
+        params.setRedirectHandler(new RedirectHandler() {
+            @Override
+            public RequestParams getRedirectParams(UriRequest uriRequest) throws Throwable {
+                String locationUrl = uriRequest.getResponseHeader("Location");
+                RequestParams params = new RequestParams(locationUrl);
+                params.setAutoResume(true);// 断点下载
+                params.setSaveFilePath(fileSavePath);
+                params.setCancelFast(true);
+                params.setMethod(HttpMethod.GET);
+                return params;
+            }
+        });
+        cancelable = x.http().get(params, callBack);
     }
 
 }
