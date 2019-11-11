@@ -465,7 +465,7 @@ public class WSAPIService {
         }
     }
 
-    public void getChannelNewMessage(String cid, boolean isNeedRefreshConversationList) {
+    public void getChannelNewMessage(String cid) {
         try {
             String tracer = CommunicationUtils.getTracer();
             JSONObject object = new JSONObject();
@@ -483,7 +483,6 @@ public class WSAPIService {
             object.put("headers", headerObj);
             HashMap hashMap = new HashMap();
             hashMap.put("cid", cid);
-            hashMap.put("isNeedRefreshConversationList", isNeedRefreshConversationList);
             EventMessage eventMessage = new EventMessage(tracer, Constant.EVENTBUS_TAG_GET_NEW_MESSAGE, "", hashMap);
             WebSocketPush.getInstance().sendEventMessage(eventMessage, object, tracer);
         } catch (Exception e) {

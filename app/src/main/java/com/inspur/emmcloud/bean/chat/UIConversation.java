@@ -231,6 +231,12 @@ public class UIConversation implements Serializable {
             UIConversation uiConversationA = (UIConversation) lhs;
             UIConversation uiConversationB = (UIConversation) rhs;
             long diff = uiConversationA.getLastUpdate() - uiConversationB.getLastUpdate();
+            if (uiConversationA.getConversation().isStick() && !uiConversationB.getConversation().isStick()) {
+                return -1;
+            }
+            if (!uiConversationA.getConversation().isStick() && uiConversationB.getConversation().isStick()) {
+                return 1;
+            }
             if (diff > 0) {
                 return -1;
             } else if (diff == 0) {

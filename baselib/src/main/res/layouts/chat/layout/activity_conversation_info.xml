@@ -83,7 +83,8 @@
                 android:layout_height="wrap_content"
                 android:background="#FFFFFF"
                 android:onClick="onClick"
-                android:paddingBottom="11dp"
+                android:paddingBottom="25dp"
+                android:paddingTop="15dp"
                 android:visibility="gone">
 
                 <LinearLayout

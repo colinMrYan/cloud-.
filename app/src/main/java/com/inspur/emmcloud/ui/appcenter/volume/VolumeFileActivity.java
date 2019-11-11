@@ -42,7 +42,6 @@ import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFileUpload;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
-import com.inspur.emmcloud.ui.appcenter.volume.view.VolumeFileTransferActivity;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
@@ -245,8 +244,8 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
             case R.id.iv_head_operation:
                 showUploadOperationPopWindow(new ArrayList<VolumeFile>());
                 break;
-            case R.id.iv_down_up_list:
-                startActivity(new Intent(this, VolumeFileTransferActivity.class));
+            case R.id.iv_down_up_list:    //跳转文件传输列表
+//                startActivity(new Intent(this, VolumeFileTransferActivity.class));
                 break;
             case R.id.operation_sort_text:
                 showSortOperationPop();
@@ -510,7 +509,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         }
         /**继续执行父类的OnActivityResult**/
         super.onActivityResult(requestCode, resultCode, data);
-        }
+    }
 
     /**
      * 打开channel

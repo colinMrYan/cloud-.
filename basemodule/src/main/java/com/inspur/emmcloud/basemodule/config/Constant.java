@@ -108,6 +108,10 @@ public class Constant {
     public static final String EVENTBUS_TAG_VIDEO_CALL = "client.video.call";
     public static final String EVENTBUS_TAG_ON_PHOTO_TAB = "tag_on_photo_tab";
     public static final String EVENTBUS_TAG_ON_PHOTO_CLOSE = "tag_on_photo_close";
+    //频道本身属性发生变化（非消息导致）
+    public static final String EVENTBUS_TAG_CONVERSATION_SELF_DATA_CHANGED = "tag_conversation_self_data_changed";
+    //频道消息发生变化
+    public static final String EVENTBUS_TAG_CONVERSATION_MESSAGE_DATA_CHANGED = "tag_conversation_message_data_changed";
     public static final String EVENTBUS_TAG_WEBSOCKET_STATUS_REMOVE = "tag_websocket_status_remove";
     public static final String EVENTBUS_TAG_SET_CHANNEL_MESSAGE_READ = "tag_set_channel_message_read";
     public static final String EVENTBUS_TAG_RECERIVER_MESSAGE_STATE_READ = "tag_receive_message_state_read";
@@ -117,7 +121,6 @@ public class Constant {
     public static final String EVENTBUS_TAG_SEND_ACTION_CONTENT_MESSAGE = "tag_send_action_content_message";
     public static final String EVENTBUS_TAG_UPDATE_CHANNEL_NAME = "tag_update_channel_name";
     public static final String EVENTBUS_TAG_QUIT_CHANNEL_GROUP = "tag_quit_channel_group";
-    public static final String EVENTBUS_TAG_UPDATE_CHANNEL_FOCUS = "tag_update_channel_focus";
     public static final String EVENTBUS_TAG_UPDATE_CHANNEL_DND = "tag_update_channel_dnd";
     public static final String EVENTBUS_TAG_CURRENT_CHANNEL_OFFLINE_MESSAGE = "tag_current_channel_offline_message";
     public static final String EVENTBUS_TAG_NET_STATE_CHANGE = "tag_net_state_change";
@@ -301,5 +304,10 @@ public class Constant {
     public static final String VIDEO_CALL_INVITE = "server.chat.video-call.invite";
     public static final String VIDEO_CALL_REFUSE = "server.chat.video-call.refuse";
     public static final String VIDEO_CALL_HANG_UP = "server.chat.video-call.hang-up";
+    /**
+     * 云盘
+     */
+    public static final String TYPE_DOWNLOAD = "download";
+    public static final String TYPE_UPLOAD = "upload";
 
 }

@@ -52,6 +52,7 @@ sendMail:
  script:
    - chmod +x ./gitlab_ci/sendMail.py
    - python ./gitlab_ci/sendMail.py
+ dependencies: []
  only:
          - master
          - dev

@@ -47,8 +47,9 @@
             android:layout_height="wrap_content"
             android:background="@color/white"
             android:divider="@null"
-            android:paddingTop="11dp"
-            android:paddingBottom="11dp"></ListView>
+            android:listSelector="@android:color/transparent"
+            android:paddingBottom="11dp"
+            android:paddingTop="11dp"></ListView>
 
     </RelativeLayout>
 

@@ -181,7 +181,7 @@
     <string name="modify_group_name">群名片</string>
     <string name="channel_single_chat_images">聊天圖片</string>
     <string name="channel_single_chat_files">文件</string>
-    <string name="channel_search_more_group_members">查看更多群成員</string>
+    <string name="channel_search_more_group_members">查看全部群成員</string>
     <string name="choose_common_office">常用辦公地點</string>
     <string name="please_click_choosing_time">請點擊選擇時間</string>
     <string name="meeting_room">會議室</string>

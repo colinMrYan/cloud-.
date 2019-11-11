@@ -155,7 +155,6 @@ public class VolumeFileDownloadActivity extends BaseActivity {
                     if (checkDownloadEnvironment()) {
                         downloadFile();
                     }
-
                 }
                 break;
             case R.id.file_download_close_img:
@@ -235,6 +234,28 @@ public class VolumeFileDownloadActivity extends BaseActivity {
      * 下载文件
      */
     private void downloadFile() {
+//        downloadBtn.setVisibility(View.GONE);
+//        downloadStatusLayout.setVisibility(View.VISIBLE);
+//        volumeFile.setStatus(VolumeFile.STATUS_DOWNLOAD_IND);
+//        VolumeFileDownloadManager.getInstance().downloadFile(volumeFile, currentDirAbsolutePath);
+//        VolumeFileDownloadManager.getInstance().setBusinessProgressCallback(volumeFile, new ProgressCallback() {
+//            @Override
+//            public void onSuccess(VolumeFile volumeFile) {
+//                Log.d("zhang", "Activity onSuccess: ");
+//            }
+//
+//            @Override
+//            public void onLoading(int progress, String speed) {
+//                Log.d("zhang", "Activity downLoading: progress = " + progress
+//                        + ",speed = " + speed + ",status = " + volumeFile.getStatus());
+//            }
+//
+//            @Override
+//            public void onFail() {
+//                Log.d("zhang", "Activity onFail: ");
+//            }
+//        });
+        //zyj 恢复之前 TODO
         downloadBtn.setVisibility(View.GONE);
         downloadStatusLayout.setVisibility(View.VISIBLE);
         final String volumeId = getIntent().getStringExtra("volumeId");
