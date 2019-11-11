@@ -277,5 +277,10 @@ public class Constant {
     public static final String VIDEO_CALL_INVITE = "server.chat.video-call.invite";
     public static final String VIDEO_CALL_REFUSE = "server.chat.video-call.refuse";
     public static final String VIDEO_CALL_HANG_UP = "server.chat.video-call.hang-up";
+    /**
+     * 云盘
+     */
+    public static final String TYPE_DOWNLOAD = "download";
+    public static final String TYPE_UPLOAD = "upload";
 
 }

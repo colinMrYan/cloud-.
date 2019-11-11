@@ -6,7 +6,7 @@ public class ClickRuleUtil {
 
     public synchronized static boolean isFastClick() {
         long time = System.currentTimeMillis();
-        if (time - lastClickTime < MIN_CLICK_INTERVAL_TIME) {
+        if (time - lastClickTime > 0 && time - lastClickTime < MIN_CLICK_INTERVAL_TIME) {
             return true;
         }
         lastClickTime = time;

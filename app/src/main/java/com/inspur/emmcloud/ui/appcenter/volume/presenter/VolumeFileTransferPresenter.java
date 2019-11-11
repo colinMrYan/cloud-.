@@ -28,7 +28,7 @@ public class VolumeFileTransferPresenter extends BasePresenter<VolumeFileTransfe
         List<VolumeFile> list = new ArrayList<>();
         switch (index) {
             case 0:
-                list = VolumeFileDownloadManager.getInstance().getAllUploadVolumeFile();
+                list = VolumeFileDownloadManager.getInstance().getAllDownloadVolumeFile();
                 break;
             case 1:
                 list = VolumeFileUploadManager.getInstance().getAllUploadVolumeFile();

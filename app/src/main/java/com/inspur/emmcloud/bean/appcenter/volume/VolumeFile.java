@@ -5,9 +5,12 @@ import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.progressbar.CircleProgressBar;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
+import com.inspur.emmcloud.interf.ProgressCallback;
 
 import org.json.JSONObject;
+import org.xutils.common.Callback;
 import org.xutils.db.annotation.Column;
+import org.xutils.db.annotation.Table;
 
 import java.io.File;
 import java.io.Serializable;
@@ -19,6 +22,7 @@ import java.util.UUID;
  * Created by chenmch on 2017/11/16.
  */
 
+@Table(name = "VolumeFile")
 public class VolumeFile implements Serializable {
     public static final String FILE_TYPE_REGULAR = "regular";
     public static final String FILE_TYPE_DIRECTORY = "directory";
@@ -75,6 +79,16 @@ public class VolumeFile implements Serializable {
     private String volumeFileAbsolutePath = "";
     private String localFilePath = "";
     private Map<String, Integer> groupPrivilegeMap = new HashMap<>();
+    Callback.Cancelable cancelable;
+    /**
+     * VolumeFile本身的callback，监听下载进度
+     */
+    private ProgressCallback progressCallback;
+    /**
+     * 业务的callback
+     */
+    private ProgressCallback businessProgressCallback;
+
     public VolumeFile() {
     }
 
@@ -112,7 +126,7 @@ public class VolumeFile implements Serializable {
         String filename = FileUtils.getFileName(volumeFileUpload.getLocalFilePath());
         VolumeFile volumeFile = new VolumeFile();
         volumeFile.setType(VolumeFile.FILE_TYPE_REGULAR);
-        volumeFile.setId(UUID.randomUUID() + "");
+        volumeFile.setId(volumeFileUpload.getId());
         volumeFile.setCreationDate(System.currentTimeMillis());
         volumeFile.setName(filename);
         volumeFile.setStatus(volumeFileUpload.getStatus());
@@ -310,6 +324,30 @@ public class VolumeFile implements Serializable {
 
     public void setVolumeFileAbsolutePath(String volumeFileAbsolutePath) {
         this.volumeFileAbsolutePath = volumeFileAbsolutePath;
+    }
+
+    public ProgressCallback getProgressCallback() {
+        return progressCallback;
+    }
+
+    public void setProgressCallback(ProgressCallback progressCallback) {
+        this.progressCallback = progressCallback;
+    }
+
+    public ProgressCallback getBusinessProgressCallback() {
+        return businessProgressCallback;
+    }
+
+    public void setBusinessProgressCallback(ProgressCallback businessProgressCallback) {
+        this.businessProgressCallback = businessProgressCallback;
+    }
+
+    public Callback.Cancelable getCancelable() {
+        return cancelable;
+    }
+
+    public void setCancelable(Callback.Cancelable cancelable) {
+        this.cancelable = cancelable;
     }
 
     public CircleProgressBar.Status transfer2ProgressStatus(String status) {

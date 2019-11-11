@@ -5,8 +5,13 @@ import android.content.Intent;
 import android.view.View;
 
 import com.inspur.emmcloud.basemodule.bean.SearchModel;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.dialog.ShareDialog;
+import com.inspur.emmcloud.ui.ShareFilesActivity;
+
+import java.io.Serializable;
+import java.util.List;
 
 public class ShareUtil {
     public static void share(Context context, final SearchModel searchModel, String shareContent) {
@@ -36,5 +41,15 @@ public class ShareUtil {
             }
         });
         dialog.show();
+    }
+
+    /**
+     * 分享到云+
+     */
+    public static void startVolumeShareActivity(Context context, List<String> uriList) {
+        Intent intent = new Intent();
+        intent.setClass(context, ShareFilesActivity.class);
+        intent.putExtra(Constant.SHARE_FILE_URI_LIST, (Serializable) uriList);
+        context.startActivity(intent);
     }
 }

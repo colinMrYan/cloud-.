@@ -285,6 +285,7 @@ public class VolumeFileUploadManager extends APIInterfaceInstance {
 
         @Override
         public void onSuccess(VolumeFile volumeFile) {
+            Log.d("zhang", "onSuccess: 上传成功");
             volumeFileUploadList.remove(volumeFileUpload);
             VolumeFileUploadCacheUtils.deleteVolumeFileUpload(volumeFileUpload);
             if (volumeFileUpload.getBusinessProgressCallback() != null) {
@@ -296,12 +297,12 @@ public class VolumeFileUploadManager extends APIInterfaceInstance {
         }
 
         @Override
-        public void onLoading(int progress, String uploadSpeed) {
+        public void onLoading(int progress, String speed) {
             volumeFileUpload.setProgress(progress);
             volumeFileUpload.setStatus(VolumeFile.STATUS_UPLOAD_IND);
             VolumeFileUploadCacheUtils.saveVolumeFileUpload(volumeFileUpload);
             if (volumeFileUpload.getBusinessProgressCallback() != null) {
-                volumeFileUpload.getBusinessProgressCallback().onLoading(progress, uploadSpeed);
+                volumeFileUpload.getBusinessProgressCallback().onLoading(progress, speed);
             }
         }
 
