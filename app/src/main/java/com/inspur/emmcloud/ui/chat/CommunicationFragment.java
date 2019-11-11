@@ -501,10 +501,10 @@ public class CommunicationFragment extends BaseFragment {
         Observable.create(new ObservableOnSubscribe<List<UIConversation>>() {
             @Override
             public void subscribe(ObservableEmitter<List<UIConversation>> emitter) throws Exception {
-                long a = System.currentTimeMillis();
                 List<Conversation> conversationList = ConversationCacheUtils.getConversationList(MyApplication.getInstance());
                 List<UIConversation> uiConversationList = new ArrayList<>();
                 if (conversationList.size() > 0) {
+                    //Conversation存储，主要存储其lastUpdate字段，便于便于后续获取Conversation排序
                     uiConversationList = UIConversation.conversationList2UIConversationList(conversationList);
                     ConversationCacheUtils.saveConversationList(MyApplication.getInstance(), conversationList);
                     Iterator<UIConversation> it = uiConversationList.iterator();
@@ -914,7 +914,7 @@ public class CommunicationFragment extends BaseFragment {
      *
      * @param conversation
      */
-    private void notifyConversationSelfDataChanged(Conversation conversation) {
+    private void notifyConversationSelfDataChanged(final Conversation conversation) {
         if (conversation != null) {
             List<UIConversation> uiConversationList = new ArrayList<>();
             uiConversationList.addAll(displayUIConversationList);
@@ -927,6 +927,14 @@ public class CommunicationFragment extends BaseFragment {
             displayUIConversationList = uiConversationList;
             conversationAdapter.setData(displayUIConversationList);
             conversationAdapter.notifyDataSetChanged();
+            Observable.create(new ObservableOnSubscribe<Void>() {
+                @Override
+                public void subscribe(ObservableEmitter<Void> emitter) throws Exception {
+                    //Conversation存储，主要存储其lastUpdate字段，便于便于后续获取Conversation排序
+                    ConversationCacheUtils.saveConversation(BaseApplication.getInstance(), conversation);
+                }
+            }).subscribeOn(Schedulers.io())
+                    .subscribe();
         }
     }
 
