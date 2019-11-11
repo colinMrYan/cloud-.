@@ -72,6 +72,12 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+
 /**
  * 主页面
  *
@@ -349,10 +355,11 @@ public class IndexActivity extends IndexBaseActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveSimpleMessage(SimpleEventMessage simpleEventMessage) {
+        //为Message添加showContent字段以便于搜索
         if (simpleEventMessage.getAction().equals(Constant.EVENTBUS_TAG_MESSAGE_ADD_SHOW_CONTENT)) {
-            new Thread(new Runnable() {
+            Observable.create(new ObservableOnSubscribe<Void>() {
                 @Override
-                public void run() {
+                public void subscribe(ObservableEmitter<Void> emitter) throws Exception {
                     List<String> messageTypeList = new ArrayList<>();
                     messageTypeList.add(Message.MESSAGE_TYPE_TEXT_PLAIN);
                     messageTypeList.add(Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN);
@@ -362,21 +369,21 @@ public class IndexActivity extends IndexBaseActivity {
                         message.setMessageShowContent();
                     }
                     MessageCacheUtil.saveMessageList(BaseApplication.getInstance(), messageList);
-
                 }
-            }).start();
+            }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe();
+
         } else if (simpleEventMessage.getAction().equals(Constant.EVENTBUS_TAG_CONVERSATION_ADD_SHOW_CONTENT)) {
-            new Thread(new Runnable() {
+            //为Conversation添加showContent字段以便于搜索
+            Observable.create(new ObservableOnSubscribe<Void>() {
                 @Override
-                public void run() {
+                public void subscribe(ObservableEmitter<Void> emitter) throws Exception {
                     List<Conversation> conversationList = ConversationCacheUtils.getConversationList(BaseApplication.getInstance());
                     for (Conversation conversation : conversationList) {
                         conversation.setShowName(CommunicationUtils.getConversationTitle(conversation));
                     }
                     ConversationCacheUtils.saveConversationList(BaseApplication.getInstance(), conversationList);
                 }
-            }).start();
-
+            }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe();
         }
     }
 
