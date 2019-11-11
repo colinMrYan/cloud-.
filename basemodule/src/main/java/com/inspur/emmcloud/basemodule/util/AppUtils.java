@@ -51,6 +51,7 @@ import com.inspur.emmcloud.componentservice.web.WebService;
 
 import java.lang.reflect.Method;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -428,11 +429,37 @@ public class AppUtils {
         try {
             packageManager.getPackageInfo(packageName, PackageManager.GET_ACTIVITIES);
             installed = true;
-        } catch (PackageManager.NameNotFoundException e) {
+        } catch (Exception e) {
             installed = false;
         }
         return installed;
     }
+
+    /**
+     * 检查手机上是否安装了指定的软件
+     *
+     * @param context
+     * @param packageName
+     * @return
+     */
+    public static boolean isAvilibleByPackageName(Context context, String packageName) {
+        try {
+            final PackageManager packageManager = context.getPackageManager();
+            List<PackageInfo> packageInfos = packageManager.getInstalledPackages(0);
+            List<String> packageNames = new ArrayList<String>();
+            if (packageInfos != null) {
+                for (int i = 0; i < packageInfos.size(); i++) {
+                    String packName = packageInfos.get(i).packageName;
+                    packageNames.add(packName);
+                }
+            }
+            // 判断packageNames中是否有目标程序的包名，有TRUE，没有FALSE
+            return packageNames.contains(packageName);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
 
     // /**
     // * 打开APK文件（安装APK应用）
