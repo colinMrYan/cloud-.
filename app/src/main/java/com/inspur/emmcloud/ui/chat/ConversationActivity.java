@@ -474,8 +474,8 @@ public class ConversationActivity extends ConversationBaseActivity {
         intent.setClass(ConversationActivity.this, ChannelVoiceCommunicationActivity.class);
         intent.putExtra("userList", (Serializable) voiceCommunicationUserInfoBeanList);
         intent.putExtra(CLOUD_PLUS_CHANNEL_ID, cid);
-        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_VIDEO_CALL_TYPE, type);
-        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.INVITER_LAYOUT_STATE);
+        intent.putExtra(Constant.VOICE_VIDEO_CALL_TYPE, type);
+        intent.putExtra(Constant.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_PRE);
         startActivity(intent);
     }
 

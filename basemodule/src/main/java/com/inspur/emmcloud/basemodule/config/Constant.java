@@ -160,6 +160,30 @@ public class Constant {
     public static final String COMMAND_UID = "uid";
     public static final String COMMAND_CHANNEL_ID = "channelid";
     public static final String COMMAND_ROOM_ID = "roomid";
+    /**
+     * agora的channelId
+     */
+    public static final String VOICE_VIDEO_CALL_AGORA_ID = "channelId";
+    /**
+     * 通话类型ECMChatInputMenu.VIDEO_CALL或者ECMChatInputMenu.VOICE_CALL
+     */
+    public static final String VOICE_VIDEO_CALL_TYPE = "voice_video_call_type";
+    /**
+     * 通话中来自schema的uid，这个uid表示来自云+中的哪个人
+     */
+    public static final String SCHEMA_FROM_UID = "voice_video_UID";
+    /**
+     * 传递页面布局样式的
+     */
+    public static final String VOICE_COMMUNICATION_STATE = "voice_communication_state";
+    /**
+     * 传递页面是否来自小窗
+     */
+    public static final String VOICE_IS_FROM_SMALL_WINDOW = "voice_is_from_window";
+//    /**
+//     * 屏幕宽度
+//     */
+//    public static final String SCREEN_SIZE = "screen_size";
 
     public static final String APP_TAB_TYPE_NATIVE = "native";
     public static final String APP_TAB_TYPE_RN = "react-native";

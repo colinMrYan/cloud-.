@@ -251,7 +251,11 @@ public class AppSchemeHandleActivity extends BaseActivity {
                             case "ecc-cloudplus-cmd":
                                 CustomProtocol customProtocol = new CustomProtocol(uri.toString());
                                 if (customProtocol.getHost().equals("voice_channel")) {
-                                    startVoiceCall(uri.toString());
+                                    //不在通话中，点击通知才打开页面，否则不打开，不会影响小窗口或者通知的逻辑，
+                                    //小窗口通知走的ecc-cloudplus-cmd-voice-call
+                                    if (!VoiceCommunicationManager.getInstance().isVoiceBusy()) {
+                                        startVoiceCall(uri.toString());
+                                    }
                                 } else if (customProtocol.getHost().equals("jump/chatviewcontroller")) {
                                     String cid = customProtocol.getParamMap().get("chatroom");
                                     Intent intent = new Intent();
@@ -268,9 +272,9 @@ public class AppSchemeHandleActivity extends BaseActivity {
                                 Intent intentVoiceCall = new Intent();
                                 intentVoiceCall.setClass(AppSchemeHandleActivity.this, ChannelVoiceCommunicationActivity.class);
                                 intentVoiceCall.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                intentVoiceCall.putExtra(ChannelVoiceCommunicationActivity.VOICE_IS_FROM_SMALL_WINDOW, true);
-                                intentVoiceCall.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE,
-                                        VoiceCommunicationManager.getInstance().getLayoutState());
+                                intentVoiceCall.putExtra(Constant.VOICE_IS_FROM_SMALL_WINDOW, true);
+                                intentVoiceCall.putExtra(Constant.VOICE_COMMUNICATION_STATE,
+                                        VoiceCommunicationManager.getInstance().getCommunicationState());
                                 startActivity(intentVoiceCall);
                                 finish();
                                 break;
@@ -299,14 +303,9 @@ public class AppSchemeHandleActivity extends BaseActivity {
     private void startVoiceCall(String content) {
         CustomProtocol customProtocol = new CustomProtocol(content);
         if (customProtocol != null) {
-            Intent intent = new Intent();
-            intent.setClass(AppSchemeHandleActivity.this, ChannelVoiceCommunicationActivity.class);
-            intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_VIDEO_CALL_AGORA_ID, customProtocol.getParamMap().get("roomid"));
-            intent.putExtra(ConversationActivity.CLOUD_PLUS_CHANNEL_ID, customProtocol.getParamMap().get("channelid"));
-            intent.putExtra(ChannelVoiceCommunicationActivity.SCHEMA_FROM_UID, customProtocol.getParamMap().get("uid"));
-            intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.INVITEE_LAYOUT_STATE);
-            intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_VIDEO_CALL_TYPE, ECMChatInputMenu.VOICE_CALL);
-            startActivity(intent);
+            VoiceCommunicationManager.getInstance().getChannelInfoByChannelId(this,
+                    customProtocol.getParamMap().get(Constant.COMMAND_ROOM_ID),
+                    ECMChatInputMenu.VOICE_CALL, customProtocol.getParamMap().get(Constant.COMMAND_CHANNEL_ID));
         }
     }
 

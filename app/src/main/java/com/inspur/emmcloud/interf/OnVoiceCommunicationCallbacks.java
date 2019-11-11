@@ -52,4 +52,8 @@ public interface OnVoiceCommunicationCallbacks {
 
     //统一的倒计时，倒计时结束时回调
     void onCountDownTimerFinish();
+
+    void onOnlyOneLeftCountDownTimerFinish();
+
+    void onActivityFinish();
 }

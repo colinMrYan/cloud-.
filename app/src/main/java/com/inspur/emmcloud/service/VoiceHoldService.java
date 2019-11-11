@@ -19,7 +19,7 @@ import android.widget.RelativeLayout;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.LogUtils;
-import com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.util.privates.NotifyUtil;
 import com.inspur.emmcloud.util.privates.VoiceCommunicationManager;
 
@@ -49,7 +49,7 @@ public class VoiceHoldService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 //        baseTime = intent.getLongExtra(ChannelVoiceCommunicationActivity.VOICE_TIME, 0);
-        screenSize = intent.getIntExtra(ChannelVoiceCommunicationActivity.SCREEN_SIZE, 0);
+//        screenSize = intent.getIntExtra(ChannelVoiceCommunicationActivity.SCREEN_SIZE, 0);
         initViews();
         createToucher();
         return super.onStartCommand(intent, flags, startId);
@@ -165,9 +165,8 @@ public class VoiceHoldService extends Service {
         try {
             intent = Intent.parseUri("ecc-cloudplus-cmd-voice-call://123", Intent.URI_INTENT_SCHEME);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_IS_FROM_SMALL_WINDOW, true);
-            intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE,
-                    VoiceCommunicationManager.getInstance().getLayoutState());
+            intent.putExtra(Constant.VOICE_IS_FROM_SMALL_WINDOW, true);
+            intent.putExtra(Constant.VOICE_COMMUNICATION_STATE, VoiceCommunicationManager.getInstance().getCommunicationState());
 //            intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_TIME, Long.parseLong(TimeUtils.getChronometerSeconds(chronometer.getText().toString())));
             LogUtils.YfcDebug("准备启动SchemeActivity");
             startActivity(intent);
