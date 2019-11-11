@@ -179,6 +179,9 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
                 } else {
                     holder.photoImg.setImageResource(R.drawable.icon_channel_group_default);
                 }
+            } else if (uiConversation.getConversation().getType().equals(Conversation.TYPE_TRANSFER)) { /**文件传输助手**/
+                holder.titleText.setText(uiConversation.getTitle());
+                ImageDisplayUtils.getInstance().displayImageByTag(holder.photoImg, uiConversation.getIcon(), R.drawable.icon_channel_group_default);
             } else {
                 ImageDisplayUtils.getInstance().displayImageByTag(holder.photoImg, uiConversation.getIcon(), isConversationTypeGroup ? R.drawable.icon_channel_group_default : R.drawable.icon_person_default);
             }
