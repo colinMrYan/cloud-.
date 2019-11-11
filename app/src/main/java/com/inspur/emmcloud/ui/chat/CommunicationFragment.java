@@ -1050,6 +1050,7 @@ public class CommunicationFragment extends BaseFragment {
                         getConversationList();
                     } else {
                         if (conversation.isHide()) {
+                            conversation.setHide(false);
                             ConversationCacheUtils.setConversationHide(MyApplication.getInstance(), conversation.getId(), false);
                         }
                         notifyConversationMessageDataChanged(conversation.getId());
