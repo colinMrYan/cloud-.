@@ -1211,13 +1211,26 @@ public class CommunicationFragment extends BaseFragment {
 
     //本地无消息时触发此方法（如应用首次安装或者在沟通页面下拉刷新）
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceiveWSRecentMessage(EventMessage eventMessage) {
+    public void onReceiveWSRecentMessage(final EventMessage eventMessage) {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_CHANNEL_RECENT_MESSAGE)) {
             if (eventMessage.getStatus() == EventMessage.RESULT_OK) {
-                String content = eventMessage.getContent();
-                GetRecentMessageListResult getRecentMessageListResult = new GetRecentMessageListResult(content);
-                List<Message> recentMessageList = getRecentMessageListResult.getMessageList();
-                cacheMessageList(recentMessageList, getRecentMessageListResult.getChannelMessageSetList());
+                //获取最近消息由于消息经常会比较多，所以此处采用线程中解析数据
+                Observable.create(new ObservableOnSubscribe<GetRecentMessageListResult>() {
+                    @Override
+                    public void subscribe(ObservableEmitter<GetRecentMessageListResult> emitter) throws Exception {
+                        String content = eventMessage.getContent();
+                        GetRecentMessageListResult getRecentMessageListResult = new GetRecentMessageListResult(content);
+                        emitter.onNext(getRecentMessageListResult);
+                    }
+                })
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Consumer<GetRecentMessageListResult>() {
+                            @Override
+                            public void accept(GetRecentMessageListResult getRecentMessageListResult) throws Exception {
+                                cacheMessageList(getRecentMessageListResult.getMessageList(), getRecentMessageListResult.getChannelMessageSetList());
+                            }
+                        });
             }
         }
     }
