@@ -145,12 +145,14 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
                 showCreateFolderDlg();
                 break;
             case R.id.btn_location_select_to:
+                if (fromVolume == null) {
+                    fromVolume = volume;
+                }
                 String operationFileAbsolutePath = getIntent().getStringExtra(EXTRA_OPERATION_FILE_DIR_ABS_PATH);
                 if (operationFileAbsolutePath.equals(currentDirAbsolutePath) && volume.getId().equals(fromVolume.getId())) {
                     ToastUtils.show(getApplicationContext(), R.string.file_exist_current_directory);
                     return;
                 }
-
                 List<VolumeFile> operationFileList = (List<VolumeFile>) getIntent().getSerializableExtra("volumeFileList");
                 for (int i = 0; i < operationFileList.size(); i++) {
                     String volumeFilePath = operationFileAbsolutePath + operationFileList.get(i).getName();

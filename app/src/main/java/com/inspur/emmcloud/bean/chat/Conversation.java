@@ -25,7 +25,7 @@ public class Conversation implements Serializable {
     public static final String TYPE_GROUP = "GROUP";
     public static final String TYPE_CAST = "CAST";
     public static final String TYPE_LINK = "LINK";
-    public static final String TYPE_TRANSFER = "TYPE_TRANSFER";
+    public static final String TYPE_TRANSFER = "FILE_TRANSFER";
     @Column(name = "id", isId = true)
     private String id;
     @Column(name = "enterprise")
@@ -278,7 +278,7 @@ public class Conversation implements Serializable {
                 break;
             case TYPE_TRANSFER:
                 searchModel.setIcon(getAvatar());
-                searchModel.setType(SearchModel.TYPE_STRUCT);
+                searchModel.setType(SearchModel.TYPE_TRANSFER);
                 break;
         }
         return searchModel;

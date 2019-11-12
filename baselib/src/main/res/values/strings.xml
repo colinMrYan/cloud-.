@@ -363,6 +363,7 @@
     <string name="chat_filemanager_native">本地文件</string>
     <string name="chat_filemanager_volume">企业云盘</string>
     <string name="chat_file_transfer">文件传输助手</string>
+    <string name="chat_file_transfer_content">登录云+桌面版，向文件传输助手发消息，可以在手机与电脑间传输文字、图片、音频、视频等文件。</string>
 
 
     <!--语音通话提示-->
