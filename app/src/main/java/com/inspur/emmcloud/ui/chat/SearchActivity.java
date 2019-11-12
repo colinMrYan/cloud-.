@@ -39,13 +39,11 @@ import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.ConversationWithMessageNum;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
-import com.inspur.emmcloud.bean.chat.UIConversation;
 import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
-import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.privates.ShareUtil;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
@@ -543,7 +541,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             }
 
         }
-        ImageDisplayUtils.getInstance().displayImage(
+        ImageDisplayUtils.getInstance().displayImageByTag(
                 photoImg, icon, defaultIcon);
 
     }
@@ -698,11 +696,9 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                 searchHolder.detailTextView.setVisibility(View.VISIBLE);
             }
 
-            if (conversation != null && (conversation.getType().equals(Conversation.TYPE_CAST))) {
-                UIConversation uiConversation = new UIConversation(conversation);
-                String icon = DirectChannelUtils.getRobotIcon(MyApplication.getInstance(), conversation.getName());
-                searchHolder.nameTextView.setText(uiConversation.getTitle());
-                ImageDisplayUtils.getInstance().displayImage(searchHolder.headImageView, icon, R.drawable.icon_person_default);
+            if (conversation != null && (conversation.getType().equals(Conversation.TYPE_TRANSFER))) {
+                searchHolder.nameTextView.setText(getString(R.string.chat_file_transfer));
+                ImageDisplayUtils.getInstance().displayImageByTag(searchHolder.headImageView, conversation.getAvatar(), R.drawable.ic_file_transfer);
                 String string = getString(R.string.chat_contact_related_message, conversationFromChatContentList.get(i).getMessageNum());
                 searchHolder.detailTextView.setText(string);
                 searchHolder.detailTextView.setVisibility(View.VISIBLE);
