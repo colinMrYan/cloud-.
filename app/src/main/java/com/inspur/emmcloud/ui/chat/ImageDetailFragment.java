@@ -26,6 +26,7 @@ import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
+import com.inspur.emmcloud.widget.largeimage.BlockImageLoader;
 import com.inspur.emmcloud.widget.largeimage.LargeImageView;
 import com.inspur.emmcloud.widget.largeimage.factory.FileBitmapDecoderFactory;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -274,7 +275,7 @@ public class ImageDetailFragment extends Fragment {
         LogUtils.jasonDebug("rawUrl==" + rawUrl);
         LogUtils.jasonDebug("mImageUrl==" + mImageUrl);
         if (!StringUtils.isBlank(rawUrl) && ImageDisplayUtils.getInstance().isHaveCacheImage(rawUrl)) {
-            String path = ImageDisplayUtils.getInstance().getCacheImageFile(rawUrl).getAbsolutePath();
+            final String path = ImageDisplayUtils.getInstance().getCacheImageFile(rawUrl).getAbsolutePath();
             try {
                 Drawable previewDrawable = null;
                 if (mImageUrl != null && !mImageUrl.equals(rawUrl) && ImageDisplayUtils.getInstance().isHaveCacheImage(mImageUrl)) {
@@ -283,6 +284,31 @@ public class ImageDetailFragment extends Fragment {
                     Bitmap bitmap = BitmapFactory.decodeStream(fis);
                     previewDrawable = new BitmapDrawable(getActivity().getResources(), bitmap);
                 }
+                //LargeImageView对于gif图片格式不支持，此处如果监听到load图片错误则使用直接给ImageView设置Bitmap
+                mImageView.setOnImageLoadListener(new BlockImageLoader.OnImageLoadListener() {
+                    @Override
+                    public void onBlockImageLoadFinished() {
+
+                    }
+
+                    @Override
+                    public void onLoadImageSize(int imageWidth, int imageHeight) {
+
+                    }
+
+                    @Override
+                    public void onLoadFail(Exception e) {
+                        try {
+                            FileInputStream fis = new FileInputStream(path);
+                            Bitmap bitmap = BitmapFactory.decodeStream(fis);
+                            mImageView.setImage(bitmap);
+                        } catch (Exception exception) {
+                            exception.printStackTrace();
+                            mImageView.setImage(R.drawable.default_image);
+                        }
+
+                    }
+                });
                 mImageView.setImage(new FileBitmapDecoderFactory(path), previewDrawable);
             } catch (Exception e) {
                 e.printStackTrace();

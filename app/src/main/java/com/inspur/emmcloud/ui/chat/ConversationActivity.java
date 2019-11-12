@@ -1126,7 +1126,7 @@ public class ConversationActivity extends ConversationBaseActivity {
 
     private void notifyConversationListChange() {
         // 通知沟通页面更新列表状态
-        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_CONVERSATION_MESSAGE_DATA_CHANGED, conversation));
+        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_CONVERSATION_MESSAGE_DATA_CHANGED, conversation.getId()));
     }
 
     /**
