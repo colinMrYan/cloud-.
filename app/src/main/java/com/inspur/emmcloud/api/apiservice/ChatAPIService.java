@@ -1388,6 +1388,9 @@ public class ChatAPIService {
     public void getConversationList() {
         final String completeUrl = APIUri.getConversationListUrl();
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
+        JSONArray jsonArray = new JSONArray();
+        jsonArray.put("private");
+        params.addParameter("include", jsonArray);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override

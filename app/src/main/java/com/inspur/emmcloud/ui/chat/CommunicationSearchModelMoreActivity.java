@@ -641,6 +641,15 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
                 searchHolder.detailTextView.setText(string);
                 searchHolder.detailTextView.setVisibility(View.VISIBLE);
             }
+
+            if (conversation != null && conversation.getType().equals(Conversation.TYPE_TRANSFER)) {
+                searchHolder.nameTextView.setText(getString(R.string.chat_file_transfer));
+                ImageDisplayUtils.getInstance().displayImage(searchHolder.headImageView, conversation.getAvatar(), R.drawable.ic_file_transfer);
+                String string = getString(R.string.chat_contact_related_message, conversationFromChatContentList.get(i).getMessageNum());
+                searchHolder.detailTextView.setText(string);
+                searchHolder.detailTextView.setVisibility(View.VISIBLE);
+            }
+
             Contact contact = conversationFromChatContentList.get(i).getSingleChatContactUser();
             if (contact != null && conversation.getType().equals(Conversation.TYPE_DIRECT)) {
                 SearchModel searchModel = contact.contact2SearchModel();
