@@ -13,7 +13,6 @@ import android.widget.EditText;
 
 import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.ResolutionUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
@@ -100,7 +99,6 @@ public class InputMethodUtils {
                 screenHeight = screenHeight + ResolutionUtils.getStatusBarHeightAboutAndroidP(activity);
             }
         }
-        LogUtils.jasonDebug("ResolutionUtils.getStatusBarHeightAboutAndroidP(activity)=" + ResolutionUtils.getStatusBarHeightAboutAndroidP(activity));
         int softInputHeight = screenHeight - r.bottom;
         if (softInputHeight < DensityUtil.dip2px(100)) {
             softInputHeight = 0;
