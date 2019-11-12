@@ -294,6 +294,11 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             case SearchModel.TYPE_USER:
                 createDirectChannel(searchModel.getId());
                 break;
+            case SearchModel.TYPE_TRANSFER:
+                Bundle bundle = new Bundle();
+                bundle.putString(ConversationActivity.EXTRA_CID, searchModel.getId());
+                IntentUtils.startActivity(this, ConversationActivity.class, bundle, true);
+                break;
         }
     }
 
@@ -534,6 +539,8 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             return;
         } else if (type.equals(SearchModel.TYPE_STRUCT)) {
             defaultIcon = R.drawable.ic_contact_sub_struct;
+        } else if (type.equals(SearchModel.TYPE_TRANSFER)) {
+            defaultIcon = R.drawable.ic_file_transfer;
         } else {
             defaultIcon = R.drawable.icon_person_default;
             if (!searchModel.getId().equals("null")) {
