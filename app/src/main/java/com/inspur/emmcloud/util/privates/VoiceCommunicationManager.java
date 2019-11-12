@@ -22,6 +22,7 @@ import com.inspur.emmcloud.bean.chat.GetVoiceCommunicationResult;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationAudioVolumeInfo;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationRtcStats;
+import com.inspur.emmcloud.bean.system.GetBoolenResult;
 import com.inspur.emmcloud.interf.OnVoiceCommunicationCallbacks;
 import com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
@@ -89,30 +90,31 @@ public class VoiceCommunicationManager {
     private int communicationState = COMMUNICATION_STATE_OVER;
     private boolean isHandsFree = false;
     private boolean isMute = false;
-    private CountDownTimer countDownOnlyOneConnectLeftTimer;
+    //    private CountDownTimer countDownOnlyOneConnectLeftTimer;
     private IRtcEngineEventHandler mRtcEventHandler = new IRtcEngineEventHandler() {
         //其他用户离线回调
         @Override
         public void onUserOffline(int uid, int reason) {
-            LogUtils.YfcDebug("用户离开：" + uid);
             changeUserConnectStateByAgoraUid(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_LEAVE, uid);
             if (getWaitAndConnectedNumber() < 2) {
+                handleDestroy();
                 //防止在声网回调和小窗打开Activity同步进行，接收到回调没关上Activity的情况
                 if (BaseApplication.getInstance().isActivityExist(ChannelVoiceCommunicationActivity.class)) {
                     BaseApplication.getInstance().closeActivity(ChannelVoiceCommunicationActivity.class.getSimpleName());
-                } else {
-                    handleDestroy();
                 }
                 VoiceCommunicationToastUtil.showToast(Constant.COMMAND_DESTROY);
-            } else if (getConnectedNumber() < 2) {
-                startOnlyOneLeftCountDownTimer();
             }
             if (onVoiceCommunicationCallbacks != null) {
                 onVoiceCommunicationCallbacks.onUserOffline(uid, reason);
             }
+//            else if (getConnectedNumber() < 2) {
+//                startOnlyOneLeftCountDownTimer();
+//            }
+
         }
 
-        //用户加入频道回调
+        //用户加入频道回调，如果加入之前，已经有其他用户在频道中了，新加入的用户也会收到这些已有用户加入频道的回调
+        //例如主叫给被叫拨打电话，被叫加入时也会受到主叫方加入的回调，返回主叫方的id
         @Override
         public void onUserJoined(int uid, int elapsed) {
             changeUserConnectStateByAgoraUid(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_CONNECTED, uid);
@@ -136,6 +138,10 @@ public class VoiceCommunicationManager {
             changeUserConnectStateByAgoraUid(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_CONNECTED, uid);
             if (onVoiceCommunicationCallbacks != null) {
                 onVoiceCommunicationCallbacks.onJoinChannelSuccess(channel, uid, elapsed);
+            }
+            //加入成功后，是主叫方再发出邀请消息
+            if (isInviter()) {
+                sendCommunicationCommand(Constant.COMMAND_INVITE);
             }
             remindEmmServerJoinChannel(channel);
         }
@@ -245,6 +251,23 @@ public class VoiceCommunicationManager {
                 onVoiceCommunicationCallbacks.onRemoteVideoStateChanged(uid, state, reason, elapsed);
             }
         }
+
+        @Override
+        public void onLeaveChannel(RtcStats stats) {
+            super.onLeaveChannel(stats);
+        }
+
+        //        @Override
+//        public void onTokenPrivilegeWillExpire(String token) {
+//            super.onTokenPrivilegeWillExpire(token);
+//            LogUtils.YfcDebug("onTokenPrivilegeWillExpire");
+//        }
+//
+//        @Override
+//        public void onRequestToken() {
+//            super.onRequestToken();
+//            LogUtils.YfcDebug("onRequestToken");
+//        }
     };
 
     /**
@@ -264,6 +287,35 @@ public class VoiceCommunicationManager {
         return voiceCommunicationManager;
     }
 
+    private VoiceCommunicationManager() {
+        this.context = BaseApplication.getInstance();
+    }
+
+    /**
+     * 初始化引擎
+     */
+    public void initializeAgoraEngine() {
+        try {
+            if (mRtcEngine == null) {
+                mRtcEngine = RtcEngine.create(context, context.getString(R.string.agora_app_id), mRtcEventHandler);
+                mRtcEngine.enableAudioVolumeIndication(1000, 3, false);
+            }
+        } catch (Exception e) {
+            LogUtils.YfcDebug("初始化声网异常：" + e.getMessage());
+        }
+    }
+
+    /**
+     * 向socket发送指令消息
+     *
+     * @param commandType
+     */
+    public void sendCommunicationCommand(String commandType) {
+        WSAPIService.getInstance().sendStartVoiceAndVideoCallMessage(cloudPlusChannelId, agoraChannelId,
+                getSchema(commandType, cloudPlusChannelId, agoraChannelId), getVoiceVideoCommunicationType(), getUidArray(
+                        getVoiceCommunicationMemberList()), getActionByCommandType(commandType));
+    }
+
     /**
      * 通知EmmServer用户加入频道
      *
@@ -272,6 +324,7 @@ public class VoiceCommunicationManager {
     private void remindEmmServerJoinChannel(String agoraChannelId) {
         if (NetUtils.isNetworkConnected(BaseApplication.getInstance())) {
             ChatAPIService chatAPIService = new ChatAPIService(BaseApplication.getInstance());
+            chatAPIService.setAPIInterface(new WebService());
             chatAPIService.remindServerJoinChannelSuccess(agoraChannelId);
         }
     }
@@ -288,6 +341,11 @@ public class VoiceCommunicationManager {
         }
     }
 
+    /**
+     * 告知服务端已拒绝
+     *
+     * @param agoraChannelId
+     */
     private void remindEmmServerRefuseChannel(String agoraChannelId) {
         if (NetUtils.isNetworkConnected(BaseApplication.getInstance())) {
             ChatAPIService chatAPIService = new ChatAPIService(BaseApplication.getInstance());
@@ -301,7 +359,7 @@ public class VoiceCommunicationManager {
      * @param commandType
      * @return
      */
-    public String getActionByCommandType(String commandType) {
+    private String getActionByCommandType(String commandType) {
         switch (commandType) {
             case Constant.COMMAND_INVITE:
                 return Constant.VIDEO_CALL_INVITE;
@@ -319,7 +377,7 @@ public class VoiceCommunicationManager {
      *
      * @return
      */
-    public JSONArray getUidArray(List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList) {
+    private JSONArray getUidArray(List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList) {
         JSONArray jsonArray = new JSONArray();
         for (int i = 0; i < voiceCommunicationUserInfoBeanList.size(); i++) {
             if (!voiceCommunicationUserInfoBeanList.get(i).getUserId().equals(BaseApplication.getInstance().getUid())) {
@@ -335,7 +393,7 @@ public class VoiceCommunicationManager {
      *
      * @return
      */
-    public String getVoiceVideoCommunicationType() {
+    private String getVoiceVideoCommunicationType() {
         if (communicationType.equals(ECMChatInputMenu.VIDEO_CALL)) {
             return "VIDEO";
         } else if (communicationType.equals(ECMChatInputMenu.VOICE_CALL)) {
@@ -351,7 +409,7 @@ public class VoiceCommunicationManager {
      *
      * @return
      */
-    public String getSchema(String cmd, String channelId, String roomId) {
+    private String getSchema(String cmd, String channelId, String roomId) {
         return "ecc-cloudplus-cmd://voice_channel?cmd=" + cmd + "&channelid=" + channelId + "&roomid=" + roomId + "&uid=" + BaseApplication.getInstance().getUid();
     }
 
@@ -414,8 +472,7 @@ public class VoiceCommunicationManager {
      * @param connectStateConnected
      */
     private void handleRefuseSocketMessage(int connectStateConnected, String uid) {
-        List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationMemberList = VoiceCommunicationManager
-                .getInstance().getVoiceCommunicationMemberList();
+        List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationMemberList = getVoiceCommunicationMemberList();
         if (voiceCommunicationMemberList != null && voiceCommunicationMemberList.size() > 0) {
             for (int i = 0; i < voiceCommunicationMemberList.size(); i++) {
                 if (voiceCommunicationMemberList.get(i).getUserId().equals(uid)) {
@@ -423,7 +480,24 @@ public class VoiceCommunicationManager {
                     break;
                 }
             }
-            checkCommunicationFinish();
+            //复用接口刷新UI
+            if (onVoiceCommunicationCallbacks != null) {
+                onVoiceCommunicationCallbacks.onUserOffline(0, 0);
+            }
+            if (getWaitAndConnectedNumber() < 2) {
+                handleDestroy();
+            }
+        }
+    }
+
+    public void changeUserStateByCloudPlusId(int connectStateConnected, String uid) {
+        if (voiceCommunicationMemberList != null && voiceCommunicationMemberList.size() > 0) {
+            for (int i = 0; i < voiceCommunicationMemberList.size(); i++) {
+                if (voiceCommunicationMemberList.get(i).getUserId().equals(uid)) {
+                    voiceCommunicationMemberList.get(i).setConnectState(connectStateConnected);
+                    break;
+                }
+            }
         }
     }
 
@@ -442,21 +516,26 @@ public class VoiceCommunicationManager {
             String command = customProtocol.getParamMap().get(Constant.COMMAND_CMD);
             switch (command) {
                 case Constant.COMMAND_REFUSE:
-                    String uid = customProtocol.getParamMap().get(Constant.COMMAND_UID);
-                    String name = ContactUserCacheUtils.getUserName(uid);
-                    if (!StringUtils.isBlank(name)) {
-                        ToastUtils.show(name + BaseApplication.getInstance().getString(R.string.communication_has_leave));
+                    //同一个频道，不是正在通话中才处理拒绝消息，正在通话中走声网的处理，保证只处理一次
+                    if (customProtocol.getParamMap().get(Constant.COMMAND_ROOM_ID).equals(VoiceCommunicationManager.getInstance().getAgoraChannelId())
+                            && !isCommunicationIng()) {
+                        String uid = customProtocol.getParamMap().get(Constant.COMMAND_UID);
+                        String name = ContactUserCacheUtils.getUserName(uid);
+                        if (!StringUtils.isBlank(name)) {
+                            ToastUtils.show(name + BaseApplication.getInstance().getString(R.string.communication_has_leave));
+                        }
+                        handleRefuseSocketMessage(
+                                VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_REFUSE,
+                                customProtocol.getParamMap().get(Constant.COMMAND_UID));
                     }
-                    handleRefuseSocketMessage(
-                            VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_REFUSE,
-                            customProtocol.getParamMap().get(Constant.COMMAND_UID));
                     break;
                 case Constant.COMMAND_DESTROY:
-                    if (BaseApplication.getInstance().isActivityExist(ChannelVoiceCommunicationActivity.class)) {
-                        if (onVoiceCommunicationCallbacks != null) {
-                            onVoiceCommunicationCallbacks.onActivityFinish();
+                    //同一个频道，不是正在通话中才处理销毁消息，正在通话中走声网的处理，保证只处理一次
+                    if (customProtocol.getParamMap().get(Constant.COMMAND_ROOM_ID).equals(VoiceCommunicationManager.getInstance().getAgoraChannelId())
+                            && !isCommunicationIng()) {
+                        if (BaseApplication.getInstance().isActivityExist(ChannelVoiceCommunicationActivity.class)) {
+                            handleDestroy();
                         }
-                        handleDestroy();
                     }
                     break;
                 //正在通话中 消息是invite消息  三者打进电话 发拒绝消息
@@ -468,7 +547,7 @@ public class VoiceCommunicationManager {
                     } else {
                         String channelId = customProtocol.getParamMap().get(Constant.COMMAND_CHANNEL_ID);
                         String fromUid = customProtocol.getParamMap().get(Constant.COMMAND_UID);
-                        getVoiceCommunicationChannelInfoAndSendRefuseCommand(channelId, agoraChannelId, fromUid);
+                        sendRefuseMessageToInviter(channelId, agoraChannelId, fromUid);
                     }
                     break;
                 default:
@@ -495,6 +574,15 @@ public class VoiceCommunicationManager {
     }
 
     /**
+     * 判断邀请人Pre状态
+     *
+     * @return
+     */
+    public boolean isInviterPre() {
+        return getCommunicationState() == COMMUNICATION_STATE_PRE && isInviter();
+    }
+
+    /**
      * 判断被邀请人Pre状态
      *
      * @return
@@ -504,21 +592,25 @@ public class VoiceCommunicationManager {
     }
 
     /**
+     * 自己是否主呼叫方
+     *
+     * @return
+     */
+    public boolean isInviter() {
+        if (voiceCommunicationMemberList != null && voiceCommunicationMemberList.size() > 0
+                && voiceCommunicationMemberList.get(0).getUserId().equals(BaseApplication.getInstance().getUid())) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * 判断通话中状态
      *
      * @return
      */
     public boolean isCommunicationIng() {
         return getCommunicationState() == COMMUNICATION_STATE_ING;
-    }
-
-    /**
-     * 判断邀请人Pre状态
-     *
-     * @return
-     */
-    public boolean isInviterPre() {
-        return getCommunicationState() == COMMUNICATION_STATE_PRE && isInviter();
     }
 
     /**
@@ -551,6 +643,11 @@ public class VoiceCommunicationManager {
         activity.startActivity(intent);
     }
 
+    /**
+     * 获取通话类型VOICE或者VIDEO
+     * @param contextParamsType
+     * @return
+     */
     private String getCommunicationType(String contextParamsType) {
         if (contextParamsType.equals("VOICE")) {
             return ECMChatInputMenu.VOICE_CALL;
@@ -562,57 +659,21 @@ public class VoiceCommunicationManager {
 
     /**
      * 销毁声网，发出离开请求，恢复状态，如果有小窗、通知取消小窗通知，调用离开方法时先判断是否在通话中
+     * 或者是不是发起者，发起者一定连接了声网
      */
     public void handleDestroy() {
-        if (getCommunicationState() == COMMUNICATION_STATE_ING) {
+        if (getCommunicationState() == COMMUNICATION_STATE_ING || isInviter()) {
             leaveChannel();
         } else {
             remindEmmServerRefuseChannel(agoraChannelId);
         }
+        if (getWaitAndConnectedNumber() >= 2 && !isInviterPre()) {
+            sendCommunicationCommand(Constant.COMMAND_REFUSE);
+        } else {
+            sendCommunicationCommand(Constant.COMMAND_DESTROY);
+        }
         destroy();
         SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
-    }
-
-    /**
-     * 检查是否需要退出
-     */
-    private void checkCommunicationFinish() {
-        List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationMemberList = VoiceCommunicationManager
-                .getInstance().getVoiceCommunicationMemberList();
-        if (voiceCommunicationMemberList != null && voiceCommunicationMemberList.size() > 0) {
-            int waitAndCommunicationSize = 0;
-            for (int i = 0; i < voiceCommunicationMemberList.size(); i++) {
-                if (voiceCommunicationMemberList.get(i).getConnectState() == VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_CONNECTED ||
-                        voiceCommunicationMemberList.get(i).getConnectState() == VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_INIT) {
-                    waitAndCommunicationSize = waitAndCommunicationSize + 1;
-                }
-            }
-            //当连接和等待中的人小于2的只是时候执行销毁
-            if (waitAndCommunicationSize < 2) {
-                if (onVoiceCommunicationCallbacks != null) {
-                    onVoiceCommunicationCallbacks.onActivityFinish();
-                }
-                handleDestroy();
-            }
-        }
-    }
-
-    private VoiceCommunicationManager() {
-        this.context = BaseApplication.getInstance();
-    }
-
-    /**
-     * 初始化引擎
-     */
-    public void initializeAgoraEngine() {
-        try {
-            if (mRtcEngine == null) {
-                mRtcEngine = RtcEngine.create(context, context.getString(R.string.agora_app_id), mRtcEventHandler);
-                mRtcEngine.enableAudioVolumeIndication(1000, 3, false);
-            }
-        } catch (Exception e) {
-            LogUtils.YfcDebug("初始化声网异常：" + e.getMessage());
-        }
     }
 
     /**
@@ -636,10 +697,6 @@ public class VoiceCommunicationManager {
                     onVoiceCommunicationCallbacks.onCountDownTimerFinish();
                 }
                 if (getWaitAndConnectedNumber() < 2) {
-                    if (onVoiceCommunicationCallbacks != null) {
-                        onVoiceCommunicationCallbacks.onActivityFinish();
-                    }
-                    remindEmmServerRefuseChannel(agoraChannelId);
                     handleDestroy();
                 }
                 if (countDownTimer != null) {
@@ -651,49 +708,36 @@ public class VoiceCommunicationManager {
         countDownTimer.start();
     }
 
-    /**
-     * 当在通话中，只剩下一个人在频道中，开始倒计时，倒计时结束时，仍然没有其他人加入，则关闭频道
-     */
-    private void startOnlyOneLeftCountDownTimer() {
-        if (countDownOnlyOneConnectLeftTimer != null) {
-            countDownOnlyOneConnectLeftTimer.cancel();
-            countDownOnlyOneConnectLeftTimer = null;
-        }
-        countDownOnlyOneConnectLeftTimer = new CountDownTimer(MILLIS_IN_FUTURE, COUNT_DOWN_INTERVAL) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-            }
-
-            @Override
-            public void onFinish() {
-                if (communicationState == COMMUNICATION_STATE_ING && getConnectedNumber() < 2) {
-                    remindEmmServerLeaveChannel(agoraChannelId);
-                    handleDestroy();
-                    if (onVoiceCommunicationCallbacks != null) {
-                        onVoiceCommunicationCallbacks.onOnlyOneLeftCountDownTimerFinish();
-                    }
-                }
-                if (countDownOnlyOneConnectLeftTimer != null) {
-                    countDownOnlyOneConnectLeftTimer.cancel();
-                    countDownOnlyOneConnectLeftTimer = null;
-                }
-            }
-        };
-        countDownOnlyOneConnectLeftTimer.start();
-    }
-
-    /**
-     * 自己是否主呼叫方
-     *
-     * @return
-     */
-    public boolean isInviter() {
-        if (voiceCommunicationMemberList != null && voiceCommunicationMemberList.size() > 0
-                && voiceCommunicationMemberList.get(0).getUserId().equals(BaseApplication.getInstance().getUid())) {
-            return true;
-        }
-        return false;
-    }
+//    /**
+//     * 当在通话中，只剩下一个人在频道中，开始倒计时，倒计时结束时，仍然没有其他人加入，则关闭频道
+//     */
+//    private void startOnlyOneLeftCountDownTimer() {
+//        if (countDownOnlyOneConnectLeftTimer != null) {
+//            countDownOnlyOneConnectLeftTimer.cancel();
+//            countDownOnlyOneConnectLeftTimer = null;
+//        }
+//        countDownOnlyOneConnectLeftTimer = new CountDownTimer(MILLIS_IN_FUTURE, COUNT_DOWN_INTERVAL) {
+//            @Override
+//            public void onTick(long millisUntilFinished) {
+//            }
+//
+//            @Override
+//            public void onFinish() {
+//                if (communicationState == COMMUNICATION_STATE_ING && getConnectedNumber() < 2) {
+//                    remindEmmServerLeaveChannel(agoraChannelId);
+//                    handleDestroy();
+//                    if (onVoiceCommunicationCallbacks != null) {
+//                        onVoiceCommunicationCallbacks.onOnlyOneLeftCountDownTimerFinish();
+//                    }
+//                }
+//                if (countDownOnlyOneConnectLeftTimer != null) {
+//                    countDownOnlyOneConnectLeftTimer.cancel();
+//                    countDownOnlyOneConnectLeftTimer = null;
+//                }
+//            }
+//        };
+//        countDownOnlyOneConnectLeftTimer.start();
+//    }
 
     /**
      * 获取当前音频通话的状态
@@ -909,17 +953,22 @@ public class VoiceCommunicationManager {
             countDownTimer.cancel();
             countDownTimer = null;
         }
-        if (countDownOnlyOneConnectLeftTimer != null) {
-            countDownOnlyOneConnectLeftTimer.cancel();
-            countDownOnlyOneConnectLeftTimer = null;
-        }
+//        if (countDownOnlyOneConnectLeftTimer != null) {
+//            countDownOnlyOneConnectLeftTimer.cancel();
+//            countDownOnlyOneConnectLeftTimer = null;
+//        }
         RtcEngine.destroy();
         mRtcEngine = null;
+
         communicationState = COMMUNICATION_STATE_OVER;
+        if (onVoiceCommunicationCallbacks != null) {
+            onVoiceCommunicationCallbacks.onActivityFinish();
+        }
         onVoiceCommunicationCallbacks = null;
         agoraChannelId = "";
         cloudPlusChannelId = "";
         connectStartTime = 0;
+        inviteeInfoBean = null;
         voiceCommunicationManager = null;
         isHandsFree = false;
         isMute = false;
@@ -1028,7 +1077,7 @@ public class VoiceCommunicationManager {
      * @param channelId
      * @param agoraChannelId
      */
-    public void getVoiceCommunicationChannelInfoAndSendRefuseCommand(String channelId, String agoraChannelId, String fromUid) {
+    private void sendRefuseMessageToInviter(String channelId, String agoraChannelId, String fromUid) {
         String scheme = "ecc-cloudplus-cmd://voice_channel?cmd=refuse&channelid=" + channelId + "&roomid=" + agoraChannelId + "&uid=" + BaseApplication.getInstance().getUid();
         WSAPIService.getInstance().sendStartVoiceAndVideoCallMessage(channelId, agoraChannelId, scheme, "VOICE", getUidArray( fromUid), Constant.VIDEO_CALL_REFUSE);
     }
@@ -1077,6 +1126,20 @@ public class VoiceCommunicationManager {
 
         @Override
         public void returnGetVoiceCommunicationChannelInfoFail(String error, int errorCode) {
+        }
+
+        @Override
+        public void returnJoinVoiceCommunicationChannelSuccess(GetBoolenResult getBoolenResult) {
+            //应对主叫方拨打电话，被叫方在前台看到后没接，退到后台，此时主叫方挂断，被叫方没有收到socket（因为在后台），也没有收到声网回调
+            //这时点击进入应用点接听，此接口返回false，则挂断通话
+            if (!Boolean.parseBoolean(getBoolenResult.getResponse())) {
+                ToastUtils.show(R.string.voice_communication_channel_not_exist);
+                handleDestroy();
+            }
+        }
+
+        @Override
+        public void returnJoinVoiceCommunicationChannelFail(String error, int errorCode) {
         }
 
         public Activity getActivity() {

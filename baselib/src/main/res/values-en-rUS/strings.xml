@@ -1322,6 +1322,7 @@
     <string name="voice_communication_more_than_two">The number of voice call users cannot be less than 2</string>
     <string name="voice_communication_hung_up_direct">Hang up</string>
     <string name="voice_communication_answer_phone_direct">Answer</string>
+    <string name="voice_communication_channel_not_exist">Channel no longer exists</string>
 
     <string name="error_no_sdcard">No SD card, no recording data.</string>
     <string name="error_state_record">Please stop recording while recording</string>

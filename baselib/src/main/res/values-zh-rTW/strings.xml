@@ -1321,6 +1321,7 @@
     <string name="voice_communication_more_than_two">語音通話用戶數不能少於2個。</string>
     <string name="voice_communication_hung_up_direct">掛斷</string>
     <string name="voice_communication_answer_phone_direct">接聽</string>
+    <string name="voice_communication_channel_not_exist">頻道已不在</string>
 
     <string name="error_no_sdcard">沒有SD卡，無法存儲錄音數據</string>
     <string name="error_state_record">正在錄音中，請先停止錄音</string>

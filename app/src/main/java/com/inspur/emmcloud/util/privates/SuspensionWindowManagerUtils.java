@@ -230,12 +230,14 @@ public class SuspensionWindowManagerUtils {
                 hideCommunicationSmallWindow();
                 return;
             }
-            Intent intent = Intent.parseUri("ecc-cloudplus-cmd-voice-call://voice_call", Intent.URI_INTENT_SCHEME);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra(Constant.VOICE_IS_FROM_SMALL_WINDOW, true);
-            intent.putExtra(Constant.VOICE_COMMUNICATION_STATE,
-                    VoiceCommunicationManager.getInstance().getCommunicationState());
-            windowContext.startActivity(intent);
+            if (VoiceCommunicationManager.getInstance().getWaitAndConnectedNumber() >= 2) {
+                Intent intent = Intent.parseUri("ecc-cloudplus-cmd-voice-call://voice_call", Intent.URI_INTENT_SCHEME);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra(Constant.VOICE_IS_FROM_SMALL_WINDOW, true);
+                intent.putExtra(Constant.VOICE_COMMUNICATION_STATE,
+                        VoiceCommunicationManager.getInstance().getCommunicationState());
+                windowContext.startActivity(intent);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

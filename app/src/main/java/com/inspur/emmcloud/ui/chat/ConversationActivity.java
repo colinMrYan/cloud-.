@@ -452,10 +452,10 @@ public class ConversationActivity extends ConversationBaseActivity {
      */
     private List<VoiceCommunicationJoinChannelInfoBean> getDirectCversationJoinChannelInfoBeanList() {
         List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList = new ArrayList<>();
-        List<String> memberList = new ArrayList<>();
-        memberList.add(DirectChannelUtils.getDirctChannelOtherUid(MyApplication.getInstance(), conversation.getName()));
-        memberList.add(MyApplication.getInstance().getUid());
-        List<ContactUser> contactUserList = ContactUserCacheUtils.getContactUserListById(memberList);
+        List<ContactUser> contactUserList = new ArrayList<>();
+        contactUserList.add(ContactUserCacheUtils.getContactUserByUid(MyApplication.getInstance().getUid()));
+        contactUserList.add(ContactUserCacheUtils.getContactUserByUid(
+                DirectChannelUtils.getDirctChannelOtherUid(MyApplication.getInstance(), conversation.getName())));
         for (int i = 0; i < contactUserList.size(); i++) {
             VoiceCommunicationJoinChannelInfoBean voiceCommunicationJoinChannelInfoBean = new VoiceCommunicationJoinChannelInfoBean();
             voiceCommunicationJoinChannelInfoBean.setUserId(contactUserList.get(i).getId());
