@@ -1384,13 +1384,12 @@ public class ChatAPIService {
 
     /**
      * 获取频道列表
+     * @param conversationType  频道类型 private (企业内频道)或者public（全局频道） 默认为Private
      */
-    public void getConversationList() {
+    public void getConversationList(final JSONArray conversationType) {
         final String completeUrl = APIUri.getConversationListUrl();
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
-        JSONArray jsonArray = new JSONArray();
-        jsonArray.put("private");
-        params.addParameter("include", jsonArray);
+        params.addParameter("include", conversationType);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
@@ -1398,7 +1397,7 @@ public class ChatAPIService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        getConversationList();
+                        getConversationList(conversationType);
                     }
 
                     @Override

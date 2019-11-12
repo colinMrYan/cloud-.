@@ -1240,7 +1240,9 @@ public class CommunicationFragment extends BaseFragment {
      */
     private void getConversationList() {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-            apiService.getConversationList();
+            JSONArray jsonArray = new JSONArray();
+            jsonArray.put("private");
+            apiService.getConversationList(jsonArray);
         } else {
             swipeRefreshLayout.setRefreshing(false);
         }
@@ -1277,7 +1279,6 @@ public class CommunicationFragment extends BaseFragment {
                 WSAPIService.getInstance().getOfflineMessage(lastMessageId);
             }
         }
-
     }
 
     /**
