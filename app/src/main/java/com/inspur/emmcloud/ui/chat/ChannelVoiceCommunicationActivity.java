@@ -29,7 +29,6 @@ import com.inspur.emmcloud.adapter.VoiceCommunicationMemberAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ResolutionUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
@@ -597,12 +596,12 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             @Override
             public void onUserJoined(final int uid, int elapsed) {
                 if (voiceCommunicationManager.getConnectedNumber() >= 2) {
-                    if (mediaPlayerManagerUtils != null) {
-                        mediaPlayerManagerUtils.stop();
-                    }
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            if (mediaPlayerManagerUtils != null) {
+                                mediaPlayerManagerUtils.stop();
+                            }
                             if (voiceCommunicationManager.isInviter() && needTimerStartFlag && voiceCommunicationManager.getConnectedNumber() == 2) {
                                 needTimerStartFlag = false;
                                 startChronometer();
@@ -1013,7 +1012,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         if (mediaPlayerManagerUtils != null) {
             mediaPlayerManagerUtils.stop();
         }
-        LogUtils.YfcDebug("当前会话状态：" + voiceCommunicationManager.getCommunicationState());
         if (voiceCommunicationManager.getCommunicationState() != COMMUNICATION_STATE_OVER) {
             saveCommunicationData();
             pickUpVoiceCommunication(false);
@@ -1075,7 +1073,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     }
 
     /**
-     * 主叫方创建频道失败，或者被叫方获取频道信息失败的处理
+     * 主叫方创建频道失败
      * @param error
      * @param errorCode
      */
