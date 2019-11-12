@@ -127,20 +127,19 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
         volumeFileList = presenter.getVolumeFileList(currentIndex);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        operationTotalBtn.setSelected(false);
-        operationTotalBtn.setText(R.string.volume_file_transfer_list_pause);
+
         switch (currentIndex) {
             case 0:
                 adapter = new VolumeFileTransferAdapter(getActivity(), volumeFileList, Constant.TYPE_DOWNLOAD);
                 recyclerView.setAdapter(adapter);
-                operationTotalLayout.setVisibility(volumeFileList.size() > 0 ? View.VISIBLE : View.GONE);
-                countTipTv.setText(getString(R.string.volume_file_transfer_list_download_count, volumeFileList.size()));
+                refreshOperationTotal(volumeFileList);
+                setRefreshCallBack();
                 break;
             case 1:
                 adapter = new VolumeFileTransferAdapter(getActivity(), volumeFileList, Constant.TYPE_UPLOAD);
                 recyclerView.setAdapter(adapter);
-                operationTotalLayout.setVisibility(volumeFileList.size() > 0 ? View.VISIBLE : View.GONE);
-                countTipTv.setText(getString(R.string.volume_file_transfer_list_upload_count, volumeFileList.size()));
+                refreshOperationTotal(volumeFileList);
+                setRefreshCallBack();
                 break;
             case 2:
                 downloadedAdapter = new VolumeFileAdapter(getActivity(), volumeFileList);
@@ -210,6 +209,45 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
         operationTotalBtn.setText(operationTotalBtn.isSelected() ? R.string.volume_file_transfer_list_continue :
                 R.string.volume_file_transfer_list_pause);
         adapter.notifyDataSetChanged();
+    }
+
+    /**
+     * 全部下载  全部暂停UI
+     */
+    private void refreshOperationTotal(List<VolumeFile> list) {
+        operationTotalLayout.setVisibility(list.size() > 0 ? View.VISIBLE : View.GONE);
+        boolean isShowPause = false;
+        for (VolumeFile volumeFile : list) {
+            if (volumeFile.getStatus().equals(VolumeFile.STATUS_DOWNLOAD_IND)
+                    || volumeFile.getStatus().equals(VolumeFile.STATUS_UPLOAD_IND)) {
+                isShowPause = true;
+                break;
+            }
+        }
+        operationTotalBtn.setSelected(!isShowPause);
+        operationTotalBtn.setText(isShowPause ? R.string.volume_file_transfer_list_pause : R.string.volume_file_transfer_list_continue);
+        if (currentIndex == 0) {
+            countTipTv.setText(getString(R.string.volume_file_transfer_list_download_count, list.size()));
+        } else if (currentIndex == 1) {
+            countTipTv.setText(getString(R.string.volume_file_transfer_list_upload_count, list.size()));
+        }
+    }
+
+    private void setRefreshCallBack() {
+        adapter.setCallBack(new VolumeFileTransferAdapter.CallBack() {
+            @Override
+            public void refreshView(List<VolumeFile> fileList) {
+                operationTotalLayout.setVisibility(fileList.size() > 0 ? View.VISIBLE : View.GONE);
+                if (fileList.size() == 0) {
+                    showNoDataLayout();
+                }
+            }
+
+            @Override
+            public void onStatusChange(List<VolumeFile> fileList) {  //点击item 暂停  继续
+                refreshOperationTotal(fileList);
+            }
+        });
     }
 
     private void setListIemClick() {

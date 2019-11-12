@@ -42,6 +42,7 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
     private Context context;
     private List<VolumeFile> fileList = new ArrayList<>();
     private String type;    //上传 or 下载
+    private CallBack callBack;
 
     public VolumeFileTransferAdapter(Context context, List<VolumeFile> fileList, String type) {
         this.context = context;
@@ -143,6 +144,9 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
                 holder.progressBar.setStatus(CircleProgressBar.Status.End);
                 fileList.remove(position);
                 notifyItemRemoved(position);
+                if (callBack != null) {
+                    callBack.refreshView(fileList);
+                }
             }
 
             @Override
@@ -179,6 +183,9 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
                 holder.progressBar.setStatus(CircleProgressBar.Status.End);
                 fileList.remove(position);
                 notifyItemRemoved(position);
+                if (callBack != null) {
+                    callBack.refreshView(fileList);
+                }
             }
 
             @Override
@@ -237,6 +244,16 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
 
     }
 
+    public void setCallBack(CallBack callBack) {
+        this.callBack = callBack;
+    }
+
+    public interface CallBack {
+        void refreshView(List<VolumeFile> fileList);
+
+        void onStatusChange(List<VolumeFile> fileList);
+    }
+
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         @BindView(R.id.volume_file_transfer_item_img)
         ImageView icon;
@@ -268,6 +285,9 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
                 case R.id.volume_file_transfer_item_status:
                     changeStatus(position);
                     notifyItemChanged(position);
+                    if (callBack != null) {
+                        callBack.onStatusChange(fileList);
+                    }
                     break;
                 default:
                     break;
@@ -303,7 +323,10 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
                                 }
                             }
                             fileList.remove(position);
-                            notifyItemRemoved(position);
+                            notifyDataSetChanged();
+                            if (callBack != null) {
+                                callBack.refreshView(fileList);
+                            }
                             dialog.dismiss();
                         }
                     })

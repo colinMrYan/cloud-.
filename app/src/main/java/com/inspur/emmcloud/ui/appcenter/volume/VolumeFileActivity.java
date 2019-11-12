@@ -46,7 +46,6 @@ import com.inspur.emmcloud.ui.appcenter.volume.view.VolumeFileTransferActivity;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
-import com.inspur.emmcloud.util.privates.VolumeFileDownloadManager;
 import com.inspur.emmcloud.util.privates.VolumeFilePrivilegeUtils;
 import com.inspur.emmcloud.util.privates.VolumeFileUploadManager;
 
@@ -598,6 +597,8 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
             adapter.notifyItemInserted(0);
             //解决RecyclerView当数据添加到第一位置，显示位置不正确的系统bug
             fileRecycleView.scrollToPosition(0);
+            showAnimator();
+            refreshTipViewLayout();
         }
     }
 
@@ -663,12 +664,6 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     @Override
     protected void onResume() {
         setBottomOperationItemShow(adapter.getSelectVolumeFileList());
-        if (VolumeFileUploadManager.getInstance().getAllUploadVolumeFile().size() > 0 ||
-                VolumeFileDownloadManager.getInstance().getAllDownloadVolumeFile().size() > 0) {
-            tipViewLayout.setVisibility(View.VISIBLE);
-        } else {
-            tipViewLayout.setVisibility(View.GONE);
-        }
         super.onResume();
     }
 

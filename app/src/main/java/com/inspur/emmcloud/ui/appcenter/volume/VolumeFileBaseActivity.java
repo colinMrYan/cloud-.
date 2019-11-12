@@ -3,6 +3,7 @@ package com.inspur.emmcloud.ui.appcenter.volume;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -11,8 +12,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -60,6 +63,8 @@ import com.inspur.emmcloud.util.privates.VolumeFilePrivilegeUtils;
 import com.inspur.emmcloud.util.privates.VolumeFileUploadManager;
 import com.inspur.emmcloud.util.privates.cache.VolumeGroupContainMeCacheUtils;
 import com.inspur.emmcloud.widget.tipsview.TipsView;
+import com.inspur.emmcloud.widget.tipsview.animator.BallView;
+import com.inspur.emmcloud.widget.tipsview.animator.Point;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.ShareAction;
@@ -155,6 +160,12 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        refreshTipViewLayout(); //小红点
+    }
+
+    @Override
     public int getLayoutResId() {
         return R.layout.activity_volume_file;
     }
@@ -203,7 +214,6 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         adapter.setCurrentDirAbsolutePath(currentDirAbsolutePath);
         fileRecycleView.setAdapter(adapter);
     }
-
 
     /**
      * 弹出文件操作框
@@ -326,7 +336,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
             }
         }
         volumeActionDataList.add(new VolumeActionData(downloadAction, R.drawable.ic_volume_download,
-                selectVolumeFileList.size() == 1 && !isVolumeFileDirectory
+                selectVolumeFileList.size() >= 1 && !isVolumeFileDirectory
                         && (isVolumeFileReadable || isVolumeFileWriteable)));
         volumeActionDataList.add(new VolumeActionData(copyAction, R.drawable.ic_volume_copy, isVolumeFileWriteable));
         volumeActionDataList.add(new VolumeActionData(deleteAction, R.drawable.ic_volume_delete, isVolumeFileWriteable));
@@ -374,6 +384,8 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
             for (VolumeFile file : adapter.getSelectVolumeFileList()) {
                 downloadFile(file);
             }
+            showAnimator();
+            refreshTipViewLayout();
             adapter.clearSelectedVolumeFileList();
             adapter.notifyDataSetChanged();
         } else if (action.equals(moveToAction)) {
@@ -588,6 +600,18 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         volumeFileList.addAll(volumeFileNormalList);
     }
 
+    /**
+     * 小红点显示状态
+     */
+    public void refreshTipViewLayout() {
+        if (VolumeFileUploadManager.getInstance().getAllUploadVolumeFile().size() > 0 ||
+                VolumeFileDownloadManager.getInstance().getAllDownloadVolumeFile().size() > 0) {
+            tipViewLayout.setVisibility(View.VISIBLE);
+        } else {
+            tipViewLayout.setVisibility(View.GONE);
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
@@ -658,6 +682,25 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
             VolumeFileDownloadManager.getInstance().downloadFile(volumeFile,
                     currentDirAbsolutePath + volumeFile.getName());
         }
+    }
+
+    /**
+     * 下载、上传动画添加
+     */
+    public void showAnimator() {
+        DisplayMetrics metric = new DisplayMetrics();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            getWindowManager().getDefaultDisplay().getRealMetrics(metric);
+        }
+        int width = metric.widthPixels; // 宽度（PX）
+        int height = metric.heightPixels; // 高度（PX）
+        Point pointStart = new Point(0, height);
+        Point pointEnd = new Point(width, 0);
+        BallView ballView = new BallView(getApplicationContext());
+        ballView.startAnimation(pointStart, pointEnd);
+
+        ViewGroup rootView = (ViewGroup) this.getWindow().getDecorView();
+        rootView.addView(ballView);
     }
 
     /**

@@ -12,13 +12,10 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
-import com.inspur.emmcloud.interf.ProgressCallback;
-import com.inspur.emmcloud.util.privates.VolumeFileUploadManager;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -176,7 +173,7 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final VolumeFile volumeFile = volumeFileList.get(position);
         String volumeFileStatus = volumeFile.getStatus();
-        boolean isStatusNomal = volumeFileStatus.equals("normal");
+        boolean isStatusNomal = true;
         holder.fileUploadStatusLayout.setVisibility(isStatusNomal ? View.GONE : View.VISIBLE);
         holder.uploadOperationText.setVisibility(isStatusNomal ? View.GONE : View.VISIBLE);
         holder.fileInfoLayout.setVisibility(isStatusNomal ? View.VISIBLE : View.GONE);
@@ -197,37 +194,37 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
         }
         String fileTime = TimeUtils.getTime(volumeFile.getLastUpdate(), format);
         holder.fileTimeText.setText(fileTime);
-        if (!isStatusNomal) {
-            LogUtils.jasonDebug("volumeFileStatus==" + volumeFileStatus);
-            boolean isStutasUploading = volumeFileStatus.equals(VolumeFile.STATUS_UPLOAD_IND);
-            holder.uploadOperationText.setText(isStutasUploading ? R.string.upload_cancel : R.string.clouddriver_upload_again);
-            holder.uploadProgressBar.setProgress(0);
-            holder.uploadProgressBar.setVisibility(View.GONE);
-            holder.uploadStatusText.setVisibility(View.VISIBLE);
-            holder.uploadStatusText.setText(isStutasUploading ? R.string.clouddriver_upload_waiting : R.string.clouddriver_upload_fail);
-            if (volumeFileStatus.equals(VolumeFile.STATUS_UPLOAD_IND)) {
-                VolumeFileUploadManager.getInstance().setBusinessProgressCallback(volumeFile, new ProgressCallback() {
-                    @Override
-                    public void onSuccess(VolumeFile newVolumeFile) {
-//                        replaceVolumeFileData(volumeFile, newVolumeFile);
-                    }
-
-                    @Override
-                    public void onLoading(int progress, String speed) {
-                        holder.uploadProgressBar.setVisibility(View.VISIBLE);
-                        holder.uploadStatusText.setVisibility(View.GONE);
-                        holder.uploadProgressBar.setProgress(progress);
-                    }
-
-                    @Override
-                    public void onFail() {
-                        volumeFile.setStatus(VolumeFile.STATUS_UPLOAD_FAIL);
-                        notifyItemChanged(position);
-                    }
-                });
-            }
-
-        }
+//        if (!isStatusNomal) {
+//            LogUtils.jasonDebug("volumeFileStatus==" + volumeFileStatus);
+//            boolean isStutasUploading = volumeFileStatus.equals(VolumeFile.STATUS_UPLOAD_IND);
+//            holder.uploadOperationText.setText(isStutasUploading ? R.string.upload_cancel : R.string.clouddriver_upload_again);
+//            holder.uploadProgressBar.setProgress(0);
+//            holder.uploadProgressBar.setVisibility(View.GONE);
+//            holder.uploadStatusText.setVisibility(View.VISIBLE);
+//            holder.uploadStatusText.setText(isStutasUploading ? R.string.clouddriver_upload_waiting : R.string.clouddriver_upload_fail);
+//            if (volumeFileStatus.equals(VolumeFile.STATUS_UPLOAD_IND)) {
+//                VolumeFileUploadManager.getInstance().setBusinessProgressCallback(volumeFile, new ProgressCallback() {
+//                    @Override
+//                    public void onSuccess(VolumeFile newVolumeFile) {
+////                        replaceVolumeFileData(volumeFile, newVolumeFile);
+//                    }
+//
+//                    @Override
+//                    public void onLoading(int progress, String speed) {
+//                        holder.uploadProgressBar.setVisibility(View.VISIBLE);
+//                        holder.uploadStatusText.setVisibility(View.GONE);
+//                        holder.uploadProgressBar.setProgress(progress);
+//                    }
+//
+//                    @Override
+//                    public void onFail() {
+//                        volumeFile.setStatus(VolumeFile.STATUS_UPLOAD_FAIL);
+//                        notifyItemChanged(position);
+//                    }
+//                });
+//            }
+//
+//        }
     }
 
     private void showVolumeFileTypeImg(ImageView imageView, VolumeFile volumeFile) {
