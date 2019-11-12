@@ -425,12 +425,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
     }
 
     private boolean isHaveStaticSearchModel(SearchModel searchModel) {
-        for (int i = 0; i < excludeSearchModelList.size(); i++) {
-            if (excludeSearchModelList.get(i).getId().equals(searchModel.getId())) {
-                return true;
-            }
-        }
-        return false;
+        return excludeSearchModelList.contains(searchModel);
     }
 
     private void showRecentChannelOperationDlg(final int position) {

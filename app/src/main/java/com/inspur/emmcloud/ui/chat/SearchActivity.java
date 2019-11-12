@@ -521,15 +521,12 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         String icon = null;
         String type = searchModel.getType();
         if (type.equals(SearchModel.TYPE_GROUP)) {
-            defaultIcon = R.drawable.icon_channel_group_default;
             File file = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH,
                     MyApplication.getInstance().getTanent() + searchModel.getId() + "_100.png1");
+            photoImg.setTag("");
             if (file.exists()) {
-                icon = "file://" + file.getAbsolutePath();
                 Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
                 photoImg.setImageBitmap(bitmap);
-//                ImageDisplayUtils.getInstance().displayImageNoCache(photoImg, icon, defaultIcon);
-
             } else {
                 photoImg.setImageResource(R.drawable.icon_channel_group_default);
             }
@@ -543,7 +540,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             }
 
         }
-        ImageDisplayUtils.getInstance().displayImage(
+        ImageDisplayUtils.getInstance().displayImageByTag(
                 photoImg, icon, defaultIcon);
 
     }

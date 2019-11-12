@@ -353,6 +353,7 @@
     <string name="chat_emotion_total_tip">All Stickers</string>
     <string name="chat_filemanager_native">Native Files</string>
     <string name="chat_filemanager_volume">Cloud Disk</string>
+    <string name="chat_file_transfer">File transfer</string>
     <!--语音通话提示-->
     <string name="voice_communication_end">The chat is over</string>
 

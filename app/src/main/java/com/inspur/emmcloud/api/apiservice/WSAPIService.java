@@ -474,7 +474,7 @@ public class WSAPIService {
             actionObj.put("path", "/channel/" + cid + "/message");
             JSONObject queryObj = new JSONObject();
             queryObj.put("before", "");
-            queryObj.put("limit", 15);
+            queryObj.put("limit", 20);
             actionObj.put("query", queryObj);
             object.put("action", actionObj);
             JSONObject headerObj = new JSONObject();
