@@ -3,7 +3,6 @@ package com.inspur.emmcloud.ui.chat;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.MyApplication;
@@ -14,6 +13,7 @@ import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.SearchModel;
+import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
@@ -31,6 +31,7 @@ import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.MessageSendManager;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -228,8 +229,8 @@ public class ShareToConversationBlankActivity extends BaseActivity {
             Message message = CommunicationUtils.combinLocalTextPlainMessage(content, cid, new HashMap<String, String>());
             message.setSendStatus(Message.MESSAGE_SEND_ING);
             MessageCacheUtil.saveMessage(ShareToConversationBlankActivity.this, message);
-            MessageSendManager.getInstance().sendMessage(message);
             notifyMessageDataChanged();
+            MessageSendManager.getInstance().sendMessage(message);
             callbackSuccess();
         } else if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
             if (NetUtils.isNetworkConnected(BaseApplication.getInstance())) {
@@ -261,8 +262,8 @@ public class ShareToConversationBlankActivity extends BaseActivity {
             Message message = CommunicationUtils.combinLocalExtendedLinksMessage(cid, poster, title, subTitle, url);
             message.setSendStatus(Message.MESSAGE_SEND_ING);
             MessageCacheUtil.saveMessage(ShareToConversationBlankActivity.this, message);
-            MessageSendManager.getInstance().sendMessage(message);
             notifyMessageDataChanged();
+            MessageSendManager.getInstance().sendMessage(message);
             callbackSuccess();
         } else if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
             if (NetUtils.isNetworkConnected(BaseApplication.getInstance())) {
@@ -288,9 +289,7 @@ public class ShareToConversationBlankActivity extends BaseActivity {
 
     private void notifyMessageDataChanged() {
         // 通知沟通页面更新列表状态
-        Intent intent = new Intent("message_notify");
-        intent.putExtra("command", "sort_session_list");
-        LocalBroadcastManager.getInstance(ShareToConversationBlankActivity.this).sendBroadcast(intent);
+        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_CONVERSATION_MESSAGE_DATA_CHANGED, cid));
     }
 
     private void callbackSuccess() {

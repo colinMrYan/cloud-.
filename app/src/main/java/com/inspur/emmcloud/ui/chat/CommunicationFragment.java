@@ -35,6 +35,7 @@ import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
@@ -111,7 +112,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import io.socket.client.Socket;
 
-import static android.app.Activity.RESULT_OK;
+
 
 /**
  * 沟通页面
@@ -492,32 +493,22 @@ public class CommunicationFragment extends BaseFragment {
         ConversationGroupIconUtils.getInstance().create(conversationList);
     }
 
+    private void sortConversationList() {
+        sortConversationList(null);
+    }
 
     /**
-     * channel 显示排序
+     * ConversationList排序和显示
+     *
+     * @param changedConversation 变更的Conversation，如果changedConversation为null,则刷新全部conversation数据
      */
-    private void sortConversationList() {
+    private void sortConversationList(final Conversation changedConversation) {
         // TODO Auto-generated method stub
         Observable.create(new ObservableOnSubscribe<List<UIConversation>>() {
             @Override
             public void subscribe(ObservableEmitter<List<UIConversation>> emitter) throws Exception {
-                List<Conversation> conversationList = ConversationCacheUtils.getConversationList(MyApplication.getInstance());
-                List<UIConversation> uiConversationList = new ArrayList<>();
-                if (conversationList.size() > 0) {
-                    //Conversation存储，主要存储其lastUpdate字段，便于便于后续获取Conversation排序
-                    uiConversationList = UIConversation.conversationList2UIConversationList(conversationList);
-                    ConversationCacheUtils.saveConversationList(MyApplication.getInstance(), conversationList);
-                    Iterator<UIConversation> it = uiConversationList.iterator();
-                    while (it.hasNext()) {
-                        UIConversation uiConversation = it.next();
-                        if (!isConversationShow(uiConversation)) {
-                            it.remove();
-                            continue;
-                        }
-
-                    }
-                    Collections.sort(uiConversationList, new UIConversation().new SortComparator());
-                }
+                List<UIConversation> uiConversationList = getUIConversationList(changedConversation);
+                Collections.sort(uiConversationList, new UIConversation().new SortComparator());
                 emitter.onNext(uiConversationList);
             }
         }).subscribeOn(Schedulers.io())
@@ -535,6 +526,38 @@ public class CommunicationFragment extends BaseFragment {
                     }
                 });
 
+    }
+
+    public List<UIConversation> getUIConversationList(Conversation changedConversation) {
+        synchronized (this) {
+            List<UIConversation> uiConversationList = new ArrayList<>();
+            if (changedConversation == null) {
+                List<Conversation> conversationList = ConversationCacheUtils.getConversationList(MyApplication.getInstance());
+                if (conversationList.size() > 0) {
+                    //Conversation存储，主要存储其lastUpdate字段，便于便于后续获取Conversation排序
+                    uiConversationList = UIConversation.conversationList2UIConversationList(conversationList);
+                    ConversationCacheUtils.saveConversationList(MyApplication.getInstance(), conversationList);
+                    Iterator<UIConversation> it = uiConversationList.iterator();
+                    while (it.hasNext()) {
+                        UIConversation uiConversation = it.next();
+                        if (!isConversationShow(uiConversation)) {
+                            it.remove();
+                            continue;
+                        }
+
+                    }
+                }
+            } else {
+                uiConversationList.addAll(displayUIConversationList);
+                UIConversation uiConversation = new UIConversation(changedConversation);
+                ConversationCacheUtils.saveConversation(BaseApplication.getInstance(), changedConversation);
+                uiConversationList.remove(uiConversation);
+                if (isConversationShow(uiConversation)) {
+                    uiConversationList.add(uiConversation);
+                }
+            }
+            return uiConversationList;
+        }
     }
 
     /**
@@ -557,7 +580,7 @@ public class CommunicationFragment extends BaseFragment {
         if (uiConversation.getMessageList().size() == 0) {
             //当会话内没有消息时，如果是单聊或者不是owner的群聊，则进行隐藏
             if (conversation.getType().equals(Conversation.TYPE_DIRECT) ||
-                    (conversation.getType().equals(CREATE_CHANNEL_GROUP) && conversation.getOwner().equals(MyApplication.getInstance().getUid()))) {
+                    (conversation.getType().equals(Conversation.TYPE_GROUP) && !conversation.getOwner().equals(MyApplication.getInstance().getUid()))) {
                 return false;
             }
         }
@@ -816,7 +839,7 @@ public class CommunicationFragment extends BaseFragment {
                         }
                         createDirectChannel(userOrChannelId);
                     } else if (peopleArray.length() > 1) {        //大于2人群聊
-                        creatGroupChannel(peopleArray);
+                        createGroupChannel(peopleArray);
                     }
                 }
             } catch (JSONException e) {
@@ -825,7 +848,7 @@ public class CommunicationFragment extends BaseFragment {
                 ToastUtils.show(getActivity(),
                         getActivity().getString(R.string.creat_group_fail));
             }
-        } else if ((resultCode == RESULT_OK) && (requestCode == REQUEST_SCAN_LOGIN_QRCODE_RESULT)) {
+        } else if ((resultCode == Activity.RESULT_OK) && (requestCode == REQUEST_SCAN_LOGIN_QRCODE_RESULT)) {
             if (data.hasExtra("isDecodeSuccess")) {
                 boolean isDecodeSuccess = data.getBooleanExtra("isDecodeSuccess", false);
                 if (isDecodeSuccess) {
@@ -888,7 +911,7 @@ public class CommunicationFragment extends BaseFragment {
      *
      * @param peopleArray
      */
-    private void creatGroupChannel(JSONArray peopleArray) {
+    private void createGroupChannel(JSONArray peopleArray) {
         // TODO Auto-generated method stub
         new ConversationCreateUtils().createGroupConversation(getActivity(), peopleArray,
                 new ConversationCreateUtils.OnCreateGroupConversationListener() {
@@ -898,7 +921,7 @@ public class CommunicationFragment extends BaseFragment {
                         Bundle bundle = new Bundle();
                         bundle.putSerializable(ConversationActivity.EXTRA_CONVERSATION, conversation);
                         IntentUtils.startActivity(getActivity(), ConversationActivity.class, bundle);
-                        notifyConversationSelfDataChanged(conversation);
+                        sortConversationList(conversation);
                         createSingleGroupIcon(conversation);
                     }
 
@@ -909,34 +932,6 @@ public class CommunicationFragment extends BaseFragment {
                 });
     }
 
-    /**
-     * 更新当前会话的数据并重新进行排序
-     *
-     * @param conversation
-     */
-    private void notifyConversationSelfDataChanged(final Conversation conversation) {
-        if (conversation != null) {
-            List<UIConversation> uiConversationList = new ArrayList<>();
-            uiConversationList.addAll(displayUIConversationList);
-            UIConversation uiConversation = new UIConversation(conversation);
-            uiConversationList.remove(uiConversation);
-            if (isConversationShow(uiConversation)) {
-                uiConversationList.add(uiConversation);
-            }
-            Collections.sort(uiConversationList, new UIConversation().new SortComparator());
-            displayUIConversationList = uiConversationList;
-            conversationAdapter.setData(displayUIConversationList);
-            conversationAdapter.notifyDataSetChanged();
-            Observable.create(new ObservableOnSubscribe<Void>() {
-                @Override
-                public void subscribe(ObservableEmitter<Void> emitter) throws Exception {
-                    //Conversation存储，主要存储其lastUpdate字段，便于便于后续获取Conversation排序
-                    ConversationCacheUtils.saveConversation(BaseApplication.getInstance(), conversation);
-                }
-            }).subscribeOn(Schedulers.io())
-                    .subscribe();
-        }
-    }
 
     private void notifyConversationMessageDataChanged(String cid) {
         Conversation conversation = null;
@@ -949,7 +944,10 @@ public class CommunicationFragment extends BaseFragment {
         if (conversation == null) {
             conversation = ConversationCacheUtils.getConversation(BaseApplication.getInstance(), cid);
         }
-        notifyConversationSelfDataChanged(conversation);
+        if (conversation != null) {
+            sortConversationList(conversation);
+        }
+
     }
 
 
@@ -990,7 +988,7 @@ public class CommunicationFragment extends BaseFragment {
                 break;
             case Constant.EVENTBUS_TAG_CHAT_CHANGE:
                 conversation = (Conversation) eventMessage.getMessageObj();
-                notifyConversationSelfDataChanged(conversation);
+                sortConversationList(conversation);
                 createSingleGroupIcon(conversation);
                 break;
             case Constant.EVENTBUS_TAG_RECALL_MESSAGE:
@@ -1004,11 +1002,11 @@ public class CommunicationFragment extends BaseFragment {
                 break;
             case Constant.EVENTBUS_TAG_CONVERSATION_SELF_DATA_CHANGED:
                 conversation = (Conversation) eventMessage.getMessageObj();
-                notifyConversationSelfDataChanged(conversation);
+                sortConversationList(conversation);
                 break;
             case Constant.EVENTBUS_TAG_CONVERSATION_MESSAGE_DATA_CHANGED:
-                conversation = (Conversation) eventMessage.getMessageObj();
-                notifyConversationMessageDataChanged(conversation.getId());
+                String cid = (String) eventMessage.getMessageObj();
+                notifyConversationMessageDataChanged(cid);
                 break;
         }
     }
@@ -1052,6 +1050,7 @@ public class CommunicationFragment extends BaseFragment {
                         if (conversation.isHide()) {
                             conversation.setHide(false);
                             ConversationCacheUtils.setConversationHide(MyApplication.getInstance(), conversation.getId(), false);
+                            LogUtils.jasonDebug("set---------------");
                         }
                         notifyConversationMessageDataChanged(conversation.getId());
                     }
