@@ -25,7 +25,9 @@ import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.ui.chat.ChannelMembersDelActivity;
 import com.inspur.emmcloud.ui.chat.CommunicationSearchMessagesActivity;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
+import com.inspur.emmcloud.ui.chat.ConversationCastInfoActivity;
 import com.inspur.emmcloud.ui.chat.ConversationNameModifyActivity;
+import com.inspur.emmcloud.ui.chat.FileTransferDetailActivity;
 import com.inspur.emmcloud.ui.chat.GroupAlbumActivity;
 import com.inspur.emmcloud.ui.chat.GroupFileActivity;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
@@ -59,6 +61,7 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
     public static final String MEMBER_SIZE = "member_size";
     private static final int QEQUEST_ADD_MEMBER = 2;
     private static final int QEQUEST_DEL_MEMBER = 3;
+    private static final int QEQUEST_FILE_TRANSFER = 4;
     @BindView(R.id.rv_conversation_members_head)
     NoScrollGridView conversationMembersHeadRecyclerView;
     @BindView(R.id.tv_title)
@@ -125,7 +128,7 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
             searchRecordLayout.setVisibility(View.VISIBLE);
             searchRecordMarginLayout.setVisibility(View.GONE);
             mPresenter.updateSearchMoreState();
-        } else if (uiConversation.getType().equals(Conversation.TYPE_DIRECT)) {
+        } else if (uiConversation.getType().equals(Conversation.TYPE_DIRECT) || uiConversation.getType().equals(Conversation.TYPE_TRANSFER)) {
             isOwner = false;
             uiUidList = mPresenter.getConversationSingleChatUIMembersUid(uiConversation);
             titleTextView.setText(R.string.chat_single_info_detail_title);
@@ -143,7 +146,12 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent();
-                if (i == uiUidList.size() - 1 && isOwner) {    /**刪除群成員**/
+                if (uiConversation.getType().equals(Conversation.TYPE_TRANSFER) && i == uiUidList.size() - 1) {
+                    intent.putExtra(ConversationCastInfoActivity.EXTRA_CID, uiConversation.getId());
+                    intent.setClass(getApplicationContext(),
+                            FileTransferDetailActivity.class);
+                    startActivityForResult(intent, QEQUEST_FILE_TRANSFER);
+                } else if (i == uiUidList.size() - 1 && isOwner) {    /**刪除群成員**/
                     intent.putExtra("memberUidList", uiConversation.getMemberList());
                     intent.setClass(getApplicationContext(),
                             ChannelMembersDelActivity.class);
@@ -387,6 +395,11 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
     public void dismissLoading() {
         LoadingDialog.dimissDlg(loadingDialog);
         super.dismissLoading();
+    }
+
+    @Override
+    public void activityFinish() {
+        finish();
     }
 
     @Override

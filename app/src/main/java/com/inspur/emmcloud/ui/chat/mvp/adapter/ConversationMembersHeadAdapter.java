@@ -71,6 +71,9 @@ public class ConversationMembersHeadAdapter extends BaseAdapter {
         } else if (uidList.get(i).equals("addUser")) {
             userPhotoUrl = "drawable://" + R.drawable.ic_add_channel_member;
             userName = "";
+        } else if (uidList.get(i).equals("fileTransfer")) {
+            userPhotoUrl = "drawable://" + R.drawable.ic_file_transfer;
+            userName = context.getString(R.string.chat_file_transfer);
         } else {
             uid = uidList.get(i);
             userName = ContactUserCacheUtils.getUserName(uid);
