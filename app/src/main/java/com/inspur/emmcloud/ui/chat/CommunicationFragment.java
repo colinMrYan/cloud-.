@@ -271,8 +271,12 @@ public class CommunicationFragment extends BaseFragment {
                 try {
                     Conversation conversation = uiConversation.getConversation();
                     String type = conversation.getType();
-                    if (type.equals(Conversation.TYPE_CAST) || type.equals(Conversation.TYPE_DIRECT) || type.equals(Conversation.TYPE_GROUP)) {
+                    if (type.equals(Conversation.TYPE_CAST) || type.equals(Conversation.TYPE_DIRECT) ||
+                            type.equals(Conversation.TYPE_GROUP) || type.equals(Conversation.TYPE_TRANSFER)) {
                         Bundle bundle = new Bundle();
+                        String conversationName = conversation.getType().equals(Conversation.TYPE_TRANSFER) ?
+                                getActivity().getString(R.string.chat_file_transfer) : conversation.getName();
+                        conversation.setName(conversationName);
                         bundle.putSerializable(ConversationActivity.EXTRA_CONVERSATION, conversation);
                         IntentUtils.startActivity(getActivity(), ConversationActivity.class, bundle);
                     } else if (conversation.getType().equals(Conversation.TYPE_LINK)) {
@@ -1257,7 +1261,9 @@ public class CommunicationFragment extends BaseFragment {
      */
     private void getConversationList() {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-            apiService.getConversationList();
+            JSONArray jsonArray = new JSONArray();
+            jsonArray.put("private");
+            apiService.getConversationList(jsonArray);
         } else {
             swipeRefreshLayout.setRefreshing(false);
         }
@@ -1294,7 +1300,6 @@ public class CommunicationFragment extends BaseFragment {
                 WSAPIService.getInstance().getOfflineMessage(lastMessageId);
             }
         }
-
     }
 
     /**

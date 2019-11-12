@@ -1056,7 +1056,16 @@ public class ConversationActivity extends ConversationBaseActivity {
             case Conversation.TYPE_CAST:
                 bundle.putSerializable(ConversationCastInfoActivity.EXTRA_CID, conversation.getId());
                 IntentUtils.startActivity(ConversationActivity.this,
-                        ConversationCastInfoActivity.class, bundle);
+                        FileTransferDetailActivity.class, bundle);
+
+//                bundle.putSerializable(ConversationCastInfoActivity.EXTRA_CID, conversation.getId());
+//                IntentUtils.startActivity(ConversationActivity.this,
+//                        ConversationCastInfoActivity.class, bundle);
+                break;
+            case Conversation.TYPE_TRANSFER:
+                bundle.putSerializable(ConversationCastInfoActivity.EXTRA_CID, conversation.getId());
+                IntentUtils.startActivity(ConversationActivity.this,
+                        FileTransferDetailActivity.class, bundle);
                 break;
             default:
                 break;
