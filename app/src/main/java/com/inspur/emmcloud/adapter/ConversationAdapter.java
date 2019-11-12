@@ -18,6 +18,7 @@ import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.bean.chat.Conversation;
@@ -179,6 +180,10 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
                 } else {
                     holder.photoImg.setImageResource(R.drawable.icon_channel_group_default);
                 }
+            } else if (uiConversation.getConversation().getType().equals(Conversation.TYPE_TRANSFER)) { /**文件传输助手**/
+                String conversationName = BaseApplication.getInstance().getString(R.string.chat_file_transfer);
+                holder.titleText.setText(conversationName);
+                ImageDisplayUtils.getInstance().displayImageByTag(holder.photoImg, uiConversation.getIcon(), R.drawable.icon_channel_group_default);
             } else {
                 ImageDisplayUtils.getInstance().displayImageByTag(holder.photoImg, uiConversation.getIcon(), isConversationTypeGroup ? R.drawable.icon_channel_group_default : R.drawable.icon_person_default);
             }

@@ -357,6 +357,7 @@
     <string name="chat_emotion_total_tip">所有表情</string>
     <string name="chat_filemanager_native">本地文件</string>
     <string name="chat_filemanager_volume">企業雲盤</string>
+    <string name="chat_file_transfer">文件傳輸助手</string>
     <!--语音通话提示-->
     <string name="voice_communication_end">聊天已結束</string>
 

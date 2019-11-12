@@ -318,14 +318,21 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
             LoadingDialog.dimissDlg(loadingDlg);
             //将移动的位置传递回去，以便于当前页面刷新数据
             sendVolumeFileRefreshBroadcast(getVolumeFileListResult.getId());
-            setResult(RESULT_OK);
+            Intent intentResult = new Intent();
+            intentResult.putExtra("copyFailedFiles", (Serializable) copyErrorFiles);
+            setResult(RESULT_OK, intentResult);
             finish();
         }
 
         @Override
         public void returnCopyFileFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDlg);
-            WebServiceMiddleUtils.hand(getApplicationContext(), error, errorCode);
+            returnErrorFileSize = ((List<VolumeFile>) getIntent().getSerializableExtra("volumeFileList")).size();
+            copyErrorToastShow();
+            Intent intentResult = new Intent();
+            intentResult.putExtra("copyFailedFiles", getIntent().getSerializableExtra("volumeFileList"));
+            setResult(RESULT_OK, intentResult);
+            finish();
         }
 
         @Override
