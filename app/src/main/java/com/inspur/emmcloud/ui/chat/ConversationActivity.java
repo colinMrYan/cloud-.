@@ -252,7 +252,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             position = cacheMessageList.size() - 1;
         }
         List<UIMessage> uiMessageListNew = UIMessage.MessageList2UIMessageList(cacheMessageList);
-        if (!ListUtils.isListEqual(uiMessageListNew, uiMessageList)) {
+        if (!ListUtils.isListEqual(uiMessageListNew, adapter.getAdapterUIMessageList())) {
             uiMessageList = uiMessageListNew;
             adapter.setMessageList(uiMessageList);
             adapter.notifyDataSetChanged();
@@ -1056,7 +1056,16 @@ public class ConversationActivity extends ConversationBaseActivity {
             case Conversation.TYPE_CAST:
                 bundle.putSerializable(ConversationCastInfoActivity.EXTRA_CID, conversation.getId());
                 IntentUtils.startActivity(ConversationActivity.this,
-                        ConversationCastInfoActivity.class, bundle);
+                        FileTransferDetailActivity.class, bundle);
+
+//                bundle.putSerializable(ConversationCastInfoActivity.EXTRA_CID, conversation.getId());
+//                IntentUtils.startActivity(ConversationActivity.this,
+//                        ConversationCastInfoActivity.class, bundle);
+                break;
+            case Conversation.TYPE_TRANSFER:
+                bundle.putSerializable(ConversationCastInfoActivity.EXTRA_CID, conversation.getId());
+                IntentUtils.startActivity(ConversationActivity.this,
+                        FileTransferDetailActivity.class, bundle);
                 break;
             default:
                 break;

@@ -12,7 +12,9 @@ import java.util.List;
 public class ApiRequestRecordCacheUtils {
     public static void saveApiRequestRecord(ApiRequestRecord apiRequestRecord) {
         try {
-            DbCacheUtils.getDb().saveOrUpdate(apiRequestRecord);
+            if (!DbCacheUtils.isDbNull()) {
+                DbCacheUtils.getDb().saveOrUpdate(apiRequestRecord);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

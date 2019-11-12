@@ -14,6 +14,7 @@ public class SearchModel implements Serializable {
     public static final String TYPE_USER = "USER";
     public static final String TYPE_STRUCT = "STRUCT";
     public static final String TYPE_GROUP = "GROUP";
+    public static final String TYPE_TRANSFER = "TRANSFER";
     @Column(name = "id", isId = true)
     private String id = "";
     @Column(name = "name")

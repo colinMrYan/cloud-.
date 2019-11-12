@@ -107,6 +107,11 @@ public class CommunicationSearchMessagesActivity extends BaseActivity {
                 ImageDisplayUtils.getInstance().displayImage(searchModelHeadImage, uiConversation.getIcon(), R.drawable.icon_person_default);
                 String showData = getString(R.string.chat_search_related_messages, "“" + uiConversation.getTitle() + "”");
                 searchModelNameText.setText(showData);
+            } else if (conversationFromChatContent.getConversation().getType().equals(Conversation.TYPE_TRANSFER)) {
+                staticNameText.setText(getString(R.string.chat_file_transfer));
+                ImageDisplayUtils.getInstance().displayImage(searchModelHeadImage, conversationFromChatContent.getConversation().getAvatar(), R.drawable.ic_file_transfer);
+                String showData = getString(R.string.chat_search_related_messages, "“" + getString(R.string.chat_file_transfer) + "”");
+                searchModelNameText.setText(showData);
             }
         } else if (getIntent().hasExtra(ConversationGroupInfoActivity.EXTRA_CID)) {     //只传ID 的时候
             channelSubRelativeLayout.setVisibility(View.GONE);

@@ -531,7 +531,8 @@ public class APIUri {
      * @return
      */
     public static String getConversationListUrl() {
-        return getECMChatConversationBaseUrl() + "/channel";
+        //return getECMChatConversationBaseUrl() + "/channel";
+        return getECMChatUrl() + "/rest/v1/channel/all";
     }
 
     /**
