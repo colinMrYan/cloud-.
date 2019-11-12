@@ -71,7 +71,7 @@ public class VolumeFilePrivilegeUtils {
                             privilegeList.add(groupPrivilege);
                         }
                     }
-                    privilege = Collections.max(privilegeList);
+                    privilege = privilegeList.size() == 0 ? 0 : Collections.max(privilegeList);
                 } else {
                     LogUtils.jasonDebug("===========没有自己所属组数据");
                     privilege = volumeFile.getOthersPrivilege();
