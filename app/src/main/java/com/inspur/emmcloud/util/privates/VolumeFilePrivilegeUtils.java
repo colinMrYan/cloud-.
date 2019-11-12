@@ -50,7 +50,6 @@ public class VolumeFilePrivilegeUtils {
      * @return
      */
     public static boolean getVolumeFileWritable(Context context, VolumeFile volumeFile) {
-        try {
             int privilege = 0;
             String myUid = MyApplication.getInstance().getUid();
             LogUtils.jasonDebug("======myUid=" + myUid);
@@ -80,11 +79,6 @@ public class VolumeFilePrivilegeUtils {
             }
             LogUtils.jasonDebug("===========最终privilege=" + privilege);
             return (privilege > 4);
-        } catch (Exception e) {
-            LogUtils.jasonDebug("===========最终privilege Error::" + e.getMessage());
-            e.printStackTrace();
-            return false;
-        }
     }
 
     /**
