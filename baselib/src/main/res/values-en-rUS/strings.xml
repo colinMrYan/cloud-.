@@ -577,7 +577,7 @@
     <string name="clouddriver_select_all">Select All</string>
     <string name="clouddriver_select_nothing">Deselect All</string>
     <string name="clouddriver_multi_select">Multi-select</string>
-    <string name="clouddriver_has_selected">Selected(%1$d)</string>
+    <string name="clouddriver_has_selected">Selected %1$d File</string>
     <string name="clouddriver_sure_delete_file">Sure to delete?</string>
     <string name="clouddriver_move2_current_directory">Move to Current Directory</string>
     <string name="clouddriver_copy2_current_directory">Copy to Current Directory</string>
@@ -640,9 +640,11 @@
     <string name="volume_file_upload_network_type_warning">Currently not connected to Wi-Fi,uploading will use mobile traffic,continue?</string>
     <string name="volume_file_download_network_type_warning">Currently not connected to Wi-Fi,downloading will use mobile traffic,continue?</string>
     <string name="volume_file_transfer">File Transfer</string>
-    <string name="volume_file_transfer_download_list">Download Lists</string>
-    <string name="volume_file_transfer_upload_list">Upload Lists</string>
+    <string name="volume_file_transfer_download_list">Downloading</string>
+    <string name="volume_file_transfer_upload_list">Uploading</string>
     <string name="volume_file_transfer_list_wait_tip">Waiting&#8230;</string>
+    <string name="volume_file_transfer_list_download_count">Downloading&#8230;(%1$d)</string>
+    <string name="volume_file_transfer_list_upload_count">Uploading&#8230;(%1$d)</string>
     <string name="volume_file_transfer_list_pause">All suspended</string>
     <string name="volume_file_transfer_list_continue">All continue</string>
     <string name="create">Create</string>

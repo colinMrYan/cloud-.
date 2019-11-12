@@ -591,7 +591,7 @@
     <string name="clouddriver_select_all">全选</string>
     <string name="clouddriver_select_nothing">全不选</string>
     <string name="clouddriver_multi_select">多选</string>
-    <string name="clouddriver_has_selected">已选择(%1$d)</string>
+    <string name="clouddriver_has_selected">已选择%1$d个文件</string>
     <string name="clouddriver_sure_delete_file">确定要删除所选文件吗？</string>
     <string name="clouddriver_move2_current_directory">移动到当前目录</string>
     <string name="clouddriver_copy2_current_directory">复制到当前目录</string>
@@ -676,6 +676,8 @@
     <string name="volume_file_transfer_download_list">下载列表</string>
     <string name="volume_file_transfer_upload_list">上传列表</string>
     <string name="volume_file_transfer_list_wait_tip">正在等待&#8230;</string>
+    <string name="volume_file_transfer_list_download_count">正在下载&#8230;(%1$d)</string>
+    <string name="volume_file_transfer_list_upload_count">正在上传&#8230;(%1$d)</string>
     <string name="volume_file_transfer_list_pause">全部暂停</string>
     <string name="volume_file_transfer_list_continue">全部继续</string>
     <string name="volume_share_2_qq_wechat">分享</string>

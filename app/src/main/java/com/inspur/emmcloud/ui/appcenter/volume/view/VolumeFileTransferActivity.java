@@ -6,11 +6,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.AllTaskFragmentAdapter;
 import com.inspur.emmcloud.basemodule.ui.BaseMvpActivity;
 import com.inspur.emmcloud.basemodule.util.TabLayoutUtil;
+import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.ui.appcenter.volume.presenter.VolumeFileTransferPresenter;
 
 import java.util.ArrayList;
@@ -24,8 +27,14 @@ import butterknife.ButterKnife;
  *
  * @author zhangyj.lc
  */
-public class VolumeFileTransferActivity extends BaseMvpActivity {
+public class VolumeFileTransferActivity extends BaseMvpActivity implements VolumeFileTransferFragment.SelectCallBack {
 
+    @BindView(R.id.ibt_back)
+    ImageButton backBtn;
+    @BindView(R.id.header_left_text)
+    TextView headerLeftTv;
+    @BindView(R.id.header_right_text)
+    TextView headerRightTv;
     @BindView(R.id.tl_file_transfer)
     TabLayout tabLayout;
     @BindView(R.id.vp_file_transfer)
@@ -45,6 +54,8 @@ public class VolumeFileTransferActivity extends BaseMvpActivity {
 
     private void init() {
         setTitleText(R.string.volume_file_transfer);
+        headerLeftTv.setText(R.string.button_cancel);
+        headerRightTv.setText(R.string.clouddriver_select_all);
         mPresenter = new VolumeFileTransferPresenter();
         mPresenter.attachView(this);
 
@@ -110,9 +121,37 @@ public class VolumeFileTransferActivity extends BaseMvpActivity {
             case R.id.ibt_back:
                 finish();
                 break;
+            case R.id.header_left_text:
+
+                break;
+            case R.id.header_right_text:
+
+                break;
             default:
                 break;
         }
     }
 
+    @Override
+    public void onSelect(List<VolumeFile> selectVolumeFileList) {
+        if (selectVolumeFileList == null || selectVolumeFileList.size() == 0) {
+            setTitleText(R.string.volume_file_transfer);
+            headerLeftTv.setVisibility(View.GONE);
+            headerRightTv.setVisibility(View.GONE);
+            backBtn.setVisibility(View.VISIBLE);
+        } else {
+            setTitleText(getString(R.string.clouddriver_has_selected, selectVolumeFileList.size()));
+            headerLeftTv.setVisibility(View.VISIBLE);
+            headerRightTv.setVisibility(View.VISIBLE);
+            backBtn.setVisibility(View.GONE);
+        }
+    }
+
+    public TextView getHeaderLeftTv() {
+        return headerLeftTv;
+    }
+
+    public TextView getHeaderRightTv() {
+        return headerRightTv;
+    }
 }

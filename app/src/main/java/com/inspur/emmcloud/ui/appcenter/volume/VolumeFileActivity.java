@@ -46,6 +46,7 @@ import com.inspur.emmcloud.ui.appcenter.volume.view.VolumeFileTransferActivity;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
+import com.inspur.emmcloud.util.privates.VolumeFileDownloadManager;
 import com.inspur.emmcloud.util.privates.VolumeFilePrivilegeUtils;
 import com.inspur.emmcloud.util.privates.VolumeFileUploadManager;
 
@@ -94,7 +95,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     public void onCreate() {
         super.onCreate();
         EventBus.getDefault().register(this);
-        this.isShowFileUploading = true;
+        this.isShowFileUploading = false;
         isOpenFromParentDirectory = getIntent().getBooleanExtra("isOpenFromParentDirectory", false);
         setOperationSortText();
         setListIemClick();
@@ -662,8 +663,12 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     @Override
     protected void onResume() {
         setBottomOperationItemShow(adapter.getSelectVolumeFileList());
-        List<VolumeFile> volumeFileUploadList = VolumeFileUploadManager.getInstance().getCurrentFolderUploadVolumeFile(volume.getId(), currentDirAbsolutePath);
-        tipViewLayout.setVisibility(volumeFileUploadList.size() > 0 ? View.VISIBLE : View.GONE);
+        if (VolumeFileUploadManager.getInstance().getAllUploadVolumeFile().size() > 0 ||
+                VolumeFileDownloadManager.getInstance().getAllDownloadVolumeFile().size() > 0) {
+            tipViewLayout.setVisibility(View.VISIBLE);
+        } else {
+            tipViewLayout.setVisibility(View.GONE);
+        }
         super.onResume();
     }
 

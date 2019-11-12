@@ -569,21 +569,23 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
      */
     protected void sortVolumeFileList() {
         sortType = PreferencesByUserAndTanentUtils.getString(this, Constant.PREF_VOLUME_FILE_SORT_TYPE, SORT_BY_NAME_UP);
-        List<VolumeFile> VolumeFileUploadingList = new ArrayList<>();
-        List<VolumeFile> VolumeFileNormalList = new ArrayList<>();
+        List<VolumeFile> volumeFileUploadingList = new ArrayList<>();
+        List<VolumeFile> volumeFileNormalList = new ArrayList<>();
         for (int i = 0; i < volumeFileList.size(); i++) {
             VolumeFile volumeFile = volumeFileList.get(i);
             if (!volumeFile.getStatus().equals("normal")) {
-                VolumeFileUploadingList.add(volumeFile);
+                volumeFileUploadingList.add(volumeFile);
             } else {
-                VolumeFileNormalList.add(volumeFile);
+                volumeFileNormalList.add(volumeFile);
             }
         }
 
-        Collections.sort(VolumeFileNormalList, new FileSortComparable());
+        Collections.sort(volumeFileNormalList, new FileSortComparable());
         volumeFileList.clear();
-        volumeFileList.addAll(VolumeFileUploadingList);
-        volumeFileList.addAll(VolumeFileNormalList);
+        if (isShowFileUploading) {
+            volumeFileList.addAll(volumeFileUploadingList);
+        }
+        volumeFileList.addAll(volumeFileNormalList);
     }
 
     @Override
