@@ -354,7 +354,7 @@
     <string name="chat_filemanager_native">Native Files</string>
     <string name="chat_filemanager_volume">Cloud Drive</string>
     <string name="chat_file_transfer">File transfer</string>
-    <string name="chat_file_transfer_content">Transfer texts,images,audio,and video files between your device and PC</string>
+    <string name="chat_file_transfer_content">Transfer texts,images,audio between your device and PC</string>
     <!--语音通话提示-->
     <string name="voice_communication_end">The chat is over</string>
 
