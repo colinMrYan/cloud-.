@@ -71,10 +71,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="45dp"
+                android:paddingBottom="3dp"
                 android:paddingLeft="5dp"
-                android:paddingTop="3dp"
                 android:paddingRight="10dp"
-                android:paddingBottom="3dp">
+                android:paddingTop="3dp">
 
                 <com.inspur.emmcloud.baselib.widget.FlowLayout
                     android:id="@+id/flowlayout"
@@ -123,6 +123,33 @@
                     android:layout_height="1px"
                     android:background="@color/color_list_divider" />
 
+                <RelativeLayout
+                    android:id="@+id/rl_select_all"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/iv_select_all"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="15dp"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/ic_select_no" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:layout_toLeftOf="@id/iv_select_all"
+                        android:gravity="right"
+                        android:paddingBottom="11dp"
+                        android:paddingTop="12dp"
+                        android:text="@string/select_all"
+                        android:textColor="#888888"
+                        android:textSize="16sp" />
+                </RelativeLayout>
                 <ListView
                     android:id="@+id/open_first_group_list"
                     android:layout_width="match_parent"
@@ -251,7 +278,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="1px"
                         android:background="@color/color_list_divider" />
-
                     <ListView
                         android:id="@+id/second_group_list"
                         android:layout_width="match_parent"

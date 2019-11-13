@@ -121,7 +121,7 @@
             android:onClick="onClick"
             android:paddingLeft="12dp"
             android:paddingRight="12dp"
-            android:text="@string/clouddriver_select_all"
+            android:text="@string/select_all"
             android:textColor="?attr/header_text_color"
             android:textSize="@dimen/header_function_textsize" />
     </RelativeLayout>
@@ -138,8 +138,8 @@
             android:layout_width="match_parent"
             android:layout_height="58dp"
             android:background="#ffffff"
-            android:paddingTop="8dp"
             android:paddingBottom="10dp"
+            android:paddingTop="8dp"
             android:visibility="gone" />
     </RelativeLayout>
 

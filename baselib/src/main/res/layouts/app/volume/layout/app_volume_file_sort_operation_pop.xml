@@ -24,12 +24,12 @@
 
         <ImageView
             android:id="@+id/sort_by_name_up_select_img"
-            android:layout_width="13dp"
-            android:layout_height="13dp"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="12dp"
-            android:src="@drawable/icon_contact_selected">
+            android:src="@drawable/ic_select_yes">
 
         </ImageView>
     </RelativeLayout>
@@ -58,12 +58,12 @@
 
         <ImageView
             android:id="@+id/sort_by_name_down_select_img"
-            android:layout_width="13dp"
-            android:layout_height="13dp"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="12dp"
-            android:src="@drawable/icon_contact_selected">
+            android:src="@drawable/ic_select_yes">
 
         </ImageView>
     </RelativeLayout>
@@ -92,12 +92,12 @@
 
         <ImageView
             android:id="@+id/sort_by_time_up_select_img"
-            android:layout_width="13dp"
-            android:layout_height="13dp"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="12dp"
-            android:src="@drawable/icon_contact_selected">
+            android:src="@drawable/ic_select_yes">
 
         </ImageView>
     </RelativeLayout>
@@ -126,12 +126,12 @@
 
         <ImageView
             android:id="@+id/sort_by_time_down_select_img"
-            android:layout_width="13dp"
-            android:layout_height="13dp"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="12dp"
-            android:src="@drawable/icon_contact_selected">
+            android:src="@drawable/ic_select_yes">
 
         </ImageView>
     </RelativeLayout>

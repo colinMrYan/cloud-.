@@ -273,7 +273,7 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
                 }
                 batchOprationHeaderText.setText(getString(R.string.clouddriver_has_selected, downloadedAdapter.getSelectVolumeFileList().size()));
                 setBottomOperationItemShow(downloadedAdapter.getSelectVolumeFileList());
-                getBatchOprationSelectAllText.setText((volumeFileList.size() == downloadedAdapter.getSelectVolumeFileList().size()) ? R.string.clouddriver_select_nothing : R.string.clouddriver_select_all);
+                getBatchOprationSelectAllText.setText((volumeFileList.size() == downloadedAdapter.getSelectVolumeFileList().size()) ? R.string.clouddriver_select_nothing : R.string.select_all);
                 batchOprationHeaderText.setText(getString(R.string.clouddriver_has_selected, downloadedAdapter.getSelectVolumeFileList().size()));
             }
 
