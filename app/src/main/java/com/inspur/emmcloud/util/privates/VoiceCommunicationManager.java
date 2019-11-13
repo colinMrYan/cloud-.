@@ -1126,6 +1126,10 @@ public class VoiceCommunicationManager {
 
         @Override
         public void returnGetVoiceCommunicationChannelInfoFail(String error, int errorCode) {
+            if (onVoiceCommunicationCallbacks != null) {
+                onVoiceCommunicationCallbacks.onActivityFinish();
+            }
+            handleDestroy();
         }
 
         @Override
