@@ -15,7 +15,7 @@ import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
  */
 
 public class FileTransferDetailActivity extends BaseActivity {
-
+    private static final int QEQUEST_FILE_TRANSFER = 4;
     String cid = "";
     @Override
     public void onCreate() {
@@ -48,6 +48,7 @@ public class FileTransferDetailActivity extends BaseActivity {
                     conversation.setName(conversationName);
                     bundle.putSerializable(ConversationActivity.EXTRA_CONVERSATION, conversation);
                     IntentUtils.startActivity(this, ConversationActivity.class, bundle);
+                    setResult(QEQUEST_FILE_TRANSFER, null);
                     finish();
                 } else {
                     finish();
