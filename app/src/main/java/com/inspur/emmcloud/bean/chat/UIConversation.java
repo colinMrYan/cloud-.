@@ -76,6 +76,9 @@ public class UIConversation implements Serializable {
             case Conversation.TYPE_LINK:
                 icon = conversation.getAvatar();
                 break;
+            case Conversation.TYPE_TRANSFER:
+                icon = "drawable//" + R.drawable.ic_file_transfer;
+                break;
             default:
                 icon = "drawable//" + R.drawable.icon_channel_group_default;
                 break;

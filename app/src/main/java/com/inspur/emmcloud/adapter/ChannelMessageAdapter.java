@@ -78,6 +78,10 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
     }
 
 
+    public List<UIMessage> getAdapterUIMessageList() {
+        return this.UIMessageList;
+    }
+
     public UIMessage getItemData(int position) {
         return this.UIMessageList.get(position);
     }
