@@ -113,7 +113,7 @@ public class ChannelMembersDelActivity extends BaseActivity {
                     .getChannelImgUrl(MyApplication.getInstance(), contactUser.getId()), R.drawable.icon_person_default);
             ((TextView) convertView.findViewById(R.id.title))
                     .setText(contactUser.getName());
-            ((ImageView) convertView.findViewById(R.id.select_img)).setImageResource(memberDelUidList.contains(contactUser.getId()) ? R.drawable.checkbox_pressed : R.drawable.checkbox_normal);
+            ((ImageView) convertView.findViewById(R.id.select_img)).setImageResource(memberDelUidList.contains(contactUser.getId()) ? R.drawable.ic_select_yes : R.drawable.ic_select_no);
             return convertView;
         }
     }
