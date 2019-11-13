@@ -14,10 +14,13 @@
 
     <ImageView
         android:id="@+id/title_img"
-        android:layout_width="14dp"
-        android:layout_height="14dp"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@id/tv_name_tips"
+        android:paddingBottom="1.5dp"
+        android:paddingRight="5dp"
+        android:paddingTop="1.5dp"
         android:scaleType="centerInside"
-        android:src="@drawable/icon_contact_right_arrow" />
+        android:src="@drawable/ic_arrow_right" />
 </RelativeLayout>

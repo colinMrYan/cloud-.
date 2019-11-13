@@ -110,8 +110,6 @@ public class SearchModel implements Serializable {
         final SearchModel otherSearchModel = (SearchModel) other;
         if (!getId().equals(otherSearchModel.getId()))
             return false;
-        if (!getName().equals(otherSearchModel.getName()))
-            return false;
         return getType().equals(otherSearchModel.getType());
     }
 

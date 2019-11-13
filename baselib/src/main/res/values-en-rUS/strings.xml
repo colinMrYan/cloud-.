@@ -146,6 +146,7 @@
     <string name="join">JOIN</string>
     <string name="none">None</string>
     <string name="input_correct_emails">Enter the correct email</string>
+    <string name="select_all">Select All</string>
 
     <!-- 新添加部分 -->
     <string name="alert">Remind</string>
@@ -575,7 +576,6 @@
     <string name="clouddriver_share_volume">Shared Disks</string>
     <string name="clouddriver_input_directory_name">Input folder name</string>
     <string name="clouddriver_input_file_name">Input file name</string>
-    <string name="clouddriver_select_all">Select All</string>
     <string name="clouddriver_select_nothing">Deselect All</string>
     <string name="clouddriver_multi_select">Multi-select</string>
     <string name="clouddriver_has_selected">Selected(%1$d)</string>
