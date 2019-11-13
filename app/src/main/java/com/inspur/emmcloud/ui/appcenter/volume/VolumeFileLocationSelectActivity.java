@@ -152,7 +152,7 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
                     fromVolume = volume;
                 }
                 String operationFileAbsolutePath = getIntent().getStringExtra(EXTRA_OPERATION_FILE_DIR_ABS_PATH);
-                if (operationFileAbsolutePath.equals(currentDirAbsolutePath) && volume.getId().equals(fromVolume.getId())) {
+                if (!isFunctionCopy && operationFileAbsolutePath.equals(currentDirAbsolutePath) && volume.getId().equals(fromVolume.getId())) {
                     ToastUtils.show(getApplicationContext(), R.string.file_exist_current_directory);
                     return;
                 }
