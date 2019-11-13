@@ -541,6 +541,8 @@ public class CommunicationUtils {
             defaultIcon = R.drawable.icon_channel_group_default;
         } else if (type.equals(SearchModel.TYPE_STRUCT)) {
             defaultIcon = R.drawable.ic_contact_sub_struct;
+        } else if (searchModel.getType().equals(SearchModel.TYPE_TRANSFER)) {
+            defaultIcon = R.drawable.ic_file_transfer;
         } else {
             defaultIcon = R.drawable.icon_person_default;
         }
