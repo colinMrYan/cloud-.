@@ -650,7 +650,7 @@
     <string name="clouddriver_volume_upload_file">上传文件</string>
     <string name="clouddriver_volume_upload_image">上传图片</string>
     <string name="clouddriver_volume_upload_take_photo">拍照上传</string>
-    <string name="clouddriver_volume_frist_download">所选本地文件已不存在，请重新下载</string>
+    <string name="clouddriver_volume_frist_download">请先下载文件</string>
     <string name="volume_upload_to_current_directory">上传到当前目录</string>
     <string name="rename">重命名</string>
     <string name="move_to">移动到</string>
