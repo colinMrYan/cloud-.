@@ -57,12 +57,12 @@ import butterknife.ButterKnife;
  * @author zhangyj.lc
  */
 public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransferPresenter> implements VolumeFileTransferContract.View {
-    int currentIndex = 0;
-    @BindView(R.id.volume_file_transfer_empty_layout)
-    View noDataLayout;
     protected static final int SHARE_IMAGE_OR_FILES = 7;
     final List<VolumeActionData> volumeActionDataList = new ArrayList<>();
     final List<VolumeActionData> volumeActionHideList = new ArrayList<>();
+    int currentIndex = 0;
+    @BindView(R.id.volume_file_transfer_empty_layout)
+    View noDataLayout;
     @BindView(R.id.batch_operation_header_text)
     TextView batchOprationHeaderText;
     @BindView(R.id.batch_operation_select_all_text)
@@ -78,7 +78,7 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
 
     List<VolumeFile> volumeFileList = new ArrayList<>();
     VolumeFileTransferPresenter presenter;
-
+    String deleteAction, shareTo; //弹框点击状态
 
     @Nullable
     @Override
@@ -88,8 +88,6 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
         init();
         return rootView;
     }
-
-    String deleteAction, shareTo; //弹框点击状态
 
     private void init() {
         presenter = new VolumeFileTransferPresenter();
@@ -133,7 +131,7 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
                 downloadedAdapter.setVolumeFileSelect(position);
                 batchOprationHeaderText.setText(getString(R.string.clouddriver_has_selected, downloadedAdapter.getSelectVolumeFileList().size()));
                 setBottomOperationItemShow(downloadedAdapter.getSelectVolumeFileList());
-                getBatchOprationSelectAllText.setText((volumeFileList.size() == downloadedAdapter.getSelectVolumeFileList().size()) ? R.string.clouddriver_select_nothing : R.string.clouddriver_select_all);
+                getBatchOprationSelectAllText.setText((volumeFileList.size() == downloadedAdapter.getSelectVolumeFileList().size()) ? R.string.clouddriver_select_nothing : R.string.select_all);
                 batchOprationHeaderText.setText(getString(R.string.clouddriver_has_selected, downloadedAdapter.getSelectVolumeFileList().size()));
             }
 

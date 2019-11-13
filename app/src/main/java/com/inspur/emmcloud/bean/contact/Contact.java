@@ -56,12 +56,23 @@ public class Contact implements Serializable {
         return contactList;
     }
 
+
     public static List<Contact> contactOrgList2ContactList(List<ContactOrg> contactOrgList) {
         List<Contact> contactList = new ArrayList<>();
         for (ContactOrg contactOrg : contactOrgList) {
             contactList.add(new Contact(contactOrg));
         }
         return contactList;
+    }
+
+    public static List<SearchModel> contactList2SearchModelList(List<Contact> contactList) {
+        List<SearchModel> searchModelList = new ArrayList<>();
+        if (contactList != null) {
+            for (Contact contact : contactList) {
+                searchModelList.add(contact.contact2SearchModel());
+            }
+        }
+        return searchModelList;
     }
 
 

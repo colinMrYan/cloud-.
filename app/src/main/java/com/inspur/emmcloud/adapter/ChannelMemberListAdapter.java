@@ -126,7 +126,7 @@ public class ChannelMemberListAdapter extends BaseAdapter implements SectionInde
         }
         if (selectedUserList.contains(dto)) {
             holder.selectedImg.setVisibility(View.VISIBLE);
-            holder.selectedImg.setImageResource(lastSelectUserList.contains(dto) ? R.drawable.icon_self_selected : R.drawable.icon_other_selected);
+            holder.selectedImg.setImageResource(lastSelectUserList.contains(dto) ? R.drawable.ic_select_not_cancel : R.drawable.ic_select_yes);
         } else {
             holder.selectedImg.setVisibility(View.INVISIBLE);
         }
