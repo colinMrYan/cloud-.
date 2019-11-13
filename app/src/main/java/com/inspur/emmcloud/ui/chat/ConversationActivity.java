@@ -1045,27 +1045,25 @@ public class ConversationActivity extends ConversationBaseActivity {
      */
     private void showConversationInfo() {
         Bundle bundle = new Bundle();
+        Intent intent;
         switch (conversation.getType()) {
             case Conversation.TYPE_GROUP:
             case Conversation.TYPE_DIRECT:
                 bundle.putString(ConversationInfoActivity.EXTRA_CID, conversation.getId());
-                Intent intent = new Intent(this, ConversationInfoActivity.class);
+                intent = new Intent(this, ConversationInfoActivity.class);
                 intent.putExtras(bundle);
                 startActivityForResult(intent, REQUEST_QUIT_CHANNELGROUP);
                 break;
             case Conversation.TYPE_CAST:
                 bundle.putSerializable(ConversationCastInfoActivity.EXTRA_CID, conversation.getId());
                 IntentUtils.startActivity(ConversationActivity.this,
-                        FileTransferDetailActivity.class, bundle);
-
-//                bundle.putSerializable(ConversationCastInfoActivity.EXTRA_CID, conversation.getId());
-//                IntentUtils.startActivity(ConversationActivity.this,
-//                        ConversationCastInfoActivity.class, bundle);
+                        ConversationCastInfoActivity.class, bundle);
                 break;
             case Conversation.TYPE_TRANSFER:
                 bundle.putSerializable(ConversationCastInfoActivity.EXTRA_CID, conversation.getId());
-                IntentUtils.startActivity(ConversationActivity.this,
-                        FileTransferDetailActivity.class, bundle);
+                intent = new Intent(this, ConversationInfoActivity.class);
+                intent.putExtras(bundle);
+                startActivityForResult(intent, REQUEST_QUIT_CHANNELGROUP);
                 break;
             default:
                 break;

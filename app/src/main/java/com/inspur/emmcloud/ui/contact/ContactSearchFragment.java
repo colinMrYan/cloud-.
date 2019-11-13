@@ -562,7 +562,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                     getString(R.string.all), ""));
         }
         openGroupTextList.add(new FirstGroupTextModel(name, id));
-        openGroupContactList = ContactOrgCacheUtils.getChildContactList(id, excludeContactUidList);
+        openGroupContactList = ContactOrgCacheUtils.getChildContactList(id, null);
         originCurrentArea = SEARCH_CONTACT;
         isSearchSingle = true;
         displayOpenLayout();

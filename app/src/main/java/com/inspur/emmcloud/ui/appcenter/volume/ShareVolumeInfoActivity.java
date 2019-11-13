@@ -292,6 +292,7 @@ public class ShareVolumeInfoActivity extends BaseActivity {
                 loadingDlg.show();
             }
             apiService.getVolumeInfo(volume.getId());
+            getVolumeGroupContainMe();
         }
     }
 
