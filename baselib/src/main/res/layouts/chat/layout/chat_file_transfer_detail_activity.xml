@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
@@ -71,28 +70,5 @@
         android:textColor="#333333"
         android:textSize="16sp" />
 
-    <com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButton
-        android:id="@+id/bt_send_message"
-        android:layout_width="wrap_content"
-        android:layout_height="42dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="45dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp"
-        android:layout_marginTop="40dp"
-        android:elevation="1dp"
-        android:gravity="center"
-        android:onClick="onClick"
-        android:paddingLeft="60dp"
-        android:paddingRight="60dp"
-        android:text="@string/user_send_message"
-        android:textAllCaps="false"
-        android:textColor="@android:color/white"
-        android:textSize="16sp"
-        app:cus_backgroundColor="#36A5F6"
-        app:cus_borderWidth="0dp"
-        app:cus_isRadiusAdjustBounds="true" />
 
 </LinearLayout>
