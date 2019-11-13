@@ -50,7 +50,6 @@ public class VolumeFilePrivilegeUtils {
      * @return
      */
     public static boolean getVolumeFileWritable(Context context, VolumeFile volumeFile) {
-        try {
             int privilege = 0;
             String myUid = MyApplication.getInstance().getUid();
             LogUtils.jasonDebug("======myUid=" + myUid);
@@ -72,7 +71,7 @@ public class VolumeFilePrivilegeUtils {
                             privilegeList.add(groupPrivilege);
                         }
                     }
-                    privilege = Collections.max(privilegeList);
+                    privilege = privilegeList.size() == 0 ? 0 : Collections.max(privilegeList);
                 } else {
                     LogUtils.jasonDebug("===========没有自己所属组数据");
                     privilege = volumeFile.getOthersPrivilege();
@@ -80,11 +79,6 @@ public class VolumeFilePrivilegeUtils {
             }
             LogUtils.jasonDebug("===========最终privilege=" + privilege);
             return (privilege > 4);
-        } catch (Exception e) {
-            LogUtils.jasonDebug("===========最终privilege Error::" + e.getMessage());
-            e.printStackTrace();
-            return false;
-        }
     }
 
     /**
@@ -116,7 +110,7 @@ public class VolumeFilePrivilegeUtils {
                         privilegeList.add(groupPrivilege);
                     }
                 }
-                privilege = Collections.max(privilegeList);
+                privilege = privilegeList.size() == 0 ? 0 : Collections.max(privilegeList);
             } else {
                 LogUtils.jasonDebug("===========没有自己所属组数据");
                 privilege = volumeFile.getOthersPrivilege();
@@ -143,7 +137,7 @@ public class VolumeFilePrivilegeUtils {
                         privilegeList.add(groupPrivilege);
                     }
                 }
-                privilege = Collections.max(privilegeList);
+                privilege = privilegeList.size() == 0 ? 0 : Collections.max(privilegeList);
             } else {
                 privilege = getVolumeFileListResult.getOthersPrivilege();
             }

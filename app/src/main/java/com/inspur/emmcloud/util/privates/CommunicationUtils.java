@@ -84,6 +84,8 @@ public class CommunicationUtils {
             title = DirectChannelUtils.getDirectChannelTitle(MyApplication.getInstance(), title);
         } else if (conversation.getType().equals(Conversation.TYPE_CAST)) {
             title = DirectChannelUtils.getRobotInfo(MyApplication.getInstance(), title).getName();
+        } else if (conversation.getType().equals(Conversation.TYPE_TRANSFER)) {
+            title = BaseApplication.getInstance().getString(R.string.chat_file_transfer);
         }
         return title;
     }

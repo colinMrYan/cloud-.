@@ -37,6 +37,7 @@ public class ConversationInfoPresenter extends BasePresenter<ConversationInfoCon
 
     private static final int QEQUEST_ADD_MEMBER = 2;
     private static final int QEQUEST_DEL_MEMBER = 3;
+    private static final int QEQUEST_FILE_TRANSFER = 4;
 
     Conversation mConversation = new Conversation();
 
@@ -65,13 +66,16 @@ public class ConversationInfoPresenter extends BasePresenter<ConversationInfoCon
             contactUserIdList.add(contactUser.getId());
         }
         uiMemberUidList.addAll(contactUserIdList);
-        if (isOwner) {
-            uiMemberUidList.add("addUser");
-            uiMemberUidList.add("deleteUser");
+        if (conversation.getType().equals(Conversation.TYPE_TRANSFER)) {
+            uiMemberUidList.add("fileTransfer");
         } else {
-            uiMemberUidList.add("addUser");
+            if (isOwner) {
+                uiMemberUidList.add("addUser");
+                uiMemberUidList.add("deleteUser");
+            } else {
+                uiMemberUidList.add("addUser");
+            }
         }
-
         return uiMemberUidList;
     }
 
@@ -79,8 +83,12 @@ public class ConversationInfoPresenter extends BasePresenter<ConversationInfoCon
     public List<String> getConversationSingleChatUIMembersUid(Conversation conversation) {
         List<String> uiUidList = new ArrayList<>();
         String uid = CommunicationUtils.getDirectChannelOtherUid(MyApplication.getInstance(), conversation.getName());
-        uiUidList.add(uid);
-        uiUidList.add("addUser");
+        if (conversation.getType().equals(Conversation.TYPE_TRANSFER)) {
+            uiUidList.add("fileTransfer");
+        } else {
+            uiUidList.add(uid);
+            uiUidList.add("addUser");
+        }
         return uiUidList;
     }
 
@@ -424,6 +432,9 @@ public class ConversationInfoPresenter extends BasePresenter<ConversationInfoCon
                         mView.showLoading();
                         delConversationMembers(delUidList, mConversation.getId());
                     }
+                    break;
+                case QEQUEST_FILE_TRANSFER:
+                    mView.activityFinish();
                     break;
                 default:
                     break;

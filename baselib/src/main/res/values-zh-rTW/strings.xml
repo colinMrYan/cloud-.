@@ -151,6 +151,7 @@
     <string name="mins">分鐘</string>
     <string name="join">加入</string>
     <string name="none">无</string>
+    <string name="select_all">全選</string>
 
 
     <!-- 新添加部分 -->
@@ -358,7 +359,7 @@
     <string name="chat_filemanager_native">本地文件</string>
     <string name="chat_filemanager_volume">企業雲盤</string>
     <string name="chat_file_transfer">文件傳輸助手</string>
-    <string name="chat_file_transfer_content">登錄雲+桌面版，向文件傳輸助手發消息，可以在手機與電腦間傳輸文字、圖片、音頻、視頻等文件。</string>
+    <string name="chat_file_transfer_content">登錄雲+桌面版，向文件傳輸助手發消息，可以在手機與電腦間傳輸文字、圖片、音頻等文件。</string>
     <!--语音通话提示-->
     <string name="voice_communication_end">聊天已結束</string>
 
@@ -572,7 +573,6 @@
     <string name="clouddriver_share_volume">共用網盤</string>
     <string name="clouddriver_input_file_name">請輸入檔案名稱</string>
     <string name="clouddriver_input_directory_name">請輸入資料夾名稱</string>
-    <string name="clouddriver_select_all">全選</string>
     <string name="clouddriver_select_nothing">全不選</string>
     <string name="clouddriver_multi_select">多選</string>
     <string name="clouddriver_has_selected">已選擇(%1$d)</string>

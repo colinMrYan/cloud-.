@@ -425,7 +425,7 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
     private void updateView(View view, int visible) {
         ImageView imageView = view.findViewById(R.id.img_member_selected);
         imageView.setVisibility(visible);
-        imageView.setImageResource(R.drawable.icon_other_selected);
+        imageView.setImageResource(R.drawable.ic_select_yes);
     }
 
 

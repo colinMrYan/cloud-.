@@ -146,6 +146,7 @@
     <string name="join">JOIN</string>
     <string name="none">None</string>
     <string name="input_correct_emails">Enter the correct email</string>
+    <string name="select_all">Select All</string>
 
     <!-- 新添加部分 -->
     <string name="alert">Remind</string>
@@ -354,7 +355,7 @@
     <string name="chat_filemanager_native">Native Files</string>
     <string name="chat_filemanager_volume">Cloud Drive</string>
     <string name="chat_file_transfer">File transfer</string>
-    <string name="chat_file_transfer_content">Transfer texts,images,audio,and video files between your device and PC</string>
+    <string name="chat_file_transfer_content">Transfer texts,images,audio between your device and PC</string>
     <!--语音通话提示-->
     <string name="voice_communication_end">The chat is over</string>
 
@@ -575,7 +576,6 @@
     <string name="clouddriver_share_volume">Shared Disks</string>
     <string name="clouddriver_input_directory_name">Input folder name</string>
     <string name="clouddriver_input_file_name">Input file name</string>
-    <string name="clouddriver_select_all">Select All</string>
     <string name="clouddriver_select_nothing">Deselect All</string>
     <string name="clouddriver_multi_select">Multi-select</string>
     <string name="clouddriver_has_selected">Selected(%1$d)</string>

@@ -27,10 +27,10 @@
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginRight="10dp"
             android:layout_marginBottom="4dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="4dp"
             android:src="@drawable/icon_org_structure" />
 
         <RelativeLayout
@@ -63,11 +63,11 @@
 
         <ImageView
             android:id="@+id/img_member_selected"
-            android:layout_width="39dp"
-            android:layout_height="36dp"
-            android:layout_centerVertical="true"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
             android:layout_alignParentRight="true"
-            android:padding="9dp" />
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp" />
 
         <View
             android:layout_width="match_parent"

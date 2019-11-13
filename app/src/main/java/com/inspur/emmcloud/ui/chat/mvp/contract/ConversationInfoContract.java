@@ -38,6 +38,8 @@ public interface ConversationInfoContract {
 
         void createGroupSuccess(Conversation conversation);
 
+        void activityFinish();
+
     }
 
     interface Presenter {
