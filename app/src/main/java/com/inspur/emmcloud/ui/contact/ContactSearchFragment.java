@@ -680,7 +680,9 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                 continue;
             }
             if (isSetSelectAll) {
-                selectMemList.add(searchModel);
+                if (!selectMemList.contains(searchModel)) {
+                    selectMemList.add(searchModel);
+                }
                 currentSelectAllSearchModelList.add(searchModel);
             } else {
                 selectMemList.remove(searchModel);
