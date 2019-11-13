@@ -1530,7 +1530,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                 } else {
                     viewHolder.selectedImg.setVisibility(View.VISIBLE);
                     if (isHaveStaticSearchModel(searchModel)) {
-                        viewHolder.selectedImg.setImageResource(R.drawable.icon_self_selected);
+                        viewHolder.selectedImg.setImageResource(R.drawable.ic_select_not_cancel);
                     } else if (selectMemList.contains(searchModel)) {
                         viewHolder.selectedImg.setImageResource(R.drawable.ic_select_yes);
                     } else {
@@ -1591,7 +1591,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
             } else {
                 viewHolder.selectedImg.setVisibility(View.VISIBLE);
                 if (isHaveStaticSearchModel(searchModel)) {
-                    viewHolder.selectedImg.setImageResource(R.drawable.icon_self_selected);
+                    viewHolder.selectedImg.setImageResource(R.drawable.ic_select_not_cancel);
                 } else if (selectMemList.contains(searchModel)) {
                     viewHolder.selectedImg.setImageResource(R.drawable.ic_select_yes);
                 } else {
@@ -1672,7 +1672,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
             } else {
                 viewHolder.selectedImg.setVisibility(View.VISIBLE);
                 if (isHaveStaticSearchModel(searchModel)) {
-                    viewHolder.selectedImg.setImageResource(R.drawable.icon_self_selected);
+                    viewHolder.selectedImg.setImageResource(R.drawable.ic_select_not_cancel);
                 } else if (selectMemList.contains(searchModel)) {
                     viewHolder.selectedImg.setImageResource(R.drawable.ic_select_yes);
                 } else {
