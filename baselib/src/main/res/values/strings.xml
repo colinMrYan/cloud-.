@@ -151,6 +151,7 @@
     <string name="join">加入</string>
     <string name="none">无</string>
     <string name="input_correct_emails">请输入正确的的电子邮箱地址</string>
+    <string name="select_all">全选</string>
 
 
     <!-- 新添加部分 -->
@@ -589,7 +590,6 @@
     <string name="clouddriver_share_volume">共享网盘</string>
     <string name="clouddriver_input_file_name">请输入文件名称</string>
     <string name="clouddriver_input_directory_name">请输入文件夹名称</string>
-    <string name="clouddriver_select_all">全选</string>
     <string name="clouddriver_select_nothing">全不选</string>
     <string name="clouddriver_multi_select">多选</string>
     <string name="clouddriver_has_selected">已选择(%1$d)</string>

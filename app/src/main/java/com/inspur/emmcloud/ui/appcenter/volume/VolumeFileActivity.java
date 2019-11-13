@@ -125,7 +125,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                 adapter.setVolumeFileSelect(position);
                 batchOprationHeaderText.setText(getString(R.string.clouddriver_has_selected, adapter.getSelectVolumeFileList().size()));
                 setBottomOperationItemShow(adapter.getSelectVolumeFileList());
-                getBatchOprationSelectAllText.setText((volumeFileList.size() == adapter.getSelectVolumeFileList().size()) ? R.string.clouddriver_select_nothing : R.string.clouddriver_select_all);
+                getBatchOprationSelectAllText.setText((volumeFileList.size() == adapter.getSelectVolumeFileList().size()) ? R.string.clouddriver_select_nothing : R.string.select_all);
                 batchOprationHeaderText.setText(getString(R.string.clouddriver_has_selected, adapter.getSelectVolumeFileList().size()));
             }
 
@@ -293,7 +293,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                 setMutiSelect(true);
                 break;
             case R.id.batch_operation_select_all_text:
-                boolean isSelectAllStatus = getBatchOprationSelectAllText.getText().toString().equals(getString(R.string.clouddriver_select_all));
+                boolean isSelectAllStatus = getBatchOprationSelectAllText.getText().toString().equals(getString(R.string.select_all));
                 setSelectAll(isSelectAllStatus);
                 setBottomOperationItemShow(adapter.getSelectVolumeFileList());
                 break;
@@ -452,7 +452,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
      * @param isMutiselect
      */
     private void setMutiSelect(boolean isMutiselect) {
-        getBatchOprationSelectAllText.setText(R.string.clouddriver_select_all);
+        getBatchOprationSelectAllText.setText(R.string.select_all);
         batchOprationHeaderText.setText(getString(R.string.clouddriver_has_selected, 0));
         batchOprationHeaderLayout.setVisibility(isMutiselect ? View.VISIBLE : View.GONE);
         adapter.setShowFileOperationDropDownImg(!isMutiselect);
@@ -460,7 +460,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     }
 
     private void setSelectAll(boolean isSelectAll) {
-        getBatchOprationSelectAllText.setText(isSelectAll ? R.string.clouddriver_select_nothing : R.string.clouddriver_select_all);
+        getBatchOprationSelectAllText.setText(isSelectAll ? R.string.clouddriver_select_nothing : R.string.select_all);
         adapter.setSelectAll(isSelectAll);
         batchOprationHeaderText.setText(getString(R.string.clouddriver_has_selected, adapter.getSelectVolumeFileList().size()));
     }
