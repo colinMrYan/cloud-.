@@ -67,8 +67,7 @@ public class VolumeFileDownloadManager extends APIInterfaceInstance {
      * @return
      */
     public List<VolumeFile> getAllDownloadVolumeFile() {
-        List<VolumeFile> volumeFileList = VolumeFileDownloadCacheUtils.getVolumeFileListInDownloading();
-        return volumeFileList;
+        return volumeFileDownloadList;
     }
 
     public void setBusinessProgressCallback(VolumeFile volumeFile, final ProgressCallback businessProgressCallback) {
@@ -106,8 +105,9 @@ public class VolumeFileDownloadManager extends APIInterfaceInstance {
                     if (downloadVolumeFile.getCancelable() != null) {
                         Log.d("zhang", "cancelDownloadVolumeFile: success");
                         downloadVolumeFile.getCancelable().cancel();
-                        downloadVolumeFile.setCancelable(null);
                     }
+                    downloadVolumeFile.setCancelable(null);
+                    Log.d("zhang", "cancelDownloadVolumeFile: STATUS_DOWNLOAD_PAUSE");
                     downloadVolumeFile.setStatus(VolumeFile.STATUS_DOWNLOAD_PAUSE);
                     VolumeFileDownloadCacheUtils.saveVolumeFile(downloadVolumeFile);
                     break;
@@ -138,6 +138,7 @@ public class VolumeFileDownloadManager extends APIInterfaceInstance {
         volumeFile.setCompleteSize(volumeFile.getProgress() / 100 * volumeFile.getSize());
         if (!isReload) {
             volumeFileDownloadList.add(volumeFile);
+            VolumeFileDownloadCacheUtils.saveVolumeFileList(volumeFileDownloadList);
         } else {
             for (int i = 0; i < volumeFileDownloadList.size(); i++) {
                 VolumeFile downloadVolumeFile = volumeFileDownloadList.get(i);
@@ -170,12 +171,14 @@ public class VolumeFileDownloadManager extends APIInterfaceInstance {
                 return params;
             }
         });
-        Callback.Cancelable cancelable = x.http().get(params, callBack);
         for (int i = 0; i < volumeFileDownloadList.size(); i++) {
             VolumeFile downloadVolumeFile = volumeFileDownloadList.get(i);
             if (volumeFile.getId().equals(downloadVolumeFile.getId())) {
-                downloadVolumeFile.setCancelable(cancelable);
-                VolumeFileDownloadCacheUtils.saveVolumeFile(downloadVolumeFile);
+                if (downloadVolumeFile.getCancelable() == null) {
+                    Callback.Cancelable cancelable = x.http().get(params, callBack);
+                    downloadVolumeFile.setCancelable(cancelable);
+                    VolumeFileDownloadCacheUtils.saveVolumeFile(downloadVolumeFile);
+                }
                 break;
             }
         }

@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,7 @@ import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.ui.BaseMvpFragment;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.basemodule.util.ClickRuleUtil;
 import com.inspur.emmcloud.basemodule.util.FileDownloadManager;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
@@ -152,6 +154,9 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
 
     @OnClick(R.id.operation_total_btn)
     public void onClick(View v) {
+        if (ClickRuleUtil.isFastClick()) {
+            return;
+        }
         switch (v.getId()) {
             case R.id.operation_total_btn:
                 switch (currentIndex) {
@@ -178,11 +183,12 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
             operationTotalBtn.setSelected(false);
             for (VolumeFile volumeFile : volumeFileList) {
                 volumeFile.setStatus(VolumeFile.STATUS_DOWNLOAD_IND);
-                VolumeFileDownloadManager.getInstance().downloadFile(volumeFile, volumeFile.getVolumeFileAbsolutePath());
+                VolumeFileDownloadManager.getInstance().reDownloadFile(volumeFile, volumeFile.getVolumeFileAbsolutePath());
             }
         } else {
             operationTotalBtn.setSelected(true);
             for (VolumeFile volumeFile : volumeFileList) {
+                Log.d("zhang", "handleDownloadOperation: STATUS_DOWNLOAD_PAUSE");
                 volumeFile.setStatus(VolumeFile.STATUS_DOWNLOAD_PAUSE);
                 VolumeFileDownloadManager.getInstance().cancelDownloadVolumeFile(volumeFile);
             }
@@ -240,6 +246,8 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
                 operationTotalLayout.setVisibility(fileList.size() > 0 ? View.VISIBLE : View.GONE);
                 if (fileList.size() == 0) {
                     showNoDataLayout();
+                } else {
+
                 }
             }
 
@@ -331,10 +339,13 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
             headerLeftTv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (ClickRuleUtil.isFastClick()) {
+                        return;
+                    }
                     downloadedAdapter.clearSelectedVolumeFileList();
                     downloadedAdapter.notifyDataSetChanged();
                     if (selectCallBack != null) {
-                        selectCallBack.onSelect(null);
+                        selectCallBack.onSelect(new ArrayList<VolumeFile>());
                     }
                     setBottomOperationItemShow(downloadedAdapter.getSelectVolumeFileList());
                 }
@@ -342,6 +353,9 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
             headerRightTv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (ClickRuleUtil.isFastClick()) {
+                        return;
+                    }
                     List<VolumeFile> list = new ArrayList<>(volumeFileList);
                     downloadedAdapter.setSelectVolumeFileList(list);
                     downloadedAdapter.notifyDataSetChanged();
@@ -398,7 +412,7 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
             downloadedAdapter.clearSelectedVolumeFileList();
             downloadedAdapter.notifyDataSetChanged();
             if (selectCallBack != null) {
-                selectCallBack.onSelect(null);
+                selectCallBack.onSelect(new ArrayList<VolumeFile>());
             }
             setBottomOperationItemShow(new ArrayList<VolumeFile>());
         }

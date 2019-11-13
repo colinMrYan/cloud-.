@@ -65,12 +65,16 @@ public class VolumeFileTransferActivity extends BaseMvpActivity implements Volum
         initFragmentList();
         TabLayoutUtil.setTabLayoutWidth(this, tabLayout);
         tabLayout.getTabAt(0).select();
+        onSelect(new ArrayList<VolumeFile>());
 
         viewPager.setAdapter(adapter);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
+                if (tab.getPosition() != 2) {
+                    onSelect(new ArrayList<VolumeFile>());
+                }
             }
 
             @Override
@@ -120,12 +124,6 @@ public class VolumeFileTransferActivity extends BaseMvpActivity implements Volum
         switch (v.getId()) {
             case R.id.ibt_back:
                 finish();
-                break;
-            case R.id.header_left_text:
-
-                break;
-            case R.id.header_right_text:
-
                 break;
             default:
                 break;

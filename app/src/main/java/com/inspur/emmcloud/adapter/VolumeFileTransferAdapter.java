@@ -227,8 +227,8 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
             VolumeFileUploadManager.getInstance().reUploadFile(volumeFile);
         } else if (status.equals(VolumeFile.STATUS_DOWNLOAD_IND)) {
             //暂停下载
+            Log.d("zhang", "changeStatus: STATUS_DOWNLOAD_PAUSE");
             fileList.get(position).setStatus(VolumeFile.STATUS_DOWNLOAD_PAUSE);
-            Log.d("zhang", "changeStatus: cancelDownloadVolumeFile");
             VolumeFileDownloadManager.getInstance().cancelDownloadVolumeFile(volumeFile);
             VolumeFileDownloadCacheUtils.saveVolumeFile(volumeFile);
         } else if (status.equals(VolumeFile.STATUS_DOWNLOAD_PAUSE)) {
