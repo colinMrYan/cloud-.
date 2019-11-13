@@ -70,6 +70,8 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
     TextView conversationNameTextView;
     @BindView(R.id.rl_more_members)
     RelativeLayout moreMembersLayout;
+    @BindView(R.id.rl_conversation_mute_notification)
+    RelativeLayout muteNotificationLayout;
     @BindView(R.id.switch_conversation_sticky)
     SwitchCompat conversationStickySwitch;
     @BindView(R.id.switch_conversation_mute_notification)
@@ -139,6 +141,7 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
             conversationQuitLayout.setVisibility(View.GONE);
             searchRecordLayout.setVisibility(View.GONE);
             searchRecordMarginLayout.setVisibility(View.VISIBLE);
+            muteNotificationLayout.setVisibility(uiConversation.getType().equals(Conversation.TYPE_TRANSFER) ? View.GONE : View.VISIBLE);
         }
         channelMembersHeadAdapter = new ConversationMembersHeadAdapter(this, isOwner, uiUidList);
         conversationMembersHeadRecyclerView.setAdapter(channelMembersHeadAdapter);
