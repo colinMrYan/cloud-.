@@ -167,7 +167,7 @@
                     android:layout_height="38dp"
                     android:layout_gravity="center_horizontal"
                     android:padding="2dp"
-                    android:src="@drawable/icon_mute_unselcected" />
+                    android:src="@drawable/icon_mute_unselected" />
 
                 <TextView
                     android:id="@+id/tv_mute"
@@ -195,7 +195,7 @@
                     android:layout_height="38dp"
                     android:layout_gravity="center_horizontal"
                     android:padding="2dp"
-                    android:src="@drawable/icon_excuse_unselected" />
+                    android:src="@drawable/icon_mute_unselected" />
 
                 <TextView
                     android:id="@+id/tv_an_excuse"

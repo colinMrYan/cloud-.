@@ -367,7 +367,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 muteImg.setSelected(voiceCommunicationManager.isMute());
                 handsFreeImg.setImageResource(voiceCommunicationManager.isHandsFree() ? R.drawable.icon_hands_free_selected : R.drawable.icon_hands_free_unselected);
                 handsFreeTv.setTextColor(voiceCommunicationManager.isHandsFree() ? colorSelected : colorUnSelected);
-                muteImg.setImageResource(voiceCommunicationManager.isMute() ? R.drawable.icon_mute_selected : R.drawable.icon_mute_unselcected);
+                muteImg.setImageResource(voiceCommunicationManager.isMute() ? R.drawable.icon_mute_selected : R.drawable.icon_mute_unselected);
                 muteTv.setTextColor(voiceCommunicationManager.isMute() ? colorSelected : colorUnSelected);
             } else if (directOrGroupType.equals(Conversation.TYPE_DIRECT)) {
                 directHandFreeImg.setSelected(voiceCommunicationManager.isHandsFree());
@@ -437,11 +437,11 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             int colorUnavailiable = ContextCompat.getColor(this, R.color.voice_communication_function_unavailiable_text);
             if (directOrGroupType.equals(Conversation.TYPE_GROUP)) {
                 answerPhoneImg.setVisibility((voiceCommunicationManager.isInviteePre()) ? View.VISIBLE : View.GONE);
-                excuseImg.setImageResource(voiceCommunicationManager.isCommunicationIng() ? R.drawable.icon_excuse_unselected : R.drawable.icon_excuse_unavailable);
+                excuseImg.setImageResource(voiceCommunicationManager.isCommunicationIng() ? R.drawable.icon_mute_unselected : R.drawable.icon_mute_unavailable);
                 excuseTv.setTextColor(voiceCommunicationManager.isCommunicationIng() ? colorNormal : colorUnavailiable);
                 handsFreeImg.setImageResource(voiceCommunicationManager.isCommunicationIng() ? R.drawable.icon_hands_free_unselected : R.drawable.icon_hands_free_unavailable);
                 handsFreeTv.setTextColor(voiceCommunicationManager.isCommunicationIng() ? colorNormal : colorUnavailiable);
-                muteImg.setImageResource(voiceCommunicationManager.isCommunicationIng() ? R.drawable.icon_mute_unselcected : R.drawable.icon_mute_unavaiable);
+                muteImg.setImageResource(voiceCommunicationManager.isCommunicationIng() ? R.drawable.icon_mute_unselected : R.drawable.icon_mute_unavailable);
                 muteTv.setTextColor(voiceCommunicationManager.isCommunicationIng() ? colorNormal : colorUnavailiable);
             } else if (directOrGroupType.equals(Conversation.TYPE_DIRECT)) {
                 directMuteLayout.setVisibility(voiceCommunicationManager.isCommunicationIng() || voiceCommunicationManager.isInviterPre() ? View.VISIBLE : View.GONE);
@@ -806,7 +806,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             case R.id.img_an_excuse:
                 switchFunctionViewUIState(excuseImg, excuseTv);
                 voiceCommunicationManager.muteAllRemoteAudioStreams(excuseImg.isSelected());
-                excuseImg.setImageResource(excuseImg.isSelected() ? R.drawable.icon_excuse_selected : R.drawable.icon_excuse_unselected);
+                excuseImg.setImageResource(excuseImg.isSelected() ? R.drawable.icon_mute_selected : R.drawable.icon_mute_unselected);
                 break;
             case R.id.ll_hands_free_direct:
                 handleFunctionState(directHandFreeImg, directHandFreeTv, R.drawable.icon_direct_hands_free_selected, R.drawable.icon_direct_hands_free, 2);
@@ -815,7 +815,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 handleFunctionState(handsFreeImg, handsFreeTv, R.drawable.icon_hands_free_selected, R.drawable.icon_hands_free_unselected, 2);
                 break;
             case R.id.ll_group_mute:
-                handleFunctionState(muteImg, muteTv, R.drawable.icon_mute_selected, R.drawable.icon_mute_unselcected, 1);
+                handleFunctionState(muteImg, muteTv, R.drawable.icon_mute_selected, R.drawable.icon_mute_unselected, 1);
                 break;
             case R.id.ll_mute_direct:
                 handleFunctionState(directMuteImg, directMuteTv, R.drawable.icon_direct_mute_selected, R.drawable.icon_direct_mute, 1);
