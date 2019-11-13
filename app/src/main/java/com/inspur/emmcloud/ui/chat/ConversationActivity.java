@@ -252,7 +252,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             position = cacheMessageList.size() - 1;
         }
         List<UIMessage> uiMessageListNew = UIMessage.MessageList2UIMessageList(cacheMessageList);
-        if (!ListUtils.isListEqual(uiMessageListNew, uiMessageList)) {
+        if (!ListUtils.isListEqual(uiMessageListNew, adapter.getAdapterUIMessageList())) {
             uiMessageList = uiMessageListNew;
             adapter.setMessageList(uiMessageList);
             adapter.notifyDataSetChanged();
