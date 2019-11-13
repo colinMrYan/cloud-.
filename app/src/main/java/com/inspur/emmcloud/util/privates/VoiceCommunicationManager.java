@@ -953,6 +953,7 @@ public class VoiceCommunicationManager {
             countDownTimer.cancel();
             countDownTimer = null;
         }
+        NotifyUtil.deleteNotify(BaseApplication.getInstance());
 //        if (countDownOnlyOneConnectLeftTimer != null) {
 //            countDownOnlyOneConnectLeftTimer.cancel();
 //            countDownOnlyOneConnectLeftTimer = null;

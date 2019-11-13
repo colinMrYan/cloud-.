@@ -243,6 +243,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         voiceCommunicationManager.initializeAgoraEngine();
         init();
         registerReceiver();
+        NotifyUtil.sendNotifyMsg(this);
     }
 
     @Override
@@ -250,7 +251,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         super.onStart();
         voiceCommunicationManager.startCountDownTimer();
         checkHasPermission();
-        NotifyUtil.deleteNotify(this);
     }
 
     private void init() {

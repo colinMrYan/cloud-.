@@ -15,10 +15,9 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
-import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
+import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity;
-
-import java.util.List;
+import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 
 import static com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_OVER;
 
@@ -45,20 +44,13 @@ public class NotifyUtil {
             NotifyUtil notifyUtil = new NotifyUtil(context);
             String title = "";
             String content = "";
-            List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationMemberList =
-                    VoiceCommunicationManager.getInstance().getVoiceCommunicationMemberList();
-            if (voiceCommunicationMemberList == null) {
-                return;
-            }
-            if (voiceCommunicationMemberList.size() > 2) {  //群聊
+            Conversation conversation = ConversationCacheUtils.getConversation(BaseApplication.getInstance(), VoiceCommunicationManager.getInstance().getCloudPlusChannelId());
+            String directOrGroupType = conversation.getType();
+            if (directOrGroupType.equals(Conversation.TYPE_GROUP)) {  //群聊
                 title = context.getResources().getString(R.string.voice_communication_notification_group_title);
                 content = context.getResources().getString(R.string.voice_communication_notification_group_content);
-            } else if (voiceCommunicationMemberList.size() == 2) {    //单聊
-                for (VoiceCommunicationJoinChannelInfoBean bean : voiceCommunicationMemberList) {
-                    if (!bean.getUserId().equals(BaseApplication.getInstance().getUid())) {
-                        title = bean.getUserName();
-                    }
-                }
+            } else if (directOrGroupType.equals(Conversation.TYPE_DIRECT)) {    //单聊
+                title = conversation.getShowName();
                 content = context.getResources().getString(R.string.voice_communication_notification_content);
             } else {
                 return;
