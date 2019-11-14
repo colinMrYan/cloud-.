@@ -288,6 +288,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
 
     private void openChannel(SearchModel searchModel) {
         switch (searchModel.getType()) {
+            case SearchModel.TYPE_DIRECT:
             case SearchModel.TYPE_GROUP:
                 startChannelActivity(searchModel.getId());
                 break;
@@ -538,6 +539,9 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             defaultIcon = R.drawable.ic_contact_sub_struct;
         } else if (type.equals(SearchModel.TYPE_TRANSFER)) {
             defaultIcon = R.drawable.ic_file_transfer;
+        } else if (type.equals(SearchModel.TYPE_DIRECT)) {
+            defaultIcon = R.drawable.icon_person_default;
+            icon = CommunicationUtils.getHeadUrl(searchModel);
         } else {
             defaultIcon = R.drawable.icon_person_default;
             if (!searchModel.getId().equals("null")) {
