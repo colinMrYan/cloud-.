@@ -72,6 +72,8 @@ public class ShareVolumeInfoActivity extends BaseActivity {
     LinearLayout groupWriteLayout;
     @BindView(R.id.ll_group_watch)
     LinearLayout groupReadLayout;
+    @BindView(R.id.rl_member)
+    LinearLayout memberLayout;
     private Volume volume;
     private MyAppAPIService apiService;
     private LoadingDialog loadingDlg;
@@ -167,6 +169,7 @@ public class ShareVolumeInfoActivity extends BaseActivity {
                 });
             }
         }
+        memberLayout.setVisibility(View.GONE);
         memberAdapter = new VolumeInfoMemberAdapter(getApplicationContext(), volumeDetail.getMemberUidList(), isOwner);
         memberGrid.setAdapter(memberAdapter);
         updateVolumeMemNum();
@@ -225,6 +228,7 @@ public class ShareVolumeInfoActivity extends BaseActivity {
         Bundle bundle = new Bundle();
         bundle.putSerializable("group", group);
         bundle.putSerializable("volumeMemList", volumeDetail.getMemberUidList());
+        bundle.putSerializable("volume", volume);
         IntentUtils.startActivity(ShareVolumeInfoActivity.this, GroupInfoActivity.class, bundle);
     }
 
