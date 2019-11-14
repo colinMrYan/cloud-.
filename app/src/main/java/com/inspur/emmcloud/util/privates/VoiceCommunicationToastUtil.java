@@ -23,7 +23,7 @@ public class VoiceCommunicationToastUtil {
                             if (VoiceCommunicationManager.getInstance().isInviter()) {
                                 ToastUtils.show(R.string.voice_communication_direct_call_canceled);
                             } else {
-                                ToastUtils.show(R.string.voice_communication_direct_calling_canceled);
+                                ToastUtils.show(R.string.voice_communication_direct_calling_reject);
                             }
                             break;
                         case ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_ING:
