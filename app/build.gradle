@@ -57,7 +57,7 @@ android {
         targetSdkVersion versions.targetSdk
         versionCode 100
         //版本号范例：1.0.0-beta.1, 1.0.0-rc.1, 1.0.0
-        versionName "4.5.3"
+        versionName "5.0.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             abiFilters "armeabi-v7a", "x86"
