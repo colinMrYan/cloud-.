@@ -33,6 +33,7 @@ import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.ui.chat.DisplayMediaImageMsg;
 import com.inspur.emmcloud.util.privates.cache.ContactOrgCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 
 import org.json.JSONObject;
 
@@ -528,6 +529,13 @@ public class CommunicationUtils {
             if (file.exists()) {
                 icon = "file://" + file.getAbsolutePath();
             }
+        } else if (type.equals(SearchModel.TYPE_DIRECT)) {
+            String uid;
+            Conversation conversation = ConversationCacheUtils.getConversation(BaseApplication.getInstance(), searchModel.getId());
+            List<String> memberList = conversation.getMemberList();
+            uid = memberList.get(0).equals(BaseApplication.getInstance().getUid()) ?
+                    memberList.get(1) : memberList.get(0);
+            icon = APIUri.getChannelImgUrl(MyApplication.getInstance(), uid);
         } else {
             if (!searchModel.getId().equals("null")) {
                 icon = APIUri.getChannelImgUrl(MyApplication.getInstance(), searchModel.getId());
