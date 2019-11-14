@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
@@ -28,11 +31,15 @@ public class ShareUtil {
         dialog.setCallBack(new ShareDialog.CallBack() {
             @Override
             public void onConfirm(View view) {
-                Intent intent = new Intent();
-                intent.putExtra("searchModel", searchModel);
-                activity.setResult(activity.RESULT_OK, intent);
-                dialog.dismiss();
-                activity.finish();
+                if (searchModel.getType().equals(SearchModel.TYPE_USER) && searchModel.getId().equals(BaseApplication.getInstance().getUid())) {
+                    ToastUtils.show(R.string.do_not_select_yourself);
+                } else {
+                    Intent intent = new Intent();
+                    intent.putExtra("searchModel", searchModel);
+                    activity.setResult(activity.RESULT_OK, intent);
+                    dialog.dismiss();
+                    activity.finish();
+                }
             }
 
             @Override

@@ -33,6 +33,7 @@ import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.ui.chat.DisplayMediaImageMsg;
 import com.inspur.emmcloud.util.privates.cache.ContactOrgCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 
 import org.json.JSONObject;
 
@@ -510,6 +511,8 @@ public class CommunicationUtils {
             if (file.exists()) {
                 icon = "file://" + file.getAbsolutePath();
             }
+        } else if (conversation.getType().equals(Conversation.TYPE_TRANSFER)) {
+            icon = "drawable://" + R.drawable.ic_file_transfer;
         } else {
             icon = DirectChannelUtils.getDirectChannelIcon(MyApplication.getInstance(), conversation.getName());
         }
@@ -526,6 +529,13 @@ public class CommunicationUtils {
             if (file.exists()) {
                 icon = "file://" + file.getAbsolutePath();
             }
+        } else if (type.equals(SearchModel.TYPE_DIRECT)) {
+            String uid;
+            Conversation conversation = ConversationCacheUtils.getConversation(BaseApplication.getInstance(), searchModel.getId());
+            List<String> memberList = conversation.getMemberList();
+            uid = memberList.get(0).equals(BaseApplication.getInstance().getUid()) ?
+                    memberList.get(1) : memberList.get(0);
+            icon = APIUri.getChannelImgUrl(MyApplication.getInstance(), uid);
         } else {
             if (!searchModel.getId().equals("null")) {
                 icon = APIUri.getChannelImgUrl(MyApplication.getInstance(), searchModel.getId());
@@ -541,6 +551,8 @@ public class CommunicationUtils {
             defaultIcon = R.drawable.icon_channel_group_default;
         } else if (type.equals(SearchModel.TYPE_STRUCT)) {
             defaultIcon = R.drawable.ic_contact_sub_struct;
+        } else if (searchModel.getType().equals(SearchModel.TYPE_TRANSFER)) {
+            defaultIcon = R.drawable.ic_file_transfer;
         } else {
             defaultIcon = R.drawable.icon_person_default;
         }
@@ -550,6 +562,8 @@ public class CommunicationUtils {
     public static String getName(Context context, Conversation conversation) {
         if (conversation.getType().equals(Conversation.TYPE_GROUP)) {
             return conversation.getName();
+        } else if (conversation.getType().equals(Conversation.TYPE_TRANSFER)) {
+            return context.getString(R.string.chat_file_transfer);
         } else {
             return DirectChannelUtils.getDirectChannelTitle(context, conversation.getName());
         }

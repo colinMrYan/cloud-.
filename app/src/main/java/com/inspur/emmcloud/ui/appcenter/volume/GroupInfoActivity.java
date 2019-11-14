@@ -13,6 +13,7 @@ import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.NoScrollGridView;
+import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
@@ -20,6 +21,7 @@ import com.inspur.emmcloud.bean.appcenter.volume.Group;
 import com.inspur.emmcloud.bean.appcenter.volume.Volume;
 import com.inspur.emmcloud.ui.chat.ChannelMembersDelActivity;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
+import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 
 import java.util.ArrayList;
@@ -106,15 +108,15 @@ public class GroupInfoActivity extends BaseActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent();
                 if (position == memberGrid.getCount() - 2) {
-                    ArrayList groupAddMemList = new ArrayList();
-                    groupAddMemList.addAll(volumeMemList);
-                    groupAddMemList.removeAll(group.getMemberUidList());
-                    intent.putExtra("memberUidList", groupAddMemList);
-                    intent.putExtra("isRemoveMyself", false);
+                    intent.putExtra("select_content", 2);
+                    intent.putExtra("isMulti_select", true);
+                    intent.putExtra("title", getString(R.string.clouddriver_add_volume_member));
+                    intent.putExtra("excludeContactUidList", group.getMemberUidList());
                     intent.setClass(getApplicationContext(),
-                            ChannelMembersDelActivity.class);
-                    intent.putExtra("title", getString(R.string.clouddriver_add_volume_group_member));
+                            ContactSearchActivity.class);
                     startActivityForResult(intent, ADD_MEMBER);
+
+
                 } else if (position == memberGrid.getCount() - 1) {
                     intent.putExtra("memberUidList", group.getMemberUidList());
                     intent.setClass(getApplicationContext(),
@@ -144,8 +146,12 @@ public class GroupInfoActivity extends BaseActivity {
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case ADD_MEMBER:
-                    List<String> memAddUidList = (List<String>) data.getSerializableExtra("selectMemList");
-                    groupMemAdd(memAddUidList);
+                    List<SearchModel> searchModelList = (List<SearchModel>) data.getSerializableExtra("selectMemList");
+                    List<String> memberAddUidList = new ArrayList<>();
+                    for (int i = 0; i < searchModelList.size(); i++) {
+                        memberAddUidList.add(searchModelList.get(i).getId());
+                    }
+                    volumeMemAdd(memberAddUidList);
                     break;
                 case DEL_MEMBER:
                     List<String> memDelUidList = (List<String>) data.getSerializableExtra("selectMemList");
@@ -167,13 +173,26 @@ public class GroupInfoActivity extends BaseActivity {
 
 
     /**
+     * 添加网盘成员
+     *
+     * @param uidList
+     */
+    private void volumeMemAdd(List<String> uidList) {
+        if (NetUtils.isNetworkConnected(getApplicationContext())) {
+            loadingDlg.show();
+            apiService.volumeMemAdd(volume.getId(), uidList);
+        }
+
+    }
+
+
+    /**
      * 添加组成员
      *
      * @param uidList
      */
     private void groupMemAdd(List<String> uidList) {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
-            loadingDlg.show();
             apiService.groupMemAdd(group.getId(), uidList);
         }
 
@@ -193,6 +212,18 @@ public class GroupInfoActivity extends BaseActivity {
     }
 
     private class WebService extends APIInterfaceInstance {
+
+        @Override
+        public void returnVolumeMemAddSuccess(List<String> uidList) {
+            groupMemAdd(uidList);
+        }
+
+        @Override
+        public void returnVolumeMemAddFail(String error, int errorCode) {
+            LoadingDialog.dimissDlg(loadingDlg);
+            WebServiceMiddleUtils.hand(getApplicationContext(), error, errorCode);
+        }
+
 
         @Override
         public void returnGroupMemAddSuccess(List<String> uidList) {
