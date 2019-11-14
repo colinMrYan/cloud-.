@@ -510,6 +510,8 @@ public class CommunicationUtils {
             if (file.exists()) {
                 icon = "file://" + file.getAbsolutePath();
             }
+        } else if (conversation.getType().equals(Conversation.TYPE_TRANSFER)) {
+            icon = "drawable://" + R.drawable.ic_file_transfer;
         } else {
             icon = DirectChannelUtils.getDirectChannelIcon(MyApplication.getInstance(), conversation.getName());
         }
@@ -552,6 +554,8 @@ public class CommunicationUtils {
     public static String getName(Context context, Conversation conversation) {
         if (conversation.getType().equals(Conversation.TYPE_GROUP)) {
             return conversation.getName();
+        } else if (conversation.getType().equals(Conversation.TYPE_TRANSFER)) {
+            return context.getString(R.string.chat_file_transfer);
         } else {
             return DirectChannelUtils.getDirectChannelTitle(context, conversation.getName());
         }

@@ -919,19 +919,20 @@ public class ConversationActivity extends ConversationBaseActivity {
         SearchModel searchModel = (SearchModel) data.getSerializableExtra("searchModel");
         if (searchModel != null) {
             String userOrChannelId = searchModel.getId();
-            boolean isGroup = searchModel.getType().equals(SearchModel.TYPE_GROUP);
-            share2Conversation(userOrChannelId, isGroup);
+            boolean isUser = searchModel.getType().equals(SearchModel.TYPE_USER);
+            share2Conversation(userOrChannelId, isUser);
         }
     }
 
-    private void share2Conversation(String userOrChannelId, boolean isGroup) {
+
+    private void share2Conversation(String userOrChannelId, boolean isUser) {
         if (StringUtils.isBlank(userOrChannelId)) {
             ToastUtils.show(MyApplication.getInstance(), getString(R.string.baselib_share_fail));
         } else {
-            if (isGroup) {
-                transmitMsg(userOrChannelId, backUiMessage);
-            } else {
+            if (isUser) {
                 createDirectChannel(userOrChannelId, backUiMessage);
+            } else {
+                transmitMsg(userOrChannelId, backUiMessage);
             }
         }
     }

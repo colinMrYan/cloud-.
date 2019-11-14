@@ -266,7 +266,7 @@ public class Conversation implements Serializable {
                 uid = memberList.get(0).equals(BaseApplication.getInstance().getUid()) ?
                         memberList.get(1) : memberList.get(0);
                 searchModel.setId(uid);
-                searchModel.setType(SearchModel.TYPE_USER);
+                searchModel.setType(SearchModel.TYPE_DIRECT);
                 break;
             case TYPE_CAST:
                 searchModel.setIcon(getAvatar());
