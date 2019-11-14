@@ -320,7 +320,7 @@ public class ContactUserCacheUtils {
      * 通过手机号搜索通讯录
      *
      * @param searchText
-     * @param haveSearchContactList
+     * @param noInSql
      * @param limit
      * @return
      */
@@ -330,10 +330,10 @@ public class ContactUserCacheUtils {
         try {
             List<ContactUser> contactUserList = DbCacheUtils.getDb().selector
                     (ContactUser.class)
-                    .where(WhereBuilder.b("mobile", "like", searchText)
+                    .where(WhereBuilder.b().expr("id not in" + noInSql))
+                    .and(WhereBuilder.b("mobile", "like", searchText)
                             .or("name", "like", searchText)
                     )
-                    .and(WhereBuilder.b().expr("id not in" + noInSql))
                     .limit(limit).findAll();
             if (contactUserList != null) {
                 searchContactList = Contact.contactUserList2ContactList(contactUserList);

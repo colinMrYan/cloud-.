@@ -504,7 +504,22 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
             openGroupAdapter.notifyDataSetChanged();
         }
         currentSelectAllSearchModelList.clear();
+        //判断全选按钮是否显示
         boolean isSelectAllLayoutShow = searchContent == SEARCH_NOTHIING || isMultiSelect == false;
+        if (isSelectAllLayoutShow) {
+            boolean isContainUser = false;
+            if (originCurrentArea == SEARCH_CONTACT) {
+                for (Contact contact : openGroupContactList) {
+                    if (contact.getType().equals(SearchModel.TYPE_USER)) {
+                        isContainUser = true;
+                        break;
+                    }
+
+                }
+
+            }
+            isSelectAllLayoutShow = isContainUser;
+        }
         selectAllLayout.setVisibility(isSelectAllLayoutShow ? View.GONE : View.VISIBLE);
         selectAllImg.setSelected(false);
         selectAllImg.setImageResource(R.drawable.ic_select_no);
