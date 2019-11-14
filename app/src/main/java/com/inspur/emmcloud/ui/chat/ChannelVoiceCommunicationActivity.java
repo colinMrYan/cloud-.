@@ -56,6 +56,7 @@ import com.inspur.emmcloud.util.privates.MediaPlayerManagerUtils;
 import com.inspur.emmcloud.util.privates.NotifyUtil;
 import com.inspur.emmcloud.util.privates.SuspensionWindowManagerUtils;
 import com.inspur.emmcloud.util.privates.VoiceCommunicationManager;
+import com.inspur.emmcloud.util.privates.VoiceCommunicationToastUtil;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
 import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
@@ -584,16 +585,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     private void initAgoraCallbacks() {
         voiceCommunicationManager.setOnVoiceCommunicationCallbacks(new OnVoiceCommunicationCallbacksImpl() {
             @Override
-            public void onUserOffline(int uid, int reason) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        refreshCommunicationMembersAdapterWithState();
-                    }
-                });
-            }
-
-            @Override
             public void onUserJoined(final int uid, int elapsed) {
                 if (voiceCommunicationManager.getConnectedNumber() >= 2) {
                     runOnUiThread(new Runnable() {
@@ -631,37 +622,13 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             }
 
             @Override
-            public void onRejoinChannelSuccess(String channel, int uid, int elapsed) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        refreshCommunicationMembersAdapterWithState();
-                    }
-                });
-            }
-
-            @Override
-            public void onUserMuteAudio(int uid, boolean muted) {
-
-            }
-
-            @Override
-            public void onError(int err) {
-                finish();
-            }
-
-            @Override
-            public void onConnectionLost() {
-                finish();
-            }
-
-            @Override
             public void onNetworkQuality(final int uid, final int txQuality, int rxQuality) {
                 if (voiceCommunicationManager.isCommunicationIng()) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             communicationStateTv.setText((uid == 0 && txQuality >= 5) ? getString(R.string.voice_communication_quality) : "");
+                            communicationTimeChronometer.setVisibility((uid == 0 && txQuality >= 5) ? View.GONE : View.VISIBLE);
                         }
                     });
                 }
@@ -706,18 +673,18 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             }
 
             @Override
-            public void onCountDownTimerFinish() {
-                refreshCommunicationMembersAdapterWithState();
-            }
-
-            @Override
-            public void onOnlyOneLeftCountDownTimerFinish() {
-                finish();
-            }
-
-            @Override
             public void onActivityFinish() {
                 finish();
+            }
+
+            @Override
+            public void onRefreshUserState() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        refreshCommunicationMembersAdapterWithState();
+                    }
+                });
             }
         });
     }
@@ -837,6 +804,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             case R.id.ll_hung_up_direct:
             case R.id.ll_video_hung_up:
             case R.id.img_hung_up:
+                VoiceCommunicationToastUtil.showToast(true, BaseApplication.getInstance().getUid());
                 if (voiceCommunicationManager.isInviteePre()) {
                     refuseOrLeaveChannel(COMMUNICATION_REFUSE, true);
                 } else {
@@ -1022,9 +990,11 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
      * 展示小窗，关闭Activity
      */
     private void showSmallWindowAndCloseActivity() {
-        SuspensionWindowManagerUtils.getInstance().showCommunicationSmallWindow(ResolutionUtils.getWidth(this),
-                Long.parseLong(TimeUtils.getChronometerSeconds(communicationTimeChronometer.getText().toString())));
-        finish();
+        if (voiceCommunicationManager.getCommunicationState() != COMMUNICATION_STATE_OVER) {
+            SuspensionWindowManagerUtils.getInstance().showCommunicationSmallWindow(ResolutionUtils.getWidth(this),
+                    Long.parseLong(TimeUtils.getChronometerSeconds(communicationTimeChronometer.getText().toString())));
+            finish();
+        }
     }
 
     @Override
