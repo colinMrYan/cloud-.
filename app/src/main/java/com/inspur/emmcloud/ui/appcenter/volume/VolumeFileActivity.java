@@ -490,7 +490,8 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                 if (searchModel != null) {
                     String userOrChannelId = searchModel.getId();
                     String searchModelType = searchModel.getType();
-                    if (searchModelType.equals(SearchModel.TYPE_TRANSFER) || searchModelType.equals(SearchModel.TYPE_GROUP)) {
+                    if (searchModelType.equals(SearchModel.TYPE_TRANSFER) || searchModelType.equals(SearchModel.TYPE_GROUP)
+                            || searchModel.getType().equals(SearchModel.TYPE_DIRECT)) {
                         startChannelActivity(userOrChannelId);
                     } else {
                         createDirectChannel(userOrChannelId);
