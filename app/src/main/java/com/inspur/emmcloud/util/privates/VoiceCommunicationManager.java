@@ -1021,7 +1021,9 @@ public class VoiceCommunicationManager {
             //应对主叫方拨打电话，被叫方在前台看到后没接，退到后台，此时主叫方挂断，被叫方没有收到socket（因为在后台），也没有收到声网回调
             //这时点击进入应用点接听，此接口返回false，则挂断通话
             if (!Boolean.parseBoolean(getBoolenResult.getResponse())) {
-                ToastUtils.show(R.string.voice_communication_channel_not_exist);
+                if (getCommunicationState() != COMMUNICATION_STATE_OVER) {
+                    ToastUtils.show(R.string.voice_communication_channel_not_exist);
+                }
                 handleDestroy();
             }
         }
