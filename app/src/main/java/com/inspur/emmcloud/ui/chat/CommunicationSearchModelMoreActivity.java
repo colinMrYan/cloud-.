@@ -25,7 +25,6 @@ import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
 import com.inspur.emmcloud.baselib.widget.ClearEditText;
 import com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout;
-import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
@@ -373,16 +372,7 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
             switch (searchArea) {
                 case SEARCH_PRIVATE_CHAT:
                 case SEARCH_GROUP:
-                    if (!searchGroupList.get(i).getId().equals(BaseApplication.getInstance().getUid())) {
-                        switch (searchGroupList.get(i).getType()) {
-                            case SearchModel.TYPE_GROUP:
-                                startChannelActivity(searchGroupList.get(i).getId());
-                                break;
-                            case SearchModel.TYPE_USER:
-                                createDirectChannel(searchGroupList.get(i).getId());
-                                break;
-                        }
-                    }
+                    startChannelActivity(searchGroupList.get(i).getId());
                     break;
                 case SEARCH_CONTACT:
                     Bundle bundle = new Bundle();
@@ -447,6 +437,9 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
             }
         } else if (type.equals(SearchModel.TYPE_STRUCT)) {
             defaultIcon = R.drawable.ic_contact_sub_struct;
+        } else if (type.equals(SearchModel.TYPE_DIRECT)) {
+            defaultIcon = R.drawable.icon_person_default;
+            icon = CommunicationUtils.getHeadUrl(searchModel);
         } else {
             defaultIcon = R.drawable.icon_person_default;
             if (!searchModel.getId().equals("null")) {
