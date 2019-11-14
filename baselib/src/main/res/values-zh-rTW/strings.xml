@@ -1329,6 +1329,7 @@
     <string name="voice_communication_direct_call_audio_call_request_declined">對方拒絕了你的語音通話請求</string>
     <string name="voice_communication_direct_calling_ended">聊天結束</string>
     <string name="voice_communication_direct_calling_canceled">对方已挂断，通话结束</string>
+    <string name="voice_communication_direct_calling_reject">已拒絕，通話結束</string>
     <string name="voice_communication_group_call_canceled">對方已掛斷，通話結束</string>
     <string name="voice_communication_group_call_busy">%1$s正忙</string>
     <string name="voice_communication_group_calling_ended">通話已結束</string>
