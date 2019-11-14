@@ -130,22 +130,21 @@
 
                     <ImageView
                         android:id="@+id/iv_select_all"
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:layout_alignParentRight="true"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
                         android:layout_centerVertical="true"
-                        android:layout_marginRight="15dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="10dp"
+                        android:padding="10dp"
                         android:scaleType="fitXY"
                         android:src="@drawable/ic_select_no" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="10dp"
-                        android:layout_toLeftOf="@id/iv_select_all"
-                        android:gravity="right"
+                        android:layout_toRightOf="@id/iv_select_all"
                         android:paddingBottom="11dp"
-                        android:paddingTop="12dp"
+                        android:paddingTop="11dp"
                         android:text="@string/select_all"
                         android:textColor="#888888"
                         android:textSize="16sp" />
@@ -156,7 +155,8 @@
                     android:layout_height="0dp"
                     android:layout_weight="1.0"
                     android:divider="#ffffff"
-                    android:dividerHeight="1px" />
+                    android:dividerHeight="1px"
+                    android:listSelector="#00000000" />
             </LinearLayout>
 
             <LinearLayout
@@ -284,7 +284,8 @@
                         android:layout_height="0dp"
                         android:layout_weight="1"
                         android:divider="#ffffff"
-                        android:dividerHeight="1px" />
+                        android:dividerHeight="1px"
+                        android:listSelector="#00000000" />
                 </LinearLayout>
             </LinearLayout>
         </RelativeLayout>
@@ -361,7 +362,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:divider="#ffffff"
-                            android:dividerHeight="0.5dp" />
+                            android:dividerHeight="1px"
+                            android:listSelector="#00000000" />
                     </RelativeLayout>
                 </LinearLayout>
 
@@ -423,7 +425,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:divider="#ffffff"
-                            android:dividerHeight="1px" />
+                            android:dividerHeight="1px"
+                            android:listSelector="#00000000" />
                     </RelativeLayout>
                 </LinearLayout>
             </LinearLayout>
