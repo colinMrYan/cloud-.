@@ -95,6 +95,7 @@ public class VolumeFileUploadManager extends APIInterfaceInstance {
         for (int i = 0; i < volumeFileUploadList.size(); i++) {
             VolumeFileUpload volumeFileUpload = volumeFileUploadList.get(i);
             if (volumeFileUpload.getId().equals(mockVolumeFile.getId())) {
+                volumeFileUpload.setVolumeFileUploadService(null);
                 if (FileUtils.isFileExist(volumeFileUpload.getLocalFilePath())) {
                     volumeFileUpload.setStatus(VolumeFile.STATUS_UPLOAD_IND);
                     //上传文件
@@ -174,6 +175,7 @@ public class VolumeFileUploadManager extends APIInterfaceInstance {
                     VolumeFileUploadService volumeFileUploadService = volumeFileUpload.getVolumeFileUploadService();
                     if (volumeFileUploadService != null) {
                         volumeFileUploadService.onPause();
+                        volumeFileUpload.setVolumeFileUploadService(null);
                     }
                     volumeFileUpload.setStatus(VolumeFile.STATUS_UPLOAD_PAUSE);
                     VolumeFileUploadCacheUtils.saveVolumeFileUpload(volumeFileUpload);
@@ -248,17 +250,22 @@ public class VolumeFileUploadManager extends APIInterfaceInstance {
                     progressCallback = new MyProgressCallback(volumeFileUpload);
                     volumeFileUpload.setProgressCallback(progressCallback);
                 }
-                volumeFileUpload.setGetVolumeFileUploadTokenResult(getVolumeFileUploadTokenResult);
-                VolumeFileUploadService volumeFileUploadService = getVolumeFileUploadService(volumeFileUpload, mockVolumeFile);
-                if (volumeFileUploadService != null) {
-                    volumeFileUploadService.setProgressCallback(progressCallback);
-                    volumeFileUpload.setTransferObserverId(transferObserverId);
-                    volumeFileUpload.setVolumeFileUploadService(volumeFileUploadService);
-                    volumeFileUploadService.uploadFile(getVolumeFileUploadTokenResult.getFileName(), fileLocalPath);
-                } else {  //如果没有获取相应的上传服务 返回上传失败
-                    progressCallback.onFail();
+                if (volumeFileUpload.getVolumeFileUploadService() == null) {
+                    volumeFileUpload.setGetVolumeFileUploadTokenResult(getVolumeFileUploadTokenResult);
+                    VolumeFileUploadService volumeFileUploadService = getVolumeFileUploadService(volumeFileUpload, mockVolumeFile);
+                    if (volumeFileUploadService != null) {
+                        volumeFileUploadService.setProgressCallback(progressCallback);
+                        volumeFileUpload.setTransferObserverId(transferObserverId);
+                        volumeFileUpload.setVolumeFileUploadService(volumeFileUploadService);
+                        volumeFileUploadService.uploadFile(getVolumeFileUploadTokenResult.getFileName(), fileLocalPath);
+                    } else {  //如果没有获取相应的上传服务 返回上传失败
+                        progressCallback.onFail();
+                    }
+                } else {
+                    volumeFileUpload.getVolumeFileUploadService().setProgressCallback(progressCallback);
                 }
                 break;
+
             }
         }
     }

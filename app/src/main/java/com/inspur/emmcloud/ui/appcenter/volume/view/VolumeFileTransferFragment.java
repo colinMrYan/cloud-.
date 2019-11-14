@@ -24,13 +24,11 @@ import com.inspur.emmcloud.baselib.widget.VolumeActionLayout;
 import com.inspur.emmcloud.baselib.widget.dialogs.ActionSheetDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
-import com.inspur.emmcloud.basemodule.bean.DownloadFileCategory;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.ui.BaseMvpFragment;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.ClickRuleUtil;
-import com.inspur.emmcloud.basemodule.util.FileDownloadManager;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
@@ -102,14 +100,16 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
 
     @Override
     public void onAttach(Context context) {
+        Log.d("zhang", "onAttach: ");
         super.onAttach(context);
         if (getActivity() instanceof SelectCallBack) {
-            selectCallBack = (SelectCallBack) context;
+            selectCallBack = (SelectCallBack) context;  //往activity传值
         }
     }
 
     @Override
     public void onDetach() {
+        Log.d("zhang", "onDetach: ");
         super.onDetach();
         selectCallBack = null;
     }
@@ -342,12 +342,7 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
                     if (ClickRuleUtil.isFastClick()) {
                         return;
                     }
-                    downloadedAdapter.clearSelectedVolumeFileList();
-                    downloadedAdapter.notifyDataSetChanged();
-                    if (selectCallBack != null) {
-                        selectCallBack.onSelect(new ArrayList<VolumeFile>());
-                    }
-                    setBottomOperationItemShow(downloadedAdapter.getSelectVolumeFileList());
+                    hideBottomOperationItemShow();
                 }
             });
             headerRightTv.setOnClickListener(new View.OnClickListener() {
@@ -365,6 +360,20 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
                     setBottomOperationItemShow(downloadedAdapter.getSelectVolumeFileList());
                 }
             });
+        }
+    }
+
+    /**
+     * tab切换时reset 已下载界面
+     */
+    public void hideBottomOperationItemShow() {
+        if (downloadedAdapter != null && volumeActionLayout != null) {
+            volumeActionLayout.setVisibility(View.GONE);
+            if (selectCallBack != null) {
+                selectCallBack.onSelect(new ArrayList<VolumeFile>());
+            }
+            downloadedAdapter.clearSelectedVolumeFileList();
+            downloadedAdapter.notifyDataSetChanged();
         }
     }
 
@@ -518,9 +527,13 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
      * @param volumeFile
      */
     protected void downloadOrOpenVolumeFile(VolumeFile volumeFile) {
-        String fileSavePath = FileDownloadManager.getInstance().getDownloadFilePath(DownloadFileCategory.CATEGORY_VOLUME_FILE, volumeFile.getId(), volumeFile.getName());
+        String fileSavePath = volumeFile.getLocalFilePath();
         if (!StringUtils.isBlank(fileSavePath)) {
-            FileUtils.openFile(BaseApplication.getInstance(), fileSavePath);
+            try {
+                FileUtils.openFile(BaseApplication.getInstance(), fileSavePath);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

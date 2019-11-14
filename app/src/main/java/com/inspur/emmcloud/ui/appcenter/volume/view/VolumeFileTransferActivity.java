@@ -40,6 +40,7 @@ public class VolumeFileTransferActivity extends BaseMvpActivity implements Volum
     @BindView(R.id.vp_file_transfer)
     ViewPager viewPager;
     FragmentPagerAdapter adapter;
+    VolumeFileTransferFragment downloadedFragment;
 
     @Override
     public void onCreate() {
@@ -55,7 +56,7 @@ public class VolumeFileTransferActivity extends BaseMvpActivity implements Volum
     private void init() {
         setTitleText(R.string.volume_file_transfer);
         headerLeftTv.setText(R.string.button_cancel);
-        headerRightTv.setText(R.string.clouddriver_select_all);
+        headerRightTv.setText(R.string.select_all);
         mPresenter = new VolumeFileTransferPresenter();
         mPresenter.attachView(this);
 
@@ -72,9 +73,6 @@ public class VolumeFileTransferActivity extends BaseMvpActivity implements Volum
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
-                if (tab.getPosition() != 2) {
-                    onSelect(new ArrayList<VolumeFile>());
-                }
             }
 
             @Override
@@ -99,6 +97,12 @@ public class VolumeFileTransferActivity extends BaseMvpActivity implements Volum
                 if (tabLayout.getTabAt(position) != null) {
                     tabLayout.getTabAt(position).select();
                 }
+                if (position != 2) {
+                    onSelect(new ArrayList<VolumeFile>());
+                    if (downloadedFragment != null) {
+                        downloadedFragment.hideBottomOperationItemShow();
+                    }
+                }
             }
 
             @Override
@@ -115,6 +119,9 @@ public class VolumeFileTransferActivity extends BaseMvpActivity implements Volum
             Bundle bundle = new Bundle();
             bundle.putInt("position", i);
             fragment.setArguments(bundle);
+            if (i == 2) {
+                downloadedFragment = fragment;
+            }
             list.add(fragment);
         }
         adapter = new AllTaskFragmentAdapter(getSupportFragmentManager(), list);

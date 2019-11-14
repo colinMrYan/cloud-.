@@ -678,13 +678,17 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
 //        bundle.putBoolean("isStartDownload", true);
 //        IntentUtils.startActivity(VolumeFileBaseActivity.this, VolumeFileDownloadActivity.class, bundle);
         List<VolumeFile> volumeFileList = VolumeFileDownloadManager.getInstance().getAllDownloadVolumeFile();
-        for (VolumeFile file : volumeFileList) {
-            if (file.getId().equals(volumeFile.getId())) {
-                return;
-            }
-        }
+
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
             volumeFile.setVolumeFileAbsolutePath(currentDirAbsolutePath + volumeFile.getName());
+            for (VolumeFile file : volumeFileList) {
+                if (file.getId().equals(volumeFile.getId())) {
+                    VolumeFileDownloadManager.getInstance().cancelDownloadVolumeFile(volumeFile);
+                    VolumeFileDownloadManager.getInstance().reDownloadFile(volumeFile,
+                            currentDirAbsolutePath + volumeFile.getName());
+                    return;
+                }
+            }
             VolumeFileDownloadManager.getInstance().downloadFile(volumeFile,
                     currentDirAbsolutePath + volumeFile.getName());
         }

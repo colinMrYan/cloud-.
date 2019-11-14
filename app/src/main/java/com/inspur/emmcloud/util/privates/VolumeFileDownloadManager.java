@@ -116,10 +116,16 @@ public class VolumeFileDownloadManager extends APIInterfaceInstance {
         }
     }
 
+    /**
+     * 继续下载
+     */
     public void reDownloadFile(final VolumeFile volumeFile, String currentDirAbsolutePath) {
         downloadFile(volumeFile, currentDirAbsolutePath, true);
     }
 
+    /**
+     * 下载文件入口
+     */
     public void downloadFile(final VolumeFile volumeFile, String currentDirAbsolutePath) {
         downloadFile(volumeFile, currentDirAbsolutePath, false);
     }
@@ -189,7 +195,12 @@ public class VolumeFileDownloadManager extends APIInterfaceInstance {
         APIDownloadCallBack callBack = new APIDownloadCallBack(BaseApplication.getInstance(), source) {
             @Override
             public void callbackStart() {
-
+                for (int i = 0; i < volumeFileDownloadList.size(); i++) {
+                    VolumeFile downloadVolumeFile = volumeFileDownloadList.get(i);
+                    if (volumeFile.getId().equals(downloadVolumeFile.getId())) {
+                        downloadVolumeFile.setLastRecordTime(System.currentTimeMillis());
+                    }
+                }
             }
 
             @Override
@@ -201,7 +212,7 @@ public class VolumeFileDownloadManager extends APIInterfaceInstance {
                     if (volumeFile.getId().equals(downloadVolumeFile.getId())) {
                         String speed = FileUtils.formatFileSize((current - downloadVolumeFile.getCompleteSize()) * 1000 /
                                 (System.currentTimeMillis() - downloadVolumeFile.getLastRecordTime())) + "/S";
-                        if (downloadVolumeFile.getBusinessProgressCallback() != null) {
+                        if (downloadVolumeFile.getBusinessProgressCallback() != null && downloadVolumeFile.getCompleteSize() != 0) {
                             downloadVolumeFile.getBusinessProgressCallback().onLoading(progress, speed);
                         }
                         downloadVolumeFile.setProgress(progress);
