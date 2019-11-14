@@ -299,7 +299,10 @@ public class ConversationCacheUtils {
         List<Conversation> conversationList = null;
         try {
             conversationList = DbCacheUtils.getDb(context).selector(Conversation.class)
-                    .where(WhereBuilder.b("type", "=", Conversation.TYPE_DIRECT).or("type", "=", Conversation.TYPE_GROUP)).orderBy("lastUpdate", true).findAll();
+                    .where("type", "=", Conversation.TYPE_DIRECT)
+                    .or("type", "=", Conversation.TYPE_GROUP)
+                    .or("type", "=", Conversation.TYPE_TRANSFER)
+                    .orderBy("lastUpdate", true).findAll();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -389,7 +392,8 @@ public class ConversationCacheUtils {
                     }
                 }
                 conversationList = DbCacheUtils.getDb(context).selector(Conversation.class)
-                        .where(WhereBuilder.b("showName", "like", searchStr).or("pyFull", "like", searchStrPYFull))
+                        .where("id", "!=", "")
+                        .and(WhereBuilder.b("showName", "like", searchStr).or("pyFull", "like", searchStrPYFull))
                         .and(WhereBuilder.b("type", "=", Conversation.TYPE_DIRECT).or("type", "=", Conversation.TYPE_TRANSFER))
                         .orderBy("lastUpdate", true).findAll();
             } catch (Exception e) {
