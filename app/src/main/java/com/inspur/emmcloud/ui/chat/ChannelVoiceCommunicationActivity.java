@@ -794,11 +794,13 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             case R.id.ll_answer_phone_direct:
             case R.id.img_answer_the_phone:
                 voiceCommunicationManager.setCommunicationState(COMMUNICATION_STATE_ING);
-                int joinState = voiceCommunicationManager.joinChannel(voiceCommunicationManager.getInviteeInfoBean().getToken(),
-                        voiceCommunicationManager.getAgoraChannelId(), voiceCommunicationManager.getInviteeInfoBean().getUserId(),
-                        voiceCommunicationManager.getInviteeInfoBean().getAgoraUid());
-                if (joinState != 0) {
-                    refuseOrLeaveChannel(COMMUNICATION_REFUSE, true);
+                if (NetUtils.isNetworkConnected(this)) {
+                    int joinState = voiceCommunicationManager.joinChannel(voiceCommunicationManager.getInviteeInfoBean().getToken(),
+                            voiceCommunicationManager.getAgoraChannelId(), voiceCommunicationManager.getInviteeInfoBean().getUserId(),
+                            voiceCommunicationManager.getInviteeInfoBean().getAgoraUid());
+                    if (joinState != 0) {
+                        refuseOrLeaveChannel(COMMUNICATION_REFUSE, true);
+                    }
                 }
                 break;
             case R.id.ll_hung_up_direct:
