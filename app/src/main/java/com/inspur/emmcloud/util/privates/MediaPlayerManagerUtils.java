@@ -338,10 +338,12 @@ public class MediaPlayerManagerUtils {
                 if (callback != null) {
                     callback.onStop();
                 }
-            } catch (IllegalStateException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+        mediaPlayer.setOnPreparedListener(null);
+        mediaPlayer.setOnCompletionListener(null);
         audioManager.abandonAudioFocus(mAudioFocusChangeListener);
     }
 
