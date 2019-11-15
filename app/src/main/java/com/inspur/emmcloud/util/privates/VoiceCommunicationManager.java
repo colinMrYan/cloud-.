@@ -452,12 +452,16 @@ public class VoiceCommunicationManager {
             String command = customProtocol.getParamMap().get(Constant.COMMAND_CMD);
             switch (command) {
                 case Constant.COMMAND_REFUSE:
-                    VoiceCommunicationCommonLine.onUserReject(getAgoraUidByCloudUid(customProtocol.getParamMap()
-                            .get(Constant.COMMAND_UID)), VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_REFUSE);
+                    if (customProtocol.getParamMap().get(Constant.COMMAND_ROOM_ID).equals(agoraChannelId)) {
+                        VoiceCommunicationCommonLine.onUserReject(getAgoraUidByCloudUid(customProtocol.getParamMap()
+                                .get(Constant.COMMAND_UID)), VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_REFUSE);
+                    }
                     break;
                 case Constant.COMMAND_DESTROY:
-                    VoiceCommunicationCommonLine.onUserReject(getAgoraUidByCloudUid(customProtocol.getParamMap().
-                            get(Constant.COMMAND_UID)), VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_LEAVE);
+                    if (customProtocol.getParamMap().get(Constant.COMMAND_ROOM_ID).equals(agoraChannelId)) {
+                        VoiceCommunicationCommonLine.onUserReject(getAgoraUidByCloudUid(customProtocol.getParamMap().
+                                get(Constant.COMMAND_UID)), VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_LEAVE);
+                    }
                     break;
                 //正在通话中 消息是invite消息  三者打进电话 发拒绝消息
                 case Constant.COMMAND_INVITE:
