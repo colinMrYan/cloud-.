@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.CountDownTimer;
+import android.os.Vibrator;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -14,7 +15,6 @@ import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
-import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.chat.GetVoiceAndVideoResult;
@@ -28,7 +28,6 @@ import com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
 
-import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 
 import java.io.Serializable;
@@ -87,6 +86,7 @@ public class VoiceCommunicationManager {
     private int communicationState = COMMUNICATION_STATE_OVER;
     private boolean isHandsFree = false;
     private boolean isMute = false;
+    private Vibrator vibrator;
     private IRtcEngineEventHandler mRtcEventHandler = new IRtcEngineEventHandler() {
         //其他用户离线回调
         @Override
@@ -99,12 +99,11 @@ public class VoiceCommunicationManager {
         @Override
         public void onUserJoined(int uid, int elapsed) {
             changeUserConnectStateByAgoraUid(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_CONNECTED, uid);
-            if (getConnectedNumber() >= 2) {
+            if (communicationState == COMMUNICATION_STATE_PRE && getConnectedNumber() >= 2) {
+                vibratorOnece();
                 //当小窗状态对方接听电话后，刷新小窗上的时间
-                if (communicationState == COMMUNICATION_STATE_PRE && SuspensionWindowManagerUtils.getInstance().isShowing()) {
-                    //发送到CommunicationFragment
-                    SimpleEventMessage simpleEventMessage = new SimpleEventMessage(Constant.EVENTBUS_TAG_REFRESH_VOICE_CALL_SMALL_WINDOW);
-                    EventBus.getDefault().post(simpleEventMessage);
+                if (SuspensionWindowManagerUtils.getInstance().isShowing()) {
+                    SuspensionWindowManagerUtils.getInstance().refreshSmallWindow();
                 }
                 communicationState = COMMUNICATION_STATE_ING;
             }
@@ -123,6 +122,8 @@ public class VoiceCommunicationManager {
             //加入成功后，是主叫方再发出邀请消息
             if (isInviter()) {
                 sendCommunicationCommand(Constant.COMMAND_INVITE);
+            } else {
+                vibratorOnece();
             }
             remindEmmServerJoinChannel(channel);
         }
@@ -231,6 +232,15 @@ public class VoiceCommunicationManager {
 //            LogUtils.YfcDebug("onRequestToken");
 //        }
     };
+
+    /*
+     * 想设置震动大小可以通过改变pattern来设定，如果开启时间太短，震动效果可能感觉不到
+     * */
+    private void vibratorOnece() {
+        Vibrator vibrator = (Vibrator) BaseApplication.getInstance().getSystemService(Context.VIBRATOR_SERVICE);
+        long[] pattern = {100, 500, 100, 500};   // 停止 开启 停止 开启
+        vibrator.vibrate(pattern, -1);   // 如果只想震动一次，repeat设为-1
+    }
 
     /**
      * 获得声网控制工具类
@@ -842,7 +852,10 @@ public class VoiceCommunicationManager {
         NotifyUtil.deleteNotify(BaseApplication.getInstance());
         RtcEngine.destroy();
         mRtcEngine = null;
-
+        if (vibrator != null) {
+            vibrator.cancel();
+            vibrator = null;
+        }
         communicationState = COMMUNICATION_STATE_OVER;
         if (onVoiceCommunicationCallbacks != null) {
             onVoiceCommunicationCallbacks.onActivityFinish();

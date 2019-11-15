@@ -81,7 +81,6 @@ import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationGroupIconUtils;
 import com.inspur.emmcloud.util.privates.MessageSendManager;
 import com.inspur.emmcloud.util.privates.ScanQrCodeUtils;
-import com.inspur.emmcloud.util.privates.SuspensionWindowManagerUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
 import com.inspur.emmcloud.util.privates.VoiceCommunicationManager;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
@@ -1072,19 +1071,10 @@ public class CommunicationFragment extends BaseFragment {
         }
     }
 
-
     //接收到websocket发过来的消息，拨打音视频电话，被呼叫触发
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveVoiceOrVideoCall(final GetVoiceAndVideoResult getVoiceAndVideoResult) {
         VoiceCommunicationManager.getInstance().onReceiveCommand(getActivity(), getVoiceAndVideoResult);
-    }
-
-    //来自VoiceCommunicationManager
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onRefreshVoiceCallSmallWindow(final SimpleEventMessage simpleEventMessage) {
-        if (simpleEventMessage.getAction().equals(Constant.EVENTBUS_TAG_REFRESH_VOICE_CALL_SMALL_WINDOW)) {
-            SuspensionWindowManagerUtils.getInstance().refreshSmallWindow();
-        }
     }
 
     //socket断开重连时（如断网联网）会触发此方法

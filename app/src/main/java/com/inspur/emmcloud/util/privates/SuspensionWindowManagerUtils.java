@@ -164,8 +164,13 @@ public class SuspensionWindowManagerUtils {
      */
     public void refreshSmallWindow() {
         if (chronometer != null) {
-            chronometer.setBase(SystemClock.elapsedRealtime());
-            chronometer.start();
+            chronometer.post(new Runnable() {
+                @Override
+                public void run() {
+                    chronometer.setBase(SystemClock.elapsedRealtime());
+                    chronometer.start();
+                }
+            });
         }
     }
 
