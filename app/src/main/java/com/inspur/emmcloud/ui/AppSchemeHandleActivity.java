@@ -269,13 +269,17 @@ public class AppSchemeHandleActivity extends BaseActivity {
                                 break;
 
                             case "ecc-cloudplus-cmd-voice-call":
-                                Intent intentVoiceCall = new Intent();
-                                intentVoiceCall.setClass(AppSchemeHandleActivity.this, ChannelVoiceCommunicationActivity.class);
-                                intentVoiceCall.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                intentVoiceCall.putExtra(Constant.VOICE_IS_FROM_SMALL_WINDOW, true);
-                                intentVoiceCall.putExtra(Constant.VOICE_COMMUNICATION_STATE,
-                                        VoiceCommunicationManager.getInstance().getCommunicationState());
-                                startActivity(intentVoiceCall);
+                                if (VoiceCommunicationManager.getInstance().getRtcEngine() != null) {
+                                    Intent intentVoiceCall = new Intent();
+                                    intentVoiceCall.setClass(AppSchemeHandleActivity.this, ChannelVoiceCommunicationActivity.class);
+                                    intentVoiceCall.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    intentVoiceCall.putExtra(Constant.VOICE_IS_FROM_SMALL_WINDOW, true);
+                                    intentVoiceCall.putExtra(Constant.VOICE_COMMUNICATION_STATE,
+                                            VoiceCommunicationManager.getInstance().getCommunicationState());
+                                    startActivity(intentVoiceCall);
+                                } else {
+                                    ToastUtils.show(R.string.voice_communication_group_calling_ended);
+                                }
                                 finish();
                                 break;
                             case "impcloud":
