@@ -596,6 +596,7 @@ public class CommunicationFragment extends BaseFragment {
     private void cacheMessageList(final List<Message> messageList, final List<ChannelMessageSet> channelMessageSetList) {
         if (messageList == null || messageList.size() == 0) {
             PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_GET_OFFLINE_LAST_MID, FLAG_GET_MESSAGE_SUCCESS);
+            MessageSendManager.getInstance().resendMessageAfterWSOnline();
         } else {
             Observable.create(new ObservableOnSubscribe<Boolean>() {
                 @Override
