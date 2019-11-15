@@ -614,8 +614,8 @@ public class MessageCacheUtil {
                         .findAll();
             } else {
                 messageList = DbCacheUtils.getDb(context).selector(Message.class)
-                        .where(WhereBuilder.b("sendStatus", "=", Message.MESSAGE_SEND_FAIL).or("sendStatus", "=", Message.MESSAGE_SEND_ING))
-                        .and("id", "in", messgeTmpIdList)
+                        .where("id", "in", messgeTmpIdList)
+                        .and(WhereBuilder.b("sendStatus", "=", Message.MESSAGE_SEND_FAIL).or("sendStatus", "=", Message.MESSAGE_SEND_ING))
                         .findAll();
             }
         } catch (Exception e) {

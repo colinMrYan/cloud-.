@@ -222,6 +222,7 @@ public class ConversationActivity extends ConversationBaseActivity {
 
     @Override
     protected void initChannelMessage() {
+        uiMessageList.clear();
         initViews();
         showMessageList();
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
@@ -252,7 +253,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             position = cacheMessageList.size() - 1;
         }
         List<UIMessage> uiMessageListNew = UIMessage.MessageList2UIMessageList(cacheMessageList);
-        if (!ListUtils.isListEqual(uiMessageListNew, adapter.getAdapterUIMessageList())) {
+        if (!ListUtils.isListEqual(uiMessageListNew, uiMessageList)) {
             uiMessageList = uiMessageListNew;
             adapter.setMessageList(uiMessageList);
             adapter.notifyDataSetChanged();

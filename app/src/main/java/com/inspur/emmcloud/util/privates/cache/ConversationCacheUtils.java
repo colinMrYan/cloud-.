@@ -47,6 +47,45 @@ public class ConversationCacheUtils {
     }
 
     /**
+     * 更新ConversationList的某些字段
+     *
+     * @param context
+     * @param conversationList
+     * @param updateColumnNames
+     */
+    public static void updateConversationList(final Context context, final List<Conversation> conversationList, String... updateColumnNames) {
+        try {
+            if (conversationList == null || conversationList.size() == 0) {
+                return;
+            }
+            DbCacheUtils.getDb(context).update(conversationList, updateColumnNames);
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 更新ConversationList的某些字段
+     *
+     * @param context
+     * @param conversationList
+     * @param updateColumnNames
+     */
+    public static void updateConversation(final Context context, final Conversation conversation, String... updateColumnNames) {
+        try {
+            if (conversation == null) {
+                return;
+            }
+            DbCacheUtils.getDb(context).update(conversation, updateColumnNames);
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
      * 删除所有会话
      *
      * @param context
