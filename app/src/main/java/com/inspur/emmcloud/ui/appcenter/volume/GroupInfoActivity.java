@@ -147,11 +147,13 @@ public class GroupInfoActivity extends BaseActivity {
             switch (requestCode) {
                 case ADD_MEMBER:
                     List<SearchModel> searchModelList = (List<SearchModel>) data.getSerializableExtra("selectMemList");
-                    List<String> memberAddUidList = new ArrayList<>();
-                    for (int i = 0; i < searchModelList.size(); i++) {
-                        memberAddUidList.add(searchModelList.get(i).getId());
+                    if (searchModelList.size() > 0) {
+                        List<String> memberAddUidList = new ArrayList<>();
+                        for (int i = 0; i < searchModelList.size(); i++) {
+                            memberAddUidList.add(searchModelList.get(i).getId());
+                        }
+                        volumeMemAdd(memberAddUidList);
                     }
-                    volumeMemAdd(memberAddUidList);
                     break;
                 case DEL_MEMBER:
                     List<String> memDelUidList = (List<String>) data.getSerializableExtra("selectMemList");
