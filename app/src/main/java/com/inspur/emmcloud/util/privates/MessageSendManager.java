@@ -230,7 +230,6 @@ public class MessageSendManager {
             if (messageListInSendRetry.size() > 0) {
                 messageListInSendRetry.remove(fakeMessage);
                 stopCheckMessageSendTimeout();
-                //todo
             }
             if (recallSendingMessageList.size() > 0) {
                 recallSendingMessageList.remove(fakeMessage);

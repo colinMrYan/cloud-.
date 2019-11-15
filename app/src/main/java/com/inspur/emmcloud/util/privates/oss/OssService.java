@@ -67,7 +67,7 @@ public class OssService implements VolumeFileUploadService {
         conf.setConnectionTimeout(15 * 1000); // 连接超时，默认15秒
         conf.setSocketTimeout(15 * 1000); // socket超时，默认15秒
         //conf.setMaxConcurrentRequest(5); // 最大并发请求书，默认5个
-        conf.setMaxErrorRetry(2); // 失败后最大重试次数，默认2次
+        conf.setMaxErrorRetry(3); // 失败后最大重试次数，默认2次
         OSSLog.enableLog();
         try {
             //此语句根据阿里云api文档需要放进主线程，此处应该是一个线程

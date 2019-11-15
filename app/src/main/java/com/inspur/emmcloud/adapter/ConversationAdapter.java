@@ -329,6 +329,10 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
 
         @Override
         public void onClick(View v) {
+            //notify未完成时，调用getAdapterPosition就会返回NO_POSITION(-1)
+            if (getAdapterPosition() < 0) {
+                return;
+            }
             if (adapterListener != null) {
                 if (haveHeaderView()) {
                     if (0 == getAdapterPosition()) {
@@ -344,6 +348,10 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
 
         @Override
         public boolean onLongClick(View v) {
+            //notify未完成时，调用getAdapterPosition就会返回NO_POSITION(-1)
+            if (getAdapterPosition() < 0) {
+                return false;
+            }
             if (adapterListener != null) {
                 if (haveHeaderView()) {
                     if (0 == getAdapterPosition()) {
