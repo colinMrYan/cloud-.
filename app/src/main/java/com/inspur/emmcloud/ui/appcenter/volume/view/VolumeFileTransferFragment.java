@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -100,7 +99,6 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
 
     @Override
     public void onAttach(Context context) {
-        Log.d("zhang", "onAttach: ");
         super.onAttach(context);
         if (getActivity() instanceof SelectCallBack) {
             selectCallBack = (SelectCallBack) context;  //往activity传值
@@ -109,7 +107,6 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
 
     @Override
     public void onDetach() {
-        Log.d("zhang", "onDetach: ");
         super.onDetach();
         selectCallBack = null;
     }
@@ -188,7 +185,6 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
         } else {
             operationTotalBtn.setSelected(true);
             for (VolumeFile volumeFile : volumeFileList) {
-                Log.d("zhang", "handleDownloadOperation: STATUS_DOWNLOAD_PAUSE");
                 volumeFile.setStatus(VolumeFile.STATUS_DOWNLOAD_PAUSE);
                 VolumeFileDownloadManager.getInstance().cancelDownloadVolumeFile(volumeFile);
             }
@@ -243,11 +239,20 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
         adapter.setCallBack(new VolumeFileTransferAdapter.CallBack() {
             @Override
             public void refreshView(List<VolumeFile> fileList) {
-                operationTotalLayout.setVisibility(fileList.size() > 0 ? View.VISIBLE : View.GONE);
+                //上传、下载成功 or 长按删除   回调
+                if (operationTotalLayout != null) {
+                    operationTotalLayout.setVisibility(fileList.size() > 0 ? View.VISIBLE : View.GONE);
+                }
                 if (fileList.size() == 0) {
                     showNoDataLayout();
                 } else {
-
+                    if (countTipTv != null) {       //长按删除时 更新数量
+                        if (currentIndex == 0) {
+                            countTipTv.setText(getString(R.string.volume_file_transfer_list_download_count, fileList.size()));
+                        } else if (currentIndex == 1) {
+                            countTipTv.setText(getString(R.string.volume_file_transfer_list_upload_count, fileList.size()));
+                        }
+                    }
                 }
             }
 
@@ -464,6 +469,10 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
             if (file.exists()) {
                 file.delete();
                 volumeFileList.remove(volumeFile);
+                if (volumeFileList.size() == 0) {
+                    hideBottomOperationItemShow();
+                    showNoDataLayout();
+                }
                 downloadedAdapter.notifyDataSetChanged();
             }
         }
@@ -570,14 +579,18 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
 
     @Override
     public void showNoDataLayout() {
-        noDataLayout.setVisibility(View.VISIBLE);
-        recyclerView.setVisibility(View.GONE);
+        if (getActivity() != null && !getActivity().isFinishing()) {
+            noDataLayout.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+        }
     }
 
     @Override
     public void showListLayout() {
-        noDataLayout.setVisibility(View.GONE);
-        recyclerView.setVisibility(View.VISIBLE);
+        if (getActivity() != null && !getActivity().isFinishing()) {
+            noDataLayout.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }
     }
 
     private static class CustomShareListener implements UMShareListener {

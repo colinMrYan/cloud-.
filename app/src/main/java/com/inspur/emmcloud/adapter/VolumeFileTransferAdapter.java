@@ -136,14 +136,14 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
     /**
      * 监听上传回调
      */
-    private void handleUploadCallback(final ViewHolder holder, final VolumeFile volumeFile) {
-        VolumeFileUploadManager.getInstance().setBusinessProgressCallback(volumeFile, new ProgressCallback() {
+    private void handleUploadCallback(final ViewHolder holder, final VolumeFile originVolumeFile) {
+        VolumeFileUploadManager.getInstance().setBusinessProgressCallback(originVolumeFile, new ProgressCallback() {
             @Override
             public void onSuccess(VolumeFile volumeFile) {
-                int position = (int) holder.statusLayout.getTag();
+                Log.d("zhang", "handleUploadCallback onSuccess: ");
                 holder.progressBar.setStatus(CircleProgressBar.Status.End);
-                fileList.remove(position);
-                notifyItemRemoved(position);
+                fileList.remove(originVolumeFile);
+                notifyDataSetChanged();
                 if (callBack != null) {
                     callBack.refreshView(fileList);
                 }
@@ -151,14 +151,14 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
 
             @Override
             public void onLoading(int progress, String speed) {
-                if (volumeFile.getStatus().equals(VolumeFile.STATUS_UPLOAD_IND)) {
+                if (originVolumeFile.getStatus().equals(VolumeFile.STATUS_UPLOAD_IND)) {
                     if (!StringUtils.isBlank(speed)) {
                         holder.speedTv.setText(speed);
                     }
                 }
                 Log.d("zhang", "upLoading: progress = " + progress
-                        + ",speed = " + speed + ",status = " + volumeFile.getStatus());
-                volumeFile.setProgress(progress);
+                        + ",speed = " + speed + ",status = " + originVolumeFile.getStatus());
+                originVolumeFile.setProgress(progress);
                 if (progress > 0) {
                     holder.progressBar.setProgress(progress);
                 }
@@ -179,10 +179,9 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
             @Override
             public void onSuccess(VolumeFile volumeFile) {
                 Log.d("zhang", "handleDownloadCallback onSuccess: ");
-                int position = (int) holder.statusLayout.getTag();
                 holder.progressBar.setStatus(CircleProgressBar.Status.End);
-                fileList.remove(position);
-                notifyItemRemoved(position);
+                fileList.remove(volumeFile);
+                notifyDataSetChanged();
                 if (callBack != null) {
                     callBack.refreshView(fileList);
                 }

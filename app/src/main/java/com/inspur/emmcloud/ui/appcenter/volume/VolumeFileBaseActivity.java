@@ -816,7 +816,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     /**
      * 获取文件列表
      */
-    protected void getVolumeFileList(boolean isShowDlg) {
+    public void getVolumeFileList(boolean isShowDlg) {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
             loadingDlg.show(isShowDlg);
             String path = currentDirAbsolutePath;

@@ -591,10 +591,10 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
             VolumeFile mockVolumeFile = VolumeFile.getMockVolumeFile(file, volume.getId());
             VolumeFileUploadManager.getInstance().uploadFile(mockVolumeFile, filePath, currentDirAbsolutePath);
-            volumeFileList.add(0, mockVolumeFile);
+//            volumeFileList.add(0, mockVolumeFile);
             initDataBlankLayoutStatus();
-            adapter.setVolumeFileList(volumeFileList);
-            adapter.notifyItemInserted(0);
+//            adapter.setVolumeFileList(volumeFileList);
+//            adapter.notifyItemInserted(0);
             //解决RecyclerView当数据添加到第一位置，显示位置不正确的系统bug
             fileRecycleView.scrollToPosition(0);
             showAnimator();
@@ -617,9 +617,8 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                             break;
                         }
                     }
-                    if (index != -1) {
-                        volumeFileList.remove(index);
-                        volumeFileList.add(index, volumeFile);
+                    if (index == -1) {
+                        volumeFileList.add(volumeFile);
                         adapter.setVolumeFileList(volumeFileList);
                         adapter.notifyItemChanged(index);
                     }

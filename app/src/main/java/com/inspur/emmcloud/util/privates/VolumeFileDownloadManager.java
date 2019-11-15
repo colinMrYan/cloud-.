@@ -143,7 +143,7 @@ public class VolumeFileDownloadManager extends APIInterfaceInstance {
         volumeFile.setLastRecordTime(System.currentTimeMillis());
         volumeFile.setCompleteSize(volumeFile.getProgress() / 100 * volumeFile.getSize());
         if (!isReload) {
-            volumeFileDownloadList.add(volumeFile);
+            volumeFileDownloadList.add(0, volumeFile);
             VolumeFileDownloadCacheUtils.saveVolumeFileList(volumeFileDownloadList);
         } else {
             for (int i = 0; i < volumeFileDownloadList.size(); i++) {

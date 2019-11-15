@@ -80,7 +80,7 @@ public class VolumeFileUploadManager extends APIInterfaceInstance {
         } else {
             volumeFileUpload.setStatus(VolumeFile.STATUS_UPLOAD_FAIL);
         }
-        volumeFileUploadList.add(volumeFileUpload);
+        volumeFileUploadList.add(0, volumeFileUpload);
         VolumeFileUploadCacheUtils.saveVolumeFileUpload(volumeFileUpload);
 
     }
