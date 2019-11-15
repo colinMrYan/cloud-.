@@ -141,8 +141,8 @@ public class ShareToConversationBlankActivity extends BaseActivity {
         SearchModel searchModel = (SearchModel) data.getSerializableExtra("searchModel");
         if (searchModel != null) {
             String userOrChannelId = searchModel.getId();
-            boolean isGroup = searchModel.getType().equals(SearchModel.TYPE_GROUP);
-            share2Conversation(userOrChannelId, isGroup);
+            boolean isUser = searchModel.getType().equals(SearchModel.TYPE_USER);
+            share2Conversation(userOrChannelId, isUser);
         } else {
             callbackFail();
         }
@@ -152,17 +152,17 @@ public class ShareToConversationBlankActivity extends BaseActivity {
      * 分享到聊天界面
      *
      * @param userOrChannelId
-     * @param isGroup
+     * @param isUser
      */
-    private void share2Conversation(String userOrChannelId, boolean isGroup) {
+    private void share2Conversation(String userOrChannelId, boolean isUser) {
         if (StringUtils.isBlank(userOrChannelId)) {
             callbackFail();
         } else {
-            if (isGroup) {
+            if (isUser) {
+                createDirectChannel(userOrChannelId);
+            } else {
                 cid = userOrChannelId;
                 sendMessage();
-            } else {
-                createDirectChannel(userOrChannelId);
             }
         }
     }
