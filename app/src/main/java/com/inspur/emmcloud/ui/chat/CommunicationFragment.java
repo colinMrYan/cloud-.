@@ -35,7 +35,6 @@ import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
@@ -540,7 +539,7 @@ public class CommunicationFragment extends BaseFragment {
                 if (conversationList.size() > 0) {
                     //Conversation存储，主要存储其lastUpdate字段，便于便于后续获取Conversation排序
                     uiConversationList = UIConversation.conversationList2UIConversationList(conversationList);
-                    ConversationCacheUtils.saveConversationList(MyApplication.getInstance(), conversationList);
+                    ConversationCacheUtils.updateConversationList(MyApplication.getInstance(), conversationList, "lastUpdate");
                     Iterator<UIConversation> it = uiConversationList.iterator();
                     while (it.hasNext()) {
                         UIConversation uiConversation = it.next();
@@ -554,11 +553,12 @@ public class CommunicationFragment extends BaseFragment {
             } else {
                 uiConversationList.addAll(displayUIConversationList);
                 UIConversation uiConversation = new UIConversation(changedConversation);
-                ConversationCacheUtils.saveConversation(BaseApplication.getInstance(), changedConversation);
+                ConversationCacheUtils.updateConversation(BaseApplication.getInstance(), changedConversation, "lastUpdate");
                 uiConversationList.remove(uiConversation);
                 if (isConversationShow(uiConversation)) {
                     uiConversationList.add(uiConversation);
                 }
+
             }
             return uiConversationList;
         }
@@ -1054,7 +1054,6 @@ public class CommunicationFragment extends BaseFragment {
                         if (conversation.isHide()) {
                             conversation.setHide(false);
                             ConversationCacheUtils.setConversationHide(MyApplication.getInstance(), conversation.getId(), false);
-                            LogUtils.jasonDebug("set---------------");
                         }
                         notifyConversationMessageDataChanged(conversation.getId());
                     }
