@@ -307,7 +307,7 @@ public class AppSchemeHandleActivity extends BaseActivity {
     private void startVoiceCall(String content) {
         CustomProtocol customProtocol = new CustomProtocol(content);
         if (customProtocol != null) {
-            VoiceCommunicationManager.getInstance().getChannelInfoByChannelId(this,
+            VoiceCommunicationManager.getInstance().getChannelInfoByChannelId(
                     customProtocol.getParamMap().get(Constant.COMMAND_ROOM_ID),
                     ECMChatInputMenu.VOICE_CALL, customProtocol.getParamMap().get(Constant.COMMAND_CHANNEL_ID));
         }

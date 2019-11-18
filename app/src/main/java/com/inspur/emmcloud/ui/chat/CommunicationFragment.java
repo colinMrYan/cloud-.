@@ -1074,7 +1074,7 @@ public class CommunicationFragment extends BaseFragment {
     //接收到websocket发过来的消息，拨打音视频电话，被呼叫触发
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveVoiceOrVideoCall(final GetVoiceAndVideoResult getVoiceAndVideoResult) {
-        VoiceCommunicationManager.getInstance().onReceiveCommand(getActivity(), getVoiceAndVideoResult);
+        VoiceCommunicationManager.getInstance().onReceiveCommand(getVoiceAndVideoResult);
     }
 
     //socket断开重连时（如断网联网）会触发此方法

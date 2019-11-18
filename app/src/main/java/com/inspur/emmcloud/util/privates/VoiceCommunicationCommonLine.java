@@ -1,7 +1,5 @@
 package com.inspur.emmcloud.util.privates;
 
-import android.app.Activity;
-
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.bean.chat.GetVoiceAndVideoResult;
@@ -18,15 +16,14 @@ public class VoiceCommunicationCommonLine {
     /**
      * 处理socket邀请消息
      *
-     * @param activity
      * @param customProtocol
      * @param getVoiceAndVideoResult
      */
-    public static void onInvite(Activity activity, CustomProtocol customProtocol, GetVoiceAndVideoResult getVoiceAndVideoResult) {
+    public static void onInvite(CustomProtocol customProtocol, GetVoiceAndVideoResult getVoiceAndVideoResult) {
         String agoraChannelId = customProtocol.getParamMap().get(Constant.COMMAND_ROOM_ID);
         //判断如果在通话中就不再接听新的来电
         if (!VoiceCommunicationManager.getInstance().isVoiceBusy()) {
-            VoiceCommunicationManager.getInstance().getChannelInfoByChannelId(activity, agoraChannelId, getVoiceAndVideoResult.getContextParamsType(), getVoiceAndVideoResult.getChannel());
+            VoiceCommunicationManager.getInstance().getChannelInfoByChannelId(agoraChannelId, getVoiceAndVideoResult.getContextParamsType(), getVoiceAndVideoResult.getChannel());
         } else {
             String channelId = customProtocol.getParamMap().get(Constant.COMMAND_CHANNEL_ID);
             String fromUid = customProtocol.getParamMap().get(Constant.COMMAND_UID);

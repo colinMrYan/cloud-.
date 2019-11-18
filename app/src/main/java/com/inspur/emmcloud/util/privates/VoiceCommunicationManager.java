@@ -440,10 +440,9 @@ public class VoiceCommunicationManager {
     /**
      * CommunicationFragment接到消息后的处理
      *
-     * @param activity
      * @param getVoiceAndVideoResult
      */
-    public void onReceiveCommand(Activity activity, GetVoiceAndVideoResult getVoiceAndVideoResult) {
+    public void onReceiveCommand(GetVoiceAndVideoResult getVoiceAndVideoResult) {
         CustomProtocol customProtocol = new CustomProtocol(getVoiceAndVideoResult.getContextParamsSchema());
         //接收到消息后告知服务端
         WSAPIService.getInstance().sendReceiveStartVoiceAndVideoCallMessageSuccess(getVoiceAndVideoResult.getTracer());
@@ -465,7 +464,7 @@ public class VoiceCommunicationManager {
                     break;
                 //正在通话中 消息是invite消息  三者打进电话 发拒绝消息
                 case Constant.COMMAND_INVITE:
-                    VoiceCommunicationCommonLine.onInvite(activity, customProtocol, getVoiceAndVideoResult);
+                    VoiceCommunicationCommonLine.onInvite(customProtocol, getVoiceAndVideoResult);
                     break;
                 default:
                     break;
@@ -492,11 +491,10 @@ public class VoiceCommunicationManager {
      *
      * @param agoraChannelId
      */
-    public void getChannelInfoByChannelId(Activity activity, String agoraChannelId, String communicationType, String cloudPlusId) {
+    public void getChannelInfoByChannelId(String agoraChannelId, String communicationType, String cloudPlusId) {
         if (NetUtils.isNetworkConnected(BaseApplication.getInstance())) {
             ChatAPIService chatAPIService = new ChatAPIService(BaseApplication.getInstance());
             WebService webService = new WebService();
-            webService.setActivity(activity);
             webService.setCloudPlusChannelId(cloudPlusId);
             webService.setCommunicationType(communicationType);
             chatAPIService.setAPIInterface(webService);
@@ -558,20 +556,19 @@ public class VoiceCommunicationManager {
     /**
      * 打开语音通话界面
      *
-     * @param activity
      * @param contextParamsRoom
      * @param contextParamsType
      * @param cid
      */
-    private void startVoiceOrVideoCall(Activity activity, String contextParamsRoom, String contextParamsType, String cid) {
+    private void startVoiceOrVideoCall(String contextParamsRoom, String contextParamsType, String cid) {
         Intent intent = new Intent();
-        intent.setClass(activity, ChannelVoiceCommunicationActivity.class);
+        intent.setClass(BaseApplication.getInstance(), ChannelVoiceCommunicationActivity.class);
         intent.putExtra(Constant.VOICE_VIDEO_CALL_AGORA_ID, contextParamsRoom);
         intent.putExtra(ConversationActivity.CLOUD_PLUS_CHANNEL_ID, cid);
         intent.putExtra(Constant.VOICE_VIDEO_CALL_TYPE, getCommunicationType(contextParamsType));
         intent.putExtra(Constant.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_PRE);
         intent.putExtra("userList", (Serializable) getVoiceCommunicationMemberList());
-        activity.startActivity(intent);
+        BaseApplication.getInstance().startActivity(intent);
     }
 
     /**
@@ -596,14 +593,16 @@ public class VoiceCommunicationManager {
         if (getCommunicationState() == COMMUNICATION_STATE_ING || isInviter()) {
             leaveChannel();
         } else {
-            remindEmmServerRefuseChannel(agoraChannelId);
+            if (agoraChannelId != null) {
+                remindEmmServerRefuseChannel(agoraChannelId);
+            }
         }
         if (getWaitAndConnectedNumber() >= 2 && !isInviterPre()) {
             sendCommunicationCommand(Constant.COMMAND_REFUSE);
         } else {
             sendCommunicationCommand(Constant.COMMAND_DESTROY);
         }
-        destroy();
+        destroyResourceAndState();
         SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
     }
 
@@ -611,6 +610,9 @@ public class VoiceCommunicationManager {
      * 启动计时器
      */
     public void startCountDownTimer() {
+        if (countDownTimer != null) {
+            return;
+        }
         //主叫方计时65秒，被叫方60秒
         countDownTimer = new CountDownTimer(isInviter() ? MILLIS_IN_FUTURE_INVITER : MILLIS_IN_FUTURE, COUNT_DOWN_INTERVAL) {
             @Override
@@ -848,7 +850,7 @@ public class VoiceCommunicationManager {
     /**
      * 离开频道销毁资源
      */
-    public void destroy() {
+    public void destroyResourceAndState() {
         if (countDownTimer != null) {
             countDownTimer.cancel();
             countDownTimer = null;
@@ -882,7 +884,7 @@ public class VoiceCommunicationManager {
             if (voiceCommunicationMemberList.size() <= 5) {
                 voiceCommunicationMemberListTop = voiceCommunicationMemberList;
                 voiceCommunicationMemberListBottom.clear();
-            } else if (voiceCommunicationManager.getVoiceCommunicationMemberList().size() <= 9) {
+            } else if (getVoiceCommunicationMemberList().size() <= 9) {
                 voiceCommunicationMemberListTop = voiceCommunicationMemberList.subList(0, 5);
                 voiceCommunicationMemberListBottom = voiceCommunicationMemberList.subList(5, voiceCommunicationMemberList.size());
             }
@@ -1025,7 +1027,7 @@ public class VoiceCommunicationManager {
             getVoiceCommunicationMemberList().clear();
             getVoiceCommunicationMemberList().addAll(getVoiceCommunicationResult.getVoiceCommunicationJoinChannelInfoBeanList());
             inviteeInfoBean = getMyCommunicationInfoBean(getVoiceCommunicationResult);
-            startVoiceOrVideoCall(activity, agoraChannelId, communicationType, cloudPlusChannelId);
+            startVoiceOrVideoCall(agoraChannelId, communicationType, cloudPlusChannelId);
         }
 
         @Override
@@ -1039,7 +1041,7 @@ public class VoiceCommunicationManager {
             //这时点击进入应用点接听，此接口返回false，则挂断通话
             if (!Boolean.parseBoolean(getBoolenResult.getResponse())) {
                 if (getCommunicationState() != COMMUNICATION_STATE_OVER) {
-                    ToastUtils.show(R.string.voice_communication_channel_not_exist);
+                    ToastUtils.show(R.string.voice_communication_direct_calling_canceled);
                 }
                 handleDestroy();
             }

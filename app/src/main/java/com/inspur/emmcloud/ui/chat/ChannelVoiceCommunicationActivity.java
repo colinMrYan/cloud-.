@@ -153,9 +153,9 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
      */
     private int initY;
     @BindView(R.id.recyclerview_voice_communication_first)
-    RecyclerView firstRecyclerview;
+    RecyclerView firstRecyclerView;
     @BindView(R.id.recyclerview_voice_communication_second)
-    RecyclerView secondRecyclerview;
+    RecyclerView secondRecyclerView;
     @BindView(R.id.ll_voice_communication_memebers)
     LinearLayout communicationMembersLinearLayout;
     @BindView(R.id.recyclerview_voice_communication_memebers_first)
@@ -524,15 +524,15 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         voiceCommunicationMemberAdapterSecond = new VoiceCommunicationMemberAdapter(this, voiceCommunicationManager.getVoiceCommunicationMemberListBottom(), 0);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        firstRecyclerview.setLayoutManager(layoutManager);
-        firstRecyclerview.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this, 8)));
-        firstRecyclerview.setAdapter(voiceCommunicationMemberAdapterFirst);
+        firstRecyclerView.setLayoutManager(layoutManager);
+        firstRecyclerView.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this, 8)));
+        firstRecyclerView.setAdapter(voiceCommunicationMemberAdapterFirst);
 
         LinearLayoutManager layoutManager2 = new LinearLayoutManager(this);
         layoutManager2.setOrientation(LinearLayoutManager.HORIZONTAL);
-        secondRecyclerview.setLayoutManager(layoutManager2);
-        secondRecyclerview.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this, 8)));
-        secondRecyclerview.setAdapter(voiceCommunicationMemberAdapterSecond);
+        secondRecyclerView.setLayoutManager(layoutManager2);
+        secondRecyclerView.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this, 8)));
+        secondRecyclerView.setAdapter(voiceCommunicationMemberAdapterSecond);
 
         LinearLayoutManager layoutManagerMembersSecond = new LinearLayoutManager(this);
         layoutManagerMembersSecond.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -1068,11 +1068,11 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 if (isJoinChannelSuccess == 0) {
                     refreshCommunicationMembersAdapterWithState();
                 } else {
-                    voiceCommunicationManager.destroy();
+                    voiceCommunicationManager.destroyResourceAndState();
                     finish();
                 }
             } else {
-                voiceCommunicationManager.destroy();
+                voiceCommunicationManager.destroyResourceAndState();
                 finish();
             }
         }
