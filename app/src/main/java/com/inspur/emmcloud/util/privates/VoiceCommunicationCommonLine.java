@@ -4,7 +4,7 @@ import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.bean.chat.GetVoiceAndVideoResult;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
-import com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity;
+import com.inspur.emmcloud.ui.chat.VoiceCommunicationActivity;
 
 /**
  * socket和声网的交叉逻辑和Invite逻辑（声网没有invite）
@@ -46,8 +46,8 @@ public class VoiceCommunicationCommonLine {
             if (VoiceCommunicationManager.getInstance().getWaitAndConnectedNumber() < 2) {
                 VoiceCommunicationManager.getInstance().handleDestroy();
                 //防止在声网回调和小窗打开Activity同步进行，接收到回调没关上Activity的情况
-                if (BaseApplication.getInstance().isActivityExist(ChannelVoiceCommunicationActivity.class)) {
-                    BaseApplication.getInstance().closeActivity(ChannelVoiceCommunicationActivity.class.getSimpleName());
+                if (BaseApplication.getInstance().isActivityExist(VoiceCommunicationActivity.class)) {
+                    BaseApplication.getInstance().closeActivity(VoiceCommunicationActivity.class.getSimpleName());
                 }
             }
             if (VoiceCommunicationManager.getInstance().getOnVoiceCommunicationCallbacks() != null) {

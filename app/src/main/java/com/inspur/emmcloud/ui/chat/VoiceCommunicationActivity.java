@@ -82,7 +82,7 @@ import io.agora.rtc.video.VideoCanvas;
  * @see CommunicationFragment#onReceiveVoiceOrVideoCall(GetVoiceAndVideoResult)
  * @see AppSchemeHandleActivity#openScheme()
  */
-public class ChannelVoiceCommunicationActivity extends BaseActivity {
+public class VoiceCommunicationActivity extends BaseActivity {
     /**
      * 通话三种状态pre代表正在邀请未接通，ing代表通话中，over代表通话结束，或者来了邀请未点击接听的状态，存储在变量
      * 默认是over状态
@@ -325,7 +325,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
 
             @Override
             public void onPermissionRequestFail(List<String> permissions) {
-                ToastUtils.show(ChannelVoiceCommunicationActivity.this, PermissionRequestManagerUtils.getInstance().getPermissionToast(ChannelVoiceCommunicationActivity.this, permissions));
+                ToastUtils.show(VoiceCommunicationActivity.this, PermissionRequestManagerUtils.getInstance().getPermissionToast(VoiceCommunicationActivity.this, permissions));
                 if (!isFinishing()) {
                     voiceCommunicationManager.handleDestroy();
                     finish();
@@ -345,12 +345,12 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             ImageDisplayUtils.getInstance().displayImage(userHeadImg, totalList.get(0).getHeadImageUrl(), R.drawable.icon_person_default);
             userNameTv.setText(totalList.get(0).getUserName());
             if (totalList.size() <= 5) {
-                communicationMembersFirstRecyclerview.setAdapter(new VoiceCommunicationMemberAdapter(ChannelVoiceCommunicationActivity.this, totalList, 3));
+                communicationMembersFirstRecyclerview.setAdapter(new VoiceCommunicationMemberAdapter(VoiceCommunicationActivity.this, totalList, 3));
             } else if (totalList.size() <= 9) {
                 List<VoiceCommunicationJoinChannelInfoBean> list1 = totalList.subList(0, 5);
                 List<VoiceCommunicationJoinChannelInfoBean> list2 = totalList.subList(5, totalList.size());
-                communicationMembersFirstRecyclerview.setAdapter(new VoiceCommunicationMemberAdapter(ChannelVoiceCommunicationActivity.this, list1, 3));
-                communicationMemberSecondRecyclerview.setAdapter(new VoiceCommunicationMemberAdapter(ChannelVoiceCommunicationActivity.this, list2, 3));
+                communicationMembersFirstRecyclerview.setAdapter(new VoiceCommunicationMemberAdapter(VoiceCommunicationActivity.this, list1, 3));
+                communicationMemberSecondRecyclerview.setAdapter(new VoiceCommunicationMemberAdapter(VoiceCommunicationActivity.this, list2, 3));
             }
         }
     }
@@ -907,8 +907,8 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     }
 
     private void showSmallWindowPermissionDialog() {
-        new CustomDialog.MessageDialogBuilder(ChannelVoiceCommunicationActivity.this)
-                .setMessage(getString(R.string.permission_grant_window_alert, AppUtils.getAppName(ChannelVoiceCommunicationActivity.this)))
+        new CustomDialog.MessageDialogBuilder(VoiceCommunicationActivity.this)
+                .setMessage(getString(R.string.permission_grant_window_alert, AppUtils.getAppName(VoiceCommunicationActivity.this)))
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -933,8 +933,8 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             showSmallWindowAndCloseActivity();
         } else {
             if (isNeedGuid) {
-                new CustomDialog.MessageDialogBuilder(ChannelVoiceCommunicationActivity.this)
-                        .setMessage(getString(R.string.permission_grant_background_start, AppUtils.getAppName(ChannelVoiceCommunicationActivity.this)))
+                new CustomDialog.MessageDialogBuilder(VoiceCommunicationActivity.this)
+                        .setMessage(getString(R.string.permission_grant_background_start, AppUtils.getAppName(VoiceCommunicationActivity.this)))
                         .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -964,10 +964,10 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                 if (AppUtils.canBackgroundStart(this)) {
                     showSmallWindowAndCloseActivity();
                 } else {
-                    ToastUtils.show(getString(R.string.permission_grant_background_start_fail, AppUtils.getAppName(ChannelVoiceCommunicationActivity.this)));
+                    ToastUtils.show(getString(R.string.permission_grant_background_start_fail, AppUtils.getAppName(VoiceCommunicationActivity.this)));
                 }
             } else {
-                ToastUtils.show(getString(R.string.permission_grant_window_fail, AppUtils.getAppName(ChannelVoiceCommunicationActivity.this)));
+                ToastUtils.show(getString(R.string.permission_grant_window_fail, AppUtils.getAppName(VoiceCommunicationActivity.this)));
             }
         }
     }
@@ -1047,7 +1047,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
      */
     private void createChannelOrGetChannelInfoFail(String error, int errorCode) {
         voiceCommunicationManager.handleDestroy();
-        WebServiceMiddleUtils.hand(ChannelVoiceCommunicationActivity.this, error, errorCode);
+        WebServiceMiddleUtils.hand(VoiceCommunicationActivity.this, error, errorCode);
         finish();
     }
 

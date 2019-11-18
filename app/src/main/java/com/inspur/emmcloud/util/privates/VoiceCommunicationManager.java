@@ -24,8 +24,8 @@ import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationRtcStats;
 import com.inspur.emmcloud.bean.system.GetBoolenResult;
 import com.inspur.emmcloud.interf.OnVoiceCommunicationCallbacks;
-import com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
+import com.inspur.emmcloud.ui.chat.VoiceCommunicationActivity;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
 
 import org.json.JSONArray;
@@ -38,9 +38,9 @@ import io.agora.rtc.IRtcEngineEventHandler;
 import io.agora.rtc.RtcEngine;
 import io.agora.rtc.video.VideoEncoderConfiguration;
 
-import static com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_ING;
-import static com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_OVER;
-import static com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_PRE;
+import static com.inspur.emmcloud.ui.chat.VoiceCommunicationActivity.COMMUNICATION_STATE_ING;
+import static com.inspur.emmcloud.ui.chat.VoiceCommunicationActivity.COMMUNICATION_STATE_OVER;
+import static com.inspur.emmcloud.ui.chat.VoiceCommunicationActivity.COMMUNICATION_STATE_PRE;
 
 /**
  * 详细回调接口解释见OnVoiceCommunicationCallbacks
@@ -76,12 +76,12 @@ public class VoiceCommunicationManager {
     private CountDownTimer countDownTimer;
     /**
      * 通话状态类型
-     * {@link ChannelVoiceCommunicationActivity}
+     * {@link VoiceCommunicationActivity}
      * 跳转到指定类的指定方法，默认状态为over
      *
-     * @see ChannelVoiceCommunicationActivity#COMMUNICATION_STATE_PRE
-     * @see ChannelVoiceCommunicationActivity#COMMUNICATION_STATE_ING
-     * @see ChannelVoiceCommunicationActivity#COMMUNICATION_STATE_OVER
+     * @see VoiceCommunicationActivity#COMMUNICATION_STATE_PRE
+     * @see VoiceCommunicationActivity#COMMUNICATION_STATE_ING
+     * @see VoiceCommunicationActivity#COMMUNICATION_STATE_OVER
      */
     private int communicationState = COMMUNICATION_STATE_OVER;
     private boolean isHandsFree = false;
@@ -562,11 +562,11 @@ public class VoiceCommunicationManager {
      */
     private void startVoiceOrVideoCall(String contextParamsRoom, String contextParamsType, String cid) {
         Intent intent = new Intent();
-        intent.setClass(BaseApplication.getInstance(), ChannelVoiceCommunicationActivity.class);
+        intent.setClass(BaseApplication.getInstance(), VoiceCommunicationActivity.class);
         intent.putExtra(Constant.VOICE_VIDEO_CALL_AGORA_ID, contextParamsRoom);
         intent.putExtra(ConversationActivity.CLOUD_PLUS_CHANNEL_ID, cid);
         intent.putExtra(Constant.VOICE_VIDEO_CALL_TYPE, getCommunicationType(contextParamsType));
-        intent.putExtra(Constant.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_PRE);
+        intent.putExtra(Constant.VOICE_COMMUNICATION_STATE, VoiceCommunicationActivity.COMMUNICATION_STATE_PRE);
         intent.putExtra("userList", (Serializable) getVoiceCommunicationMemberList());
         BaseApplication.getInstance().startActivity(intent);
     }
@@ -668,7 +668,7 @@ public class VoiceCommunicationManager {
      */
     public boolean isVoiceBusy() {
         return communicationState == COMMUNICATION_STATE_PRE ||
-                communicationState == ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_ING;
+                communicationState == VoiceCommunicationActivity.COMMUNICATION_STATE_ING;
     }
 
     /**

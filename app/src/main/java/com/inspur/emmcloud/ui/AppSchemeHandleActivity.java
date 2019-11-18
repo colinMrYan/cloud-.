@@ -32,9 +32,9 @@ import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.ui.appcenter.ReactNativeAppActivity;
 import com.inspur.emmcloud.ui.appcenter.volume.VolumeHomePageActivity;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
-import com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.ui.chat.ConversationBaseActivity;
+import com.inspur.emmcloud.ui.chat.VoiceCommunicationActivity;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.ui.find.AnalysisActivity;
@@ -271,7 +271,7 @@ public class AppSchemeHandleActivity extends BaseActivity {
                             case "ecc-cloudplus-cmd-voice-call":
                                 if (VoiceCommunicationManager.getInstance().getRtcEngine() != null) {
                                     Intent intentVoiceCall = new Intent();
-                                    intentVoiceCall.setClass(AppSchemeHandleActivity.this, ChannelVoiceCommunicationActivity.class);
+                                    intentVoiceCall.setClass(AppSchemeHandleActivity.this, VoiceCommunicationActivity.class);
                                     intentVoiceCall.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                     intentVoiceCall.putExtra(Constant.VOICE_IS_FROM_SMALL_WINDOW, true);
                                     intentVoiceCall.putExtra(Constant.VOICE_COMMUNICATION_STATE,

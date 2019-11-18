@@ -17,9 +17,9 @@ import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 
-import static com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_ING;
-import static com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_OVER;
-import static com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_PRE;
+import static com.inspur.emmcloud.ui.chat.VoiceCommunicationActivity.COMMUNICATION_STATE_ING;
+import static com.inspur.emmcloud.ui.chat.VoiceCommunicationActivity.COMMUNICATION_STATE_OVER;
+import static com.inspur.emmcloud.ui.chat.VoiceCommunicationActivity.COMMUNICATION_STATE_PRE;
 
 /**
  * 悬浮窗管理类封装

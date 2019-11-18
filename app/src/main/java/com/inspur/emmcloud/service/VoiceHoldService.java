@@ -48,8 +48,8 @@ public class VoiceHoldService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-//        baseTime = intent.getLongExtra(ChannelVoiceCommunicationActivity.VOICE_TIME, 0);
-//        screenSize = intent.getIntExtra(ChannelVoiceCommunicationActivity.SCREEN_SIZE, 0);
+//        baseTime = intent.getLongExtra(VoiceCommunicationActivity.VOICE_TIME, 0);
+//        screenSize = intent.getIntExtra(VoiceCommunicationActivity.SCREEN_SIZE, 0);
         initViews();
         createToucher();
         return super.onStartCommand(intent, flags, startId);
@@ -155,10 +155,10 @@ public class VoiceHoldService extends Service {
      * 回到
      */
     private void goBackVoiceCommunicationActivity() {
-//        Intent intent = new Intent(getBaseContext(), ChannelVoiceCommunicationActivity.class);
+//        Intent intent = new Intent(getBaseContext(), VoiceCommunicationActivity.class);
 //        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-////        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.COME_BACK_FROM_SERVICE);
-//        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_TIME, Long.parseLong(TimeUtils.getChronometerSeconds(chronometer.getText().toString())));
+////        intent.putExtra(VoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, VoiceCommunicationActivity.COME_BACK_FROM_SERVICE);
+//        intent.putExtra(VoiceCommunicationActivity.VOICE_TIME, Long.parseLong(TimeUtils.getChronometerSeconds(chronometer.getText().toString())));
 //        startActivity(intent);
 
         Intent intent = null;
@@ -167,7 +167,7 @@ public class VoiceHoldService extends Service {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra(Constant.VOICE_IS_FROM_SMALL_WINDOW, true);
             intent.putExtra(Constant.VOICE_COMMUNICATION_STATE, VoiceCommunicationManager.getInstance().getCommunicationState());
-//            intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_TIME, Long.parseLong(TimeUtils.getChronometerSeconds(chronometer.getText().toString())));
+//            intent.putExtra(VoiceCommunicationActivity.VOICE_TIME, Long.parseLong(TimeUtils.getChronometerSeconds(chronometer.getText().toString())));
             LogUtils.YfcDebug("准备启动SchemeActivity");
             startActivity(intent);
         } catch (Exception e) {

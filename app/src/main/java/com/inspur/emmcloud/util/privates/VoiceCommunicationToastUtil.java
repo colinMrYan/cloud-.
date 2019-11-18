@@ -5,7 +5,7 @@ import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.bean.chat.Conversation;
-import com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity;
+import com.inspur.emmcloud.ui.chat.VoiceCommunicationActivity;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 
@@ -18,7 +18,7 @@ public class VoiceCommunicationToastUtil {
             switch (directOrGroup) {
                 case Conversation.TYPE_DIRECT:
                     switch (VoiceCommunicationManager.getInstance().getCommunicationState()) {
-                        case ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_PRE:
+                        case VoiceCommunicationActivity.COMMUNICATION_STATE_PRE:
                             //自己挂断，单聊，未接通
                             if (VoiceCommunicationManager.getInstance().isInviter()) {
                                 ToastUtils.show(R.string.voice_communication_direct_call_canceled);
@@ -26,7 +26,7 @@ public class VoiceCommunicationToastUtil {
                                 ToastUtils.show(R.string.voice_communication_direct_calling_reject);
                             }
                             break;
-                        case ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_ING:
+                        case VoiceCommunicationActivity.COMMUNICATION_STATE_ING:
                             //自己挂断，单聊，通话中
                             if (VoiceCommunicationManager.getInstance().isInviter()) {
                                 ToastUtils.show(R.string.voice_communication_direct_calling_ended);
@@ -40,11 +40,11 @@ public class VoiceCommunicationToastUtil {
                     break;
                 case Conversation.TYPE_GROUP:
                     switch (VoiceCommunicationManager.getInstance().getCommunicationState()) {
-                        case ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_PRE:
+                        case VoiceCommunicationActivity.COMMUNICATION_STATE_PRE:
                             //自己挂断，群聊，未接通
                             ToastUtils.show(R.string.voice_communication_group_calling_ended);
                             break;
-                        case ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_ING:
+                        case VoiceCommunicationActivity.COMMUNICATION_STATE_ING:
 //                            ToastUtils.show("无提示");
                             break;
                         default:
@@ -58,14 +58,14 @@ public class VoiceCommunicationToastUtil {
             switch (directOrGroup) {
                 case Conversation.TYPE_DIRECT:
                     switch (VoiceCommunicationManager.getInstance().getCommunicationState()) {
-                        case ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_PRE:
+                        case VoiceCommunicationActivity.COMMUNICATION_STATE_PRE:
                             if (VoiceCommunicationManager.getInstance().isInviter()) {
                                 ToastUtils.show(R.string.voice_communication_direct_call_audio_call_request_declined);
                             } else {
                                 ToastUtils.show(R.string.voice_communication_direct_calling_canceled);
                             }
                             break;
-                        case ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_ING:
+                        case VoiceCommunicationActivity.COMMUNICATION_STATE_ING:
                             //对方挂断，单聊
                             if (VoiceCommunicationManager.getInstance().isInviter()) {
                                 ToastUtils.show(R.string.voice_communication_direct_calling_canceled);
@@ -79,13 +79,13 @@ public class VoiceCommunicationToastUtil {
                     break;
                 case Conversation.TYPE_GROUP:
                     switch (VoiceCommunicationManager.getInstance().getCommunicationState()) {
-                        case ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_PRE:
+                        case VoiceCommunicationActivity.COMMUNICATION_STATE_PRE:
                             String name = ContactUserCacheUtils.getUserName(cloudPlusUid);
                             if (VoiceCommunicationManager.getInstance().isInviter() && !StringUtils.isBlank(name)) {
                                 ToastUtils.show(BaseApplication.getInstance().getString(R.string.voice_communication_group_call_busy, name));
                             }
                             break;
-                        case ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_ING:
+                        case VoiceCommunicationActivity.COMMUNICATION_STATE_ING:
                             if (cloudPlusUid.equals(BaseApplication.getInstance().getUid())) {
                                 ToastUtils.show(R.string.voice_communication_group_call_canceled);
                             }
