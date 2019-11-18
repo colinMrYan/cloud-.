@@ -1293,7 +1293,7 @@ public class CommunicationFragment extends BaseFragment {
                     break;
                 case "sync_all_base_data_success":
                     createGroupIcon(null);
-                    sortConversationList();
+                    getConversationList();
                     break;
                 case "set_all_message_read":
                     setAllConversationRead();
