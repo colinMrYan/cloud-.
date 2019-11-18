@@ -378,10 +378,10 @@ public class VoiceCommunicationActivity extends BaseActivity {
                 directMuteTv.setTextColor(voiceCommunicationManager.isMute() ? colorSelected : colorUnSelected);
                 directMuteImg.setSelected(voiceCommunicationManager.isMute());
             }
+            voiceCommunicationManager.muteLocalAudioStream(voiceCommunicationManager.isMute());
+            voiceCommunicationManager.muteAllRemoteAudioStreams(false);
+            voiceCommunicationManager.onSwitchSpeakerphoneClicked(voiceCommunicationManager.isHandsFree());
         }
-        voiceCommunicationManager.muteLocalAudioStream(voiceCommunicationManager.isMute());
-        voiceCommunicationManager.muteAllRemoteAudioStreams(false);
-        voiceCommunicationManager.onSwitchSpeakerphoneClicked(voiceCommunicationManager.isHandsFree());
     }
 
     /**
@@ -474,8 +474,9 @@ public class VoiceCommunicationActivity extends BaseActivity {
 
     private void changeMediaPlayState() {
         if (voiceCommunicationManager.getCommunicationState() == COMMUNICATION_STATE_PRE) {
-            mediaPlayerManagerUtils.changeToSpeakerMode();
-            mediaPlayerManagerUtils.play(R.raw.voice_communication_watting_answer, null, true);
+            //仿照微信，邀请者用听筒模式，被邀请者用外放模式
+            mediaPlayerManagerUtils.play(R.raw.voice_communication_watting_answer, null, true, voiceCommunicationManager.isInviterPre() ?
+                    MediaPlayerManagerUtils.MODE_EARPIECE : MediaPlayerManagerUtils.MODE_SPEAKER);
         } else {
             mediaPlayerManagerUtils.stop();
         }
