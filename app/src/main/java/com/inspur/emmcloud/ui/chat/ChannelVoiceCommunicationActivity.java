@@ -474,11 +474,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
 
     private void changeMediaPlayState() {
         if (voiceCommunicationManager.getCommunicationState() == COMMUNICATION_STATE_PRE) {
-            if (voiceCommunicationManager.isInviterPre()) {
-                mediaPlayerManagerUtils.changeToEarpieceModeNoStop();
-            } else if (voiceCommunicationManager.isInviteePre()) {
-                mediaPlayerManagerUtils.changeToSpeakerMode();
-            }
+            mediaPlayerManagerUtils.changeToSpeakerMode();
             mediaPlayerManagerUtils.play(R.raw.voice_communication_watting_answer, null, true);
         } else {
             mediaPlayerManagerUtils.stop();
