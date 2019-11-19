@@ -30,6 +30,7 @@ import org.xutils.x;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class VolumeFileDownloadManager extends APIInterfaceInstance {
@@ -70,6 +71,16 @@ public class VolumeFileDownloadManager extends APIInterfaceInstance {
      * @return
      */
     public List<VolumeFile> getAllDownloadVolumeFile() {
+        Iterator<VolumeFile> iterator = volumeFileDownloadList.iterator();
+        while (iterator.hasNext()) {
+            VolumeFile item = iterator.next();
+            if (FileUtils.isFileExist(MyAppConfig.getFileDownloadByUserAndTanentDirPath() + item.getName())) {
+                //防止重复下载
+                iterator.remove();
+                VolumeFileDownloadCacheUtils.deleteVolumeFile(item);
+            }
+        }
+
         return volumeFileDownloadList;
     }
 
