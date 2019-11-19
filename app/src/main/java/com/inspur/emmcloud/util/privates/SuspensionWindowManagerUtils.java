@@ -14,13 +14,12 @@ import android.widget.Chronometer;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
-import com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity;
+import com.inspur.emmcloud.basemodule.config.Constant;
 
-import static com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_ING;
-import static com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_OVER;
-import static com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_PRE;
+import static com.inspur.emmcloud.ui.chat.VoiceCommunicationActivity.COMMUNICATION_STATE_ING;
+import static com.inspur.emmcloud.ui.chat.VoiceCommunicationActivity.COMMUNICATION_STATE_OVER;
+import static com.inspur.emmcloud.ui.chat.VoiceCommunicationActivity.COMMUNICATION_STATE_PRE;
 
 /**
  * 悬浮窗管理类封装
@@ -83,9 +82,11 @@ public class SuspensionWindowManagerUtils {
      * 隐藏悬浮窗
      */
     public void hideCommunicationSmallWindow() {
-        if (isShowing && null != windowView && windowManager != null) {
+        if (isShowing) {
             try {
-                windowManager.removeView(windowView);
+                if (null != windowView && null != windowManager) {
+                    windowManager.removeView(windowView);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -131,9 +132,6 @@ public class SuspensionWindowManagerUtils {
                 }
             }
         };
-        //点击事件的监听
-//        ImageButton imgBtnPhone = (ImageButton) windowView.findViewById(R.id.img_btn_voice_window);
-//        imgBtnPhone.setOnClickListener(clickListener);
         windowView.setOnClickListener(clickListener);
         //更新窗口位置的监听
         View.OnTouchListener touchListener = new View.OnTouchListener() {
@@ -157,7 +155,6 @@ public class SuspensionWindowManagerUtils {
                 return false;
             }
         };
-//        imgBtnPhone.setOnTouchListener(touchListener);
         windowView.setOnTouchListener(touchListener);
     }
 
@@ -167,9 +164,13 @@ public class SuspensionWindowManagerUtils {
      */
     public void refreshSmallWindow() {
         if (chronometer != null) {
-            LogUtils.YfcDebug("重置计时器");
-            chronometer.setBase(SystemClock.elapsedRealtime());
-            chronometer.start();
+            chronometer.post(new Runnable() {
+                @Override
+                public void run() {
+                    chronometer.setBase(SystemClock.elapsedRealtime());
+                    chronometer.start();
+                }
+            });
         }
     }
 
@@ -234,34 +235,18 @@ public class SuspensionWindowManagerUtils {
                 hideCommunicationSmallWindow();
                 return;
             }
-            Intent intent = Intent.parseUri("ecc-cloudplus-cmd-voice-call://voice_call", Intent.URI_INTENT_SCHEME);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_IS_FROM_SMALL_WINDOW, true);
-            intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE,
-                    VoiceCommunicationManager.getInstance().getLayoutState());
-            LogUtils.YfcDebug("准备启动SchemeActivity");
-            windowContext.startActivity(intent);
-//            Intent intent = new Intent(windowContext, .class);
-//            Intent intent = Intent.parseUri("ecc-cloudplus-cmd-voice-call://123", Intent.URI_INTENT_SCHEME);
-//            intent.setClass(windowContext,AppSchemeHandleActivity.class);
-//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//            PendingIntent pendingIntent =
-//                    PendingIntent.getActivity(windowContext, 0, intent, 0);
-//            try {
-//                pendingIntent.send();
-//            } catch (PendingIntent.CanceledException e) {
-//                e.printStackTrace();
-//            }
-
-            LogUtils.YfcDebug("启动应用");
+            if (VoiceCommunicationManager.getInstance().getWaitAndConnectedNumber() >= 2) {
+                Intent intent = Intent.parseUri("ecc-cloudplus-cmd-voice-call://voice_call", Intent.URI_INTENT_SCHEME);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra(Constant.VOICE_IS_FROM_SMALL_WINDOW, true);
+                intent.putExtra(Constant.VOICE_COMMUNICATION_STATE,
+                        VoiceCommunicationManager.getInstance().getCommunicationState());
+                windowContext.startActivity(intent);
+            }
         } catch (Exception e) {
-            LogUtils.YfcDebug("捕获异常：" + e.getMessage());
             e.printStackTrace();
         }
     }
 
-//    public Chronometer getChronometer() {
-//        return chronometer;
-//    }
 }
 

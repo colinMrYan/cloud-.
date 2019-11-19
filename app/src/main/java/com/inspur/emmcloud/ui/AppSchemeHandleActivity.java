@@ -32,9 +32,9 @@ import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.ui.appcenter.ReactNativeAppActivity;
 import com.inspur.emmcloud.ui.appcenter.volume.VolumeHomePageActivity;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
-import com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.ui.chat.ConversationBaseActivity;
+import com.inspur.emmcloud.ui.chat.VoiceCommunicationActivity;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.ui.find.AnalysisActivity;
@@ -251,7 +251,11 @@ public class AppSchemeHandleActivity extends BaseActivity {
                             case "ecc-cloudplus-cmd":
                                 CustomProtocol customProtocol = new CustomProtocol(uri.toString());
                                 if (customProtocol.getHost().equals("voice_channel")) {
-                                    startVoiceCall(uri.toString());
+                                    //不在通话中，点击通知才打开页面，否则不打开，不会影响小窗口或者通知的逻辑，
+                                    //小窗口通知走的ecc-cloudplus-cmd-voice-call
+                                    if (!VoiceCommunicationManager.getInstance().isVoiceBusy()) {
+                                        startVoiceCall(uri.toString());
+                                    }
                                 } else if (customProtocol.getHost().equals("jump/chatviewcontroller")) {
                                     String cid = customProtocol.getParamMap().get("chatroom");
                                     Intent intent = new Intent();
@@ -265,13 +269,17 @@ public class AppSchemeHandleActivity extends BaseActivity {
                                 break;
 
                             case "ecc-cloudplus-cmd-voice-call":
-                                Intent intentVoiceCall = new Intent();
-                                intentVoiceCall.setClass(AppSchemeHandleActivity.this, ChannelVoiceCommunicationActivity.class);
-                                intentVoiceCall.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                intentVoiceCall.putExtra(ChannelVoiceCommunicationActivity.VOICE_IS_FROM_SMALL_WINDOW, true);
-                                intentVoiceCall.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE,
-                                        VoiceCommunicationManager.getInstance().getLayoutState());
-                                startActivity(intentVoiceCall);
+                                if (VoiceCommunicationManager.getInstance().getRtcEngine() != null) {
+                                    Intent intentVoiceCall = new Intent();
+                                    intentVoiceCall.setClass(AppSchemeHandleActivity.this, VoiceCommunicationActivity.class);
+                                    intentVoiceCall.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    intentVoiceCall.putExtra(Constant.VOICE_IS_FROM_SMALL_WINDOW, true);
+                                    intentVoiceCall.putExtra(Constant.VOICE_COMMUNICATION_STATE,
+                                            VoiceCommunicationManager.getInstance().getCommunicationState());
+                                    startActivity(intentVoiceCall);
+                                } else {
+                                    ToastUtils.show(R.string.voice_communication_group_calling_ended);
+                                }
                                 finish();
                                 break;
                             case "impcloud":
@@ -299,14 +307,9 @@ public class AppSchemeHandleActivity extends BaseActivity {
     private void startVoiceCall(String content) {
         CustomProtocol customProtocol = new CustomProtocol(content);
         if (customProtocol != null) {
-            Intent intent = new Intent();
-            intent.setClass(AppSchemeHandleActivity.this, ChannelVoiceCommunicationActivity.class);
-            intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_VIDEO_CALL_AGORA_ID, customProtocol.getParamMap().get("roomid"));
-            intent.putExtra(ConversationActivity.CLOUD_PLUS_CHANNEL_ID, customProtocol.getParamMap().get("channelid"));
-            intent.putExtra(ChannelVoiceCommunicationActivity.SCHEMA_FROM_UID, customProtocol.getParamMap().get("uid"));
-            intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.INVITEE_LAYOUT_STATE);
-            intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_VIDEO_CALL_TYPE, ECMChatInputMenu.VOICE_CALL);
-            startActivity(intent);
+            VoiceCommunicationManager.getInstance().getChannelInfoByChannelId(
+                    customProtocol.getParamMap().get(Constant.COMMAND_ROOM_ID),
+                    ECMChatInputMenu.VOICE_CALL, customProtocol.getParamMap().get(Constant.COMMAND_CHANNEL_ID));
         }
     }
 

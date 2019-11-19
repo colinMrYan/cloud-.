@@ -275,6 +275,9 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
             }
             title = intent.getExtras().getString(EXTRA_TITLE);
             isMultiSelect = intent.getExtras().getBoolean(EXTRA_MULTI_SELECT);
+            if (selectLimit == 1) {
+                isMultiSelect = false;
+            }
             searchContent = intent.getExtras().getInt(EXTRA_TYPE);
             isContainMe = intent.getExtras().containsKey(EXTRA_CONTAIN_ME) && intent.getBooleanExtra(EXTRA_CONTAIN_ME, false);
             if (intent.hasExtra(EXTRA_HAS_SELECT)) {
@@ -1540,7 +1543,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
 
             if (searchModel != null) {
                 displayImg(searchModel, viewHolder.photoImg);
-                if (searchContent == SEARCH_NOTHIING) {
+                if (searchContent == SEARCH_NOTHIING || !isMultiSelect) {
                     viewHolder.selectedImg.setVisibility(View.GONE);
                 } else if (searchModel.getType().equals(SearchModel.TYPE_STRUCT)) {
                     viewHolder.selectedImg.setVisibility(View.GONE);
@@ -1603,7 +1606,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
             SearchModel searchModel = commonContactList.get(position);
             viewHolder.nameText.setText(getCompleteName(searchModel));
             displayImg(searchModel, viewHolder.photoImg);
-            if (searchContent == SEARCH_NOTHIING) {
+            if (searchContent == SEARCH_NOTHIING || !isMultiSelect) {
                 viewHolder.selectedImg.setVisibility(View.GONE);
             } else if (searchModel.getType().equals(SearchModel.TYPE_STRUCT)) {
                 viewHolder.selectedImg.setVisibility(View.GONE);
@@ -1685,7 +1688,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
             CommunicationUtils.setUserDescText(searchModel, viewHolder.descTv, true);
 
 
-            if (searchContent == SEARCH_NOTHIING) {
+            if (searchContent == SEARCH_NOTHIING || !isMultiSelect) {
                 viewHolder.selectedImg.setVisibility(View.GONE);
             } else if (searchModel.getType().equals(SearchModel.TYPE_STRUCT)) {
                 viewHolder.selectedImg.setVisibility(View.GONE);

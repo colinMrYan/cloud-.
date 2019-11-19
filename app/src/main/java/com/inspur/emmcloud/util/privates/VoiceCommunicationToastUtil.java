@@ -1,81 +1,103 @@
 package com.inspur.emmcloud.util.privates;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
-import com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity;
+import com.inspur.emmcloud.bean.chat.Conversation;
+import com.inspur.emmcloud.ui.chat.VoiceCommunicationActivity;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 
 public class VoiceCommunicationToastUtil {
 
-    public static void showToast(String type) {
-        if (BaseApplication.getInstance().isActivityExist(ChannelVoiceCommunicationActivity.class)) {
-            return;
-        }
-
-        String endTip = BaseApplication.getInstance().getString(R.string.voice_communication_end);
-        if (type.equals("destroy")) {
-            ToastUtils.show(endTip);
-        } else if (type.equals("refuse")) {
-            if (VoiceCommunicationManager.getInstance().getVoiceCommunicationMemberList().size() == 2) {    //单聊时
-                ToastUtils.show(endTip);
-            } else if (!SuspensionWindowManagerUtils.getInstance().isShowing()) {
-                ToastUtils.show(endTip);
+    public static void showToast(boolean isMySelfHungUp, String cloudPlusUid) {
+        String directOrGroup = ConversationCacheUtils.getConversationType(BaseApplication.getInstance(),
+                VoiceCommunicationManager.getInstance().getCloudPlusChannelId());
+        if (isMySelfHungUp) {
+            switch (directOrGroup) {
+                case Conversation.TYPE_DIRECT:
+                    switch (VoiceCommunicationManager.getInstance().getCommunicationState()) {
+                        case VoiceCommunicationActivity.COMMUNICATION_STATE_PRE:
+                            //自己挂断，单聊，未接通
+                            if (VoiceCommunicationManager.getInstance().isInviter()) {
+                                ToastUtils.show(R.string.voice_communication_direct_call_canceled);
+                            } else {
+                                ToastUtils.show(R.string.voice_communication_direct_calling_reject);
+                            }
+                            break;
+                        case VoiceCommunicationActivity.COMMUNICATION_STATE_ING:
+                            //自己挂断，单聊，通话中
+                            if (VoiceCommunicationManager.getInstance().isInviter()) {
+                                ToastUtils.show(R.string.voice_communication_direct_calling_ended);
+                            } else {
+                                ToastUtils.show(R.string.voice_communication_direct_calling_reject);
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                case Conversation.TYPE_GROUP:
+                    switch (VoiceCommunicationManager.getInstance().getCommunicationState()) {
+                        case VoiceCommunicationActivity.COMMUNICATION_STATE_PRE:
+                            //自己挂断，群聊，未接通
+                            ToastUtils.show(R.string.voice_communication_group_calling_ended);
+                            break;
+                        case VoiceCommunicationActivity.COMMUNICATION_STATE_ING:
+//                            ToastUtils.show("无提示");
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            switch (directOrGroup) {
+                case Conversation.TYPE_DIRECT:
+                    switch (VoiceCommunicationManager.getInstance().getCommunicationState()) {
+                        case VoiceCommunicationActivity.COMMUNICATION_STATE_PRE:
+                            if (VoiceCommunicationManager.getInstance().isInviter()) {
+                                ToastUtils.show(R.string.voice_communication_direct_call_audio_call_request_declined);
+                            } else {
+                                ToastUtils.show(R.string.voice_communication_direct_calling_canceled);
+                            }
+                            break;
+                        case VoiceCommunicationActivity.COMMUNICATION_STATE_ING:
+                            //对方挂断，单聊
+                            if (VoiceCommunicationManager.getInstance().isInviter()) {
+                                ToastUtils.show(R.string.voice_communication_direct_calling_canceled);
+                            } else {
+                                ToastUtils.show(R.string.voice_communication_direct_calling_ended);
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                case Conversation.TYPE_GROUP:
+                    switch (VoiceCommunicationManager.getInstance().getCommunicationState()) {
+                        case VoiceCommunicationActivity.COMMUNICATION_STATE_PRE:
+                            String name = ContactUserCacheUtils.getUserName(cloudPlusUid);
+                            if (VoiceCommunicationManager.getInstance().isInviter() && !StringUtils.isBlank(name)) {
+                                ToastUtils.show(BaseApplication.getInstance().getString(R.string.voice_communication_group_call_busy, name));
+                            }
+                            break;
+                        case VoiceCommunicationActivity.COMMUNICATION_STATE_ING:
+                            if (cloudPlusUid.equals(BaseApplication.getInstance().getUid())) {
+                                ToastUtils.show(R.string.voice_communication_group_call_canceled);
+                            }
+                            break;
+//                            ToastUtils.show("无提示");
+                        default:
+                            break;
+                    }
+                    break;
+                default:
+                    break;
             }
         }
-//        TODO 统一整理状态
-//        if (type.equals("refuse")) {        //收到拒绝消息
-//            if (VoiceCommunicationManager.getInstance().isInviter()) {      //邀请者
-//                if (VoiceCommunicationManager.getInstance().getVoiceCommunicationMemberList().size() == 2) {    //单聊时
-//                    switch (VoiceCommunicationManager.getInstance().getCommunicationState()) {
-//                        case COMMUNICATION_STATE_PRE:
-//                            ToastUtils.show("聊天已取消");
-//                            break;
-//                        case COMMUNICATION_STATE_ING:
-//                            ToastUtils.show("聊天结束");
-//                            break;
-//                        case COMMUNICATION_STATE_OVER:
-//                            ToastUtils.show("通话已结束");
-//                            break;
-//                        default:
-//                            break;
-//                    }
-//                } else {    //TODO：群聊时暂不提示
-//                    switch (VoiceCommunicationManager.getInstance().getCommunicationState()) {
-//                        case COMMUNICATION_STATE_OVER:
-//                            ToastUtils.show("通话已结束");
-//                            break;
-//                    }
-//                }
-//            } else {        //被邀请者
-//                if (VoiceCommunicationManager.getInstance().getVoiceCommunicationMemberList().size() == 2) {
-//                    ToastUtils.show("对方以挂断，通话结束");
-//                }
-//            }
-//
-//        } else if (type.equals("destroy")) {        //收到拒绝消息
-//            if (VoiceCommunicationManager.getInstance().isInviter()) {      //邀请者
-//                switch (VoiceCommunicationManager.getInstance().getCommunicationState()) {
-//                    case COMMUNICATION_STATE_PRE:
-//                        ToastUtils.show("聊天已取消");
-//                        break;
-//                    case COMMUNICATION_STATE_ING:
-//                        //单聊时提示   TODO：群聊时暂不提示
-//                        if (VoiceCommunicationManager.getInstance().getVoiceCommunicationMemberList().size() == 2) {
-//                            ToastUtils.show("聊天结束");
-//                        }
-//                        break;
-//                    case COMMUNICATION_STATE_OVER:
-//                        ToastUtils.show("聊天结束");
-//                        break;
-//                    default:
-//                        break;
-//                }
-//
-//            } else {            //被邀请者
-//                if (VoiceCommunicationManager.getInstance().getVoiceCommunicationMemberList().size() == 2) {
-//                    ToastUtils.show("对方以挂断，通话结束");
-//                }
-//            }
-//        }
     }
 }

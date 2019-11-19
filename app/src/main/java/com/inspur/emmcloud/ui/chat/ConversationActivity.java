@@ -453,10 +453,10 @@ public class ConversationActivity extends ConversationBaseActivity {
      */
     private List<VoiceCommunicationJoinChannelInfoBean> getDirectCversationJoinChannelInfoBeanList() {
         List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList = new ArrayList<>();
-        List<String> memberList = new ArrayList<>();
-        memberList.add(DirectChannelUtils.getDirctChannelOtherUid(MyApplication.getInstance(), conversation.getName()));
-        memberList.add(MyApplication.getInstance().getUid());
-        List<ContactUser> contactUserList = ContactUserCacheUtils.getContactUserListById(memberList);
+        List<ContactUser> contactUserList = new ArrayList<>();
+        contactUserList.add(ContactUserCacheUtils.getContactUserByUid(MyApplication.getInstance().getUid()));
+        contactUserList.add(ContactUserCacheUtils.getContactUserByUid(
+                DirectChannelUtils.getDirctChannelOtherUid(MyApplication.getInstance(), conversation.getName())));
         for (int i = 0; i < contactUserList.size(); i++) {
             VoiceCommunicationJoinChannelInfoBean voiceCommunicationJoinChannelInfoBean = new VoiceCommunicationJoinChannelInfoBean();
             voiceCommunicationJoinChannelInfoBean.setUserId(contactUserList.get(i).getId());
@@ -473,11 +473,11 @@ public class ConversationActivity extends ConversationBaseActivity {
      */
     private void startVoiceOrVideoCall(String type, List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList) {
         Intent intent = new Intent();
-        intent.setClass(ConversationActivity.this, ChannelVoiceCommunicationActivity.class);
+        intent.setClass(ConversationActivity.this, VoiceCommunicationActivity.class);
         intent.putExtra("userList", (Serializable) voiceCommunicationUserInfoBeanList);
         intent.putExtra(CLOUD_PLUS_CHANNEL_ID, cid);
-        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_VIDEO_CALL_TYPE, type);
-        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.INVITER_LAYOUT_STATE);
+        intent.putExtra(Constant.VOICE_VIDEO_CALL_TYPE, type);
+        intent.putExtra(Constant.VOICE_COMMUNICATION_STATE, VoiceCommunicationActivity.COMMUNICATION_STATE_PRE);
         startActivity(intent);
     }
 

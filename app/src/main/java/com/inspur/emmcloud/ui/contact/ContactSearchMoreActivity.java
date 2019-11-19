@@ -183,6 +183,9 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
         isMultiSelect = getIntent().getBooleanExtra("isMultiSelect", false);
         selectMemList = (List<SearchModel>) getIntent().getSerializableExtra(
                 "selectMemList");
+        if (selectLimit == 1) {
+            isMultiSelect = false;
+        }
         searchContent = getIntent().getIntExtra("searchContent", 1);
         // 单选时隐藏输入框或者不选时
         if (!isMultiSelect || searchContent == SEARCH_NOTHIING) {
@@ -615,7 +618,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
             displayImg(searchModel, viewHolder.photoImg);
             viewHolder.nameText.setText(getCompleteName(searchModel));
             CommunicationUtils.setUserDescText(searchModel, viewHolder.descText, true);
-            if (searchContent == SEARCH_NOTHIING) {
+            if (searchContent == SEARCH_NOTHIING || !isMultiSelect) {
                 viewHolder.selectedImg.setVisibility(View.GONE);
             } else {
                 viewHolder.selectedImg.setVisibility(View.VISIBLE);
