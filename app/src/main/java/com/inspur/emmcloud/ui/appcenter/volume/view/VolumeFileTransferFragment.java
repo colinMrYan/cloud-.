@@ -23,6 +23,7 @@ import com.inspur.emmcloud.baselib.widget.VolumeActionLayout;
 import com.inspur.emmcloud.baselib.widget.dialogs.ActionSheetDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.ui.BaseMvpFragment;
@@ -43,6 +44,9 @@ import com.umeng.socialize.bean.PlatformName;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.shareboard.SnsPlatform;
 import com.umeng.socialize.utils.ShareBoardlistener;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -87,6 +91,7 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
 
     List<VolumeFile> volumeFileList = new ArrayList<>();
     VolumeFileTransferPresenter presenter;
+    TextView headerRightTv;
 
     @Nullable
     @Override
@@ -276,10 +281,14 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
                 if (selectCallBack != null) {
                     selectCallBack.onSelect(downloadedAdapter.getSelectVolumeFileList());
                 }
-                batchOprationHeaderText.setText(getString(R.string.clouddriver_has_selected, downloadedAdapter.getSelectVolumeFileList().size()));
+                if (downloadedAdapter.getSelectVolumeFileList().size() == volumeFileList.size()) {
+                    headerRightTv.setSelected(false);
+                    headerRightTv.setText(R.string.clouddriver_select_nothing);
+                } else {
+                    headerRightTv.setSelected(true);
+                    headerRightTv.setText(R.string.select_all);
+                }
                 setBottomOperationItemShow(downloadedAdapter.getSelectVolumeFileList());
-                getBatchOprationSelectAllText.setText((volumeFileList.size() == downloadedAdapter.getSelectVolumeFileList().size()) ? R.string.clouddriver_select_nothing : R.string.select_all);
-                batchOprationHeaderText.setText(getString(R.string.clouddriver_has_selected, downloadedAdapter.getSelectVolumeFileList().size()));
             }
 
             @Override
@@ -340,7 +349,7 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
     private void setHeaderOperation() {
         if (getActivity() instanceof VolumeFileTransferActivity) {
             TextView headerLeftTv = ((VolumeFileTransferActivity) getActivity()).getHeaderLeftTv();
-            final TextView headerRightTv = ((VolumeFileTransferActivity) getActivity()).getHeaderRightTv();
+            headerRightTv = ((VolumeFileTransferActivity) getActivity()).getHeaderRightTv();
             headerRightTv.setSelected(true);
             headerLeftTv.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -458,6 +467,10 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         deleteFile(deleteVolumeFile);
+                        downloadedAdapter.setSelectVolumeFileList(new ArrayList<VolumeFile>());
+                        if (selectCallBack != null) {
+                            selectCallBack.onSelect(new ArrayList<VolumeFile>());
+                        }
                         dialog.dismiss();
                     }
                 })
@@ -635,5 +648,13 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
 
     public interface SelectCallBack {
         void onSelect(List<VolumeFile> selectVolumeFileList);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveSimpleEventMessage(SimpleEventMessage simpleEventMessage) {
+        if (simpleEventMessage.getAction().equals(Constant.EVENTBUS_TAG_VOLUME_FILE_DOWNLOAD_SUCCESS) && currentIndex == 2) {
+            volumeFileList.add(0, (VolumeFile) simpleEventMessage.getMessageObj());
+            downloadedAdapter.notifyDataSetChanged();
+        }
     }
 }

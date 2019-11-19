@@ -72,7 +72,7 @@ public class FileDownloadManager {
         for (FileDownloadInfo fileDownloadInfo : fileDownloadInfoList) {
             File file = new File(fileDownloadInfo.getFilePath());
             if (file.exists()) {
-                downloadFileList.add(file);
+                downloadFileList.add(0, file);
             } else {
                 invalidFileDownloadInfoList.add(fileDownloadInfo);
             }

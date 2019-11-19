@@ -79,7 +79,7 @@ public class VolumeFile implements Serializable {
     private String volumeFileAbsolutePath = "";
     long lastRecordTime = 0;    //记录上次下载上传时间
     private Map<String, Integer> groupPrivilegeMap = new HashMap<>();
-    Callback.Cancelable cancelable;
+    transient Callback.Cancelable cancelable;
     long completeSize = 0;
     @Column(name = "localFilePath")
     private String localFilePath = "";

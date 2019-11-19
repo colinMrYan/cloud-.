@@ -12,12 +12,15 @@ import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.api.APIDownloadCallBack;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.DownloadFileCategory;
+import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.FileDownloadManager;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.interf.ProgressCallback;
 
+import org.greenrobot.eventbus.EventBus;
 import org.xutils.common.Callback;
 import org.xutils.http.HttpMethod;
 import org.xutils.http.RequestParams;
@@ -72,11 +75,22 @@ public class VolumeFileDownloadManager extends APIInterfaceInstance {
 
     public void setBusinessProgressCallback(VolumeFile volumeFile, final ProgressCallback businessProgressCallback) {
         for (int i = 0; i < volumeFileDownloadList.size(); i++) {
-            VolumeFile downloadVolumeFile = volumeFileDownloadList.get(i);
+            final VolumeFile downloadVolumeFile = volumeFileDownloadList.get(i);
             if (downloadVolumeFile.getId().equals(volumeFile.getId())) {
                 if (businessProgressCallback != null) {
                     if (downloadVolumeFile.getStatus().equals(VolumeFile.STATUS_DOWNLOAD_IND)) {
-                        businessProgressCallback.onLoading(downloadVolumeFile.getProgress(), "");
+                        if (downloadVolumeFile.getProgress() == 100) {
+                            volumeFileDownloadList.remove(downloadVolumeFile);
+                            VolumeFileDownloadCacheUtils.deleteVolumeFile(downloadVolumeFile);
+                            new android.os.Handler().post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    businessProgressCallback.onSuccess(downloadVolumeFile);
+                                }
+                            });
+                        } else {
+                            businessProgressCallback.onLoading(downloadVolumeFile.getProgress(), "");
+                        }
                     } else if (downloadVolumeFile.getStatus().equals(VolumeFile.STATUS_DOWNLOAD_FAIL)) {
                         new android.os.Handler().post(new Runnable() {
                             @Override
@@ -137,6 +151,10 @@ public class VolumeFileDownloadManager extends APIInterfaceInstance {
     public void downloadFile(final VolumeFile volumeFile, String currentDirAbsolutePath, boolean isReload) {
         final String fileSavePath = MyAppConfig.getFileDownloadByUserAndTanentDirPath() +
                 FileUtils.getNoDuplicateFileNameInDir(MyAppConfig.getFileDownloadByUserAndTanentDirPath(), volumeFile.getName());
+        if (FileUtils.isFileExist(MyAppConfig.getFileDownloadByUserAndTanentDirPath() + volumeFile.getName())) {
+            //防止重复下载
+            return;
+        }
         Log.d("zhang", "downloadFile: fileSavePath = " + fileSavePath);
         volumeFile.setLocalFilePath(fileSavePath);
         volumeFile.setStatus(VolumeFile.STATUS_DOWNLOAD_IND);
@@ -212,7 +230,7 @@ public class VolumeFileDownloadManager extends APIInterfaceInstance {
                     if (volumeFile.getId().equals(downloadVolumeFile.getId())) {
                         String speed = FileUtils.formatFileSize((current - downloadVolumeFile.getCompleteSize()) * 1000 /
                                 (System.currentTimeMillis() - downloadVolumeFile.getLastRecordTime())) + "/S";
-                        if (downloadVolumeFile.getBusinessProgressCallback() != null && downloadVolumeFile.getCompleteSize() != 0) {
+                        if (downloadVolumeFile.getBusinessProgressCallback() != null && downloadVolumeFile.getCompleteSize() >= 0) {
                             downloadVolumeFile.getBusinessProgressCallback().onLoading(progress, speed);
                         }
                         downloadVolumeFile.setProgress(progress);
@@ -238,6 +256,8 @@ public class VolumeFileDownloadManager extends APIInterfaceInstance {
                         }
                         VolumeFileDownloadCacheUtils.deleteVolumeFile(volumeFile);
                         volumeFileDownloadList.remove(volumeFile);
+                        SimpleEventMessage simpleEventMessage = new SimpleEventMessage(Constant.EVENTBUS_TAG_VOLUME_FILE_DOWNLOAD_SUCCESS, volumeFile);
+                        EventBus.getDefault().post(simpleEventMessage);
                         break;
                     }
                 }

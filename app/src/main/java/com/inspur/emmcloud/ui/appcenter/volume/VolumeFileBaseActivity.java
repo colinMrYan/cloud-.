@@ -169,6 +169,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     public int getLayoutResId() {
         return R.layout.activity_volume_file;
     }
+
     private void initView() {
         sortType = PreferencesByUserAndTanentUtils.getString(this, Constant.PREF_VOLUME_FILE_SORT_TYPE, SORT_BY_NAME_UP);
         loadingDlg = new LoadingDialog(this);
@@ -320,6 +321,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         boolean isVolumeFileWriteable = true;
         boolean isVolumeFileReadable = true;
         boolean isVolumeFileDirectory = true;
+        boolean isVolumeContainDir = false;
         boolean isOwner = true;
         for (int i = 0; i < selectVolumeFileList.size(); i++) {
             if (isVolumeFileWriteable) {
@@ -334,9 +336,13 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
             if (isVolumeFileDirectory) {
                 isVolumeFileDirectory = selectVolumeFileList.get(i).getType().equals(VolumeFile.FILE_TYPE_DIRECTORY);
             }
+
+            if (!isVolumeContainDir) {
+                isVolumeContainDir = selectVolumeFileList.get(i).getType().equals(VolumeFile.FILE_TYPE_DIRECTORY);
+            }
         }
         volumeActionDataList.add(new VolumeActionData(downloadAction, R.drawable.ic_volume_download,
-                selectVolumeFileList.size() >= 1 && !isVolumeFileDirectory
+                selectVolumeFileList.size() >= 1 && !isVolumeContainDir
                         && (isVolumeFileReadable || isVolumeFileWriteable)));
         volumeActionDataList.add(new VolumeActionData(copyAction, R.drawable.ic_volume_copy, (isVolumeFileReadable || isVolumeFileWriteable)));
         volumeActionDataList.add(new VolumeActionData(deleteAction, R.drawable.ic_volume_delete, isVolumeFileWriteable));
@@ -346,8 +352,9 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         volumeActionDataList.add(new VolumeActionData(shareTo, R.drawable.ic_volume_share, selectVolumeFileList.size() == 1 &&
                 !isVolumeFileDirectory && (isVolumeFileWriteable || isVolumeFileReadable)));
         volumeActionDataList.add(new VolumeActionData(permissionAction, R.drawable.ic_volume_permission,
-                isVolumeFileDirectory && (isVolumeFileWriteable || isVolumeFileReadable)
-                        && (volumeFrom != MY_VOLUME) && isOwner && volume.getType().equals("public")));
+                isVolumeFileDirectory && selectVolumeFileList.size() == 1 &&
+                        (isVolumeFileWriteable || isVolumeFileReadable) &&
+                        (volumeFrom != MY_VOLUME) && isOwner && volume.getType().equals("public")));
         for (int i = 0; i < volumeActionDataList.size(); i++) {
             if (!volumeActionDataList.get(i).isShow()) {
                 volumeActionDataList.remove(i);
@@ -404,9 +411,9 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
             String fileSavePath = FileDownloadManager.getInstance().getDownloadFilePath(
                     DownloadFileCategory.CATEGORY_VOLUME_FILE, volumeFile.getId(), volumeFile.getName());
             shareFile(fileSavePath, adapter.getSelectVolumeFileList().get(0));
-                adapter.clearSelectedVolumeFileList();
-                adapter.notifyDataSetChanged();
-                setBottomOperationItemShow(new ArrayList<VolumeFile>());
+            adapter.clearSelectedVolumeFileList();
+            adapter.notifyDataSetChanged();
+            setBottomOperationItemShow(new ArrayList<VolumeFile>());
         } else if (action.equals(permissionAction)) {
             startVolumeFilePermissionManager(volumeFile);
         }
