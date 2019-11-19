@@ -644,6 +644,7 @@
     <string name="volume_file_transfer_download_list">Downloading</string>
     <string name="volume_file_transfer_upload_list">Uploading</string>
     <string name="volume_file_transfer_list_wait_tip">Waiting&#8230;</string>
+    <string name="volume_file_transfer_list_pause_tip">Pausing&#8230;</string>
     <string name="volume_file_transfer_list_download_count">Downloading&#8230;(%1$d)</string>
     <string name="volume_file_transfer_list_upload_count">Uploading&#8230;(%1$d)</string>
     <string name="volume_file_transfer_list_pause">All suspended</string>
@@ -669,6 +670,7 @@
     <string name="volume_please_install_wechat">Please install Wechat</string>
     <string name="volume_share_2_qq_wechat">Share</string>
     <string name="volume_copy_between_volume_error_toast">%1$d Files copy unsuccessfully</string>
+    <string name="has_no_data">no data</string>
 
 
     <!-- 我的页面部分 -->

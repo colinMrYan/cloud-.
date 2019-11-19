@@ -645,6 +645,7 @@
     <string name="volume_file_transfer_download_list">下載列表</string>
     <string name="volume_file_transfer_upload_list">上傳列表</string>
     <string name="volume_file_transfer_list_wait_tip">正在等待&#8230;</string>
+    <string name="volume_file_transfer_list_pause_tip">暫停中&#8230;</string>
     <string name="volume_file_transfer_list_download_count">正在下載&#8230;(%1$d)</string>
     <string name="volume_file_transfer_list_upload_count">正在上傳&#8230;(%1$d)</string>
     <string name="volume_file_transfer_list_pause">全部暫停</string>
@@ -665,6 +666,7 @@
     <string name="volume_please_install_wechat">請先安裝微信</string>
     <string name="volume_share_2_qq_wechat">分享</string>
     <string name="volume_copy_between_volume_error_toast">%1$d 個文件複製失敗</string>
+    <string name="has_no_data">暫無數據</string>
 
     <!-- 我的頁面部分 -->
     <string name="moments">动态</string>

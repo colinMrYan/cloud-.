@@ -139,7 +139,12 @@ public class VolumeFileTransferActivity extends BaseMvpActivity implements Volum
 
     @Override
     public void onSelect(List<VolumeFile> selectVolumeFileList) {
-        if (selectVolumeFileList == null || selectVolumeFileList.size() == 0) {
+        if (selectVolumeFileList == null) {     //处理“全不选”情况
+            setTitleText(R.string.volume_file_transfer);
+            headerLeftTv.setVisibility(View.VISIBLE);
+            headerRightTv.setVisibility(View.VISIBLE);
+            backBtn.setVisibility(View.GONE);
+        } else if (selectVolumeFileList.size() == 0) {  //正常无数据
             setTitleText(R.string.volume_file_transfer);
             headerLeftTv.setVisibility(View.GONE);
             headerRightTv.setVisibility(View.GONE);

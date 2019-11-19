@@ -37,6 +37,7 @@ public class VolumeFileTransferPresenter extends BasePresenter<VolumeFileTransfe
                 List<File> fileList = FileDownloadManager.getInstance().getFileDownloadFileList(DownloadFileCategory.CATEGORY_VOLUME_FILE);
                 for (File file : fileList) {
                     VolumeFile volumeFile = VolumeFile.getMockVolumeFile(file, "123");
+                    volumeFile.setLastUpdate(file.lastModified());
                     volumeFile.setStatus(VolumeFile.STATUS_NORMAL);
                     list.add(volumeFile);
                 }

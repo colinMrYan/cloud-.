@@ -340,7 +340,8 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
     private void setHeaderOperation() {
         if (getActivity() instanceof VolumeFileTransferActivity) {
             TextView headerLeftTv = ((VolumeFileTransferActivity) getActivity()).getHeaderLeftTv();
-            TextView headerRightTv = ((VolumeFileTransferActivity) getActivity()).getHeaderRightTv();
+            final TextView headerRightTv = ((VolumeFileTransferActivity) getActivity()).getHeaderRightTv();
+            headerRightTv.setSelected(true);
             headerLeftTv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -356,13 +357,16 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
                     if (ClickRuleUtil.isFastClick()) {
                         return;
                     }
+                    boolean isSelect = headerRightTv.isSelected();
                     List<VolumeFile> list = new ArrayList<>(volumeFileList);
-                    downloadedAdapter.setSelectVolumeFileList(list);
+                    downloadedAdapter.setSelectVolumeFileList(isSelect ? list : new ArrayList<VolumeFile>());
+                    headerRightTv.setText(isSelect ? R.string.clouddriver_select_nothing : R.string.select_all);
                     downloadedAdapter.notifyDataSetChanged();
-                    if (selectCallBack != null) {
-                        selectCallBack.onSelect(list);
-                    }
+                    headerRightTv.setSelected(!isSelect);
                     setBottomOperationItemShow(downloadedAdapter.getSelectVolumeFileList());
+                    if (selectCallBack != null) {
+                        selectCallBack.onSelect(isSelect ? list : null);
+                    }
                 }
             });
         }
@@ -444,6 +448,9 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         setBottomOperationItemShow(downloadedAdapter.getSelectVolumeFileList());
+                        if (selectCallBack != null) {
+                            selectCallBack.onSelect(downloadedAdapter.getSelectVolumeFileList());
+                        }
                         dialog.dismiss();
                     }
                 })

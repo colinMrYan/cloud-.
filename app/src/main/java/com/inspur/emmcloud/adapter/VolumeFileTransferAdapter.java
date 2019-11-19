@@ -106,7 +106,7 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
      */
     private void showVolumeFileDesc(TextView descTv, VolumeFile volumeFile) {
         if (volumeFile.getStatus().equals(VolumeFile.STATUS_UPLOAD_PAUSE) || volumeFile.getStatus().equals(VolumeFile.STATUS_DOWNLOAD_PAUSE)) {
-            descTv.setText(R.string.volume_file_transfer_list_wait_tip);
+            descTv.setText(R.string.volume_file_transfer_list_pause_tip);
         } else {
             descTv.setText(FileUtils.formatFileSize(volumeFile.getSize()));
         }
