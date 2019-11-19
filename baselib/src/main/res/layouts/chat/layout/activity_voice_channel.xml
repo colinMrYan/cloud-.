@@ -447,7 +447,7 @@
 
         <RelativeLayout
             android:id="@+id/rl_person_info"
-            android:layout_width="160dp"
+            android:layout_width="wrap_content"
             android:layout_height="66dp"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="35dp"
@@ -464,8 +464,8 @@
                 android:id="@+id/tv_video_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@+id/img_video_head"
-                android:text="名字"
                 android:textColor="#ffffff"
                 android:textSize="28sp" />
 
@@ -475,8 +475,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tv_video_name"
                 android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@id/img_video_head"
-                android:text="状态"
                 android:textColor="#ffffff"
                 android:textSize="16sp" />
         </RelativeLayout>
@@ -490,6 +490,33 @@
             android:paddingTop="16dp"
             android:paddingBottom="16dp"
             android:src="@drawable/icon_voice_commucation_pack_up" />
+
+        <LinearLayout
+            android:id="@+id/ll_video_turn_to_voice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="136dp"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/iv_video_turn_to_voice"
+                android:layout_width="34dp"
+                android:layout_height="21dp"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/ic_video_call_turn_to_voice_white" />
+
+            <TextView
+                android:id="@+id/tv_video_turn_to_voice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="12dp"
+                android:gravity="center_horizontal"
+                android:text="@string/video_communication_turn_to_voice_call"
+                android:textSize="12sp" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -513,14 +540,14 @@
                     android:id="@+id/img_turn_to_voice"
                     android:layout_width="64dp"
                     android:layout_height="64dp"
-                    android:src="@drawable/ic_video_call_turn_to_voice_white" />
+                    android:src="@drawable/ic_video_call_turn_to_voice_call" />
 
                 <TextView
                     android:layout_width="70dp"
                     android:layout_height="17dp"
                     android:layout_marginTop="12dp"
                     android:gravity="center_horizontal"
-                    android:text="切换到语音通话"
+                    android:text="@string/video_communication_turn_to_voice_call"
                     android:textColor="#ffffff"
                     android:textSize="12sp" />
             </LinearLayout>
@@ -571,7 +598,7 @@
                     android:layout_height="17dp"
                     android:layout_marginTop="12dp"
                     android:gravity="center_horizontal"
-                    android:text="接听"
+                    android:text="@string/voice_communication_answer_phone_direct"
                     android:textColor="#ffffff"
                     android:textSize="12sp" />
             </LinearLayout>
@@ -589,14 +616,14 @@
                     android:id="@+id/img_video_turn_camera"
                     android:layout_width="64dp"
                     android:layout_height="64dp"
-                    android:src="@drawable/ic_voice_call_switch_camera_white" />
+                    android:src="@drawable/ic_video_call_switch_camera" />
 
                 <TextView
                     android:layout_width="70dp"
                     android:layout_height="17dp"
                     android:layout_marginTop="12dp"
                     android:gravity="center_horizontal"
-                    android:text="切换摄像头"
+                    android:text="@string/video_communication_switch_camera"
                     android:textColor="#ffffff"
                     android:textSize="12sp" />
             </LinearLayout>

@@ -29,6 +29,7 @@ import com.inspur.emmcloud.adapter.VoiceCommunicationMemberAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ResolutionUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
@@ -148,6 +149,18 @@ public class VoiceCommunicationActivity extends BaseActivity {
     TextView userNameTv;
     @BindView(R.id.ll_voice_communication_invite_members)
     LinearLayout inviteMembersGroupLinearLayout;
+    @BindView(R.id.img_video_head)
+    CircleTextImageView videoCallUserHeadImg;
+    @BindView(R.id.tv_video_name)
+    TextView videoCallUserNameTv;
+    @BindView(R.id.tv_video_state)
+    TextView videoCallStateTv;
+    @BindView(R.id.ll_video_turn_to_voice)
+    LinearLayout vodeoTurnToVoiceLayout;
+    @BindView(R.id.iv_video_turn_to_voice)
+    ImageView videoTurnToVoiceImg;
+    @BindView(R.id.tv_video_turn_to_voice)
+    TextView videoTurnToVoiceTv;
     /**
      * 本地视频初始y坐标
      */
@@ -318,7 +331,13 @@ public class VoiceCommunicationActivity extends BaseActivity {
      * 检查权限
      */
     private void checkHasPermission() {
-        PermissionRequestManagerUtils.getInstance().requestRuntimePermission(this, Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
+        String[] permissions = new String[]{Permissions.RECORD_AUDIO};
+        if (communicationType.equals(ECMChatInputMenu.VOICE_CALL)) {
+            permissions = new String[]{Permissions.RECORD_AUDIO};
+        } else if (communicationType.equals(ECMChatInputMenu.VIDEO_CALL)) {
+            permissions = new String[]{Permissions.RECORD_AUDIO, Permissions.CAMERA};
+        }
+        PermissionRequestManagerUtils.getInstance().requestRuntimePermission(this, permissions, new PermissionRequestCallback() {
             @Override
             public void onPermissionRequestSuccess(List<String> permissions) {
             }
@@ -466,8 +485,23 @@ public class VoiceCommunicationActivity extends BaseActivity {
             videoPackUpImg.setVisibility(View.GONE);
             personInfoLayout.setVisibility((voiceCommunicationManager.isInviterPre() || voiceCommunicationManager.isInviteePre()) ? View.VISIBLE : View.GONE);
             if (voiceCommunicationManager.isCommunicationIng()) {
+                vodeoTurnToVoiceLayout.setVisibility(View.GONE);
                 localVideoContainer.getLayoutParams().height = DensityUtil.dip2px(this, 167);
                 localVideoContainer.getLayoutParams().width = DensityUtil.dip2px(this, 94);
+            } else {
+                vodeoTurnToVoiceLayout.setVisibility(View.VISIBLE);
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) vodeoTurnToVoiceLayout.getLayoutParams();
+                params.width = ResolutionUtils.getWidth(this) / 2;
+                if (voiceCommunicationManager.isInviterPre()) {
+                    videoTurnToVoiceImg.setImageResource(R.drawable.ic_video_call_turn_to_voice_white);
+                    videoTurnToVoiceTv.setTextColor(ContextCompat.getColor(this, R.color.white));
+                    params.addRule(RelativeLayout.CENTER_HORIZONTAL);
+                } else if (voiceCommunicationManager.isInviteePre()) {
+                    videoTurnToVoiceImg.setImageResource(R.drawable.ic_video_call_turn_to_voice_black);
+                    videoTurnToVoiceTv.setTextColor(ContextCompat.getColor(this, R.color.header_text_black));
+                    params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                }
+                vodeoTurnToVoiceLayout.setLayoutParams(params);
             }
         }
     }
@@ -664,7 +698,8 @@ public class VoiceCommunicationActivity extends BaseActivity {
                     @Override
                     public void run() {
                         //屏蔽视频
-//                        setupRemoteVideo(uid);
+                        setupRemoteVideo(uid);
+                        handleCommunicationViewsState();
                     }
                 });
             }
@@ -713,6 +748,7 @@ public class VoiceCommunicationActivity extends BaseActivity {
         if (!communicationType.equals(ECMChatInputMenu.VIDEO_CALL)) {
             return;
         }
+        voiceCommunicationManager.enableVideo();
         //设置本地视图
         agoraLocalView = RtcEngine.CreateRendererView(getBaseContext());
         agoraLocalView.setZOrderMediaOverlay(true);
@@ -819,13 +855,22 @@ public class VoiceCommunicationActivity extends BaseActivity {
                 break;
             case R.id.ll_video_answer_phone:
                 setupLocalVideo();
-                handleCommunicationViewsState();
                 voiceCommunicationManager.joinChannel(voiceCommunicationManager.getInviteeInfoBean().getToken(),
                         agoraChannelId, voiceCommunicationManager.getInviteeInfoBean().getUserId(),
                         voiceCommunicationManager.getInviteeInfoBean().getAgoraUid());
                 break;
             case R.id.ll_turn_to_voice:
                 voiceCommunicationManager.disableVideo();
+                communicationType = ECMChatInputMenu.VOICE_CALL;
+                voiceCommunicationManager.setCommunicationType(ECMChatInputMenu.VOICE_CALL);
+                //根据communicationType切换语音通话和视频通话布局
+                if (communicationType.equals(ECMChatInputMenu.VIDEO_CALL)) {
+                    videoCallLayout.setVisibility(View.VISIBLE);
+                    voiceCallLayout.setVisibility(View.GONE);
+                } else if (communicationType.equals(ECMChatInputMenu.VOICE_CALL)) {
+                    voiceCallLayout.setVisibility(View.VISIBLE);
+                    videoCallLayout.setVisibility(View.GONE);
+                }
                 break;
             default:
                 break;
@@ -990,9 +1035,13 @@ public class VoiceCommunicationActivity extends BaseActivity {
      */
     private void showSmallWindowAndCloseActivity() {
         if (voiceCommunicationManager.getCommunicationState() != COMMUNICATION_STATE_OVER) {
-            SuspensionWindowManagerUtils.getInstance().showCommunicationSmallWindow(ResolutionUtils.getWidth(this),
-                    Long.parseLong(TimeUtils.getChronometerSeconds(communicationTimeChronometer.getText().toString())));
-            finish();
+            if (voiceCommunicationManager.getCommunicationType().equals(ECMChatInputMenu.VOICE_CALL)) {
+                SuspensionWindowManagerUtils.getInstance().showCommunicationSmallWindow(ResolutionUtils.getWidth(this),
+                        Long.parseLong(TimeUtils.getChronometerSeconds(communicationTimeChronometer.getText().toString())));
+                finish();
+            } else if (voiceCommunicationManager.getCommunicationType().equals(ECMChatInputMenu.VIDEO_CALL)) {
+                LogUtils.YfcDebug("视频通话");
+            }
         }
     }
 
@@ -1010,8 +1059,33 @@ public class VoiceCommunicationActivity extends BaseActivity {
     private void setInviterInfo() {
         if (voiceCommunicationManager.isInviteePre()) {
             VoiceCommunicationJoinChannelInfoBean infoBean = voiceCommunicationManager.getVoiceCommunicationMemberList().get(0);
-            ImageDisplayUtils.getInstance().displayImage(userHeadImg, infoBean.getHeadImageUrl(), R.drawable.icon_person_default);
-            userNameTv.setText(infoBean.getUserName());
+            if (voiceCommunicationManager.getCommunicationType().equals(ECMChatInputMenu.VOICE_CALL)) {
+                ImageDisplayUtils.getInstance().displayImage(userHeadImg, infoBean.getHeadImageUrl(), R.drawable.icon_person_default);
+                userNameTv.setText(infoBean.getUserName());
+            } else if (voiceCommunicationManager.getCommunicationType().equals(ECMChatInputMenu.VIDEO_CALL)) {
+                videoCallUserNameTv.setTextColor(voiceCommunicationManager.isInviterPre() ?
+                        ContextCompat.getColor(this, R.color.white) : ContextCompat.getColor(this, R.color.header_text_black));
+                videoCallStateTv.setTextColor(voiceCommunicationManager.isInviterPre() ?
+                        ContextCompat.getColor(this, R.color.white) : ContextCompat.getColor(this, R.color.header_text_black));
+                ImageDisplayUtils.getInstance().displayImage(videoCallUserHeadImg, infoBean.getHeadImageUrl(), R.drawable.icon_person_default);
+                videoCallUserNameTv.setText(infoBean.getUserName());
+                videoCallStateTv.setText(R.string.video_communication_invite_video_call);
+            }
+        }
+    }
+
+    private void setInviteeInfo() {
+        if (voiceCommunicationManager.isInviterPre()) {
+            if (voiceCommunicationManager.getCommunicationType().equals(ECMChatInputMenu.VIDEO_CALL)) {
+                videoCallUserNameTv.setTextColor(voiceCommunicationManager.isInviterPre() ?
+                        ContextCompat.getColor(this, R.color.white) : ContextCompat.getColor(this, R.color.header_text_black));
+                videoCallStateTv.setTextColor(voiceCommunicationManager.isInviterPre() ?
+                        ContextCompat.getColor(this, R.color.white) : ContextCompat.getColor(this, R.color.header_text_black));
+                VoiceCommunicationJoinChannelInfoBean infoBean = voiceCommunicationManager.getVoiceCommunicationMemberList().get(1);
+                ImageDisplayUtils.getInstance().displayImage(videoCallUserHeadImg, infoBean.getHeadImageUrl(), R.drawable.icon_person_default);
+                videoCallUserNameTv.setText(infoBean.getUserName());
+                videoCallStateTv.setText(R.string.video_communication_waiting_answer);
+            }
         }
     }
 
@@ -1060,12 +1134,15 @@ public class VoiceCommunicationActivity extends BaseActivity {
             VoiceCommunicationJoinChannelInfoBean voiceCommunicationJoinChannelInfoBean = getMyCommunicationInfoBean(getVoiceCommunicationResult);
             if (voiceCommunicationJoinChannelInfoBean != null) {
                 voiceCommunicationManager.setEncryptionSecret(agoraChannelId);
-                //屏蔽视频通话
-//                setupLocalVideo();
                 int isJoinChannelSuccess = voiceCommunicationManager.joinChannel(voiceCommunicationJoinChannelInfoBean.getToken(),
                         agoraChannelId, voiceCommunicationJoinChannelInfoBean.getUserId(), voiceCommunicationJoinChannelInfoBean.getAgoraUid());
                 voiceCommunicationManager.getVoiceCommunicationMemberList().clear();
                 voiceCommunicationManager.getVoiceCommunicationMemberList().addAll(getVoiceCommunicationResult.getVoiceCommunicationJoinChannelInfoBeanList());
+                if (communicationType.equals(ECMChatInputMenu.VIDEO_CALL)) {
+                    //屏蔽视频通话
+                    setupLocalVideo();
+                    setInviteeInfo();
+                }
                 if (isJoinChannelSuccess == 0) {
                     refreshCommunicationMembersAdapterWithState();
                 } else {

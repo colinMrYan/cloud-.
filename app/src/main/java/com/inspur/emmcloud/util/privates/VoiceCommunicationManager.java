@@ -382,7 +382,16 @@ public class VoiceCommunicationManager {
      * @return
      */
     private String getSchema(String cmd, String channelId, String roomId) {
-        return "ecc-cloudplus-cmd://voice_channel?cmd=" + cmd + "&channelid=" + channelId + "&roomid=" + roomId + "&uid=" + BaseApplication.getInstance().getUid();
+        return "ecc-cloudplus-cmd://" + getChannelType() + "?cmd=" + cmd + "&channelid=" + channelId + "&roomid=" + roomId + "&uid=" + BaseApplication.getInstance().getUid();
+    }
+
+    private String getChannelType() {
+        if (communicationType.equals(ECMChatInputMenu.VOICE_CALL)) {
+            return "voice_channel";
+        } else if (communicationType.equals(ECMChatInputMenu.VIDEO_CALL)) {
+            return "video_channel";
+        }
+        return "";
     }
 
     /**
