@@ -64,7 +64,6 @@ import com.inspur.emmcloud.bean.chat.GetRecentMessageListResult;
 import com.inspur.emmcloud.bean.chat.GetVoiceAndVideoResult;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.UIConversation;
-import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
 import com.inspur.emmcloud.bean.chat.WSCommand;
 import com.inspur.emmcloud.bean.system.EmmAction;
 import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
@@ -79,16 +78,13 @@ import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.CheckingNetStateUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationGroupIconUtils;
-import com.inspur.emmcloud.util.privates.CustomProtocol;
 import com.inspur.emmcloud.util.privates.MessageSendManager;
 import com.inspur.emmcloud.util.privates.ScanQrCodeUtils;
-import com.inspur.emmcloud.util.privates.SuspensionWindowManagerUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
 import com.inspur.emmcloud.util.privates.VoiceCommunicationManager;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.MessageMatheSetCacheUtils;
-import com.inspur.emmcloud.widget.ECMChatInputMenu;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -1075,119 +1071,10 @@ public class CommunicationFragment extends BaseFragment {
         }
     }
 
-
     //接收到websocket发过来的消息，拨打音视频电话，被呼叫触发
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveVoiceOrVideoCall(final GetVoiceAndVideoResult getVoiceAndVideoResult) {
-        //屏蔽语音通话
-        final CustomProtocol customProtocol = new CustomProtocol(getVoiceAndVideoResult.getContextParamsSchema());
-        //接收到消息后告知服务端
-        WSAPIService.getInstance().sendReceiveStartVoiceAndVideoCallMessageSuccess(getVoiceAndVideoResult.getTracer());
-        //判断命令消息是否有效，无效不处理
-        if (isCommandAvailable(customProtocol)) {
-            //判断如果在通话中就不再接听新的来电
-            if (!VoiceCommunicationManager.getInstance().isVoiceBusy()) {
-                if (customProtocol.getParamMap().get(Constant.COMMAND_CMD).equals(Constant.COMMAND_INVITE)) {
-                    startVoiceOrVideoCall(getVoiceAndVideoResult.getContextParamsRoom(), getVoiceAndVideoResult.getContextParamsType(), getVoiceAndVideoResult.getChannel());
-                }
-            } else {
-                //当ChannelVoiceCommunicationActivity页面不存在的情况下处理refuse和destroy
-                if (!BaseApplication.getInstance().isActivityExist(ChannelVoiceCommunicationActivity.class)) {
-                    if (customProtocol.getParamMap().get(Constant.COMMAND_CMD).equals(Constant.COMMAND_REFUSE)) {
-                        changeUserConnectStateByUid(VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_REFUSE, customProtocol.getParamMap().get(Constant.COMMAND_UID));
-                        checkCommunicationFinish();
-                        return;
-                    } else if (customProtocol.getParamMap().get(Constant.COMMAND_CMD).equals(Constant.COMMAND_DESTROY)) {
-                        VoiceCommunicationManager.getInstance().destroy();
-                        SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
-                        VoiceCommunicationManager.getInstance().setCommunicationState(ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_OVER);
-                        return;
-                    }
-                }
-                //正在通话中 消息是invite消息  三者打进电话 发拒绝消息
-                if (customProtocol.getParamMap().get(Constant.COMMAND_CMD).equals(Constant.COMMAND_INVITE)) {
-                    String agoraChannelId = customProtocol.getParamMap().get(Constant.COMMAND_ROOM_ID);
-                    String channelId = customProtocol.getParamMap().get(Constant.COMMAND_CHANNEL_ID);
-                    String fromUid = customProtocol.getParamMap().get(Constant.COMMAND_UID);
-                    VoiceCommunicationManager.getInstance().getVoiceCommunicationChannelInfoAndSendRefuseCommand(channelId, agoraChannelId, fromUid);
-                }
-            }
-        }
-    }
-
-    private boolean isCommandAvailable(CustomProtocol customProtocol) {
-        return customProtocol.getProtocol().equals(Constant.COMMAND_ECC_CLOUDPLUS_CMD)
-                && !StringUtils.isBlank(customProtocol.getParamMap().get(Constant.COMMAND_CMD));
-    }
-
-    //来自VoiceCommunicationManager
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onRefreshVoiceCallSmallWindow(final SimpleEventMessage simpleEventMessage) {
-        if (simpleEventMessage.getAction().equals(Constant.EVENTBUS_TAG_REFRESH_VOICE_CALL_SMALL_WINDOW)) {
-            SuspensionWindowManagerUtils.getInstance().refreshSmallWindow();
-        }
-    }
-
-
-    /**
-     * 修改用户的链接状态
-     * 通过云+uid
-     *
-     * @param connectStateConnected
-     */
-    private void changeUserConnectStateByUid(int connectStateConnected, String uid) {
-        List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationMemberList = VoiceCommunicationManager
-                .getInstance().getVoiceCommunicationMemberList();
-        if (voiceCommunicationMemberList != null && voiceCommunicationMemberList.size() > 0) {
-            for (int i = 0; i < voiceCommunicationMemberList.size(); i++) {
-                if (voiceCommunicationMemberList.get(i).getUserId().equals(uid)) {
-                    voiceCommunicationMemberList.get(i).setConnectState(connectStateConnected);
-                    break;
-                }
-            }
-        }
-    }
-
-    /**
-     * 检查是否需要退出
-     */
-    private void checkCommunicationFinish() {
-        List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationMemberList = VoiceCommunicationManager
-                .getInstance().getVoiceCommunicationMemberList();
-        if (voiceCommunicationMemberList != null && voiceCommunicationMemberList.size() > 0) {
-            int waitAndCommunicationSize = 0;
-            for (int i = 0; i < voiceCommunicationMemberList.size(); i++) {
-                if (voiceCommunicationMemberList.get(i).getConnectState() == VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_CONNECTED ||
-                        voiceCommunicationMemberList.get(i).getConnectState() == VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_INIT) {
-                    waitAndCommunicationSize = waitAndCommunicationSize + 1;
-                }
-            }
-            if (waitAndCommunicationSize < 2) {
-                VoiceCommunicationManager.getInstance().destroy();
-                SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
-                VoiceCommunicationManager.getInstance().setCommunicationState(ChannelVoiceCommunicationActivity.COMMUNICATION_STATE_OVER);
-            }
-        }
-    }
-
-    private void startVoiceOrVideoCall(String contextParamsRoom, String contextParamsType, String cid) {
-        //消息拦截逻辑，以后应当拦截命令消息，此时注释掉，以后解开注意判空
-        Intent intent = new Intent();
-        intent.setClass(getActivity(), ChannelVoiceCommunicationActivity.class);
-        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_VIDEO_CALL_AGORA_ID, contextParamsRoom);
-        intent.putExtra(ConversationActivity.CLOUD_PLUS_CHANNEL_ID, cid);
-        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_VIDEO_CALL_TYPE, getCommunicationType(contextParamsType));
-        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.INVITEE_LAYOUT_STATE);
-        startActivity(intent);
-    }
-
-    private String getCommunicationType(String contextParamsType) {
-        if (contextParamsType.equals("VOICE")) {
-            return ECMChatInputMenu.VOICE_CALL;
-        } else if (contextParamsType.equals("VIDEO")) {
-            return ECMChatInputMenu.VIDEO_CALL;
-        }
-        return ECMChatInputMenu.VOICE_CALL;
+        VoiceCommunicationManager.getInstance().onReceiveCommand(getVoiceAndVideoResult);
     }
 
     //socket断开重连时（如断网联网）会触发此方法
@@ -1238,7 +1125,6 @@ public class CommunicationFragment extends BaseFragment {
             }
         }
     }
-
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveMessageStateRead(EventMessage eventMessage) {

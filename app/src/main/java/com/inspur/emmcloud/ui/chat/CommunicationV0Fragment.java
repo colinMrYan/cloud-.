@@ -628,9 +628,9 @@ public class CommunicationV0Fragment extends BaseFragment {
 //                        if(customProtocol != null){
 //                            MsgReadCreationDateCacheUtils.saveMessageReadCreationDate(getActivity(),receivedMsg.getCid(),receivedMsg.getTime());
 //                            Intent intent = new Intent();
-//                            intent.setClass(getActivity(),ChannelVoiceCommunicationActivity.class);
+//                            intent.setClass(getActivity(),VoiceCommunicationActivity.class);
 //                            intent.putExtra("channelId",customProtocol.getParamMap().get("id"));
-//                            intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE,ChannelVoiceCommunicationActivity.INVITEE_LAYOUT_STATE);
+//                            intent.putExtra(VoiceCommunicationActivity.VOICE_COMMUNICATION_STATE,VoiceCommunicationActivity.INVITEE_LAYOUT_STATE);
 //                            startActivity(intent);
 //                        }
                         Channel receiveMsgChannel = ChannelCacheUtils.getChannel(

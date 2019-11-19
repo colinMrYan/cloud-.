@@ -1387,6 +1387,16 @@
     <string name="voice_communication_more_than_two">语音通话用户数不能少于2个。</string>
     <string name="voice_communication_hung_up_direct">挂断</string>
     <string name="voice_communication_answer_phone_direct">接听</string>
+    <string name="voice_communication_channel_not_exist">频道已不在</string>
+    <string name="voice_communication_direct_call_canceled">聊天已取消</string>
+    <string name="voice_communication_direct_call_ended_request_declined">对方已挂断，通话结束</string>
+    <string name="voice_communication_direct_call_audio_call_request_declined">对方拒绝了你的语音通话请求</string>
+    <string name="voice_communication_direct_calling_ended">聊天结束</string>
+    <string name="voice_communication_direct_calling_canceled">对方已挂断，通话结束</string>
+    <string name="voice_communication_direct_calling_reject">已拒绝，通话结束</string>
+    <string name="voice_communication_group_call_canceled">通话已结束</string>
+    <string name="voice_communication_group_call_busy">%1$s正忙</string>
+    <string name="voice_communication_group_calling_ended">通话已结束</string>
 
     <string name="error_no_sdcard">没有SD卡，无法存储录音数据</string>
     <string name="error_state_record">正在录音中，请先停止录音</string>

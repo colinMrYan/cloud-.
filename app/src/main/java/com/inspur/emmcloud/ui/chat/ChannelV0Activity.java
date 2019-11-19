@@ -317,9 +317,9 @@ public class ChannelV0Activity extends BaseActivity {
 //                    voiceCommunicationUserInfoBeanList.add(voiceCommunicationJoinChannelInfoBean);
 //                }
 //                Intent intent = new Intent();
-//                intent.setClass(ChannelV0Activity.this, ChannelVoiceCommunicationActivity.class);
+//                intent.setClass(ChannelV0Activity.this, VoiceCommunicationActivity.class);
 //                intent.putExtra("userList", (Serializable) voiceCommunicationUserInfoBeanList);
-//                intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.INVITER_LAYOUT_STATE);
+//                intent.putExtra(VoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, VoiceCommunicationActivity.INVITER_LAYOUT_STATE);
 //                startActivity(intent);
             }
 
