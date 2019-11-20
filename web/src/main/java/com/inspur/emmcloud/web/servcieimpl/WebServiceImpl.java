@@ -25,7 +25,7 @@ import com.inspur.emmcloud.componentservice.web.WebService;
 import com.inspur.emmcloud.web.R;
 import com.inspur.emmcloud.web.plugin.PluginMgr;
 import com.inspur.emmcloud.web.plugin.barcode.ScanResultActivity;
-import com.inspur.emmcloud.web.plugin.barcode.decoder.PreviewDecodeActivity;
+import com.inspur.emmcloud.web.plugin.barcode.alidecoder.ALiScanActivity;
 import com.inspur.emmcloud.web.ui.ImpFragment;
 
 import java.io.File;
@@ -80,7 +80,7 @@ public class WebServiceImpl implements WebService {
                     @Override
                     public void onPermissionRequestSuccess(List<String> permissions) {
                         Intent intent = new Intent();
-                        intent.setClass(activity, PreviewDecodeActivity.class);
+                        intent.setClass(activity, ALiScanActivity.class);
                         activity.startActivityForResult(intent, requestCode);
                     }
 
@@ -100,7 +100,7 @@ public class WebServiceImpl implements WebService {
                     @Override
                     public void onPermissionRequestSuccess(List<String> permissions) {
                         Intent intent = new Intent();
-                        intent.setClass(fragment.getActivity(), PreviewDecodeActivity.class);
+                        intent.setClass(fragment.getActivity(), ALiScanActivity.class);
                         fragment.startActivityForResult(intent, requestCode);
                     }
 

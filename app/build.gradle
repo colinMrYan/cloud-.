@@ -10,8 +10,7 @@ buildscript {
     }
 }
 apply plugin: 'com.inspur.comgradle'
-//apply plugin: 'com.google.protobuf'
-
+apply plugin: 'com.alipay.apollo.baseline.platform'
 import com.android.build.OutputFile
 
 apply from: "../node_modules/react-native/react.gradle"
