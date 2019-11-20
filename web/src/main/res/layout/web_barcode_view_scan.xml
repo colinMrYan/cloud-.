@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <com.inspur.emmcloud.web.plugin.barcode.alidecoder.widget.FinderView
+        android:id="@+id/finder_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="35dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="58dp"
+            android:layout_height="58dp"
+            android:layout_centerVertical="true"
+            android:padding="10dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/web_ali_scan_back" />
+
+
+        <ImageView
+            android:id="@+id/iv_gallery"
+            android:layout_width="58dp"
+            android:layout_height="58dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:padding="10dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/web_qrcode_scan_from_gallery" />
+
+
+    </RelativeLayout>
+
+    <com.inspur.emmcloud.web.plugin.barcode.alidecoder.widget.RayView
+        android:id="@+id/ray_view"
+        android:layout_width="226dp"
+        android:layout_height="224dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/web_qrcode_scan_ray" />
+
+    <TextView
+        android:id="@+id/tv_tips1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ray_view"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:includeFontPadding="false"
+        android:text="@string/web_put_qrcode_in_frame"
+        android:textColor="#ffffff"
+        android:textSize="14sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_tips1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:includeFontPadding="false"
+        android:text="@string/web_can_auto_scan"
+        android:textColor="#ffffff"
+        android:textSize="14sp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#00000000"
+        android:paddingBottom="20dp"
+        android:paddingTop="5dp">
+
+        <Button
+            android:id="@+id/bt_torch"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/icon_lamp_off"
+            android:onClick="onClick"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tv_lamp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/bt_torch"
+            android:layout_centerHorizontal="true"
+            android:text="@string/turn_on_light"
+            android:textColor="@color/white" />
+    </RelativeLayout>
+</merge>
