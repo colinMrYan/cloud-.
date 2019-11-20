@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.CountDownTimer;
 import android.os.Vibrator;
+import android.view.SurfaceView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -87,6 +88,15 @@ public class VoiceCommunicationManager {
     private boolean isHandsFree = false;
     private boolean isMute = false;
     private Vibrator vibrator;
+    /**
+     * 视频会话小视图
+     */
+    private SurfaceView agoraLocalView;
+    /**
+     * 视频会话大视图
+     */
+    private SurfaceView agoraRemoteView;
+    private int videoFirstFrameUid = 0;
     private IRtcEngineEventHandler mRtcEventHandler = new IRtcEngineEventHandler() {
         //其他用户离线回调
         @Override
@@ -213,6 +223,14 @@ public class VoiceCommunicationManager {
             super.onFirstRemoteVideoDecoded(uid, width, height, elapsed);
             if (onVoiceCommunicationCallbacks != null) {
                 onVoiceCommunicationCallbacks.onFirstRemoteVideoDecoded(uid, width, height, elapsed);
+            }
+        }
+
+        @Override
+        public void onUserEnableVideo(int uid, boolean enabled) {
+            super.onUserEnableVideo(uid, enabled);
+            if (onVoiceCommunicationCallbacks != null) {
+                onVoiceCommunicationCallbacks.onUserEnableVideo(uid, enabled);
             }
         }
 
@@ -613,7 +631,11 @@ public class VoiceCommunicationManager {
             sendCommunicationCommand(Constant.COMMAND_DESTROY);
         }
         destroyResourceAndState();
-        SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
+        if (communicationType.equals(ECMChatInputMenu.VOICE_CALL)) {
+            SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
+        } else if (communicationType.equals(ECMChatInputMenu.VIDEO_CALL)) {
+            VideoSuspensionWindowManagerUtils.getInstance().hideVideoCommunicationSmallWindow();
+        }
     }
 
     /**
@@ -701,6 +723,20 @@ public class VoiceCommunicationManager {
         }
     }
 
+    public SurfaceView getRemoteView() {
+        if (agoraRemoteView == null) {
+            agoraRemoteView = RtcEngine.CreateRendererView(BaseApplication.getInstance().getBaseContext());
+        }
+        return agoraRemoteView;
+    }
+
+    public SurfaceView getLocalView() {
+        if (agoraLocalView == null) {
+            agoraLocalView = RtcEngine.CreateRendererView(BaseApplication.getInstance().getBaseContext());
+            agoraLocalView.setZOrderMediaOverlay(true);
+        }
+        return agoraLocalView;
+    }
 
     /**
      * 开启视频通话的配置
@@ -981,6 +1017,14 @@ public class VoiceCommunicationManager {
 
     public void setConnectStartTime(long connectStartTime) {
         this.connectStartTime = connectStartTime;
+    }
+
+    public int getVideoFirstFrameUid() {
+        return videoFirstFrameUid;
+    }
+
+    public void setVideoFirstFrameUid(int videoFirstFrameUid) {
+        this.videoFirstFrameUid = videoFirstFrameUid;
     }
 
     public OnVoiceCommunicationCallbacks getOnVoiceCommunicationCallbacks() {

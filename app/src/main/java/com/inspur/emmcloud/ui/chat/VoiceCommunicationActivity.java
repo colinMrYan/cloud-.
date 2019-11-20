@@ -16,6 +16,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Chronometer;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -56,6 +57,7 @@ import com.inspur.emmcloud.ui.AppSchemeHandleActivity;
 import com.inspur.emmcloud.util.privates.MediaPlayerManagerUtils;
 import com.inspur.emmcloud.util.privates.NotifyUtil;
 import com.inspur.emmcloud.util.privates.SuspensionWindowManagerUtils;
+import com.inspur.emmcloud.util.privates.VideoSuspensionWindowManagerUtils;
 import com.inspur.emmcloud.util.privates.VoiceCommunicationManager;
 import com.inspur.emmcloud.util.privates.VoiceCommunicationToastUtil;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
@@ -69,7 +71,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.agora.rtc.RtcEngine;
 import io.agora.rtc.video.VideoCanvas;
 
 /**
@@ -126,14 +127,6 @@ public class VoiceCommunicationActivity extends BaseActivity {
      * 会话类型 VOICE_CALL或者VIDEO_CALL
      */
     private String communicationType = "";
-    /**
-     * 视频会话小视图
-     */
-    private SurfaceView agoraLocalView;
-    /**
-     * 视频会话大视图
-     */
-    private SurfaceView agoraRemoteView;
     /**
      * 本地视频初始x坐标
      */
@@ -382,6 +375,7 @@ public class VoiceCommunicationActivity extends BaseActivity {
         if (voiceCommunicationManager.isCommunicationIng()) {
             int colorUnSelected = ContextCompat.getColor(this, R.color.voice_communication_function_default);
             int colorSelected = ContextCompat.getColor(this, R.color.voice_communication_function_select);
+            LogUtils.YfcDebug("群聊单聊标志：" + directOrGroupType);
             if (directOrGroupType.equals(Conversation.TYPE_GROUP)) {
                 handsFreeImg.setSelected(voiceCommunicationManager.isHandsFree());
                 muteImg.setSelected(voiceCommunicationManager.isMute());
@@ -401,6 +395,7 @@ public class VoiceCommunicationActivity extends BaseActivity {
             voiceCommunicationManager.muteAllRemoteAudioStreams(false);
             voiceCommunicationManager.onSwitchSpeakerphoneClicked(voiceCommunicationManager.isHandsFree());
         }
+        voiceCommunicationManager.muteLocalAudioStream(true);
     }
 
     /**
@@ -503,6 +498,7 @@ public class VoiceCommunicationActivity extends BaseActivity {
                 }
                 vodeoTurnToVoiceLayout.setLayoutParams(params);
             }
+            changeMediaPlayState();
         }
     }
 
@@ -530,6 +526,13 @@ public class VoiceCommunicationActivity extends BaseActivity {
         if (communicationType.equals(ECMChatInputMenu.VIDEO_CALL)) {
             videoCallLayout.setVisibility(View.VISIBLE);
             voiceCallLayout.setVisibility(View.GONE);
+            if (voiceCommunicationManager.getCommunicationState() == COMMUNICATION_STATE_PRE && voiceCommunicationManager.isInviterPre()) {
+                setInviteeInfo();
+                setupLocalVideo();
+            } else if (voiceCommunicationManager.getCommunicationState() == COMMUNICATION_STATE_ING) {
+                setupLocalVideo();
+                setupRemoteVideo(voiceCommunicationManager.getVideoFirstFrameUid());
+            }
         } else if (communicationType.equals(ECMChatInputMenu.VOICE_CALL)) {
             voiceCallLayout.setVisibility(View.VISIBLE);
             videoCallLayout.setVisibility(View.GONE);
@@ -693,15 +696,28 @@ public class VoiceCommunicationActivity extends BaseActivity {
             }
 
             @Override
-            public void onRemoteVideoStateChanged(final int uid, int state, int reason, int elapsed) {
+            public void onFirstRemoteVideoDecoded(final int uid, int width, int height, int elapsed) {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        voiceCommunicationManager.setVideoFirstFrameUid(uid);
                         //屏蔽视频
                         setupRemoteVideo(uid);
                         handleCommunicationViewsState();
                     }
                 });
+            }
+
+            @Override
+            public void onUserEnableVideo(int uid, boolean enabled) {
+                if (!enabled) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            turnToVoiceCommunication();
+                        }
+                    });
+                }
             }
 
             @Override
@@ -750,33 +766,26 @@ public class VoiceCommunicationActivity extends BaseActivity {
         }
         voiceCommunicationManager.enableVideo();
         //设置本地视图
-        agoraLocalView = RtcEngine.CreateRendererView(getBaseContext());
-        agoraLocalView.setZOrderMediaOverlay(true);
         if (voiceCommunicationManager.isInviterPre()) {
             localVideoContainer.getLayoutParams().height = FrameLayout.LayoutParams.MATCH_PARENT;
             localVideoContainer.getLayoutParams().width = FrameLayout.LayoutParams.MATCH_PARENT;
         }
-        localVideoContainer.addView(agoraLocalView);
-        voiceCommunicationManager.getRtcEngine().setupLocalVideo(new VideoCanvas(agoraLocalView, VideoCanvas.RENDER_MODE_HIDDEN, 0));
+        SurfaceView localView = voiceCommunicationManager.getLocalView();
+        if (localView.getParent() instanceof ViewGroup) {
+            ((ViewGroup) localView.getParent()).removeView(localView);
+        }
+        localVideoContainer.addView(voiceCommunicationManager.getLocalView());
+        voiceCommunicationManager.getRtcEngine().setupLocalVideo(new VideoCanvas(voiceCommunicationManager.getLocalView(), VideoCanvas.RENDER_MODE_HIDDEN, 0));
     }
 
     private void setupRemoteVideo(int uid) {
-        //设置远程视图
-        int count = remoteVideoContainer.getChildCount();
-        View view = null;
-        for (int i = 0; i < count; i++) {
-            View v = remoteVideoContainer.getChildAt(i);
-            if (v.getTag() instanceof Integer && ((int) v.getTag()) == uid) {
-                view = v;
-            }
+        SurfaceView remoteView = voiceCommunicationManager.getRemoteView();
+        if (remoteView.getParent() instanceof ViewGroup) {
+            ((ViewGroup) remoteView.getParent()).removeView(remoteView);
         }
-        if (view != null) {
-            return;
-        }
-        agoraRemoteView = RtcEngine.CreateRendererView(getBaseContext());
-        remoteVideoContainer.addView(agoraRemoteView);
-        voiceCommunicationManager.getRtcEngine().setupRemoteVideo(new VideoCanvas(agoraRemoteView, VideoCanvas.RENDER_MODE_HIDDEN, uid));
-        agoraRemoteView.setTag(uid);
+        remoteVideoContainer.addView(voiceCommunicationManager.getRemoteView());
+        voiceCommunicationManager.getRtcEngine().setupRemoteVideo(new VideoCanvas(voiceCommunicationManager.getRemoteView(), VideoCanvas.RENDER_MODE_HIDDEN, uid));
+        voiceCommunicationManager.getRemoteView().setTag(uid);
     }
 
     /**
@@ -859,22 +868,34 @@ public class VoiceCommunicationActivity extends BaseActivity {
                         agoraChannelId, voiceCommunicationManager.getInviteeInfoBean().getUserId(),
                         voiceCommunicationManager.getInviteeInfoBean().getAgoraUid());
                 break;
+            case R.id.ll_video_turn_to_voice:
             case R.id.ll_turn_to_voice:
-                voiceCommunicationManager.disableVideo();
-                communicationType = ECMChatInputMenu.VOICE_CALL;
-                voiceCommunicationManager.setCommunicationType(ECMChatInputMenu.VOICE_CALL);
-                //根据communicationType切换语音通话和视频通话布局
-                if (communicationType.equals(ECMChatInputMenu.VIDEO_CALL)) {
-                    videoCallLayout.setVisibility(View.VISIBLE);
-                    voiceCallLayout.setVisibility(View.GONE);
-                } else if (communicationType.equals(ECMChatInputMenu.VOICE_CALL)) {
-                    voiceCallLayout.setVisibility(View.VISIBLE);
-                    videoCallLayout.setVisibility(View.GONE);
-                }
+                turnToVoiceCommunication();
                 break;
             default:
                 break;
         }
+    }
+
+    /**
+     * 转到音频通话
+     */
+    private void turnToVoiceCommunication() {
+        if (voiceCommunicationManager.getCommunicationType().equals(ECMChatInputMenu.VOICE_CALL)) {
+            return;
+        }
+        voiceCommunicationManager.disableVideo();
+        communicationType = ECMChatInputMenu.VOICE_CALL;
+        voiceCommunicationManager.setCommunicationType(ECMChatInputMenu.VOICE_CALL);
+        //根据communicationType切换语音通话和视频通话布局
+        if (communicationType.equals(ECMChatInputMenu.VIDEO_CALL)) {
+            videoCallLayout.setVisibility(View.VISIBLE);
+            voiceCallLayout.setVisibility(View.GONE);
+        } else if (communicationType.equals(ECMChatInputMenu.VOICE_CALL)) {
+            voiceCallLayout.setVisibility(View.VISIBLE);
+            videoCallLayout.setVisibility(View.GONE);
+        }
+        changeFunctionState();
     }
 
     private void handleFunctionState(ImageView imageView, TextView textView, int selected, int unselected, int type) {
@@ -1039,8 +1060,10 @@ public class VoiceCommunicationActivity extends BaseActivity {
                 SuspensionWindowManagerUtils.getInstance().showCommunicationSmallWindow(ResolutionUtils.getWidth(this),
                         Long.parseLong(TimeUtils.getChronometerSeconds(communicationTimeChronometer.getText().toString())));
                 finish();
-            } else if (voiceCommunicationManager.getCommunicationType().equals(ECMChatInputMenu.VIDEO_CALL)) {
-                LogUtils.YfcDebug("视频通话");
+            } else if (voiceCommunicationManager.getCommunicationType().equals(ECMChatInputMenu.VIDEO_CALL) &&
+                    (voiceCommunicationManager.isInviterPre() || voiceCommunicationManager.isCommunicationIng())) {
+                VideoSuspensionWindowManagerUtils.getInstance().showVideoCommunicationSmallWindow(ResolutionUtils.getWidth(this));
+                finish();
             }
         }
     }
