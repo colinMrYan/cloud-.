@@ -347,8 +347,7 @@ public class MyAppFragment extends BaseFragment {
     private void refreshAppListView() {
         List<AppGroupBean> appGroupList = MyAppCacheUtils.getMyAppList(getContext());
         List<AppGroupBean> appGroupFromNetList = MyAppCacheUtils.getMyAppListFromNet(getContext());
-        boolean isOpenCommAppFromSer = AppConfigCacheUtils.getAppConfigValue(getContext(), "EnableCommonFunction", "true").equals("true");
-        if (appGroupList.size() > 0 && (appGroupList.size() != appGroupFromNetList.size()) && !MyAppCacheUtils.getNeedCommonlyUseApp() && !isOpenCommAppFromSer) {
+        if (appGroupList.size() > 0 && (appGroupList.size() != appGroupFromNetList.size()) && !MyAppCacheUtils.getNeedCommonlyUseApp()) {
             appGroupList.remove(0);
         }
         if (appListAdapter != null) {
@@ -772,8 +771,7 @@ public class MyAppFragment extends BaseFragment {
      * @param appGroupList
      */
     private void handCommonlyUseAppData(List<AppGroupBean> appGroupList, boolean isNeedRefresh) {
-        boolean isOpenCommAppFromSer = AppConfigCacheUtils.getAppConfigValue(getContext(), "EnableCommonFunction", "true").equals("true");
-        if (MyAppCacheUtils.getNeedCommonlyUseApp() && isOpenCommAppFromSer) {
+        if (MyAppCacheUtils.getNeedCommonlyUseApp()) {
             AppGroupBean appGroupBean = MyAppCacheUtils.getCommonlyUserAppGroup();
             if (appGroupBean != null) {
                 appGroupList.add(0, appGroupBean);
@@ -905,8 +903,7 @@ public class MyAppFragment extends BaseFragment {
                             }
 
                         }
-                        boolean isOpenCommAppFromSer = AppConfigCacheUtils.getAppConfigValue(getContext(), "EnableCommonFunction", "true").equals("true");
-                        if (MyAppCacheUtils.getNeedCommonlyUseApp() && isOpenCommAppFromSer) {
+                        if (MyAppCacheUtils.getNeedCommonlyUseApp()) {
                             saveOrChangeCommonlyUseAppList(app, appAdapterList);
                         }
                     }
