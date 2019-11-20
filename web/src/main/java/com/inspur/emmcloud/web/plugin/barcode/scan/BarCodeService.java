@@ -24,7 +24,7 @@ import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.web.plugin.ImpPlugin;
-import com.inspur.emmcloud.web.plugin.barcode.decoder.PreviewDecodeActivity;
+import com.inspur.emmcloud.web.plugin.barcode.alidecoder.ALiScanActivity;
 import com.inspur.emmcloud.web.ui.ImpFragment;
 
 import org.json.JSONException;
@@ -106,7 +106,7 @@ public class BarCodeService extends ImpPlugin {
             PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getActivity(), Permissions.CAMERA, new PermissionRequestCallback() {
                 @Override
                 public void onPermissionRequestSuccess(List<String> permissions) {
-                    Intent scanIntent = new Intent(getFragmentContext(), PreviewDecodeActivity.class);
+                    Intent scanIntent = new Intent(getFragmentContext(), ALiScanActivity.class);
                     getImpCallBackInterface().onStartActivityForResult(scanIntent, ImpFragment.BARCODE_SERVER__SCAN_REQUEST);
                 }
 
