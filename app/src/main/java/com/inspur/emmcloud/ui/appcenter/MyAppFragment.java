@@ -347,7 +347,7 @@ public class MyAppFragment extends BaseFragment {
     private void refreshAppListView() {
         List<AppGroupBean> appGroupList = MyAppCacheUtils.getMyAppList(getContext());
         List<AppGroupBean> appGroupFromNetList = MyAppCacheUtils.getMyAppListFromNet(getContext());
-        Boolean isOpenCommAppFromSer = Boolean.getBoolean(AppConfigCacheUtils.getAppConfigValue(getContext(), "EnableCommonFunction", "true"));
+        boolean isOpenCommAppFromSer = AppConfigCacheUtils.getAppConfigValue(getContext(), "EnableCommonFunction", "true").equals("true");
         if (appGroupList.size() > 0 && (appGroupList.size() != appGroupFromNetList.size()) && !MyAppCacheUtils.getNeedCommonlyUseApp() && !isOpenCommAppFromSer) {
             appGroupList.remove(0);
         }
@@ -695,7 +695,7 @@ public class MyAppFragment extends BaseFragment {
         List<MenuItem> menuItemList = new ArrayList<>();//
         menuItemList.add(new MenuItem(R.drawable.ic_message_menu_scan_black, 1, getActivity().getString(R.string.sweep)));
         menuItemList.add(new MenuItem(R.drawable.ic_change_app_order, 2, getString(R.string.app_sort_order)));
-        Boolean isOpenCommAppFromSer = Boolean.getBoolean(AppConfigCacheUtils.getAppConfigValue(getContext(), "EnableCommonFunction", "true"));
+        boolean isOpenCommAppFromSer = AppConfigCacheUtils.getAppConfigValue(getContext(), "EnableCommonFunction", "true").equals("true");
         if (isOpenCommAppFromSer) {
             menuItemList.add(new MenuItem(MyAppCacheUtils.getNeedCommonlyUseApp() ? R.drawable.ic_commonly_use_open : R.drawable.ic_commonly_use_close
                     , 3, getActivity().getString(MyAppCacheUtils.getNeedCommonlyUseApp() ? R.string.app_commonly_use_close : R.string.app_commonly_use)));
@@ -772,7 +772,7 @@ public class MyAppFragment extends BaseFragment {
      * @param appGroupList
      */
     private void handCommonlyUseAppData(List<AppGroupBean> appGroupList, boolean isNeedRefresh) {
-        Boolean isOpenCommAppFromSer = Boolean.getBoolean(AppConfigCacheUtils.getAppConfigValue(getContext(), "EnableCommonFunction", "true"));
+        boolean isOpenCommAppFromSer = AppConfigCacheUtils.getAppConfigValue(getContext(), "EnableCommonFunction", "true").equals("true");
         if (MyAppCacheUtils.getNeedCommonlyUseApp() && isOpenCommAppFromSer) {
             AppGroupBean appGroupBean = MyAppCacheUtils.getCommonlyUserAppGroup();
             if (appGroupBean != null) {
@@ -905,7 +905,7 @@ public class MyAppFragment extends BaseFragment {
                             }
 
                         }
-                        Boolean isOpenCommAppFromSer = Boolean.getBoolean(AppConfigCacheUtils.getAppConfigValue(getContext(), "EnableCommonFunction", "true"));
+                        boolean isOpenCommAppFromSer = AppConfigCacheUtils.getAppConfigValue(getContext(), "EnableCommonFunction", "true").equals("true");
                         if (MyAppCacheUtils.getNeedCommonlyUseApp() && isOpenCommAppFromSer) {
                             saveOrChangeCommonlyUseAppList(app, appAdapterList);
                         }
