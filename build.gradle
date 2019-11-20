@@ -123,23 +123,39 @@ buildscript {
 
     repositories {
         maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        maven {
+            credentials {
+                username "MvnRead"
+                password "reaDAct111"
+            }
+            url "http://mvn.cloud.alipay.com/nexus/content/repositories/releases/"
+        }
+        maven {url 'http://maven.aliyun.com/nexus/content/repositories/google/'}
         jcenter()
         mavenCentral()
         google()
     }
     dependencies {
         classpath deps.android.gradlePlugin
-//        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.5'
         classpath deps.butterknife.gradle_plugin
+        // 请加入如下插件，简化配置
+        classpath 'com.android.boost.dependency:easyaar:3.3.6'
 
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
     }
 }
 
 allprojects {
     repositories {
         maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        // 金融云 repo
+        maven {
+            credentials {
+                username "MvnRead"
+                password "reaDAct111"
+            }
+            url "http://mvn.cloud.alipay.com/nexus/content/repositories/releases/"
+        }
+        maven {url 'http://maven.aliyun.com/nexus/content/repositories/google/'}
         jcenter()
         mavenCentral()
         maven {

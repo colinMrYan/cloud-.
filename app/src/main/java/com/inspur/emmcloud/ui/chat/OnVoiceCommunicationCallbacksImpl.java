@@ -9,29 +9,29 @@ import com.inspur.emmcloud.interf.OnVoiceCommunicationCallbacks;
  */
 
 public abstract class OnVoiceCommunicationCallbacksImpl implements OnVoiceCommunicationCallbacks {
-    public abstract void onUserOffline(int uid, int reason);
+//    public abstract void onUserOffline(int uid, int reason);
 
     public abstract void onUserJoined(int uid, int elapsed);
 
     public abstract void onJoinChannelSuccess(String channel, int uid, int elapsed);
 
-    public abstract void onRejoinChannelSuccess(String channel, int uid, int elapsed);
+//    public abstract void onRejoinChannelSuccess(String channel, int uid, int elapsed);
 
     @Override
     public void onRtcStats(VoiceCommunicationRtcStats stats) {
 
     }
 
-    public abstract void onUserMuteAudio(int uid, boolean muted);
+//    public abstract void onUserMuteAudio(int uid, boolean muted);
 
-    @Override
-    public void onWarning(int warn) {
+//    @Override
+//    public void onWarning(int warn) {
+//
+//    }
 
-    }
+//    public abstract void onError(int err);
 
-    public abstract void onError(int err);
-
-    public abstract void onConnectionLost();
+//    public abstract void onConnectionLost();
 
     public abstract void onNetworkQuality(int uid, int txQuality, int rxQuality);
 
@@ -47,6 +47,21 @@ public abstract class OnVoiceCommunicationCallbacksImpl implements OnVoiceCommun
 
     @Override
     public void onAudioVolumeIndication(VoiceCommunicationAudioVolumeInfo[] speakers, int totalVolume) {
+
+    }
+
+    @Override
+    public void onRefreshUserState() {
+
+    }
+
+    @Override
+    public void onActivityFinish() {
+
+    }
+
+    @Override
+    public void onRemoteVideoStateChanged(int uid, int state, int reason, int elapsed) {
 
     }
 }

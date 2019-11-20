@@ -143,7 +143,8 @@ public class MediaPlayerManagerUtils {
      * @param rawResId raw目录下的文件id
      * @param callback
      */
-    public void play(int rawResId, PlayCallback callback, boolean isLooping) {
+    public void play(int rawResId, PlayCallback callback, boolean isLooping, int mode) {
+        this.currentMode = mode;
         String rawFileUri = "android.resource://" + MyApplication.getInstance().getPackageName() + "/" + rawResId;
         setMediaPlayerLooping(isLooping);
         play(rawFileUri, callback);
@@ -176,6 +177,8 @@ public class MediaPlayerManagerUtils {
             //耳机模式下直接返回
             if (isBluetoothConnected || MediaPlayerManagerUtils.getManager().getCurrentMode() == MediaPlayerManagerUtils.MODE_HEADSET) {
                 changeToHeadsetMode();
+            } else if (getCurrentMode() == MediaPlayerManagerUtils.MODE_EARPIECE) {
+                changeToEarpieceMode();
             } else {
                 changeToSpeakerMode();
             }
@@ -338,10 +341,12 @@ public class MediaPlayerManagerUtils {
                 if (callback != null) {
                     callback.onStop();
                 }
-            } catch (IllegalStateException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+        mediaPlayer.setOnPreparedListener(null);
+        mediaPlayer.setOnCompletionListener(null);
         audioManager.abandonAudioFocus(mAudioFocusChangeListener);
     }
 

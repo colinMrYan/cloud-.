@@ -1240,12 +1240,12 @@ public class ChatAPIService {
         HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, compelteUrl) {
             @Override
             public void callbackSuccess(byte[] arg0) {
-                apiInterface.returnRefuseVoiceCommunicationChannelSuccess(new GetBoolenResult(new String(arg0)));
+//                apiInterface.returnRefuseVoiceCommunicationChannelSuccess(new GetBoolenResult(new String(arg0)));
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnRefuseVoiceCommunicationChannelFail(error, responseCode);
+//                apiInterface.returnRefuseVoiceCommunicationChannelFail(error, responseCode);
             }
 
             @Override

@@ -1324,6 +1324,16 @@
     <string name="voice_communication_more_than_two">The number of voice call users cannot be less than 2</string>
     <string name="voice_communication_hung_up_direct">Hang up</string>
     <string name="voice_communication_answer_phone_direct">Answer</string>
+    <string name="voice_communication_channel_not_exist">Channel no longer exists</string>
+    <string name="voice_communication_direct_call_canceled">Call canceled</string>
+    <string name="voice_communication_direct_call_ended_request_declined">Call ended:request declined</string>
+    <string name="voice_communication_direct_call_audio_call_request_declined">Audio call request declined</string>
+    <string name="voice_communication_direct_calling_ended">Call ended</string>
+    <string name="voice_communication_direct_calling_canceled">Call canceled by caller</string>
+    <string name="voice_communication_direct_calling_reject">Call ended:request declined</string>
+    <string name="voice_communication_group_call_canceled">Call ended</string>
+    <string name="voice_communication_group_call_busy">%1$s is busy</string>
+    <string name="voice_communication_group_calling_ended">Call ended</string>
 
     <string name="error_no_sdcard">No SD card, no recording data.</string>
     <string name="error_state_record">Please stop recording while recording</string>
