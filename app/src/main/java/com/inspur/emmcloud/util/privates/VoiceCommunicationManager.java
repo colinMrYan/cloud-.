@@ -207,11 +207,12 @@ public class VoiceCommunicationManager {
             }
         }
 
+        //官方示例仍用的此方法
         @Override
-        public void onRemoteVideoStateChanged(int uid, int state, int reason, int elapsed) {
-            super.onRemoteVideoStateChanged(uid, state, reason, elapsed);
+        public void onFirstRemoteVideoDecoded(int uid, int width, int height, int elapsed) {
+            super.onFirstRemoteVideoDecoded(uid, width, height, elapsed);
             if (onVoiceCommunicationCallbacks != null) {
-                onVoiceCommunicationCallbacks.onRemoteVideoStateChanged(uid, state, reason, elapsed);
+                onVoiceCommunicationCallbacks.onFirstRemoteVideoDecoded(uid, width, height, elapsed);
             }
         }
 
