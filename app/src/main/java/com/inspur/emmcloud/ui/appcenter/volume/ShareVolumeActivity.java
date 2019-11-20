@@ -103,7 +103,7 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
     }
 
     private void initView() {
-        if (getIntent().hasExtra(VolumeFileBaseActivity.EXTRA_IS_FUNCTION_COPY)) {
+        if (getIntent().hasExtra(VolumeFileBaseActivity.EXTRA_IS_FUNCTION_COPY_OR_MOVE)) {
             isCopyOrMove = true;
             copyFromVolume = (Volume) getIntent().getSerializableExtra(VolumeFileBaseActivity.EXTRA_FROM_VOLUME);
             operationFileDirAbsolutePath = getIntent().getStringExtra(VolumeFileBaseActivity.EXTRA_OPERATION_FILE_DIR_ABS_PATH);
@@ -146,7 +146,7 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
                             Intent intent = new Intent(ShareVolumeActivity.this, VolumeFileLocationSelectActivity.class);
                             bundle.putSerializable(VolumeFileBaseActivity.EXTRA_FROM_VOLUME, copyFromVolume);
                             bundle.putSerializable(VolumeFileBaseActivity.EXTRA_VOLUME_FILE_LIST, (Serializable) fromVolumeVolumeFileList);
-                            bundle.putBoolean(VolumeFileBaseActivity.EXTRA_IS_FUNCTION_COPY, true);
+                            bundle.putBoolean(VolumeFileBaseActivity.EXTRA_IS_FUNCTION_COPY_OR_MOVE, true);
                             bundle.putString(VolumeFileBaseActivity.EXTRA_OPERATION_FILE_DIR_ABS_PATH, operationFileDirAbsolutePath);
                             intent.putExtras(bundle);
                             startActivityForResult(intent, VolumeFileBaseActivity.REQUEST_COPY_FILE);

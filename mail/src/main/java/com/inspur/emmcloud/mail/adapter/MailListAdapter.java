@@ -93,7 +93,7 @@ public class MailListAdapter extends BaseAdapter {
         }
         String time = TimeUtils.getDisplayTime(context, mail.getCreationTimestamp());
         viewHolder.topicText.setText(mail.getSubject());
-        viewHolder.encryptFlagImg.setImageResource(R.drawable.ic_mail_flag_encrypt_yes);
+        viewHolder.encryptFlagImg.setImageResource(R.drawable.mail_flag_encrypt_yes_ic);
         viewHolder.encryptFlagImg.setVisibility(mail.isEncrypted() ? View.VISIBLE : View.INVISIBLE);
         viewHolder.unReadView.setVisibility(mail.isRead() ? View.GONE : View.VISIBLE);
         viewHolder.timeText.setText(time);

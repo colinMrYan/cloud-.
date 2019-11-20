@@ -91,7 +91,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     public static final String EXTRA_FROM_VOLUME = "fromVolume";
     public static final String EXTRA_VOLUME_FILE_LIST = "volumeFileList";
     public static final String EXTRA_VOLUME_FILE_TITLE = "title";
-    public static final String EXTRA_IS_FUNCTION_COPY = "isFunctionCopy";
+    public static final String EXTRA_IS_FUNCTION_COPY_OR_MOVE = "isFunctionCopyOrMove";
     public static final String EXTRA_OPERATION_FILE_DIR_ABS_PATH = "operationFileDirAbsolutePath";
     protected static final int REQUEST_MOVE_FILE = 5;
     protected static final int REQUEST_COPY_FILE = 6;
@@ -670,7 +670,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
             bundle.putSerializable(EXTRA_VOLUME_FILE_LIST, (Serializable) moveVolumeFileList);
             bundle.putString(EXTRA_VOLUME_FILE_TITLE, getString(R.string.clouddriver_select_move_position));
             bundle.putString(EXTRA_OPERATION_FILE_DIR_ABS_PATH, currentDirAbsolutePath);
-            bundle.putBoolean(EXTRA_IS_FUNCTION_COPY, false);
+            bundle.putBoolean(EXTRA_IS_FUNCTION_COPY_OR_MOVE, false);
             intent.putExtras(bundle);
             startActivityForResult(intent, REQUEST_MOVE_FILE);
         }
@@ -688,7 +688,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
             bundle.putSerializable(EXTRA_FROM_VOLUME, volume);
             bundle.putSerializable(EXTRA_VOLUME_FILE_LIST, (Serializable) volumeFileList);
             bundle.putString(EXTRA_VOLUME_FILE_TITLE, getString(R.string.clouddriver_select_copy_position));
-            bundle.putBoolean(EXTRA_IS_FUNCTION_COPY, true);
+            bundle.putBoolean(EXTRA_IS_FUNCTION_COPY_OR_MOVE, true);
             bundle.putString(EXTRA_OPERATION_FILE_DIR_ABS_PATH, currentDirAbsolutePath);
             intent.putExtras(bundle);
             startActivityForResult(intent, REQUEST_COPY_FILE);

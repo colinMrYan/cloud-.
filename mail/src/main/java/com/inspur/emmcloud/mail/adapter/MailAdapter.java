@@ -60,7 +60,7 @@ public class MailAdapter extends RecyclerView.Adapter<MailAdapter.ViewHolder> {
         }
         String time = TimeUtils.getDisplayTime(context, mail.getCreationTimestamp());
         holder.topicText.setText(mail.getSubject());
-        holder.encryptFlagImg.setImageResource(mail.isEncrypted() ? R.drawable.ic_mail_flag_encrypt_yes : R.drawable.ic_mail_flag_encrypt_no);
+        holder.encryptFlagImg.setImageResource(mail.isEncrypted() ? R.drawable.mail_flag_encrypt_yes_ic : R.drawable.mail_flag_encrypt_no_ic);
         holder.unReadView.setVisibility(mail.isRead() ? View.GONE : View.VISIBLE);
         holder.timeText.setText(time);
     }
