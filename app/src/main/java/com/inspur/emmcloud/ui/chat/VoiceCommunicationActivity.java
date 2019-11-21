@@ -484,7 +484,7 @@ public class VoiceCommunicationActivity extends BaseActivity {
             videoHungUp.setVisibility((voiceCommunicationManager.isCommunicationIng() || voiceCommunicationManager.isInviterPre() || voiceCommunicationManager.isInviteePre()) ? View.VISIBLE : View.GONE);
             answerVideoPhoneLayout.setVisibility(voiceCommunicationManager.isInviteePre() ? View.VISIBLE : View.GONE);
             switchCameraLayout.setVisibility(voiceCommunicationManager.isCommunicationIng() ? View.VISIBLE : View.GONE);
-            videoPackUpImg.setVisibility(View.GONE);
+            videoPackUpImg.setVisibility(voiceCommunicationManager.isCommunicationIng() ? View.VISIBLE : View.GONE);
             personInfoLayout.setVisibility((voiceCommunicationManager.isInviterPre() || voiceCommunicationManager.isInviteePre()) ? View.VISIBLE : View.GONE);
             if (voiceCommunicationManager.isCommunicationIng()) {
                 vodeoTurnToVoiceLayout.setVisibility(View.GONE);
@@ -521,7 +521,7 @@ public class VoiceCommunicationActivity extends BaseActivity {
 
     @Override
     protected int getStatusType() {
-        return super.getStatusType();
+        return STATUS_WHITE_DARK_FONT;
     }
 
 
@@ -862,6 +862,7 @@ public class VoiceCommunicationActivity extends BaseActivity {
                     refuseOrLeaveChannel(COMMUNICATION_LEAVE, true);
                 }
                 break;
+            case R.id.img_video_communication_pack_up:
             case R.id.img_voice_communication_pack_up:
                 saveCommunicationData();
                 pickUpVoiceCommunication(true);
