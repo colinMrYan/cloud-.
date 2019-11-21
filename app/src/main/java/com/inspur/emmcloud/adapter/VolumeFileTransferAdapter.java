@@ -17,6 +17,7 @@ import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.baselib.widget.progressbar.CircleProgressBar;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.ClickRuleUtil;
+import com.inspur.emmcloud.basemodule.util.FileDownloadManager;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
@@ -60,6 +61,9 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        if (fileList == null || fileList.size() == 0) {
+            return;
+        }
         VolumeFile volumeFile = fileList.get(position);
         holder.itemView.setTag(position);
         //显示图标
@@ -113,6 +117,9 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
     }
 
     private void showVolumeFileSpeed(final ViewHolder holder, final int position) {
+        if (fileList == null || fileList.size() == 0) {
+            return;
+        }
         final VolumeFile volumeFile = fileList.get(position);
         holder.progressBar.setStatus(volumeFile.transfer2ProgressStatus(volumeFile.getStatus()));
         if (volumeFile.getProgress() == -1) {
@@ -189,8 +196,8 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
 
             @Override
             public void onLoading(int progress, String speed) {
-                Log.d("zhang", "downLoading: progress = " + progress
-                        + ",speed = " + speed + ",status = " + volumeFile.getStatus());
+//                Log.d("zhang", "downLoading: progress = " + progress
+//                        + ",speed = " + speed + ",status = " + volumeFile.getStatus());
                 if (volumeFile.getStatus().equals(VolumeFile.STATUS_DOWNLOAD_IND)) {
                     if (!StringUtils.isBlank(speed)) {
                         holder.speedTv.setText(speed);
@@ -296,6 +303,7 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
         @Override
         public boolean onLongClick(View v) {
             final int position = (int) v.getTag();
+            final VolumeFile recordVolumeFile = fileList.get(position);
             new CustomDialog.MessageDialogBuilder(context)
                     .setMessage(R.string.clouddriver_sure_delete_file)
                     .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -307,26 +315,36 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
                     .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            VolumeFile volumeFile = fileList.get(position);
-                            if (type.equals(com.inspur.emmcloud.basemodule.config.Constant.TYPE_UPLOAD)) {
-                                VolumeFileUploadManager.getInstance().cancelVolumeFileUploadService(volumeFile);
-                            } else if (type.equals(Constant.TYPE_DOWNLOAD)) {
-                                VolumeFileDownloadManager.getInstance().cancelDownloadVolumeFile(volumeFile);
-                                VolumeFileDownloadCacheUtils.deleteVolumeFile(volumeFile);
-                                if (!StringUtils.isBlank(volumeFile.getLocalFilePath())) {
-                                    String tmpFilePath = volumeFile.getLocalFilePath() + ".tmp";
-                                    File localTmpDownloadFile = new File(tmpFilePath);
-                                    if (localTmpDownloadFile.exists()) {
-                                        localTmpDownloadFile.delete();
+                            if (!fileList.contains(recordVolumeFile)) {    //下载完成可能刷新列表导致位置不对
+                                dialog.dismiss();
+                                return;
+                            }
+                            try {
+                                VolumeFile volumeFile = fileList.get(position);
+                                if (type.equals(Constant.TYPE_UPLOAD)) {
+                                    VolumeFileUploadManager.getInstance().cancelVolumeFileUploadService(volumeFile);
+                                } else if (type.equals(Constant.TYPE_DOWNLOAD)) {
+                                    VolumeFileDownloadManager.getInstance().cancelDownloadVolumeFile(volumeFile);
+                                    VolumeFileDownloadCacheUtils.deleteVolumeFile(volumeFile);
+                                    FileDownloadManager.getInstance().deleteDownloadFile(volumeFile.getLocalFilePath());
+                                    if (!StringUtils.isBlank(volumeFile.getLocalFilePath())) {
+                                        String tmpFilePath = volumeFile.getLocalFilePath() + ".tmp";
+                                        File localTmpDownloadFile = new File(tmpFilePath);
+                                        if (localTmpDownloadFile.exists()) {
+                                            localTmpDownloadFile.delete();
+                                        }
                                     }
                                 }
+                                fileList.remove(position);
+                                notifyDataSetChanged();
+                                if (callBack != null) {
+                                    callBack.refreshView(fileList);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            } finally {
+                                dialog.dismiss();
                             }
-                            fileList.remove(position);
-                            notifyDataSetChanged();
-                            if (callBack != null) {
-                                callBack.refreshView(fileList);
-                            }
-                            dialog.dismiss();
                         }
                     })
                     .show();

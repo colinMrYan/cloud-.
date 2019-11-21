@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -141,6 +142,8 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     RelativeLayout tipViewLayout;
     @BindView(R.id.tv_volume_tip)
     TextView volumeTipTextView;
+    @BindView(R.id.iv_down_up_list)
+    ImageView downUpListIv;
     String deleteAction, downloadAction, renameAction, moveToAction, copyAction, permissionAction, shareTo, moreAction; //弹框点击状态
     CustomShareListener mShareListener;
     private List<VolumeFile> moveVolumeFileList = new ArrayList<>();//移动的云盘文件列表
@@ -185,6 +188,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         title = getIntent().getExtras().getString("title", "");
         headerText.setVisibility(View.VISIBLE);
         headerText.setText(title);
+        downUpListIv.setEnabled(true);
         redPointView.attach(tipViewLayout, new TipsView.Listener() {
             @Override
             public void onStart() {
@@ -690,12 +694,12 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
             volumeFile.setVolumeFileAbsolutePath(currentDirAbsolutePath + volumeFile.getName());
             for (VolumeFile file : volumeFileList) {
                 if (file.getId().equals(volumeFile.getId())) {
-                    VolumeFileDownloadManager.getInstance().cancelDownloadVolumeFile(volumeFile);
                     VolumeFileDownloadManager.getInstance().reDownloadFile(volumeFile,
                             currentDirAbsolutePath + volumeFile.getName());
                     return;
                 }
             }
+            VolumeFileDownloadManager.getInstance().resetVolumeFileStatus(volumeFile);
             VolumeFileDownloadManager.getInstance().downloadFile(volumeFile,
                     currentDirAbsolutePath + volumeFile.getName());
         }
@@ -715,6 +719,13 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         Point pointEnd = new Point(width, 0);
         BallView ballView = new BallView(getApplicationContext());
         ballView.startAnimation(pointStart, pointEnd);
+        downUpListIv.setEnabled(false);
+        ballView.setListener(new BallView.Listener() {
+            @Override
+            public void onAnimationEnd() {
+                downUpListIv.setEnabled(true);
+            }
+        });
 
         ViewGroup rootView = (ViewGroup) this.getWindow().getDecorView();
         rootView.addView(ballView);

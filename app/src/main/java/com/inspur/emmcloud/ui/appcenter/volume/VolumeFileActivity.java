@@ -46,6 +46,7 @@ import com.inspur.emmcloud.ui.appcenter.volume.view.VolumeFileTransferActivity;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
+import com.inspur.emmcloud.util.privates.VolumeFileDownloadManager;
 import com.inspur.emmcloud.util.privates.VolumeFilePrivilegeUtils;
 import com.inspur.emmcloud.util.privates.VolumeFileUploadManager;
 
@@ -627,6 +628,9 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
             }
             List<VolumeFile> volumeFileUploadList = VolumeFileUploadManager.getInstance().getCurrentFolderUploadVolumeFile(volume.getId(), currentDirAbsolutePath);
             tipViewLayout.setVisibility(volumeFileUploadList.size() > 0 ? View.VISIBLE : View.GONE);
+        } else if (simpleEventMessage.getAction().equals(Constant.EVENTBUS_TAG_VOLUME_FILE_DOWNLOAD_SUCCESS)) {
+            List<VolumeFile> volumeFileDownloadList = VolumeFileDownloadManager.getInstance().getAllDownloadVolumeFile();
+            tipViewLayout.setVisibility(volumeFileDownloadList.size() > 0 ? View.VISIBLE : View.GONE);
         }
     }
 

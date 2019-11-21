@@ -18,6 +18,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 public class BallView extends android.support.v7.widget.AppCompatTextView {
     Paint paint;
     int radius = 30;
+    Listener listener;
 
     public BallView(Context context) {
         super(context);
@@ -60,17 +61,28 @@ public class BallView extends android.support.v7.widget.AppCompatTextView {
                 invalidate();
             }
         });
-        anim.setDuration(1000);
+        anim.setDuration(800);
         anim.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
                 ViewGroup viewGroup = (ViewGroup) getParent();
                 viewGroup.removeView(BallView.this);
+                if (listener != null) {
+                    listener.onAnimationEnd();
+                }
             }
         });
         anim.setInterpolator(new AccelerateDecelerateInterpolator());
         anim.start();
+    }
+
+    public void setListener(Listener listener) {
+        this.listener = listener;
+    }
+
+    public interface Listener {
+        void onAnimationEnd();
     }
 
 }

@@ -29,6 +29,7 @@ import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.ui.BaseMvpFragment;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.ClickRuleUtil;
+import com.inspur.emmcloud.basemodule.util.FileDownloadManager;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
@@ -45,10 +46,10 @@ import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.shareboard.SnsPlatform;
 import com.umeng.socialize.utils.ShareBoardlistener;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
@@ -103,6 +104,12 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (getActivity() instanceof SelectCallBack) {
@@ -114,6 +121,12 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
     public void onDetach() {
         super.onDetach();
         selectCallBack = null;
+    }
+
+    @Override
+    public void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
     }
 
     String deleteAction, shareTo; //弹框点击状态
@@ -453,6 +466,7 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
     protected void showFileDelWranibgDlg(final List<VolumeFile> deleteVolumeFile) {
         new CustomDialog.MessageDialogBuilder(getActivity())
                 .setMessage(R.string.clouddriver_sure_delete_file)
+                .setCancelable(false)
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -483,20 +497,18 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
      * @param deleteVolumeFile
      */
     protected void deleteFile(List<VolumeFile> deleteVolumeFile) {
+        List<String> filePathList = new ArrayList<>();
         for (VolumeFile volumeFile : deleteVolumeFile) {
-            String path = volumeFile.getLocalFilePath();
-            File file = new File(path);
-            if (file.exists()) {
-                file.delete();
-                volumeFileList.remove(volumeFile);
-                if (volumeFileList.size() == 0) {
-                    hideBottomOperationItemShow();
-                    showNoDataLayout();
-                }
-                downloadedAdapter.notifyDataSetChanged();
+            filePathList.add(volumeFile.getLocalFilePath());
+            volumeFileList.remove(volumeFile);
+            VolumeFileDownloadManager.getInstance().resetVolumeFileStatus(volumeFile);
+            if (volumeFileList.size() == 0) {
+                hideBottomOperationItemShow();
+                showNoDataLayout();
             }
+            downloadedAdapter.notifyDataSetChanged();
         }
-
+        FileDownloadManager.getInstance().deleteDownloadFile(filePathList);
     }
 
     /**
@@ -653,8 +665,12 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveSimpleEventMessage(SimpleEventMessage simpleEventMessage) {
         if (simpleEventMessage.getAction().equals(Constant.EVENTBUS_TAG_VOLUME_FILE_DOWNLOAD_SUCCESS) && currentIndex == 2) {
-            volumeFileList.add(0, (VolumeFile) simpleEventMessage.getMessageObj());
-            downloadedAdapter.notifyDataSetChanged();
+            VolumeFile volumeFile = (VolumeFile) simpleEventMessage.getMessageObj();
+            if (!volumeFileList.contains(volumeFile)) {
+                volumeFileList.add(0, (VolumeFile) simpleEventMessage.getMessageObj());
+                showListLayout();
+                downloadedAdapter.notifyDataSetChanged();
+            }
         }
     }
 }

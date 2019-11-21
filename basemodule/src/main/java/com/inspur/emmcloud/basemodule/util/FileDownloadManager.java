@@ -1,7 +1,9 @@
 package com.inspur.emmcloud.basemodule.util;
 
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.bean.DownloadFileCategory;
 import com.inspur.emmcloud.basemodule.bean.FileDownloadInfo;
+import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -39,6 +41,16 @@ public class FileDownloadManager {
             FileDownloadInfoCacheUtils.deleteFileDownloadInfo(fileDownloadInfo);
         }
         return "";
+    }
+
+    public String getFilePath(DownloadFileCategory downloadFileCategory, String categoryId, String fileName) {
+        String fileSavePath = getDownloadFilePath(DownloadFileCategory.CATEGORY_VOLUME_FILE, categoryId, fileName);
+        if (StringUtils.isBlank(fileSavePath)) {
+            fileSavePath = MyAppConfig.getFileDownloadByUserAndTanentDirPath() +
+                    FileUtils.getNoDuplicateFileNameInDir(MyAppConfig.getFileDownloadByUserAndTanentDirPath(), fileName);
+        }
+
+        return fileSavePath;
     }
 
     public boolean isDownloadFileExists(DownloadFileCategory downloadFileCategory, String categoryId, String fileName) {
