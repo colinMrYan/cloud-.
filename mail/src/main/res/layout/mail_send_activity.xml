@@ -146,7 +146,7 @@
                         android:layout_height="20dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:background="@drawable/ic_mail_add_contacts"
+                        android:background="@drawable/mail_add_contacts_ic"
                         android:onClick="onClick" />
                 </RelativeLayout>
 
@@ -155,8 +155,8 @@
                     android:layout_height="0.5sp"
                     android:layout_below="@id/rl_recipients"
                     android:layout_marginLeft="15dp"
-                    android:layout_marginTop="12dp"
                     android:layout_marginRight="15dp"
+                    android:layout_marginTop="12dp"
                     android:background="#C8C7CC"></View>
             </RelativeLayout>
 
@@ -216,7 +216,7 @@
                         android:layout_height="20dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:background="@drawable/ic_mail_add_contacts"
+                        android:background="@drawable/mail_add_contacts_ic"
                         android:onClick="onClick" />
                 </RelativeLayout>
 
@@ -225,8 +225,8 @@
                     android:layout_height="0.5sp"
                     android:layout_below="@id/rl_cc"
                     android:layout_marginLeft="15dp"
-                    android:layout_marginTop="12dp"
                     android:layout_marginRight="15dp"
+                    android:layout_marginTop="12dp"
                     android:background="#C8C7CC"></View>
             </RelativeLayout>
 
@@ -243,10 +243,10 @@
                     android:id="@+id/rl_sender"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
                     android:layout_marginLeft="15dp"
-                    android:layout_marginTop="30dp"
                     android:layout_marginRight="15dp"
-                    android:layout_marginBottom="12dp">
+                    android:layout_marginTop="30dp">
 
                     <TextView
                         android:id="@+id/tv_sender_tip"
@@ -269,7 +269,7 @@
                         android:layout_height="20dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:background="@drawable/ic_mail_add_contacts" />
+                        android:background="@drawable/mail_add_contacts_ic" />
                 </RelativeLayout>
 
                 <View
@@ -277,8 +277,8 @@
                     android:layout_height="0.5sp"
                     android:layout_below="@id/rl_sender"
                     android:layout_marginLeft="15dp"
-                    android:layout_marginTop="12dp"
                     android:layout_marginRight="15dp"
+                    android:layout_marginTop="12dp"
                     android:background="#C8C7CC"
                     android:visibility="gone"></View>
             </RelativeLayout>
@@ -325,7 +325,7 @@
                         android:layout_height="20dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:background="@drawable/ic_mail_add_contacts"
+                        android:background="@drawable/mail_add_contacts_ic"
                         android:onClick="onClick"
                         android:visibility="gone" />
                 </RelativeLayout>
@@ -335,8 +335,8 @@
                     android:layout_height="0.5sp"
                     android:layout_below="@id/rl_theme_sender"
                     android:layout_marginLeft="15dp"
-                    android:layout_marginTop="12dp"
                     android:layout_marginRight="15dp"
+                    android:layout_marginTop="12dp"
                     android:background="#C8C7CC"></View>
             </RelativeLayout>
 
@@ -347,8 +347,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/rl_sender_theme_all"
                 android:layout_marginLeft="15dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="15dp">
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="5dp">
 
                 <EditText
                     android:id="@+id/et_content_send"
@@ -366,8 +366,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/rl_content_send"
                 android:layout_marginLeft="15dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="15dp">
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="10dp">
 
                 <ImageView
                     android:id="@+id/iv_fw_tip"
@@ -376,7 +376,7 @@
                     android:background="@drawable/bg_corner"
                     android:onClick="onClick"
                     android:padding="2dp"
-                    android:src="@drawable/ic_mail_include_tip"
+                    android:src="@drawable/mail_include_tip_ic"
                     android:textColor="#151515"
                     android:visibility="gone" />
 

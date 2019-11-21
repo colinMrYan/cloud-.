@@ -165,11 +165,6 @@ public class CommunicationFragment extends BaseFragment {
                     popupWindow.dismiss();
                     break;
                 case R.id.message_scan_layout:
-//                    Intent scanIntent = new Intent();
-//                    scanIntent.setClass(getActivity(), PreviewDecodeActivity.class);
-//                    scanIntent.putExtra("from", "CommunicationFragment");
-//                    startActivityForResult(scanIntent, REQUEST_SCAN_LOGIN_QRCODE_RESULT);
-//                    AppUtils.openScanCode(getActivity(),REQUEST_SCAN_LOGIN_QRCODE_RESULT);
                     AppUtils.openScanCode(CommunicationFragment.this, REQUEST_SCAN_LOGIN_QRCODE_RESULT);
                     popupWindow.dismiss();
                     break;

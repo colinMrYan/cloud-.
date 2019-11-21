@@ -9,7 +9,7 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_centerVertical="true"
-        android:src="@drawable/ic_mail_folder_expand" />
+        android:src="@drawable/mail_folder_expand_ic" />
 
     <ImageView
         android:id="@+id/iv_folder_icon"

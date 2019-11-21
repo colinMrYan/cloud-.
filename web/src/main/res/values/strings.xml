@@ -4,6 +4,7 @@
     <string name="web_can_auto_scan">即可自动扫描</string>
     <string name="web_scan_result">扫描结果</string>
     <string name="web_can_not_recognize">无法识别</string>
+    <string name="web_qrcode_not_found">未发现二维码</string>
 
     <!-- GPS -->
     <string name="web_gps_opened">GPS已经开启</string>
