@@ -17,6 +17,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Chronometer;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -24,6 +25,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.VoiceCommunicationMemberAdapter;
@@ -31,6 +33,7 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.ResolutionUtils;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
@@ -252,6 +255,7 @@ public class VoiceCommunicationActivity extends BaseActivity {
         voiceCommunicationManager = VoiceCommunicationManager.getInstance();
         voiceCommunicationManager.initializeAgoraEngine();
         init();
+        setNavigationBarColor(android.R.color.black);
         registerReceiver();
         NotifyUtil.sendNotifyMsg(this);
     }
@@ -522,6 +526,26 @@ public class VoiceCommunicationActivity extends BaseActivity {
     @Override
     protected int getStatusType() {
         return STATUS_WHITE_DARK_FONT;
+    }
+
+    protected void setStatus() {
+        //视频通话专用方法
+        if (communicationType.equals(ECMChatInputMenu.VIDEO_CALL)) {
+            int statusBarColor = android.R.color.black;
+            int navigationBarColor = android.R.color.white;
+            boolean isStatusBarDarkFont = ResourceUtils.getBoolenOfAttr(this, com.inspur.emmcloud.basemodule.R.attr.status_bar_dark_font);
+            ImmersionBar.with(this).statusBarColor(statusBarColor).navigationBarColor(navigationBarColor).navigationBarDarkIcon(true, 1.0f).statusBarDarkFont(isStatusBarDarkFont, 0.2f).init();
+        }
+    }
+
+    protected void setNavigationBarColor(int color) {
+        //视频通话专用方法
+        if (communicationType.equals(ECMChatInputMenu.VIDEO_CALL)) {
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                getWindow().setNavigationBarColor(ContextCompat.getColor(BaseApplication.getInstance(), color));
+            }
+        }
     }
 
 
