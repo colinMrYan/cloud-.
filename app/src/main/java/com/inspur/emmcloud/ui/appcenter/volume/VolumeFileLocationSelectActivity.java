@@ -140,7 +140,7 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
 
             case R.id.location_select_cancel_text:
                 Intent intentResult = new Intent();
-                intentResult.putExtra("copyFailedFiles", (Serializable) copyOrMoveErrorFiles);
+                intentResult.putExtra("operationFailedFiles", (Serializable) copyOrMoveErrorFiles);
                 setResult(RESULT_OK, intentResult);
                 finish();
                 break;

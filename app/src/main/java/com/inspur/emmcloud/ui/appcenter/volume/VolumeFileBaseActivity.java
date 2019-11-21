@@ -376,10 +376,8 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
             adapter.clearSelectedVolumeFileList();
             adapter.notifyDataSetChanged();
         } else if (action.equals(moveToAction)) {
-            // moveFile(adapter.getSelectVolumeFileList());
             copyOrMoveFile(adapter.getSelectVolumeFileList(), false);
         } else if (action.equals(copyAction)) {
-            // copyFile(adapter.getSelectVolumeFileList());
             copyOrMoveFile(adapter.getSelectVolumeFileList(), true);
         } else if (action.equals(deleteAction)) {
             if (adapter.getSelectVolumeFileList().size() > 0) {
