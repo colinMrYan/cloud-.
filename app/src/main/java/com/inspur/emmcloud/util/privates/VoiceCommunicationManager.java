@@ -593,6 +593,7 @@ public class VoiceCommunicationManager {
         intent.setClass(BaseApplication.getInstance(), VoiceCommunicationActivity.class);
         intent.putExtra(Constant.VOICE_VIDEO_CALL_AGORA_ID, contextParamsRoom);
         intent.putExtra(ConversationActivity.CLOUD_PLUS_CHANNEL_ID, cid);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(Constant.VOICE_VIDEO_CALL_TYPE, getCommunicationType(contextParamsType));
         intent.putExtra(Constant.VOICE_COMMUNICATION_STATE, VoiceCommunicationActivity.COMMUNICATION_STATE_PRE);
         intent.putExtra("userList", (Serializable) getVoiceCommunicationMemberList());
