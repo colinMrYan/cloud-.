@@ -103,6 +103,26 @@ public class VideoSuspensionWindowManagerUtils {
     }
 
     /**
+     * 小窗状态接通视频刷新小窗
+     */
+    public void refreshVideoSmallWindow() {
+        final RelativeLayout localVideoContainer = windowView.findViewById(R.id.rl_video_view_container);
+        localVideoContainer.post(new Runnable() {
+            @Override
+            public void run() {
+                SurfaceView remoteView = VoiceCommunicationManager.getInstance().getRemoteView();
+                localVideoContainer.removeAllViews();
+                if (remoteView.getParent() instanceof ViewGroup) {
+                    ((ViewGroup) remoteView.getParent()).removeView(remoteView);
+                }
+                localVideoContainer.addView(remoteView);
+                VoiceCommunicationManager.getInstance().getRtcEngine().setupRemoteVideo(new VideoCanvas(remoteView,
+                        VideoCanvas.RENDER_MODE_HIDDEN, VoiceCommunicationManager.getInstance().getVideoFirstFrameUid()));
+            }
+        });
+    }
+
+    /**
      * 组装悬浮窗View
      *
      * @return

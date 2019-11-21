@@ -37,6 +37,7 @@ import java.util.List;
 
 import io.agora.rtc.IRtcEngineEventHandler;
 import io.agora.rtc.RtcEngine;
+import io.agora.rtc.video.BeautyOptions;
 import io.agora.rtc.video.VideoEncoderConfiguration;
 
 import static com.inspur.emmcloud.ui.chat.VoiceCommunicationActivity.COMMUNICATION_STATE_ING;
@@ -223,6 +224,10 @@ public class VoiceCommunicationManager {
             super.onFirstRemoteVideoDecoded(uid, width, height, elapsed);
             if (onVoiceCommunicationCallbacks != null) {
                 onVoiceCommunicationCallbacks.onFirstRemoteVideoDecoded(uid, width, height, elapsed);
+            }
+            //当接通视频通话，如果是在小窗状态，刷新小窗
+            if (VideoSuspensionWindowManagerUtils.getInstance().isShowing()) {
+                VideoSuspensionWindowManagerUtils.getInstance().refreshVideoSmallWindow();
             }
         }
 
@@ -721,6 +726,9 @@ public class VoiceCommunicationManager {
                     VideoEncoderConfiguration.FRAME_RATE.FRAME_RATE_FPS_15,
                     VideoEncoderConfiguration.STANDARD_BITRATE,
                     VideoEncoderConfiguration.ORIENTATION_MODE.ORIENTATION_MODE_FIXED_PORTRAIT));
+            //美颜效果
+            mRtcEngine.setBeautyEffectOptions(true, new
+                    BeautyOptions(BeautyOptions.LIGHTENING_CONTRAST_NORMAL, 0.8f, 0.7f, 0.1f));
         }
     }
 
