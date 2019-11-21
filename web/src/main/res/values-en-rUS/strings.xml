@@ -5,6 +5,7 @@
     <string name="web_can_auto_scan">can automatically scan</string>
     <string name="web_scan_result">Scan Results</string>
     <string name="web_can_not_recognize">Unrecognized</string>
+    <string name="web_qrcode_not_found">QR Code not found</string>
 
     <!-- GPS -->
     <string name="web_gps_opened">GPS has been turned on</string>

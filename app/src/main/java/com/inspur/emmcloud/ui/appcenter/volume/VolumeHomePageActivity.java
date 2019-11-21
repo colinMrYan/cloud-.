@@ -59,6 +59,7 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
     private LoadingDialog loadingDlg;
 
     private boolean isCopyOrMove = false;
+    private boolean isHaveCopyOrMove = false;
     private Volume copyFromVolume;
     private String operationFileDirAbsolutePath;
     private String title;
@@ -90,8 +91,9 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
     }
 
     private void init() {
-        if (getIntent().hasExtra(VolumeFileBaseActivity.EXTRA_IS_FUNCTION_COPY)) {
-            isCopyOrMove = true;
+        if (getIntent().hasExtra(VolumeFileBaseActivity.EXTRA_IS_FUNCTION_COPY_OR_MOVE)) {
+            isHaveCopyOrMove = true;
+            isCopyOrMove = getIntent().getBooleanExtra(VolumeFileBaseActivity.EXTRA_IS_FUNCTION_COPY_OR_MOVE, true);
             copyFromVolume = (Volume) getIntent().getSerializableExtra(VolumeFileBaseActivity.EXTRA_FROM_VOLUME);
             operationFileDirAbsolutePath = getIntent().getStringExtra(VolumeFileBaseActivity.EXTRA_OPERATION_FILE_DIR_ABS_PATH);
             title = getIntent().getStringExtra(VolumeFileBaseActivity.EXTRA_VOLUME_FILE_TITLE);
@@ -118,48 +120,39 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
                 if (getIntent() != null && getIntent().hasExtra(Constant.SHARE_FILE_URI_LIST)) {
                     uriList = (List<Uri>) getIntent().getSerializableExtra(Constant.SHARE_FILE_URI_LIST);
                 }
-                if (isCopyOrMove) {
+                /**功能划分:: 复制移动 、 网盘分享、普通打开**/
+                if (isHaveCopyOrMove) {
                     bundle.putSerializable(VolumeFileBaseActivity.EXTRA_FROM_VOLUME, copyFromVolume);
                     bundle.putSerializable(VolumeFileBaseActivity.EXTRA_VOLUME_FILE_LIST, (Serializable) fromVolumeVolumeFileList);
-                    bundle.putBoolean(VolumeFileBaseActivity.EXTRA_IS_FUNCTION_COPY, true);
+                    bundle.putBoolean(VolumeFileBaseActivity.EXTRA_IS_FUNCTION_COPY_OR_MOVE, isCopyOrMove);
                     bundle.putString(VolumeFileBaseActivity.EXTRA_OPERATION_FILE_DIR_ABS_PATH, operationFileDirAbsolutePath);
-                }
-
-                switch (position) {
-                    case 0:
-                        if (myVolume != null && isCopyOrMove == false) {
-                            if (uriList != null && uriList.size() > 0) {
-                                bundle.putSerializable("fileShareUriList", (Serializable) uriList);
-                                bundle.putString("operationFileDirAbsolutePath", "/");
-                                IntentUtils.startActivity(VolumeHomePageActivity.this, VolumeFileLocationSelectActivity.class, bundle);
-                            } else {
-                                bundle.putInt(VolumeFileBaseActivity.VOLUME_FROM, VolumeFileBaseActivity.MY_VOLUME);
-                                IntentUtils.startActivity(VolumeHomePageActivity.this, VolumeFileActivity.class,
-                                        bundle);
-                            }
-                        }
-                        if (isCopyOrMove) {
-                            Intent intent = new Intent(VolumeHomePageActivity.this, VolumeFileLocationSelectActivity.class);
-                            intent.putExtras(bundle);
-                            startActivityForResult(intent, VolumeFileBaseActivity.REQUEST_COPY_FILE);
-                        }
-                        break;
-                    case 1:
-                        if (isCopyOrMove) {
-                                Intent intent = new Intent(VolumeHomePageActivity.this, ShareVolumeActivity.class);
-                                intent.putExtras(bundle);
-                                startActivityForResult(intent, VolumeFileBaseActivity.REQUEST_COPY_FILE);
-                        } else {
+                    Intent intent = new Intent(VolumeHomePageActivity.this, position == 0 ? VolumeFileLocationSelectActivity.class : ShareVolumeActivity.class);
+                    intent.putExtras(bundle);
+                    startActivityForResult(intent, isCopyOrMove ? VolumeFileBaseActivity.REQUEST_COPY_FILE : VolumeFileBaseActivity.REQUEST_MOVE_FILE);
+                } else if (myVolume != null && isCopyOrMove == false && uriList != null && uriList.size() > 0) {
+                    switch (position) {
+                        case 0:
+                            bundle.putSerializable(Constant.SHARE_FILE_URI_LIST, (Serializable) uriList);
+                            bundle.putString(VolumeFileBaseActivity.EXTRA_OPERATION_FILE_DIR_ABS_PATH, "/");
+                            IntentUtils.startActivity(VolumeHomePageActivity.this, VolumeFileLocationSelectActivity.class, bundle);
+                            break;
+                        case 1:
                             bundle.putSerializable("shareVolumeList", (Serializable) shareVolumeList);
-                            if (uriList != null && uriList.size() > 0) {
-                                bundle.putSerializable(Constant.SHARE_FILE_URI_LIST, (Serializable) uriList);
-                            }
-                            IntentUtils.startActivity(VolumeHomePageActivity.this, ShareVolumeActivity.class,
-                                    bundle);
-                        }
-                        break;
-                    default:
-                        break;
+                            bundle.putSerializable(Constant.SHARE_FILE_URI_LIST, (Serializable) uriList);
+                            IntentUtils.startActivity(VolumeHomePageActivity.this, ShareVolumeActivity.class, bundle);
+                            break;
+                    }
+                } else {
+                    switch (position) {
+                        case 0:
+                            bundle.putInt(VolumeFileBaseActivity.VOLUME_FROM, VolumeFileBaseActivity.MY_VOLUME);
+                            IntentUtils.startActivity(VolumeHomePageActivity.this, VolumeFileActivity.class, bundle);
+                            break;
+                        case 1:
+                            bundle.putSerializable("shareVolumeList", (Serializable) shareVolumeList);
+                            IntentUtils.startActivity(VolumeHomePageActivity.this, ShareVolumeActivity.class, bundle);
+                            break;
+                    }
                 }
             }
         });

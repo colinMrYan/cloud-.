@@ -337,10 +337,8 @@ public class TaskAddActivity extends BaseActivity {
                 break;
             case R.id.rl_task_manager:
                 intent.putExtra(ContactSearchFragment.EXTRA_TYPE, 2);
-                intent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, true);
-                intent.putExtra(ContactSearchFragment.EXTRA_LIMIT, 1);
+                intent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, false);
                 intent.putExtra(ContactSearchFragment.EXTRA_TITLE, getString(R.string.schedule_task_add_manager));
-                intent.putExtra(ContactSearchFragment.EXTRA_HAS_SELECT, (Serializable) taskMangerList);
                 intent.setClass(getApplicationContext(), ContactSearchActivity.class);
                 startActivityForResult(intent, REQUEST_MANGER);
                 break;

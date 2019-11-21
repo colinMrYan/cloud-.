@@ -83,10 +83,10 @@
             android:adjustViewBounds="true"
             android:clickable="true"
             android:onClick="onClick"
-            android:paddingLeft="13dp"
-            android:paddingTop="17dp"
-            android:paddingRight="16dp"
             android:paddingBottom="17dp"
+            android:paddingLeft="13dp"
+            android:paddingRight="16dp"
+            android:paddingTop="17dp"
             android:scaleType="fitXY"
             android:src="?attr/ic_header_option"
             android:visibility="gone" />
@@ -130,7 +130,7 @@
             android:layout_height="100dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="100dp"
-            android:src="@drawable/ic_net_check_load_error" />
+            android:src="@drawable/web_net_check_load_error" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -165,9 +165,9 @@
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:onClick="onClick"
+                android:paddingBottom="20dp"
                 android:paddingLeft="25dp"
                 android:paddingRight="25dp"
-                android:paddingBottom="20dp"
                 android:text="@string/function_net_look_error_detail"
                 android:textColor="#36A5F6"
                 android:textSize="13sp" />
@@ -209,8 +209,8 @@
                 android:layout_below="@id/pb_load"
                 android:layout_marginTop="10dp"
                 android:ellipsize="end"
-                android:maxWidth="200dp"
                 android:maxLines="2"
+                android:maxWidth="200dp"
                 android:textColor="#555555"
                 android:textSize="@dimen/content_small_textsize" />
         </RelativeLayout>
