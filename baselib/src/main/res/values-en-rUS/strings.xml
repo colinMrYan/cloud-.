@@ -665,6 +665,10 @@
     <string name="volume_please_install_wechat">Please install Wechat</string>
     <string name="volume_share_2_qq_wechat">Share</string>
     <string name="volume_copy_between_volume_error_toast">%1$d Files copy unsuccessfully</string>
+    <string name="volume_copy_success">Copy Success</string>
+    <string name="volume_copy_fail">Copy Fail</string>
+    <string name="volume_move_success">Move Success</string>
+    <string name="volume_move_fail">Move Fail</string>
 
 
     <!-- 我的页面部分 -->

@@ -986,6 +986,13 @@ public class APIUri {
     }
 
     /**
+     * 夸网盘复制文件或者文件夹的Url
+     ***/
+    public static String getCopyOrMoveFileBetweenVolumeUrl(String fromVolumeId) {
+        return getUrlBaseVolume() + "/" + fromVolumeId + "/file/operation";
+    }
+
+    /**
      * 根据volumeId
      *
      * @param volumeId

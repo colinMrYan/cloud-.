@@ -679,6 +679,10 @@
     <string name="volume_file_transfer_list_wait_tip">正在等待&#8230;</string>
     <string name="volume_share_2_qq_wechat">分享</string>
     <string name="volume_copy_between_volume_error_toast">%1$d 个文件复制失败</string>
+    <string name="volume_copy_success">复制成功</string>
+    <string name="volume_copy_fail">复制失败</string>
+    <string name="volume_move_success">移动成功</string>
+    <string name="volume_move_fail">移动失败</string>
 
     <!--Webex 邮箱-->
     <string name="mail_install_cert"><u>安装数字证书</u></string>
