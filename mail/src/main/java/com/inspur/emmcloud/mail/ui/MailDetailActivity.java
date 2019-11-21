@@ -146,10 +146,10 @@ public class MailDetailActivity extends BaseActivity {
     }
 
     private void initView() {
-        findViewById(R.id.ibt_mail_delete).setBackgroundResource(R.drawable.ic_mail_delete_white);
-        signImg.setImageResource(R.drawable.ic_mail_flag_sign_yes);
+        findViewById(R.id.ibt_mail_delete).setBackgroundResource(R.drawable.mail_delete_white_ic);
+        signImg.setImageResource(R.drawable.mail_flag_sign_yes_ic);
         setMailContentVisible(false);
-        encryptImg.setImageResource(mail.isEncrypted() ? R.drawable.ic_mail_flag_encrypt_yes : R.drawable.ic_mail_flag_encrypt_no);
+        encryptImg.setImageResource(mail.isEncrypted() ? R.drawable.mail_flag_encrypt_yes_ic : R.drawable.mail_flag_encrypt_no_ic);
         encryptImg.setVisibility(mail.isEncrypted() ? View.VISIBLE : View.INVISIBLE);
         topicText.setText(mail.getSubject());
         sendTimeText.setText(TimeUtils.getTime(this, mail.getCreationTimestamp(), TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE));

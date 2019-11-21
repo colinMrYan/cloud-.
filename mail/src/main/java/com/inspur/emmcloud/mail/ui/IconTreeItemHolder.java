@@ -58,32 +58,32 @@ public class IconTreeItemHolder extends TreeNode.BaseNodeViewHolder<MailFolder> 
 
     @Override
     public void toggle(boolean active) {
-        arrowImg.setImageResource(active ? R.drawable.ic_mail_folder_collapse : R.drawable.ic_mail_folder_expand);
+        arrowImg.setImageResource(active ? R.drawable.mail_folder_collapse_ic : R.drawable.mail_folder_expand_ic);
     }
 
     public int getMailFolderIconRes(MailFolder mailFolder) {
         int res = -1;
         switch (mailFolder.getFolderType()) {
             case 0:
-                res = R.drawable.ic_mail_drafts;
+                res = R.drawable.mail_drafts_ic;
                 break;
             case 1:
-                res = R.drawable.ic_mail_inbox;
+                res = R.drawable.mail_inbox_ic;
                 break;
             case 2:
-                res = R.drawable.ic_mail_outbox;
+                res = R.drawable.mail_outbox_ic;
                 break;
             case 3:
-                res = R.drawable.ic_mail_sent;
+                res = R.drawable.mail_sent_ic;
                 break;
             case 4:
-                res = R.drawable.ic_mail_deletedbox;
+                res = R.drawable.mail_deletedbox_ic;
                 break;
             case 5:
-                res = R.drawable.ic_mail_dustbin;
+                res = R.drawable.mail_dustbin_ic;
                 break;
             default:
-                res = R.drawable.ic_mail_folder;
+                res = R.drawable.mail_folder_ic;
                 break;
         }
         return res;

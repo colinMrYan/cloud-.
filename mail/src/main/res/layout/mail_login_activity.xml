@@ -28,15 +28,15 @@
             android:layout_height="56dp"
             android:layout_marginTop="80dp"
             android:scaleType="fitXY"
-            android:src="@drawable/ic_mail_login_logo" />
+            android:src="@drawable/mail_login_logo_ic" />
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/text_input_layout_username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
-            android:layout_marginTop="35dp"
             android:layout_marginRight="30dp"
+            android:layout_marginTop="35dp"
             app:errorEnabled="true">
 
             <EditText
@@ -87,8 +87,8 @@
             android:layout_width="match_parent"
             android:layout_height="46dp"
             android:layout_marginLeft="30dp"
-            android:layout_marginTop="60dp"
             android:layout_marginRight="30dp"
+            android:layout_marginTop="60dp"
             android:background="@drawable/bg_login_btn_unable"
             android:enabled="false"
             android:gravity="center"

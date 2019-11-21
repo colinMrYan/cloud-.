@@ -41,10 +41,10 @@
             android:id="@+id/sv_slide_data"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/rl_header"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@id/rl_header"
             android:background="#ffffff">
 
             <RelativeLayout
@@ -295,8 +295,8 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/lv_attachment"
                     android:layout_marginLeft="15dp"
-                    android:layout_marginTop="10dp"
                     android:layout_marginRight="15dp"
+                    android:layout_marginTop="10dp"
                     android:paddingBottom="200dp">
 
                 </com.inspur.emmcloud.baselib.widget.NoScrollWebView>
@@ -325,10 +325,10 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingLeft="15dp"
-                        android:paddingTop="12dp"
-                        android:paddingRight="15dp"
                         android:paddingBottom="20dp"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp"
+                        android:paddingTop="12dp"
                         android:text="本邮件为加密邮件，您的邮箱账号未安装任何数字证书，请先进行数字证书安装，再查看邮件！"
                         android:textColor="#666666" />
 
@@ -367,15 +367,15 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="62dp"
                     android:onClick="onClick"
-                    android:paddingTop="4dp"
-                    android:paddingBottom="4dp">
+                    android:paddingBottom="4dp"
+                    android:paddingTop="4dp">
 
                     <ImageView
                         android:id="@+id/iv_reply"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_centerHorizontal="true"
-                        android:background="@drawable/ic_mail_reply" />
+                        android:background="@drawable/mail_reply_ic" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -393,15 +393,15 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="62dp"
                     android:onClick="onClick"
-                    android:paddingTop="4dp"
-                    android:paddingBottom="4dp">
+                    android:paddingBottom="4dp"
+                    android:paddingTop="4dp">
 
                     <ImageView
                         android:id="@+id/iv_reply_all"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_centerHorizontal="true"
-                        android:background="@drawable/ic_mail_reply_all" />
+                        android:background="@drawable/mail_reply_all_ic" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -418,8 +418,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:onClick="onClick"
-                    android:paddingTop="4dp"
-                    android:paddingBottom="4dp">
+                    android:paddingBottom="4dp"
+                    android:paddingTop="4dp">
 
                     <ImageView
                         android:id="@+id/iv_forward"

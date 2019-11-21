@@ -7,6 +7,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.bean.appcenter.App;
@@ -106,13 +107,16 @@ public class MyAppCacheUtils {
 
     /**
      * 获取是否需要显示常用app
-     *
+     *isShowCommAppFromSer  服务端拉取是否显示常用应用  true：显示本地最近常用操作按钮 然后根据 isShowCommAppFromNative 显示最近常用应用UI false：隐藏本地操作按钮
+     * isShowCommAppFromNative 最近常用操作按钮本地存储状态
      * @return
      */
     public static boolean getNeedCommonlyUseApp() {
         String userId = MyApplication.getInstance().getUid();
-        return PreferencesUtils.getBoolean(MyApplication.getInstance(), MyApplication.getInstance().getTanent()
+        boolean isShowCommAppFromSer = AppConfigCacheUtils.getAppConfigValue(BaseApplication.getInstance(), "EnableCommonFunction", "true").equals("true");
+        boolean isShowCommAppFromNative = PreferencesUtils.getBoolean(MyApplication.getInstance(), MyApplication.getInstance().getTanent()
                 + userId + "needCommonlyUseApp", true);
+        return isShowCommAppFromNative && isShowCommAppFromSer;
     }
 
     /**
@@ -147,6 +151,16 @@ public class MyAppCacheUtils {
     }
 
     /**
+     * 清除应用缓存
+     *
+     * @param context
+     * @return
+     */
+    public static boolean clearMyAppList(Context context) {
+        return PreferencesByUserAndTanentUtils.putString(context, Constant.APP_MYAPP_LIST_FROM_NET, "");
+    }
+
+    /**
      * 应用排序接口，比较权重，用于展示APP
      */
     public static class SortCommonlyUseAppClass implements Comparator {
@@ -166,16 +180,6 @@ public class MyAppCacheUtils {
                 return 0;
             }
         }
-    }
-
-    /**
-     * 清除应用缓存
-     *
-     * @param context
-     * @return
-     */
-    public static boolean clearMyAppList(Context context) {
-        return PreferencesByUserAndTanentUtils.putString(context, Constant.APP_MYAPP_LIST_FROM_NET, "");
     }
 
 }

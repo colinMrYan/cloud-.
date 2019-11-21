@@ -24,7 +24,6 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
@@ -43,6 +42,8 @@ import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout;
+import com.inspur.emmcloud.baselib.widget.popmenu.DropPopMenu;
+import com.inspur.emmcloud.baselib.widget.popmenu.MenuItem;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.ClientConfigItem;
 import com.inspur.emmcloud.basemodule.bean.GetAllConfigVersionResult;
@@ -72,6 +73,7 @@ import com.inspur.emmcloud.util.privates.MyAppWidgetUtils;
 import com.inspur.emmcloud.util.privates.ScanQrCodeUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
 import com.inspur.emmcloud.util.privates.cache.AppCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.AppConfigCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MyAppCacheUtils;
 import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
 import com.inspur.emmcloud.widget.draggrid.DragGridView;
@@ -649,57 +651,58 @@ public class MyAppFragment extends BaseFragment {
      * @param view
      */
     private void showPopupWindow(View view) {
-        // 一个自定义的布局，作为popwindowivew显示的内容
-        View contentView = LayoutInflater.from(getActivity())
-                .inflate(R.layout.app_center_popup_window_view, null);
-//        final SwitchView switchView = contentView.findViewById(R.id.switch_view_common_app);
-        commonlyUseLayout = contentView.findViewById(R.id.ll_common_app_switch);
-        //为了在打开PopWindow时立刻显示当前状态
-//        switchView.setOpened(getNeedCommonlyUseApp());
-        // 设置按钮的点击事件
-        popupWindow = new PopupWindow(contentView,
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT, true);
-        popupWindow.setTouchable(true);
-        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+        final DropPopMenu dropPopMenu = new DropPopMenu(getActivity());
+        dropPopMenu.setOnItemClickListener(new DropPopMenu.OnItemClickListener() {
             @Override
-            public void onDismiss() {
-                backgroundAlpha(1.0f);
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id, MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case 1:
+                        AppUtils.openScanCode(MyAppFragment.this, REQUEST_SCAN_LOGIN_QRCODE_RESULT);
+                        break;
+                    case 2:
+                        if (appListAdapter != null) {
+                            appListAdapter.setCanEdit(true);
+                            appListAdapter.notifyDataSetChanged();
+                            setAppEditStatus(true);
+                        }
+                        break;
+                    case 3:
+                        if (!MyAppCacheUtils.getNeedCommonlyUseApp()) {
+                            MyAppCacheUtils.saveNeedCommonlyUseApp(true);
+                            handCommonlyUseAppData(appListAdapter.getAppAdapterList(), true);
+                        } else {
+                            if (getNeedRemoveCommonlyUseGroup()) {
+                                appListAdapter.getAppAdapterList().remove(0);
+                                appListAdapter.notifyDataSetChanged();
+                            }
+                            MyAppCacheUtils.saveNeedCommonlyUseApp(false);
+                        }
+                        break;
+                    case 4:
+                        break;
+                    default:
+                        break;
+                }
             }
         });
-//        switchView.setOnStateChangedListener(new OnStateChangedListener() {
-//            @Override
-//            public void toggleToOn(View view) {
-//                if (view == null || switchView == null) {
-//                    return;
-//                }
-//                switchView.toggleSwitch(true);
-//                saveNeedCommonlyUseApp(true);
-//                handCommonlyUseAppData(appListAdapter.getAppAdapterList(), true);
-//            }
-//
-//            @Override
-//            public void toggleToOff(View view) {
-//                if (view == null || switchView == null) {
-//                    return;
-//                }
-//                switchView.toggleSwitch(false);
-//                if (getNeedCommonlyUseApp() && AppCacheUtils.getCommonlyUseNeedShowList(getActivity()).size() > 0) {
-//                    appListAdapter.getAppAdapterList().remove(0);
-//                    appListAdapter.notifyDataSetChanged();
-//                }
-//                saveNeedCommonlyUseApp(false);
-//            }
-//        });
-        setCommonlyUseIconAndText();
-        (contentView.findViewById(R.id.ll_app_order)).setOnClickListener(myOnClickListener);
-        (contentView.findViewById(R.id.ll_common_app_switch)).setOnClickListener(myOnClickListener);
-        (contentView.findViewById(R.id.ll_app_scan)).setOnClickListener(myOnClickListener);
-        popupWindow.setBackgroundDrawable(getResources().getDrawable(
-                R.drawable.pop_window_view_tran));
-        backgroundAlpha(0.8f);
-        popupWindow.showAsDropDown(view);
+        List<MenuItem> list = getAddMenuList();
+        dropPopMenu.setMenuList(list);
+        dropPopMenu.show(view);
     }
+
+    private List<MenuItem> getAddMenuList() {
+        List<MenuItem> menuItemList = new ArrayList<>();//
+        menuItemList.add(new MenuItem(R.drawable.ic_message_menu_scan_black, 1, getActivity().getString(R.string.sweep)));
+        menuItemList.add(new MenuItem(R.drawable.ic_change_app_order, 2, getString(R.string.app_sort_order)));
+        boolean isOpenCommAppFromSer = AppConfigCacheUtils.getAppConfigValue(getContext(), "EnableCommonFunction", "true").equals("true");
+        if (isOpenCommAppFromSer) {
+            menuItemList.add(new MenuItem(MyAppCacheUtils.getNeedCommonlyUseApp() ? R.drawable.ic_commonly_use_open : R.drawable.ic_commonly_use_close
+                    , 3, getActivity().getString(MyAppCacheUtils.getNeedCommonlyUseApp() ? R.string.app_commonly_use_close : R.string.app_commonly_use)));
+        }
+        return menuItemList;
+    }
+
+
 
     /**
      * 设置添加屏幕的背景透明度
@@ -794,15 +797,6 @@ public class MyAppFragment extends BaseFragment {
         lastOnItemClickTime = time;
         return false;
 
-    }
-
-    private void setCommonlyUseIconAndText() {
-        if (popupWindow != null && commonlyUseLayout != null) {
-            ImageView imageView = commonlyUseLayout.findViewById(R.id.iv_app_commonly_use);
-            TextView textView = commonlyUseLayout.findViewById(R.id.tv_app_commonly_use);
-            imageView.setImageResource(MyAppCacheUtils.getNeedCommonlyUseApp() ? R.drawable.ic_commonly_use_open : R.drawable.ic_commonly_use_close);
-            textView.setText(MyAppCacheUtils.getNeedCommonlyUseApp() ? R.string.app_commonly_use_close : R.string.app_commonly_use);
-        }
     }
 
     private void setAppEditStatus(boolean isEditStatus) {
@@ -1053,34 +1047,6 @@ public class MyAppFragment extends BaseFragment {
                     if (popupWindow != null && popupWindow.isShowing()) {
                         popupWindow.dismiss();
                     }
-                    break;
-                case R.id.ll_app_order:
-                    if (popupWindow != null && appListAdapter != null) {
-                        appListAdapter.setCanEdit(true);
-                        appListAdapter.notifyDataSetChanged();
-                        setAppEditStatus(true);
-                        popupWindow.dismiss();
-                    }
-                    break;
-                case R.id.ll_common_app_switch:
-                    if (popupWindow != null) {
-                        popupWindow.dismiss();
-                    }
-                    if (!MyAppCacheUtils.getNeedCommonlyUseApp()) {
-                        MyAppCacheUtils.saveNeedCommonlyUseApp(true);
-                        handCommonlyUseAppData(appListAdapter.getAppAdapterList(), true);
-                        setCommonlyUseIconAndText();
-                    } else {
-                        if (getNeedRemoveCommonlyUseGroup()) {
-                            appListAdapter.getAppAdapterList().remove(0);
-                            appListAdapter.notifyDataSetChanged();
-                        }
-                        MyAppCacheUtils.saveNeedCommonlyUseApp(false);
-                        setCommonlyUseIconAndText();
-                    }
-                    break;
-                case R.id.ll_app_scan:
-                    AppUtils.openScanCode(MyAppFragment.this, REQUEST_SCAN_LOGIN_QRCODE_RESULT);
                     break;
             }
 
