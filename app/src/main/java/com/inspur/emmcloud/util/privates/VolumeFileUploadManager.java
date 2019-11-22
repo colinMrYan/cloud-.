@@ -210,7 +210,7 @@ public class VolumeFileUploadManager extends APIInterfaceInstance {
                             });
 
                         } else {
-                            businessProgressCallback.onLoading(volumeFileUpload.getProgress(), "");
+                            businessProgressCallback.onLoading(volumeFileUpload.getProgress(), 0, "");
                         }
                     } else if (volumeFileUpload.getStatus().equals(VolumeFile.STATUS_UPLOAD_FAIL)) {
                         new Handler().post(new Runnable() {
@@ -319,12 +319,12 @@ public class VolumeFileUploadManager extends APIInterfaceInstance {
         }
 
         @Override
-        public void onLoading(int progress, String speed) {
+        public void onLoading(int progress, long current, String speed) {
             volumeFileUpload.setProgress(progress);
             volumeFileUpload.setStatus(VolumeFile.STATUS_UPLOAD_IND);
             VolumeFileUploadCacheUtils.saveVolumeFileUpload(volumeFileUpload);
             if (volumeFileUpload.getBusinessProgressCallback() != null) {
-                volumeFileUpload.getBusinessProgressCallback().onLoading(progress, speed);
+                volumeFileUpload.getBusinessProgressCallback().onLoading(progress, current, speed);
             }
         }
 

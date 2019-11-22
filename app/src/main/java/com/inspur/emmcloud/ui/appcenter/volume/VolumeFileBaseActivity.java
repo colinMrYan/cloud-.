@@ -571,11 +571,11 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         if (!StringUtils.isBlank(fileSavePath)) {
             FileUtils.openFile(getApplicationContext(), fileSavePath);
         } else {
-//            Bundle bundle = new Bundle();
-//            bundle.putSerializable("volumeId", volume.getId());
-//            bundle.putSerializable("volumeFile", volumeFile);
-//            bundle.putSerializable("currentDirAbsolutePath", currentDirAbsolutePath + volumeFile.getName());
-//            IntentUtils.startActivity(VolumeFileBaseActivity.this, VolumeFileDownloadActivity.class, bundle);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("volumeId", volume.getId());
+            bundle.putSerializable("volumeFile", volumeFile);
+            bundle.putSerializable("currentDirAbsolutePath", currentDirAbsolutePath + volumeFile.getName());
+            IntentUtils.startActivity(VolumeFileBaseActivity.this, VolumeFileDownloadActivity.class, bundle);
         }
     }
 

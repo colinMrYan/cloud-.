@@ -39,6 +39,7 @@
     <string name="add">添加</string>
     <string name="update">更新</string>
     <string name="download">下載</string>
+    <string name="redownload">繼續下載</string>
     <string name="confirm_modify_language">確定修改語言</string>
     <string name="resolution_valiad">您的設備解析度小於1280*720無法運行此程式</string>
     <string name="file_type_not_recognize">不可識別的檔案類型</string>

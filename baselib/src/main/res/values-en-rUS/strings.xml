@@ -36,6 +36,7 @@
     <string name="add">Add</string>
     <string name="update">Update</string>
     <string name="download">Download</string>
+    <string name="redownload">Continue to download</string>
     <string name="confirm_modify_language">Change to This Language?</string>
     <string name="file_type_not_recognize">Unrecognizable File type</string>
     <string name="return_app">Return Application</string>

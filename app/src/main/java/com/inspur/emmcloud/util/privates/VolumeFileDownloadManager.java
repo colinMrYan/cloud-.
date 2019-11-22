@@ -98,7 +98,7 @@ public class VolumeFileDownloadManager extends APIInterfaceInstance {
                             });
                             resetVolumeFileStatus(volumeFile);
                         } else {
-                            businessProgressCallback.onLoading(downloadVolumeFile.getProgress(), "");
+                            businessProgressCallback.onLoading(downloadVolumeFile.getProgress(), downloadVolumeFile.getCompleteSize(), "");
                         }
                     } else if (downloadVolumeFile.getStatus().equals(VolumeFile.STATUS_DOWNLOAD_FAIL)) {
                         new android.os.Handler().post(new Runnable() {
@@ -218,6 +218,23 @@ public class VolumeFileDownloadManager extends APIInterfaceInstance {
         }
     }
 
+    /**
+     * 获取文件下载状态
+     *
+     * @param volumeFile
+     * @return
+     */
+    public String getFileStatus(VolumeFile volumeFile) {
+        for (int i = 0; i < volumeFileDownloadList.size(); i++) {
+            VolumeFile downloadVolumeFile = volumeFileDownloadList.get(i);
+            if (volumeFile.getId().equals(downloadVolumeFile.getId())) {
+                return VolumeFile.STATUS_DOWNLOAD_IND;
+            }
+        }
+
+        return VolumeFile.STATUS_NORMAL;
+    }
+
     private APIDownloadCallBack getAPIDownloadCallBack(String source, final VolumeFile volumeFile,
                                                        final String fileSavePath) {
         APIDownloadCallBack callBack = new APIDownloadCallBack(BaseApplication.getInstance(), source) {
@@ -241,7 +258,7 @@ public class VolumeFileDownloadManager extends APIInterfaceInstance {
                         String speed = FileUtils.formatFileSize((current - downloadVolumeFile.getCompleteSize()) * 1000 /
                                 (System.currentTimeMillis() - downloadVolumeFile.getLastRecordTime())) + "/S";
                         if (downloadVolumeFile.getBusinessProgressCallback() != null && downloadVolumeFile.getCompleteSize() >= 0) {
-                            downloadVolumeFile.getBusinessProgressCallback().onLoading(progress, speed);
+                            downloadVolumeFile.getBusinessProgressCallback().onLoading(progress, current, speed);
                         }
                         downloadVolumeFile.setProgress(progress);
                         downloadVolumeFile.setLastRecordTime(System.currentTimeMillis());
@@ -281,6 +298,7 @@ public class VolumeFileDownloadManager extends APIInterfaceInstance {
                     if (volumeFile.getId().equals(downloadVolumeFile.getId())) {
                         if (downloadVolumeFile.getBusinessProgressCallback() != null) {
                             downloadVolumeFile.getBusinessProgressCallback().onFail();
+                            resetVolumeFileStatus(volumeFile);
                         }
                         break;
                     }

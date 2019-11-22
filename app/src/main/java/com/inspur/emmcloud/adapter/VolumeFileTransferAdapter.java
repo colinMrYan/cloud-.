@@ -157,7 +157,7 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
             }
 
             @Override
-            public void onLoading(int progress, String speed) {
+            public void onLoading(int progress, long current, String speed) {
                 if (originVolumeFile.getStatus().equals(VolumeFile.STATUS_UPLOAD_IND)) {
                     if (!StringUtils.isBlank(speed)) {
                         holder.speedTv.setText(speed);
@@ -195,7 +195,7 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
             }
 
             @Override
-            public void onLoading(int progress, String speed) {
+            public void onLoading(int progress, long current, String speed) {
 //                Log.d("zhang", "downLoading: progress = " + progress
 //                        + ",speed = " + speed + ",status = " + volumeFile.getStatus());
                 if (volumeFile.getStatus().equals(VolumeFile.STATUS_DOWNLOAD_IND)) {
