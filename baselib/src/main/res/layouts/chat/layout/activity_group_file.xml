@@ -123,9 +123,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="#ffffff"
-        android:elevation="10dp"
-        android:translationZ="10dp">
+        android:background="#ffffff">
 
         <com.inspur.emmcloud.baselib.widget.VolumeActionLayout
             android:id="@+id/ll_volume_action"
