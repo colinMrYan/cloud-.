@@ -12,6 +12,7 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIInterface;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.router.Router;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
 import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
@@ -747,7 +748,9 @@ public class MyAppAPIService {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        params.addQueryStringParameter("requestBody", rootObj.toString());
+        // params.addBodyParameter("requestBody",rootObj);
+        params.setBodyContent(rootObj.toString());
+        LogUtils.jasonDebug(rootObj.toString());
         params.setAsJsonContent(true);
         HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, url) {
             @Override
