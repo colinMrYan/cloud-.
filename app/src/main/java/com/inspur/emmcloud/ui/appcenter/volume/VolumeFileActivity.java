@@ -623,6 +623,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                         volumeFileList.add(volumeFile);
                         adapter.setVolumeFileList(volumeFileList);
                         adapter.notifyItemChanged(index);
+                        initDataBlankLayoutStatus();
                     }
                 }
             }
