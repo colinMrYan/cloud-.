@@ -1860,4 +1860,14 @@ public class APIInterfaceInstance implements APIInterface {
     public void returnJoinConversationFail(String error, int errorCode) {
 
     }
+
+    @Override
+    public void returnMoveOrCopyFileBetweenVolumeSuccess(String operation) {
+
+    }
+
+    @Override
+    public void returnMoveOrCopyFileBetweenVolumeFail(String error, int errorCode, String srcVolumeFilePath, String operation, List<VolumeFile> volumeFileList) {
+
+    }
 }

@@ -12,19 +12,22 @@ import com.inspur.emmcloud.adapter.VolumeFileAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButton;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
-import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.util.privates.VolumeFilePrivilegeUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -53,19 +56,16 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
     TextView locationSelectCancelText;
     @BindView(R.id.path_text)
     TextView pathText;
-    List<VolumeFile> copyErrorFiles = new ArrayList<>();
+    List<VolumeFile> copyOrMoveErrorFiles = new ArrayList<>();
     private boolean isFunctionCopy;//判断是复制还是移动功能
     private MyAppAPIService apiService;
     private List<Uri> shareUriList = new ArrayList<>();
-    private int copyFileSize = 0;
-    private int copyReturnFileSize = 0;
-    private int returnErrorFileSize = 0;
 
     @Override
     public void onCreate() {
         super.onCreate();
         EventBus.getDefault().register(this);
-        isFunctionCopy = getIntent().getBooleanExtra("isFunctionCopy", true);
+        isFunctionCopy = getIntent().getBooleanExtra(VolumeFileBaseActivity.EXTRA_IS_FUNCTION_COPY_OR_MOVE, true);
         initViews();
     }
 
@@ -140,7 +140,7 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
 
             case R.id.location_select_cancel_text:
                 Intent intentResult = new Intent();
-                intentResult.putExtra("copyFailedFiles", (Serializable) copyErrorFiles);
+                intentResult.putExtra(VolumeFileBaseActivity.EXTRA_OPERATION_FAIL_FILES, (Serializable) copyOrMoveErrorFiles);
                 setResult(RESULT_OK, intentResult);
                 finish();
                 break;
@@ -164,15 +164,7 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
                         return;
                     }
                 }
-                if (isFunctionCopy) {
-                    if (fromVolume != null && !fromVolume.getId().equals(volume.getId())) {
-                        copyFileBetweenVolume(operationFileAbsolutePath);
-                    } else {
-                        copyFile(operationFileAbsolutePath);
-                    }
-                } else {
-                    moveFile(operationFileAbsolutePath);
-                }
+                copyOrMoveFileBetweenVolume(operationFileAbsolutePath, isFunctionCopy ? "copy" : "move");
                 break;
             case R.id.btn_location_select_upload_to:
                 goUploadPage();
@@ -237,135 +229,60 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
         }
     }
 
-    /**
-     * 复制文件
-     */
-    private void copyFile(String operationFileAbsolutePath) {
+    private void copyOrMoveFileBetweenVolume(String fileOrgPath, String operation) {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
             loadingDlg.show();
+            List<VolumeFile> copyOrMoveVolumeFileList = (List<VolumeFile>) getIntent().getSerializableExtra(EXTRA_VOLUME_FILE_LIST);
             String path = currentDirAbsolutePath;
             if (currentDirAbsolutePath.length() > 1) {
                 path = currentDirAbsolutePath.substring(0, currentDirAbsolutePath.length() - 1);
             }
-            List<VolumeFile> moveVolumeFileList = (List<VolumeFile>) getIntent().getSerializableExtra("volumeFileList");
-            apiService.copyVolumeFile(volume.getId(), operationFileAbsolutePath, moveVolumeFileList, path);
-        }
-    }
-
-    /**
-     * 夸网盘复制
-     **/
-    private void copyFileBetweenVolume(String fileOrgPath) {
-        if (NetUtils.isNetworkConnected(getApplicationContext())) {
-            copyReturnFileSize = 0;
-            returnErrorFileSize = 0;
-            loadingDlg.show();
-            List<VolumeFile> moveVolumeFileList = (List<VolumeFile>) getIntent().getSerializableExtra(EXTRA_VOLUME_FILE_LIST);
-            copyFileSize = moveVolumeFileList.size();
-            String path = currentDirAbsolutePath;
-            if (currentDirAbsolutePath.length() > 1) {
-                path = currentDirAbsolutePath.substring(0, currentDirAbsolutePath.length() - 1);
-            }
-            for (int i = 0; i < moveVolumeFileList.size(); i++) {
-                String srcVolumeFilePath = fileOrgPath + moveVolumeFileList.get(i).getName();
-                apiService.copyFileBetweenVolume(moveVolumeFileList.get(i), fromVolume.getId(), volume.getId(), srcVolumeFilePath, path);
-            }
-        }
-    }
-
-
-    /**
-     * 移动文件
-     *
-     * @param operationFileAbsolutePath
-     */
-    private void moveFile(String operationFileAbsolutePath) {
-        if (NetUtils.isNetworkConnected(getApplicationContext())) {
-            loadingDlg.show();
-            String path = currentDirAbsolutePath;
-            if (currentDirAbsolutePath.length() > 1) {
-                path = currentDirAbsolutePath.substring(0, currentDirAbsolutePath.length() - 1);
-            }
-            List<VolumeFile> moveVolumeFileList = (List<VolumeFile>) getIntent().getSerializableExtra("volumeFileList");
-            apiService.moveVolumeFile(volume.getId(), operationFileAbsolutePath, moveVolumeFileList, path);
-        }
-    }
-
-    /**
-     * 复制异常提醒Toast
-     **/
-    private void copyErrorToastShow() {
-        if (returnErrorFileSize != 0) {
-            String showErrorDetail = String.format(getString(R.string.volume_copy_between_volume_error_toast), returnErrorFileSize);
-            ToastUtils.show(showErrorDetail);
+            apiService.copyOrMoveFileBetweenVolume(copyOrMoveVolumeFileList, fromVolume.getId(), volume.getId(), operation, fileOrgPath, path);
         }
     }
 
     private class WebService extends APIInterfaceInstance {
         @Override
-        public void returnMoveFileSuccess(List<VolumeFile> movedVolumeFileList) {
+        public void returnMoveOrCopyFileBetweenVolumeSuccess(String operation) {
             LoadingDialog.dimissDlg(loadingDlg);
-            //将移动的位置传递回去，以便于当前页面刷新数据
-            sendVolumeFileRefreshBroadcast(getVolumeFileListResult.getId());
-            sendVolumeFileRefreshBroadcast(movedVolumeFileList.get(0).getParent());
-            setResult(RESULT_OK);
-            finish();
-        }
-
-        @Override
-        public void returnMoveFileFail(String error, int errorCode) {
-            LoadingDialog.dimissDlg(loadingDlg);
-            WebServiceMiddleUtils.hand(getApplicationContext(), error, errorCode);
-        }
-
-        @Override
-        public void returnCopyFileSuccess() {
-            LoadingDialog.dimissDlg(loadingDlg);
-            //将移动的位置传递回去，以便于当前页面刷新数据
-            sendVolumeFileRefreshBroadcast(getVolumeFileListResult.getId());
             Intent intentResult = new Intent();
-            intentResult.putExtra("copyFailedFiles", (Serializable) copyErrorFiles);
+            intentResult.putExtra(VolumeFileBaseActivity.EXTRA_OPERATION_FAIL_FILES, (Serializable) copyOrMoveErrorFiles);
             setResult(RESULT_OK, intentResult);
+            ToastUtils.show(getString(operation.equals("copy") ? R.string.volume_copy_success : R.string.volume_move_success));
             finish();
         }
 
         @Override
-        public void returnCopyFileFail(String error, int errorCode) {
+        public void returnMoveOrCopyFileBetweenVolumeFail(String error, int errorCode, String srcVolumeFilePath, String operation, List<VolumeFile> volumeFileList) {
+            try {
+                JSONArray arrayData = JSONUtils.getJSONArray(error, new JSONArray());
+                for (int i = 0; i < 10; i++) {
+                    if (arrayData.isNull(i)) {
+                        if (i == 0) {
+                            copyOrMoveErrorFiles.addAll(volumeFileList);
+                        }
+                        break;
+                    }
+                    JSONObject jsonObject = arrayData.getJSONObject(i);
+                    boolean operationSuccess = jsonObject.getBoolean("success");
+                    String operationFailFile = jsonObject.getString("source");
+                    if (!operationSuccess && !StringUtils.isBlank(operationFailFile)) {
+                        for (int i1 = 0; i1 < volumeFileList.size(); i1++) {
+                            if (operationFailFile.equals(srcVolumeFilePath + volumeFileList.get(i1).getName())) {
+                                copyOrMoveErrorFiles.add(volumeFileList.get(i1));
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             LoadingDialog.dimissDlg(loadingDlg);
-            returnErrorFileSize = ((List<VolumeFile>) getIntent().getSerializableExtra("volumeFileList")).size();
-            copyErrorToastShow();
             Intent intentResult = new Intent();
-            intentResult.putExtra("copyFailedFiles", getIntent().getSerializableExtra("volumeFileList"));
+            intentResult.putExtra(VolumeFileBaseActivity.EXTRA_OPERATION_FAIL_FILES, (Serializable) copyOrMoveErrorFiles);
             setResult(RESULT_OK, intentResult);
+            ToastUtils.show(getString(operation.equals("copy") ? R.string.volume_copy_fail : R.string.volume_move_fail));
             finish();
-        }
-
-        @Override
-        public void returnCopyFileBetweenVolumeSuccess() {
-            copyReturnFileSize++;
-            if (copyReturnFileSize == copyFileSize) {
-                copyErrorToastShow();
-                LoadingDialog.dimissDlg(loadingDlg);
-                Intent intentResult = new Intent();
-                intentResult.putExtra("copyFailedFiles", (Serializable) copyErrorFiles);
-                setResult(RESULT_OK, intentResult);
-                finish();
-            }
-        }
-
-        @Override
-        public void returnCopyFileBetweenVolumeFail(String error, int errorCode, VolumeFile volumeFile) {
-            copyReturnFileSize++;
-            returnErrorFileSize++;
-            copyErrorFiles.add(volumeFile);
-            if (copyReturnFileSize == copyFileSize) {
-                copyErrorToastShow();
-                LoadingDialog.dimissDlg(loadingDlg);
-                Intent intentResult = new Intent();
-                intentResult.putExtra("copyFailedFiles", (Serializable) copyErrorFiles);
-                setResult(RESULT_OK, intentResult);
-                finish();
-            }
         }
     }
 }

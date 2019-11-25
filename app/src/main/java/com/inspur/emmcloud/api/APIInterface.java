@@ -518,6 +518,10 @@ public interface APIInterface {
 
     void returnCopyFileBetweenVolumeFail(String error, int errorCode, VolumeFile volumeFile);
 
+    void returnMoveOrCopyFileBetweenVolumeSuccess(String operation);
+
+    void returnMoveOrCopyFileBetweenVolumeFail(String error, int errorCode, String srcVolumeFilePath, String operation, List<VolumeFile> volumeFileList);
+
     void returnRecommendAppWidgetListSuccess(GetRecommendAppWidgetListResult getRecommendAppWidgetListResult);
 
     void returnRecommendAppWidgetListFail(String error, int errorCode);
