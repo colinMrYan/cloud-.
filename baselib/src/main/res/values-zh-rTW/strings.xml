@@ -362,6 +362,12 @@
     <string name="chat_file_transfer_content">登錄雲+桌面版，向文件傳輸助手發消息，可以在手機與電腦間傳輸文字、圖片、音頻等文件。</string>
     <!--语音通话提示-->
     <string name="voice_communication_end">聊天已結束</string>
+    <string name="video_call">視頻通話</string>
+    <string name="video_communication_turn_to_voice_call">切到語音通話</string>
+    <string name="video_communication_switch_camera">切換監視器</string>
+    <string name="video_communication_waiting_answer">連接中…</string>
+    <string name="video_communication_invite_video_call">邀請你視頻通話</string>
+    <string name="voice_video_call_no_contact">未獲取到連絡人資訊</string>
 
     <!-- 會議卡片 -->
     <string name="meeting_has_confirmed">已確認</string>

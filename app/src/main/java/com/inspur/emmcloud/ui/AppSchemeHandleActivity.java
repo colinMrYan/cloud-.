@@ -49,7 +49,6 @@ import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.ProfileUtils;
 import com.inspur.emmcloud.util.privates.VoiceCommunicationManager;
 import com.inspur.emmcloud.util.privates.WebAppUtils;
-import com.inspur.emmcloud.widget.ECMChatInputMenu;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -250,7 +249,7 @@ public class AppSchemeHandleActivity extends BaseActivity {
                                 break;
                             case "ecc-cloudplus-cmd":
                                 CustomProtocol customProtocol = new CustomProtocol(uri.toString());
-                                if (customProtocol.getHost().equals("voice_channel")) {
+                                if (customProtocol.getHost().equals("voice_channel") || customProtocol.getHost().equals("video_channel")) {
                                     //不在通话中，点击通知才打开页面，否则不打开，不会影响小窗口或者通知的逻辑，
                                     //小窗口通知走的ecc-cloudplus-cmd-voice-call
                                     if (!VoiceCommunicationManager.getInstance().isVoiceBusy()) {
@@ -309,8 +308,23 @@ public class AppSchemeHandleActivity extends BaseActivity {
         if (customProtocol != null) {
             VoiceCommunicationManager.getInstance().getChannelInfoByChannelId(
                     customProtocol.getParamMap().get(Constant.COMMAND_ROOM_ID),
-                    ECMChatInputMenu.VOICE_CALL, customProtocol.getParamMap().get(Constant.COMMAND_CHANNEL_ID));
+                    getChannelTypeByHost(customProtocol.getHost()), customProtocol.getParamMap().get(Constant.COMMAND_CHANNEL_ID));
         }
+    }
+
+    /**
+     * 根据Host获取通话类型
+     *
+     * @param host
+     * @return
+     */
+    private String getChannelTypeByHost(String host) {
+        if (host.equals("voice_channel")) {
+            return "VOICE";
+        } else if (host.equals("video_channel")) {
+            return "VIDEO";
+        }
+        return "VOICE";
     }
 
     /**

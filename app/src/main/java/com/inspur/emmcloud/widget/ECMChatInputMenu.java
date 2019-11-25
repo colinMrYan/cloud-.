@@ -558,7 +558,7 @@ public class ECMChatInputMenu extends LinearLayout {
                     getContext().getString(R.string.mention),
                     getContext().getString(R.string.voice_call),
                     getContext().getString(R.string.send_email),
-                    "视频通话"};
+                    getContext().getString(R.string.video_call)};
             String[] functionActionArray = {"gallery", "camera", "file", "voice_input", "mention", VOICE_CALL, "send_email", VIDEO_CALL};
             String inputControl = "-1";
             if (!StringUtils.isBlank(inputs)) {
@@ -610,6 +610,10 @@ public class ECMChatInputMenu extends LinearLayout {
                     case 8:
                         isVoiceCallEnable = controlValue.equals("1");
                         break;
+                    //屏蔽视频通话
+//                    case 9:
+//                        isVideoCallEnable = controlValue.equals("1");
+//                        break;
                     case 10:
                         isSendEmailEnable = controlValue.equals("1");
                         break;
@@ -729,7 +733,7 @@ public class ECMChatInputMenu extends LinearLayout {
                         case VIDEO_CALL:
                             //当没有悬浮窗权限或者小米手机上没有后台弹出界面权限时先请求权限
                             if ((Build.VERSION.SDK_INT >= 23 && !Settings.canDrawOverlays(getContext())) ||
-                                    (Build.VERSION.SDK_INT >= 19 && AppUtils.canBackgroundStart(getContext()))) {
+                                    (Build.VERSION.SDK_INT >= 19 && !AppUtils.canBackgroundStart(getContext()))) {
                                 chatInputMenuListener.onNoSmallWindowPermission();
                                 return;
                             }
