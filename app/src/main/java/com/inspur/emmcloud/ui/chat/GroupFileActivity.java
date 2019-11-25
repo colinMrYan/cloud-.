@@ -68,7 +68,6 @@ public class GroupFileActivity extends BaseActivity {
     private PopupWindow sortOperationPop;
     private GroupFileAdapter adapter;
     private FileSortComparable fileSortComparable;
-    final List<VolumeActionData> volumeActionHideList = new ArrayList<>();
     @BindView(R.id.ll_volume_action)
     VolumeActionLayout volumeActionLayout;
     private List<GroupFileInfo> selectGroupFileList = new ArrayList<>();
@@ -235,7 +234,8 @@ public class GroupFileActivity extends BaseActivity {
         TextView fileNameText = convertView.findViewById(R.id.tv_file_name);
         TextView fileSizeText = convertView.findViewById(R.id.tv_file_size);
         TextView fileTimeText = convertView.findViewById(R.id.file_time_text);
-        TextView fileMonthText = convertView.findViewById(R.id.tv_file_month);
+        //注释掉现在没有用上的控件
+//        TextView fileMonthText = convertView.findViewById(R.id.tv_file_month);
         RelativeLayout fileInfoLayout = convertView.findViewById(R.id.file_info_layout);
         ImageView selectImg = convertView.findViewById(R.id.file_select_img);
         fileInfoLayout.setVisibility(View.VISIBLE);
@@ -268,7 +268,7 @@ public class GroupFileActivity extends BaseActivity {
         convertView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                LogUtils.YfcDebug("点单个文件");
             }
         });
         selectImg.setOnClickListener(new OnClickListener() {
@@ -291,7 +291,6 @@ public class GroupFileActivity extends BaseActivity {
     protected void setBottomOperationItemShow(List<GroupFileInfo> selectVolumeFileList) {
         downLoadAction = getString(R.string.download);
         volumeActionDataList.clear();
-        volumeActionHideList.clear();
         volumeActionDataList.add(new VolumeActionData(downLoadAction, R.drawable.ic_volume_download, true));
         for (int i = 0; i < volumeActionDataList.size(); i++) {
             if (!volumeActionDataList.get(i).isShow()) {
@@ -306,14 +305,13 @@ public class GroupFileActivity extends BaseActivity {
             @Override
             public void volumeActionSelectedListener(String actionName) {
                 volumeActionLayout.setVisibility(View.GONE);
-                handleVolumeAction(actionName);
+                handleDownLoadAction(actionName);
             }
         });
     }
 
-    private void handleVolumeAction(String actionName) {
+    private void handleDownLoadAction(String actionName) {
         if (actionName.equals(downLoadAction)) {
-            LogUtils.YfcDebug("跳转到下载页面");
             for (GroupFileInfo groupFileInfo : selectGroupFileList) {
                 LogUtils.YfcDebug("下载文件名称：" + groupFileInfo.getName());
             }
