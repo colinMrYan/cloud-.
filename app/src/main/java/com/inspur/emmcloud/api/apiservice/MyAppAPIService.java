@@ -1298,7 +1298,8 @@ public class MyAppAPIService {
      * @param volumeId
      */
     public void getVolumeFileGroup(final String volumeId, final String path) {
-        final String url = StringUtils.encodeURIComponent(APIUri.getVolumeFileGroupUrl(volumeId) + "?path=" + path);
+        String encodePath = StringUtils.encodeURIComponent(path);
+        final String url = APIUri.getVolumeFileGroupUrl(volumeId) + "?path=" + encodePath;
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, url) {
             @Override
