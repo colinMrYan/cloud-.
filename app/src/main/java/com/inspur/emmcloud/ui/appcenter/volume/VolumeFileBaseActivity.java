@@ -667,7 +667,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
             bundle.putBoolean(EXTRA_IS_FUNCTION_COPY_OR_MOVE, isCopy);
             bundle.putString(EXTRA_OPERATION_FILE_DIR_ABS_PATH, currentDirAbsolutePath);
             intent.putExtras(bundle);
-            startActivityForResult(intent, REQUEST_COPY_FILE);
+            startActivityForResult(intent, isCopy ? REQUEST_COPY_FILE : REQUEST_MOVE_FILE);
         }
     }
 
