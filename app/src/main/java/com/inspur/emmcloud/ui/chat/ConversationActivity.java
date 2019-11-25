@@ -2004,8 +2004,9 @@ public class ConversationActivity extends ConversationBaseActivity {
         @Override
         public void returnShareFileToFriendsFromVolumeSuccess(String newPath, VolumeFile volumeFile) {
             MsgContentRegularFile msgContentRegularFile = new MsgContentRegularFile();
+            String[] allPath = newPath.split("/");
             msgContentRegularFile.setCategory(Message.MESSAGE_TYPE_FILE_REGULAR_FILE);
-            msgContentRegularFile.setName(volumeFile.getName());
+            msgContentRegularFile.setName(allPath[allPath.length - 1]);
             msgContentRegularFile.setSize(volumeFile.getSize());
             msgContentRegularFile.setMedia(newPath);
             Message fakeMessage = CommunicationUtils.combineTransmitRegularFileMessage(cid, newPath, msgContentRegularFile);
