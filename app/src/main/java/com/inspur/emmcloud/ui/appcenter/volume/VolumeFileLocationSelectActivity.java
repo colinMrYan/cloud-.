@@ -140,7 +140,7 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
 
             case R.id.location_select_cancel_text:
                 Intent intentResult = new Intent();
-                intentResult.putExtra("operationFailedFiles", (Serializable) copyOrMoveErrorFiles);
+                intentResult.putExtra(VolumeFileBaseActivity.EXTRA_COPY_FAIL_FILES, (Serializable) copyOrMoveErrorFiles);
                 setResult(RESULT_OK, intentResult);
                 finish();
                 break;
@@ -279,7 +279,7 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
             }
             LoadingDialog.dimissDlg(loadingDlg);
             Intent intentResult = new Intent();
-            intentResult.putExtra("operationFailedFiles", (Serializable) copyOrMoveErrorFiles);
+            intentResult.putExtra(VolumeFileBaseActivity.EXTRA_COPY_FAIL_FILES, (Serializable) copyOrMoveErrorFiles);
             setResult(RESULT_OK, intentResult);
             ToastUtils.show(getString(operation.equals("copy") ? R.string.volume_copy_fail : R.string.volume_move_fail));
             finish();
