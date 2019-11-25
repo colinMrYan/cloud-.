@@ -94,6 +94,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     public static final String EXTRA_IS_FUNCTION_COPY_OR_MOVE = "isFunctionCopyOrMove";
     public static final String EXTRA_OPERATION_FILE_DIR_ABS_PATH = "operationFileDirAbsolutePath";
     public static final String EXTRA_FILE_SHARE_URI = "fileShareUriList";
+    public static final String EXTRA_COPY_FAIL_FILES = "copyFailedFiles";
     protected static final int REQUEST_MOVE_FILE = 5;
     protected static final int REQUEST_COPY_FILE = 6;
     protected static final int SHARE_IMAGE_OR_FILES = 7;

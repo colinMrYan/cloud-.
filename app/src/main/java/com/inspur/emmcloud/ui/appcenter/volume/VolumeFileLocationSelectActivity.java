@@ -246,7 +246,7 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
         public void returnMoveOrCopyFileBetweenVolumeSuccess(String operation) {
             LoadingDialog.dimissDlg(loadingDlg);
             Intent intentResult = new Intent();
-            intentResult.putExtra("copyFailedFiles", (Serializable) copyOrMoveErrorFiles);
+            intentResult.putExtra(VolumeFileBaseActivity.EXTRA_COPY_FAIL_FILES, (Serializable) copyOrMoveErrorFiles);
             setResult(RESULT_OK, intentResult);
             ToastUtils.show(getString(operation.equals("copy") ? R.string.volume_copy_success : R.string.volume_move_success));
             finish();
