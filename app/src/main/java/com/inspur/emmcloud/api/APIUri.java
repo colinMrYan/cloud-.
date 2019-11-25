@@ -109,8 +109,8 @@ public class APIUri {
 
     public static String getUrlBaseVolume() {
         //return getCloudDriver() + "/volume";
-        return "http://10.25.12.114:3001/cloud-drive/rest/v1/volume";
-        //return getCloudDriver() + "/volume";
+        /** 测试 用return "http://10.25.12.114:3001/cloud-drive/rest/v1/volume";**/
+        return getCloudDriver() + "/volume";
     }
 
     public static String getUrlBaseGroup() {
