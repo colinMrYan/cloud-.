@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.chat;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
@@ -22,11 +23,13 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.VolumeFileFilterPopGridAdapter;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
-import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.widget.VolumeActionData;
 import com.inspur.emmcloud.baselib.widget.VolumeActionLayout;
+import com.inspur.emmcloud.basemodule.bean.DownloadFileCategory;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.FileDownloadManager;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.GroupFileInfo;
@@ -72,6 +75,7 @@ public class GroupFileActivity extends BaseActivity {
     VolumeActionLayout volumeActionLayout;
     private List<GroupFileInfo> selectGroupFileList = new ArrayList<>();
     private String downLoadAction; //弹框点击状态
+    List<Message> fileTypeMessageListWithOrder = new ArrayList<>();
     @Override
     public void onCreate() {
         ButterKnife.bind(this);
@@ -80,9 +84,24 @@ public class GroupFileActivity extends BaseActivity {
         noChannelFileLayout.setVisibility(fileInfoList.size() == 0 ? View.VISIBLE : View.GONE);
         fileSortComparable = new FileSortComparable();
         Collections.sort(fileInfoList, fileSortComparable);
+        handleMessageOrder(fileInfoList);
         adapter = new GroupFileAdapter();
         fileListView.setAdapter(adapter);
         adapter.setAndReFreshList(fileInfoList);
+    }
+
+    private void handleMessageOrder(List<GroupFileInfo> fileInfoList) {
+        //根据fileInfoList的排序排列fileTypeMessage
+        fileTypeMessageListWithOrder.clear();
+        List<Message> fileTypeMessageList = MessageCacheUtil.getFileTypeMsgList(MyApplication.getInstance(), cid);
+        for (GroupFileInfo groupFileInfo : fileInfoList) {
+            for (Message message : fileTypeMessageList) {
+                String url = APIUri.getChatFileResouceUrl(message.getChannel(), message.getMsgContentAttachmentFile().getMedia());
+                if (groupFileInfo.getUrl().equals(url)) {
+                    fileTypeMessageListWithOrder.add(message);
+                }
+            }
+        }
     }
 
     @Override
@@ -161,6 +180,7 @@ public class GroupFileActivity extends BaseActivity {
         }
         operationSortText.setText(sortTypeShowTxt);
         Collections.sort(fileInfoList, fileSortComparable);
+        handleMessageOrder(fileInfoList);
         adapter.setAndReFreshList(fileInfoList);
     }
 
@@ -226,6 +246,7 @@ public class GroupFileActivity extends BaseActivity {
                 fileInfoFilterList.add(groupFileInfo);
             }
         }
+        handleMessageOrder(fileInfoFilterList);
         adapter.setAndReFreshList(fileInfoFilterList);
     }
 
@@ -234,8 +255,6 @@ public class GroupFileActivity extends BaseActivity {
         TextView fileNameText = convertView.findViewById(R.id.tv_file_name);
         TextView fileSizeText = convertView.findViewById(R.id.tv_file_size);
         TextView fileTimeText = convertView.findViewById(R.id.file_time_text);
-        //注释掉现在没有用上的控件
-//        TextView fileMonthText = convertView.findViewById(R.id.tv_file_month);
         RelativeLayout fileInfoLayout = convertView.findViewById(R.id.file_info_layout);
         ImageView selectImg = convertView.findViewById(R.id.file_select_img);
         fileInfoLayout.setVisibility(View.VISIBLE);
@@ -245,19 +264,6 @@ public class GroupFileActivity extends BaseActivity {
         final String fileName = groupFileInfo.getName();
         fileNameText.setText(fileName);
         fileSizeText.setText(groupFileInfo.getSize());
-        //与IOS统一不带月份显示，如需添加，解开如下注释
-//        if (sortType.equals(SORT_BY_TIME_DOWN) || sortType.equals(SORT_BY_TIME_UP)) {
-//            String currentTime = TimeUtils.timeLong2YMString(GroupFileActivity.this, groupFileInfo.getLongTime());
-//            if (position >= 1) {
-//                String lastTime = TimeUtils.timeLong2YMString(GroupFileActivity.this, groupFileInfoList.get(position - 1).getLongTime());
-//                fileMonthText.setVisibility(!lastTime.equals(currentTime) ? View.VISIBLE : View.GONE);
-//                fileMonthText.setText(currentTime);
-//            } else {
-//                fileMonthText.setText(currentTime.equals(TimeUtils.timeLong2YMString(GroupFileActivity.this, groupFileInfo.getLongTime())) ? getString(R.string.current_month) : currentTime);
-//            }
-//        } else {
-//            fileMonthText.setVisibility(View.GONE);
-//        }
         if (selectGroupFileList.size() > 0) {
             selectImg.setImageResource(selectGroupFileList.contains(groupFileInfo) ? R.drawable.ic_select_yes : R.drawable.ic_select_no);
         } else {
@@ -268,21 +274,33 @@ public class GroupFileActivity extends BaseActivity {
         convertView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                LogUtils.YfcDebug("点单个文件");
-            }
-        });
-        selectImg.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (selectGroupFileList.contains(groupFileInfoList.get(position))) {
-                    selectGroupFileList.remove(groupFileInfoList.get(position));
-                } else {
-                    selectGroupFileList.add(groupFileInfoList.get(position));
+                if (fileTypeMessageListWithOrder != null && fileTypeMessageListWithOrder.size() > 0) {
+                    Message message = fileTypeMessageListWithOrder.get(position);
+                    final MsgContentRegularFile msgContentFile = message.getMsgContentAttachmentFile();
+                    final String fileDownloadPath = FileDownloadManager.getInstance().getDownloadFilePath(DownloadFileCategory.CATEGORY_MESSAGE, message.getId(), msgContentFile.getName());
+                    if (!StringUtils.isBlank(fileDownloadPath)) {
+                        FileUtils.openFile(GroupFileActivity.this, fileDownloadPath);
+                    } else {
+                        Intent intent = new Intent(GroupFileActivity.this, ChatFileDownloadActivtiy.class);
+                        intent.putExtra("message", message);
+                        startActivity(intent);
+                    }
                 }
-                adapter.notifyDataSetChanged();
-                setBottomOperationItemShow(selectGroupFileList);
             }
         });
+        //暂时不支持下载多个文件
+//        selectImg.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (selectGroupFileList.contains(groupFileInfoList.get(position))) {
+//                    selectGroupFileList.remove(groupFileInfoList.get(position));
+//                } else {
+//                    selectGroupFileList.add(groupFileInfoList.get(position));
+//                }
+//                adapter.notifyDataSetChanged();
+//                setBottomOperationItemShow(selectGroupFileList);
+//            }
+//        });
     }
 
     /**
@@ -310,11 +328,14 @@ public class GroupFileActivity extends BaseActivity {
         });
     }
 
+    /**
+     * 多文件下载
+     *
+     * @param actionName
+     */
     private void handleDownLoadAction(String actionName) {
         if (actionName.equals(downLoadAction)) {
-            for (GroupFileInfo groupFileInfo : selectGroupFileList) {
-                LogUtils.YfcDebug("下载文件名称：" + groupFileInfo.getName());
-            }
+
         }
     }
 
