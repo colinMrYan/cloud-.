@@ -264,6 +264,8 @@ public class CommunicationUtils {
         return message;
     }
 
+    /***
+     *转发文件拼假消息**/
     public static Message combineTransmitRegularFileMessage(String cid, String newPath, MsgContentRegularFile orgMsgContentRegularFile) {
         String tracer = getTracer();
         Message message = combinLocalMessageCommon();

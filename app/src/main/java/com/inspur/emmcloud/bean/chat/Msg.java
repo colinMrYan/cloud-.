@@ -1,5 +1,7 @@
 package com.inspur.emmcloud.bean.chat;
 
+import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 
@@ -97,6 +99,17 @@ public class Msg implements Serializable {
             e.printStackTrace();
             LogUtils.exceptionDebug(TAG, e.toString());
         }
+    }
+
+    public Message msg2Message() {
+        Message message = new Message(this);
+        message.setCreationDate(getTime());
+        MsgContentRegularFile msgContentRegularFile = new MsgContentRegularFile();
+        msgContentRegularFile.setMedia(APIUri.getPreviewUrl(JSONUtils.getString(getBody(), "key", "")));
+        msgContentRegularFile.setSize(JSONUtils.getLong(getBody(), "size", 0));
+        msgContentRegularFile.setName(JSONUtils.getString(getBody(), "name", ""));
+        message.setContent(JSONUtils.toJSONString(msgContentRegularFile));
+        return message;
     }
 
     public String getMid() {

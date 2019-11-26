@@ -32,6 +32,7 @@ import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.basemodule.util.ClickRuleUtil;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
@@ -42,9 +43,11 @@ import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFileUpload;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
+import com.inspur.emmcloud.ui.appcenter.volume.view.VolumeFileTransferActivity;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
+import com.inspur.emmcloud.util.privates.VolumeFileDownloadManager;
 import com.inspur.emmcloud.util.privates.VolumeFilePrivilegeUtils;
 import com.inspur.emmcloud.util.privates.VolumeFileUploadManager;
 
@@ -69,7 +72,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     private static final int REQUEST_OPEN_CEMERA = 2;
     private static final int REQUEST_OPEN_GALLERY = 3;
     private static final int REQUEST_OPEN_FILE_BROWSER = 4;
-    private static final int REQUEST_SHOW_FILE_FILTER = 5;
+    private static final int REQUEST_SHOW_FILE_FILTER = 11;
     @BindView(R.id.operation_layout)
     RelativeLayout operationLayout;
     @BindView(R.id.operation_sort_text)
@@ -93,7 +96,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     public void onCreate() {
         super.onCreate();
         EventBus.getDefault().register(this);
-        this.isShowFileUploading = true;
+        this.isShowFileUploading = false;
         isOpenFromParentDirectory = getIntent().getBooleanExtra("isOpenFromParentDirectory", false);
         setOperationSortText();
         setListIemClick();
@@ -118,10 +121,10 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
 
             @Override
             public void onSelectedItemClick(View view, int position) {
-                VolumeFile volumeFile = volumeFileList.get(position);
-                if (!volumeFile.getStatus().equals("normal")) {
-                    return;
-                }
+//                VolumeFile volumeFile = volumeFileList.get(position);
+//                if (!volumeFile.getStatus().equals("normal")) {
+//                    return;
+//                }
                 adapter.setVolumeFileSelect(position);
                 batchOprationHeaderText.setText(getString(R.string.clouddriver_has_selected, adapter.getSelectVolumeFileList().size()));
                 setBottomOperationItemShow(adapter.getSelectVolumeFileList());
@@ -131,8 +134,11 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
 
             @Override
             public void onItemClick(View view, int position) {
+                if (ClickRuleUtil.isFastClick()) {
+                    return;
+                }
                 VolumeFile volumeFile = volumeFileList.get(position);
-                if (volumeFile.getStatus().equals("normal")) {
+//                if (volumeFile.getStatus().equals("normal")) {
                     if (adapter.getSelectVolumeFileList().size() == 0) {
                         if (!adapter.getMultiselect()) {
                             Bundle bundle = new Bundle();
@@ -152,10 +158,10 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                                 downloadOrOpenVolumeFile(volumeFile);
                             }
                         }
-                    } else {
-                        adapter.setVolumeFileSelect(position);
-                        setBottomOperationItemShow(adapter.getSelectVolumeFileList());
-                    }
+//                    } else {
+//                        adapter.setVolumeFileSelect(position);
+//                        setBottomOperationItemShow(adapter.getSelectVolumeFileList());
+//                    }
 
                 }
 
@@ -164,7 +170,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
             @Override
             public void onItemLongClick(View view, int position) {
                 VolumeFile volumeFile = volumeFileList.get(position);
-                if (volumeFile.getStatus().equals("normal") && !adapter.getMultiselect()) {
+                if (/*volumeFile.getStatus().equals("normal") && */!adapter.getMultiselect()) {
                     showFileOperationDlg(volumeFileList.get(position));
                 }
             }
@@ -244,8 +250,8 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
             case R.id.iv_head_operation:
                 showUploadOperationPopWindow(new ArrayList<VolumeFile>());
                 break;
-            case R.id.iv_down_up_list:    //跳转文件传输列表
-//                startActivity(new Intent(this, VolumeFileTransferActivity.class));
+            case R.id.iv_down_up_list:
+                startActivity(new Intent(this, VolumeFileTransferActivity.class));
                 break;
             case R.id.operation_sort_text:
                 showSortOperationPop();
@@ -479,12 +485,15 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                         uploadFile(pathList.get(i));
                     }
                 }
+                return;
             } else if (requestCode == REQUEST_OPEN_CEMERA //拍照返回
                     && NetUtils.isNetworkConnected(getApplicationContext())) {
                 String imgPath = data.getExtras().getString(MyCameraActivity.OUT_FILE_PATH);
                 uploadFile(imgPath);
+                return;
             } else if (requestCode == REQUEST_SHOW_FILE_FILTER) {  //移动文件
                 getVolumeFileList(false);
+                return;
             } else if (requestCode == SHARE_IMAGE_OR_FILES) {
                 SearchModel searchModel = (SearchModel) data.getSerializableExtra("searchModel");
                 if (searchModel != null) {
@@ -497,6 +506,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                         startChannelActivity(userOrChannelId);
                     }
                 }
+                return;
             }
         } else if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {  // 图库选择图片返回
             if (data != null && requestCode == REQUEST_OPEN_GALLERY) {
@@ -507,6 +517,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                     uploadFile(imgPath);
                 }
             }
+            return;
         }
         /**继续执行父类的OnActivityResult**/
         super.onActivityResult(requestCode, resultCode, data);
@@ -591,12 +602,14 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
             VolumeFile mockVolumeFile = VolumeFile.getMockVolumeFile(file, volume.getId());
             VolumeFileUploadManager.getInstance().uploadFile(mockVolumeFile, filePath, currentDirAbsolutePath);
-            volumeFileList.add(0, mockVolumeFile);
+//            volumeFileList.add(0, mockVolumeFile);
             initDataBlankLayoutStatus();
-            adapter.setVolumeFileList(volumeFileList);
-            adapter.notifyItemInserted(0);
+//            adapter.setVolumeFileList(volumeFileList);
+//            adapter.notifyItemInserted(0);
             //解决RecyclerView当数据添加到第一位置，显示位置不正确的系统bug
             fileRecycleView.scrollToPosition(0);
+            showAnimator();
+            refreshTipViewLayout();
         }
     }
 
@@ -615,16 +628,19 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                             break;
                         }
                     }
-                    if (index != -1) {
-                        volumeFileList.remove(index);
-                        volumeFileList.add(index, volumeFile);
+                    if (index == -1) {
+                        volumeFileList.add(volumeFile);
                         adapter.setVolumeFileList(volumeFileList);
                         adapter.notifyItemChanged(index);
+                        initDataBlankLayoutStatus();
                     }
                 }
             }
             List<VolumeFile> volumeFileUploadList = VolumeFileUploadManager.getInstance().getCurrentFolderUploadVolumeFile(volume.getId(), currentDirAbsolutePath);
             tipViewLayout.setVisibility(volumeFileUploadList.size() > 0 ? View.VISIBLE : View.GONE);
+        } else if (simpleEventMessage.getAction().equals(Constant.EVENTBUS_TAG_VOLUME_FILE_DOWNLOAD_SUCCESS)) {
+            List<VolumeFile> volumeFileDownloadList = VolumeFileDownloadManager.getInstance().getAllDownloadVolumeFile();
+            tipViewLayout.setVisibility(volumeFileDownloadList.size() > 0 ? View.VISIBLE : View.GONE);
         }
     }
 
@@ -662,8 +678,6 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     @Override
     protected void onResume() {
         setBottomOperationItemShow(adapter.getSelectVolumeFileList());
-        List<VolumeFile> volumeFileUploadList = VolumeFileUploadManager.getInstance().getCurrentFolderUploadVolumeFile(volume.getId(), currentDirAbsolutePath);
-        tipViewLayout.setVisibility(volumeFileUploadList.size() > 0 ? View.VISIBLE : View.GONE);
         super.onResume();
     }
 

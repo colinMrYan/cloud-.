@@ -39,6 +39,7 @@
     <string name="add">添加</string>
     <string name="update">更新</string>
     <string name="download">下載</string>
+    <string name="redownload">繼續下載</string>
     <string name="confirm_modify_language">確定修改語言</string>
     <string name="resolution_valiad">您的設備解析度小於1280*720無法運行此程式</string>
     <string name="file_type_not_recognize">不可識別的檔案類型</string>
@@ -581,7 +582,7 @@
     <string name="clouddriver_input_directory_name">請輸入資料夾名稱</string>
     <string name="clouddriver_select_nothing">全不選</string>
     <string name="clouddriver_multi_select">多選</string>
-    <string name="clouddriver_has_selected">已選擇(%1$d)</string>
+    <string name="clouddriver_has_selected">已選擇%1$d個文件</string>
     <string name="clouddriver_sure_delete_file">確定要刪除所選檔嗎？</string>
     <string name="clouddriver_move2_current_directory">移動到目前的目錄</string>
     <string name="clouddriver_create_volume">新建網盤</string>
@@ -651,8 +652,14 @@
     <string name="volume_file_transfer_download_list">下載列表</string>
     <string name="volume_file_transfer_upload_list">上傳列表</string>
     <string name="volume_file_transfer_list_wait_tip">正在等待&#8230;</string>
+    <string name="volume_file_transfer_list_pause_tip">暫停中&#8230;</string>
+    <string name="volume_file_transfer_list_download_count">正在下載&#8230;(%1$d)</string>
+    <string name="volume_file_transfer_list_upload_count">正在上傳&#8230;(%1$d)</string>
+    <string name="volume_file_transfer_list_pause">全部暫停</string>
+    <string name="volume_file_transfer_list_continue">全部繼續</string>
     <string name="rename">重命名</string>
     <string name="move_to">移動到</string>
+    <string name="volume_file_open">打開</string>
     <string name="clouddrive_internal_sharing">内部分享</string>
     <string name="copy">複製</string>
     <string name="video">視頻</string>
@@ -671,6 +678,7 @@
     <string name="volume_copy_fail">複製失敗</string>
     <string name="volume_move_success">移動成功</string>
     <string name="volume_move_fail">移動失敗</string>
+    <string name="has_no_data">暫無數據</string>
 
     <!-- 我的頁面部分 -->
     <string name="moments">动态</string>

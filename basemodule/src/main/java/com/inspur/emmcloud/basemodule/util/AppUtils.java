@@ -49,6 +49,7 @@ import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestC
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.componentservice.web.WebService;
 
+import java.io.FileReader;
 import java.lang.reflect.Method;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -1059,4 +1060,23 @@ public class AppUtils {
         }
         return true;
     }
+
+    /**
+     * 判断耳机
+     *
+     * @return
+     */
+    public static boolean isHeadsetExists() {
+        char[] buffer = new char[1024];
+        int newState = 0;
+        try {
+            FileReader file = new FileReader("/sys/class/switch/h2w/state");
+            int len = file.read(buffer, 0, 1024);
+            newState = Integer.valueOf((new String(buffer, 0, len)).trim());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return newState != 0;
+    }
+
 }

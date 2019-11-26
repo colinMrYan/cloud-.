@@ -81,4 +81,17 @@ public class GroupFileInfo {
     public void setMessageId(String messageId) {
         this.messageId = messageId;
     }
+
+    public boolean equals(Object other) { // 重写equals方法，后面最好重写hashCode方法
+
+        if (this == other) // 先检查是否其自反性，后比较other是否为空。这样效率高
+            return true;
+        if (other == null)
+            return false;
+        if (!(other instanceof GroupFileInfo))
+            return false;
+
+        final GroupFileInfo otherVolumeFile = (GroupFileInfo) other;
+        return getUrl().equals(otherVolumeFile.getUrl());
+    }
 }

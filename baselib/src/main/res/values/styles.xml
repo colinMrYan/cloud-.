@@ -48,7 +48,7 @@
         <item name="footer_bg">@drawable/footer_bg_white</item>
         <item name="footer_bg_color">@color/footer_bg_white</item>
         <item name="header_text_color">@color/header_text_black</item>
-
+        <item name="header_text_blue_white_color">@color/footer_tab_text_sel_blue</item>
         <item name="footer_tab_text_color">@color/seclector_footer_text_white</item>
         <item name="footer_tab_text_color_nor">@color/footer_tab_text_nor_white</item>
         <item name="footer_tab_text_color_select">@color/footer_tab_text_sel_white</item>
@@ -88,6 +88,7 @@
         <item name="footer_bg">@drawable/footer_bg_grey</item>
         <item name="footer_bg_color">@color/footer_bg_grey</item>
         <item name="header_text_color">@color/header_text_grey</item>
+        <item name="header_text_blue_white_color">@color/header_text_grey</item>
         <item name="footer_tab_text_color">@color/seclector_footer_text_grey</item>
         <item name="footer_tab_text_color_nor">@color/footer_tab_text_nor_grey</item>
         <item name="footer_tab_text_color_select">@color/footer_tab_text_sel_grey</item>
@@ -126,6 +127,7 @@
         <item name="footer_bg">@drawable/footer_bg_blue</item>
         <item name="footer_bg_color">@color/footer_bg_blue</item>
         <item name="header_text_color">@color/header_text</item>
+        <item name="header_text_blue_white_color">@color/header_text</item>
         <item name="footer_tab_text_color">@color/seclector_footer_text_blue</item>
         <item name="footer_tab_text_color_nor">@color/footer_tab_text_nor_blue</item>
         <item name="footer_tab_text_color_select">@color/footer_tab_text_sel_blue</item>

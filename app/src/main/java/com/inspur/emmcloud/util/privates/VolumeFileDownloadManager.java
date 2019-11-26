@@ -12,12 +12,14 @@ import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.api.APIDownloadCallBack;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.DownloadFileCategory;
-import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.FileDownloadManager;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.interf.ProgressCallback;
 
+import org.greenrobot.eventbus.EventBus;
 import org.xutils.common.Callback;
 import org.xutils.http.HttpMethod;
 import org.xutils.http.RequestParams;
@@ -27,14 +29,13 @@ import org.xutils.x;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class VolumeFileDownloadManager extends APIInterfaceInstance {
     private static volatile VolumeFileDownloadManager instance;
     private List<VolumeFile> volumeFileDownloadList = new ArrayList<>();
     private MyAppAPIService apiService;
-
-    private long lastTime = 0L;
 
     public static VolumeFileDownloadManager getInstance() {
         if (instance == null) {
@@ -46,8 +47,6 @@ public class VolumeFileDownloadManager extends APIInterfaceInstance {
         }
         return instance;
     }
-
-    private long completeSize = 0L;
 
     public VolumeFileDownloadManager() {
         apiService = new MyAppAPIService(MyApplication.getInstance());
@@ -71,17 +70,36 @@ public class VolumeFileDownloadManager extends APIInterfaceInstance {
      * @return
      */
     public List<VolumeFile> getAllDownloadVolumeFile() {
-        List<VolumeFile> volumeFileList = VolumeFileDownloadCacheUtils.getVolumeFileListInDownloading();
-        return volumeFileList;
+        Iterator<VolumeFile> iterator = volumeFileDownloadList.iterator();
+        while (iterator.hasNext()) {
+            VolumeFile item = iterator.next();
+            if (FileDownloadManager.getInstance().isDownloadFileExists(DownloadFileCategory.CATEGORY_VOLUME_FILE, item.getId(), item.getName())) {
+                //防止重复下载
+                iterator.remove();
+                resetVolumeFileStatus(item);
+            }
+        }
+
+        return volumeFileDownloadList;
     }
 
-    public void setBusinessProgressCallback(VolumeFile volumeFile, final ProgressCallback businessProgressCallback) {
+    public void setBusinessProgressCallback(final VolumeFile volumeFile, final ProgressCallback businessProgressCallback) {
         for (int i = 0; i < volumeFileDownloadList.size(); i++) {
-            VolumeFile downloadVolumeFile = volumeFileDownloadList.get(i);
+            final VolumeFile downloadVolumeFile = volumeFileDownloadList.get(i);
             if (downloadVolumeFile.getId().equals(volumeFile.getId())) {
                 if (businessProgressCallback != null) {
                     if (downloadVolumeFile.getStatus().equals(VolumeFile.STATUS_DOWNLOAD_IND)) {
-                        businessProgressCallback.onLoading(downloadVolumeFile.getProgress(), "");
+                        if (downloadVolumeFile.getProgress() == 100) {
+                            new android.os.Handler().post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    businessProgressCallback.onSuccess(downloadVolumeFile);
+                                }
+                            });
+                            resetVolumeFileStatus(volumeFile);
+                        } else {
+                            businessProgressCallback.onLoading(downloadVolumeFile.getProgress(), downloadVolumeFile.getCompleteSize(), "");
+                        }
                     } else if (downloadVolumeFile.getStatus().equals(VolumeFile.STATUS_DOWNLOAD_FAIL)) {
                         new android.os.Handler().post(new Runnable() {
                             @Override
@@ -92,6 +110,7 @@ public class VolumeFileDownloadManager extends APIInterfaceInstance {
                     }
                     downloadVolumeFile.setBusinessProgressCallback(businessProgressCallback);
                 }
+                break;
             }
         }
     }
@@ -109,8 +128,9 @@ public class VolumeFileDownloadManager extends APIInterfaceInstance {
                     if (downloadVolumeFile.getCancelable() != null) {
                         Log.d("zhang", "cancelDownloadVolumeFile: success");
                         downloadVolumeFile.getCancelable().cancel();
-                        downloadVolumeFile.setCancelable(null);
                     }
+                    downloadVolumeFile.setCancelable(null);
+                    Log.d("zhang", "cancelDownloadVolumeFile: STATUS_DOWNLOAD_PAUSE");
                     downloadVolumeFile.setStatus(VolumeFile.STATUS_DOWNLOAD_PAUSE);
                     VolumeFileDownloadCacheUtils.saveVolumeFile(downloadVolumeFile);
                     break;
@@ -119,10 +139,16 @@ public class VolumeFileDownloadManager extends APIInterfaceInstance {
         }
     }
 
+    /**
+     * 继续下载
+     */
     public void reDownloadFile(final VolumeFile volumeFile, String currentDirAbsolutePath) {
         downloadFile(volumeFile, currentDirAbsolutePath, true);
     }
 
+    /**
+     * 下载文件入口
+     */
     public void downloadFile(final VolumeFile volumeFile, String currentDirAbsolutePath) {
         downloadFile(volumeFile, currentDirAbsolutePath, false);
     }
@@ -132,20 +158,37 @@ public class VolumeFileDownloadManager extends APIInterfaceInstance {
      * 下载文件
      */
     public void downloadFile(final VolumeFile volumeFile, String currentDirAbsolutePath, boolean isReload) {
-        final String fileSavePath = MyAppConfig.getFileDownloadByUserAndTanentDirPath() +
-                FileUtils.getNoDuplicateFileNameInDir(MyAppConfig.getFileDownloadByUserAndTanentDirPath(), volumeFile.getName());
+        final String fileSavePath = FileDownloadManager.getInstance().getFilePath(
+                DownloadFileCategory.CATEGORY_VOLUME_FILE, volumeFile.getId(), volumeFile.getName());
+        if (FileDownloadManager.getInstance().isDownloadFileExists(
+                DownloadFileCategory.CATEGORY_VOLUME_FILE, volumeFile.getId(), volumeFile.getName())) {
+            //防止重复下载
+            return;
+        }
+        Log.d("zhang", "downloadFile: fileSavePath = " + fileSavePath);
         volumeFile.setLocalFilePath(fileSavePath);
         volumeFile.setStatus(VolumeFile.STATUS_DOWNLOAD_IND);
+        volumeFile.setLastRecordTime(System.currentTimeMillis());
+        volumeFile.setCompleteSize(volumeFile.getProgress() / 100 * volumeFile.getSize());
         if (!isReload) {
-            volumeFileDownloadList.add(volumeFile);
+            volumeFileDownloadList.add(0, volumeFile);
+            VolumeFileDownloadCacheUtils.saveVolumeFileList(volumeFileDownloadList);
+        } else {
+            for (int i = 0; i < volumeFileDownloadList.size(); i++) {
+                VolumeFile downloadVolumeFile = volumeFileDownloadList.get(i);
+                if (volumeFile.getId().equals(downloadVolumeFile.getId())) {
+                    downloadVolumeFile.setStatus(VolumeFile.STATUS_DOWNLOAD_IND);
+                    downloadVolumeFile.setLastRecordTime(volumeFile.getLastRecordTime());
+                    downloadVolumeFile.setCompleteSize(volumeFile.getCompleteSize());
+                    VolumeFileDownloadCacheUtils.saveVolumeFile(downloadVolumeFile);
+                    break;
+                }
+            }
         }
+
         final String volumeId = volumeFile.getVolume();
         String source = APIUri.getVolumeFileUploadSTSTokenUrl(volumeId);
-
-        lastTime = System.currentTimeMillis();
-        completeSize = volumeFile.getProgress() / 100 * volumeFile.getSize();
         APIDownloadCallBack callBack = getAPIDownloadCallBack(source, volumeFile, fileSavePath);
-
         RequestParams params = BaseApplication.getInstance().getHttpRequestParams(source);
         params.addParameter("volumeId", volumeId);
         params.addQueryStringParameter("path", currentDirAbsolutePath);
@@ -162,14 +205,34 @@ public class VolumeFileDownloadManager extends APIInterfaceInstance {
                 return params;
             }
         });
-        Callback.Cancelable cancelable = x.http().get(params, callBack);
         for (int i = 0; i < volumeFileDownloadList.size(); i++) {
             VolumeFile downloadVolumeFile = volumeFileDownloadList.get(i);
             if (volumeFile.getId().equals(downloadVolumeFile.getId())) {
-                downloadVolumeFile.setCancelable(cancelable);
-                VolumeFileDownloadCacheUtils.saveVolumeFile(downloadVolumeFile);
+                if (downloadVolumeFile.getCancelable() == null) {
+                    Callback.Cancelable cancelable = x.http().get(params, callBack);
+                    downloadVolumeFile.setCancelable(cancelable);
+                    VolumeFileDownloadCacheUtils.saveVolumeFile(downloadVolumeFile);
+                }
+                break;
             }
         }
+    }
+
+    /**
+     * 获取文件下载状态
+     *
+     * @param volumeFile
+     * @return
+     */
+    public String getFileStatus(VolumeFile volumeFile) {
+        for (int i = 0; i < volumeFileDownloadList.size(); i++) {
+            VolumeFile downloadVolumeFile = volumeFileDownloadList.get(i);
+            if (volumeFile.getId().equals(downloadVolumeFile.getId())) {
+                return downloadVolumeFile.getStatus();
+            }
+        }
+
+        return VolumeFile.STATUS_NORMAL;
     }
 
     private APIDownloadCallBack getAPIDownloadCallBack(String source, final VolumeFile volumeFile,
@@ -177,27 +240,33 @@ public class VolumeFileDownloadManager extends APIInterfaceInstance {
         APIDownloadCallBack callBack = new APIDownloadCallBack(BaseApplication.getInstance(), source) {
             @Override
             public void callbackStart() {
-
+                for (int i = 0; i < volumeFileDownloadList.size(); i++) {
+                    VolumeFile downloadVolumeFile = volumeFileDownloadList.get(i);
+                    if (volumeFile.getId().equals(downloadVolumeFile.getId())) {
+                        downloadVolumeFile.setLastRecordTime(System.currentTimeMillis());
+                    }
+                }
             }
 
             @Override
             public void callbackLoading(long total, long current, boolean isUploading) {
                 int progress = (int) (current * 100.0 / total);
-                String totalSize = FileUtils.formatFileSize(total);
-                String currentSize = FileUtils.formatFileSize(current);
-                String speed = FileUtils.formatFileSize((current - completeSize) * 1000 / (System.currentTimeMillis() - lastTime)) + "/S";
 
                 for (int i = 0; i < volumeFileDownloadList.size(); i++) {
                     VolumeFile downloadVolumeFile = volumeFileDownloadList.get(i);
                     if (volumeFile.getId().equals(downloadVolumeFile.getId())) {
-                        if (downloadVolumeFile.getBusinessProgressCallback() != null) {
-                            downloadVolumeFile.getBusinessProgressCallback().onLoading(progress, speed);
+                        String speed = FileUtils.formatFileSize((current - downloadVolumeFile.getCompleteSize()) * 1000 /
+                                (System.currentTimeMillis() - downloadVolumeFile.getLastRecordTime())) + "/S";
+                        if (downloadVolumeFile.getBusinessProgressCallback() != null && downloadVolumeFile.getCompleteSize() >= 0) {
+                            downloadVolumeFile.getBusinessProgressCallback().onLoading(progress, current, speed);
                         }
+                        downloadVolumeFile.setProgress(progress);
+                        downloadVolumeFile.setLastRecordTime(System.currentTimeMillis());
+                        downloadVolumeFile.setCompleteSize(current);
+                        VolumeFileDownloadCacheUtils.saveVolumeFile(downloadVolumeFile);
+                        break;
                     }
                 }
-
-                lastTime = System.currentTimeMillis();
-                completeSize = current;
             }
 
             @Override
@@ -205,8 +274,6 @@ public class VolumeFileDownloadManager extends APIInterfaceInstance {
                 Log.d("zhang", "onSuccess: 下载成功");
                 FileDownloadManager.getInstance().saveDownloadFileInfo(DownloadFileCategory.CATEGORY_VOLUME_FILE,
                         volumeFile.getId(), volumeFile.getName(), fileSavePath);
-                VolumeFileDownloadCacheUtils.deleteVolumeFile(volumeFile);
-                volumeFileDownloadList.remove(volumeFile);
                 ToastUtils.show(BaseApplication.getInstance(), R.string.download_success);
                 for (int i = 0; i < volumeFileDownloadList.size(); i++) {
                     VolumeFile downloadVolumeFile = volumeFileDownloadList.get(i);
@@ -214,10 +281,13 @@ public class VolumeFileDownloadManager extends APIInterfaceInstance {
                         if (downloadVolumeFile.getBusinessProgressCallback() != null) {
                             downloadVolumeFile.getBusinessProgressCallback().onSuccess(volumeFile);
                         }
-                        volumeFileDownloadList.remove(volumeFile);
+                        SimpleEventMessage simpleEventMessage = new SimpleEventMessage(Constant.EVENTBUS_TAG_VOLUME_FILE_DOWNLOAD_SUCCESS, volumeFile);
+                        EventBus.getDefault().post(simpleEventMessage);
+                        break;
                     }
                 }
 
+                resetVolumeFileStatus(volumeFile);
             }
 
             @Override
@@ -228,7 +298,9 @@ public class VolumeFileDownloadManager extends APIInterfaceInstance {
                     if (volumeFile.getId().equals(downloadVolumeFile.getId())) {
                         if (downloadVolumeFile.getBusinessProgressCallback() != null) {
                             downloadVolumeFile.getBusinessProgressCallback().onFail();
+                            resetVolumeFileStatus(volumeFile);
                         }
+                        break;
                     }
                 }
             }
@@ -240,5 +312,35 @@ public class VolumeFileDownloadManager extends APIInterfaceInstance {
         };
 
         return callBack;
+    }
+
+    /**
+     * 重置状态
+     *
+     * @param volumeFile
+     */
+    public void resetVolumeFileStatus(VolumeFile volumeFile) {
+        Log.d("zhang", "resetVolumeFileStatus: ");
+        if (volumeFile.getCancelable() != null) {
+            volumeFile.setCancelable(null);
+        }
+        if (volumeFile.getBusinessProgressCallback() != null) {
+            volumeFile.setBusinessProgressCallback(null);
+        }
+        VolumeFileDownloadCacheUtils.deleteVolumeFile(volumeFile);
+        for (int i = 0; i < volumeFileDownloadList.size(); i++) {
+            VolumeFile downloadVolumeFile = volumeFileDownloadList.get(i);
+            if (volumeFile.getId().equals(downloadVolumeFile.getId())) {
+                if (downloadVolumeFile.getCancelable() != null) {
+                    downloadVolumeFile.getCancelable().cancel();
+                    downloadVolumeFile.setCancelable(null);
+                }
+                if (downloadVolumeFile.getBusinessProgressCallback() != null) {
+                    downloadVolumeFile.setBusinessProgressCallback(null);
+                }
+                volumeFileDownloadList.remove(volumeFile);
+                break;
+            }
+        }
     }
 }
