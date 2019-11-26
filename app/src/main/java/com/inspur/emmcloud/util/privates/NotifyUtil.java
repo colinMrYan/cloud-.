@@ -75,7 +75,7 @@ public class NotifyUtil {
         builder = new NotificationCompat.Builder(context, NotificationChannelId);
         builder.setOngoing(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            mChannel = new NotificationChannel(NotificationChannelId, NotificationChannelName, NotificationManager.IMPORTANCE_HIGH);
+            mChannel = new NotificationChannel(NotificationChannelId, NotificationChannelName, NotificationManager.IMPORTANCE_LOW);
             mChannel.setDescription("");
             mChannel.enableLights(true);
             mChannel.setLightColor(Color.RED);
