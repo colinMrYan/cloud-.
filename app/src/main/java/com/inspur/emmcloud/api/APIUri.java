@@ -10,6 +10,7 @@ import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
+import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.Robot;
 import com.inspur.emmcloud.bean.schedule.Schedule;
 import com.inspur.emmcloud.bean.schedule.calendar.AccountType;
@@ -108,6 +109,8 @@ public class APIUri {
     }
 
     public static String getUrlBaseVolume() {
+        //return getCloudDriver() + "/volume";
+        /** 测试 用return "http://10.25.12.114:3001/cloud-drive/rest/v1/volume";**/
         return getCloudDriver() + "/volume";
     }
 
@@ -417,6 +420,24 @@ public class APIUri {
      */
     public static String getChatFileResouceUrl(String cid, String path) {
         String url = getECMChatUrl() + "/api/v1/channel/" + cid + "/file/request?path=" + StringUtils.encodeURIComponent(path);
+        return url;
+    }
+
+    /**
+     * 区分V0 V1 文件下载url
+     *
+     * @param message
+     * @return
+     */
+    public static String getChatFileResourceUrl(Message message) {
+        String cid = message.getChannel();
+        String path = message.getMsgContentAttachmentFile().getMedia();
+        String url;
+        if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
+            url = path;
+        } else {
+            url = getECMChatUrl() + "/api/v1/channel/" + cid + "/file/request?path=" + StringUtils.encodeURIComponent(path);
+        }
         return url;
     }
 
@@ -983,6 +1004,14 @@ public class APIUri {
      ***/
     public static String getCopyFileBetweenVolumeUrl(String fromVolumeId, String toVolumeId) {
         return getUrlBaseVolume() + "/" + fromVolumeId + "/file/share/volume/" + toVolumeId;
+    }
+
+    /**
+     * 夸网盘复制文件或者文件夹的Url
+     ***/
+    public static String getCopyOrMoveFileBetweenVolumeUrl(String fromVolumeId) {
+        return getUrlBaseVolume() + "/" + fromVolumeId + "/file/operation";
+        // return "http://10.25.12.114:3001/cloud-drive/rest/v1/volume/"+ fromVolumeId + "/file/operation";
     }
 
     /**

@@ -6,11 +6,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.AllTaskFragmentAdapter;
 import com.inspur.emmcloud.basemodule.ui.BaseMvpActivity;
 import com.inspur.emmcloud.basemodule.util.TabLayoutUtil;
+import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.ui.appcenter.volume.presenter.VolumeFileTransferPresenter;
 
 import java.util.ArrayList;
@@ -24,13 +27,20 @@ import butterknife.ButterKnife;
  *
  * @author zhangyj.lc
  */
-public class VolumeFileTransferActivity extends BaseMvpActivity {
+public class VolumeFileTransferActivity extends BaseMvpActivity implements VolumeFileTransferFragment.SelectCallBack {
 
+    @BindView(R.id.ibt_back)
+    ImageButton backBtn;
+    @BindView(R.id.header_left_text)
+    TextView headerLeftTv;
+    @BindView(R.id.header_right_text)
+    TextView headerRightTv;
     @BindView(R.id.tl_file_transfer)
     TabLayout tabLayout;
     @BindView(R.id.vp_file_transfer)
     ViewPager viewPager;
     FragmentPagerAdapter adapter;
+    VolumeFileTransferFragment downloadedFragment;
 
     @Override
     public void onCreate() {
@@ -45,6 +55,8 @@ public class VolumeFileTransferActivity extends BaseMvpActivity {
 
     private void init() {
         setTitleText(R.string.volume_file_transfer);
+        headerLeftTv.setText(R.string.button_cancel);
+        headerRightTv.setText(R.string.select_all);
         mPresenter = new VolumeFileTransferPresenter();
         mPresenter.attachView(this);
 
@@ -54,6 +66,7 @@ public class VolumeFileTransferActivity extends BaseMvpActivity {
         initFragmentList();
         TabLayoutUtil.setTabLayoutWidth(this, tabLayout);
         tabLayout.getTabAt(0).select();
+        onSelect(new ArrayList<VolumeFile>());
 
         viewPager.setAdapter(adapter);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -84,6 +97,12 @@ public class VolumeFileTransferActivity extends BaseMvpActivity {
                 if (tabLayout.getTabAt(position) != null) {
                     tabLayout.getTabAt(position).select();
                 }
+                if (position != 2) {
+                    onSelect(new ArrayList<VolumeFile>());
+                    if (downloadedFragment != null) {
+                        downloadedFragment.hideBottomOperationItemShow();
+                    }
+                }
             }
 
             @Override
@@ -100,6 +119,9 @@ public class VolumeFileTransferActivity extends BaseMvpActivity {
             Bundle bundle = new Bundle();
             bundle.putInt("position", i);
             fragment.setArguments(bundle);
+            if (i == 2) {
+                downloadedFragment = fragment;
+            }
             list.add(fragment);
         }
         adapter = new AllTaskFragmentAdapter(getSupportFragmentManager(), list);
@@ -115,4 +137,31 @@ public class VolumeFileTransferActivity extends BaseMvpActivity {
         }
     }
 
+    @Override
+    public void onSelect(List<VolumeFile> selectVolumeFileList) {
+        if (selectVolumeFileList == null) {     //处理“全不选”情况
+            setTitleText(R.string.volume_file_transfer);
+            headerLeftTv.setVisibility(View.VISIBLE);
+            headerRightTv.setVisibility(View.VISIBLE);
+            backBtn.setVisibility(View.GONE);
+        } else if (selectVolumeFileList.size() == 0) {  //正常无数据
+            setTitleText(R.string.volume_file_transfer);
+            headerLeftTv.setVisibility(View.GONE);
+            headerRightTv.setVisibility(View.GONE);
+            backBtn.setVisibility(View.VISIBLE);
+        } else {
+            setTitleText(getString(R.string.clouddriver_has_selected, selectVolumeFileList.size()));
+            headerLeftTv.setVisibility(View.VISIBLE);
+            headerRightTv.setVisibility(View.VISIBLE);
+            backBtn.setVisibility(View.GONE);
+        }
+    }
+
+    public TextView getHeaderLeftTv() {
+        return headerLeftTv;
+    }
+
+    public TextView getHeaderRightTv() {
+        return headerRightTv;
+    }
 }

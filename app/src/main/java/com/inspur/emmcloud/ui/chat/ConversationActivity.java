@@ -455,8 +455,12 @@ public class ConversationActivity extends ConversationBaseActivity {
         List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList = new ArrayList<>();
         List<ContactUser> contactUserList = new ArrayList<>();
         contactUserList.add(ContactUserCacheUtils.getContactUserByUid(MyApplication.getInstance().getUid()));
-        contactUserList.add(ContactUserCacheUtils.getContactUserByUid(
-                DirectChannelUtils.getDirctChannelOtherUid(MyApplication.getInstance(), conversation.getName())));
+        ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(
+                DirectChannelUtils.getDirctChannelOtherUid(MyApplication.getInstance(), conversation.getName()));
+        if (contactUser == null) {
+            return null;
+        }
+        contactUserList.add(contactUser);
         for (int i = 0; i < contactUserList.size(); i++) {
             VoiceCommunicationJoinChannelInfoBean voiceCommunicationJoinChannelInfoBean = new VoiceCommunicationJoinChannelInfoBean();
             voiceCommunicationJoinChannelInfoBean.setUserId(contactUserList.get(i).getId());
@@ -472,6 +476,10 @@ public class ConversationActivity extends ConversationBaseActivity {
      * @param type
      */
     private void startVoiceOrVideoCall(String type, List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList) {
+        if (voiceCommunicationUserInfoBeanList == null || voiceCommunicationUserInfoBeanList.size() == 1) {
+            ToastUtils.show(R.string.voice_video_call_no_contact);
+            return;
+        }
         Intent intent = new Intent();
         intent.setClass(ConversationActivity.this, VoiceCommunicationActivity.class);
         intent.putExtra("userList", (Serializable) voiceCommunicationUserInfoBeanList);
@@ -2004,8 +2012,9 @@ public class ConversationActivity extends ConversationBaseActivity {
         @Override
         public void returnShareFileToFriendsFromVolumeSuccess(String newPath, VolumeFile volumeFile) {
             MsgContentRegularFile msgContentRegularFile = new MsgContentRegularFile();
+            String[] allPath = newPath.split("/");
             msgContentRegularFile.setCategory(Message.MESSAGE_TYPE_FILE_REGULAR_FILE);
-            msgContentRegularFile.setName(volumeFile.getName());
+            msgContentRegularFile.setName(allPath[allPath.length - 1]);
             msgContentRegularFile.setSize(volumeFile.getSize());
             msgContentRegularFile.setMedia(newPath);
             Message fakeMessage = CommunicationUtils.combineTransmitRegularFileMessage(cid, newPath, msgContentRegularFile);

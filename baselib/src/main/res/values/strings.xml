@@ -39,6 +39,7 @@
     <string name="add">添加</string>
     <string name="update">更新</string>
     <string name="download">下载</string>
+    <string name="redownload">继续下载</string>
     <string name="confirm_modify_language">确定修改语言</string>
     <string name="resolution_valiad">您的设备分辨率小于800*480无法运行此程序</string>
     <string name="file_type_not_recognize">不可识别的文件类型</string>
@@ -592,7 +593,7 @@
     <string name="clouddriver_input_directory_name">请输入文件夹名称</string>
     <string name="clouddriver_select_nothing">全不选</string>
     <string name="clouddriver_multi_select">多选</string>
-    <string name="clouddriver_has_selected">已选择(%1$d)</string>
+    <string name="clouddriver_has_selected">已选择%1$d个文件</string>
     <string name="clouddriver_sure_delete_file">确定要删除所选文件吗？</string>
     <string name="clouddriver_move2_current_directory">移动到当前目录</string>
     <string name="clouddriver_copy2_current_directory">复制到当前目录</string>
@@ -652,6 +653,7 @@
     <string name="clouddriver_volume_upload_take_photo">拍照上传</string>
     <string name="clouddriver_volume_frist_download">转发前请将文件下载至本地</string>
     <string name="volume_upload_to_current_directory">上传到当前目录</string>
+    <string name="volume_file_open">打开</string>
     <string name="rename">重命名</string>
     <string name="move_to">移动到</string>
     <string name="clouddrive_internal_sharing">内部分享</string>
@@ -677,8 +679,18 @@
     <string name="volume_file_transfer_download_list">下载列表</string>
     <string name="volume_file_transfer_upload_list">上传列表</string>
     <string name="volume_file_transfer_list_wait_tip">正在等待&#8230;</string>
+    <string name="volume_file_transfer_list_pause_tip">暂停中&#8230;</string>
+    <string name="volume_file_transfer_list_download_count">正在下载&#8230;(%1$d)</string>
+    <string name="volume_file_transfer_list_upload_count">正在上传&#8230;(%1$d)</string>
+    <string name="volume_file_transfer_list_pause">全部暂停</string>
+    <string name="volume_file_transfer_list_continue">全部继续</string>
     <string name="volume_share_2_qq_wechat">分享</string>
     <string name="volume_copy_between_volume_error_toast">%1$d 个文件复制失败</string>
+    <string name="volume_copy_success">复制成功</string>
+    <string name="volume_copy_fail">复制失败</string>
+    <string name="volume_move_success">移动成功</string>
+    <string name="volume_move_fail">移动失败</string>
+    <string name="has_no_data">暂无数据</string>
 
     <!--Webex 邮箱-->
     <string name="mail_install_cert"><u>安装数字证书</u></string>
@@ -1397,6 +1409,12 @@
     <string name="voice_communication_group_call_canceled">通话已结束</string>
     <string name="voice_communication_group_call_busy">%1$s正忙</string>
     <string name="voice_communication_group_calling_ended">通话已结束</string>
+    <string name="video_call">视频通话</string>
+    <string name="video_communication_turn_to_voice_call">切到语音通话</string>
+    <string name="video_communication_switch_camera">切换摄像头</string>
+    <string name="video_communication_waiting_answer">连接中...</string>
+    <string name="video_communication_invite_video_call">邀请你视频通话</string>
+    <string name="voice_video_call_no_contact">未获取到联系人信息</string>
 
     <string name="error_no_sdcard">没有SD卡，无法存储录音数据</string>
     <string name="error_state_record">正在录音中，请先停止录音</string>

@@ -132,7 +132,7 @@ public class ChatFileDownloadActivtiy extends BaseActivity {
         fileSavePath = MyAppConfig.getFileDownloadByUserAndTanentDirPath() + FileUtils.getNoDuplicateFileNameInDir(MyAppConfig.getFileDownloadByUserAndTanentDirPath(), message.getMsgContentAttachmentFile().getName());
         downloadBtn.setVisibility(View.GONE);
         downloadStatusLayout.setVisibility(View.VISIBLE);
-        String source = APIUri.getChatFileResouceUrl(message.getChannel(), message.getMsgContentAttachmentFile().getMedia());
+        String source = APIUri.getChatFileResourceUrl(message);
         APIDownloadCallBack callBack = new APIDownloadCallBack(getApplicationContext(), source) {
             @Override
             public void callbackStart() {

@@ -25,6 +25,7 @@ import com.inspur.emmcloud.bean.appcenter.GetRecommendAppWidgetListResult;
 import com.inspur.emmcloud.bean.appcenter.GetRemoveAppResult;
 import com.inspur.emmcloud.bean.appcenter.GetSearchAppResult;
 import com.inspur.emmcloud.bean.appcenter.GetWebAppRealUrlResult;
+import com.inspur.emmcloud.bean.appcenter.volume.GetReturnMoveOrCopyErrorResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileListResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileUploadTokenResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeGroupPermissionResult;
@@ -39,6 +40,7 @@ import com.inspur.emmcloud.componentservice.login.LoginService;
 import com.inspur.emmcloud.componentservice.login.OauthCallBack;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.xutils.http.RequestParams;
 
@@ -726,6 +728,61 @@ public class MyAppAPIService {
     }
 
     /**
+     * 跨网盘复制或移动
+     **/
+    public void copyOrMoveFileBetweenVolume(final List<VolumeFile> operationVolumeFile, final String fromVolumeId, final String toVolumeId, final String operation, final String srcVolumeFilePath, final String desVolumeFilePath) {
+        final String url = APIUri.getCopyOrMoveFileBetweenVolumeUrl(fromVolumeId);
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
+        JSONArray array = new JSONArray();
+        JSONObject rootObj = new JSONObject();
+        try {
+            for (int i = 0; i < operationVolumeFile.size(); i++) {
+                JSONObject object = new JSONObject();
+                object.put("source", srcVolumeFilePath + operationVolumeFile.get(i).getName());
+                object.put("destination", desVolumeFilePath);
+                array.put(object);
+            }
+            rootObj.put("targetVolume", toVolumeId);
+            rootObj.put("operation", operation);
+            rootObj.put("requests", array);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        params.setBodyContent(rootObj.toString());
+        params.setAsJsonContent(true);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, url) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnMoveOrCopyFileBetweenVolumeSuccess(operation);
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnMoveOrCopyFileBetweenVolumeFail(new GetReturnMoveOrCopyErrorResult(error), responseCode, srcVolumeFilePath, operation, operationVolumeFile);
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        copyOrMoveFileBetweenVolume(operationVolumeFile, fromVolumeId, toVolumeId, operation, srcVolumeFilePath, desVolumeFilePath);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                refreshToken(
+                        oauthCallBack, requestTime);
+            }
+        });
+    }
+
+
+
+    /**
      * 创建文件夹
      *
      * @param volumeId
@@ -1298,7 +1355,8 @@ public class MyAppAPIService {
      * @param volumeId
      */
     public void getVolumeFileGroup(final String volumeId, final String path) {
-        final String url = StringUtils.encodeURIComponent(APIUri.getVolumeFileGroupUrl(volumeId) + "?path=" + path);
+        String pathResult = StringUtils.encodeURIComponent(path);
+        final String url = APIUri.getVolumeFileGroupUrl(volumeId) + "?path=" + pathResult;
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, url) {
             @Override

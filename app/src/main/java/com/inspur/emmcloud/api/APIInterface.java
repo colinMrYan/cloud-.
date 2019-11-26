@@ -19,6 +19,7 @@ import com.inspur.emmcloud.bean.appcenter.ReactNativeUpdateBean;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailDetailResult;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailFolderResult;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailListResult;
+import com.inspur.emmcloud.bean.appcenter.volume.GetReturnMoveOrCopyErrorResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileListResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileUploadTokenResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeGroupPermissionResult;
@@ -517,6 +518,10 @@ public interface APIInterface {
     void returnCopyFileBetweenVolumeSuccess();
 
     void returnCopyFileBetweenVolumeFail(String error, int errorCode, VolumeFile volumeFile);
+
+    void returnMoveOrCopyFileBetweenVolumeSuccess(String operation);
+
+    void returnMoveOrCopyFileBetweenVolumeFail(GetReturnMoveOrCopyErrorResult errorResult, int errorCode, String srcVolumeFilePath, String operation, List<VolumeFile> volumeFileList);
 
     void returnRecommendAppWidgetListSuccess(GetRecommendAppWidgetListResult getRecommendAppWidgetListResult);
 
