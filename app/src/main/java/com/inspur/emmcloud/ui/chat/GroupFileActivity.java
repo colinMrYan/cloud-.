@@ -21,7 +21,6 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.VolumeFileFilterPopGridAdapter;
-import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
@@ -36,7 +35,6 @@ import com.inspur.emmcloud.bean.chat.GroupFileInfo;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.Msg;
 import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
-import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
 
@@ -67,7 +65,8 @@ public class GroupFileActivity extends BaseActivity {
     TextView filterByFileTypeText;
     final List<VolumeActionData> volumeActionDataList = new ArrayList<>();
     private String cid;
-    private List<GroupFileInfo> fileInfoList = new ArrayList<>();
+    //    private List<GroupFileInfo> fileInfoList = new ArrayList<>();
+    private List<Message> fileMessageList = new ArrayList<>();
     private PopupWindow sortOperationPop;
     private GroupFileAdapter adapter;
     private FileSortComparable fileSortComparable;
@@ -81,27 +80,26 @@ public class GroupFileActivity extends BaseActivity {
         ButterKnife.bind(this);
         cid = getIntent().getExtras().getString("cid");
         getFileMsgList();
-        noChannelFileLayout.setVisibility(fileInfoList.size() == 0 ? View.VISIBLE : View.GONE);
+        noChannelFileLayout.setVisibility(fileMessageList.size() == 0 ? View.VISIBLE : View.GONE);
         fileSortComparable = new FileSortComparable();
-        Collections.sort(fileInfoList, fileSortComparable);
-        handleMessageOrder(fileInfoList);
+        Collections.sort(fileMessageList, fileSortComparable);
         adapter = new GroupFileAdapter();
         fileListView.setAdapter(adapter);
-        adapter.setAndReFreshList(fileInfoList);
+        adapter.setAndReFreshList(fileMessageList);
     }
 
-    private void handleMessageOrder(List<GroupFileInfo> fileInfoList) {
+    private void handleMessageOrder(List<Message> fileInfoList) {
         //根据fileInfoList的排序排列fileTypeMessage
         fileTypeMessageListWithOrder.clear();
         List<Message> fileTypeMessageList = MessageCacheUtil.getFileTypeMsgList(MyApplication.getInstance(), cid);
-        for (GroupFileInfo groupFileInfo : fileInfoList) {
-            for (Message message : fileTypeMessageList) {
-                String url = APIUri.getChatFileResouceUrl(message.getChannel(), message.getMsgContentAttachmentFile().getMedia());
-                if (groupFileInfo.getUrl().equals(url)) {
-                    fileTypeMessageListWithOrder.add(message);
-                }
-            }
-        }
+//        for (GroupFileInfo groupFileInfo : fileInfoList) {
+//            for (Message message : fileTypeMessageList) {
+//                String url = APIUri.getChatFileResouceUrl(message.getChannel(), message.getMsgContentAttachmentFile().getMedia());
+//                if (groupFileInfo.getUrl().equals(url)) {
+//                    fileTypeMessageListWithOrder.add(message);
+//                }
+//            }
+//        }
     }
 
     @Override
@@ -114,17 +112,10 @@ public class GroupFileActivity extends BaseActivity {
             List<Msg> fileTypeMsgList = MsgCacheUtil.getFileTypeMsgList(
                     GroupFileActivity.this, cid);
             for (Msg msg : fileTypeMsgList) {
-                GroupFileInfo groupFileInfo = new GroupFileInfo(msg);
-                fileInfoList.add(groupFileInfo);
+                fileMessageList.add(msg.msg2Message());
             }
         } else {
-            List<Message> fileTypeMessageList = MessageCacheUtil.getFileTypeMsgList(MyApplication.getInstance(), cid);
-            for (Message message : fileTypeMessageList) {
-                MsgContentRegularFile msgContentRegularFile = message.getMsgContentAttachmentFile();
-                String url = APIUri.getChatFileResouceUrl(message.getChannel(), msgContentRegularFile.getMedia());
-                GroupFileInfo groupFileInfo = new GroupFileInfo(url, msgContentRegularFile.getName(), msgContentRegularFile.getSize() + "", message.getCreationDate(), ContactUserCacheUtils.getUserName(message.getFromUser()), message.getId());
-                fileInfoList.add(groupFileInfo);
-            }
+            fileMessageList = MessageCacheUtil.getFileTypeMsgList(MyApplication.getInstance(), cid);
         }
     }
 
@@ -179,9 +170,9 @@ public class GroupFileActivity extends BaseActivity {
                 break;
         }
         operationSortText.setText(sortTypeShowTxt);
-        Collections.sort(fileInfoList, fileSortComparable);
-        handleMessageOrder(fileInfoList);
-        adapter.setAndReFreshList(fileInfoList);
+        Collections.sort(fileMessageList, fileSortComparable);
+        handleMessageOrder(fileMessageList);
+        adapter.setAndReFreshList(fileMessageList);
     }
 
     public void onClick(View v) {
@@ -238,10 +229,10 @@ public class GroupFileActivity extends BaseActivity {
     }
 
     private void filterFilesByFileType(String fileFilterType) {
-        List<GroupFileInfo> fileInfoFilterList = new ArrayList<>();
+        List<Message> fileInfoFilterList = new ArrayList<>();
         fileInfoFilterList.clear();
-        for (GroupFileInfo groupFileInfo : fileInfoList) {
-            String format = FileUtils.getMimeType(groupFileInfo.getName());
+        for (Message groupFileInfo : fileMessageList) {
+            String format = FileUtils.getMimeType(groupFileInfo.getMsgContentAttachmentFile().getName());
             if (fileFilterType.equals(FileUtils.getFileTypeFormat(format))) {
                 fileInfoFilterList.add(groupFileInfo);
             }
@@ -250,7 +241,7 @@ public class GroupFileActivity extends BaseActivity {
         adapter.setAndReFreshList(fileInfoFilterList);
     }
 
-    public void displayFiles(View convertView, final int position, final List<GroupFileInfo> groupFileInfoList) {
+    public void displayFiles(View convertView, final int position, final List<Message> messageList) {
         ImageView fileImg = convertView.findViewById(R.id.file_type_img);
         TextView fileNameText = convertView.findViewById(R.id.tv_file_name);
         TextView fileSizeText = convertView.findViewById(R.id.tv_file_size);
@@ -260,17 +251,17 @@ public class GroupFileActivity extends BaseActivity {
         fileInfoLayout.setVisibility(View.VISIBLE);
         RelativeLayout progressLayout = convertView.findViewById(R.id.file_upload_status_layout);
         progressLayout.setVisibility(View.GONE);
-        final GroupFileInfo groupFileInfo = groupFileInfoList.get(position);
-        final String fileName = groupFileInfo.getName();
+        final Message message = messageList.get(position);
+        final String fileName = message.getMsgContentAttachmentFile().getName();
         fileNameText.setText(fileName);
-        fileSizeText.setText(groupFileInfo.getSize());
+        fileSizeText.setText(FileUtils.formatFileSize(message.getMsgContentAttachmentFile().getSize()));
         if (selectGroupFileList.size() > 0) {
-            selectImg.setImageResource(selectGroupFileList.contains(groupFileInfo) ? R.drawable.ic_select_yes : R.drawable.ic_select_no);
+            selectImg.setImageResource(selectGroupFileList.contains(message) ? R.drawable.ic_select_yes : R.drawable.ic_select_no);
         } else {
             selectImg.setImageResource(R.drawable.ic_volume_no_selected);
         }
-        fileTimeText.setText(TimeUtils.getChannelMsgDisplayTime(GroupFileActivity.this, groupFileInfo.getLongTime()));
-        fileImg.setImageResource(FileUtils.getFileIconResIdByFileName(groupFileInfo.getName()));
+        fileTimeText.setText(TimeUtils.getChannelMsgDisplayTime(GroupFileActivity.this, message.getCreationDate()));
+        fileImg.setImageResource(FileUtils.getFileIconResIdByFileName(message.getMsgContentAttachmentFile().getName()));
         convertView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -380,7 +371,7 @@ public class GroupFileActivity extends BaseActivity {
 
     private class GroupFileAdapter extends BaseAdapter {
 
-        private List<GroupFileInfo> groupFileInfoList = new ArrayList<>();
+        private List<Message> groupFileInfoList = new ArrayList<>();
 
         @Override
         public int getCount() {
@@ -404,7 +395,7 @@ public class GroupFileActivity extends BaseActivity {
             return convertView;
         }
 
-        public void setAndReFreshList(List<GroupFileInfo> groupFileInfoList) {
+        public void setAndReFreshList(List<Message> groupFileInfoList) {
             this.groupFileInfoList = groupFileInfoList;
             notifyDataSetChanged();
         }
