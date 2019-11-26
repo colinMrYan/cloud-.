@@ -301,10 +301,10 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         downloadAction = getString(R.string.download);
         moveToAction = getString(R.string.move);
         copyAction = getString(R.string.copy);
-        deleteAction = getString(R.string.delete);
-        moreAction = getString(R.string.more);
-        renameAction = getString(R.string.rename);
         shareTo = getString(R.string.baselib_share_to);
+        moreAction = getString(R.string.more);
+        deleteAction = getString(R.string.delete);
+        renameAction = getString(R.string.rename);
         volumeActionDataList.clear();
         volumeActionHideList.clear();
         boolean isVolumeFileWriteable = true;
@@ -330,11 +330,11 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
                         && (isVolumeFileReadable || isVolumeFileWriteable)));
         volumeActionDataList.add(new VolumeActionData(copyAction, R.drawable.ic_volume_copy, (isVolumeFileReadable || isVolumeFileWriteable)));
         volumeActionDataList.add(new VolumeActionData(moveToAction, R.drawable.ic_volume_move, isVolumeFileWriteable));
-        volumeActionDataList.add(new VolumeActionData(deleteAction, R.drawable.ic_volume_delete, isVolumeFileWriteable));
-        volumeActionDataList.add(new VolumeActionData(renameAction, R.drawable.ic_volume_rename,
-                isVolumeFileWriteable && selectVolumeFileList.size() == 1));
         volumeActionDataList.add(new VolumeActionData(shareTo, R.drawable.ic_volume_share, selectVolumeFileList.size() == 1 &&
                 !isVolumeFileDirectory && (isVolumeFileWriteable || isVolumeFileReadable)));
+        volumeActionDataList.add(new VolumeActionData(renameAction, R.drawable.ic_volume_rename,
+                isVolumeFileWriteable && selectVolumeFileList.size() == 1));
+        volumeActionDataList.add(new VolumeActionData(deleteAction, R.drawable.ic_volume_delete, isVolumeFileWriteable));
         volumeActionDataList.add(new VolumeActionData(permissionAction, R.drawable.ic_volume_permission,
                 isVolumeFileDirectory && (isVolumeFileWriteable || isVolumeFileReadable)
                         && (volumeFrom != MY_VOLUME) && isOwner && volume.getType().equals("public")));

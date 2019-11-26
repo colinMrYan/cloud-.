@@ -25,6 +25,7 @@ import com.inspur.emmcloud.bean.appcenter.GetRecommendAppWidgetListResult;
 import com.inspur.emmcloud.bean.appcenter.GetRemoveAppResult;
 import com.inspur.emmcloud.bean.appcenter.GetSearchAppResult;
 import com.inspur.emmcloud.bean.appcenter.GetWebAppRealUrlResult;
+import com.inspur.emmcloud.bean.appcenter.volume.GetReturnMoveOrCopyErrorResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileListResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileUploadTokenResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeGroupPermissionResult;
@@ -757,7 +758,7 @@ public class MyAppAPIService {
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnMoveOrCopyFileBetweenVolumeFail(error, responseCode, srcVolumeFilePath, operation, operationVolumeFile);
+                apiInterface.returnMoveOrCopyFileBetweenVolumeFail(new GetReturnMoveOrCopyErrorResult(error), responseCode, srcVolumeFilePath, operation, operationVolumeFile);
             }
 
             @Override
