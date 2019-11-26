@@ -152,32 +152,38 @@ public class MediaPlayerManagerUtils {
                     AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
             BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
             boolean isBluetoothConnected = !(BluetoothProfile.STATE_DISCONNECTED == adapter.getProfileConnectionState(BluetoothProfile.HEADSET));
-            //耳机模式下直接返回
-            if (isBluetoothConnected || MediaPlayerManagerUtils.getManager().getCurrentMode() == MediaPlayerManagerUtils.MODE_HEADSET || mode == MediaPlayerManagerUtils.MODE_HEADSET) {
-                if (mode != -1) {
-                    audioManager.setSpeakerphoneOn(false);
-                } else {
-                    changeToHeadsetMode();
-                }
-            } else if (getCurrentMode() == MediaPlayerManagerUtils.MODE_EARPIECE || mode == MediaPlayerManagerUtils.MODE_EARPIECE) {
-                if (mode != -1) {
-                    audioManager.setSpeakerphoneOn(false);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                        audioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
-                    } else {
-                        audioManager.setMode(AudioManager.MODE_IN_CALL);
-                    }
-                } else {
-                    changeToEarpieceMode();
+            //如果mode不是-1说明是音视频通话
+            if (mode != -1) {
+                switch (mode) {
+                    case MODE_HEADSET:
+                        audioManager.setSpeakerphoneOn(false);
+                        break;
+                    case MODE_SPEAKER:
+                        audioManager.setMode(AudioManager.MODE_NORMAL);
+                        audioManager.setSpeakerphoneOn(true);
+                        break;
+                    case MODE_EARPIECE:
+                        audioManager.setSpeakerphoneOn(false);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                            audioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
+                        } else {
+                            audioManager.setMode(AudioManager.MODE_IN_CALL);
+                        }
+                        break;
+                    default:
+                        break;
                 }
             } else {
-                if (mode != -1) {
-                    audioManager.setMode(AudioManager.MODE_NORMAL);
-                    audioManager.setSpeakerphoneOn(true);
+                //耳机模式下直接返回
+                if (isBluetoothConnected || MediaPlayerManagerUtils.getManager().getCurrentMode() == MediaPlayerManagerUtils.MODE_HEADSET) {
+                    changeToHeadsetMode();
+                } else if (getCurrentMode() == MediaPlayerManagerUtils.MODE_EARPIECE) {
+                    changeToEarpieceMode();
                 } else {
                     changeToSpeakerMode();
                 }
             }
+
             mediaPlayer.reset();
             mediaPlayer.setDataSource(context, Uri.parse(path));
             mediaPlayer.prepareAsync();
