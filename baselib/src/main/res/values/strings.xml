@@ -652,6 +652,7 @@
     <string name="clouddriver_volume_upload_take_photo">拍照上传</string>
     <string name="clouddriver_volume_frist_download">转发前请将文件下载至本地</string>
     <string name="volume_upload_to_current_directory">上传到当前目录</string>
+    <string name="volume_file_open">打开</string>
     <string name="rename">重命名</string>
     <string name="move_to">移动到</string>
     <string name="clouddrive_internal_sharing">内部分享</string>

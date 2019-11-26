@@ -647,6 +647,7 @@
     <string name="volume_file_transfer_list_wait_tip">正在等待&#8230;</string>
     <string name="rename">重命名</string>
     <string name="move_to">移動到</string>
+    <string name="volume_file_open">打開</string>
     <string name="clouddrive_internal_sharing">内部分享</string>
     <string name="copy">複製</string>
     <string name="video">視頻</string>
