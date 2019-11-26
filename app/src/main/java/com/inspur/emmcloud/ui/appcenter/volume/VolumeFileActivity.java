@@ -71,7 +71,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     private static final int REQUEST_OPEN_CEMERA = 2;
     private static final int REQUEST_OPEN_GALLERY = 3;
     private static final int REQUEST_OPEN_FILE_BROWSER = 4;
-    private static final int REQUEST_SHOW_FILE_FILTER = 5;
+    private static final int REQUEST_SHOW_FILE_FILTER = 11;
     @BindView(R.id.operation_layout)
     RelativeLayout operationLayout;
     @BindView(R.id.operation_sort_text)
@@ -481,12 +481,15 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                         uploadFile(pathList.get(i));
                     }
                 }
+                return;
             } else if (requestCode == REQUEST_OPEN_CEMERA //拍照返回
                     && NetUtils.isNetworkConnected(getApplicationContext())) {
                 String imgPath = data.getExtras().getString(MyCameraActivity.OUT_FILE_PATH);
                 uploadFile(imgPath);
+                return;
             } else if (requestCode == REQUEST_SHOW_FILE_FILTER) {  //移动文件
                 getVolumeFileList(false);
+                return;
             } else if (requestCode == SHARE_IMAGE_OR_FILES) {
                 SearchModel searchModel = (SearchModel) data.getSerializableExtra("searchModel");
                 if (searchModel != null) {
@@ -499,6 +502,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                         startChannelActivity(userOrChannelId);
                     }
                 }
+                return;
             }
         } else if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {  // 图库选择图片返回
             if (data != null && requestCode == REQUEST_OPEN_GALLERY) {
@@ -509,6 +513,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                     uploadFile(imgPath);
                 }
             }
+            return;
         }
         /**继续执行父类的OnActivityResult**/
         super.onActivityResult(requestCode, resultCode, data);

@@ -12,22 +12,19 @@ import com.inspur.emmcloud.adapter.VolumeFileAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
-import com.inspur.emmcloud.baselib.util.JSONUtils;
-import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButton;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.bean.appcenter.volume.GetReturnMoveOrCopyErrorResult;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.util.privates.VolumeFilePrivilegeUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -253,29 +250,18 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
         }
 
         @Override
-        public void returnMoveOrCopyFileBetweenVolumeFail(String error, int errorCode, String srcVolumeFilePath, String operation, List<VolumeFile> volumeFileList) {
-            try {
-                JSONArray arrayData = JSONUtils.getJSONArray(error, new JSONArray());
-                for (int i = 0; i < 10; i++) {
-                    if (arrayData.isNull(i)) {
-                        if (i == 0) {
-                            copyOrMoveErrorFiles.addAll(volumeFileList);
-                        }
-                        break;
-                    }
-                    JSONObject jsonObject = arrayData.getJSONObject(i);
-                    boolean operationSuccess = jsonObject.getBoolean("success");
-                    String operationFailFile = jsonObject.getString("source");
-                    if (!operationSuccess && !StringUtils.isBlank(operationFailFile)) {
-                        for (int i1 = 0; i1 < volumeFileList.size(); i1++) {
-                            if (operationFailFile.equals(srcVolumeFilePath + volumeFileList.get(i1).getName())) {
-                                copyOrMoveErrorFiles.add(volumeFileList.get(i1));
-                            }
+        public void returnMoveOrCopyFileBetweenVolumeFail(GetReturnMoveOrCopyErrorResult errorResult, int errorCode, String srcVolumeFilePath, String operation, List<VolumeFile> volumeFileList) {
+            List<String> operationFailFileList = errorResult.getOperationFailFileSourceList();
+            if (operationFailFileList != null) {
+                for (int i = 0; i < operationFailFileList.size(); i++) {
+                    for (int i1 = 0; i1 < volumeFileList.size(); i1++) {
+                        if (operationFailFileList.equals(srcVolumeFilePath + volumeFileList.get(i1).getName())) {
+                            copyOrMoveErrorFiles.add(volumeFileList.get(i1));
                         }
                     }
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
+            } else {
+                copyOrMoveErrorFiles.addAll(volumeFileList);
             }
             LoadingDialog.dimissDlg(loadingDlg);
             Intent intentResult = new Intent();
