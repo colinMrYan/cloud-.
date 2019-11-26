@@ -291,17 +291,14 @@ public class MessageSendManager {
             @Override
             public void onVoiceResultSuccess(VoiceResult voiceResult, boolean isLast) {
                 MsgContentMediaVoice originMsgContentMediaVoice = message.getMsgContentMediaVoice();
-                if (!voiceResult.getResults().equals(originMsgContentMediaVoice.getResult())) {
-                    MsgContentMediaVoice msgContentMediaVoice = new MsgContentMediaVoice();
-                    msgContentMediaVoice.setDuration(originMsgContentMediaVoice.getDuration());
-                    msgContentMediaVoice.setMedia(originMsgContentMediaVoice.getMedia());
-                    msgContentMediaVoice.setJsonResults(voiceResult.getResults());
-                    message.setContent(msgContentMediaVoice.toString());
-                    MessageCacheUtil.saveMessage(MyApplication.getInstance(), message);
-                    if (commonCallBack != null) {
-                        commonCallBack.execute();
-                    }
-
+                MsgContentMediaVoice msgContentMediaVoice = new MsgContentMediaVoice();
+                msgContentMediaVoice.setDuration(originMsgContentMediaVoice.getDuration());
+                msgContentMediaVoice.setMedia(originMsgContentMediaVoice.getMedia());
+                msgContentMediaVoice.setJsonResults(voiceResult.getResults());
+                message.setContent(msgContentMediaVoice.toString());
+                MessageCacheUtil.saveMessage(MyApplication.getInstance(), message);
+                if (commonCallBack != null) {
+                    commonCallBack.execute();
                 }
             }
 
