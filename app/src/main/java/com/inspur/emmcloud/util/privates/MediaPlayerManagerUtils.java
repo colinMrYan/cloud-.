@@ -138,16 +138,56 @@ public class MediaPlayerManagerUtils {
     }
 
     /**
-     * 播放音乐
+     * 播放铃声给语音通话用的方法
      *
      * @param rawResId raw目录下的文件id
-     * @param callback
      */
-    public void play(int rawResId, PlayCallback callback, boolean isLooping, int mode) {
-        this.currentMode = mode;
-        String rawFileUri = "android.resource://" + MyApplication.getInstance().getPackageName() + "/" + rawResId;
-        setMediaPlayerLooping(isLooping);
-        play(rawFileUri, callback);
+    public void play(int rawResId, final boolean isLooping, int mode) {
+        stop();
+        String playPath = "android.resource://" + MyApplication.getInstance().getPackageName() + "/" + rawResId;
+        try {
+            audioManager.requestAudioFocus(mAudioFocusChangeListener, AudioManager.STREAM_MUSIC,
+                    AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
+            BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+            boolean isBluetoothConnected = !(BluetoothProfile.STATE_DISCONNECTED == adapter.getProfileConnectionState(BluetoothProfile.HEADSET));
+            //耳机模式下直接返回
+            if (isBluetoothConnected || mode == MediaPlayerManagerUtils.MODE_HEADSET) {
+                audioManager.setSpeakerphoneOn(false);
+            } else if (mode == MediaPlayerManagerUtils.MODE_EARPIECE) {
+                audioManager.setSpeakerphoneOn(false);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                    audioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
+                } else {
+                    audioManager.setMode(AudioManager.MODE_IN_CALL);
+                }
+            } else {
+                audioManager.setMode(AudioManager.MODE_NORMAL);
+                audioManager.setSpeakerphoneOn(true);
+            }
+            mediaPlayer.reset();
+            mediaPlayer.setDataSource(context, Uri.parse(playPath));
+            mediaPlayer.prepareAsync();
+            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    mediaPlayer.start();
+                }
+            });
+            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    if (isLooping) {
+                        mediaPlayer.start();
+                        mediaPlayer.setLooping(true);
+                    } else {
+                        resetPlayMode();
+                        audioManager.abandonAudioFocus(mAudioFocusChangeListener);
+                    }
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**

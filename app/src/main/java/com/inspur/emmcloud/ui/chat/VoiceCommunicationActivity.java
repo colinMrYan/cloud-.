@@ -516,7 +516,7 @@ public class VoiceCommunicationActivity extends BaseActivity {
     private void changeMediaPlayState() {
         if (voiceCommunicationManager.getCommunicationState() == COMMUNICATION_STATE_PRE) {
             //仿照微信，邀请者用听筒模式，被邀请者用外放模式
-            mediaPlayerManagerUtils.play(R.raw.voice_communication_watting_answer, null, true, voiceCommunicationManager.isInviterPre() ?
+            mediaPlayerManagerUtils.play(R.raw.voice_communication_watting_answer, true, voiceCommunicationManager.isInviterPre() ?
                     MediaPlayerManagerUtils.MODE_EARPIECE : MediaPlayerManagerUtils.MODE_SPEAKER);
         } else {
             mediaPlayerManagerUtils.stop();
