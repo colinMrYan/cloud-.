@@ -333,27 +333,25 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         boolean isOwner = true;
         for (int i = 0; i < selectVolumeFileList.size(); i++) {
             if (isVolumeFileWriteable) {
-                isVolumeFileWriteable = VolumeFilePrivilegeUtils.getVolumeFileWritable(getApplicationContext(), selectVolumeFileList.get(i));
+                isVolumeFileWriteable = VolumeFilePrivilegeUtils.getVolumeFileWritable(getApplicationContext(), selectVolumeFileList.get(i));//写权限
             }
             if (isVolumeFileReadable) {
-                isVolumeFileReadable = VolumeFilePrivilegeUtils.getVolumeFileReadable(getApplicationContext(), selectVolumeFileList.get(i));
+                isVolumeFileReadable = VolumeFilePrivilegeUtils.getVolumeFileReadable(getApplicationContext(), selectVolumeFileList.get(i));//读权限
             }
             if (isOwner) {
-                isOwner = selectVolumeFileList.get(i).getOwner().equals(BaseApplication.getInstance().getUid());
+                isOwner = selectVolumeFileList.get(i).getOwner().equals(BaseApplication.getInstance().getUid()); //判断是否为Owner
             }
             if (isVolumeFileDirectory) {
-                isVolumeFileDirectory = selectVolumeFileList.get(i).getType().equals(VolumeFile.FILE_TYPE_DIRECTORY);
+                isVolumeFileDirectory = selectVolumeFileList.get(i).getType().equals(VolumeFile.FILE_TYPE_DIRECTORY);//是否为文件
             }
-
             if (!isVolumeContainDir) {
-                isVolumeContainDir = selectVolumeFileList.get(i).getType().equals(VolumeFile.FILE_TYPE_DIRECTORY);
+                isVolumeContainDir = selectVolumeFileList.get(i).getType().equals(VolumeFile.FILE_TYPE_DIRECTORY); //是否包含文件夹
             }
         }
-
         if (selectVolumeFileList.size() == 1) {
             String fileSavePath = FileDownloadManager.getInstance().getDownloadFilePath(DownloadFileCategory.CATEGORY_VOLUME_FILE,
                     selectVolumeFileList.get(0).getId(), selectVolumeFileList.get(0).getName());
-            isShowOpenAction = !StringUtils.isBlank(fileSavePath);
+            isShowOpenAction = !StringUtils.isBlank(fileSavePath);                                                 //是否包含本地路径
         }
         volumeActionDataList.add(new VolumeActionData(openAction, R.drawable.volume_open_file, isShowOpenAction));
         volumeActionDataList.add(new VolumeActionData(downloadAction, R.drawable.ic_volume_download,
