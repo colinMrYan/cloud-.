@@ -108,6 +108,8 @@ public class APIUri {
     }
 
     public static String getUrlBaseVolume() {
+        //return getCloudDriver() + "/volume";
+        /** 测试 用return "http://10.25.12.114:3001/cloud-drive/rest/v1/volume";**/
         return getCloudDriver() + "/volume";
     }
 
@@ -983,6 +985,14 @@ public class APIUri {
      ***/
     public static String getCopyFileBetweenVolumeUrl(String fromVolumeId, String toVolumeId) {
         return getUrlBaseVolume() + "/" + fromVolumeId + "/file/share/volume/" + toVolumeId;
+    }
+
+    /**
+     * 夸网盘复制文件或者文件夹的Url
+     ***/
+    public static String getCopyOrMoveFileBetweenVolumeUrl(String fromVolumeId) {
+        return getUrlBaseVolume() + "/" + fromVolumeId + "/file/operation";
+        // return "http://10.25.12.114:3001/cloud-drive/rest/v1/volume/"+ fromVolumeId + "/file/operation";
     }
 
     /**

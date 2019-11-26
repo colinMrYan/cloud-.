@@ -665,6 +665,10 @@
     <string name="volume_please_install_wechat">Please install Wechat</string>
     <string name="volume_share_2_qq_wechat">Share</string>
     <string name="volume_copy_between_volume_error_toast">%1$d Files copy unsuccessfully</string>
+    <string name="volume_copy_success">Copy Success</string>
+    <string name="volume_copy_fail">Copy Fail</string>
+    <string name="volume_move_success">Move Success</string>
+    <string name="volume_move_fail">Move Fail</string>
 
 
     <!-- 我的页面部分 -->
@@ -1334,6 +1338,12 @@
     <string name="voice_communication_group_call_canceled">Call ended</string>
     <string name="voice_communication_group_call_busy">%1$s is busy</string>
     <string name="voice_communication_group_calling_ended">Call ended</string>
+    <string name="video_call">Video Call</string>
+    <string name="video_communication_turn_to_voice_call">Switch to voice call</string>
+    <string name="video_communication_switch_camera">Switch cameras</string>
+    <string name="video_communication_waiting_answer">Connection...</string>
+    <string name="video_communication_invite_video_call">Invite you to a video call</string>
+    <string name="voice_video_call_no_contact">Contact information not obtained</string>
 
     <string name="error_no_sdcard">No SD card, no recording data.</string>
     <string name="error_state_record">Please stop recording while recording</string>

@@ -93,6 +93,8 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     public static final String EXTRA_VOLUME_FILE_TITLE = "title";
     public static final String EXTRA_IS_FUNCTION_COPY_OR_MOVE = "isFunctionCopyOrMove";
     public static final String EXTRA_OPERATION_FILE_DIR_ABS_PATH = "operationFileDirAbsolutePath";
+    public static final String EXTRA_FILE_SHARE_URI = "fileShareUriList";
+    public static final String EXTRA_OPERATION_FAIL_FILES = "operationFailedFiles";
     protected static final int REQUEST_MOVE_FILE = 5;
     protected static final int REQUEST_COPY_FILE = 6;
     protected static final int SHARE_IMAGE_OR_FILES = 7;
@@ -327,10 +329,10 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
                 selectVolumeFileList.size() == 1 && !isVolumeFileDirectory
                         && (isVolumeFileReadable || isVolumeFileWriteable)));
         volumeActionDataList.add(new VolumeActionData(copyAction, R.drawable.ic_volume_copy, (isVolumeFileReadable || isVolumeFileWriteable)));
+        volumeActionDataList.add(new VolumeActionData(moveToAction, R.drawable.ic_volume_move, isVolumeFileWriteable));
         volumeActionDataList.add(new VolumeActionData(deleteAction, R.drawable.ic_volume_delete, isVolumeFileWriteable));
         volumeActionDataList.add(new VolumeActionData(renameAction, R.drawable.ic_volume_rename,
                 isVolumeFileWriteable && selectVolumeFileList.size() == 1));
-        volumeActionDataList.add(new VolumeActionData(moveToAction, R.drawable.ic_volume_move, isVolumeFileWriteable));
         volumeActionDataList.add(new VolumeActionData(shareTo, R.drawable.ic_volume_share, selectVolumeFileList.size() == 1 &&
                 !isVolumeFileDirectory && (isVolumeFileWriteable || isVolumeFileReadable)));
         volumeActionDataList.add(new VolumeActionData(permissionAction, R.drawable.ic_volume_permission,
@@ -375,9 +377,9 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
             adapter.clearSelectedVolumeFileList();
             adapter.notifyDataSetChanged();
         } else if (action.equals(moveToAction)) {
-            moveFile(adapter.getSelectVolumeFileList());
+            copyOrMoveFile(adapter.getSelectVolumeFileList(), false);
         } else if (action.equals(copyAction)) {
-            copyFile(adapter.getSelectVolumeFileList());
+            copyOrMoveFile(adapter.getSelectVolumeFileList(), true);
         } else if (action.equals(deleteAction)) {
             if (adapter.getSelectVolumeFileList().size() > 0) {
                 showFileDelWranibgDlg(adapter.getSelectVolumeFileList());
@@ -588,22 +590,17 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
+                case REQUEST_MOVE_FILE:
                 case REQUEST_COPY_FILE:                         /**复制失败VolumeFiles 返回进行重新选择复制**/
                     adapter.clearSelectedVolumeFileList();
                     adapter.notifyDataSetChanged();
-                    List<VolumeFile> copyVolumeResultFileList = new ArrayList<>();
-                    if (data.hasExtra("copyFailedFiles")) {
-                        copyVolumeResultFileList = (List<VolumeFile>) data.getSerializableExtra("copyFailedFiles");
+                    List<VolumeFile> operationFileList = new ArrayList<>();
+                    if (data.hasExtra(EXTRA_OPERATION_FAIL_FILES)) {
+                        operationFileList = (List<VolumeFile>) data.getSerializableExtra(EXTRA_OPERATION_FAIL_FILES);
                     }
-                    adapter.setSelectVolumeFileList(copyVolumeResultFileList);
+                    adapter.setSelectVolumeFileList(operationFileList);
                     adapter.notifyDataSetChanged();
-                    setBottomOperationItemShow(copyVolumeResultFileList);
-                    break;
-                case REQUEST_MOVE_FILE:
-                    adapter.clearSelectedVolumeFileList();
-                    volumeFileList.removeAll(moveVolumeFileList);
-                    adapter.notifyDataSetChanged();
-                    setBottomOperationItemShow(new ArrayList<VolumeFile>());
+                    setBottomOperationItemShow(operationFileList);
                     break;
                 default:
                     break;
@@ -656,42 +653,22 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
 //        }
     }
 
-    /**
-     * 移动文件
-     *
-     * @param moveVolumeFileList
-     */
-    protected void moveFile(List<VolumeFile> moveVolumeFileList) {
-        this.moveVolumeFileList = moveVolumeFileList;
-        if (moveVolumeFileList.size() > 0) {
-            Intent intent = new Intent(getApplicationContext(), VolumeFileLocationSelectActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("volume", volume);
-            bundle.putSerializable(EXTRA_VOLUME_FILE_LIST, (Serializable) moveVolumeFileList);
-            bundle.putString(EXTRA_VOLUME_FILE_TITLE, getString(R.string.clouddriver_select_move_position));
-            bundle.putString(EXTRA_OPERATION_FILE_DIR_ABS_PATH, currentDirAbsolutePath);
-            bundle.putBoolean(EXTRA_IS_FUNCTION_COPY_OR_MOVE, false);
-            intent.putExtras(bundle);
-            startActivityForResult(intent, REQUEST_MOVE_FILE);
-        }
-
-    }
 
     /***
      * 复制文件
      * @param volumeFileList
      */
-    protected void copyFile(List<VolumeFile> volumeFileList) {
+    protected void copyOrMoveFile(List<VolumeFile> volumeFileList, boolean isCopy) {
         if (volumeFileList.size() > 0) {
             Intent intent = new Intent(getApplicationContext(), VolumeHomePageActivity.class);
             Bundle bundle = new Bundle();
             bundle.putSerializable(EXTRA_FROM_VOLUME, volume);
             bundle.putSerializable(EXTRA_VOLUME_FILE_LIST, (Serializable) volumeFileList);
             bundle.putString(EXTRA_VOLUME_FILE_TITLE, getString(R.string.clouddriver_select_copy_position));
-            bundle.putBoolean(EXTRA_IS_FUNCTION_COPY_OR_MOVE, true);
+            bundle.putBoolean(EXTRA_IS_FUNCTION_COPY_OR_MOVE, isCopy);
             bundle.putString(EXTRA_OPERATION_FILE_DIR_ABS_PATH, currentDirAbsolutePath);
             intent.putExtras(bundle);
-            startActivityForResult(intent, REQUEST_COPY_FILE);
+            startActivityForResult(intent, isCopy ? REQUEST_COPY_FILE : REQUEST_MOVE_FILE);
         }
     }
 

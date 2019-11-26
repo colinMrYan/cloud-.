@@ -679,6 +679,10 @@
     <string name="volume_file_transfer_list_wait_tip">正在等待&#8230;</string>
     <string name="volume_share_2_qq_wechat">分享</string>
     <string name="volume_copy_between_volume_error_toast">%1$d 个文件复制失败</string>
+    <string name="volume_copy_success">复制成功</string>
+    <string name="volume_copy_fail">复制失败</string>
+    <string name="volume_move_success">移动成功</string>
+    <string name="volume_move_fail">移动失败</string>
 
     <!--Webex 邮箱-->
     <string name="mail_install_cert"><u>安装数字证书</u></string>
@@ -1397,6 +1401,12 @@
     <string name="voice_communication_group_call_canceled">通话已结束</string>
     <string name="voice_communication_group_call_busy">%1$s正忙</string>
     <string name="voice_communication_group_calling_ended">通话已结束</string>
+    <string name="video_call">视频通话</string>
+    <string name="video_communication_turn_to_voice_call">切到语音通话</string>
+    <string name="video_communication_switch_camera">切换摄像头</string>
+    <string name="video_communication_waiting_answer">连接中...</string>
+    <string name="video_communication_invite_video_call">邀请你视频通话</string>
+    <string name="voice_video_call_no_contact">未获取到联系人信息</string>
 
     <string name="error_no_sdcard">没有SD卡，无法存储录音数据</string>
     <string name="error_state_record">正在录音中，请先停止录音</string>
