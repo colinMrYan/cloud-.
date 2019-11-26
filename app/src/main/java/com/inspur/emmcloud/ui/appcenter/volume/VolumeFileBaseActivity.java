@@ -643,14 +643,15 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
             }
             switch (requestCode) {
                 case REQUEST_MOVE_FILE:
-                    List<VolumeFile> operationFileList = new ArrayList<>();
-                    operationFileList = adapter.getSelectVolumeFileList();
+                    List<VolumeFile> operationFileList = adapter.getSelectVolumeFileList();
                     if (operationFailFileList.size() > 0) {
                         operationFileList.removeAll(operationFailFileList);
                     }
-                    volumeFileList.removeAll(operationFileList);
+                    if (operationFileList.size() > 0) {
+                        volumeFileList.removeAll(operationFileList);
+                    }
                     adapter.clearSelectedVolumeFileList();
-                    adapter.setSelectVolumeFileList(operationFileList);
+                    adapter.setSelectVolumeFileList(operationFailFileList);
                     adapter.notifyDataSetChanged();
                     setBottomOperationItemShow(operationFailFileList);
                     break;
