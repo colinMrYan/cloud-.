@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.CountDownTimer;
 import android.os.Vibrator;
+import android.view.SurfaceView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -36,6 +37,7 @@ import java.util.List;
 
 import io.agora.rtc.IRtcEngineEventHandler;
 import io.agora.rtc.RtcEngine;
+import io.agora.rtc.video.BeautyOptions;
 import io.agora.rtc.video.VideoEncoderConfiguration;
 
 import static com.inspur.emmcloud.ui.chat.VoiceCommunicationActivity.COMMUNICATION_STATE_ING;
@@ -87,6 +89,15 @@ public class VoiceCommunicationManager {
     private boolean isHandsFree = false;
     private boolean isMute = false;
     private Vibrator vibrator;
+    /**
+     * 视频会话小视图
+     */
+    private SurfaceView agoraLocalView;
+    /**
+     * 视频会话大视图
+     */
+    private SurfaceView agoraRemoteView;
+    private int videoFirstFrameUid = 0;
     private IRtcEngineEventHandler mRtcEventHandler = new IRtcEngineEventHandler() {
         //其他用户离线回调
         @Override
@@ -207,11 +218,24 @@ public class VoiceCommunicationManager {
             }
         }
 
+        //官方示例仍用的此方法
         @Override
-        public void onRemoteVideoStateChanged(int uid, int state, int reason, int elapsed) {
-            super.onRemoteVideoStateChanged(uid, state, reason, elapsed);
+        public void onFirstRemoteVideoDecoded(int uid, int width, int height, int elapsed) {
+            super.onFirstRemoteVideoDecoded(uid, width, height, elapsed);
             if (onVoiceCommunicationCallbacks != null) {
-                onVoiceCommunicationCallbacks.onRemoteVideoStateChanged(uid, state, reason, elapsed);
+                onVoiceCommunicationCallbacks.onFirstRemoteVideoDecoded(uid, width, height, elapsed);
+            }
+            //当接通视频通话，如果是在小窗状态，刷新小窗
+            if (VideoSuspensionWindowManagerUtils.getInstance().isShowing()) {
+                VideoSuspensionWindowManagerUtils.getInstance().refreshVideoSmallWindow();
+            }
+        }
+
+        @Override
+        public void onUserEnableVideo(int uid, boolean enabled) {
+            super.onUserEnableVideo(uid, enabled);
+            if (onVoiceCommunicationCallbacks != null) {
+                onVoiceCommunicationCallbacks.onUserEnableVideo(uid, enabled);
             }
         }
 
@@ -382,7 +406,16 @@ public class VoiceCommunicationManager {
      * @return
      */
     private String getSchema(String cmd, String channelId, String roomId) {
-        return "ecc-cloudplus-cmd://voice_channel?cmd=" + cmd + "&channelid=" + channelId + "&roomid=" + roomId + "&uid=" + BaseApplication.getInstance().getUid();
+        return "ecc-cloudplus-cmd://" + getChannelType() + "?cmd=" + cmd + "&channelid=" + channelId + "&roomid=" + roomId + "&uid=" + BaseApplication.getInstance().getUid();
+    }
+
+    private String getChannelType() {
+        if (communicationType.equals(ECMChatInputMenu.VOICE_CALL)) {
+            return "voice_channel";
+        } else if (communicationType.equals(ECMChatInputMenu.VIDEO_CALL)) {
+            return "video_channel";
+        }
+        return "";
     }
 
     /**
@@ -565,6 +598,7 @@ public class VoiceCommunicationManager {
         intent.setClass(BaseApplication.getInstance(), VoiceCommunicationActivity.class);
         intent.putExtra(Constant.VOICE_VIDEO_CALL_AGORA_ID, contextParamsRoom);
         intent.putExtra(ConversationActivity.CLOUD_PLUS_CHANNEL_ID, cid);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(Constant.VOICE_VIDEO_CALL_TYPE, getCommunicationType(contextParamsType));
         intent.putExtra(Constant.VOICE_COMMUNICATION_STATE, VoiceCommunicationActivity.COMMUNICATION_STATE_PRE);
         intent.putExtra("userList", (Serializable) getVoiceCommunicationMemberList());
@@ -603,7 +637,11 @@ public class VoiceCommunicationManager {
             sendCommunicationCommand(Constant.COMMAND_DESTROY);
         }
         destroyResourceAndState();
-        SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
+        if (communicationType.equals(ECMChatInputMenu.VOICE_CALL)) {
+            SuspensionWindowManagerUtils.getInstance().hideCommunicationSmallWindow();
+        } else if (communicationType.equals(ECMChatInputMenu.VIDEO_CALL)) {
+            VideoSuspensionWindowManagerUtils.getInstance().hideVideoCommunicationSmallWindow();
+        }
     }
 
     /**
@@ -688,9 +726,26 @@ public class VoiceCommunicationManager {
                     VideoEncoderConfiguration.FRAME_RATE.FRAME_RATE_FPS_15,
                     VideoEncoderConfiguration.STANDARD_BITRATE,
                     VideoEncoderConfiguration.ORIENTATION_MODE.ORIENTATION_MODE_FIXED_PORTRAIT));
+            //美颜效果
+            mRtcEngine.setBeautyEffectOptions(true, new
+                    BeautyOptions(BeautyOptions.LIGHTENING_CONTRAST_NORMAL, 0.8f, 0.7f, 0.1f));
         }
     }
 
+    public SurfaceView getRemoteView() {
+        if (agoraRemoteView == null) {
+            agoraRemoteView = RtcEngine.CreateRendererView(BaseApplication.getInstance().getBaseContext());
+        }
+        return agoraRemoteView;
+    }
+
+    public SurfaceView getLocalView() {
+        if (agoraLocalView == null) {
+            agoraLocalView = RtcEngine.CreateRendererView(BaseApplication.getInstance().getBaseContext());
+            agoraLocalView.setZOrderMediaOverlay(true);
+        }
+        return agoraLocalView;
+    }
 
     /**
      * 开启视频通话的配置
@@ -971,6 +1026,14 @@ public class VoiceCommunicationManager {
 
     public void setConnectStartTime(long connectStartTime) {
         this.connectStartTime = connectStartTime;
+    }
+
+    public int getVideoFirstFrameUid() {
+        return videoFirstFrameUid;
+    }
+
+    public void setVideoFirstFrameUid(int videoFirstFrameUid) {
+        this.videoFirstFrameUid = videoFirstFrameUid;
     }
 
     public OnVoiceCommunicationCallbacks getOnVoiceCommunicationCallbacks() {

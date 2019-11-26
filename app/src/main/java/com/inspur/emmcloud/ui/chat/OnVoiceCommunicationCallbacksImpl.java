@@ -61,7 +61,7 @@ public abstract class OnVoiceCommunicationCallbacksImpl implements OnVoiceCommun
     }
 
     @Override
-    public void onRemoteVideoStateChanged(int uid, int state, int reason, int elapsed) {
+    public void onFirstRemoteVideoDecoded(int uid, int state, int reason, int elapsed) {
 
     }
 }
