@@ -32,6 +32,7 @@ import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.basemodule.util.ClickRuleUtil;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
@@ -133,6 +134,9 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
 
             @Override
             public void onItemClick(View view, int position) {
+                if (ClickRuleUtil.isFastClick()) {
+                    return;
+                }
                 VolumeFile volumeFile = volumeFileList.get(position);
 //                if (volumeFile.getStatus().equals("normal")) {
                     if (adapter.getSelectVolumeFileList().size() == 0) {

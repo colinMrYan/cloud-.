@@ -252,7 +252,7 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
         @Override
         public void returnMoveOrCopyFileBetweenVolumeFail(GetReturnMoveOrCopyErrorResult errorResult, int errorCode, String srcVolumeFilePath, String operation, List<VolumeFile> volumeFileList) {
             List<String> operationFailFileList = errorResult.getOperationFailFileSourceList();
-            if (operationFailFileList != null) {
+            if (operationFailFileList != null && operationFailFileList.size() > 0) {
                 for (int i = 0; i < operationFailFileList.size(); i++) {
                     for (int i1 = 0; i1 < volumeFileList.size(); i1++) {
                         if (operationFailFileList.equals(srcVolumeFilePath + volumeFileList.get(i1).getName())) {
