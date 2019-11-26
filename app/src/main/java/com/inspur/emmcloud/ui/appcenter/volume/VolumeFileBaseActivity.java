@@ -637,18 +637,28 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
+            List<VolumeFile> operationFailFileList = new ArrayList<>();
+            if (data.hasExtra(EXTRA_OPERATION_FAIL_FILES)) {
+                operationFailFileList = (List<VolumeFile>) data.getSerializableExtra(EXTRA_OPERATION_FAIL_FILES);
+            }
             switch (requestCode) {
                 case REQUEST_MOVE_FILE:
-                case REQUEST_COPY_FILE:                         /**复制失败VolumeFiles 返回进行重新选择复制**/
-                    adapter.clearSelectedVolumeFileList();
-                    adapter.notifyDataSetChanged();
                     List<VolumeFile> operationFileList = new ArrayList<>();
-                    if (data.hasExtra(EXTRA_OPERATION_FAIL_FILES)) {
-                        operationFileList = (List<VolumeFile>) data.getSerializableExtra(EXTRA_OPERATION_FAIL_FILES);
+                    operationFileList = adapter.getSelectVolumeFileList();
+                    if (operationFailFileList.size() > 0) {
+                        operationFileList.removeAll(operationFailFileList);
                     }
+                    volumeFileList.removeAll(operationFileList);
+                    adapter.clearSelectedVolumeFileList();
                     adapter.setSelectVolumeFileList(operationFileList);
                     adapter.notifyDataSetChanged();
-                    setBottomOperationItemShow(operationFileList);
+                    setBottomOperationItemShow(operationFailFileList);
+                    break;
+                case REQUEST_COPY_FILE:                         /**复制失败VolumeFiles 返回进行重新选择复制**/
+                    adapter.clearSelectedVolumeFileList();
+                    adapter.setSelectVolumeFileList(operationFailFileList);
+                    adapter.notifyDataSetChanged();
+                    setBottomOperationItemShow(operationFailFileList);
                     break;
                 default:
                     break;
