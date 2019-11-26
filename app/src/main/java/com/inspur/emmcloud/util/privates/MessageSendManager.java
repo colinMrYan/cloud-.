@@ -291,17 +291,14 @@ public class MessageSendManager {
             @Override
             public void onVoiceResultSuccess(VoiceResult voiceResult, boolean isLast) {
                 MsgContentMediaVoice originMsgContentMediaVoice = message.getMsgContentMediaVoice();
-                if (!voiceResult.getResults().equals(originMsgContentMediaVoice.getResult())) {
-                    MsgContentMediaVoice msgContentMediaVoice = new MsgContentMediaVoice();
-                    msgContentMediaVoice.setDuration(originMsgContentMediaVoice.getDuration());
-                    msgContentMediaVoice.setMedia(originMsgContentMediaVoice.getMedia());
-                    msgContentMediaVoice.setJsonResults(voiceResult.getResults());
-                    message.setContent(msgContentMediaVoice.toString());
-                    MessageCacheUtil.saveMessage(MyApplication.getInstance(), message);
-                    if (commonCallBack != null) {
-                        commonCallBack.execute();
-                    }
-
+                MsgContentMediaVoice msgContentMediaVoice = new MsgContentMediaVoice();
+                msgContentMediaVoice.setDuration(originMsgContentMediaVoice.getDuration());
+                msgContentMediaVoice.setMedia(originMsgContentMediaVoice.getMedia());
+                msgContentMediaVoice.setJsonResults(voiceResult.getResults());
+                message.setContent(msgContentMediaVoice.toString());
+                MessageCacheUtil.saveMessage(MyApplication.getInstance(), message);
+                if (commonCallBack != null) {
+                    commonCallBack.execute();
                 }
             }
 
@@ -378,7 +375,7 @@ public class MessageSendManager {
             }
 
             @Override
-            public void onLoading(int progress, String speed) {
+            public void onLoading(int progress, long current, String speed) {
                 //此处不进行loading进度，因为消息的发送进度不等于资源的发送进度
             }
 

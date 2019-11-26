@@ -62,7 +62,7 @@ public class S3Service extends APIInterfaceInstance implements VolumeFileUploadS
             long bytesCurrent = transferObserver.getBytesTransferred();
             long bytesTotal = transferObserver.getBytesTotal();
             int progress = (int) (((float) bytesCurrent / (float) bytesTotal) * 100);
-            progressCallback.onLoading(progress, "");
+            progressCallback.onLoading(progress, bytesCurrent, "");
         }
     }
 
@@ -136,7 +136,7 @@ public class S3Service extends APIInterfaceInstance implements VolumeFileUploadS
                         uploadSpeed = FileUtils.formatFileSize(uploadSpeed);
                         uploadSpeed = uploadSpeed + "/S";
                     }
-                    progressCallback.onLoading(progress, uploadSpeed);
+                    progressCallback.onLoading(progress, bytesCurrent, uploadSpeed);
                 }
             }
 

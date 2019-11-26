@@ -2,6 +2,7 @@
 <resources>
     <attr name="header_bg_color" format="reference|color" />
     <attr name="header_text_color" format="reference|color" />
+    <attr name="header_text_blue_white_color" format="reference|color" />
     <attr name="footer_bg_color" format="reference|color" />
     <attr name="footer_tab_text_color_nor" format="reference|color" />
     <attr name="footer_tab_text_color_select" format="reference|color" />

@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.util.privates.oss;
 
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -110,7 +111,8 @@ public class OssService implements VolumeFileUploadService {
                         if (progressCallback != null) {
                             int progress = msg.arg1;
                             String uploadSpeed = (String) msg.obj;
-                            progressCallback.onLoading(progress, uploadSpeed);
+                            long currentSize = msg.getData().getLong("currentSize");
+                            progressCallback.onLoading(progress, currentSize, uploadSpeed);
                         }
                         break;
                     default:
@@ -164,6 +166,9 @@ public class OssService implements VolumeFileUploadService {
                 msg.what = PROGRESS;
                 msg.arg1 = progress;
                 msg.obj = uploadSpeed;
+                Bundle bundle = new Bundle();
+                bundle.putLong("currentSize", currentSize);
+                msg.setData(bundle);
                 LogUtils.jasonDebug("uploadSpeed===" + uploadSpeed);
                 if (handler != null) {
                     handler.sendMessage(msg);

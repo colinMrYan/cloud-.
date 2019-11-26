@@ -516,10 +516,24 @@ public class VoiceCommunicationActivity extends BaseActivity {
     private void changeMediaPlayState() {
         if (voiceCommunicationManager.getCommunicationState() == COMMUNICATION_STATE_PRE) {
             //仿照微信，邀请者用听筒模式，被邀请者用外放模式
-            mediaPlayerManagerUtils.play(R.raw.voice_communication_watting_answer, true, voiceCommunicationManager.isInviterPre() ?
-                    MediaPlayerManagerUtils.MODE_EARPIECE : MediaPlayerManagerUtils.MODE_SPEAKER);
+            String rawFileUri = "android.resource://" + MyApplication.getInstance().getPackageName() + "/" + R.raw.voice_communication_watting_answer;
+            mediaPlayerManagerUtils.play(rawFileUri, null, true, getMode());
         } else {
             mediaPlayerManagerUtils.stop();
+        }
+    }
+
+    /**
+     * 如果有耳机则走耳机，否则邀请者走听筒，被邀请者走外放
+     *
+     * @return
+     */
+    private int getMode() {
+        if (AppUtils.isHeadsetExists()) {
+            return MediaPlayerManagerUtils.MODE_HEADSET;
+        } else {
+            return voiceCommunicationManager.isInviterPre() ?
+                    MediaPlayerManagerUtils.MODE_EARPIECE : MediaPlayerManagerUtils.MODE_SPEAKER;
         }
     }
 

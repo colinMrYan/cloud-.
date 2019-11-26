@@ -138,74 +138,12 @@ public class MediaPlayerManagerUtils {
     }
 
     /**
-     * 播放铃声给语音通话用的方法
-     *
-     * @param rawResId raw目录下的文件id
-     */
-    public void play(int rawResId, final boolean isLooping, int mode) {
-        stop();
-        String playPath = "android.resource://" + MyApplication.getInstance().getPackageName() + "/" + rawResId;
-        try {
-            audioManager.requestAudioFocus(mAudioFocusChangeListener, AudioManager.STREAM_MUSIC,
-                    AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
-            BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
-            boolean isBluetoothConnected = !(BluetoothProfile.STATE_DISCONNECTED == adapter.getProfileConnectionState(BluetoothProfile.HEADSET));
-            //耳机模式下直接返回
-            if (isBluetoothConnected || mode == MediaPlayerManagerUtils.MODE_HEADSET) {
-                audioManager.setSpeakerphoneOn(false);
-            } else if (mode == MediaPlayerManagerUtils.MODE_EARPIECE) {
-                audioManager.setSpeakerphoneOn(false);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                    audioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
-                } else {
-                    audioManager.setMode(AudioManager.MODE_IN_CALL);
-                }
-            } else {
-                audioManager.setMode(AudioManager.MODE_NORMAL);
-                audioManager.setSpeakerphoneOn(true);
-            }
-            mediaPlayer.reset();
-            mediaPlayer.setDataSource(context, Uri.parse(playPath));
-            mediaPlayer.prepareAsync();
-            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mp) {
-                    mediaPlayer.start();
-                }
-            });
-            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mp) {
-                    if (isLooping) {
-                        mediaPlayer.start();
-                        mediaPlayer.setLooping(true);
-                    } else {
-                        resetPlayMode();
-                        audioManager.abandonAudioFocus(mAudioFocusChangeListener);
-                    }
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * 设置息屏释放监听
-     *
-     * @param wakeLockCallBack
-     */
-    public void setWakeLockReleaseListener(CommonCallBack wakeLockCallBack) {
-        this.wakeLockCallBack = wakeLockCallBack;
-    }
-
-    /**
      * 播放音乐
      *
-     * @param path     音乐文件路径
-     * @param callback 播放回调函数
+     * @param path raw目录下的文件id
+     * @param callback
      */
-    public void play(String path, final PlayCallback callback) {
+    public void play(String path, final PlayCallback callback, final boolean isLooping, int mode) {
         stop();
         this.path = path;
         this.callback = callback;
@@ -215,12 +153,30 @@ public class MediaPlayerManagerUtils {
             BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
             boolean isBluetoothConnected = !(BluetoothProfile.STATE_DISCONNECTED == adapter.getProfileConnectionState(BluetoothProfile.HEADSET));
             //耳机模式下直接返回
-            if (isBluetoothConnected || MediaPlayerManagerUtils.getManager().getCurrentMode() == MediaPlayerManagerUtils.MODE_HEADSET) {
-                changeToHeadsetMode();
-            } else if (getCurrentMode() == MediaPlayerManagerUtils.MODE_EARPIECE) {
-                changeToEarpieceMode();
+            if (isBluetoothConnected || MediaPlayerManagerUtils.getManager().getCurrentMode() == MediaPlayerManagerUtils.MODE_HEADSET || mode == MediaPlayerManagerUtils.MODE_HEADSET) {
+                if (mode != -1) {
+                    audioManager.setSpeakerphoneOn(false);
+                } else {
+                    changeToHeadsetMode();
+                }
+            } else if (getCurrentMode() == MediaPlayerManagerUtils.MODE_EARPIECE || mode == MediaPlayerManagerUtils.MODE_EARPIECE) {
+                if (mode != -1) {
+                    audioManager.setSpeakerphoneOn(false);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                        audioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
+                    } else {
+                        audioManager.setMode(AudioManager.MODE_IN_CALL);
+                    }
+                } else {
+                    changeToEarpieceMode();
+                }
             } else {
-                changeToSpeakerMode();
+                if (mode != -1) {
+                    audioManager.setMode(AudioManager.MODE_NORMAL);
+                    audioManager.setSpeakerphoneOn(true);
+                } else {
+                    changeToSpeakerMode();
+                }
             }
             mediaPlayer.reset();
             mediaPlayer.setDataSource(context, Uri.parse(path));
@@ -255,6 +211,25 @@ public class MediaPlayerManagerUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 设置息屏释放监听
+     *
+     * @param wakeLockCallBack
+     */
+    public void setWakeLockReleaseListener(CommonCallBack wakeLockCallBack) {
+        this.wakeLockCallBack = wakeLockCallBack;
+    }
+
+    /**
+     * 播放音乐
+     *
+     * @param path     音乐文件路径
+     * @param callback 播放回调函数
+     */
+    public void play(String path, final PlayCallback callback) {
+        play(path, callback, false, -1);
     }
 
     public boolean isPause() {
