@@ -429,12 +429,12 @@ public class APIUri {
      * @param message
      * @return
      */
-    public static String getChatFileResouceUrl(Message message) {
+    public static String getChatFileResourceUrl(Message message) {
         String cid = message.getChannel();
         String path = message.getMsgContentAttachmentFile().getMedia();
         String url;
         if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
-            url = getPreviewUrl(path);
+            url = path;
         } else {
             url = getECMChatUrl() + "/api/v1/channel/" + cid + "/file/request?path=" + StringUtils.encodeURIComponent(path);
         }
