@@ -777,7 +777,6 @@ public class MyAppAPIService {
                 refreshToken(
                         oauthCallBack, requestTime);
             }
-
         });
     }
 
