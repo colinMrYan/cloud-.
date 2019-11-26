@@ -399,7 +399,7 @@ public class VoiceCommunicationActivity extends BaseActivity {
             }
             voiceCommunicationManager.muteLocalAudioStream(voiceCommunicationManager.isMute());
             voiceCommunicationManager.muteAllRemoteAudioStreams(false);
-            voiceCommunicationManager.onSwitchSpeakerphoneClicked(voiceCommunicationManager.isHandsFree());
+            voiceCommunicationManager.setEnableSpeakerphone(voiceCommunicationManager.isHandsFree());
         }
     }
 
@@ -939,7 +939,7 @@ public class VoiceCommunicationActivity extends BaseActivity {
                 break;
             case 2:
                 voiceCommunicationManager.setHandsFree(imageView.isSelected());
-                voiceCommunicationManager.onSwitchSpeakerphoneClicked(imageView.isSelected());
+                voiceCommunicationManager.setEnableSpeakerphone(imageView.isSelected());
                 break;
             default:
                 break;
