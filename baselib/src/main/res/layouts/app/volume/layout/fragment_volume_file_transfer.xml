@@ -15,16 +15,23 @@
             android:id="@+id/volume_file_transfer_empty_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
+            android:gravity="center_horizontal"
+            android:paddingTop="70dp"
             android:orientation="vertical"
             android:visibility="gone">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/volume_transfer_no_file" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/has_no_data"
-                android:textColor="#333333"
-                android:textSize="15sp" />
+                android:layout_marginTop="30dp"
+                android:text="@string/no_file"
+                android:textColor="#666666"
+                android:textSize="16sp" />
 
         </LinearLayout>
 
@@ -137,8 +144,8 @@
             android:layout_width="match_parent"
             android:layout_height="58dp"
             android:background="#ffffff"
-            android:paddingBottom="10dp"
             android:paddingTop="8dp"
+            android:paddingBottom="10dp"
             android:visibility="gone" />
     </RelativeLayout>
 
