@@ -4,8 +4,10 @@ import android.os.Handler;
 import android.util.Log;
 
 import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
@@ -80,7 +82,7 @@ public class VolumeFileUploadManager extends APIInterfaceInstance {
         } else {
             volumeFileUpload.setStatus(VolumeFile.STATUS_UPLOAD_FAIL);
         }
-        volumeFileUploadList.add(volumeFileUpload);
+        volumeFileUploadList.add(0, volumeFileUpload);
         VolumeFileUploadCacheUtils.saveVolumeFileUpload(volumeFileUpload);
 
     }
@@ -95,6 +97,7 @@ public class VolumeFileUploadManager extends APIInterfaceInstance {
         for (int i = 0; i < volumeFileUploadList.size(); i++) {
             VolumeFileUpload volumeFileUpload = volumeFileUploadList.get(i);
             if (volumeFileUpload.getId().equals(mockVolumeFile.getId())) {
+                volumeFileUpload.setVolumeFileUploadService(null);
                 if (FileUtils.isFileExist(volumeFileUpload.getLocalFilePath())) {
                     volumeFileUpload.setStatus(VolumeFile.STATUS_UPLOAD_IND);
                     //上传文件
@@ -174,6 +177,7 @@ public class VolumeFileUploadManager extends APIInterfaceInstance {
                     VolumeFileUploadService volumeFileUploadService = volumeFileUpload.getVolumeFileUploadService();
                     if (volumeFileUploadService != null) {
                         volumeFileUploadService.onPause();
+                        volumeFileUpload.setVolumeFileUploadService(null);
                     }
                     volumeFileUpload.setStatus(VolumeFile.STATUS_UPLOAD_PAUSE);
                     VolumeFileUploadCacheUtils.saveVolumeFileUpload(volumeFileUpload);
@@ -189,13 +193,25 @@ public class VolumeFileUploadManager extends APIInterfaceInstance {
      * @param volumeFile
      * @param businessProgressCallback
      */
-    public void setBusinessProgressCallback(VolumeFile volumeFile, final ProgressCallback businessProgressCallback) {
+    public void setBusinessProgressCallback(final VolumeFile volumeFile, final ProgressCallback businessProgressCallback) {
         for (int i = 0; i < volumeFileUploadList.size(); i++) {
-            VolumeFileUpload volumeFileUpload = volumeFileUploadList.get(i);
+            final VolumeFileUpload volumeFileUpload = volumeFileUploadList.get(i);
             if (volumeFileUpload.getId().equals(volumeFile.getId())) {
                 if (businessProgressCallback != null) {
                     if (volumeFileUpload.getStatus().equals(VolumeFile.STATUS_UPLOAD_IND)) {
-                        businessProgressCallback.onLoading(volumeFileUpload.getProgress(), "");
+                        if (volumeFileUpload.getProgress() == 100) {
+                            new Handler().post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    volumeFileUploadList.remove(volumeFileUpload);
+                                    VolumeFileUploadCacheUtils.deleteVolumeFileUpload(volumeFileUpload);
+                                    businessProgressCallback.onSuccess(volumeFile);
+                                }
+                            });
+
+                        } else {
+                            businessProgressCallback.onLoading(volumeFileUpload.getProgress(), 0, "");
+                        }
                     } else if (volumeFileUpload.getStatus().equals(VolumeFile.STATUS_UPLOAD_FAIL)) {
                         new Handler().post(new Runnable() {
                             @Override
@@ -248,17 +264,22 @@ public class VolumeFileUploadManager extends APIInterfaceInstance {
                     progressCallback = new MyProgressCallback(volumeFileUpload);
                     volumeFileUpload.setProgressCallback(progressCallback);
                 }
-                volumeFileUpload.setGetVolumeFileUploadTokenResult(getVolumeFileUploadTokenResult);
-                VolumeFileUploadService volumeFileUploadService = getVolumeFileUploadService(volumeFileUpload, mockVolumeFile);
-                if (volumeFileUploadService != null) {
-                    volumeFileUploadService.setProgressCallback(progressCallback);
-                    volumeFileUpload.setTransferObserverId(transferObserverId);
-                    volumeFileUpload.setVolumeFileUploadService(volumeFileUploadService);
-                    volumeFileUploadService.uploadFile(getVolumeFileUploadTokenResult.getFileName(), fileLocalPath);
-                } else {  //如果没有获取相应的上传服务 返回上传失败
-                    progressCallback.onFail();
+                if (volumeFileUpload.getVolumeFileUploadService() == null) {
+                    volumeFileUpload.setGetVolumeFileUploadTokenResult(getVolumeFileUploadTokenResult);
+                    VolumeFileUploadService volumeFileUploadService = getVolumeFileUploadService(volumeFileUpload, mockVolumeFile);
+                    if (volumeFileUploadService != null) {
+                        volumeFileUploadService.setProgressCallback(progressCallback);
+                        volumeFileUpload.setTransferObserverId(transferObserverId);
+                        volumeFileUpload.setVolumeFileUploadService(volumeFileUploadService);
+                        volumeFileUploadService.uploadFile(getVolumeFileUploadTokenResult.getFileName(), fileLocalPath);
+                    } else {  //如果没有获取相应的上传服务 返回上传失败
+                        progressCallback.onFail();
+                    }
+                } else {
+                    volumeFileUpload.getVolumeFileUploadService().setProgressCallback(progressCallback);
                 }
                 break;
+
             }
         }
     }
@@ -286,6 +307,7 @@ public class VolumeFileUploadManager extends APIInterfaceInstance {
         @Override
         public void onSuccess(VolumeFile volumeFile) {
             Log.d("zhang", "onSuccess: 上传成功");
+            ToastUtils.show(BaseApplication.getInstance(), R.string.clouddriver_upload_success);
             volumeFileUploadList.remove(volumeFileUpload);
             VolumeFileUploadCacheUtils.deleteVolumeFileUpload(volumeFileUpload);
             if (volumeFileUpload.getBusinessProgressCallback() != null) {
@@ -297,12 +319,12 @@ public class VolumeFileUploadManager extends APIInterfaceInstance {
         }
 
         @Override
-        public void onLoading(int progress, String speed) {
+        public void onLoading(int progress, long current, String speed) {
             volumeFileUpload.setProgress(progress);
             volumeFileUpload.setStatus(VolumeFile.STATUS_UPLOAD_IND);
             VolumeFileUploadCacheUtils.saveVolumeFileUpload(volumeFileUpload);
             if (volumeFileUpload.getBusinessProgressCallback() != null) {
-                volumeFileUpload.getBusinessProgressCallback().onLoading(progress, speed);
+                volumeFileUpload.getBusinessProgressCallback().onLoading(progress, current, speed);
             }
         }
 

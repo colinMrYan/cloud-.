@@ -36,6 +36,7 @@
     <string name="add">Add</string>
     <string name="update">Update</string>
     <string name="download">Download</string>
+    <string name="redownload">Continue to download</string>
     <string name="confirm_modify_language">Change to This Language?</string>
     <string name="file_type_not_recognize">Unrecognizable File type</string>
     <string name="return_app">Return Application</string>
@@ -578,7 +579,7 @@
     <string name="clouddriver_input_file_name">Input file name</string>
     <string name="clouddriver_select_nothing">Deselect All</string>
     <string name="clouddriver_multi_select">Multi-select</string>
-    <string name="clouddriver_has_selected">Selected(%1$d)</string>
+    <string name="clouddriver_has_selected">Selected %1$d File</string>
     <string name="clouddriver_sure_delete_file">Sure to delete?</string>
     <string name="clouddriver_move2_current_directory">Move to Current Directory</string>
     <string name="clouddriver_copy2_current_directory">Copy to Current Directory</string>
@@ -641,9 +642,14 @@
     <string name="volume_file_upload_network_type_warning">Currently not connected to Wi-Fi,uploading will use mobile traffic,continue?</string>
     <string name="volume_file_download_network_type_warning">Currently not connected to Wi-Fi,downloading will use mobile traffic,continue?</string>
     <string name="volume_file_transfer">File Transfer</string>
-    <string name="volume_file_transfer_download_list">Download Lists</string>
-    <string name="volume_file_transfer_upload_list">Upload Lists</string>
+    <string name="volume_file_transfer_download_list">Downloading</string>
+    <string name="volume_file_transfer_upload_list">Uploading</string>
     <string name="volume_file_transfer_list_wait_tip">Waiting&#8230;</string>
+    <string name="volume_file_transfer_list_pause_tip">Pausing&#8230;</string>
+    <string name="volume_file_transfer_list_download_count">Downloading&#8230;(%1$d)</string>
+    <string name="volume_file_transfer_list_upload_count">Uploading&#8230;(%1$d)</string>
+    <string name="volume_file_transfer_list_pause">All suspended</string>
+    <string name="volume_file_transfer_list_continue">All continue</string>
     <string name="create">Create</string>
     <string name="cloud_drive">Cloud Drive</string>
     <string name="video">Video</string>
@@ -669,6 +675,7 @@
     <string name="volume_copy_fail">Copy Fail</string>
     <string name="volume_move_success">Move Success</string>
     <string name="volume_move_fail">Move Fail</string>
+    <string name="has_no_data">no data</string>
 
 
     <!-- 我的页面部分 -->
