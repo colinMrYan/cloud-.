@@ -35,6 +35,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.agora.rtc.Constants;
 import io.agora.rtc.IRtcEngineEventHandler;
 import io.agora.rtc.RtcEngine;
 import io.agora.rtc.video.BeautyOptions;
@@ -295,6 +296,7 @@ public class VoiceCommunicationManager {
             if (mRtcEngine == null) {
                 mRtcEngine = RtcEngine.create(context, context.getString(R.string.agora_app_id), mRtcEventHandler);
                 mRtcEngine.enableAudioVolumeIndication(1000, 3, false);
+                mRtcEngine.setChannelProfile(Constants.CHANNEL_PROFILE_COMMUNICATION);
             }
         } catch (Exception e) {
             LogUtils.YfcDebug("初始化声网异常：" + e.getMessage());
@@ -835,17 +837,6 @@ public class VoiceCommunicationManager {
     public void setChannelProfile(int profile) {
         if (mRtcEngine != null) {
             mRtcEngine.setChannelProfile(profile);
-        }
-    }
-
-    /**
-     * 打开外放模式
-     *
-     * @param isSpakerphoneOpen
-     */
-    public void onSwitchSpeakerphoneClicked(boolean isSpakerphoneOpen) {
-        if (mRtcEngine != null) {
-            mRtcEngine.setEnableSpeakerphone(isSpakerphoneOpen);
         }
     }
 
