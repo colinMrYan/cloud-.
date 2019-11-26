@@ -129,7 +129,7 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
                     Intent intent = new Intent(VolumeHomePageActivity.this, position == 0 ? VolumeFileLocationSelectActivity.class : ShareVolumeActivity.class);
                     intent.putExtras(bundle);
                     startActivityForResult(intent, isCopyOrMove ? VolumeFileBaseActivity.REQUEST_COPY_FILE : VolumeFileBaseActivity.REQUEST_MOVE_FILE);
-                } else if (myVolume != null && isCopyOrMove == false && uriList != null && uriList.size() > 0) {
+                } else if (myVolume != null && isHaveCopyOrMove == false && uriList != null && uriList.size() > 0) {
                     switch (position) {
                         case 0:
                             bundle.putSerializable(Constant.SHARE_FILE_URI_LIST, (Serializable) uriList);
@@ -205,6 +205,7 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
+                case VolumeFileBaseActivity.REQUEST_MOVE_FILE:
                 case VolumeFileBaseActivity.REQUEST_COPY_FILE:
                     setResult(RESULT_OK, data);
                     finish();

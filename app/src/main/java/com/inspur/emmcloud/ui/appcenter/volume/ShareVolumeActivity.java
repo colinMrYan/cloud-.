@@ -78,7 +78,8 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
     private String deleteVolumeAction, volumeDetailAction, renameVolumeAction;
     private MyDialog createShareVolumeDlg, updateShareVolumeNameDlg;
 
-    private boolean isCopyOrMove = false;
+    private boolean isCopyOrMoveOperation = false;
+    private boolean isCopy = false;
     private Volume copyFromVolume;
     private String operationFileDirAbsolutePath;
     private String title;
@@ -104,7 +105,8 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
 
     private void initView() {
         if (getIntent().hasExtra(VolumeFileBaseActivity.EXTRA_IS_FUNCTION_COPY_OR_MOVE)) {
-            isCopyOrMove = true;
+            isCopyOrMoveOperation = true;
+            isCopy = getIntent().getBooleanExtra(VolumeFileBaseActivity.EXTRA_IS_FUNCTION_COPY_OR_MOVE, true);
             copyFromVolume = (Volume) getIntent().getSerializableExtra(VolumeFileBaseActivity.EXTRA_FROM_VOLUME);
             operationFileDirAbsolutePath = getIntent().getStringExtra(VolumeFileBaseActivity.EXTRA_OPERATION_FILE_DIR_ABS_PATH);
             title = getIntent().getStringExtra(VolumeFileBaseActivity.EXTRA_VOLUME_FILE_TITLE);
@@ -138,18 +140,18 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
                     bundle.putSerializable("volume", volume);
                     bundle.putString("title", volume.getName());
                     if (shareUriList != null && shareUriList.size() > 0) {
-                        bundle.putSerializable("fileShareUriList", (Serializable) shareUriList);
+                        bundle.putSerializable(VolumeFileBaseActivity.EXTRA_FILE_SHARE_URI, (Serializable) shareUriList);
                         bundle.putString(VolumeFileBaseActivity.EXTRA_OPERATION_FILE_DIR_ABS_PATH, "/");
                         IntentUtils.startActivity(ShareVolumeActivity.this, VolumeFileLocationSelectActivity.class, bundle);
                     } else {
-                        if (isCopyOrMove) {
+                        if (isCopyOrMoveOperation) {
                             Intent intent = new Intent(ShareVolumeActivity.this, VolumeFileLocationSelectActivity.class);
                             bundle.putSerializable(VolumeFileBaseActivity.EXTRA_FROM_VOLUME, copyFromVolume);
                             bundle.putSerializable(VolumeFileBaseActivity.EXTRA_VOLUME_FILE_LIST, (Serializable) fromVolumeVolumeFileList);
-                            bundle.putBoolean(VolumeFileBaseActivity.EXTRA_IS_FUNCTION_COPY_OR_MOVE, true);
+                            bundle.putBoolean(VolumeFileBaseActivity.EXTRA_IS_FUNCTION_COPY_OR_MOVE, isCopy);
                             bundle.putString(VolumeFileBaseActivity.EXTRA_OPERATION_FILE_DIR_ABS_PATH, operationFileDirAbsolutePath);
                             intent.putExtras(bundle);
-                            startActivityForResult(intent, VolumeFileBaseActivity.REQUEST_COPY_FILE);
+                            startActivityForResult(intent, isCopy ? VolumeFileBaseActivity.REQUEST_COPY_FILE : VolumeFileBaseActivity.REQUEST_MOVE_FILE);
                         } else {
                             IntentUtils.startActivity(ShareVolumeActivity.this, VolumeFileActivity.class, bundle);
                         }
@@ -357,6 +359,7 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case VolumeFileBaseActivity.REQUEST_COPY_FILE:
+                case VolumeFileBaseActivity.REQUEST_MOVE_FILE:
                     setResult(RESULT_OK, data);
                     finish();
                     break;
