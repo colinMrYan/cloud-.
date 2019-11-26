@@ -228,7 +228,7 @@ public class VolumeFileDownloadManager extends APIInterfaceInstance {
         for (int i = 0; i < volumeFileDownloadList.size(); i++) {
             VolumeFile downloadVolumeFile = volumeFileDownloadList.get(i);
             if (volumeFile.getId().equals(downloadVolumeFile.getId())) {
-                return VolumeFile.STATUS_DOWNLOAD_IND;
+                return downloadVolumeFile.getStatus();
             }
         }
 
