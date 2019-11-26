@@ -77,9 +77,12 @@ public class VolumeFile implements Serializable {
     private int progress = -1;
     @Column(name = "volumeFileAbsolutePath")
     private String volumeFileAbsolutePath = "";
-    private String localFilePath = "";
+    long lastRecordTime = 0;    //记录上次下载上传时间
     private Map<String, Integer> groupPrivilegeMap = new HashMap<>();
-    Callback.Cancelable cancelable;
+    transient Callback.Cancelable cancelable;
+    long completeSize = 0;
+    @Column(name = "localFilePath")
+    private String localFilePath = "";
     /**
      * VolumeFile本身的callback，监听下载进度
      */
@@ -348,6 +351,22 @@ public class VolumeFile implements Serializable {
 
     public void setCancelable(Callback.Cancelable cancelable) {
         this.cancelable = cancelable;
+    }
+
+    public long getLastRecordTime() {
+        return lastRecordTime;
+    }
+
+    public void setLastRecordTime(long lastRecordTime) {
+        this.lastRecordTime = lastRecordTime;
+    }
+
+    public long getCompleteSize() {
+        return completeSize;
+    }
+
+    public void setCompleteSize(long completeSize) {
+        this.completeSize = completeSize;
     }
 
     public CircleProgressBar.Status transfer2ProgressStatus(String status) {

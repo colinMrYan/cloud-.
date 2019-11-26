@@ -82,10 +82,9 @@
             android:id="@+id/file_type_img"
             android:layout_width="44dp"
             android:layout_height="44dp"
-            android:layout_marginBottom="16dp"
+            android:layout_centerVertical="true"
             android:layout_marginLeft="12dp"
             android:layout_marginRight="22dp"
-            android:layout_marginTop="16dp"
             android:adjustViewBounds="true"
             android:scaleType="fitCenter" />
 
@@ -93,6 +92,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
             android:layout_toRightOf="@id/file_type_img">
 
             <TextView
