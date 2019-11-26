@@ -146,7 +146,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     TextView volumeTipTextView;
     @BindView(R.id.iv_down_up_list)
     ImageView downUpListIv;
-    String deleteAction, downloadAction, renameAction, moveToAction, copyAction, permissionAction, shareTo, moreAction; //弹框点击状态
+    String deleteAction, downloadAction, openAction, renameAction, moveToAction, copyAction, permissionAction, shareTo, moreAction; //弹框点击状态
     CustomShareListener mShareListener;
     private List<VolumeFile> moveVolumeFileList = new ArrayList<>();//移动的云盘文件列表
     private MyAppAPIService apiServiceBase;
@@ -315,48 +315,55 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
      */
     protected void setBottomOperationItemShow(List<VolumeFile> selectVolumeFileList) {
         permissionAction = getString(R.string.clouddriver_file_permission_manager);
+        openAction = getString(R.string.volume_file_open);
         downloadAction = getString(R.string.download);
         moveToAction = getString(R.string.move);
         copyAction = getString(R.string.copy);
-        deleteAction = getString(R.string.delete);
-        moreAction = getString(R.string.more);
-        renameAction = getString(R.string.rename);
         shareTo = getString(R.string.baselib_share_to);
+        moreAction = getString(R.string.more);
+        deleteAction = getString(R.string.delete);
+        renameAction = getString(R.string.rename);
         volumeActionDataList.clear();
         volumeActionHideList.clear();
         boolean isVolumeFileWriteable = true;
         boolean isVolumeFileReadable = true;
         boolean isVolumeFileDirectory = true;
         boolean isVolumeContainDir = false;
+        boolean isShowOpenAction = false;
         boolean isOwner = true;
         for (int i = 0; i < selectVolumeFileList.size(); i++) {
             if (isVolumeFileWriteable) {
-                isVolumeFileWriteable = VolumeFilePrivilegeUtils.getVolumeFileWritable(getApplicationContext(), selectVolumeFileList.get(i));
+                isVolumeFileWriteable = VolumeFilePrivilegeUtils.getVolumeFileWritable(getApplicationContext(), selectVolumeFileList.get(i));//写权限
             }
             if (isVolumeFileReadable) {
-                isVolumeFileReadable = VolumeFilePrivilegeUtils.getVolumeFileReadable(getApplicationContext(), selectVolumeFileList.get(i));
+                isVolumeFileReadable = VolumeFilePrivilegeUtils.getVolumeFileReadable(getApplicationContext(), selectVolumeFileList.get(i));//读权限
             }
             if (isOwner) {
-                isOwner = selectVolumeFileList.get(i).getOwner().equals(BaseApplication.getInstance().getUid());
+                isOwner = selectVolumeFileList.get(i).getOwner().equals(BaseApplication.getInstance().getUid()); //判断是否为Owner
             }
             if (isVolumeFileDirectory) {
-                isVolumeFileDirectory = selectVolumeFileList.get(i).getType().equals(VolumeFile.FILE_TYPE_DIRECTORY);
+                isVolumeFileDirectory = selectVolumeFileList.get(i).getType().equals(VolumeFile.FILE_TYPE_DIRECTORY);//是否为文件
             }
-
             if (!isVolumeContainDir) {
-                isVolumeContainDir = selectVolumeFileList.get(i).getType().equals(VolumeFile.FILE_TYPE_DIRECTORY);
+                isVolumeContainDir = selectVolumeFileList.get(i).getType().equals(VolumeFile.FILE_TYPE_DIRECTORY); //是否包含文件夹
             }
         }
+        if (selectVolumeFileList.size() == 1) {
+            String fileSavePath = FileDownloadManager.getInstance().getDownloadFilePath(DownloadFileCategory.CATEGORY_VOLUME_FILE,
+                    selectVolumeFileList.get(0).getId(), selectVolumeFileList.get(0).getName());
+            isShowOpenAction = !StringUtils.isBlank(fileSavePath);                                                 //是否包含本地路径
+        }
+        volumeActionDataList.add(new VolumeActionData(openAction, R.drawable.volume_open_file, isShowOpenAction));
         volumeActionDataList.add(new VolumeActionData(downloadAction, R.drawable.ic_volume_download,
                 selectVolumeFileList.size() >= 1 && !isVolumeContainDir
-                        && (isVolumeFileReadable || isVolumeFileWriteable)));
+                        && (isVolumeFileReadable || isVolumeFileWriteable)&& !isShowOpenAction));
         volumeActionDataList.add(new VolumeActionData(copyAction, R.drawable.ic_volume_copy, (isVolumeFileReadable || isVolumeFileWriteable)));
         volumeActionDataList.add(new VolumeActionData(moveToAction, R.drawable.ic_volume_move, isVolumeFileWriteable));
-        volumeActionDataList.add(new VolumeActionData(deleteAction, R.drawable.ic_volume_delete, isVolumeFileWriteable));
-        volumeActionDataList.add(new VolumeActionData(renameAction, R.drawable.ic_volume_rename,
-                isVolumeFileWriteable && selectVolumeFileList.size() == 1));
         volumeActionDataList.add(new VolumeActionData(shareTo, R.drawable.ic_volume_share, selectVolumeFileList.size() == 1 &&
                 !isVolumeFileDirectory && (isVolumeFileWriteable || isVolumeFileReadable)));
+        volumeActionDataList.add(new VolumeActionData(renameAction, R.drawable.ic_volume_rename,
+                isVolumeFileWriteable && selectVolumeFileList.size() == 1));
+        volumeActionDataList.add(new VolumeActionData(deleteAction, R.drawable.ic_volume_delete, isVolumeFileWriteable));
         volumeActionDataList.add(new VolumeActionData(permissionAction, R.drawable.ic_volume_permission,
                 isVolumeFileDirectory && selectVolumeFileList.size() == 1 &&
                         (isVolumeFileWriteable || isVolumeFileReadable) &&
@@ -401,6 +408,8 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
             refreshTipViewLayout();
             adapter.clearSelectedVolumeFileList();
             adapter.notifyDataSetChanged();
+        } else if (action.equals(openAction)) {
+            downloadOrOpenVolumeFile(volumeFile);
         } else if (action.equals(moveToAction)) {
             copyOrMoveFile(adapter.getSelectVolumeFileList(), false);
         } else if (action.equals(copyAction)) {
