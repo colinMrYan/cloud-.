@@ -46,39 +46,66 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 /**
  * Created by yufuchang on 2019/3/28.
  */
-public class ScheduleHomeFragment extends BaseFragment implements View.OnClickListener {
+public class ScheduleHomeFragment extends BaseFragment {
 
     private static final String PV_COLLECTION_CAL = "calendar";
     private static final String PV_COLLECTION_MISSION = "task";
     private static final String PV_COLLECTION_MEETING = "meeting";
-    private View rootView;
-    private TabLayout tabLayout;
-    private CustomScrollViewPager viewPager;
-    private ImageButton todayImgBtn;
+    @BindView(R.id.tab_layout_schedule)
+    TabLayout tabLayout;
+    @BindView(R.id.view_pager_all_schedule)
+    CustomScrollViewPager viewPager;
+    @BindView(R.id.ibt_today)
+    ImageButton todayImgBtn;
+    @BindView(R.id.tv_date)
+    TextView dateText;
     private ScheduleFragment scheduleFragment;
     private MeetingFragment meetingFragment;
     private TaskFragment taskFragment;
-    private TextView dateText;
+
     private boolean isRunForeground = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        initView();
         EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_schedule_home, container, false);
+        unbinder = ButterKnife.bind(this, view);
+        initView();
+        return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        setFragmentStatusBarCommon();
         isRunForeground = true;
-        dateText.setText(Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "");
-        scheduleFragment.updateCurrentDate();
+        refreshDate();
     }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        isRunForeground = !hidden;
+        if (!hidden) {
+            setFragmentStatusBarCommon();
+            refreshDate();
+        }
+    }
+
 
     @Override
     public void onPause() {
@@ -92,19 +119,10 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
         EventBus.getDefault().unregister(this);
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        setFragmentStatusBarCommon();
-        if (rootView == null) {
-            rootView = inflater.inflate(R.layout.fragment_schedule_home, container,
-                    false);
-        }
-        ViewGroup parent = (ViewGroup) rootView.getParent();
-        if (parent != null) {
-            parent.removeView(rootView);
-        }
-        return rootView;
+
+    private void refreshDate() {
+        dateText.setText(Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "");
+        scheduleFragment.updateCurrentDate();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -112,25 +130,25 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
         if (eventMessage.getAction().equals(Constant.SCHEDULE_DETAIL)) {
             switch ((String) eventMessage.getMessageObj()) {
                 case Constant.ACTION_CALENDAR:
-                    if(tabLayout != null){
+                    if (tabLayout != null) {
                         tabLayout.getTabAt(0).select();
                     }
                     break;
                 case Constant.ACTION_MEETING:
-                    if(tabLayout != null){
+                    if (tabLayout != null) {
                         tabLayout.getTabAt(1).select();
-                        if(meetingFragment != null){
+                        if (meetingFragment != null) {
                             meetingFragment.getMeetingList();
                         }
                     }
                     break;
                 case Constant.ACTION_TASK:
-                    if(tabLayout != null){
+                    if (tabLayout != null) {
                         tabLayout.getTabAt(2).select();
                     }
                     break;
                 default:
-                    if(tabLayout != null){
+                    if (tabLayout != null) {
                         tabLayout.getTabAt(0).select();
                     }
                     break;
@@ -153,13 +171,7 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
     }
 
     private void initView() {
-        rootView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_schedule_home, null);
-        dateText = rootView.findViewById(R.id.tv_date);
-        todayImgBtn = rootView.findViewById(R.id.ibt_today);
-        todayImgBtn.setOnClickListener(this);
-        rootView.findViewById(R.id.ibt_add).setOnClickListener(this);
         initTabLayout();
-        viewPager = rootView.findViewById(R.id.view_pager_all_schedule);
         viewPager.setScrollable(false);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -197,7 +209,6 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
     }
 
     private void initTabLayout() {
-        tabLayout = rootView.findViewById(R.id.tab_layout_schedule);
         int[] tabTitleResIds = {R.string.work_schedule, R.string.work_meeting_text, R.string.work_mession};
         for (int i = 0; i < tabTitleResIds.length; i++) {
             TabLayout.Tab tab = tabLayout.newTab();
@@ -241,7 +252,7 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, isSelect ? 20 : 18);
         int textColorNormal = ResourceUtils.getResValueOfAttr(getActivity(), R.attr.schedule_tab_text_color_normal);
         int textColorSelect = ResourceUtils.getResValueOfAttr(getActivity(), R.attr.schedule_tab_text_color_select);
-        textView.setTextColor(ContextCompat.getColor(MyApplication.getInstance(),isSelect?textColorSelect:textColorNormal));
+        textView.setTextColor(ContextCompat.getColor(MyApplication.getInstance(), isSelect ? textColorSelect : textColorNormal));
     }
 
     private String getExchangeScheduleCalendar() {
@@ -272,10 +283,10 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
                         IntentUtils.startActivity(getActivity(), ScheduleAddActivity.class, bundle);
                         break;
                     case 2:
-                        if(viewPager.getCurrentItem() == 2){
+                        if (viewPager.getCurrentItem() == 2) {
                             recordUserClickWorkFunction(PV_COLLECTION_MISSION);
                             IntentUtils.startActivity(getActivity(), TaskAddActivity.class);
-                        }else{
+                        } else {
                             recordUserClickWorkFunction(PV_COLLECTION_MEETING);
                             calendarType = getExchangeScheduleCalendar();
                             bundle.putString(ScheduleAddActivity.EXTRA_SCHEDULE_SCHEDULECALENDAR_TYPE,
@@ -284,10 +295,10 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
                         }
                         break;
                     case 3:
-                        if(viewPager.getCurrentItem() == 0){
+                        if (viewPager.getCurrentItem() == 0) {
                             recordUserClickWorkFunction(PV_COLLECTION_MISSION);
                             IntentUtils.startActivity(getActivity(), TaskAddActivity.class);
-                        }else if(viewPager.getCurrentItem() == 1){
+                        } else if (viewPager.getCurrentItem() == 1) {
                             recordUserClickWorkFunction(PV_COLLECTION_MEETING);
                             calendarType = getExchangeScheduleCalendar();
                             bundle.putString(ScheduleAddActivity.EXTRA_SCHEDULE_SCHEDULECALENDAR_TYPE,
@@ -308,8 +319,8 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
                             IntentUtils.startActivity(getActivity(), TaskSetActivity.class);
                         }
                         break;
-                        default:
-                            break;
+                    default:
+                        break;
                 }
             }
         });
@@ -341,7 +352,7 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
         return menuItemList;
     }
 
-    @Override
+    @OnClick({R.id.ibt_add, R.id.ibt_today})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ibt_add:

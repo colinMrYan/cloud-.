@@ -24,9 +24,8 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
@@ -38,6 +37,7 @@ import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
@@ -92,6 +92,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 import static android.app.Activity.RESULT_OK;
 
 
@@ -103,38 +107,89 @@ public class MyAppFragment extends BaseFragment {
 
     private static final int REQUEST_SCAN_LOGIN_QRCODE_RESULT = 5;
     private static final String ACTION_NAME = "add_app";
+    @BindView(R.id.my_app_list)
+    ListView appListView;
+    @BindView(R.id.ibt_appcenter_config)
+    ImageButton configBtn;
+    @BindView(R.id.ibt_appcenter_enter)
+    ImageButton appcenterEnterBtn;
+    @BindView(R.id.bt_sort_finish)
+    Button sortFinishBtn;
+    @BindView(R.id.tv_header)
+    TextView headerText;
+    @BindView(R.id.refresh_layout)
+    MySwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.my_app_recommend_app_widget_layout)
+    RelativeLayout myAppRecommendAppWidgetLayout;
+    @BindView(R.id.rl_no_app)
+    RelativeLayout noAppLayout;
+    @BindView(R.id.my_app_recommend_app_wiget_recyclerview)
+    RecyclerView recommendAppWidgetListView;
     private long lastOnItemClickTime = 0;//防止多次点击
-    private View rootView;
-    private ListView appListView;
     private AppListAdapter appListAdapter;
-    private ImageButton configBtn;
-    private ImageButton appcenterEnterBtn;
-    private Button sortFinishBtn;
-    private MyAppAPIService apiService;
-    private MySwipeRefreshLayout swipeRefreshLayout;
     private BroadcastReceiver mBroadcastReceiver;
-    private PopupWindow popupWindow;
+    private MyAppAPIService apiService;
     private MyAppSaveTask myAppSaveTask;
     private Map<String, Integer> appStoreBadgeMap = new HashMap<>();
-    private RecyclerView recommendAppWidgetListView = null;
     private RecommendAppWidgetListAdapter recommendAppWidgetListAdapter = null;
     private DataSetObserver dataSetObserver;
     private View netExceptionView;
     private boolean haveHeader = false;
-    private MyOnClickListener myOnClickListener;
-    private LinearLayout commonlyUseLayout;
 
     private CheckingNetStateUtils checkingNetStateUtils;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        checkingNetStateUtils = new CheckingNetStateUtils(getContext(), NetUtils.pingUrls, NetUtils.httpUrls);
-        rootView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_app, null);
-        copyData();
-        initViews();
+        LogUtils.jasonDebug("onCreate------------");
         registerReceiver();
         EventBus.getDefault().register(this);
+    }
+
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        LogUtils.jasonDebug("onCreateView------------");
+        View view = inflater.inflate(R.layout.fragment_app, container, false);
+        unbinder = ButterKnife.bind(this, view);
+        checkingNetStateUtils = new CheckingNetStateUtils(getContext(), NetUtils.pingUrls, NetUtils.httpUrls);
+        copyData();
+        initViews();
+        getMyAppRecommendWidgetsUpdate();
+        return view;
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        LogUtils.jasonDebug("onHiddenChanged------------" + hidden);
+        if (!hidden) {
+            refreshDataAndWidgetOnPageVisible();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        LogUtils.jasonDebug("onResume------------");
+        refreshDataAndWidgetOnPageVisible();
+    }
+
+
+    /**
+     * 当页面出现的时候刷新数据和界面
+     */
+    private void refreshDataAndWidgetOnPageVisible() {
+        setFragmentStatusBarCommon();
+        if (ClientConfigUpdateUtils.getInstance().isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_MY_APP)) {
+            getMyApp();
+        }
+        if (MyAppCacheUtils.getMyAppListFromNet(getActivity()).size() > 0) {
+            new AppBadgeUtils(MyApplication.getInstance()).getAppBadgeCountFromServer();
+        }
+        refreshRecommendAppWidgetView();
+        checkingNetStateUtils.getNetStateResult(5);
     }
 
     /**
@@ -156,21 +211,6 @@ public class MyAppFragment extends BaseFragment {
         }
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        setFragmentStatusBarCommon();
-        if (rootView == null) {
-            rootView = inflater
-                    .inflate(R.layout.fragment_app, container, false);
-        }
-        ViewGroup parent = (ViewGroup) rootView.getParent();
-        if (parent != null) {
-            parent.removeView(rootView);
-        }
-        getMyAppRecommendWidgetsUpdate();
-        return rootView;
-    }
 
     /**
      * 检查获取我的应用推荐应用小部件更新
@@ -182,18 +222,6 @@ public class MyAppFragment extends BaseFragment {
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (ClientConfigUpdateUtils.getInstance().isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_MY_APP)) {
-            getMyApp();
-        }
-        if (MyAppCacheUtils.getMyAppListFromNet(getActivity()).size() > 0) {
-            new AppBadgeUtils(MyApplication.getInstance()).getAppBadgeCountFromServer();
-        }
-        refreshRecommendAppWidgetView();
-        checkingNetStateUtils.getNetStateResult(5);
-    }
 
     /**
      * 初始化Views
@@ -213,20 +241,11 @@ public class MyAppFragment extends BaseFragment {
             @Override
             public void onChanged() {
                 boolean isDataBlank = appListAdapter == null || appListAdapter.getCount() == 0;
-                (rootView
-                        .findViewById(R.id.rl_no_app)).setVisibility(isDataBlank ? View.VISIBLE : View.GONE);
+                noAppLayout.setVisibility(isDataBlank ? View.VISIBLE : View.GONE);
             }
         };
         initPullRefreshLayout();
-        appListView = rootView.findViewById(R.id.my_app_list);
         refreshAppListView();
-        configBtn = rootView.findViewById(R.id.ibt_appcenter_config);
-        myOnClickListener = new MyOnClickListener();
-        configBtn.setOnClickListener(myOnClickListener);
-        sortFinishBtn = rootView.findViewById(R.id.bt_sort_finish);
-        sortFinishBtn.setOnClickListener(myOnClickListener);
-        appcenterEnterBtn = rootView.findViewById(R.id.ibt_appcenter_enter);
-        appcenterEnterBtn.setOnClickListener(myOnClickListener);
         setTabTitle();
         //当Fragment创建时重置时间
         PreferencesByUserAndTanentUtils.putInt(getActivity(), Constant.PREF_MY_APP_RECOMMEND_LASTUPDATE_HOUR, 0);
@@ -280,7 +299,7 @@ public class MyAppFragment extends BaseFragment {
         if (!(MyAppWidgetUtils.isNeedShowMyAppRecommendWidgets(BaseApplication.getInstance())) ||
                 !MyAppWidgetUtils.isEffective(PreferencesByUserAndTanentUtils.getLong(getContext()
                         , Constant.PREF_MY_APP_RECOMMEND_EXPIREDDATE, 0L))) {
-            (rootView.findViewById(R.id.my_app_recommend_app_widget_layout)).setVisibility(View.GONE);
+            myAppRecommendAppWidgetLayout.setVisibility(View.GONE);
             return;
         }
         //是否是需要刷新的时间，即过了当前小时内appId的显示时间，这是只控制刷新，不控制显示隐藏，MyAPPFragment Destroy时会重置这个时间，使下次进入时不会影响刷新UI
@@ -293,9 +312,9 @@ public class MyAppFragment extends BaseFragment {
         List<RecommendAppWidgetBean> recommendAppWidgetBeanList = getRecommendAppWidgetListResult.getRecommendAppWidgetBeanList();
         List<App> appList = MyAppWidgetUtils.getShouldShowAppList(recommendAppWidgetBeanList, appListAdapter.getAppAdapterList());
         if (appList.size() > 0) {
-            if (recommendAppWidgetListView == null) {
-                recommendAppWidgetListView = (RecyclerView) rootView.findViewById(R.id.my_app_recommend_app_wiget_recyclerview);
-                (rootView.findViewById(R.id.my_app_recommend_app_widget_layout)).setVisibility(View.VISIBLE);
+            if (recommendAppWidgetListAdapter == null) {
+
+                myAppRecommendAppWidgetLayout.setVisibility(View.VISIBLE);
                 LinearLayoutManager manager = new LinearLayoutManager(getActivity());
                 manager.setOrientation(LinearLayoutManager.HORIZONTAL);
                 recommendAppWidgetListView.setLayoutManager(manager);
@@ -308,19 +327,12 @@ public class MyAppFragment extends BaseFragment {
                         UriUtils.openApp(getActivity(), app, "smartrecommend");
                     }
                 });
-                rootView.findViewById(R.id.my_app_recommend_app_widget_img).setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        (rootView.findViewById(R.id.my_app_recommend_app_widget_layout)).setVisibility(View.GONE);
-                        MyAppWidgetUtils.saveNotShowDate(getActivity(), TimeUtils.getEndTime());
-                    }
-                });
             }
             recommendAppWidgetListAdapter.setAndReFreshRecommendList(appList);
             PreferencesByUserAndTanentUtils.putInt(getActivity(), Constant.PREF_MY_APP_RECOMMEND_LASTUPDATE_HOUR, MyAppWidgetUtils.getNowHour());
         } else {
             //当前小时没有需要显示的appId或者列表中没有当前小时内的应用
-            (rootView.findViewById(R.id.my_app_recommend_app_widget_layout)).setVisibility(View.GONE);
+            myAppRecommendAppWidgetLayout.setVisibility(View.GONE);
         }
     }
 
@@ -329,7 +341,6 @@ public class MyAppFragment extends BaseFragment {
      * 初始化PullRefreshLayout
      */
     private void initPullRefreshLayout() {
-        swipeRefreshLayout = rootView.findViewById(R.id.refresh_layout);
         swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg_blue), getResources().getColor(R.color.header_bg_blue));
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -377,7 +388,7 @@ public class MyAppFragment extends BaseFragment {
     private void setTabTitle() {
         String appTabs = PreferencesByUserAndTanentUtils.getString(getActivity(), Constant.PREF_APP_TAB_BAR_INFO_CURRENT, "");
         if (!StringUtils.isBlank(appTabs)) {
-            ((TextView) rootView.findViewById(R.id.tv_header)).setText(AppTabUtils.getTabTitle(getActivity(), getClass().getSimpleName()));
+            headerText.setText(AppTabUtils.getTabTitle(getActivity(), getClass().getSimpleName()));
         }
     }
 
@@ -457,7 +468,7 @@ public class MyAppFragment extends BaseFragment {
                 String action = intent.getAction();
                 if (action.equals(ACTION_NAME)) {
                     getMyApp();
-                    (rootView.findViewById(R.id.bt_sort_finish)).setVisibility(View.GONE);
+                    sortFinishBtn.setVisibility(View.GONE);
                     configBtn.setVisibility(View.VISIBLE);
                     appListAdapter.setCanEdit(false);
                     appListAdapter.notifyDataSetChanged();
@@ -615,14 +626,6 @@ public class MyAppFragment extends BaseFragment {
         appListAdapter.notifyDataSetChanged();
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        //为解决切换tab卡死的bug
-        if (popupWindow != null && popupWindow.isShowing()) {
-            popupWindow.dismiss();
-        }
-    }
 
     @Override
     public void onDestroy() {
@@ -701,7 +704,6 @@ public class MyAppFragment extends BaseFragment {
         }
         return menuItemList;
     }
-
 
 
     /**
@@ -823,6 +825,28 @@ public class MyAppFragment extends BaseFragment {
     private boolean getNeedRemoveCommonlyUseGroup() {
         return MyAppCacheUtils.getNeedCommonlyUseApp() && AppCacheUtils.getCommonlyUseNeedShowList(getActivity()).size() > 0
                 && (MyAppCacheUtils.getMyAppListFromNet(getActivity()).size() != appListAdapter.getCount());
+    }
+
+    @OnClick({R.id.my_app_recommend_app_widget_img, R.id.ibt_appcenter_config, R.id.bt_sort_finish, R.id.ibt_appcenter_enter})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.my_app_recommend_app_widget_img:
+                myAppRecommendAppWidgetLayout.setVisibility(View.GONE);
+                MyAppWidgetUtils.saveNotShowDate(getActivity(), TimeUtils.getEndTime());
+                break;
+            case R.id.ibt_appcenter_enter:
+                IntentUtils.startActivity(getActivity(), AppCenterActivity.class);
+                PVCollectModelCacheUtils.saveCollectModel("appcenter", "application");
+                break;
+            case R.id.ibt_appcenter_config:
+                showPopupWindow(view);
+                break;
+            case R.id.bt_sort_finish:
+                appListAdapter.setCanEdit(false);
+                appListAdapter.notifyDataSetChanged();
+                setAppEditStatus(false);
+                break;
+        }
     }
 
     /**
@@ -992,6 +1016,7 @@ public class MyAppFragment extends BaseFragment {
      * 应用顺序排序接口，比较orderId
      */
     public class SortAppClass implements Comparator {
+        @Override
         public int compare(Object arg0, Object arg1) {
             App appItemA = (App) arg0;
             App appItemB = (App) arg1;
@@ -1011,6 +1036,7 @@ public class MyAppFragment extends BaseFragment {
      * 常用应用排序接口，比较权重，用于存储常用app
      */
     public class SortCommonlyUseApp implements Comparator {
+        @Override
         public int compare(Object arg0, Object arg1) {
             AppCommonlyUse appItemA = (AppCommonlyUse) arg0;
             AppCommonlyUse appItemB = (AppCommonlyUse) arg1;
@@ -1026,30 +1052,6 @@ public class MyAppFragment extends BaseFragment {
             } else {
                 return -1;
             }
-        }
-    }
-
-    class MyOnClickListener implements OnClickListener {
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.ibt_appcenter_enter:
-                    IntentUtils.startActivity(getActivity(), AppCenterActivity.class);
-                    PVCollectModelCacheUtils.saveCollectModel("appcenter", "application");
-                    break;
-                case R.id.ibt_appcenter_config:
-                    showPopupWindow(v);
-                    break;
-                case R.id.bt_sort_finish:
-                    appListAdapter.setCanEdit(false);
-                    appListAdapter.notifyDataSetChanged();
-                    setAppEditStatus(false);
-                    if (popupWindow != null && popupWindow.isShowing()) {
-                        popupWindow.dismiss();
-                    }
-                    break;
-            }
-
         }
     }
 
