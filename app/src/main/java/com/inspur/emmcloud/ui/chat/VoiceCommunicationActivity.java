@@ -881,7 +881,7 @@ public class VoiceCommunicationActivity extends BaseActivity {
             case R.id.ll_answer_phone_direct:
             case R.id.img_answer_the_phone:
                 voiceCommunicationManager.setCommunicationState(COMMUNICATION_STATE_ING);
-                if (NetUtils.isNetworkConnected(this)) {
+                if (NetUtils.isNetworkConnected(this) && !ClickRuleUtil.isFastClick()) {
                     int joinState = voiceCommunicationManager.joinChannel(voiceCommunicationManager.getInviteeInfoBean().getToken(),
                             voiceCommunicationManager.getAgoraChannelId(), voiceCommunicationManager.getInviteeInfoBean().getUserId(),
                             voiceCommunicationManager.getInviteeInfoBean().getAgoraUid());
