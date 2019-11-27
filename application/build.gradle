@@ -6,7 +6,7 @@ android {
 
 
     defaultConfig {
-        applicationId "developer.yufuchang.com.application"
+        applicationId "com.inspur.emmcloud.application"
         minSdkVersion 16
         targetSdkVersion 28
         versionCode 1
