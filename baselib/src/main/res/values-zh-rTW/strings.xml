@@ -1337,7 +1337,7 @@
     <string name="voice_communicaiton_watting_talking">通話中</string>
     <string name="voice_communication_voice_busy_tip">正在語音通話，請稍後再試</string>
     <string name="voice_communication_quality">當前通話品質不佳</string>
-    <string name="voice_communication_support_nine_members">雲+現時支持九人語音</string>
+    <string name="voice_communication_support_nine_members">現時雲+最多支持9人同時通話</string>
     <string name="voice_communication_more_than_two">語音通話用戶數不能少於2個。</string>
     <string name="voice_communication_hung_up_direct">掛斷</string>
     <string name="voice_communication_answer_phone_direct">接聽</string>

@@ -1391,7 +1391,7 @@
     <string name="voice_communicaiton_watting_talking">通话中</string>
     <string name="voice_communication_voice_busy_tip">正在语音通话，请稍后再试</string>
     <string name="voice_communication_quality">当前通话质量不佳</string>
-    <string name="voice_communication_support_nine_members">云+目前支持九人语音</string>
+    <string name="voice_communication_support_nine_members">目前云+最多支持9人同时通话</string>
     <string name="communication_has_leave">已挂断</string>
     <string name="voice_communication_notification_group_title">语音通话</string>
     <string name="voice_communication_notification_group_content">点击恢复</string>
