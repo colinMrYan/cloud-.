@@ -282,6 +282,7 @@ public class AppSchemeHandleActivity extends BaseActivity {
                                 finish();
                                 break;
                             case "impcloud":
+                                finish();
                                 break;
                             default:
                                 showSchemeUnknownWarning();
