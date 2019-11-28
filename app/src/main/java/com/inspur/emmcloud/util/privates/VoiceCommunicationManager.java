@@ -3,6 +3,7 @@ package com.inspur.emmcloud.util.privates;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.os.CountDownTimer;
 import android.os.Vibrator;
 import android.view.SurfaceView;
@@ -297,12 +298,21 @@ public class VoiceCommunicationManager {
                 mRtcEngine = RtcEngine.create(context, context.getString(R.string.agora_app_id), mRtcEventHandler);
                 mRtcEngine.enableAudioVolumeIndication(1000, 3, false);
                 mRtcEngine.setChannelProfile(Constants.CHANNEL_PROFILE_COMMUNICATION);
+                stopOtherAppMusic();
                 //经测试发现无效
 //                mRtcEngine.setParameters("{\"che.audio.nonmixable.option\":true}");
             }
         } catch (Exception e) {
             LogUtils.YfcDebug("初始化声网异常：" + e.getMessage());
         }
+    }
+
+    /**
+     * 通过获取焦点停止第三方音乐播放
+     */
+    private void stopOtherAppMusic() {
+        AudioManager audioManager = (AudioManager) BaseApplication.getInstance().getSystemService(Context.AUDIO_SERVICE);
+        audioManager.requestAudioFocus(null, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
     }
 
     /**
