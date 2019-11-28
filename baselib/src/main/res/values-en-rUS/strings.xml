@@ -648,8 +648,8 @@
     <string name="volume_file_transfer_list_pause_tip">Pausing&#8230;</string>
     <string name="volume_file_transfer_list_download_count">Downloading&#8230;(%1$d)</string>
     <string name="volume_file_transfer_list_upload_count">Uploading&#8230;(%1$d)</string>
-    <string name="volume_file_transfer_list_pause">All suspended</string>
-    <string name="volume_file_transfer_list_continue">All continue</string>
+    <string name="volume_file_transfer_list_pause">Suspend</string>
+    <string name="volume_file_transfer_list_continue">Continue</string>
     <string name="create">Create</string>
     <string name="cloud_drive">Cloud Drive</string>
     <string name="video">Video</string>

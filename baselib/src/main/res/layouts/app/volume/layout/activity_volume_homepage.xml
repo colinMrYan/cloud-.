@@ -44,6 +44,48 @@
             android:scaleType="centerInside"
             android:src="?attr/ic_header_option"
             android:visibility="gone" />
+
+        <RelativeLayout
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:visibility="visible">
+
+            <RelativeLayout
+                android:id="@+id/rl_tip_view"
+                android:layout_width="6dp"
+                android:layout_height="6dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="12dp">
+
+                <TextView
+                    android:id="@+id/tv_volume_tip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_tips_new_message"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:text="1"
+                    android:textColor="@color/black"
+                    android:textSize="5sp" />
+            </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/iv_down_up_list"
+                android:layout_width="48dp"
+                android:layout_height="match_parent"
+                android:clickable="true"
+                android:onClick="onClick"
+                android:paddingLeft="10dp"
+                android:paddingTop="15dp"
+                android:paddingRight="12dp"
+                android:paddingBottom="15dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_volume_down_up_list"
+                android:tint="?attr/header_text_color" />
+
+        </RelativeLayout>
     </RelativeLayout>
 
     <android.support.v4.widget.SwipeRefreshLayout
