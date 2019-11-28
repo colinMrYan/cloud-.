@@ -288,7 +288,9 @@ public class AudioRecordButton extends Button {
      * 播放开始录制音效
      */
     private void playRecordStartMusic() {
-        MediaPlayerManagerUtils.getManager().play(R.raw.voice_search_on, null);
+        if (!VoiceCommunicationManager.getInstance().isVoiceBusy()) {
+            MediaPlayerManagerUtils.getManager().play(R.raw.voice_search_on, null);
+        }
     }
 
     /**
