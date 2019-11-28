@@ -216,7 +216,6 @@ public class MainActivity extends BaseActivity {
      */
     private void setSplashShow() {
         // TODO Auto-generated method stub
-        skipText.setVisibility(View.VISIBLE);
         final long splashSkipStartShowTime = System.currentTimeMillis();
         TimerTask task = new TimerTask() {
             @Override
@@ -240,6 +239,7 @@ public class MainActivity extends BaseActivity {
             }
         };
         if (new SplashPageUtils(MainActivity.this).checkIfShowSplashPage()) {
+            skipText.setVisibility(View.VISIBLE);
             skipText.setText(getString(R.string.skip) + " " + SPLASH_SHOW_TIME_BY_SECOND);
             skipText.setVisibility(View.VISIBLE);
             timer = new Timer();
