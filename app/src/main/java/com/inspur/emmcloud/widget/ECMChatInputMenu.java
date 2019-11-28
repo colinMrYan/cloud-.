@@ -720,10 +720,13 @@ public class ECMChatInputMenu extends LinearLayout {
                                     ToastUtils.show(R.string.voice_communication_voice_busy_tip);
                                     return;
                                 }
+                                if (PermissionRequestManagerUtils.getInstance().isHasPermission(getContext(), Permissions.RECORD_AUDIO)) {
+                                    startVoiceCall(VOICE_CALL);
+                                }
                                 PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getContext(), Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
                                     @Override
                                     public void onPermissionRequestSuccess(List<String> permissions) {
-                                        startVoiceCall(VOICE_CALL);
+
                                     }
 
                                     @Override
@@ -749,12 +752,15 @@ public class ECMChatInputMenu extends LinearLayout {
                                 ToastUtils.show(R.string.voice_communication_voice_busy_tip);
                                 return;
                             }
+                            String[] videoPermissions = new String[]{Permissions.RECORD_AUDIO, Permissions.CAMERA};
+                            if (PermissionRequestManagerUtils.getInstance().isHasPermission(getContext(), videoPermissions)) {
+                                startVoiceCall(VIDEO_CALL);
+                            }
                             if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-                                String[] videoPermissions = new String[]{Permissions.RECORD_AUDIO, Permissions.CAMERA};
                                 PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getContext(), videoPermissions, new PermissionRequestCallback() {
                                     @Override
                                     public void onPermissionRequestSuccess(List<String> permissions) {
-                                        startVoiceCall(VIDEO_CALL);
+
                                     }
 
                                     @Override
