@@ -838,12 +838,16 @@ public class VoiceCommunicationActivity extends BaseActivity {
      */
     private void refreshCommunicationMembersAdapterWithState() {
         voiceCommunicationManager.handleVoiceCommunicationMemberList();
-        if (voiceCommunicationManager.getVoiceCommunicationMemberList().size() <= 5) {
+        if (voiceCommunicationManager.getWaitAndConnectedNumber() <= 5) {
             if (voiceCommunicationMemberAdapterFirst != null) {
                 voiceCommunicationMemberAdapterFirst.setMemberDataAndRefresh(
                         voiceCommunicationManager.getVoiceCommunicationMemberListTop(), 1);
             }
-        } else if (voiceCommunicationManager.getVoiceCommunicationMemberList().size() <= 9) {
+            if (voiceCommunicationManager.getVoiceCommunicationMemberList().size() >= 5 && voiceCommunicationMemberAdapterSecond != null) {
+                voiceCommunicationMemberAdapterSecond.setMemberDataAndRefresh(
+                        voiceCommunicationManager.getVoiceCommunicationMemberListBottom(), 2);
+            }
+        } else if (voiceCommunicationManager.getWaitAndConnectedNumber() <= 9) {
             if (voiceCommunicationMemberAdapterFirst != null) {
                 voiceCommunicationMemberAdapterFirst.setMemberDataAndRefresh(
                         voiceCommunicationManager.getVoiceCommunicationMemberListTop(), 1);
