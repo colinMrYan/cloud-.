@@ -272,8 +272,6 @@ public class ImageDetailFragment extends Fragment {
                 .cacheInMemory(true)
                 .cacheOnDisk(true)
                 .build();
-        LogUtils.jasonDebug("rawUrl==" + rawUrl);
-        LogUtils.jasonDebug("mImageUrl==" + mImageUrl);
         if (!StringUtils.isBlank(rawUrl) && ImageDisplayUtils.getInstance().isHaveCacheImage(rawUrl)) {
             final String path = ImageDisplayUtils.getInstance().getCacheImageFile(rawUrl).getAbsolutePath();
             try {

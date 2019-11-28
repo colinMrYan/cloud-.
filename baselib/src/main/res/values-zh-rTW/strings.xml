@@ -153,6 +153,7 @@
     <string name="join">加入</string>
     <string name="none">无</string>
     <string name="select_all">全選</string>
+    <string name="skip">跳過</string>
 
 
     <!-- 新添加部分 -->
@@ -801,7 +802,6 @@
     <string name="modify_user_password">請確認密碼不為空，且兩次輸入密碼一致</string>
     <string name="modify_user_password_success">通行證密碼修改成功，請使用新密碼登錄</string>
     <string name="modify_user_password_fail">設置密碼失敗，您是否繼續設置</string>
-    <string name="modify_jump">跳過</string>
     <string name="modify_welcom_user_cloud">歡迎使用雲+</string>
     <string name="modify_first_use">這是您第一次使用雲+，是否設置通行證密碼，以方便下次登錄</string>
     <string name="setting_update_this_time_hint">本次更新</string>

@@ -1234,7 +1234,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                     int index = -1;
                     if (size > 0) {
                         for (int i = size - 1; i >= 0; i--) {
-                            if (uiMessageList.get(i).getMessage().getId().equals(String.valueOf(eventMessage.getId()))) {
+                            if (uiMessageList.get(i).getMessage().getId().equals(String.valueOf(receivedWSMessage.getTmpId()))) {
                                 index = i;
                                 break;
                             }
