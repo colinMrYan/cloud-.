@@ -1409,6 +1409,8 @@
     <string name="voice_communication_group_call_canceled">通话已结束</string>
     <string name="voice_communication_group_call_busy">%1$s正忙</string>
     <string name="voice_communication_group_calling_ended">通话已结束</string>
+    <string name="voice_communication_can_not_use_this_feature">语音通话中，无法使用此功能</string>
+    <string name="voice_communication_calling">正在打电话</string>
     <string name="video_call">视频通话</string>
     <string name="video_communication_turn_to_voice_call">切到语音通话</string>
     <string name="video_communication_switch_camera">切换摄像头</string>

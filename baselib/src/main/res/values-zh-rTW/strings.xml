@@ -1346,6 +1346,8 @@
     <string name="voice_communication_direct_call_ended_request_declined">對方已掛斷，通話結束</string>
     <string name="voice_communication_direct_call_audio_call_request_declined">對方拒絕了你的語音通話請求</string>
     <string name="voice_communication_direct_calling_ended">聊天結束</string>
+    <string name="voice_communication_can_not_use_this_feature">語音通話中，無法使用此功能</string>
+    <string name="voice_communication_calling">正在打電話</string>
     <string name="voice_communication_direct_calling_canceled">对方已挂断，通话结束</string>
     <string name="voice_communication_direct_calling_reject">已拒絕，通話結束</string>
     <string name="voice_communication_group_call_canceled">對方已掛斷，通話結束</string>
