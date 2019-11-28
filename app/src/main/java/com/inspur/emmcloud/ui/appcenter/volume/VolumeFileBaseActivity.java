@@ -28,6 +28,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.VolumeFileAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
+import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.FomatUtils;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
@@ -733,7 +734,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         int width = metric.widthPixels; // 宽度（PX）
         int height = metric.heightPixels; // 高度（PX）
         Point pointStart = new Point(0, height);
-        Point pointEnd = new Point(width, 0);
+        Point pointEnd = new Point(width - DensityUtil.dip2px(30), DensityUtil.dip2px(40));
         BallView ballView = new BallView(getApplicationContext());
         ballView.startAnimation(pointStart, pointEnd);
         downUpListIv.setEnabled(false);

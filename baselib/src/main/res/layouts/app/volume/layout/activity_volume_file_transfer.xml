@@ -60,8 +60,6 @@
             android:textColor="?attr/header_text_color"
             android:textSize="@dimen/header_textsize"
             android:visibility="gone" />
-
-
     </RelativeLayout>
 
     <android.support.design.widget.TabLayout
@@ -74,6 +72,7 @@
         app:tabGravity="fill"
         app:tabMode="scrollable"
         app:tabSelectedTextColor="#36A5F6"
+        app:tabTextAppearance="@style/VolumeTransferTabLayoutTextStyle"
         app:tabTextColor="#333333" />
 
     <View style="@style/divide_style" />
@@ -85,6 +84,5 @@
         android:layout_weight="1"
         android:background="@color/content_bg"
         android:overScrollMode="never" />
-
 
 </LinearLayout>

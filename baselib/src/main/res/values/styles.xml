@@ -362,6 +362,10 @@
     <style name="ScheduleTaskTabLayoutTextStyle">
         <item name="android:textSize">13sp</item>
     </style>
+
+    <style name="VolumeTransferTabLayoutTextStyle">
+        <item name="android:textSize">13sp</item>
+    </style>
     <style name="DateTimePickerDateTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!--这个绿色是选中时的背景颜色，和当前日期的颜色-->
         <item name="colorAccent">#36A5F6</item>

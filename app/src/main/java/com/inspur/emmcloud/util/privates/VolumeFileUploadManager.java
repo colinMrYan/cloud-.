@@ -4,10 +4,8 @@ import android.os.Handler;
 import android.util.Log;
 
 import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
-import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
@@ -307,7 +305,7 @@ public class VolumeFileUploadManager extends APIInterfaceInstance {
         @Override
         public void onSuccess(VolumeFile volumeFile) {
             Log.d("zhang", "onSuccess: 上传成功");
-            ToastUtils.show(BaseApplication.getInstance(), R.string.clouddriver_upload_success);
+//            ToastUtils.show(BaseApplication.getInstance(), R.string.clouddriver_upload_success);
             volumeFileUploadList.remove(volumeFileUpload);
             VolumeFileUploadCacheUtils.deleteVolumeFileUpload(volumeFileUpload);
             if (volumeFileUpload.getBusinessProgressCallback() != null) {
@@ -330,9 +328,12 @@ public class VolumeFileUploadManager extends APIInterfaceInstance {
 
         @Override
         public void onFail() {
+            Log.d("zhang", "callbackError: 上传失败");
             volumeFileUpload.setStatus(VolumeFile.STATUS_UPLOAD_FAIL);
             VolumeFileUploadCacheUtils.saveVolumeFileUpload(volumeFileUpload);
             if (volumeFileUpload.getBusinessProgressCallback() != null) {
+                volumeFileUpload.setStatus(VolumeFile.STATUS_UPLOAD_FAIL);
+                VolumeFileUploadCacheUtils.saveVolumeFileUpload(volumeFileUpload);
                 volumeFileUpload.getBusinessProgressCallback().onFail();
             }
         }
