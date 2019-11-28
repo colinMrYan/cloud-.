@@ -1332,7 +1332,7 @@
     <string name="voice_communicaiton_watting_talking">In the call</string>
     <string name="voice_communication_voice_busy_tip">Voice call in progress, please try again later</string>
     <string name="voice_communication_quality">The quality of current calls is poor.</string>
-    <string name="voice_communication_support_nine_members">Cloud + supports nine voice at present.</string>
+    <string name="voice_communication_support_nine_members">Currently, Cloud + supports up to 9 simultaneous calls</string>
     <string name="voice_communication_more_than_two">The number of voice call users cannot be less than 2</string>
     <string name="voice_communication_hung_up_direct">Hang up</string>
     <string name="voice_communication_answer_phone_direct">Answer</string>
@@ -1346,6 +1346,8 @@
     <string name="voice_communication_group_call_canceled">Call ended</string>
     <string name="voice_communication_group_call_busy">%1$s is busy</string>
     <string name="voice_communication_group_calling_ended">Call ended</string>
+    <string name="voice_communication_can_not_use_this_feature">Unable to uses this feature during call</string>
+    <string name="voice_communication_calling">Calling</string>
     <string name="video_call">Video Call</string>
     <string name="video_communication_turn_to_voice_call">Switch to voice call</string>
     <string name="video_communication_switch_camera">Switch cameras</string>

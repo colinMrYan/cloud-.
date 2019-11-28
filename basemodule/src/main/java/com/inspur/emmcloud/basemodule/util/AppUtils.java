@@ -1079,4 +1079,12 @@ public class AppUtils {
         return newState != 0;
     }
 
+    /**
+     * 是否正在使用电话
+     */
+    public static boolean isPhoneInUse() {
+        TelephonyManager mTelephonyManager = (TelephonyManager) BaseApplication.getInstance().getSystemService(Context.TELEPHONY_SERVICE);
+        int state = mTelephonyManager.getCallState();
+        return state != TelephonyManager.CALL_STATE_IDLE;
+    }
 }

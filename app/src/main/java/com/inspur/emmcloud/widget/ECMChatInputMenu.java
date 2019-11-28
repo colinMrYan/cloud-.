@@ -705,6 +705,10 @@ public class ECMChatInputMenu extends LinearLayout {
                             }
                             break;
                         case VOICE_CALL:
+                            if (AppUtils.isPhoneInUse()) {
+                                ToastUtils.show(R.string.voice_communication_calling);
+                                return;
+                            }
                             //当没有悬浮窗权限或者小米手机上没有后台弹出界面权限时先请求权限
                             if ((Build.VERSION.SDK_INT >= 23 && !Settings.canDrawOverlays(getContext())) ||
                                     (Build.VERSION.SDK_INT >= 19 && !AppUtils.canBackgroundStart(getContext()))) {
@@ -731,6 +735,10 @@ public class ECMChatInputMenu extends LinearLayout {
                             }
                             break;
                         case VIDEO_CALL:
+                            if (AppUtils.isPhoneInUse()) {
+                                ToastUtils.show(R.string.voice_communication_calling);
+                                return;
+                            }
                             //当没有悬浮窗权限或者小米手机上没有后台弹出界面权限时先请求权限
                             if ((Build.VERSION.SDK_INT >= 23 && !Settings.canDrawOverlays(getContext())) ||
                                     (Build.VERSION.SDK_INT >= 19 && !AppUtils.canBackgroundStart(getContext()))) {
