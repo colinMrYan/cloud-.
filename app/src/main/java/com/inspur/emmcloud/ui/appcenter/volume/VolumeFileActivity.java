@@ -120,10 +120,6 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
 
             @Override
             public void onSelectedItemClick(View view, int position) {
-//                VolumeFile volumeFile = volumeFileList.get(position);
-//                if (!volumeFile.getStatus().equals("normal")) {
-//                    return;
-//                }
                 adapter.setVolumeFileSelect(position);
                 batchOprationHeaderText.setText(getString(R.string.clouddriver_has_selected, adapter.getSelectVolumeFileList().size()));
                 setBottomOperationItemShow(adapter.getSelectVolumeFileList());
@@ -137,7 +133,6 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                     return;
                 }
                 VolumeFile volumeFile = volumeFileList.get(position);
-//                if (volumeFile.getStatus().equals("normal")) {
                     if (adapter.getSelectVolumeFileList().size() == 0) {
                         if (!adapter.getMultiselect()) {
                             Bundle bundle = new Bundle();
@@ -157,11 +152,6 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                                 downloadOrOpenVolumeFile(volumeFile);
                             }
                         }
-//                    } else {
-//                        adapter.setVolumeFileSelect(position);
-//                        setBottomOperationItemShow(adapter.getSelectVolumeFileList());
-//                    }
-
                 }
 
             }
@@ -531,7 +521,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         bundle.putString("share_type", "file");
         bundle.putString("path", currentDirAbsolutePath); //currentDirAbsolutePath
         bundle.putSerializable("share_obj_form_volume", (Serializable) shareToVolumeFile);
-        IntentUtils.startActivity(this, ConversationActivity.class, bundle, true);
+        IntentUtils.startActivity(this, ConversationActivity.class, bundle, false);
     }
 
     /**
