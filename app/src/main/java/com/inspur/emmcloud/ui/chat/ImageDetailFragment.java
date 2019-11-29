@@ -69,6 +69,7 @@ public class ImageDetailFragment extends Fragment {
     private int previewHigh = 0;
     private int previewWide = 0;
     private String rawUrl = null;
+    private String mImageName = "";
 
     private int locationW, locationH, locationX, locationY;
     private boolean isNeedTransformOut;
@@ -77,7 +78,7 @@ public class ImageDetailFragment extends Fragment {
     private ImageLoadingProgressListener imageLoadingProgressListener;
 
 
-    public static ImageDetailFragment newInstance(String imageUrl, int w, int h, int x, int y, boolean isNeedTransformIn, boolean isNeedTransformOut, int preViewH, int preViewW, int rawH, int rawW) {
+    public static ImageDetailFragment newInstance(String imageUrl, int w, int h, int x, int y, boolean isNeedTransformIn, boolean isNeedTransformOut, int preViewH, int preViewW, int rawH, int rawW, String imageName) {
         final ImageDetailFragment f = new ImageDetailFragment();
 
         final Bundle args = new Bundle();
@@ -92,6 +93,8 @@ public class ImageDetailFragment extends Fragment {
         args.putInt("preW", preViewW);
         args.putBoolean("isNeedTransformOut", isNeedTransformOut);
         args.putBoolean("isNeedTransformIn", isNeedTransformIn);
+        args.putString("imageName", imageName);
+
         f.setArguments(args);
         return f;
     }
@@ -101,6 +104,8 @@ public class ImageDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mImageUrl = getArguments() != null ? getArguments().getString("url")
+                : null;
+        mImageName = getArguments() != null ? getArguments().getString("imageName")
                 : null;
         locationH = getArguments() != null ? getArguments().getInt("h")
                 : null;
@@ -236,10 +241,11 @@ public class ImageDetailFragment extends Fragment {
         // 重复保存时，覆盖原同名图片
         // 将要保存图片的路径和图片名称
         String savedImagePath = "";
+        String saveImageName = StringUtils.isBlank(mImageName) ? FileUtils.getFileName(mImageUrl) : mImageName;
         File file = new File("/sdcard/IMP-Cloud/cache/chat/"
-                + FileUtils.getFileName(mImageUrl));
+                + saveImageName);
         savedImagePath = "/sdcard/IMP-Cloud/cache/chat/"
-                + FileUtils.getFileName(mImageUrl);
+                + saveImageName;
         try {
             BufferedOutputStream bos = new BufferedOutputStream(
                     new FileOutputStream(file));

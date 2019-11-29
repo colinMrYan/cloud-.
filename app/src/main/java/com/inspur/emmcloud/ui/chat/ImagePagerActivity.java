@@ -509,7 +509,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
             int preViewW = msgContentMediaImage != null ? msgContentMediaImage.getPreviewWidth() : 0;
             LogUtils.LbcDebug("rawH" + rawHigh + "rawW" + rawWidth + "preH" + preViewH + "preW" + preViewW);
                 return ImageDetailFragment.newInstance(url, locationW, locationH, locationX, locationY, isNeedTransformIn,
-                        isNeedTransformOut, preViewH, preViewW, rawHigh, rawWidth);
+                        isNeedTransformOut, preViewH, preViewW, rawHigh, rawWidth, msgContentMediaImage.getName());
         }
 
         @Override

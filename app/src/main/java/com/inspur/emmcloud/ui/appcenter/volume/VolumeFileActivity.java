@@ -521,7 +521,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         bundle.putString("share_type", "file");
         bundle.putString("path", currentDirAbsolutePath); //currentDirAbsolutePath
         bundle.putSerializable("share_obj_form_volume", (Serializable) shareToVolumeFile);
-        IntentUtils.startActivity(this, ConversationActivity.class, bundle, true);
+        IntentUtils.startActivity(this, ConversationActivity.class, bundle, false);
     }
 
     /**
