@@ -705,64 +705,43 @@ public class ECMChatInputMenu extends LinearLayout {
                             }
                             break;
                         case VOICE_CALL:
-                            if (AppUtils.isPhoneInUse()) {
-                                ToastUtils.show(R.string.voice_communication_calling);
-                                return;
-                            }
-                            //当没有悬浮窗权限或者小米手机上没有后台弹出界面权限时先请求权限
-                            if ((Build.VERSION.SDK_INT >= 23 && !Settings.canDrawOverlays(getContext())) ||
-                                    (Build.VERSION.SDK_INT >= 19 && !AppUtils.canBackgroundStart(getContext()))) {
-                                chatInputMenuListener.onNoSmallWindowPermission();
-                                return;
-                            }
-                            if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-                                if (VoiceCommunicationManager.getInstance().isVoiceBusy()) {
-                                    ToastUtils.show(R.string.voice_communication_voice_busy_tip);
-                                    return;
+                            //检查网络和能否发起电话，提示在方法内处理
+                            if (NetUtils.isNetworkConnected(MyApplication.getInstance()) && checkCanMakeCall()) {
+                                if (PermissionRequestManagerUtils.getInstance().isHasPermission(getContext(), Permissions.RECORD_AUDIO)) {
+                                    startVoiceCall(VOICE_CALL);
+                                } else {
+                                    PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getContext(), Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
+                                        @Override
+                                        public void onPermissionRequestSuccess(List<String> permissions) {
+
+                                        }
+
+                                        @Override
+                                        public void onPermissionRequestFail(List<String> permissions) {
+                                            ToastUtils.show(getContext(), PermissionRequestManagerUtils.getInstance().getPermissionToast(getContext(), permissions));
+                                        }
+                                    });
                                 }
-                                PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getContext(), Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
-                                    @Override
-                                    public void onPermissionRequestSuccess(List<String> permissions) {
-                                        startVoiceCall(VOICE_CALL);
-                                    }
-
-                                    @Override
-                                    public void onPermissionRequestFail(List<String> permissions) {
-                                        ToastUtils.show(getContext(), PermissionRequestManagerUtils.getInstance().getPermissionToast(getContext(), permissions));
-                                    }
-
-                                });
                             }
                             break;
                         case VIDEO_CALL:
-                            if (AppUtils.isPhoneInUse()) {
-                                ToastUtils.show(R.string.voice_communication_calling);
-                                return;
-                            }
-                            //当没有悬浮窗权限或者小米手机上没有后台弹出界面权限时先请求权限
-                            if ((Build.VERSION.SDK_INT >= 23 && !Settings.canDrawOverlays(getContext())) ||
-                                    (Build.VERSION.SDK_INT >= 19 && !AppUtils.canBackgroundStart(getContext()))) {
-                                chatInputMenuListener.onNoSmallWindowPermission();
-                                return;
-                            }
-                            if (VoiceCommunicationManager.getInstance().isVoiceBusy()) {
-                                ToastUtils.show(R.string.voice_communication_voice_busy_tip);
-                                return;
-                            }
-                            if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+                            if (NetUtils.isNetworkConnected(MyApplication.getInstance()) && checkCanMakeCall()) {
                                 String[] videoPermissions = new String[]{Permissions.RECORD_AUDIO, Permissions.CAMERA};
-                                PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getContext(), videoPermissions, new PermissionRequestCallback() {
-                                    @Override
-                                    public void onPermissionRequestSuccess(List<String> permissions) {
-                                        startVoiceCall(VIDEO_CALL);
-                                    }
+                                if (PermissionRequestManagerUtils.getInstance().isHasPermission(getContext(), videoPermissions)) {
+                                    startVoiceCall(VIDEO_CALL);
+                                } else {
+                                    PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getContext(), videoPermissions, new PermissionRequestCallback() {
+                                        @Override
+                                        public void onPermissionRequestSuccess(List<String> permissions) {
 
-                                    @Override
-                                    public void onPermissionRequestFail(List<String> permissions) {
-                                        ToastUtils.show(getContext(), PermissionRequestManagerUtils.getInstance().getPermissionToast(getContext(), permissions));
-                                    }
+                                        }
 
-                                });
+                                        @Override
+                                        public void onPermissionRequestFail(List<String> permissions) {
+                                            ToastUtils.show(getContext(), PermissionRequestManagerUtils.getInstance().getPermissionToast(getContext(), permissions));
+                                        }
+                                    });
+                                }
                             }
                             break;
                         case "send_email":
@@ -775,6 +754,29 @@ public class ECMChatInputMenu extends LinearLayout {
             });
             viewpagerLayout.setInputTypeBeanList(inputTypeBeanList);
         }
+    }
+
+    /**
+     * 检查是否有发起电话的条件
+     *
+     * @return
+     */
+    private boolean checkCanMakeCall() {
+        if (AppUtils.isPhoneInUse()) {
+            ToastUtils.show(R.string.voice_communication_calling);
+            return false;
+        }
+        if (VoiceCommunicationManager.getInstance().isVoiceBusy()) {
+            ToastUtils.show(R.string.voice_communication_voice_busy_tip);
+            return false;
+        }
+        //当没有悬浮窗权限或者小米手机上没有后台弹出界面权限时先请求权限
+        if ((Build.VERSION.SDK_INT >= 23 && !Settings.canDrawOverlays(getContext())) ||
+                (Build.VERSION.SDK_INT >= 19 && !AppUtils.canBackgroundStart(getContext()))) {
+            chatInputMenuListener.onNoSmallWindowPermission();
+            return false;
+        }
+        return true;
     }
 
 
