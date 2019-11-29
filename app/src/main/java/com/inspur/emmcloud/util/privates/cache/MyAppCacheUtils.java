@@ -113,10 +113,15 @@ public class MyAppCacheUtils {
      */
     public static boolean getNeedCommonlyUseApp() {
         String userId = MyApplication.getInstance().getUid();
-        boolean isShowCommAppFromSer = AppConfigCacheUtils.getAppConfigValue(BaseApplication.getInstance(), "EnableCommonFunction", "true").equals("true");
-        boolean isShowCommAppFromNative = PreferencesUtils.getBoolean(MyApplication.getInstance(), MyApplication.getInstance().getTanent()
-                + userId + "needCommonlyUseApp", true);
-        return isShowCommAppFromNative && isShowCommAppFromSer;
+        boolean isCommonUseAppShowResult = true;
+        boolean isContentCommState = PreferencesUtils.isKeyExist(MyApplication.getInstance(), MyApplication.getInstance().getTanent() + userId + "needCommonlyUseApp");
+        if (!isContentCommState) {
+            isCommonUseAppShowResult = AppConfigCacheUtils.getAppConfigValue(BaseApplication.getInstance(), "EnableCommonFunction", "true").equals("true");
+        } else {
+            isCommonUseAppShowResult = PreferencesUtils.getBoolean(MyApplication.getInstance(), MyApplication.getInstance().getTanent()
+                    + userId + "needCommonlyUseApp", true);
+        }
+        return isCommonUseAppShowResult;
     }
 
     /**
