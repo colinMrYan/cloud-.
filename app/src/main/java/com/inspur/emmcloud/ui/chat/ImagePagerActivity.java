@@ -507,7 +507,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
             int rawWidth = msgContentMediaImage != null ? msgContentMediaImage.getRawWidth() : 0;
             int preViewH = msgContentMediaImage != null ? msgContentMediaImage.getPreviewHeight() : 0;
             int preViewW = msgContentMediaImage != null ? msgContentMediaImage.getPreviewWidth() : 0;
-            String imageName = msgContentMediaImage != null ? msgContentMediaImage.getName() : FileUtils.getFileName(url);
+            String imageName = msgContentMediaImage != null ? msgContentMediaImage.getName() : "";
             LogUtils.LbcDebug("rawH" + rawHigh + "rawW" + rawWidth + "preH" + preViewH + "preW" + preViewW + "name" + imageName);
                 return ImageDetailFragment.newInstance(url, locationW, locationH, locationX, locationY, isNeedTransformIn,
                         isNeedTransformOut, preViewH, preViewW, rawHigh, rawWidth, imageName);
