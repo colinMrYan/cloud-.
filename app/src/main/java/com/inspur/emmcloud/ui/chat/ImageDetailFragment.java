@@ -246,6 +246,7 @@ public class ImageDetailFragment extends Fragment {
                 + saveImageName);
         savedImagePath = "/sdcard/IMP-Cloud/cache/chat/"
                 + saveImageName;
+        LogUtils.LbcDebug("savedImagePath" + savedImagePath);
         try {
             BufferedOutputStream bos = new BufferedOutputStream(
                     new FileOutputStream(file));
