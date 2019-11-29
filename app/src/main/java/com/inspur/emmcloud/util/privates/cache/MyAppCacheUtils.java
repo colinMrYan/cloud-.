@@ -114,8 +114,8 @@ public class MyAppCacheUtils {
     public static boolean getNeedCommonlyUseApp() {
         String userId = MyApplication.getInstance().getUid();
         boolean isCommonUseAppShowResult = true;
-        boolean isContentCommState = PreferencesUtils.isKeyExist(MyApplication.getInstance(), MyApplication.getInstance().getTanent() + userId + "needCommonlyUseApp");
-        if (!isContentCommState) {
+        boolean isContactCommState = PreferencesUtils.isKeyExist(MyApplication.getInstance(), MyApplication.getInstance().getTanent() + userId + "needCommonlyUseApp");
+        if (!isContactCommState) {
             isCommonUseAppShowResult = AppConfigCacheUtils.getAppConfigValue(BaseApplication.getInstance(), "EnableCommonFunction", "true").equals("true");
         } else {
             isCommonUseAppShowResult = PreferencesUtils.getBoolean(MyApplication.getInstance(), MyApplication.getInstance().getTanent()
