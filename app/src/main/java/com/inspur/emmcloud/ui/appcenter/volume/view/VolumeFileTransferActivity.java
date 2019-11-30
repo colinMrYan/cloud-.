@@ -69,6 +69,7 @@ public class VolumeFileTransferActivity extends BaseMvpActivity implements Volum
         onSelect(new ArrayList<VolumeFile>());
 
         viewPager.setAdapter(adapter);
+        viewPager.setOffscreenPageLimit(3);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {

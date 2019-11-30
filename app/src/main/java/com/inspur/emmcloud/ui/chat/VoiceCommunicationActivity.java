@@ -838,12 +838,16 @@ public class VoiceCommunicationActivity extends BaseActivity {
      */
     private void refreshCommunicationMembersAdapterWithState() {
         voiceCommunicationManager.handleVoiceCommunicationMemberList();
-        if (voiceCommunicationManager.getVoiceCommunicationMemberList().size() <= 5) {
+        if (voiceCommunicationManager.getWaitAndConnectedNumber() <= 5) {
             if (voiceCommunicationMemberAdapterFirst != null) {
                 voiceCommunicationMemberAdapterFirst.setMemberDataAndRefresh(
                         voiceCommunicationManager.getVoiceCommunicationMemberListTop(), 1);
             }
-        } else if (voiceCommunicationManager.getVoiceCommunicationMemberList().size() <= 9) {
+            if (voiceCommunicationManager.getVoiceCommunicationMemberList().size() >= 5 && voiceCommunicationMemberAdapterSecond != null) {
+                voiceCommunicationMemberAdapterSecond.setMemberDataAndRefresh(
+                        voiceCommunicationManager.getVoiceCommunicationMemberListBottom(), 2);
+            }
+        } else if (voiceCommunicationManager.getWaitAndConnectedNumber() <= 9) {
             if (voiceCommunicationMemberAdapterFirst != null) {
                 voiceCommunicationMemberAdapterFirst.setMemberDataAndRefresh(
                         voiceCommunicationManager.getVoiceCommunicationMemberListTop(), 1);
@@ -881,7 +885,7 @@ public class VoiceCommunicationActivity extends BaseActivity {
             case R.id.ll_answer_phone_direct:
             case R.id.img_answer_the_phone:
                 voiceCommunicationManager.setCommunicationState(COMMUNICATION_STATE_ING);
-                if (NetUtils.isNetworkConnected(this)) {
+                if (NetUtils.isNetworkConnected(this) && !ClickRuleUtil.isFastClick()) {
                     int joinState = voiceCommunicationManager.joinChannel(voiceCommunicationManager.getInviteeInfoBean().getToken(),
                             voiceCommunicationManager.getAgoraChannelId(), voiceCommunicationManager.getInviteeInfoBean().getUserId(),
                             voiceCommunicationManager.getInviteeInfoBean().getAgoraUid());
