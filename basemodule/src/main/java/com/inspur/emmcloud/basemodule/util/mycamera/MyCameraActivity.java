@@ -2,23 +2,24 @@ package com.inspur.emmcloud.basemodule.util.mycamera;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.hardware.Camera;
+import android.os.Build;
 import android.os.Environment;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.TypedValue;
+import android.view.MotionEvent;
 import android.view.OrientationEventListener;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -33,7 +34,7 @@ import com.inspur.emmcloud.baselib.util.ResolutionUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.R;
-import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.basemodule.R2;
 import com.inspur.emmcloud.basemodule.ui.BaseFragmentActivity;
 import com.inspur.emmcloud.basemodule.util.imageedit.IMGEditActivity;
 import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
@@ -42,32 +43,35 @@ import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestM
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.json.JSONObject;
+import org.xutils.view.annotation.ViewInject;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.Manifest.permission.CAMERA;
+import butterknife.ButterKnife;
 
 public class MyCameraActivity extends BaseFragmentActivity implements View.OnClickListener, SurfaceHolder.Callback {
 
     public static final String EXTRA_PHOTO_DIRECTORY_PATH = "IMAGE_SAVE_PATH";
     public static final String EXTRA_PHOTO_NAME = "IMAGE_NAME";
-    //    public static final String EXTRA_CROP_ENABLE = "IMAGE_CROP_ENABLE";
-    //    public static final String PARAM_MAX_HEIGHT = "param_max_height";
-//    public static final String PARAM_MAX_WIDTH = "param_max_width";
-    //public static final String PARAM_QUALTITY = "param_qualtity";
     public static final String EXTRA_ENCODING_TYPE = "IMAGE_ENCODING_TYPE";
     public static final String EXTRA_RECT_SCALE_JSON = "CAMERA_SCALE_JSON";
     public static final String OUT_FILE_PATH = "OUT_FILE_PATH";
     private static final int REQ_IMAGE_EDIT = 1;
-    //    private int maxHeight = 2000;
-//    private int maxWidth = 2000;
-//    private int qualtity = 90;
+    @ViewInject(R2.id.set_radio_list)
+    RecyclerView setRadioRecycleView;
+    @ViewInject(R2.id.rl_preview)
+    RelativeLayout previewLayout;
+    @ViewInject(R2.id.iv_preview)
+    ImageView previewImg;
+    @ViewInject(R2.id.focus_view)
+    FoucsView foucsView;
     private int encodingType = 0;
     private String photoFilePath;
     private String photoName;
     private FocusSurfaceView previewSFV;
+    private RelativeLayout parentLayout;
     private ImageButton switchCameraBtn, cameraLightSwitchBtn;
     private Camera mCamera;
     private SurfaceHolder mHolder;
@@ -76,13 +80,9 @@ public class MyCameraActivity extends BaseFragmentActivity implements View.OnCli
     private String cameraFlashModel = Camera.Parameters.FLASH_MODE_AUTO;
     private DetectScreenOrientation detectScreenOrientation;
     private String photoSaveDirectoryPath;
-
     private String defaultRectScale;
-    private RecyclerView setRadioRecycleView;
     private List<RectScale> rectScaleList = new ArrayList<>();
     private int radioSelectPosition = 0;
-    private RelativeLayout previewLayout;
-    private ImageView previewImg;
     private Bitmap originBitmap;
     private Bitmap cropBitmap;
     private boolean safeToTakePicture = false;
@@ -94,16 +94,34 @@ public class MyCameraActivity extends BaseFragmentActivity implements View.OnCli
             ToastUtils.show(this, R.string.baselib_sd_not_exist);
             finish();
         }
-        requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-        setNavigationBarColor(android.R.color.black);
-        setContentView(R.layout.activity_mycamera);
+        setContentView(R.layout.activity_my_camera);
+        ButterKnife.bind(this);
         initData();
     }
 
     @Override
-    protected void setTheme() {
-        //不使用Base中的主题，使用自定义主题
+    protected void onStart() {
+        super.onStart();
+        setWindows();
+
+    }
+
+    private void setWindows() {
+        //全屏显示
+        if (Build.VERSION.SDK_INT >= 19) {
+            View decorView = getWindow().getDecorView();
+            decorView.setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+        } else {
+            View decorView = getWindow().getDecorView();
+            int option = View.SYSTEM_UI_FLAG_FULLSCREEN;
+            decorView.setSystemUiVisibility(option);
+        }
     }
 
     @Override
@@ -119,9 +137,6 @@ public class MyCameraActivity extends BaseFragmentActivity implements View.OnCli
         detectScreenOrientation.enable();
         photoSaveDirectoryPath = getIntent().getExtras().getString(EXTRA_PHOTO_DIRECTORY_PATH, Environment.getExternalStorageDirectory() + "/DCIM/");
         photoName = getIntent().getExtras().getString(EXTRA_PHOTO_NAME, System.currentTimeMillis() + ".jpg");
-//        maxHeight = getIntent().getIntExtra(PARAM_MAX_HEIGHT,MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE);
-//        maxWidth = getIntent().getIntExtra(PARAM_MAX_WIDTH,MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE);
-//        qualtity =  getIntent().getIntExtra(PARAM_QUALTITY,90);
         encodingType = getIntent().getIntExtra(EXTRA_ENCODING_TYPE, 0);
         if (getIntent().hasExtra(EXTRA_RECT_SCALE_JSON)) {
             String json = getIntent().getStringExtra(EXTRA_RECT_SCALE_JSON);
@@ -156,11 +171,7 @@ public class MyCameraActivity extends BaseFragmentActivity implements View.OnCli
 
     private void initView() {
         previewSFV = (FocusSurfaceView) findViewById(R.id.preview_sv);
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) previewSFV.getLayoutParams();
-        int screenWidth = ResolutionUtils.getWidth(this);
-        params.height = (int) (screenWidth * 4.0 / 3);
-        //为了使取景框居中（下部的内容较多），上调取景框
-//        previewSFV.setTopMove(DensityUtil.dip2px(getApplicationContext(), (rectScaleList.size()) > 0 ? 28 : 16));
+        parentLayout = findViewById(R.id.rl_parent);
         mHolder = previewSFV.getHolder();
         mHolder.addCallback(MyCameraActivity.this);
         switchCameraBtn = (ImageButton) findViewById(R.id.switch_camera_btn);
@@ -168,7 +179,6 @@ public class MyCameraActivity extends BaseFragmentActivity implements View.OnCli
         if (Camera.getNumberOfCameras() < 2) {
             switchCameraBtn.setVisibility(View.GONE);
         }
-        setRadioRecycleView = (RecyclerView) findViewById(R.id.set_radio_list);
         if (rectScaleList.size() > 0) {
             setRadioRecycleView.setVisibility(View.VISIBLE);
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -176,8 +186,6 @@ public class MyCameraActivity extends BaseFragmentActivity implements View.OnCli
             setRadioRecycleView.setLayoutManager(linearLayoutManager);
             setRadioRecycleView.setAdapter(new Adapter());
         }
-        previewLayout = (RelativeLayout) findViewById(R.id.rl_preview);
-        previewImg = (ImageView) findViewById(R.id.iv_preview);
     }
 
 
@@ -198,6 +206,8 @@ public class MyCameraActivity extends BaseFragmentActivity implements View.OnCli
         PermissionRequestManagerUtils.getInstance().requestRuntimePermission(this, Permissions.CAMERA, new PermissionRequestCallback() {
             @Override
             public void onPermissionRequestSuccess(List<String> permissions) {
+
+                setWindows();
                 openCamera();
                 setCameraParams();
             }
@@ -224,31 +234,6 @@ public class MyCameraActivity extends BaseFragmentActivity implements View.OnCli
         }
     }
 
-    private boolean checkPermission() {
-        return ContextCompat.checkSelfPermission(getApplicationContext(), CAMERA) == PackageManager.PERMISSION_GRANTED;
-    }
-
-    private void requestPermission() {
-        ActivityCompat.requestPermissions(this, new String[]{CAMERA}, 10000);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case 10000:
-                if (grantResults.length > 0) {
-                    if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                        initCamera();
-                        setCameraParams();
-                        break;
-                    }
-                }
-                ToastUtils.show(getApplicationContext(), R.string.open_camera_fail_by_perminssion);
-                finish();
-                break;
-        }
-    }
-
     private void setCameraParams() {
         if (mCamera == null) {
             return;
@@ -269,12 +254,13 @@ public class MyCameraActivity extends BaseFragmentActivity implements View.OnCli
             }
             mCamera.setDisplayOrientation(rotateAngle);
             parameters.setRotation(rotateAngle);
+            float rate = parentLayout.getHeight() * 1.0f / parentLayout.getWidth();
             List<Camera.Size> PictureSizeList = parameters.getSupportedPictureSizes();
-            Camera.Size pictureSize = CameraUtils.getInstance(this).getPictureSize(PictureSizeList, MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE);
+            Camera.Size pictureSize = CameraUtils.getInstance(this).getPictureSize(PictureSizeList, 1000, rate);
             parameters.setPictureSize(pictureSize.width, pictureSize.height);
             LogUtils.jasonDebug("pictureSize.width=" + pictureSize.width + "   pictureSize.height=" + pictureSize.height);
             List<Camera.Size> previewSizeList = parameters.getSupportedPreviewSizes();
-            Camera.Size previewSize = CameraUtils.getInstance(this).getPreviewSize(previewSizeList, 2000);
+            Camera.Size previewSize = CameraUtils.getInstance(this).getPreviewSize(previewSizeList, 700, rate);
             parameters.setPreviewSize(previewSize.width, previewSize.height);
             LogUtils.jasonDebug("previewSize.width=" + previewSize.width + "   previewSize.height=" + previewSize.height);
             List<String> modelList = parameters.getSupportedFlashModes();
@@ -288,20 +274,78 @@ public class MyCameraActivity extends BaseFragmentActivity implements View.OnCli
             mCamera.startPreview();
             safeToTakePicture = true;
             mCamera.cancelAutoFocus();// 如果要实现连续的自动对焦，这一句必须加上，这句必须要在startPreview后面加上去
+
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) parentLayout.getLayoutParams();
+            params.height = ResolutionUtils.getWidth(this) * pictureSize.width / pictureSize.height;
+            parentLayout.setLayoutParams(params);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        View decorView = getWindow().getDecorView();
-        decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+    public boolean onTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            if (event.getPointerCount() == 1) {
+                //显示对焦指示器
+                setFocusViewWidthAnimation(event.getX(), event.getY());
+            }
+        }
+        return super.onTouchEvent(event);
     }
 
+
+    public void setFocusViewWidthAnimation(final float x, final float y, final FocusCallback callback) {
+        if (mCamera == null) {
+            return;
+        }
+        final Camera.Parameters params = mCamera.getParameters();
+        Rect focusRect = calculateTapArea(x, y, 1f, context);
+        mCamera.cancelAutoFocus();
+        if (params.getMaxNumFocusAreas() > 0) {
+            List<Camera.Area> focusAreas = new ArrayList<>();
+            focusAreas.add(new Camera.Area(focusRect, 800));
+            params.setFocusAreas(focusAreas);
+        } else {
+            Log.i(TAG, "focus areas not supported");
+            callback.focusSuccess();
+            return;
+        }
+        final String currentFocusMode = params.getFocusMode();
+        try {
+            params.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+            mCamera.setParameters(params);
+            mCamera.autoFocus(new Camera.AutoFocusCallback() {
+                @Override
+                public void onAutoFocus(boolean success, Camera camera) {
+                    if (success || handlerTime > 10) {
+                        Camera.Parameters params = camera.getParameters();
+                        params.setFocusMode(currentFocusMode);
+                        camera.setParameters(params);
+                        handlerTime = 0;
+                        callback.focusSuccess();
+                    } else {
+                        handlerTime++;
+                        handleFocus(context, x, y, callback);
+                    }
+                }
+            });
+        } catch (Exception e) {
+            Log.e(TAG, "autoFocus failer");
+        }
+    }
+
+    private Rect calculateTapArea(float x, float y, float coefficient, Context context) {
+        float focusAreaSize = 300;
+        int areaSize = Float.valueOf(focusAreaSize * coefficient).intValue();
+        int centerX = (int) (x / ResolutionUtils.getWidth(context) * 2000 - 1000);
+        int centerY = (int) (y / ResolutionUtils.getHeight(context) * 2000 - 1000);
+        int left = clamp(centerX - areaSize / 2, -1000, 1000);
+        int top = clamp(centerY - areaSize / 2, -1000, 1000);
+        RectF rectF = new RectF(left, top, left + areaSize, top + areaSize);
+        return new Rect(Math.round(rectF.left), Math.round(rectF.top), Math.round(rectF.right), Math.round(rectF
+                .bottom));
+    }
     /**
      * 判断屏幕方向
      *

@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000">
+
+    <RelativeLayout
+        android:id="@+id/rl_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true">
+
+        <com.inspur.emmcloud.basemodule.util.mycamera.FocusSurfaceView
+            android:id="@+id/preview_sv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:visibility="visible"
+            app:focus_frame_can_change="true"
+            app:focus_frame_color="@android:color/transparent"
+            app:focus_frame_stroke_weight="0dp"
+            app:focus_guide_color="@android:color/holo_green_dark"
+            app:focus_guide_show_mode="not_show"
+            app:focus_guide_stroke_weight="1dp"
+            app:focus_handle_color="@android:color/white"
+            app:focus_handle_show_mode="show_always"
+            app:focus_handle_size="5dp"
+            app:focus_min_frame_size="50dp"
+            app:focus_overlay_color="#86000000"
+            app:focus_set_max_initial_frame_scale="true"
+            app:focus_touch_padding="8dp" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/set_radio_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/preview_sv"
+            android:paddingLeft="10dp"
+            android:scrollbars="none"
+            android:visibility="gone"></android.support.v7.widget.RecyclerView>
+
+        <RelativeLayout
+            android:id="@+id/rl_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#70000000"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
+
+            <ImageButton
+                android:id="@+id/close_camera_btn"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@null"
+                android:onClick="onClick"
+                android:paddingBottom="4dp"
+                android:paddingLeft="6dp"
+                android:paddingRight="6dp"
+                android:paddingTop="6dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/plugin_cemera_btn_close_camera" />
+
+            <ImageButton
+                android:id="@+id/camera_light_switch_btn"
+                android:layout_width="50dp"
+                android:layout_height="48dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="60dp"
+                android:background="@null"
+                android:onClick="onClick"
+                android:paddingBottom="5dp"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"
+                android:paddingTop="7dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/plugin_cemera_btn_camera_light_on" />
+
+            <ImageButton
+                android:id="@+id/switch_camera_btn"
+                android:layout_width="50dp"
+                android:layout_height="48dp"
+                android:layout_alignParentRight="true"
+                android:background="@null"
+                android:onClick="onClick"
+                android:paddingBottom="5dp"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"
+                android:paddingTop="7dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/plugin_cemera_btn_camera_facing_switch" />
+        </RelativeLayout>
+
+        <com.inspur.emmcloud.basemodule.util.mycamera.FoucsView
+            android:id="@+id/focus_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible">
+
+        </com.inspur.emmcloud.basemodule.util.mycamera.FoucsView>
+
+
+        <Button
+            android:id="@+id/take_bt"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="50dp"
+            android:background="@drawable/plugin_camera_take_picture_btn"
+            android:onClick="onClick" />
+
+
+        <RelativeLayout
+            android:id="@+id/rl_preview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/black"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/iv_preview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitCenter" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="40dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btn_retry"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/plugin_camera_take_picture_preview_back"
+                    android:onClick="onClick" />
+
+                <Button
+                    android:id="@+id/btn_edit"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/plugin_camera_take_picture_preview_edit"
+                    android:onClick="onClick" />
+
+                <Button
+                    android:id="@+id/btn_complete"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/plugin_camera_take_picture_preview_complete"
+                    android:onClick="onClick" />
+            </LinearLayout>
+        </RelativeLayout>
+    </RelativeLayout>
+
+
+</RelativeLayout>

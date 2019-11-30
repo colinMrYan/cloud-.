@@ -1,12 +1,10 @@
 
 package com.inspur.emmcloud.web.runalone.ui;
 
-import android.content.Intent;
-
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
-import com.inspur.emmcloud.web.ui.ImpActivity;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
 
 /**
  * Created by chenmch on 2019/6/14.
@@ -16,10 +14,12 @@ import com.inspur.emmcloud.web.ui.ImpActivity;
 public class WebTestMainActivity extends BaseActivity {
     @Override
     public void onCreate() {
-        Intent intent = new Intent(this, ImpActivity.class);
-        intent.putExtra("uri", "http://emm.inspuronline.com:83/JSApi/index.html");
-        intent.putExtra(Constant.WEB_FRAGMENT_SHOW_HEADER, true);
-        startActivity(intent);
+//        Intent intent = new Intent(this, ImpActivity.class);
+//        intent.putExtra("uri", "http://emm.inspuronline.com:83/JSApi/index.html");
+//        intent.putExtra(Constant.WEB_FRAGMENT_SHOW_HEADER, true);
+//        startActivity(intent);
+
+        AppUtils.openCamera(this, "a.jpg", 1);
         finish();
     }
 
