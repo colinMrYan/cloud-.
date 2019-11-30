@@ -160,6 +160,7 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
             public void onLoading(int progress, long current, String speed) {
                 if (originVolumeFile.getStatus().equals(VolumeFile.STATUS_UPLOAD_IND)) {
                     if (!StringUtils.isBlank(speed)) {
+                        holder.speedTv.setVisibility(View.VISIBLE);
                         holder.speedTv.setText(speed);
                     }
                 }
@@ -174,6 +175,17 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
             @Override
             public void onFail() {
                 holder.progressBar.setStatus(CircleProgressBar.Status.End);
+                holder.speedTv.setVisibility(View.GONE);
+                holder.descTv.setText(FileUtils.formatFileSize(originVolumeFile.getSize()));
+                for (int i = 0; i < fileList.size(); i++) {
+                    if (fileList.get(i).getId().equals(originVolumeFile.getId())) {
+                        fileList.get(i).setStatus(VolumeFile.STATUS_UPLOAD_FAIL);
+                        break;
+                    }
+                }
+                if (callBack != null) {
+                    callBack.onStatusChange(fileList);
+                }
             }
         });
     }
@@ -200,6 +212,7 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
 //                        + ",speed = " + speed + ",status = " + volumeFile.getStatus());
                 if (volumeFile.getStatus().equals(VolumeFile.STATUS_DOWNLOAD_IND)) {
                     if (!StringUtils.isBlank(speed)) {
+                        holder.speedTv.setVisibility(View.VISIBLE);
                         holder.speedTv.setText(speed);
                     }
                 }
@@ -212,6 +225,11 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
             @Override
             public void onFail() {
                 holder.progressBar.setStatus(CircleProgressBar.Status.End);
+                holder.speedTv.setVisibility(View.GONE);
+                holder.descTv.setText(FileUtils.formatFileSize(volumeFile.getSize()));
+                if (callBack != null) {
+                    callBack.onStatusChange(fileList);
+                }
             }
         });
     }

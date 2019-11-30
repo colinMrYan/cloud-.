@@ -3,12 +3,10 @@ package com.inspur.emmcloud.util.privates;
 import android.util.Log;
 
 import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.baselib.util.LogUtils;
-import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.api.APIDownloadCallBack;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.DownloadFileCategory;
@@ -274,7 +272,7 @@ public class VolumeFileDownloadManager extends APIInterfaceInstance {
                 Log.d("zhang", "onSuccess: 下载成功");
                 FileDownloadManager.getInstance().saveDownloadFileInfo(DownloadFileCategory.CATEGORY_VOLUME_FILE,
                         volumeFile.getId(), volumeFile.getName(), fileSavePath);
-                ToastUtils.show(BaseApplication.getInstance(), R.string.download_success);
+//                ToastUtils.show(BaseApplication.getInstance(), R.string.download_success);
                 for (int i = 0; i < volumeFileDownloadList.size(); i++) {
                     VolumeFile downloadVolumeFile = volumeFileDownloadList.get(i);
                     if (volumeFile.getId().equals(downloadVolumeFile.getId())) {
@@ -292,13 +290,18 @@ public class VolumeFileDownloadManager extends APIInterfaceInstance {
 
             @Override
             public void callbackError(Throwable arg0, boolean arg1) {
-                ToastUtils.show(BaseApplication.getInstance(), R.string.download_fail);
+//                ToastUtils.show(BaseApplication.getInstance(), R.string.download_fail);
+                Log.d("zhang", "callbackError: 下载失败");
                 for (int i = 0; i < volumeFileDownloadList.size(); i++) {
                     VolumeFile downloadVolumeFile = volumeFileDownloadList.get(i);
                     if (volumeFile.getId().equals(downloadVolumeFile.getId())) {
                         if (downloadVolumeFile.getBusinessProgressCallback() != null) {
+                            if (downloadVolumeFile.getCancelable() != null) {
+                                downloadVolumeFile.setCancelable(null);
+                            }
+                            downloadVolumeFile.setStatus(VolumeFile.STATUS_DOWNLOAD_FAIL);
+                            VolumeFileDownloadCacheUtils.saveVolumeFile(downloadVolumeFile);
                             downloadVolumeFile.getBusinessProgressCallback().onFail();
-                            resetVolumeFileStatus(volumeFile);
                         }
                         break;
                     }
