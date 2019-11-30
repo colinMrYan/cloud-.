@@ -287,9 +287,9 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
             @Override
             public void onSelectedItemClick(View view, int position) {
                 VolumeFile volumeFile = volumeFileList.get(position);
-                if (!volumeFile.getStatus().equals("normal")) {
-                    return;
-                }
+//                if (!volumeFile.getStatus().equals("normal")) {
+//                    return;
+//                }
                 downloadedAdapter.setVolumeFileSelect(position);
                 if (selectCallBack != null) {
                     selectCallBack.onSelect(downloadedAdapter.getSelectVolumeFileList());
@@ -307,7 +307,7 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
             @Override
             public void onItemClick(View view, int position) {
                 VolumeFile volumeFile = volumeFileList.get(position);
-                if (volumeFile.getStatus().equals("normal")) {
+//                if (volumeFile.getStatus().equals("normal")) {
                     if (downloadedAdapter.getSelectVolumeFileList().size() == 0) {
                         if (!downloadedAdapter.getMultiselect()) {
                             downloadOrOpenVolumeFile(volumeFile);
@@ -316,14 +316,14 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
                         downloadedAdapter.setVolumeFileSelect(position);
                         setBottomOperationItemShow(downloadedAdapter.getSelectVolumeFileList());
                     }
-                }
+//                }
 
             }
 
             @Override
             public void onItemLongClick(View view, int position) {
                 VolumeFile volumeFile = volumeFileList.get(position);
-                if (volumeFile.getStatus().equals("normal") && !downloadedAdapter.getMultiselect()) {
+                if (/*volumeFile.getStatus().equals("normal") && */!downloadedAdapter.getMultiselect()) {
                     showFileOperationDlg(volumeFileList.get(position));
                 }
             }
