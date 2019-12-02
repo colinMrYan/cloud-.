@@ -40,7 +40,10 @@ import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.ConversationWithMessageNum;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.contact.Contact;
+import com.inspur.emmcloud.bean.system.MainTabProperty;
+import com.inspur.emmcloud.bean.system.MainTabResult;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
+import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
@@ -116,6 +119,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     private String searchText;
     private long lastSearchTime = 0;
     private String shareContent;
+    private boolean isSearchContacts = true;
     /**
      * 虚拟键盘
      */
@@ -135,6 +139,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     public void onCreate() {
         ButterKnife.bind(this);
         ImmersionBar.with(this).statusBarColor(R.color.search_contact_header_bg).statusBarDarkFont(true, 0.2f).navigationBarColor(R.color.white).navigationBarDarkIcon(true, 1.0f).init();
+        initData();
         handMessage();
         initSearchRunnable();
         groupAdapter = new GroupOrContactAdapter();
@@ -161,6 +166,24 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         allPrivateChatLayout.setVisibility(View.GONE);
         InputMethodUtils.display(this, searchEdit);
         shareContent = (String) getIntent().getSerializableExtra(Constant.SHARE_CONTENT);
+    }
+
+    /**
+     * 是否隐藏联系人
+     **/
+    private void initData() {
+        ArrayList<MainTabResult> mainTabResults = AppTabUtils.getMainTabResultList(getApplicationContext());
+        for (int i = 0; i < mainTabResults.size(); i++) {
+            if (mainTabResults.get(i).getUri().equals(Constant.APP_TAB_BAR_COMMUNACATE)) {
+                MainTabProperty mainTabProperty = mainTabResults.get(i).getMainTabProperty();
+                if (mainTabProperty != null) {
+                    if (!mainTabProperty.isCanContact()) {
+                        isSearchContacts = false;
+                    }
+                }
+                break;
+            }
+        }
     }
 
     @Override
@@ -423,8 +446,11 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                                 for (int i = 0; i < (groupsSearchList.size() > 3 ? 3 : groupsSearchList.size()); i++) {
                                     groupConversationList.add(groupsSearchList.get(i));
                                 }
-                                contactsSearchList = ContactUserCacheUtils.getSearchContact(searchText, null, 3);
+                                contactsSearchList = new ArrayList<>();
                                 contactList = new ArrayList<>();
+                                if (isSearchContacts) {
+                                    contactsSearchList = ContactUserCacheUtils.getSearchContact(searchText, null, 3);
+                                }
                                 for (int j = 0; j < contactsSearchList.size(); j++) {
                                     contactList.add(contactsSearchList.get(j).contact2SearchModel());
                                 }
