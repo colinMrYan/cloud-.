@@ -91,24 +91,28 @@
                 android:src="@drawable/plugin_cemera_btn_camera_facing_switch" />
         </RelativeLayout>
 
-        <com.inspur.emmcloud.basemodule.util.mycamera.FoucsView
+        <com.inspur.emmcloud.basemodule.util.mycamera.FocusView
             android:id="@+id/focus_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="invisible">
+            android:layout_centerInParent="true"
+            android:visibility="invisible"></com.inspur.emmcloud.basemodule.util.mycamera.FocusView>
 
-        </com.inspur.emmcloud.basemodule.util.mycamera.FoucsView>
-
-
-        <Button
-            android:id="@+id/take_bt"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+        <RelativeLayout
+            android:id="@+id/rl_capture"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="50dp"
-            android:background="@drawable/plugin_camera_take_picture_btn"
-            android:onClick="onClick" />
+            android:layout_marginBottom="50dp">
+
+            <Button
+                android:id="@+id/take_bt"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/plugin_camera_take_picture_btn"
+                android:onClick="onClick" />
+        </RelativeLayout>
 
 
         <RelativeLayout

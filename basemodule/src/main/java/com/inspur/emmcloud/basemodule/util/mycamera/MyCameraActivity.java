@@ -1,18 +1,19 @@
 package com.inspur.emmcloud.basemodule.util.mycamera;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Rect;
-import android.graphics.RectF;
 import android.hardware.Camera;
 import android.os.Build;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.OrientationEventListener;
@@ -43,12 +44,12 @@ import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestM
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.json.JSONObject;
-import org.xutils.view.annotation.ViewInject;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MyCameraActivity extends BaseFragmentActivity implements View.OnClickListener, SurfaceHolder.Callback {
@@ -59,19 +60,24 @@ public class MyCameraActivity extends BaseFragmentActivity implements View.OnCli
     public static final String EXTRA_RECT_SCALE_JSON = "CAMERA_SCALE_JSON";
     public static final String OUT_FILE_PATH = "OUT_FILE_PATH";
     private static final int REQ_IMAGE_EDIT = 1;
-    @ViewInject(R2.id.set_radio_list)
+    @BindView(R2.id.set_radio_list)
     RecyclerView setRadioRecycleView;
-    @ViewInject(R2.id.rl_preview)
+    @BindView(R2.id.rl_preview)
     RelativeLayout previewLayout;
-    @ViewInject(R2.id.iv_preview)
+    @BindView(R2.id.iv_preview)
     ImageView previewImg;
-    @ViewInject(R2.id.focus_view)
-    FoucsView foucsView;
+    @BindView(R2.id.focus_view)
+    FocusView focusView;
+    @BindView(R2.id.preview_sv)
+    FocusSurfaceView previewSFV;
+    @BindView(R2.id.rl_parent)
+    RelativeLayout parentLayout;
+    @BindView(R2.id.rl_capture)
+    RelativeLayout captureLayout;
     private int encodingType = 0;
     private String photoFilePath;
     private String photoName;
-    private FocusSurfaceView previewSFV;
-    private RelativeLayout parentLayout;
+
     private ImageButton switchCameraBtn, cameraLightSwitchBtn;
     private Camera mCamera;
     private SurfaceHolder mHolder;
@@ -86,6 +92,9 @@ public class MyCameraActivity extends BaseFragmentActivity implements View.OnCli
     private Bitmap originBitmap;
     private Bitmap cropBitmap;
     private boolean safeToTakePicture = false;
+    private int handlerTime = 0;
+    private SensorController sensorController;
+    private int screemWidth, screenHeight;
 
     @Override
     public void onCreate() {
@@ -97,6 +106,21 @@ public class MyCameraActivity extends BaseFragmentActivity implements View.OnCli
         setContentView(R.layout.activity_my_camera);
         ButterKnife.bind(this);
         initData();
+
+        sensorController = SensorController.getInstance(this);
+        sensorController.setCameraFocusListener(new SensorController.CameraFocusListener() {
+            @Override
+            public void onFocus() {
+                if (mCamera != null) {
+                    if (!sensorController.isFocusLocked()) {
+                        if (setFocusViewWidthAnimation(screemWidth / 2, screenHeight / 2)) {
+                            sensorController.lockFocus();
+                        }
+                    }
+                }
+            }
+        });
+        sensorController.start();
     }
 
     @Override
@@ -165,13 +189,12 @@ public class MyCameraActivity extends BaseFragmentActivity implements View.OnCli
                 }
             }
         }
-
+        screemWidth = ResolutionUtils.getWidth(this);
+        screenHeight = ResolutionUtils.getHeight(this);
 
     }
 
     private void initView() {
-        previewSFV = (FocusSurfaceView) findViewById(R.id.preview_sv);
-        parentLayout = findViewById(R.id.rl_parent);
         mHolder = previewSFV.getHolder();
         mHolder.addCallback(MyCameraActivity.this);
         switchCameraBtn = (ImageButton) findViewById(R.id.switch_camera_btn);
@@ -268,16 +291,27 @@ public class MyCameraActivity extends BaseFragmentActivity implements View.OnCli
                 parameters.setFlashMode(cameraFlashModel);
             }
             List<String> focusModeList = parameters.getSupportedFocusModes();
-            if (focusModeList != null && focusModeList.contains(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE))
-                parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);//连续对焦
+            if (focusModeList != null) {
+                if (focusModeList.contains(Camera.Parameters.FOCUS_MODE_AUTO)) {
+                    parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+                } else if (focusModeList.contains(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)) {
+                    parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);//连续对焦
+                }
+            }
+
             mCamera.setParameters(parameters);
             mCamera.startPreview();
             safeToTakePicture = true;
-            mCamera.cancelAutoFocus();// 如果要实现连续的自动对焦，这一句必须加上，这句必须要在startPreview后面加上去
+
+            //todo
+            // mCamera.cancelAutoFocus();// 如果要实现连续的自动对焦，这一句必须加上，这句必须要在startPreview后面加上去
 
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) parentLayout.getLayoutParams();
-            params.height = ResolutionUtils.getWidth(this) * pictureSize.width / pictureSize.height;
+            params.height = screemWidth * pictureSize.width / pictureSize.height;
             parentLayout.setLayoutParams(params);
+
+
+            setFocusViewWidthAnimation(focusView.getWidth() / 2, focusView.getHeight() / 2);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -287,6 +321,7 @@ public class MyCameraActivity extends BaseFragmentActivity implements View.OnCli
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             if (event.getPointerCount() == 1) {
+                handleFocus(event.getX(), event.getY());
                 //显示对焦指示器
                 setFocusViewWidthAnimation(event.getX(), event.getY());
             }
@@ -295,21 +330,20 @@ public class MyCameraActivity extends BaseFragmentActivity implements View.OnCli
     }
 
 
-    public void setFocusViewWidthAnimation(final float x, final float y, final FocusCallback callback) {
+    public boolean setFocusViewWidthAnimation(final float x, final float y) {
         if (mCamera == null) {
-            return;
+            return false;
         }
         final Camera.Parameters params = mCamera.getParameters();
-        Rect focusRect = calculateTapArea(x, y, 1f, context);
+        Rect focusRect = calculateTapArea(x, y, 1f);
         mCamera.cancelAutoFocus();
         if (params.getMaxNumFocusAreas() > 0) {
             List<Camera.Area> focusAreas = new ArrayList<>();
             focusAreas.add(new Camera.Area(focusRect, 800));
             params.setFocusAreas(focusAreas);
         } else {
-            Log.i(TAG, "focus areas not supported");
-            callback.focusSuccess();
-            return;
+            focusView.setVisibility(View.INVISIBLE);
+            return false;
         }
         final String currentFocusMode = params.getFocusMode();
         try {
@@ -323,29 +357,78 @@ public class MyCameraActivity extends BaseFragmentActivity implements View.OnCli
                         params.setFocusMode(currentFocusMode);
                         camera.setParameters(params);
                         handlerTime = 0;
-                        callback.focusSuccess();
+                        focusView.setVisibility(View.INVISIBLE);
                     } else {
                         handlerTime++;
-                        handleFocus(context, x, y, callback);
+                        setFocusViewWidthAnimation(x, y);
                     }
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            sensorController.unlockFocus();
+                        }
+                    }, 1000);
                 }
             });
+            return true;
         } catch (Exception e) {
-            Log.e(TAG, "autoFocus failer");
+            e.printStackTrace();
+            return false;
         }
     }
 
-    private Rect calculateTapArea(float x, float y, float coefficient, Context context) {
+
+    public boolean handleFocus(float x, float y) {
+        if (y > captureLayout.getTop()) {
+            return false;
+        }
+        focusView.setVisibility(View.VISIBLE);
+        if (x < focusView.getWidth() / 2) {
+            x = focusView.getWidth() / 2;
+        }
+        if (x > screemWidth - focusView.getWidth() / 2) {
+            x = screemWidth - focusView.getWidth() / 2;
+        }
+        if (y < focusView.getWidth() / 2) {
+            y = focusView.getWidth() / 2;
+        }
+        if (y > captureLayout.getTop() - focusView.getWidth() / 2) {
+            y = captureLayout.getTop() - focusView.getWidth() / 2;
+        }
+        focusView.setX(x - focusView.getWidth() / 2);
+        focusView.setY(y - focusView.getHeight() / 2);
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(focusView, "scaleX", 1, 0.6f);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(focusView, "scaleY", 1, 0.6f);
+        ObjectAnimator alpha = ObjectAnimator.ofFloat(focusView, "alpha", 1f, 0.4f, 1f, 0.4f, 1f, 0.4f, 1f);
+        AnimatorSet animSet = new AnimatorSet();
+        animSet.play(scaleX).with(scaleY).before(alpha);
+        animSet.setDuration(400);
+        animSet.start();
+        return true;
+    }
+
+    private Rect calculateTapArea(float x, float y, float coefficient) {
         float focusAreaSize = 300;
         int areaSize = Float.valueOf(focusAreaSize * coefficient).intValue();
-        int centerX = (int) (x / ResolutionUtils.getWidth(context) * 2000 - 1000);
-        int centerY = (int) (y / ResolutionUtils.getHeight(context) * 2000 - 1000);
-        int left = clamp(centerX - areaSize / 2, -1000, 1000);
-        int top = clamp(centerY - areaSize / 2, -1000, 1000);
-        RectF rectF = new RectF(left, top, left + areaSize, top + areaSize);
-        return new Rect(Math.round(rectF.left), Math.round(rectF.top), Math.round(rectF.right), Math.round(rectF
-                .bottom));
+        int left = clamp(Float.valueOf((y / screenHeight) * 2000 - 1000).intValue(), areaSize);
+        int top = clamp(Float.valueOf(((screemWidth - x) / screemWidth) * 2000 - 1000).intValue(), areaSize);
+        return new Rect(left, top, left + areaSize, top + areaSize);
     }
+
+    private int clamp(int touchCoordinateInCameraReper, int focusAreaSize) {
+        int result;
+        if (Math.abs(touchCoordinateInCameraReper) + focusAreaSize > 1000) {
+            if (touchCoordinateInCameraReper > 0) {
+                result = 1000 - focusAreaSize;
+            } else {
+                result = -1000 + focusAreaSize;
+            }
+        } else {
+            result = touchCoordinateInCameraReper - focusAreaSize / 2;
+        }
+        return result;
+    }
+
     /**
      * 判断屏幕方向
      *
