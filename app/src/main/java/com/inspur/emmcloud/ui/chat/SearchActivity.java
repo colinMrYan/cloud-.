@@ -179,8 +179,11 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                 if (mainTabProperty != null) {
                     if (!mainTabProperty.isCanContact()) {
                         isSearchContacts = false;
+                        break;
                     }
                 }
+            } else if (mainTabResults.get(i).getUri().equals(Constant.APP_TAB_BAR_CONTACT)) {
+                isSearchContacts = false;
                 break;
             }
         }
