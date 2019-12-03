@@ -18,6 +18,7 @@ import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.R;
 import com.inspur.emmcloud.basemodule.bean.Enterprise;
 import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
 import com.inspur.emmcloud.basemodule.config.Constant;
@@ -101,6 +102,7 @@ public abstract class BaseApplication extends MultiDexApplication {
         x.Ext.setDebug(true);
         LogUtils.isDebug = AppUtils.isApkDebugable(getInstance());
         Res.init(this); // 注册imp的资源文件类
+        ToastUtils.init(this);
         ImageDisplayUtils.getInstance().initImageLoader(getInstance(), new CustomImageDownloader(getInstance()), MyAppConfig.LOCAL_CACHE_PATH);
         initTanent();
         userPhotoUrlMap = new LinkedHashMap<String, String>() {
@@ -124,7 +126,6 @@ public abstract class BaseApplication extends MultiDexApplication {
         refreshToken = PreferencesUtils.getString(getInstance(), "refreshToken", "");
         //科大讯飞语音SDK初始化
         SpeechUtility.createUtility(this, SpeechConstant.APPID + "=5a6001bf");
-        ToastUtils.init(this);
         //置为0，调起解锁界面 (强杀进程后)
         PreferencesUtils.putLong(BaseApplication.getInstance(), Constant.PREF_APP_BACKGROUND_TIME, 0L);
     }
@@ -334,11 +335,26 @@ public abstract class BaseApplication extends MultiDexApplication {
             if (currentEnterprise == null && enterpriseList.size() > 0) {
                 currentEnterprise = enterpriseList.get(0);
             }
-            WebServiceRouterManager.getInstance().setWebServiceRouter(currentEnterprise);
-            tanent = currentEnterprise.getCode();
+            if (currentEnterprise != null) {
+                WebServiceRouterManager.getInstance().setWebServiceRouter(currentEnterprise);
+                tanent = currentEnterprise.getCode();
+            } else {
+                //当没有任何租户的时候则清空登录信息，重新登录
+                PreferencesUtils.putString(getInstance(), "myInfo", "");
+                PreferencesUtils.putString(getInstance(), "accessToken", "");
+                PreferencesUtils.putString(getInstance(), "refreshToken", "");
+                PreferencesUtils.putString(getInstance(), "userRealName", "");
+                PreferencesUtils.putString(getInstance(), "userID", "");
+                BaseApplication.getInstance().setAccessToken("");
+                BaseApplication.getInstance().setRefreshToken("");
+                BaseApplication.getInstance().setUid("");
+                BaseApplication.getInstance().setTanent("");
+                BaseApplication.getInstance().setCurrentEnterprise(null);
+                ToastUtils.show(R.string.login_user_not_bound_enterprise);
+            }
+
         }
     }
-
     public String getTanent() {
         return tanent;
     }
