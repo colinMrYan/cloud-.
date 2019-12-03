@@ -339,17 +339,14 @@ public abstract class BaseApplication extends MultiDexApplication {
                 WebServiceRouterManager.getInstance().setWebServiceRouter(currentEnterprise);
                 tanent = currentEnterprise.getCode();
             } else {
-                //当没有任何租户的时候则清空登录信息，重新登录
                 PreferencesUtils.putString(getInstance(), "myInfo", "");
                 PreferencesUtils.putString(getInstance(), "accessToken", "");
                 PreferencesUtils.putString(getInstance(), "refreshToken", "");
-                PreferencesUtils.putString(getInstance(), "userRealName", "");
-                PreferencesUtils.putString(getInstance(), "userID", "");
+                PreferencesUtils.putInt(getInstance(), "keepAlive", 0);
+                PreferencesUtils.putString(getInstance(), "tokenType", "");
+                PreferencesUtils.putInt(getInstance(), "expiresIn", 0);
                 BaseApplication.getInstance().setAccessToken("");
                 BaseApplication.getInstance().setRefreshToken("");
-                BaseApplication.getInstance().setUid("");
-                BaseApplication.getInstance().setTanent("");
-                BaseApplication.getInstance().setCurrentEnterprise(null);
                 ToastUtils.show(R.string.login_user_not_bound_enterprise);
             }
 

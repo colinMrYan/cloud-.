@@ -207,6 +207,7 @@ public class LoginUtils extends LoginAPIInterfaceImpl implements LanguageManager
      * 清空登录信息
      */
     private void clearLoginInfo() {
+        PreferencesUtils.putString(activity, "myInfo", "");
         PreferencesUtils.putString(activity, "accessToken", "");
         PreferencesUtils.putString(activity, "refreshToken", "");
         PreferencesUtils.putInt(activity, "keepAlive", 0);
@@ -346,8 +347,7 @@ public class LoginUtils extends LoginAPIInterfaceImpl implements LanguageManager
             Enterprise defaultEnterprise = getMyInfoResult.getDefaultEnterprise();
             if (enterpriseList.size() == 0 && defaultEnterprise == null) {
                 ToastUtils.show(activity, R.string.login_user_not_bound_enterprise);
-                BaseApplication.getInstance().setAccessToken("");
-                PreferencesUtils.putString(BaseApplication.getInstance(), "accessToken", "");
+                clearLoginInfo();
                 loginUtilsHandler.sendEmptyMessage(LOGIN_FAIL);
             } else {
                 if (isLogin && enterpriseList.size() > 1) {
