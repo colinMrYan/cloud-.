@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.ui.mine.myinfo;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
@@ -9,7 +8,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -23,7 +21,6 @@ import com.inspur.emmcloud.basemodule.api.BaseModuleAPIInterfaceInstance;
 import com.inspur.emmcloud.basemodule.api.BaseModuleApiService;
 import com.inspur.emmcloud.basemodule.bean.Enterprise;
 import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
-import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
@@ -77,10 +74,6 @@ public class MyInfoActivity extends BaseActivity {
     TextView mailText;
     @BindView(R.id.tv_department)
     TextView departmentText;
-    @BindView(R.id.rl_password_modify)
-    RelativeLayout passwordModifyLayout;
-    @BindView(R.id.rl_password_reset)
-    RelativeLayout passwordResetLayout;
 
     private MineAPIService apiService;
     private LoadingDialog loadingDlg;
@@ -104,6 +97,7 @@ public class MyInfoActivity extends BaseActivity {
         return R.layout.activity_my_info;
     }
 
+    @Override
     protected int getStatusType() {
         return STATUS_WHITE_DARK_FONT;
     }
@@ -144,15 +138,6 @@ public class MyInfoActivity extends BaseActivity {
                 break;
             case R.id.ibt_back:
                 finishActivity();
-                break;
-            case R.id.rl_password_modify:
-                ARouter.getInstance().build(Constant.AROUTER_CLASS_LOGIN_PASSWORD_MODIFY).navigation();
-                break;
-            case R.id.rl_password_reset:
-                Bundle bundle = new Bundle();
-                bundle.putInt("extra_mode", 2);
-                bundle.putString("extra_phone", getMyInfoResult.getPhoneNumber());
-                ARouter.getInstance().build(Constant.AROUTER_CLASS_LOGIN_BY_SMS).with(bundle).navigation();
                 break;
             default:
                 break;
@@ -231,8 +216,6 @@ public class MyInfoActivity extends BaseActivity {
             enterpriseLayout.setVisibility((userProfileInfoBean.getShowEpInfo() == 0) ? View.GONE : View.VISIBLE);
             photoLayout.setVisibility((userProfileInfoBean.getShowHead() == 0) ? View.GONE : View.VISIBLE);
             nameText.setVisibility((userProfileInfoBean.getShowUserName() == 0) ? View.GONE : View.VISIBLE);
-            passwordModifyLayout.setVisibility((userProfileInfoBean.getShowModifyPsd() == 0) ? View.GONE : View.VISIBLE);
-            passwordResetLayout.setVisibility((userProfileInfoBean.getShowResetPsd() == 0) ? View.GONE : View.VISIBLE);
             phoneLayout.setVisibility((0 == userProfileInfoBean.getShowUserPhone()) ? View.GONE : View.VISIBLE);
             mailLayout.setVisibility(0 == userProfileInfoBean.getShowUserMail() ? View.GONE : View.VISIBLE);
             officePhoneLayout.setVisibility(
