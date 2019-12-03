@@ -770,7 +770,7 @@ public class VoiceCommunicationActivity extends BaseActivity {
             @Override
             public void onRtcStats(VoiceCommunicationRtcStats stats) {
                 super.onRtcStats(stats);
-                /// 1V1音频通话；被邀请者检测到频道内只有自己一个人的时候，需要离开频道；检测次数15次  stats.users通信模式下，返回当前频道内的人数
+                /// 1V1音频通话；被邀请者检测到频道内只有自己一个人的时候，需要离开频道；检测次数15次  stats.users通信模式下，返回当前频道内的人数.
                 if (directOrGroupType.equals(Conversation.TYPE_DIRECT) && !voiceCommunicationManager.isInviter() && stats.users == 1) {
                     if (directCommunicationUserCheckCount >= 15) {
                         voiceCommunicationManager.handleDestroy();
