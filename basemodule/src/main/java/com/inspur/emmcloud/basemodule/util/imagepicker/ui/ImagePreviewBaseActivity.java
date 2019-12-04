@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.basemodule.util.imagepicker.ui;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -37,7 +38,7 @@ public abstract class ImagePreviewBaseActivity extends ImageBaseActivity {
 //            getWindow().setAttributes(lp);
 //        }
         setContentView(R.layout.activity_image_preview);
-        ImmersionBar.with(this).statusBarColor(android.R.color.black).navigationBarColor(android.R.color.black).statusBarDarkFont(false, 0.2f).init();
+//        ImmersionBar.with(this).statusBarColor(android.R.color.black).navigationBarColor(android.R.color.black).statusBarDarkFont(false, 0.2f).init();
         mCurrentPosition = getIntent().getIntExtra(ImagePicker.EXTRA_SELECTED_IMAGE_POSITION, 0);
         mImageItems = (ArrayList<ImageItem>) getIntent().getSerializableExtra(ImagePicker.EXTRA_IMAGE_ITEMS);
         imagePicker = ImagePicker.getInstance();
@@ -58,6 +59,7 @@ public abstract class ImagePreviewBaseActivity extends ImageBaseActivity {
         topBar.findViewById(R.id.ibt_back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ImmersionBar.with(ImagePreviewBaseActivity.this).statusBarColor(R.color.color_image_grid_header).init();
                 finish();
             }
         });
@@ -76,6 +78,29 @@ public abstract class ImagePreviewBaseActivity extends ImageBaseActivity {
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        setWindows();
+    }
+
+    private void setWindows() {
+        //全屏显示
+        if (Build.VERSION.SDK_INT >= 19) {
+            View decorView = getWindow().getDecorView();
+            decorView.setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+        } else {
+            View decorView = getWindow().getDecorView();
+            int option = View.SYSTEM_UI_FLAG_FULLSCREEN;
+            decorView.setSystemUiVisibility(option);
+        }
+    }
     /**
      * 单击时，隐藏头和尾
      */

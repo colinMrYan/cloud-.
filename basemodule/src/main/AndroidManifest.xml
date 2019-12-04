@@ -141,14 +141,14 @@
         <meta-data
             android:name="android.max_aspect"
             android:value="2.4" />
-        <!-- 适配华为(hua wei)刘海屏 -->
-        <meta-data
-            android:name="android.notch_support"
-            android:value="true" />
+        <!--&lt;!&ndash; 适配华为(hua wei)刘海屏 &ndash;&gt;-->
+        <!--<meta-data-->
+        <!--android:name="android.notch_support"-->
+        <!--android:value="true" />-->
         <!-- 适配小米(xiao mi)刘海屏 -->
-        <meta-data
-            android:name="notch.config"
-            android:value="portrait|landscape" />
+        <!--<meta-data-->
+        <!--android:name="notch.config"-->
+        <!--android:value="portrait|landscape" />-->
 
         <!--custom-->
         <meta-data
@@ -416,8 +416,7 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:stateNotNeeded="true"
-            android:supportsRtl="true" />
-
+            android:supportsRtl="true"></activity>
         <activity
             android:name=".ui.NoPermissionDialogActivity"
             android:launchMode="singleInstance"
