@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.inspur.emmcloud.basemodule.util.mycamera.CropView
+    <com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary.CropView
         android:id="@+id/crop_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -24,7 +24,7 @@
         app:focus_overlay_color="#86000000"
         app:focus_touch_padding="8dp">
 
-    </com.inspur.emmcloud.basemodule.util.mycamera.CropView>
+    </com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary.CropView>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_radio"

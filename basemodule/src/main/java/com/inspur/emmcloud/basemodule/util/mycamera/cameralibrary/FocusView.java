@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.basemodule.util.mycamera;
+package com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -7,16 +7,9 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.inspur.emmcloud.baselib.util.ResolutionUtils;
+import com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary.util.ScreenUtils;
 
-/**
- * =====================================
- * 作    者: 陈嘉桐
- * 版    本：1.1.4
- * 创建日期：2017/4/26
- * 描    述：对焦框
- * =====================================
- */
+
 public class FocusView extends View {
     private int size;
     private int center_x;
@@ -34,7 +27,7 @@ public class FocusView extends View {
 
     public FocusView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        this.size = ResolutionUtils.getWidth(context) / 3;
+        this.size = ScreenUtils.getScreenWidth(context) / 3;
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
         mPaint.setDither(true);

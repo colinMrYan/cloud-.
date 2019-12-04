@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.basemodule.util.mycamera;
+package com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -25,6 +25,9 @@ import android.view.animation.Interpolator;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.basemodule.R;
+import com.inspur.emmcloud.basemodule.util.mycamera.SimpleValueAnimator;
+import com.inspur.emmcloud.basemodule.util.mycamera.SimpleValueAnimatorListener;
+import com.inspur.emmcloud.basemodule.util.mycamera.ValueAnimatorV14;
 
 /**
  * Created by chenmch on 2019/12/2.

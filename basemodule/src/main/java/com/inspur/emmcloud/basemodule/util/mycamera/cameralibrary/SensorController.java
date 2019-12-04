@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.basemodule.util.mycamera;
+package com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary;
 
 import android.app.Activity;
 import android.content.Context;
@@ -9,9 +9,6 @@ import android.hardware.SensorManager;
 
 import java.util.Calendar;
 
-/**
- * Created by chenmch on 2019/11/30.
- */
 
 public class SensorController implements SensorEventListener {
     public static final int STATUS_NONE = 0;

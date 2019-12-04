@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.RadioGroup;
 import android.widget.ViewSwitcher;
 
+import com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButton;
 import com.inspur.emmcloud.basemodule.R;
 import com.inspur.emmcloud.basemodule.ui.BaseFragmentActivity;
 import com.inspur.emmcloud.basemodule.util.imageedit.core.IMGMode;
@@ -34,6 +35,7 @@ abstract class IMGEditBaseActivity extends BaseFragmentActivity implements View.
     private IMGTextEditDialog mTextDialog;
     private View mLayoutOpSub;
     private ViewSwitcher mOpSwitcher, mOpSubSwitcher;
+    private CustomRoundButton doneBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +87,8 @@ abstract class IMGEditBaseActivity extends BaseFragmentActivity implements View.
         mColorGroup.setOnCheckedChangeListener(this);
 
         mLayoutOpSub = findViewById(R.id.layout_op_sub);
+        doneBtn = findViewById(R.id.bt_done);
+        doneBtn.setOnClickListener(this);
     }
 
     @Override
@@ -100,9 +104,9 @@ abstract class IMGEditBaseActivity extends BaseFragmentActivity implements View.
             onModeClick(IMGMode.CLIP);
         } else if (vid == R.id.btn_undo) {
             onUndoClick();
-        } else if (vid == R.id.tv_done) {
+        } else if (vid == R.id.bt_done) {
             onDoneClick();
-        } else if (vid == R.id.tv_cancel) {
+        } else if (vid == R.id.ibt_back) {
             onCancelClick();
         } else if (vid == R.id.ib_clip_cancel) {
             onCancelClipClick();

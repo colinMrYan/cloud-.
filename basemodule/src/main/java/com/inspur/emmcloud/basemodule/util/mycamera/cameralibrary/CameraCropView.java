@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.basemodule.util.mycamera;
+package com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -16,6 +16,8 @@ import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.R;
+import com.inspur.emmcloud.basemodule.util.mycamera.GetReatScaleResult;
+import com.inspur.emmcloud.basemodule.util.mycamera.RectScale;
 
 import org.json.JSONObject;
 
@@ -86,13 +88,19 @@ public class CameraCropView extends RelativeLayout {
             }
         }
         if (rectScaleList.size() > 0) {
-            setRadioRecycleView.setVisibility(View.VISIBLE);
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
-            linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-            setRadioRecycleView.setLayoutManager(linearLayoutManager);
-            setRadioRecycleView.setAdapter(new Adapter());
             setVisibility(View.VISIBLE);
-            cropView.setCustomRectScale(rectScaleList.get(radioSelectPosition).getRectScale());
+            postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    setRadioRecycleView.setVisibility(View.VISIBLE);
+                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
+                    linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+                    setRadioRecycleView.setLayoutManager(linearLayoutManager);
+                    setRadioRecycleView.setAdapter(new Adapter());
+                    cropView.setCustomRectScale(rectScaleList.get(radioSelectPosition).getRectScale());
+                }
+            }, 300);
+
 
         } else if (defaultRectScale != null) {
             setVisibility(View.VISIBLE);

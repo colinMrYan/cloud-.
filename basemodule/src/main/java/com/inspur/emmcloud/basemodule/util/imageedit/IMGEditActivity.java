@@ -3,7 +3,6 @@ package com.inspur.emmcloud.basemodule.util.imageedit;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.text.TextUtils;
 
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.compressor.Compressor;
@@ -30,6 +29,7 @@ public class IMGEditActivity extends IMGEditBaseActivity {
     public static final String OUT_FILE_PATH = "OUT_FILE_PATH";
     boolean isHaveEdit = false;
     private int encodingType = 0;
+    private String originFilePath = "";
 
     @Override
     public Bitmap getBitmap() {
@@ -37,11 +37,11 @@ public class IMGEditActivity extends IMGEditBaseActivity {
         if (intent == null) {
             return null;
         }
-        String filePath = getIntent().getStringExtra(EXTRA_IMAGE_PATH);
-        if (filePath == null) {
+        originFilePath = getIntent().getStringExtra(EXTRA_IMAGE_PATH);
+        if (originFilePath == null) {
             return null;
         }
-        File file = new File(filePath);
+        File file = new File(originFilePath);
         if (!file.exists()) {
             return null;
         }
@@ -90,17 +90,18 @@ public class IMGEditActivity extends IMGEditBaseActivity {
     @Override
     public void onCancelClick() {
         finish();
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 
     @Override
     public void onDoneClick() {
-        String path = getIntent().getExtras().getString(EXTRA_IMAGE_SAVE_DIR_PATH, MyAppConfig.LOCAL_IMG_CREATE_PATH);
-        if (!TextUtils.isEmpty(path)) {
-            File dir = new File(path);
+        if (isHaveEdit) {
+            String dirPath = MyAppConfig.LOCAL_IMG_CREATE_PATH;
+            File dir = new File(dirPath);
             if (!dir.exists()) {
                 dir.mkdirs();
             }
-            File saveFile = new File(path, System.currentTimeMillis() + ".png");
+            File saveFile = new File(dirPath, System.currentTimeMillis() + ".png");
             if (saveFile.exists()) {
                 saveFile.delete();
             }
@@ -124,11 +125,14 @@ public class IMGEditActivity extends IMGEditBaseActivity {
                 Intent intent = new Intent();
                 intent.putExtra(OUT_FILE_PATH, saveFile.getAbsolutePath());
                 setResult(Activity.RESULT_OK, intent);
-                finish();
-                return;
+            } else {
+                setResult(Activity.RESULT_CANCELED);
             }
+        } else {
+            Intent intent = new Intent();
+            intent.putExtra(OUT_FILE_PATH, originFilePath);
+            setResult(Activity.RESULT_OK, intent);
         }
-        setResult(Activity.RESULT_CANCELED);
         finish();
     }
 
