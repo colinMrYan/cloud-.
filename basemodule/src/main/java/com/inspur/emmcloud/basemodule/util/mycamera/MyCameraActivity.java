@@ -510,10 +510,13 @@ public class MyCameraActivity extends BaseFragmentActivity implements View.OnCli
                 long d = System.currentTimeMillis();
                 LogUtils.jasonDebug("d-c=" + (d - c));
                 savePhoto();
-                previewImg.setImageBitmap(cropBitmap);
-                previewLayout.setVisibility(View.VISIBLE);
-                long e = System.currentTimeMillis();
-                LogUtils.jasonDebug("e-d=" + (e - d));
+                startActivityForResult(
+                        new Intent(MyCameraActivity.this, IMGEditActivity.class)
+                                .putExtra(IMGEditActivity.EXTRA_IMAGE_PATH, photoFilePath)
+                                .putExtra(IMGEditActivity.EXTRA_ENCODING_TYPE, encodingType),
+                        REQ_IMAGE_EDIT
+                );
+
             }
         });
     }

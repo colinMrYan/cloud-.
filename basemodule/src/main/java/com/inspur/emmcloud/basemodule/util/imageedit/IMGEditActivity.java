@@ -28,8 +28,8 @@ public class IMGEditActivity extends IMGEditBaseActivity {
     public static final String EXTRA_IMAGE_SAVE_DIR_PATH = "IMAGE_SAVE_DIR_PATH";
     public static final String EXTRA_ENCODING_TYPE = "IMAGE_ENCODING_TYPE";
     public static final String OUT_FILE_PATH = "OUT_FILE_PATH";
+    boolean isHaveEdit = false;
     private int encodingType = 0;
-
 
     @Override
     public Bitmap getBitmap() {
@@ -64,6 +64,7 @@ public class IMGEditActivity extends IMGEditBaseActivity {
 
     @Override
     public void onModeClick(IMGMode mode) {
+        isHaveEdit = true;
         IMGMode cm = mImgView.getMode();
         if (cm == mode) {
             mode = IMGMode.NONE;
