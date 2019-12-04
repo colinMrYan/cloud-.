@@ -4,8 +4,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 
+import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.basemodule.R;
 import com.inspur.emmcloud.basemodule.util.imagepicker.ImagePicker;
 import com.inspur.emmcloud.basemodule.util.imagepicker.adapter.ImagePageAdapter;
@@ -59,7 +59,7 @@ public abstract class ImagePreviewBaseActivity extends ImageBaseActivity {
         topBar.findViewById(R.id.ibt_back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ImagePreviewBaseActivity.this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN, WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+                ImmersionBar.with(ImagePreviewBaseActivity.this).statusBarColor(R.color.color_image_grid_header).init();
                 finish();
             }
         });

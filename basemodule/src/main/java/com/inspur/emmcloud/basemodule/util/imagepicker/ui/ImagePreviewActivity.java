@@ -65,6 +65,7 @@ public class ImagePreviewActivity extends ImagePreviewBaseActivity implements
         });
         originCheck.setVisibility(imagePicker.isSupportOrigin() ? View.VISIBLE : View.GONE);
         originCheck.setChecked(isOrigin);
+        setEditBtnStatus(!isOrigin);
         // 初始化当前页面的状态
         onImageSelected(0, null, true);
         ImageItem item = mImageItems.get(mCurrentPosition);
@@ -89,13 +90,7 @@ public class ImagePreviewActivity extends ImagePreviewBaseActivity implements
                         mCurrentPosition = position;
                         ImageItem item = mImageItems.get(mCurrentPosition);
                         boolean isSelected = imagePicker.isSelect(item);
-                        if (isSelected) {
-                            editBtn.setTextColor(Color.parseColor("#ffffff"));
-                            editBtn.setEnabled(true);
-                        } else {
-                            editBtn.setEnabled(false);
-                            editBtn.setTextColor(Color.parseColor("#4f87a2"));
-                        }
+                        setEditBtnStatus(isSelected);
                         mCbCheck.setChecked(isSelected);
                     }
                 });
@@ -111,14 +106,11 @@ public class ImagePreviewActivity extends ImagePreviewBaseActivity implements
                     // Toast.makeText(ImagePreviewActivity.this,
                     // ImagePreviewActivity.this.getString(R.string.select_limit,
                     // selectLimit), Toast.LENGTH_SHORT).show();
-                    mCbCheck.setChecked(true);
-                    editBtn.setTextColor(Color.parseColor("#ffffff"));
                     editBtn.setEnabled(true);
                 } else {
-                    editBtn.setEnabled(false);
-                    editBtn.setTextColor(Color.parseColor("#4f87a2"));
                     mCbCheck.setChecked(false);
                 }
+                setEditBtnStatus(mCbCheck.isChecked());
                 imagePicker.addSelectedImageItem(mCurrentPosition, imageItem,
                         mCbCheck.isChecked());
             }
@@ -127,8 +119,14 @@ public class ImagePreviewActivity extends ImagePreviewBaseActivity implements
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 isOrigin = b;
+                setEditBtnStatus(!isOrigin);
             }
         });
+    }
+
+    private void setEditBtnStatus(boolean isEnable) {
+        editBtn.setTextColor(isEnable ? Color.parseColor("#ffffff") : Color.parseColor("#888888"));
+        editBtn.setEnabled(isEnable);
     }
 
     /**
