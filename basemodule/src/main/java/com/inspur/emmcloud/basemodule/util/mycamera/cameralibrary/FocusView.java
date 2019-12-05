@@ -31,7 +31,7 @@ public class FocusView extends View {
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
         mPaint.setDither(true);
-        mPaint.setColor(0xEE16AE16);
+        mPaint.setColor(0xEE36A5F6);
         mPaint.setStrokeWidth(4);
         mPaint.setStyle(Paint.Style.STROKE);
     }
