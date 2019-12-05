@@ -386,8 +386,11 @@ public class CameraInterface implements Camera.PreviewCallback {
                 mParams.setPreviewSize(previewSize.width, previewSize.height);
                 preview_height = previewSize.height;
                 mParams.setPictureSize(pictureSize.width, pictureSize.height);
-
-                if (CameraParamUtil.getInstance().isSupportedFocusMode(
+                if (jCameraView.isHasCameraCropView() && CameraParamUtil.getInstance().isSupportedFocusMode(
+                        mParams.getSupportedFocusModes(),
+                        Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO)) {
+                    mParams.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
+                } else if (CameraParamUtil.getInstance().isSupportedFocusMode(
                         mParams.getSupportedFocusModes(),
                         Camera.Parameters.FOCUS_MODE_AUTO)) {
                     mParams.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
@@ -692,13 +695,12 @@ public class CameraInterface implements Camera.PreviewCallback {
     }
 
     public boolean handleFocus(final Context context, final float x, final float y, final FocusCallback callback) {
-        if (mCamera == null) {
+        if (mCamera == null && jCameraView.isHasCameraCropView()) {
             return false;
         }
         final Camera.Parameters params = mCamera.getParameters();
         Rect focusRect = calculateTapArea(x, y, 1f, context);
         mCamera.cancelAutoFocus();
-        LogUtils.jasonDebug("handleFocus===zoom==" + params.getZoom());
         if (params.getMaxNumFocusAreas() > 0) {
             List<Camera.Area> focusAreas = new ArrayList<>();
             List<Camera.Area> meteringAreas = new ArrayList<>();

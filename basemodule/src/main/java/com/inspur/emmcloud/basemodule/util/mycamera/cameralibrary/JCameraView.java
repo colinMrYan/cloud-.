@@ -305,6 +305,10 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
         CameraInterface.getInstance().doDestroyCamera();
     }
 
+    public boolean isHasCameraCropView() {
+        return cameraCropView.getVisibility() == VISIBLE;
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (cameraCropView.getVisibility() == VISIBLE) {
