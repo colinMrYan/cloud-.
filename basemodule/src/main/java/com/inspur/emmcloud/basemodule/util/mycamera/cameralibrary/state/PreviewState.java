@@ -6,7 +6,6 @@ import android.view.SurfaceHolder;
 
 import com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary.CameraInterface;
 import com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary.JCameraView;
-import com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary.util.LogUtil;
 
 
 class PreviewState implements State {
@@ -31,7 +30,6 @@ class PreviewState implements State {
 
     @Override
     public boolean focus(float x, float y, CameraInterface.FocusCallback callback, boolean isShowFocusView) {
-        LogUtil.i("preview state focus");
         if (isShowFocusView) {
             if (machine.getView().handlerFoucs(x, y)) {
                 return CameraInterface.getInstance().handleFocus(machine.getContext(), x, y, callback);
@@ -43,7 +41,7 @@ class PreviewState implements State {
     }
 
     @Override
-    public void swtich(SurfaceHolder holder, float screenProp) {
+    public void switchCamera(SurfaceHolder holder, float screenProp) {
         CameraInterface.getInstance().switchCamera(holder, screenProp);
     }
 
@@ -59,7 +57,6 @@ class PreviewState implements State {
             public void captureResult(Bitmap bitmap, boolean isVertical) {
                 machine.getView().showPicture(bitmap, isVertical);
                 machine.setState(machine.getBorrowPictureState());
-                LogUtil.i("capture");
             }
         });
     }
@@ -85,18 +82,15 @@ class PreviewState implements State {
     }
 
     @Override
-    public void cancle(SurfaceHolder holder, float screenProp) {
-        LogUtil.i("浏览状态下,没有 cancle 事件");
+    public void cancel(SurfaceHolder holder, float screenProp) {
     }
 
     @Override
     public void confirm() {
-        LogUtil.i("浏览状态下,没有 confirm 事件");
     }
 
     @Override
     public void zoom(float zoom, int type) {
-        LogUtil.i(TAG, "zoom");
         CameraInterface.getInstance().setZoom(zoom, type);
     }
 

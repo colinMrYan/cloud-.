@@ -218,7 +218,7 @@ public class CaptureLayout extends FrameLayout {
         btn_return = new ReturnButton(getContext(), (int) (button_size / 3f));
         LayoutParams btn_return_param = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         btn_return_param.gravity = Gravity.CENTER_VERTICAL;
-        btn_return_param.setMargins(layout_width / 6, 0, 0, 0);
+        btn_return_param.setMargins(layout_width / 7, 0, 0, 0);
         btn_return.setLayoutParams(btn_return_param);
         btn_return.setOnClickListener(new OnClickListener() {
             @Override

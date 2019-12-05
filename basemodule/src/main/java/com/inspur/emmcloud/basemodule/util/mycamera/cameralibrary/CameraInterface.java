@@ -20,12 +20,12 @@ import android.view.SurfaceHolder;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary.listener.ErrorListener;
 import com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary.util.CameraParamUtil;
 import com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary.util.CheckPermission;
 import com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary.util.DeviceUtil;
 import com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary.util.FileUtil;
-import com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary.util.LogUtil;
 import com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary.util.ScreenUtils;
 
 import java.io.ByteArrayOutputStream;
@@ -50,7 +50,6 @@ public class CameraInterface implements Camera.PreviewCallback {
     private int SELECTED_CAMERA = -1;
     private int CAMERA_POST_POSITION = -1;
     private int CAMERA_FRONT_POSITION = -1;
-    private SurfaceHolder mHolder = null;
     private float screenProp = -1.0f;
     private boolean isRecorder = false;
     private MediaRecorder mediaRecorder;
@@ -162,6 +161,10 @@ public class CameraInterface implements Camera.PreviewCallback {
         this.jCameraView = jCameraView;
     }
 
+    public void resetCamera() {
+        SELECTED_CAMERA = CAMERA_POST_POSITION;
+    }
+
     //切换摄像头icon跟随手机角度进行旋转
     private void rotationAnimation() {
         if (mSwitchView == null) {
@@ -242,7 +245,7 @@ public class CameraInterface implements Camera.PreviewCallback {
         if (mParams == null) {
             mParams = mCamera.getParameters();
         }
-        if (!mParams.isZoomSupported() || !mParams.isSmoothZoomSupported()) {
+        if (!mParams.isZoomSupported() && !mParams.isSmoothZoomSupported()) {
             return;
         }
         switch (type) {
@@ -253,7 +256,7 @@ public class CameraInterface implements Camera.PreviewCallback {
                 }
                 if (zoom >= 0) {
                     //每移动50个像素缩放一个级别
-                    int scaleRate = (int) (zoom / 40);
+                    int scaleRate = (int) (zoom / 50);
                     if (scaleRate <= mParams.getMaxZoom() && scaleRate >= nowScaleRate && recordScleRate != scaleRate) {
                         mParams.setZoom(scaleRate);
                         mCamera.setParameters(mParams);
@@ -265,8 +268,9 @@ public class CameraInterface implements Camera.PreviewCallback {
                 if (isRecorder) {
                     return;
                 }
+
                 //每移动50个像素缩放一个级别
-                int scaleRate = (int) (zoom / 50);
+                int scaleRate = (int) (zoom / 30);
                 if (scaleRate < mParams.getMaxZoom()) {
                     nowScaleRate += scaleRate;
                     if (nowScaleRate < 0) {
@@ -275,9 +279,9 @@ public class CameraInterface implements Camera.PreviewCallback {
                         nowScaleRate = mParams.getMaxZoom();
                     }
                     mParams.setZoom(nowScaleRate);
+                    LogUtils.jasonDebug("nowScaleRate==" + nowScaleRate);
                     mCamera.setParameters(mParams);
                 }
-                LogUtil.i("setZoom = " + nowScaleRate);
                 break;
         }
 
@@ -350,7 +354,6 @@ public class CameraInterface implements Camera.PreviewCallback {
             SELECTED_CAMERA = CAMERA_POST_POSITION;
         }
         doDestroyCamera();
-        LogUtil.i("open start");
         openCamera(SELECTED_CAMERA);
 //        mCamera = Camera.open();
         if (Build.VERSION.SDK_INT > 17 && this.mCamera != null) {
@@ -360,7 +363,6 @@ public class CameraInterface implements Camera.PreviewCallback {
                 e.printStackTrace();
             }
         }
-        LogUtil.i("open end");
         doStartPreview(holder, screenProp);
     }
 
@@ -368,16 +370,12 @@ public class CameraInterface implements Camera.PreviewCallback {
      * doStartPreview
      */
     public void doStartPreview(SurfaceHolder holder, float screenProp) {
-        if (isPreviewing) {
-            LogUtil.i("doStartPreview isPreviewing");
-        }
         if (this.screenProp < 0) {
             this.screenProp = screenProp;
         }
         if (holder == null) {
             return;
         }
-        this.mHolder = holder;
         if (mCamera != null) {
             try {
                 mParams = mCamera.getParameters();
@@ -385,10 +383,7 @@ public class CameraInterface implements Camera.PreviewCallback {
                         .getSupportedPreviewSizes(), 700, screenProp);
                 Camera.Size pictureSize = CameraParamUtil.getInstance().getPictureSize(mParams
                         .getSupportedPictureSizes(), 1000, screenProp);
-
                 mParams.setPreviewSize(previewSize.width, previewSize.height);
-
-                preview_width = previewSize.width;
                 preview_height = previewSize.height;
                 mParams.setPictureSize(pictureSize.width, pictureSize.height);
 
@@ -409,7 +404,6 @@ public class CameraInterface implements Camera.PreviewCallback {
                 mCamera.setPreviewCallback(this); //每一帧回调
                 mCamera.startPreview();//启动浏览
                 isPreviewing = true;
-                Log.i(TAG, "=== Start Preview ===");
 
 
                 float prevewProp = (float) previewSize.width / (float) previewSize.height;
@@ -464,10 +458,10 @@ public class CameraInterface implements Camera.PreviewCallback {
                 mCamera.stopPreview();
                 //这句要在stopPreview后执行，不然会卡顿或者花屏
                 mCamera.setPreviewDisplay(null);
-                mHolder = null;
                 isPreviewing = false;
                 mCamera.release();
                 mCamera = null;
+                nowScaleRate = 1;
 //                destroyCameraInterface();
                 Log.i(TAG, "=== Destroy Camera ===");
             } catch (IOException e) {
@@ -704,10 +698,15 @@ public class CameraInterface implements Camera.PreviewCallback {
         final Camera.Parameters params = mCamera.getParameters();
         Rect focusRect = calculateTapArea(x, y, 1f, context);
         mCamera.cancelAutoFocus();
+        LogUtils.jasonDebug("handleFocus===zoom==" + params.getZoom());
         if (params.getMaxNumFocusAreas() > 0) {
             List<Camera.Area> focusAreas = new ArrayList<>();
-            focusAreas.add(new Camera.Area(focusRect, 800));
+            List<Camera.Area> meteringAreas = new ArrayList<>();
+            Camera.Area cameraArea = new Camera.Area(focusRect, 1000);
+            focusAreas.add(cameraArea);
+            meteringAreas.add(cameraArea);
             params.setFocusAreas(focusAreas);
+            params.setMeteringAreas(meteringAreas);
         }
 //        else {
 //            Log.i(TAG, "focus areas not supported");
@@ -721,16 +720,16 @@ public class CameraInterface implements Camera.PreviewCallback {
             mCamera.autoFocus(new Camera.AutoFocusCallback() {
                 @Override
                 public void onAutoFocus(boolean success, Camera camera) {
-//                    if (success || handlerTime > 1) {
-                    Camera.Parameters params = camera.getParameters();
-                    params.setFocusMode(currentFocusMode);
-                    camera.setParameters(params);
-                    handlerTime = 0;
-                    callback.focusSuccess();
-//                    } else {
-//                        handlerTime++;
-//                        handleFocus(context, x, y, callback);
-//                    }
+                    if (success || handlerTime > 1) {
+                        Camera.Parameters params = camera.getParameters();
+                        params.setFocusMode(currentFocusMode);
+                        camera.setParameters(params);
+                        handlerTime = 0;
+                        callback.focusSuccess();
+                    } else {
+                        handlerTime++;
+                        handleFocus(context, x, y, callback);
+                    }
                 }
             });
             return true;

@@ -11,7 +11,6 @@ import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -30,7 +29,6 @@ import com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary.listener.JCame
 import com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary.listener.TypeListener;
 import com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary.state.CameraMachine;
 import com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary.util.FileUtil;
-import com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary.util.LogUtil;
 import com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary.util.ScreenUtils;
 import com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary.view.CameraView;
 
@@ -99,8 +97,8 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
 
     private boolean firstTouch = true;
     private float firstTouchLength = 0;
-    private String cropJson = "";
-    private ErrorListener errorLisenter;
+    private ErrorListener errorListener;
+    private String cropJson;
 
     public JCameraView(Context context) {
         this(context, null);
@@ -129,8 +127,7 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
     private void initData() {
         layout_width = ScreenUtils.getScreenWidth(mContext);
         //缩放梯度
-        zoomGradient = (int) (layout_width / 16f);
-        LogUtil.i("zoom = " + zoomGradient);
+        zoomGradient = (int) (layout_width / 50f);
         machine = new CameraMachine(getContext(), this, this);
     }
 
@@ -149,11 +146,12 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
         mFocusView = (FocusView) view.findViewById(R.id.fouce_view);
         cameraCropView = findViewById(R.id.camera_crop_view);
         mVideoView.getHolder().addCallback(this);
+
         //切换摄像头
         mSwitchCamera.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                machine.swtich(mVideoView.getHolder(), screenProp);
+                machine.switchCamera(mVideoView.getHolder(), screenProp);
             }
         });
         //拍照 录像
@@ -193,14 +191,13 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
 
             @Override
             public void recordZoom(float zoom) {
-                LogUtil.i("recordZoom");
                 machine.zoom(zoom, CameraInterface.TYPE_RECORDER);
             }
 
             @Override
             public void recordError() {
-                if (errorLisenter != null) {
-                    errorLisenter.AudioPermissionError();
+                if (errorListener != null) {
+                    errorListener.AudioPermissionError();
                 }
             }
         });
@@ -208,7 +205,7 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
         mCaptureLayout.setTypeLisenter(new TypeListener() {
             @Override
             public void cancel() {
-                machine.cancle(mVideoView.getHolder(), screenProp);
+                machine.cancel(mVideoView.getHolder(), screenProp);
             }
 
             @Override
@@ -265,29 +262,30 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
 
     //生命周期onResume
     public void onResume() {
-        LogUtil.i("JCameraView onResume");
         resetState(TYPE_DEFAULT); //重置状态
         CameraInterface.getInstance().registerSensorManager(mContext);
         machine.start(mVideoView.getHolder(), screenProp);
     }
 
     public boolean reFocus() {
-        return setFocusViewWidthAnimation(mFocusView.getWidth() / 2, mFocusView.getHeight() / 2, false);
+        return setFocusViewWidthAnimation(mFocusView.getX() + mFocusView.getWidth() / 2, mFocusView.getY() + mFocusView.getHeight() / 2, false);
     }
 
     //生命周期onPause
     public void onPause() {
-        LogUtil.i("JCameraView onPause");
         stopVideo();
         resetState(TYPE_PICTURE);
         CameraInterface.getInstance().isPreview(false);
         CameraInterface.getInstance().unregisterSensorManager(mContext);
     }
 
+    public void onDestroy() {
+        CameraInterface.getInstance().resetCamera();
+    }
+
     //SurfaceView生命周期
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        LogUtil.i("JCameraView SurfaceCreated");
 //        mVideoView.setCustomRatio(1,1);
         new Thread() {
             @Override
@@ -304,20 +302,19 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        LogUtil.i("JCameraView SurfaceDestroyed");
         CameraInterface.getInstance().doDestroyCamera();
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        if (cameraCropView.getVisibility() == VISIBLE) {
+            return super.onTouchEvent(event);
+        }
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 if (event.getPointerCount() == 1) {
                     //显示对焦指示器
                     setFocusViewWidthAnimation(event.getX(), event.getY(), true);
-                }
-                if (event.getPointerCount() == 2) {
-                    Log.i("CJT", "ACTION_DOWN = " + 2);
                 }
                 break;
             case MotionEvent.ACTION_MOVE:
@@ -325,6 +322,7 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
                     firstTouch = true;
                 }
                 if (event.getPointerCount() == 2) {
+                    mFocusView.setVisibility(View.GONE);
                     //第一个点
                     float point_1_X = event.getX(0);
                     float point_1_Y = event.getY(0);
@@ -339,9 +337,10 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
                         firstTouchLength = result;
                         firstTouch = false;
                     }
-                    if ((int) (result - firstTouchLength) / zoomGradient != 0) {
-                        firstTouch = true;
+                    if ((int) (result - firstTouchLength) / 30 != 0) {
+//                        firstTouch = true;
                         machine.zoom(result - firstTouchLength, CameraInterface.TYPE_CAPTURE);
+                        firstTouchLength = result;
                     }
 //                    Log.i("CJT", "result = " + (result - firstTouchLength));
                 }
@@ -353,9 +352,10 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
         return true;
     }
 
+
     //对焦框指示器动画
     private boolean setFocusViewWidthAnimation(float x, float y, boolean isShowFocusView) {
-        return machine.focus(x, y, new CameraInterface.FocusCallback() {
+        boolean isSupportSetFocusAera = machine.focus(x, y, new CameraInterface.FocusCallback() {
             @Override
             public void focusSuccess() {
                 mFocusView.setVisibility(INVISIBLE);
@@ -367,6 +367,11 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
                 }, 1000);
             }
         }, isShowFocusView);
+        if (!isSupportSetFocusAera) {
+            mFocusView.setVisibility(INVISIBLE);
+            CameraInterface.getInstance().unlockFocus();
+        }
+        return isSupportSetFocusAera;
     }
 
     private void updateVideoViewSize(float videoWidth, float videoHeight) {
@@ -392,9 +397,9 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
     }
 
     //启动Camera错误回调
-    public void setErrorLisenter(ErrorListener errorLisenter) {
-        this.errorLisenter = errorLisenter;
-        CameraInterface.getInstance().setErrorLinsenter(errorLisenter);
+    public void setErrorListener(ErrorListener errorListener) {
+        this.errorListener = errorListener;
+        CameraInterface.getInstance().setErrorLinsenter(errorListener);
     }
 
     //设置CaptureButton功能（拍照和录像）
@@ -540,7 +545,6 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
 
     @Override
     public void startPreviewCallback() {
-        LogUtil.i("startPreviewCallback");
         handlerFoucs(mFocusView.getWidth() / 2, mFocusView.getHeight() / 2);
     }
 

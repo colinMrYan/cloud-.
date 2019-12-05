@@ -14,7 +14,6 @@ import android.view.View;
 
 import com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary.listener.CaptureListener;
 import com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary.util.CheckPermission;
-import com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary.util.LogUtil;
 
 import static com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary.JCameraView.BUTTON_STATE_ONLY_CAPTURE;
 
@@ -132,7 +131,6 @@ public class CaptureButton extends View {
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                LogUtil.i("state = " + state);
                 if (event.getPointerCount() > 1 || state != STATE_IDLE)
                     break;
                 event_Y = event.getY();     //记录Y值

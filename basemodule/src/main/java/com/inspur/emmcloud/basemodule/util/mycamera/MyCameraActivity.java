@@ -54,6 +54,7 @@ public class MyCameraActivity extends BaseFragmentActivity implements JCameraLis
             public void onPermissionRequestSuccess(List<String> permissions) {
                 granted = true;
                 setContentView(R.layout.activity_my_camera);
+                setWindows();
                 ButterKnife.bind(MyCameraActivity.this);
                 initData();
                 initView();
@@ -170,7 +171,10 @@ public class MyCameraActivity extends BaseFragmentActivity implements JCameraLis
     @Override
     protected void onPause() {
         super.onPause();
-        jCameraView.onPause();
+        if (jCameraView != null) {
+            jCameraView.onPause();
+        }
+
     }
 
 
