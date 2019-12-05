@@ -9,6 +9,7 @@ package com.inspur.emmcloud.application.api;
 import android.content.Context;
 
 import com.inspur.emmcloud.application.bean.App;
+import com.inspur.emmcloud.application.bean.BadgeBodyModel;
 import com.inspur.emmcloud.application.bean.GetAddAppResult;
 import com.inspur.emmcloud.application.bean.GetRecommendAppWidgetListResult;
 import com.inspur.emmcloud.application.bean.GetRemoveAppResult;
@@ -324,6 +325,74 @@ public class ApplicationAPIService {
             @Override
             public void callbackFail(String error, int responseCode) {
                 apiInterface.returnRecommendAppWidgetListFail(error, responseCode);
+            }
+        });
+    }
+
+    /**
+     * 验证行政审批密码
+     *
+     * @param password
+     */
+    public void veriryApprovalPassword(String userName, final String password) {
+        String completeUrl = ApplicationAPIUri.getVeriryApprovalPasswordUrl();
+        RequestParams params = new RequestParams(completeUrl);
+        params.addQueryStringParameter("userName", userName);
+        params.addQueryStringParameter("userPass", password);
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                if (arg0 != null && new String(arg0).equals("登录成功")) {
+                    apiInterface.returnVeriryApprovalPasswordSuccess(password);
+                } else {
+                    apiInterface.returnVeriryApprovalPasswordFail("", -1);
+                }
+
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnVeriryApprovalPasswordFail(error, responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                apiInterface.returnVeriryApprovalPasswordFail("", -1);
+            }
+        });
+    }
+
+    /**
+     * 获取app badge数量
+     */
+    public void getBadgeCount() {
+        final String url = ApplicationAPIUri.getBadgeCountUrl();
+        RequestParams params = BaseApplication.getInstance().getHttpRequestParams(url);
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, url) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnBadgeCountSuccess(new BadgeBodyModel(new String(arg0)));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnBadgeCountFail(error, responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getBadgeCount();
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                refreshToken(oauthCallBack, requestTime);
             }
         });
     }

@@ -63,4 +63,46 @@ public class ApplicationAPIUri {
     public static String getMyAppWidgetsUrl() {
         return WebServiceRouterManager.getInstance().getClusterEmm() + "api/mam/v6.0/app/recommend/apps";
     }
+
+    /**
+     * 获取app真实地址
+     *
+     * @param appId
+     * @return
+     */
+    public static String getAppRealUrl(String appId) {
+        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/mam/v3.0/gs_sso/app_uri?id=" + appId;
+    }
+
+    /**
+     * 行政审批验证密码
+     */
+    public static String getVeriryApprovalPasswordUrl() {
+        return WebServiceRouterManager.getInstance().getClusterEmm() + "proxy/shenpi/langchao.ecgap.inportal/login/CheckLoginDB.aspx?";
+    }
+
+
+    /**
+     * 未读消息url
+     *
+     * @return
+     */
+    public static String getBadgeCountUrl() {
+        String badgeCountUrl = "";
+        if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
+            badgeCountUrl = WebServiceRouterManager.getInstance().getClusterChat() + "/unread-count";
+        } else if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
+            badgeCountUrl = WebServiceRouterManager.getInstance().getClusterChat() + "/rest/v1/unread-count";
+        }
+        return badgeCountUrl;
+    }
+
+    /**
+     * zip文件下载地址
+     *
+     * @return
+     */
+    public static String getZipUrl() {
+        return WebServiceRouterManager.getInstance().getClusterStorageLegacy() + "/res/stream/";
+    }
 }

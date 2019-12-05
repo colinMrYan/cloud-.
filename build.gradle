@@ -172,6 +172,18 @@ allprojects {
     }
 }
 
+subprojects {
+    project.configurations.all {
+        resolutionStrategy.eachDependency { details ->
+            if (details.requested.group == 'com.android.support'
+                    && details.requested.name.contains('multidex') ) {
+                //统一版本号
+                details.useVersion "1.0.1"
+            }
+        }
+    }
+}
+
 task clean(type: Delete) {
     delete rootProject.buildDir
 }

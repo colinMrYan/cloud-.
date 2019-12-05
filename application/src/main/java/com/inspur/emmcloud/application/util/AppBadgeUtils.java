@@ -2,10 +2,10 @@ package com.inspur.emmcloud.application.util;
 
 import android.content.Context;
 
-import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.AppAPIService;
+import com.inspur.emmcloud.application.api.ApplicationAPIService;
+import com.inspur.emmcloud.application.api.ApplicationApiInterfaceImpl;
+import com.inspur.emmcloud.application.bean.BadgeBodyModel;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
-import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -15,11 +15,11 @@ import org.greenrobot.eventbus.EventBus;
 
 public class AppBadgeUtils {
     private Context context;
-    private AppAPIService appAPIService;
+    private ApplicationAPIService appAPIService;
 
     public AppBadgeUtils(Context context) {
         this.context = context;
-        appAPIService = new AppAPIService(context);
+        appAPIService = new ApplicationAPIService(context);
         appAPIService.setAPIInterface(new WebService());
     }
 
@@ -29,7 +29,7 @@ public class AppBadgeUtils {
         }
     }
 
-    class WebService extends APIInterfaceInstance {
+    class WebService extends ApplicationApiInterfaceImpl {
         @Override
         public void returnBadgeCountSuccess(BadgeBodyModel badgeBodyModel) {
             EventBus.getDefault().post(badgeBodyModel);

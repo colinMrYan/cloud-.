@@ -18,6 +18,7 @@ import com.inspur.emmcloud.application.api.ApplicationAPIService;
 import com.inspur.emmcloud.application.api.ApplicationApiInterfaceImpl;
 import com.inspur.emmcloud.application.bean.App;
 import com.inspur.emmcloud.application.bean.GetAddAppResult;
+import com.inspur.emmcloud.application.util.ApplicationUriUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
@@ -121,7 +122,7 @@ public class AppCenterAdapter extends BaseAdapter {
                 if (app.getUseStatus() == 0) {
                     installApp(type, appID, (Button) v);
                 } else if (app.getUseStatus() == 1) {
-                    UriUtils.openApp(activity, app, "appcenter");
+                    ApplicationUriUtils.openApp(activity, app, "appcenter");
                 } else {
                     // 更新
                 }

@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.application.api;
 
 import com.inspur.emmcloud.application.bean.App;
+import com.inspur.emmcloud.application.bean.BadgeBodyModel;
 import com.inspur.emmcloud.application.bean.GetAddAppResult;
 import com.inspur.emmcloud.application.bean.GetAllAppResult;
 import com.inspur.emmcloud.application.bean.GetRecommendAppWidgetListResult;
@@ -44,4 +45,12 @@ public interface ApplicationAPIInterface {
     void returnRecommendAppWidgetListSuccess(GetRecommendAppWidgetListResult getRecommendAppWidgetListResult);
 
     void returnRecommendAppWidgetListFail(String error, int errorCode);
+
+    void returnVeriryApprovalPasswordSuccess(String password);
+
+    void returnVeriryApprovalPasswordFail(String error, int errorCode);
+
+    void returnBadgeCountSuccess(BadgeBodyModel badgeBodyModel);
+
+    void returnBadgeCountFail(String error, int errorCode);
 }
