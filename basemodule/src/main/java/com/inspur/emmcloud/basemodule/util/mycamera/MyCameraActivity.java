@@ -163,7 +163,7 @@ public class MyCameraActivity extends BaseFragmentActivity implements JCameraLis
     @Override
     protected void onResume() {
         super.onResume();
-        if (granted) {
+        if (jCameraView != null && granted) {
             jCameraView.onResume();
         }
     }
@@ -188,6 +188,9 @@ public class MyCameraActivity extends BaseFragmentActivity implements JCameraLis
 
     @Override
     protected void onDestroy() {
+        if (jCameraView != null) {
+            jCameraView.onDestroy();
+        }
         super.onDestroy();
     }
 
