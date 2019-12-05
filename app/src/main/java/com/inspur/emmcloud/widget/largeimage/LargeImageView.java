@@ -39,7 +39,6 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 
 import com.inspur.emmcloud.baselib.util.DensityUtil;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.widget.largeimage.factory.BitmapDecoderFactory;
 
 import java.util.ArrayList;
@@ -592,7 +591,6 @@ public class LargeImageView extends View implements BlockImageLoader.OnImageLoad
                     }
                 }
             } else {
-                LogUtils.jasonDebug("drawDatas==" + drawDatas.size());
                 if (drawDatas.isEmpty()) {
                     if (mDrawable != null) {
                         mDrawable.setBounds(drawOffsetX, drawOffsetY, drawOffsetX + contentWidth, drawOffsetY + contentHeight);

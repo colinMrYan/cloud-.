@@ -64,6 +64,7 @@
     <!-- 插件：拨打电话 -->
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
 
     <!-- 插件：发送短信 -->
     <uses-permission android:name="android.permission.SEND_SMS" />
@@ -140,14 +141,14 @@
         <meta-data
             android:name="android.max_aspect"
             android:value="2.4" />
-        <!-- 适配华为(hua wei)刘海屏 -->
-        <meta-data
-            android:name="android.notch_support"
-            android:value="true" />
+        <!--&lt;!&ndash; 适配华为(hua wei)刘海屏 &ndash;&gt;-->
+        <!--<meta-data-->
+        <!--android:name="android.notch_support"-->
+        <!--android:value="true" />-->
         <!-- 适配小米(xiao mi)刘海屏 -->
-        <meta-data
-            android:name="notch.config"
-            android:value="portrait|landscape" />
+        <!--<meta-data-->
+        <!--android:name="notch.config"-->
+        <!--android:value="portrait|landscape" />-->
 
         <!--custom-->
         <meta-data
@@ -235,6 +236,12 @@
                 <action android:name="android.intent.action.PACKAGE_REMOVED" />
 
                 <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".util.systool.EmmPhoneReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.PHONE_STATE" />
+                <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
             </intent-filter>
         </receiver>
 
@@ -409,8 +416,7 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:stateNotNeeded="true"
-            android:supportsRtl="true" />
-
+            android:supportsRtl="true"></activity>
         <activity
             android:name=".ui.NoPermissionDialogActivity"
             android:launchMode="singleInstance"

@@ -1400,8 +1400,12 @@ public class MyAppAPIService {
      * @param recurse
      */
     public void updateVolumeFileGroupPermission(final String volumeId, final String path, final String group, final int privilege, final boolean recurse) {
-        final String url = APIUri.getVolumeFileGroupUrl(volumeId) + "?path=" + path + "&group=" + group + "&privilege=" + privilege + "&recurse=" + recurse;
+        final String url = APIUri.getVolumeFileGroupUrl(volumeId);
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
+        params.addQueryStringParameter("path", path);
+        params.addQueryStringParameter("group", group);
+        params.addQueryStringParameter("privilege", privilege + "");
+        params.addQueryStringParameter("recurse", recurse + "");
         HttpUtils.request(context, CloudHttpMethod.PUT, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {

@@ -452,8 +452,8 @@ public class WebSocketPush {
                         switch (path) {
                             case "/channel/message":
                                 if (wsPushContent.getMethod().equals("post")) {
-                                    EventMessage eventMessagea = new EventMessage("", Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE, wsPushContent.getBody());
-                                    EventBus.getDefault().post(eventMessagea);
+                                    EventMessage eventMessage = new EventMessage("", Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE, wsPushContent.getBody());
+                                    EventBus.getDefault().post(eventMessage);
                                 }
                                 break;
                             case "/channel/message/state/unread":

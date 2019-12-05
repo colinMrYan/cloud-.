@@ -19,6 +19,7 @@ import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
@@ -252,7 +253,7 @@ public class AppSchemeHandleActivity extends BaseActivity {
                                 if (customProtocol.getHost().equals("voice_channel") || customProtocol.getHost().equals("video_channel")) {
                                     //不在通话中，点击通知才打开页面，否则不打开，不会影响小窗口或者通知的逻辑，
                                     //小窗口通知走的ecc-cloudplus-cmd-voice-call
-                                    if (!VoiceCommunicationManager.getInstance().isVoiceBusy()) {
+                                    if (!VoiceCommunicationManager.getInstance().isVoiceBusy() && !AppUtils.isPhoneInUse()) {
                                         startVoiceCall(uri.toString());
                                     }
                                 } else if (customProtocol.getHost().equals("jump/chatviewcontroller")) {
@@ -266,7 +267,6 @@ public class AppSchemeHandleActivity extends BaseActivity {
                                 }
                                 finish();
                                 break;
-
                             case "ecc-cloudplus-cmd-voice-call":
                                 if (VoiceCommunicationManager.getInstance().getRtcEngine() != null) {
                                     Intent intentVoiceCall = new Intent();
@@ -282,6 +282,7 @@ public class AppSchemeHandleActivity extends BaseActivity {
                                 finish();
                                 break;
                             case "impcloud":
+                                finish();
                                 break;
                             default:
                                 showSchemeUnknownWarning();

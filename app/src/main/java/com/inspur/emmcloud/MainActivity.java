@@ -5,12 +5,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.baselib.router.Router;
@@ -45,6 +44,7 @@ import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import pl.droidsonroids.gif.GifImageView;
 
 
@@ -61,15 +61,14 @@ public class MainActivity extends BaseActivity {
     private static final int NO_NEED_UPGRADE = 10;
     private static final int UPGRADE_FAIL = 11;
     private static final int DONOT_UPGRADE = 12;
-    private static final long SPLASH_PAGE_TIME = 2500;
-    @BindView(R.id.ibt_skip)
-    ImageButton skipImageBtn;
+    private static final int SPLASH_SHOW_TIME_BY_SECOND = 4;
+    @BindView(R.id.tv_skip)
+    TextView skipText;
     @BindView(R.id.iv_splash_logo)
     ImageView splashLogoImg;
     @BindView(R.id.iv_splash_ad)
     GifImageView splashAdImg;
     private Handler handler;
-    private long activitySplashShowTime = 0;
     private Timer timer;
 
     @Override
@@ -89,6 +88,7 @@ public class MainActivity extends BaseActivity {
         return R.layout.activity_main;
     }
 
+    @Override
     protected int getStatusType() {
         return STATUS_WHITE;
     }
@@ -123,8 +123,6 @@ public class MainActivity extends BaseActivity {
         } else {
             ImageDisplayUtils.getInstance().displayImage(splashLogoImg, "drawable://" + splashLogoResId, R.drawable.ic_splash_logo);
         }
-        activitySplashShowTime = System.currentTimeMillis();
-
         // 检测分辨率、网络环境
         if (!ResolutionUtils.isFitResolution(MainActivity.this)) {
             showResolutionValiadDlg();
@@ -163,17 +161,6 @@ public class MainActivity extends BaseActivity {
                 handler, false);
         upgradeUtils.checkUpdate(false);
 
-    }
-
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.ibt_skip:
-                if (timer != null) {
-                    timer.cancel();
-                    startApp();
-                }
-                break;
-        }
     }
 
     private void handMessage() {
@@ -229,30 +216,44 @@ public class MainActivity extends BaseActivity {
      */
     private void setSplashShow() {
         // TODO Auto-generated method stub
-        long betweenTime = System.currentTimeMillis() - activitySplashShowTime;
-        long leftTime = SPLASH_PAGE_TIME - betweenTime;
+        final long splashSkipStartShowTime = System.currentTimeMillis();
         TimerTask task = new TimerTask() {
+            @Override
             public void run() {
-                if (timer != null) {
-                    timer.cancel();
-                }
-                //线程转为主线程
-                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        skipImageBtn.setVisibility(View.INVISIBLE);
-                        startApp();
+                        long currentTime = System.currentTimeMillis();
+                        int second = (int) ((currentTime - splashSkipStartShowTime) / 1000);
+                        if (second < SPLASH_SHOW_TIME_BY_SECOND) {
+                            skipText.setText(getString(R.string.skip) + " " + (SPLASH_SHOW_TIME_BY_SECOND - second));
+                        } else {
+                            skipText.setEnabled(false);
+                            destroyTimer();
+                            startApp();
+                        }
                     }
                 });
+
+
             }
         };
-        if (new SplashPageUtils(MainActivity.this).checkIfShowSplashPage() && (leftTime > 0)) {
-            skipImageBtn.setVisibility(View.VISIBLE);
+        if (new SplashPageUtils(MainActivity.this).checkIfShowSplashPage()) {
+            skipText.setVisibility(View.VISIBLE);
+            skipText.setText(getString(R.string.skip) + " " + SPLASH_SHOW_TIME_BY_SECOND);
+            skipText.setVisibility(View.VISIBLE);
             timer = new Timer();
-            timer.schedule(task, leftTime);
+            timer.schedule(task, 1000, 1000);
         } else {
             startApp();
         }
+    }
+
+
+    @OnClick(R.id.tv_skip)
+    public void skipSplash() {
+        destroyTimer();
+        startApp();
     }
 
     /**
@@ -352,7 +353,12 @@ public class MainActivity extends BaseActivity {
         if (handler != null) {
             handler = null;
         }
+        destroyTimer();
+    }
+
+    private void destroyTimer() {
         if (timer != null) {
+            timer.cancel();
             timer = null;
         }
     }

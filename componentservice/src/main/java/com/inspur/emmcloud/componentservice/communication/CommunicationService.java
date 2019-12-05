@@ -30,4 +30,7 @@ public interface CommunicationService extends CoreService {
     void MessageSendManagerOnDestroy();
 
     void sendVoiceCommunicationNotify();
+
+    //退出登录停止语音通话
+    void stopVoiceCommunication();
 }

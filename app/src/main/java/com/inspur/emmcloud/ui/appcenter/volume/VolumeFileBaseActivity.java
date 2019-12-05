@@ -28,6 +28,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.VolumeFileAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
+import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.FomatUtils;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
@@ -329,7 +330,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         boolean isVolumeFileReadable = true;
         boolean isVolumeFileDirectory = true;
         boolean isVolumeContainDir = false;
-        boolean isShowOpenAction = false;
+        boolean isAllDownloadAction = true; //选中的文件是否全部下载
         boolean isOwner = true;
         for (int i = 0; i < selectVolumeFileList.size(); i++) {
             if (isVolumeFileWriteable) {
@@ -348,15 +349,19 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
                 isVolumeContainDir = selectVolumeFileList.get(i).getType().equals(VolumeFile.FILE_TYPE_DIRECTORY); //是否包含文件夹
             }
         }
-        if (selectVolumeFileList.size() == 1) {
+        for (VolumeFile item : selectVolumeFileList) {
             String fileSavePath = FileDownloadManager.getInstance().getDownloadFilePath(DownloadFileCategory.CATEGORY_VOLUME_FILE,
-                    selectVolumeFileList.get(0).getId(), selectVolumeFileList.get(0).getName());
-            isShowOpenAction = !StringUtils.isBlank(fileSavePath);                                                 //是否包含本地路径
+                    item.getId(), item.getName());
+            if (StringUtils.isBlank(fileSavePath)) {
+                isAllDownloadAction = false;
+                break;
+            }
         }
-        volumeActionDataList.add(new VolumeActionData(openAction, R.drawable.volume_open_file, isShowOpenAction));
+        volumeActionDataList.add(new VolumeActionData(openAction, R.drawable.volume_open_file,
+                selectVolumeFileList.size() == 1 && isAllDownloadAction));
         volumeActionDataList.add(new VolumeActionData(downloadAction, R.drawable.ic_volume_download,
                 selectVolumeFileList.size() >= 1 && !isVolumeContainDir
-                        && (isVolumeFileReadable || isVolumeFileWriteable)&& !isShowOpenAction));
+                        && (isVolumeFileReadable || isVolumeFileWriteable) && !isAllDownloadAction));
         volumeActionDataList.add(new VolumeActionData(copyAction, R.drawable.ic_volume_copy, (isVolumeFileReadable || isVolumeFileWriteable)));
         volumeActionDataList.add(new VolumeActionData(moveToAction, R.drawable.ic_volume_move, isVolumeFileWriteable));
         volumeActionDataList.add(new VolumeActionData(shareTo, R.drawable.ic_volume_share, selectVolumeFileList.size() == 1 &&
@@ -637,18 +642,29 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
+            List<VolumeFile> operationFailFileList = new ArrayList<>();
+            if (data.hasExtra(EXTRA_OPERATION_FAIL_FILES)) {
+                operationFailFileList = (List<VolumeFile>) data.getSerializableExtra(EXTRA_OPERATION_FAIL_FILES);
+            }
             switch (requestCode) {
                 case REQUEST_MOVE_FILE:
+                    List<VolumeFile> operationFileList = adapter.getSelectVolumeFileList();
+                    if (operationFailFileList.size() > 0) {
+                        operationFileList.removeAll(operationFailFileList);
+                    }
+                    if (operationFileList.size() > 0) {
+                        volumeFileList.removeAll(operationFileList);
+                    }
+                    adapter.clearSelectedVolumeFileList();
+                    adapter.setSelectVolumeFileList(operationFailFileList);
+                    adapter.notifyDataSetChanged();
+                    setBottomOperationItemShow(operationFailFileList);
+                    break;
                 case REQUEST_COPY_FILE:                         /**复制失败VolumeFiles 返回进行重新选择复制**/
                     adapter.clearSelectedVolumeFileList();
+                    adapter.setSelectVolumeFileList(operationFailFileList);
                     adapter.notifyDataSetChanged();
-                    List<VolumeFile> operationFileList = new ArrayList<>();
-                    if (data.hasExtra(EXTRA_OPERATION_FAIL_FILES)) {
-                        operationFileList = (List<VolumeFile>) data.getSerializableExtra(EXTRA_OPERATION_FAIL_FILES);
-                    }
-                    adapter.setSelectVolumeFileList(operationFileList);
-                    adapter.notifyDataSetChanged();
-                    setBottomOperationItemShow(operationFileList);
+                    setBottomOperationItemShow(operationFailFileList);
                     break;
                 default:
                     break;
@@ -722,7 +738,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         int width = metric.widthPixels; // 宽度（PX）
         int height = metric.heightPixels; // 高度（PX）
         Point pointStart = new Point(0, height);
-        Point pointEnd = new Point(width, 0);
+        Point pointEnd = new Point(width - DensityUtil.dip2px(30), DensityUtil.dip2px(40));
         BallView ballView = new BallView(getApplicationContext());
         ballView.startAnimation(pointStart, pointEnd);
         downUpListIv.setEnabled(false);

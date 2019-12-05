@@ -54,6 +54,7 @@ import com.inspur.emmcloud.bean.chat.GetVoiceAndVideoResult;
 import com.inspur.emmcloud.bean.chat.GetVoiceCommunicationResult;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationAudioVolumeInfo;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
+import com.inspur.emmcloud.bean.chat.VoiceCommunicationRtcStats;
 import com.inspur.emmcloud.broadcastreceiver.VoiceCommunicationHeadSetReceiver;
 import com.inspur.emmcloud.ui.AppSchemeHandleActivity;
 import com.inspur.emmcloud.util.privates.MediaPlayerManagerUtils;
@@ -248,6 +249,7 @@ public class VoiceCommunicationActivity extends BaseActivity {
     private MediaPlayerManagerUtils mediaPlayerManagerUtils;
     private VoiceCommunicationManager voiceCommunicationManager;
     private VoiceCommunicationHeadSetReceiver receiver;
+    private int directCommunicationUserCheckCount = 0;
 
     @Override
     public void onCreate() {
@@ -766,6 +768,21 @@ public class VoiceCommunicationActivity extends BaseActivity {
             }
 
             @Override
+            public void onRtcStats(VoiceCommunicationRtcStats stats) {
+                super.onRtcStats(stats);
+                /// 1V1音频通话；被邀请者检测到频道内只有自己一个人的时候，需要离开频道；检测次数15次  stats.users通信模式下，返回当前频道内的人数.
+                if (directOrGroupType.equals(Conversation.TYPE_DIRECT) && !voiceCommunicationManager.isInviter() && stats.users == 1) {
+                    if (directCommunicationUserCheckCount >= 15) {
+                        voiceCommunicationManager.handleDestroy();
+                    } else {
+                        directCommunicationUserCheckCount = directCommunicationUserCheckCount + 1;
+                    }
+                } else {
+                    directCommunicationUserCheckCount = 0;
+                }
+            }
+
+            @Override
             public void onActivityFinish() {
                 finish();
             }
@@ -838,12 +855,16 @@ public class VoiceCommunicationActivity extends BaseActivity {
      */
     private void refreshCommunicationMembersAdapterWithState() {
         voiceCommunicationManager.handleVoiceCommunicationMemberList();
-        if (voiceCommunicationManager.getVoiceCommunicationMemberList().size() <= 5) {
+        if (voiceCommunicationManager.getWaitAndConnectedNumber() <= 5) {
             if (voiceCommunicationMemberAdapterFirst != null) {
                 voiceCommunicationMemberAdapterFirst.setMemberDataAndRefresh(
                         voiceCommunicationManager.getVoiceCommunicationMemberListTop(), 1);
             }
-        } else if (voiceCommunicationManager.getVoiceCommunicationMemberList().size() <= 9) {
+            if (voiceCommunicationManager.getVoiceCommunicationMemberList().size() >= 5 && voiceCommunicationMemberAdapterSecond != null) {
+                voiceCommunicationMemberAdapterSecond.setMemberDataAndRefresh(
+                        voiceCommunicationManager.getVoiceCommunicationMemberListBottom(), 2);
+            }
+        } else if (voiceCommunicationManager.getWaitAndConnectedNumber() <= 9) {
             if (voiceCommunicationMemberAdapterFirst != null) {
                 voiceCommunicationMemberAdapterFirst.setMemberDataAndRefresh(
                         voiceCommunicationManager.getVoiceCommunicationMemberListTop(), 1);
@@ -881,7 +902,7 @@ public class VoiceCommunicationActivity extends BaseActivity {
             case R.id.ll_answer_phone_direct:
             case R.id.img_answer_the_phone:
                 voiceCommunicationManager.setCommunicationState(COMMUNICATION_STATE_ING);
-                if (NetUtils.isNetworkConnected(this)) {
+                if (NetUtils.isNetworkConnected(this) && !ClickRuleUtil.isFastClick()) {
                     int joinState = voiceCommunicationManager.joinChannel(voiceCommunicationManager.getInviteeInfoBean().getToken(),
                             voiceCommunicationManager.getAgoraChannelId(), voiceCommunicationManager.getInviteeInfoBean().getUserId(),
                             voiceCommunicationManager.getInviteeInfoBean().getAgoraUid());

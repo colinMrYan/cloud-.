@@ -2,12 +2,13 @@ package com.inspur.emmcloud.basemodule.util.imageedit;
 
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.RadioGroup;
 import android.widget.ViewSwitcher;
 
-import com.gyf.barlibrary.ImmersionBar;
+import com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButton;
 import com.inspur.emmcloud.basemodule.R;
 import com.inspur.emmcloud.basemodule.ui.BaseFragmentActivity;
 import com.inspur.emmcloud.basemodule.util.imageedit.core.IMGMode;
@@ -34,6 +35,7 @@ abstract class IMGEditBaseActivity extends BaseFragmentActivity implements View.
     private IMGTextEditDialog mTextDialog;
     private View mLayoutOpSub;
     private ViewSwitcher mOpSwitcher, mOpSubSwitcher;
+    private CustomRoundButton doneBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,12 +45,31 @@ abstract class IMGEditBaseActivity extends BaseFragmentActivity implements View.
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        if (Build.VERSION.SDK_INT >= 19) {
+            View decorView = getWindow().getDecorView();
+            decorView.setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+        } else {
+            View decorView = getWindow().getDecorView();
+            int option = View.SYSTEM_UI_FLAG_FULLSCREEN;
+            decorView.setSystemUiVisibility(option);
+        }
+    }
+
+    @Override
     public void onCreate() {
 //        setNavigationBarColor(android.R.color.black);
         Bitmap bitmap = getBitmap();
         if (bitmap != null) {
             setContentView(R.layout.plugin_camera_image_edit_activity);
-            ImmersionBar.with(this).statusBarColor(R.color.black).navigationBarColor(R.color.black).init();
+//            ImmersionBar.with(this).statusBarColor(R.color.black).navigationBarColor(R.color.black).init();
             initViews();
             mImgView.setImageBitmap(bitmap);
         } else finish();
@@ -66,6 +87,8 @@ abstract class IMGEditBaseActivity extends BaseFragmentActivity implements View.
         mColorGroup.setOnCheckedChangeListener(this);
 
         mLayoutOpSub = findViewById(R.id.layout_op_sub);
+        doneBtn = findViewById(R.id.bt_done);
+        doneBtn.setOnClickListener(this);
     }
 
     @Override
@@ -81,9 +104,9 @@ abstract class IMGEditBaseActivity extends BaseFragmentActivity implements View.
             onModeClick(IMGMode.CLIP);
         } else if (vid == R.id.btn_undo) {
             onUndoClick();
-        } else if (vid == R.id.tv_done) {
+        } else if (vid == R.id.bt_done) {
             onDoneClick();
-        } else if (vid == R.id.tv_cancel) {
+        } else if (vid == R.id.ibt_back) {
             onCancelClick();
         } else if (vid == R.id.ib_clip_cancel) {
             onCancelClipClick();
