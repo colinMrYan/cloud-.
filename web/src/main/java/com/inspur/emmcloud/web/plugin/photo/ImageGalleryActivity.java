@@ -6,6 +6,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
+import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
@@ -53,7 +54,6 @@ public class ImageGalleryActivity extends BaseActivity {
     public void onCreate() {
         ButterKnife.bind(this);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
-
         List<String> sourceImageList = getIntent().getStringArrayListExtra(EXTRA_IMAGE_SOURCE_URLS);
         List<String> thumbnailImageList = getIntent().getStringArrayListExtra(EXTRA_IMAGE_THUMB_URLS);
         int index = getIntent().getIntExtra(EXTRA_IMAGE_INDEX, 0);
@@ -73,6 +73,12 @@ public class ImageGalleryActivity extends BaseActivity {
         checkConfig();
         transLayout.apply(transConfig);
         transLayout.show();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        ImmersionBar.with(this).navigationBarColor(android.R.color.black).init();
     }
 
     @Override

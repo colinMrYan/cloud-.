@@ -572,9 +572,9 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
 //        }
         mFocusView.setX(x - mFocusView.getWidth() / 2);
         mFocusView.setY(y - mFocusView.getHeight() / 2);
-        ObjectAnimator scaleX = ObjectAnimator.ofFloat(mFocusView, "scaleX", 1, 0.6f);
-        ObjectAnimator scaleY = ObjectAnimator.ofFloat(mFocusView, "scaleY", 1, 0.6f);
-        ObjectAnimator alpha = ObjectAnimator.ofFloat(mFocusView, "alpha", 1f, 0.4f, 1f, 0.4f, 1f, 0.4f, 1f);
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(mFocusView, "scaleX", 1, 0.8f);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(mFocusView, "scaleY", 1, 0.8f);
+        ObjectAnimator alpha = ObjectAnimator.ofFloat(mFocusView, "alpha", 1f, 0.6f, 1f, 0.6f, 1f, 0.6f, 1f);
         AnimatorSet animSet = new AnimatorSet();
         animSet.play(scaleX).with(scaleY).before(alpha);
         animSet.setDuration(400);
