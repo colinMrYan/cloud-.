@@ -20,7 +20,7 @@ public class AndroidMp3ConvertUtils {
     private static final int CHANNEL = 1;//声道数
     private static final int MODE = 0;//模式，默认0
     private static final int OUT_BIT_RATE = 32;//输入比特率
-    private static final int QUALITY = 0;//音频质量0~9,0质量最好体积最大，9质量最差体积最小
+    private static final int QUALITY = 5;//音频质量0~9,0质量最好体积最大，9质量最差体积最小
     Handler handler = new Handler();
     private Context context;
     private String rawPath = "", mp3Path = "";

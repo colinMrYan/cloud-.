@@ -433,7 +433,7 @@ public class AudioRecorderManager {
         this.callBack = callBack;
     }
 
-    public void deNose() {
+    public void deNoseX() {
         int createStatus = -1;
         denosexUtil nsUtils = null;
         try {
@@ -450,7 +450,6 @@ public class AudioRecorderManager {
             FileOutputStream fOut = new FileOutputStream(pcmAudioFilePath);
             byte[] buffer = new byte[640];
             while (fInt.read(buffer) != -1) {
-                LogUtils.LbcDebug("111");
                 short[] inputData = new short[320];
                 short[] outData = new short[320];
                 ByteBuffer.wrap(buffer).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().get(inputData);
@@ -482,6 +481,43 @@ public class AudioRecorderManager {
         return dest;
     }
 
+    public void voiceAgc() {
+        int createStatus = -1;
+        denosexUtil agcUtils = null;
+        try {
+            agcUtils = new denosexUtil();
+            createStatus = agcUtils.noseAgcCreate();
+            int iniState = agcUtils.noseAgcIni(createStatus, 0, 255, 3, 16000);
+            int configState = agcUtils.noseAgcSetConfig(createStatus, 30, 1, 3);
+            File fileRaw = new File(rawAudioFilePath);
+            File filePcm = new File(pcmAudioFilePath);
+            if (!fileRaw.exists()) {
+                return; //如果不存在 退出
+            }
+            FileInputStream fInt = new FileInputStream(rawAudioFilePath);
+            FileOutputStream fOut = new FileOutputStream(pcmAudioFilePath);
+            byte[] buffer = new byte[320];
+            while (fInt.read(buffer) != -1) {
+                short[] inputData = new short[160];
+                short[] outData = new short[160];
+                ByteBuffer.wrap(buffer).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().get(inputData);
+                outData = agcUtils.noseAgcProcess(createStatus, inputData, 160);
+                fOut.write(toByteArray(outData));
+            }
+            fInt.close();
+            fOut.close();
+            fileRaw.delete();
+            File fileNew = new File(rawAudioFilePath);
+            filePcm.renameTo(fileNew);
+            LogUtils.LbcDebug("new File Success");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (createStatus == 0 && agcUtils != null) {
+            agcUtils.noseAgcFree();
+        }
+    }
+
     /**
      * 给AudioRecordButton返回数据的回调接口
      */
@@ -499,7 +535,8 @@ public class AudioRecorderManager {
         public void run() {
             writeData2File();//往文件中写入裸数据
             /**初始文件的语音降噪和语音增强算法在此添加**/
-            deNose();  //语音降噪
+            voiceAgc();
+            deNoseX();
             copyWaveFile(rawAudioFilePath, wavAudioFilePath);//给裸数据加上头文件
         }
     }
