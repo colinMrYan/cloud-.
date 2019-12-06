@@ -1,5 +1,8 @@
 package com.inspur.emmcloud.web.plugin.screenshot;
 
+import android.content.Intent;
+
+import com.inspur.emmcloud.basemodule.util.imageedit.IMGEditActivity;
 import com.inspur.emmcloud.web.plugin.ImpPlugin;
 
 import org.json.JSONObject;
@@ -20,7 +23,12 @@ public class ScreenshotService extends ImpPlugin {
 
 
     private void screenshot() {
-
+        String screenshotImgPath = ScreenshotUtil.screenshot(getActivity());
+        if (screenshotImgPath != null) {
+            getActivity().startActivity(new Intent(getActivity(), IMGEditActivity.class)
+                    .putExtra(IMGEditActivity.EXTRA_IS_COVER_ORIGIN, true)
+                    .putExtra(IMGEditActivity.EXTRA_IMAGE_PATH, screenshotImgPath));
+        }
     }
 
     @Override

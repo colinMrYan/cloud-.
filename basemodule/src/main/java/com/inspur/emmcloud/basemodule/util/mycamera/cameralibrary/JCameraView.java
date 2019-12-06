@@ -245,9 +245,7 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         float widthSize = mVideoView.getMeasuredWidth();
         float heightSize = mVideoView.getMeasuredHeight();
-        if (screenProp == 0) {
             screenProp = heightSize / widthSize;
-        }
     }
 
     public void setCropData(String cropJson) {

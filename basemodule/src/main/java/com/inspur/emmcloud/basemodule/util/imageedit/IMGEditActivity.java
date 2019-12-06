@@ -24,7 +24,7 @@ public class IMGEditActivity extends IMGEditBaseActivity {
 
     public static final String EXTRA_IMAGE_PATH = "IMAGE_PATH";
 
-    public static final String EXTRA_IMAGE_SAVE_DIR_PATH = "IMAGE_SAVE_DIR_PATH";
+    public static final String EXTRA_IS_COVER_ORIGIN = "IS_COVER_ORIGIN_IMG";
     public static final String EXTRA_ENCODING_TYPE = "IMAGE_ENCODING_TYPE";
     public static final String OUT_FILE_PATH = "OUT_FILE_PATH";
     boolean isHaveEdit = false;
@@ -96,12 +96,19 @@ public class IMGEditActivity extends IMGEditBaseActivity {
     @Override
     public void onDoneClick() {
         if (isHaveEdit) {
-            String dirPath = MyAppConfig.LOCAL_IMG_CREATE_PATH;
-            File dir = new File(dirPath);
-            if (!dir.exists()) {
-                dir.mkdirs();
+            boolean isCoverOriginImg = getIntent().getBooleanExtra(EXTRA_IS_COVER_ORIGIN, false);
+            File saveFile = null;
+            if (isCoverOriginImg) {
+                saveFile = new File(originFilePath);
+            } else {
+                String dirPath = MyAppConfig.LOCAL_IMG_CREATE_PATH;
+                File dir = new File(dirPath);
+                if (!dir.exists()) {
+                    dir.mkdirs();
+                }
+                saveFile = new File(dirPath, System.currentTimeMillis() + ".png");
             }
-            File saveFile = new File(dirPath, System.currentTimeMillis() + ".png");
+
             if (saveFile.exists()) {
                 saveFile.delete();
             }
@@ -125,6 +132,8 @@ public class IMGEditActivity extends IMGEditBaseActivity {
                 Intent intent = new Intent();
                 intent.putExtra(OUT_FILE_PATH, saveFile.getAbsolutePath());
                 setResult(Activity.RESULT_OK, intent);
+
+
             } else {
                 setResult(Activity.RESULT_CANCELED);
             }

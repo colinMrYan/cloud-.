@@ -1,9 +1,9 @@
 package com.inspur.emmcloud.basemodule.util.imageedit;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -13,6 +13,8 @@ import android.view.WindowManager.LayoutParams;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 
+import com.gyf.barlibrary.BarHide;
+import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.basemodule.R;
 import com.inspur.emmcloud.basemodule.util.imageedit.core.IMGText;
 import com.inspur.emmcloud.basemodule.util.imageedit.view.IMGColorGroup;
@@ -33,9 +35,11 @@ public class IMGTextEditDialog extends Dialog implements View.OnClickListener,
     private IMGText mDefaultText;
 
     private IMGColorGroup mColorGroup;
+    private Context context;
 
     public IMGTextEditDialog(Context context, Callback callback) {
         super(context, R.style.ImageTextDialog);
+        this.context = context;
         setContentView(R.layout.plugin_camera_image_text_dialog);
         mCallback = callback;
         Window window = getWindow();
@@ -101,23 +105,11 @@ public class IMGTextEditDialog extends Dialog implements View.OnClickListener,
         mEditText.setTextColor(mColorGroup.getCheckColor());
     }
 
-    private void fullScreenImmersive(View view) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            int uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_FULLSCREEN;
-            view.setSystemUiVisibility(uiOptions);
-        }
-    }
-
     @Override
     public void show() {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
         super.show();
-        fullScreenImmersive(getWindow().getDecorView());
+        ImmersionBar.with((Activity) context, this).hideBar(BarHide.FLAG_HIDE_BAR).init();
         this.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
     }
 
@@ -125,4 +117,6 @@ public class IMGTextEditDialog extends Dialog implements View.OnClickListener,
 
         void onText(IMGText text);
     }
+
+
 }

@@ -14,15 +14,15 @@
             android:id="@+id/masker"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#C000" />
+            android:background="#8822292c" />
 
         <ListView
             android:id="@+id/listView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:divider="@color/color_list_divider"
-            android:dividerHeight="0.5dp"
+            android:divider="#a0ffffff"
+            android:dividerHeight="0.5px"
             tools:listitem="@layout/adapter_folder_list_item" />
     </FrameLayout>
 
