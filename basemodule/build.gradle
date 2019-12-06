@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.jakewharton.butterknife'
 
 android {
     compileSdkVersion versions.compileSdk
@@ -43,5 +44,7 @@ android {
 dependencies {
     api project(':componentservice')
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-//    debugImplementation   'com.squareup.leakcanary:leakcanary-android:2.0-beta-3'
+    implementation deps.butterknife.butterknife
+    annotationProcessor deps.butterknife.butterknife_compiler
+
 }

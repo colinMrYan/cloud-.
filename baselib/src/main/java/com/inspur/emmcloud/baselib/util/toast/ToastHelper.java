@@ -46,7 +46,7 @@ final class ToastHelper extends Handler {
     /***
      * 显示吐司弹窗
      */
-    void show() {
+    boolean show() {
         if (!isShow) {
             /*
              这里解释一下，为什么不复用 WindowManager.LayoutParams 这个对象
@@ -99,9 +99,11 @@ final class ToastHelper extends Handler {
                 // 添加一个移除吐司的任务
                 sendEmptyMessageDelayed(0, mToast.getDuration() == Toast.LENGTH_LONG ?
                         ToastHandler.LONG_DURATION_TIMEOUT : ToastHandler.SHORT_DURATION_TIMEOUT);
-            } catch (NullPointerException | IllegalStateException | WindowManager.BadTokenException ignored) {
+            } catch (Exception e) {
+                isShow = false;
             }
         }
+        return isShow;
     }
 
     /**

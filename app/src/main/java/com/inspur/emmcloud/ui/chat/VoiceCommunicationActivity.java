@@ -54,6 +54,7 @@ import com.inspur.emmcloud.bean.chat.GetVoiceAndVideoResult;
 import com.inspur.emmcloud.bean.chat.GetVoiceCommunicationResult;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationAudioVolumeInfo;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
+import com.inspur.emmcloud.bean.chat.VoiceCommunicationRtcStats;
 import com.inspur.emmcloud.broadcastreceiver.VoiceCommunicationHeadSetReceiver;
 import com.inspur.emmcloud.ui.AppSchemeHandleActivity;
 import com.inspur.emmcloud.util.privates.MediaPlayerManagerUtils;
@@ -248,6 +249,7 @@ public class VoiceCommunicationActivity extends BaseActivity {
     private MediaPlayerManagerUtils mediaPlayerManagerUtils;
     private VoiceCommunicationManager voiceCommunicationManager;
     private VoiceCommunicationHeadSetReceiver receiver;
+    private int directCommunicationUserCheckCount = 0;
 
     @Override
     public void onCreate() {
@@ -762,6 +764,21 @@ public class VoiceCommunicationActivity extends BaseActivity {
                             turnToVoiceCommunication();
                         }
                     });
+                }
+            }
+
+            @Override
+            public void onRtcStats(VoiceCommunicationRtcStats stats) {
+                super.onRtcStats(stats);
+                /// 1V1音频通话；被邀请者检测到频道内只有自己一个人的时候，需要离开频道；检测次数15次  stats.users通信模式下，返回当前频道内的人数.
+                if (directOrGroupType.equals(Conversation.TYPE_DIRECT) && !voiceCommunicationManager.isInviter() && stats.users == 1) {
+                    if (directCommunicationUserCheckCount >= 15) {
+                        voiceCommunicationManager.handleDestroy();
+                    } else {
+                        directCommunicationUserCheckCount = directCommunicationUserCheckCount + 1;
+                    }
+                } else {
+                    directCommunicationUserCheckCount = 0;
                 }
             }
 
