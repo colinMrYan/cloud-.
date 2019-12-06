@@ -44,6 +44,12 @@
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".util.ScreenUtil.ScreenShotActivity"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme_Transparent" />
 
         <activity android:name=".util.ScreenUtil.ScreenShotActivity" />
 

@@ -51,20 +51,4 @@ public class ScreenUtil {
         }
     }
 
-    public void ScreenShotWithoutStateBarByView(View view, String path, String name) {
-        view.setDrawingCacheEnabled(true);
-        view.buildDrawingCache();
-        Bitmap bitmap = view.getDrawingCache();
-        try {
-            File file = new File(path, name);
-            FileOutputStream out = new FileOutputStream(file);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
-            out.flush();
-            out.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
 }
