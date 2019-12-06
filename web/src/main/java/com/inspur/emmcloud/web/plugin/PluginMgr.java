@@ -26,6 +26,7 @@ import com.inspur.emmcloud.web.plugin.map.MapService;
 import com.inspur.emmcloud.web.plugin.network.NetworkService;
 import com.inspur.emmcloud.web.plugin.nfc.NFCService;
 import com.inspur.emmcloud.web.plugin.photo.PhotoService;
+import com.inspur.emmcloud.web.plugin.screenshot.ScreenshotService;
 import com.inspur.emmcloud.web.plugin.share.ShareSocialService;
 import com.inspur.emmcloud.web.plugin.sms.SmsService;
 import com.inspur.emmcloud.web.plugin.sql.SqlService;
@@ -257,6 +258,8 @@ public class PluginMgr {
                 serviceName = HttpService.class.getCanonicalName();
             } else if (serviceName.endsWith("WechatService")) {
                 serviceName = InvoiceService.class.getCanonicalName();
+            } else if (serviceName.endsWith("ScreenshotService")) {
+                serviceName = ScreenshotService.class.getCanonicalName();
             }
             LogUtils.jasonDebug("serviceName==" + serviceName);
         }
