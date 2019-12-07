@@ -356,7 +356,7 @@
     <string name="chat_search_related_messages">%1$s的記錄</string>
     <string name="chat_group_member_size">%1$s(%2$d)</string>
     <string name="chat_group_qr_code_share">分享二維碼</string>
-    <string name="chat_group_welcome_join_group">歡迎加入%1$s群</string>
+    <string name="chat_group_welcome_join_group">歡迎加入群聊%1$s</string>
     <string name="chat_conversation_create_error">創建群組失敗</string>
     <string name="chat_emotion_recent_tip">最近使用</string>
     <string name="chat_emotion_total_tip">所有表情</string>
