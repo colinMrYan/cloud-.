@@ -178,7 +178,7 @@
     <string name="channel_group_members_name"> 群名称</string>
     <string name="channel_group_qrcode">群二维码</string>
     <string name="channel_group_qrcode_card">群二维码名片</string>
-    <string name="channel_group_qrcode_valid">该二维码7天内（%1$s之前）有效，重新进入将更新</string>
+    <string name="channel_group_qrcode_valid">该二维码7天内(%1$s之前)有效，重新进入将更新</string>
     <string name="channel_set_top"> 置顶</string>
     <string name="channel_set_sticky"> 置顶聊天</string>
     <string name="message_without_interruption">消息免打扰</string>
