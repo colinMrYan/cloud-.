@@ -7,8 +7,10 @@ import android.os.Bundle;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.imageedit.IMGEditActivity;
 import com.inspur.emmcloud.web.R;
 import com.inspur.emmcloud.web.plugin.ImpPlugin;
@@ -16,6 +18,7 @@ import com.umeng.commonsdk.UMConfigure;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareListener;
+import com.umeng.socialize.bean.PlatformName;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.shareboard.SnsPlatform;
@@ -77,28 +80,41 @@ public class ScreenshotService extends ImpPlugin {
         mShareListener = new CustomShareListener(getActivity());
 
         ShareAction shareAction = new ShareAction(getActivity());
-        shareAction.setDisplayList(
-                SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE,
-                SHARE_MEDIA.QQ, SHARE_MEDIA.QZONE
-        );
         shareAction.setShareboardclickCallback(new ShareBoardlistener() {
             @Override
             public void onclick(SnsPlatform snsPlatform, SHARE_MEDIA share_media) {
-                if (snsPlatform.mKeyword.equals("CLOUDPLUSE")) {
-                    ArrayList<String> urlList = new ArrayList<>();
-                    urlList.add(screenshotImgPath);
-                    Bundle bundle = new Bundle();
-                    bundle.putStringArrayList(Constant.SHARE_FILE_URI_LIST, urlList);
-                    ARouter.getInstance().build(Constant.AROUTER_CLASS_COMMUNICATION_SHARE_FILE).with(bundle).navigation();
-                } else {
-                    UMImage thumb = new UMImage(getActivity(), new File(screenshotImgPath));
-                    new ShareAction(getActivity()).withMedia(thumb)
-                            .setPlatform(share_media)
-                            .setCallback(mShareListener)
-                            .share();
+
+                switch (snsPlatform.mKeyword) {
+                    case "CLOUDPLUSE":
+                        ArrayList<String> urlList = new ArrayList<>();
+                        urlList.add(screenshotImgPath);
+                        Bundle bundle = new Bundle();
+                        bundle.putStringArrayList(Constant.SHARE_FILE_URI_LIST, urlList);
+                        ARouter.getInstance().build(Constant.AROUTER_CLASS_COMMUNICATION_SHARE_FILE).with(bundle).navigation();
+                        break;
+                    case "wechat":
+                        new ShareAction(getActivity()).withMedia(new UMImage(getActivity(), new File(screenshotImgPath)))
+                                .setPlatform(SHARE_MEDIA.WEIXIN)
+                                .setCallback(mShareListener)
+                                .share();
+                        break;
+                    case "qq":
+                        new ShareAction(getActivity()).withMedia(new UMImage(getActivity(), new File(screenshotImgPath)))
+                                .setPlatform(SHARE_MEDIA.QQ)
+                                .setCallback(mShareListener)
+                                .share();
+                        break;
                 }
             }
         });
+
+
+        if (AppUtils.isAppInstalled(BaseApplication.getInstance(), "com.tencent.mm")) {
+            shareAction.addButton(PlatformName.WEIXIN, "wechat", "umeng_socialize_wechat", "umeng_socialize_wechat");
+        }
+        if (AppUtils.isAppInstalled(BaseApplication.getInstance(), "com.tencent.mobileqq")) {
+            shareAction.addButton(PlatformName.QQ, "qq", "umeng_socialize_qq", "umeng_socialize_qq");
+        }
         shareAction.addButton(getFragmentContext().getString(R.string.clouddrive_internal_sharing), "CLOUDPLUSE", "ic_launcher_share", "ic_launcher_share");
         shareAction.open();
 
