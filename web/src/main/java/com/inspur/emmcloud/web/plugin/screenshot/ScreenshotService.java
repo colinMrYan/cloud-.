@@ -79,7 +79,7 @@ public class ScreenshotService extends ImpPlugin {
         ShareAction shareAction = new ShareAction(getActivity());
         shareAction.setDisplayList(
                 SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE,
-                SHARE_MEDIA.QQ, SHARE_MEDIA.QZONE, SHARE_MEDIA.SMS
+                SHARE_MEDIA.QQ, SHARE_MEDIA.QZONE
         );
         shareAction.setShareboardclickCallback(new ShareBoardlistener() {
             @Override
