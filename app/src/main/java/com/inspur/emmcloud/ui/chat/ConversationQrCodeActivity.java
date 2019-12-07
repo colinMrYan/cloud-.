@@ -164,11 +164,11 @@ public class ConversationQrCodeActivity extends BaseActivity {
                         if (snsPlatform.mKeyword.equals("CLOUDPLUSE")) {
                             shareGroupToFriends();
                         } else {
-                            String tip = getString(R.string.chat_group_welcome_join_group, groupName);
+                            String tip = getString(R.string.chat_group_welcome_join_group);
                             UMImage thumb = new UMImage(ConversationQrCodeActivity.this, R.drawable.ic_launcher_share);
                             UMWeb web = new UMWeb(shareUrl);
                             web.setThumb(thumb);
-                            web.setDescription(tip);
+                            web.setDescription(getString(R.string.chat_group_welcome_join_group_detail, groupName));
                             web.setTitle(tip);
                             new ShareAction(ConversationQrCodeActivity.this).withMedia(web)
                                     .setPlatform(getPlatform(snsPlatform.mKeyword))
@@ -319,11 +319,11 @@ public class ConversationQrCodeActivity extends BaseActivity {
      */
     private String conbineGroupNewsContent() {
         JSONObject jsonObject = new JSONObject();
-        String tip = getString(R.string.chat_group_welcome_join_group, groupName);
+        String tip = getString(R.string.chat_group_welcome_join_group);
         try {
             jsonObject.put("url", shareUrl);
             jsonObject.put("poster", "");
-            jsonObject.put("digest", tip);
+            jsonObject.put("digest", getString(R.string.chat_group_welcome_join_group_detail, groupName));
             jsonObject.put("title", tip);
         } catch (Exception e) {
             e.printStackTrace();
