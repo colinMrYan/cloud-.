@@ -51,7 +51,7 @@ abstract class IMGEditBaseActivity extends BaseFragmentActivity implements View.
         Bitmap bitmap = getBitmap();
         if (bitmap != null) {
             setContentView(R.layout.plugin_camera_image_edit_activity);
-            ImmersionBar.with(this).hideBar(BarHide.FLAG_HIDE_BAR).init();
+            ImmersionBar.with(this).hideBar(BarHide.FLAG_HIDE_STATUS_BAR).fullScreen(true).transparentNavigationBar().init();
             initViews();
             mImgView.setImageBitmap(bitmap);
         } else finish();
@@ -155,7 +155,7 @@ abstract class IMGEditBaseActivity extends BaseFragmentActivity implements View.
 
     @Override
     public void onDismiss(DialogInterface dialog) {
-        ImmersionBar.with(this).hideBar(BarHide.FLAG_HIDE_BAR).init();
+        ImmersionBar.with(this).hideBar(BarHide.FLAG_HIDE_STATUS_BAR).fullScreen(true).transparentNavigationBar().init();
         ImmersionBar.with(IMGEditBaseActivity.this, mTextDialog).destroy();
         mOpSwitcher.setVisibility(View.VISIBLE);
 

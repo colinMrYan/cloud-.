@@ -61,7 +61,8 @@
         android:id="@+id/capture_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom" />
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="20dp" />
 
     <com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary.FocusView
         android:id="@+id/fouce_view"

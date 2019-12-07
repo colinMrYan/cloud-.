@@ -62,7 +62,7 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/color_image_grid_header"
+        android:background="#c022292c"
         android:visibility="gone">
 
         <Button

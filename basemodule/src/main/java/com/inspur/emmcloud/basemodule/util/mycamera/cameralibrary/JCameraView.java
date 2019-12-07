@@ -141,6 +141,7 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
         mSwitchCamera.setImageResource(iconSrc);
         machine.flash(Camera.Parameters.FLASH_MODE_AUTO);
         mCaptureLayout = (CaptureLayout) view.findViewById(R.id.capture_layout);
+        mCaptureLayout.setVisibility(INVISIBLE);
         mCaptureLayout.setDuration(duration);
         mCaptureLayout.setIconSrc(iconLeft, iconRight);
         mFocusView = (FocusView) view.findViewById(R.id.fouce_view);
@@ -267,6 +268,10 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
 
     public boolean reFocus() {
         return setFocusViewWidthAnimation(mFocusView.getX() + mFocusView.getWidth() / 2, mFocusView.getY() + mFocusView.getHeight() / 2, false);
+    }
+
+    public void showCaptureLayout() {
+        mCaptureLayout.setVisibility(VISIBLE);
     }
 
     //生命周期onPause
@@ -423,17 +428,20 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
                 FileUtil.deleteFile(videoUrl);
                 mVideoView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
                 machine.start(mVideoView.getHolder(), screenProp);
+                mSwitchCamera.setVisibility(VISIBLE);
                 break;
             case TYPE_PICTURE:
                 mPhoto.setVisibility(INVISIBLE);
                 break;
             case TYPE_SHORT:
+                mSwitchCamera.setVisibility(VISIBLE);
                 break;
             case TYPE_DEFAULT:
                 mVideoView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+                mSwitchCamera.setVisibility(VISIBLE);
                 break;
         }
-        mSwitchCamera.setVisibility(VISIBLE);
+
 //        mFlashLamp.setVisibility(VISIBLE);
         mCaptureLayout.resetCaptureLayout();
     }

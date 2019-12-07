@@ -279,7 +279,6 @@ public class CameraInterface implements Camera.PreviewCallback {
                         nowScaleRate = mParams.getMaxZoom();
                     }
                     mParams.setZoom(nowScaleRate);
-                    LogUtils.jasonDebug("nowScaleRate==" + nowScaleRate);
                     mCamera.setParameters(mParams);
                 }
                 break;
@@ -415,11 +414,13 @@ public class CameraInterface implements Camera.PreviewCallback {
                 final RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) jCameraView.getLayoutParams();
                 params.width = width;
                 params.height = height;
-
+                LogUtils.jasonDebug("a==" + System.currentTimeMillis());
                 jCameraView.post(new Runnable() {
                     @Override
                     public void run() {
+                        LogUtils.jasonDebug("b==" + System.currentTimeMillis());
                         jCameraView.setLayoutParams(params);
+                        jCameraView.showCaptureLayout();
                         jCameraView.reFocus();
                     }
                 });
