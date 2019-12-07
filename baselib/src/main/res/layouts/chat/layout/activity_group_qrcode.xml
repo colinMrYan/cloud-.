@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="@string/channel_group_qrcode"
+            android:text="@string/channel_group_qrcode_card"
             android:textColor="?attr/header_text_color"
             android:textSize="@dimen/header_textsize" />
     </RelativeLayout>
@@ -77,14 +77,25 @@
 
         <Button
             android:id="@+id/btn_share_group_qrcode"
-            android:layout_width="91dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:layout_below="@id/iv_group_qrcode"
             android:layout_centerHorizontal="true"
             android:background="@null"
             android:drawableLeft="@drawable/ic_group_share"
+            android:drawablePadding="5dp"
             android:text="@string/chat_group_qr_code_share"
             android:textColor="#36A5F6"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/tv_valid_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/btn_share_group_qrcode"
+            android:gravity="center"
+            android:textColor="#FF999999"
             android:textSize="13sp" />
     </RelativeLayout>
 

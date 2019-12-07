@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import com.alibaba.android.arouter.launcher.ARouter;
-import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.config.Constant;
 
@@ -47,8 +46,6 @@ public class ScanQrCodeUtils {
             Uri uri = Uri.parse(result);
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
             context.startActivity(intent);
-        } else if (result.startsWith(APIUri.getCreateGroupConversationUrl())) {
-
         } else if (result.startsWith("http")) {
             Bundle bundle = new Bundle();
             bundle.putString("uri", result);
