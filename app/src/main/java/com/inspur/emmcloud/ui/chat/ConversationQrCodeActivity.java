@@ -18,6 +18,7 @@ import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
@@ -50,6 +51,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
+import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -71,6 +73,8 @@ public class ConversationQrCodeActivity extends BaseActivity {
     ImageView groupQrCodeImage;
     @BindView(R.id.btn_share_group_qrcode)
     Button shareGroupQrCodeBtn;
+    @BindView(R.id.tv_valid_date)
+    TextView validDateText;
     private String cid;
     private LoadingDialog loadingDialog;
     private CustomShareListener shareConversationListener;
@@ -104,6 +108,18 @@ public class ConversationQrCodeActivity extends BaseActivity {
         getQrCodeContent();
         groupName = getIntent().getStringExtra("groupName");
         groupNameText.setText(getString(R.string.chat_group_member_size, groupName, getIntent().getIntExtra(ConversationGroupInfoActivity.MEMBER_SIZE, 0)));
+        validDateText.setText(getValidDate());
+    }
+
+    /**
+     * 获取有效时间
+     *
+     * @return
+     */
+    private String getValidDate() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_YEAR, 7);
+        return getString(R.string.channel_group_qrcode_valid, TimeUtils.calendar2FormatString(this, calendar, TimeUtils.FORMAT_MONTH_DAY));
     }
 
     /**
@@ -139,7 +155,7 @@ public class ConversationQrCodeActivity extends BaseActivity {
         shareConversationListener = new CustomShareListener(ConversationQrCodeActivity.this);
         ShareAction shareAction = new ShareAction(ConversationQrCodeActivity.this).setDisplayList(
                 SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE,
-                SHARE_MEDIA.QQ, SHARE_MEDIA.QZONE, SHARE_MEDIA.SMS
+                SHARE_MEDIA.QQ, SHARE_MEDIA.QZONE
         )
                 .setShareboardclickCallback(new ShareBoardlistener() {
                     @Override
@@ -147,12 +163,6 @@ public class ConversationQrCodeActivity extends BaseActivity {
                         if (snsPlatform.mKeyword.equals("CLOUDPLUSE")) {
                             shareGroupToFriends();
                         } else {
-                            if (share_media == SHARE_MEDIA.SMS) {
-                                new ShareAction(ConversationQrCodeActivity.this).withText(shareUrl)
-                                        .setPlatform(share_media)
-                                        .setCallback(shareConversationListener)
-                                        .share();
-                            } else {
                                 String tip = getString(R.string.chat_group_welcome_join_group, groupName);
                                 UMImage thumb = new UMImage(ConversationQrCodeActivity.this, R.drawable.ic_launcher_share);
                                 UMWeb web = new UMWeb(shareUrl);
@@ -163,7 +173,6 @@ public class ConversationQrCodeActivity extends BaseActivity {
                                         .setPlatform(share_media)
                                         .setCallback(shareConversationListener)
                                         .share();
-                            }
                         }
 
                     }
