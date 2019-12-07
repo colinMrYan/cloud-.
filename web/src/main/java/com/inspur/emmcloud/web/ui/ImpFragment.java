@@ -31,7 +31,6 @@ import com.alibaba.android.arouter.facade.Postcard;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
@@ -45,6 +44,7 @@ import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.basemodule.util.Res;
+import com.inspur.emmcloud.basemodule.util.imageedit.IMGEditActivity;
 import com.inspur.emmcloud.componentservice.login.LoginService;
 import com.inspur.emmcloud.web.R;
 import com.inspur.emmcloud.web.plugin.IPlugin;
@@ -54,11 +54,13 @@ import com.inspur.emmcloud.web.plugin.camera.CameraService;
 import com.inspur.emmcloud.web.plugin.filetransfer.FileTransferService;
 import com.inspur.emmcloud.web.plugin.invoice.InvoiceService;
 import com.inspur.emmcloud.web.plugin.photo.PhotoService;
+import com.inspur.emmcloud.web.plugin.screenshot.ScreenshotService;
 import com.inspur.emmcloud.web.plugin.staff.SelectStaffService;
 import com.inspur.emmcloud.web.plugin.video.VideoService;
 import com.inspur.emmcloud.web.plugin.window.DropItemTitle;
 import com.inspur.emmcloud.web.plugin.window.OnKeyDownListener;
 import com.inspur.emmcloud.web.webview.ImpWebView;
+import com.itheima.roundedimageview.RoundedImageView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -87,6 +89,7 @@ public class ImpFragment extends ImpBaseFragment {
     public static final int SELECT_FILE_SERVICE_REQUEST = 9;
     public static final int REQUEST_CODE_RECORD_VIDEO = 10;
     public static final int FILE_CHOOSER_RESULT_CODE = 5173;
+    private static final int REQUEST_EDIT_SCREENSHOT_IMG = 11;
     private static final String JAVASCRIPT_PREFIX = "javascript:";
     private static String EXTRA_OUTSIDE_URL = "extra_outside_url";
     private static String EXTRA_OUTSIDE_URL_REQUEST_RESULT = "extra_outside_url_request_result";
@@ -101,6 +104,7 @@ public class ImpFragment extends ImpBaseFragment {
     private String helpUrl = "";
     private HashMap<String, String> urlTilteMap = new HashMap<>();
     private View rootView;
+    private RoundedImageView screenshotImg;
 
     private String appName = "";
     private String version;
@@ -115,6 +119,7 @@ public class ImpFragment extends ImpBaseFragment {
     //错误url和错误信息
     private String errorUrl = "";
     private String errorDescription = "";
+    private String screenshotImgPath = "";
 
 
     @Override
@@ -225,7 +230,6 @@ public class ImpFragment extends ImpBaseFragment {
      */
     private void initFragmentViews() {
         String url = getArguments().getString(Constant.APP_WEB_URI);
-        LogUtils.jasonDebug("url==" + url);
         optionMenuList = (ArrayList<MainTabMenu>) getArguments().getSerializable(Constant.WEB_FRAGMENT_MENU);
         setWebViewFunctionVisiable();
         initHeaderOptionMenu();
@@ -247,6 +251,8 @@ public class ImpFragment extends ImpBaseFragment {
             }
         });
         webView.loadUrl(url, webViewHeaders);
+        screenshotImg = rootView.findViewById(R.id.iv_screenshot);
+        screenshotImg.setOnClickListener(listener);
     }
 
     /**
@@ -467,6 +473,13 @@ public class ImpFragment extends ImpBaseFragment {
                 if (loadFailLayout != null) {
                     loadFailLayout.setVisibility(View.VISIBLE);
                 }
+            }
+
+            @Override
+            public void showScreenshotImg(String screenshotImgPath) {
+                ImpFragment.this.screenshotImgPath = screenshotImgPath;
+                screenshotImg.setVisibility(View.VISIBLE);
+                ImageDisplayUtils.getInstance().displayImage(screenshotImg, screenshotImgPath);
             }
         };
     }
@@ -772,6 +785,8 @@ public class ImpFragment extends ImpBaseFragment {
                     case REQUEST_CODE_RECORD_VIDEO:
                         serviceName = VideoService.class.getCanonicalName();
                         break;
+                    case REQUEST_EDIT_SCREENSHOT_IMG:
+                        serviceName = ScreenshotService.class.getCanonicalName();
                     default:
                         break;
                 }
@@ -842,7 +857,11 @@ public class ImpFragment extends ImpBaseFragment {
                     }
                 }
 
-            } else {
+            } else if (i == R.id.iv_screenshot) {
+                getActivity().startActivityForResult(new Intent(getActivity(), IMGEditActivity.class)
+                        .putExtra(IMGEditActivity.EXTRA_IS_COVER_ORIGIN, true)
+                        .putExtra(IMGEditActivity.EXTRA_IMAGE_PATH, screenshotImgPath), REQUEST_EDIT_SCREENSHOT_IMG);
+            }
             }
         }
     }
