@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -120,6 +121,8 @@ public class ImpFragment extends ImpBaseFragment {
     private String errorUrl = "";
     private String errorDescription = "";
     private String screenshotImgPath = "";
+    private Handler handler;
+    private Runnable screenshotRunnable;
 
 
     @Override
@@ -210,6 +213,7 @@ public class ImpFragment extends ImpBaseFragment {
         if (!StringUtils.isBlank(getArguments().getString("appId"))) {
             appId = getArguments().getString("appId");
         }
+        initImpCallBackInterface();
         initFragmentViews();
         RelativeLayout.LayoutParams layoutParams =
                 new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -222,6 +226,15 @@ public class ImpFragment extends ImpBaseFragment {
             headerText.setTextSize(17);
         }
         headerText.setText(StringUtils.isBlank(appName) ? "" : appName);
+        handler = new Handler();
+        screenshotRunnable = new Runnable() {
+            @Override
+            public void run() {
+                if (screenshotImg != null) {
+                    screenshotImg.setVisibility(View.GONE);
+                }
+            }
+        };
     }
 
 
@@ -378,13 +391,9 @@ public class ImpFragment extends ImpBaseFragment {
 
     }
 
-    /**
-     * 与主Fragment通信的接口
-     *
-     * @return
-     */
-    private ImpCallBackInterface getImpCallBackInterface() {
-        return new ImpCallBackInterface() {
+
+    private void initImpCallBackInterface() {
+        impCallBackInterface = new ImpCallBackInterface() {
             @Override
             public void onLoadingDlgDimiss() {
                 dimissLoadingDlg();
@@ -480,8 +489,22 @@ public class ImpFragment extends ImpBaseFragment {
                 ImpFragment.this.screenshotImgPath = screenshotImgPath;
                 screenshotImg.setVisibility(View.VISIBLE);
                 ImageDisplayUtils.getInstance().displayImage(screenshotImg, screenshotImgPath);
+                if (handler != null) {
+                    handler.removeCallbacks(screenshotRunnable);
+                    handler.postDelayed(screenshotRunnable, 3000);
+                }
             }
         };
+    }
+
+
+    /**
+     * 与主Fragment通信的接口
+     *
+     * @return
+     */
+    private ImpCallBackInterface getImpCallBackInterface() {
+        return impCallBackInterface;
     }
 
     private void setHeaderTitleTextDropImg() {
@@ -708,6 +731,10 @@ public class ImpFragment extends ImpBaseFragment {
             webView.destroy();
             webView = null;
         }
+        if (handler != null) {
+            handler.removeCallbacks(screenshotRunnable);
+            handler = null;
+        }
         impCallBackInterface = null;
         //清除掉图片缓存
 //        DataCleanManager.cleanCustomCache(MyAppConfig.LOCAL_IMG_CREATE_PATH);
@@ -804,6 +831,18 @@ public class ImpFragment extends ImpBaseFragment {
 
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onWechatEvent(SimpleEventMessage message) {
+        if (message.getAction().equals(Constant.EVENTBUS_TAG_WECHAT_RESULT)) {
+            String result = (String) message.getMessageObj();
+
+            String serviceName = InvoiceService.class.getCanonicalName();
+            PluginMgr pluginMgr = webView.getPluginMgr();
+            InvoiceService invoiceService = (InvoiceService) pluginMgr.getPlugin(serviceName);
+            invoiceService.handleWechatResult(result);
+        }
+    }
+
     class ImpFragmentClickListener implements View.OnClickListener {
 
         @Override
@@ -858,10 +897,10 @@ public class ImpFragment extends ImpBaseFragment {
                 }
 
             } else if (i == R.id.iv_screenshot) {
-                getActivity().startActivityForResult(new Intent(getActivity(), IMGEditActivity.class)
+                screenshotImg.setVisibility(View.GONE);
+                startActivityForResult(new Intent(getActivity(), IMGEditActivity.class)
                         .putExtra(IMGEditActivity.EXTRA_IS_COVER_ORIGIN, true)
                         .putExtra(IMGEditActivity.EXTRA_IMAGE_PATH, screenshotImgPath), REQUEST_EDIT_SCREENSHOT_IMG);
-            }
             }
         }
     }
@@ -895,17 +934,6 @@ public class ImpFragment extends ImpBaseFragment {
             selectImg.setVisibility(dropItemTitle.isSelected() ? View.VISIBLE : View.INVISIBLE);
             return convertView;
         }
-    }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onWechatEvent(SimpleEventMessage message) {
-        if (message.getAction().equals(Constant.EVENTBUS_TAG_WECHAT_RESULT)) {
-            String result = (String) message.getMessageObj();
-
-            String serviceName = InvoiceService.class.getCanonicalName();
-            PluginMgr pluginMgr = webView.getPluginMgr();
-            InvoiceService invoiceService = (InvoiceService) pluginMgr.getPlugin(serviceName);
-            invoiceService.handleWechatResult(result);
-        }
     }
 }

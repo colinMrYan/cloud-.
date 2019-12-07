@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
@@ -51,6 +52,7 @@ import butterknife.ButterKnife;
 /**
  * Created by yufuchang on 2018/5/12.
  */
+@Route(path = Constant.AROUTER_CLASS_COMMUNICATION_SHARE_FILE)
 public class ShareFilesActivity extends BaseActivity {
 
     private final static int SHARE_IMAGE_OR_FILES = 0;
