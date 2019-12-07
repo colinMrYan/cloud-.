@@ -29,22 +29,31 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.adapter.DragAdapter;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.application.R;
 import com.inspur.emmcloud.application.adapter.RecommendAppWidgetListAdapter;
+import com.inspur.emmcloud.application.api.ApplicationAPIService;
+import com.inspur.emmcloud.application.api.ApplicationApiInterfaceImpl;
 import com.inspur.emmcloud.application.bean.App;
 import com.inspur.emmcloud.application.bean.AppCommonlyUse;
 import com.inspur.emmcloud.application.bean.AppGroupBean;
+import com.inspur.emmcloud.application.bean.AppOrder;
+import com.inspur.emmcloud.application.bean.BadgeBodyModel;
+import com.inspur.emmcloud.application.bean.BadgeBodyModuleModel;
+import com.inspur.emmcloud.application.bean.GetAppGroupResult;
 import com.inspur.emmcloud.application.bean.GetRecommendAppWidgetListResult;
 import com.inspur.emmcloud.application.bean.RecommendAppWidgetBean;
 import com.inspur.emmcloud.application.interf.OnRecommendAppWidgetItemClickListener;
 import com.inspur.emmcloud.application.util.AppBadgeUtils;
+import com.inspur.emmcloud.application.util.AppCacheUtils;
+import com.inspur.emmcloud.application.util.AppConfigCacheUtils;
+import com.inspur.emmcloud.application.util.ApplicationUriUtils;
 import com.inspur.emmcloud.application.util.MyAppCacheUtils;
 import com.inspur.emmcloud.application.util.MyAppWidgetUtils;
+import com.inspur.emmcloud.application.util.ScanQrCodeUtils;
+import com.inspur.emmcloud.application.widget.DragAdapter;
+import com.inspur.emmcloud.application.widget.DragGridView;
 import com.inspur.emmcloud.application.widget.ECMSpaceItemDecoration;
+import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
@@ -61,23 +70,12 @@ import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseFragment;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.basemodule.util.CheckingNetStateUtils;
 import com.inspur.emmcloud.basemodule.util.ClientConfigUpdateUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
-import com.inspur.emmcloud.bean.appcenter.AppOrder;
-import com.inspur.emmcloud.bean.appcenter.GetAppGroupResult;
-import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
-import com.inspur.emmcloud.bean.system.badge.BadgeBodyModuleModel;
-import com.inspur.emmcloud.ui.mine.setting.NetWorkStateDetailActivity;
-import com.inspur.emmcloud.util.privates.AppTabUtils;
-import com.inspur.emmcloud.util.privates.CheckingNetStateUtils;
-import com.inspur.emmcloud.util.privates.ScanQrCodeUtils;
-import com.inspur.emmcloud.util.privates.UriUtils;
-import com.inspur.emmcloud.util.privates.cache.AppCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.AppConfigCacheUtils;
-import com.inspur.emmcloud.widget.draggrid.DragGridView;
-import com.inspur.emmcloud.widget.draggrid.DragGridView.OnChanageListener;
+import com.inspur.emmcloud.componentservice.communication.CommunicationService;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -110,7 +108,7 @@ public class MyAppFragment extends BaseFragment {
     private ImageButton configBtn;
     private ImageButton appcenterEnterBtn;
     private Button sortFinishBtn;
-    private MyAppAPIService apiService;
+    private ApplicationAPIService apiService;
     private MySwipeRefreshLayout swipeRefreshLayout;
     private BroadcastReceiver mBroadcastReceiver;
     private PopupWindow popupWindow;
@@ -203,10 +201,14 @@ public class MyAppFragment extends BaseFragment {
         netExceptionView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                IntentUtils.startActivity(getActivity(), NetWorkStateDetailActivity.class);
+                Router router = Router.getInstance();
+                if (router.getService(CommunicationService.class) != null) {
+                    CommunicationService service = router.getService(CommunicationService.class);
+                    service.startNetWorkStateActivity(getActivity());
+                }
             }
         });
-        apiService = new MyAppAPIService(getActivity());
+        apiService = new ApplicationAPIService(getActivity());
         apiService.setAPIInterface(new WebService());
         //当Adapter的大小发生改变时调用此方法
         dataSetObserver = new DataSetObserver() {
@@ -305,7 +307,7 @@ public class MyAppFragment extends BaseFragment {
                 recommendAppWidgetListAdapter.setOnRecommendAppWidgetItemClickListener(new OnRecommendAppWidgetItemClickListener() {
                     @Override
                     public void onRecommendAppWidgetItemClick(App app) {
-                        UriUtils.openApp(getActivity(), app, "smartrecommend");
+                        ApplicationUriUtils.openApp(getActivity(), app, "smartrecommend");
                     }
                 });
                 rootView.findViewById(R.id.my_app_recommend_app_widget_img).setOnClickListener(new OnClickListener() {
@@ -377,8 +379,18 @@ public class MyAppFragment extends BaseFragment {
     private void setTabTitle() {
         String appTabs = PreferencesByUserAndTanentUtils.getString(getActivity(), Constant.PREF_APP_TAB_BAR_INFO_CURRENT, "");
         if (!StringUtils.isBlank(appTabs)) {
-            ((TextView) rootView.findViewById(R.id.tv_header)).setText(AppTabUtils.getTabTitle(getActivity(), getClass().getSimpleName()));
+            ((TextView) rootView.findViewById(R.id.tv_header)).setText(getHeaderText(getClass().getSimpleName()));
         }
+    }
+
+    private String getHeaderText(String simpleName) {
+        String headerText = "";
+        Router router = Router.getInstance();
+        if (router.getService(CommunicationService.class) != null) {
+            CommunicationService service = router.getService(CommunicationService.class);
+            headerText = service.getMyAppFragmentHeaderText(simpleName);
+        }
+        return headerText;
     }
 
 
@@ -871,7 +883,7 @@ public class MyAppFragment extends BaseFragment {
             dragGridView.setPosition(listPosition);
             dragGridView.setPullRefreshLayout(swipeRefreshLayout);
             dragGridViewAdapter.setGroupPosition(listPosition);
-            dragGridView.setOnChangeListener(new OnChanageListener() {
+            dragGridView.setOnChangeListener(new DragGridView.OnChanageListener() {
                 @Override
                 public void onChange(int listPosition, int from, int to) {
                     handAppOrderChange(appGroupItemList, from, to);
@@ -895,9 +907,9 @@ public class MyAppFragment extends BaseFragment {
                                 startActivity(intent);
                             } else {
                                 if (getIsCommonlyUseGroupInList(listPosition)) {
-                                    UriUtils.openApp(getActivity(), app, "commonapplications");
+                                    ApplicationUriUtils.openApp(getActivity(), app, "commonapplications");
                                 } else {
-                                    UriUtils.openApp(getActivity(), app, "application");
+                                    ApplicationUriUtils.openApp(getActivity(), app, "application");
                                 }
                             }
 
@@ -930,7 +942,7 @@ public class MyAppFragment extends BaseFragment {
                         @Override
                         public void onNotifyCommonlyUseApp(App app) {
                             deleteCommonlyUseApp(appAdapterList, app);
-                            new AppBadgeUtils(MyApplication.getInstance()).getAppBadgeCountFromServer();
+                            new AppBadgeUtils(BaseApplication.getInstance()).getAppBadgeCountFromServer();
                             appListAdapter.notifyDataSetChanged();
                             dragGridViewAdapter.notifyDataSetChanged();
 //                            MyAppCacheUtils.saveMyAppList(getActivity(), appListAdapter.getAppAdapterList());
@@ -1078,8 +1090,8 @@ public class MyAppFragment extends BaseFragment {
         @Override
         protected void onPostExecute(List<AppGroupBean> appGroupList) {
             super.onPostExecute(appGroupList);
-            if (MyAppCacheUtils.getMyAppListFromNet(MyApplication.getInstance()).size() > 0) {
-                new AppBadgeUtils(MyApplication.getInstance()).getAppBadgeCountFromServer();
+            if (MyAppCacheUtils.getMyAppListFromNet(BaseApplication.getInstance()).size() > 0) {
+                new AppBadgeUtils(BaseApplication.getInstance()).getAppBadgeCountFromServer();
             }
             appListAdapter.setAppAdapterList(appGroupList);
             swipeRefreshLayout.setRefreshing(false);
@@ -1087,7 +1099,7 @@ public class MyAppFragment extends BaseFragment {
         }
     }
 
-    class WebService extends APIInterfaceInstance {
+    class WebService extends ApplicationApiInterfaceImpl {
         @Override
         public void returnUserAppsSuccess(final GetAppGroupResult getAppGroupResult, String clientConfigMyAppVersion) {
             swipeRefreshLayout.setRefreshing(false);

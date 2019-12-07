@@ -11,14 +11,17 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.inspur.emmcloud.application.R;
 import com.inspur.emmcloud.application.bean.App;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 
 import java.util.List;
 
+@Route(path = Constant.AROUTER_CLASS_APPCENTER_MORE)
 public class AppCenterMoreActivity extends BaseActivity {
 
     public static final String APP_CENTER_APPLIST = "appList";

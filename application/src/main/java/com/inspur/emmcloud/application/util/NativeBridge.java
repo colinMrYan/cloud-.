@@ -16,9 +16,9 @@ import com.facebook.react.bridge.WritableNativeArray;
 import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.uimanager.IllegalViewOperationException;
 import com.inspur.emmcloud.application.R;
-import com.inspur.emmcloud.application.api.ApplicationAPIUri;
 import com.inspur.emmcloud.application.bean.AlertButton;
 import com.inspur.emmcloud.application.bean.GetMyInfoResultWithoutSerializable;
+import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
@@ -27,7 +27,9 @@ import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.Enterprise;
 import com.inspur.emmcloud.basemodule.bean.SearchModel;
+import com.inspur.emmcloud.componentservice.communication.CommunicationService;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
+import com.inspur.emmcloud.componentservice.web.WebService;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -207,9 +209,14 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
         }
         this.promise = promise;
         this.multi = multi;
+
         Intent intent = new Intent();
-        intent.setClass(getReactApplicationContext(),
-                ContactSearchActivity.class);
+        Router router = Router.getInstance();
+        if (router.getService(WebService.class) != null) {
+            CommunicationService service = router.getService(CommunicationService.class);
+            intent.setClass(getReactApplicationContext(),
+                    service.getContactSearchActivity());
+        }
         intent.putExtra("select_content", 2);
         intent.putExtra("isMulti_select", multi);
         intent.putExtra("title", getReactApplicationContext().getString(R.string.adress_list));
@@ -260,7 +267,12 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
                             uidList.add(contactId);
                         }
                     }
-                    List<ContactUser> contactUserList = ContactUserCacheUtils.getSoreUserList(uidList);
+                    List<ContactUser> contactUserList = null;
+                    Router router = Router.getInstance();
+                    if (router.getService(WebService.class) != null) {
+                        CommunicationService service = router.getService(CommunicationService.class);
+                        contactUserList = service.getContantUserList(uidList);
+                    }
                     if (multi) {
                         WritableNativeArray writableNativeArray = new WritableNativeArray();
                         for (ContactUser contactUser : contactUserList) {
@@ -299,7 +311,13 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
             promise.resolve(null);
             return;
         }
-        ContactUser contactUser = ContactUserCacheUtils.getContactUserByEmail(email);
+        ContactUser contactUser = null;
+        Router router = Router.getInstance();
+        if (router.getService(WebService.class) != null) {
+            CommunicationService service = router.getService(CommunicationService.class);
+            contactUser = service.getContactUser(email);
+            ;
+        }
         if (contactUser != null) {
             WritableNativeMap map = contactUser2Map(contactUser);
             promise.resolve(map);
@@ -319,7 +337,14 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
             map.putString("email", contactUser.getEmail());
             //   map.putString("org_name", orgName);
             //  map.putString("type", type);
-            map.putString("head", ApplicationAPIUri.getUserIconUrl(BaseApplication.getInstance(), contactUser.getId()));
+
+            Router router = Router.getInstance();
+            if (router.getService(WebService.class) != null) {
+                CommunicationService service = router.getService(CommunicationService.class);
+                map.putString("head", service.getUserIconUrl(contactUser));
+            } else {
+                map.putString("head", "");
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

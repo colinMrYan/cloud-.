@@ -16,6 +16,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.inspur.emmcloud.application.R;
 import com.inspur.emmcloud.application.adapter.AppCenterAdapter;
 import com.inspur.emmcloud.application.api.ApplicationAPIService;
@@ -26,6 +27,7 @@ import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.ClearEditText;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
@@ -39,6 +41,7 @@ import java.util.List;
  *
  * @author Administrator
  */
+@Route(path = Constant.AROUTER_CLASS_APPCENTER_SEARCH)
 public class AppSearchActivity extends BaseActivity {
 
     private static final String ACTION_NAME = "add_app";

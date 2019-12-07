@@ -11,6 +11,8 @@ import android.content.Context;
 import com.inspur.emmcloud.application.bean.App;
 import com.inspur.emmcloud.application.bean.BadgeBodyModel;
 import com.inspur.emmcloud.application.bean.GetAddAppResult;
+import com.inspur.emmcloud.application.bean.GetAllAppResult;
+import com.inspur.emmcloud.application.bean.GetAppGroupResult;
 import com.inspur.emmcloud.application.bean.GetRecommendAppWidgetListResult;
 import com.inspur.emmcloud.application.bean.GetRemoveAppResult;
 import com.inspur.emmcloud.application.bean.GetSearchAppResult;
@@ -393,6 +395,86 @@ public class ApplicationAPIService {
                     }
                 };
                 refreshToken(oauthCallBack, requestTime);
+            }
+        });
+    }
+
+    /**
+     * 获取所有应用
+     */
+    public void getNewAllApps() {
+        final String completeUrl = ApplicationAPIUri.getNewAllApps();
+        RequestParams params = ((BaseApplication) context.getApplicationContext())
+                .getHttpRequestParams(completeUrl);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnAllAppsSuccess(new GetAllAppResult(new String(arg0)));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnAllAppsFail(error, responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getNewAllApps();
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+        });
+
+    }
+
+    /**
+     * 获取用户所有apps
+     */
+    public void getUserApps(final String clientConfigMyAppVersion) {
+        final String completeUrl = ApplicationAPIUri.getUserApps();
+        RequestParams params = ((BaseApplication) context.getApplicationContext())
+                .getHttpRequestParams(completeUrl);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getUserApps(clientConfigMyAppVersion);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnUserAppsSuccess(new GetAppGroupResult(new String(arg0)), clientConfigMyAppVersion);
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnUserAppsFail(error, responseCode);
             }
         });
     }

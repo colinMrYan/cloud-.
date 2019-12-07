@@ -19,11 +19,11 @@ android {
     aaptOptions.useNewCruncher = false
 
     defaultConfig {
-        applicationId "com.inspur.emmcloud.application"
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         javaCompileOptions {
@@ -65,4 +65,5 @@ dependencies {
     implementation project(':react-native-svg')
     implementation project(':react-native-vector-icons')
     implementation project(':react-native-navigation')
+    api deps.support.multidex
 }

@@ -192,16 +192,6 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnCheckCloudPluseConnectionSuccess(byte[] arg0, String url) {
-
-    }
-
-    @Override
-    public void returnCheckCloudPluseConnectionError(String error, int responseCode, String url) {
-
-    }
-
-    @Override
     public void returnUploadMyHeadSuccess(
             GetUploadMyHeadResult getUploadMyInfoResult, String filePath) {
         // TODO Auto-generated method stub

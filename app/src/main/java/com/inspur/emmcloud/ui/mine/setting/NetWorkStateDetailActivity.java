@@ -18,8 +18,8 @@ import com.inspur.emmcloud.baselib.widget.CustomLoadingView;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.CheckingNetStateUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
-import com.inspur.emmcloud.util.privates.CheckingNetStateUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
 
 import org.greenrobot.eventbus.EventBus;

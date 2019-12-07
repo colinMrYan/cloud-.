@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.util.privates;
+package com.inspur.emmcloud.basemodule.util;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -8,14 +8,13 @@ import android.os.Looper;
 import android.os.Message;
 import android.telephony.TelephonyManager;
 
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.baselib.util.PingNetEntity;
+import com.inspur.emmcloud.basemodule.R;
+import com.inspur.emmcloud.basemodule.api.BaseModuleAPIInterfaceInstance;
+import com.inspur.emmcloud.basemodule.api.BaseModuleApiService;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
-import com.inspur.emmcloud.basemodule.util.NetUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -94,14 +93,14 @@ public class CheckingNetStateUtils {
     public void getNetStateResult(int timeout) {
         final String action = Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT;
         try {
-            Context context = MyApplication.getInstance();
+            Context context = BaseApplication.getInstance();
             ConnectivityManager conMan = (ConnectivityManager) context
                     .getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo.State mobile = conMan.getNetworkInfo(
                     ConnectivityManager.TYPE_MOBILE).getState();
             NetworkInfo.State wifi = conMan.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
                     .getState();
-            boolean isAppOnForeground = ((MyApplication) context.getApplicationContext()).getIsActive();
+            boolean isAppOnForeground = ((BaseApplication) context.getApplicationContext()).getIsActive();
             if (mobile == NetworkInfo.State.CONNECTED || mobile == NetworkInfo.State.CONNECTING) {
                 if (isAppOnForeground) {
                     EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT, true));
@@ -177,7 +176,7 @@ public class CheckingNetStateUtils {
      */
     public void CheckNetHttpThreadStart(final String[] StrUrl) {
         for (int i = 0; i < StrUrl.length; i++) {
-            AppAPIService apiService = new AppAPIService(context);
+            BaseModuleApiService apiService = new BaseModuleApiService(context);
             apiService.setAPIInterface(new WebHttpService());
             apiService.getCloudConnectStateUrl(StrUrl[i]);
         }
@@ -231,7 +230,7 @@ public class CheckingNetStateUtils {
      */
     public String getNetworksType() {
         String netWorkType = null;
-        Context context = MyApplication.getInstance();
+        Context context = BaseApplication.getInstance();
         ConnectivityManager conMan = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = conMan.getActiveNetworkInfo();
@@ -283,7 +282,7 @@ public class CheckingNetStateUtils {
     /**
      * Http 检测网路状态 回调
      */
-    public class WebHttpService extends APIInterfaceInstance {
+    public class WebHttpService extends BaseModuleAPIInterfaceInstance {
         @Override
         public void returnCheckCloudPluseConnectionSuccess(byte[] arg0, final String url) {
             CheckingNetStateUtils.PingUrlStateAction handlerUrlStateAction = new CheckingNetStateUtils.PingUrlStateAction(Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT, url, true);

@@ -5,7 +5,45 @@
     <application
         android:name=".runalone.application.AppApplication"
         android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"></application>
+        android:theme="@style/AppTheme">
+
+        <activity
+            android:name=".ui.AppCenterActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.AppCenterMoreActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.AppSearchActivity"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.AppDetailActivity"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.AppGroupActivity"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.ReactNativeAppActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+    </application>
 </manifest>

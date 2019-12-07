@@ -468,4 +468,47 @@ public class BaseModuleApiService {
         });
     }
 
+    /**
+     * 获取网络连通状态
+     *
+     * @param url
+     */
+    public void getCloudConnectStateUrl(final String url) {
+        RequestParams params = ((BaseApplication) context.getApplicationContext())
+                .getHttpRequestParams(url);
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, url) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnCheckCloudPluseConnectionSuccess(arg0, url);
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                if (responseCode == 302 || responseCode == 301) {
+                    apiInterface.returnCheckCloudPluseConnectionSuccess(null, url);
+                } else {
+                    apiInterface.returnCheckCloudPluseConnectionError(error, responseCode, url);
+                }
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getCloudConnectStateUrl(url);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+        });
+    }
+
 }

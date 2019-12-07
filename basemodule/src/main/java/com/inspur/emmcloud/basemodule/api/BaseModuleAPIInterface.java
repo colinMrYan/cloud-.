@@ -45,4 +45,8 @@ public interface BaseModuleAPIInterface {
 
     void returnUploadApiRequestRecordFail();
 
+    void returnCheckCloudPluseConnectionSuccess(byte[] arg0, String url);
+
+    void returnCheckCloudPluseConnectionError(String error, int responseCode, String url);
+
 }

@@ -96,6 +96,7 @@ public abstract class BaseApplication extends MultiDexApplication {
         Router.registerComponent("com.inspur.emmcloud.news.applike.NewsAppLike");
         Router.registerComponent("com.inspur.emmcloud.webex.applike.WebexAppLike");
         Router.registerComponent("com.inspur.emmcloud.mail.applike.MailAppLike");
+        Router.registerComponent("com.inspur.emmcloud.application.applike.ApplicationAppLike");
         CrashHandler crashHandler = CrashHandler.getInstance();
         crashHandler.init(getInstance());
         x.Ext.init(getInstance());

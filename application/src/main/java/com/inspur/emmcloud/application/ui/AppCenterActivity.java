@@ -29,6 +29,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.application.R;
 import com.inspur.emmcloud.application.adapter.MyViewPagerAdapter;
@@ -66,6 +67,7 @@ import static com.inspur.emmcloud.application.ui.AppCenterMoreActivity.APP_CENTE
  * 应用中心页面 com.inspur.emmcloud.ui.AppCenterActivity create at 2016年8月31日
  * 下午2:54:47
  */
+@Route(path = Constant.AROUTER_CLASS_APPCENTER)
 public class AppCenterActivity extends BaseActivity {
     private static final String ACTION_NAME = "add_app";
     private static final int UPDATE_VIEWPAGER = 1;

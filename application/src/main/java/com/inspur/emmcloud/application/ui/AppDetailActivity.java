@@ -12,13 +12,17 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.inspur.emmcloud.application.R;
 import com.inspur.emmcloud.application.api.ApplicationAPIService;
 import com.inspur.emmcloud.application.api.ApplicationApiInterfaceImpl;
 import com.inspur.emmcloud.application.bean.App;
 import com.inspur.emmcloud.application.bean.GetAddAppResult;
+import com.inspur.emmcloud.application.util.AppCenterNativeAppUtils;
+import com.inspur.emmcloud.application.util.ApplicationUriUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
@@ -33,6 +37,7 @@ import java.util.List;
  *
  * @author Administrator
  */
+@Route(path = Constant.AROUTER_CLASS_APPCENTER_DETAIL)
 public class AppDetailActivity extends BaseActivity {
     private static final String ACTION_NAME = "add_app";
     private ImageView appIconImg;
@@ -125,7 +130,7 @@ public class AppDetailActivity extends BaseActivity {
                         if (app.getAppType() == 2) {
                             new AppCenterNativeAppUtils().InstallOrOpen(AppDetailActivity.this, app);
                         } else {
-                            UriUtils.openApp(AppDetailActivity.this, app, "appcenter");
+                            ApplicationUriUtils.openApp(AppDetailActivity.this, app, "appcenter");
                         }
                         //发送到MyAPPFragment.updateCommonlyUseAppList
                         EventBus.getDefault().post(app);

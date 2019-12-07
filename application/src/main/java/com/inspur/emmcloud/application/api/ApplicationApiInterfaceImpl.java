@@ -4,10 +4,14 @@ import com.inspur.emmcloud.application.bean.App;
 import com.inspur.emmcloud.application.bean.BadgeBodyModel;
 import com.inspur.emmcloud.application.bean.GetAddAppResult;
 import com.inspur.emmcloud.application.bean.GetAllAppResult;
+import com.inspur.emmcloud.application.bean.GetAppGroupResult;
+import com.inspur.emmcloud.application.bean.GetClientIdRsult;
 import com.inspur.emmcloud.application.bean.GetRecommendAppWidgetListResult;
 import com.inspur.emmcloud.application.bean.GetRemoveAppResult;
 import com.inspur.emmcloud.application.bean.GetSearchAppResult;
 import com.inspur.emmcloud.application.bean.GetWebAppRealUrlResult;
+import com.inspur.emmcloud.application.bean.ReactNativeDownloadUrlBean;
+import com.inspur.emmcloud.application.bean.ReactNativeInstallUriBean;
 
 /**
  * Created by: yufuchang
@@ -111,6 +115,46 @@ public class ApplicationApiInterfaceImpl implements ApplicationAPIInterface {
 
     @Override
     public void returnBadgeCountFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnGetReactNativeInstallUrlSuccess(ReactNativeInstallUriBean reactNativeInstallUriBean) {
+
+    }
+
+    @Override
+    public void returnGetReactNativeInstallUrlFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnGetClientIdResultSuccess(GetClientIdRsult getClientIdRsult) {
+
+    }
+
+    @Override
+    public void returnGetClientIdResultFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnGetDownloadReactNativeUrlSuccess(ReactNativeDownloadUrlBean reactNativeDownloadUrlBean) {
+
+    }
+
+    @Override
+    public void returnGetDownloadReactNativeUrlFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnUserAppsSuccess(GetAppGroupResult getAppGroupResult, String clientConfigMyAppVersion) {
+
+    }
+
+    @Override
+    public void returnUserAppsFail(String error, int errorCode) {
 
     }
 }

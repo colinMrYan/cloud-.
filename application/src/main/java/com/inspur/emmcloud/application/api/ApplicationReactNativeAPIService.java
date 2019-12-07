@@ -2,18 +2,16 @@ package com.inspur.emmcloud.application.api;
 
 import android.content.Context;
 
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.api.APIInterface;
-import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.application.bean.GetClientIdRsult;
+import com.inspur.emmcloud.application.bean.ReactNativeDownloadUrlBean;
+import com.inspur.emmcloud.application.bean.ReactNativeInstallUriBean;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
 import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
 import com.inspur.emmcloud.basemodule.api.HttpUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.util.DownLoaderUtils;
-import com.inspur.emmcloud.bean.appcenter.GetClientIdRsult;
-import com.inspur.emmcloud.bean.appcenter.ReactNativeDownloadUrlBean;
-import com.inspur.emmcloud.bean.appcenter.ReactNativeInstallUriBean;
 import com.inspur.emmcloud.componentservice.login.LoginService;
 import com.inspur.emmcloud.componentservice.login.OauthCallBack;
 
@@ -28,13 +26,13 @@ import java.io.File;
 
 public class ApplicationReactNativeAPIService {
     private Context context;
-    private APIInterface apiInterface;
+    private ApplicationAPIInterface apiInterface;
 
     public ApplicationReactNativeAPIService(Context context) {
         this.context = context;
     }
 
-    public void setAPIInterface(APIInterface apiInterface) {
+    public void setAPIInterface(ApplicationAPIInterface apiInterface) {
         this.apiInterface = apiInterface;
     }
 
@@ -53,8 +51,8 @@ public class ApplicationReactNativeAPIService {
      * @param deviceName
      */
     public void getClientId(final String deviceId, final String deviceName) {
-        final String completeUrl = APIUri.getClientId();
-        RequestParams params = ((MyApplication) context.getApplicationContext())
+        final String completeUrl = ApplicationAPIUri.getClientId();
+        RequestParams params = ((BaseApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         params.addParameter("deviceId", deviceId);
         params.addParameter("deviceName", deviceName);
@@ -95,8 +93,8 @@ public class ApplicationReactNativeAPIService {
      * @param uri
      */
     public void getReactNativeInstallUrl(final String uri) {
-        final String completeUrl = APIUri.getReactNativeInstallUrl();
-        RequestParams params = ((MyApplication) context.getApplicationContext())
+        final String completeUrl = ApplicationAPIUri.getReactNativeInstallUrl();
+        RequestParams params = ((BaseApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         params.addParameter("uri", uri);
         HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
@@ -140,9 +138,9 @@ public class ApplicationReactNativeAPIService {
      * @param appId
      */
     public void writeBackVersionChange(final String preVersion, final String currentVersion, final String clientId, final String command, final String appId) {
-        final String completeUrl = APIUri.getReactNativeWriteBackUrl(appId) + "?preVersion=" + preVersion + "&currentVersion=" + currentVersion + "&clientId=" + clientId +
+        final String completeUrl = ApplicationAPIUri.getReactNativeWriteBackUrl(appId) + "?preVersion=" + preVersion + "&currentVersion=" + currentVersion + "&clientId=" + clientId +
                 "&command=" + command;
-        RequestParams params = ((MyApplication) context.getApplicationContext())
+        RequestParams params = ((BaseApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
             @Override
@@ -187,7 +185,7 @@ public class ApplicationReactNativeAPIService {
     public void getDownLoadUrl(final Context context, final String findDownloadUrl,
                                final String clientId, final String currentVersion) {
         final String completeUrl = findDownloadUrl + "?version=" + currentVersion + "&clientId=" + clientId;
-        RequestParams params = ((MyApplication) context.getApplicationContext())
+        RequestParams params = ((BaseApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
             @Override

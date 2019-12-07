@@ -8,6 +8,7 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.application.R;
 import com.inspur.emmcloud.application.api.ApplicationAPIUri;
 import com.inspur.emmcloud.application.bean.App;
+import com.inspur.emmcloud.application.ui.ReactNativeAppActivity;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;

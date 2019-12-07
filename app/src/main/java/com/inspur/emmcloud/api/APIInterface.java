@@ -696,10 +696,6 @@ public interface APIInterface {
 
     void returnDeleteConversationFail(String error, int errorCode);
 
-    void returnCheckCloudPluseConnectionSuccess(byte[] arg0, String url);
-
-    void returnCheckCloudPluseConnectionError(String error, int responseCode, String url);
-
     void returnMailFolderSuccess(GetMailFolderResult getMailForderResult);
 
     void returnMailFolderFail(String error, int errorCode);

@@ -5,12 +5,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.inspur.emmcloud.application.R;
 import com.inspur.emmcloud.application.adapter.AppGroupAdapter;
 import com.inspur.emmcloud.application.bean.App;
+import com.inspur.emmcloud.application.util.ApplicationUriUtils;
 import com.inspur.emmcloud.application.widget.ECMSpaceItemDecoration;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 
 import java.util.ArrayList;
@@ -22,6 +25,7 @@ import butterknife.ButterKnife;
 /**
  * Created by yufuchang on 2018/8/8.
  */
+@Route(path = Constant.AROUTER_CLASS_APPCENTER_GROUP)
 public class AppGroupActivity extends BaseActivity {
 
     @BindView(R.id.recyclerview_group_app)
@@ -55,7 +59,7 @@ public class AppGroupActivity extends BaseActivity {
         appGroupAdapter.setGroupListener(new GroupAppListClickListener() {
             @Override
             public void onGroupAppClick(App app) {
-                UriUtils.openApp(AppGroupActivity.this, app, "application");
+                ApplicationUriUtils.openApp(AppGroupActivity.this, app, "application");
             }
         });
         String categoryName = getIntent().getStringExtra("categoryName");

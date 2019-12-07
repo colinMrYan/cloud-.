@@ -87,4 +87,14 @@ public class BaseModuleAPIInterfaceInstance implements BaseModuleAPIInterface {
     public void returnUploadApiRequestRecordFail() {
 
     }
+
+    @Override
+    public void returnCheckCloudPluseConnectionSuccess(byte[] arg0, String url) {
+
+    }
+
+    @Override
+    public void returnCheckCloudPluseConnectionError(String error, int responseCode, String url) {
+
+    }
 }

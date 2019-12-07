@@ -291,6 +291,13 @@ public class Constant {
 
     public static final String AROUTER_CLASS_WEBEX_MAIN = "/webex/WebexMyMeetingActivity";
 
+    public static final String AROUTER_CLASS_APPCENTER = "/application/AppCenterActivity";
+    public static final String AROUTER_CLASS_APPCENTER_MORE = "/application/AppCenterMoreActivity";
+    public static final String AROUTER_CLASS_APPCENTER_DETAIL = "/application/AppDetailActivity";
+    public static final String AROUTER_CLASS_APPCENTER_GROUP = "/application/AppGroupActivity";
+    public static final String AROUTER_CLASS_APPCENTER_SEARCH = "/application/AppSearchActivity";
+    public static final String AROUTER_CLASS_APPCENTER_REACT_NATIVE = "/application/ReactNativeAppActivity";
+
     //参会状态
     public static final int ATTEND_MEETING_STATUS_ACCEPT = 1;
     public static final int ATTEND_MEETING_STATUS_REJECT = 2;

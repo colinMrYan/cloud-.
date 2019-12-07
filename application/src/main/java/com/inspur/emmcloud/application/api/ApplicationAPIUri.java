@@ -105,4 +105,58 @@ public class ApplicationAPIUri {
     public static String getZipUrl() {
         return WebServiceRouterManager.getInstance().getClusterStorageLegacy() + "/res/stream/";
     }
+
+    /**
+     * 获取clientid的
+     *
+     * @return
+     */
+    public static String getClientId() {
+        return WebServiceRouterManager.getInstance().getClusterDistribution() + "/client/registry";
+    }
+
+    /**
+     * ReactNative应用更新写回
+     *
+     * @return
+     */
+    public static String getReactNativeWriteBackUrl(String appModule) {
+        return WebServiceRouterManager.getInstance().getClusterDistribution() + "/app/" + appModule + "/update";
+    }
+
+    /**
+     * ReactNative应用安装地址查询接口
+     *
+     * @return
+     */
+    public static String getReactNativeInstallUrl() {
+        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/mam/v3.0/imp_app/queryByUri";
+    }
+
+    /**
+     * 获取所有App以及查询app
+     *
+     * @return
+     */
+    public static String getNewAllApps() {
+        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/mam/v3.0/imp_app/appCenterList";
+    }
+
+    /**
+     * 获取用户apps
+     *
+     * @return
+     */
+    public static String getUserApps() {
+        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/mam/v3.1/imp_app/userApps";
+    }
+
+    /**
+     * 获取创建聊天url
+     *
+     * @return
+     */
+    public static String getCreateGroupConversationUrl() {
+        return WebServiceRouterManager.getInstance().getClusterChat() + "/api/v1" + "/channel/group";
+    }
 }
