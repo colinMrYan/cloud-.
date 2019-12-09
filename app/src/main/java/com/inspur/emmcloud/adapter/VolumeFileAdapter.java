@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -174,8 +173,6 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
         final VolumeFile volumeFile = volumeFileList.get(position);
         String volumeFileStatus = volumeFile.getStatus();
         boolean isStatusNomal = true;
-        holder.fileUploadStatusLayout.setVisibility(isStatusNomal ? View.GONE : View.VISIBLE);
-        holder.uploadOperationText.setVisibility(isStatusNomal ? View.GONE : View.VISIBLE);
         holder.fileInfoLayout.setVisibility(isStatusNomal ? View.VISIBLE : View.GONE);
         holder.fileOperationDropDownImg.setVisibility(View.GONE);
         holder.fileSelcetImg.setVisibility(isShowFileOperationSelecteImage && isStatusNomal ? View.VISIBLE : View.GONE);
@@ -280,16 +277,8 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
         TextView fileSizeText;
         @BindView(R.id.file_select_img)
         ImageView fileSelcetImg;
-        @BindView(R.id.upload_cancel_text)
-        TextView uploadOperationText;
-        @BindView(R.id.upload_progress)
-        ProgressBar uploadProgressBar;
-        @BindView(R.id.upload_status_text)
-        TextView uploadStatusText;
         @BindView(R.id.file_info_layout)
         RelativeLayout fileInfoLayout;
-        @BindView(R.id.file_upload_status_layout)
-        RelativeLayout fileUploadStatusLayout;
         @BindView(R.id.file_operation_drop_down_img)
         ImageView fileOperationDropDownImg;
         private MyItemClickListener myItemClickListener;
@@ -301,7 +290,6 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
             fileOperationDropDownImg.setOnClickListener(this);
-            uploadOperationText.setOnClickListener(this);
             fileSelcetImg.setOnClickListener(this);
         }
 
@@ -310,8 +298,6 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
             if (myItemClickListener != null) {
                 if (v.getId() == R.id.file_operation_drop_down_img) {
                     myItemClickListener.onItemDropDownImgClick(v, getAdapterPosition());
-                } else if (v.getId() == R.id.upload_cancel_text) {
-//                    myItemClickListener.onItemOperationTextClick(v, getAdapterPosition());
                 } else if (v.getId() == R.id.file_select_img) {
                     myItemClickListener.onSelectedItemClick(v, getAdapterPosition());
                 } else {

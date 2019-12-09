@@ -267,8 +267,6 @@ public class GroupFileActivity extends BaseActivity {
         ImageView selectImg = convertView.findViewById(R.id.file_select_img);
         fileInfoLayout.setVisibility(View.VISIBLE);
         selectImg.setVisibility(View.GONE);
-        RelativeLayout progressLayout = convertView.findViewById(R.id.file_upload_status_layout);
-        progressLayout.setVisibility(View.GONE);
         final Message message = messageList.get(position);
         final String fileName = message.getMsgContentAttachmentFile().getName();
         fileNameText.setText(fileName);

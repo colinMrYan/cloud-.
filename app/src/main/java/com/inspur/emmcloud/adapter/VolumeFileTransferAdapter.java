@@ -22,11 +22,13 @@ import com.inspur.emmcloud.basemodule.util.FileDownloadManager;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
+import com.inspur.emmcloud.bean.appcenter.volume.VolumeFileUpload;
 import com.inspur.emmcloud.interf.ProgressCallback;
 import com.inspur.emmcloud.ui.appcenter.volume.observe.LoadObservable;
 import com.inspur.emmcloud.util.privates.VolumeFileDownloadCacheUtils;
 import com.inspur.emmcloud.util.privates.VolumeFileDownloadManager;
 import com.inspur.emmcloud.util.privates.VolumeFileUploadManager;
+import com.inspur.emmcloud.util.privates.cache.VolumeFileUploadCacheUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -90,6 +92,8 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
     private void syncListData() {
         if (type.equals(Constant.TYPE_DOWNLOAD)) {
             unfinishedFileList = VolumeFileDownloadManager.getInstance().getDownloadingList();
+        } else if (type.equals(Constant.TYPE_UPLOAD)) {
+            unfinishedFileList = VolumeFileUploadManager.getInstance().getUnFinishUploadList();
         }
     }
 
@@ -183,12 +187,23 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
             @Override
             public void onSuccess(VolumeFile volumeFile) {
                 Log.d("zhang", "handleUploadCallback onSuccess: ");
+//                holder.descTv.setText(R.string.download_complete);
+                holder.itemView.setEnabled(false);
+//                fileList.remove(volumeFile);
+                //下载成功停留2S中转换状态
+                VolumeFileUpload volumeFileUpload = VolumeFileUploadManager.getInstance().
+                        getVolumeFileUpload(volumeFile);
+                if (volumeFileUpload != null) {
+                    volumeFileUpload.setStatus(VolumeFile.STATUS_NORMAL);
+                    VolumeFileUploadCacheUtils.saveVolumeFileUpload(volumeFileUpload);
+                }
                 holder.progressBar.setStatus(CircleProgressBar.Status.Success);
-                unfinishedFileList.remove(originVolumeFile);
+                LoadObservable.getInstance().notifyDateChange();
+                syncListData();
                 notifyDataSetChanged();
-//                if (callBack != null) {
-//                    callBack.refreshView(fileList);
-//                }
+                if (callBack != null) {
+                    callBack.refreshView(unfinishedFileList);
+                }
             }
 
             @Override
@@ -213,7 +228,7 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
                 for (int i = 0; i < unfinishedFileList.size(); i++) {
                     if (unfinishedFileList.get(i).getId().equals(originVolumeFile.getId())) {
                         unfinishedFileList.get(i).setStatus(VolumeFile.STATUS_FAIL);
-                        showVolumeFileDesc(holder, unfinishedFileList.get(i));
+                        notifyDataSetChanged();
                         break;
                     }
                 }
@@ -422,6 +437,9 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
                                 VolumeFile volumeFile = unfinishedFileList.get(position);
                                 if (type.equals(Constant.TYPE_UPLOAD)) {
                                     VolumeFileUploadManager.getInstance().cancelVolumeFileUploadService(volumeFile);
+                                    VolumeFileUploadManager.getInstance().deleteUploadInfo(volumeFile);
+                                    VolumeFileUpload volumeFileUpload = VolumeFileUploadManager.getInstance().getVolumeFileUpload(volumeFile);
+                                    VolumeFileUploadCacheUtils.deleteVolumeFileUpload(volumeFileUpload);
                                 } else if (type.equals(Constant.TYPE_DOWNLOAD)) {
                                     VolumeFileDownloadManager.getInstance().cancelDownloadVolumeFile(volumeFile);
                                     VolumeFileDownloadManager.getInstance().deleteDownloadInfo(volumeFile);

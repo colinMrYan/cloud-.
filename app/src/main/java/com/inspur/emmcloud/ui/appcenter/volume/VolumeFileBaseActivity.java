@@ -631,7 +631,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
      * 小红点显示状态
      */
     public void refreshTipViewLayout() {
-        if (VolumeFileUploadManager.getInstance().getAllUploadVolumeFile().size() > 0 ||
+        if (VolumeFileUploadManager.getInstance().getUnFinishUploadList().size() > 0 ||
                 VolumeFileDownloadManager.getInstance().getDownloadingList().size() > 0) {
             tipViewLayout.setVisibility(View.VISIBLE);
         } else {
@@ -986,6 +986,10 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         @Override
         public void returnVolumeFileDeleteSuccess(List<VolumeFile> deleteVolumeFileList) {
             LoadingDialog.dimissDlg(loadingDlg);
+            //清除上传列表数据
+            for (VolumeFile volumeFile : deleteVolumeFileList) {
+                VolumeFileUploadManager.getInstance().resetVolumeFileStatus(volumeFile);
+            }
             volumeFileList.removeAll(deleteVolumeFileList);
             adapter.setVolumeFileList(volumeFileList);
             adapter.clearSelectedVolumeFileList();

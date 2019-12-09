@@ -46,7 +46,8 @@ public class VolumeFileUploadManager extends APIInterfaceInstance {
                 isNeedUpdateVolumeFileUploadStatus = true;
             }
 
-            if (volumeFileUpload.getStatus().equals(VolumeFile.STATUS_SUCCESS)) {
+            if (volumeFileUpload.getStatus().equals(VolumeFile.STATUS_SUCCESS) ||
+                    volumeFileUpload.getStatus().equals(VolumeFile.STATUS_FAIL)) {
                 isNeedUpdateVolumeFileUploadStatus = true;
             }
         }
@@ -175,6 +176,25 @@ public class VolumeFileUploadManager extends APIInterfaceInstance {
     }
 
     /**
+     * 通过volumeFile 获取对应的上传item
+     */
+    public VolumeFileUpload getVolumeFileUpload(VolumeFile volumeFile) {
+        for (VolumeFileUpload volumeFileUpload : volumeFileUploadList) {
+            if (volumeFileUpload.getId().equals(volumeFile.getId())) {
+                return volumeFileUpload;
+            }
+        }
+        return null;
+    }
+
+    public void deleteUploadInfo(VolumeFile volumeFile) {
+        VolumeFileUpload item = getVolumeFileUpload(volumeFile);
+        if (item != null) {
+            volumeFileUploadList.remove(item);
+        }
+    }
+
+    /**
      * 移除上传服务
      *
      * @param mockVolumeFile
@@ -188,8 +208,8 @@ public class VolumeFileUploadManager extends APIInterfaceInstance {
                     if (volumeFileUploadService != null) {
                         volumeFileUploadService.onDestroy();
                     }
-                    volumeFileUploadList.remove(i);
-                    VolumeFileUploadCacheUtils.deleteVolumeFileUpload(volumeFileUpload);
+//                    volumeFileUploadList.remove(i);
+//                    VolumeFileUploadCacheUtils.deleteVolumeFileUpload(volumeFileUpload);
                     break;
                 }
             }
@@ -325,6 +345,17 @@ public class VolumeFileUploadManager extends APIInterfaceInstance {
         }
     }
 
+    /**
+     * 重置上传
+     */
+    public void resetVolumeFileStatus(VolumeFile volumeFile) {
+        VolumeFileUpload volumeFileUpload = getVolumeFileUpload(volumeFile);
+        if (volumeFileUpload != null) {
+            volumeFileUploadList.remove(volumeFileUpload);
+            VolumeFileUploadCacheUtils.deleteVolumeFileUpload(volumeFileUpload);
+        }
+    }
+
     private class MyProgressCallback implements ProgressCallback {
         private VolumeFileUpload volumeFileUpload;
 
@@ -340,13 +371,20 @@ public class VolumeFileUploadManager extends APIInterfaceInstance {
             for (int i = 0; i < volumeFileUploadList.size(); i++) {
                 VolumeFileUpload item = volumeFileUploadList.get(i);
                 if (item.getId().equals(volumeFileUpload.getId())) {
-                    item.setStatus(VolumeFile.STATUS_SUCCESS);
+                    VolumeFileUploadCacheUtils.deleteVolumeFileUpload(volumeFileUpload);
+                    //恢复成真正的ID
+                    volumeFileUpload.setId(volumeFile.getId());
+                    volumeFileUpload.setStatus(VolumeFile.STATUS_SUCCESS);
+                    volumeFileUpload.setLastUpdate(System.currentTimeMillis());
+                    VolumeFileUploadCacheUtils.saveVolumeFileUpload(volumeFileUpload);
                 }
             }
+
 //            VolumeFileUploadCacheUtils.deleteVolumeFileUpload(volumeFileUpload);
             if (volumeFileUpload.getBusinessProgressCallback() != null) {
                 volumeFileUpload.getBusinessProgressCallback().onSuccess(volumeFile);
             }
+
             SimpleEventMessage simpleEventMessage = new SimpleEventMessage(Constant.EVENTBUS_TAG_VOLUME_FILE_UPLOAD_SUCCESS, volumeFile);
             simpleEventMessage.setExtraObj(volumeFileUpload);
             EventBus.getDefault().post(simpleEventMessage);

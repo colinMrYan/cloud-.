@@ -526,13 +526,19 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
         for (VolumeFile volumeFile : deleteVolumeFile) {
             filePathList.add(volumeFile.getLocalFilePath());
             finishedVolumeFileList.remove(volumeFile);
-            VolumeFileDownloadManager.getInstance().resetVolumeFileStatus(volumeFile);
+            if (currentIndex == 0) {
+                VolumeFileDownloadManager.getInstance().resetVolumeFileStatus(volumeFile);
+            } else if (currentIndex == 1) {
+                VolumeFileUploadManager.getInstance().resetVolumeFileStatus(volumeFile);
+            }
             if (finishedVolumeFileList.size() == 0 && unFinishedVolumeFileList.size() == 0) {
                 showNoDataLayout();
             }
             downloadedAdapter.notifyDataSetChanged();
         }
-        FileDownloadManager.getInstance().deleteDownloadFile(filePathList);
+        if (currentIndex == 0) {
+            FileDownloadManager.getInstance().deleteDownloadFile(filePathList);
+        }
     }
 
     /**

@@ -143,6 +143,7 @@ public class VolumeFile implements Serializable {
         volumeFile.setFormat(FileUtils.getMimeType(filename));
         volumeFile.setSize(FileUtils.getFileSize(volumeFileUpload.getLocalFilePath()));
         volumeFile.setLocalFilePath(volumeFileUpload.getLocalFilePath());
+        volumeFile.setLastUpdate(volumeFileUpload.getLastUpdate());
         return volumeFile;
     }
 
