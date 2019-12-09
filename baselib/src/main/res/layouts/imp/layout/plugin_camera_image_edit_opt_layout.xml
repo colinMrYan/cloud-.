@@ -12,37 +12,17 @@
         android:layout_height="wrap_content"
         android:background="@drawable/plugin_camera_image_bg_top">
 
-        <TextView
-            android:id="@+id/tv_cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top"
-            android:clickable="true"
-            android:focusable="true"
+        <ImageButton
+            android:id="@+id/ibt_back"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="25dp"
             android:onClick="onClick"
-            android:paddingBottom="12dp"
-            android:paddingLeft="15dp"
-            android:paddingRight="12dp"
-            android:paddingTop="20dp"
-            android:text="@string/image_cancel"
-            android:textColor="#FFFFFF"
-            android:textSize="16sp" />
+            android:padding="10dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/web_ali_scan_back" />
 
-        <TextView
-            android:id="@+id/tv_done"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top|end"
-            android:clickable="true"
-            android:focusable="true"
-            android:onClick="onClick"
-            android:paddingBottom="12dp"
-            android:paddingLeft="12dp"
-            android:paddingRight="15dp"
-            android:paddingTop="20dp"
-            android:text="@string/image_done"
-            android:textColor="#4CA1FB"
-            android:textSize="16sp" />
 
     </FrameLayout>
 
@@ -138,68 +118,106 @@
 
     </LinearLayout>
 
-    <RadioGroup
-        android:id="@+id/rg_modes"
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/plugin_camera_image_bg_bottom"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:paddingBottom="15dp">
 
-        <RadioButton
-            android:id="@+id/rb_doodle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:button="@drawable/plugin_camera_image_btn_doodle"
-            android:gravity="center"
-            android:onClick="onClick"
-            android:textColor="#FFF" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <Space
-            android:layout_width="32dp"
-            android:layout_height="wrap_content" />
+            <RadioGroup
+                android:id="@+id/rg_modes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-        <ImageButton
-            android:id="@+id/btn_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@null"
-            android:contentDescription="@string/image_text"
-            android:gravity="center"
-            android:onClick="onClick"
-            android:padding="10dp"
-            android:src="@drawable/plugin_camera_image_btn_text"
-            android:textColor="#FFF" />
+                <Space
+                    android:layout_width="25dp"
+                    android:layout_height="wrap_content" />
 
-        <Space
-            android:layout_width="32dp"
-            android:layout_height="wrap_content" />
+                <RadioButton
+                    android:id="@+id/rb_doodle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@drawable/plugin_camera_image_btn_doodle"
+                    android:gravity="center"
+                    android:onClick="onClick"
+                    android:textColor="#FFF" />
 
-        <RadioButton
-            android:id="@+id/rb_mosaic"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:button="@drawable/plugin_camera_image_btn_mosaic"
-            android:gravity="center"
-            android:onClick="onClick"
-            android:textColor="#FFF" />
+                <Space
+                    android:layout_width="25dp"
+                    android:layout_height="wrap_content" />
 
-        <Space
-            android:layout_width="32dp"
-            android:layout_height="wrap_content" />
+                <ImageButton
+                    android:id="@+id/btn_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:contentDescription="@string/image_text"
+                    android:gravity="center"
+                    android:onClick="onClick"
+                    android:padding="10dp"
+                    android:src="@drawable/plugin_camera_image_btn_text"
+                    android:textColor="#FFF" />
 
-        <ImageButton
-            android:id="@+id/btn_clip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@null"
-            android:contentDescription="@string/image_clip"
-            android:gravity="center"
-            android:onClick="onClick"
-            android:padding="10dp"
-            android:src="@drawable/plugin_camera_image_btn_clip"
-            android:textColor="#FFF" />
+                <Space
+                    android:layout_width="25dp"
+                    android:layout_height="wrap_content" />
 
-    </RadioGroup>
+                <RadioButton
+                    android:id="@+id/rb_mosaic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@drawable/plugin_camera_image_btn_mosaic"
+                    android:gravity="center"
+                    android:onClick="onClick"
+                    android:textColor="#FFF" />
+
+                <Space
+                    android:layout_width="25dp"
+                    android:layout_height="wrap_content" />
+
+                <ImageButton
+                    android:id="@+id/btn_clip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:contentDescription="@string/image_clip"
+                    android:gravity="center"
+                    android:onClick="onClick"
+                    android:padding="10dp"
+                    android:src="@drawable/plugin_camera_image_btn_clip"
+                    android:textColor="#FFF" />
+
+            </RadioGroup>
+
+
+            <com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButton
+                android:id="@+id/bt_done"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="15dp"
+                android:minHeight="0dp"
+                android:minWidth="0dp"
+                android:paddingBottom="5dp"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:paddingTop="5dp"
+                android:text="@string/image_done"
+                android:textColor="@android:color/white"
+                android:textSize="15sp"
+                app:cus_backgroundColor="#36A5F6"
+                app:cus_radius="3dp" />
+        </RelativeLayout>
+
+    </RelativeLayout>
 
 </LinearLayout>

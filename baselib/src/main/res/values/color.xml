@@ -149,4 +149,5 @@
     <color name="schedule_blue">#6EAEF6</color>
     <color name="schedule_purple">#E434FF</color>
     <color name="schedule_brown">#986533</color>
+    <color name="color_image_grid_header">#22292c</color>
 </resources>

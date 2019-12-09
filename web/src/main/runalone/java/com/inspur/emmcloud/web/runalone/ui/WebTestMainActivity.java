@@ -20,7 +20,9 @@ public class WebTestMainActivity extends BaseActivity {
         intent.putExtra("uri", "http://emm.inspuronline.com:83/JSApi/index.html");
         intent.putExtra(Constant.WEB_FRAGMENT_SHOW_HEADER, true);
         startActivity(intent);
-        finish();
+
+//        AppUtils.openCamera(this, "a.jpg", 1);
+//        finish();
     }
 
     @Override

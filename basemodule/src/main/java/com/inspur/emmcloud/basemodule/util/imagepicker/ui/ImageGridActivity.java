@@ -12,6 +12,7 @@ import android.widget.CompoundButton;
 import android.widget.GridView;
 import android.widget.TextView;
 
+import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.R;
 import com.inspur.emmcloud.basemodule.util.imageedit.IMGEditActivity;
@@ -59,6 +60,7 @@ public class ImageGridActivity extends ImageBaseActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_grid);
+        ImmersionBar.with(this).statusBarColor(R.color.color_image_grid_header).navigationBarColor(R.color.color_image_grid_header).init();
         // hideBars();
         imagePicker = ImagePicker.getInstance();
         imagePicker.clear();
@@ -84,7 +86,6 @@ public class ImageGridActivity extends ImageBaseActivity implements
             }
         });
         orgPictureCheckBox.setVisibility(imagePicker.isSupportOrigin() ? View.VISIBLE : View.GONE);
-        setStatus();
     }
 
 

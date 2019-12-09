@@ -433,4 +433,5 @@
         <attr name="circle_progress_unreached_bar_height" format="dimension" />
         <attr name="circle_progress_radius" format="dimension" />
     </declare-styleable>
+
 </resources>

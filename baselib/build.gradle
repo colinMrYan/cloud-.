@@ -86,7 +86,7 @@ android {
 }
 
 dependencies {
-    api fileTree(dir: 'libs', include: ['*.jar'])
+    api fileTree(include: ['*.jar'], dir: 'libs')
     api deps.support.compat
     api deps.support.design
     api deps.support.v7.appcompat
@@ -102,12 +102,11 @@ dependencies {
     api deps.fastjson
     api deps.commonsLang3
     api deps.amapLocation
-
     api(deps.socket) {
         exclude group: 'org.json', module: 'json'
     }
     api deps.pinyin4j
-//    api deps.universalImageLoader
+    //    api deps.universalImageLoader
     api(deps.PhotoView) {
         exclude module: 'support-compat'
         exclude module: 'support-core-utils'
@@ -126,7 +125,6 @@ dependencies {
     api deps.RecordWave
     api deps.mp3spi
     api deps.Mp3Converter
-
     api deps.commonsCodec
     api deps.oss
     api deps.protobuf
@@ -136,8 +134,6 @@ dependencies {
     api deps.bmelnychukAtv
     api deps.immersionbar
     api deps.SegmentControlView
-
-
     androidTestApi(deps.support.test.runner) {
         exclude module: 'support-annotations'
     }
@@ -147,12 +143,12 @@ dependencies {
     api deps.ARouter.arouter_api
     api deps.ical4j
     api deps.fingerprintidentify
-
     api deps.S3.aws_android_sdk_s3
     api deps.S3.aws_android_sdk_core
-    api (deps.S3.aws_android_sdk_mobile_client){ transitive = true }
-    api (deps.S3.aws_auth){ transitive = true }
+    api(deps.S3.aws_android_sdk_mobile_client) { transitive = true }
+    api(deps.S3.aws_auth) { transitive = true }
     api deps.wechatOpenSdk
     api deps.rx.rxjava
     api deps.rx.rxandroid
+    implementation files('libs/denosexJNI_V1.0.jar')
 }

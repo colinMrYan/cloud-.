@@ -34,7 +34,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="共0张"
             android:textColor="#d2d2d7"
             android:textSize="14sp" />
     </LinearLayout>
@@ -44,7 +43,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:src="@drawable/web_camera_list_selected" />
+        android:layout_marginRight="15dp"
+        android:src="@drawable/ic_select_yes" />
 
 </LinearLayout>

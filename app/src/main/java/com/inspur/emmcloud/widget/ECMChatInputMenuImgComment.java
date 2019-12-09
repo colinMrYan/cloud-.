@@ -277,6 +277,7 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
                     mentionsMap = inputEdit.getMentionsMap();
                     chatInputMenuListener.onSendMsg(content, getContentMentionUidList(), urlList, mentionsMap);
                     inputEdit.setText("");
+                    inputEdit.clearInsertModelList();
                 }
                 break;
             case R.id.bt_cancel:
