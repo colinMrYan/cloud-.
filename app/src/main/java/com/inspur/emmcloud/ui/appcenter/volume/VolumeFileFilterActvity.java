@@ -49,11 +49,6 @@ public class VolumeFileFilterActvity extends VolumeFileBaseActivity {
             }
 
             @Override
-            public void onItemOperationTextClick(View view, int position) {
-
-            }
-
-            @Override
             public void onSelectedItemClick(View view, int position) {
 
             }

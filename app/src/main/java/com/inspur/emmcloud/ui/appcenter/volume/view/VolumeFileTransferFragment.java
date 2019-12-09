@@ -7,6 +7,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,9 +33,10 @@ import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.ClickRuleUtil;
 import com.inspur.emmcloud.basemodule.util.FileDownloadManager;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
-import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.ui.appcenter.volume.contract.VolumeFileTransferContract;
+import com.inspur.emmcloud.ui.appcenter.volume.observe.LoadObservable;
+import com.inspur.emmcloud.ui.appcenter.volume.observe.LoadObserver;
 import com.inspur.emmcloud.ui.appcenter.volume.presenter.VolumeFileTransferPresenter;
 import com.inspur.emmcloud.util.privates.ShareFile2OutAppUtils;
 import com.inspur.emmcloud.util.privates.ShareUtil;
@@ -63,7 +66,8 @@ import butterknife.OnClick;
  *
  * @author zhangyj.lc
  */
-public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransferPresenter> implements VolumeFileTransferContract.View {
+public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransferPresenter>
+        implements VolumeFileTransferContract.View, LoadObserver {
     int currentIndex = 0;
     @BindView(R.id.volume_file_transfer_empty_layout)
     View noDataLayout;
@@ -86,13 +90,19 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
     TextView operationTotalBtn;
     @BindView(R.id.volume_file_transfer_recycler)
     RecyclerView recyclerView;
+    @BindView(R.id.load_finish_tip)
+    TextView finishCountTipTv;
+    @BindView(R.id.volume_file_transfer_finish_recycler)
+    RecyclerView finishRecyclerView;
     VolumeFileTransferAdapter adapter;
     VolumeFileAdapter downloadedAdapter;
     SelectCallBack selectCallBack;
 
-    List<VolumeFile> volumeFileList = new ArrayList<>();
+    //    List<VolumeFile> volumeFileList = new ArrayList<>();
+    List<VolumeFile> unFinishedVolumeFileList = new ArrayList<>();
+    List<VolumeFile> finishedVolumeFileList = new ArrayList<>();
     VolumeFileTransferPresenter presenter;
-    TextView headerRightTv;
+    TextView headerLeftTv, headerRightTv;
 
     @Nullable
     @Override
@@ -107,6 +117,7 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
+        LoadObservable.getInstance().registerObserver(this);
     }
 
     @Override
@@ -118,6 +129,11 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
     }
 
     @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
         selectCallBack = null;
@@ -126,6 +142,7 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
     @Override
     public void onDestroy() {
         EventBus.getDefault().unregister(this);
+        LoadObservable.getInstance().unregisterObserver(this);
         super.onDestroy();
     }
 
@@ -141,29 +158,42 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
             currentIndex = getArguments().getInt("position");
         }
 
-        volumeFileList = presenter.getVolumeFileList(currentIndex);
+        unFinishedVolumeFileList = presenter.getUnFinishVolumeFileList(currentIndex);
+        finishedVolumeFileList = presenter.getFinishVolumeFileList(currentIndex);
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setLayoutManager(new CusRecyclerViewLinearLayoutManager(getActivity()));
+        finishRecyclerView.setLayoutManager(new CusRecyclerViewLinearLayoutManager(getActivity()));
 
         switch (currentIndex) {
             case 0:
-                adapter = new VolumeFileTransferAdapter(getActivity(), volumeFileList, Constant.TYPE_DOWNLOAD);
+                adapter = new VolumeFileTransferAdapter(getActivity(), unFinishedVolumeFileList, Constant.TYPE_DOWNLOAD);
                 recyclerView.setAdapter(adapter);
-                refreshOperationTotal(volumeFileList);
+                downloadedAdapter = new VolumeFileAdapter(getActivity(), finishedVolumeFileList);
+                finishRecyclerView.setAdapter(downloadedAdapter);
+                setListIemClick();
+                refreshOperationTotal();
                 setRefreshCallBack();
                 break;
             case 1:
-                adapter = new VolumeFileTransferAdapter(getActivity(), volumeFileList, Constant.TYPE_UPLOAD);
+                adapter = new VolumeFileTransferAdapter(getActivity(), unFinishedVolumeFileList, Constant.TYPE_UPLOAD);
                 recyclerView.setAdapter(adapter);
-                refreshOperationTotal(volumeFileList);
+                downloadedAdapter = new VolumeFileAdapter(getActivity(), finishedVolumeFileList);
+                setListIemClick();
+                finishRecyclerView.setAdapter(downloadedAdapter);
+                refreshOperationTotal();
                 setRefreshCallBack();
                 break;
-            case 2:
-                downloadedAdapter = new VolumeFileAdapter(getActivity(), volumeFileList);
-                recyclerView.setAdapter(downloadedAdapter);
-                setListIemClick();
-                setHeaderOperation();
-                break;
+//            case 2:
+//                downloadedAdapter = new VolumeFileAdapter(getActivity(), volumeFileList);
+//                finishRecyclerView.setAdapter(downloadedAdapter);
+//                setListIemClick();
+//                setHeaderOperation();
+//                break;
+        }
+
+        setHeaderOperation();
+        if (finishedVolumeFileList.size() == 0 && unFinishedVolumeFileList.size() == 0) {
+            showNoDataLayout();
         }
     }
 
@@ -196,14 +226,16 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
     private void handleDownloadOperation() {
         if (operationTotalBtn.isSelected()) {
             operationTotalBtn.setSelected(false);
-            for (VolumeFile volumeFile : volumeFileList) {
-                volumeFile.setStatus(VolumeFile.STATUS_DOWNLOAD_IND);
+            for (VolumeFile volumeFile : unFinishedVolumeFileList) {
+                volumeFile.setLoadType(VolumeFile.TYPE_DOWNLOAD);
+                volumeFile.setStatus(VolumeFile.STATUS_LOADING);
                 VolumeFileDownloadManager.getInstance().reDownloadFile(volumeFile, volumeFile.getVolumeFileAbsolutePath());
             }
         } else {
             operationTotalBtn.setSelected(true);
-            for (VolumeFile volumeFile : volumeFileList) {
-                volumeFile.setStatus(VolumeFile.STATUS_DOWNLOAD_PAUSE);
+            for (VolumeFile volumeFile : unFinishedVolumeFileList) {
+                volumeFile.setLoadType(VolumeFile.TYPE_DOWNLOAD);
+                volumeFile.setStatus(VolumeFile.STATUS_PAUSE);
                 VolumeFileDownloadManager.getInstance().cancelDownloadVolumeFile(volumeFile);
             }
         }
@@ -215,14 +247,16 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
     private void handleUploadOperation() {
         if (operationTotalBtn.isSelected()) {
             operationTotalBtn.setSelected(false);
-            for (VolumeFile volumeFile : volumeFileList) {
-                volumeFile.setStatus(VolumeFile.STATUS_UPLOAD_IND);
+            for (VolumeFile volumeFile : unFinishedVolumeFileList) {
+                volumeFile.setLoadType(VolumeFile.TYPE_UPLOAD);
+                volumeFile.setStatus(VolumeFile.STATUS_LOADING);
                 VolumeFileUploadManager.getInstance().reUploadFile(volumeFile);
             }
         } else {
             operationTotalBtn.setSelected(true);
-            for (VolumeFile volumeFile : volumeFileList) {
-                volumeFile.setStatus(VolumeFile.STATUS_UPLOAD_PAUSE);
+            for (VolumeFile volumeFile : unFinishedVolumeFileList) {
+                volumeFile.setLoadType(VolumeFile.TYPE_UPLOAD);
+                volumeFile.setStatus(VolumeFile.STATUS_PAUSE);
                 VolumeFileUploadManager.getInstance().pauseVolumeFileUploadService(volumeFile);
             }
         }
@@ -234,49 +268,59 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
     /**
      * 全部下载  全部暂停UI
      */
-    private void refreshOperationTotal(List<VolumeFile> list) {
-        operationTotalLayout.setVisibility(list.size() > 0 ? View.VISIBLE : View.GONE);
+    private void refreshOperationTotal() {
+        operationTotalLayout.setVisibility(unFinishedVolumeFileList.size() > 0 ? View.VISIBLE : View.GONE);
         boolean isShowPause = false;
-        for (VolumeFile volumeFile : list) {
-            if (volumeFile.getStatus().equals(VolumeFile.STATUS_DOWNLOAD_IND)
-                    || volumeFile.getStatus().equals(VolumeFile.STATUS_UPLOAD_IND)) {
+        for (VolumeFile volumeFile : unFinishedVolumeFileList) {
+            if (volumeFile.getStatus().equals(VolumeFile.STATUS_LOADING)) {
                 isShowPause = true;
                 break;
             }
         }
         operationTotalBtn.setSelected(!isShowPause);
         operationTotalBtn.setText(isShowPause ? R.string.volume_file_transfer_list_pause : R.string.volume_file_transfer_list_continue);
-        if (currentIndex == 0) {
-            countTipTv.setText(getString(R.string.volume_file_transfer_list_download_count, list.size()));
-        } else if (currentIndex == 1) {
-            countTipTv.setText(getString(R.string.volume_file_transfer_list_upload_count, list.size()));
-        }
+        refreshCountTip();
     }
 
+    /**
+     * 刷新数量提示
+     */
+    private void refreshCountTip() {
+        if (currentIndex == 0) {
+            countTipTv.setText(getString(R.string.volume_file_transfer_list_download_count, unFinishedVolumeFileList.size()));
+            finishCountTipTv.setText(getString(R.string.volume_file_transfer_list_download_finish_count, finishedVolumeFileList.size()));
+        } else if (currentIndex == 1) {
+            countTipTv.setText(getString(R.string.volume_file_transfer_list_upload_count, unFinishedVolumeFileList.size()));
+            finishCountTipTv.setText(getString(R.string.volume_file_transfer_list_upload_finish_count, finishedVolumeFileList.size()));
+        }
+        finishCountTipTv.setVisibility(finishedVolumeFileList.size() > 0 ? View.VISIBLE : View.GONE);
+    }
+
+    /**
+     * 上传、下载成功 or 长按删除   回调
+     */
     private void setRefreshCallBack() {
         adapter.setCallBack(new VolumeFileTransferAdapter.CallBack() {
             @Override
             public void refreshView(List<VolumeFile> fileList) {
+                unFinishedVolumeFileList = presenter.getUnFinishVolumeFileList(currentIndex);
+                adapter.notifyDataSetChanged();
                 //上传、下载成功 or 长按删除   回调
                 if (operationTotalLayout != null) {
                     operationTotalLayout.setVisibility(fileList.size() > 0 ? View.VISIBLE : View.GONE);
                 }
-                if (fileList.size() == 0) {
+                if (finishedVolumeFileList.size() == 0 && unFinishedVolumeFileList.size() == 0) {
                     showNoDataLayout();
                 } else {
-                    if (countTipTv != null) {       //长按删除时 更新数量
-                        if (currentIndex == 0) {
-                            countTipTv.setText(getString(R.string.volume_file_transfer_list_download_count, fileList.size()));
-                        } else if (currentIndex == 1) {
-                            countTipTv.setText(getString(R.string.volume_file_transfer_list_upload_count, fileList.size()));
-                        }
+                    if (countTipTv != null && finishCountTipTv != null) {       //长按删除时 更新数量
+                        refreshCountTip();
                     }
                 }
             }
 
             @Override
             public void onStatusChange(List<VolumeFile> fileList) {  //点击item 暂停  继续
-                refreshOperationTotal(fileList);
+                refreshOperationTotal();
             }
         });
     }
@@ -286,15 +330,11 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
 
             @Override
             public void onSelectedItemClick(View view, int position) {
-                VolumeFile volumeFile = volumeFileList.get(position);
-//                if (!volumeFile.getStatus().equals("normal")) {
-//                    return;
-//                }
                 downloadedAdapter.setVolumeFileSelect(position);
                 if (selectCallBack != null) {
                     selectCallBack.onSelect(downloadedAdapter.getSelectVolumeFileList());
                 }
-                if (downloadedAdapter.getSelectVolumeFileList().size() == volumeFileList.size()) {
+                if (downloadedAdapter.getSelectVolumeFileList().size() == finishedVolumeFileList.size()) {
                     headerRightTv.setSelected(false);
                     headerRightTv.setText(R.string.clouddriver_select_nothing);
                 } else {
@@ -306,52 +346,42 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
 
             @Override
             public void onItemClick(View view, int position) {
-                VolumeFile volumeFile = volumeFileList.get(position);
-//                if (volumeFile.getStatus().equals("normal")) {
-                    if (downloadedAdapter.getSelectVolumeFileList().size() == 0) {
-                        if (!downloadedAdapter.getMultiselect()) {
-                            downloadOrOpenVolumeFile(volumeFile);
-                        }
-                    } else {
-                        downloadedAdapter.setVolumeFileSelect(position);
-                        setBottomOperationItemShow(downloadedAdapter.getSelectVolumeFileList());
+                VolumeFile volumeFile = finishedVolumeFileList.get(position);
+                if (downloadedAdapter.getSelectVolumeFileList().size() == 0) {
+                    if (!downloadedAdapter.getMultiselect()) {
+                        downloadOrOpenVolumeFile(volumeFile);
                     }
-//                }
-
+                } else {
+                    downloadedAdapter.setVolumeFileSelect(position);
+                    if (selectCallBack != null) {
+                        selectCallBack.onSelect(downloadedAdapter.getSelectVolumeFileList());
+                    }
+                    if (downloadedAdapter.getSelectVolumeFileList().size() == finishedVolumeFileList.size()) {
+                        headerRightTv.setSelected(false);
+                        headerRightTv.setText(R.string.clouddriver_select_nothing);
+                    } else {
+                        headerRightTv.setSelected(true);
+                        headerRightTv.setText(R.string.select_all);
+                    }
+                    setBottomOperationItemShow(downloadedAdapter.getSelectVolumeFileList());
+                }
             }
 
             @Override
             public void onItemLongClick(View view, int position) {
-                VolumeFile volumeFile = volumeFileList.get(position);
-                if (/*volumeFile.getStatus().equals("normal") && */!downloadedAdapter.getMultiselect()) {
-                    showFileOperationDlg(volumeFileList.get(position));
+                if (!downloadedAdapter.getMultiselect()) {
+                    showFileOperationDlg(finishedVolumeFileList.get(position));
                 }
             }
 
             @Override
             public void onItemDropDownImgClick(View view, int position) {
                 if (!downloadedAdapter.getMultiselect()) {
-                    showFileOperationDlg(volumeFileList.get(position));
+                    showFileOperationDlg(finishedVolumeFileList.get(position));
                 } else {
                     downloadedAdapter.setVolumeFileSelect(position);
                 }
 
-            }
-
-            @Override
-            public void onItemOperationTextClick(View view, int position) {
-                VolumeFile volumeFile = volumeFileList.get(position);
-                if (volumeFile.getStatus().equals(VolumeFile.STATUS_UPLOAD_IND)) {
-                    //取消上传
-                    VolumeFileUploadManager.getInstance().cancelVolumeFileUploadService(volumeFile);
-                    volumeFileList.remove(position);
-                    adapter.notifyItemRemoved(position);
-                } else if (NetUtils.isNetworkConnected(getActivity())) {
-                    //重新上传
-                    volumeFile.setStatus(VolumeFile.STATUS_UPLOAD_IND);
-                    VolumeFileUploadManager.getInstance().reUploadFile(volumeFile);
-                    adapter.notifyItemChanged(position);
-                }
             }
         });
     }
@@ -361,36 +391,30 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
      */
     private void setHeaderOperation() {
         if (getActivity() instanceof VolumeFileTransferActivity) {
-            TextView headerLeftTv = ((VolumeFileTransferActivity) getActivity()).getHeaderLeftTv();
+            headerLeftTv = ((VolumeFileTransferActivity) getActivity()).getHeaderLeftTv();
             headerRightTv = ((VolumeFileTransferActivity) getActivity()).getHeaderRightTv();
             headerRightTv.setSelected(true);
-            headerLeftTv.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (ClickRuleUtil.isFastClick()) {
-                        return;
-                    }
-                    hideBottomOperationItemShow();
-                }
-            });
-            headerRightTv.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (ClickRuleUtil.isFastClick()) {
-                        return;
-                    }
-                    boolean isSelect = headerRightTv.isSelected();
-                    List<VolumeFile> list = new ArrayList<>(volumeFileList);
-                    downloadedAdapter.setSelectVolumeFileList(isSelect ? list : new ArrayList<VolumeFile>());
-                    headerRightTv.setText(isSelect ? R.string.clouddriver_select_nothing : R.string.select_all);
-                    downloadedAdapter.notifyDataSetChanged();
-                    headerRightTv.setSelected(!isSelect);
-                    setBottomOperationItemShow(downloadedAdapter.getSelectVolumeFileList());
-                    if (selectCallBack != null) {
-                        selectCallBack.onSelect(isSelect ? list : null);
-                    }
-                }
-            });
+        }
+    }
+
+    public void clickHeaderRight() {
+        if (headerRightTv != null) {
+            boolean isSelect = headerRightTv.isSelected();
+            List<VolumeFile> list = new ArrayList<>(finishedVolumeFileList);
+            downloadedAdapter.setSelectVolumeFileList(isSelect ? list : new ArrayList<VolumeFile>());
+            headerRightTv.setText(isSelect ? R.string.clouddriver_select_nothing : R.string.select_all);
+            downloadedAdapter.notifyDataSetChanged();
+            headerRightTv.setSelected(!isSelect);
+            setBottomOperationItemShow(downloadedAdapter.getSelectVolumeFileList());
+            if (selectCallBack != null) {
+                selectCallBack.onSelect(isSelect ? list : null);
+            }
+        }
+    }
+
+    public void clickHeaderLeft() {
+        if (headerLeftTv != null) {
+            hideBottomOperationItemShow();
         }
     }
 
@@ -441,12 +465,12 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
      * 处理Volume 相关的Action
      */
     private void handleVolumeAction(String action) {
-        VolumeFile volumeFile = downloadedAdapter.getSelectVolumeFileList().get(0);
         if (action.equals(deleteAction)) {
             if (downloadedAdapter.getSelectVolumeFileList().size() > 0) {
                 showFileDelWranibgDlg(downloadedAdapter.getSelectVolumeFileList());
             }
         } else if (action.equals(shareTo)) {
+            VolumeFile volumeFile = downloadedAdapter.getSelectVolumeFileList().get(0);
             String fileSavePath = volumeFile.getLocalFilePath();
             shareFile(fileSavePath, downloadedAdapter.getSelectVolumeFileList().get(0));
             downloadedAdapter.clearSelectedVolumeFileList();
@@ -485,6 +509,7 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
                         if (selectCallBack != null) {
                             selectCallBack.onSelect(new ArrayList<VolumeFile>());
                         }
+                        refreshCountTip();
                         dialog.dismiss();
                     }
                 })
@@ -500,10 +525,9 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
         List<String> filePathList = new ArrayList<>();
         for (VolumeFile volumeFile : deleteVolumeFile) {
             filePathList.add(volumeFile.getLocalFilePath());
-            volumeFileList.remove(volumeFile);
+            finishedVolumeFileList.remove(volumeFile);
             VolumeFileDownloadManager.getInstance().resetVolumeFileStatus(volumeFile);
-            if (volumeFileList.size() == 0) {
-                hideBottomOperationItemShow();
+            if (finishedVolumeFileList.size() == 0 && unFinishedVolumeFileList.size() == 0) {
                 showNoDataLayout();
             }
             downloadedAdapter.notifyDataSetChanged();
@@ -625,6 +649,18 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
         }
     }
 
+    @Override
+    public void onDataChange() {
+        unFinishedVolumeFileList = presenter.getUnFinishVolumeFileList(currentIndex);
+        finishedVolumeFileList = presenter.getFinishVolumeFileList(currentIndex);
+        downloadedAdapter.setVolumeFileList(finishedVolumeFileList);
+        downloadedAdapter.notifyDataSetChanged();
+        adapter.setUnfinishedFileList(unFinishedVolumeFileList);
+        adapter.notifyDataSetChanged();
+        Log.d("zhang", "onDataChange: 监听到数据变化 unFinishedVolumeFileList.size = " + unFinishedVolumeFileList.size());
+        Log.d("zhang", "onDataChange: 监听到数据变化 finishedVolumeFileList.size = " + finishedVolumeFileList.size());
+    }
+
     private static class CustomShareListener implements UMShareListener {
 
         private WeakReference<BaseActivity> mActivity;
@@ -658,19 +694,44 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveSimpleEventMessage(SimpleEventMessage simpleEventMessage) {
+//        if (simpleEventMessage.getAction().equals(Constant.EVENTBUS_TAG_VOLUME_FILE_DOWNLOAD_SUCCESS) && currentIndex == 2) {
+//            VolumeFile volumeFile = (VolumeFile) simpleEventMessage.getMessageObj();
+//            if (!volumeFileList.contains(volumeFile)) {
+//                volumeFileList.add(0, (VolumeFile) simpleEventMessage.getMessageObj());
+//                showListLayout();
+////                downloadedAdapter.notifyDataSetChanged();
+//            }
+//        }
+    }
+
     public interface SelectCallBack {
         void onSelect(List<VolumeFile> selectVolumeFileList);
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceiveSimpleEventMessage(SimpleEventMessage simpleEventMessage) {
-        if (simpleEventMessage.getAction().equals(Constant.EVENTBUS_TAG_VOLUME_FILE_DOWNLOAD_SUCCESS) && currentIndex == 2) {
-            VolumeFile volumeFile = (VolumeFile) simpleEventMessage.getMessageObj();
-            if (!volumeFileList.contains(volumeFile)) {
-                volumeFileList.add(0, (VolumeFile) simpleEventMessage.getMessageObj());
-                showListLayout();
-                downloadedAdapter.notifyDataSetChanged();
+    public class CusRecyclerViewLinearLayoutManager extends LinearLayoutManager {
+        public CusRecyclerViewLinearLayoutManager(Context context) {
+            super(context);
+        }
+
+        public CusRecyclerViewLinearLayoutManager(Context context, int orientation, boolean reverseLayout) {
+            super(context, orientation, reverseLayout);
+        }
+
+        public CusRecyclerViewLinearLayoutManager(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+            super(context, attrs, defStyleAttr, defStyleRes);
+        }
+
+        @Override
+        public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
+            try {
+                //try catch一下
+                super.onLayoutChildren(recycler, state);
+            } catch (IndexOutOfBoundsException e) {
+                e.printStackTrace();
             }
+
         }
     }
 }

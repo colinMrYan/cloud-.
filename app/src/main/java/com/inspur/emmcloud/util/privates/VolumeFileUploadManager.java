@@ -41,8 +41,12 @@ public class VolumeFileUploadManager extends APIInterfaceInstance {
         volumeFileUploadList = VolumeFileUploadCacheUtils.getVolumeFileUploadList();
         boolean isNeedUpdateVolumeFileUploadStatus = false;
         for (VolumeFileUpload volumeFileUpload : volumeFileUploadList) {
-            if (volumeFileUpload.getStatus().equals(VolumeFile.STATUS_UPLOAD_IND)) {
-                volumeFileUpload.setStatus(VolumeFile.STATUS_UPLOAD_PAUSE);
+            if (volumeFileUpload.getStatus().equals(VolumeFile.STATUS_LOADING)) {
+                volumeFileUpload.setStatus(VolumeFile.STATUS_PAUSE);
+                isNeedUpdateVolumeFileUploadStatus = true;
+            }
+
+            if (volumeFileUpload.getStatus().equals(VolumeFile.STATUS_SUCCESS)) {
                 isNeedUpdateVolumeFileUploadStatus = true;
             }
         }
@@ -75,14 +79,13 @@ public class VolumeFileUploadManager extends APIInterfaceInstance {
         File file = new File(localFilePath);
         VolumeFileUpload volumeFileUpload = new VolumeFileUpload(mockVolumeFile, localFilePath, volumeFileParentPath);
         if (FileUtils.isFileExist(volumeFileUpload.getLocalFilePath()) && NetUtils.isNetworkConnected(BaseApplication.getInstance())) {
-            volumeFileUpload.setStatus(VolumeFile.STATUS_UPLOAD_IND);
+            volumeFileUpload.setStatus(VolumeFile.STATUS_LOADING);
             apiService.getVolumeFileUploadToken(file.getName(), volumeFileUpload, mockVolumeFile);
         } else {
-            volumeFileUpload.setStatus(VolumeFile.STATUS_UPLOAD_FAIL);
+            volumeFileUpload.setStatus(VolumeFile.STATUS_FAIL);
         }
         volumeFileUploadList.add(0, volumeFileUpload);
         VolumeFileUploadCacheUtils.saveVolumeFileUpload(volumeFileUpload);
-
     }
 
     /**
@@ -97,11 +100,11 @@ public class VolumeFileUploadManager extends APIInterfaceInstance {
             if (volumeFileUpload.getId().equals(mockVolumeFile.getId())) {
                 volumeFileUpload.setVolumeFileUploadService(null);
                 if (FileUtils.isFileExist(volumeFileUpload.getLocalFilePath())) {
-                    volumeFileUpload.setStatus(VolumeFile.STATUS_UPLOAD_IND);
+                    volumeFileUpload.setStatus(VolumeFile.STATUS_LOADING);
                     //上传文件
                     apiService.getVolumeFileUploadToken(mockVolumeFile.getName(), volumeFileUpload, mockVolumeFile);
                 } else {
-                    volumeFileUpload.setStatus(VolumeFile.STATUS_UPLOAD_FAIL);
+                    volumeFileUpload.setStatus(VolumeFile.STATUS_FAIL);
                 }
                 VolumeFileUploadCacheUtils.saveVolumeFileUpload(volumeFileUpload);
                 break;
@@ -144,6 +147,33 @@ public class VolumeFileUploadManager extends APIInterfaceInstance {
         return volumeFileList;
     }
 
+    public List<VolumeFile> getFinishUploadList() {
+        List<VolumeFile> volumeFileList = new ArrayList<>();
+        for (int i = 0; i < volumeFileUploadList.size(); i++) {
+            VolumeFileUpload volumeFileUpload = volumeFileUploadList.get(i);
+            if (volumeFileUpload.getStatus().equals(VolumeFile.STATUS_NORMAL) || volumeFileUpload.getStatus().equals(VolumeFile.STATUS_SUCCESS)) {
+                VolumeFile mockVolumeFile = VolumeFile.getMockVolumeFile(volumeFileUpload);
+                volumeFileList.add(mockVolumeFile);
+            }
+
+        }
+        return volumeFileList;
+    }
+
+    public List<VolumeFile> getUnFinishUploadList() {
+        List<VolumeFile> volumeFileList = new ArrayList<>();
+        for (int i = 0; i < volumeFileUploadList.size(); i++) {
+            VolumeFileUpload volumeFileUpload = volumeFileUploadList.get(i);
+            if (volumeFileUpload.getStatus().equals(VolumeFile.STATUS_LOADING) || volumeFileUpload.getStatus().equals(VolumeFile.STATUS_PAUSE) ||
+                    volumeFileUpload.getStatus().equals(VolumeFile.STATUS_FAIL)) {
+                VolumeFile mockVolumeFile = VolumeFile.getMockVolumeFile(volumeFileUpload);
+                volumeFileList.add(mockVolumeFile);
+            }
+
+        }
+        return volumeFileList;
+    }
+
     /**
      * 移除上传服务
      *
@@ -177,7 +207,7 @@ public class VolumeFileUploadManager extends APIInterfaceInstance {
                         volumeFileUploadService.onPause();
                         volumeFileUpload.setVolumeFileUploadService(null);
                     }
-                    volumeFileUpload.setStatus(VolumeFile.STATUS_UPLOAD_PAUSE);
+                    volumeFileUpload.setStatus(VolumeFile.STATUS_PAUSE);
                     VolumeFileUploadCacheUtils.saveVolumeFileUpload(volumeFileUpload);
                     break;
                 }
@@ -196,7 +226,7 @@ public class VolumeFileUploadManager extends APIInterfaceInstance {
             final VolumeFileUpload volumeFileUpload = volumeFileUploadList.get(i);
             if (volumeFileUpload.getId().equals(volumeFile.getId())) {
                 if (businessProgressCallback != null) {
-                    if (volumeFileUpload.getStatus().equals(VolumeFile.STATUS_UPLOAD_IND)) {
+                    if (volumeFileUpload.getStatus().equals(VolumeFile.STATUS_LOADING)) {
                         if (volumeFileUpload.getProgress() == 100) {
                             new Handler().post(new Runnable() {
                                 @Override
@@ -210,7 +240,7 @@ public class VolumeFileUploadManager extends APIInterfaceInstance {
                         } else {
                             businessProgressCallback.onLoading(volumeFileUpload.getProgress(), 0, "");
                         }
-                    } else if (volumeFileUpload.getStatus().equals(VolumeFile.STATUS_UPLOAD_FAIL)) {
+                    } else if (volumeFileUpload.getStatus().equals(VolumeFile.STATUS_FAIL)) {
                         new Handler().post(new Runnable() {
                             @Override
                             public void run() {
@@ -306,8 +336,14 @@ public class VolumeFileUploadManager extends APIInterfaceInstance {
         public void onSuccess(VolumeFile volumeFile) {
             Log.d("zhang", "onSuccess: 上传成功");
 //            ToastUtils.show(BaseApplication.getInstance(), R.string.clouddriver_upload_success);
-            volumeFileUploadList.remove(volumeFileUpload);
-            VolumeFileUploadCacheUtils.deleteVolumeFileUpload(volumeFileUpload);
+//            volumeFileUploadList.remove(volumeFileUpload);
+            for (int i = 0; i < volumeFileUploadList.size(); i++) {
+                VolumeFileUpload item = volumeFileUploadList.get(i);
+                if (item.getId().equals(volumeFileUpload.getId())) {
+                    item.setStatus(VolumeFile.STATUS_SUCCESS);
+                }
+            }
+//            VolumeFileUploadCacheUtils.deleteVolumeFileUpload(volumeFileUpload);
             if (volumeFileUpload.getBusinessProgressCallback() != null) {
                 volumeFileUpload.getBusinessProgressCallback().onSuccess(volumeFile);
             }
@@ -319,7 +355,7 @@ public class VolumeFileUploadManager extends APIInterfaceInstance {
         @Override
         public void onLoading(int progress, long current, String speed) {
             volumeFileUpload.setProgress(progress);
-            volumeFileUpload.setStatus(VolumeFile.STATUS_UPLOAD_IND);
+            volumeFileUpload.setStatus(VolumeFile.STATUS_LOADING);
             VolumeFileUploadCacheUtils.saveVolumeFileUpload(volumeFileUpload);
             if (volumeFileUpload.getBusinessProgressCallback() != null) {
                 volumeFileUpload.getBusinessProgressCallback().onLoading(progress, current, speed);
@@ -329,10 +365,10 @@ public class VolumeFileUploadManager extends APIInterfaceInstance {
         @Override
         public void onFail() {
             Log.d("zhang", "callbackError: 上传失败");
-            volumeFileUpload.setStatus(VolumeFile.STATUS_UPLOAD_FAIL);
+            volumeFileUpload.setStatus(VolumeFile.STATUS_FAIL);
             VolumeFileUploadCacheUtils.saveVolumeFileUpload(volumeFileUpload);
             if (volumeFileUpload.getBusinessProgressCallback() != null) {
-                volumeFileUpload.setStatus(VolumeFile.STATUS_UPLOAD_FAIL);
+                volumeFileUpload.setStatus(VolumeFile.STATUS_FAIL);
                 VolumeFileUploadCacheUtils.saveVolumeFileUpload(volumeFileUpload);
                 volumeFileUpload.getBusinessProgressCallback().onFail();
             }

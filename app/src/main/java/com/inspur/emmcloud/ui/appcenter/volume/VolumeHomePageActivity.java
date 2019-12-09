@@ -207,7 +207,7 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
      */
     public void refreshTipViewLayout() {
         if (VolumeFileUploadManager.getInstance().getAllUploadVolumeFile().size() > 0 ||
-                VolumeFileDownloadManager.getInstance().getAllDownloadVolumeFile().size() > 0) {
+                VolumeFileDownloadManager.getInstance().getDownloadingList().size() > 0) {
             tipViewLayout.setVisibility(View.VISIBLE);
         } else {
             tipViewLayout.setVisibility(View.GONE);

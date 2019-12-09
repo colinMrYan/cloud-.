@@ -235,12 +235,12 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
         } else {
             if (volumeFile.getFormat().startsWith("image/")) {
                 String url = "";
-                if (volumeFile.getStatus().equals(VolumeFile.STATUS_UPLOAD_IND)) {
-                    url = volumeFile.getLocalFilePath();
-                } else {
-                    String path = currentDirAbsolutePath + volumeFile.getName();
-                    url = APIUri.getVolumeFileTypeImgThumbnailUrl(volumeFile, path);
-                }
+//                if (volumeFile.getStatus().equals(VolumeFile.STATUS_LOADING) ) {
+//                    url = volumeFile.getLocalFilePath();
+//                } else {
+                String path = currentDirAbsolutePath + volumeFile.getName();
+                url = APIUri.getVolumeFileTypeImgThumbnailUrl(volumeFile, path);
+//                }
                 imageView.setTag(url);
                 ImageDisplayUtils.getInstance().displayImageByTag(imageView, url, R.drawable.baselib_file_type_img);
                 return;
@@ -266,9 +266,6 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
         void onItemClick(View view, int position);
         void onItemLongClick(View view, int position);
         void onItemDropDownImgClick(View view, int position);
-
-        void onItemOperationTextClick(View view, int position);
-
         void onSelectedItemClick(View view, int position);
     }
 
@@ -314,7 +311,7 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
                 if (v.getId() == R.id.file_operation_drop_down_img) {
                     myItemClickListener.onItemDropDownImgClick(v, getAdapterPosition());
                 } else if (v.getId() == R.id.upload_cancel_text) {
-                    myItemClickListener.onItemOperationTextClick(v, getAdapterPosition());
+//                    myItemClickListener.onItemOperationTextClick(v, getAdapterPosition());
                 } else if (v.getId() == R.id.file_select_img) {
                     myItemClickListener.onSelectedItemClick(v, getAdapterPosition());
                 } else {

@@ -1,5 +1,7 @@
 package com.inspur.emmcloud.basemodule.util;
 
+import android.util.Log;
+
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.bean.DownloadFileCategory;
 import com.inspur.emmcloud.basemodule.bean.FileDownloadInfo;
@@ -81,6 +83,7 @@ public class FileDownloadManager {
         List<File> downloadFileList = new ArrayList<>();
         List<FileDownloadInfo> invalidFileDownloadInfoList = new ArrayList<>();
         List<FileDownloadInfo> fileDownloadInfoList = FileDownloadInfoCacheUtils.getFileDownloadInfoList(downloadFileCategory.getValue());
+        Log.d("zhang", "getFileDownloadFileList: fileDownloadInfoList.size = " + fileDownloadInfoList.size());
         for (FileDownloadInfo fileDownloadInfo : fileDownloadInfoList) {
             File file = new File(fileDownloadInfo.getFilePath());
             if (file.exists()) {
@@ -91,6 +94,28 @@ public class FileDownloadManager {
         }
         FileDownloadInfoCacheUtils.deleteFileDownloadInfoList(invalidFileDownloadInfoList);
         return downloadFileList;
+    }
+
+    /**
+     * 根据业务类型获取所有已下载的且本地还存在的文件下载信息列表,并删除不存在的文件数据
+     *
+     * @param downloadFileCategory
+     * @return FileDownloadInfo 类型
+     */
+    public List<FileDownloadInfo> getFileDownloadInfoFileList(DownloadFileCategory downloadFileCategory) {
+        List<FileDownloadInfo> resultList = new ArrayList<>();
+        List<FileDownloadInfo> invalidFileDownloadInfoList = new ArrayList<>();
+        List<FileDownloadInfo> fileDownloadInfoList = FileDownloadInfoCacheUtils.getFileDownloadInfoList(downloadFileCategory.getValue());
+        for (FileDownloadInfo fileDownloadInfo : fileDownloadInfoList) {
+            File file = new File(fileDownloadInfo.getFilePath());
+            if (file.exists()) {
+                resultList.add(0, fileDownloadInfo);
+            } else {
+                invalidFileDownloadInfoList.add(fileDownloadInfo);
+            }
+        }
+        FileDownloadInfoCacheUtils.deleteFileDownloadInfoList(invalidFileDownloadInfoList);
+        return resultList;
     }
 
 
