@@ -51,6 +51,7 @@ import com.inspur.emmcloud.componentservice.web.WebService;
 
 import java.io.FileReader;
 import java.lang.reflect.Method;
+import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -1091,5 +1092,31 @@ public class AppUtils {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public static boolean needAuthorizationToken(String url) {
+        //检查每一个路由是否
+        WebServiceRouterManager manager = WebServiceRouterManager.getInstance();
+        if (url.startsWith(manager.getClusterEcm()) ||
+                url.startsWith(manager.getClusterChat()) ||
+                url.startsWith(manager.getClusterSchedule()) ||
+                url.startsWith(manager.getClusterDistribution()) ||
+                url.startsWith(manager.getClusterNews()) ||
+                url.startsWith(manager.getClusterCloudDrive()) ||
+                url.startsWith(manager.getClusterStorageLegacy()) ||
+                url.startsWith(manager.getClusterChatSocket()) ||
+                url.startsWith(manager.getClusterEmm()) ||
+                url.startsWith(manager.getClusterClientRegistry()) ||
+                url.startsWith(manager.getClusterBot())) {
+            return true;
+        }
+        URL urlHost = null;
+        try {
+            urlHost = new URL(url);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        String urlHostPath = urlHost.getHost();
+        return (urlHostPath.endsWith(Constant.INSPUR_HOST_URL)) || urlHostPath.endsWith(Constant.INSPURONLINE_HOST_URL) || urlHost.getPath().endsWith("/app/mdm/v3.0/loadForRegister")
     }
 }
