@@ -91,7 +91,7 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
 
     private void syncListData() {
         if (type.equals(Constant.TYPE_DOWNLOAD)) {
-            unfinishedFileList = VolumeFileDownloadManager.getInstance().getDownloadingList();
+            unfinishedFileList = VolumeFileDownloadManager.getInstance().getUnFinishDownloadList();
         } else if (type.equals(Constant.TYPE_UPLOAD)) {
             unfinishedFileList = VolumeFileUploadManager.getInstance().getUnFinishUploadList();
         }

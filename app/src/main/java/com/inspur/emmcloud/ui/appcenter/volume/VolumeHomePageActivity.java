@@ -206,8 +206,8 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
      * 小红点显示状态
      */
     public void refreshTipViewLayout() {
-        if (VolumeFileUploadManager.getInstance().getAllUploadVolumeFile().size() > 0 ||
-                VolumeFileDownloadManager.getInstance().getDownloadingList().size() > 0) {
+        if (VolumeFileUploadManager.getInstance().getUnFinishUploadList().size() > 0 ||
+                VolumeFileDownloadManager.getInstance().getUnFinishDownloadList().size() > 0) {
             tipViewLayout.setVisibility(View.VISIBLE);
         } else {
             tipViewLayout.setVisibility(View.GONE);
