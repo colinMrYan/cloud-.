@@ -181,6 +181,8 @@
     <string name="choose_common_office">common office address</string>
     <string name="please_click_choosing_time">Please click and choose time</string>
     <string name="channel_group_qrcode">Group QR Code</string>
+    <string name="channel_group_qrcode_card">Group QR Code</string>
+    <string name="channel_group_qrcode_valid">Valid until %1$s and will update upon joining group</string>
     <string name="meeting_room">Meeting Room</string>
     <string name="building">Building</string>
     <string name="am">AM</string>
@@ -353,7 +355,8 @@
     <string name="chat_search_related_messages">Record(s) for%1$s</string>
     <string name="chat_more_private_chat">More Private Chats</string>
     <string name="chat_private_chat">Private Chats</string>
-    <string name="chat_group_welcome_join_group">Welcome to group %1$s</string>
+    <string name="chat_group_welcome_join_group">Welcome to group</string>
+    <string name="chat_group_welcome_join_group_detail">Welcome to group %1$s,enter to view details.</string>
     <string name="chat_conversation_create_error">Create Chat Group Fail</string>
     <string name="chat_emotion_recent_tip">Recently Used</string>
     <string name="chat_emotion_total_tip">All Stickers</string>
