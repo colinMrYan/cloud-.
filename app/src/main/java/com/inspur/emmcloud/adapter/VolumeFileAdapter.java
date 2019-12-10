@@ -191,37 +191,6 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
         }
         String fileTime = TimeUtils.getTime(volumeFile.getLastUpdate(), format);
         holder.fileTimeText.setText(fileTime);
-//        if (!isStatusNomal) {
-//            LogUtils.jasonDebug("volumeFileStatus==" + volumeFileStatus);
-//            boolean isStutasUploading = volumeFileStatus.equals(VolumeFile.STATUS_UPLOAD_IND);
-//            holder.uploadOperationText.setText(isStutasUploading ? R.string.upload_cancel : R.string.clouddriver_upload_again);
-//            holder.uploadProgressBar.setProgress(0);
-//            holder.uploadProgressBar.setVisibility(View.GONE);
-//            holder.uploadStatusText.setVisibility(View.VISIBLE);
-//            holder.uploadStatusText.setText(isStutasUploading ? R.string.clouddriver_upload_waiting : R.string.clouddriver_upload_fail);
-//            if (volumeFileStatus.equals(VolumeFile.STATUS_UPLOAD_IND)) {
-//                VolumeFileUploadManager.getInstance().setBusinessProgressCallback(volumeFile, new ProgressCallback() {
-//                    @Override
-//                    public void onSuccess(VolumeFile newVolumeFile) {
-////                        replaceVolumeFileData(volumeFile, newVolumeFile);
-//                    }
-//
-//                    @Override
-//                    public void onLoading(int progress, String speed) {
-//                        holder.uploadProgressBar.setVisibility(View.VISIBLE);
-//                        holder.uploadStatusText.setVisibility(View.GONE);
-//                        holder.uploadProgressBar.setProgress(progress);
-//                    }
-//
-//                    @Override
-//                    public void onFail() {
-//                        volumeFile.setStatus(VolumeFile.STATUS_UPLOAD_FAIL);
-//                        notifyItemChanged(position);
-//                    }
-//                });
-//            }
-//
-//        }
     }
 
     private void showVolumeFileTypeImg(ImageView imageView, VolumeFile volumeFile) {
@@ -232,12 +201,12 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
         } else {
             if (volumeFile.getFormat().startsWith("image/")) {
                 String url = "";
-//                if (volumeFile.getStatus().equals(VolumeFile.STATUS_LOADING) ) {
-//                    url = volumeFile.getLocalFilePath();
-//                } else {
-                String path = currentDirAbsolutePath + volumeFile.getName();
-                url = APIUri.getVolumeFileTypeImgThumbnailUrl(volumeFile, path);
-//                }
+                if (volumeFile.getStatus().equals(VolumeFile.STATUS_SUCCESS)) {
+                    url = volumeFile.getLocalFilePath();
+                } else {
+                    String path = currentDirAbsolutePath + volumeFile.getName();
+                    url = APIUri.getVolumeFileTypeImgThumbnailUrl(volumeFile, path);
+                }
                 imageView.setTag(url);
                 ImageDisplayUtils.getInstance().displayImageByTag(imageView, url, R.drawable.baselib_file_type_img);
                 return;

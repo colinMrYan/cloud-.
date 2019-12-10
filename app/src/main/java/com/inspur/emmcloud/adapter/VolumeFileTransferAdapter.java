@@ -89,7 +89,7 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
         return unfinishedFileList == null ? 0 : unfinishedFileList.size();
     }
 
-    private void syncListData() {
+    private synchronized void syncListData() {
         if (type.equals(Constant.TYPE_DOWNLOAD)) {
             unfinishedFileList = VolumeFileDownloadManager.getInstance().getUnFinishDownloadList();
         } else if (type.equals(Constant.TYPE_UPLOAD)) {
@@ -191,12 +191,12 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
                 holder.itemView.setEnabled(false);
 //                fileList.remove(volumeFile);
                 //下载成功停留2S中转换状态
-                VolumeFileUpload volumeFileUpload = VolumeFileUploadManager.getInstance().
-                        getVolumeFileUpload(volumeFile);
-                if (volumeFileUpload != null) {
-                    volumeFileUpload.setStatus(VolumeFile.STATUS_NORMAL);
-                    VolumeFileUploadCacheUtils.saveVolumeFileUpload(volumeFileUpload);
-                }
+//                VolumeFileUpload volumeFileUpload = VolumeFileUploadManager.getInstance().
+//                        getVolumeFileUpload(volumeFile);
+//                if (volumeFileUpload != null) {
+//                    volumeFileUpload.setStatus(VolumeFile.STATUS_NORMAL);
+//                    VolumeFileUploadCacheUtils.saveVolumeFileUpload(volumeFileUpload);
+//                }
                 holder.progressBar.setStatus(CircleProgressBar.Status.Success);
                 LoadObservable.getInstance().notifyDateChange();
                 syncListData();
@@ -252,8 +252,8 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
                 holder.itemView.setEnabled(false);
 //                fileList.remove(volumeFile);
                 //下载成功停留2S中转换状态
-                originVolumeFile.setStatus(VolumeFile.STATUS_NORMAL);
-                VolumeFileDownloadCacheUtils.saveVolumeFile(originVolumeFile);
+//                originVolumeFile.setStatus(VolumeFile.STATUS_NORMAL);
+//                VolumeFileDownloadCacheUtils.saveVolumeFile(originVolumeFile);
                 LoadObservable.getInstance().notifyDateChange();
                 syncListData();
                 notifyDataSetChanged();

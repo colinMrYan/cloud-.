@@ -112,6 +112,7 @@ public class VolumeFileDownloadManager {
         List<FileDownloadInfo> fileList = FileDownloadManager.getInstance().getFileDownloadInfoFileList(DownloadFileCategory.CATEGORY_VOLUME_FILE);
         for (FileDownloadInfo downloadInfo : fileList) {
             VolumeFile volumeFile = VolumeFile.getMockDownloadVolumeFile(downloadInfo, "1234");
+            volumeFile.setStatus(VolumeFile.STATUS_SUCCESS);
             volumeFileDownloadedList.add(volumeFile);
         }
 
