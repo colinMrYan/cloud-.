@@ -1,14 +1,11 @@
 package com.inspur.emmcloud.ui.appcenter.volume.presenter;
 
-import com.inspur.emmcloud.basemodule.bean.DownloadFileCategory;
 import com.inspur.emmcloud.basemodule.mvp.BasePresenter;
-import com.inspur.emmcloud.basemodule.util.FileDownloadManager;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.ui.appcenter.volume.contract.VolumeFileTransferContract;
 import com.inspur.emmcloud.util.privates.VolumeFileDownloadManager;
 import com.inspur.emmcloud.util.privates.VolumeFileUploadManager;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,32 +21,46 @@ public class VolumeFileTransferPresenter extends BasePresenter<VolumeFileTransfe
     }
 
     @Override
-    public List<VolumeFile> getVolumeFileList(int index) {
+    public List<VolumeFile> getUnFinishVolumeFileList(int index) {
         List<VolumeFile> list = new ArrayList<>();
         switch (index) {
             case 0:
-                list = VolumeFileDownloadManager.getInstance().getAllDownloadVolumeFile();
+                list = VolumeFileDownloadManager.getInstance().getDownloadingList();
                 break;
             case 1:
-                list = VolumeFileUploadManager.getInstance().getAllUploadVolumeFile();
+                list = VolumeFileUploadManager.getInstance().getUnFinishUploadList();
                 break;
-            case 2:
-                List<File> fileList = FileDownloadManager.getInstance().getFileDownloadFileList(DownloadFileCategory.CATEGORY_VOLUME_FILE);
-                for (File file : fileList) {
-                    VolumeFile volumeFile = VolumeFile.getMockVolumeFile(file, "123");
-                    volumeFile.setLastUpdate(file.lastModified());
-                    volumeFile.setStatus(VolumeFile.STATUS_NORMAL);
-                    list.add(volumeFile);
-                }
+        }
+        return list;
+    }
+
+    @Override
+    public List<VolumeFile> getFinishVolumeFileList(int index) {
+        List<VolumeFile> list = new ArrayList<>();
+        switch (index) {
+            case 0:
+                list = VolumeFileDownloadManager.getInstance().getDownloadedList();
                 break;
+            case 1:
+                list = VolumeFileUploadManager.getInstance().getFinishUploadList();
+                break;
+//            case 2:
+//                List<File> fileList = FileDownloadManager.getInstance().getFileDownloadFileList(DownloadFileCategory.CATEGORY_VOLUME_FILE);
+//                for (File file : fileList) {
+//                    VolumeFile volumeFile = VolumeFile.getMockVolumeFile(file, "123");
+//                    volumeFile.setLastUpdate(file.lastModified());
+//                    volumeFile.setStatus(VolumeFile.STATUS_NORMAL);
+//                    list.add(volumeFile);
+//                }
+//                break;
             default:
                 break;
         }
-        if (list.size() > 0) {
-            mView.showListLayout();
-        } else {
-            mView.showNoDataLayout();
-        }
+//        if (list.size() > 0) {
+//            mView.showListLayout();
+//        } else {
+//            mView.showNoDataLayout();
+//        }
         return list;
     }
 }

@@ -31,6 +31,8 @@ import com.inspur.emmcloud.ui.appcenter.volume.VolumeHomePageActivity;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.ui.chat.mvp.view.ConversationSearchActivity;
+import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
+import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.TabAndAppExistUtils;
@@ -248,78 +250,123 @@ public class ShareFilesActivity extends BaseActivity {
      * 给朋友分享图片或文件
      */
     private void shareFilesToFriends() {
-//        Intent intent = new Intent();
-//        String firstFileName = "";
-//        File file = new File(uriList.get(0));
-//        firstFileName = file.getName();
-//        String shareManyPictures = getResources().getString(isImageUriList(uriList) ? R.string.baselib_share_many_picture : R.string.baselib_share_many_files, uriList.size());
-//        String fileType = isImageUriList(uriList) ? getString(R.string.baselib_share_image) : getString(R.string.baselib_share_file);
-//        String detailResult = fileType + " " + firstFileName + (uriList.size() > 1 ? shareManyPictures : "");
-//        intent.putExtra(ContactSearchFragment.EXTRA_TYPE, 0);
-//        intent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, false);
-//        intent.putExtra(ContactSearchFragment.EXTRA_SHOW_COMFIRM_DIALOG_WITH_MESSAGE, detailResult);
-//        intent.putExtra(ContactSearchFragment.EXTRA_SHOW_COMFIRM_DIALOG, true);
-//        ArrayList<String> uidList = new ArrayList<>();
-//        uidList.add(MyApplication.getInstance().getUid());
-//        intent.putStringArrayListExtra(ContactSearchFragment.EXTRA_EXCLUDE_SELECT, uidList);
-//        intent.putExtra(ContactSearchFragment.EXTRA_TITLE, getString(R.string.baselib_share_to));
-//        intent.setClass(getApplicationContext(), ContactSearchActivity.class);
-//        startActivityForResult(intent, SHARE_IMAGE_OR_FILES);
+        if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
+            Intent intent = new Intent();
+            String firstFileName = "";
+            File file = new File(uriList.get(0));
+            firstFileName = file.getName();
+            String shareManyPictures = getResources().getString(isImageUriList(uriList) ? R.string.baselib_share_many_picture : R.string.baselib_share_many_files, uriList.size());
+            String fileType = isImageUriList(uriList) ? getString(R.string.baselib_share_image) : getString(R.string.baselib_share_file);
+            String detailResult = fileType + " " + firstFileName + (uriList.size() > 1 ? shareManyPictures : "");
+            intent.putExtra(ContactSearchFragment.EXTRA_TYPE, 0);
+            intent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, false);
+            intent.putExtra(ContactSearchFragment.EXTRA_SHOW_COMFIRM_DIALOG_WITH_MESSAGE, detailResult);
+            intent.putExtra(ContactSearchFragment.EXTRA_SHOW_COMFIRM_DIALOG, true);
+            ArrayList<String> uidList = new ArrayList<>();
+            uidList.add(MyApplication.getInstance().getUid());
+            intent.putStringArrayListExtra(ContactSearchFragment.EXTRA_EXCLUDE_SELECT, uidList);
+            intent.putExtra(ContactSearchFragment.EXTRA_TITLE, getString(R.string.baselib_share_to));
+            intent.setClass(getApplicationContext(),
+                    ContactSearchActivity.class);
+            startActivityForResult(intent, SHARE_IMAGE_OR_FILES);
+        } else {
+            File file = new File(uriList.get(0));
+            String firstFileName = file.getName();
+            String shareManyPictures = getResources().getString(isImageUriList(uriList) ? R.string.baselib_share_many_picture : R.string.baselib_share_many_files, uriList.size());
+            String fileType = isImageUriList(uriList) ? getString(R.string.baselib_share_image) : getString(R.string.baselib_share_file);
+            String shareContent = fileType + " " + firstFileName + (uriList.size() > 1 ? shareManyPictures : "");
+            Intent shareIntent = new Intent(this, ConversationSearchActivity.class);
+            shareIntent.putExtra(Constant.SHARE_CONTENT, shareContent);
 
-        File file = new File(uriList.get(0));
-        String firstFileName = file.getName();
-        String shareManyPictures = getResources().getString(isImageUriList(uriList) ? R.string.baselib_share_many_picture : R.string.baselib_share_many_files, uriList.size());
-        String fileType = isImageUriList(uriList) ? getString(R.string.baselib_share_image) : getString(R.string.baselib_share_file);
-        String shareContent = fileType + " " + firstFileName + (uriList.size() > 1 ? shareManyPictures : "");
-        Intent shareIntent = new Intent(this, ConversationSearchActivity.class);
-        shareIntent.putExtra(Constant.SHARE_CONTENT, shareContent);
-
-        startActivityForResult(shareIntent, SHARE_FROM_RECENT_CHAT);
+            startActivityForResult(shareIntent, SHARE_FROM_RECENT_CHAT);
+        }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d("zhang", "onActivityResult: ");
+        Log.d("zhang", "ShareFile onActivityResult: ");
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode != RESULT_OK || !NetUtils.isNetworkConnected(getApplicationContext())) {
-            return;
-        }
-        if (requestCode == SHARE_IMAGE_OR_FILES) {
-            String result = data.getStringExtra("searchResult");
-            try {
-                String userOrChannelId = "";
-                boolean isGroup = false;
-                JSONObject jsonObject = new JSONObject(result);
-                if (jsonObject.has("people")) {
-                    JSONArray peopleArray = jsonObject.getJSONArray("people");
-                    if (peopleArray.length() > 0) {
-                        JSONObject peopleObj = peopleArray.getJSONObject(0);
-                        userOrChannelId = peopleObj.getString("pid");
-                        isGroup = false;
+        if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
+            if (requestCode == SHARE_IMAGE_OR_FILES && resultCode == RESULT_OK
+                    && NetUtils.isNetworkConnected(getApplicationContext())) {
+                String result = data.getStringExtra("searchResult");
+                try {
+                    String userOrChannelId = "";
+                    boolean isGroup = false;
+                    JSONObject jsonObject = new JSONObject(result);
+                    if (jsonObject.has("people")) {
+                        JSONArray peopleArray = jsonObject.getJSONArray("people");
+                        if (peopleArray.length() > 0) {
+                            JSONObject peopleObj = peopleArray.getJSONObject(0);
+                            userOrChannelId = peopleObj.getString("pid");
+                            isGroup = false;
+                        }
                     }
-                }
 
-                if (jsonObject.has("channelGroup")) {
-                    JSONArray channelGroupArray = jsonObject
-                            .getJSONArray("channelGroup");
-                    if (channelGroupArray.length() > 0) {
-                        JSONObject cidObj = channelGroupArray.getJSONObject(0);
-                        userOrChannelId = cidObj.getString("cid");
-                        isGroup = true;
+                    if (jsonObject.has("channelGroup")) {
+                        JSONArray channelGroupArray = jsonObject
+                                .getJSONArray("channelGroup");
+                        if (channelGroupArray.length() > 0) {
+                            JSONObject cidObj = channelGroupArray.getJSONObject(0);
+                            userOrChannelId = cidObj.getString("cid");
+                            isGroup = true;
+                        }
                     }
+                    if (StringUtils.isBlank(userOrChannelId)) {
+                        ToastUtils.show(MyApplication.getInstance(), getString(R.string.baselib_share_fail));
+                    } else {
+                        if (isGroup) {
+                            startChannelActivity(userOrChannelId);
+                        } else {
+                            createDirectChannel(userOrChannelId);
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    ToastUtils.show(MyApplication.getInstance(), getString(R.string.baselib_share_fail));
                 }
-
-                share2Conversation(userOrChannelId, isGroup);
-            } catch (Exception e) {
-                e.printStackTrace();
-                ToastUtils.show(MyApplication.getInstance(), getString(R.string.baselib_share_fail));
             }
-        } else if (requestCode == SHARE_FROM_RECENT_CHAT) {
-            SearchModel searchModel = (SearchModel) data.getSerializableExtra("searchModel");
-            if (searchModel != null) {
-                String userOrChannelId = searchModel.getId();
-                boolean isUser = searchModel.getType().equals(SearchModel.TYPE_USER);
-                share2Conversation(userOrChannelId, isUser);
+        } else {
+            if (resultCode != RESULT_OK || !NetUtils.isNetworkConnected(getApplicationContext())) {
+                return;
+            }
+            if (requestCode == SHARE_IMAGE_OR_FILES) {
+                String result = data.getStringExtra("searchResult");
+                try {
+                    String userOrChannelId = "";
+                    boolean isGroup = false;
+                    JSONObject jsonObject = new JSONObject(result);
+                    if (jsonObject.has("people")) {
+                        JSONArray peopleArray = jsonObject.getJSONArray("people");
+                        if (peopleArray.length() > 0) {
+                            JSONObject peopleObj = peopleArray.getJSONObject(0);
+                            userOrChannelId = peopleObj.getString("pid");
+                            isGroup = false;
+                        }
+                    }
+
+                    if (jsonObject.has("channelGroup")) {
+                        JSONArray channelGroupArray = jsonObject
+                                .getJSONArray("channelGroup");
+                        if (channelGroupArray.length() > 0) {
+                            JSONObject cidObj = channelGroupArray.getJSONObject(0);
+                            userOrChannelId = cidObj.getString("cid");
+                            isGroup = true;
+                        }
+                    }
+
+                    share2Conversation(userOrChannelId, isGroup);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    ToastUtils.show(MyApplication.getInstance(), getString(R.string.baselib_share_fail));
+                }
+            } else if (requestCode == SHARE_FROM_RECENT_CHAT) {
+                SearchModel searchModel = (SearchModel) data.getSerializableExtra("searchModel");
+                if (searchModel != null) {
+                    String userOrChannelId = searchModel.getId();
+                    boolean isUser = searchModel.getType().equals(SearchModel.TYPE_USER);
+                    share2Conversation(userOrChannelId, isUser);
+                }
             }
         }
     }
@@ -401,7 +448,8 @@ public class ShareFilesActivity extends BaseActivity {
 
 
     /**
-     * 多图片适配器*/
+     * 多图片适配器
+     */
     class ShareImagesAdapter extends RecyclerView.Adapter<FileHolder> {
         LayoutInflater inflater;
 
@@ -429,7 +477,8 @@ public class ShareFilesActivity extends BaseActivity {
     }
 
     /**
-     * 多文件适配器*/
+     * 多文件适配器
+     */
     class ShareFilesAdapter extends RecyclerView.Adapter<FileHolder> {
         LayoutInflater inflater;
 

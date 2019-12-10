@@ -631,8 +631,8 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
      * 小红点显示状态
      */
     public void refreshTipViewLayout() {
-        if (VolumeFileUploadManager.getInstance().getAllUploadVolumeFile().size() > 0 ||
-                VolumeFileDownloadManager.getInstance().getAllDownloadVolumeFile().size() > 0) {
+        if (VolumeFileUploadManager.getInstance().getUnFinishUploadList().size() > 0 ||
+                VolumeFileDownloadManager.getInstance().getDownloadingList().size() > 0) {
             tipViewLayout.setVisibility(View.VISIBLE);
         } else {
             tipViewLayout.setVisibility(View.GONE);
@@ -710,7 +710,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
 //        bundle.putString("currentDirAbsolutePath", currentDirAbsolutePath + volumeFile.getName());
 //        bundle.putBoolean("isStartDownload", true);
 //        IntentUtils.startActivity(VolumeFileBaseActivity.this, VolumeFileDownloadActivity.class, bundle);
-        List<VolumeFile> volumeFileList = VolumeFileDownloadManager.getInstance().getAllDownloadVolumeFile();
+        List<VolumeFile> volumeFileList = VolumeFileDownloadManager.getInstance().getDownloadingList();
 
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
             volumeFile.setVolumeFileAbsolutePath(currentDirAbsolutePath + volumeFile.getName());
@@ -721,7 +721,6 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
                     return;
                 }
             }
-            VolumeFileDownloadManager.getInstance().resetVolumeFileStatus(volumeFile);
             VolumeFileDownloadManager.getInstance().downloadFile(volumeFile,
                     currentDirAbsolutePath + volumeFile.getName());
         }
@@ -987,6 +986,10 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         @Override
         public void returnVolumeFileDeleteSuccess(List<VolumeFile> deleteVolumeFileList) {
             LoadingDialog.dimissDlg(loadingDlg);
+            //清除上传列表数据
+            for (VolumeFile volumeFile : deleteVolumeFileList) {
+                VolumeFileUploadManager.getInstance().resetVolumeFileStatus(volumeFile);
+            }
             volumeFileList.removeAll(deleteVolumeFileList);
             adapter.setVolumeFileList(volumeFileList);
             adapter.clearSelectedVolumeFileList();

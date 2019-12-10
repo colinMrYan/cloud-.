@@ -832,7 +832,28 @@ public class ConversationActivity extends ConversationBaseActivity {
                     break;
                 case SHARE_SEARCH_RUEST_CODE:
                     if (NetUtils.isNetworkConnected(getApplicationContext())) {
-                        handleShareResult(data);
+                        if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
+                            String searchResult = data.getStringExtra("searchResult");
+                            JSONObject jsonObject = JSONUtils.getJSONObject(searchResult);
+                            if (jsonObject.has("people")) {
+                                JSONArray peopleArray = JSONUtils.getJSONArray(jsonObject, "people", new JSONArray());
+                                if (peopleArray.length() > 0) {
+                                    JSONObject peopleObj = JSONUtils.getJSONObject(peopleArray, 0, new JSONObject());
+                                    String pidUid = JSONUtils.getString(peopleObj, "pid", "");
+                                    createDirectChannel(pidUid, backUiMessage);
+                                }
+                            }
+                            if (jsonObject.has("channelGroup")) {
+                                JSONArray channelGroupArray = JSONUtils.getJSONArray(jsonObject, "channelGroup", new JSONArray());
+                                if (channelGroupArray.length() > 0) {
+                                    JSONObject cidObj = JSONUtils.getJSONObject(channelGroupArray, 0, new JSONObject());
+                                    String cid = JSONUtils.getString(cidObj, "cid", "");
+                                    transmitMsg(cid, backUiMessage);
+                                }
+                            }
+                        } else {
+                            handleShareResult(data);
+                        }
                     }
                     break;
                 case VOICE_CALL_MEMBER_CODE:
@@ -925,11 +946,31 @@ public class ConversationActivity extends ConversationBaseActivity {
     }
 
     private void handleShareResult(Intent data) {
-        SearchModel searchModel = (SearchModel) data.getSerializableExtra("searchModel");
-        if (searchModel != null) {
-            String userOrChannelId = searchModel.getId();
-            boolean isUser = searchModel.getType().equals(SearchModel.TYPE_USER);
-            share2Conversation(userOrChannelId, isUser);
+        if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
+            Conversation conversation = (Conversation) data.getSerializableExtra("conversation");
+            if (conversation != null) {
+                String userOrChannelId = conversation.getId();
+                boolean isGroup = conversation.getType().equals(Conversation.TYPE_GROUP);
+                if (!isGroup) {
+                    userOrChannelId = DirectChannelUtils.getDirctChannelOtherUid(
+                            ConversationActivity.this, conversation.getName());
+                }
+                share2Conversation(userOrChannelId, isGroup);
+            }
+
+            SearchModel searchModel = (SearchModel) data.getSerializableExtra("searchModel");
+            if (searchModel != null) {
+                String userOrChannelId = searchModel.getId();
+                boolean isGroup = searchModel.getType().equals(SearchModel.TYPE_GROUP);
+                share2Conversation(userOrChannelId, isGroup);
+            }
+        } else {
+            SearchModel searchModel = (SearchModel) data.getSerializableExtra("searchModel");
+            if (searchModel != null) {
+                String userOrChannelId = searchModel.getId();
+                boolean isUser = searchModel.getType().equals(SearchModel.TYPE_USER);
+                share2Conversation(userOrChannelId, isUser);
+            }
         }
     }
 
@@ -1922,12 +1963,13 @@ public class ConversationActivity extends ConversationBaseActivity {
         intent.putExtra(ContactSearchFragment.EXTRA_TITLE, context.getString(R.string.baselib_share_to));
         intent.setClass(context,
                 ContactSearchActivity.class);
-//        startActivityForResult(intent, SHARE_SEARCH_RUEST_CODE);
-
-        Intent shareIntent = new Intent(this, ConversationSearchActivity.class);
-        shareIntent.putExtra(Constant.SHARE_CONTENT, result);
-
-        startActivityForResult(shareIntent, SHARE_SEARCH_RUEST_CODE);
+        if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
+            startActivityForResult(intent, SHARE_SEARCH_RUEST_CODE);
+        } else {
+            Intent shareIntent = new Intent(this, ConversationSearchActivity.class);
+            shareIntent.putExtra(Constant.SHARE_CONTENT, result);
+            startActivityForResult(shareIntent, SHARE_SEARCH_RUEST_CODE);
+        }
     }
 
     private void requestToRecallMessage(Message message) {

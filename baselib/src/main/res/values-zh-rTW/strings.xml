@@ -40,6 +40,9 @@
     <string name="update">更新</string>
     <string name="download">下載</string>
     <string name="redownload">繼續下載</string>
+    <string name="download_complete">下載完成</string>
+    <string name="download_fail_tip">下載失敗，點擊<Data><![CDATA[<font color=\'#36a5f6\'>重新下載</font>]]></Data></string>
+    <string name="upload_fail_tip">上傳失敗，點擊<Data><![CDATA[<font color=\'#36a5f6\'>重新上傳</font>]]></Data></string>
     <string name="confirm_modify_language">確定修改語言</string>
     <string name="resolution_valiad">您的設備解析度小於1280*720無法運行此程式</string>
     <string name="file_type_not_recognize">不可識別的檔案類型</string>
@@ -656,6 +659,8 @@
     <string name="volume_file_transfer_list_pause_tip">暫停中&#8230;</string>
     <string name="volume_file_transfer_list_download_count">正在下載&#8230;(%1$d)</string>
     <string name="volume_file_transfer_list_upload_count">正在上傳&#8230;(%1$d)</string>
+    <string name="volume_file_transfer_list_download_finish_count">下載完成&#160;(%1$d)</string>
+    <string name="volume_file_transfer_list_upload_finish_count">上傳完成&#160;(%1$d)</string>
     <string name="volume_file_transfer_list_pause">全部暫停</string>
     <string name="volume_file_transfer_list_continue">全部繼續</string>
     <string name="rename">重命名</string>
