@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="schedule_task_create">New Task</string>
+    <string name="schedule_task_content_hint">Please enter the content</string>
+    <string name="schedule_task_priority">Priority</string>
+    <string name="schedule_task_category">Category</string>
+</resources>

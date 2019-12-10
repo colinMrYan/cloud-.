@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="schedule_task_create">新建任務</string>
+    <string name="schedule_task_content_hint">請輸入任務內容...</string>
+    <string name="schedule_task_priority">優先級</string>
+    <string name="schedule_task_category">類別</string>
+</resources>
