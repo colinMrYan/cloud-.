@@ -54,6 +54,7 @@ public class ScreenshotService extends ImpPlugin {
 
     private void screenshot() {
         String screenshotImgPath = ScreenshotUtil.screenshot(getActivity());
+        AppUtils.refreshGallery(getFragmentContext(), screenshotImgPath);
         if (getImpCallBackInterface() != null) {
             getImpCallBackInterface().showScreenshotImg(screenshotImgPath);
         }
@@ -64,6 +65,7 @@ public class ScreenshotService extends ImpPlugin {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
             String screenshotImgPath = data.getStringExtra(IMGEditActivity.OUT_FILE_PATH);
+            AppUtils.refreshGallery(getFragmentContext(), screenshotImgPath);
             shareScreenshotImg(screenshotImgPath);
 
         }
@@ -119,6 +121,7 @@ public class ScreenshotService extends ImpPlugin {
         shareAction.open();
 
     }
+
 
     @Override
     public void onDestroy() {

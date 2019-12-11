@@ -49,6 +49,7 @@ import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestC
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.componentservice.web.WebService;
 
+import java.io.File;
 import java.io.FileReader;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -1118,5 +1119,22 @@ public class AppUtils {
         }
         String urlHostPath = urlHost.getHost();
         return (urlHostPath.endsWith(Constant.INSPUR_HOST_URL)) || urlHostPath.endsWith(Constant.INSPURONLINE_HOST_URL) || urlHost.getPath().endsWith("/app/mdm/v3.0/loadForRegister");
+    }
+
+    /**
+     * 通知图库更新图片
+     *
+     * @param context
+     * @param cameraPath
+     */
+    public static void refreshGallery(Context context, String cameraPath) {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File file = new File(cameraPath);
+        if (file.exists()) {
+            Uri contentUri = Uri.fromFile(file);
+            mediaScanIntent.setData(contentUri);
+            context.sendBroadcast(mediaScanIntent);
+        }
+
     }
 }

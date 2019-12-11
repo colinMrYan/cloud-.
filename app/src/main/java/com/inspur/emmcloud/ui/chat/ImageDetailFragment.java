@@ -1,16 +1,11 @@
 package com.inspur.emmcloud.ui.chat;
 
-import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +18,7 @@ import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.EventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
@@ -46,13 +42,10 @@ import org.greenrobot.eventbus.EventBus;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
 import uk.co.senab.photoview.PhotoViewAttacher;
-
-import static android.R.attr.path;
 
 
 /**
@@ -209,24 +202,6 @@ public class ImageDetailFragment extends Fragment {
         }
     }
 
-    /**
-     * 保存并显示把图片展示出来
-     *
-     * @param context
-     * @param cameraPath
-     */
-    private void refreshGallery(Context context, String cameraPath) {
-        File file = new File(cameraPath);
-        // 其次把文件插入到系统图库
-        try {
-            MediaStore.Images.Media.insertImage(context.getContentResolver(),
-                    file.getAbsolutePath(), file.getName(), null);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        // 最后通知图库更新
-        LocalBroadcastManager.getInstance(context).sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + path)));
-    }
 
     /**
      * 保存图片
@@ -427,7 +402,7 @@ public class ImageDetailFragment extends Fragment {
      */
     private void saveBitmapToLocalFromImageLoader(Bitmap bitmap) {
         String savedImagePath = saveBitmapFile(bitmap);
-        refreshGallery(BaseApplication.getInstance(), savedImagePath);
+        AppUtils.refreshGallery(BaseApplication.getInstance(), savedImagePath);
     }
 
     public interface DownLoadProgressRefreshListener {
