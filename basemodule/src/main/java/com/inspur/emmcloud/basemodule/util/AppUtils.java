@@ -49,7 +49,6 @@ import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestC
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.componentservice.web.WebService;
 
-import java.io.File;
 import java.io.FileReader;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -142,8 +141,8 @@ public class AppUtils {
             final ContentResolver cr = context.getContentResolver();
             String AUTHORITY = "com.android.launcher2.settings";
             final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/favorites?notify=true");
-            Cursor c = cr.query(CONTENT_URI, new String[] { "title", "iconResource" }, "title=?",
-                    new String[] { context.getString(R.string.app_name) }, null);
+            Cursor c = cr.query(CONTENT_URI, new String[]{"title", "iconResource"}, "title=?",
+                    new String[]{context.getString(R.string.app_name)}, null);
 
             if (c != null && c.getCount() > 0) {
                 isInstallShortcut = true;
@@ -717,7 +716,6 @@ public class AppUtils {
     }
 
 
-
     /**
      * 获取SD卡文件里的UUID
      *
@@ -900,6 +898,7 @@ public class AppUtils {
         }
         return appIconResName;
     }
+
     /**
      * 判断权限集合
      * permissions 权限数组
@@ -1125,16 +1124,17 @@ public class AppUtils {
      * 通知图库更新图片
      *
      * @param context
-     * @param cameraPath
+     * @param filePath
      */
-    public static void refreshGallery(Context context, String cameraPath) {
-        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        File file = new File(cameraPath);
-        if (file.exists()) {
-            Uri contentUri = Uri.fromFile(file);
-            mediaScanIntent.setData(contentUri);
-            context.sendBroadcast(mediaScanIntent);
-        }
+    public static void refreshMedia(Context context, final String filePath) {
+//        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+//        File file = new File(filePath);
+//        if (file.exists()) {
+//            Uri contentUri = Uri.fromFile(file);
+//            mediaScanIntent.setData(contentUri);
+//            context.sendBroadcast(mediaScanIntent);
+//        }
+        new MediaScanner(context).scanFile(filePath);
 
     }
 }
