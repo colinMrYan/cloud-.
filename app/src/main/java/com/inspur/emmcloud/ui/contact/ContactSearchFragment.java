@@ -613,12 +613,20 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
         displayOpenLayout();
     }
 
-    /**
-     * 添加联系人
-     */
+
     private void changeMembers(SearchModel searchModel) {
+        changeMembers(searchModel, false);
+    }
+
+    /**
+     * 更改SearchModel选中状态或者打开SearchModel
+     *
+     * @param searchModel
+     * @param isSelectImgClick 是否是点击选择按钮进入到此方法
+     */
+    private void changeMembers(SearchModel searchModel, boolean isSelectImgClick) {
         if (searchModel != null) {
-            if (searchContent == SEARCH_NOTHIING || (!isMultiSelect && searchModel.getType().equals(SearchModel.TYPE_STRUCT))) {
+            if (searchContent == SEARCH_NOTHIING || (!isSelectImgClick && searchModel.getType().equals(SearchModel.TYPE_STRUCT) && !selectMemList.contains(searchModel))) {
                 checkInfoOrEnterChannel(searchModel);
                 return;
             }
@@ -753,7 +761,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
             searchResultText.setPadding(0, paddingTop, 0, paddingTop);
             searchResultText.setGravity(Gravity.CENTER);
             searchResultText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-            searchResultText.setTextColor(Color.parseColor("#0F7BCA"));
+            searchResultText.setTextColor(searchModel.getType().equals(SearchModel.TYPE_STRUCT) ? Color.parseColor("#0C6FB7") : Color.parseColor("#36A5F6"));
             searchResultText.setText(selectMemList.get(i).getName() + ",");
             searchResultText.setOnClickListener(new View.OnClickListener() {
 
@@ -781,10 +789,10 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
             FlowLayout.LayoutParams params = new FlowLayout.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT, DensityUtil.dip2px(
                     getActivity().getApplicationContext(), ViewGroup.LayoutParams.WRAP_CONTENT));
-            params.topMargin = DensityUtil.dip2px(getActivity().getApplicationContext(), 2);
+            params.topMargin = DensityUtil.dip2px(2);
             params.bottomMargin = params.topMargin;
-            int piddingTop = DensityUtil.dip2px(MyApplication.getInstance(), 1);
-            int piddingRight = DensityUtil.dip2px(MyApplication.getInstance(), 5);
+            int piddingTop = DensityUtil.dip2px(1);
+            int piddingRight = DensityUtil.dip2px(5);
             searchEdit.setPadding(piddingRight, piddingTop, piddingRight, piddingTop);
             searchEdit.setLayoutParams(params);
             searchEdit.setSingleLine(true);
@@ -1537,46 +1545,40 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-            SearchModel searchModel = null;
+            final SearchModel searchModel = originCurrentArea == SEARCH_CONTACT ? openGroupContactList.get(position).contact2SearchModel() : openGroupChannelList.get(position);
             if (originCurrentArea == SEARCH_CONTACT) {
-                final Contact contact = openGroupContactList.get(position);
-                searchModel = contact.contact2SearchModel();
-                if (contact.getType().equals(Contact.TYPE_USER) || selectMemList.contains(searchModel)) { // 如果通讯录是人的话就显示头像
+                if (searchModel.getType().equals(Contact.TYPE_USER) || selectMemList.contains(searchModel)) { // 如果通讯录是人的话就显示头像
                     viewHolder.rightArrowImg.setVisibility(View.INVISIBLE);
                 } else {
                     viewHolder.rightArrowImg.setVisibility(View.VISIBLE);
-                    viewHolder.rightArrowImg.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            openContact(contact);
-                        }
-                    });
                 }
                 viewHolder.nameText.setText(getCompleteName(searchModel));
 
             } else {
                 viewHolder.rightArrowImg.setVisibility(View.INVISIBLE);
-                searchModel = openGroupChannelList.get(position);
                 viewHolder.nameText.setText(searchModel.getName());
             }
             CommunicationUtils.setUserDescText(searchModel, viewHolder.descTv, false);
 
-            if (searchModel != null) {
-                displayImg(searchModel, viewHolder.photoImg);
-                if (searchContent == SEARCH_NOTHIING || !isMultiSelect) {
-                    viewHolder.selectedImg.setVisibility(View.GONE);
+            displayImg(searchModel, viewHolder.photoImg);
+            if (searchContent == SEARCH_NOTHIING || !isMultiSelect) {
+                viewHolder.selectedImg.setVisibility(View.GONE);
+            } else {
+                viewHolder.selectedImg.setVisibility(View.VISIBLE);
+                if (isHaveStaticSearchModel(searchModel)) {
+                    viewHolder.selectedImg.setImageResource(R.drawable.ic_select_not_cancel);
+                } else if (selectMemList.contains(searchModel)) {
+                    viewHolder.selectedImg.setImageResource(R.drawable.ic_select_yes);
                 } else {
-                    viewHolder.selectedImg.setVisibility(View.VISIBLE);
-                    if (isHaveStaticSearchModel(searchModel)) {
-                        viewHolder.selectedImg.setImageResource(R.drawable.ic_select_not_cancel);
-                    } else if (selectMemList.contains(searchModel)) {
-                        viewHolder.selectedImg.setImageResource(R.drawable.ic_select_yes);
-                    } else {
-                        viewHolder.selectedImg.setImageResource(R.drawable.ic_select_no);
-                    }
+                    viewHolder.selectedImg.setImageResource(R.drawable.ic_select_no);
                 }
-
             }
+            viewHolder.selectedImg.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    changeMembers(searchModel, true);
+                }
+            });
             return convertView;
         }
     }
@@ -1774,7 +1776,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                     if (arg1 != count - 1) {
                         arg0.titleImg.setVisibility(View.VISIBLE);
                         arg0.titleText
-                                .setTextColor(Color.parseColor("#018DD4"));
+                                .setTextColor(Color.parseColor("#36A5F6"));
                     } else {
                         arg0.titleImg.setVisibility(View.GONE);
                         arg0.titleText
@@ -1789,7 +1791,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                 arg0.titleText.setText(openGroupTextList.get(arg1).getName());
                 if (arg1 != count - 1) {
                     arg0.titleImg.setVisibility(View.VISIBLE);
-                    arg0.titleText.setTextColor(Color.parseColor("#018DD4"));
+                    arg0.titleText.setTextColor(Color.parseColor("#36A5F6"));
                 } else {
                     arg0.titleImg.setVisibility(View.GONE);
                     arg0.titleText.setTextColor(Color.parseColor("#666666"));
