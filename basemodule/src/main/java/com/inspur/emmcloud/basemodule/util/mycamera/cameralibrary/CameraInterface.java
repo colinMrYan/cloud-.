@@ -710,12 +710,9 @@ public class CameraInterface implements Camera.PreviewCallback {
             meteringAreas.add(cameraArea);
             params.setFocusAreas(focusAreas);
             params.setMeteringAreas(meteringAreas);
+        } else {
+            return false;
         }
-//        else {
-//            Log.i(TAG, "focus areas not supported");
-//            callback.focusSuccess();
-//            return false;
-//        }
         final String currentFocusMode = params.getFocusMode();
         try {
             params.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);

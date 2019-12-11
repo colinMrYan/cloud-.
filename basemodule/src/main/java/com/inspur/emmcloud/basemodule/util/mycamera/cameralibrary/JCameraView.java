@@ -362,7 +362,7 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
 
     //对焦框指示器动画
     private boolean setFocusViewWidthAnimation(float x, float y, boolean isShowFocusView) {
-        boolean isSupportSetFocusAera = machine.focus(x, y, new CameraInterface.FocusCallback() {
+        boolean isSupportSetFocusArea = machine.focus(x, y, new CameraInterface.FocusCallback() {
             @Override
             public void focusSuccess() {
                 mFocusView.setVisibility(INVISIBLE);
@@ -374,11 +374,11 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
                 }, 1000);
             }
         }, isShowFocusView);
-        if (!isSupportSetFocusAera) {
+        if (!isSupportSetFocusArea) {
             mFocusView.setVisibility(INVISIBLE);
             CameraInterface.getInstance().unlockFocus();
         }
-        return isSupportSetFocusAera;
+        return isSupportSetFocusArea;
     }
 
     private void updateVideoViewSize(float videoWidth, float videoHeight) {
