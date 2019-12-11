@@ -7,4 +7,5 @@ import com.inspur.emmcloud.componentservice.CoreService;
  * Date: 2019/12/6
  */
 public interface ApplicationService extends CoreService {
+    Class getMyAppFragment();
 }

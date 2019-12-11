@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.application.serviceimpl;
 
 
+import com.inspur.emmcloud.application.ui.MyAppFragment;
 import com.inspur.emmcloud.componentservice.appcenter.ApplicationService;
 
 /**
@@ -9,4 +10,8 @@ import com.inspur.emmcloud.componentservice.appcenter.ApplicationService;
  */
 public class AppCenterServiceImpl implements ApplicationService {
 
+    @Override
+    public Class getMyAppFragment() {
+        return MyAppFragment.class;
+    }
 }
