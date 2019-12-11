@@ -400,7 +400,11 @@
         <activity
             android:name=".util.imagepicker.ui.ImagePreviewActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.notch_support"
+                android:value="true" />
+        </activity>
         <activity
             android:name=".util.imagepicker.ui.ImageCropActivity"
             android:resizeableActivity="true"

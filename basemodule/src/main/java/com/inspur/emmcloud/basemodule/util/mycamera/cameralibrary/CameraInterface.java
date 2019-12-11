@@ -21,8 +21,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.basemodule.util.mycamera.CameraUtils;
 import com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary.listener.ErrorListener;
-import com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary.util.CameraParamUtil;
 import com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary.util.CheckPermission;
 import com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary.util.DeviceUtil;
 import com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary.util.FileUtil;
@@ -152,7 +152,7 @@ public class CameraInterface implements Camera.PreviewCallback {
         this.mSwitchView = mSwitchView;
         this.mFlashLamp = mFlashLamp;
         if (mSwitchView != null) {
-            cameraAngle = CameraParamUtil.getInstance().getCameraDisplayOrientation(mSwitchView.getContext(),
+            cameraAngle = CameraUtils.getInstance().getCameraDisplayOrientation(mSwitchView.getContext(),
                     SELECTED_CAMERA);
         }
     }
@@ -279,7 +279,6 @@ public class CameraInterface implements Camera.PreviewCallback {
                         nowScaleRate = mParams.getMaxZoom();
                     }
                     mParams.setZoom(nowScaleRate);
-                    LogUtils.jasonDebug("nowScaleRate==" + nowScaleRate);
                     mCamera.setParameters(mParams);
                 }
                 break;
@@ -379,23 +378,23 @@ public class CameraInterface implements Camera.PreviewCallback {
         if (mCamera != null) {
             try {
                 mParams = mCamera.getParameters();
-                Camera.Size previewSize = CameraParamUtil.getInstance().getPreviewSize(mParams
+                Camera.Size previewSize = CameraUtils.getInstance().getPreviewSize(mParams
                         .getSupportedPreviewSizes(), 700, screenProp);
-                Camera.Size pictureSize = CameraParamUtil.getInstance().getPictureSize(mParams
+                Camera.Size pictureSize = CameraUtils.getInstance().getPictureSize(mParams
                         .getSupportedPictureSizes(), 1000, screenProp);
                 mParams.setPreviewSize(previewSize.width, previewSize.height);
                 preview_height = previewSize.height;
                 mParams.setPictureSize(pictureSize.width, pictureSize.height);
-                if (jCameraView.isHasCameraCropView() && CameraParamUtil.getInstance().isSupportedFocusMode(
+                if (jCameraView.isHasCameraCropView() && CameraUtils.getInstance().isSupportedFocusMode(
                         mParams.getSupportedFocusModes(),
                         Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO)) {
                     mParams.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
-                } else if (CameraParamUtil.getInstance().isSupportedFocusMode(
+                } else if (CameraUtils.getInstance().isSupportedFocusMode(
                         mParams.getSupportedFocusModes(),
                         Camera.Parameters.FOCUS_MODE_AUTO)) {
                     mParams.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
                 }
-                if (CameraParamUtil.getInstance().isSupportedPictureFormats(mParams.getSupportedPictureFormats(),
+                if (CameraUtils.getInstance().isSupportedPictureFormats(mParams.getSupportedPictureFormats(),
                         ImageFormat.JPEG)) {
                     mParams.setPictureFormat(ImageFormat.JPEG);
                     mParams.setJpegQuality(100);
@@ -415,11 +414,13 @@ public class CameraInterface implements Camera.PreviewCallback {
                 final RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) jCameraView.getLayoutParams();
                 params.width = width;
                 params.height = height;
-
+                LogUtils.jasonDebug("a==" + System.currentTimeMillis());
                 jCameraView.post(new Runnable() {
                     @Override
                     public void run() {
+                        LogUtils.jasonDebug("b==" + System.currentTimeMillis());
                         jCameraView.setLayoutParams(params);
+                        jCameraView.showCaptureLayout();
                         jCameraView.reFocus();
                     }
                 });
@@ -566,10 +567,10 @@ public class CameraInterface implements Camera.PreviewCallback {
 
         Camera.Size videoSize;
         if (mParams.getSupportedVideoSizes() == null) {
-            videoSize = CameraParamUtil.getInstance().getPreviewSize(mParams.getSupportedPreviewSizes(), 600,
+            videoSize = CameraUtils.getInstance().getPreviewSize(mParams.getSupportedPreviewSizes(), 600,
                     screenProp);
         } else {
-            videoSize = CameraParamUtil.getInstance().getPreviewSize(mParams.getSupportedVideoSizes(), 600,
+            videoSize = CameraUtils.getInstance().getPreviewSize(mParams.getSupportedVideoSizes(), 600,
                     screenProp);
         }
         Log.i(TAG, "setVideoSize    width = " + videoSize.width + "height = " + videoSize.height);
