@@ -647,7 +647,7 @@ public class VoiceCommunicationManager {
         if (getCommunicationState() == COMMUNICATION_STATE_ING || isInviter()) {
             leaveChannel();
         } else {
-            if (!StringUtils.isBlank(agoraChannelId)) {
+            if (isVoiceBusy()) {
                 remindEmmServerRefuseChannel(agoraChannelId);
             }
         }
