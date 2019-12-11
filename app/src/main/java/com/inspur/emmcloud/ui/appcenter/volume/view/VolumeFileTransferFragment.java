@@ -373,16 +373,6 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
                     showFileOperationDlg(finishedVolumeFileList.get(position));
                 }
             }
-
-            @Override
-            public void onItemDropDownImgClick(View view, int position) {
-                if (!downloadedAdapter.getMultiselect()) {
-                    showFileOperationDlg(finishedVolumeFileList.get(position));
-                } else {
-                    downloadedAdapter.setVolumeFileSelect(position);
-                }
-
-            }
         });
     }
 

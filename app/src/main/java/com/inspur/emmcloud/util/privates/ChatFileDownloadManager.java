@@ -69,7 +69,7 @@ public class ChatFileDownloadManager {
         for (int i = 0; i < downloadInfoList.size(); i++) {
             DownloadInfo downloadInfo = downloadInfoList.get(i);
             if (info.getFileId().equals(downloadInfo.getFileId())) {
-                if (downloadInfo.getBusinessProgressCallback() == null) {
+                if (downloadInfo.getBusinessProgressCallback() != null) {
                     downloadInfo.setBusinessProgressCallback(businessProgressCallback);
                 }
             }
@@ -106,7 +106,7 @@ public class ChatFileDownloadManager {
 
         final String fileSavePath = info.getLocalPath();
         String source = info.getUrl();
-        info.setStatus(DownloadInfo.STATUS_DOWNLOADING);
+        info.setStatus(DownloadInfo.STATUS_LOADING);
 
         APIDownloadCallBack callBack = new APIDownloadCallBack(BaseApplication.getInstance(), source) {
             @Override
@@ -189,7 +189,7 @@ public class ChatFileDownloadManager {
                         itemInfo.getCancelable().cancel();
                     }
                     itemInfo.setCancelable(null);
-                    itemInfo.setStatus(DownloadInfo.STATUS_DOWNLOAD_PAUSE);
+                    itemInfo.setStatus(DownloadInfo.STATUS_PAUSE);
                     DownloadCacheUtils.saveDownloadFile(itemInfo);
                 }
             }

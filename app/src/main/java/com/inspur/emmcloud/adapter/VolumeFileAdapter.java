@@ -36,7 +36,6 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
     private MyItemClickListener mItemClickListener;
     private boolean isMultiselect = false;
     private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-    private boolean isShowFileOperationDropDownImg = true;
     private boolean isShowFileOperationSelecteImage = true;
     private String currentDirAbsolutePath;
     public VolumeFileAdapter(Context context, List<VolumeFile> volumeFileList) {
@@ -50,15 +49,6 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
 
     public void setVolumeFileList(List<VolumeFile> volumeFileList) {
         this.volumeFileList = volumeFileList;
-    }
-
-    /**
-     * 设置是否显示右侧箭头
-     *
-     * @param isShowFileOperationDropDownImg
-     */
-    public void setShowFileOperationDropDownImg(boolean isShowFileOperationDropDownImg) {
-        this.isShowFileOperationDropDownImg = isShowFileOperationDropDownImg;
     }
 
     /**
@@ -172,10 +162,9 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final VolumeFile volumeFile = volumeFileList.get(position);
         String volumeFileStatus = volumeFile.getStatus();
-        boolean isStatusNomal = true;
-        holder.fileInfoLayout.setVisibility(isStatusNomal ? View.VISIBLE : View.GONE);
-        holder.fileOperationDropDownImg.setVisibility(View.GONE);
-        holder.fileSelcetImg.setVisibility(isShowFileOperationSelecteImage && isStatusNomal ? View.VISIBLE : View.GONE);
+        boolean isStatusNormal = true;
+        holder.fileInfoLayout.setVisibility(isStatusNormal ? View.VISIBLE : View.GONE);
+        holder.fileSelcetImg.setVisibility(isShowFileOperationSelecteImage && isStatusNormal ? View.VISIBLE : View.GONE);
         if (selectVolumeFileList.size() > 0) {
             holder.fileSelcetImg.setImageResource(selectVolumeFileList.contains(volumeFile) ? R.drawable.ic_select_yes : R.drawable.ic_select_no);
         } else {
@@ -231,7 +220,6 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
     public interface MyItemClickListener {
         void onItemClick(View view, int position);
         void onItemLongClick(View view, int position);
-        void onItemDropDownImgClick(View view, int position);
         void onSelectedItemClick(View view, int position);
     }
 
@@ -248,8 +236,6 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
         ImageView fileSelcetImg;
         @BindView(R.id.file_info_layout)
         RelativeLayout fileInfoLayout;
-        @BindView(R.id.file_operation_drop_down_img)
-        ImageView fileOperationDropDownImg;
         private MyItemClickListener myItemClickListener;
 
         public ViewHolder(View itemView, MyItemClickListener myItemClickListener) {
@@ -258,16 +244,13 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
             this.myItemClickListener = myItemClickListener;
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
-            fileOperationDropDownImg.setOnClickListener(this);
             fileSelcetImg.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
             if (myItemClickListener != null) {
-                if (v.getId() == R.id.file_operation_drop_down_img) {
-                    myItemClickListener.onItemDropDownImgClick(v, getAdapterPosition());
-                } else if (v.getId() == R.id.file_select_img) {
+                if (v.getId() == R.id.file_select_img) {
                     myItemClickListener.onSelectedItemClick(v, getAdapterPosition());
                 } else {
                     myItemClickListener.onItemClick(v, getAdapterPosition());

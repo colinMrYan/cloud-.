@@ -163,16 +163,6 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                     showFileOperationDlg(volumeFileList.get(position));
                 }
             }
-
-            @Override
-            public void onItemDropDownImgClick(View view, int position) {
-                if (!adapter.getMultiselect()) {
-                    showFileOperationDlg(volumeFileList.get(position));
-                } else {
-                    adapter.setVolumeFileSelect(position);
-                }
-
-            }
         });
     }
 
@@ -436,7 +426,6 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         getBatchOprationSelectAllText.setText(R.string.select_all);
         batchOprationHeaderText.setText(getString(R.string.clouddriver_has_selected, 0));
         batchOprationHeaderLayout.setVisibility(isMutiselect ? View.VISIBLE : View.GONE);
-        adapter.setShowFileOperationDropDownImg(!isMutiselect);
         adapter.setMultiselect(isMutiselect);
     }
 

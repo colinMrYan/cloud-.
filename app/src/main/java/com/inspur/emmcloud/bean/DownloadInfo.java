@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.bean;
 
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.interf.ProgressCallback;
 
@@ -14,9 +15,10 @@ public class DownloadInfo implements Serializable {
     public static final String TYPE_MESSAGE = "message";
     public static final String TYPE_VOLUME = "volume";
     public static final String STATUS_NORMAL = "normal";
-    public static final String STATUS_DOWNLOADING = "downloading";
-    public static final String STATUS_DOWNLOAD_PAUSE = "pause";
-    public static final String STATUS_DOWNLOAD_FAIL = "fail";
+    public static final String STATUS_LOADING = "loading";
+    public static final String STATUS_PAUSE = "pause";
+    public static final String STATUS_SUCCESS = "pause";
+    public static final String STATUS_FAIL = "fail";
     transient Callback.Cancelable cancelable;
     @Column(name = "id", isId = true, autoGen = true)
     private int id;
@@ -37,9 +39,9 @@ public class DownloadInfo implements Serializable {
     @Column(name = "createTime")
     private String createTime;
     @Column(name = "lastUpdateTime")
-    private Long lastUpdateTime;
+    private Long lastUpdateTime = 0L;
     @Column(name = "completed")
-    private Long completed;
+    private Long completed = 0L;
     @Column(name = "size")
     private String size;
     @Column(name = "type")
@@ -53,10 +55,14 @@ public class DownloadInfo implements Serializable {
     public static DownloadInfo message2DownloadInfo(Message message) {
         DownloadInfo info = new DownloadInfo();
         info.setFileId(message.getId());
+        info.setFileName(message.getMsgContentAttachmentFile().getName());
         info.setLocalPath(message.getLocalPath());
         info.setType(TYPE_MESSAGE);
+        info.setUrl(APIUri.getChatFileResourceUrl(message));
+        info.setLastUpdateTime(System.currentTimeMillis());
+        info.setSize(String.valueOf(message.getMsgContentAttachmentFile().getSize()));
 
-        return null;
+        return info;
     }
 
     public String getFileId() {
