@@ -75,6 +75,24 @@ public class Contact implements Serializable {
         return searchModelList;
     }
 
+    public static List<SearchModel> contactUser2SearchModelList(List<ContactUser> contactUserList) {
+        List<SearchModel> searchModelList = new ArrayList<>();
+        if (contactUserList != null) {
+            for (ContactUser contactUser : contactUserList) {
+                searchModelList.add(new SearchModel(contactUser));
+            }
+        }
+        return searchModelList;
+    }
+
+    public static Contact SearchModel2Contact(SearchModel searchModel) {
+        Contact contact = new Contact();
+        contact.setType(searchModel.getType());
+        contact.setId(searchModel.getId());
+        contact.setName(searchModel.getName());
+        contact.setEmail(searchModel.getEmail());
+        return contact;
+    }
 
     public String getId() {
         return id;
