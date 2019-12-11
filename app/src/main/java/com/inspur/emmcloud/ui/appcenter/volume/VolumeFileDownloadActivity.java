@@ -86,9 +86,9 @@ public class VolumeFileDownloadActivity extends BaseActivity {
             boolean isStartDownload = getIntent().getBooleanExtra("isStartDownload", false);
             if (!isStartDownload) {
                 String status = VolumeFileDownloadManager.getInstance().getFileStatus(volumeFile);
-                if (status.equals(VolumeFile.STATUS_DOWNLOAD_IND)) {
+                if (status.equals(VolumeFile.STATUS_LOADING)) {
                     isStartDownload = true;
-                } else if (status.equals(VolumeFile.STATUS_DOWNLOAD_PAUSE)) {
+                } else if (status.equals(VolumeFile.STATUS_PAUSE)) {
                     downloadBtn.setText(R.string.redownload);
                 }
             }
@@ -101,7 +101,7 @@ public class VolumeFileDownloadActivity extends BaseActivity {
     private void showVolumeFileTypeImg() {
         if (volumeFile.getFormat().startsWith("image/")) {
             String url = "";
-            if (volumeFile.getStatus().equals(VolumeFile.STATUS_UPLOAD_IND)) {
+            if (volumeFile.getStatus().equals(VolumeFile.STATUS_LOADING)) {
                 url = volumeFile.getLocalFilePath();
             } else {
                 url = APIUri.getVolumeFileTypeImgThumbnailUrl(volumeFile, currentDirAbsolutePath);
@@ -245,7 +245,7 @@ public class VolumeFileDownloadActivity extends BaseActivity {
     private void downloadFile() {
         downloadBtn.setVisibility(View.GONE);
         downloadStatusLayout.setVisibility(View.VISIBLE);
-        volumeFile.setStatus(VolumeFile.STATUS_DOWNLOAD_IND);
+        volumeFile.setStatus(VolumeFile.STATUS_LOADING);
 
         List<VolumeFile> volumeFileList = VolumeFileDownloadManager.getInstance().getAllDownloadVolumeFile();
 

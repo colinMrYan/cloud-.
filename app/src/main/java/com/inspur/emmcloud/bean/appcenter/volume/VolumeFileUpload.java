@@ -38,6 +38,8 @@ public class VolumeFileUpload implements Serializable {
     private int progress = 0;
     @Column(name = "volumeId")
     private String volumeId;
+    @Column(name = "lastUpdate")
+    private long lastUpdate = 0L;
     /**
      * VolumeFileUpload本身的callback，监听上传进度
      */
@@ -164,5 +166,13 @@ public class VolumeFileUpload implements Serializable {
 
     public void setVolumeId(String volumeId) {
         this.volumeId = volumeId;
+    }
+
+    public long getLastUpdate() {
+        return lastUpdate;
+    }
+
+    public void setLastUpdate(long lastUpdate) {
+        this.lastUpdate = lastUpdate;
     }
 }

@@ -13,9 +13,9 @@ import java.util.List;
 
 public class AllTaskFragmentAdapter extends FragmentPagerAdapter {
     //存放fragment的集合
-    private List<Fragment> taskListFragmentList;
+    private List<? extends Fragment> taskListFragmentList;
 
-    public AllTaskFragmentAdapter(FragmentManager fm, List<Fragment> taskListFragmentList) {
+    public AllTaskFragmentAdapter(FragmentManager fm, List<? extends Fragment> taskListFragmentList) {
         super(fm);
         this.taskListFragmentList = taskListFragmentList;
     }
@@ -30,7 +30,7 @@ public class AllTaskFragmentAdapter extends FragmentPagerAdapter {
         return taskListFragmentList.size();
     }
 
-    public List<Fragment> getTaskListFragment() {
+    public List<? extends Fragment> getTaskListFragment() {
         return taskListFragmentList;
     }
 
