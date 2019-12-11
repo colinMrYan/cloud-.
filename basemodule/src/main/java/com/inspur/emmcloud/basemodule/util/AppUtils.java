@@ -1117,6 +1117,6 @@ public class AppUtils {
             e.printStackTrace();
         }
         String urlHostPath = urlHost.getHost();
-        return (urlHostPath.endsWith(Constant.INSPUR_HOST_URL)) || urlHostPath.endsWith(Constant.INSPURONLINE_HOST_URL) || urlHost.getPath().endsWith("/app/mdm/v3.0/loadForRegister")
+        return (urlHostPath.endsWith(Constant.INSPUR_HOST_URL)) || urlHostPath.endsWith(Constant.INSPURONLINE_HOST_URL) || urlHost.getPath().endsWith("/app/mdm/v3.0/loadForRegister");
     }
 }
