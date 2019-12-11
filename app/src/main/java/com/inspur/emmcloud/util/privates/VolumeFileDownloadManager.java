@@ -87,7 +87,7 @@ public class VolumeFileDownloadManager {
      *
      * @return
      */
-    public List<VolumeFile> getDownloadingList() {
+    public List<VolumeFile> getUnFinishDownloadList() {
         volumeFileDownloadingList.clear();
         for (VolumeFile volumeFile : volumeFileDownloadList) {
             if (volumeFile.getStatus().equals(VolumeFile.STATUS_LOADING) || volumeFile.getStatus().equals(VolumeFile.STATUS_PAUSE)
@@ -101,7 +101,7 @@ public class VolumeFileDownloadManager {
     /**
      * 获取已下载完成的文件列表  (下载成功 or 下载失败)
      */
-    public List<VolumeFile> getDownloadedList() {
+    public List<VolumeFile> getFinishDownloadList() {
         volumeFileDownloadedList.clear();
 //        for (VolumeFile volumeFile : volumeFileDownloadList) {
 //            if (volumeFile.getStatus().equals(VolumeFile.STATUS_NORMAL)) {
@@ -112,6 +112,7 @@ public class VolumeFileDownloadManager {
         List<FileDownloadInfo> fileList = FileDownloadManager.getInstance().getFileDownloadInfoFileList(DownloadFileCategory.CATEGORY_VOLUME_FILE);
         for (FileDownloadInfo downloadInfo : fileList) {
             VolumeFile volumeFile = VolumeFile.getMockDownloadVolumeFile(downloadInfo, "1234");
+            volumeFile.setStatus(VolumeFile.STATUS_SUCCESS);
             volumeFileDownloadedList.add(volumeFile);
         }
 

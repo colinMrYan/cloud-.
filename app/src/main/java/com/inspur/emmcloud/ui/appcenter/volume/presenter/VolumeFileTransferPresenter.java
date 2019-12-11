@@ -25,7 +25,7 @@ public class VolumeFileTransferPresenter extends BasePresenter<VolumeFileTransfe
         List<VolumeFile> list = new ArrayList<>();
         switch (index) {
             case 0:
-                list = VolumeFileDownloadManager.getInstance().getDownloadingList();
+                list = VolumeFileDownloadManager.getInstance().getUnFinishDownloadList();
                 break;
             case 1:
                 list = VolumeFileUploadManager.getInstance().getUnFinishUploadList();
@@ -39,7 +39,7 @@ public class VolumeFileTransferPresenter extends BasePresenter<VolumeFileTransfe
         List<VolumeFile> list = new ArrayList<>();
         switch (index) {
             case 0:
-                list = VolumeFileDownloadManager.getInstance().getDownloadedList();
+                list = VolumeFileDownloadManager.getInstance().getFinishDownloadList();
                 break;
             case 1:
                 list = VolumeFileUploadManager.getInstance().getFinishUploadList();

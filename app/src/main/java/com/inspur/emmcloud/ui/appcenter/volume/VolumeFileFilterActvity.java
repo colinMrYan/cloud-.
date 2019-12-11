@@ -44,11 +44,6 @@ public class VolumeFileFilterActvity extends VolumeFileBaseActivity {
             }
 
             @Override
-            public void onItemDropDownImgClick(View view, int position) {
-                showFileOperationDlg(volumeFileList.get(position));
-            }
-
-            @Override
             public void onSelectedItemClick(View view, int position) {
 
             }

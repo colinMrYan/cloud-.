@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.chat;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -21,8 +22,12 @@ import com.inspur.emmcloud.basemodule.util.DownLoaderUtils;
 import com.inspur.emmcloud.basemodule.util.FileDownloadManager;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.bean.DownloadInfo;
+import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
+import com.inspur.emmcloud.interf.ProgressCallback;
+import com.inspur.emmcloud.util.privates.ChatFileDownloadManager;
 
 import org.xutils.common.Callback;
 
@@ -133,6 +138,23 @@ public class ChatFileDownloadActivtiy extends BaseActivity {
         downloadBtn.setVisibility(View.GONE);
         downloadStatusLayout.setVisibility(View.VISIBLE);
         String source = APIUri.getChatFileResourceUrl(message);
+//        final DownloadInfo downloadInfo = DownloadInfo.message2DownloadInfo(message);
+//
+//        List<DownloadInfo> downloadInfoList = ChatFileDownloadManager.getInstance().getAllChatFileDownloadList();
+//        if (NetUtils.isNetworkConnected(this)) {
+//            for (DownloadInfo item : downloadInfoList) {
+//                if (item.getFileId().equals(downloadInfo.getFileId())) {
+//                    ChatFileDownloadManager.getInstance().reDownloadFile(downloadInfo);
+//                    setProgressListener(downloadInfo);
+//                    return;
+//                }
+//            }
+//
+//            ChatFileDownloadManager.getInstance().resetDownloadStatus(downloadInfo);
+//            ChatFileDownloadManager.getInstance().downloadFile(downloadInfo);
+//            setProgressListener(downloadInfo);
+//        }
+
         APIDownloadCallBack callBack = new APIDownloadCallBack(getApplicationContext(), source) {
             @Override
             public void callbackStart() {
@@ -142,6 +164,7 @@ public class ChatFileDownloadActivtiy extends BaseActivity {
 
             @Override
             public void callbackLoading(long total, long current, boolean isUploading) {
+                Log.d("zhang", "ChatFileDownloadActivity callbackLoading: total = " + total + ",current = " + current);
                 int progress = (int) (current * 100.0 / total);
                 progressBar.setProgress(progress);
                 String totleSize = FileUtils.formatFileSize(total);
@@ -152,6 +175,7 @@ public class ChatFileDownloadActivtiy extends BaseActivity {
 
             @Override
             public void callbackSuccess(File file) {
+                Log.d("zhang", "ChatFileDownloadActivity callbackSuccess: ");
                 FileDownloadManager.getInstance().saveDownloadFileInfo(DownloadFileCategory.CATEGORY_MESSAGE, message.getId(), message.getMsgContentAttachmentFile().getName(), fileSavePath);
                 ToastUtils.show(getApplicationContext(), R.string.download_success);
                 downloadStatusLayout.setVisibility(View.GONE);
@@ -163,6 +187,7 @@ public class ChatFileDownloadActivtiy extends BaseActivity {
 
             @Override
             public void callbackError(Throwable arg0, boolean arg1) {
+                Log.d("zhang", "ChatFileDownloadActivity callbackError: ");
                 if (downloadStatusLayout.getVisibility() == View.VISIBLE) {
                     ToastUtils.show(getApplicationContext(), R.string.download_fail);
                     downloadStatusLayout.setVisibility(View.GONE);
@@ -179,6 +204,43 @@ public class ChatFileDownloadActivtiy extends BaseActivity {
             }
         };
         cancelable = new DownLoaderUtils().startDownLoad(source, fileSavePath, callBack);
+    }
+
+    private void setProgressListener(final DownloadInfo downloadInfo) {
+        ChatFileDownloadManager.getInstance().setBusinessProgressCallback(downloadInfo, new ProgressCallback() {
+            @Override
+            public void onSuccess(VolumeFile volumeFile) {
+                FileDownloadManager.getInstance().saveDownloadFileInfo(DownloadFileCategory.CATEGORY_MESSAGE, message.getId(), message.getMsgContentAttachmentFile().getName(), fileSavePath);
+                ToastUtils.show(getApplicationContext(), R.string.download_success);
+                downloadStatusLayout.setVisibility(View.GONE);
+                progressBar.setProgress(0);
+                progressText.setText("");
+                downloadBtn.setVisibility(View.VISIBLE);
+                setDownloadingStatus(true);
+            }
+
+            @Override
+            public void onLoading(int progress, long current, String speed) {
+                Log.d("zhang", "onLoading: ChatFileDownloadActivity progress = " + progress);
+//                int progress = (int) (current * 100.0 / total);
+                progressBar.setProgress(progress);
+                String totleSize = FileUtils.formatFileSize(downloadInfo.getSize());
+                String currentSize = FileUtils.formatFileSize(current);
+                progressText.setText(getString(R.string.clouddriver_downloading_status, currentSize, totleSize));
+            }
+
+            @Override
+            public void onFail() {
+                if (downloadStatusLayout.getVisibility() == View.VISIBLE) {
+                    ToastUtils.show(getApplicationContext(), R.string.download_fail);
+                    downloadStatusLayout.setVisibility(View.GONE);
+                    progressBar.setProgress(0);
+                    progressText.setText("");
+                    downloadBtn.setVisibility(View.VISIBLE);
+                    setDownloadingStatus(false);
+                }
+            }
+        });
     }
 
 }

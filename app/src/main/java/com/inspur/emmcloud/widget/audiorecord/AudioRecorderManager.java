@@ -535,8 +535,12 @@ public class AudioRecorderManager {
         public void run() {
             writeData2File();//往文件中写入裸数据
             /**初始文件的语音降噪和语音增强算法在此添加**/
-            voiceAgc();
-            deNoseX();
+            try {
+                voiceAgc();
+                deNoseX();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             copyWaveFile(rawAudioFilePath, wavAudioFilePath);//给裸数据加上头文件
         }
     }

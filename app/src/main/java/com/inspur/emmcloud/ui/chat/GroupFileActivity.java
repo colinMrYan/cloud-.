@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -26,14 +27,19 @@ import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.widget.VolumeActionData;
 import com.inspur.emmcloud.baselib.widget.VolumeActionLayout;
+import com.inspur.emmcloud.baselib.widget.progressbar.CircleProgressBar;
 import com.inspur.emmcloud.basemodule.bean.DownloadFileCategory;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.FileDownloadManager;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
+import com.inspur.emmcloud.bean.DownloadInfo;
+import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.Msg;
 import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
+import com.inspur.emmcloud.interf.ProgressCallback;
+import com.inspur.emmcloud.util.privates.ChatFileDownloadManager;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
 
@@ -265,6 +271,8 @@ public class GroupFileActivity extends BaseActivity {
         TextView fileTimeText = convertView.findViewById(R.id.file_time_text);
         RelativeLayout fileInfoLayout = convertView.findViewById(R.id.file_info_layout);
         ImageView selectImg = convertView.findViewById(R.id.file_select_img);
+        View statusLayout = convertView.findViewById(R.id.item_file_load_status);
+        CircleProgressBar progressBar = convertView.findViewById(R.id.item_file_load_progressBar);
         fileInfoLayout.setVisibility(View.VISIBLE);
         selectImg.setVisibility(View.GONE);
         final Message message = messageList.get(position);
@@ -278,6 +286,8 @@ public class GroupFileActivity extends BaseActivity {
         }
         fileTimeText.setText(TimeUtils.getChannelMsgDisplayTime(GroupFileActivity.this, message.getCreationDate()));
         fileImg.setImageResource(FileUtils.getFileIconResIdByFileName(message.getMsgContentAttachmentFile().getName()));
+//        DownloadInfo downloadInfo = DownloadInfo.message2DownloadInfo(message);
+//        handleDownloadCallback(convertView, downloadInfo);
         convertView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -307,6 +317,28 @@ public class GroupFileActivity extends BaseActivity {
                 }
                 adapter.notifyDataSetChanged();
                 setBottomOperationItemShow(selectGroupFileList);
+            }
+        });
+    }
+
+    /**
+     * 监听下载回调
+     */
+    private void handleDownloadCallback(View convertView, final DownloadInfo downloadInfo) {
+        ChatFileDownloadManager.getInstance().setBusinessProgressCallback(downloadInfo, new ProgressCallback() {
+            @Override
+            public void onSuccess(VolumeFile volumeFile) {
+                Log.d("zhang", "GroupFile onSuccess:");
+            }
+
+            @Override
+            public void onLoading(int progress, long current, String speed) {
+                Log.d("zhang", "GroupFile onLoading:");
+            }
+
+            @Override
+            public void onFail() {
+                Log.d("zhang", "GroupFile onFail:");
             }
         });
     }
@@ -342,6 +374,20 @@ public class GroupFileActivity extends BaseActivity {
      * @param actionName
      */
     private void handleDownLoadAction(String actionName) {
+//        if (actionName.equals(downLoadAction)) {
+//            for (int i = 0; i < selectGroupFileList.size(); i++) {
+//                Message message = selectGroupFileList.get(i);
+//                final MsgContentRegularFile msgContentFile = message.getMsgContentAttachmentFile();
+//                DownloadInfo downloadInfo = DownloadInfo.message2DownloadInfo(message);
+//                final String fileDownloadPath = FileDownloadManager.getInstance().getDownloadFilePath(DownloadFileCategory.CATEGORY_MESSAGE, message.getId(), msgContentFile.getName());
+//                if (StringUtils.isBlank(fileDownloadPath)) {
+//                    ChatFileDownloadManager.getInstance().downloadFile(downloadInfo);
+//                }
+//            }
+//            selectGroupFileList.clear();
+//            setBottomOperationItemShow(selectGroupFileList);
+//        }
+
         if (actionName.equals(downLoadAction)) {
             Message message = selectGroupFileList.get(0);
             final MsgContentRegularFile msgContentFile = message.getMsgContentAttachmentFile();

@@ -632,7 +632,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
      */
     public void refreshTipViewLayout() {
         if (VolumeFileUploadManager.getInstance().getUnFinishUploadList().size() > 0 ||
-                VolumeFileDownloadManager.getInstance().getDownloadingList().size() > 0) {
+                VolumeFileDownloadManager.getInstance().getUnFinishDownloadList().size() > 0) {
             tipViewLayout.setVisibility(View.VISIBLE);
         } else {
             tipViewLayout.setVisibility(View.GONE);
@@ -710,7 +710,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
 //        bundle.putString("currentDirAbsolutePath", currentDirAbsolutePath + volumeFile.getName());
 //        bundle.putBoolean("isStartDownload", true);
 //        IntentUtils.startActivity(VolumeFileBaseActivity.this, VolumeFileDownloadActivity.class, bundle);
-        List<VolumeFile> volumeFileList = VolumeFileDownloadManager.getInstance().getDownloadingList();
+        List<VolumeFile> volumeFileList = VolumeFileDownloadManager.getInstance().getUnFinishDownloadList();
 
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
             volumeFile.setVolumeFileAbsolutePath(currentDirAbsolutePath + volumeFile.getName());
