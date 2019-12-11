@@ -1,7 +1,10 @@
 package com.inspur.emmcloud.basemodule.util.mycamera;
 
-import android.app.Activity;
+import android.content.Context;
+import android.hardware.Camera;
 import android.hardware.Camera.Size;
+import android.view.Surface;
+import android.view.WindowManager;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -19,7 +22,7 @@ public class CameraUtils {
 
     }
 
-    public static CameraUtils getInstance(Activity context) {
+    public static CameraUtils getInstance() {
         if (myCamPara == null) {
             myCamPara = new CameraUtils();
             return myCamPara;
@@ -127,13 +130,65 @@ public class CameraUtils {
         return Math.abs(r - rate) <= 0.5;
     }
 
+
+    public boolean isSupportedFocusMode(List<String> focusList, String focusMode) {
+        for (int i = 0; i < focusList.size(); i++) {
+            if (focusMode.equals(focusList.get(i))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isSupportedPictureFormats(List<Integer> supportedPictureFormats, int jpeg) {
+        for (int i = 0; i < supportedPictureFormats.size(); i++) {
+            if (jpeg == supportedPictureFormats.get(i)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public int getCameraDisplayOrientation(Context context, int cameraId) {
+        Camera.CameraInfo info = new Camera.CameraInfo();
+        Camera.getCameraInfo(cameraId, info);
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        int rotation = wm.getDefaultDisplay().getRotation();
+        int degrees = 0;
+        switch (rotation) {
+            case Surface.ROTATION_0:
+                degrees = 0;
+                break;
+            case Surface.ROTATION_90:
+                degrees = 90;
+                break;
+            case Surface.ROTATION_180:
+                degrees = 180;
+                break;
+            case Surface.ROTATION_270:
+                degrees = 270;
+                break;
+        }
+        int result;
+        if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+            result = (info.orientation + degrees) % 360;
+            result = (360 - result) % 360;   // compensate the mirror
+        } else {
+            // back-facing
+            result = (info.orientation - degrees + 360) % 360;
+        }
+        return result;
+    }
+
+
     public class CameraSizeComparator implements Comparator<Size> {
         //按升序排列
+        @Override
         public int compare(Size lhs, Size rhs) {
             // TODO Auto-generated method stub
-            if (lhs.width == rhs.width) {
+            if (lhs.width == rhs.width && lhs.height == rhs.height) {
                 return 0;
-            } else if (lhs.width > rhs.width) {
+            } else if (lhs.width > rhs.width || (lhs.width == rhs.width && lhs.height > rhs.height)) {
                 return 1;
             } else {
                 return -1;

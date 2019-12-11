@@ -42,6 +42,8 @@ public class MyAppConfig {
             .getExternalStorageDirectory() + "/IMP-Cloud/oss/";
     public static final String LOCAL_SHARE_FILE_PATH = Environment
             .getExternalStorageDirectory() + "/IMP-Cloud/cache/share_file/";
+    public static final String LOCAL_CACHE_SCREENSHOTS_PATH = Environment
+            .getExternalStorageDirectory() + "/IMP-Cloud/cache/screenshots/";
     /**
      * 用户文件操作空间，所有用户文件操作不应超出这个范围，清除全部缓存时应当考虑清除此处
      */

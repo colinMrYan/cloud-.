@@ -1,9 +1,7 @@
 package com.inspur.emmcloud.basemodule.util.imagepicker.ui;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.view.Window;
 
 import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.basemodule.R;
@@ -29,16 +27,8 @@ public abstract class ImagePreviewBaseActivity extends ImageBaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
-//        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-//            //全屏显示
-//            WindowManager.LayoutParams lp = getWindow().getAttributes();
-//            lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
-//            getWindow().setAttributes(lp);
-//        }
         setContentView(R.layout.activity_image_preview);
-//        ImmersionBar.with(this).statusBarColor(android.R.color.black).navigationBarColor(android.R.color.black).statusBarDarkFont(false, 0.2f).init();
+        ImmersionBar.with(this).navigationBarColor(R.color.color_image_grid_header).init();
         mCurrentPosition = getIntent().getIntExtra(ImagePicker.EXTRA_SELECTED_IMAGE_POSITION, 0);
         mImageItems = (ArrayList<ImageItem>) getIntent().getSerializableExtra(ImagePicker.EXTRA_IMAGE_ITEMS);
         imagePicker = ImagePicker.getInstance();
@@ -47,14 +37,6 @@ public abstract class ImagePreviewBaseActivity extends ImageBaseActivity {
         //初始化控件
         content = findViewById(R.id.content);
         topBar = findViewById(R.id.top_bar);
-//        if (Build.VERSION.SDK_INT >= 16) content.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-//        //因为状态栏透明后，布局整体会上移，所以给头部加上状态栏的margin值，保证头部不会被覆盖
-//        topBar = findViewById(R.id.top_bar);
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-//            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) topBar.getLayoutParams();
-//            params.topMargin = Utils.getStatusHeight(this);
-//            topBar.setLayoutParams(params);
-//        }
         topBar.findViewById(R.id.tv_ok).setVisibility(View.GONE);
         topBar.findViewById(R.id.ibt_back).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,29 +60,6 @@ public abstract class ImagePreviewBaseActivity extends ImageBaseActivity {
 
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        setWindows();
-    }
-
-    private void setWindows() {
-        //全屏显示
-        if (Build.VERSION.SDK_INT >= 19) {
-            View decorView = getWindow().getDecorView();
-            decorView.setSystemUiVisibility(
-                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                            | View.SYSTEM_UI_FLAG_FULLSCREEN
-                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-        } else {
-            View decorView = getWindow().getDecorView();
-            int option = View.SYSTEM_UI_FLAG_FULLSCREEN;
-            decorView.setSystemUiVisibility(option);
-        }
-    }
     /**
      * 单击时，隐藏头和尾
      */
