@@ -1043,22 +1043,21 @@ public class MyAppFragment extends BaseFragment {
     class MyOnClickListener implements OnClickListener {
         @Override
         public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.ibt_appcenter_enter:
-                    IntentUtils.startActivity(getActivity(), AppCenterActivity.class);
-                    PVCollectModelCacheUtils.saveCollectModel("appcenter", "application");
-                    break;
-                case R.id.ibt_appcenter_config:
-                    showPopupWindow(v);
-                    break;
-                case R.id.bt_sort_finish:
-                    appListAdapter.setCanEdit(false);
-                    appListAdapter.notifyDataSetChanged();
-                    setAppEditStatus(false);
-                    if (popupWindow != null && popupWindow.isShowing()) {
-                        popupWindow.dismiss();
-                    }
-                    break;
+            int i = v.getId();
+            if (i == R.id.ibt_appcenter_enter) {
+                IntentUtils.startActivity(getActivity(), AppCenterActivity.class);
+                PVCollectModelCacheUtils.saveCollectModel("appcenter", "application");
+            } else if (i == R.id.ibt_appcenter_config) {
+                showPopupWindow(v);
+
+            } else if (i == R.id.bt_sort_finish) {
+                appListAdapter.setCanEdit(false);
+                appListAdapter.notifyDataSetChanged();
+                setAppEditStatus(false);
+                if (popupWindow != null && popupWindow.isShowing()) {
+                    popupWindow.dismiss();
+                }
+
             }
 
         }

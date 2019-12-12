@@ -147,22 +147,15 @@ public class AppCenterActivity extends BaseActivity {
     }
 
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.ibt_back:
-                finish();
-                break;
-            case R.id.search_img:
-                IntentUtils.startActivity(AppCenterActivity.this,
-                        AppSearchActivity.class);
-                break;
-            case R.id.recommand_tab_text:
-                viewPager.setCurrentItem(0);
-                break;
-            case R.id.class_tab_text:
-                viewPager.setCurrentItem(1);
-                break;
-            default:
-                break;
+        if (v.getId() == R.id.ibt_back) {
+            finish();
+        } else if (v.getId() == R.id.search_img) {
+            IntentUtils.startActivity(AppCenterActivity.this,
+                    AppSearchActivity.class);
+        } else if (v.getId() == R.id.recommand_tab_text) {
+            viewPager.setCurrentItem(0);
+        } else if (v.getId() == R.id.class_tab_text) {
+            viewPager.setCurrentItem(1);
         }
     }
 

@@ -172,25 +172,6 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
 
-        <activity
-            android:name=".ui.appcenter.AppCenterActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.appcenter.AppCenterMoreActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.appcenter.AppSearchActivity"
-            android:launchMode="singleTask"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.appcenter.AppDetailActivity"
-            android:launchMode="singleTask"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-
 
         <activity
             android:name=".ui.ShareFilesActivity"
@@ -592,11 +573,6 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.mine.setting.RecommendAppActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.appcenter.AppGroupActivity"
-            android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
 

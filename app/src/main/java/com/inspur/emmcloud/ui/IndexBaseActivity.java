@@ -48,8 +48,8 @@ import com.inspur.emmcloud.bean.system.TabBean;
 import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
 import com.inspur.emmcloud.broadcastreceiver.NetworkChangeReceiver;
 import com.inspur.emmcloud.broadcastreceiver.ScreenBroadcastReceiver;
+import com.inspur.emmcloud.componentservice.appcenter.ApplicationService;
 import com.inspur.emmcloud.componentservice.web.WebService;
-import com.inspur.emmcloud.ui.appcenter.MyAppFragment;
 import com.inspur.emmcloud.ui.chat.CommunicationFragment;
 import com.inspur.emmcloud.ui.chat.CommunicationV0Fragment;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
@@ -200,7 +200,11 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
                                     tabBean = new TabBean(getString(R.string.work), ScheduleHomeFragment.class, mainTabResult);
                                     break;
                                 case Constant.APP_TAB_BAR_APPLICATION:
-                                    tabBean = new TabBean(getString(R.string.application), MyAppFragment.class, mainTabResult);
+                                    Router router = Router.getInstance();
+                                    if (router.getService(WebService.class) != null) {
+                                        ApplicationService service = router.getService(ApplicationService.class);
+                                        tabBean = new TabBean(getString(R.string.application), service.getMyAppFragment(), mainTabResult);
+                                    }
                                     break;
                                 case Constant.APP_TAB_BAR_PROFILE:
                                     tabBean = new TabBean(getString(R.string.mine), MoreFragment.class, mainTabResult);

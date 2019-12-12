@@ -107,10 +107,9 @@ public class AppSearchActivity extends BaseActivity {
     }
 
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.ibt_back:
-                finish();
-                break;
+        int i = view.getId();
+        if (i == R.id.ibt_back) {
+            finish();
         }
     }
 

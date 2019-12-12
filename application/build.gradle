@@ -41,6 +41,14 @@ android {
         }
     }
 
+    lintOptions {
+//        lintConfig file("lint.xml")
+        abortOnError false
+        checkReleaseBuilds false
+//        disable 'MissingTranslation', 'ExtraTranslation'
+    }
+
+    resourcePrefix project.getName()+"_"
 }
 
 combuild {

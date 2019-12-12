@@ -118,25 +118,23 @@ public class AppDetailActivity extends BaseActivity {
     }
 
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.ibt_back:
-                finish();
-                break;
-            case R.id.app_status_btn:
-                if (!isFastDoubleClick()) {
-                    if (app.getUseStatus() == 0) {
-                        addApp(statusBtn, app.getAppID());
-                    } else if (app.getUseStatus() == 1) {
-                        if (app.getAppType() == 2) {
-                            new AppCenterNativeAppUtils().InstallOrOpen(AppDetailActivity.this, app);
-                        } else {
-                            ApplicationUriUtils.openApp(AppDetailActivity.this, app, "appcenter");
-                        }
-                        //发送到MyAPPFragment.updateCommonlyUseAppList
-                        EventBus.getDefault().post(app);
+        int i = v.getId();
+        if (i == R.id.ibt_back) {
+            finish();
+        } else if (i == R.id.app_status_btn) {
+            if (!isFastDoubleClick()) {
+                if (app.getUseStatus() == 0) {
+                    addApp(statusBtn, app.getAppID());
+                } else if (app.getUseStatus() == 1) {
+                    if (app.getAppType() == 2) {
+                        new AppCenterNativeAppUtils().InstallOrOpen(AppDetailActivity.this, app);
+                    } else {
+                        ApplicationUriUtils.openApp(AppDetailActivity.this, app, "appcenter");
                     }
+                    //发送到MyAPPFragment.updateCommonlyUseAppList
+                    EventBus.getDefault().post(app);
                 }
-                break;
+            }
 
         }
     }

@@ -19,7 +19,6 @@ import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -28,9 +27,7 @@ import butterknife.ButterKnife;
 @Route(path = Constant.AROUTER_CLASS_APPCENTER_GROUP)
 public class AppGroupActivity extends BaseActivity {
 
-    @BindView(R.id.recyclerview_group_app)
     RecyclerView appGroupRecyclerView;
-    @BindView(R.id.header_text)
     TextView textView;
     private List<App> appList = new ArrayList<>();
 
@@ -51,6 +48,8 @@ public class AppGroupActivity extends BaseActivity {
      * 初始化Views
      */
     private void initViews() {
+        appGroupRecyclerView = findViewById(R.id.recyclerview_group_app);
+        textView = findViewById(R.id.header_text);
         appGroupRecyclerView.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(BaseApplication.getInstance(), 11)));
         GridLayoutManager gridLayoutManager = new GridLayoutManager(BaseApplication.getInstance(), 4);
         appGroupRecyclerView.setLayoutManager(gridLayoutManager);
@@ -67,10 +66,8 @@ public class AppGroupActivity extends BaseActivity {
     }
 
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.ibt_back:
-                finish();
-                break;
+        if (view.getId() == R.id.ibt_back) {
+            finish();
         }
     }
 
