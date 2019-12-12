@@ -87,7 +87,6 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     private MyDialog myDialog = null;
     private LoadingDialog loadingDlg;
     private ScheduleAllDayEventListAdapter adapter;
-    private List<ScheduleCalendar> scheduleCalendarList;
 
     @Override
     protected void init() {
@@ -97,7 +96,6 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         pageStartCalendar = TimeUtils.getDayBeginCalendar(Calendar.getInstance());
         pageEndCalendar = TimeUtils.getDayEndCalendar(Calendar.getInstance());
         yearHolidayListMap = HolidayCacheUtils.getYearHolidayListMap(MyApplication.getInstance());
-        initScheduleCalendar();
         initView();
     }
 
@@ -105,7 +103,6 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     public void onReceiverSimpleEventMessage(SimpleEventMessage eventMessage) {
         switch (eventMessage.getAction()) {
             case Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_SETTING_CHANGED:
-                initScheduleCalendar();
                 setEventShowType();
                 showCalendarEvent(true);
                 break;
@@ -170,10 +167,10 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         calendarDayView.setOnClickListener(this);
     }
 
-    @Override
-    protected void initScheduleCalendar() {
-        scheduleCalendarList = ScheduleCalendarCacheUtils.getScheduleCalendarList(BaseApplication.getInstance(), true);
-    }
+//    @Override
+//    protected void initScheduleCalendar() {
+//        scheduleCalendarList = ScheduleCalendarCacheUtils.getScheduleCalendarList(BaseApplication.getInstance(), true);
+//    }
 
     /**
      * 设置事件展示样式-日视图和列表视图
@@ -190,7 +187,9 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
      *
      * @param isForceUpdate 是否强制刷新数据
      */
+    @Override
     protected void showCalendarEvent(boolean isForceUpdate) {
+        List<ScheduleCalendar> scheduleCalendarList = ScheduleCalendarCacheUtils.getScheduleCalendarList(BaseApplication.getInstance(), true);
         List<Schedule> scheduleList = ScheduleCacheUtils.getScheduleList(MyApplication.getInstance(), pageStartCalendar, pageEndCalendar, scheduleCalendarList);
         //在非强制刷新情况下如果前一次日历的日期包含此次的日期则不用重新获取数据
         boolean isNeedGetDataFromNet = isForceUpdate || newDataStartCalendar == null || newDataEndCalendar == null || pageStartCalendar.before(newDataStartCalendar) || pageEndCalendar.after(newDataEndCalendar);
@@ -334,8 +333,9 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
      * 显示所有的全天事件列表
      */
     private void showAllDayEventListDlg() {
-        if (myDialog == null)
+        if (myDialog == null) {
             myDialog = new MyDialog(getActivity(), R.layout.schedule_all_day_event_pop);
+        }
         MaxHeightListView listView = myDialog.findViewById(R.id.lv_all_day_event);
         listView.setMaxHeight(DensityUtil.dip2px(MyApplication.getInstance(), 300));
         adapter = new ScheduleAllDayEventListAdapter(getActivity(), allDayEventList, selectCalendar);
@@ -503,6 +503,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         if (NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
             ScheduleCalendar appScheduleCalendar = null;
             boolean isContainAppSchedule = false;
+            List<ScheduleCalendar> scheduleCalendarList = ScheduleCalendarCacheUtils.getScheduleCalendarList(BaseApplication.getInstance(), true);
             for (ScheduleCalendar scheduleCalendar : scheduleCalendarList) {
                 if (scheduleCalendar.getAcType().equals(AccountType.APP_MEETING.toString()) || scheduleCalendar.getAcType().equals(AccountType.APP_SCHEDULE.toString())) {
                     isContainAppSchedule = true;
@@ -542,8 +543,11 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
                 }
 
             }
-            //当日程拉取成功后，检查是否已弹出Exchange账户登录异常框，如有则消失
-            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_HIDE_EXCHANGE_ACCOUNT_ERROR));
+            if (scheduleCalendar.getAcType().equals(AccountType.EXCHANGE.toString())) {
+                //当日程拉取成功后，检查是否已弹出Exchange账户登录异常框，如有则消失
+                EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_HIDE_EXCHANGE_ACCOUNT_ERROR));
+            }
+
         }
 
         @Override
