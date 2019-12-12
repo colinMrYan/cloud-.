@@ -7,14 +7,12 @@ import android.os.Bundle;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.bean.appcenter.App;
-import com.inspur.emmcloud.ui.appcenter.ReactNativeAppActivity;
 
 
 public class UriUtils {
@@ -63,10 +61,12 @@ public class UriUtils {
                     openWebApp(activity, uri, app);
                 }
                 break;
+            //此处暂时没有去掉，需要测一下ReactNative放到模块里会不会有问题，有问题要再挪回来
             case 5:
                 Bundle bundle = new Bundle();
                 bundle.putString("ecc-app-react-native", uri);
-                IntentUtils.startActivity(activity, ReactNativeAppActivity.class, bundle);
+//                IntentUtils.startActivity(activity, ReactNativeAppActivity.class, bundle);
+                ARouter.getInstance().build(Constant.AROUTER_CLASS_APPCENTER_REACT_NATIVE).with(bundle).navigation(activity);
                 break;
             case 7:
                 OfflineAppUtil.handleOfflineWeb(activity, app);
