@@ -695,50 +695,48 @@ public class CameraInterface implements Camera.PreviewCallback {
         }
     }
 
-    public boolean handleFocus(final Context context, final float x, final float y, final FocusCallback callback) {
+    public void handleFocus(final Context context, final float x, final float y, final FocusCallback callback) {
         if (mCamera == null && jCameraView.isHasCameraCropView()) {
-            return false;
+            return;
         }
         final Camera.Parameters params = mCamera.getParameters();
         Rect focusRect = calculateTapArea(x, y, 1f, context);
-        mCamera.cancelAutoFocus();
+        Camera.Area cameraArea = new Camera.Area(focusRect, 1000);
         if (params.getMaxNumFocusAreas() > 0) {
+            mCamera.cancelAutoFocus();
             List<Camera.Area> focusAreas = new ArrayList<>();
-            List<Camera.Area> meteringAreas = new ArrayList<>();
-            Camera.Area cameraArea = new Camera.Area(focusRect, 1000);
             focusAreas.add(cameraArea);
-            meteringAreas.add(cameraArea);
             params.setFocusAreas(focusAreas);
+        }
+        if (params.getMaxNumMeteringAreas() > 0) { // Check if it is safe to set meteringArea.
+            List<Camera.Area> meteringAreas = new ArrayList<>();
+            meteringAreas.add(cameraArea);
             params.setMeteringAreas(meteringAreas);
         }
-//        else {
-//            Log.i(TAG, "focus areas not supported");
-//            callback.focusSuccess();
-//            return false;
-//        }
         final String currentFocusMode = params.getFocusMode();
         try {
             params.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
             mCamera.setParameters(params);
-            mCamera.autoFocus(new Camera.AutoFocusCallback() {
-                @Override
-                public void onAutoFocus(boolean success, Camera camera) {
-                    if (success || handlerTime > 1) {
-                        Camera.Parameters params = camera.getParameters();
-                        params.setFocusMode(currentFocusMode);
-                        camera.setParameters(params);
-                        handlerTime = 0;
-                        callback.focusSuccess();
-                    } else {
-                        handlerTime++;
-                        handleFocus(context, x, y, callback);
+            if (params.getMaxNumFocusAreas() > 0) {
+                mCamera.autoFocus(new Camera.AutoFocusCallback() {
+                    @Override
+                    public void onAutoFocus(boolean success, Camera camera) {
+                        if (success || handlerTime > 1) {
+                            Camera.Parameters params = camera.getParameters();
+                            params.setFocusMode(currentFocusMode);
+                            camera.setParameters(params);
+                            handlerTime = 0;
+                            callback.focusSuccess();
+                            sensorController.lockFocus();
+                        } else {
+                            handlerTime++;
+                            handleFocus(context, x, y, callback);
+                        }
                     }
-                }
-            });
-            return true;
+                });
+            }
         } catch (Exception e) {
             Log.e(TAG, "autoFocus failer");
-            return false;
         }
     }
 
@@ -759,9 +757,7 @@ public class CameraInterface implements Camera.PreviewCallback {
             public void onFocus() {
                 if (mCamera != null) {
                     if (!sensorController.isFocusLocked()) {
-                        if (jCameraView.reFocus()) {
-                            sensorController.lockFocus();
-                        }
+                        jCameraView.reFocus();
                     }
                 }
             }

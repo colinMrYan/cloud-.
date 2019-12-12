@@ -29,15 +29,15 @@ class PreviewState implements State {
 
 
     @Override
-    public boolean focus(float x, float y, CameraInterface.FocusCallback callback, boolean isShowFocusView) {
+    public void focus(float x, float y, CameraInterface.FocusCallback callback, boolean isShowFocusView) {
         if (isShowFocusView) {
             if (machine.getView().handlerFoucs(x, y)) {
-                return CameraInterface.getInstance().handleFocus(machine.getContext(), x, y, callback);
+                CameraInterface.getInstance().handleFocus(machine.getContext(), x, y, callback);
             }
         } else {
-            return CameraInterface.getInstance().handleFocus(machine.getContext(), x, y, callback);
+            CameraInterface.getInstance().handleFocus(machine.getContext(), x, y, callback);
         }
-        return false;
+
     }
 
     @Override

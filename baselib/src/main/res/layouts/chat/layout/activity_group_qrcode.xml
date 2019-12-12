@@ -61,8 +61,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="480dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginLeft="22dp"
+        android:layout_marginRight="22dp"
         android:layout_below="@id/rl_header"
         android:layout_marginTop="43dp"
         android:background="@color/white"
@@ -70,8 +70,8 @@
 
         <ImageView
             android:id="@+id/iv_group_qrcode"
-            android:layout_width="312dp"
-            android:layout_height="312dp"
+            android:layout_width="295dp"
+            android:layout_height="295dp"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="75dp" />
 

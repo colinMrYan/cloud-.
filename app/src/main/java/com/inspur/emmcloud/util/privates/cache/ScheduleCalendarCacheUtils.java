@@ -66,10 +66,14 @@ public class ScheduleCalendarCacheUtils {
         boolean isEnableExchange = PreferencesByUserAndTanentUtils.getBoolean(BaseApplication.getInstance(), Constant.PREF_SCHEDULE_ENABLE_EXCHANGE, false);
         List<ScheduleCalendar> scheduleCalendarList = null;
         try {
+
+            scheduleCalendarList = DbCacheUtils.getDb(context).selector(ScheduleCalendar.class).where("acType", "!=", "Exchange").findAll();
             if (isEnableExchange) {
-                scheduleCalendarList = DbCacheUtils.getDb(context).findAll(ScheduleCalendar.class);
-            } else {
-                scheduleCalendarList = DbCacheUtils.getDb(context).selector(ScheduleCalendar.class).where("acType", "!=", "Exchange").findAll();
+                List<ScheduleCalendar> exchangeScheduleCalendarList = DbCacheUtils.getDb(context).selector(ScheduleCalendar.class).where("acType", "=", "Exchange").findAll();
+                if (exchangeScheduleCalendarList != null) {
+                    scheduleCalendarList.addAll(exchangeScheduleCalendarList);
+                }
+
             }
 
         } catch (Exception e) {

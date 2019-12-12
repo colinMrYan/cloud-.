@@ -26,8 +26,7 @@ public class BorrowVideoState implements State {
     }
 
     @Override
-    public boolean focus(float x, float y, CameraInterface.FocusCallback callback, boolean isShowFocusView) {
-        return false;
+    public void focus(float x, float y, CameraInterface.FocusCallback callback, boolean isShowFocusView) {
     }
 
 

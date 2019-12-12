@@ -88,7 +88,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
      */
     public void setNetExceptionView(Boolean NetState) {
         if (false == NetState && !haveHeaderView()) {
-            addHeaderView(LayoutInflater.from(context).inflate(R.layout.recycleview_header_item, null));
+            addHeaderView(LayoutInflater.from(context).inflate(R.layout.header_error, null));
         } else if (true == NetState && haveHeaderView()) {
             deleteHeaderView();
         }

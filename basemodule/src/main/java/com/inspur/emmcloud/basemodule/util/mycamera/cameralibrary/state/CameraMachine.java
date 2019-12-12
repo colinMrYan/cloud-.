@@ -65,8 +65,8 @@ public class CameraMachine implements State {
     }
 
     @Override
-    public boolean focus(float x, float y, CameraInterface.FocusCallback callback, boolean isShowFocusView) {
-        return state.focus(x, y, callback, isShowFocusView);
+    public void focus(float x, float y, CameraInterface.FocusCallback callback, boolean isShowFocusView) {
+        state.focus(x, y, callback, isShowFocusView);
     }
 
     @Override
