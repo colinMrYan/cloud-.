@@ -1,8 +1,9 @@
 package com.inspur.emmcloud.bean;
 
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.baselib.widget.progressbar.CircleProgressBar;
 import com.inspur.emmcloud.bean.chat.Message;
-import com.inspur.emmcloud.interf.ProgressCallback;
+import com.inspur.emmcloud.interf.ChatProgressCallback;
 
 import org.xutils.common.Callback;
 import org.xutils.db.annotation.Column;
@@ -17,7 +18,7 @@ public class DownloadInfo implements Serializable {
     public static final String STATUS_NORMAL = "normal";
     public static final String STATUS_LOADING = "loading";
     public static final String STATUS_PAUSE = "pause";
-    public static final String STATUS_SUCCESS = "pause";
+    public static final String STATUS_SUCCESS = "success";
     public static final String STATUS_FAIL = "fail";
     transient Callback.Cancelable cancelable;
     @Column(name = "id", isId = true, autoGen = true)
@@ -33,7 +34,7 @@ public class DownloadInfo implements Serializable {
     @Column(name = "localPath")
     private String localPath;
     @Column(name = "status")
-    private String status;
+    private String status = STATUS_NORMAL;
     @Column(name = "progress")
     private int progress;
     @Column(name = "createTime")
@@ -43,14 +44,14 @@ public class DownloadInfo implements Serializable {
     @Column(name = "completed")
     private Long completed = 0L;
     @Column(name = "size")
-    private String size;
+    private Long size;
     @Column(name = "type")
     private String type;
 
     /**
      * 业务的callback
      */
-    private ProgressCallback businessProgressCallback;
+    private transient ChatProgressCallback businessProgressCallback;
 
     public static DownloadInfo message2DownloadInfo(Message message) {
         DownloadInfo info = new DownloadInfo();
@@ -60,7 +61,7 @@ public class DownloadInfo implements Serializable {
         info.setType(TYPE_MESSAGE);
         info.setUrl(APIUri.getChatFileResourceUrl(message));
         info.setLastUpdateTime(System.currentTimeMillis());
-        info.setSize(String.valueOf(message.getMsgContentAttachmentFile().getSize()));
+        info.setSize(message.getMsgContentAttachmentFile().getSize());
 
         return info;
     }
@@ -145,12 +146,34 @@ public class DownloadInfo implements Serializable {
         this.completed = completed;
     }
 
-    public String getSize() {
-        return size;
+    public static CircleProgressBar.Status transfer2ProgressStatus(String status) {
+        CircleProgressBar.Status pbStatus;
+        switch (status) {
+            case STATUS_NORMAL:
+                pbStatus = CircleProgressBar.Status.Starting;
+                break;
+            case STATUS_LOADING:
+                pbStatus = CircleProgressBar.Status.Loading;
+                break;
+            case STATUS_FAIL:
+                pbStatus = CircleProgressBar.Status.Fail;
+                break;
+            case STATUS_PAUSE:
+                pbStatus = CircleProgressBar.Status.Pause;
+                break;
+            case STATUS_SUCCESS:
+                pbStatus = CircleProgressBar.Status.Success;
+                break;
+            default:
+                pbStatus = CircleProgressBar.Status.Starting;
+                break;
+        }
+
+        return pbStatus;
     }
 
-    public void setSize(String size) {
-        this.size = size;
+    public long getSize() {
+        return size;
     }
 
     public String getType() {
@@ -169,11 +192,15 @@ public class DownloadInfo implements Serializable {
         this.cancelable = cancelable;
     }
 
-    public ProgressCallback getBusinessProgressCallback() {
+    public void setSize(long size) {
+        this.size = size;
+    }
+
+    public ChatProgressCallback getBusinessProgressCallback() {
         return businessProgressCallback;
     }
 
-    public void setBusinessProgressCallback(ProgressCallback businessProgressCallback) {
+    public void setBusinessProgressCallback(ChatProgressCallback businessProgressCallback) {
         this.businessProgressCallback = businessProgressCallback;
     }
 }
