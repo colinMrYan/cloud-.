@@ -1,8 +1,6 @@
 package com.inspur.emmcloud.util.privates;
 
-import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.LogUtils;
-import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.api.APIDownloadCallBack;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.DownloadFileCategory;
@@ -245,7 +243,7 @@ public class ChatFileDownloadManager {
                 DownloadCacheUtils.saveDownloadFile(downloadInfo);
                 FileDownloadManager.getInstance().saveDownloadFileInfo(DownloadFileCategory.CATEGORY_MESSAGE,
                         downloadInfo.getFileId(), downloadInfo.getFileName(), downloadInfo.getLocalPath());
-                ToastUtils.show(BaseApplication.getInstance(), R.string.download_success);
+//                ToastUtils.show(BaseApplication.getInstance(), R.string.download_success);
                 if (downloadInfo.getBusinessProgressCallback() != null) {
                     downloadInfo.getBusinessProgressCallback().onSuccess(file);
                 }
@@ -253,7 +251,7 @@ public class ChatFileDownloadManager {
 
             @Override
             public void callbackError(Throwable arg0, boolean arg1) {
-                ToastUtils.show(BaseApplication.getInstance(), R.string.download_fail);
+//                ToastUtils.show(BaseApplication.getInstance(), R.string.download_fail);
                 DownloadInfo downloadInfo = getManagerDownloadInfo(info);
                 downloadInfo.setStatus(DownloadInfo.STATUS_FAIL);
                 DownloadCacheUtils.saveDownloadFile(downloadInfo);

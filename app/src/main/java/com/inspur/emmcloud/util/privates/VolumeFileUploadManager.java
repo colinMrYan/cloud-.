@@ -191,6 +191,7 @@ public class VolumeFileUploadManager extends APIInterfaceInstance {
         VolumeFileUpload item = getVolumeFileUpload(volumeFile);
         if (item != null) {
             volumeFileUploadList.remove(item);
+            VolumeFileUploadCacheUtils.deleteVolumeFileUpload(item);
         }
     }
 

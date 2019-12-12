@@ -271,7 +271,7 @@ public class VolumeFileDownloadActivity extends BaseActivity {
             public void onSuccess(VolumeFile volumeFile) {
                 Log.d("zhang", "Activity onSuccess: ");
                 FileDownloadManager.getInstance().saveDownloadFileInfo(DownloadFileCategory.CATEGORY_VOLUME_FILE, volumeFile.getId(), volumeFile.getName(), fileSavePath);
-                ToastUtils.show(getApplicationContext(), R.string.download_success);
+//                ToastUtils.show(getApplicationContext(), R.string.download_success);
                 downloadStatusLayout.setVisibility(View.GONE);
                 progressBar.setProgress(0);
                 progressText.setText("");
@@ -296,7 +296,7 @@ public class VolumeFileDownloadActivity extends BaseActivity {
             public void onFail() {
                 Log.d("zhang", "Activity onFail: ");
                 if (downloadStatusLayout.getVisibility() == View.VISIBLE) {
-                    ToastUtils.show(getApplicationContext(), R.string.download_fail);
+//                    ToastUtils.show(getApplicationContext(), R.string.download_fail);
                     downloadStatusLayout.setVisibility(View.GONE);
                     shareFileTextView.setVisibility(View.GONE);
                     progressBar.setProgress(0);
