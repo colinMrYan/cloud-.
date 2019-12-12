@@ -34,15 +34,16 @@ import com.inspur.emmcloud.basemodule.util.FileDownloadManager;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.DownloadInfo;
-import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.Msg;
 import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
-import com.inspur.emmcloud.interf.ProgressCallback;
+import com.inspur.emmcloud.interf.ChatProgressCallback;
 import com.inspur.emmcloud.util.privates.ChatFileDownloadManager;
+import com.inspur.emmcloud.util.privates.DownloadCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
 
+import java.io.File;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -79,6 +80,7 @@ public class GroupFileActivity extends BaseActivity {
     private List<Message> selectGroupFileList = new ArrayList<>();
     private String downLoadAction; //弹框点击状态
     List<Message> fileTypeMessageListWithOrder = new ArrayList<>();
+
     @Override
     public void onCreate() {
         ButterKnife.bind(this);
@@ -90,6 +92,12 @@ public class GroupFileActivity extends BaseActivity {
         fileTypeMessageListWithOrder.addAll(fileMessageList);
         adapter = new GroupFileAdapter(fileTypeMessageListWithOrder);
         fileListView.setAdapter(adapter);
+        fileListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                downloadOrOpenFile(position);
+            }
+        });
         fileListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -109,7 +117,13 @@ public class GroupFileActivity extends BaseActivity {
         });
     }
 
-//    private void handleMessageOrder(List<Message> fileInfoList) {
+    @Override
+    protected void onResume() {
+        super.onResume();
+        adapter.notifyDataSetChanged();
+    }
+
+    //    private void handleMessageOrder(List<Message> fileInfoList) {
 //        //根据fileInfoList的排序排列fileTypeMessage
 //        fileTypeMessageListWithOrder.clear();
 //        List<Message> fileTypeMessageList = MessageCacheUtil.getFileTypeMsgList(MyApplication.getInstance(), cid);
@@ -264,49 +278,41 @@ public class GroupFileActivity extends BaseActivity {
         adapter.notifyDataSetChanged();
     }
 
-    public void displayFiles(View convertView, final int position, final List<Message> messageList) {
-        ImageView fileImg = convertView.findViewById(R.id.file_type_img);
-        TextView fileNameText = convertView.findViewById(R.id.tv_file_name);
-        TextView fileSizeText = convertView.findViewById(R.id.tv_file_size);
-        TextView fileTimeText = convertView.findViewById(R.id.file_time_text);
-        RelativeLayout fileInfoLayout = convertView.findViewById(R.id.file_info_layout);
-        ImageView selectImg = convertView.findViewById(R.id.file_select_img);
-        View statusLayout = convertView.findViewById(R.id.item_file_load_status);
-        CircleProgressBar progressBar = convertView.findViewById(R.id.item_file_load_progressBar);
-        fileInfoLayout.setVisibility(View.VISIBLE);
-        selectImg.setVisibility(View.GONE);
+    public void displayFiles(final ViewHolder holder, final int position, final List<Message> messageList) {
+        holder.fileInfoLayout.setVisibility(View.VISIBLE);
+        holder.selectImg.setVisibility(View.GONE);
         final Message message = messageList.get(position);
         final String fileName = message.getMsgContentAttachmentFile().getName();
-        fileNameText.setText(fileName);
-        fileSizeText.setText(FileUtils.formatFileSize(message.getMsgContentAttachmentFile().getSize()));
+        holder.fileNameText.setText(fileName);
+        holder.fileSizeText.setText(FileUtils.formatFileSize(message.getMsgContentAttachmentFile().getSize()));
         if (selectGroupFileList.size() > 0) {
-            selectImg.setImageResource(selectGroupFileList.contains(message) ? R.drawable.ic_select_yes : R.drawable.ic_select_no);
+            holder.selectImg.setImageResource(selectGroupFileList.contains(message) ? R.drawable.ic_select_yes : R.drawable.ic_select_no);
         } else {
-            selectImg.setImageResource(R.drawable.ic_volume_no_selected);
+            holder.selectImg.setImageResource(R.drawable.ic_volume_no_selected);
         }
-        fileTimeText.setText(TimeUtils.getChannelMsgDisplayTime(GroupFileActivity.this, message.getCreationDate()));
-        fileImg.setImageResource(FileUtils.getFileIconResIdByFileName(message.getMsgContentAttachmentFile().getName()));
-//        DownloadInfo downloadInfo = DownloadInfo.message2DownloadInfo(message);
-//        handleDownloadCallback(convertView, downloadInfo);
-        convertView.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (fileTypeMessageListWithOrder != null && fileTypeMessageListWithOrder.size() > 0) {
-                    Message message = fileTypeMessageListWithOrder.get(position);
-                    final MsgContentRegularFile msgContentFile = message.getMsgContentAttachmentFile();
-                    final String fileDownloadPath = FileDownloadManager.getInstance().getDownloadFilePath(DownloadFileCategory.CATEGORY_MESSAGE, message.getId(), msgContentFile.getName());
-                    if (!StringUtils.isBlank(fileDownloadPath)) {
-                        FileUtils.openFile(GroupFileActivity.this, fileDownloadPath);
-                    } else {
-                        Intent intent = new Intent(GroupFileActivity.this, ChatFileDownloadActivtiy.class);
-                        intent.putExtra("message", message);
-                        startActivity(intent);
+        holder.fileTimeText.setText(TimeUtils.getChannelMsgDisplayTime(GroupFileActivity.this, message.getCreationDate()));
+        holder.fileImg.setImageResource(FileUtils.getFileIconResIdByFileName(message.getMsgContentAttachmentFile().getName()));
+        DownloadInfo info = DownloadInfo.message2DownloadInfo(message);
+        DownloadInfo downloadInfo = ChatFileDownloadManager.getInstance().getManagerDownloadInfo(info);
+        if (downloadInfo != null) {
+            if (DownloadInfo.STATUS_PAUSE.equals(downloadInfo.getStatus()) ||
+                    DownloadInfo.STATUS_LOADING.equals(downloadInfo.getStatus())) {
+                holder.statusLayout.setVisibility(View.VISIBLE);
+                holder.progressBar.setStatus(downloadInfo.transfer2ProgressStatus(downloadInfo.getStatus()));
+                holder.progressBar.setProgress(downloadInfo.getProgress());
+                holder.statusLayout.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        changeStatus(holder, position);
                     }
-                }
+                });
+            } else {
+                holder.statusLayout.setVisibility(View.GONE);
             }
-        });
+            handleDownloadCallback(holder, downloadInfo);
+        }
         //暂时不支持下载多个文件
-        selectImg.setOnClickListener(new OnClickListener() {
+        holder.selectImg.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (selectGroupFileList.contains(messageList.get(position))) {
@@ -321,24 +327,66 @@ public class GroupFileActivity extends BaseActivity {
         });
     }
 
+    private void downloadOrOpenFile(int position) {
+        if (fileTypeMessageListWithOrder != null && fileTypeMessageListWithOrder.size() > 0) {
+            Message message = fileTypeMessageListWithOrder.get(position);
+            final MsgContentRegularFile msgContentFile = message.getMsgContentAttachmentFile();
+            final String fileDownloadPath = FileDownloadManager.getInstance().getDownloadFilePath(DownloadFileCategory.CATEGORY_MESSAGE, message.getId(), msgContentFile.getName());
+            if (!StringUtils.isBlank(fileDownloadPath)) {
+                FileUtils.openFile(GroupFileActivity.this, fileDownloadPath);
+            } else {
+                Intent intent = new Intent(GroupFileActivity.this, ChatFileDownloadActivtiy.class);
+                intent.putExtra("message", message);
+                startActivity(intent);
+            }
+        }
+    }
+
+    private void changeStatus(ViewHolder holder, int position) {
+        if (fileTypeMessageListWithOrder != null && fileTypeMessageListWithOrder.size() > 0) {
+            Message message = fileTypeMessageListWithOrder.get(position);
+            DownloadInfo info = DownloadInfo.message2DownloadInfo(message);
+            DownloadInfo downloadInfo = ChatFileDownloadManager.getInstance().getManagerDownloadInfo(info);
+            if (downloadInfo != null) {
+                String status = downloadInfo.getStatus();
+                if (status.equals(DownloadInfo.STATUS_LOADING)) {
+                    downloadInfo.setStatus(DownloadInfo.STATUS_PAUSE);
+                    ChatFileDownloadManager.getInstance().cancelDownloadFile(downloadInfo);
+                    DownloadCacheUtils.saveDownloadFile(downloadInfo);
+                } else if (status.equals(DownloadInfo.STATUS_PAUSE) || status.equals(DownloadInfo.STATUS_FAIL)) {
+                    downloadInfo.setStatus(DownloadInfo.STATUS_LOADING);
+                    ChatFileDownloadManager.getInstance().reDownloadFile(downloadInfo);
+                    DownloadCacheUtils.saveDownloadFile(downloadInfo);
+                }
+                holder.progressBar.setStatus(DownloadInfo.transfer2ProgressStatus(downloadInfo.getStatus()));
+            }
+        }
+    }
+
     /**
      * 监听下载回调
      */
-    private void handleDownloadCallback(View convertView, final DownloadInfo downloadInfo) {
-        ChatFileDownloadManager.getInstance().setBusinessProgressCallback(downloadInfo, new ProgressCallback() {
+    private void handleDownloadCallback(final ViewHolder holder, final DownloadInfo downloadInfo) {
+        ChatFileDownloadManager.getInstance().setBusinessProgressCallback(downloadInfo, new ChatProgressCallback() {
             @Override
-            public void onSuccess(VolumeFile volumeFile) {
+            public void onSuccess(File file) {
                 Log.d("zhang", "GroupFile onSuccess:");
+                holder.progressBar.setStatus(CircleProgressBar.Status.Success);
+                holder.statusLayout.setVisibility(View.GONE);
             }
 
             @Override
             public void onLoading(int progress, long current, String speed) {
                 Log.d("zhang", "GroupFile onLoading:");
+                holder.progressBar.setStatus(CircleProgressBar.Status.Loading);
+                holder.progressBar.setProgress(progress);
             }
 
             @Override
             public void onFail() {
                 Log.d("zhang", "GroupFile onFail:");
+                holder.statusLayout.setVisibility(View.GONE);
+                holder.progressBar.setStatus(CircleProgressBar.Status.Fail);
             }
         });
     }
@@ -374,20 +422,6 @@ public class GroupFileActivity extends BaseActivity {
      * @param actionName
      */
     private void handleDownLoadAction(String actionName) {
-//        if (actionName.equals(downLoadAction)) {
-//            for (int i = 0; i < selectGroupFileList.size(); i++) {
-//                Message message = selectGroupFileList.get(i);
-//                final MsgContentRegularFile msgContentFile = message.getMsgContentAttachmentFile();
-//                DownloadInfo downloadInfo = DownloadInfo.message2DownloadInfo(message);
-//                final String fileDownloadPath = FileDownloadManager.getInstance().getDownloadFilePath(DownloadFileCategory.CATEGORY_MESSAGE, message.getId(), msgContentFile.getName());
-//                if (StringUtils.isBlank(fileDownloadPath)) {
-//                    ChatFileDownloadManager.getInstance().downloadFile(downloadInfo);
-//                }
-//            }
-//            selectGroupFileList.clear();
-//            setBottomOperationItemShow(selectGroupFileList);
-//        }
-
         if (actionName.equals(downLoadAction)) {
             Message message = selectGroupFileList.get(0);
             final MsgContentRegularFile msgContentFile = message.getMsgContentAttachmentFile();
@@ -470,9 +504,35 @@ public class GroupFileActivity extends BaseActivity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            convertView = LayoutInflater.from(GroupFileActivity.this).inflate(R.layout.app_volume_file_item_view, null);
-            displayFiles(convertView, position, messageList);
+            ViewHolder holder;
+            if (convertView == null) {
+                holder = new ViewHolder();
+                convertView = LayoutInflater.from(GroupFileActivity.this).inflate(R.layout.app_volume_file_item_view, null);
+                holder.fileImg = convertView.findViewById(R.id.file_type_img);
+                holder.fileNameText = convertView.findViewById(R.id.tv_file_name);
+                holder.fileSizeText = convertView.findViewById(R.id.tv_file_size);
+                holder.fileTimeText = convertView.findViewById(R.id.file_time_text);
+                holder.fileInfoLayout = convertView.findViewById(R.id.file_info_layout);
+                holder.selectImg = convertView.findViewById(R.id.file_select_img);
+                holder.statusLayout = convertView.findViewById(R.id.item_file_load_status);
+                holder.progressBar = convertView.findViewById(R.id.item_file_load_progressBar);
+                convertView.setTag(holder);
+            } else {
+                holder = (ViewHolder) convertView.getTag();
+            }
+            displayFiles(holder, position, messageList);
             return convertView;
         }
+    }
+
+    class ViewHolder {
+        ImageView fileImg;
+        TextView fileNameText;
+        TextView fileSizeText;
+        TextView fileTimeText;
+        RelativeLayout fileInfoLayout;
+        ImageView selectImg;
+        View statusLayout;
+        CircleProgressBar progressBar;
     }
 }

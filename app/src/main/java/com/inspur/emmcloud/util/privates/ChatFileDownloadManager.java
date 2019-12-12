@@ -1,19 +1,24 @@
 package com.inspur.emmcloud.util.privates;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.api.APIDownloadCallBack;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.DownloadFileCategory;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
-import com.inspur.emmcloud.basemodule.util.DownLoaderUtils;
 import com.inspur.emmcloud.basemodule.util.FileDownloadManager;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.DownloadInfo;
-import com.inspur.emmcloud.interf.ProgressCallback;
+import com.inspur.emmcloud.interf.ChatProgressCallback;
 
 import org.xutils.common.Callback;
+import org.xutils.http.HttpMethod;
+import org.xutils.http.RequestParams;
+import org.xutils.http.app.RedirectHandler;
+import org.xutils.http.request.UriRequest;
+import org.xutils.x;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -24,7 +29,23 @@ public class ChatFileDownloadManager {
     private List<DownloadInfo> downloadInfoList = new ArrayList<>();
 
     public ChatFileDownloadManager() {
+        downloadInfoList = DownloadCacheUtils.getAllDownloadingList();
+        boolean isNeedUpdateVolumeFileDownloadStatus = false;
+        for (DownloadInfo downloadInfo : downloadInfoList) {
+            if (downloadInfo.getStatus().equals(DownloadInfo.STATUS_LOADING)) {
+                downloadInfo.setStatus(DownloadInfo.STATUS_PAUSE);
+                isNeedUpdateVolumeFileDownloadStatus = true;
+            }
 
+            if (downloadInfo.getStatus().equals(DownloadInfo.STATUS_SUCCESS) ||
+                    downloadInfo.getStatus().equals(DownloadInfo.STATUS_FAIL)) {
+                isNeedUpdateVolumeFileDownloadStatus = true;
+            }
+        }
+
+        if (isNeedUpdateVolumeFileDownloadStatus) {
+            DownloadCacheUtils.saveDownloadFileList(downloadInfoList);
+        }
     }
 
     public static ChatFileDownloadManager getInstance() {
@@ -65,11 +86,19 @@ public class ChatFileDownloadManager {
         return resultList;
     }
 
-    public void setBusinessProgressCallback(DownloadInfo info, ProgressCallback businessProgressCallback) {
+    public String getFileStatus(DownloadInfo info) {
+        DownloadInfo downloadInfo = getManagerDownloadInfo(info);
+        if (downloadInfo != null) {
+            return downloadInfo.getStatus();
+        }
+        return "";
+    }
+
+    public void setBusinessProgressCallback(DownloadInfo info, ChatProgressCallback businessProgressCallback) {
         for (int i = 0; i < downloadInfoList.size(); i++) {
             DownloadInfo downloadInfo = downloadInfoList.get(i);
             if (info.getFileId().equals(downloadInfo.getFileId())) {
-                if (downloadInfo.getBusinessProgressCallback() != null) {
+                if (businessProgressCallback != null) {
                     downloadInfo.setBusinessProgressCallback(businessProgressCallback);
                 }
             }
@@ -104,10 +133,85 @@ public class ChatFileDownloadManager {
             return;
         }
 
-        final String fileSavePath = info.getLocalPath();
+        final String fileSavePath = FileDownloadManager.getInstance().getFilePath(
+                DownloadFileCategory.CATEGORY_MESSAGE, info.getFileId(), info.getFileName());
         String source = info.getUrl();
+        info.setLocalPath(fileSavePath);
+        info.setType(DownloadInfo.TYPE_MESSAGE);
         info.setStatus(DownloadInfo.STATUS_LOADING);
+        info.setLastUpdateTime(System.currentTimeMillis());
+        info.setCompleted(info.getProgress() / 100 * info.getSize());
 
+        if (!isReload) {
+            downloadInfoList.add(0, info);
+            DownloadCacheUtils.saveDownloadFileList(downloadInfoList);
+        } else {
+            DownloadInfo downloadInfo = getManagerDownloadInfo(info);
+            downloadInfo.setType(DownloadInfo.TYPE_MESSAGE);
+            downloadInfo.setStatus(DownloadInfo.STATUS_LOADING);
+            downloadInfo.setLastUpdateTime(downloadInfo.getLastUpdateTime());
+            downloadInfo.setCompleted(downloadInfo.getCompleted());
+            DownloadCacheUtils.saveDownloadFile(downloadInfo);
+        }
+
+        APIDownloadCallBack callBack = getAPIDownloadCallBack(source, info, fileSavePath);
+        RequestParams params = BaseApplication.getInstance().getHttpRequestParams(source);
+        params.setAutoResume(true);// 断点下载
+        params.setSaveFilePath(fileSavePath);
+        params.setCancelFast(true);
+        LogUtils.jasonDebug("params==" + params.toString());
+        params.setRedirectHandler(new RedirectHandler() {
+            @Override
+            public RequestParams getRedirectParams(UriRequest uriRequest) throws Throwable {
+                String locationUrl = uriRequest.getResponseHeader("Location");
+                RequestParams params = new RequestParams(locationUrl);
+                params.setAutoResume(true);// 断点下载
+                params.setSaveFilePath(fileSavePath);
+                params.setCancelFast(true);
+                params.setMethod(HttpMethod.GET);
+                return params;
+            }
+        });
+
+        DownloadInfo downloadInfo = getManagerDownloadInfo(info);
+        if (downloadInfo != null && downloadInfo.getCancelable() == null) {
+            Callback.Cancelable cancelable = x.http().get(params, callBack);
+            downloadInfo.setCancelable(cancelable);
+            DownloadCacheUtils.saveDownloadFile(downloadInfo);
+        }
+    }
+
+    /**
+     * 通过文件Id获取对应得下载管理信息
+     */
+    public DownloadInfo getManagerDownloadInfo(DownloadInfo info) {
+        for (int i = 0; i < downloadInfoList.size(); i++) {
+            DownloadInfo downloadInfo = downloadInfoList.get(i);
+            if (info.getFileId().equals(downloadInfo.getFileId()) && info.getType().equals(downloadInfo.getType())) {
+                return downloadInfo;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * 暂停下载
+     */
+    public void cancelDownloadFile(DownloadInfo info) {
+        DownloadInfo downloadInfo = getManagerDownloadInfo(info);
+        if (downloadInfo != null) {
+            if (downloadInfo.getCancelable() != null) {
+                downloadInfo.getCancelable().cancel();
+            }
+            downloadInfo.setCancelable(null);
+            downloadInfo.setStatus(DownloadInfo.STATUS_PAUSE);
+            DownloadCacheUtils.saveDownloadFile(downloadInfo);
+        }
+    }
+
+    private APIDownloadCallBack getAPIDownloadCallBack(String source, final DownloadInfo info,
+                                                       final String fileSavePath) {
         APIDownloadCallBack callBack = new APIDownloadCallBack(BaseApplication.getInstance(), source) {
             @Override
             public void callbackStart() {
@@ -136,15 +240,26 @@ public class ChatFileDownloadManager {
 
             @Override
             public void callbackSuccess(File file) {
-                DownloadCacheUtils.deleteDownloadFile(info);
+                DownloadInfo downloadInfo = getManagerDownloadInfo(info);
+                downloadInfo.setStatus(DownloadInfo.STATUS_SUCCESS);
+                DownloadCacheUtils.saveDownloadFile(downloadInfo);
                 FileDownloadManager.getInstance().saveDownloadFileInfo(DownloadFileCategory.CATEGORY_MESSAGE,
-                        info.getFileId(), info.getFileName(), info.getLocalPath());
+                        downloadInfo.getFileId(), downloadInfo.getFileName(), downloadInfo.getLocalPath());
                 ToastUtils.show(BaseApplication.getInstance(), R.string.download_success);
+                if (downloadInfo.getBusinessProgressCallback() != null) {
+                    downloadInfo.getBusinessProgressCallback().onSuccess(file);
+                }
             }
 
             @Override
             public void callbackError(Throwable arg0, boolean arg1) {
                 ToastUtils.show(BaseApplication.getInstance(), R.string.download_fail);
+                DownloadInfo downloadInfo = getManagerDownloadInfo(info);
+                downloadInfo.setStatus(DownloadInfo.STATUS_FAIL);
+                DownloadCacheUtils.saveDownloadFile(downloadInfo);
+                if (downloadInfo.getBusinessProgressCallback() != null) {
+                    downloadInfo.getBusinessProgressCallback().onFail();
+                }
             }
 
             @Override
@@ -152,48 +267,8 @@ public class ChatFileDownloadManager {
 
             }
         };
-        if (info.getCancelable() == null) {
-            Callback.Cancelable cancelable = new DownLoaderUtils().startDownLoad(source, fileSavePath, callBack);
-            info.setCancelable(cancelable);
-        }
 
-        if (!isReload) {
-            downloadInfoList.add(0, info);
-            DownloadCacheUtils.saveDownloadFile(info);
-        }
-    }
-
-    /**
-     * 通过文件Id获取对应得下载管理信息
-     */
-    private DownloadInfo getManagerDownloadInfo(DownloadInfo info) {
-        for (int i = 0; i < downloadInfoList.size(); i++) {
-            DownloadInfo downloadInfo = downloadInfoList.get(i);
-            if (info.getFileId().equals(downloadInfo.getFileId()) && info.getType().equals(downloadInfo.getType())) {
-                return downloadInfo;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * 暂停下载
-     */
-    public void cancelDownloadFile(DownloadInfo downloadInfo) {
-        if (downloadInfo != null) {
-            for (int i = 0; i < downloadInfoList.size(); i++) {
-                DownloadInfo itemInfo = downloadInfoList.get(i);
-                if (itemInfo.getFileId().equals(downloadInfo.getFileId())) {
-                    if (itemInfo.getCancelable() != null) {
-                        itemInfo.getCancelable().cancel();
-                    }
-                    itemInfo.setCancelable(null);
-                    itemInfo.setStatus(DownloadInfo.STATUS_PAUSE);
-                    DownloadCacheUtils.saveDownloadFile(itemInfo);
-                }
-            }
-        }
+        return callBack;
     }
 
     /**
