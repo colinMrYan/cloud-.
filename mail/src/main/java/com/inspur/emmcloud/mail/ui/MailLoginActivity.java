@@ -101,13 +101,14 @@ public class MailLoginActivity extends BaseActivity {
                     .setOnExchangeLoginListener(new OnExchangeLoginListener() {
                         @Override
                         public void onMailLoginSuccess() {
+                            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_HIDE_EXCHANGE_ACCOUNT_ERROR));
                             if (getIntent().hasExtra("from") && getIntent().getExtras().getString("from").equals("schedule_exchange_login")) {
                                 setResult(RESULT_OK);
                                 finish();
                             } else {
                                 IntentUtils.startActivity(MailLoginActivity.this, MailHomeActivity.class, true);
                             }
-                            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_HIDE_EXCHANGE_ACCOUNT_ERROR));
+
                         }
 
                         @Override

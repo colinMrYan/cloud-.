@@ -23,9 +23,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Process;
+import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -49,6 +51,8 @@ import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestC
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.componentservice.web.WebService;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -1127,14 +1131,21 @@ public class AppUtils {
      * @param filePath
      */
     public static void refreshMedia(Context context, final String filePath) {
-//        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-//        File file = new File(filePath);
-//        if (file.exists()) {
-//            Uri contentUri = Uri.fromFile(file);
-//            mediaScanIntent.setData(contentUri);
-//            context.sendBroadcast(mediaScanIntent);
-//        }
-        new MediaScanner(context).scanFile(filePath);
+        if (AppUtils.getIsXiaoMi()) {
+            File file = new File(filePath);
+            // 其次把文件插入到系统图库
+            try {
+                MediaStore.Images.Media.insertImage(context.getContentResolver(),
+                        file.getAbsolutePath(), file.getName(), null);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            // 最后通知图库更新
+            LocalBroadcastManager.getInstance(context).sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)));
+        } else {
+            new MediaScanner(context).scanFile(filePath);
+        }
+
 
     }
 }

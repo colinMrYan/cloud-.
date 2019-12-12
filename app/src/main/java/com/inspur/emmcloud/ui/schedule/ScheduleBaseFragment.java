@@ -304,9 +304,6 @@ public class ScheduleBaseFragment extends BaseLayoutFragment implements View.OnL
         return "";
     }
 
-    protected void initScheduleCalendar() {
-
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -345,7 +342,6 @@ public class ScheduleBaseFragment extends BaseLayoutFragment implements View.OnL
                 boolean isEnableExchange = getScheduleBasicDataResult.isEnableExchange();
                 if (isEnableExchangePrevious != isEnableExchange) {
                     PreferencesByUserAndTanentUtils.putBoolean(BaseApplication.getInstance(), Constant.PREF_SCHEDULE_ENABLE_EXCHANGE, getScheduleBasicDataResult.isEnableExchange());
-                    initScheduleCalendar();
                 }
                 List<Holiday> holidayList = getScheduleBasicDataResult.getHolidayList();
                 int year = getScheduleBasicDataResult.getYear();
