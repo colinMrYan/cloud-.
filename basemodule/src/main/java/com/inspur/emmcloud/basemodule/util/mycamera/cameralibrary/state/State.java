@@ -12,7 +12,7 @@ public interface State {
 
     void stop();
 
-    boolean focus(float x, float y, CameraInterface.FocusCallback callback, boolean isShowFocusView);
+    void focus(float x, float y, CameraInterface.FocusCallback callback, boolean isShowFocusView);
 
     void switchCamera(SurfaceHolder holder, float screenProp);
 

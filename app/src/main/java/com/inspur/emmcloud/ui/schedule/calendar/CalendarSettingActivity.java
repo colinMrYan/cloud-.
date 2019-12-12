@@ -169,6 +169,7 @@ public class CalendarSettingActivity extends BaseActivity {
             ScheduleCalendarCacheUtils.removeScheduleCalendar(getApplicationContext(), scheduleCalendarList.get(position));
             scheduleCalendarList.remove(position);
             calendarAdapter.notifyDataSetChanged();
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_HIDE_EXCHANGE_ACCOUNT_ERROR));
         } else if (action.equals(getString(R.string.schedule_modify_ac))) {
             currentScheduleCalendar = scheduleCalendarList.get(position);
             Bundle bundle = new Bundle();
@@ -209,16 +210,14 @@ public class CalendarSettingActivity extends BaseActivity {
             switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    ScheduleCalendar scheduleCalendar1 = new ScheduleCalendar();
-                    scheduleCalendar1 = scheduleCalendarList.get(position);
-                    scheduleCalendar1.setOpen(isChecked);
-                    ScheduleCalendarCacheUtils.saveScheduleCalendar(BaseApplication.getInstance(), scheduleCalendar1);
+                    scheduleCalendar.setOpen(isChecked);
+                    ScheduleCalendarCacheUtils.saveScheduleCalendar(BaseApplication.getInstance(), scheduleCalendar);
                 }
             });
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (scheduleCalendarList.get(position).getAcType().equals(AccountType.EXCHANGE.toString())) {
+                    if (scheduleCalendar.getAcType().equals(AccountType.EXCHANGE.toString())) {
                         String deleteAccount = getString(R.string.schedule_delete_ac);
                         String modifyAccount = getString(R.string.schedule_modify_ac);
                         new ActionSheetDialog.ActionListSheetBuilder(CalendarSettingActivity.this)

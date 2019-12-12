@@ -14,6 +14,7 @@ import com.inspur.emmcloud.baselib.util.FomatUtils;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
@@ -25,6 +26,8 @@ import com.inspur.emmcloud.componentservice.mail.OnExchangeLoginListener;
 import com.inspur.emmcloud.mail.R;
 import com.inspur.emmcloud.mail.R2;
 import com.inspur.emmcloud.mail.util.ExchangeLoginUtils;
+
+import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -104,6 +107,7 @@ public class MailLoginActivity extends BaseActivity {
                             } else {
                                 IntentUtils.startActivity(MailLoginActivity.this, MailHomeActivity.class, true);
                             }
+                            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_HIDE_EXCHANGE_ACCOUNT_ERROR));
                         }
 
                         @Override
