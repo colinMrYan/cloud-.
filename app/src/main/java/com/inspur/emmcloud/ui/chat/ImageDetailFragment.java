@@ -52,8 +52,6 @@ import java.io.IOException;
 
 import uk.co.senab.photoview.PhotoViewAttacher;
 
-import static android.R.attr.path;
-
 
 /**
  * 单张图片显示Fragment
@@ -225,7 +223,7 @@ public class ImageDetailFragment extends Fragment {
             e.printStackTrace();
         }
         // 最后通知图库更新
-        LocalBroadcastManager.getInstance(context).sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + path)));
+        LocalBroadcastManager.getInstance(context).sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + cameraPath)));
     }
 
     /**
