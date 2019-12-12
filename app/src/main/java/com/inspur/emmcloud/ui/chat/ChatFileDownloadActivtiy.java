@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.StringUtils;
-import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.DownloadFileCategory;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
@@ -220,7 +219,7 @@ public class ChatFileDownloadActivtiy extends BaseActivity {
             @Override
             public void onSuccess(File file) {
                 FileDownloadManager.getInstance().saveDownloadFileInfo(DownloadFileCategory.CATEGORY_MESSAGE, message.getId(), message.getMsgContentAttachmentFile().getName(), fileSavePath);
-                ToastUtils.show(getApplicationContext(), R.string.download_success);
+//                ToastUtils.show(getApplicationContext(), R.string.download_success);
                 downloadStatusLayout.setVisibility(View.GONE);
                 progressBar.setProgress(0);
                 progressText.setText("");
@@ -241,7 +240,7 @@ public class ChatFileDownloadActivtiy extends BaseActivity {
             @Override
             public void onFail() {
                 if (downloadStatusLayout.getVisibility() == View.VISIBLE) {
-                    ToastUtils.show(getApplicationContext(), R.string.download_fail);
+//                    ToastUtils.show(getApplicationContext(), R.string.download_fail);
                     downloadStatusLayout.setVisibility(View.GONE);
                     progressBar.setProgress(0);
                     progressText.setText("");

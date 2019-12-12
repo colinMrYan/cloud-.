@@ -22,13 +22,11 @@ import com.inspur.emmcloud.basemodule.util.FileDownloadManager;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
-import com.inspur.emmcloud.bean.appcenter.volume.VolumeFileUpload;
 import com.inspur.emmcloud.interf.ProgressCallback;
 import com.inspur.emmcloud.ui.appcenter.volume.observe.LoadObservable;
 import com.inspur.emmcloud.util.privates.VolumeFileDownloadCacheUtils;
 import com.inspur.emmcloud.util.privates.VolumeFileDownloadManager;
 import com.inspur.emmcloud.util.privates.VolumeFileUploadManager;
-import com.inspur.emmcloud.util.privates.cache.VolumeFileUploadCacheUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -260,12 +258,6 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
                 if (callBack != null) {
                     callBack.refreshView(unfinishedFileList);
                 }
-                new android.os.Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-
-                    }
-                }, 2000);
             }
 
             @Override
@@ -438,8 +430,6 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
                                 if (type.equals(Constant.TYPE_UPLOAD)) {
                                     VolumeFileUploadManager.getInstance().cancelVolumeFileUploadService(volumeFile);
                                     VolumeFileUploadManager.getInstance().deleteUploadInfo(volumeFile);
-                                    VolumeFileUpload volumeFileUpload = VolumeFileUploadManager.getInstance().getVolumeFileUpload(volumeFile);
-                                    VolumeFileUploadCacheUtils.deleteVolumeFileUpload(volumeFileUpload);
                                 } else if (type.equals(Constant.TYPE_DOWNLOAD)) {
                                     VolumeFileDownloadManager.getInstance().cancelDownloadVolumeFile(volumeFile);
                                     VolumeFileDownloadManager.getInstance().deleteDownloadInfo(volumeFile);

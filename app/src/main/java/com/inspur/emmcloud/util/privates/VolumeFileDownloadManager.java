@@ -349,6 +349,7 @@ public class VolumeFileDownloadManager {
                                 EventBus.getDefault().post(simpleEventMessage);
                             }
                         });
+                        volumeFileDownloadList.remove(downloadVolumeFile);
                         VolumeFileDownloadCacheUtils.saveVolumeFile(downloadVolumeFile);
                         break;
                     }
