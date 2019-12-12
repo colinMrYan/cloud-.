@@ -542,7 +542,8 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
                 }
 
             }
-
+            //当日程拉取成功后，检查是否已弹出Exchange账户登录异常框，如有则消失
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_HIDE_EXCHANGE_ACCOUNT_ERROR));
         }
 
         @Override

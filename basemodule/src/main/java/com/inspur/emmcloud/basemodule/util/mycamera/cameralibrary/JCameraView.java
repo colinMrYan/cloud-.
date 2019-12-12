@@ -1,5 +1,7 @@
 package com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
@@ -266,8 +268,8 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
         machine.start(mVideoView.getHolder(), screenProp);
     }
 
-    public boolean reFocus() {
-        return setFocusViewWidthAnimation(mFocusView.getX() + mFocusView.getWidth() / 2, mFocusView.getY() + mFocusView.getHeight() / 2, false);
+    public void reFocus() {
+        setFocusViewWidthAnimation(mFocusView.getX() + mFocusView.getWidth() / 2, mFocusView.getY() + mFocusView.getHeight() / 2, false);
     }
 
     public void showCaptureLayout() {
@@ -361,8 +363,8 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
 
 
     //对焦框指示器动画
-    private boolean setFocusViewWidthAnimation(float x, float y, boolean isShowFocusView) {
-        boolean isSupportSetFocusArea = machine.focus(x, y, new CameraInterface.FocusCallback() {
+    private void setFocusViewWidthAnimation(float x, float y, boolean isShowFocusView) {
+        machine.focus(x, y, new CameraInterface.FocusCallback() {
             @Override
             public void focusSuccess() {
                 mFocusView.setVisibility(INVISIBLE);
@@ -371,14 +373,9 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
                     public void run() {
                         CameraInterface.getInstance().unlockFocus();
                     }
-                }, 1000);
+                }, 300);
             }
         }, isShowFocusView);
-        if (!isSupportSetFocusArea) {
-            mFocusView.setVisibility(INVISIBLE);
-            CameraInterface.getInstance().unlockFocus();
-        }
-        return isSupportSetFocusArea;
     }
 
     private void updateVideoViewSize(float videoWidth, float videoHeight) {
@@ -585,6 +582,17 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
         animSet.play(scaleX).with(scaleY).before(alpha);
         animSet.setDuration(400);
         animSet.start();
+        animSet.removeAllListeners();
+        animSet.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                if (mFocusView != null) {
+                    mFocusView.setVisibility(View.GONE);
+                }
+
+            }
+        });
         return true;
     }
 
