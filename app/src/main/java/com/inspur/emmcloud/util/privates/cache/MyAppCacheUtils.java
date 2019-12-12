@@ -94,6 +94,24 @@ public class MyAppCacheUtils {
     }
 
     /**
+     * 删除缓存里的App
+     *
+     * @param context
+     * @param deleteApp
+     */
+    public static void deleteAppInCache(Context context, App deleteApp) {
+        List<AppGroupBean> appGroupList = MyAppCacheUtils.getMyAppListFromNet(MyApplication.getInstance());
+        for (AppGroupBean appGroupBean : appGroupList) {
+            List<App> appList = appGroupBean.getAppItemList();
+            if (appList.contains(deleteApp)) {
+                appList.remove(deleteApp);
+                break;
+            }
+        }
+        saveMyAppListFromNet(context, appGroupList);
+    }
+
+    /**
      * 存储是否需要显示常用app
      *
      * @param isNeedCommonlyUseApp
