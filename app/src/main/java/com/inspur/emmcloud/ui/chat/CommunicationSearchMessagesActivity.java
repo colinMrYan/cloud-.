@@ -31,7 +31,7 @@ import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.ConversationWithMessageNum;
 import com.inspur.emmcloud.bean.chat.UIConversation;
 import com.inspur.emmcloud.bean.chat.UIMessage;
-import com.inspur.emmcloud.bean.contact.Contact;
+import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 
@@ -93,14 +93,11 @@ public class CommunicationSearchMessagesActivity extends BaseActivity {
                 searchModelNameText.setText(showData); //Record(s)  分別處理群組和個人
                 staticNameText.setText(conversationFromChatContent.getConversation().getName());
             } else if (conversationFromChatContent.getConversation().getType().equals(Conversation.TYPE_DIRECT)) {
-                if (conversationFromChatContent.getSingleChatContactUser() != null) {
-                    Contact contact = conversationFromChatContent.getSingleChatContactUser();
-                    SearchModel searchModel = contact.contact2SearchModel();
-                    displayImg(searchModel, searchModelHeadImage);
-                    String showData = getString(R.string.chat_search_related_messages, "“" + conversationFromChatContent.getSingleChatContactUser().getName() + "”");
-                    searchModelNameText.setText(showData);
-                    staticNameText.setText(searchModel.getName());
-                }
+                String icon = DirectChannelUtils.getDirectChannelIcon(MyApplication.getInstance(), conversationFromChatContent.getConversation().getName());
+                ImageDisplayUtils.getInstance().displayImage(searchModelHeadImage, icon, R.drawable.icon_person_default);
+                String showData = getString(R.string.chat_search_related_messages, "“" + conversationFromChatContent.getConversation().getShowName() + "”");
+                searchModelNameText.setText(showData);
+                staticNameText.setText(conversationFromChatContent.getConversation().getShowName());
             } else if (conversationFromChatContent.getConversation().getType().equals(Conversation.TYPE_CAST)) {
                 UIConversation uiConversation = new UIConversation(conversationFromChatContent.getConversation());
                 staticNameText.setText(uiConversation.getTitle());
