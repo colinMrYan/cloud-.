@@ -17,6 +17,6 @@ public class ScheduleApplication extends BaseApplication {
 
     @Override
     public String getIntentClassRouterAfterLogin() {
-        return Constant.AROUTER_CLASS_MAIL_LOGIN;
+        return Constant.AROUTER_CLASS_SCHEDLE_TEST;
     }
 }

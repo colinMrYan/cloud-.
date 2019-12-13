@@ -22,7 +22,7 @@
         android:textSize="13sp"
         android:visibility="gone" />
 
-    <com.inspur.emmcloud.widget.calendarview.CalendarLayout
+    <com.inspur.emmcloud.schedule.widget.calendarview.CalendarLayout
         android:id="@+id/calendar_layout_schedule"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -31,7 +31,7 @@
         app:calendar_content_view_id="@+id/ll_date_and_arrow"
         app:default_status="shrink">
 
-        <com.inspur.emmcloud.widget.calendarview.CalendarView
+        <com.inspur.emmcloud.schedule.widget.calendarview.CalendarView
             android:id="@+id/calendar_view_schedule"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -45,7 +45,7 @@
             app:lunar_text_size="10sp"
             app:max_year="2099"
             app:min_year="1900"
-            app:month_view="com.inspur.emmcloud.widget.calendarview.custom.CustomMonthView"
+            app:month_view="com.inspur.emmcloud.schedule.widget.calendarview.custom.CustomMonthView"
             app:month_view_show_mode="mode_all"
             app:other_month_lunar_text_color="#999999"
             app:other_month_text_color="#999999"
@@ -58,7 +58,7 @@
             app:week_background="#ffffff"
             app:week_start_with="sun"
             app:week_text_color="#333333"
-            app:week_view="com.inspur.emmcloud.widget.calendarview.custom.CustomWeekView"
+            app:week_view="com.inspur.emmcloud.schedule.widget.calendarview.custom.CustomWeekView"
             app:week_view_scrollable="true"
             app:year_view_day_text_color="#333333"
             app:year_view_day_text_size="15sp"
@@ -66,7 +66,7 @@
             app:year_view_month_text_size="15sp"
             app:year_view_scheme_color="#f17706" />
 
-        <com.inspur.emmcloud.widget.calendarview.CalendarLinearLayout
+        <com.inspur.emmcloud.schedule.widget.calendarview.CalendarLinearLayout
             android:id="@+id/ll_date_and_arrow"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -191,12 +191,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="968dp">
 
-                    <com.inspur.emmcloud.widget.calendardayview.CalendarDayView
+                    <com.inspur.emmcloud.schedule.widget.calendardayview.CalendarDayView
                         android:id="@+id/calendar_day_view"
                         android:layout_width="match_parent"
                         android:layout_height="968dp"
                         android:paddingBottom="4dp"
-                        android:paddingTop="4dp"></com.inspur.emmcloud.widget.calendardayview.CalendarDayView>
+                        android:paddingTop="4dp"></com.inspur.emmcloud.schedule.widget.calendardayview.CalendarDayView>
 
                     <RelativeLayout
                         android:id="@+id/rl_content"
@@ -240,6 +240,6 @@
                     android:textSize="16sp" />
             </LinearLayout>
 
-        </com.inspur.emmcloud.widget.calendarview.CalendarLinearLayout>
-    </com.inspur.emmcloud.widget.calendarview.CalendarLayout>
+        </com.inspur.emmcloud.schedule.widget.calendarview.CalendarLinearLayout>
+    </com.inspur.emmcloud.schedule.widget.calendarview.CalendarLayout>
 </LinearLayout>

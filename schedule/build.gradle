@@ -52,6 +52,21 @@ android {
 
 
     resourcePrefix project.getName()+"_"
+
+    //资源文件目录
+    sourceSets {
+        main {
+            res.srcDirs =
+                    [
+                            'src/main/res',
+                            'src/main/res/layouts/calendar',//日程_日历
+                            'src/main/res/layouts/task',//日程_任务
+                            'src/main/res/layouts/meeting',//日程_任务
+                            'src/main/res/layouts/schedule',//日程_任务
+                            'src/main/res/layouts/test',//日程_任务
+                    ]
+        }
+    }
 }
 
 
