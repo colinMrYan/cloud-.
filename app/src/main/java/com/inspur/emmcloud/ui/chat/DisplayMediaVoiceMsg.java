@@ -16,6 +16,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ChannelMessageAdapter;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.CustomLoadingView;
@@ -27,6 +28,7 @@ import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentMediaVoice;
 import com.inspur.emmcloud.bean.chat.UIMessage;
 import com.inspur.emmcloud.util.privates.MediaPlayerManagerUtils;
+import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.widget.bubble.ArrowDirection;
 import com.inspur.emmcloud.widget.bubble.BubbleLayout;
 
@@ -63,6 +65,8 @@ public class DisplayMediaVoiceMsg {
         speechText.setVisibility(View.VISIBLE);
         speechText.setText(msgContentMediaVoice.getResult());
         speechText.setTextColor(isMyMsg ? Color.parseColor("#FFFFFF") : Color.parseColor("#666666"));
+        View unPackView = cardContentView.findViewById(R.id.v_pack);
+        unPackView.setVisibility(!isMyMsg && (message.getType().equals(Message.MESSAGE_TYPE_MEDIA_VOICE) && message.getLifeCycleState() == Message.MESSAGE_LIFE_PACK) ? View.VISIBLE : View.GONE);
         if (StringUtils.isBlank(msgContentMediaVoice.getResult())) {
             int widthDip = 90 + duration;
             if (widthDip > 230) {
@@ -96,18 +100,21 @@ public class DisplayMediaVoiceMsg {
 
 
                 if (!FileUtils.isFileExist(fileSavePath)) {
+                    LogUtils.YfcDebug("显示加载进度条");
                     downloadLoadingView.setVisibility(View.VISIBLE);
                     String source = APIUri.getChatVoiceFileResouceUrl(message.getChannel(), message.getMsgContentMediaVoice().getMedia());
                     new DownLoaderUtils().startDownLoad(source, fileSavePath, new APIDownloadCallBack(source) {
 
                         @Override
                         public void callbackSuccess(File file) {
+                            LogUtils.YfcDebug("下载完成，取消进度条，隐藏小红点");
                             downloadLoadingView.setVisibility(View.GONE);
                             //当下载完成时如果mediaplayer没有被占用则播放语音
                             if (!MediaPlayerManagerUtils.getManager().isPlaying()) {
 
                                 playVoiceFile(fileSavePath, voiceAnimView, isMyMsg);
                                 setVoiceAnimViewBgByPlayStatus(voiceAnimView, true, isMyMsg);
+                                setVoiceUnPack(cardContentView.findViewById(R.id.v_pack), context, message);
                             }
 
                         }
@@ -123,9 +130,9 @@ public class DisplayMediaVoiceMsg {
                         }
                     });
                 } else {
-
                     playVoiceFile(fileSavePath, voiceAnimView, isMyMsg);
                     setVoiceAnimViewBgByPlayStatus(voiceAnimView, true, isMyMsg);
+                    setVoiceUnPack(cardContentView.findViewById(R.id.v_pack), context, message);
                 }
             }
         });
@@ -143,6 +150,18 @@ public class DisplayMediaVoiceMsg {
             }
         });
         return cardContentView;
+    }
+
+    /**
+     * 设置消息已经拆包
+     *
+     * @param context
+     * @param message
+     */
+    private static void setVoiceUnPack(View unPackView, Context context, Message message) {
+        message.setLifeCycleState(Message.MESSAGE_LIFE_UNPACK);
+        MessageCacheUtil.saveMessageLifeCycleState(context, message);
+        unPackView.setVisibility(View.GONE);
     }
 
     /**
