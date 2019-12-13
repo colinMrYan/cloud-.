@@ -16,7 +16,6 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ChannelMessageAdapter;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.CustomLoadingView;
@@ -65,7 +64,7 @@ public class DisplayMediaVoiceMsg {
         speechText.setVisibility(View.VISIBLE);
         speechText.setText(msgContentMediaVoice.getResult());
         speechText.setTextColor(isMyMsg ? Color.parseColor("#FFFFFF") : Color.parseColor("#666666"));
-        View unPackView = cardContentView.findViewById(R.id.v_pack);
+        final View unPackView = cardContentView.findViewById(R.id.v_pack);
         unPackView.setVisibility(!isMyMsg && (message.getType().equals(Message.MESSAGE_TYPE_MEDIA_VOICE) && message.getLifeCycleState() == Message.MESSAGE_LIFE_PACK) ? View.VISIBLE : View.GONE);
         if (StringUtils.isBlank(msgContentMediaVoice.getResult())) {
             int widthDip = 90 + duration;
@@ -100,23 +99,19 @@ public class DisplayMediaVoiceMsg {
 
 
                 if (!FileUtils.isFileExist(fileSavePath)) {
-                    LogUtils.YfcDebug("显示加载进度条");
                     downloadLoadingView.setVisibility(View.VISIBLE);
                     String source = APIUri.getChatVoiceFileResouceUrl(message.getChannel(), message.getMsgContentMediaVoice().getMedia());
                     new DownLoaderUtils().startDownLoad(source, fileSavePath, new APIDownloadCallBack(source) {
 
                         @Override
                         public void callbackSuccess(File file) {
-                            LogUtils.YfcDebug("下载完成，取消进度条，隐藏小红点");
                             downloadLoadingView.setVisibility(View.GONE);
                             //当下载完成时如果mediaplayer没有被占用则播放语音
                             if (!MediaPlayerManagerUtils.getManager().isPlaying()) {
-
                                 playVoiceFile(fileSavePath, voiceAnimView, isMyMsg);
                                 setVoiceAnimViewBgByPlayStatus(voiceAnimView, true, isMyMsg);
-                                setVoiceUnPack(cardContentView.findViewById(R.id.v_pack), context, message);
                             }
-
+                            setVoiceUnPack(unPackView, context, message);
                         }
 
                         @Override
@@ -132,7 +127,7 @@ public class DisplayMediaVoiceMsg {
                 } else {
                     playVoiceFile(fileSavePath, voiceAnimView, isMyMsg);
                     setVoiceAnimViewBgByPlayStatus(voiceAnimView, true, isMyMsg);
-                    setVoiceUnPack(cardContentView.findViewById(R.id.v_pack), context, message);
+                    setVoiceUnPack(unPackView, context, message);
                 }
             }
         });
@@ -146,6 +141,7 @@ public class DisplayMediaVoiceMsg {
                 if (mItemClickListener != null) {
                     mItemClickListener.onMediaVoiceReRecognize(uiMessage, cardContentView, downloadLoadingView);
                 }
+                setVoiceUnPack(cardContentView.findViewById(R.id.v_pack), context, message);
                 return false;
             }
         });
