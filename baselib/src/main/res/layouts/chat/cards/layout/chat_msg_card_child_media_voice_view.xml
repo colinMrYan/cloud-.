@@ -98,8 +98,8 @@
 
     <View
         android:id="@+id/v_pack"
-        android:layout_width="10dp"
-        android:layout_height="10dp"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
         android:layout_marginLeft="6dp"
         android:background="@drawable/bg_tips_new_message"
         android:visibility="gone" />
