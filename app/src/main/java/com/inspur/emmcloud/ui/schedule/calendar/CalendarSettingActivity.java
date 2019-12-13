@@ -144,6 +144,7 @@ public class CalendarSettingActivity extends BaseActivity {
         if (resultCode == RESULT_OK) {
             String account = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, "");
             String password = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_PASSWORD, "");
+            //实际使用中password只会从Preference中获取
             ScheduleCalendar scheduleCalendar = new ScheduleCalendar(CalendarColor.GREEN, account, account, password, AccountType.EXCHANGE);
             if (requestCode == REQUEST_ADD_CALENDAR) {
                 if (!scheduleCalendarList.contains(scheduleCalendar)) {

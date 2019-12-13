@@ -803,9 +803,6 @@ public class MessageCacheUtil {
                 if (cidNumMap.containsKey(tempConversation.getId())) {
                     ConversationWithMessageNum conversationFromChatContent =
                             new ConversationWithMessageNum(tempConversation, cidNumMap.get(tempConversation.getId()));
-                    if (tempConversation.getType().equals(Conversation.TYPE_DIRECT)) {
-                        conversationFromChatContent.initSingleChatContact();
-                    }
                     conversationFromChatContentList.add(conversationFromChatContent);
                 }
             }
