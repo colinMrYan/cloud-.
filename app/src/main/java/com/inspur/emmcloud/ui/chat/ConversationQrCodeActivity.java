@@ -398,6 +398,7 @@ public class ConversationQrCodeActivity extends BaseActivity {
         @Override
         public void returnInvitationContentFail(String error, int errorCode) {
             shareGroupQrCodeBtn.setVisibility(View.GONE);
+            validDateText.setVisibility(View.GONE);
             LoadingDialog.dimissDlg(loadingDialog);
             WebServiceMiddleUtils.hand(ConversationQrCodeActivity.this, error, errorCode);
         }
