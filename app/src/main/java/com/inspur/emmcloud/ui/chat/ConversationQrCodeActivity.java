@@ -29,6 +29,7 @@ import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
@@ -397,8 +398,8 @@ public class ConversationQrCodeActivity extends BaseActivity {
         @Override
         public void returnInvitationContentFail(String error, int errorCode) {
             shareGroupQrCodeBtn.setVisibility(View.GONE);
-            //返回失败不消失 微信是这样
-//            LoadingDialog.dimissDlg(loadingDialog);
+            LoadingDialog.dimissDlg(loadingDialog);
+            WebServiceMiddleUtils.hand(ConversationQrCodeActivity.this, error, errorCode);
         }
     }
 }
