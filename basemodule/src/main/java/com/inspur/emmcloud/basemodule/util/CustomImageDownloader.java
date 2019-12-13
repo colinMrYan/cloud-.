@@ -23,6 +23,8 @@ public class CustomImageDownloader extends BaseImageDownloader {
     protected HttpURLConnection createConnection(String url, Object extra)
             throws IOException {
         HttpURLConnection connection = super.createConnection(url, extra);
+        //HttpURLConnection设置链接不遵循重定向，因为有些url请求时重定向之前和重定向之后header不同。
+        connection.setInstanceFollowRedirects(false);
         if (BaseApplication.getInstance().getToken() != null && !StringUtils.isBlank(url)) {
             if (url.contains("/file/request?path=")) {
                 connection.setRequestProperty("Authorization", BaseApplication.getInstance().getToken());
