@@ -20,6 +20,6 @@ public class ScheduleModelMainActivity extends AppCompatActivity {
         super.onStart();
         setContentView(R.layout.schedule_model_main_activity);
         scheduleFragment = new ScheduleHomeFragment();
-        getSupportFragmentManager().beginTransaction().replace(R.id.fl_test, scheduleFragment).commitAllowingStateLoss();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fl_container, scheduleFragment).commitAllowingStateLoss();
     }
 }

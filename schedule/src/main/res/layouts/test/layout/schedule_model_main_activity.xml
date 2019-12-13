@@ -4,7 +4,8 @@
     android:layout_height="match_parent">
 
     <FrameLayout
-        android:id="@+id/fl_test"
+        android:id="@+id/fl_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></FrameLayout>
+        android:layout_height="match_parent"
+        android:layout_below="@id/rl_header" />
 </android.support.v7.widget.LinearLayoutCompat>

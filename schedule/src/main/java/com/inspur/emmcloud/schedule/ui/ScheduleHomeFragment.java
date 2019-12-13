@@ -97,7 +97,7 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
                              Bundle savedInstanceState) {
         setFragmentStatusBarCommon();
         if (rootView == null) {
-            rootView = inflater.inflate(R.layout.fragment_schedule_home, container,
+            rootView = inflater.inflate(R.layout.schedule_fragment_home, container,
                     false);
         }
         ViewGroup parent = (ViewGroup) rootView.getParent();
@@ -153,7 +153,7 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
     }
 
     private void initView() {
-        rootView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_schedule_home, null);
+        rootView = LayoutInflater.from(getActivity()).inflate(R.layout.schedule_fragment_home, null);
         dateText = rootView.findViewById(R.id.tv_date);
         todayImgBtn = rootView.findViewById(R.id.ibt_today);
         todayImgBtn.setOnClickListener(this);
