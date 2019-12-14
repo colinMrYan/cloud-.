@@ -6,6 +6,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -26,6 +27,7 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ChannelMessageAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
@@ -37,6 +39,7 @@ import com.inspur.emmcloud.baselib.widget.CustomLoadingView;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButton;
+import com.inspur.emmcloud.basemodule.api.APIDownloadCallBack;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.DownloadFileCategory;
 import com.inspur.emmcloud.basemodule.bean.EventMessage;
@@ -45,6 +48,7 @@ import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.basemodule.util.DownLoaderUtils;
 import com.inspur.emmcloud.basemodule.util.FileDownloadManager;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
@@ -83,6 +87,7 @@ import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.DirectChannelUtils;
+import com.inspur.emmcloud.util.privates.MediaPlayerManagerUtils;
 import com.inspur.emmcloud.util.privates.MessageSendManager;
 import com.inspur.emmcloud.util.privates.NotificationUpgradeUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
@@ -161,6 +166,54 @@ public class ConversationActivity extends ConversationBaseActivity {
 
     private UIMessage backUiMessage = null;
 
+    /**
+     * 根据播放状态设置VoiceAnimView的背景
+     *
+     * @param voiceAnimView
+     * @param isPlaying
+     * @param isMyMsg
+     */
+    private static void setVoiceAnimViewBgByPlayStatus(View voiceAnimView, boolean isPlaying, boolean isMyMsg) {
+        if (voiceAnimView != null) {
+            if (isPlaying) {
+                voiceAnimView.setBackgroundResource(isMyMsg ? R.drawable.chat_voice_message_play_right : R.drawable.chat_voice_message_play_left);
+                AnimationDrawable drawable = (AnimationDrawable) voiceAnimView
+                        .getBackground();
+                if (drawable.isRunning()) {
+                    drawable.stop();
+                }
+                drawable.start();
+            } else {
+                voiceAnimView.setBackgroundResource(isMyMsg ? R.drawable.ic_chat_msg_card_voice_right_level_3 : R.drawable.ic_chat_msg_card_voice_left_level_3);
+            }
+        }
+    }
+
+    /**
+     * 播放语音
+     *
+     * @param fileSavePath
+     * @param voiceAnimView
+     * @param isMyMsg
+     */
+    private static void playVoiceFile(String fileSavePath, final View voiceAnimView, final boolean isMyMsg) {
+        MediaPlayerManagerUtils.getManager().play(fileSavePath, new MediaPlayerManagerUtils.PlayCallback() {
+            @Override
+            public void onPrepared() {
+            }
+
+            @Override
+            public void onComplete() {
+                setVoiceAnimViewBgByPlayStatus(voiceAnimView, false, isMyMsg);
+            }
+
+            @Override
+            public void onStop() {
+                setVoiceAnimViewBgByPlayStatus(voiceAnimView, false, isMyMsg);
+            }
+        });
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -209,7 +262,6 @@ public class ConversationActivity extends ConversationBaseActivity {
         };
     }
 
-
     // Activity在SingleTask的启动模式下多次打开传递Intent无效，用此方法解决
     @Override
     protected void onNewIntent(Intent intent) {
@@ -234,6 +286,27 @@ public class ConversationActivity extends ConversationBaseActivity {
 
         }
     }
+
+//    private void setUnReadMessageCount() {
+//        if (getIntent().hasExtra(EXTRA_UNREAD_MESSAGE)) {
+//            final List<Message> unReadMessageList = (List<Message>) getIntent().getSerializableExtra(EXTRA_UNREAD_MESSAGE);
+////            unreadRoundBtn.setVisibility(unReadMessageList.size() > UNREAD_NUMBER_BORDER ? View.VISIBLE : View.GONE);
+//            unreadRoundBtn.setText(getString(R.string.chat_conversation_unread_count, unReadMessageList.size()));
+//            unreadRoundBtn.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    List<UIMessage> unReadMessageUIList = UIMessage.MessageList2UIMessageList(unReadMessageList);
+//                    uiMessageList.clear();
+//                    uiMessageList.addAll(unReadMessageUIList);
+//                    adapter.setMessageList(uiMessageList);
+//                    adapter.notifyDataSetChanged();
+//                    msgListView.MoveToPosition(0);
+//                    unreadRoundBtn.setVisibility(View.GONE);
+//                    msgListView.scrollToPosition(0);
+//                }
+//            });
+//        }
+//    }
 
     private void showMessageList() {
         int position = -1;
@@ -262,7 +335,6 @@ public class ConversationActivity extends ConversationBaseActivity {
 
     }
 
-
     /**
      * 初始化Views
      */
@@ -274,28 +346,6 @@ public class ConversationActivity extends ConversationBaseActivity {
         sendMsgFromShare();
 //        setUnReadMessageCount();
     }
-
-//    private void setUnReadMessageCount() {
-//        if (getIntent().hasExtra(EXTRA_UNREAD_MESSAGE)) {
-//            final List<Message> unReadMessageList = (List<Message>) getIntent().getSerializableExtra(EXTRA_UNREAD_MESSAGE);
-////            unreadRoundBtn.setVisibility(unReadMessageList.size() > UNREAD_NUMBER_BORDER ? View.VISIBLE : View.GONE);
-//            unreadRoundBtn.setText(getString(R.string.chat_conversation_unread_count, unReadMessageList.size()));
-//            unreadRoundBtn.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    List<UIMessage> unReadMessageUIList = UIMessage.MessageList2UIMessageList(unReadMessageList);
-//                    uiMessageList.clear();
-//                    uiMessageList.addAll(unReadMessageUIList);
-//                    adapter.setMessageList(uiMessageList);
-//                    adapter.notifyDataSetChanged();
-//                    msgListView.MoveToPosition(0);
-//                    unreadRoundBtn.setVisibility(View.GONE);
-//                    msgListView.scrollToPosition(0);
-//                }
-//            });
-//        }
-//    }
-
 
     /**
      * 初始化下拉刷新UI
@@ -540,7 +590,6 @@ public class ConversationActivity extends ConversationBaseActivity {
         startActivity(intent);
     }
 
-
     /**
      * 初始化消息列表UI
      */
@@ -556,13 +605,6 @@ public class ConversationActivity extends ConversationBaseActivity {
                 }
             }
 
-            @Override
-            public void onMediaVoiceReRecognize(UIMessage uiMessage, View view, CustomLoadingView downloadLoadingView) {
-                List<Integer> operationIdList = getMessageOperationIdList(uiMessage);
-                if (operationIdList.size() > 0) {
-                    showMessageOperationDlg(operationIdList, uiMessage, view, downloadLoadingView);
-                }
-            }
 
             @Override
             public void onAdapterDataSizeChange() {
@@ -577,7 +619,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                     backUiMessage = uiMessage;
                     List<Integer> operationIdList = getMessageOperationIdList(uiMessage);
                     if (operationIdList.size() > 0) {
-                        showMessageOperationDlg(operationIdList, uiMessage, view, null);
+                        showMessageOperationDlg(operationIdList, uiMessage, view);
                     }
                 }
 
@@ -607,10 +649,10 @@ public class ConversationActivity extends ConversationBaseActivity {
                     }
                 }
             }
+
         });
         msgListView.setAdapter(adapter);
     }
-
 
     /**
      * 消息重新发送
@@ -645,8 +687,14 @@ public class ConversationActivity extends ConversationBaseActivity {
         MessageSendManager.getInstance().sendMessage(uiMessage.getMessage());
     }
 
-
-    private void recognizerMediaVoiceMessage(final UIMessage uiMessage, final CustomLoadingView downloadLoadingView) {
+    private void recognizerMediaVoiceMessage(final UIMessage uiMessage, final View messageView) {
+        final Message message = uiMessage.getMessage();
+        final boolean isMyMsg = message.getFromUser().equals(MyApplication.getInstance().getUid());
+        final CustomLoadingView downloadLoadingView = (CustomLoadingView) messageView.findViewById(isMyMsg ? R.id.qlv_downloading_left : R.id.qlv_downloading_right);
+        //当此语音正在播放时，用户点击会暂停播放
+        if (MediaPlayerManagerUtils.getManager().isPlaying()) {
+            MediaPlayerManagerUtils.getManager().stop();
+        }
         String mp3FileSavePath = MyAppConfig.getCacheVoiceFilePath(uiMessage.getMessage().getChannel(), uiMessage.getMessage().getId());
         //如果原文件不存在，不进行重新识别
         if (!FileUtils.isFileExist(mp3FileSavePath)) {
@@ -724,7 +772,6 @@ public class ConversationActivity extends ConversationBaseActivity {
         voice2StringMessageUtils.startVoiceListeningByVoiceFile(uiMessage.getMessage().getMsgContentMediaVoice().getDuration(), filePath);
     }
 
-
     /**
      * 从外部分享过来
      */
@@ -783,7 +830,6 @@ public class ConversationActivity extends ConversationBaseActivity {
         }
         return StringUtils.isBlank(compressorUrl) ? url : compressorUrl;
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode,
@@ -974,7 +1020,6 @@ public class ConversationActivity extends ConversationBaseActivity {
         }
     }
 
-
     private void share2Conversation(String userOrChannelId, boolean isUser) {
         if (StringUtils.isBlank(userOrChannelId)) {
             ToastUtils.show(MyApplication.getInstance(), getString(R.string.baselib_share_fail));
@@ -986,7 +1031,6 @@ public class ConversationActivity extends ConversationBaseActivity {
             }
         }
     }
-
 
     private void combinAndSendMessageWithFile(String filePath, String messageType, Compressor.ResolutionRatio resolutionRatio) {
         combinAndSendMessageWithFile(filePath, messageType, 0, resolutionRatio);
@@ -1058,7 +1102,6 @@ public class ConversationActivity extends ConversationBaseActivity {
                 break;
         }
     }
-
 
     /**
      * 关闭此页面
@@ -1140,7 +1183,6 @@ public class ConversationActivity extends ConversationBaseActivity {
         MessageSendManager.getInstance().sendMessage(localMessage);
     }
 
-
     /**
      * 消息发送完成后在本地添加一条消息
      *
@@ -1157,7 +1199,6 @@ public class ConversationActivity extends ConversationBaseActivity {
         adapter.notifyItemInserted(uiMessageList.size() - 1);
         msgListView.MoveToPosition(uiMessageList.size() - 1);
     }
-
 
     /**
      * 处理未发送成功的消息，存储临时消息
@@ -1194,7 +1235,6 @@ public class ConversationActivity extends ConversationBaseActivity {
             adapter.notifyItemChanged(index);
         }
     }
-
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveSimpleMessage(SimpleEventMessage simpleEventMessage) {
@@ -1258,7 +1298,6 @@ public class ConversationActivity extends ConversationBaseActivity {
         }
     }
 
-
     public void onReceiveWSMessage(SimpleEventMessage simpleEventMessage) {
         if (simpleEventMessage.getAction().equals(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE_CONVERSATION)) {
             if (adapter == null) {
@@ -1312,7 +1351,6 @@ public class ConversationActivity extends ConversationBaseActivity {
 
     }
 
-
     @Override
     public void onBackPressed() {
         // TODO Auto-generated method stub
@@ -1348,7 +1386,6 @@ public class ConversationActivity extends ConversationBaseActivity {
         EventBus.getDefault().unregister(this);
     }
 
-
     /**
      * 获取历史消息
      */
@@ -1371,7 +1408,6 @@ public class ConversationActivity extends ConversationBaseActivity {
         }
     }
 
-
     /**
      * 从本地获取历史消息
      */
@@ -1386,7 +1422,6 @@ public class ConversationActivity extends ConversationBaseActivity {
         }
         swipeRefreshLayout.setRefreshing(false);
     }
-
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onResponseRecallMessage(EventMessage eventMessage) {
@@ -1422,7 +1457,6 @@ public class ConversationActivity extends ConversationBaseActivity {
         }
     }
 
-
     //接收到websocket发过来的消息，根据评论获取被评论的消息时触发此方法
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onResponseGetMessageById(EventMessage eventMessage) {
@@ -1439,7 +1473,6 @@ public class ConversationActivity extends ConversationBaseActivity {
         }
 
     }
-
 
     //接收到websocket发过来的消息，推送消息触发此方法
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -1477,7 +1510,6 @@ public class ConversationActivity extends ConversationBaseActivity {
             }
         }
     }
-
 
     /**
      * 获取此频道的最新消息
@@ -1765,6 +1797,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 }
                 break;
             case Message.MESSAGE_TYPE_MEDIA_VOICE:
+                voiceBubbleOnClick(view, uiMessage);
                 break;
             default:
                 NotificationUpgradeUtils upgradeUtils = new NotificationUpgradeUtils(context,
@@ -1775,17 +1808,75 @@ public class ConversationActivity extends ConversationBaseActivity {
     }
 
     /**
+     * 语音播放点击事件
+     **/
+    private void voiceBubbleOnClick(final View cardContentView, UIMessage uiMessage) {
+
+        if (uiMessage.getSendStatus() != 1) {
+            return;
+        }
+        final Message message = uiMessage.getMessage();
+        final boolean isMyMsg = message.getFromUser().equals(MyApplication.getInstance().getUid());
+        final View voiceAnimView = isMyMsg ? cardContentView.findViewById(R.id.v_voice_anim_right) : cardContentView.findViewById(R.id.v_voice_anim_left);
+        final CustomLoadingView downloadLoadingView = (CustomLoadingView) cardContentView.findViewById(isMyMsg ? R.id.qlv_downloading_left : R.id.qlv_downloading_right);
+        if (downloadLoadingView.getVisibility() == View.VISIBLE) {
+            return;
+        }
+        final String fileSavePath = MyAppConfig.getCacheVoiceFilePath(message.getChannel(), message.getId());
+        if (MediaPlayerManagerUtils.getManager().isPlaying(fileSavePath)) {
+            MediaPlayerManagerUtils.getManager().stop();
+            return;
+        }
+        if (MediaPlayerManagerUtils.getManager().isPlaying()) {
+            MediaPlayerManagerUtils.getManager().stop();
+        }
+
+
+        if (!FileUtils.isFileExist(fileSavePath)) {
+            downloadLoadingView.setVisibility(View.VISIBLE);
+            String source = APIUri.getChatVoiceFileResouceUrl(message.getChannel(), message.getMsgContentMediaVoice().getMedia());
+            new DownLoaderUtils().startDownLoad(source, fileSavePath, new APIDownloadCallBack(source) {
+
+                @Override
+                public void callbackSuccess(File file) {
+                    downloadLoadingView.setVisibility(View.GONE);
+                    //当下载完成时如果mediaplayer没有被占用则播放语音
+                    if (!MediaPlayerManagerUtils.getManager().isPlaying()) {
+
+                        playVoiceFile(fileSavePath, voiceAnimView, isMyMsg);
+                        setVoiceAnimViewBgByPlayStatus(voiceAnimView, true, isMyMsg);
+                    }
+
+                }
+
+                @Override
+                public void callbackError(Throwable arg0, boolean arg1) {
+                    downloadLoadingView.setVisibility(View.GONE);
+                    ToastUtils.show(MyApplication.getInstance(), R.string.play_fail);
+                }
+
+                @Override
+                public void onCancelled(CancelledException e) {
+                }
+            });
+        } else {
+            playVoiceFile(fileSavePath, voiceAnimView, isMyMsg);
+            setVoiceAnimViewBgByPlayStatus(voiceAnimView, true, isMyMsg);
+        }
+    }
+
+    /**
      * 仿微信长按处理
      */
-    private void showMessageOperationDlg(final List<Integer> operationIdList, final UIMessage uiMessage, View view, final CustomLoadingView downloadLoadingView) {
+    private void showMessageOperationDlg(final List<Integer> operationIdList, final UIMessage uiMessage, final View messageView) {
         if (mPopupWindowList == null) {
-            mPopupWindowList = new PopupWindowList(view.getContext());
+            mPopupWindowList = new PopupWindowList(messageView.getContext());
         }
         List<String> operationList = new ArrayList<>();
         for (Integer operationId : operationIdList) {
             operationList.add(getString(operationId));
         }
-        mPopupWindowList.setAnchorView(view);
+        mPopupWindowList.setAnchorView(messageView);
         mPopupWindowList.setItemData(operationList);
         mPopupWindowList.setModal(true);
         mPopupWindowList.show();
@@ -1817,7 +1908,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                         requestToRecallMessage(uiMessage.getMessage());
                         break;
                     case R.string.voice_to_word:
-                        recognizerMediaVoiceMessage(uiMessage, downloadLoadingView);
+                        recognizerMediaVoiceMessage(uiMessage, messageView);
                         break;
                     case R.string.chat_resend_message:
                         resendMessage(uiMessage);

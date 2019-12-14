@@ -336,9 +336,8 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
 
         void onMessageResend(UIMessage uiMessage, View view);
 
-        void onMediaVoiceReRecognize(UIMessage uiMessage, View view, CustomLoadingView downloadLoadingView);
-
         void onAdapterDataSizeChange();
+
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

@@ -59,7 +59,7 @@ public class MediaScanner {
         }
 
         private void scan(File file) {
-            mConn.scanFile(file.getAbsolutePath(), null);
+            mConn.scanFile(file.getAbsolutePath(), mMimeType);
         }
     }
 }

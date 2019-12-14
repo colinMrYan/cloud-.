@@ -198,7 +198,7 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
             case R.id.rl_conversation_qr:
                 bundle.putString("cid", uiConversation.getId());
                 bundle.putString("groupName", uiConversation.getShowName());
-                bundle.putInt(MEMBER_SIZE, uiConversation.getMemberList().size());
+                bundle.putInt(MEMBER_SIZE, mPresenter.getConversationRealMemberSize());
                 IntentUtils.startActivity(this,
                         ConversationQrCodeActivity.class, bundle);
                 break;
