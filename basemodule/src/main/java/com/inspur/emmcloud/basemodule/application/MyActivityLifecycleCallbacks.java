@@ -2,19 +2,15 @@ package com.inspur.emmcloud.basemodule.application;
 
 import android.app.Activity;
 import android.app.Application;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
-import com.inspur.emmcloud.basemodule.service.AppExceptionService;
-import com.inspur.emmcloud.basemodule.service.PVCollectService;
-import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.basemodule.util.AppExceptionManager;
+import com.inspur.emmcloud.basemodule.util.AppPVManager;
 import com.inspur.emmcloud.basemodule.util.ClientIDUtils;
-import com.inspur.emmcloud.basemodule.util.DbCacheUtils;
 import com.inspur.emmcloud.componentservice.app.AppService;
 import com.inspur.emmcloud.componentservice.appcenter.AppcenterService;
 import com.inspur.emmcloud.componentservice.login.LoginService;
@@ -85,12 +81,13 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
             }
             BaseApplication.getInstance().setIsActive(false);
             if (BaseApplication.getInstance().isHaveLogin()) {
-                startUploadPVCollectService(BaseApplication.getInstance());
+                //进行app异常上传
+                new AppExceptionManager().uploadException();
+                new AppPVManager().uploadPV();
                 startSyncCommonAppService();
                 new ClientIDUtils(BaseApplication.getInstance()).upload();
             }
-            //进行app异常上传
-            startUploadExceptionService(activity);
+
         }
     }
 
@@ -142,26 +139,8 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
         }
     }
 
-    /***
-     * 打开app应用行为分析上传的Service;
-     */
-    private void startUploadPVCollectService(Context context) {
-        // TODO Auto-generated method stub
-        if (!AppUtils.isServiceWork(context, PVCollectService.class.getName()) && (!DbCacheUtils.isDbNull())) {
-            Intent intent = new Intent();
-            intent.setClass(context, PVCollectService.class);
-            context.startService(intent);
-        }
-    }
 
     /**
-     * 启动异常上传服务
-     */
-    private void startUploadExceptionService(Activity activity) {
-        Intent intent = new Intent();
-        intent.setClass(activity, AppExceptionService.class);
-        activity.startService(intent);
-    }
 
 
     /***

@@ -819,7 +819,6 @@
         <service android:name=".service.LocationService"></service>
         <service android:name=".service.CoreService"></service>
         <service android:name=".service.CoreInnerService"></service>
-        <service android:name=".service.SyncCommonAppService"></service>
         <service android:name=".service.VoiceHoldService" />
 
         <receiver
