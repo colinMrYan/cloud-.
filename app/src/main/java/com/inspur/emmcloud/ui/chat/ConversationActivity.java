@@ -173,7 +173,7 @@ public class ConversationActivity extends ConversationBaseActivity {
      * @param isPlaying
      * @param isMyMsg
      */
-    private static void setVoiceAnimViewBgByPlayStatus(View voiceAnimView, boolean isPlaying, boolean isMyMsg) {
+    private void setVoiceAnimViewBgByPlayStatus(View voiceAnimView, boolean isPlaying, boolean isMyMsg) {
         if (voiceAnimView != null) {
             if (isPlaying) {
                 voiceAnimView.setBackgroundResource(isMyMsg ? R.drawable.chat_voice_message_play_right : R.drawable.chat_voice_message_play_left);
@@ -196,7 +196,7 @@ public class ConversationActivity extends ConversationBaseActivity {
      * @param voiceAnimView
      * @param isMyMsg
      */
-    private static void playVoiceFile(String fileSavePath, final View voiceAnimView, final boolean isMyMsg) {
+    private void playVoiceFile(String fileSavePath, final View voiceAnimView, final boolean isMyMsg, final UIMessage uiMessage) {
         MediaPlayerManagerUtils.getManager().play(fileSavePath, new MediaPlayerManagerUtils.PlayCallback() {
             @Override
             public void onPrepared() {
@@ -205,6 +205,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             @Override
             public void onComplete() {
                 setVoiceAnimViewBgByPlayStatus(voiceAnimView, false, isMyMsg);
+                findNextPackVoiceMessageAndClick(uiMessage);
             }
 
             @Override
@@ -212,6 +213,39 @@ public class ConversationActivity extends ConversationBaseActivity {
                 setVoiceAnimViewBgByPlayStatus(voiceAnimView, false, isMyMsg);
             }
         });
+    }
+
+    /**
+     * 查找下一条未播放的语音消息并点击（点击包含下载，播放动画，播放语音消息等操作）
+     *
+     * @param uiMessage
+     */
+    private void findNextPackVoiceMessageAndClick(UIMessage uiMessage) {
+        //找到当前语音消息的位置，并判断当前播放的消息不是自己发的
+        int index = uiMessageList.indexOf(uiMessage);
+        if (index != -1 && !uiMessage.getMessage().getFromUser().equals(BaseApplication.getInstance().getUid())) {
+            //找到当前语音消息后面的UIMessageList
+            List<UIMessage> nextUIMessageList = uiMessageList.subList(index, uiMessageList.size());
+            //遍历nextUIMessageList
+            for (final UIMessage uiMessagePlay : nextUIMessageList) {
+                Message messagePlay = uiMessagePlay.getMessage();
+                //找到第一条不是自己发出的，未播放过的语音消息
+                if (!messagePlay.getFromUser().equals(BaseApplication.getInstance().getUid())
+                        && messagePlay.getType().equals(Message.MESSAGE_TYPE_MEDIA_VOICE)
+                        && messagePlay.getLifeCycleState() == 0) {
+                    //找到未播放的消息在消息列表里的位置滑动到此消息的位置并播放
+                    final int playIndex = uiMessageList.indexOf(uiMessagePlay);
+                    msgListView.MoveToPosition(playIndex);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            voiceBubbleOnClick(linearLayoutManager.findViewByPosition(playIndex), uiMessagePlay);
+                        }
+                    }, 100);
+                    break;
+                }
+            }
+        }
     }
 
     @Override
@@ -1810,7 +1844,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     /**
      * 语音播放点击事件
      **/
-    private void voiceBubbleOnClick(final View cardContentView, UIMessage uiMessage) {
+    private void voiceBubbleOnClick(final View cardContentView, final UIMessage uiMessage) {
 
         if (uiMessage.getSendStatus() != 1) {
             return;
@@ -1842,11 +1876,10 @@ public class ConversationActivity extends ConversationBaseActivity {
                     downloadLoadingView.setVisibility(View.GONE);
                     //当下载完成时如果mediaplayer没有被占用则播放语音
                     if (!MediaPlayerManagerUtils.getManager().isPlaying()) {
-
-                        playVoiceFile(fileSavePath, voiceAnimView, isMyMsg);
+                        playVoiceFile(fileSavePath, voiceAnimView, isMyMsg, uiMessage);
                         setVoiceAnimViewBgByPlayStatus(voiceAnimView, true, isMyMsg);
                     }
-
+                    setVoiceUnPack(cardContentView.findViewById(R.id.v_pack), ConversationActivity.this, message);
                 }
 
                 @Override
@@ -1860,9 +1893,23 @@ public class ConversationActivity extends ConversationBaseActivity {
                 }
             });
         } else {
-            playVoiceFile(fileSavePath, voiceAnimView, isMyMsg);
+            playVoiceFile(fileSavePath, voiceAnimView, isMyMsg, uiMessage);
             setVoiceAnimViewBgByPlayStatus(voiceAnimView, true, isMyMsg);
+            setVoiceUnPack(cardContentView.findViewById(R.id.v_pack), ConversationActivity.this, message);
         }
+    }
+
+    /**
+     * 设置消息已经拆包，并隐藏小红点
+     * 包括下载成功后设置，重新拉取消息文件仍然存在时设置，长按转文字时设置
+     *
+     * @param context
+     * @param message
+     */
+    private void setVoiceUnPack(View unPackView, Context context, Message message) {
+        message.setLifeCycleState(Message.MESSAGE_LIFE_UNPACK);
+        MessageCacheUtil.saveMessageLifeCycleState(context, message);
+        unPackView.setVisibility(View.GONE);
     }
 
     /**
@@ -1909,6 +1956,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                         break;
                     case R.string.voice_to_word:
                         recognizerMediaVoiceMessage(uiMessage, messageView);
+                        setVoiceUnPack(messageView.findViewById(R.id.v_pack), ConversationActivity.this, uiMessage.getMessage());
                         break;
                     case R.string.chat_resend_message:
                         resendMessage(uiMessage);

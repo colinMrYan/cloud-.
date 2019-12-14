@@ -40,6 +40,9 @@ public class DisplayMediaVoiceMsg {
         voiceBubbleLayout.setStrokeWidth(isMyMsg ? 0 : 0.5f);
         final View voiceAnimView = isMyMsg ? cardContentView.findViewById(R.id.v_voice_anim_right) : cardContentView.findViewById(R.id.v_voice_anim_left);
         voiceAnimView.setVisibility(View.VISIBLE);
+        final View unPackView = cardContentView.findViewById(R.id.v_pack);
+        unPackView.setVisibility(!isMyMsg && (message.getType().equals(Message.MESSAGE_TYPE_MEDIA_VOICE)
+                && message.getLifeCycleState() == Message.MESSAGE_LIFE_PACK) ? View.VISIBLE : View.GONE);
         final CustomLoadingView downloadLoadingView = (CustomLoadingView) cardContentView.findViewById(isMyMsg ? R.id.qlv_downloading_left : R.id.qlv_downloading_right);
         TextView durationText = (TextView) cardContentView.findViewById(isMyMsg ? R.id.tv_duration_left : R.id.tv_duration_right);
         //校正UI，因消息部分未支持撤回机制，暂不开放，控制两分以内发送的消息才显示校正
