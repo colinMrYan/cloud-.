@@ -24,6 +24,7 @@ import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.interf.ProgressCallback;
 import com.inspur.emmcloud.ui.appcenter.volume.observe.LoadObservable;
+import com.inspur.emmcloud.util.privates.NetworkMobileTipUtil;
 import com.inspur.emmcloud.util.privates.VolumeFileDownloadCacheUtils;
 import com.inspur.emmcloud.util.privates.VolumeFileDownloadManager;
 import com.inspur.emmcloud.util.privates.VolumeFileUploadManager;
@@ -297,8 +298,8 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
         void onItemClick(View view, int position);
     }
 
-    private void changeStatus(int position) {
-        VolumeFile volumeFile = unfinishedFileList.get(position);
+    private void changeStatus(final int position) {
+        final VolumeFile volumeFile = unfinishedFileList.get(position);
         String status = volumeFile.getStatus();
         if (status.equals(VolumeFile.STATUS_LOADING)) {
             if (volumeFile.getLoadType().equals(VolumeFile.TYPE_UPLOAD)) {
@@ -313,16 +314,48 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
         } else if (status.equals(VolumeFile.STATUS_PAUSE)) {
             if (volumeFile.getLoadType().equals(VolumeFile.TYPE_UPLOAD)) {
                 //继续上传
-                unfinishedFileList.get(position).setStatus(VolumeFile.STATUS_LOADING);
-                volumeFile.setStatus(VolumeFile.STATUS_LOADING);
-                VolumeFileUploadManager.getInstance().reUploadFile(volumeFile);
+                NetworkMobileTipUtil.checkEnvironment(context, R.string.volume_file_upload_network_type_warning,
+                        volumeFile.getSize(), new NetworkMobileTipUtil.Callback() {
+                            @Override
+                            public void cancel() {
+
+                            }
+
+                            @Override
+                            public void onNext() {
+                                unfinishedFileList.get(position).setStatus(VolumeFile.STATUS_LOADING);
+                                volumeFile.setStatus(VolumeFile.STATUS_LOADING);
+                                VolumeFileUploadManager.getInstance().reUploadFile(volumeFile);
+                                notifyItemChanged(position);
+                                if (callBack != null) {
+                                    callBack.onStatusChange(unfinishedFileList);
+                                }
+                            }
+                        });
+
             } else if (volumeFile.getLoadType().equals(VolumeFile.TYPE_DOWNLOAD)) {
                 //继续下载
-                unfinishedFileList.get(position).setStatus(VolumeFile.STATUS_LOADING);
-                Log.d("zhang", "changeStatus: downloadFile");
-                volumeFile.setStatus(VolumeFile.STATUS_LOADING);
-                VolumeFileDownloadManager.getInstance().reDownloadFile(volumeFile, volumeFile.getVolumeFileAbsolutePath());
-                VolumeFileDownloadCacheUtils.saveVolumeFile(volumeFile);
+                NetworkMobileTipUtil.checkEnvironment(context, R.string.volume_file_download_network_type_warning,
+                        volumeFile.getSize(), new NetworkMobileTipUtil.Callback() {
+                            @Override
+                            public void cancel() {
+
+                            }
+
+                            @Override
+                            public void onNext() {
+                                unfinishedFileList.get(position).setStatus(VolumeFile.STATUS_LOADING);
+                                Log.d("zhang", "changeStatus: downloadFile");
+                                volumeFile.setStatus(VolumeFile.STATUS_LOADING);
+                                VolumeFileDownloadManager.getInstance().reDownloadFile(volumeFile, volumeFile.getVolumeFileAbsolutePath());
+                                VolumeFileDownloadCacheUtils.saveVolumeFile(volumeFile);
+                                notifyItemChanged(position);
+                                if (callBack != null) {
+                                    callBack.onStatusChange(unfinishedFileList);
+                                }
+                            }
+                        });
+
             }
         }
     }

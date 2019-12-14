@@ -59,6 +59,7 @@ import com.inspur.emmcloud.bean.appcenter.volume.Volume;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeGroupContainMe;
 import com.inspur.emmcloud.ui.chat.mvp.view.ConversationSearchActivity;
+import com.inspur.emmcloud.util.privates.NetworkMobileTipUtil;
 import com.inspur.emmcloud.util.privates.ShareFile2OutAppUtils;
 import com.inspur.emmcloud.util.privates.VolumeFileDownloadManager;
 import com.inspur.emmcloud.util.privates.VolumeFilePrivilegeUtils;
@@ -405,14 +406,25 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     private void handleVolumeAction(String action) {
         VolumeFile volumeFile = adapter.getSelectVolumeFileList().get(0);
         if (action.equals(downloadAction)) {
-            //批量下载
+            long totalDownloadSize = 0;
             for (VolumeFile file : adapter.getSelectVolumeFileList()) {
-                downloadFile(file);
+                totalDownloadSize = totalDownloadSize + file.getSize();
             }
-            showAnimator();
-            refreshTipViewLayout();
-            adapter.clearSelectedVolumeFileList();
-            adapter.notifyDataSetChanged();
+            //批量下载
+            volumeActionLayout.setVisibility(View.VISIBLE);
+            NetworkMobileTipUtil.checkEnvironment(this, R.string.volume_file_download_network_type_warning, totalDownloadSize,
+                    new NetworkMobileTipUtil.Callback() {
+                        @Override
+                        public void cancel() {
+
+                        }
+
+                        @Override
+                        public void onNext() {
+                            volumeActionLayout.setVisibility(View.GONE);
+                            handleDownloadList();
+                        }
+                    });
         } else if (action.equals(openAction)) {
             downloadOrOpenVolumeFile(volumeFile);
         } else if (action.equals(moveToAction)) {
@@ -437,6 +449,19 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         } else if (action.equals(permissionAction)) {
             startVolumeFilePermissionManager(volumeFile);
         }
+    }
+
+    /**
+     * 批量下载
+     */
+    private void handleDownloadList() {
+        for (VolumeFile file : adapter.getSelectVolumeFileList()) {
+            downloadFile(file);
+        }
+        showAnimator();
+        refreshTipViewLayout();
+        adapter.clearSelectedVolumeFileList();
+        adapter.notifyDataSetChanged();
     }
 
     /**
