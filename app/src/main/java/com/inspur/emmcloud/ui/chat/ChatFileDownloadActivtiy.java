@@ -25,6 +25,7 @@ import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
 import com.inspur.emmcloud.interf.ChatProgressCallback;
 import com.inspur.emmcloud.util.privates.ChatFileDownloadManager;
+import com.inspur.emmcloud.util.privates.NetworkMobileTipUtil;
 
 import org.xutils.common.Callback;
 
@@ -118,7 +119,18 @@ public class ChatFileDownloadActivtiy extends BaseActivity {
                 if (FileUtils.isFileExist(fileSavePath)) {
                     FileUtils.openFile(BaseApplication.getInstance(), fileSavePath);
                 } else {
-                    downloadFile();
+                    NetworkMobileTipUtil.checkEnvironment(this, R.string.volume_file_download_network_type_warning,
+                            message.getMsgContentAttachmentFile().getSize(), new NetworkMobileTipUtil.Callback() {
+                                @Override
+                                public void cancel() {
+
+                                }
+
+                                @Override
+                                public void onNext() {
+                                    downloadFile();
+                                }
+                            });
                 }
                 break;
             case R.id.file_download_close_img:

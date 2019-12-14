@@ -221,6 +221,10 @@ public class VolumeFileDownloadManager {
             for (int i = 0; i < volumeFileDownloadList.size(); i++) {
                 VolumeFile downloadVolumeFile = volumeFileDownloadList.get(i);
                 if (volumeFile.getId().equals(downloadVolumeFile.getId())) {
+                    //防止外部删除文件  还存留缓存数据库
+                    if (downloadVolumeFile.getCancelable() != null) {
+                        downloadVolumeFile.setCancelable(null);
+                    }
                     downloadVolumeFile.setLoadType(VolumeFile.TYPE_DOWNLOAD);
                     downloadVolumeFile.setStatus(VolumeFile.STATUS_LOADING);
                     downloadVolumeFile.setLastRecordTime(volumeFile.getLastRecordTime());

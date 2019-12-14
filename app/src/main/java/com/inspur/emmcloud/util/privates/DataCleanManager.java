@@ -5,6 +5,7 @@ import android.os.Environment;
 import android.webkit.WebView;
 
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.basemodule.util.DbCacheUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 
 import java.io.File;
@@ -82,6 +83,8 @@ public class DataCleanManager {
         for (String filePath : filepath) {
             DeleteFile(new File(filePath));
         }
+
+        DbCacheUtils.deleteDbByTableName(context, "DownloadFile");
     }
 
 

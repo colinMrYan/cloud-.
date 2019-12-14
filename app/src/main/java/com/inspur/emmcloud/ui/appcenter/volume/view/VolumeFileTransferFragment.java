@@ -38,6 +38,7 @@ import com.inspur.emmcloud.ui.appcenter.volume.contract.VolumeFileTransferContra
 import com.inspur.emmcloud.ui.appcenter.volume.observe.LoadObservable;
 import com.inspur.emmcloud.ui.appcenter.volume.observe.LoadObserver;
 import com.inspur.emmcloud.ui.appcenter.volume.presenter.VolumeFileTransferPresenter;
+import com.inspur.emmcloud.util.privates.NetworkMobileTipUtil;
 import com.inspur.emmcloud.util.privates.ShareFile2OutAppUtils;
 import com.inspur.emmcloud.util.privates.ShareUtil;
 import com.inspur.emmcloud.util.privates.VolumeFileDownloadManager;
@@ -202,6 +203,7 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
         if (ClickRuleUtil.isFastClick()) {
             return;
         }
+
         switch (v.getId()) {
             case R.id.operation_total_btn:
                 switch (currentIndex) {
@@ -224,13 +226,32 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
      * 点击全部下载 暂停
      */
     private void handleDownloadOperation() {
+        long totalSize = 0L;
+        for (VolumeFile volumeFile : unFinishedVolumeFileList) {
+            totalSize = totalSize + volumeFile.getSize();
+        }
         if (operationTotalBtn.isSelected()) {
-            operationTotalBtn.setSelected(false);
-            for (VolumeFile volumeFile : unFinishedVolumeFileList) {
-                volumeFile.setLoadType(VolumeFile.TYPE_DOWNLOAD);
-                volumeFile.setStatus(VolumeFile.STATUS_LOADING);
-                VolumeFileDownloadManager.getInstance().reDownloadFile(volumeFile, volumeFile.getVolumeFileAbsolutePath());
-            }
+            NetworkMobileTipUtil.checkEnvironment(getActivity(), R.string.volume_file_download_network_type_warning,
+                    totalSize, new NetworkMobileTipUtil.Callback() {
+                        @Override
+                        public void cancel() {
+
+                        }
+
+                        @Override
+                        public void onNext() {
+                            operationTotalBtn.setSelected(false);
+                            for (VolumeFile volumeFile : unFinishedVolumeFileList) {
+                                volumeFile.setLoadType(VolumeFile.TYPE_DOWNLOAD);
+                                volumeFile.setStatus(VolumeFile.STATUS_LOADING);
+                                VolumeFileDownloadManager.getInstance().reDownloadFile(volumeFile, volumeFile.getVolumeFileAbsolutePath());
+                            }
+                            operationTotalBtn.setText(operationTotalBtn.isSelected() ? R.string.volume_file_transfer_list_continue :
+                                    R.string.volume_file_transfer_list_pause);
+                            adapter.notifyDataSetChanged();
+                        }
+                    });
+
         } else {
             operationTotalBtn.setSelected(true);
             for (VolumeFile volumeFile : unFinishedVolumeFileList) {
@@ -238,20 +259,39 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
                 volumeFile.setStatus(VolumeFile.STATUS_PAUSE);
                 VolumeFileDownloadManager.getInstance().cancelDownloadVolumeFile(volumeFile);
             }
+            operationTotalBtn.setText(operationTotalBtn.isSelected() ? R.string.volume_file_transfer_list_continue :
+                    R.string.volume_file_transfer_list_pause);
+            adapter.notifyDataSetChanged();
         }
-        operationTotalBtn.setText(operationTotalBtn.isSelected() ? R.string.volume_file_transfer_list_continue :
-                R.string.volume_file_transfer_list_pause);
-        adapter.notifyDataSetChanged();
     }
 
     private void handleUploadOperation() {
+        long totalSize = 0L;
+        for (VolumeFile volumeFile : unFinishedVolumeFileList) {
+            totalSize = totalSize + volumeFile.getSize();
+        }
         if (operationTotalBtn.isSelected()) {
-            operationTotalBtn.setSelected(false);
-            for (VolumeFile volumeFile : unFinishedVolumeFileList) {
-                volumeFile.setLoadType(VolumeFile.TYPE_UPLOAD);
-                volumeFile.setStatus(VolumeFile.STATUS_LOADING);
-                VolumeFileUploadManager.getInstance().reUploadFile(volumeFile);
-            }
+            NetworkMobileTipUtil.checkEnvironment(getActivity(), R.string.volume_file_upload_network_type_warning,
+                    totalSize, new NetworkMobileTipUtil.Callback() {
+                        @Override
+                        public void cancel() {
+
+                        }
+
+                        @Override
+                        public void onNext() {
+                            operationTotalBtn.setSelected(false);
+                            for (VolumeFile volumeFile : unFinishedVolumeFileList) {
+                                volumeFile.setLoadType(VolumeFile.TYPE_UPLOAD);
+                                volumeFile.setStatus(VolumeFile.STATUS_LOADING);
+                                VolumeFileUploadManager.getInstance().reUploadFile(volumeFile);
+                            }
+                            operationTotalBtn.setText(operationTotalBtn.isSelected() ? R.string.volume_file_transfer_list_continue :
+                                    R.string.volume_file_transfer_list_pause);
+                            adapter.notifyDataSetChanged();
+                        }
+                    });
+
         } else {
             operationTotalBtn.setSelected(true);
             for (VolumeFile volumeFile : unFinishedVolumeFileList) {
@@ -259,10 +299,10 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
                 volumeFile.setStatus(VolumeFile.STATUS_PAUSE);
                 VolumeFileUploadManager.getInstance().pauseVolumeFileUploadService(volumeFile);
             }
+            operationTotalBtn.setText(operationTotalBtn.isSelected() ? R.string.volume_file_transfer_list_continue :
+                    R.string.volume_file_transfer_list_pause);
+            adapter.notifyDataSetChanged();
         }
-        operationTotalBtn.setText(operationTotalBtn.isSelected() ? R.string.volume_file_transfer_list_continue :
-                R.string.volume_file_transfer_list_pause);
-        adapter.notifyDataSetChanged();
     }
 
     /**

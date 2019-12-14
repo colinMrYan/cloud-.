@@ -390,9 +390,6 @@
             android:screenOrientation="unspecified"
             android:theme="@style/Theme.Transparent.Permission" />
 
-        <service android:name=".service.PVCollectService"></service>
-        <service android:name=".service.AppExceptionService"></service>
-
         <activity
             android:name=".util.imagepicker.ui.ImageGridActivity"
             android:resizeableActivity="true"

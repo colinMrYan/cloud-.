@@ -27,6 +27,21 @@ public class ChatFileDownloadManager {
     private List<DownloadInfo> downloadInfoList = new ArrayList<>();
 
     public ChatFileDownloadManager() {
+        refreshCache();
+    }
+
+    public static ChatFileDownloadManager getInstance() {
+        if (instance == null) {
+            synchronized (ChatFileDownloadManager.class) {
+                if (instance == null) {
+                    instance = new ChatFileDownloadManager();
+                }
+            }
+        }
+        return instance;
+    }
+
+    private void refreshCache() {
         downloadInfoList = DownloadCacheUtils.getAllDownloadingList();
         boolean isNeedUpdateVolumeFileDownloadStatus = false;
         for (DownloadInfo downloadInfo : downloadInfoList) {
@@ -46,21 +61,11 @@ public class ChatFileDownloadManager {
         }
     }
 
-    public static ChatFileDownloadManager getInstance() {
-        if (instance == null) {
-            synchronized (ChatFileDownloadManager.class) {
-                if (instance == null) {
-                    instance = new ChatFileDownloadManager();
-                }
-            }
-        }
-        return instance;
-    }
-
     /**
      * 获取聊天下载文件列表
      */
     public List<DownloadInfo> getAllChatFileDownloadList() {
+        refreshCache();
         List<DownloadInfo> resultList = new ArrayList<>();
         for (DownloadInfo info : downloadInfoList) {
             if (info.getType().equals(DownloadInfo.TYPE_MESSAGE)) {
@@ -74,6 +79,7 @@ public class ChatFileDownloadManager {
      * 获取云盘下载中文件列表
      */
     public List<DownloadInfo> getAllVolumeFileDownloadList() {
+        refreshCache();
         List<DownloadInfo> resultList = new ArrayList<>();
         for (DownloadInfo info : downloadInfoList) {
             if (info.getType().equals(DownloadInfo.TYPE_VOLUME)) {
@@ -145,6 +151,10 @@ public class ChatFileDownloadManager {
             DownloadCacheUtils.saveDownloadFileList(downloadInfoList);
         } else {
             DownloadInfo downloadInfo = getManagerDownloadInfo(info);
+            //防止外部删除文件  还存留缓存数据库
+            if (downloadInfo.getCancelable() != null) {
+                downloadInfo.setCancelable(null);
+            }
             downloadInfo.setType(DownloadInfo.TYPE_MESSAGE);
             downloadInfo.setStatus(DownloadInfo.STATUS_LOADING);
             downloadInfo.setLastUpdateTime(downloadInfo.getLastUpdateTime());
