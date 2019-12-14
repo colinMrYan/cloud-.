@@ -16,6 +16,7 @@ import com.inspur.emmcloud.basemodule.config.Constant;
 
 import org.greenrobot.eventbus.EventBus;
 import org.xutils.DbManager;
+import org.xutils.ex.DbException;
 import org.xutils.x;
 
 import java.io.File;
@@ -213,6 +214,24 @@ public class DbCacheUtils {
             // TODO: handle exception
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 根据表名删除数据库
+     */
+    public static void deleteDbByTableName(Context context, String tableName) {
+        try {
+            if (db != null) {
+                if (tableIsExist(db, tableName)) {
+                    db.execNonQuery("DROP TABLE IF EXISTS " + tableName);
+                }
+            }
+        } catch (DbException e) {
+            e.printStackTrace();
+        } finally {
+            closeDb(context);
+        }
+
     }
 
     /**

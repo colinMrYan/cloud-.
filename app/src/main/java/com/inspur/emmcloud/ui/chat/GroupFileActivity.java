@@ -40,11 +40,13 @@ import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
 import com.inspur.emmcloud.interf.ChatProgressCallback;
 import com.inspur.emmcloud.util.privates.ChatFileDownloadManager;
 import com.inspur.emmcloud.util.privates.DownloadCacheUtils;
+import com.inspur.emmcloud.util.privates.NetworkMobileTipUtil;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
 
 import java.io.File;
 import java.text.Collator;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -80,6 +82,7 @@ public class GroupFileActivity extends BaseActivity {
     private List<Message> selectGroupFileList = new ArrayList<>();
     private String downLoadAction; //弹框点击状态
     List<Message> fileTypeMessageListWithOrder = new ArrayList<>();
+    private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
     @Override
     public void onCreate() {
@@ -290,7 +293,8 @@ public class GroupFileActivity extends BaseActivity {
         } else {
             holder.selectImg.setImageResource(R.drawable.ic_volume_no_selected);
         }
-        holder.fileTimeText.setText(TimeUtils.getChannelMsgDisplayTime(GroupFileActivity.this, message.getCreationDate()));
+//        holder.fileTimeText.setText(TimeUtils.getChannelMsgDisplayTime(GroupFileActivity.this, message.getCreationDate()));
+        holder.fileTimeText.setText(TimeUtils.getTime(message.getCreationDate(), format));
         holder.fileImg.setImageResource(FileUtils.getFileIconResIdByFileName(message.getMsgContentAttachmentFile().getName()));
         DownloadInfo info = DownloadInfo.message2DownloadInfo(message);
         DownloadInfo downloadInfo = ChatFileDownloadManager.getInstance().getManagerDownloadInfo(info);
@@ -342,11 +346,11 @@ public class GroupFileActivity extends BaseActivity {
         }
     }
 
-    private void changeStatus(ViewHolder holder, int position) {
+    private void changeStatus(final ViewHolder holder, int position) {
         if (fileTypeMessageListWithOrder != null && fileTypeMessageListWithOrder.size() > 0) {
             Message message = fileTypeMessageListWithOrder.get(position);
             DownloadInfo info = DownloadInfo.message2DownloadInfo(message);
-            DownloadInfo downloadInfo = ChatFileDownloadManager.getInstance().getManagerDownloadInfo(info);
+            final DownloadInfo downloadInfo = ChatFileDownloadManager.getInstance().getManagerDownloadInfo(info);
             if (downloadInfo != null) {
                 String status = downloadInfo.getStatus();
                 if (status.equals(DownloadInfo.STATUS_LOADING)) {
@@ -354,9 +358,22 @@ public class GroupFileActivity extends BaseActivity {
                     ChatFileDownloadManager.getInstance().cancelDownloadFile(downloadInfo);
                     DownloadCacheUtils.saveDownloadFile(downloadInfo);
                 } else if (status.equals(DownloadInfo.STATUS_PAUSE) || status.equals(DownloadInfo.STATUS_FAIL)) {
-                    downloadInfo.setStatus(DownloadInfo.STATUS_LOADING);
-                    ChatFileDownloadManager.getInstance().reDownloadFile(downloadInfo);
-                    DownloadCacheUtils.saveDownloadFile(downloadInfo);
+                    NetworkMobileTipUtil.checkEnvironment(this, R.string.volume_file_download_network_type_warning, downloadInfo.getSize(),
+                            new NetworkMobileTipUtil.Callback() {
+                                @Override
+                                public void cancel() {
+
+                                }
+
+                                @Override
+                                public void onNext() {
+                                    downloadInfo.setStatus(DownloadInfo.STATUS_LOADING);
+                                    ChatFileDownloadManager.getInstance().reDownloadFile(downloadInfo);
+                                    DownloadCacheUtils.saveDownloadFile(downloadInfo);
+                                    holder.progressBar.setStatus(DownloadInfo.transfer2ProgressStatus(downloadInfo.getStatus()));
+                                }
+                            });
+
                 }
                 holder.progressBar.setStatus(DownloadInfo.transfer2ProgressStatus(downloadInfo.getStatus()));
             }
@@ -372,12 +389,18 @@ public class GroupFileActivity extends BaseActivity {
             public void onSuccess(File file) {
                 Log.d("zhang", "GroupFile onSuccess:");
                 holder.progressBar.setStatus(CircleProgressBar.Status.Success);
-                holder.statusLayout.setVisibility(View.GONE);
+                holder.statusLayout.setEnabled(false);
+                new android.os.Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        holder.statusLayout.setVisibility(View.GONE);
+                    }
+                }, 2000);
             }
 
             @Override
             public void onLoading(int progress, long current, String speed) {
-                Log.d("zhang", "GroupFile onLoading:");
+//                Log.d("zhang", "GroupFile onLoading:");
                 holder.progressBar.setStatus(CircleProgressBar.Status.Loading);
                 holder.progressBar.setProgress(progress);
             }
