@@ -16,6 +16,7 @@ import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFileUpload;
 import com.inspur.emmcloud.interf.ProgressCallback;
 import com.inspur.emmcloud.interf.VolumeFileUploadService;
+import com.inspur.emmcloud.ui.appcenter.volume.observe.LoadObservable;
 import com.inspur.emmcloud.util.privates.cache.VolumeFileUploadCacheUtils;
 import com.inspur.emmcloud.util.privates.oss.OssService;
 import com.inspur.emmcloud.util.privates.s3.S3Service;
@@ -38,6 +39,22 @@ public class VolumeFileUploadManager extends APIInterfaceInstance {
     public VolumeFileUploadManager() {
         apiService = new MyAppAPIService(MyApplication.getInstance());
         apiService.setAPIInterface(this);
+
+        refreshCache();
+    }
+
+    public static VolumeFileUploadManager getInstance() {
+        if (instance == null) {
+            synchronized (VolumeFileUploadManager.class) {
+                if (instance == null) {
+                    instance = new VolumeFileUploadManager();
+                }
+            }
+        }
+        return instance;
+    }
+
+    private void refreshCache() {
         volumeFileUploadList = VolumeFileUploadCacheUtils.getVolumeFileUploadList();
         boolean isNeedUpdateVolumeFileUploadStatus = false;
         for (VolumeFileUpload volumeFileUpload : volumeFileUploadList) {
@@ -54,18 +71,6 @@ public class VolumeFileUploadManager extends APIInterfaceInstance {
         if (isNeedUpdateVolumeFileUploadStatus) {
             VolumeFileUploadCacheUtils.saveVolumeFileUploadList(volumeFileUploadList);
         }
-
-    }
-
-    public static VolumeFileUploadManager getInstance() {
-        if (instance == null) {
-            synchronized (VolumeFileUploadManager.class) {
-                if (instance == null) {
-                    instance = new VolumeFileUploadManager();
-                }
-            }
-        }
-        return instance;
     }
 
 
@@ -138,6 +143,7 @@ public class VolumeFileUploadManager extends APIInterfaceInstance {
      * @return
      */
     public List<VolumeFile> getAllUploadVolumeFile() {
+        refreshCache();
         List<VolumeFile> volumeFileList = new ArrayList<>();
         for (int i = 0; i < volumeFileUploadList.size(); i++) {
             VolumeFileUpload volumeFileUpload = volumeFileUploadList.get(i);
@@ -149,6 +155,7 @@ public class VolumeFileUploadManager extends APIInterfaceInstance {
     }
 
     public List<VolumeFile> getFinishUploadList() {
+        refreshCache();
         List<VolumeFile> volumeFileList = new ArrayList<>();
         for (int i = 0; i < volumeFileUploadList.size(); i++) {
             VolumeFileUpload volumeFileUpload = volumeFileUploadList.get(i);
@@ -162,6 +169,7 @@ public class VolumeFileUploadManager extends APIInterfaceInstance {
     }
 
     public List<VolumeFile> getUnFinishUploadList() {
+        refreshCache();
         List<VolumeFile> volumeFileList = new ArrayList<>();
         for (int i = 0; i < volumeFileUploadList.size(); i++) {
             VolumeFileUpload volumeFileUpload = volumeFileUploadList.get(i);
@@ -389,6 +397,7 @@ public class VolumeFileUploadManager extends APIInterfaceInstance {
             SimpleEventMessage simpleEventMessage = new SimpleEventMessage(Constant.EVENTBUS_TAG_VOLUME_FILE_UPLOAD_SUCCESS, volumeFile);
             simpleEventMessage.setExtraObj(volumeFileUpload);
             EventBus.getDefault().post(simpleEventMessage);
+            LoadObservable.getInstance().notifyDateChange();
         }
 
         @Override
