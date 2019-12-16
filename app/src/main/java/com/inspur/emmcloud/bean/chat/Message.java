@@ -35,6 +35,8 @@ public class Message implements Serializable {
     public static final int MESSAGE_SEND_EDIT = 3;
     public static final int MESSAGE_READ = 1;
     public static final int MESSAGE_UNREAD = 0;
+    public static final int MESSAGE_LIFE_PACK = 0;//消息未拆包
+    public static final int MESSAGE_LIFE_UNPACK = 1;//消息已拆包
     @Column(name = "id", isId = true)
     private String id;
     @Column(name = "message")
@@ -66,6 +68,8 @@ public class Message implements Serializable {
     private boolean isWaitingSendRetry = false;
     @Column(name = "recallFrom")
     private String recallFrom = "";
+    @Column(name = "lifeCycleState")
+    private int lifeCycleState = 0;//0未拆包，1已经拆包
     private String tmpId = "";
 
     public Message() {
@@ -318,6 +322,14 @@ public class Message implements Serializable {
             return JSONUtils.getString(recallFrom, "name", "");
         }
         return "";
+    }
+
+    public int getLifeCycleState() {
+        return lifeCycleState;
+    }
+
+    public void setLifeCycleState(int lifeCycleState) {
+        this.lifeCycleState = lifeCycleState;
     }
 
     public String getTmpId() {
