@@ -297,7 +297,7 @@
     <string name="socket_connecting">Connecting</string>
     <string name="socket_close">Disconnected</string>
     <string name="chat_file_download_success">File has been downloaded successfully, click again to open</string>
-    <string name="group_name_longth_valid">Group name, word overrun (no more than 40 characters)</string>
+    <string name="group_name_longth_valid">Group name, word overrun (no more than 25 characters)</string>
     <string name="message_create_group">New Chat</string>
     <string name="business_card">Business Card</string>
     <string name="no_channel_album">No content</string>

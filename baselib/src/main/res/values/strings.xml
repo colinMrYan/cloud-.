@@ -304,7 +304,7 @@
     <string name="socket_connecting">连接中</string>
     <string name="socket_close">已断开</string>
     <string name="chat_file_download_success">文件已下载成功，再次点击进行打开</string>
-    <string name="group_name_longth_valid">群名称字数超限（不超过40个字符）</string>
+    <string name="group_name_longth_valid">群名称字数超限（不超过25个字符）</string>
     <string name="message_create_group">发起群聊</string>
     <string name="business_card">个人名片</string>
     <string name="no_channel_album">无内容</string>
