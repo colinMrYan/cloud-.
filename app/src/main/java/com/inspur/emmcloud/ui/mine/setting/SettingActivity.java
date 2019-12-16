@@ -24,6 +24,7 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.api.apiservice.MineAPIService;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
+import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.NotificationSetUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
@@ -48,6 +49,7 @@ import com.inspur.emmcloud.bean.mine.GetExperienceUpgradeFlagResult;
 import com.inspur.emmcloud.bean.system.AppConfig;
 import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
 import com.inspur.emmcloud.bean.system.navibar.NaviBarScheme;
+import com.inspur.emmcloud.componentservice.appcenter.ApplicationService;
 import com.inspur.emmcloud.service.CoreService;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.chat.DisplayMediaVoiceMsg;
@@ -55,7 +57,6 @@ import com.inspur.emmcloud.util.privates.AppBadgeUtils;
 import com.inspur.emmcloud.util.privates.DataCleanManager;
 import com.inspur.emmcloud.util.privates.TabAndAppExistUtils;
 import com.inspur.emmcloud.util.privates.cache.AppConfigCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.MyAppCacheUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -525,7 +526,11 @@ public class SettingActivity extends BaseActivity {
                         ClientConfigUpdateUtils.getInstance().clearDbDataConfigWithClearAllCache();
                         ImageDisplayUtils.getInstance().clearAllCache();
                         //因为断网时清除所有缓存会清掉
-                        MyAppCacheUtils.clearMyAppList(SettingActivity.this);
+                        Router router = Router.getInstance();
+                        if (router.getService(WebService.class) != null) {
+                            ApplicationService service = router.getService(ApplicationService.class);
+                            service.clearMyAppList(SettingActivity.this);
+                        }
                         //清除全部缓存时是否需要清除掉小程序，如果需要，解开下面一行的注释
 //					ReactNativeFlow.deleteReactNativeInstallDir(MyAppConfig.getReactInstallPath(SettingActivity.this,userId));
                         ToastUtils.show(getApplicationContext(),

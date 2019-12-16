@@ -38,8 +38,6 @@ import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
-import com.inspur.emmcloud.bean.appcenter.App;
-import com.inspur.emmcloud.bean.appcenter.AppGroupBean;
 import com.inspur.emmcloud.bean.contact.ContactClickMessage;
 import com.inspur.emmcloud.bean.system.ChangeTabBean;
 import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
@@ -59,7 +57,6 @@ import com.inspur.emmcloud.ui.mine.setting.CreateGestureActivity;
 import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
 import com.inspur.emmcloud.ui.schedule.ScheduleHomeFragment;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
-import com.inspur.emmcloud.util.privates.cache.MyAppCacheUtils;
 import com.inspur.emmcloud.widget.MyFragmentTabHost;
 import com.inspur.emmcloud.widget.tipsview.TipsView;
 
@@ -69,7 +66,6 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -468,22 +464,12 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
      * @return
      */
     private int getFilterAppStoreBadgeNum(Map<String, Integer> appBadgeMap) {
-        Map<String, Integer> appBadgeMapSum = new HashMap<>();
-        appBadgeMapSum.putAll(appBadgeMap);
-        int appStoreBadgeNum = 0;
-        List<AppGroupBean> appGroupBeanList = MyAppCacheUtils.getMyAppList(this);
-        for (AppGroupBean appGroupBean : appGroupBeanList) {
-            List<App> appList = appGroupBean.getAppItemList();
-            for (App app : appList) {
-                Integer num = appBadgeMapSum.get(app.getAppID());
-                if (num != null) {
-                    appStoreBadgeNum = appStoreBadgeNum + num;
-                    appBadgeMapSum.remove(app.getAppID());
-                }
-
-            }
+        Router router = Router.getInstance();
+        if (router.getService(WebService.class) != null) {
+            ApplicationService service = router.getService(ApplicationService.class);
+            return service.getFilterAppStoreBadgeNum(appBadgeMap);
         }
-        return appStoreBadgeNum;
+        return 0;
     }
 
     private void setTabBarBadge(String tabName, int number) {
