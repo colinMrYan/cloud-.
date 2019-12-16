@@ -55,7 +55,7 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
     }
 
     public void setUnfinishedFileList(List<VolumeFile> fileList) {
-        this.unfinishedFileList = unfinishedFileList;
+        this.unfinishedFileList = fileList;
     }
 
     @NonNull
@@ -197,7 +197,6 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
 //                    VolumeFileUploadCacheUtils.saveVolumeFileUpload(volumeFileUpload);
 //                }
                 holder.progressBar.setStatus(CircleProgressBar.Status.Success);
-                LoadObservable.getInstance().notifyDateChange();
                 syncListData();
                 notifyDataSetChanged();
                 if (callBack != null) {
@@ -253,7 +252,6 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
                 //下载成功停留2S中转换状态
 //                originVolumeFile.setStatus(VolumeFile.STATUS_NORMAL);
 //                VolumeFileDownloadCacheUtils.saveVolumeFile(originVolumeFile);
-                LoadObservable.getInstance().notifyDateChange();
                 syncListData();
                 notifyDataSetChanged();
                 if (callBack != null) {

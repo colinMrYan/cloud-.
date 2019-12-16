@@ -14,6 +14,7 @@ import com.inspur.emmcloud.basemodule.util.FileDownloadManager;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.interf.ProgressCallback;
+import com.inspur.emmcloud.ui.appcenter.volume.observe.LoadObservable;
 
 import org.greenrobot.eventbus.EventBus;
 import org.xutils.common.Callback;
@@ -45,6 +46,10 @@ public class VolumeFileDownloadManager {
     }
 
     public VolumeFileDownloadManager() {
+        refreshCache();
+    }
+
+    private void refreshCache() {
         volumeFileDownloadList = VolumeFileDownloadCacheUtils.getVolumeFileListInDownloading();
         boolean isNeedUpdateVolumeFileDownloadStatus = false;
         for (VolumeFile volumeFile : volumeFileDownloadList) {
@@ -78,7 +83,7 @@ public class VolumeFileDownloadManager {
 //                resetVolumeFileStatus(item);
 //            }
 //        }
-
+        refreshCache();
         return volumeFileDownloadList;
     }
 
@@ -88,6 +93,7 @@ public class VolumeFileDownloadManager {
      * @return
      */
     public List<VolumeFile> getUnFinishDownloadList() {
+        refreshCache();
         volumeFileDownloadingList.clear();
         for (VolumeFile volumeFile : volumeFileDownloadList) {
             if (volumeFile.getStatus().equals(VolumeFile.STATUS_LOADING) || volumeFile.getStatus().equals(VolumeFile.STATUS_PAUSE)
@@ -102,6 +108,7 @@ public class VolumeFileDownloadManager {
      * 获取已下载完成的文件列表  (下载成功 or 下载失败)
      */
     public List<VolumeFile> getFinishDownloadList() {
+        refreshCache();
         volumeFileDownloadedList.clear();
 //        for (VolumeFile volumeFile : volumeFileDownloadList) {
 //            if (volumeFile.getStatus().equals(VolumeFile.STATUS_NORMAL)) {
@@ -358,7 +365,7 @@ public class VolumeFileDownloadManager {
                         break;
                     }
                 }
-
+                LoadObservable.getInstance().notifyDateChange();
 //                resetVolumeFileStatus(volumeFile);
             }
 

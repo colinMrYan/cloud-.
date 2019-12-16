@@ -132,6 +132,9 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser && currentIndex == 1) {
+            refreshOperationTotal();
+        }
     }
 
     @Override
@@ -347,7 +350,7 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
                 adapter.notifyDataSetChanged();
                 //上传、下载成功 or 长按删除   回调
                 if (operationTotalLayout != null) {
-                    operationTotalLayout.setVisibility(fileList.size() > 0 ? View.VISIBLE : View.GONE);
+                    operationTotalLayout.setVisibility(unFinishedVolumeFileList.size() > 0 ? View.VISIBLE : View.GONE);
                 }
                 if (finishedVolumeFileList.size() == 0 && unFinishedVolumeFileList.size() == 0) {
                     showNoDataLayout();
