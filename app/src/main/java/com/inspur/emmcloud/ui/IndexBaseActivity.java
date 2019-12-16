@@ -197,7 +197,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
                                     break;
                                 case Constant.APP_TAB_BAR_APPLICATION:
                                     Router router = Router.getInstance();
-                                    if (router.getService(WebService.class) != null) {
+                                    if (router.getService(ApplicationService.class) != null) {
                                         ApplicationService service = router.getService(ApplicationService.class);
                                         tabBean = new TabBean(getString(R.string.application), service.getMyAppFragment(), mainTabResult);
                                     }
@@ -465,7 +465,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
      */
     private int getFilterAppStoreBadgeNum(Map<String, Integer> appBadgeMap) {
         Router router = Router.getInstance();
-        if (router.getService(WebService.class) != null) {
+        if (router.getService(ApplicationService.class) != null) {
             ApplicationService service = router.getService(ApplicationService.class);
             return service.getFilterAppStoreBadgeNum(appBadgeMap);
         }

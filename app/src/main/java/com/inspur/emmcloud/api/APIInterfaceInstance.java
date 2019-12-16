@@ -3,17 +3,8 @@ package com.inspur.emmcloud.api;
 
 import com.inspur.emmcloud.basemodule.bean.GetUploadPushInfoResult;
 import com.inspur.emmcloud.bean.ChatFileUploadInfo;
-import com.inspur.emmcloud.bean.appcenter.App;
-import com.inspur.emmcloud.bean.appcenter.GetAddAppResult;
-import com.inspur.emmcloud.bean.appcenter.GetAllAppResult;
-import com.inspur.emmcloud.bean.appcenter.GetAppGroupResult;
 import com.inspur.emmcloud.bean.appcenter.GetClientIdRsult;
 import com.inspur.emmcloud.bean.appcenter.GetIDResult;
-import com.inspur.emmcloud.bean.appcenter.GetMyAppResult;
-import com.inspur.emmcloud.bean.appcenter.GetRecommendAppWidgetListResult;
-import com.inspur.emmcloud.bean.appcenter.GetRemoveAppResult;
-import com.inspur.emmcloud.bean.appcenter.GetSearchAppResult;
-import com.inspur.emmcloud.bean.appcenter.GetWebAppRealUrlResult;
 import com.inspur.emmcloud.bean.appcenter.ReactNativeDownloadUrlBean;
 import com.inspur.emmcloud.bean.appcenter.ReactNativeInstallUriBean;
 import com.inspur.emmcloud.bean.appcenter.ReactNativeUpdateBean;
@@ -118,36 +109,6 @@ public class APIInterfaceInstance implements APIInterface {
     public void returnBindingDeviceListFail(String error, int errorCode) {
     }
 
-    @Override
-    public void returnAddAppSuccess(GetAddAppResult getAddAppResult) {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
-    public void returnAddAppFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
-    public void returnRemoveAppSuccess(GetRemoveAppResult getRemoveAppResult) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnRemoveAppFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
-    public void returnMyAppSuccess(GetMyAppResult getMyAppResult) {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
-    public void returnMyAppFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-    }
 
     @Override
     public void returnMsgCommentCountSuccess(GetMsgCommentCountResult getMsgCommentCountResult, String mid) {
@@ -167,29 +128,6 @@ public class APIInterfaceInstance implements APIInterface {
         // TODO Auto-generated method stub
     }
 
-    @Override
-    public void returnSearchAppSuccess(GetSearchAppResult getAllAppResult) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnSearchAppFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnSearchAppMoreSuccess(GetSearchAppResult getAllAppResult) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnSearchAppMoreFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
-    }
 
     @Override
     public void returnUploadMyHeadSuccess(
@@ -885,60 +823,6 @@ public class APIInterfaceInstance implements APIInterface {
     public void returnRobotByIdFail(String error, int errorCode) {
     }
 
-    @Override
-    public void returnGetAppTabsSuccess(GetAppMainTabResult getAppTabsResult) {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
-    public void returnGetAppTabsFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
-    public void returnUserAppsSuccess(GetAppGroupResult getAppGroupResult, String clientConfigMyAppVersion) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnUserAppsFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnAllAppsSuccess(GetAllAppResult getAllAppResult) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnAllAppsFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
-    public void returnAllAppsFreshSuccess(GetAllAppResult getAllAppResult) {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
-    public void returnAllAppsFreshFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
-    public void returnAllAppsMoreSuccess(GetAllAppResult getAllAppResult) {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
-    public void returnAllAppsMoreFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
-    }
-
 
     @Override
     public void returnReactNativeUpdateSuccess(ReactNativeUpdateBean reactNativeUpdateBean) {
@@ -1044,16 +928,6 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnAppInfoSuccess(App app) {
-
-    }
-
-    @Override
-    public void returnAppInfoFail(String error, int errorCode) {
-
-    }
-
-    @Override
     public void returnAppConfigSuccess(GetAppConfigResult getAppConfigResult) {
 
     }
@@ -1073,14 +947,6 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnUploadPositionSuccess() {
-    }
-
-    @Override
-    public void returnWebAppRealUrlSuccess(GetWebAppRealUrlResult getWebAppRealUrlResult) {
-    }
-
-    @Override
-    public void returnWebAppRealUrlFail() {
     }
 
     @Override
@@ -1145,14 +1011,6 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnMoveFileFail(String error, int errorCode) {
-    }
-
-    @Override
-    public void returnRecommendAppWidgetListSuccess(GetRecommendAppWidgetListResult getRecommendAppWidgetListResult) {
-    }
-
-    @Override
-    public void returnRecommendAppWidgetListFail(String error, int errorCode) {
     }
 
     @Override

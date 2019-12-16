@@ -7,6 +7,7 @@ import com.inspur.emmcloud.application.api.ApplicationApiInterfaceImpl;
 import com.inspur.emmcloud.application.bean.GetWebAppRealUrlResult;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.componentservice.communication.OnGetWebAppRealUrlListener;
 
 /**
  * Created by chenmch on 2017/11/1.
@@ -32,12 +33,6 @@ public class WebAppUtils {
         } else if (onGetWebAppRealUrlListener != null) {
             onGetWebAppRealUrlListener.getWebAppRealUrlFail();
         }
-    }
-
-    public interface OnGetWebAppRealUrlListener {
-        void getWebAppRealUrlSuccess(String webAppUrl);
-
-        void getWebAppRealUrlFail();
     }
 
     private class WebService extends ApplicationApiInterfaceImpl {

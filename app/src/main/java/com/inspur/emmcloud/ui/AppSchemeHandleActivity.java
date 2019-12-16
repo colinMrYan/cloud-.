@@ -25,7 +25,10 @@ import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.schedule.calendar.CalendarEvent;
 import com.inspur.emmcloud.bean.system.ChangeTabBean;
+import com.inspur.emmcloud.componentservice.appcenter.ApplicationService;
 import com.inspur.emmcloud.componentservice.communication.CommunicationService;
+import com.inspur.emmcloud.componentservice.communication.OnFinishActivityListener;
+import com.inspur.emmcloud.componentservice.communication.OnGetWebAppRealUrlListener;
 import com.inspur.emmcloud.componentservice.communication.ShareToConversationListener;
 import com.inspur.emmcloud.componentservice.mail.MailService;
 import com.inspur.emmcloud.componentservice.mail.OnExchangeLoginListener;
@@ -43,12 +46,10 @@ import com.inspur.emmcloud.ui.find.KnowledgeActivity;
 import com.inspur.emmcloud.ui.find.trip.TripInfoActivity;
 import com.inspur.emmcloud.ui.schedule.meeting.ScheduleDetailActivity;
 import com.inspur.emmcloud.ui.schedule.task.TaskAddActivity;
-import com.inspur.emmcloud.util.privates.AppId2AppAndOpenAppUtils;
 import com.inspur.emmcloud.util.privates.CustomProtocol;
 import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.ProfileUtils;
 import com.inspur.emmcloud.util.privates.VoiceCommunicationManager;
-import com.inspur.emmcloud.util.privates.WebAppUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -196,14 +197,16 @@ public class AppSchemeHandleActivity extends BaseActivity {
                                 }
                                 break;
                             case "ecc-app":
-                                AppId2AppAndOpenAppUtils appId2AppAndOpenAppUtils = new AppId2AppAndOpenAppUtils(AppSchemeHandleActivity.this);
-                                appId2AppAndOpenAppUtils.setOnFinishActivityListener(new AppId2AppAndOpenAppUtils.OnFinishActivityListener() {
-                                    @Override
-                                    public void onFinishActivity() {
-                                        finish();
-                                    }
-                                });
-                                appId2AppAndOpenAppUtils.getAppInfoById(uri);
+                                Router router = Router.getInstance();
+                                if (router.getService(ApplicationService.class) != null) {
+                                    ApplicationService service = router.getService(ApplicationService.class);
+                                    service.getAppInfoById(AppSchemeHandleActivity.this, uri, new OnFinishActivityListener() {
+                                        @Override
+                                        public void onFinishActivity() {
+                                            finish();
+                                        }
+                                    });
+                                }
                                 break;
 
                             case "ecc-calendar-jpush":
@@ -544,23 +547,27 @@ public class AppSchemeHandleActivity extends BaseActivity {
      */
     private void openWebApp(String host, final String openMode) {
         String url = APIUri.getGSMsgSchemeUrl(host);
-        new WebAppUtils(AppSchemeHandleActivity.this, new WebAppUtils.OnGetWebAppRealUrlListener() {
-            @Override
-            public void getWebAppRealUrlSuccess(String webAppUrl) {
-                boolean isUriHasTitle = (openMode != null && openMode.equals("1"));
-                Bundle bundle = new Bundle();
-                bundle.putString("uri", webAppUrl);
-                bundle.putBoolean(Constant.WEB_FRAGMENT_SHOW_HEADER, isUriHasTitle);
-                ARouter.getInstance().build(Constant.AROUTER_CLASS_WEB_MAIN).with(bundle).navigation();
-                AppSchemeHandleActivity.this.finish();
-            }
+        Router router = Router.getInstance();
+        if (router.getService(ApplicationService.class) != null) {
+            ApplicationService service = router.getService(ApplicationService.class);
+            service.getWebAppRealUrl(new OnGetWebAppRealUrlListener() {
+                @Override
+                public void getWebAppRealUrlSuccess(String webAppUrl) {
+                    boolean isUriHasTitle = (openMode != null && openMode.equals("1"));
+                    Bundle bundle = new Bundle();
+                    bundle.putString("uri", webAppUrl);
+                    bundle.putBoolean(Constant.WEB_FRAGMENT_SHOW_HEADER, isUriHasTitle);
+                    ARouter.getInstance().build(Constant.AROUTER_CLASS_WEB_MAIN).with(bundle).navigation();
+                    AppSchemeHandleActivity.this.finish();
+                }
 
-            @Override
-            public void getWebAppRealUrlFail() {
-                ToastUtils.show(AppSchemeHandleActivity.this, R.string.react_native_app_open_failed);
-                finish();
-            }
-        }).getWebAppRealUrl(url);
+                @Override
+                public void getWebAppRealUrlFail() {
+                    ToastUtils.show(AppSchemeHandleActivity.this, R.string.react_native_app_open_failed);
+                    finish();
+                }
+            }, url);
+        }
     }
 
     /**

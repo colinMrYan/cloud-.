@@ -14,6 +14,7 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.ContactAPIService;
+import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.NotificationSetUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
@@ -45,6 +46,7 @@ import com.inspur.emmcloud.bean.schedule.calendar.CalendarColor;
 import com.inspur.emmcloud.bean.schedule.calendar.ScheduleCalendar;
 import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
+import com.inspur.emmcloud.componentservice.appcenter.ApplicationService;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.push.WebSocketPush;
@@ -53,7 +55,6 @@ import com.inspur.emmcloud.service.LocationService;
 import com.inspur.emmcloud.util.privates.AppConfigUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.MessageSendManager;
-import com.inspur.emmcloud.util.privates.MyAppWidgetUtils;
 import com.inspur.emmcloud.util.privates.ProfileUtils;
 import com.inspur.emmcloud.util.privates.ReactNativeUtils;
 import com.inspur.emmcloud.util.privates.SplashPageUtils;
@@ -172,9 +173,12 @@ public class IndexActivity extends IndexBaseActivity {
      * 获取我的应用推荐小部件数据,如果到了更新时间才请求
      */
     private void getMyAppRecommendWidgets() {
-        if (MyAppWidgetUtils.checkNeedUpdateMyAppWidget(IndexActivity.this)) {
-            MyAppWidgetUtils.getInstance(getApplicationContext()).getMyAppWidgetsFromNet();
+        Router router = Router.getInstance();
+        if (router.getService(ApplicationService.class) != null) {
+            ApplicationService service = router.getService(ApplicationService.class);
+            service.getMyAppRecommendWidgets();
         }
+
     }
 
     /**

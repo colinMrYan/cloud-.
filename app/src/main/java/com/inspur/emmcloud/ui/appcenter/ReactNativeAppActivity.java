@@ -129,7 +129,7 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
     }
 
     /**
-     * 初始化RN App
+     * 初始化RNApp
      */
     private void initReactNativeApp() {
         loadingDialog.show();

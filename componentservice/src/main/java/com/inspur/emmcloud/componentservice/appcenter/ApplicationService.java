@@ -1,8 +1,12 @@
 package com.inspur.emmcloud.componentservice.appcenter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.net.Uri;
 
 import com.inspur.emmcloud.componentservice.CoreService;
+import com.inspur.emmcloud.componentservice.communication.OnFinishActivityListener;
+import com.inspur.emmcloud.componentservice.communication.OnGetWebAppRealUrlListener;
 
 import java.util.Map;
 
@@ -20,4 +24,18 @@ public interface ApplicationService extends CoreService {
     boolean clearMyAppList(Context context);
 
     int getFilterAppStoreBadgeNum(Map<String, Integer> appBadgeMap);
+
+    void getAppInfoById(Activity activity, Uri uri, OnFinishActivityListener listener);
+
+    void getAppBadgeCountFromServer();
+
+    int getAppCommonlyUseSize();
+
+    void saveAppCommonlyUseList(Context context, String appListJson);
+
+    Class getSyncCommonAppService();
+
+    void getMyAppRecommendWidgets();
+
+    void getWebAppRealUrl(OnGetWebAppRealUrlListener listener, String url);
 }

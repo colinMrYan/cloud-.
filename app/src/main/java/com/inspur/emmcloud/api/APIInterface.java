@@ -2,17 +2,8 @@ package com.inspur.emmcloud.api;
 
 import com.inspur.emmcloud.basemodule.bean.GetUploadPushInfoResult;
 import com.inspur.emmcloud.bean.ChatFileUploadInfo;
-import com.inspur.emmcloud.bean.appcenter.App;
-import com.inspur.emmcloud.bean.appcenter.GetAddAppResult;
-import com.inspur.emmcloud.bean.appcenter.GetAllAppResult;
-import com.inspur.emmcloud.bean.appcenter.GetAppGroupResult;
 import com.inspur.emmcloud.bean.appcenter.GetClientIdRsult;
 import com.inspur.emmcloud.bean.appcenter.GetIDResult;
-import com.inspur.emmcloud.bean.appcenter.GetMyAppResult;
-import com.inspur.emmcloud.bean.appcenter.GetRecommendAppWidgetListResult;
-import com.inspur.emmcloud.bean.appcenter.GetRemoveAppResult;
-import com.inspur.emmcloud.bean.appcenter.GetSearchAppResult;
-import com.inspur.emmcloud.bean.appcenter.GetWebAppRealUrlResult;
 import com.inspur.emmcloud.bean.appcenter.ReactNativeDownloadUrlBean;
 import com.inspur.emmcloud.bean.appcenter.ReactNativeInstallUriBean;
 import com.inspur.emmcloud.bean.appcenter.ReactNativeUpdateBean;
@@ -96,41 +87,15 @@ import java.util.List;
 
 public interface APIInterface {
 
-    void returnAllAppsSuccess(GetAllAppResult getAllAppResult);
 
-    void returnAllAppsFail(String error, int errorCode);
 
-    void returnAllAppsFreshSuccess(GetAllAppResult getAllAppResult);
-
-    void returnAllAppsFreshFail(String error, int errorCode);
-
-    void returnAllAppsMoreSuccess(GetAllAppResult getAllAppResult);
-
-    void returnAllAppsMoreFail(String error, int errorCode);
-
-    void returnAddAppSuccess(GetAddAppResult getAddAppResult);
-
-    void returnAddAppFail(String error, int errorCode);
-
-    void returnRemoveAppSuccess(GetRemoveAppResult getRemoveAppResult);
-
-    void returnRemoveAppFail(String error, int errorCode);
-
-    void returnMyAppSuccess(GetMyAppResult getMyAppResult);
-
-    void returnMyAppFail(String error, int errorCode);
 
     void returnUpgradeSuccess(GetUpgradeResult getUpgradeResult, boolean isManualCheck);
 
     void returnUpgradeFail(String error, boolean isManualCheck, int errorCode);
 
-    void returnSearchAppSuccess(GetSearchAppResult getAllAppResult);
 
-    void returnSearchAppFail(String error, int errorCode);
 
-    void returnSearchAppMoreSuccess(GetSearchAppResult getAllAppResult);
-
-    void returnSearchAppMoreFail(String error, int errorCode);
 
 
 
@@ -393,16 +358,6 @@ public interface APIInterface {
 
     void returnRobotByIdFail(String error, int errorCode);
 
-
-
-    void returnGetAppTabsSuccess(GetAppMainTabResult getAppTabsResult);
-
-    void returnGetAppTabsFail(String error, int errorCode);
-
-    void returnUserAppsSuccess(GetAppGroupResult getAppGroupResult, String clientConfigMyAppVersion);
-
-    void returnUserAppsFail(String error, int errorCode);
-
     void returnReactNativeUpdateSuccess(ReactNativeUpdateBean reactNativeUpdateBean);
 
     void returnReactNativeUpdateFail(String error, int errorCode);
@@ -456,10 +411,6 @@ public interface APIInterface {
 
     void returnDeviceLogListFail(String error, int errorCode);
 
-    void returnAppInfoSuccess(App app);
-
-    void returnAppInfoFail(String error, int errorCode);
-
     void returnAppConfigSuccess(GetAppConfigResult getAppConfigResult);
 
     void returnAppConfigFail(String error, int errorCode);
@@ -469,10 +420,6 @@ public interface APIInterface {
     void returnSaveWebAutoRotateConfigFail(String error, int errorCode);
 
     void returnUploadPositionSuccess();
-
-    void returnWebAppRealUrlSuccess(GetWebAppRealUrlResult getWebAppRealUrlResult);
-
-    void returnWebAppRealUrlFail();
 
     void returnSaveConfigSuccess();
 
@@ -523,9 +470,6 @@ public interface APIInterface {
 
     void returnMoveOrCopyFileBetweenVolumeFail(GetReturnMoveOrCopyErrorResult errorResult, int errorCode, String srcVolumeFilePath, String operation, List<VolumeFile> volumeFileList);
 
-    void returnRecommendAppWidgetListSuccess(GetRecommendAppWidgetListResult getRecommendAppWidgetListResult);
-
-    void returnRecommendAppWidgetListFail(String error, int errorCode);
 
     void returnCreateShareVolumeSuccess(Volume volume);
 

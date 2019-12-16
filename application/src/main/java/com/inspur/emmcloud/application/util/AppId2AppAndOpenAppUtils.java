@@ -1,17 +1,18 @@
-package com.inspur.emmcloud.util.privates;
+package com.inspur.emmcloud.application.util;
 
 import android.app.Activity;
 import android.net.Uri;
 
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
+import com.inspur.emmcloud.application.R;
+import com.inspur.emmcloud.application.api.ApplicationAPIService;
+import com.inspur.emmcloud.application.api.ApplicationApiInterfaceImpl;
+import com.inspur.emmcloud.application.bean.App;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
-import com.inspur.emmcloud.bean.appcenter.App;
+import com.inspur.emmcloud.componentservice.communication.OnFinishActivityListener;
 
 /**
  * Created by yufuchang on 2017/11/22.
@@ -36,7 +37,7 @@ public class AppId2AppAndOpenAppUtils {
         this.uri = (uri == null) ? "" : uri.toString();
         if (NetUtils.isNetworkConnected(activity) && !StringUtils.isBlank(appId)) {
             loadingDialog.show();
-            MyAppAPIService apiService = new MyAppAPIService(activity);
+            ApplicationAPIService apiService = new ApplicationAPIService(activity);
             apiService.setAPIInterface(new WebService());
             apiService.getAppInfo(appId);
         } else {
@@ -71,9 +72,9 @@ public class AppId2AppAndOpenAppUtils {
         if (!StringUtils.isBlank(app.getAppID())) {
             //特殊处理，不走UriUtils.openApp的逻辑，直接打开appUri，appUri是最终打开地址。
             if (app.getIsSSO() == 1) {
-                UriUtils.openWebApp(activity, app.getUri(), app);
+                ApplicationUriUtils.openWebApp(activity, app.getUri(), app);
             } else {
-                UriUtils.openApp(activity, app, "application");
+                ApplicationUriUtils.openApp(activity, app, "application");
             }
         } else {
             ToastUtils.show(R.string.unsupport_type);
@@ -90,14 +91,7 @@ public class AppId2AppAndOpenAppUtils {
         }
     }
 
-    /**
-     * 结束Activity的接口
-     */
-    public interface OnFinishActivityListener {
-        void onFinishActivity();
-    }
-
-    class WebService extends APIInterfaceInstance {
+    class WebService extends ApplicationApiInterfaceImpl {
         @Override
         public void returnAppInfoSuccess(App app) {
             dismissLoadingDialog();

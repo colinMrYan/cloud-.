@@ -15,6 +15,7 @@ import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
+import com.inspur.emmcloud.componentservice.communication.OnGetWebAppRealUrlListener;
 
 
 public class ApplicationUriUtils {
@@ -46,7 +47,7 @@ public class ApplicationUriUtils {
                 } else if (app.getIsSSO() == 1) {
                     String url = ApplicationAPIUri.getAppRealUrl(app.getAppID());
                     if (NetUtils.isNetworkConnected(activity)) {
-                        new WebAppUtils(activity, new WebAppUtils.OnGetWebAppRealUrlListener() {
+                        new WebAppUtils(activity, new OnGetWebAppRealUrlListener() {
                             @Override
                             public void getWebAppRealUrlSuccess(String webAppUrl) {
                                 openWebApp(activity, webAppUrl, app);

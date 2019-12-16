@@ -49,7 +49,6 @@ import com.inspur.emmcloud.application.util.AppConfigCacheUtils;
 import com.inspur.emmcloud.application.util.ApplicationUriUtils;
 import com.inspur.emmcloud.application.util.MyAppCacheUtils;
 import com.inspur.emmcloud.application.util.MyAppWidgetUtils;
-import com.inspur.emmcloud.application.util.ScanQrCodeUtils;
 import com.inspur.emmcloud.application.widget.DragAdapter;
 import com.inspur.emmcloud.application.widget.DragGridView;
 import com.inspur.emmcloud.application.widget.ECMSpaceItemDecoration;
@@ -75,6 +74,7 @@ import com.inspur.emmcloud.basemodule.util.ClientConfigUpdateUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.basemodule.util.ScanQrCodeUtils;
 import com.inspur.emmcloud.componentservice.communication.CommunicationService;
 
 import org.greenrobot.eventbus.EventBus;

@@ -8,7 +8,6 @@ import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.bean.system.MainTabResult;
 import com.inspur.emmcloud.componentservice.appcenter.ApplicationService;
-import com.inspur.emmcloud.componentservice.web.WebService;
 
 import java.util.ArrayList;
 
@@ -46,7 +45,7 @@ public class TabAndAppExistUtils {
      */
     public static boolean isAppExist(Context context, String scheme) {
         Router router = Router.getInstance();
-        if (router.getService(WebService.class) != null) {
+        if (router.getService(ApplicationService.class) != null) {
             ApplicationService service = router.getService(ApplicationService.class);
             return service.isAppExist(context, scheme);
         }
@@ -62,7 +61,7 @@ public class TabAndAppExistUtils {
      */
     public static String getVolumeIconUrl(Context context, String scheme) {
         Router router = Router.getInstance();
-        if (router.getService(WebService.class) != null) {
+        if (router.getService(ApplicationService.class) != null) {
             ApplicationService service = router.getService(ApplicationService.class);
             return service.getVolumeIconUrl(context, scheme);
         }

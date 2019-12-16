@@ -1,16 +1,28 @@
 package com.inspur.emmcloud.application.serviceimpl;
 
 
+import android.app.Activity;
 import android.content.Context;
+import android.net.Uri;
 
 import com.inspur.emmcloud.application.bean.App;
+import com.inspur.emmcloud.application.bean.AppCommonlyUse;
 import com.inspur.emmcloud.application.bean.AppGroupBean;
+import com.inspur.emmcloud.application.service.SyncCommonAppService;
 import com.inspur.emmcloud.application.ui.MyAppFragment;
+import com.inspur.emmcloud.application.util.AppBadgeUtils;
+import com.inspur.emmcloud.application.util.AppCacheUtils;
+import com.inspur.emmcloud.application.util.AppId2AppAndOpenAppUtils;
 import com.inspur.emmcloud.application.util.MyAppCacheUtils;
+import com.inspur.emmcloud.application.util.MyAppWidgetUtils;
+import com.inspur.emmcloud.application.util.WebAppUtils;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.componentservice.appcenter.ApplicationService;
+import com.inspur.emmcloud.componentservice.communication.OnFinishActivityListener;
+import com.inspur.emmcloud.componentservice.communication.OnGetWebAppRealUrlListener;
 
 import java.util.HashMap;
 import java.util.List;
@@ -80,5 +92,46 @@ public class AppCenterServiceImpl implements ApplicationService {
             }
         }
         return appStoreBadgeNum;
+    }
+
+    @Override
+    public void getAppInfoById(Activity activity, Uri uri, OnFinishActivityListener listener) {
+        AppId2AppAndOpenAppUtils appId2AppAndOpenAppUtils = new AppId2AppAndOpenAppUtils(activity);
+        appId2AppAndOpenAppUtils.setOnFinishActivityListener(listener);
+        appId2AppAndOpenAppUtils.getAppInfoById(uri);
+    }
+
+    @Override
+    public void getAppBadgeCountFromServer() {
+        new AppBadgeUtils(BaseApplication.getInstance()).getAppBadgeCountFromServer();
+    }
+
+    @Override
+    public int getAppCommonlyUseSize() {
+        return AppCacheUtils.getCommonlyUseList(BaseApplication.getInstance()).size();
+    }
+
+    @Override
+    public void saveAppCommonlyUseList(Context context, String commonAppListJson) {
+        List<AppCommonlyUse> commonAppList = JSONUtils.parseArray(commonAppListJson, AppCommonlyUse.class);
+        AppCacheUtils.saveAppCommonlyUseList(context, commonAppList);
+    }
+
+
+    @Override
+    public Class getSyncCommonAppService() {
+        return SyncCommonAppService.class;
+    }
+
+    @Override
+    public void getMyAppRecommendWidgets() {
+        if (MyAppWidgetUtils.checkNeedUpdateMyAppWidget(BaseApplication.getInstance())) {
+            MyAppWidgetUtils.getInstance(BaseApplication.getInstance()).getMyAppWidgetsFromNet();
+        }
+    }
+
+    @Override
+    public void getWebAppRealUrl(OnGetWebAppRealUrlListener listener, String url) {
+        new WebAppUtils(BaseApplication.getInstance(), listener).getWebAppRealUrl(url);
     }
 }

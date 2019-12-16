@@ -53,7 +53,6 @@ import com.inspur.emmcloud.componentservice.appcenter.ApplicationService;
 import com.inspur.emmcloud.service.CoreService;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.chat.DisplayMediaVoiceMsg;
-import com.inspur.emmcloud.util.privates.AppBadgeUtils;
 import com.inspur.emmcloud.util.privates.DataCleanManager;
 import com.inspur.emmcloud.util.privates.TabAndAppExistUtils;
 import com.inspur.emmcloud.util.privates.cache.AppConfigCacheUtils;
@@ -527,7 +526,7 @@ public class SettingActivity extends BaseActivity {
                         ImageDisplayUtils.getInstance().clearAllCache();
                         //因为断网时清除所有缓存会清掉
                         Router router = Router.getInstance();
-                        if (router.getService(WebService.class) != null) {
+                        if (router.getService(ApplicationService.class) != null) {
                             ApplicationService service = router.getService(ApplicationService.class);
                             service.clearMyAppList(SettingActivity.this);
                         }
@@ -541,7 +540,11 @@ public class SettingActivity extends BaseActivity {
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                                 | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
-                        new AppBadgeUtils(MyApplication.getInstance()).getAppBadgeCountFromServer();
+                        Router routerBadge = Router.getInstance();
+                        if (router.getService(ApplicationService.class) != null) {
+                            ApplicationService service = routerBadge.getService(ApplicationService.class);
+                            service.getAppBadgeCountFromServer();
+                        }
                     }
                 })
                 .show();
