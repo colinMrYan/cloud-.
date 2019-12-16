@@ -1,10 +1,10 @@
-package com.inspur.emmcloud.util.privates.cache;
+package com.inspur.emmcloud.schedule.util;
 
 import android.content.Context;
 
 import com.inspur.emmcloud.basemodule.util.DbCacheUtils;
-import com.inspur.emmcloud.bean.schedule.Schedule;
-import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
+import com.inspur.emmcloud.schedule.bean.Schedule;
+import com.inspur.emmcloud.schedule.bean.meeting.Meeting;
 
 import org.xutils.db.sqlite.WhereBuilder;
 

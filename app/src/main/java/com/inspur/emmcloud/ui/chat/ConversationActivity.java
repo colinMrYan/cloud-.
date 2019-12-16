@@ -22,12 +22,14 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ChannelMessageAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
+import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.ListUtils;
@@ -68,6 +70,7 @@ import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
 import com.inspur.emmcloud.bean.chat.UIMessage;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
 import com.inspur.emmcloud.bean.system.VoiceResult;
+import com.inspur.emmcloud.componentservice.Schedule.ScheduleService;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.interf.ResultCallback;
@@ -78,7 +81,6 @@ import com.inspur.emmcloud.ui.chat.pop.PopupWindowList;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
-import com.inspur.emmcloud.ui.schedule.meeting.ScheduleAddActivity;
 import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
@@ -1880,10 +1882,12 @@ public class ConversationActivity extends ConversationBaseActivity {
      * 文本信息添加到日程
      */
     private void addTextToSchedule(String content) {
-        Intent intent = new Intent();
-        intent.putExtra(Constant.EXTRA_SCHEDULE_TITLE_EVENT, content);
-        intent.setClass(ConversationActivity.this, ScheduleAddActivity.class);
-        startActivity(intent);
+        Router router = Router.getInstance();
+        if (router.getService(ScheduleService.class) != null) {
+            Bundle bundle = new Bundle();
+            bundle.putString(Constant.EXTRA_SCHEDULE_TITLE_EVENT, content);
+            ARouter.getInstance().build(Constant.AROUTER_CLASS_SCHEDLE_ADD).with(bundle).navigation(ConversationActivity.this);
+        }
     }
 
     /**

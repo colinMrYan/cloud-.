@@ -288,8 +288,10 @@ public class Constant {
     public static final String AROUTER_CLASS_MAIL_LOGIN = "/mail/login";
     public static final String AROUTER_CLASS_MAIL_HOME = "/mail/home";
     public static final String AROUTER_CLASS_GROUP_NEWS = "/group/news";
-    public static final String AROUTER_CLASS_SCHEDLE_TEST = "/schedule/test";
     public static final String AROUTER_CLASS_WEBEX_MAIN = "/webex/WebexMyMeetingActivity";
+
+    public static final String AROUTER_CLASS_SCHEDLE_TEST = "/schedule/test";
+    public static final String AROUTER_CLASS_SCHEDLE_ADD = "/schedule/add";
 
     //参会状态
     public static final int ATTEND_MEETING_STATUS_ACCEPT = 1;

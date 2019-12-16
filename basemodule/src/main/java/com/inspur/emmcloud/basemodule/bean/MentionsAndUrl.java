@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.schedule.bean;
+package com.inspur.emmcloud.basemodule.bean;
 
 /**
  * classes : com.inspur.emmcloud.bean.work.MentionsAndUrl

@@ -126,7 +126,7 @@
     <string name="schedule_meeting_attend_accept">接受</string>
     <string name="schedule_meeting_attend_ignore">暂定</string>
     <string name="schedule_meeting_attend_reject">拒绝</string>
-    <string name="chat_group_chanel_not_exist">当前聊天信息不存在</string>
+
     <string name="schedule_add">新建</string>
     <string name="schedule_update">编辑</string>
     <string name="schedule_add_position">请输入地点...</string>
@@ -167,7 +167,6 @@
     <string name="schedule_calendar_pm">下午</string>
     <string name="schedule_calendar_so_on"> 等</string>
     <string name="schedule_calendar_schedules">项日程</string>
-    <string name="schedule_calendar_no_schedule_today">暂无日程</string>
     <string name="schedule_meeting_no_meeting_today">暂无会议</string>
     <string name="schedule_click_to_add_schedule">再次点击新建日程</string>
     <string name="schedule_exchange_login_fail">%1$s 密码已更改，请到日程设置中更新</string>

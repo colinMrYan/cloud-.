@@ -10,10 +10,6 @@ import com.inspur.emmcloud.basemodule.config.Constant;
 
 public class ScheduleApplication extends BaseApplication {
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-    }
 
     @Override
     public String getIntentClassRouterAfterLogin() {

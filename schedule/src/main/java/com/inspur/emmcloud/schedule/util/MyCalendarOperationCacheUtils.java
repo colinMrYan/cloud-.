@@ -1,9 +1,10 @@
-package com.inspur.emmcloud.util.privates.cache;
+package com.inspur.emmcloud.schedule.util;
 
 import android.content.Context;
 
 import com.inspur.emmcloud.basemodule.util.DbCacheUtils;
-import com.inspur.emmcloud.bean.schedule.calendar.MyCalendarOperation;
+import com.inspur.emmcloud.schedule.bean.calendar.MyCalendarOperation;
+
 
 /**
  * 频道列表缓存处理类

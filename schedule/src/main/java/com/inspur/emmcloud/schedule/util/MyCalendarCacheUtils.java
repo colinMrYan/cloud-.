@@ -1,9 +1,9 @@
-package com.inspur.emmcloud.util.privates.cache;
+package com.inspur.emmcloud.schedule.util;
 
 import android.content.Context;
 
 import com.inspur.emmcloud.basemodule.util.DbCacheUtils;
-import com.inspur.emmcloud.bean.schedule.MyCalendar;
+import com.inspur.emmcloud.schedule.bean.MyCalendar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,6 @@ public class MyCalendarCacheUtils {
      * 存储日历列表
      *
      * @param context
-     * @param channelList
      */
     public static void saveMyCalendarList(final Context context,
                                           final List<MyCalendar> myCalendarList) {

@@ -1,9 +1,9 @@
-package com.inspur.emmcloud.util.privates.cache;
+package com.inspur.emmcloud.schedule.util;
 
 import android.content.Context;
 
 import com.inspur.emmcloud.basemodule.util.DbCacheUtils;
-import com.inspur.emmcloud.bean.schedule.task.Task;
+import com.inspur.emmcloud.schedule.bean.task.Task;
 
 import org.xutils.db.sqlite.WhereBuilder;
 

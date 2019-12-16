@@ -93,7 +93,6 @@
     <string name="schedule_calendar_schedules">schedules</string>
     <string name="schedule_account_select">Account</string>
     <string name="schedule_sync_sys_calendar">Synchronize to local calendar</string>
-    <string name="schedule_calendar_no_schedule_today">No Schedule</string>
     <string name="schedule_meeting_no_meeting_today">No Meeting</string>
     <string name="schedule_add">Create</string>
     <string name="schedule_update">Update</string>
@@ -167,7 +166,7 @@
     <string name="schedule_meeting_attend_ignore">Tentative</string>
     <string name="schedule_meeting_attend_accept">Accept</string>
     <string name="schedule_meeting_attend_reject">Reject</string>
-    <string name="chat_group_chanel_not_exist">chat message does not exist</string>
+
     <string name="schedule_delete_ac">Delete Account</string>
     <string name="schedule_modify_ac">Modify Account</string>
     <string name="meeting_cancel_the_meeting">Are you sure to cancel the meeting?</string>

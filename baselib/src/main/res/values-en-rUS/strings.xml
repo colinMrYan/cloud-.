@@ -893,6 +893,9 @@
     <string name="no_work_content">No job content</string>
     <string name="schedule_calendar_all_day">All Day</string>
 
+    <string name="meeting_trip_start_time">Start Time</string>
+    <string name="schedule_calendar_no_schedule_today">No Schedule</string>
+    <string name="chat_group_chanel_not_exist">chat message does not exist</string>
 
     <!--网络链接及网络诊断-->
     <string name="net_connected_error">No internet available,please check</string>

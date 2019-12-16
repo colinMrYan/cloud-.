@@ -1,11 +1,11 @@
-package com.inspur.emmcloud.util.privates;
+package com.inspur.emmcloud.schedule.util;
 
 import android.app.NotificationManager;
 import android.content.Context;
 
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.bean.schedule.Schedule;
-import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
+import com.inspur.emmcloud.schedule.R;
+import com.inspur.emmcloud.schedule.bean.Schedule;
+import com.inspur.emmcloud.schedule.bean.meeting.Meeting;
 
 import org.json.JSONObject;
 

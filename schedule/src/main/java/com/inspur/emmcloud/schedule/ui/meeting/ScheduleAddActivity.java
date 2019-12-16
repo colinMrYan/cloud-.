@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
@@ -74,7 +75,7 @@ import butterknife.ButterKnife;
 /**
  * Created by chenmch on 2019/4/9.
  */
-
+@Route(path = Constant.AROUTER_CLASS_APP_NETWORK_DETAIL)
 public class ScheduleAddActivity extends BaseActivity implements CompoundButton.OnCheckedChangeListener {
     public static final String EXTRA_SCHEDULE_SCHEDULECALENDAR_TYPE = "extra_schedule_calendar_type";
     //EXTRA_EVENT_TYPE_FROM_MEETING

@@ -908,6 +908,10 @@
     <string name="no_work_content">暫無工作內容</string>
     <string name="schedule_calendar_all_day">全天</string>
 
+    <string name="meeting_trip_start_time">开始时间</string>
+    <string name="schedule_calendar_no_schedule_today">暫無日程</string>
+    <string name="chat_group_chanel_not_exist">當前聊天信息不存在</string>
+
     <!--网络链接及网络诊断-->
     <string name="net_connected_error">網絡不給力，請檢查網絡設置</string>
     <string name="net_diagnosis_title">網絡診斷</string>

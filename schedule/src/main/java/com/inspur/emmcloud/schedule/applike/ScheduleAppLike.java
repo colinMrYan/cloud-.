@@ -2,6 +2,7 @@ package com.inspur.emmcloud.schedule.applike;
 
 import com.inspur.emmcloud.baselib.applicationlike.IApplicationLike;
 import com.inspur.emmcloud.baselib.router.Router;
+import com.inspur.emmcloud.componentservice.Schedule.ScheduleService;
 import com.inspur.emmcloud.componentservice.mail.MailService;
 import com.inspur.emmcloud.schedule.serviceimpl.ScheduleServiceImpl;
 
@@ -16,7 +17,7 @@ public class ScheduleAppLike implements IApplicationLike {
 
     @Override
     public void onCreate() {
-        router.addService(MailService.class, new ScheduleServiceImpl());
+        router.addService(ScheduleService.class, new ScheduleServiceImpl());
     }
 
     @Override

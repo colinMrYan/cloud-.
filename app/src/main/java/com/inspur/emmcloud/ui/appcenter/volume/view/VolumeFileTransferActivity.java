@@ -10,7 +10,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.adapter.AllTaskFragmentAdapter;
+import com.inspur.emmcloud.adapter.AllVolumeFragmentAdapter;
 import com.inspur.emmcloud.basemodule.ui.BaseMvpActivity;
 import com.inspur.emmcloud.basemodule.util.TabLayoutUtil;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
@@ -125,7 +125,7 @@ public class VolumeFileTransferActivity extends BaseMvpActivity implements Volum
             }
             list.add(fragment);
         }
-        adapter = new AllTaskFragmentAdapter(getSupportFragmentManager(), list);
+        adapter = new AllVolumeFragmentAdapter(getSupportFragmentManager(), list);
     }
 
     public void onClick(View v) {

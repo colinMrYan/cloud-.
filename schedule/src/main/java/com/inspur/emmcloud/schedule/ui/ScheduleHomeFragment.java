@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.schedule.ui;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -153,6 +154,7 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
     }
 
     private void initView() {
+        Activity tes = getActivity();
         rootView = LayoutInflater.from(getActivity()).inflate(R.layout.schedule_fragment_home, null);
         dateText = rootView.findViewById(R.id.tv_date);
         todayImgBtn = rootView.findViewById(R.id.ibt_today);
