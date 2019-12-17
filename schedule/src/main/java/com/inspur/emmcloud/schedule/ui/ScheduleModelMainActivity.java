@@ -4,7 +4,6 @@ package com.inspur.emmcloud.schedule.ui;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.view.WindowManager;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.inspur.emmcloud.basemodule.config.Constant;
@@ -22,8 +21,6 @@ public class ScheduleModelMainActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.schedule_model_main_activity);
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
-                | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         scheduleFragment = new ScheduleHomeFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.fl_container_test1, scheduleFragment).commitAllowingStateLoss();
     }
