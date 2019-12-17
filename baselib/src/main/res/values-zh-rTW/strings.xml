@@ -303,7 +303,7 @@
     <string name="socket_connecting">連接中</string>
     <string name="socket_close">已斷開</string>
     <string name="chat_file_download_success">檔案已下載成功，再次點擊進行打開</string>
-    <string name="group_name_longth_valid">群名稱字數超限（不超過40個字元）</string>
+    <string name="group_name_longth_valid">群名稱字數超限（不超過25個字元）</string>
     <string name="message_create_group">發起群聊</string>
     <string name="business_card">個人名片</string>
     <string name="no_channel_album">無內容</string>

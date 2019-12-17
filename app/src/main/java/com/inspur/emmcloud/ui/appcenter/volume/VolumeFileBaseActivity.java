@@ -482,6 +482,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        volumeActionLayout.setVisibility(View.GONE);
                         deleteFile(deleteVolumeFile);
                         dialog.dismiss();
                     }
