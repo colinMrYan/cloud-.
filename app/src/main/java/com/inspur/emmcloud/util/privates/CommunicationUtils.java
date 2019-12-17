@@ -533,6 +533,7 @@ public class CommunicationUtils {
             }
         } else if (type.equals(SearchModel.TYPE_DIRECT)) {
             Conversation conversation = ConversationCacheUtils.getConversation(BaseApplication.getInstance(), searchModel.getId());
+            String faal = "";
             icon = DirectChannelUtils.getDirectChannelIcon(MyApplication.getInstance(), conversation.getName());
         } else {
             if (!searchModel.getId().equals("null")) {
