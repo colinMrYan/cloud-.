@@ -8,4 +8,6 @@ import com.inspur.emmcloud.componentservice.CoreService;
 
 public interface ScheduleService extends CoreService {
     Class getImpFragmentClass();
+
+    void initScheduleCalendar();
 }
