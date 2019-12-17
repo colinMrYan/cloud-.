@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.application.api;
 
 import com.inspur.emmcloud.application.bean.App;
-import com.inspur.emmcloud.application.bean.BadgeBodyModel;
 import com.inspur.emmcloud.application.bean.GetAddAppResult;
 import com.inspur.emmcloud.application.bean.GetAllAppResult;
 import com.inspur.emmcloud.application.bean.GetAppGroupResult;
@@ -12,6 +11,7 @@ import com.inspur.emmcloud.application.bean.GetSearchAppResult;
 import com.inspur.emmcloud.application.bean.GetWebAppRealUrlResult;
 import com.inspur.emmcloud.application.bean.ReactNativeDownloadUrlBean;
 import com.inspur.emmcloud.application.bean.ReactNativeInstallUriBean;
+import com.inspur.emmcloud.basemodule.bean.badge.BadgeBodyModel;
 
 /**
  * Created by: yufuchang

@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.inspur.emmcloud.application.api.ApplicationAPIService;
 import com.inspur.emmcloud.application.api.ApplicationApiInterfaceImpl;
-import com.inspur.emmcloud.application.bean.BadgeBodyModel;
+import com.inspur.emmcloud.basemodule.bean.badge.BadgeBodyModel;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 
 import org.greenrobot.eventbus.EventBus;

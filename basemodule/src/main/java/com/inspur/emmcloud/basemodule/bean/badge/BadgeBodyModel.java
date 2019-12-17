@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.bean.system.badge;
+package com.inspur.emmcloud.basemodule.bean.badge;
 
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 
