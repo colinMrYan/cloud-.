@@ -47,16 +47,17 @@ import com.inspur.emmcloud.bean.schedule.calendar.ScheduleCalendar;
 import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
 import com.inspur.emmcloud.componentservice.appcenter.ApplicationService;
+import com.inspur.emmcloud.componentservice.communication.OnFindFragmentUpdateListener;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.service.CoreService;
 import com.inspur.emmcloud.service.LocationService;
+import com.inspur.emmcloud.ui.find.FindFragment;
 import com.inspur.emmcloud.util.privates.AppConfigUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.MessageSendManager;
 import com.inspur.emmcloud.util.privates.ProfileUtils;
-import com.inspur.emmcloud.util.privates.ReactNativeUtils;
 import com.inspur.emmcloud.util.privates.SplashPageUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactOrgCacheUtils;
@@ -262,7 +263,16 @@ public class IndexActivity extends IndexBaseActivity {
                 @Override
                 public void getClientIdSuccess(String clientId) {
                     if (NetUtils.isNetworkConnected(getApplicationContext(), false)) {
-                        new ReactNativeUtils(IndexActivity.this).init(); //更新react
+                        Router router = Router.getInstance();
+                        if (router.getService(ApplicationService.class) != null) {
+                            ApplicationService service = router.getService(ApplicationService.class);
+                            service.initReactNative(IndexActivity.this, new OnFindFragmentUpdateListener() {
+                                @Override
+                                public void onFindFragment(boolean isUpdateed) {
+                                    FindFragment.hasUpdated = isUpdateed;
+                                }
+                            });
+                        }
                     }
                 }
 

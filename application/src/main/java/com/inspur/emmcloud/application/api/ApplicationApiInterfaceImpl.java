@@ -11,6 +11,7 @@ import com.inspur.emmcloud.application.bean.GetSearchAppResult;
 import com.inspur.emmcloud.application.bean.GetWebAppRealUrlResult;
 import com.inspur.emmcloud.application.bean.ReactNativeDownloadUrlBean;
 import com.inspur.emmcloud.application.bean.ReactNativeInstallUriBean;
+import com.inspur.emmcloud.application.bean.ReactNativeUpdateBean;
 import com.inspur.emmcloud.basemodule.bean.badge.BadgeBodyModel;
 
 /**
@@ -155,6 +156,16 @@ public class ApplicationApiInterfaceImpl implements ApplicationAPIInterface {
 
     @Override
     public void returnUserAppsFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnReactNativeUpdateSuccess(ReactNativeUpdateBean reactNativeUpdateBean) {
+
+    }
+
+    @Override
+    public void returnReactNativeUpdateFail(String error, int errorCode) {
 
     }
 }

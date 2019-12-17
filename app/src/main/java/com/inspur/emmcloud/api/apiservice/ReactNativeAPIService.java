@@ -10,17 +10,11 @@ import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
 import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
 import com.inspur.emmcloud.basemodule.api.HttpUtils;
-import com.inspur.emmcloud.basemodule.util.DownLoaderUtils;
 import com.inspur.emmcloud.bean.appcenter.GetClientIdRsult;
-import com.inspur.emmcloud.bean.appcenter.ReactNativeDownloadUrlBean;
-import com.inspur.emmcloud.bean.appcenter.ReactNativeInstallUriBean;
 import com.inspur.emmcloud.componentservice.login.LoginService;
 import com.inspur.emmcloud.componentservice.login.OauthCallBack;
 
-import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
-
-import java.io.File;
 
 /**
  * Created by yufuchang on 2017/3/28.
@@ -90,47 +84,6 @@ public class ReactNativeAPIService {
     }
 
     /**
-     * 获取地址
-     *
-     * @param uri
-     */
-    public void getReactNativeInstallUrl(final String uri) {
-        final String completeUrl = APIUri.getReactNativeInstallUrl();
-        RequestParams params = ((MyApplication) context.getApplicationContext())
-                .getHttpRequestParams(completeUrl);
-        params.addParameter("uri", uri);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
-            @Override
-            public void callbackSuccess(byte[] arg0) {
-                apiInterface.returnGetReactNativeInstallUrlSuccess(new ReactNativeInstallUriBean(new String(arg0)));
-            }
-
-            @Override
-            public void callbackFail(String error, int responseCode) {
-                apiInterface.returnGetReactNativeInstallUrlFail(error, responseCode);
-            }
-
-            @Override
-            public void callbackTokenExpire(long requestTime) {
-                OauthCallBack oauthCallBack = new OauthCallBack() {
-                    @Override
-                    public void reExecute() {
-                        getReactNativeInstallUrl(uri);
-                    }
-
-                    @Override
-                    public void executeFailCallback() {
-                        callbackFail("", -1);
-                    }
-                };
-                refreshToken(
-                        oauthCallBack, requestTime);
-            }
-
-        });
-    }
-
-    /**
      * 写回版本变更情况
      *
      * @param preVersion
@@ -176,61 +129,7 @@ public class ReactNativeAPIService {
     }
 
 
-    /**
-     * 获取ReactNative应用的下地址
-     *
-     * @param context
-     * @param findDownloadUrl
-     * @param clientId
-     * @param currentVersion
-     */
-    public void getDownLoadUrl(final Context context, final String findDownloadUrl,
-                               final String clientId, final String currentVersion) {
-        final String completeUrl = findDownloadUrl + "?version=" + currentVersion + "&clientId=" + clientId;
-        RequestParams params = ((MyApplication) context.getApplicationContext())
-                .getHttpRequestParams(completeUrl);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
-            @Override
-            public void callbackSuccess(byte[] arg0) {
-                apiInterface.returnGetDownloadReactNativeUrlSuccess(new ReactNativeDownloadUrlBean(new String(arg0)));
-            }
 
-            @Override
-            public void callbackFail(String error, int responseCode) {
-                apiInterface.returnGetDownloadReactNativeUrlFail(error, responseCode);
-            }
-
-            @Override
-            public void callbackTokenExpire(long requestTime) {
-                OauthCallBack oauthCallBack = new OauthCallBack() {
-                    @Override
-                    public void reExecute() {
-                        getDownLoadUrl(context, findDownloadUrl, clientId, currentVersion);
-                    }
-
-                    @Override
-                    public void executeFailCallback() {
-                        callbackFail("", -1);
-                    }
-                };
-                refreshToken(
-                        oauthCallBack, requestTime);
-            }
-
-        });
-    }
-
-    /**
-     * 下载reactnative更新包
-     *
-     * @param fromUri
-     * @param filePath
-     * @param progressCallback
-     */
-    public void downloadReactNativeModuleZipPackage(String fromUri, String filePath, Callback.ProgressCallback<File> progressCallback) {
-        DownLoaderUtils downLoaderUtils = new DownLoaderUtils();
-        downLoaderUtils.startDownLoad(fromUri, filePath, progressCallback);
-    }
 
 //    /**
 //     * 写回闪屏日志

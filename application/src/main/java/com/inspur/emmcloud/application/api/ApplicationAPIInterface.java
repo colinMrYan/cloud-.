@@ -11,6 +11,7 @@ import com.inspur.emmcloud.application.bean.GetSearchAppResult;
 import com.inspur.emmcloud.application.bean.GetWebAppRealUrlResult;
 import com.inspur.emmcloud.application.bean.ReactNativeDownloadUrlBean;
 import com.inspur.emmcloud.application.bean.ReactNativeInstallUriBean;
+import com.inspur.emmcloud.application.bean.ReactNativeUpdateBean;
 import com.inspur.emmcloud.basemodule.bean.badge.BadgeBodyModel;
 
 /**
@@ -74,5 +75,9 @@ public interface ApplicationAPIInterface {
     void returnUserAppsSuccess(GetAppGroupResult getAppGroupResult, String clientConfigMyAppVersion);
 
     void returnUserAppsFail(String error, int errorCode);
+
+    void returnReactNativeUpdateSuccess(ReactNativeUpdateBean reactNativeUpdateBean);
+
+    void returnReactNativeUpdateFail(String error, int errorCode);
 
 }

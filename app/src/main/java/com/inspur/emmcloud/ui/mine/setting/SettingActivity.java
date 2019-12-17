@@ -530,8 +530,6 @@ public class SettingActivity extends BaseActivity {
                             ApplicationService service = router.getService(ApplicationService.class);
                             service.clearMyAppList(SettingActivity.this);
                         }
-                        //清除全部缓存时是否需要清除掉小程序，如果需要，解开下面一行的注释
-//					ReactNativeFlow.deleteReactNativeInstallDir(MyAppConfig.getReactInstallPath(SettingActivity.this,userId));
                         ToastUtils.show(getApplicationContext(),
                                 R.string.data_clear_success);
                         //((MyApplication) getApplicationContext()).exit();

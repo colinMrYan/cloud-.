@@ -159,4 +159,13 @@ public class ApplicationAPIUri {
     public static String getCreateGroupConversationUrl() {
         return WebServiceRouterManager.getInstance().getClusterChat() + "/api/v1" + "/channel/group";
     }
+
+    /**
+     * 更新的Native地址
+     *
+     * @return
+     */
+    public static String getReactNativeUpdate() {
+        return WebServiceRouterManager.getInstance().getClusterDistribution() + "/view/DISCOVER/bundle/?";
+    }
 }

@@ -5,6 +5,7 @@ import android.content.Context;
 import com.inspur.emmcloud.application.bean.GetClientIdRsult;
 import com.inspur.emmcloud.application.bean.ReactNativeDownloadUrlBean;
 import com.inspur.emmcloud.application.bean.ReactNativeInstallUriBean;
+import com.inspur.emmcloud.application.bean.ReactNativeUpdateBean;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
@@ -274,5 +275,42 @@ public class ApplicationReactNativeAPIService {
 //        });
 //    }
 
+    /**
+     * 获取ReactNative更新版本
+     *
+     * @param version
+     * @param lastCreationDate
+     */
+    public void getReactNativeUpdate(final String version, final long lastCreationDate, final String clientId) {
+        final String completeUrl = ApplicationAPIUri.getReactNativeUpdate() + "version=" + version + "&lastCreationDate="
+                + lastCreationDate + "&clientId=" + clientId;
+        RequestParams params = ((BaseApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnReactNativeUpdateSuccess(new ReactNativeUpdateBean(new String(arg0)));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnReactNativeUpdateFail(error, responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                refreshToken(new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getReactNativeUpdate(version, lastCreationDate, clientId);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                }, requestTime);
+            }
+        });
+    }
 
 }

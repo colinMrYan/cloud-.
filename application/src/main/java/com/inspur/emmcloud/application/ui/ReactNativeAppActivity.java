@@ -23,7 +23,6 @@ import com.inspur.emmcloud.application.bean.ReactNativeInstallUriBean;
 import com.inspur.emmcloud.application.util.ReactNativeFlow;
 import com.inspur.emmcloud.application.util.ReactNativeInitInfoUtils;
 import com.inspur.emmcloud.application.util.ReactNativeWritableNativeMap;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
@@ -66,7 +65,6 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
 
     @Override
     public void onCreate() {
-        LogUtils.YfcDebug("application里的ReactNativeActivity");
         init();
         checkSource();
         initReactNativeApp();

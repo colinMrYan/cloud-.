@@ -15,12 +15,14 @@ import com.inspur.emmcloud.application.util.AppCacheUtils;
 import com.inspur.emmcloud.application.util.AppId2AppAndOpenAppUtils;
 import com.inspur.emmcloud.application.util.MyAppCacheUtils;
 import com.inspur.emmcloud.application.util.MyAppWidgetUtils;
+import com.inspur.emmcloud.application.util.ReactNativeUtils;
 import com.inspur.emmcloud.application.util.WebAppUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.componentservice.appcenter.ApplicationService;
+import com.inspur.emmcloud.componentservice.communication.OnFindFragmentUpdateListener;
 import com.inspur.emmcloud.componentservice.communication.OnFinishActivityListener;
 import com.inspur.emmcloud.componentservice.communication.OnGetWebAppRealUrlListener;
 
@@ -133,5 +135,10 @@ public class AppCenterServiceImpl implements ApplicationService {
     @Override
     public void getWebAppRealUrl(OnGetWebAppRealUrlListener listener, String url) {
         new WebAppUtils(BaseApplication.getInstance(), listener).getWebAppRealUrl(url);
+    }
+
+    @Override
+    public void initReactNative(Context context, OnFindFragmentUpdateListener listener) {
+        new ReactNativeUtils(context, listener).init(); //更新react
     }
 }

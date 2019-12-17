@@ -6,8 +6,6 @@ import com.inspur.emmcloud.basemodule.bean.badge.BadgeBodyModel;
 import com.inspur.emmcloud.bean.ChatFileUploadInfo;
 import com.inspur.emmcloud.bean.appcenter.GetClientIdRsult;
 import com.inspur.emmcloud.bean.appcenter.GetIDResult;
-import com.inspur.emmcloud.bean.appcenter.ReactNativeDownloadUrlBean;
-import com.inspur.emmcloud.bean.appcenter.ReactNativeInstallUriBean;
 import com.inspur.emmcloud.bean.appcenter.ReactNativeUpdateBean;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailDetailResult;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailFolderResult;
@@ -844,26 +842,6 @@ public class APIInterfaceInstance implements APIInterface {
 
     }
 
-
-    @Override
-    public void returnGetDownloadReactNativeUrlSuccess(ReactNativeDownloadUrlBean reactNativeDownloadUrlBean) {
-
-    }
-
-    @Override
-    public void returnGetDownloadReactNativeUrlFail(String error, int errorCode) {
-
-    }
-
-    @Override
-    public void returnGetReactNativeInstallUrlSuccess(ReactNativeInstallUriBean reactNativeInstallUriBean) {
-
-    }
-
-    @Override
-    public void returnGetReactNativeInstallUrlFail(String error, int errorCode) {
-
-    }
 
     @Override
     public void returnVeriryApprovalPasswordSuccess(String password) {
