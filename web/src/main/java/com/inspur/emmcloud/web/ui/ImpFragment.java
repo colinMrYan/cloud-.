@@ -15,6 +15,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.ScaleAnimation;
+import android.view.animation.TranslateAnimation;
 import android.webkit.ValueCallback;
 import android.webkit.WebSettings;
 import android.widget.AdapterView;
@@ -485,10 +489,27 @@ public class ImpFragment extends ImpBaseFragment {
             }
 
             @Override
+            public void hideScreenshotImg() {
+                screenshotImg.clearAnimation();
+                screenshotImg.setVisibility(View.GONE);
+            }
+
+            @Override
             public void showScreenshotImg(String screenshotImgPath) {
                 ImpFragment.this.screenshotImgPath = screenshotImgPath;
                 screenshotImg.setVisibility(View.VISIBLE);
                 ImageDisplayUtils.getInstance().displayImage(screenshotImg, screenshotImgPath);
+                float scale = rootView.getWidth() * 1.0f / DensityUtil.dip2px(90);
+                int fromX = DensityUtil.dip2px((45 * scale - 75));
+                float fromY = -(rootView.getHeight() - rootView.getHeight() * 1.0f / rootView.getWidth() * DensityUtil.dip2px(90) - DensityUtil.dip2px(40));
+                TranslateAnimation translateAnimation = new TranslateAnimation(Animation.ABSOLUTE, fromX, Animation.ABSOLUTE, 0, Animation.ABSOLUTE, fromY, Animation.ABSOLUTE, 0);
+                Animation scaleAnimation = new ScaleAnimation(scale, 1, scale, 1, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                AnimationSet animationSet = new AnimationSet(true);
+
+                animationSet.addAnimation(scaleAnimation);
+                animationSet.addAnimation(translateAnimation);
+                animationSet.setDuration(500);
+                screenshotImg.startAnimation(animationSet);
                 if (handler != null) {
                     handler.removeCallbacks(screenshotRunnable);
                     handler.postDelayed(screenshotRunnable, 3000);
