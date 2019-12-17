@@ -34,7 +34,7 @@ public interface ApplicationService extends CoreService {
 
     void saveAppCommonlyUseList(Context context, String appListJson);
 
-    Class getSyncCommonAppService();
+    void syncCommonApp();
 
     void getMyAppRecommendWidgets();
 

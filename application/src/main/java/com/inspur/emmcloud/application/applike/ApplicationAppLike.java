@@ -1,6 +1,6 @@
 package com.inspur.emmcloud.application.applike;
 
-import com.inspur.emmcloud.application.serviceimpl.AppCenterServiceImpl;
+import com.inspur.emmcloud.application.serviceimpl.ApplicationServiceImpl;
 import com.inspur.emmcloud.baselib.applicationlike.IApplicationLike;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.componentservice.appcenter.ApplicationService;
@@ -14,7 +14,7 @@ public class ApplicationAppLike implements IApplicationLike {
 
     @Override
     public void onCreate() {
-        router.addService(ApplicationService.class, new AppCenterServiceImpl());
+        router.addService(ApplicationService.class, new ApplicationServiceImpl());
     }
 
     @Override

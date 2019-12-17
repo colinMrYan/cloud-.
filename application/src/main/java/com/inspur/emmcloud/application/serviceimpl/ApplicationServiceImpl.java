@@ -5,10 +5,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 
+import com.inspur.emmcloud.application.api.ApplicationAPIService;
+import com.inspur.emmcloud.application.api.ApplicationApiInterfaceImpl;
 import com.inspur.emmcloud.application.bean.App;
 import com.inspur.emmcloud.application.bean.AppCommonlyUse;
 import com.inspur.emmcloud.application.bean.AppGroupBean;
-import com.inspur.emmcloud.application.service.SyncCommonAppService;
 import com.inspur.emmcloud.application.ui.MyAppFragment;
 import com.inspur.emmcloud.application.util.AppBadgeUtils;
 import com.inspur.emmcloud.application.util.AppCacheUtils;
@@ -20,6 +21,7 @@ import com.inspur.emmcloud.application.util.WebAppUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.componentservice.appcenter.ApplicationService;
 import com.inspur.emmcloud.componentservice.communication.OnFindFragmentUpdateListener;
@@ -34,7 +36,7 @@ import java.util.Map;
  * Created by: yufuchang
  * Date: 2019/11/27
  */
-public class AppCenterServiceImpl implements ApplicationService {
+public class ApplicationServiceImpl implements ApplicationService {
 
     @Override
     public Class getMyAppFragment() {
@@ -121,8 +123,16 @@ public class AppCenterServiceImpl implements ApplicationService {
 
 
     @Override
-    public Class getSyncCommonAppService() {
-        return SyncCommonAppService.class;
+    public void syncCommonApp() {
+        if (NetUtils.isNetworkConnected(BaseApplication.getInstance()) && BaseApplication.getInstance().isHaveLogin()) {
+            List<AppCommonlyUse> commonAppList = AppCacheUtils.getUploadCommonlyUseAppList(BaseApplication.getInstance());
+            if (commonAppList.size() > 0) {
+                String commonAppListJson = JSONUtils.toJSONString(commonAppList);
+                ApplicationAPIService apiService = new ApplicationAPIService(BaseApplication.getInstance());
+                apiService.setAPIInterface(new WebService());
+                apiService.syncCommonApp(commonAppListJson);
+            }
+        }
     }
 
     @Override
@@ -140,5 +150,17 @@ public class AppCenterServiceImpl implements ApplicationService {
     @Override
     public void initReactNative(Context context, OnFindFragmentUpdateListener listener) {
         new ReactNativeUtils(context, listener).init(); //更新react
+    }
+
+    class WebService extends ApplicationApiInterfaceImpl {
+        @Override
+        public void returnSaveConfigSuccess() {
+            //暂时没有处理
+        }
+
+        @Override
+        public void returnSaveConfigFail() {
+            //暂时没有处理
+        }
     }
 }
