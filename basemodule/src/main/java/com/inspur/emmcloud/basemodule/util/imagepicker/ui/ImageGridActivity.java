@@ -226,7 +226,7 @@ public class ImageGridActivity extends ImageBaseActivity implements
                     imagePicker.getSelectLimit()));
             OkText.setEnabled(true);
         } else {
-            OkText.setText(getString(R.string.complete));
+            OkText.setText(getString(R.string.send));
             OkText.setEnabled(false);
         }
 

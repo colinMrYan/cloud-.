@@ -19,6 +19,9 @@ public class DownloadCacheUtils {
         } catch (DbException e) {
             e.printStackTrace();
         }
+        if (list == null) {
+            list = new ArrayList<>();
+        }
         return list;
     }
 

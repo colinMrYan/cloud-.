@@ -37,6 +37,9 @@
     <string name="update">Update</string>
     <string name="download">Download</string>
     <string name="redownload">Continue to download</string>
+    <string name="download_complete">Download complete</string>
+    <string name="download_fail_tip">Download failed, click <Data><![CDATA[<font color=\'#36a5f6\'>Retry</font>]]></Data> </string>
+    <string name="upload_fail_tip">Upload failed，click<Data><![CDATA[<font color=\'#36a5f6\'>Retry</font>]]></Data></string>
     <string name="confirm_modify_language">Change to This Language?</string>
     <string name="file_type_not_recognize">Unrecognizable File type</string>
     <string name="return_app">Return Application</string>
@@ -178,6 +181,8 @@
     <string name="choose_common_office">common office address</string>
     <string name="please_click_choosing_time">Please click and choose time</string>
     <string name="channel_group_qrcode">Group QR Code</string>
+    <string name="channel_group_qrcode_card">Group QR Code</string>
+    <string name="channel_group_qrcode_valid">Valid until %1$s and will update upon joining group</string>
     <string name="meeting_room">Meeting Room</string>
     <string name="building">Building</string>
     <string name="am">AM</string>
@@ -292,7 +297,7 @@
     <string name="socket_connecting">Connecting</string>
     <string name="socket_close">Disconnected</string>
     <string name="chat_file_download_success">File has been downloaded successfully, click again to open</string>
-    <string name="group_name_longth_valid">Group name, word overrun (no more than 40 characters)</string>
+    <string name="group_name_longth_valid">Group name, word overrun (no more than 25 characters)</string>
     <string name="message_create_group">New Chat</string>
     <string name="business_card">Business Card</string>
     <string name="no_channel_album">No content</string>
@@ -350,7 +355,8 @@
     <string name="chat_search_related_messages">Record(s) for%1$s</string>
     <string name="chat_more_private_chat">More Private Chats</string>
     <string name="chat_private_chat">Private Chats</string>
-    <string name="chat_group_welcome_join_group">Welcome to group %1$s</string>
+    <string name="chat_group_welcome_join_group">Welcome to group</string>
+    <string name="chat_group_welcome_join_group_detail">Welcome to group %1$s,enter to view details.</string>
     <string name="chat_conversation_create_error">Create Chat Group Fail</string>
     <string name="chat_emotion_recent_tip">Recently Used</string>
     <string name="chat_emotion_total_tip">All Stickers</string>
@@ -475,7 +481,7 @@
     <string name="schedule_task_a_person">person</string>
     <string name="schedule_task_tag_name_length">Tag name up to 64 characters</string>
     <string name="schedule_click_to_add_schedule">Click to Add Schedule</string>
-    <string name="schedule_exchange_login_fail">%1$s Password has changed.Update it in the schedule settings.</string>
+    <string name="schedule_exchange_login_fail">Exchange account password changed, please update</string>
     <string name="schedule_account_type">Calendar</string>
     <string name="schedule_cloud_calendar">Cloud+ Schedule</string>
     <string name="schedule_cloud_meeting">Cloud+ Meeting</string>
@@ -643,12 +649,14 @@
     <string name="volume_file_upload_network_type_warning">Currently not connected to Wi-Fi,uploading will use mobile traffic,continue?</string>
     <string name="volume_file_download_network_type_warning">Currently not connected to Wi-Fi,downloading will use mobile traffic,continue?</string>
     <string name="volume_file_transfer">File Transfer</string>
-    <string name="volume_file_transfer_download_list">Downloading</string>
-    <string name="volume_file_transfer_upload_list">Uploading</string>
+    <string name="volume_file_transfer_download_list">Download List</string>
+    <string name="volume_file_transfer_upload_list">Upload List</string>
     <string name="volume_file_transfer_list_wait_tip">Waiting&#8230;</string>
     <string name="volume_file_transfer_list_pause_tip">Pausing&#8230;</string>
     <string name="volume_file_transfer_list_download_count">Downloading&#8230;(%1$d)</string>
     <string name="volume_file_transfer_list_upload_count">Uploading&#8230;(%1$d)</string>
+    <string name="volume_file_transfer_list_download_finish_count">Download complete&#160;(%1$d)</string>
+    <string name="volume_file_transfer_list_upload_finish_count">Upload complete&#160;(%1$d)</string>
     <string name="volume_file_transfer_list_pause">Suspend</string>
     <string name="volume_file_transfer_list_continue">Continue</string>
     <string name="create">Create</string>

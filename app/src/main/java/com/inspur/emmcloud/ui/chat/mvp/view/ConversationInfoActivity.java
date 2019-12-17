@@ -27,6 +27,7 @@ import com.inspur.emmcloud.ui.chat.CommunicationSearchMessagesActivity;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.ui.chat.ConversationCastInfoActivity;
 import com.inspur.emmcloud.ui.chat.ConversationNameModifyActivity;
+import com.inspur.emmcloud.ui.chat.ConversationQrCodeActivity;
 import com.inspur.emmcloud.ui.chat.FileTransferDetailActivity;
 import com.inspur.emmcloud.ui.chat.GroupAlbumActivity;
 import com.inspur.emmcloud.ui.chat.GroupFileActivity;
@@ -195,11 +196,11 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
                         ConversationNameModifyActivity.class, bundle);
                 break;
             case R.id.rl_conversation_qr:
-//                bundle.putString("cid", uiConversation.getId());
-//                bundle.putString("groupName", uiConversation.getShowName());
-//                bundle.putInt(MEMBER_SIZE, uiConversation.getMemberList().size());
-//                IntentUtils.startActivity(this,
-//                        ConversationQrCodeActivity.class, bundle);
+                bundle.putString("cid", uiConversation.getId());
+                bundle.putString("groupName", uiConversation.getShowName());
+                bundle.putInt(MEMBER_SIZE, mPresenter.getConversationRealMemberSize());
+                IntentUtils.startActivity(this,
+                        ConversationQrCodeActivity.class, bundle);
                 break;
             case R.id.rl_conversation_images:
                 bundle.putString(EXTRA_CID, uiConversation.getId());

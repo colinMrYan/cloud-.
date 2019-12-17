@@ -90,12 +90,19 @@
         android:id="@+id/tv_duration_right"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:maxLength="3"
+        android:maxLength="4"
         android:paddingLeft="6dp"
         android:textColor="#3f3f3f"
         android:textSize="15sp"
         android:visibility="gone" />
 
+    <View
+        android:id="@+id/v_pack"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:layout_marginLeft="6dp"
+        android:background="@drawable/bg_tips_new_message"
+        android:visibility="gone" />
     <com.inspur.emmcloud.baselib.widget.CustomLoadingView
         android:id="@+id/qlv_downloading_right"
         android:layout_width="wrap_content"

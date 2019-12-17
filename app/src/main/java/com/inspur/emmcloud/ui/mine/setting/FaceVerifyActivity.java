@@ -257,10 +257,10 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
             parameters.setRotation(rotateAngle);
             List<Camera.Size> PictureSizeList = parameters.getSupportedPictureSizes();
             float rate = 1.33333333f;
-            Camera.Size pictureSize = CameraUtils.getInstance(this).getPictureSize(PictureSizeList, 1000, rate);
+            Camera.Size pictureSize = CameraUtils.getInstance().getPictureSize(PictureSizeList, 1000, rate);
             parameters.setPictureSize(pictureSize.width, pictureSize.height);
             List<Camera.Size> previewSizeList = parameters.getSupportedPreviewSizes();
-            Camera.Size previewSize = CameraUtils.getInstance(this).getPreviewSize(previewSizeList, 1000, rate);
+            Camera.Size previewSize = CameraUtils.getInstance().getPreviewSize(previewSizeList, 1000, rate);
             parameters.setPreviewSize(previewSize.width, previewSize.height);
             List<String> modelList = parameters.getSupportedFlashModes();
             if (modelList != null && modelList.contains(cameraFlashModel)) {

@@ -5,7 +5,6 @@ import android.view.SurfaceHolder;
 
 import com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary.CameraInterface;
 import com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary.JCameraView;
-import com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary.util.LogUtil;
 
 public class BorrowVideoState implements State {
     private final String TAG = "BorrowVideoState";
@@ -27,13 +26,12 @@ public class BorrowVideoState implements State {
     }
 
     @Override
-    public boolean focus(float x, float y, CameraInterface.FocusCallback callback, boolean isShowFocusView) {
-        return false;
+    public void focus(float x, float y, CameraInterface.FocusCallback callback, boolean isShowFocusView) {
     }
 
 
     @Override
-    public void swtich(SurfaceHolder holder, float screenProp) {
+    public void switchCamera(SurfaceHolder holder, float screenProp) {
 
     }
 
@@ -58,7 +56,7 @@ public class BorrowVideoState implements State {
     }
 
     @Override
-    public void cancle(SurfaceHolder holder, float screenProp) {
+    public void cancel(SurfaceHolder holder, float screenProp) {
         machine.getView().resetState(JCameraView.TYPE_VIDEO);
         machine.setState(machine.getPreviewState());
     }
@@ -71,7 +69,6 @@ public class BorrowVideoState implements State {
 
     @Override
     public void zoom(float zoom, int type) {
-        LogUtil.i(TAG, "zoom");
     }
 
     @Override

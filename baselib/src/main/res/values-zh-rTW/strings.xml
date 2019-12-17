@@ -40,6 +40,9 @@
     <string name="update">更新</string>
     <string name="download">下載</string>
     <string name="redownload">繼續下載</string>
+    <string name="download_complete">下載完成</string>
+    <string name="download_fail_tip">下載失敗，點擊<Data><![CDATA[<font color=\'#36a5f6\'>重新下載</font>]]></Data></string>
+    <string name="upload_fail_tip">上傳失敗，點擊<Data><![CDATA[<font color=\'#36a5f6\'>重新上傳</font>]]></Data></string>
     <string name="confirm_modify_language">確定修改語言</string>
     <string name="resolution_valiad">您的設備解析度小於1280*720無法運行此程式</string>
     <string name="file_type_not_recognize">不可識別的檔案類型</string>
@@ -177,6 +180,8 @@
     <string name="channel_group_file">群文件</string>
     <string name="channel_group_members_name">群名稱</string>
     <string name="channel_group_qrcode">群二維碼</string>
+    <string name="channel_group_qrcode_card">群二維碼名片</string>
+    <string name="channel_group_qrcode_valid">該二維碼7天內（%1$s之前）有效，重新進入將更新</string>
     <string name="channel_set_top"> 置頂</string>
     <string name="message_without_interruption">消息免打擾</string>
     <string name="login_hint_text">用戶名/郵箱/手機號</string>
@@ -298,7 +303,7 @@
     <string name="socket_connecting">連接中</string>
     <string name="socket_close">已斷開</string>
     <string name="chat_file_download_success">檔案已下載成功，再次點擊進行打開</string>
-    <string name="group_name_longth_valid">群名稱字數超限（不超過40個字元）</string>
+    <string name="group_name_longth_valid">群名稱字數超限（不超過25個字元）</string>
     <string name="message_create_group">發起群聊</string>
     <string name="business_card">個人名片</string>
     <string name="no_channel_album">無內容</string>
@@ -354,7 +359,8 @@
     <string name="chat_search_related_messages">%1$s的記錄</string>
     <string name="chat_group_member_size">%1$s(%2$d)</string>
     <string name="chat_group_qr_code_share">分享二維碼</string>
-    <string name="chat_group_welcome_join_group">歡迎進入%1$s群</string>
+    <string name="chat_group_welcome_join_group">歡迎加入群聊</string>
+    <string name="chat_group_welcome_join_group_detail">歡迎加入群聊%1$s,進入可查看詳情。</string>
     <string name="chat_conversation_create_error">創建群組失敗</string>
     <string name="chat_emotion_recent_tip">最近使用</string>
     <string name="chat_emotion_total_tip">所有表情</string>
@@ -449,7 +455,7 @@
     <string name="schedule_meeting_no_meeting_today">暂无會議</string>
     <string name="schedule_task_no_task_today">暂无任務</string>
     <string name="schedule_click_to_add_schedule">再次點擊新建日程</string>
-    <string name="schedule_exchange_login_fail">%1$s 密碼已更改，請到日程設置中更新</string>
+    <string name="schedule_exchange_login_fail">Exchange帳戶密碼已變更，請更新</string>
     <string name="schedule_account_type">賬戶</string>
     <string name="schedule_cloud_calendar">云+ 日程</string>
     <string name="schedule_cloud_meeting">云+ 會議</string>
@@ -656,6 +662,8 @@
     <string name="volume_file_transfer_list_pause_tip">暫停中&#8230;</string>
     <string name="volume_file_transfer_list_download_count">正在下載&#8230;(%1$d)</string>
     <string name="volume_file_transfer_list_upload_count">正在上傳&#8230;(%1$d)</string>
+    <string name="volume_file_transfer_list_download_finish_count">下載完成&#160;(%1$d)</string>
+    <string name="volume_file_transfer_list_upload_finish_count">上傳完成&#160;(%1$d)</string>
     <string name="volume_file_transfer_list_pause">全部暫停</string>
     <string name="volume_file_transfer_list_continue">全部繼續</string>
     <string name="rename">重命名</string>

@@ -63,6 +63,10 @@
 
     </RelativeLayout>
 
+    <include
+        layout="@layout/header_error"
+        android:visibility="gone" />
+
     <com.inspur.emmcloud.baselib.widget.CustomScrollViewPager
         android:id="@+id/view_pager_all_schedule"
         android:layout_width="match_parent"

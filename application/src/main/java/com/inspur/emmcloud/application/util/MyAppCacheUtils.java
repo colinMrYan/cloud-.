@@ -99,7 +99,7 @@ public class MyAppCacheUtils {
      * @param deleteApp
      */
     public static void deleteAppInCache(Context context, App deleteApp) {
-        List<AppGroupBean> appGroupList = MyAppCacheUtils.getMyAppListFromNet(BaseApplication.getInstance());
+        List<AppGroupBean> appGroupList = MyAppCacheUtils.getMyAppListFromNet(MyApplication.getInstance());
         for (AppGroupBean appGroupBean : appGroupList) {
             List<App> appList = appGroupBean.getAppItemList();
             if (appList.contains(deleteApp)) {

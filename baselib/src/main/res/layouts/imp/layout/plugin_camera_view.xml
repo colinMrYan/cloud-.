@@ -47,8 +47,9 @@
 
         <ImageView
             android:id="@+id/image_switch"
-            android:layout_width="65dp"
-            android:layout_height="65dp"
+            android:layout_width="67dp"
+            android:layout_height="67dp"
+            android:layout_marginTop="10dp"
             android:padding="20dp"
             android:scaleType="fitXY"
             android:src="@drawable/plugin_cemera_btn_camera_switch" />
@@ -60,7 +61,8 @@
         android:id="@+id/capture_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom" />
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="20dp" />
 
     <com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary.FocusView
         android:id="@+id/fouce_view"

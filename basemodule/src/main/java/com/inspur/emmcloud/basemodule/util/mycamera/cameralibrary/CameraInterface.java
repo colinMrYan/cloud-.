@@ -20,12 +20,12 @@ import android.view.SurfaceHolder;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.basemodule.util.mycamera.CameraUtils;
 import com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary.listener.ErrorListener;
-import com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary.util.CameraParamUtil;
 import com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary.util.CheckPermission;
 import com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary.util.DeviceUtil;
 import com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary.util.FileUtil;
-import com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary.util.LogUtil;
 import com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary.util.ScreenUtils;
 
 import java.io.ByteArrayOutputStream;
@@ -50,7 +50,6 @@ public class CameraInterface implements Camera.PreviewCallback {
     private int SELECTED_CAMERA = -1;
     private int CAMERA_POST_POSITION = -1;
     private int CAMERA_FRONT_POSITION = -1;
-    private SurfaceHolder mHolder = null;
     private float screenProp = -1.0f;
     private boolean isRecorder = false;
     private MediaRecorder mediaRecorder;
@@ -153,13 +152,17 @@ public class CameraInterface implements Camera.PreviewCallback {
         this.mSwitchView = mSwitchView;
         this.mFlashLamp = mFlashLamp;
         if (mSwitchView != null) {
-            cameraAngle = CameraParamUtil.getInstance().getCameraDisplayOrientation(mSwitchView.getContext(),
+            cameraAngle = CameraUtils.getInstance().getCameraDisplayOrientation(mSwitchView.getContext(),
                     SELECTED_CAMERA);
         }
     }
 
     public void setJCameraView(JCameraView jCameraView) {
         this.jCameraView = jCameraView;
+    }
+
+    public void resetCamera() {
+        SELECTED_CAMERA = CAMERA_POST_POSITION;
     }
 
     //切换摄像头icon跟随手机角度进行旋转
@@ -242,7 +245,7 @@ public class CameraInterface implements Camera.PreviewCallback {
         if (mParams == null) {
             mParams = mCamera.getParameters();
         }
-        if (!mParams.isZoomSupported() || !mParams.isSmoothZoomSupported()) {
+        if (!mParams.isZoomSupported() && !mParams.isSmoothZoomSupported()) {
             return;
         }
         switch (type) {
@@ -253,7 +256,7 @@ public class CameraInterface implements Camera.PreviewCallback {
                 }
                 if (zoom >= 0) {
                     //每移动50个像素缩放一个级别
-                    int scaleRate = (int) (zoom / 40);
+                    int scaleRate = (int) (zoom / 50);
                     if (scaleRate <= mParams.getMaxZoom() && scaleRate >= nowScaleRate && recordScleRate != scaleRate) {
                         mParams.setZoom(scaleRate);
                         mCamera.setParameters(mParams);
@@ -265,8 +268,9 @@ public class CameraInterface implements Camera.PreviewCallback {
                 if (isRecorder) {
                     return;
                 }
+
                 //每移动50个像素缩放一个级别
-                int scaleRate = (int) (zoom / 50);
+                int scaleRate = (int) (zoom / 30);
                 if (scaleRate < mParams.getMaxZoom()) {
                     nowScaleRate += scaleRate;
                     if (nowScaleRate < 0) {
@@ -277,7 +281,6 @@ public class CameraInterface implements Camera.PreviewCallback {
                     mParams.setZoom(nowScaleRate);
                     mCamera.setParameters(mParams);
                 }
-                LogUtil.i("setZoom = " + nowScaleRate);
                 break;
         }
 
@@ -350,7 +353,6 @@ public class CameraInterface implements Camera.PreviewCallback {
             SELECTED_CAMERA = CAMERA_POST_POSITION;
         }
         doDestroyCamera();
-        LogUtil.i("open start");
         openCamera(SELECTED_CAMERA);
 //        mCamera = Camera.open();
         if (Build.VERSION.SDK_INT > 17 && this.mCamera != null) {
@@ -360,7 +362,6 @@ public class CameraInterface implements Camera.PreviewCallback {
                 e.printStackTrace();
             }
         }
-        LogUtil.i("open end");
         doStartPreview(holder, screenProp);
     }
 
@@ -368,36 +369,32 @@ public class CameraInterface implements Camera.PreviewCallback {
      * doStartPreview
      */
     public void doStartPreview(SurfaceHolder holder, float screenProp) {
-        if (isPreviewing) {
-            LogUtil.i("doStartPreview isPreviewing");
-        }
         if (this.screenProp < 0) {
             this.screenProp = screenProp;
         }
         if (holder == null) {
             return;
         }
-        this.mHolder = holder;
         if (mCamera != null) {
             try {
                 mParams = mCamera.getParameters();
-                Camera.Size previewSize = CameraParamUtil.getInstance().getPreviewSize(mParams
+                Camera.Size previewSize = CameraUtils.getInstance().getPreviewSize(mParams
                         .getSupportedPreviewSizes(), 700, screenProp);
-                Camera.Size pictureSize = CameraParamUtil.getInstance().getPictureSize(mParams
+                Camera.Size pictureSize = CameraUtils.getInstance().getPictureSize(mParams
                         .getSupportedPictureSizes(), 1000, screenProp);
-
                 mParams.setPreviewSize(previewSize.width, previewSize.height);
-
-                preview_width = previewSize.width;
                 preview_height = previewSize.height;
                 mParams.setPictureSize(pictureSize.width, pictureSize.height);
-
-                if (CameraParamUtil.getInstance().isSupportedFocusMode(
+                if (jCameraView.isHasCameraCropView() && CameraUtils.getInstance().isSupportedFocusMode(
+                        mParams.getSupportedFocusModes(),
+                        Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO)) {
+                    mParams.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
+                } else if (CameraUtils.getInstance().isSupportedFocusMode(
                         mParams.getSupportedFocusModes(),
                         Camera.Parameters.FOCUS_MODE_AUTO)) {
                     mParams.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
                 }
-                if (CameraParamUtil.getInstance().isSupportedPictureFormats(mParams.getSupportedPictureFormats(),
+                if (CameraUtils.getInstance().isSupportedPictureFormats(mParams.getSupportedPictureFormats(),
                         ImageFormat.JPEG)) {
                     mParams.setPictureFormat(ImageFormat.JPEG);
                     mParams.setJpegQuality(100);
@@ -409,7 +406,6 @@ public class CameraInterface implements Camera.PreviewCallback {
                 mCamera.setPreviewCallback(this); //每一帧回调
                 mCamera.startPreview();//启动浏览
                 isPreviewing = true;
-                Log.i(TAG, "=== Start Preview ===");
 
 
                 float prevewProp = (float) previewSize.width / (float) previewSize.height;
@@ -418,11 +414,13 @@ public class CameraInterface implements Camera.PreviewCallback {
                 final RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) jCameraView.getLayoutParams();
                 params.width = width;
                 params.height = height;
-
+                LogUtils.jasonDebug("a==" + System.currentTimeMillis());
                 jCameraView.post(new Runnable() {
                     @Override
                     public void run() {
+                        LogUtils.jasonDebug("b==" + System.currentTimeMillis());
                         jCameraView.setLayoutParams(params);
+                        jCameraView.showCaptureLayout();
                         jCameraView.reFocus();
                     }
                 });
@@ -464,10 +462,10 @@ public class CameraInterface implements Camera.PreviewCallback {
                 mCamera.stopPreview();
                 //这句要在stopPreview后执行，不然会卡顿或者花屏
                 mCamera.setPreviewDisplay(null);
-                mHolder = null;
                 isPreviewing = false;
                 mCamera.release();
                 mCamera = null;
+                nowScaleRate = 1;
 //                destroyCameraInterface();
                 Log.i(TAG, "=== Destroy Camera ===");
             } catch (IOException e) {
@@ -569,10 +567,10 @@ public class CameraInterface implements Camera.PreviewCallback {
 
         Camera.Size videoSize;
         if (mParams.getSupportedVideoSizes() == null) {
-            videoSize = CameraParamUtil.getInstance().getPreviewSize(mParams.getSupportedPreviewSizes(), 600,
+            videoSize = CameraUtils.getInstance().getPreviewSize(mParams.getSupportedPreviewSizes(), 600,
                     screenProp);
         } else {
-            videoSize = CameraParamUtil.getInstance().getPreviewSize(mParams.getSupportedVideoSizes(), 600,
+            videoSize = CameraUtils.getInstance().getPreviewSize(mParams.getSupportedVideoSizes(), 600,
                     screenProp);
         }
         Log.i(TAG, "setVideoSize    width = " + videoSize.width + "height = " + videoSize.height);
@@ -697,46 +695,48 @@ public class CameraInterface implements Camera.PreviewCallback {
         }
     }
 
-    public boolean handleFocus(final Context context, final float x, final float y, final FocusCallback callback) {
-        if (mCamera == null) {
-            return false;
+    public void handleFocus(final Context context, final float x, final float y, final FocusCallback callback) {
+        if (mCamera == null && jCameraView.isHasCameraCropView()) {
+            return;
         }
         final Camera.Parameters params = mCamera.getParameters();
         Rect focusRect = calculateTapArea(x, y, 1f, context);
-        mCamera.cancelAutoFocus();
+        Camera.Area cameraArea = new Camera.Area(focusRect, 1000);
         if (params.getMaxNumFocusAreas() > 0) {
+            mCamera.cancelAutoFocus();
             List<Camera.Area> focusAreas = new ArrayList<>();
-            focusAreas.add(new Camera.Area(focusRect, 800));
+            focusAreas.add(cameraArea);
             params.setFocusAreas(focusAreas);
         }
-//        else {
-//            Log.i(TAG, "focus areas not supported");
-//            callback.focusSuccess();
-//            return false;
-//        }
+        if (params.getMaxNumMeteringAreas() > 0) { // Check if it is safe to set meteringArea.
+            List<Camera.Area> meteringAreas = new ArrayList<>();
+            meteringAreas.add(cameraArea);
+            params.setMeteringAreas(meteringAreas);
+        }
         final String currentFocusMode = params.getFocusMode();
         try {
             params.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
             mCamera.setParameters(params);
-            mCamera.autoFocus(new Camera.AutoFocusCallback() {
-                @Override
-                public void onAutoFocus(boolean success, Camera camera) {
-//                    if (success || handlerTime > 1) {
-                    Camera.Parameters params = camera.getParameters();
-                    params.setFocusMode(currentFocusMode);
-                    camera.setParameters(params);
-                    handlerTime = 0;
-                    callback.focusSuccess();
-//                    } else {
-//                        handlerTime++;
-//                        handleFocus(context, x, y, callback);
-//                    }
-                }
-            });
-            return true;
+            if (params.getMaxNumFocusAreas() > 0) {
+                mCamera.autoFocus(new Camera.AutoFocusCallback() {
+                    @Override
+                    public void onAutoFocus(boolean success, Camera camera) {
+                        if (success || handlerTime > 1) {
+                            Camera.Parameters params = camera.getParameters();
+                            params.setFocusMode(currentFocusMode);
+                            camera.setParameters(params);
+                            handlerTime = 0;
+                            callback.focusSuccess();
+                            sensorController.lockFocus();
+                        } else {
+                            handlerTime++;
+                            handleFocus(context, x, y, callback);
+                        }
+                    }
+                });
+            }
         } catch (Exception e) {
             Log.e(TAG, "autoFocus failer");
-            return false;
         }
     }
 
@@ -757,9 +757,7 @@ public class CameraInterface implements Camera.PreviewCallback {
             public void onFocus() {
                 if (mCamera != null) {
                     if (!sensorController.isFocusLocked()) {
-                        if (jCameraView.reFocus()) {
-                            sensorController.lockFocus();
-                        }
+                        jCameraView.reFocus();
                     }
                 }
             }

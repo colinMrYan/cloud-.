@@ -24,8 +24,8 @@ import com.inspur.emmcloud.basemodule.bean.GetAllConfigVersionResult;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.push.PushManagerUtils;
-import com.inspur.emmcloud.basemodule.service.PVCollectService;
 import com.inspur.emmcloud.basemodule.util.ApiRequestRecordUploadUtils;
+import com.inspur.emmcloud.basemodule.util.AppPVManager;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.ClientConfigUpdateUtils;
 import com.inspur.emmcloud.basemodule.util.ClientIDUtils;
@@ -186,23 +186,11 @@ public class IndexActivity extends IndexBaseActivity {
      * 启动服务
      */
     private void startService() {
-        startUploadPVCollectService();
+        //app应用行为分析上传
+        new AppPVManager().uploadPV();
         startCoreService();
         startLocationService();
     }
-
-    /***
-     * 打开app应用行为分析上传的Service;
-     */
-    private void startUploadPVCollectService() {
-        // TODO Auto-generated method stub
-        if (!AppUtils.isServiceWork(getApplicationContext(), PVCollectService.class.getName())) {
-            Intent intent = new Intent();
-            intent.setClass(this, PVCollectService.class);
-            startService(intent);
-        }
-    }
-
 
     /**
      * 打开保活服务

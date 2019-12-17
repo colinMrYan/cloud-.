@@ -12,9 +12,9 @@ public interface State {
 
     void stop();
 
-    boolean focus(float x, float y, CameraInterface.FocusCallback callback, boolean isShowFocusView);
+    void focus(float x, float y, CameraInterface.FocusCallback callback, boolean isShowFocusView);
 
-    void swtich(SurfaceHolder holder, float screenProp);
+    void switchCamera(SurfaceHolder holder, float screenProp);
 
     void restart();
 
@@ -24,7 +24,7 @@ public interface State {
 
     void stopRecord(boolean isShort, long time);
 
-    void cancle(SurfaceHolder holder, float screenProp);
+    void cancel(SurfaceHolder holder, float screenProp);
 
     void confirm();
 

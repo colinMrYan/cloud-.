@@ -14,9 +14,9 @@ public class SensorController implements SensorEventListener {
     public static final int STATUS_NONE = 0;
     public static final int STATUS_STATIC = 1;
     public static final int STATUS_MOVE = 2;
-    public static final int DELAY_DURATION = 500;
+    public static final int DELAY_DURATION = 200;
     private static SensorController mInstance;
-    private final double moveIs = 1.4;
+    private final double moveIs = 1.7;
     boolean canFocus = false;
     boolean canFocusIn = false;
     boolean isFocusing = false;
@@ -71,6 +71,7 @@ public class SensorController implements SensorEventListener {
         }
 
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+
             int x = (int) event.values[0];
             int y = (int) event.values[1];
             int z = (int) event.values[2];
@@ -82,8 +83,7 @@ public class SensorController implements SensorEventListener {
                 int py = Math.abs(mY - y);
                 int pz = Math.abs(mZ - z);
                 double value = Math.sqrt(px * px + py * py + pz * pz);
-
-                if (value > moveIs) {
+                if (value >= moveIs) {
                     STATUE = STATUS_MOVE;
                 } else {
                     if (STATUE == STATUS_MOVE) {

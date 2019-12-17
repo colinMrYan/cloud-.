@@ -477,7 +477,7 @@ public class ScheduleDetailActivity extends BaseActivity {
             case R.id.rl_schedule_attend_status:     //参会答复
                 Intent replyIntent = new Intent(this, ScheduleDetailReplyActivity.class);
                 replyIntent.putExtra("OriginReplyData", info);
-                replyIntent.putExtra(Constant.SCHEDULE_DETAIL, scheduleEvent);
+                replyIntent.putExtra(Constant.OPEN_SCHEDULE_DETAIL, scheduleEvent);
                 startActivityForResult(replyIntent, 0);
                 break;
         }

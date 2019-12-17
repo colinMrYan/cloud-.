@@ -5,6 +5,7 @@ import com.inspur.emmcloud.basemodule.application.BaseApplication;
 
 import org.xutils.common.Callback;
 import org.xutils.common.Callback.Cancelable;
+import org.xutils.http.HttpMethod;
 import org.xutils.http.RequestParams;
 import org.xutils.http.app.RedirectHandler;
 import org.xutils.http.request.UriRequest;
@@ -37,7 +38,11 @@ public class DownLoaderUtils {
             @Override
             public RequestParams getRedirectParams(UriRequest uriRequest) throws Throwable {
                 String locationUrl = uriRequest.getResponseHeader("Location");
-                params.setUri(locationUrl);
+                RequestParams params = new RequestParams(locationUrl);
+                params.setAutoResume(true);// 断点下载
+                params.setSaveFilePath(saveFilePath);
+                params.setCancelFast(true);
+                params.setMethod(HttpMethod.GET);
                 return params;
             }
         });

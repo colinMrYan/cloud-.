@@ -46,8 +46,8 @@ public class ReturnButton extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        int moveX = size / 4;
-        int moveY = size / 2;
+        int moveX = size / 5;
+        int moveY = (int) (size / 2.5);
         path.moveTo(strokeWidth + moveX, strokeWidth / 2 + moveY);
         path.lineTo(center_X + moveX, center_Y - strokeWidth / 2 + moveY);
         path.lineTo(size - strokeWidth + moveX, strokeWidth / 2 + moveY);

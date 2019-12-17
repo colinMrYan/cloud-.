@@ -294,9 +294,6 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
             if (cidNumMap.containsKey(tempConversation.getId())) {
                 ConversationWithMessageNum conversationFromChatContent =
                         new ConversationWithMessageNum(tempConversation, cidNumMap.get(tempConversation.getId()));
-                if (tempConversation.getType().equals(Conversation.TYPE_DIRECT)) {
-                    conversationFromChatContent.initSingleChatContact();
-                }
                 conversationFromChatContentList.add(conversationFromChatContent);
             }
         }
@@ -616,7 +613,11 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
             } else {
                 searchHolder = (SearchHolder) view.getTag();
             }
-            Conversation conversation = conversationFromChatContentList.get(i).getConversation();
+
+            Conversation conversation = null;
+            if (conversationFromChatContentList.size() > 0) {
+                conversation = conversationFromChatContentList.get(i).getConversation();
+            }
             if (conversation != null && conversation.getType().equals(Conversation.TYPE_GROUP)) {
                 SearchModel searchModel = conversation.conversation2SearchModel();
                 displayImg(searchModel, searchHolder.headImageView);
@@ -643,11 +644,10 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
                 searchHolder.detailTextView.setVisibility(View.VISIBLE);
             }
 
-            Contact contact = conversationFromChatContentList.get(i).getSingleChatContactUser();
-            if (contact != null && conversation.getType().equals(Conversation.TYPE_DIRECT)) {
-                SearchModel searchModel = contact.contact2SearchModel();
-                displayImg(searchModel, searchHolder.headImageView);
-                searchHolder.nameTextView.setText(searchModel.getName().toString());
+            if (conversation != null && conversation.getType().equals(Conversation.TYPE_DIRECT)) {
+                String icon = DirectChannelUtils.getDirectChannelIcon(MyApplication.getInstance(), conversation.getName());
+                ImageDisplayUtils.getInstance().displayImage(searchHolder.headImageView, icon, R.drawable.icon_person_default);
+                searchHolder.nameTextView.setText(conversation.getShowName());
                 String string = getString(R.string.chat_contact_related_message, conversationFromChatContentList.get(i).getMessageNum());
                 searchHolder.detailTextView.setText(string);
                 searchHolder.detailTextView.setVisibility(View.VISIBLE);
