@@ -93,6 +93,24 @@ public class MyAppCacheUtils {
     }
 
     /**
+     * 删除缓存里的App
+     *
+     * @param context
+     * @param deleteApp
+     */
+    public static void deleteAppInCache(Context context, App deleteApp) {
+        List<AppGroupBean> appGroupList = MyAppCacheUtils.getMyAppListFromNet(BaseApplication.getInstance());
+        for (AppGroupBean appGroupBean : appGroupList) {
+            List<App> appList = appGroupBean.getAppItemList();
+            if (appList.contains(deleteApp)) {
+                appList.remove(deleteApp);
+                break;
+            }
+        }
+        saveMyAppListFromNet(context, appGroupList);
+    }
+
+    /**
      * 存储是否需要显示常用app
      *
      * @param isNeedCommonlyUseApp
@@ -106,17 +124,21 @@ public class MyAppCacheUtils {
 
     /**
      * 获取是否需要显示常用app
-     * isShowCommAppFromSer  服务端拉取是否显示常用应用  true：显示本地最近常用操作按钮 然后根据 isShowCommAppFromNative 显示最近常用应用UI false：隐藏本地操作按钮
+     *isShowCommAppFromSer  服务端拉取是否显示常用应用  true：显示本地最近常用操作按钮 然后根据 isShowCommAppFromNative 显示最近常用应用UI false：隐藏本地操作按钮
      * isShowCommAppFromNative 最近常用操作按钮本地存储状态
-     *
      * @return
      */
     public static boolean getNeedCommonlyUseApp() {
         String userId = BaseApplication.getInstance().getUid();
-        boolean isShowCommAppFromSer = AppConfigCacheUtils.getAppConfigValue(BaseApplication.getInstance(), "EnableCommonFunction", "true").equals("true");
-        boolean isShowCommAppFromNative = PreferencesUtils.getBoolean(BaseApplication.getInstance(), BaseApplication.getInstance().getTanent()
-                + userId + "needCommonlyUseApp", true);
-        return isShowCommAppFromNative && isShowCommAppFromSer;
+        boolean isCommonUseAppShowResult = true;
+        boolean isContactCommState = PreferencesUtils.isKeyExist(BaseApplication.getInstance(), BaseApplication.getInstance().getTanent() + userId + "needCommonlyUseApp");
+        if (!isContactCommState) {
+            isCommonUseAppShowResult = AppConfigCacheUtils.getAppConfigValue(BaseApplication.getInstance(), "EnableCommonFunction", "true").equals("true");
+        } else {
+            isCommonUseAppShowResult = PreferencesUtils.getBoolean(BaseApplication.getInstance(), BaseApplication.getInstance().getTanent()
+                    + userId + "needCommonlyUseApp", true);
+        }
+        return isCommonUseAppShowResult;
     }
 
     /**

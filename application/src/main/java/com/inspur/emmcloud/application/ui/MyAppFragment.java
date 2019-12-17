@@ -945,6 +945,7 @@ public class MyAppFragment extends BaseFragment {
                             new AppBadgeUtils(BaseApplication.getInstance()).getAppBadgeCountFromServer();
                             appListAdapter.notifyDataSetChanged();
                             dragGridViewAdapter.notifyDataSetChanged();
+                            MyAppCacheUtils.deleteAppInCache(getActivity(), app);
 //                            MyAppCacheUtils.saveMyAppList(getActivity(), appListAdapter.getAppAdapterList());
                         }
                     });
