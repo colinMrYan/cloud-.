@@ -6,7 +6,6 @@ import com.inspur.emmcloud.basemodule.bean.badge.BadgeBodyModel;
 import com.inspur.emmcloud.bean.ChatFileUploadInfo;
 import com.inspur.emmcloud.bean.appcenter.GetClientIdRsult;
 import com.inspur.emmcloud.bean.appcenter.GetIDResult;
-import com.inspur.emmcloud.bean.appcenter.ReactNativeUpdateBean;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailDetailResult;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailFolderResult;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailListResult;
@@ -80,6 +79,9 @@ import com.inspur.emmcloud.bean.system.GetBoolenResult;
 import com.inspur.emmcloud.bean.system.GetUpgradeResult;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
 import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
+import com.inspur.reactnative.bean.ReactNativeDownloadUrlBean;
+import com.inspur.reactnative.bean.ReactNativeInstallUriBean;
+import com.inspur.reactnative.bean.ReactNativeUpdateBean;
 
 import java.util.Calendar;
 import java.util.List;
@@ -124,6 +126,16 @@ public class APIInterfaceInstance implements APIInterface {
     @Override
     public void returnUpgradeFail(String error, boolean isManualCheck, int errorCode) {
         // TODO Auto-generated method stub
+    }
+
+    @Override
+    public void returnGetReactNativeInstallUrlSuccess(ReactNativeInstallUriBean reactNativeInstallUriBean) {
+
+    }
+
+    @Override
+    public void returnGetReactNativeInstallUrlFail(String error, int errorCode) {
+
     }
 
 
@@ -1697,4 +1709,16 @@ public class APIInterfaceInstance implements APIInterface {
     public void returnMoveOrCopyFileBetweenVolumeFail(GetReturnMoveOrCopyErrorResult errorResult, int errorCode, String srcVolumeFilePath, String operation, List<VolumeFile> volumeFileList) {
 
     }
+
+
+    @Override
+    public void returnGetDownloadReactNativeUrlSuccess(ReactNativeDownloadUrlBean reactNativeDownloadUrlBean) {
+
+    }
+
+    @Override
+    public void returnGetDownloadReactNativeUrlFail(String error, int errorCode) {
+
+    }
+
 }

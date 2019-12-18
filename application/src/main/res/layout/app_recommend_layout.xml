@@ -25,7 +25,7 @@
                     android:clipChildren="false"
                     android:visibility="gone">
 
-                    <com.inspur.emmcloud.application.widget.AdsViewPager
+                    <com.inspur.emmcloud.widget.AdsViewPager
                         android:id="@+id/avp_ads"
                         android:layout_width="wrap_content"
                         android:layout_height="130dp"

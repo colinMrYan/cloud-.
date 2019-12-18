@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.application.bean;
+package com.inspur.reactnative.bean;
 
 import org.json.JSONException;
 import org.json.JSONObject;

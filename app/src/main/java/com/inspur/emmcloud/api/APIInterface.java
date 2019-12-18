@@ -5,7 +5,6 @@ import com.inspur.emmcloud.basemodule.bean.badge.BadgeBodyModel;
 import com.inspur.emmcloud.bean.ChatFileUploadInfo;
 import com.inspur.emmcloud.bean.appcenter.GetClientIdRsult;
 import com.inspur.emmcloud.bean.appcenter.GetIDResult;
-import com.inspur.emmcloud.bean.appcenter.ReactNativeUpdateBean;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailDetailResult;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailFolderResult;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailListResult;
@@ -79,6 +78,9 @@ import com.inspur.emmcloud.bean.system.GetBoolenResult;
 import com.inspur.emmcloud.bean.system.GetUpgradeResult;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
 import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
+import com.inspur.reactnative.bean.ReactNativeDownloadUrlBean;
+import com.inspur.reactnative.bean.ReactNativeInstallUriBean;
+import com.inspur.reactnative.bean.ReactNativeUpdateBean;
 
 import java.util.Calendar;
 import java.util.List;
@@ -93,10 +95,13 @@ public interface APIInterface {
     void returnUpgradeFail(String error, boolean isManualCheck, int errorCode);
 
 
+    void returnGetDownloadReactNativeUrlSuccess(ReactNativeDownloadUrlBean reactNativeDownloadUrlBean);
 
+    void returnGetDownloadReactNativeUrlFail(String error, int errorCode);
 
+    void returnGetReactNativeInstallUrlSuccess(ReactNativeInstallUriBean reactNativeInstallUriBean);
 
-
+    void returnGetReactNativeInstallUrlFail(String error, int errorCode);
 
 
     void returnUploadMyHeadSuccess(GetUploadMyHeadResult getUploadMyInfoResult, String filePath);

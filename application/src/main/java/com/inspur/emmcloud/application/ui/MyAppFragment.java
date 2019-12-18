@@ -352,6 +352,7 @@ public class MyAppFragment extends BaseFragment {
         if (appGroupList.size() > 0 && (appGroupList.size() != appGroupFromNetList.size()) && !MyAppCacheUtils.getNeedCommonlyUseApp()) {
             appGroupList.remove(0);
         }
+        handleAppOrder(appGroupList);
         if (appListAdapter != null) {
             appListAdapter.setAppAdapterList(appGroupList);
         } else {
@@ -747,15 +748,8 @@ public class MyAppFragment extends BaseFragment {
                 appGroupList.get(changeId).getCategoryID());
     }
 
-    /**
-     * 获取到网络数据后对排序和显示进行处理
-     *
-     * @param appGroupList
-     * @return
-     */
-    public List<AppGroupBean> handleAppList(List<AppGroupBean> appGroupList) {
-        List<AppOrder> appOrderList = AppCacheUtils
-                .getAllAppOrderList(getActivity());
+    public void handleAppOrder(List<AppGroupBean> appGroupList) {
+        List<AppOrder> appOrderList = AppCacheUtils.getAllAppOrderList(getActivity());
         int appListSize = appGroupList.size();
         for (int i = 0; i < appListSize; i++) {
             List<App> appItemList = appGroupList.get(i).getAppItemList();
@@ -769,8 +763,32 @@ public class MyAppFragment extends BaseFragment {
                     app.setOrderId(Integer.parseInt(appOrderList.get(index).getOrderId()));
                 }
             }
-            Collections.sort(appGroupList.get(i).getAppItemList(),
-                    new SortAppClass());
+            Collections.sort(appGroupList.get(i).getAppItemList(), new SortAppClass());
+        }
+    }
+
+    /**
+     * 获取到网络数据后对排序和显示进行处理
+     *
+     * @param appGroupList
+     * @return
+     */
+    public List<AppGroupBean> handleAppList(List<AppGroupBean> appGroupList) {
+        List<AppOrder> appOrderList = AppCacheUtils.getAllAppOrderList(getActivity());
+        int appListSize = appGroupList.size();
+        for (int i = 0; i < appListSize; i++) {
+            List<App> appItemList = appGroupList.get(i).getAppItemList();
+            int appGroupSize = appItemList.size();
+            for (int j = 0; j < appGroupSize; j++) {
+                App app = appItemList.get(j);
+                AppOrder appOrderCache = new AppOrder();
+                appOrderCache.setAppID(app.getAppID());
+                int index = appOrderList.indexOf(appOrderCache);
+                if (index != -1) {
+                    app.setOrderId(Integer.parseInt(appOrderList.get(index).getOrderId()));
+                }
+            }
+            Collections.sort(appGroupList.get(i).getAppItemList(), new SortAppClass());
         }
         handCommonlyUseAppData(appGroupList, false);
         return appGroupList;

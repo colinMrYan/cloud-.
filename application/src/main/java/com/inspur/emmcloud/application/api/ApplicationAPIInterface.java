@@ -9,9 +9,6 @@ import com.inspur.emmcloud.application.bean.GetRecommendAppWidgetListResult;
 import com.inspur.emmcloud.application.bean.GetRemoveAppResult;
 import com.inspur.emmcloud.application.bean.GetSearchAppResult;
 import com.inspur.emmcloud.application.bean.GetWebAppRealUrlResult;
-import com.inspur.emmcloud.application.bean.ReactNativeDownloadUrlBean;
-import com.inspur.emmcloud.application.bean.ReactNativeInstallUriBean;
-import com.inspur.emmcloud.application.bean.ReactNativeUpdateBean;
 import com.inspur.emmcloud.basemodule.bean.badge.BadgeBodyModel;
 
 /**
@@ -59,25 +56,18 @@ public interface ApplicationAPIInterface {
 
     void returnBadgeCountFail(String error, int errorCode);
 
-    void returnGetReactNativeInstallUrlSuccess(ReactNativeInstallUriBean reactNativeInstallUriBean);
 
-    void returnGetReactNativeInstallUrlFail(String error, int errorCode);
 
 
     void returnGetClientIdResultSuccess(GetClientIdRsult getClientIdRsult);
 
     void returnGetClientIdResultFail(String error, int errorCode);
 
-    void returnGetDownloadReactNativeUrlSuccess(ReactNativeDownloadUrlBean reactNativeDownloadUrlBean);
 
-    void returnGetDownloadReactNativeUrlFail(String error, int errorCode);
 
     void returnUserAppsSuccess(GetAppGroupResult getAppGroupResult, String clientConfigMyAppVersion);
 
     void returnUserAppsFail(String error, int errorCode);
 
-    void returnReactNativeUpdateSuccess(ReactNativeUpdateBean reactNativeUpdateBean);
-
-    void returnReactNativeUpdateFail(String error, int errorCode);
 
 }

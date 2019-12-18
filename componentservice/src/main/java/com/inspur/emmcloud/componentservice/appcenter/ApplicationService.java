@@ -5,7 +5,6 @@ import android.content.Context;
 import android.net.Uri;
 
 import com.inspur.emmcloud.componentservice.CoreService;
-import com.inspur.emmcloud.componentservice.communication.OnFindFragmentUpdateListener;
 import com.inspur.emmcloud.componentservice.communication.OnFinishActivityListener;
 import com.inspur.emmcloud.componentservice.communication.OnGetWebAppRealUrlListener;
 
@@ -40,5 +39,4 @@ public interface ApplicationService extends CoreService {
 
     void getWebAppRealUrl(OnGetWebAppRealUrlListener listener, String url);
 
-    void initReactNative(Context context, OnFindFragmentUpdateListener listener);
 }

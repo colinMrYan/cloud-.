@@ -9,9 +9,6 @@ import com.inspur.emmcloud.application.bean.GetRecommendAppWidgetListResult;
 import com.inspur.emmcloud.application.bean.GetRemoveAppResult;
 import com.inspur.emmcloud.application.bean.GetSearchAppResult;
 import com.inspur.emmcloud.application.bean.GetWebAppRealUrlResult;
-import com.inspur.emmcloud.application.bean.ReactNativeDownloadUrlBean;
-import com.inspur.emmcloud.application.bean.ReactNativeInstallUriBean;
-import com.inspur.emmcloud.application.bean.ReactNativeUpdateBean;
 import com.inspur.emmcloud.basemodule.bean.badge.BadgeBodyModel;
 
 /**
@@ -119,15 +116,7 @@ public class ApplicationApiInterfaceImpl implements ApplicationAPIInterface {
 
     }
 
-    @Override
-    public void returnGetReactNativeInstallUrlSuccess(ReactNativeInstallUriBean reactNativeInstallUriBean) {
 
-    }
-
-    @Override
-    public void returnGetReactNativeInstallUrlFail(String error, int errorCode) {
-
-    }
 
     @Override
     public void returnGetClientIdResultSuccess(GetClientIdRsult getClientIdRsult) {
@@ -136,16 +125,6 @@ public class ApplicationApiInterfaceImpl implements ApplicationAPIInterface {
 
     @Override
     public void returnGetClientIdResultFail(String error, int errorCode) {
-
-    }
-
-    @Override
-    public void returnGetDownloadReactNativeUrlSuccess(ReactNativeDownloadUrlBean reactNativeDownloadUrlBean) {
-
-    }
-
-    @Override
-    public void returnGetDownloadReactNativeUrlFail(String error, int errorCode) {
 
     }
 
@@ -159,13 +138,4 @@ public class ApplicationApiInterfaceImpl implements ApplicationAPIInterface {
 
     }
 
-    @Override
-    public void returnReactNativeUpdateSuccess(ReactNativeUpdateBean reactNativeUpdateBean) {
-
-    }
-
-    @Override
-    public void returnReactNativeUpdateFail(String error, int errorCode) {
-
-    }
 }

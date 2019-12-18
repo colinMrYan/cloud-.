@@ -33,6 +33,7 @@ import com.inspur.emmcloud.componentservice.communication.ShareToConversationLis
 import com.inspur.emmcloud.componentservice.mail.MailService;
 import com.inspur.emmcloud.componentservice.mail.OnExchangeLoginListener;
 import com.inspur.emmcloud.interf.CommonCallBack;
+import com.inspur.emmcloud.ui.appcenter.ReactNativeAppActivity;
 import com.inspur.emmcloud.ui.appcenter.volume.VolumeHomePageActivity;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
@@ -173,8 +174,7 @@ public class AppSchemeHandleActivity extends BaseActivity {
                                 break;
                             case "ecc-app-react-native":
                                 bundle.putString(scheme, uri.toString());
-                                ARouter.getInstance().build(Constant.AROUTER_CLASS_APPCENTER_REACT_NATIVE).with(bundle).navigation(AppSchemeHandleActivity.this);
-                                finish();
+                                IntentUtils.startActivity(AppSchemeHandleActivity.this, ReactNativeAppActivity.class, bundle, true);
                                 break;
                             case "gs-msg":
                                 if (!NetUtils.isNetworkConnected(AppSchemeHandleActivity.this)) {

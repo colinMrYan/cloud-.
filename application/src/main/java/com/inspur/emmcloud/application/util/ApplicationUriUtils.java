@@ -8,13 +8,13 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.application.R;
 import com.inspur.emmcloud.application.api.ApplicationAPIUri;
 import com.inspur.emmcloud.application.bean.App;
-import com.inspur.emmcloud.application.ui.ReactNativeAppActivity;
-import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
+import com.inspur.emmcloud.componentservice.appcenter.AppcenterService;
 import com.inspur.emmcloud.componentservice.communication.OnGetWebAppRealUrlListener;
 
 
@@ -67,12 +67,15 @@ public class ApplicationUriUtils {
             case 5:
                 Bundle bundle = new Bundle();
                 bundle.putString("ecc-app-react-native", uri);
-                IntentUtils.startActivity(activity, ReactNativeAppActivity.class, bundle);
+                Router router = Router.getInstance();
+                if (router.getService(AppcenterService.class) != null) {
+                    AppcenterService service = router.getService(AppcenterService.class);
+                    service.startReactNativeApp(activity, bundle);
+                }
                 break;
             case 7:
                 OfflineAppUtil.handleOfflineWeb(activity, app);
                 break;
-
             default:
                 ToastUtils.show(activity,
                         R.string.app_not_support_app_type);

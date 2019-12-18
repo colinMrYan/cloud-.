@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.bean.appcenter;
+package com.inspur.reactnative.bean;
 
 
 import com.inspur.emmcloud.baselib.util.StringUtils;

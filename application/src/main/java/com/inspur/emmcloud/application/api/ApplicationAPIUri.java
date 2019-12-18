@@ -98,15 +98,6 @@ public class ApplicationAPIUri {
     }
 
     /**
-     * zip文件下载地址
-     *
-     * @return
-     */
-    public static String getZipUrl() {
-        return WebServiceRouterManager.getInstance().getClusterStorageLegacy() + "/res/stream/";
-    }
-
-    /**
      * 获取clientid的
      *
      * @return
@@ -125,15 +116,6 @@ public class ApplicationAPIUri {
     }
 
     /**
-     * ReactNative应用安装地址查询接口
-     *
-     * @return
-     */
-    public static String getReactNativeInstallUrl() {
-        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/mam/v3.0/imp_app/queryByUri";
-    }
-
-    /**
      * 获取所有App以及查询app
      *
      * @return
@@ -149,23 +131,5 @@ public class ApplicationAPIUri {
      */
     public static String getUserApps() {
         return WebServiceRouterManager.getInstance().getClusterEmm() + "api/mam/v3.1/imp_app/userApps";
-    }
-
-    /**
-     * 获取创建聊天url
-     *
-     * @return
-     */
-    public static String getCreateGroupConversationUrl() {
-        return WebServiceRouterManager.getInstance().getClusterChat() + "/api/v1" + "/channel/group";
-    }
-
-    /**
-     * 更新的Native地址
-     *
-     * @return
-     */
-    public static String getReactNativeUpdate() {
-        return WebServiceRouterManager.getInstance().getClusterDistribution() + "/view/DISCOVER/bundle/?";
     }
 }

@@ -1,11 +1,10 @@
-package com.inspur.emmcloud.application.util;
+package com.inspur.emmcloud.util.privates;
 
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 
-import com.inspur.emmcloud.application.api.ApplicationAPIUri;
-import com.inspur.emmcloud.application.bean.ReactNativeUpdateBean;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ZipUtils;
 import com.inspur.emmcloud.basemodule.api.APIDownloadCallBack;
@@ -13,6 +12,8 @@ import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.AppExceptionCacheUtils;
 import com.inspur.emmcloud.basemodule.util.DownLoaderUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
+import com.inspur.emmcloud.ui.find.FindFragment;
+import com.inspur.reactnative.bean.ReactNativeUpdateBean;
 
 import java.io.File;
 
@@ -104,7 +105,7 @@ public class ReactNativeFlow {
      */
     public static void downLoadZipFile(final Context context, final ReactNativeUpdateBean reactNativeUpdateBean, final String userId) {
         final String reactZipFilePath = MyAppConfig.getFileDownloadDirPath() + "/" + userId + "/" + reactNativeUpdateBean.getBundle().getAndroidUri();
-        APIDownloadCallBack progressCallback = new APIDownloadCallBack(context, ApplicationAPIUri.getZipUrl()) {
+        APIDownloadCallBack progressCallback = new APIDownloadCallBack(context, APIUri.getZipUrl()) {
             @Override
             public void callbackStart() {
 
@@ -130,7 +131,7 @@ public class ReactNativeFlow {
 
             }
         };
-        String source = ApplicationAPIUri.getZipUrl() + reactNativeUpdateBean.getBundle().getAndroidUri();
+        String source = APIUri.getZipUrl() + reactNativeUpdateBean.getBundle().getAndroidUri();
         new DownLoaderUtils().startDownLoad(source, reactZipFilePath, progressCallback);
     }
 
@@ -156,7 +157,7 @@ public class ReactNativeFlow {
             ZipUtils.upZipFile(reactZipFilePath, reactCurrentPath);
             FileUtils.deleteFile(reactZipFilePath);
 //            PreferencesUtils.putString(context, "react_native_lastupdatetime", "" + System.currentTimeMillis());//隔半小时检查更新逻辑相关
-//            FindFragment.hasUpdated = true;
+            FindFragment.hasUpdated = true;
             Intent intent = new Intent("com.inspur.react.success");
             LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
         } else {
