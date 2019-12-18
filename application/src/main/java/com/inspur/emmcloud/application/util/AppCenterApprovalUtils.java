@@ -78,7 +78,7 @@ public class AppCenterApprovalUtils {
                         veriryPassword(encodePassword);
                     } catch (Exception e) {
                         e.printStackTrace();
-                        ToastUtils.show(context, R.string.app_password_encrypt_error);
+                        ToastUtils.show(context, R.string.application_app_password_encrypt_error);
                     }
                 }
             }
@@ -145,7 +145,7 @@ public class AppCenterApprovalUtils {
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }
-            ToastUtils.show(context, R.string.app_password_error);
+            ToastUtils.show(context, R.string.application_app_password_error);
             PreferencesByUserAndTanentUtils.putString(context, "approvalPassword", "");
             if (passwordInputDlg == null) {
                 showPasswordInputDlg();

@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="@string/search"
+            android:text="@string/application_search"
             android:textColor="?attr/header_text_color"
             android:textSize="@dimen/header_textsize" />
     </RelativeLayout>
@@ -59,7 +59,7 @@
             android:layout_marginLeft="12dp"
             android:background="@null"
             android:onClick="onSearch"
-            android:text="@string/search"
+            android:text="@string/application_search"
             android:textColor="@drawable/seclector_search_btn_text"
             android:textSize="@dimen/header_textsize"
             android:visibility="gone" />
@@ -89,7 +89,7 @@
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@id/search_img"
                 android:background="@null"
-                android:hint="@string/search"
+                android:hint="@string/application_search"
                 android:imeOptions="actionSearch"
                 android:singleLine="true"
                 android:textColor="#000000"

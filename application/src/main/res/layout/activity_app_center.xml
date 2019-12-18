@@ -28,7 +28,7 @@
                 android:onClick="onClick"
                 android:paddingTop="7dp"
                 android:paddingBottom="7dp"
-                android:text="@string/app_recommand"
+                android:text="@string/application_app_recommand"
                 android:textColor="#4990E2"
                 android:textSize="@dimen/content_normal_textsize" />
 
@@ -48,7 +48,7 @@
                 android:onClick="onClick"
                 android:paddingTop="7dp"
                 android:paddingBottom="7dp"
-                android:text="@string/app_classification"
+                android:text="@string/application_app_classification"
                 android:textColor="#999999"
                 android:textSize="@dimen/content_normal_textsize" />
         </LinearLayout>

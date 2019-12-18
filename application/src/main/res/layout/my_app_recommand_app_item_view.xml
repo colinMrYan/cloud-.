@@ -27,7 +27,7 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="9dp"
             android:layout_marginTop="13dp"
-            android:text="@string/app_center_more_apps"
+            android:text="@string/application_app_center_more_apps"
             android:textColor="#999999"
             android:textSize="@dimen/content_normal_textsize" />
     </RelativeLayout>

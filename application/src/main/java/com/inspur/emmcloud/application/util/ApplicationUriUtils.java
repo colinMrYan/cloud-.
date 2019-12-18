@@ -33,7 +33,7 @@ public class ApplicationUriUtils {
                 } catch (Exception e) {
                     e.printStackTrace();
                     ToastUtils.show(activity,
-                            R.string.app_not_support_app_type);
+                            R.string.application_app_not_support_app_type);
                 }
                 break;
             case 2:
@@ -78,7 +78,7 @@ public class ApplicationUriUtils {
                 break;
             default:
                 ToastUtils.show(activity,
-                        R.string.app_not_support_app_type);
+                        R.string.application_app_not_support_app_type);
                 break;
         }
         //应用pv收集

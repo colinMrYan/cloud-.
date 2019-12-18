@@ -131,7 +131,7 @@ public class AppCenterNativeAppUtils {
                         veriryPassword(encodePassword);
                     } catch (Exception e) {
                         e.printStackTrace();
-                        ToastUtils.show(context, R.string.app_password_encrypt_error);
+                        ToastUtils.show(context, R.string.application_app_password_encrypt_error);
                     }
                 }
             }
@@ -163,7 +163,7 @@ public class AppCenterNativeAppUtils {
             loadingDlg = new LoadingDialog(context);
             loadingDlg.show();
             loadingDlg.setText("");
-            final String downloadStr = context.getString(R.string.app_download);
+            final String downloadStr = context.getString(R.string.application_app_download);
             APIDownloadCallBack progressCallback = new APIDownloadCallBack(context, app.getInstallUri()) {
 
                 @Override
@@ -226,7 +226,7 @@ public class AppCenterNativeAppUtils {
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }
-            ToastUtils.show(context, R.string.app_password_error);
+            ToastUtils.show(context, R.string.application_app_password_error);
             PreferencesByUserAndTanentUtils.putString(context, "approvalPassword", "");
             if (passwordInputDlg == null) {
                 showPasswordInputDlg();

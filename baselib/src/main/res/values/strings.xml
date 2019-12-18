@@ -565,33 +565,12 @@
     <string name="find_search_news">新闻</string>
 
     <!-- 应用部分 -->
-    <string name="app_not_support_app_type">不支持打开此类型应用</string>
     <string name="application">应用</string>
-    <string name="adding"> 添加中</string>
-    <string name="add_app"> 添加应用</string>
-    <string name="app_search_null"> 未搜索到任何应用</string>
-    <string name="app_input_search_key"> 请输入搜索关键字</string>
+    <string name="app_update_function">当前版本不支持此功能，请立即升级到最新版本</string>
+    <string name="app_new_function">新功能</string>
     <string name="delete">删除</string>
-    <string name="app_must_be_app_cannot_edit">当前应用皆为必装，不可编辑</string>
-    <string name="app_center">应用中心</string>
     <string name="detail">详情</string>
     <string name="search">请输入关键字</string>
-    <string name="app_commonly_use">开启常用模式</string>
-    <string name="app_commonly_use_close">结束常用模式</string>
-    <string name="app_center_more_apps">更多应用</string>
-    <string name="app_input_mail_password">请输入公司邮箱密码</string>
-    <string name="app_need_input_mail_password">第一次使用或密码修改后需要输入</string>
-    <string name="app_download">应用下载中：</string>
-    <string name="app_password_error">密码错误，请重新输入</string>
-    <string name="app_password_encrypt_error">密码加密出错</string>
-    <string name="app_recommand">推荐</string>
-    <string name="app_classification">分类</string>
-    <string name="app_create_shortcut_no_more_remind">不再提醒</string>
-    <string name="app_commonly_use_app">是否将移动签到添加到桌面快捷方式，一键签到?</string>
-    <string name="no_app">当前没有添加应用</string>
-    <string name="app_new_function">新功能</string>
-    <string name="app_update_function">当前版本不支持此功能，请立即升级到最新版本</string>
-    <string name="app_sort_order">调整顺序</string>
 
     <!--云盘 -->
     <string name="clouddriver_my_file">我的文件</string>

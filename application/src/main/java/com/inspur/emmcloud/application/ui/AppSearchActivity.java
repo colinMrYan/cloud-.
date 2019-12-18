@@ -141,7 +141,7 @@ public class AppSearchActivity extends BaseActivity {
         String keyword = searchEdit.getText().toString();
         if (StringUtils.isBlank(keyword)) {
             ToastUtils.show(getApplicationContext(),
-                    getString(R.string.app_input_search_key));
+                    getString(R.string.application_app_input_search_key));
             return;
         }
         searchApp(keyword);
@@ -228,7 +228,7 @@ public class AppSearchActivity extends BaseActivity {
             searchAppList = getAllAppResult.getAllAppList();
             if (searchAppList.size() == 0) {
                 ToastUtils.show(AppSearchActivity.this,
-                        getString(R.string.app_search_null));
+                        getString(R.string.application_app_search_null));
             }
             searchAdapter.notifyListData(searchAppList);
 

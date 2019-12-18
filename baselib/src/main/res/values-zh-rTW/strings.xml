@@ -553,33 +553,12 @@
 
 
     <!-- 應用部分 -->
-    <string name="app_not_support_app_type">不支援打開此類型應用</string>
     <string name="application">應用</string>
-    <string name="adding"> 添加中</string>
-    <string name="add_app"> 添加應用</string>
-    <string name="app_search_null"> 未搜索到任何應用</string>
-    <string name="app_input_search_key"> 請輸入搜索關鍵字</string>
-    <string name="delete">刪除</string>
-    <string name="app_must_be_app_cannot_edit">當前應用皆為必裝，不可編輯</string>
-    <string name="app_center">應用中心</string>
-    <string name="detail">詳情</string>
-    <string name="search">請輸入關鍵字</string>
-    <string name="app_commonly_use">開啟常用模式</string>
-    <string name="app_commonly_use_close">結束常用模式</string>
-    <string name="app_center_more_apps">更多應用</string>
-    <string name="app_input_mail_password">請輸入公司郵箱密碼</string>
-    <string name="app_need_input_mail_password">第一次使用或密碼修改後需要輸入</string>
-    <string name="app_download">應用下載中：</string>
-    <string name="app_password_error">密碼錯誤，請重新輸入</string>
-    <string name="app_password_encrypt_error">密碼加密出錯</string>
-    <string name="app_recommand">推薦</string>
-    <string name="app_classification">分類</string>
-    <string name="app_create_shortcut_no_more_remind">不再提醒</string>
-    <string name="app_commonly_use_app">是否將移動簽到添加到案頭快捷方式，一鍵簽到？ </string>
-    <string name="no_app">當前沒有添加應用</string>
     <string name="app_new_function">新功能</string>
     <string name="app_update_function">當前版本不支持此功能，請立即陞級到最新版本</string>
-    <string name="app_sort_order">調整順序</string>
+    <string name="detail">詳情</string>
+    <string name="search">請輸入關鍵字</string>
+    <string name="delete">刪除</string>
 
 
     <!--云盘 -->

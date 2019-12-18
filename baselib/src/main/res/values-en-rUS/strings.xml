@@ -551,33 +551,12 @@
     <string name="find_search_news">News</string>
 
     <!-- 应用部分 -->
-    <string name="app_not_support_app_type">Does not support opening application of this type</string>
     <string name="application">App</string>
-    <string name="adding"> Adding</string>
-    <string name="add_app"> Add App</string>
-    <string name="app_search_null"> Not get a search result</string>
-    <string name="app_input_search_key"> Please input the key words</string>
-    <string name="app_must_be_app_cannot_edit">All applications are necessary and non-editable</string>
-    <string name="app_center">APP Center</string>
-    <string name="app_commonly_use">Common mode</string>
-    <string name="app_commonly_use_close">Common off</string>
-    <string name="app_center_more_apps">More Apps</string>
-    <string name="app_input_mail_password">Please Enter the company email password</string>
-    <string name="app_need_input_mail_password">Please enter the password when you first use it or your password has been changed</string>
-    <string name="app_download">App downloading：</string>
-    <string name="app_password_error">Password is wrong, please re-enter</string>
-    <string name="app_password_encrypt_error">Password encryption error</string>
-    <string name="app_recommand">Recommend</string>
-    <string name="app_classification">Classification</string>
-    <string name="app_create_shortcut_no_more_remind">No more reminders</string>
-    <string name="app_commonly_use_app">Do you want to add mobile registration to desktop shortcuts, one click sign in? </string>
     <string name="app_update_function">This feature is not supported by the current version, please upgrade to the latest version</string>
     <string name="app_new_function">New</string>
-    <string name="no_app">No app currently added</string>
     <string name="detail">Details</string>
     <string name="search">Enter Keywords</string>
     <string name="delete">Delete</string>
-    <string name="app_sort_order">Edit</string>
 
     <!--云盘 Cloud Driver-->
     <string name="clouddriver_my_file">My Files</string>

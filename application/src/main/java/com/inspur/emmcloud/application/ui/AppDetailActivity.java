@@ -163,7 +163,7 @@ public class AppDetailActivity extends BaseActivity {
      */
     private void addApp(Button statusBtn, String appID) {
         if (NetUtils.isNetworkConnected(AppDetailActivity.this)) {
-            statusBtn.setText(getString(R.string.adding));
+            statusBtn.setText(getString(R.string.application_adding));
             loadingDlg.show();
             apiService.addApp(appID);
         }

@@ -82,7 +82,7 @@
                 android:paddingLeft="16dp"
                 android:paddingRight="11dp"
                 android:paddingTop="11dp"
-                android:text="@string/app_sort_order"
+                android:text="@string/application_app_sort_order"
                 android:textColor="@color/header_text_black"
                 android:textSize="16sp" />
         </LinearLayout>
@@ -120,7 +120,7 @@
                 android:paddingLeft="16dp"
                 android:paddingRight="11dp"
                 android:paddingTop="11dp"
-                android:text="@string/app_commonly_use"
+                android:text="@string/application_app_commonly_use"
                 android:textColor="@color/header_text_black"
                 android:textSize="16sp" />
 

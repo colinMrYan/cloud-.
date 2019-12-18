@@ -110,7 +110,7 @@ public class AppCenterActivity extends BaseActivity {
      * 初始化视图
      */
     private void initView() {
-        setTitleText(R.string.app_center);
+        setTitleText(R.string.application_app_center);
         findViewById(R.id.search_img).setVisibility(View.VISIBLE);
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         recommendView = LayoutInflater.from(this).inflate(
