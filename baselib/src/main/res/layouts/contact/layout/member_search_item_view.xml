@@ -8,8 +8,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="62dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
+
         android:focusable="false"
         android:focusableInTouchMode="false"
         android:gravity="center_vertical"
@@ -17,10 +16,13 @@
 
         <ImageView
             android:id="@+id/selected_img"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_marginRight="10dp"
-            android:padding="10dp"
+            android:layout_width="56dp"
+            android:layout_height="62dp"
+            android:layout_marginRight="-15dp"
+            android:paddingBottom="23dp"
+            android:paddingLeft="25dp"
+            android:paddingRight="15dp"
+            android:paddingTop="23dp"
             android:scaleType="fitXY"
             android:src="@drawable/ic_select_yes"
             android:visibility="gone" />
@@ -29,6 +31,7 @@
             android:id="@+id/img_photo"
             android:layout_width="36dp"
             android:layout_height="36dp"
+            android:layout_marginLeft="15dp"
             android:layout_marginRight="10dp" />
 
         <RelativeLayout
@@ -59,8 +62,10 @@
 
         <ImageView
             android:id="@+id/arrow_img"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
+            android:layout_width="46dp"
+            android:layout_height="match_parent"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
             android:scaleType="centerInside"
             android:src="@drawable/ic_arrow_right"
             android:visibility="gone" />

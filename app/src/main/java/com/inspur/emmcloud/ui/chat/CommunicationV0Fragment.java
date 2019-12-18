@@ -242,7 +242,7 @@ public class CommunicationV0Fragment extends BaseFragment {
 
     private void initView() {
         // TODO Auto-generated method stub
-        netExceptionView = LayoutInflater.from(getContext()).inflate(R.layout.recycleview_header_item, null);
+        netExceptionView = LayoutInflater.from(getContext()).inflate(R.layout.header_error, null);
         netExceptionView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

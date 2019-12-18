@@ -10,6 +10,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.basemodule.R;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.imagepicker.ImagePicker;
@@ -34,7 +35,7 @@ public class ImageCropActivity extends ImageBaseActivity implements View.OnClick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_crop);
-
+        ImmersionBar.with(this).statusBarColor(R.color.color_image_grid_header).navigationBarColor(R.color.color_image_grid_header).init();
         imagePicker = ImagePicker.getInstance();
 
         //初始化View
@@ -69,7 +70,6 @@ public class ImageCropActivity extends ImageBaseActivity implements View.OnClick
                 mCropImageView.RotateImage();
             }
         });
-        setStatus();
 
     }
 

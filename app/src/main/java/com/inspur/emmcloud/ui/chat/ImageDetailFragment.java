@@ -1,16 +1,11 @@
 package com.inspur.emmcloud.ui.chat;
 
-import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +18,8 @@ import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.EventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
@@ -46,13 +43,10 @@ import org.greenrobot.eventbus.EventBus;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
 import uk.co.senab.photoview.PhotoViewAttacher;
-
-import static android.R.attr.path;
 
 
 /**
@@ -69,6 +63,7 @@ public class ImageDetailFragment extends Fragment {
     private int previewHigh = 0;
     private int previewWide = 0;
     private String rawUrl = null;
+    private String mImageName = "";
 
     private int locationW, locationH, locationX, locationY;
     private boolean isNeedTransformOut;
@@ -77,7 +72,7 @@ public class ImageDetailFragment extends Fragment {
     private ImageLoadingProgressListener imageLoadingProgressListener;
 
 
-    public static ImageDetailFragment newInstance(String imageUrl, int w, int h, int x, int y, boolean isNeedTransformIn, boolean isNeedTransformOut, int preViewH, int preViewW, int rawH, int rawW) {
+    public static ImageDetailFragment newInstance(String imageUrl, int w, int h, int x, int y, boolean isNeedTransformIn, boolean isNeedTransformOut, int preViewH, int preViewW, int rawH, int rawW, String imageName) {
         final ImageDetailFragment f = new ImageDetailFragment();
 
         final Bundle args = new Bundle();
@@ -92,6 +87,8 @@ public class ImageDetailFragment extends Fragment {
         args.putInt("preW", preViewW);
         args.putBoolean("isNeedTransformOut", isNeedTransformOut);
         args.putBoolean("isNeedTransformIn", isNeedTransformIn);
+        args.putString("imageName", imageName);
+
         f.setArguments(args);
         return f;
     }
@@ -101,6 +98,8 @@ public class ImageDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mImageUrl = getArguments() != null ? getArguments().getString("url")
+                : null;
+        mImageName = getArguments() != null ? getArguments().getString("imageName")
                 : null;
         locationH = getArguments() != null ? getArguments().getInt("h")
                 : null;
@@ -205,25 +204,6 @@ public class ImageDetailFragment extends Fragment {
     }
 
     /**
-     * 保存并显示把图片展示出来
-     *
-     * @param context
-     * @param cameraPath
-     */
-    private void refreshGallery(Context context, String cameraPath) {
-        File file = new File(cameraPath);
-        // 其次把文件插入到系统图库
-        try {
-            MediaStore.Images.Media.insertImage(context.getContentResolver(),
-                    file.getAbsolutePath(), file.getName(), null);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        // 最后通知图库更新
-        LocalBroadcastManager.getInstance(context).sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + path)));
-    }
-
-    /**
      * 保存图片
      *
      * @param bitmap
@@ -235,11 +215,10 @@ public class ImageDetailFragment extends Fragment {
         }
         // 重复保存时，覆盖原同名图片
         // 将要保存图片的路径和图片名称
-        String savedImagePath = "";
-        File file = new File("/sdcard/IMP-Cloud/cache/chat/"
-                + FileUtils.getFileName(mImageUrl));
-        savedImagePath = "/sdcard/IMP-Cloud/cache/chat/"
-                + FileUtils.getFileName(mImageUrl);
+        String saveImageName = StringUtils.isBlank(mImageName) ? FileUtils.getFileName(mImageUrl) : mImageName;
+        String savedImagePath = MyAppConfig.LOCAL_CACHE_PATH + "chat/" + saveImageName;
+
+        File file = new File(savedImagePath);
         try {
             BufferedOutputStream bos = new BufferedOutputStream(
                     new FileOutputStream(file));
@@ -272,8 +251,6 @@ public class ImageDetailFragment extends Fragment {
                 .cacheInMemory(true)
                 .cacheOnDisk(true)
                 .build();
-        LogUtils.jasonDebug("rawUrl==" + rawUrl);
-        LogUtils.jasonDebug("mImageUrl==" + mImageUrl);
         if (!StringUtils.isBlank(rawUrl) && ImageDisplayUtils.getInstance().isHaveCacheImage(rawUrl)) {
             final String path = ImageDisplayUtils.getInstance().getCacheImageFile(rawUrl).getAbsolutePath();
             try {
@@ -422,7 +399,7 @@ public class ImageDetailFragment extends Fragment {
      */
     private void saveBitmapToLocalFromImageLoader(Bitmap bitmap) {
         String savedImagePath = saveBitmapFile(bitmap);
-        refreshGallery(BaseApplication.getInstance(), savedImagePath);
+        AppUtils.refreshMedia(BaseApplication.getInstance(), savedImagePath);
     }
 
     public interface DownLoadProgressRefreshListener {

@@ -9,6 +9,7 @@ import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.bean.chat.PersonDto;
 import com.inspur.emmcloud.bean.chat.Robot;
 import com.inspur.emmcloud.bean.contact.Contact;
+import com.inspur.emmcloud.bean.contact.ContactOrg;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 
 import org.xutils.db.sqlite.WhereBuilder;
@@ -487,4 +488,36 @@ public class ContactUserCacheUtils {
         }
         return noInSql;
     }
+
+    public static List<ContactUser> getContactUserListInContactOrgList(List<String> contactOrgIdList) {
+        List<ContactUser> contactUserList = new ArrayList<>();
+        if (contactOrgIdList == null) {
+            return contactUserList;
+        }
+        List<String> allContactOrgIdList = new ArrayList<>();
+        List<String> subContactOrgIdList = new ArrayList<>();
+        subContactOrgIdList.addAll(contactOrgIdList);
+        try {
+            while (subContactOrgIdList.size() > 0) {
+                allContactOrgIdList.addAll(subContactOrgIdList);
+                List<ContactOrg> contactOrgList = DbCacheUtils.getDb().selector(ContactOrg.class).where("parentId", "in", subContactOrgIdList).findAll();
+                subContactOrgIdList.clear();
+                if (contactOrgList != null && contactOrgList.size() > 0) {
+                    for (ContactOrg contactOrg : contactOrgList) {
+                        subContactOrgIdList.add(contactOrg.getId());
+                    }
+                }
+            }
+            contactUserList = DbCacheUtils.getDb().selector(ContactUser.class).where("parentId", "in", allContactOrgIdList).findAll();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (contactUserList == null) {
+            contactUserList = new ArrayList<>();
+        }
+        return contactUserList;
+
+    }
+
+
 }

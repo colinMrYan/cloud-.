@@ -169,7 +169,7 @@ public class VolumeFileInManagerAdapter extends RecyclerView.Adapter<VolumeFileI
         holder.fileTimeText.setText(fileTime);
         if (!isStatusNomal) {
             LogUtils.jasonDebug("volumeFileStatus==" + volumeFileStatus);
-            if (volumeFileStatus.equals(VolumeFile.STATUS_UPLOAD_IND)) {
+            if (volumeFileStatus.equals(VolumeFile.STATUS_LOADING)) {
                 VolumeFileUploadManager.getInstance().setBusinessProgressCallback(volumeFile, new ProgressCallback() {
                     @Override
                     public void onSuccess(VolumeFile newVolumeFile) {
@@ -182,7 +182,7 @@ public class VolumeFileInManagerAdapter extends RecyclerView.Adapter<VolumeFileI
 
                     @Override
                     public void onFail() {
-                        volumeFile.setStatus(VolumeFile.STATUS_UPLOAD_FAIL);
+                        volumeFile.setStatus(VolumeFile.STATUS_FAIL);
                         notifyItemChanged(position);
                     }
                 });
@@ -199,7 +199,7 @@ public class VolumeFileInManagerAdapter extends RecyclerView.Adapter<VolumeFileI
         } else {
             if (volumeFile.getFormat().startsWith("image/")) {
                 String url = "";
-                if (volumeFile.getStatus().equals(VolumeFile.STATUS_UPLOAD_IND)) {
+                if (volumeFile.getStatus().equals(VolumeFile.STATUS_LOADING)) {
                     url = volumeFile.getLocalFilePath();
                 } else {
                     String path = currentDirAbsolutePath + volumeFile.getName();

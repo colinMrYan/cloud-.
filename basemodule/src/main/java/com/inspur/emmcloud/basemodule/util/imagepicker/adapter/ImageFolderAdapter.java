@@ -9,11 +9,11 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.baselib.util.ResolutionUtils;
 import com.inspur.emmcloud.basemodule.R;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.imagepicker.ImagePicker;
 import com.inspur.emmcloud.basemodule.util.imagepicker.bean.ImageFolder;
-import com.inspur.emmcloud.basemodule.util.imagepicker.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +33,8 @@ public class ImageFolderAdapter extends BaseAdapter {
         else imageFolders = new ArrayList<ImageFolder>();
 
         imagePicker = ImagePicker.getInstance();
-        mImageSize = Utils.getImageItemWidth(mActivity);
+        mImageSize = ResolutionUtils.getWidth(activity) / 4;
+        ;
         mInflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 

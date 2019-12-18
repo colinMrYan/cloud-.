@@ -18,18 +18,16 @@
         android:layout_above="@id/iv_splash_logo"
         android:scaleType="centerCrop" />
 
-    <ImageButton
-        android:id="@+id/ibt_skip"
-        android:layout_width="80dp"
-        android:layout_height="46dp"
+    <TextView
+        android:id="@+id/tv_skip"
+        android:layout_width="70dp"
+        android:layout_height="30dp"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="18dp"
-        android:layout_marginRight="8dp"
-        android:background="@null"
-        android:onClick="onClick"
-        android:padding="10dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/icon_splash_skip"
+        android:layout_marginRight="18dp"
+        android:layout_marginTop="28dp"
+        android:background="@drawable/app_bg_splash_skip_btn"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
         android:visibility="gone" />
-
 </RelativeLayout>

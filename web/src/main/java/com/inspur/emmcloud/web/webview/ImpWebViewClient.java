@@ -2,6 +2,7 @@ package com.inspur.emmcloud.web.webview;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.net.http.SslError;
@@ -29,6 +30,7 @@ import com.inspur.emmcloud.web.ui.ImpCallBackInterface;
 
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -263,7 +265,21 @@ public class ImpWebViewClient extends WebViewClient {
             try {
                 Intent intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME);
                 intent.setComponent(null);
-                webView.getContext().startActivity(intent);
+                List<ResolveInfo> resolveInfoList = BaseApplication.getInstance().getPackageManager().queryIntentActivities(intent, 0);
+                boolean isMyAppScheme = false;
+                if (url.startsWith("mailto:") || url.startsWith("tel:") || url.startsWith("geo:") || url.startsWith("sms:") || url.startsWith("smsto:")) {
+                    isMyAppScheme = true;
+                } else if (resolveInfoList != null && resolveInfoList.size() > 0) {
+                    for (ResolveInfo resolveInfo : resolveInfoList) {
+                        if (resolveInfo.activityInfo.packageName.equals(BaseApplication.getInstance().getPackageName())) {
+                            isMyAppScheme = true;
+                            break;
+                        }
+                    }
+                }
+                if (isMyAppScheme) {
+                    webView.getContext().startActivity(intent);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

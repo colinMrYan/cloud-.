@@ -40,10 +40,14 @@ import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.ConversationWithMessageNum;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.contact.Contact;
+import com.inspur.emmcloud.bean.system.MainTabProperty;
+import com.inspur.emmcloud.bean.system.MainTabResult;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
+import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
+import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.privates.ShareUtil;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
@@ -116,6 +120,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     private String searchText;
     private long lastSearchTime = 0;
     private String shareContent;
+    private boolean isSearchContacts = true;
     /**
      * 虚拟键盘
      */
@@ -135,6 +140,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     public void onCreate() {
         ButterKnife.bind(this);
         ImmersionBar.with(this).statusBarColor(R.color.search_contact_header_bg).statusBarDarkFont(true, 0.2f).navigationBarColor(R.color.white).navigationBarDarkIcon(true, 1.0f).init();
+        initData();
         handMessage();
         initSearchRunnable();
         groupAdapter = new GroupOrContactAdapter();
@@ -161,6 +167,27 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         allPrivateChatLayout.setVisibility(View.GONE);
         InputMethodUtils.display(this, searchEdit);
         shareContent = (String) getIntent().getSerializableExtra(Constant.SHARE_CONTENT);
+    }
+
+    /**
+     * 是否隐藏联系人
+     **/
+    private void initData() {
+        ArrayList<MainTabResult> mainTabResults = AppTabUtils.getMainTabResultList(getApplicationContext());
+        for (int i = 0; i < mainTabResults.size(); i++) {
+            if (mainTabResults.get(i).getUri().equals(Constant.APP_TAB_BAR_COMMUNACATE)) {
+                MainTabProperty mainTabProperty = mainTabResults.get(i).getMainTabProperty();
+                if (mainTabProperty != null) {
+                    if (!mainTabProperty.isCanContact()) {
+                        isSearchContacts = false;
+                        break;
+                    }
+                }
+            } else if (mainTabResults.get(i).getUri().equals(Constant.APP_TAB_BAR_CONTACT)) {
+                isSearchContacts = false;
+                break;
+            }
+        }
     }
 
     @Override
@@ -404,7 +431,9 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                     public void run() {
                         List<SearchModel> groupsSearchList;
                         List<SearchModel> privateChatSearchList;
-                        List<Contact> contactsSearchList;
+                        List<Contact> contactsSearchList = new ArrayList<>();
+                        contactList = new ArrayList<>();
+                        List<ConversationWithMessageNum> conversationFromChatContentNums = new ArrayList<>();
                         switch (searchArea) {
                             case SEARCH_ALL:
                                 if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
@@ -423,14 +452,17 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                                 for (int i = 0; i < (groupsSearchList.size() > 3 ? 3 : groupsSearchList.size()); i++) {
                                     groupConversationList.add(groupsSearchList.get(i));
                                 }
-                                contactsSearchList = ContactUserCacheUtils.getSearchContact(searchText, null, 3);
-                                contactList = new ArrayList<>();
+                                if (isSearchContacts) {
+                                    contactsSearchList = ContactUserCacheUtils.getSearchContact(searchText, null, 3);
+                                }
                                 for (int j = 0; j < contactsSearchList.size(); j++) {
                                     contactList.add(contactsSearchList.get(j).contact2SearchModel());
                                 }
-                                conversationFromChatContentList.clear();
+                                conversationFromChatContentNums = oriChannelInfoByKeyword(searchText);
                                 conversationFromChatContentList = new ArrayList<>();
-                                conversationFromChatContentList = oriChannelInfoByKeyword(searchText);
+                                for (int m = 0; m < conversationFromChatContentNums.size(); m++) {
+                                    conversationFromChatContentList.add(conversationFromChatContentNums.get(m));
+                                }
                                 //分享过来  去除系统通知
                                 if (!StringUtils.isBlank(shareContent)) {
                                     Iterator<ConversationWithMessageNum> iterator = conversationFromChatContentList.iterator();
@@ -505,9 +537,6 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             if (cidNumMap.containsKey(tempConversation.getId())) {
                 ConversationWithMessageNum conversationFromChatContent =
                         new ConversationWithMessageNum(tempConversation, cidNumMap.get(tempConversation.getId()));
-                if (tempConversation.getType().equals(Conversation.TYPE_DIRECT)) {
-                    conversationFromChatContent.initSingleChatContact();
-                }
                 conversationFromChatContentResultList.add(conversationFromChatContent);
             }
         }
@@ -694,7 +723,10 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             } else {
                 searchHolder = (SearchHolder) view.getTag();
             }
-            Conversation conversation = conversationFromChatContentList.get(i).getConversation();
+            Conversation conversation = null;
+            if (conversationFromChatContentList.size() > 0) {
+                conversation = conversationFromChatContentList.get(i).getConversation();
+            }
             if (conversation != null && (conversation.getType().equals(Conversation.TYPE_GROUP))) {
                 SearchModel searchModel = conversation.conversation2SearchModel();
                 displayImg(searchModel, searchHolder.headImageView);
@@ -711,12 +743,10 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                 searchHolder.detailTextView.setText(string);
                 searchHolder.detailTextView.setVisibility(View.VISIBLE);
             }
-
-            Contact contact = conversationFromChatContentList.get(i).getSingleChatContactUser();
-            if (contact != null && conversation.getType().equals(Conversation.TYPE_DIRECT)) {
-                SearchModel searchModel = contact.contact2SearchModel();
-                displayImg(searchModel, searchHolder.headImageView);
-                searchHolder.nameTextView.setText(searchModel.getName().toString());
+            if (conversation != null && conversation.getType().equals(Conversation.TYPE_DIRECT)) {
+                String icon = DirectChannelUtils.getDirectChannelIcon(MyApplication.getInstance(), conversation.getName());
+                ImageDisplayUtils.getInstance().displayImageByTag(searchHolder.headImageView, icon, R.drawable.icon_person_default);
+                searchHolder.nameTextView.setText(conversation.getShowName());
                 String string = getString(R.string.chat_contact_related_message, conversationFromChatContentList.get(i).getMessageNum());
                 searchHolder.detailTextView.setText(string);
                 searchHolder.detailTextView.setVisibility(View.VISIBLE);

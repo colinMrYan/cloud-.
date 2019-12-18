@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
@@ -31,6 +32,9 @@ import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeListResult;
 import com.inspur.emmcloud.bean.appcenter.volume.Volume;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeHomePageDirectory;
+import com.inspur.emmcloud.ui.appcenter.volume.view.VolumeFileTransferActivity;
+import com.inspur.emmcloud.util.privates.VolumeFileDownloadManager;
+import com.inspur.emmcloud.util.privates.VolumeFileUploadManager;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -42,6 +46,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 
 /**
@@ -54,6 +59,12 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
     ListView listView;
     @BindView(R.id.volume_recent_use_list)
     ListView volumeRecentUseListView;
+    @BindView(R.id.rl_tip_view)
+    RelativeLayout tipViewLayout;
+    @BindView(R.id.tv_volume_tip)
+    TextView volumeTipTextView;
+    @BindView(R.id.iv_down_up_list)
+    ImageView downUpListIv;
     private VolumeRecentUseAdapter volumeRecentUseAdapter;
     private MyAppAPIService apiService;
     private LoadingDialog loadingDlg;
@@ -168,10 +179,14 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
             if (getIntent() != null && getIntent().hasExtra(Constant.SHARE_FILE_URI_LIST)) {
                 finish();
             }
-
+        } else if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_VOLUME_FILE_UPLOAD_SUCCESS) ||
+                eventMessage.getAction().equals(Constant.EVENTBUS_TAG_VOLUME_FILE_DOWNLOAD_SUCCESS)) {
+            refreshTipViewLayout();
         }
+
     }
 
+    @OnClick(R.id.iv_down_up_list)
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ibt_back:
@@ -179,8 +194,23 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
                 break;
             case R.id.option_img:
                 break;
+            case R.id.iv_down_up_list:
+                startActivity(new Intent(this, VolumeFileTransferActivity.class));
+                break;
             default:
                 break;
+        }
+    }
+
+    /**
+     * 小红点显示状态
+     */
+    public void refreshTipViewLayout() {
+        if (VolumeFileUploadManager.getInstance().getUnFinishUploadList().size() > 0 ||
+                VolumeFileDownloadManager.getInstance().getUnFinishDownloadList().size() > 0) {
+            tipViewLayout.setVisibility(View.VISIBLE);
+        } else {
+            tipViewLayout.setVisibility(View.GONE);
         }
     }
 
@@ -199,6 +229,7 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
     protected void onResume() {
         super.onResume();
         getVolumeList(false, false);
+        refreshTipViewLayout(); //小红点
     }
 
     @Override

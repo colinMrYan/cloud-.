@@ -10,6 +10,7 @@ import android.app.Application;
  */
 final class SupportToast extends BaseToast {
 
+    private boolean isShowSuccess = true;
     // 吐司弹窗显示辅助类
     private final ToastHelper mToastHelper;
 
@@ -21,12 +22,20 @@ final class SupportToast extends BaseToast {
     @Override
     public void show() {
         // 显示吐司
-        mToastHelper.show();
+        isShowSuccess = mToastHelper.show();
     }
 
     @Override
     public void cancel() {
         // 取消显示
         mToastHelper.cancel();
+    }
+
+    public boolean isShowSuccess() {
+        return isShowSuccess;
+    }
+
+    public void setShowSuccess(boolean showSuccess) {
+        isShowSuccess = showSuccess;
     }
 }

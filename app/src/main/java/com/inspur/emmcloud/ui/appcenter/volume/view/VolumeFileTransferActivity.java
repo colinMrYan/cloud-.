@@ -2,7 +2,6 @@ package com.inspur.emmcloud.ui.appcenter.volume.view;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
@@ -21,6 +20,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * 文件传输列表
@@ -40,7 +40,8 @@ public class VolumeFileTransferActivity extends BaseMvpActivity implements Volum
     @BindView(R.id.vp_file_transfer)
     ViewPager viewPager;
     FragmentPagerAdapter adapter;
-    VolumeFileTransferFragment downloadedFragment;
+    List<VolumeFileTransferFragment> list = new ArrayList<>();
+    private int currentIndex = 0;
 
     @Override
     public void onCreate() {
@@ -62,22 +63,24 @@ public class VolumeFileTransferActivity extends BaseMvpActivity implements Volum
 
         tabLayout.addTab(tabLayout.newTab().setText(R.string.volume_file_transfer_download_list), true);
         tabLayout.addTab(tabLayout.newTab().setText(R.string.volume_file_transfer_upload_list), true);
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.has_downloaded), true);
+//        tabLayout.addTab(tabLayout.newTab().setText(R.string.has_downloaded), true);
         initFragmentList();
         TabLayoutUtil.setTabLayoutWidth(this, tabLayout);
         tabLayout.getTabAt(0).select();
         onSelect(new ArrayList<VolumeFile>());
 
         viewPager.setAdapter(adapter);
+        viewPager.setOffscreenPageLimit(3);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
+                currentIndex = tab.getPosition();
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-
+                list.get(tab.getPosition()).clickHeaderLeft();
             }
 
             @Override
@@ -94,14 +97,12 @@ public class VolumeFileTransferActivity extends BaseMvpActivity implements Volum
 
             @Override
             public void onPageSelected(int position) {
+                currentIndex = position;
                 if (tabLayout.getTabAt(position) != null) {
                     tabLayout.getTabAt(position).select();
                 }
                 if (position != 2) {
                     onSelect(new ArrayList<VolumeFile>());
-                    if (downloadedFragment != null) {
-                        downloadedFragment.hideBottomOperationItemShow();
-                    }
                 }
             }
 
@@ -113,15 +114,11 @@ public class VolumeFileTransferActivity extends BaseMvpActivity implements Volum
     }
 
     private void initFragmentList() {
-        List<Fragment> list = new ArrayList<>();
         for (int i = 0; i < tabLayout.getTabCount(); i++) {
             VolumeFileTransferFragment fragment = new VolumeFileTransferFragment();
             Bundle bundle = new Bundle();
             bundle.putInt("position", i);
             fragment.setArguments(bundle);
-            if (i == 2) {
-                downloadedFragment = fragment;
-            }
             list.add(fragment);
         }
         adapter = new AllTaskFragmentAdapter(getSupportFragmentManager(), list);
@@ -131,6 +128,20 @@ public class VolumeFileTransferActivity extends BaseMvpActivity implements Volum
         switch (v.getId()) {
             case R.id.ibt_back:
                 finish();
+                break;
+            default:
+                break;
+        }
+    }
+
+    @OnClick({R.id.header_left_text, R.id.header_right_text})
+    public void onClickView(View v) {
+        switch (v.getId()) {
+            case R.id.header_left_text:
+                list.get(currentIndex).clickHeaderLeft();
+                break;
+            case R.id.header_right_text:
+                list.get(currentIndex).clickHeaderRight();
                 break;
             default:
                 break;

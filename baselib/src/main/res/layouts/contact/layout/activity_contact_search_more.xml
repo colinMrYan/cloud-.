@@ -66,10 +66,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:onClick="onClick"
+                android:paddingBottom="3dp"
                 android:paddingLeft="5dp"
-                android:paddingTop="3dp"
                 android:paddingRight="10dp"
-                android:paddingBottom="3dp">
+                android:paddingTop="3dp">
 
                 <com.inspur.emmcloud.baselib.widget.FlowLayout
                     android:id="@+id/flowlayout"
@@ -102,7 +102,7 @@
                     android:id="@+id/title_list"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:paddingLeft="10dp"></android.support.v7.widget.RecyclerView>
+                    android:paddingLeft="15dp"></android.support.v7.widget.RecyclerView>
             </RelativeLayout>
 
             <View

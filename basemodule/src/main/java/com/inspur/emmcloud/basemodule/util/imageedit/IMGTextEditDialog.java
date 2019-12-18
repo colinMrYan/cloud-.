@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.basemodule.util.imageedit;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
@@ -7,10 +8,13 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 
+import com.gyf.barlibrary.BarHide;
+import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.basemodule.R;
 import com.inspur.emmcloud.basemodule.util.imageedit.core.IMGText;
 import com.inspur.emmcloud.basemodule.util.imageedit.view.IMGColorGroup;
@@ -31,9 +35,11 @@ public class IMGTextEditDialog extends Dialog implements View.OnClickListener,
     private IMGText mDefaultText;
 
     private IMGColorGroup mColorGroup;
+    private Context context;
 
     public IMGTextEditDialog(Context context, Callback callback) {
         super(context, R.style.ImageTextDialog);
+        this.context = context;
         setContentView(R.layout.plugin_camera_image_text_dialog);
         mCallback = callback;
         Window window = getWindow();
@@ -99,8 +105,18 @@ public class IMGTextEditDialog extends Dialog implements View.OnClickListener,
         mEditText.setTextColor(mColorGroup.getCheckColor());
     }
 
+    @Override
+    public void show() {
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
+        super.show();
+        ImmersionBar.with((Activity) context, this).hideBar(BarHide.FLAG_HIDE_BAR).init();
+        this.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
+    }
+
     public interface Callback {
 
         void onText(IMGText text);
     }
+
+
 }

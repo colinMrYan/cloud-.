@@ -127,6 +127,7 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
         return R.layout.activity_face_verification;
     }
 
+    @Override
     protected int getStatusType() {
         return STATUS_WHITE;
     }
@@ -255,18 +256,20 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
             mCamera.setDisplayOrientation(rotateAngle);
             parameters.setRotation(rotateAngle);
             List<Camera.Size> PictureSizeList = parameters.getSupportedPictureSizes();
-            Camera.Size pictureSize = CameraUtils.getInstance(this).getPictureSize(PictureSizeList, 1000);
+            float rate = 1.33333333f;
+            Camera.Size pictureSize = CameraUtils.getInstance().getPictureSize(PictureSizeList, 1000, rate);
             parameters.setPictureSize(pictureSize.width, pictureSize.height);
             List<Camera.Size> previewSizeList = parameters.getSupportedPreviewSizes();
-            Camera.Size previewSize = CameraUtils.getInstance(this).getPreviewSize(previewSizeList, 1400);
+            Camera.Size previewSize = CameraUtils.getInstance().getPreviewSize(previewSizeList, 1000, rate);
             parameters.setPreviewSize(previewSize.width, previewSize.height);
             List<String> modelList = parameters.getSupportedFlashModes();
             if (modelList != null && modelList.contains(cameraFlashModel)) {
                 parameters.setFlashMode(cameraFlashModel);
             }
             List<String> focusModeList = parameters.getSupportedFocusModes();
-            if (focusModeList != null && focusModeList.contains(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE))
+            if (focusModeList != null && focusModeList.contains(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)) {
                 parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);//连续对焦
+            }
             mCamera.setParameters(parameters);
             mCamera.startPreview();
             mCamera.cancelAutoFocus();// 如果要实现连续的自动对焦，这一句必须加上，这句必须要在startPreview后面加上去

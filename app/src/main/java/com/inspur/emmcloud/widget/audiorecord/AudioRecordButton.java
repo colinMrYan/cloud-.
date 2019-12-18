@@ -15,6 +15,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.util.privates.MediaPlayerManagerUtils;
+import com.inspur.emmcloud.util.privates.VoiceCommunicationManager;
 import com.shuyu.waveview.FileUtils;
 
 public class AudioRecordButton extends Button {
@@ -113,7 +114,11 @@ public class AudioRecordButton extends Button {
 //
 //                    });
 //                }
-                startRecordVoice();
+                if (VoiceCommunicationManager.getInstance().isVoiceBusy()) {
+                    ToastUtils.show(R.string.voice_communication_can_not_use_this_feature);
+                } else {
+                    startRecordVoice();
+                }
                 return false;
             }
         });
@@ -283,7 +288,9 @@ public class AudioRecordButton extends Button {
      * 播放开始录制音效
      */
     private void playRecordStartMusic() {
-        MediaPlayerManagerUtils.getManager().play(R.raw.voice_search_on, null);
+        if (!VoiceCommunicationManager.getInstance().isVoiceBusy()) {
+            MediaPlayerManagerUtils.getManager().play(R.raw.voice_search_on, null);
+        }
     }
 
     /**

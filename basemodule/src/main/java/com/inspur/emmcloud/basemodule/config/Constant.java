@@ -138,6 +138,7 @@ public class Constant {
     public static final String EVENTBUS_TAG_SCHEDULE_HOLIDAY_CHANGE = "tag_schedule_holiday_changed";
     public static final String EVENTBUS_TAG_SCHEDULE_TASK_DATA_CHANGED = "tag_schedule_task_data_changed";
     public static final String EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED = "tag_schedule_calendar_data_changed";
+    public static final String EVENTBUS_TAG_SCHEDULE_HIDE_EXCHANGE_ACCOUNT_ERROR = "tag_schedule_hide_exchange_account_error";
     public static final String EVENTBUS_TASK_ORDER_CHANGE = "task_order_change";
     public static final String EVENTBUS_TAG_SELECT_CALENDAR_CHANGED = "tag_select_calendar_changed";
     public static final String EVENTBUS_TAG_SAFE_UNLOCK = "tag_safe_unlock";//二次认证（刷脸、手势认证通过）
@@ -252,7 +253,7 @@ public class Constant {
     //COMMUNICATION_LONG_CLICK_TO_SCHEDULE
 
     public static final String SCHEDULE_QUERY = "schedule_query";
-    public static final String SCHEDULE_DETAIL = "schedule_detail";
+    public static final String OPEN_SCHEDULE_DETAIL = "schedule_detail";
 
 
     public static final String SMS_LOGIN_START_TIME = "sms_login_start_time";
@@ -260,6 +261,7 @@ public class Constant {
 
     public static final String AROUTER_CLASS_COMMUNICATION_MEMBER = "/communication/MembersActivity";
     public static final String AROUTER_CLASS_COMMUNICATION_IMAGEPAGER = "/communication/ImagePagerActivity";
+    public static final String AROUTER_CLASS_COMMUNICATION_SHARE_FILE = "/communication/ShareFilesActivity";
 
     public static final String AROUTER_CLASS_LOGIN_MAIN = "/login/LoginActivity";
     public static final String AROUTER_CLASS_LOGIN_PASSWORD_MODIFY = "/login/PasswordModifyActivity";

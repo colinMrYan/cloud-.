@@ -2,6 +2,7 @@ package com.inspur.emmcloud.util.privates;
 
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.bean.chat.GetVoiceAndVideoResult;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
 import com.inspur.emmcloud.ui.chat.VoiceCommunicationActivity;
@@ -22,7 +23,7 @@ public class VoiceCommunicationCommonLine {
     public static void onInvite(CustomProtocol customProtocol, GetVoiceAndVideoResult getVoiceAndVideoResult) {
         String agoraChannelId = customProtocol.getParamMap().get(Constant.COMMAND_ROOM_ID);
         //判断如果在通话中就不再接听新的来电
-        if (!VoiceCommunicationManager.getInstance().isVoiceBusy()) {
+        if (!VoiceCommunicationManager.getInstance().isVoiceBusy() && !AppUtils.isPhoneInUse()) {
             VoiceCommunicationManager.getInstance().getChannelInfoByChannelId(agoraChannelId, getVoiceAndVideoResult.getContextParamsType(), getVoiceAndVideoResult.getChannel());
         } else {
             String channelId = customProtocol.getParamMap().get(Constant.COMMAND_CHANNEL_ID);

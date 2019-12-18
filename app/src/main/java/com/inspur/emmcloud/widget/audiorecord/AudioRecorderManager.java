@@ -34,6 +34,8 @@ public class AudioRecorderManager {
     private String rawAudioFilePath = "";
     //wavAudioFilePath可播放的音频文件
     private String wavAudioFilePath = "";
+    //中间文件
+    private String pcmAudioFilePath = "";
     //录音工具
     private AudioRecord audioRecord;
     //正在录制的标志
@@ -164,6 +166,7 @@ public class AudioRecorderManager {
         // 获取音频文件路径
         String fileName = AppUtils.generalFileName();
         rawAudioFilePath = getRawFilePath() + fileName + ".raw";
+        pcmAudioFilePath = getRawFilePath() + fileName + ".pcm";
         wavAudioFilePath = getWavFilePath() + fileName + ".wav";
         // 获得缓冲区字节大小
         bufferSizeInBytes = AudioRecord.getMinBufferSize(AUDIO_SAMPLE_RATE,
@@ -192,6 +195,11 @@ public class AudioRecorderManager {
             if (file.exists()) {
                 file.delete();
             }
+            File pcmfile = new File(pcmAudioFilePath);
+            if (pcmfile.exists()) {
+                pcmfile.delete(); //如果存在删除
+            }
+
             fos = new FileOutputStream(file);// 建立一个可存取字节的文件
             boolean isHasData = false;
             while (isRecording == true) {
@@ -409,7 +417,7 @@ public class AudioRecorderManager {
      */
     public String getCurrentFilePath() {
         // TODO Auto-generated method stub
-        return wavAudioFilePath;
+        return rawAudioFilePath;
     }
 
     /**
@@ -437,7 +445,8 @@ public class AudioRecorderManager {
         @Override
         public void run() {
             writeData2File();//往文件中写入裸数据
-            copyWaveFile(rawAudioFilePath, wavAudioFilePath);//给裸数据加上头文件
+            /**初始文件的语音降噪和语音增强算法在此添加**/
+            // copyWaveFile(rawAudioFilePath, wavAudioFilePath);//给裸数据加上头文件
         }
     }
 }

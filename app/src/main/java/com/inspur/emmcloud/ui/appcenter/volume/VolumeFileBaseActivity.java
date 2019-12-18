@@ -28,6 +28,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.VolumeFileAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
+import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.FomatUtils;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
@@ -58,6 +59,7 @@ import com.inspur.emmcloud.bean.appcenter.volume.Volume;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeGroupContainMe;
 import com.inspur.emmcloud.ui.chat.mvp.view.ConversationSearchActivity;
+import com.inspur.emmcloud.util.privates.NetworkMobileTipUtil;
 import com.inspur.emmcloud.util.privates.ShareFile2OutAppUtils;
 import com.inspur.emmcloud.util.privates.VolumeFileDownloadManager;
 import com.inspur.emmcloud.util.privates.VolumeFilePrivilegeUtils;
@@ -329,7 +331,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         boolean isVolumeFileReadable = true;
         boolean isVolumeFileDirectory = true;
         boolean isVolumeContainDir = false;
-        boolean isShowOpenAction = false;
+        boolean isAllDownloadAction = true; //选中的文件是否全部下载
         boolean isOwner = true;
         for (int i = 0; i < selectVolumeFileList.size(); i++) {
             if (isVolumeFileWriteable) {
@@ -348,15 +350,19 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
                 isVolumeContainDir = selectVolumeFileList.get(i).getType().equals(VolumeFile.FILE_TYPE_DIRECTORY); //是否包含文件夹
             }
         }
-        if (selectVolumeFileList.size() == 1) {
+        for (VolumeFile item : selectVolumeFileList) {
             String fileSavePath = FileDownloadManager.getInstance().getDownloadFilePath(DownloadFileCategory.CATEGORY_VOLUME_FILE,
-                    selectVolumeFileList.get(0).getId(), selectVolumeFileList.get(0).getName());
-            isShowOpenAction = !StringUtils.isBlank(fileSavePath);                                                 //是否包含本地路径
+                    item.getId(), item.getName());
+            if (StringUtils.isBlank(fileSavePath)) {
+                isAllDownloadAction = false;
+                break;
+            }
         }
-        volumeActionDataList.add(new VolumeActionData(openAction, R.drawable.volume_open_file, isShowOpenAction));
+        volumeActionDataList.add(new VolumeActionData(openAction, R.drawable.volume_open_file,
+                selectVolumeFileList.size() == 1 && isAllDownloadAction));
         volumeActionDataList.add(new VolumeActionData(downloadAction, R.drawable.ic_volume_download,
                 selectVolumeFileList.size() >= 1 && !isVolumeContainDir
-                        && (isVolumeFileReadable || isVolumeFileWriteable)&& !isShowOpenAction));
+                        && (isVolumeFileReadable || isVolumeFileWriteable) && !isAllDownloadAction));
         volumeActionDataList.add(new VolumeActionData(copyAction, R.drawable.ic_volume_copy, (isVolumeFileReadable || isVolumeFileWriteable)));
         volumeActionDataList.add(new VolumeActionData(moveToAction, R.drawable.ic_volume_move, isVolumeFileWriteable));
         volumeActionDataList.add(new VolumeActionData(shareTo, R.drawable.ic_volume_share, selectVolumeFileList.size() == 1 &&
@@ -400,14 +406,25 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     private void handleVolumeAction(String action) {
         VolumeFile volumeFile = adapter.getSelectVolumeFileList().get(0);
         if (action.equals(downloadAction)) {
-            //批量下载
+            long totalDownloadSize = 0;
             for (VolumeFile file : adapter.getSelectVolumeFileList()) {
-                downloadFile(file);
+                totalDownloadSize = totalDownloadSize + file.getSize();
             }
-            showAnimator();
-            refreshTipViewLayout();
-            adapter.clearSelectedVolumeFileList();
-            adapter.notifyDataSetChanged();
+            //批量下载
+            volumeActionLayout.setVisibility(View.VISIBLE);
+            NetworkMobileTipUtil.checkEnvironment(this, R.string.volume_file_download_network_type_warning, totalDownloadSize,
+                    new NetworkMobileTipUtil.Callback() {
+                        @Override
+                        public void cancel() {
+
+                        }
+
+                        @Override
+                        public void onNext() {
+                            volumeActionLayout.setVisibility(View.GONE);
+                            handleDownloadList();
+                        }
+                    });
         } else if (action.equals(openAction)) {
             downloadOrOpenVolumeFile(volumeFile);
         } else if (action.equals(moveToAction)) {
@@ -435,6 +452,19 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     }
 
     /**
+     * 批量下载
+     */
+    private void handleDownloadList() {
+        for (VolumeFile file : adapter.getSelectVolumeFileList()) {
+            downloadFile(file);
+        }
+        showAnimator();
+        refreshTipViewLayout();
+        adapter.clearSelectedVolumeFileList();
+        adapter.notifyDataSetChanged();
+    }
+
+    /**
      * 弹出文件删除提示框
      *
      * @param deleteVolumeFile
@@ -452,6 +482,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        volumeActionLayout.setVisibility(View.GONE);
                         deleteFile(deleteVolumeFile);
                         dialog.dismiss();
                     }
@@ -626,8 +657,8 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
      * 小红点显示状态
      */
     public void refreshTipViewLayout() {
-        if (VolumeFileUploadManager.getInstance().getAllUploadVolumeFile().size() > 0 ||
-                VolumeFileDownloadManager.getInstance().getAllDownloadVolumeFile().size() > 0) {
+        if (VolumeFileUploadManager.getInstance().getUnFinishUploadList().size() > 0 ||
+                VolumeFileDownloadManager.getInstance().getUnFinishDownloadList().size() > 0) {
             tipViewLayout.setVisibility(View.VISIBLE);
         } else {
             tipViewLayout.setVisibility(View.GONE);
@@ -705,7 +736,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
 //        bundle.putString("currentDirAbsolutePath", currentDirAbsolutePath + volumeFile.getName());
 //        bundle.putBoolean("isStartDownload", true);
 //        IntentUtils.startActivity(VolumeFileBaseActivity.this, VolumeFileDownloadActivity.class, bundle);
-        List<VolumeFile> volumeFileList = VolumeFileDownloadManager.getInstance().getAllDownloadVolumeFile();
+        List<VolumeFile> volumeFileList = VolumeFileDownloadManager.getInstance().getUnFinishDownloadList();
 
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
             volumeFile.setVolumeFileAbsolutePath(currentDirAbsolutePath + volumeFile.getName());
@@ -716,7 +747,6 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
                     return;
                 }
             }
-            VolumeFileDownloadManager.getInstance().resetVolumeFileStatus(volumeFile);
             VolumeFileDownloadManager.getInstance().downloadFile(volumeFile,
                     currentDirAbsolutePath + volumeFile.getName());
         }
@@ -733,7 +763,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         int width = metric.widthPixels; // 宽度（PX）
         int height = metric.heightPixels; // 高度（PX）
         Point pointStart = new Point(0, height);
-        Point pointEnd = new Point(width, 0);
+        Point pointEnd = new Point(width - DensityUtil.dip2px(30), DensityUtil.dip2px(40));
         BallView ballView = new BallView(getApplicationContext());
         ballView.startAnimation(pointStart, pointEnd);
         downUpListIv.setEnabled(false);
@@ -982,6 +1012,10 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         @Override
         public void returnVolumeFileDeleteSuccess(List<VolumeFile> deleteVolumeFileList) {
             LoadingDialog.dimissDlg(loadingDlg);
+            //清除上传列表数据
+            for (VolumeFile volumeFile : deleteVolumeFileList) {
+                VolumeFileUploadManager.getInstance().resetVolumeFileStatus(volumeFile);
+            }
             volumeFileList.removeAll(deleteVolumeFileList);
             adapter.setVolumeFileList(volumeFileList);
             adapter.clearSelectedVolumeFileList();

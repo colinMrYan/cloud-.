@@ -73,7 +73,6 @@ import com.inspur.emmcloud.util.privates.MyAppWidgetUtils;
 import com.inspur.emmcloud.util.privates.ScanQrCodeUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
 import com.inspur.emmcloud.util.privates.cache.AppCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.AppConfigCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MyAppCacheUtils;
 import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
 import com.inspur.emmcloud.widget.draggrid.DragGridView;
@@ -227,7 +226,7 @@ public class MyAppFragment extends BaseFragment {
      * 初始化Views
      */
     private void initViews() {
-        netExceptionView = LayoutInflater.from(getContext()).inflate(R.layout.recycleview_header_item, null);
+        netExceptionView = LayoutInflater.from(getContext()).inflate(R.layout.header_error, null);
         netExceptionView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -697,11 +696,9 @@ public class MyAppFragment extends BaseFragment {
         List<MenuItem> menuItemList = new ArrayList<>();//
         menuItemList.add(new MenuItem(R.drawable.ic_message_menu_scan_black, 1, getActivity().getString(R.string.sweep)));
         menuItemList.add(new MenuItem(R.drawable.ic_change_app_order, 2, getString(R.string.app_sort_order)));
-        boolean isOpenCommAppFromSer = AppConfigCacheUtils.getAppConfigValue(getContext(), "EnableCommonFunction", "true").equals("true");
-        if (isOpenCommAppFromSer) {
-            menuItemList.add(new MenuItem(MyAppCacheUtils.getNeedCommonlyUseApp() ? R.drawable.ic_commonly_use_open : R.drawable.ic_commonly_use_close
+        //boolean isOpenCommAppFromSer = AppConfigCacheUtils.getAppConfigValue(getContext(), "EnableCommonFunction", "true").equals("true");
+        menuItemList.add(new MenuItem(MyAppCacheUtils.getNeedCommonlyUseApp() ? R.drawable.ic_commonly_use_open : R.drawable.ic_commonly_use_close
                     , 3, getActivity().getString(MyAppCacheUtils.getNeedCommonlyUseApp() ? R.string.app_commonly_use_close : R.string.app_commonly_use)));
-        }
         return menuItemList;
     }
 
@@ -958,6 +955,7 @@ public class MyAppFragment extends BaseFragment {
                             new AppBadgeUtils(MyApplication.getInstance()).getAppBadgeCountFromServer();
                             appListAdapter.notifyDataSetChanged();
                             dragGridViewAdapter.notifyDataSetChanged();
+                            MyAppCacheUtils.deleteAppInCache(getActivity(), app);
 //                            MyAppCacheUtils.saveMyAppList(getActivity(), appListAdapter.getAppAdapterList());
                         }
                     });

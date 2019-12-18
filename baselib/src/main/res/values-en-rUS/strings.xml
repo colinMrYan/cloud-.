@@ -37,6 +37,9 @@
     <string name="update">Update</string>
     <string name="download">Download</string>
     <string name="redownload">Continue to download</string>
+    <string name="download_complete">Download complete</string>
+    <string name="download_fail_tip">Download failed, click <Data><![CDATA[<font color=\'#36a5f6\'>Retry</font>]]></Data> </string>
+    <string name="upload_fail_tip">Upload failed，click<Data><![CDATA[<font color=\'#36a5f6\'>Retry</font>]]></Data></string>
     <string name="confirm_modify_language">Change to This Language?</string>
     <string name="file_type_not_recognize">Unrecognizable File type</string>
     <string name="return_app">Return Application</string>
@@ -148,6 +151,7 @@
     <string name="none">None</string>
     <string name="input_correct_emails">Enter the correct email</string>
     <string name="select_all">Select All</string>
+    <string name="skip">Skip</string>
 
     <!-- 新添加部分 -->
     <string name="alert">Remind</string>
@@ -177,6 +181,8 @@
     <string name="choose_common_office">common office address</string>
     <string name="please_click_choosing_time">Please click and choose time</string>
     <string name="channel_group_qrcode">Group QR Code</string>
+    <string name="channel_group_qrcode_card">Group QR Code</string>
+    <string name="channel_group_qrcode_valid">Valid until %1$s and will update upon joining group</string>
     <string name="meeting_room">Meeting Room</string>
     <string name="building">Building</string>
     <string name="am">AM</string>
@@ -291,7 +297,7 @@
     <string name="socket_connecting">Connecting</string>
     <string name="socket_close">Disconnected</string>
     <string name="chat_file_download_success">File has been downloaded successfully, click again to open</string>
-    <string name="group_name_longth_valid">Group name, word overrun (no more than 40 characters)</string>
+    <string name="group_name_longth_valid">Group name, word overrun (no more than 25 characters)</string>
     <string name="message_create_group">New Chat</string>
     <string name="business_card">Business Card</string>
     <string name="no_channel_album">No content</string>
@@ -349,7 +355,8 @@
     <string name="chat_search_related_messages">Record(s) for%1$s</string>
     <string name="chat_more_private_chat">More Private Chats</string>
     <string name="chat_private_chat">Private Chats</string>
-    <string name="chat_group_welcome_join_group">Welcome to group %1$s</string>
+    <string name="chat_group_welcome_join_group">Welcome to group</string>
+    <string name="chat_group_welcome_join_group_detail">Welcome to group %1$s,enter to view details.</string>
     <string name="chat_conversation_create_error">Create Chat Group Fail</string>
     <string name="chat_emotion_recent_tip">Recently Used</string>
     <string name="chat_emotion_total_tip">All Stickers</string>
@@ -474,7 +481,7 @@
     <string name="schedule_task_a_person">person</string>
     <string name="schedule_task_tag_name_length">Tag name up to 64 characters</string>
     <string name="schedule_click_to_add_schedule">Click to Add Schedule</string>
-    <string name="schedule_exchange_login_fail">%1$s Password has changed.Update it in the schedule settings.</string>
+    <string name="schedule_exchange_login_fail">Exchange account password changed, please update</string>
     <string name="schedule_account_type">Calendar</string>
     <string name="schedule_cloud_calendar">Cloud+ Schedule</string>
     <string name="schedule_cloud_meeting">Cloud+ Meeting</string>
@@ -642,14 +649,16 @@
     <string name="volume_file_upload_network_type_warning">Currently not connected to Wi-Fi,uploading will use mobile traffic,continue?</string>
     <string name="volume_file_download_network_type_warning">Currently not connected to Wi-Fi,downloading will use mobile traffic,continue?</string>
     <string name="volume_file_transfer">File Transfer</string>
-    <string name="volume_file_transfer_download_list">Downloading</string>
-    <string name="volume_file_transfer_upload_list">Uploading</string>
+    <string name="volume_file_transfer_download_list">Download List</string>
+    <string name="volume_file_transfer_upload_list">Upload List</string>
     <string name="volume_file_transfer_list_wait_tip">Waiting&#8230;</string>
     <string name="volume_file_transfer_list_pause_tip">Pausing&#8230;</string>
     <string name="volume_file_transfer_list_download_count">Downloading&#8230;(%1$d)</string>
     <string name="volume_file_transfer_list_upload_count">Uploading&#8230;(%1$d)</string>
-    <string name="volume_file_transfer_list_pause">All suspended</string>
-    <string name="volume_file_transfer_list_continue">All continue</string>
+    <string name="volume_file_transfer_list_download_finish_count">Download complete&#160;(%1$d)</string>
+    <string name="volume_file_transfer_list_upload_finish_count">Upload complete&#160;(%1$d)</string>
+    <string name="volume_file_transfer_list_pause">Suspend</string>
+    <string name="volume_file_transfer_list_continue">Continue</string>
     <string name="create">Create</string>
     <string name="cloud_drive">Cloud Drive</string>
     <string name="video">Video</string>
@@ -797,7 +806,6 @@
     <string name="modify_user_password">Passwords do not match, make sure</string>
     <string name="modify_user_password_success">Password changed successfully, please login</string>
     <string name="modify_user_password_fail">Retry</string>
-    <string name="modify_jump">Skip</string>
     <string name="modify_welcom_user_cloud">Welcome to the inspur of cloud +</string>
     <string name="modify_first_use">This is the first time you use the cloud + , the inspur passes is set password to login next time</string>
     <string name="setting_update_this_time_hint">Update</string>
@@ -1332,7 +1340,7 @@
     <string name="voice_communicaiton_watting_talking">In the call</string>
     <string name="voice_communication_voice_busy_tip">Voice call in progress, please try again later</string>
     <string name="voice_communication_quality">The quality of current calls is poor.</string>
-    <string name="voice_communication_support_nine_members">Cloud + supports nine voice at present.</string>
+    <string name="voice_communication_support_nine_members">Currently, Cloud + supports up to 9 simultaneous calls</string>
     <string name="voice_communication_more_than_two">The number of voice call users cannot be less than 2</string>
     <string name="voice_communication_hung_up_direct">Hang up</string>
     <string name="voice_communication_answer_phone_direct">Answer</string>
@@ -1346,6 +1354,8 @@
     <string name="voice_communication_group_call_canceled">Call ended</string>
     <string name="voice_communication_group_call_busy">%1$s is busy</string>
     <string name="voice_communication_group_calling_ended">Call ended</string>
+    <string name="voice_communication_can_not_use_this_feature">Unable to uses this feature during call</string>
+    <string name="voice_communication_calling">Calling</string>
     <string name="video_call">Video Call</string>
     <string name="video_communication_turn_to_voice_call">Switch to voice call</string>
     <string name="video_communication_switch_camera">Switch cameras</string>

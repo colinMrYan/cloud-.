@@ -35,6 +35,7 @@ import com.czt.mp3recorder.MP3Recorder;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
@@ -42,6 +43,7 @@ import com.inspur.emmcloud.baselib.widget.NoScrollGridView;
 import com.inspur.emmcloud.baselib.widget.dialogs.ActionSheetDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.ClickRuleUtil;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
@@ -71,17 +73,25 @@ import com.inspur.emmcloud.widget.waveprogress.VoiceCompleteView;
 import com.inspur.emmcloud.widget.waveprogress.WaterWaveProgress;
 import com.itheima.roundedimageview.RoundedImageView;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.lang.reflect.Field;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTouch;
+import lbc.com.denosex.denosexUtil;
 
 
 /**
@@ -91,6 +101,7 @@ public class ECMChatInputMenu extends LinearLayout {
 
     public static final String VOICE_CALL = "voice_call";
     public static final String VIDEO_CALL = "video_call";
+    public final static int AUDIO_SAMPLE_RATE = 16000;  //44.1KHz,普遍使用的频率
     private static final int GELLARY_RESULT = 2;
     private static final int CAMERA_RESULT = 3;
     private static final int CHOOSE_FILE = 4;
@@ -188,6 +199,76 @@ public class ECMChatInputMenu extends LinearLayout {
         initView(context, attrs);
     }
 
+    /**
+     * 输出WAV文件
+     *
+     * @param out           WAV输出文件流
+     * @param totalAudioLen 整个音频PCM数据大小
+     * @param totalDataLen  整个数据大小
+     * @param sampleRate    采样率
+     * @param channels      声道数
+     * @param byteRate      采样字节byte率
+     * @throws IOException
+     */
+    private static void writeWaveFileHeader(FileOutputStream out, long totalAudioLen,
+                                            long totalDataLen, int sampleRate, int channels, long byteRate) throws IOException {
+        byte[] header = new byte[44];
+        header[0] = 'R'; // RIFF
+        header[1] = 'I';
+        header[2] = 'F';
+        header[3] = 'F';
+        header[4] = (byte) (totalDataLen & 0xff);//数据大小
+        header[5] = (byte) ((totalDataLen >> 8) & 0xff);
+        header[6] = (byte) ((totalDataLen >> 16) & 0xff);
+        header[7] = (byte) ((totalDataLen >> 24) & 0xff);
+        header[8] = 'W';//WAVE
+        header[9] = 'A';
+        header[10] = 'V';
+        header[11] = 'E';
+        //FMT Chunk
+        header[12] = 'f'; // 'fmt '
+        header[13] = 'm';
+        header[14] = 't';
+        header[15] = ' ';//过渡字节
+        //数据大小
+        header[16] = 16; // 4 bytes: size of 'fmt ' chunk
+        header[17] = 0;
+        header[18] = 0;
+        header[19] = 0;
+        //编码方式 10H为PCM编码格式
+        header[20] = 1; // format = 1
+        header[21] = 0;
+        //通道数
+        header[22] = (byte) channels;
+        header[23] = 0;
+        //采样率，每个通道的播放速度
+        header[24] = (byte) (sampleRate & 0xff);
+        header[25] = (byte) ((sampleRate >> 8) & 0xff);
+        header[26] = (byte) ((sampleRate >> 16) & 0xff);
+        header[27] = (byte) ((sampleRate >> 24) & 0xff);
+        //音频数据传送速率,采样率*通道数*采样深度/8
+        header[28] = (byte) (byteRate & 0xff);
+        header[29] = (byte) ((byteRate >> 8) & 0xff);
+        header[30] = (byte) ((byteRate >> 16) & 0xff);
+        header[31] = (byte) ((byteRate >> 24) & 0xff);
+        // 确定系统一次要处理多少个这样字节的数据，确定缓冲区，通道数*采样位数
+        header[32] = (byte) (channels * 16 / 8);
+        header[33] = 0;
+        //每个样本的数据位数
+        header[34] = 16;
+        header[35] = 0;
+        //Data chunk
+        header[36] = 'd';//data
+        header[37] = 'a';
+        header[38] = 't';
+        header[39] = 'a';
+        header[40] = (byte) (totalAudioLen & 0xff);
+        header[41] = (byte) ((totalAudioLen >> 8) & 0xff);
+        header[42] = (byte) ((totalAudioLen >> 16) & 0xff);
+        header[43] = (byte) ((totalAudioLen >> 24) & 0xff);
+        out.write(header, 0, 44);
+    }
+
     private void initView(final Context context, AttributeSet attrs) {
         // TODO Auto-generated method stub
         View view = LayoutInflater.from(context).inflate(R.layout.communication_widget_chat_input_menu, this, true);
@@ -233,6 +314,151 @@ public class ECMChatInputMenu extends LinearLayout {
         });
     }
 
+    /**
+     * 语音降噪算法 pcm文件
+     **/
+    public void deNoseX(String rawAudioFilePath, String pcmAudioFilePath) {
+        int createStatus = -1;
+        denosexUtil nsUtils = null;
+        try {
+            nsUtils = new denosexUtil();
+            createStatus = nsUtils.denoseXCreate();  //去噪创建
+            int initStatus = nsUtils.denoseXIni(createStatus, 16000); //去噪初始化 参数说明 创建状态，采样率
+            int setStatus = nsUtils.denoseXPolicy(createStatus, 1); // 去噪 Policy 参数说明
+            File fileRaw = new File(rawAudioFilePath);
+            File filePcm = new File(pcmAudioFilePath);
+            if (!fileRaw.exists()) {
+                return; //如果不存在 退出
+            }
+            FileInputStream fInt = new FileInputStream(rawAudioFilePath);
+            FileOutputStream fOut = new FileOutputStream(pcmAudioFilePath);
+            byte[] buffer = new byte[640];
+            while (fInt.read(buffer) != -1) {
+                short[] inputData = new short[320];
+                short[] outData = new short[320];
+                ByteBuffer.wrap(buffer).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().get(inputData);
+                outData = nsUtils.denoseXProcess(createStatus, inputData);
+                fOut.write(toByteArray(outData));
+            }
+
+            fInt.close();
+            fOut.close();
+            fileRaw.delete();
+            File fileNew = new File(rawAudioFilePath);
+            filePcm.renameTo(fileNew);
+            LogUtils.LbcDebug("new File Success");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (createStatus == 0 && nsUtils != null) {
+            nsUtils.denoseXFree();
+        }
+    }
+
+    public byte[] toByteArray(short[] src) {
+        int count = src.length;
+        byte[] dest = new byte[count << 1];
+        for (int i = 0; i < count; i++) {
+            dest[i * 2] = (byte) (src[i]);
+            dest[i * 2 + 1] = (byte) (src[i] >> 8);
+        }
+        return dest;
+    }
+
+    /**
+     * 语音增强算法（原始数据文件pcm）
+     **/
+    public void voiceAgc(String rawAudioFilePath, String pcmAudioFilePath) {
+        int createStatus = -1;
+        denosexUtil agcUtils = null;
+        try {
+            agcUtils = new denosexUtil();
+            createStatus = agcUtils.noseAgcCreate();
+            int iniState = agcUtils.noseAgcIni(createStatus, 0, 255, 3, 16000);
+            int configState = agcUtils.noseAgcSetConfig(createStatus, 30, 1, 3);
+            File fileRaw = new File(rawAudioFilePath);
+            File filePcm = new File(pcmAudioFilePath);
+            if (!fileRaw.exists()) {
+                return; //如果不存在 退出
+            }
+            FileInputStream fInt = new FileInputStream(rawAudioFilePath);
+            FileOutputStream fOut = new FileOutputStream(pcmAudioFilePath);
+            byte[] buffer = new byte[320];
+            while (fInt.read(buffer) != -1) {
+                short[] inputData = new short[160];
+                short[] outData = new short[160];
+                ByteBuffer.wrap(buffer).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().get(inputData);
+                outData = agcUtils.noseAgcProcess(createStatus, inputData, 160);
+                fOut.write(toByteArray(outData));
+            }
+            fInt.close();
+            fOut.close();
+            fileRaw.delete();
+            File fileNew = new File(rawAudioFilePath);
+            filePcm.renameTo(fileNew);
+            LogUtils.LbcDebug("new File Success");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (createStatus == 0 && agcUtils != null) {
+            agcUtils.noseAgcFree();
+        }
+    }
+
+    /**
+     * PCM文件转WAV文件
+     *
+     * @param inPcmFilePath  输入PCM文件路径
+     * @param outWavFilePath 输出WAV文件路径
+     * @param sampleRate     采样率，例如15000
+     * @param channels       声道数 单声道：1或双声道：2
+     * @param bitNum         采样位数，8或16
+     */
+    public void convertPcmToWav(String inPcmFilePath, String outWavFilePath, int sampleRate,
+                                int channels, int bitNum) {
+        FileInputStream in = null;
+        FileOutputStream out = null;
+        byte[] data = new byte[1024];
+
+        try {
+            //采样字节byte率
+            long byteRate = sampleRate * channels * bitNum / 8;
+
+            in = new FileInputStream(inPcmFilePath);
+            out = new FileOutputStream(outWavFilePath);
+
+            //PCM文件大小
+            long totalAudioLen = in.getChannel().size();
+
+            //总大小，由于不包括RIFF和WAV，所以是44 - 8 = 36，在加上PCM文件大小
+            long totalDataLen = totalAudioLen + 36;
+
+            writeWaveFileHeader(out, totalAudioLen, totalDataLen, sampleRate, channels, byteRate);
+
+            int length = 0;
+            while ((length = in.read(data)) > 0) {
+                out.write(data, 0, length);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
     private void initAudioRecord() {
         audioRecordBtn.setAudioFinishRecorderListener(new AudioRecordButton.AudioFinishRecorderListener() {
 
@@ -240,11 +466,33 @@ public class ECMChatInputMenu extends LinearLayout {
             public void onStartRecordingVoice() {
             }
 
+            /****/
             @Override
-            public void onFinished(final float seconds, String filePath) {
+            public void onFinished(final float seconds, String filePathRaw) {
+                /**文件操作**/
+                if (FileUtils.getFileSize(filePathRaw) > 0) {
+                    try {
+                        String BasePath = MyAppConfig.LOCAL_CACHE_VOICE_PATH + "/";
+                        String id = UUID.randomUUID().toString();
+                        String namePcm = id + ".pcm";
+                        String filePcmNew = BasePath + namePcm;
+                        voiceAgc(filePathRaw, filePcmNew);
+                        deNoseX(filePathRaw, filePcmNew);
+                        if ((FileUtils.getFileSize(filePathRaw) <= 0)) {
+                            return;
+                        } else {
+                            File tempFile = new File(filePcmNew);
+                            String wavName = filePathRaw.replace(".raw", ".wav");
+                            convertPcmToWav(filePathRaw, wavName, 16000, 1, 16);
+                            tempFile.delete();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
                 // TODO Auto-generated method stub
                 if (AppUtils.getIsVoiceWordOpen()) {
-                    if (FileUtils.getFileSize(filePath) <= 0) {
+                    if (FileUtils.getFileSize(filePathRaw) <= 0) {
                         if (audioDialogManager != null) {
                             audioDialogManager.dismissVoice2WordProgressDialog();
                         }
@@ -254,7 +502,7 @@ public class ECMChatInputMenu extends LinearLayout {
                     audioDialogManager.showVoice2WordProgressDialog();
                     //转写和转文件格式同时进行
                     voice2StringMessageUtils.setNeedChangeLanguage(false);
-                    voice2StringMessageUtils.startVoiceListeningByVoiceFile(seconds, filePath);
+                    voice2StringMessageUtils.startVoiceListeningByVoiceFile(seconds, filePathRaw);
                     AndroidMp3ConvertUtils.with(getContext()).setCallBack(new AndroidMp3ConvertUtils.AndroidMp3ConvertCallback() {
                         @Override
                         public void onSuccess(String mp3FilePath) {
@@ -273,7 +521,7 @@ public class ECMChatInputMenu extends LinearLayout {
                                 audioDialogManager.dismissVoice2WordProgressDialog();
                             }
                         }
-                    }).setRawPathAndMp3Path(filePath.replace(".wav", ".raw"), filePath.replace(".wav", ".mp3")).startConvert();
+                    }).setRawPathAndMp3Path(filePathRaw , filePathRaw.replace(".raw", ".mp3")).startConvert();
                 } else {
                     AndroidMp3ConvertUtils.with(getContext()).setCallBack(new AndroidMp3ConvertUtils.AndroidMp3ConvertCallback() {
                         @Override
@@ -287,7 +535,7 @@ public class ECMChatInputMenu extends LinearLayout {
                         public void onFailure(Exception e) {
 
                         }
-                    }).setRawPathAndMp3Path(filePath.replace(".wav", ".raw"), filePath.replace(".wav", ".mp3")).startConvert();
+                    }).setRawPathAndMp3Path(filePathRaw , filePathRaw.replace(".raw", ".mp3")).startConvert();
 
                 }
             }
@@ -705,56 +953,43 @@ public class ECMChatInputMenu extends LinearLayout {
                             }
                             break;
                         case VOICE_CALL:
-                            //当没有悬浮窗权限或者小米手机上没有后台弹出界面权限时先请求权限
-                            if ((Build.VERSION.SDK_INT >= 23 && !Settings.canDrawOverlays(getContext())) ||
-                                    (Build.VERSION.SDK_INT >= 19 && !AppUtils.canBackgroundStart(getContext()))) {
-                                chatInputMenuListener.onNoSmallWindowPermission();
-                                return;
-                            }
-                            if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-                                if (VoiceCommunicationManager.getInstance().isVoiceBusy()) {
-                                    ToastUtils.show(R.string.voice_communication_voice_busy_tip);
-                                    return;
+                            //检查网络和能否发起电话，提示在方法内处理
+                            if (NetUtils.isNetworkConnected(MyApplication.getInstance()) && checkCanMakeCall()) {
+                                if (PermissionRequestManagerUtils.getInstance().isHasPermission(getContext(), Permissions.RECORD_AUDIO)) {
+                                    startVoiceCall(VOICE_CALL);
+                                } else {
+                                    PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getContext(), Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
+                                        @Override
+                                        public void onPermissionRequestSuccess(List<String> permissions) {
+
+                                        }
+
+                                        @Override
+                                        public void onPermissionRequestFail(List<String> permissions) {
+                                            ToastUtils.show(getContext(), PermissionRequestManagerUtils.getInstance().getPermissionToast(getContext(), permissions));
+                                        }
+                                    });
                                 }
-                                PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getContext(), Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
-                                    @Override
-                                    public void onPermissionRequestSuccess(List<String> permissions) {
-                                        startVoiceCall(VOICE_CALL);
-                                    }
-
-                                    @Override
-                                    public void onPermissionRequestFail(List<String> permissions) {
-                                        ToastUtils.show(getContext(), PermissionRequestManagerUtils.getInstance().getPermissionToast(getContext(), permissions));
-                                    }
-
-                                });
                             }
                             break;
                         case VIDEO_CALL:
-                            //当没有悬浮窗权限或者小米手机上没有后台弹出界面权限时先请求权限
-                            if ((Build.VERSION.SDK_INT >= 23 && !Settings.canDrawOverlays(getContext())) ||
-                                    (Build.VERSION.SDK_INT >= 19 && !AppUtils.canBackgroundStart(getContext()))) {
-                                chatInputMenuListener.onNoSmallWindowPermission();
-                                return;
-                            }
-                            if (VoiceCommunicationManager.getInstance().isVoiceBusy()) {
-                                ToastUtils.show(R.string.voice_communication_voice_busy_tip);
-                                return;
-                            }
-                            if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+                            if (NetUtils.isNetworkConnected(MyApplication.getInstance()) && checkCanMakeCall()) {
                                 String[] videoPermissions = new String[]{Permissions.RECORD_AUDIO, Permissions.CAMERA};
-                                PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getContext(), videoPermissions, new PermissionRequestCallback() {
-                                    @Override
-                                    public void onPermissionRequestSuccess(List<String> permissions) {
-                                        startVoiceCall(VIDEO_CALL);
-                                    }
+                                if (PermissionRequestManagerUtils.getInstance().isHasPermission(getContext(), videoPermissions)) {
+                                    startVoiceCall(VIDEO_CALL);
+                                } else {
+                                    PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getContext(), videoPermissions, new PermissionRequestCallback() {
+                                        @Override
+                                        public void onPermissionRequestSuccess(List<String> permissions) {
 
-                                    @Override
-                                    public void onPermissionRequestFail(List<String> permissions) {
-                                        ToastUtils.show(getContext(), PermissionRequestManagerUtils.getInstance().getPermissionToast(getContext(), permissions));
-                                    }
+                                        }
 
-                                });
+                                        @Override
+                                        public void onPermissionRequestFail(List<String> permissions) {
+                                            ToastUtils.show(getContext(), PermissionRequestManagerUtils.getInstance().getPermissionToast(getContext(), permissions));
+                                        }
+                                    });
+                                }
                             }
                             break;
                         case "send_email":
@@ -767,6 +1002,29 @@ public class ECMChatInputMenu extends LinearLayout {
             });
             viewpagerLayout.setInputTypeBeanList(inputTypeBeanList);
         }
+    }
+
+    /**
+     * 检查是否有发起电话的条件
+     *
+     * @return
+     */
+    private boolean checkCanMakeCall() {
+        if (AppUtils.isPhoneInUse()) {
+            ToastUtils.show(R.string.voice_communication_calling);
+            return false;
+        }
+        if (VoiceCommunicationManager.getInstance().isVoiceBusy()) {
+            ToastUtils.show(R.string.voice_communication_voice_busy_tip);
+            return false;
+        }
+        //当没有悬浮窗权限或者小米手机上没有后台弹出界面权限时先请求权限
+        if ((Build.VERSION.SDK_INT >= 23 && !Settings.canDrawOverlays(getContext())) ||
+                (Build.VERSION.SDK_INT >= 19 && !AppUtils.canBackgroundStart(getContext()))) {
+            chatInputMenuListener.onNoSmallWindowPermission();
+            return false;
+        }
+        return true;
     }
 
 

@@ -146,26 +146,9 @@ public class VoiceCommunicationMemberAdapter extends RecyclerView.Adapter<VoiceC
      * @param index
      */
     public void setMemberDataAndRefresh(List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationJoinChannelInfoBeanList, int index) {
-        this.voiceCommunicationUserInfoBeanList = getInitAndConnected(voiceCommunicationJoinChannelInfoBeanList);
+        this.voiceCommunicationUserInfoBeanList = voiceCommunicationJoinChannelInfoBeanList;
         this.index = index;
         notifyDataSetChanged();
-    }
-
-    /**
-     * 取出所有等待中和已经接通的人员
-     *
-     * @param voiceCommunicationJoinChannelInfoBeanList
-     * @return
-     */
-    private List<VoiceCommunicationJoinChannelInfoBean> getInitAndConnected(List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationJoinChannelInfoBeanList) {
-        List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationJoinChannelInfoBeans = new ArrayList<>();
-        for (VoiceCommunicationJoinChannelInfoBean voiceCommunicationJoinChannelInfoBean : voiceCommunicationJoinChannelInfoBeanList) {
-            int state = voiceCommunicationJoinChannelInfoBean.getConnectState();
-            if (state == VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_INIT || state == VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_CONNECTED) {
-                voiceCommunicationJoinChannelInfoBeans.add(voiceCommunicationJoinChannelInfoBean);
-            }
-        }
-        return voiceCommunicationJoinChannelInfoBeans;
     }
 
     public class VoiceCommunicationHolder extends RecyclerView.ViewHolder {

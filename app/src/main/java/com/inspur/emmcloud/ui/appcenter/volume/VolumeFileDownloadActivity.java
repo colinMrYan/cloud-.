@@ -1,6 +1,5 @@
 package com.inspur.emmcloud.ui.appcenter.volume;
 
-import android.content.DialogInterface;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -14,7 +13,6 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
-import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.DownloadFileCategory;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
@@ -26,6 +24,7 @@ import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.interf.ProgressCallback;
+import com.inspur.emmcloud.util.privates.NetworkMobileTipUtil;
 import com.inspur.emmcloud.util.privates.ShareFile2OutAppUtils;
 import com.inspur.emmcloud.util.privates.VolumeFileDownloadManager;
 import com.umeng.socialize.ShareAction;
@@ -86,13 +85,13 @@ public class VolumeFileDownloadActivity extends BaseActivity {
             boolean isStartDownload = getIntent().getBooleanExtra("isStartDownload", false);
             if (!isStartDownload) {
                 String status = VolumeFileDownloadManager.getInstance().getFileStatus(volumeFile);
-                if (status.equals(VolumeFile.STATUS_DOWNLOAD_IND)) {
+                if (status.equals(VolumeFile.STATUS_LOADING)) {
                     isStartDownload = true;
-                } else if (status.equals(VolumeFile.STATUS_DOWNLOAD_PAUSE)) {
+                } else if (status.equals(VolumeFile.STATUS_PAUSE)) {
                     downloadBtn.setText(R.string.redownload);
                 }
             }
-            if (isStartDownload && checkDownloadEnvironment()) {
+            if (isStartDownload) {
                 downloadFile();
             }
         }
@@ -101,7 +100,7 @@ public class VolumeFileDownloadActivity extends BaseActivity {
     private void showVolumeFileTypeImg() {
         if (volumeFile.getFormat().startsWith("image/")) {
             String url = "";
-            if (volumeFile.getStatus().equals(VolumeFile.STATUS_UPLOAD_IND)) {
+            if (volumeFile.getStatus().equals(VolumeFile.STATUS_LOADING)) {
                 url = volumeFile.getLocalFilePath();
             } else {
                 url = APIUri.getVolumeFileTypeImgThumbnailUrl(volumeFile, currentDirAbsolutePath);
@@ -152,9 +151,18 @@ public class VolumeFileDownloadActivity extends BaseActivity {
                 if (FileUtils.isFileExist(fileSavePath)) {
                     FileUtils.openFile(BaseApplication.getInstance(), fileSavePath);
                 } else {
-                    if (checkDownloadEnvironment()) {
-                        downloadFile();
-                    }
+                    NetworkMobileTipUtil.checkEnvironment(this, R.string.volume_file_download_network_type_warning,
+                            volumeFile.getSize(), new NetworkMobileTipUtil.Callback() {
+                                @Override
+                                public void cancel() {
+
+                                }
+
+                                @Override
+                                public void onNext() {
+                                    downloadFile();
+                                }
+                            });
                 }
                 break;
             case R.id.file_download_close_img:
@@ -208,44 +216,13 @@ public class VolumeFileDownloadActivity extends BaseActivity {
         shareAction.open();
     }
 
-    private boolean checkDownloadEnvironment() {
-        if (!NetUtils.isNetworkConnected(getApplicationContext()) || !AppUtils.isHasSDCard(getApplicationContext())) {
-            return false;
-        }
-        if (volumeFile.getSize() >= MyAppConfig.NETWORK_MOBILE_MAX_SIZE_ALERT && NetUtils.isNetworkTypeMobile(getApplicationContext())) {
-            showNetworkMobileAlert();
-            return false;
-        }
-        return true;
-    }
-
-
-    private void showNetworkMobileAlert() {
-        new CustomDialog.MessageDialogBuilder(VolumeFileDownloadActivity.this)
-                .setMessage(R.string.volume_file_upload_network_type_warning)
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
-                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        downloadFile();
-                    }
-                })
-                .show();
-    }
-
     /**
      * 下载文件
      */
     private void downloadFile() {
         downloadBtn.setVisibility(View.GONE);
         downloadStatusLayout.setVisibility(View.VISIBLE);
-        volumeFile.setStatus(VolumeFile.STATUS_DOWNLOAD_IND);
+        volumeFile.setStatus(VolumeFile.STATUS_LOADING);
 
         List<VolumeFile> volumeFileList = VolumeFileDownloadManager.getInstance().getAllDownloadVolumeFile();
 
@@ -271,7 +248,7 @@ public class VolumeFileDownloadActivity extends BaseActivity {
             public void onSuccess(VolumeFile volumeFile) {
                 Log.d("zhang", "Activity onSuccess: ");
                 FileDownloadManager.getInstance().saveDownloadFileInfo(DownloadFileCategory.CATEGORY_VOLUME_FILE, volumeFile.getId(), volumeFile.getName(), fileSavePath);
-                ToastUtils.show(getApplicationContext(), R.string.download_success);
+//                ToastUtils.show(getApplicationContext(), R.string.download_success);
                 downloadStatusLayout.setVisibility(View.GONE);
                 progressBar.setProgress(0);
                 progressText.setText("");
@@ -296,7 +273,7 @@ public class VolumeFileDownloadActivity extends BaseActivity {
             public void onFail() {
                 Log.d("zhang", "Activity onFail: ");
                 if (downloadStatusLayout.getVisibility() == View.VISIBLE) {
-                    ToastUtils.show(getApplicationContext(), R.string.download_fail);
+//                    ToastUtils.show(getApplicationContext(), R.string.download_fail);
                     downloadStatusLayout.setVisibility(View.GONE);
                     shareFileTextView.setVisibility(View.GONE);
                     progressBar.setProgress(0);

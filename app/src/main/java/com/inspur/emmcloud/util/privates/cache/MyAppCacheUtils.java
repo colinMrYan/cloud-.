@@ -94,6 +94,24 @@ public class MyAppCacheUtils {
     }
 
     /**
+     * 删除缓存里的App
+     *
+     * @param context
+     * @param deleteApp
+     */
+    public static void deleteAppInCache(Context context, App deleteApp) {
+        List<AppGroupBean> appGroupList = MyAppCacheUtils.getMyAppListFromNet(MyApplication.getInstance());
+        for (AppGroupBean appGroupBean : appGroupList) {
+            List<App> appList = appGroupBean.getAppItemList();
+            if (appList.contains(deleteApp)) {
+                appList.remove(deleteApp);
+                break;
+            }
+        }
+        saveMyAppListFromNet(context, appGroupList);
+    }
+
+    /**
      * 存储是否需要显示常用app
      *
      * @param isNeedCommonlyUseApp
@@ -113,10 +131,15 @@ public class MyAppCacheUtils {
      */
     public static boolean getNeedCommonlyUseApp() {
         String userId = MyApplication.getInstance().getUid();
-        boolean isShowCommAppFromSer = AppConfigCacheUtils.getAppConfigValue(BaseApplication.getInstance(), "EnableCommonFunction", "true").equals("true");
-        boolean isShowCommAppFromNative = PreferencesUtils.getBoolean(MyApplication.getInstance(), MyApplication.getInstance().getTanent()
-                + userId + "needCommonlyUseApp", true);
-        return isShowCommAppFromNative && isShowCommAppFromSer;
+        boolean isCommonUseAppShowResult = true;
+        boolean isContactCommState = PreferencesUtils.isKeyExist(MyApplication.getInstance(), MyApplication.getInstance().getTanent() + userId + "needCommonlyUseApp");
+        if (!isContactCommState) {
+            isCommonUseAppShowResult = AppConfigCacheUtils.getAppConfigValue(BaseApplication.getInstance(), "EnableCommonFunction", "true").equals("true");
+        } else {
+            isCommonUseAppShowResult = PreferencesUtils.getBoolean(MyApplication.getInstance(), MyApplication.getInstance().getTanent()
+                    + userId + "needCommonlyUseApp", true);
+        }
+        return isCommonUseAppShowResult;
     }
 
     /**
