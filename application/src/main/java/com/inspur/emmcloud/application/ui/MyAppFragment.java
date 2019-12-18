@@ -774,22 +774,7 @@ public class MyAppFragment extends BaseFragment {
      * @return
      */
     public List<AppGroupBean> handleAppList(List<AppGroupBean> appGroupList) {
-        List<AppOrder> appOrderList = AppCacheUtils.getAllAppOrderList(getActivity());
-        int appListSize = appGroupList.size();
-        for (int i = 0; i < appListSize; i++) {
-            List<App> appItemList = appGroupList.get(i).getAppItemList();
-            int appGroupSize = appItemList.size();
-            for (int j = 0; j < appGroupSize; j++) {
-                App app = appItemList.get(j);
-                AppOrder appOrderCache = new AppOrder();
-                appOrderCache.setAppID(app.getAppID());
-                int index = appOrderList.indexOf(appOrderCache);
-                if (index != -1) {
-                    app.setOrderId(Integer.parseInt(appOrderList.get(index).getOrderId()));
-                }
-            }
-            Collections.sort(appGroupList.get(i).getAppItemList(), new SortAppClass());
-        }
+        handleAppOrder(appGroupList);
         handCommonlyUseAppData(appGroupList, false);
         return appGroupList;
     }
