@@ -10,6 +10,6 @@ public class AppApplication extends BaseApplication {
 
     @Override
     public String getIntentClassRouterAfterLogin() {
-        return Constant.AROUTER_CLASS_APPCENTER;
+        return Constant.AROUTER_CLASS_APPCENTER_TEST;
     }
 }

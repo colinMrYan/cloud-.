@@ -10,10 +10,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ui.ApplicationTestActivity"
+            android:name=".runalone.ui.ApplicationTestActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait">
-
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
         <activity
@@ -26,10 +29,7 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
 
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
+
         <activity
             android:name=".ui.AppSearchActivity"
             android:launchMode="singleTask"
