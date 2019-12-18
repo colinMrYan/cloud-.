@@ -53,6 +53,9 @@ public class ScreenshotService extends ImpPlugin {
     }
 
     private void screenshot() {
+        if (getImpCallBackInterface() != null) {
+            getImpCallBackInterface().hideScreenshotImg();
+        }
         String screenshotImgPath = ScreenshotUtil.screenshot(getActivity());
         AppUtils.refreshMedia(getFragmentContext(), screenshotImgPath);
         if (getImpCallBackInterface() != null) {
