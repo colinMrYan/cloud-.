@@ -267,7 +267,9 @@ public class ImpWebViewClient extends WebViewClient {
                 intent.setComponent(null);
                 List<ResolveInfo> resolveInfoList = BaseApplication.getInstance().getPackageManager().queryIntentActivities(intent, 0);
                 boolean isMyAppScheme = false;
-                if (resolveInfoList != null && resolveInfoList.size() > 0) {
+                if (url.startsWith("mailto:") || url.startsWith("tel:") || url.startsWith("geo:") || url.startsWith("sms:") || url.startsWith("smsto:")) {
+                    isMyAppScheme = true;
+                } else if (resolveInfoList != null && resolveInfoList.size() > 0) {
                     for (ResolveInfo resolveInfo : resolveInfoList) {
                         if (resolveInfo.activityInfo.packageName.equals(BaseApplication.getInstance().getPackageName())) {
                             isMyAppScheme = true;

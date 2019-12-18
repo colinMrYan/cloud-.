@@ -46,4 +46,6 @@ public interface ImpCallBackInterface {
     void showLoadFailLayout(String url, String description);
 
     void showScreenshotImg(String sceenshotImgPath);
+
+    void hideScreenshotImg();
 }

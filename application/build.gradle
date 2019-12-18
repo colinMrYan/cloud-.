@@ -65,13 +65,4 @@ dependencies {
     annotationProcessor deps.ARouter.router_anno
     implementation deps.butterknife.butterknife
     annotationProcessor deps.butterknife.butterknife_compiler
-
-    implementation deps.react
-    // React Naive Components
-    implementation project(':react-native-smart-swipe-refresh-layout')
-    implementation project(':react-native-picker')
-    implementation project(':react-native-svg')
-    implementation project(':react-native-vector-icons')
-    implementation project(':react-native-navigation')
-    api deps.support.multidex
 }
