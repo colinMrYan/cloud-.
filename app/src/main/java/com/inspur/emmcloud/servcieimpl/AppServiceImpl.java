@@ -1,10 +1,9 @@
 package com.inspur.emmcloud.servcieimpl;
 
-import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.util.AppBadgeUtils;
 import com.inspur.emmcloud.componentservice.app.AppService;
-import com.inspur.emmcloud.componentservice.appcenter.ApplicationService;
 import com.inspur.emmcloud.util.privates.TabAndAppExistUtils;
 import com.inspur.emmcloud.util.privates.cache.AppConfigCacheUtils;
 
@@ -15,11 +14,7 @@ import com.inspur.emmcloud.util.privates.cache.AppConfigCacheUtils;
 public class AppServiceImpl implements AppService {
     @Override
     public void getAppBadgeCountFromServer() {
-        Router router = Router.getInstance();
-        if (router.getService(ApplicationService.class) != null) {
-            ApplicationService service = router.getService(ApplicationService.class);
-            service.getAppBadgeCountFromServer();
-        }
+        new AppBadgeUtils(BaseApplication.getInstance()).getAppBadgeCountFromServer();
     }
 
     @Override

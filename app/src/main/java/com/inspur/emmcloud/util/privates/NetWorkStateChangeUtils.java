@@ -5,10 +5,9 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.baselib.router.Router;
+import com.inspur.emmcloud.basemodule.util.AppBadgeUtils;
 import com.inspur.emmcloud.basemodule.util.CheckingNetStateUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
-import com.inspur.emmcloud.componentservice.appcenter.ApplicationService;
 import com.inspur.emmcloud.push.WebSocketPush;
 
 /**
@@ -73,11 +72,7 @@ public class NetWorkStateChangeUtils {
      */
     private void getBadgeFromServer(Context context) {
         if (MyApplication.getInstance().isHaveLogin()) {
-            Router router = Router.getInstance();
-            if (router.getService(ApplicationService.class) != null) {
-                ApplicationService service = router.getService(ApplicationService.class);
-                service.getAppBadgeCountFromServer();
-            }
+            new AppBadgeUtils(context).getAppBadgeCountFromServer();
         }
     }
 }

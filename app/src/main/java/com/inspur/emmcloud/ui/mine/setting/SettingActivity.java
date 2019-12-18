@@ -37,6 +37,7 @@ import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.push.PushManagerUtils;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.AppBadgeUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.ClientConfigUpdateUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
@@ -538,11 +539,7 @@ public class SettingActivity extends BaseActivity {
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                                 | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
-                        Router routerBadge = Router.getInstance();
-                        if (router.getService(ApplicationService.class) != null) {
-                            ApplicationService service = routerBadge.getService(ApplicationService.class);
-                            service.getAppBadgeCountFromServer();
-                        }
+                        new AppBadgeUtils(SettingActivity.this).getAppBadgeCountFromServer();
                     }
                 })
                 .show();

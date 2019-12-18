@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.api;
 
 import com.inspur.emmcloud.basemodule.bean.GetUploadPushInfoResult;
-import com.inspur.emmcloud.basemodule.bean.badge.BadgeBodyModel;
 import com.inspur.emmcloud.bean.ChatFileUploadInfo;
 import com.inspur.emmcloud.bean.appcenter.GetClientIdRsult;
 import com.inspur.emmcloud.bean.appcenter.GetIDResult;
@@ -627,9 +626,7 @@ public interface APIInterface {
 
     void returnCreateGroupConversationFail(String error, int errorCode);
 
-    void returnBadgeCountSuccess(BadgeBodyModel badgeBodyModel);
 
-    void returnBadgeCountFail(String error, int errorCode);
 
     void returnDeleteConversationSuccess(String cid);
 

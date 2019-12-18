@@ -27,8 +27,6 @@ public interface ApplicationService extends CoreService {
 
     void getAppInfoById(Activity activity, Uri uri, OnFinishActivityListener listener);
 
-    void getAppBadgeCountFromServer();
-
     int getAppCommonlyUseSize();
 
     void saveAppCommonlyUseList(Context context, String appListJson);

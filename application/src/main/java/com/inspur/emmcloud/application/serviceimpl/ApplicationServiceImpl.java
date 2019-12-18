@@ -11,7 +11,6 @@ import com.inspur.emmcloud.application.bean.App;
 import com.inspur.emmcloud.application.bean.AppCommonlyUse;
 import com.inspur.emmcloud.application.bean.AppGroupBean;
 import com.inspur.emmcloud.application.ui.MyAppFragment;
-import com.inspur.emmcloud.application.util.AppBadgeUtils;
 import com.inspur.emmcloud.application.util.AppCacheUtils;
 import com.inspur.emmcloud.application.util.AppId2AppAndOpenAppUtils;
 import com.inspur.emmcloud.application.util.MyAppCacheUtils;
@@ -101,11 +100,6 @@ public class ApplicationServiceImpl implements ApplicationService {
         AppId2AppAndOpenAppUtils appId2AppAndOpenAppUtils = new AppId2AppAndOpenAppUtils(activity);
         appId2AppAndOpenAppUtils.setOnFinishActivityListener(listener);
         appId2AppAndOpenAppUtils.getAppInfoById(uri);
-    }
-
-    @Override
-    public void getAppBadgeCountFromServer() {
-        new AppBadgeUtils(BaseApplication.getInstance()).getAppBadgeCountFromServer();
     }
 
     @Override

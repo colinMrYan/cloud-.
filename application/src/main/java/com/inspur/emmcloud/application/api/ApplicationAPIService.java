@@ -21,7 +21,6 @@ import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
 import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
 import com.inspur.emmcloud.basemodule.api.HttpUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
-import com.inspur.emmcloud.basemodule.bean.badge.BadgeBodyModel;
 import com.inspur.emmcloud.componentservice.login.LoginService;
 import com.inspur.emmcloud.componentservice.login.OauthCallBack;
 
@@ -360,41 +359,6 @@ public class ApplicationAPIService {
             @Override
             public void callbackTokenExpire(long requestTime) {
                 apiInterface.returnVeriryApprovalPasswordFail("", -1);
-            }
-        });
-    }
-
-    /**
-     * 获取app badge数量
-     */
-    public void getBadgeCount() {
-        final String url = ApplicationAPIUri.getBadgeCountUrl();
-        RequestParams params = BaseApplication.getInstance().getHttpRequestParams(url);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, url) {
-            @Override
-            public void callbackSuccess(byte[] arg0) {
-                apiInterface.returnBadgeCountSuccess(new BadgeBodyModel(new String(arg0)));
-            }
-
-            @Override
-            public void callbackFail(String error, int responseCode) {
-                apiInterface.returnBadgeCountFail(error, responseCode);
-            }
-
-            @Override
-            public void callbackTokenExpire(long requestTime) {
-                OauthCallBack oauthCallBack = new OauthCallBack() {
-                    @Override
-                    public void reExecute() {
-                        getBadgeCount();
-                    }
-
-                    @Override
-                    public void executeFailCallback() {
-                        callbackFail("", -1);
-                    }
-                };
-                refreshToken(oauthCallBack, requestTime);
             }
         });
     }
