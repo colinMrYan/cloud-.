@@ -73,10 +73,11 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+
 /**
  * Created by chenmch on 2019/4/9.
  */
-@Route(path = Constant.AROUTER_CLASS_APP_NETWORK_DETAIL)
+@Route(path = Constant.AROUTER_CLASS_SCHEDLE_ADD)
 public class ScheduleAddActivity extends BaseActivity implements CompoundButton.OnCheckedChangeListener {
     public static final String EXTRA_SCHEDULE_SCHEDULECALENDAR_TYPE = "extra_schedule_calendar_type";
     //EXTRA_EVENT_TYPE_FROM_MEETING
