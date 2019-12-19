@@ -29,6 +29,7 @@ import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.schedule.R;
+import com.inspur.emmcloud.schedule.R2;
 import com.inspur.emmcloud.schedule.adapter.ScheduleMeetingRoomDurationAdapter;
 import com.inspur.emmcloud.schedule.adapter.ScheduleMyViewPagerAdapter;
 import com.inspur.emmcloud.schedule.api.ScheduleAPIInterfaceImpl;
@@ -58,17 +59,17 @@ public class MeetingRoomInfoActivity extends BaseActivity {
     private static final int REQUEST_MEETING_INFO = 1;
     private final String dayStartTime = "06:00";
     private final String dayEndTime = "22:00";
-    @BindView(R.id.tv_meeting_room_name)
+    @BindView(R2.id.tv_meeting_room_name)
     TextView meetingRoomNameText;
-    @BindView(R.id.tv_meeting_room_floor)
+    @BindView(R2.id.tv_meeting_room_floor)
     TextView meetingRoomFloorText;
-    @BindView(R.id.view_pager)
+    @BindView(R2.id.view_pager)
     ViewPager viewPager;
-    @BindView(R.id.tv_people_num)
+    @BindView(R2.id.tv_people_num)
     TextView peopleNumText;
-    @BindView(R.id.ll_equipment)
+    @BindView(R2.id.ll_equipment)
     LinearLayout equipmentLayout;
-    @BindView(R.id.tl_meeting_tab)
+    @BindView(R2.id.tl_meeting_tab)
     TabLayout tabLayout;
     private long MINI_INTER_BETWEEN_MEETING = 900000;
     private MeetingRoom meetingRoom;

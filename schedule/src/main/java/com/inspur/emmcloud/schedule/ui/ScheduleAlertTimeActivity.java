@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.schedule.R;
+import com.inspur.emmcloud.schedule.R2;
 import com.inspur.emmcloud.schedule.bean.RemindEvent;
 
 import butterknife.BindView;
@@ -28,9 +29,9 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
     public static String EXTRA_IS_TASK = "schedule_is_task";
     static int[] alertTimeIntArray = {-1, 0, 600, 1200, 1800, 3600, 86400};
     static int[] alertTimeAllDayIntArray = {-1, -32400, 54000, 140400, 572400};
-    @BindView(R.id.lv_alert_time)
+    @BindView(R2.id.lv_alert_time)
     ListView alertTimeListView;
-    @BindView(R.id.iv_no_alert_select)
+    @BindView(R2.id.iv_no_alert_select)
     ImageView noAlertSelectImage;
     int alertTime = -1;
     String[] alertTimeArray = {

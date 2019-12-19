@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.inspur.emmcloud.widget.bubble.BubbleLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.inspur.emmcloud.schedule.widget.bub.BubbleLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/bubble_layout"
     android:layout_width="match_parent"
@@ -149,4 +149,4 @@
 
     </LinearLayout>
 
-</com.inspur.emmcloud.widget.bubble.BubbleLayout>
+</com.inspur.emmcloud.schedule.widget.bub.BubbleLayout>

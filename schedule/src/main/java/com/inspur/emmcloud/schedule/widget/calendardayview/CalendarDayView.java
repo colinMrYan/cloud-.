@@ -324,7 +324,6 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
         }
     }
 
-
     private boolean isEventsCollide(Event event1, Event event2) {
         long start1 = event1.getEventStartTime().getTimeInMillis();
         long end1 = event1.getEventEndTime().getTimeInMillis();

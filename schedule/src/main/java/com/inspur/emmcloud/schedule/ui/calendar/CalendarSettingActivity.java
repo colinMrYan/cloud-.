@@ -22,6 +22,7 @@ import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.schedule.R;
+import com.inspur.emmcloud.schedule.R2;
 import com.inspur.emmcloud.schedule.bean.calendar.AccountType;
 import com.inspur.emmcloud.schedule.bean.calendar.CalendarColor;
 import com.inspur.emmcloud.schedule.bean.calendar.ScheduleCalendar;
@@ -44,15 +45,15 @@ public class CalendarSettingActivity extends BaseActivity {
     public static final String SHOW_TYPE_DAY_VIEW = "show_type_day_view";
     private final int REQUEST_ADD_CALENDAR = 1;
     private final int REQUEST_MODIFY_CALENDAR = 2;
-    @BindView(R.id.listview_list_calendars)
+    @BindView(R2.id.listview_list_calendars)
     ScrollViewWithListView calendarsListView;
-    @BindView(R.id.iv_list_view_select)
+    @BindView(R2.id.iv_list_view_select)
     ImageView listSelectImageView;
-    @BindView(R.id.iv_day_view_select)
+    @BindView(R2.id.iv_day_view_select)
     ImageView daySelectImageView;
-    @BindView(R.id.ll_add_calendar)
+    @BindView(R2.id.ll_add_calendar)
     LinearLayout addCalendarLayout;
-    @BindView(R.id.switch_view_holiday_state)
+    @BindView(R2.id.switch_view_holiday_state)
     SwitchCompat holidayStateSwitch;
     private List<ScheduleCalendar> scheduleCalendarList = new ArrayList<>();
     private CalendarAdapter calendarAdapter;
@@ -99,32 +100,31 @@ public class CalendarSettingActivity extends BaseActivity {
     }
 
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.ibt_back:
-                onBackPressed();
-                break;
-            case R.id.rl_list_view:
-                if (listSelectImageView.getVisibility() != View.VISIBLE) {
-                    listSelectImageView.setVisibility(View.VISIBLE);
-                    daySelectImageView.setVisibility(View.INVISIBLE);
-                    PreferencesUtils.putString(getApplicationContext(),
-                            Constant.PREF_CALENDAR_EVENT_SHOW_TYPE, SHOW_TYPE_LIST);
-                }
-                break;
-            case R.id.rl_day_view:
-                if (daySelectImageView.getVisibility() != View.VISIBLE) {
-                    daySelectImageView.setVisibility(View.VISIBLE);
-                    listSelectImageView.setVisibility(View.INVISIBLE);
-                    PreferencesUtils.putString(getApplicationContext(),
-                            Constant.PREF_CALENDAR_EVENT_SHOW_TYPE, SHOW_TYPE_DAY_VIEW);
-                }
-                break;
-            case R.id.ll_add_calendar:
-                Intent intent = new Intent(CalendarSettingActivity.this, CalendarAccountSelectActivity.class);
-                startActivityForResult(intent, REQUEST_ADD_CALENDAR);
-                break;
-            default:
-                break;
+        int i = v.getId();
+        if (i == R.id.ibt_back) {
+            onBackPressed();
+
+        } else if (i == R.id.rl_list_view) {
+            if (listSelectImageView.getVisibility() != View.VISIBLE) {
+                listSelectImageView.setVisibility(View.VISIBLE);
+                daySelectImageView.setVisibility(View.INVISIBLE);
+                PreferencesUtils.putString(getApplicationContext(),
+                        Constant.PREF_CALENDAR_EVENT_SHOW_TYPE, SHOW_TYPE_LIST);
+            }
+
+        } else if (i == R.id.rl_day_view) {
+            if (daySelectImageView.getVisibility() != View.VISIBLE) {
+                daySelectImageView.setVisibility(View.VISIBLE);
+                listSelectImageView.setVisibility(View.INVISIBLE);
+                PreferencesUtils.putString(getApplicationContext(),
+                        Constant.PREF_CALENDAR_EVENT_SHOW_TYPE, SHOW_TYPE_DAY_VIEW);
+            }
+
+        } else if (i == R.id.ll_add_calendar) {
+            Intent intent = new Intent(CalendarSettingActivity.this, CalendarAccountSelectActivity.class);
+            startActivityForResult(intent, REQUEST_ADD_CALENDAR);
+
+        } else {
         }
     }
 

@@ -18,7 +18,7 @@ import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
-import com.inspur.emmcloud.bean.chat.Conversation;
+import com.inspur.emmcloud.componentservice.communication.Conversation;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 
 import org.greenrobot.eventbus.EventBus;

@@ -16,6 +16,7 @@ import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.schedule.R;
+import com.inspur.emmcloud.schedule.R2;
 import com.inspur.emmcloud.schedule.bean.calendar.ScheduleCalendar;
 import com.inspur.emmcloud.schedule.util.CalendarUtils;
 import com.inspur.emmcloud.schedule.util.ScheduleCalendarCacheUtils;
@@ -34,7 +35,7 @@ public class ScheduleTypeSelectActivity extends BaseActivity {
 
     public static final String SCHEDULE_AC_TYPE = "schedule_ac_type";
 
-    @BindView(R.id.lv_schedule_types)
+    @BindView(R2.id.lv_schedule_types)
     ListView scheduleTypesListView;
 
     private List<ScheduleCalendar> scheduleTypeList = new ArrayList<>();

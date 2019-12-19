@@ -47,6 +47,7 @@ import com.inspur.emmcloud.schedule.ui.meeting.ScheduleDetailActivity;
 import com.inspur.emmcloud.schedule.util.HolidayCacheUtils;
 import com.inspur.emmcloud.schedule.util.ScheduleCacheUtils;
 import com.inspur.emmcloud.schedule.util.ScheduleCalendarCacheUtils;
+import com.inspur.emmcloud.schedule.util.ScheduleGroupCreateUtils;
 import com.inspur.emmcloud.schedule.widget.calendardayview.Event;
 import com.inspur.emmcloud.schedule.widget.calendarview.EmmCalendar;
 
@@ -464,17 +465,16 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
 
     @Override
     public void onGroupChat(Event event) {
-        //1111111111111111111111111111111111111
-//        (new ChatCreateUtils()).startGroupChat(getActivity(), (Schedule) (event.getEventObj()), "", new ChatCreateUtils.ICreateGroupChatListener() {
-//            @Override
-//            public void createSuccess() {
-//            }
-//
-//            @Override
-//            public void createFail() {
-//                ToastUtils.show(R.string.meeting_group_chat_fail);
-//            }
-//        });
+        (new ScheduleGroupCreateUtils()).startGroupChat(getActivity(), (Schedule) (event.getEventObj()), "", new ScheduleGroupCreateUtils.ICreateGroupChatListener() {
+            @Override
+            public void createSuccess() {
+            }
+
+            @Override
+            public void createFail() {
+                ToastUtils.show(R.string.meeting_group_chat_fail);
+            }
+        });
     }
 
     @Override

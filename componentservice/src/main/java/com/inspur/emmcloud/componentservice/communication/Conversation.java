@@ -1,10 +1,9 @@
-package com.inspur.emmcloud.bean.chat;
+package com.inspur.emmcloud.componentservice.communication;
 
+import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.PinyinUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
-import com.inspur.emmcloud.basemodule.bean.SearchModel;
-import com.inspur.emmcloud.util.privates.CommunicationUtils;
 
 import org.json.JSONObject;
 import org.xutils.db.annotation.Column;
@@ -87,7 +86,13 @@ public class Conversation implements Serializable {
         this.stick = JSONUtils.getBoolean(obj, "stick", false);
         this.hide = false;
         this.action = JSONUtils.getString(obj, "action", "");
-        this.showName = CommunicationUtils.getConversationTitle(this);
+        Router router = Router.getInstance();
+        if (router != null) {
+            CommunicationService contactService = router.getService(CommunicationService.class);
+            if (contactService != null) {
+                this.showName = contactService.getShowName(this);
+            }
+        }
         this.pyFull = PinyinUtils.getPingYin(showName);
     }
 

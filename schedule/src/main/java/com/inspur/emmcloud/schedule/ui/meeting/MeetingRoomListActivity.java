@@ -20,6 +20,7 @@ import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.schedule.R;
+import com.inspur.emmcloud.schedule.R2;
 import com.inspur.emmcloud.schedule.adapter.ScheduleMeetingRoomAdapter;
 import com.inspur.emmcloud.schedule.api.ScheduleAPIInterfaceImpl;
 import com.inspur.emmcloud.schedule.api.ScheduleAPIService;
@@ -51,17 +52,17 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
     public static final String EXTRA_MEETING_ROOM = "extra_meeting_room";
     private static final int REQUEST_MEETING_OFFICE_SETTING = 1;
     private static final int REQUEST_ENTER_MEETING_ROOM_INFO = 2;
-    @BindView(R.id.swipe_refresh_layout)
+    @BindView(R2.id.swipe_refresh_layout)
     MySwipeRefreshLayout swipeRefreshLayout;
-    @BindView(R.id.expandable_list_view)
+    @BindView(R2.id.expandable_list_view)
     ExpandableListView expandableListView;
-    @BindView(R.id.tv_start_date)
+    @BindView(R2.id.tv_start_date)
     TextView startDateText;
-    @BindView(R.id.tv_start_time)
+    @BindView(R2.id.tv_start_time)
     TextView startTimeText;
-    @BindView(R.id.tv_end_date)
+    @BindView(R2.id.tv_end_date)
     TextView endDateText;
-    @BindView(R.id.tv_end_time)
+    @BindView(R2.id.tv_end_time)
     TextView endTimeText;
     private Calendar startTimeCalendar;
     private Calendar endTimeCalendar;

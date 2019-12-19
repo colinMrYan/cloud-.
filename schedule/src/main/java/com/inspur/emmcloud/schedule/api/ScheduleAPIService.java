@@ -2074,4 +2074,90 @@ public class ScheduleAPIService {
             }
         });
     }
+
+    //    /**
+//     * 发起群聊  入口
+//     *
+//     * @param meeting  会议对象
+//     * @param chatGroupId CID 群聊ID
+//     * @param listener    成功失败回调 可以传null
+//     */
+//    public void startGroupChat(Activity context, Schedule meeting, String chatGroupId, ICreateGroupChatListener listener) {
+//        this.context = context;
+//        this.iCreateGroupChatListener = listener;
+//
+//        scheduleApiService = new ScheduleApiService(context);
+//        scheduleApiService.setAPIInterface(new WebService());
+//        this.meeting = meeting;
+//        if (meeting == null) return;
+//        peopleArray = getPeopleArray(meeting);
+//        if (peopleArray.length() < 2) {
+//            ToastUtils.show(R.string.chat_group_least_two_person);
+//            return;
+//        }
+//
+//        if (StringUtils.isBlank(chatGroupId)) {
+//            loadingDlg = new LoadingDialog(context);
+//            loadingDlg.show();
+//            scheduleApiService.getCalendarBindChat(meeting.getId());
+//        } else {
+//            if (TabAndAppExistUtils.isTabExist(context, Constant.APP_TAB_BAR_COMMUNACATE)) {
+//                Bundle bundle = new Bundle();
+//                bundle.putString(ConversationActivity.EXTRA_CID, chatGroupId);
+//                IntentUtils.startActivity(context, ConversationActivity.class, bundle);
+//            }
+//        }
+//    }
+//
+//    private JSONArray getPeopleArray(Schedule meeting) {
+//        List<Participant> totalList = deleteRepeatData(meeting.getAllParticipantList(), meeting.getOwner());
+//        JSONArray peopleArray = new JSONArray();
+//        for (Participant participant : totalList) {
+//            JSONObject json = new JSONObject();
+//            try {
+////                if (!participant.getId().equals(BaseApplication.getInstance().getUid())) {
+//                json.put("pid", participant.getId());
+//                json.put("name", participant.getName());
+//                peopleArray.put(json);
+////                }
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        return peopleArray;
+//    }
+//
+//    //list去重
+//    private List<Participant> deleteRepeatData(List<Participant> list, String owner) {
+//        //把创建人加入到群聊
+//        if (!StringUtils.isBlank(owner)) {
+//            Participant ownerParticipant = new Participant();
+//            ownerParticipant.setId(owner);
+//            String ownerName = ContactUserCacheUtils.getUserName(owner);
+//            ownerParticipant.setName(ownerName);
+//            list.add(ownerParticipant);
+//        }
+//        //去除通讯录中不存在的人(外部联系人)
+//        Iterator<Participant> iterator = list.iterator();
+//        while (iterator.hasNext()) {
+//            Participant item = iterator.next();
+//            ContactUser user = ContactUserCacheUtils.getContactUserByUid(item.getId());
+//            if (user == null) {
+//                iterator.remove();
+//            }
+//        }
+//        Set<Participant> set = new TreeSet<>(new Comparator<Participant>() {
+//            @Override
+//            public int compare(Participant o1, Participant o2) {
+//                return o1.getId().compareTo(o2.getId());
+//            }
+//        });
+//        set.addAll(list);
+//        List<Participant> result = new ArrayList<>(set);
+//        Collections.reverse(result);
+//
+//        return result;
+//    }
+
 }

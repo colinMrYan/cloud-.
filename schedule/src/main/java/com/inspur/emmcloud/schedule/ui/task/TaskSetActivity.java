@@ -14,6 +14,7 @@ import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.schedule.R;
+import com.inspur.emmcloud.schedule.R2;
 import com.inspur.emmcloud.schedule.bean.task.MessionSetModel;
 
 import org.greenrobot.eventbus.EventBus;
@@ -36,7 +37,7 @@ public class TaskSetActivity extends BaseActivity {
     public static final String TASK_ORDER = "order";
     public static final String TASK_ORDER_PRIORITY = "PRIORITY";
     public static final String TASK_ORDER_DUE_DATE = "DUE_DATE";
-    @BindView(R.id.lv_task_list)
+    @BindView(R2.id.lv_task_list)
     ListView setListView;
     private ArrayList<MessionSetModel> taskSetModel = new ArrayList<MessionSetModel>();
 

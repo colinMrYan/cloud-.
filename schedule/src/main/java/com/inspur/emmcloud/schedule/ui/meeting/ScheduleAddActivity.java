@@ -29,7 +29,6 @@ import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.api.BaseModuleApiUri;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.CalendarIdAndCloudIdBean;
-import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
@@ -42,9 +41,11 @@ import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
+import com.inspur.emmcloud.componentservice.communication.SearchModel;
 import com.inspur.emmcloud.componentservice.contact.ContactService;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.schedule.R;
+import com.inspur.emmcloud.schedule.R2;
 import com.inspur.emmcloud.schedule.api.ScheduleAPIInterfaceImpl;
 import com.inspur.emmcloud.schedule.api.ScheduleAPIService;
 import com.inspur.emmcloud.schedule.bean.GetIDResult;
@@ -89,41 +90,41 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
     private static final int REQUEST_SELECT_LIAISON = 3;
     private static final int REQUEST_SELECT_MEETING_ROOM = 4;
     private static final int REQUEST_SET_REMIND_EVENT = 5;
-    @BindView(R.id.et_title)
+    @BindView(R2.id.et_title)
     EditText titleEdit;
-    @BindView(R.id.tv_start_date)
+    @BindView(R2.id.tv_start_date)
     TextView startDateText;
-    @BindView(R.id.tv_start_time)
+    @BindView(R2.id.tv_start_time)
     TextView startTimeText;
-    @BindView(R.id.tv_end_date)
+    @BindView(R2.id.tv_end_date)
     TextView endDateText;
-    @BindView(R.id.tv_end_time)
+    @BindView(R2.id.tv_end_time)
     TextView endTimeText;
-    @BindView(R.id.ll_attendee)
+    @BindView(R2.id.ll_attendee)
     LinearLayout attendeeLayout;
-    @BindView(R.id.ll_recorder)
+    @BindView(R2.id.ll_recorder)
     LinearLayout recorderLayout;
-    @BindView(R.id.ll_liaison)
+    @BindView(R2.id.ll_liaison)
     LinearLayout liaisonLayout;
-    @BindView(R.id.et_notes)
+    @BindView(R2.id.et_notes)
     EditText notesEdit;
-    @BindView(R.id.tv_reminder)
+    @BindView(R2.id.tv_reminder)
     TextView reminderText;
-    @BindView(R.id.tv_new_event_title)
+    @BindView(R2.id.tv_new_event_title)
     TextView newEventTitleText;
-    @BindView(R.id.rl_calendar_type)
+    @BindView(R2.id.rl_calendar_type)
     RelativeLayout calendarTypeLayout;
-    @BindView(R.id.switch_all_day)
+    @BindView(R2.id.switch_all_day)
     Switch allDaySwitch;
-    @BindView(R.id.switch_sync_calendar)
+    @BindView(R2.id.switch_sync_calendar)
     Switch syncCalendarSwitch;
-    @BindView(R.id.tv_event_type)
+    @BindView(R2.id.tv_event_type)
     TextView eventTypeText;
-    @BindView(R.id.et_meeting_position)
+    @BindView(R2.id.et_meeting_position)
     EditText positionEditText;
-    @BindView(R.id.iv_meeting_position_enter)
+    @BindView(R2.id.iv_meeting_position_enter)
     ImageView meetingPositionEnterImageView;
-    @BindView(R.id.iv_meeting_position_del)
+    @BindView(R2.id.iv_meeting_position_del)
     ImageView meetingPositionDelImageView;
 
 

@@ -29,7 +29,6 @@ import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.api.APIDownloadCallBack;
 import com.inspur.emmcloud.basemodule.api.BaseModuleApiUri;
 import com.inspur.emmcloud.basemodule.bean.DownloadFileCategory;
-import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
@@ -40,9 +39,11 @@ import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.componentservice.communication.SearchModel;
 import com.inspur.emmcloud.componentservice.contact.ContactService;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.schedule.R;
+import com.inspur.emmcloud.schedule.R2;
 import com.inspur.emmcloud.schedule.api.ScheduleAPIInterfaceImpl;
 import com.inspur.emmcloud.schedule.api.ScheduleAPIService;
 import com.inspur.emmcloud.schedule.bean.RemindEvent;
@@ -88,39 +89,39 @@ public class TaskAddActivity extends BaseActivity {
     private static final int REQUEST_PARTICIPANT = 3;
     private static final int REQUEST_ALERT_TIME = 4;
     private static final int REQUEST_ATTACHMENT = 5;
-    @BindView(R.id.ll_single_tag)
+    @BindView(R2.id.ll_single_tag)
     LinearLayout singleTagLayout;
-    @BindView(R.id.ll_tags)
+    @BindView(R2.id.ll_tags)
     LinearLayout tagsLayout;
-    @BindView(R.id.et_input_title)
+    @BindView(R2.id.et_input_title)
     EditText contentInputEdit;
-    @BindView(R.id.iv_task_type_tap)
+    @BindView(R2.id.iv_task_type_tap)
     ImageView taskTypeTapImage;
-    @BindView(R.id.tv_task_type_name)
+    @BindView(R2.id.tv_task_type_name)
     TextView taskTypeNameText;
-    @BindView(R.id.tv_deadline_time)
+    @BindView(R2.id.tv_deadline_time)
     TextView deadlineTimeText;
-    @BindView(R.id.iv_participant_head_three)
+    @BindView(R2.id.iv_participant_head_three)
     ImageView participantHeadThreeImageView;
-    @BindView(R.id.iv_participant_head_two)
+    @BindView(R2.id.iv_participant_head_two)
     ImageView participantHeadTwoImageView;
-    @BindView(R.id.iv_participant_head_one)
+    @BindView(R2.id.iv_participant_head_one)
     ImageView participantHeadOneImageView;
-    @BindView(R.id.tv_participant_num)
+    @BindView(R2.id.tv_participant_num)
     TextView participantNumText;
-    @BindView(R.id.iv_manager_head)
+    @BindView(R2.id.iv_manager_head)
     ImageView managerHeadImageView;
-    @BindView(R.id.tv_manager_num)
+    @BindView(R2.id.tv_manager_num)
     TextView managerNumText;
-    @BindView(R.id.tv_end_task_alert_time)
+    @BindView(R2.id.tv_end_task_alert_time)
     TextView taskAlertTimeView;
-    @BindView(R.id.lv_attachment_abstract_other)
+    @BindView(R2.id.lv_attachment_abstract_other)
     ListView attachmentOthersList;
-    @BindView(R.id.ll_more_content)
+    @BindView(R2.id.ll_more_content)
     LinearLayout moreContentLayout;
-    @BindView(R.id.v_priority)
+    @BindView(R2.id.v_priority)
     SegmentControlView segmentControlView;
-    @BindView(R.id.tv_title)
+    @BindView(R2.id.tv_title)
     TextView titleText;
 
 

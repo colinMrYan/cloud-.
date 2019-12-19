@@ -15,6 +15,7 @@ import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.schedule.R;
+import com.inspur.emmcloud.schedule.R2;
 import com.inspur.emmcloud.schedule.api.ScheduleAPIInterfaceImpl;
 import com.inspur.emmcloud.schedule.api.ScheduleAPIService;
 import com.inspur.emmcloud.schedule.bean.Participant;
@@ -28,7 +29,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class ScheduleDetailReplyActivity extends BaseActivity {
-    @BindView(R.id.lv_meeting_reply)
+    @BindView(R2.id.lv_meeting_reply)
     ListView listView;
     private Schedule schedule;
     private List<ReplyAttendResult> dataList = new ArrayList<>();

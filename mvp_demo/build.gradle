@@ -53,6 +53,18 @@ android {
     }
     resourcePrefix project.getName()+"_"
 
+    //资源文件目录
+    sourceSets {
+        main {
+            res.srcDirs =
+                    [
+                            'src/main/res',
+                            'src/main/res/layouts/meeting',//日程_任务
+
+                    ]
+        }
+    }
+
 }
 
 combuild {
@@ -62,7 +74,6 @@ combuild {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-
     implementation project(':basemodule')
     androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.2', {
         exclude group: 'com.android.support', module: 'support-annotations'

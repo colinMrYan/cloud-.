@@ -28,6 +28,7 @@ import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.componentservice.contact.ContactService;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.schedule.R;
+import com.inspur.emmcloud.schedule.R2;
 import com.inspur.emmcloud.schedule.api.ScheduleAPIInterfaceImpl;
 import com.inspur.emmcloud.schedule.api.ScheduleAPIService;
 import com.inspur.emmcloud.schedule.bean.MeetingAttendees;
@@ -48,9 +49,9 @@ import butterknife.ButterKnife;
 
 public class MeetingAttendeeStateActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener, ExpandableListView.OnChildClickListener {
 
-    @BindView(R.id.expandable_list_view)
+    @BindView(R2.id.expandable_list_view)
     ExpandableListView expandableListView;
-    @BindView(R.id.swipe_refresh_layout)
+    @BindView(R2.id.swipe_refresh_layout)
     MySwipeRefreshLayout swipeRefreshLayout;
     MeetingAttendeeStateAdapter meetingAttendeeStateAdapter;
     Schedule schedule;

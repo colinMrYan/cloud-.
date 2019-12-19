@@ -9,6 +9,7 @@ import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.schedule.R;
+import com.inspur.emmcloud.schedule.R2;
 import com.inspur.emmcloud.schedule.adapter.MeetingOfficeAdapter;
 import com.inspur.emmcloud.schedule.api.ScheduleAPIInterfaceImpl;
 import com.inspur.emmcloud.schedule.api.ScheduleAPIService;
@@ -28,7 +29,7 @@ import butterknife.ButterKnife;
 
 public class MeetingOfficeSettingActivity extends BaseActivity implements ExpandableListView.OnChildClickListener {
 
-    @BindView(R.id.expandable_listView)
+    @BindView(R2.id.expandable_listView)
     ExpandableListView expandableListView;
     private LoadingDialog loadingDlg;
     private ScheduleAPIService apiService;

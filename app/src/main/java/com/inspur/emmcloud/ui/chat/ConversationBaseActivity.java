@@ -13,7 +13,7 @@ import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
-import com.inspur.emmcloud.bean.chat.Conversation;
+import com.inspur.emmcloud.componentservice.communication.Conversation;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 
 import org.greenrobot.eventbus.EventBus;

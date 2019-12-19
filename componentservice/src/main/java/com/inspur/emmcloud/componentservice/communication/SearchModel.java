@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.basemodule.bean;
+package com.inspur.emmcloud.componentservice.communication;
 
 import android.content.Context;
 

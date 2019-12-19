@@ -21,6 +21,7 @@ import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.schedule.R;
+import com.inspur.emmcloud.schedule.R2;
 import com.inspur.emmcloud.schedule.api.ScheduleAPIInterfaceImpl;
 import com.inspur.emmcloud.schedule.api.ScheduleAPIService;
 import com.inspur.emmcloud.schedule.bean.task.TagColorBean;
@@ -38,11 +39,11 @@ import butterknife.ButterKnife;
  * Created by libaochao on 2019/4/9.
  */
 public class TaskTagAddActivity extends BaseActivity  {
-    @BindView(R.id.lv_tag_color)
+    @BindView(R2.id.lv_tag_color)
     ListView tagColorList;
-    @BindView(R.id.tv_delecte_tag)
+    @BindView(R2.id.tv_delecte_tag)
     TextView deleteTagText;
-    @BindView(R.id.et_tag_name)
+    @BindView(R2.id.et_tag_name)
     EditText tagNameEdit;
 
     private List<TagColorBean> tagColorBeans = new ArrayList<>();

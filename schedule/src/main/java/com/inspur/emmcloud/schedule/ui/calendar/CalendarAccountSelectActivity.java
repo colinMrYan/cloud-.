@@ -15,6 +15,7 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.schedule.R;
+import com.inspur.emmcloud.schedule.R2;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,7 +26,7 @@ import butterknife.ButterKnife;
 
 public class CalendarAccountSelectActivity extends BaseActivity {
     private static final int REQUEST_EXCHANGE_LOGIN = 1;
-    @BindView(R.id.lv_calendar_account)
+    @BindView(R2.id.lv_calendar_account)
     ListView calendarAccountListView;
 
     @Override

@@ -1,8 +1,10 @@
 package com.inspur.emmcloud.componentservice.communication;
 
+import android.content.Context;
+
 import com.inspur.emmcloud.componentservice.CoreService;
 
-import org.json.JSONObject;
+import org.json.JSONArray;
 
 /**
  * Created by chenmch on 2019/5/31.
@@ -25,7 +27,7 @@ public interface CommunicationService extends CoreService {
 
     void shareTxtPlainToConversation(String content, ShareToConversationListener listener);
 
-    void openConversationByChannelId(JSONObject jsonObject);
+    void openConversationByChannelId(String cid);
 
     void MessageSendManagerOnDestroy();
 
@@ -33,4 +35,9 @@ public interface CommunicationService extends CoreService {
 
     //退出登录停止语音通话
     void stopVoiceCommunication();
+
+    void createGroupConversation(Context context, JSONArray peopleArray, String groupName,
+                                 OnCreateGroupConversationListener onCreateGroupConversationListener);
+
+    String getShowName(Conversation conversation);
 }

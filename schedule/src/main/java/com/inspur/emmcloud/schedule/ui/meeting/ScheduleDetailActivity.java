@@ -32,6 +32,7 @@ import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.componentservice.contact.ContactService;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.schedule.R;
+import com.inspur.emmcloud.schedule.R2;
 import com.inspur.emmcloud.schedule.api.ScheduleAPIInterfaceImpl;
 import com.inspur.emmcloud.schedule.api.ScheduleAPIService;
 import com.inspur.emmcloud.schedule.bean.Location;
@@ -42,6 +43,7 @@ import com.inspur.emmcloud.schedule.bean.meeting.ReplyAttendResult;
 import com.inspur.emmcloud.schedule.ui.ScheduleAlertTimeActivity;
 import com.inspur.emmcloud.schedule.util.CalendarUtils;
 import com.inspur.emmcloud.schedule.util.ScheduleCacheUtils;
+import com.inspur.emmcloud.schedule.util.ScheduleGroupCreateUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.jsoup.helper.StringUtil;
@@ -74,56 +76,56 @@ public class ScheduleDetailActivity extends BaseActivity {
     /**
      * 日程相关
      **/
-    @BindView(R.id.tv_schedule_title)
+    @BindView(R2.id.tv_schedule_title)
     TextView scheduleTitleText;
-    @BindView(R.id.tv_schedule_time)
+    @BindView(R2.id.tv_schedule_time)
     TextView scheduleTimeText;
-    @BindView(R.id.tv_schedule_remind)
+    @BindView(R2.id.tv_schedule_remind)
     TextView scheduleRemindText;
-    @BindView(R.id.schedule_distribution_layout)
+    @BindView(R2.id.schedule_distribution_layout)
     View scheduleDistributionLayout;
-    @BindView(R.id.tv_schedule_distribution)
+    @BindView(R2.id.tv_schedule_distribution)
     TextView scheduleDistributionText;
-    @BindView(R.id.tv_schedule_create)
+    @BindView(R2.id.tv_schedule_create)
     TextView scheduleCreateTimeText;
-    @BindView(R.id.header_text)
+    @BindView(R2.id.header_text)
     TextView headText;
-    @BindView(R.id.tv_attendee)
+    @BindView(R2.id.tv_attendee)
     TextView attendeeText;
-    @BindView(R.id.tv_location)
+    @BindView(R2.id.tv_location)
     TextView scheduleLocationText;
-    @BindView(R.id.rl_schedule_location)
+    @BindView(R2.id.rl_schedule_location)
     RelativeLayout scheduleLocationLayout;
-    @BindView(R.id.tv_schedule_record_holder)
+    @BindView(R2.id.tv_schedule_record_holder)
     TextView scheduleRecordHolderText;
-    @BindView(R.id.tv_schedule_conference)
+    @BindView(R2.id.tv_schedule_conference)
     TextView scheduleConferenceText;
-    @BindView(R.id.tv_schedule_note)
+    @BindView(R2.id.tv_schedule_note)
     TextView scheduleNoteText;
-    @BindView(R.id.rl_schedule_record_holder)
+    @BindView(R2.id.rl_schedule_record_holder)
     RelativeLayout scheduleRecordHolderLayout;
-    @BindView(R.id.rl_schedule_conference)
+    @BindView(R2.id.rl_schedule_conference)
     RelativeLayout scheduleConferenceLayout;
-    @BindView(R.id.rl_schedule_note)
+    @BindView(R2.id.rl_schedule_note)
     RelativeLayout scheduleNoteLayout;
-    @BindView(R.id.iv_schedule_detail_more)
+    @BindView(R2.id.iv_schedule_detail_more)
     ImageView scheduleMoreImg;
-    @BindView(R.id.rl_schedule_attendee)
+    @BindView(R2.id.rl_schedule_attendee)
     RelativeLayout scheduleAttendLayout;
-    @BindView(R.id.tv_schedule_invite)
+    @BindView(R2.id.tv_schedule_invite)
     TextView scheduleInviteText;
-    @BindView(R.id.rl_schedule_calendar)
+    @BindView(R2.id.rl_schedule_calendar)
     View scheduleCalendarTypeLayout;
-    @BindView(R.id.image_schedule_calendar_type)
+    @BindView(R2.id.image_schedule_calendar_type)
     ImageView scheduleCalendarTypeImage;
-    @BindView(R.id.tv_schedule_calendar_type)
+    @BindView(R2.id.tv_schedule_calendar_type)
     TextView scheduleCalendarTypeText;  //日历类型
-    @BindView(R.id.rl_schedule_attend_status)
+    @BindView(R2.id.rl_schedule_attend_status)
     RelativeLayout attendStatusLayout;
-    @BindView(R.id.tv_schedule_attend_status)
+    @BindView(R2.id.tv_schedule_attend_status)
     TextView attendStatusText;
     ReplyAttendResult info = new ReplyAttendResult(); //参会答复
-    @BindView(R.id.rl_schedule_invite)
+    @BindView(R2.id.rl_schedule_invite)
     RelativeLayout scheduleInviteLayout;
     private ScheduleAPIService scheduleApiService;
     private LoadingDialog loadingDlg;
@@ -568,7 +570,7 @@ public class ScheduleDetailActivity extends BaseActivity {
                 } else if (tag.equals(getString(isFromCalendar ? R.string.schedule_calendar_delete : R.string.schedule_meeting_cancel))) {
                     showConfirmClearDialog(scheduleEvent);
                 } else if (tag.equals(getString(R.string.meeting_create_group_chat))) {
-//                    new ChatCreateUtils().startGroupChat(ScheduleDetailActivity.this, scheduleEvent, chatGroupId, null); ////////111111111111111111111111111111111111111111111111
+                    new ScheduleGroupCreateUtils().startGroupChat(ScheduleDetailActivity.this, scheduleEvent, chatGroupId, null);
                 }
                 dialog.dismiss();
             }

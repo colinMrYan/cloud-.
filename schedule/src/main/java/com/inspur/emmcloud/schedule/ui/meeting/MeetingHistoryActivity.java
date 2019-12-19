@@ -26,10 +26,8 @@ public class MeetingHistoryActivity extends BaseFragmentActivity {
     }
 
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.ibt_back:
-                finish();
-                break;
+        if (view.getId() == R.id.ibt_back) {
+            finish();
         }
     }
 }

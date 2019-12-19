@@ -17,6 +17,7 @@ import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.schedule.R;
+import com.inspur.emmcloud.schedule.R2;
 import com.inspur.emmcloud.schedule.api.ScheduleAPIInterfaceImpl;
 import com.inspur.emmcloud.schedule.api.ScheduleAPIService;
 import com.inspur.emmcloud.schedule.bean.meeting.GetTagResult;
@@ -35,7 +36,7 @@ import butterknife.ButterKnife;
 public class TaskTagsManageActivity extends BaseActivity {
     public static String EXTRA_TAGS = "tags";
     public static String EXTRA_DELETE_TAGS = "tags";
-    @BindView(R.id.lv_task_manage_tags)
+    @BindView(R2.id.lv_task_manage_tags)
     ListView taskManageTagsList;
     private TaskTagsAdapter taskTagsAdapter;
     private LoadingDialog loadingDialog;
