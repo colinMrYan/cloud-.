@@ -438,7 +438,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        simpleEventMessage.setAction(Constant.SCHEDULE_DETAIL);
+                        simpleEventMessage.setAction(Constant.OPEN_SCHEDULE_DETAIL);
                         EventBus.getDefault().post(simpleEventMessage);
                     }
                 }, 100);

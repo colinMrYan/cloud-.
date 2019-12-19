@@ -20,6 +20,7 @@ import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
 import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
 import com.inspur.emmcloud.basemodule.api.HttpUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.bean.ChatFileUploadInfo;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileUploadTokenResult;
@@ -1253,7 +1254,9 @@ public class ChatAPIService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        refuseAgoraChannel(channelId);
+                        if (BaseApplication.getInstance().isHaveLogin()) {
+                            refuseAgoraChannel(channelId);
+                        }
                     }
 
                     @Override
@@ -1292,7 +1295,9 @@ public class ChatAPIService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        leaveAgoraChannel(channelId);
+                        if (BaseApplication.getInstance().isHaveLogin()) {
+                            leaveAgoraChannel(channelId);
+                        }
                     }
 
                     @Override

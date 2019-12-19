@@ -481,7 +481,7 @@ public class ScheduleDetailActivity extends BaseActivity {
         } else if (i == R.id.rl_schedule_attend_status) {
             Intent replyIntent = new Intent(this, ScheduleDetailReplyActivity.class);
             replyIntent.putExtra("OriginReplyData", info);
-            replyIntent.putExtra(Constant.SCHEDULE_DETAIL, scheduleEvent);
+            replyIntent.putExtra(Constant.OPEN_SCHEDULE_DETAIL, scheduleEvent);
             startActivityForResult(replyIntent, 0);
         }
     }

@@ -48,6 +48,7 @@ import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
+import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.privates.ShareUtil;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
@@ -431,7 +432,9 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                     public void run() {
                         List<SearchModel> groupsSearchList;
                         List<SearchModel> privateChatSearchList;
-                        List<Contact> contactsSearchList;
+                        List<Contact> contactsSearchList = new ArrayList<>();
+                        contactList = new ArrayList<>();
+                        List<ConversationWithMessageNum> conversationFromChatContentNums = new ArrayList<>();
                         switch (searchArea) {
                             case SEARCH_ALL:
                                 if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
@@ -450,17 +453,17 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                                 for (int i = 0; i < (groupsSearchList.size() > 3 ? 3 : groupsSearchList.size()); i++) {
                                     groupConversationList.add(groupsSearchList.get(i));
                                 }
-                                contactsSearchList = new ArrayList<>();
-                                contactList = new ArrayList<>();
                                 if (isSearchContacts) {
                                     contactsSearchList = ContactUserCacheUtils.getSearchContact(searchText, null, 3);
                                 }
                                 for (int j = 0; j < contactsSearchList.size(); j++) {
                                     contactList.add(contactsSearchList.get(j).contact2SearchModel());
                                 }
-                                conversationFromChatContentList.clear();
+                                conversationFromChatContentNums = oriChannelInfoByKeyword(searchText);
                                 conversationFromChatContentList = new ArrayList<>();
-                                conversationFromChatContentList = oriChannelInfoByKeyword(searchText);
+                                for (int m = 0; m < conversationFromChatContentNums.size(); m++) {
+                                    conversationFromChatContentList.add(conversationFromChatContentNums.get(m));
+                                }
                                 //分享过来  去除系统通知
                                 if (!StringUtils.isBlank(shareContent)) {
                                     Iterator<ConversationWithMessageNum> iterator = conversationFromChatContentList.iterator();
@@ -535,9 +538,6 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             if (cidNumMap.containsKey(tempConversation.getId())) {
                 ConversationWithMessageNum conversationFromChatContent =
                         new ConversationWithMessageNum(tempConversation, cidNumMap.get(tempConversation.getId()));
-                if (tempConversation.getType().equals(Conversation.TYPE_DIRECT)) {
-                    conversationFromChatContent.initSingleChatContact();
-                }
                 conversationFromChatContentResultList.add(conversationFromChatContent);
             }
         }
@@ -724,7 +724,10 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             } else {
                 searchHolder = (SearchHolder) view.getTag();
             }
-            Conversation conversation = conversationFromChatContentList.get(i).getConversation();
+            Conversation conversation = null;
+            if (conversationFromChatContentList.size() > 0) {
+                conversation = conversationFromChatContentList.get(i).getConversation();
+            }
             if (conversation != null && (conversation.getType().equals(Conversation.TYPE_GROUP))) {
                 SearchModel searchModel = conversation.conversation2SearchModel();
                 displayImg(searchModel, searchHolder.headImageView);
@@ -741,12 +744,10 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                 searchHolder.detailTextView.setText(string);
                 searchHolder.detailTextView.setVisibility(View.VISIBLE);
             }
-
-            Contact contact = conversationFromChatContentList.get(i).getSingleChatContactUser();
-            if (contact != null && conversation.getType().equals(Conversation.TYPE_DIRECT)) {
-                SearchModel searchModel = contact.contact2SearchModel();
-                displayImg(searchModel, searchHolder.headImageView);
-                searchHolder.nameTextView.setText(searchModel.getName().toString());
+            if (conversation != null && conversation.getType().equals(Conversation.TYPE_DIRECT)) {
+                String icon = DirectChannelUtils.getDirectChannelIcon(MyApplication.getInstance(), conversation.getName());
+                ImageDisplayUtils.getInstance().displayImageByTag(searchHolder.headImageView, icon, R.drawable.icon_person_default);
+                searchHolder.nameTextView.setText(conversation.getShowName());
                 String string = getString(R.string.chat_contact_related_message, conversationFromChatContentList.get(i).getMessageNum());
                 searchHolder.detailTextView.setText(string);
                 searchHolder.detailTextView.setVisibility(View.VISIBLE);

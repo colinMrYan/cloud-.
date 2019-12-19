@@ -55,7 +55,7 @@ public class ScheduleDetailReplyActivity extends BaseActivity {
 
     private void initData() {
         ReplyAttendResult originData = (ReplyAttendResult) getIntent().getSerializableExtra("OriginReplyData");
-        schedule = (Schedule) getIntent().getSerializableExtra(Constant.SCHEDULE_DETAIL);
+        schedule = (Schedule) getIntent().getSerializableExtra(Constant.OPEN_SCHEDULE_DETAIL);
         if (originData.responseType.equals(Participant.CALENDAR_RESPONSE_TYPE_UNKNOWN)) {
             ReplyAttendResult info = new ReplyAttendResult();
             info.content = getString(R.string.schedule_meeting_attend_unknown);

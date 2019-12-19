@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -14,6 +15,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.ScaleAnimation;
+import android.view.animation.TranslateAnimation;
 import android.webkit.ValueCallback;
 import android.webkit.WebSettings;
 import android.widget.AdapterView;
@@ -31,7 +36,6 @@ import com.alibaba.android.arouter.facade.Postcard;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
@@ -45,6 +49,7 @@ import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.basemodule.util.Res;
+import com.inspur.emmcloud.basemodule.util.imageedit.IMGEditActivity;
 import com.inspur.emmcloud.componentservice.login.LoginService;
 import com.inspur.emmcloud.web.R;
 import com.inspur.emmcloud.web.plugin.IPlugin;
@@ -54,11 +59,13 @@ import com.inspur.emmcloud.web.plugin.camera.CameraService;
 import com.inspur.emmcloud.web.plugin.filetransfer.FileTransferService;
 import com.inspur.emmcloud.web.plugin.invoice.InvoiceService;
 import com.inspur.emmcloud.web.plugin.photo.PhotoService;
+import com.inspur.emmcloud.web.plugin.screenshot.ScreenshotService;
 import com.inspur.emmcloud.web.plugin.staff.SelectStaffService;
 import com.inspur.emmcloud.web.plugin.video.VideoService;
 import com.inspur.emmcloud.web.plugin.window.DropItemTitle;
 import com.inspur.emmcloud.web.plugin.window.OnKeyDownListener;
 import com.inspur.emmcloud.web.webview.ImpWebView;
+import com.itheima.roundedimageview.RoundedImageView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -87,6 +94,7 @@ public class ImpFragment extends ImpBaseFragment {
     public static final int SELECT_FILE_SERVICE_REQUEST = 9;
     public static final int REQUEST_CODE_RECORD_VIDEO = 10;
     public static final int FILE_CHOOSER_RESULT_CODE = 5173;
+    private static final int REQUEST_EDIT_SCREENSHOT_IMG = 11;
     private static final String JAVASCRIPT_PREFIX = "javascript:";
     private static String EXTRA_OUTSIDE_URL = "extra_outside_url";
     private static String EXTRA_OUTSIDE_URL_REQUEST_RESULT = "extra_outside_url_request_result";
@@ -101,6 +109,7 @@ public class ImpFragment extends ImpBaseFragment {
     private String helpUrl = "";
     private HashMap<String, String> urlTilteMap = new HashMap<>();
     private View rootView;
+    private RoundedImageView screenshotImg;
 
     private String appName = "";
     private String version;
@@ -115,6 +124,9 @@ public class ImpFragment extends ImpBaseFragment {
     //错误url和错误信息
     private String errorUrl = "";
     private String errorDescription = "";
+    private String screenshotImgPath = "";
+    private Handler handler;
+    private Runnable screenshotRunnable;
 
 
     @Override
@@ -205,6 +217,7 @@ public class ImpFragment extends ImpBaseFragment {
         if (!StringUtils.isBlank(getArguments().getString("appId"))) {
             appId = getArguments().getString("appId");
         }
+        initImpCallBackInterface();
         initFragmentViews();
         RelativeLayout.LayoutParams layoutParams =
                 new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -217,6 +230,15 @@ public class ImpFragment extends ImpBaseFragment {
             headerText.setTextSize(17);
         }
         headerText.setText(StringUtils.isBlank(appName) ? "" : appName);
+        handler = new Handler();
+        screenshotRunnable = new Runnable() {
+            @Override
+            public void run() {
+                if (screenshotImg != null) {
+                    screenshotImg.setVisibility(View.GONE);
+                }
+            }
+        };
     }
 
 
@@ -225,7 +247,6 @@ public class ImpFragment extends ImpBaseFragment {
      */
     private void initFragmentViews() {
         String url = getArguments().getString(Constant.APP_WEB_URI);
-        LogUtils.jasonDebug("url==" + url);
         optionMenuList = (ArrayList<MainTabMenu>) getArguments().getSerializable(Constant.WEB_FRAGMENT_MENU);
         setWebViewFunctionVisiable();
         initHeaderOptionMenu();
@@ -247,6 +268,8 @@ public class ImpFragment extends ImpBaseFragment {
             }
         });
         webView.loadUrl(url, webViewHeaders);
+        screenshotImg = rootView.findViewById(R.id.iv_screenshot);
+        screenshotImg.setOnClickListener(listener);
     }
 
     /**
@@ -372,13 +395,9 @@ public class ImpFragment extends ImpBaseFragment {
 
     }
 
-    /**
-     * 与主Fragment通信的接口
-     *
-     * @return
-     */
-    private ImpCallBackInterface getImpCallBackInterface() {
-        return new ImpCallBackInterface() {
+
+    private void initImpCallBackInterface() {
+        impCallBackInterface = new ImpCallBackInterface() {
             @Override
             public void onLoadingDlgDimiss() {
                 dimissLoadingDlg();
@@ -468,7 +487,45 @@ public class ImpFragment extends ImpBaseFragment {
                     loadFailLayout.setVisibility(View.VISIBLE);
                 }
             }
+
+            @Override
+            public void hideScreenshotImg() {
+                screenshotImg.clearAnimation();
+                screenshotImg.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void showScreenshotImg(String screenshotImgPath) {
+                ImpFragment.this.screenshotImgPath = screenshotImgPath;
+                screenshotImg.setVisibility(View.VISIBLE);
+                ImageDisplayUtils.getInstance().displayImage(screenshotImg, screenshotImgPath);
+                float scale = rootView.getWidth() * 1.0f / DensityUtil.dip2px(90);
+                int fromX = DensityUtil.dip2px((45 * scale - 75));
+                float fromY = -(rootView.getHeight() - rootView.getHeight() * 1.0f / rootView.getWidth() * DensityUtil.dip2px(90) - DensityUtil.dip2px(40));
+                TranslateAnimation translateAnimation = new TranslateAnimation(Animation.ABSOLUTE, fromX, Animation.ABSOLUTE, 0, Animation.ABSOLUTE, fromY, Animation.ABSOLUTE, 0);
+                Animation scaleAnimation = new ScaleAnimation(scale, 1, scale, 1, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                AnimationSet animationSet = new AnimationSet(true);
+
+                animationSet.addAnimation(scaleAnimation);
+                animationSet.addAnimation(translateAnimation);
+                animationSet.setDuration(500);
+                screenshotImg.startAnimation(animationSet);
+                if (handler != null) {
+                    handler.removeCallbacks(screenshotRunnable);
+                    handler.postDelayed(screenshotRunnable, 3000);
+                }
+            }
         };
+    }
+
+
+    /**
+     * 与主Fragment通信的接口
+     *
+     * @return
+     */
+    private ImpCallBackInterface getImpCallBackInterface() {
+        return impCallBackInterface;
     }
 
     private void setHeaderTitleTextDropImg() {
@@ -695,6 +752,10 @@ public class ImpFragment extends ImpBaseFragment {
             webView.destroy();
             webView = null;
         }
+        if (handler != null) {
+            handler.removeCallbacks(screenshotRunnable);
+            handler = null;
+        }
         impCallBackInterface = null;
         //清除掉图片缓存
 //        DataCleanManager.cleanCustomCache(MyAppConfig.LOCAL_IMG_CREATE_PATH);
@@ -772,6 +833,8 @@ public class ImpFragment extends ImpBaseFragment {
                     case REQUEST_CODE_RECORD_VIDEO:
                         serviceName = VideoService.class.getCanonicalName();
                         break;
+                    case REQUEST_EDIT_SCREENSHOT_IMG:
+                        serviceName = ScreenshotService.class.getCanonicalName();
                     default:
                         break;
                 }
@@ -787,6 +850,18 @@ public class ImpFragment extends ImpBaseFragment {
         }
 
 
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onWechatEvent(SimpleEventMessage message) {
+        if (message.getAction().equals(Constant.EVENTBUS_TAG_WECHAT_RESULT)) {
+            String result = (String) message.getMessageObj();
+
+            String serviceName = InvoiceService.class.getCanonicalName();
+            PluginMgr pluginMgr = webView.getPluginMgr();
+            InvoiceService invoiceService = (InvoiceService) pluginMgr.getPlugin(serviceName);
+            invoiceService.handleWechatResult(result);
+        }
     }
 
     class ImpFragmentClickListener implements View.OnClickListener {
@@ -842,7 +917,11 @@ public class ImpFragment extends ImpBaseFragment {
                     }
                 }
 
-            } else {
+            } else if (i == R.id.iv_screenshot) {
+                screenshotImg.setVisibility(View.GONE);
+                startActivityForResult(new Intent(getActivity(), IMGEditActivity.class)
+                        .putExtra(IMGEditActivity.EXTRA_IS_COVER_ORIGIN, true)
+                        .putExtra(IMGEditActivity.EXTRA_IMAGE_PATH, screenshotImgPath), REQUEST_EDIT_SCREENSHOT_IMG);
             }
         }
     }
@@ -876,17 +955,6 @@ public class ImpFragment extends ImpBaseFragment {
             selectImg.setVisibility(dropItemTitle.isSelected() ? View.VISIBLE : View.INVISIBLE);
             return convertView;
         }
-    }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onWechatEvent(SimpleEventMessage message) {
-        if (message.getAction().equals(Constant.EVENTBUS_TAG_WECHAT_RESULT)) {
-            String result = (String) message.getMessageObj();
-
-            String serviceName = InvoiceService.class.getCanonicalName();
-            PluginMgr pluginMgr = webView.getPluginMgr();
-            InvoiceService invoiceService = (InvoiceService) pluginMgr.getPlugin(serviceName);
-            invoiceService.handleWechatResult(result);
-        }
     }
 }

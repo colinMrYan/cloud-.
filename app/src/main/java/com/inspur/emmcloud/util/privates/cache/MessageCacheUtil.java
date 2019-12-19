@@ -219,6 +219,24 @@ public class MessageCacheUtil {
     }
 
     /**
+     * 设置消息为已拆包状态
+     *
+     * @param context
+     * @param message
+     */
+    public static void saveMessageLifeCycleState(Context context, Message message) {
+        try {
+            if (message == null) {
+                return;
+            }
+            DbCacheUtils.getDb(context).saveOrUpdate(message);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * 获取历史消息列表
      * 给UiConversation用，沟通列表需要显示所有四种状态的消息
      *
@@ -785,9 +803,6 @@ public class MessageCacheUtil {
                 if (cidNumMap.containsKey(tempConversation.getId())) {
                     ConversationWithMessageNum conversationFromChatContent =
                             new ConversationWithMessageNum(tempConversation, cidNumMap.get(tempConversation.getId()));
-                    if (tempConversation.getType().equals(Conversation.TYPE_DIRECT)) {
-                        conversationFromChatContent.initSingleChatContact();
-                    }
                     conversationFromChatContentList.add(conversationFromChatContent);
                 }
             }

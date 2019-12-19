@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.web.util.ScreenUtil;
+package com.inspur.emmcloud.web.plugin.screenshot;
 
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;

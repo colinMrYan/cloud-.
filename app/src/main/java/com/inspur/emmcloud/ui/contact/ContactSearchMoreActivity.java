@@ -14,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
@@ -158,23 +157,24 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
         if (searchEdit == null) {
             searchEdit = new EditText(this);
             FlowLayout.LayoutParams params = new FlowLayout.LayoutParams(
-                    LayoutParams.WRAP_CONTENT, DensityUtil.dip2px(
-                    getApplicationContext(), LayoutParams.WRAP_CONTENT));
-            params.topMargin = DensityUtil.dip2px(getApplicationContext(), 2);
+                    ViewGroup.LayoutParams.WRAP_CONTENT, DensityUtil.dip2px(
+                    getApplicationContext(), ViewGroup.LayoutParams.WRAP_CONTENT));
+            params.topMargin = DensityUtil.dip2px(2);
             params.bottomMargin = params.topMargin;
-            int piddingTop = DensityUtil.dip2px(getApplicationContext(), 1);
-            int piddingLeft = DensityUtil.dip2px(getApplicationContext(), 10);
-            searchEdit.setPadding(piddingLeft, piddingTop, piddingLeft, piddingTop);
+            int piddingTop = DensityUtil.dip2px(1);
+            int piddingRight = DensityUtil.dip2px(5);
+            searchEdit.setPadding(piddingRight, piddingTop, piddingRight, piddingTop);
             searchEdit.setLayoutParams(params);
             searchEdit.setSingleLine(true);
-            searchEdit.setHint(getString(R.string.msg_key_search_member));
             searchEdit.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-            searchEdit.requestFocus();
-            searchEdit.requestFocusFromTouch();
             searchEdit.setBackground(null);
+            searchEdit.setHint(getString(R.string.msg_key_search_member));
             searchEdit.addTextChangedListener(myTextWatcher);
         }
-        flowLayout.addView(searchEdit);
+
+        if (searchEdit.getParent() == null) {
+            flowLayout.addView(searchEdit);
+        }
     }
 
     private void getIntentData() {

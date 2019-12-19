@@ -112,7 +112,9 @@ public class CommunicationServiceImpl implements CommunicationService {
 
     @Override
     public void stopVoiceCommunication() {
-        VoiceCommunicationManager.getInstance().handleDestroy();
+        if (VoiceCommunicationManager.getInstance().isVoiceBusy()) {
+            VoiceCommunicationManager.getInstance().handleDestroy();
+        }
     }
 
     @Override

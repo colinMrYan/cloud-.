@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
@@ -63,7 +64,8 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
     private MeetingFragment meetingFragment;
     private TaskFragment taskFragment;
     private TextView dateText;
-    private boolean isRunForeground = false;
+    private RelativeLayout errorLayout;
+    private TextView errorInfoText;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -76,16 +78,10 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
     @Override
     public void onResume() {
         super.onResume();
-        isRunForeground = true;
         dateText.setText(Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "");
         scheduleFragment.updateCurrentDate();
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        isRunForeground = false;
-    }
 
     @Override
     public void onDestroy() {
@@ -110,39 +106,54 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveFragmentScheme(SimpleEventMessage eventMessage) {
-        if (eventMessage.getAction().equals(Constant.SCHEDULE_DETAIL)) {
-            switch ((String) eventMessage.getMessageObj()) {
-                case Constant.ACTION_CALENDAR:
-                    if(tabLayout != null){
-                        tabLayout.getTabAt(0).select();
-                    }
-                    break;
-                case Constant.ACTION_MEETING:
-                    if(tabLayout != null){
-                        tabLayout.getTabAt(1).select();
-                        if(meetingFragment != null){
-                            meetingFragment.getMeetingList();
-                        }
-                    }
-                    break;
-                case Constant.ACTION_TASK:
-                    if(tabLayout != null){
-                        tabLayout.getTabAt(2).select();
-                    }
-                    break;
-                default:
-                    if(tabLayout != null){
-                        tabLayout.getTabAt(0).select();
-                    }
-                    break;
-            }
-        } else if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_EWS_401)) {
-            if (isRunForeground) {
-                String ewsAccount = (String) eventMessage.getMessageObj();
-                scheduleFragment.showExchangeLoginFailToast(ewsAccount);
-            }
+        switch (eventMessage.getAction()) {
+            case Constant.OPEN_SCHEDULE_DETAIL:
+                openScheduleDetail(eventMessage);
+                break;
+            case Constant.EVENTBUS_TAG_EWS_401:
+                if (errorLayout.getVisibility() != View.VISIBLE) {
+                    errorLayout.setVisibility(View.VISIBLE);
+//                    String ewsAccount = (String) eventMessage.getMessageObj();
+                    errorInfoText.setText(getString(R.string.schedule_exchange_login_fail));
+                }
+                break;
+            case Constant.EVENTBUS_TAG_SCHEDULE_HIDE_EXCHANGE_ACCOUNT_ERROR:
+                if (errorLayout.getVisibility() == View.VISIBLE) {
+                    errorLayout.setVisibility(View.GONE);
+                }
+                break;
         }
     }
+
+    private void openScheduleDetail(SimpleEventMessage eventMessage) {
+        switch ((String) eventMessage.getMessageObj()) {
+            case Constant.ACTION_CALENDAR:
+                if (tabLayout != null) {
+                    tabLayout.getTabAt(0).select();
+                }
+                break;
+            case Constant.ACTION_MEETING:
+                if (tabLayout != null) {
+                    tabLayout.getTabAt(1).select();
+                    if (meetingFragment != null) {
+                        meetingFragment.getMeetingList();
+                    }
+                }
+                break;
+            case Constant.ACTION_TASK:
+                if (tabLayout != null) {
+                    tabLayout.getTabAt(2).select();
+                }
+                break;
+            default:
+                if (tabLayout != null) {
+                    tabLayout.getTabAt(0).select();
+                }
+                break;
+        }
+    }
+
+    ;
 
     /**
      * 记录用户点击
@@ -190,12 +201,14 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
         list.add(scheduleFragment);
         list.add(meetingFragment);
         list.add(taskFragment);
-
+        errorLayout = rootView.findViewById(R.id.rl_error);
         //初始化adapter
         ScheduleHomeFragmentAdapter adapter = new ScheduleHomeFragmentAdapter(getActivity().getSupportFragmentManager(), list);
         //将适配器和ViewPager结合
         viewPager.setAdapter(adapter);
-
+        errorLayout = rootView.findViewById(R.id.rl_error);
+        errorInfoText = rootView.findViewById(R.id.tv_error_info);
+        errorLayout.setOnClickListener(this);
     }
 
     private void initTabLayout() {
@@ -274,10 +287,10 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
                         IntentUtils.startActivity(getActivity(), ScheduleAddActivity.class, bundle);
                         break;
                     case 2:
-                        if(viewPager.getCurrentItem() == 2){
+                        if (viewPager.getCurrentItem() == 2) {
                             recordUserClickWorkFunction(PV_COLLECTION_MISSION);
                             IntentUtils.startActivity(getActivity(), TaskAddActivity.class);
-                        }else{
+                        } else {
                             recordUserClickWorkFunction(PV_COLLECTION_MEETING);
                             calendarType = getExchangeScheduleCalendar();
                             bundle.putString(ScheduleAddActivity.EXTRA_SCHEDULE_SCHEDULECALENDAR_TYPE,
@@ -286,10 +299,10 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
                         }
                         break;
                     case 3:
-                        if(viewPager.getCurrentItem() == 0){
+                        if (viewPager.getCurrentItem() == 0) {
                             recordUserClickWorkFunction(PV_COLLECTION_MISSION);
                             IntentUtils.startActivity(getActivity(), TaskAddActivity.class);
-                        }else if(viewPager.getCurrentItem() == 1){
+                        } else if (viewPager.getCurrentItem() == 1) {
                             recordUserClickWorkFunction(PV_COLLECTION_MEETING);
                             calendarType = getExchangeScheduleCalendar();
                             bundle.putString(ScheduleAddActivity.EXTRA_SCHEDULE_SCHEDULECALENDAR_TYPE,
@@ -310,8 +323,8 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
                             IntentUtils.startActivity(getActivity(), TaskSetActivity.class);
                         }
                         break;
-                        default:
-                            break;
+                    default:
+                        break;
                 }
             }
         });
@@ -350,6 +363,10 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
             showAddPopMenu(view);
         } else if (i == R.id.ibt_today) {
             scheduleFragment.setScheduleBackToToday();
+        }else if(i==R.id.rl_error){
+            Bundle bundle = new Bundle();
+            bundle.putString("from", "schedule_exchange_login");
+            ARouter.getInstance().build(Constant.AROUTER_CLASS_MAIL_LOGIN).with(bundle).navigation();
         }
     }
 

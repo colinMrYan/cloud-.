@@ -2,6 +2,8 @@ package com.inspur.emmcloud.baselib.widget.progressbar;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -24,10 +26,11 @@ public class CircleProgressBar extends ProgressBar {
     protected int mUnReachedProgressBarHeight = DensityUtil.dip2px(DEFAULT_HEIGHT_UNREACHED_PROGRESS_BAR);
     protected int mReachedBarColor = DEFAULT_TEXT_COLOR;
     Paint mPaint = new Paint();
-    Status mStatus = Status.End;
+    Status mStatus = Status.Success;
     private int triangleLength;
     private Path mPath;
     private int mRadius = DensityUtil.dip2px(13);
+    private Bitmap failedBitmap;
 
     public CircleProgressBar(Context context) {
         this(context, null);
@@ -66,6 +69,9 @@ public class CircleProgressBar extends ProgressBar {
 
         mPath = new Path();//need path to draw triangle
         initPath();
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inScaled = true;
+        failedBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ee_1, options);
     }
 
     private void initPath() {
@@ -101,37 +107,72 @@ public class CircleProgressBar extends ProgressBar {
         canvas.translate(getPaddingLeft(), getPaddingTop());
         mPaint.setStyle(Paint.Style.STROKE);
         // draw unreaded bar
-        mPaint.setColor(mUnReachedBarColor);
+        if (mStatus == Status.Success) {
+            mPaint.setColor(mReachedBarColor);
+        } else if (mStatus == Status.Fail) {
+            mPaint.setColor(Color.parseColor("#FFFFCC00"));
+            mPaint.setStyle(Paint.Style.FILL);
+        } else {
+            mPaint.setColor(mUnReachedBarColor);
+        }
         mPaint.setStrokeWidth(mUnReachedProgressBarHeight);
         canvas.drawCircle(mRadius, mRadius, mRadius, mPaint);
-        // draw reached bar
-        mPaint.setColor(mReachedBarColor);
-        mPaint.setStrokeWidth(mReachedProgressBarHeight);
-        float sweepAngle = getProgress() * 1.0f / getMax() * 360;
-        canvas.drawArc(new RectF(0, 0, mRadius * 2, mRadius * 2), -90,
-                sweepAngle, false, mPaint);
+        if (mStatus != Status.Fail) {
+            // draw reached bar
+            mPaint.setColor(mReachedBarColor);
+            mPaint.setStrokeWidth(mReachedProgressBarHeight);
+            float sweepAngle = getProgress() * 1.0f / getMax() * 360;
+            canvas.drawArc(new RectF(0, 0, mRadius * 2, mRadius * 2), -90,
+                    sweepAngle, false, mPaint);
+        }
         canvas.restore();
         mPath = new Path();//need path to draw triangle
 
         triangleLength = mRadius;
         float leftX = (float) ((2 * mRadius - Math.sqrt(3.0) / 2 * triangleLength) / 2);
         float realX = (float) (leftX + leftX * 0.2);
-        mPath.moveTo(realX, mRadius - (triangleLength / 2));
-        mPath.lineTo(realX, mRadius + (triangleLength / 2));
-        mPath.lineTo((float) (realX + Math.sqrt(3.0) / 2 * triangleLength), mRadius);
-        mPath.lineTo(realX, mRadius - (triangleLength / 2));
 
         canvas.save();
         canvas.translate(getPaddingLeft(), getPaddingTop());
 
-        if (mStatus == Status.End || mStatus == Status.Pause) {//未开始状态，画笔填充
+        if (mStatus == Status.Pause) {//未开始状态，画笔填充
+            mPath.moveTo(realX, mRadius - (triangleLength / 2));
+            mPath.lineTo(realX, mRadius + (triangleLength / 2));
+            mPath.lineTo((float) (realX + Math.sqrt(3.0) / 2 * triangleLength), mRadius);
+            mPath.lineTo(realX, mRadius - (triangleLength / 2));
+
             mPaint.setStyle(Paint.Style.FILL);
-            canvas.drawPath(mPath, mPaint);//直接drawPath
-        } else if (mStatus == Status.Starting || mStatus == Status.Uploading || mStatus == Status.Downloading) {
+            canvas.drawPath(mPath, mPaint);
+        } else if (mStatus == Status.Starting || mStatus == Status.Loading) {
             mPaint.setStyle(Paint.Style.STROKE);
             mPaint.setStrokeWidth(DensityUtil.dip2px(2));
             canvas.drawLine(mRadius * 2 / 3, mRadius * 2 / 3, mRadius * 2 / 3, 2 * mRadius * 2 / 3, mPaint);
             canvas.drawLine(2 * mRadius - (mRadius * 2 / 3), mRadius * 2 / 3, 2 * mRadius - (mRadius * 2 / 3), 2 * mRadius * 2 / 3, mPaint);
+        } else if (mStatus == Status.Success) {
+            mPath.moveTo(realX - mRadius / 7, mRadius);
+            mPath.lineTo(realX + mRadius / 4, mRadius * 4 / 3);
+            mPath.lineTo(realX + mRadius * 4 / 5, mRadius - (triangleLength / 4));
+            mPaint.setStyle(Paint.Style.STROKE);
+            mPaint.setStrokeWidth(DensityUtil.dip2px(3));
+            canvas.drawPath(mPath, mPaint);
+        } else if (mStatus == Status.Fail) {
+//            mPath.moveTo(mRadius - mRadius / 3, mRadius - mRadius / 3);
+//            mPath.lineTo(mRadius + mRadius / 3, mRadius + mRadius / 3 );
+//            mPath.moveTo(mRadius - mRadius / 3, mRadius + mRadius / 3);
+//            mPath.lineTo(mRadius + mRadius / 3, mRadius - mRadius / 3);
+//            mPaint.setColor(Color.RED);
+//            mPaint.setStyle(Paint.Style.STROKE);
+//            mPaint.setStrokeWidth(DensityUtil.dip2px(3));
+//            canvas.drawPath(mPath, mPaint);
+//            canvas.translate(-getPaddingLeft(), -getPaddingTop());
+//            mPaint.setAntiAlias(true);
+//            mPaint.setFilterBitmap(true);
+//
+//            canvas.drawBitmap(failedBitmap, 0, 0, mPaint);
+//            canvas.translate(-getPaddingLeft(), -getPaddingTop());
+            mPaint.setColor(Color.WHITE);
+            mPaint.setTextSize(DensityUtil.dip2px(20));
+            canvas.drawText("!", mRadius * 4 / 5, mRadius * 8 / 5, mPaint);
         }
         canvas.restore();
     }
@@ -147,10 +188,9 @@ public class CircleProgressBar extends ProgressBar {
 
     public enum Status {
         Starting,
-        Uploading,
-        Downloading,
+        Loading,
         Pause,
-        End
+        Success,
+        Fail
     }
-
 }

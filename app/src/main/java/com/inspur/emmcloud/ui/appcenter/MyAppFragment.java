@@ -198,7 +198,7 @@ public class MyAppFragment extends BaseFragment {
      * 初始化Views
      */
     private void initViews() {
-        netExceptionView = LayoutInflater.from(getContext()).inflate(R.layout.recycleview_header_item, null);
+        netExceptionView = LayoutInflater.from(getContext()).inflate(R.layout.header_error, null);
         netExceptionView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -931,6 +931,7 @@ public class MyAppFragment extends BaseFragment {
                             new AppBadgeUtils(MyApplication.getInstance()).getAppBadgeCountFromServer();
                             appListAdapter.notifyDataSetChanged();
                             dragGridViewAdapter.notifyDataSetChanged();
+                            MyAppCacheUtils.deleteAppInCache(getActivity(), app);
 //                            MyAppCacheUtils.saveMyAppList(getActivity(), appListAdapter.getAppAdapterList());
                         }
                     });

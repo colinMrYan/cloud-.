@@ -9,11 +9,11 @@ import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
+import com.inspur.emmcloud.baselib.util.ResolutionUtils;
 import com.inspur.emmcloud.basemodule.R;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.imagepicker.ImagePicker;
 import com.inspur.emmcloud.basemodule.util.imagepicker.bean.ImageItem;
-import com.inspur.emmcloud.basemodule.util.imagepicker.util.Utils;
 
 import java.util.ArrayList;
 
@@ -35,7 +35,7 @@ public class ImageGridAdapter extends BaseAdapter {
         if (images == null || images.size() == 0) this.images = new ArrayList<ImageItem>();
         else this.images = images;
 
-        mImageSize = Utils.getImageItemWidth(mActivity);
+        mImageSize = ResolutionUtils.getWidth(activity) / 4;
         imagePicker = ImagePicker.getInstance();
         isShowCamera = imagePicker.isShowCamera();
         mSelectedImages = imagePicker.getSelectedImages();

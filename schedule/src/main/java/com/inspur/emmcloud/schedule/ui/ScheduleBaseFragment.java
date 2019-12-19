@@ -14,7 +14,6 @@ import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
-import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
@@ -304,16 +303,6 @@ public class ScheduleBaseFragment extends BaseLayoutFragment implements View.OnL
         return "";
     }
 
-    /**
-     * 弹出注销提示框
-     */
-    public void showExchangeLoginFailToast(String ewsAccount) {
-        ToastUtils.show(getString(R.string.schedule_exchange_login_fail, ewsAccount));
-    }
-
-    protected void initScheduleCalendar() {
-
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -352,7 +341,6 @@ public class ScheduleBaseFragment extends BaseLayoutFragment implements View.OnL
                 boolean isEnableExchange = getScheduleBasicDataResult.isEnableExchange();
                 if (isEnableExchangePrevious != isEnableExchange) {
                     PreferencesByUserAndTanentUtils.putBoolean(BaseApplication.getInstance(), Constant.PREF_SCHEDULE_ENABLE_EXCHANGE, getScheduleBasicDataResult.isEnableExchange());
-                    initScheduleCalendar();
                 }
                 List<Holiday> holidayList = getScheduleBasicDataResult.getHolidayList();
                 int year = getScheduleBasicDataResult.getYear();

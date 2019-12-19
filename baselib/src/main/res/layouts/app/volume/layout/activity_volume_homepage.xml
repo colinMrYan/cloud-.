@@ -49,6 +49,7 @@
             android:layout_width="48dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
+            android:layout_marginRight="2dp"
             android:visibility="visible">
 
             <RelativeLayout
@@ -74,13 +75,11 @@
             <ImageView
                 android:id="@+id/iv_down_up_list"
                 android:layout_width="48dp"
-                android:layout_height="match_parent"
+                android:layout_height="48dp"
+                android:layout_centerVertical="true"
                 android:clickable="true"
                 android:onClick="onClick"
-                android:paddingLeft="10dp"
-                android:paddingTop="15dp"
-                android:paddingRight="12dp"
-                android:paddingBottom="15dp"
+                android:padding="13dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/ic_volume_down_up_list"
                 android:tint="?attr/header_text_color" />

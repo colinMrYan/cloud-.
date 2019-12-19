@@ -532,12 +532,8 @@ public class CommunicationUtils {
                 icon = "file://" + file.getAbsolutePath();
             }
         } else if (type.equals(SearchModel.TYPE_DIRECT)) {
-            String uid;
             Conversation conversation = ConversationCacheUtils.getConversation(BaseApplication.getInstance(), searchModel.getId());
-            List<String> memberList = conversation.getMemberList();
-            uid = memberList.get(0).equals(BaseApplication.getInstance().getUid()) ?
-                    memberList.get(1) : memberList.get(0);
-            icon = APIUri.getChannelImgUrl(MyApplication.getInstance(), uid);
+            icon = DirectChannelUtils.getDirectChannelIcon(MyApplication.getInstance(), conversation.getName());
         } else {
             if (!searchModel.getId().equals("null")) {
                 icon = APIUri.getChannelImgUrl(MyApplication.getInstance(), searchModel.getId());

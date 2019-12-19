@@ -57,6 +57,7 @@ public class CameraCropView extends RelativeLayout {
         this.context = context;
         View view = View.inflate(context, R.layout.plugin_camera_crop_view, this);
         cropView = findViewById(R.id.crop_view);
+        cropView.setTopMove(DensityUtil.dip2px(40));
         setRadioRecycleView = findViewById(R.id.recycler_view_radio);
 //        View view = LayoutInflater.from(context).inflate(R.layout.plugin_camera_crop_view, this,true);
 //        ButterKnife.bind(this, view);
