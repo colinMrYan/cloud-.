@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.Base64;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
@@ -120,8 +119,6 @@ public class CalendarUtils {
                     String exchangeAccount = scheduleCalendar.getAcName();
                     //此处用Preferences代替从scheduleCalendar中获取，因为当密码变更时Preference最可靠
                     String exchangePassword = PreferencesByUserAndTanentUtils.getString(BaseApplication.getInstance(), Constant.PREF_MAIL_PASSWORD, "");
-                    LogUtils.jasonDebug("exchangeAccount=" + exchangeAccount);
-                    LogUtils.jasonDebug("exchangePassword=" + exchangePassword);
                     if (!StringUtils.isBlank(exchangeAccount) && !StringUtils.isBlank(exchangePassword)) {
                         exchangeAuthHeaderValue = exchangeAccount + ":" + exchangePassword;
                         exchangeAuthHeaderValue = Base64.encodeToString(exchangeAuthHeaderValue.getBytes(), Base64.NO_WRAP);
