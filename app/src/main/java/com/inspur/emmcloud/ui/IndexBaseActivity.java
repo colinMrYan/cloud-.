@@ -48,6 +48,7 @@ import com.inspur.emmcloud.bean.system.TabBean;
 import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
 import com.inspur.emmcloud.broadcastreceiver.NetworkChangeReceiver;
 import com.inspur.emmcloud.broadcastreceiver.ScreenBroadcastReceiver;
+import com.inspur.emmcloud.componentservice.Schedule.ScheduleService;
 import com.inspur.emmcloud.componentservice.web.WebService;
 import com.inspur.emmcloud.ui.appcenter.MyAppFragment;
 import com.inspur.emmcloud.ui.chat.CommunicationFragment;
@@ -57,7 +58,6 @@ import com.inspur.emmcloud.ui.find.FindFragment;
 import com.inspur.emmcloud.ui.mine.MoreFragment;
 import com.inspur.emmcloud.ui.mine.setting.CreateGestureActivity;
 import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
-import com.inspur.emmcloud.ui.schedule.ScheduleHomeFragment;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.cache.MyAppCacheUtils;
 import com.inspur.emmcloud.widget.MyFragmentTabHost;
@@ -197,7 +197,11 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
                                     }
                                     break;
                                 case Constant.APP_TAB_BAR_WORK:
-                                    tabBean = new TabBean(getString(R.string.work), ScheduleHomeFragment.class, mainTabResult);
+                                    Router router = Router.getInstance();
+                                    if (router.getService(ScheduleService.class) != null) {
+                                        ScheduleService service = router.getService(ScheduleService.class);
+                                        tabBean = new TabBean(getString(R.string.work), service.getImpFragmentClass(), mainTabResult);
+                                    }
                                     break;
                                 case Constant.APP_TAB_BAR_APPLICATION:
                                     tabBean = new TabBean(getString(R.string.application), MyAppFragment.class, mainTabResult);
@@ -224,7 +228,6 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
                                 WebService service = router.getService(WebService.class);
                                 tabBean = new TabBean(getString(R.string.web), service.getImpFragmentClass(), mainTabResult);
                             }
-
                             break;
                     }
                     if (tabBean == null) {

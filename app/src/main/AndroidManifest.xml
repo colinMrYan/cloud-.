@@ -680,14 +680,7 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
-        <activity
-            android:name=".ui.schedule.meeting.MeetingRoomInfoActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.schedule.meeting.MeetingHistoryActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+
         <activity
             android:name=".ui.find.DocumentActivity"
             android:launchMode="singleTask"
@@ -698,67 +691,9 @@
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.schedule.meeting.ScheduleAddActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.schedule.meeting.ScheduleDetailActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.schedule.meeting.ScheduleDetailReplyActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.schedule.meeting.MeetingRoomListActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.schedule.meeting.MeetingOfficeSettingActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.schedule.meeting.MeetingAttendeeStateActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
 
-        <activity
-            android:name=".ui.schedule.ScheduleAlertTimeActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.schedule.calendar.CalendarSettingActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.schedule.calendar.CalendarAccountSelectActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-
-        <activity
-            android:name=".ui.schedule.task.TaskAddActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.schedule.task.TaskTagAddActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.schedule.task.TaskTagsManageActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.schedule.task.TaskSetActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.chat.ChannelMembersDelActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-
-        <activity
-            android:name=".ui.schedule.ScheduleTypeSelectActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
 

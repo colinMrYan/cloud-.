@@ -49,13 +49,13 @@ import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
-import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetVoiceAndVideoResult;
 import com.inspur.emmcloud.bean.chat.GetVoiceCommunicationResult;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationAudioVolumeInfo;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationRtcStats;
 import com.inspur.emmcloud.broadcastreceiver.VoiceCommunicationHeadSetReceiver;
+import com.inspur.emmcloud.componentservice.communication.Conversation;
 import com.inspur.emmcloud.ui.AppSchemeHandleActivity;
 import com.inspur.emmcloud.util.privates.MediaPlayerManagerUtils;
 import com.inspur.emmcloud.util.privates.NotifyUtil;
@@ -110,30 +110,6 @@ public class VoiceCommunicationActivity extends BaseActivity {
      */
     private static final int REQUEST_WINDOW_PERMISSION = 100;
     private static final int REQUEST_BACKGROUND_WINDOWS = 101;
-    /**
-     * 是否来自小窗
-     */
-    private boolean isFromSmallWindow = false;
-    /**
-     * 声网的channelId
-     */
-    private String agoraChannelId = "";
-    /**
-     * 云+的Id
-     */
-    private String cloudPlusChannelId = "";
-    /**
-     * 指明发起此会话的channel是单聊还是群聊
-     */
-    private String directOrGroupType = "";
-    /**
-     * 会话类型 VOICE_CALL或者VIDEO_CALL
-     */
-    private String communicationType = "";
-    /**
-     * 本地视频初始x坐标
-     */
-    private int initX;
     boolean needTimerStartFlag = true;
     @BindView(R.id.img_an_excuse)
     ImageView excuseImg;
@@ -157,10 +133,6 @@ public class VoiceCommunicationActivity extends BaseActivity {
     ImageView videoTurnToVoiceImg;
     @BindView(R.id.tv_video_turn_to_voice)
     TextView videoTurnToVoiceTv;
-    /**
-     * 本地视频初始y坐标
-     */
-    private int initY;
     @BindView(R.id.recyclerview_voice_communication_first)
     RecyclerView firstRecyclerView;
     @BindView(R.id.recyclerview_voice_communication_second)
@@ -243,6 +215,34 @@ public class VoiceCommunicationActivity extends BaseActivity {
     ImageView directHandFreeImg;
     @BindView(R.id.tv_hands_free_direct)
     TextView directHandFreeTv;
+    /**
+     * 是否来自小窗
+     */
+    private boolean isFromSmallWindow = false;
+    /**
+     * 声网的channelId
+     */
+    private String agoraChannelId = "";
+    /**
+     * 云+的Id
+     */
+    private String cloudPlusChannelId = "";
+    /**
+     * 指明发起此会话的channel是单聊还是群聊
+     */
+    private String directOrGroupType = "";
+    /**
+     * 会话类型 VOICE_CALL或者VIDEO_CALL
+     */
+    private String communicationType = "";
+    /**
+     * 本地视频初始x坐标
+     */
+    private int initX;
+    /**
+     * 本地视频初始y坐标
+     */
+    private int initY;
     private ChatAPIService apiService;
     private VoiceCommunicationMemberAdapter voiceCommunicationMemberAdapterFirst;
     private VoiceCommunicationMemberAdapter voiceCommunicationMemberAdapterSecond;

@@ -12,7 +12,6 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
-import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
@@ -23,7 +22,6 @@ import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
-import com.inspur.emmcloud.bean.schedule.calendar.CalendarEvent;
 import com.inspur.emmcloud.bean.system.ChangeTabBean;
 import com.inspur.emmcloud.componentservice.communication.CommunicationService;
 import com.inspur.emmcloud.componentservice.communication.ShareToConversationListener;
@@ -42,8 +40,6 @@ import com.inspur.emmcloud.ui.find.AnalysisActivity;
 import com.inspur.emmcloud.ui.find.DocumentActivity;
 import com.inspur.emmcloud.ui.find.KnowledgeActivity;
 import com.inspur.emmcloud.ui.find.trip.TripInfoActivity;
-import com.inspur.emmcloud.ui.schedule.meeting.ScheduleDetailActivity;
-import com.inspur.emmcloud.ui.schedule.task.TaskAddActivity;
 import com.inspur.emmcloud.util.privates.AppId2AppAndOpenAppUtils;
 import com.inspur.emmcloud.util.privates.CustomProtocol;
 import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
@@ -207,16 +203,16 @@ public class AppSchemeHandleActivity extends BaseActivity {
                                 break;
 
                             case "ecc-calendar-jpush":
-                                String content = getIntent().getStringExtra("content");
-                                if (content != null) {
-                                    JSONObject calEventObj = JSONUtils.getJSONObject(content);
-                                    CalendarEvent calendarEvent = new CalendarEvent(calEventObj);
-                                    Intent intent = new Intent(AppSchemeHandleActivity.this, ScheduleDetailActivity.class);
-                                    intent.putExtra("calEvent", calendarEvent);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    startActivity(intent);
-                                }
-                                finish();
+//                                String content = getIntent().getStringExtra("content");
+//                                if (content != null) {
+//                                    JSONObject calEventObj = JSONUtils.getJSONObject(content);
+//                                    CalendarEvent calendarEvent = new CalendarEvent(calEventObj);
+//                                    Intent intent = new Intent(AppSchemeHandleActivity.this, ScheduleDetailActivity.class);
+//                                    intent.putExtra("calEvent", calendarEvent);
+//                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                                    startActivity(intent);
+//                                }
+//                                finish();
                                 break;
                             case "ecc-app-change-tab":
                                 EventBus.getDefault().post(new ChangeTabBean(Constant.APP_TAB_BAR_APPLICATION));
@@ -587,7 +583,7 @@ public class AppSchemeHandleActivity extends BaseActivity {
                     simpleEventMessage.setMessageObj(Constant.ACTION_CALENDAR);
                     EventBus.getDefault().post(simpleEventMessage);
                 } else if (!StringUtils.isBlank(query.getQueryParameter("id"))) {
-                    openScheduleActivity(query.getQueryParameter("id"), ScheduleDetailActivity.class);
+                    //openScheduleActivity(query.getQueryParameter("id"), ScheduleDetailActivity.class);
                 }
                 finish();
                 break;
@@ -596,7 +592,7 @@ public class AppSchemeHandleActivity extends BaseActivity {
                     simpleEventMessage.setMessageObj(Constant.ACTION_TASK);
                     EventBus.getDefault().post(simpleEventMessage);
                 } else if (!StringUtils.isBlank(query.getQueryParameter("id"))) {
-                    openScheduleActivity(query.getQueryParameter("id"), TaskAddActivity.class);
+                    //openScheduleActivity(query.getQueryParameter("id"), TaskAddActivity.class);
                 }
                 finish();
                 break;
@@ -605,7 +601,7 @@ public class AppSchemeHandleActivity extends BaseActivity {
                     simpleEventMessage.setMessageObj(Constant.ACTION_MEETING);
                     EventBus.getDefault().postSticky(simpleEventMessage);
                 } else if (!StringUtils.isBlank(query.getQueryParameter("id"))) {
-                    openScheduleActivity(query.getQueryParameter("id"), ScheduleDetailActivity.class);
+                    //  openScheduleActivity(query.getQueryParameter("id"), ScheduleDetailActivity.class);
                 }
                 finish();
                 break;

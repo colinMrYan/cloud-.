@@ -2,7 +2,7 @@ package com.inspur.emmcloud.bean.chat;
 
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
-import com.inspur.emmcloud.basemodule.bean.SearchModel;
+import com.inspur.emmcloud.componentservice.communication.SearchModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;

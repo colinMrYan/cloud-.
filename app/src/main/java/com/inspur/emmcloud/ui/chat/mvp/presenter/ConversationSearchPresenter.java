@@ -1,7 +1,7 @@
 package com.inspur.emmcloud.ui.chat.mvp.presenter;
 
 import com.inspur.emmcloud.basemodule.mvp.BasePresenter;
-import com.inspur.emmcloud.bean.chat.Conversation;
+import com.inspur.emmcloud.componentservice.communication.Conversation;
 import com.inspur.emmcloud.ui.chat.mvp.contract.ConversionSearchContract;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 

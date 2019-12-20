@@ -9,10 +9,11 @@ import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
-import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.basemodule.mvp.BasePresenter;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
-import com.inspur.emmcloud.bean.chat.Conversation;
+import com.inspur.emmcloud.componentservice.communication.Conversation;
+import com.inspur.emmcloud.componentservice.communication.OnCreateGroupConversationListener;
+import com.inspur.emmcloud.componentservice.communication.SearchModel;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.componentservice.login.OauthCallBack;
 import com.inspur.emmcloud.ui.chat.mvp.contract.ConversationInfoContract;
@@ -309,7 +310,7 @@ public class ConversationInfoPresenter extends BasePresenter<ConversationInfoCon
         }
         // TODO Auto-generated method stub
         new ConversationCreateUtils().createGroupConversation(mView.getActivity(), peopleArray,
-                new ConversationCreateUtils.OnCreateGroupConversationListener() {
+                new OnCreateGroupConversationListener() {
 
                     @Override
                     public void createGroupConversationSuccess(Conversation conversation) {

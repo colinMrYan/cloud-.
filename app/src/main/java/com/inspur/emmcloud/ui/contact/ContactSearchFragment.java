@@ -38,7 +38,6 @@ import com.inspur.emmcloud.baselib.widget.MaxHightScrollView;
 import com.inspur.emmcloud.baselib.widget.NoHorScrollView;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.MyDialog;
-import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
@@ -47,12 +46,14 @@ import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
-import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.bean.contact.ContactClickMessage;
 import com.inspur.emmcloud.bean.contact.ContactOrg;
 import com.inspur.emmcloud.bean.contact.FirstGroupTextModel;
+import com.inspur.emmcloud.componentservice.communication.Conversation;
+import com.inspur.emmcloud.componentservice.communication.OnCreateDirectConversationListener;
+import com.inspur.emmcloud.componentservice.communication.SearchModel;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
@@ -1272,7 +1273,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
         if (NetUtils.isNetworkConnected(getActivity().getApplicationContext())) {
             if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
                 new ConversationCreateUtils().createDirectConversation(getActivity(), id,
-                        new ConversationCreateUtils.OnCreateDirectConversationListener() {
+                        new OnCreateDirectConversationListener() {
                             @Override
                             public void createDirectConversationSuccess(Conversation conversation) {
                                 Bundle bundle = new Bundle();

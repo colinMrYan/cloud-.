@@ -1,0 +1,88 @@
+
+buildscript {
+    repositories {
+        maven {
+            url uri('../release')
+        }
+    }
+    dependencies {
+        classpath 'com.inspur:comgradle:1.0'
+    }
+}
+apply plugin: 'com.inspur.comgradle'
+apply plugin: 'com.jakewharton.butterknife'
+
+
+
+android {
+    compileSdkVersion versions.compileSdk
+    buildToolsVersion versions.androidTools
+    aaptOptions.cruncherEnabled = false
+    aaptOptions.useNewCruncher = false
+    defaultConfig {
+        minSdkVersion versions.minSdk
+        targetSdkVersion versions.targetSdk
+        versionCode 1
+        versionName "1.0"
+        ndk {
+            abiFilters "armeabi-v7a", "x86"
+        }
+        multiDexEnabled true
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [AROUTER_MODULE_NAME: project.getName()]
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    lintOptions {
+//        lintConfig file("lint.xml")
+        abortOnError false
+        checkReleaseBuilds false
+//        disable 'MissingTranslation', 'ExtraTranslation'
+    }
+
+
+    resourcePrefix project.getName()+"_"
+
+    //资源文件目录
+    sourceSets {
+        main {
+            res.srcDirs =
+                    [
+                            'src/main/res',
+                            'src/main/res/layouts/calendar',//日程_日历
+                            'src/main/res/layouts/task',//日程_任务
+                            'src/main/res/layouts/meeting',//日程_任务
+                            'src/main/res/layouts/schedule',//日程_任务
+                            'src/main/res/layouts/test',//日程_任务
+                    ]
+        }
+    }
+}
+
+
+combuild {
+    applicationName = 'com.inspur.emmcloud.schedule.runalone.application.ScheduleApplication'
+    isRegisterCompoAuto = false
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(':basemodule')
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    annotationProcessor deps.ARouter.router_anno
+    implementation deps.butterknife.butterknife
+    annotationProcessor deps.butterknife.butterknife_compiler
+    implementation deps.pagerslidingtabstrip
+}

@@ -1,21 +1,27 @@
 package com.inspur.emmcloud.servcieimpl;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.push.PushManagerUtils;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.componentservice.communication.CommunicationService;
+import com.inspur.emmcloud.componentservice.communication.Conversation;
+import com.inspur.emmcloud.componentservice.communication.OnCreateGroupConversationListener;
 import com.inspur.emmcloud.componentservice.communication.ShareToConversationListener;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.ui.chat.ConversationBaseActivity;
 import com.inspur.emmcloud.ui.chat.ShareToConversationBlankActivity;
+import com.inspur.emmcloud.util.privates.CommunicationUtils;
+import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.MessageSendManager;
 import com.inspur.emmcloud.util.privates.NotifyUtil;
 import com.inspur.emmcloud.util.privates.VoiceCommunicationManager;
 
-import org.json.JSONObject;
+import org.json.JSONArray;
 
 /**
  * Created by chenmch on 2019/6/3.
@@ -78,12 +84,11 @@ public class CommunicationServiceImpl implements CommunicationService {
     /**
      * 扫码后接收来自网页的插件调用
      *
-     * @param jsonObject
+     * @param cid
      */
     @Override
-    public void openConversationByChannelId(JSONObject jsonObject) {
+    public void openConversationByChannelId(String cid) {
         try {
-            String cid = jsonObject.getString("channelId");
             Intent intent = new Intent();
             intent.putExtra(ConversationBaseActivity.EXTRA_CID, cid);
             intent.putExtra(ConversationActivity.EXTRA_NEED_GET_NEW_MESSAGE, true);
@@ -109,6 +114,21 @@ public class CommunicationServiceImpl implements CommunicationService {
     public void stopVoiceCommunication() {
         if (VoiceCommunicationManager.getInstance().isVoiceBusy()) {
             VoiceCommunicationManager.getInstance().handleDestroy();
+        }
+    }
+
+    @Override
+    public void createGroupConversation(Context context, JSONArray peopleArray, String groupName, OnCreateGroupConversationListener onCreateGroupConversationListener) {
+        new ConversationCreateUtils().createGroupConversation((Activity) context, peopleArray, groupName, onCreateGroupConversationListener);
+    }
+
+
+    @Override
+    public String getShowName(Conversation conversation) {
+        if (conversation != null) {
+            return CommunicationUtils.getConversationTitle(conversation);
+        } else {
+            return "";
         }
     }
 }
