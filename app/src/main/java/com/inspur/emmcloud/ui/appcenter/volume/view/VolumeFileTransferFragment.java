@@ -311,8 +311,8 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
     /**
      * 全部下载  全部暂停UI
      */
-    private void refreshOperationTotal() {
-        operationTotalLayout.setVisibility(unFinishedVolumeFileList.size() > 0 ? View.VISIBLE : View.GONE);
+    private synchronized void refreshOperationTotal() {
+        operationTotalLayout.setVisibility(unFinishedVolumeFileList == null || unFinishedVolumeFileList.size() == 0 ? View.GONE : View.VISIBLE);
         boolean isShowPause = false;
         for (VolumeFile volumeFile : unFinishedVolumeFileList) {
             if (volumeFile.getStatus().equals(VolumeFile.STATUS_LOADING)) {
@@ -696,6 +696,7 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
         downloadedAdapter.notifyDataSetChanged();
         adapter.setUnfinishedFileList(unFinishedVolumeFileList);
         adapter.notifyDataSetChanged();
+        refreshOperationTotal();
         Log.d("zhang", "onDataChange: 监听到数据变化 unFinishedVolumeFileList.size = " + unFinishedVolumeFileList.size());
         Log.d("zhang", "onDataChange: 监听到数据变化 finishedVolumeFileList.size = " + finishedVolumeFileList.size());
     }
