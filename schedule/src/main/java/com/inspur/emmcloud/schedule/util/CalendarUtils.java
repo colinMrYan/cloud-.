@@ -1,9 +1,9 @@
 package com.inspur.emmcloud.schedule.util;
 
 import android.content.Context;
+import android.os.Build;
 import android.util.Base64;
 
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
@@ -13,6 +13,7 @@ import com.inspur.emmcloud.schedule.bean.Schedule;
 import com.inspur.emmcloud.schedule.bean.calendar.AccountType;
 import com.inspur.emmcloud.schedule.bean.calendar.CalendarColor;
 import com.inspur.emmcloud.schedule.bean.calendar.ScheduleCalendar;
+import com.inspur.emmcloud.schedule.util.ScheduleCalendarCacheUtils;
 
 
 public class CalendarUtils {
@@ -120,11 +121,11 @@ public class CalendarUtils {
                     String exchangeAccount = scheduleCalendar.getAcName();
                     //此处用Preferences代替从scheduleCalendar中获取，因为当密码变更时Preference最可靠
                     String exchangePassword = PreferencesByUserAndTanentUtils.getString(BaseApplication.getInstance(), Constant.PREF_MAIL_PASSWORD, "");
-                    LogUtils.jasonDebug("exchangeAccount=" + exchangeAccount);
-                    LogUtils.jasonDebug("exchangePassword=" + exchangePassword);
                     if (!StringUtils.isBlank(exchangeAccount) && !StringUtils.isBlank(exchangePassword)) {
                         exchangeAuthHeaderValue = exchangeAccount + ":" + exchangePassword;
-                        exchangeAuthHeaderValue = Base64.encodeToString(exchangeAuthHeaderValue.getBytes(), Base64.NO_WRAP);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
+                            exchangeAuthHeaderValue = Base64.encodeToString(exchangeAuthHeaderValue.getBytes(), Base64.NO_WRAP);
+                        }
                     }
                     break;
                 default:

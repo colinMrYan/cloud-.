@@ -231,7 +231,6 @@ public abstract class BaseApplication extends MultiDexApplication {
         }
         if (!StringUtils.isBlank(extraHeaderKey) && !StringUtils.isBlank(extraHeaderValue)) {
             params.addHeader(extraHeaderKey, extraHeaderValue);
-            LogUtils.jasonDebug("extraHeaderValue==" + extraHeaderValue);
         }
         params.addHeader("Accept-Language", LanguageManager.getInstance().getCurrentAppLanguage());
         return params;
