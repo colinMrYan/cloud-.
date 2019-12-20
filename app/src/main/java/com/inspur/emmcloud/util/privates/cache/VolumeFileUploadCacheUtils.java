@@ -24,7 +24,7 @@ public class VolumeFileUploadCacheUtils {
         return volumeFileUploadList;
     }
 
-    public static void saveVolumeFileUpload(VolumeFileUpload volumeFileUpload) {
+    public synchronized static void saveVolumeFileUpload(VolumeFileUpload volumeFileUpload) {
         try {
             if (volumeFileUpload != null) {
                 DbCacheUtils.getDb().saveOrUpdate(volumeFileUpload);

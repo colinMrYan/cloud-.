@@ -211,8 +211,8 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
                         holder.speedTv.setText(speed);
                     }
                 }
-                Log.d("zhang", "upLoading: progress = " + progress
-                        + ",speed = " + speed + ",status = " + originVolumeFile.getStatus());
+//                Log.d("zhang", "upLoading: progress = " + progress
+//                        + ",speed = " + speed + ",status = " + originVolumeFile.getStatus());
                 originVolumeFile.setProgress(progress);
                 if (progress > 0) {
                     holder.progressBar.setProgress(progress);
