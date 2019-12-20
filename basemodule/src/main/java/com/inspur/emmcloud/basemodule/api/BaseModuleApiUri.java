@@ -150,4 +150,20 @@ public class BaseModuleApiUri {
         }
         return headImgUrl;
     }
+
+    /**
+     * 未读消息url
+     *
+     * @return
+     */
+    public static String getBadgeCountUrl() {
+        String badgeCountUrl = "";
+        if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
+            badgeCountUrl = WebServiceRouterManager.getInstance().getClusterChat() + "/unread-count";
+        } else if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
+            badgeCountUrl = WebServiceRouterManager.getInstance().getClusterChat() + "/rest/v1/unread-count";
+        }
+        return badgeCountUrl;
+    }
+
 }

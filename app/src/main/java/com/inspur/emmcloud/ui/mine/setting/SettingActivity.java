@@ -24,6 +24,7 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.api.apiservice.MineAPIService;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
+import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.NotificationSetUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
@@ -36,6 +37,7 @@ import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.push.PushManagerUtils;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.AppBadgeUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.ClientConfigUpdateUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
@@ -48,14 +50,13 @@ import com.inspur.emmcloud.bean.mine.GetExperienceUpgradeFlagResult;
 import com.inspur.emmcloud.bean.system.AppConfig;
 import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
 import com.inspur.emmcloud.bean.system.navibar.NaviBarScheme;
+import com.inspur.emmcloud.componentservice.appcenter.ApplicationService;
 import com.inspur.emmcloud.service.CoreService;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.chat.DisplayMediaVoiceMsg;
-import com.inspur.emmcloud.util.privates.AppBadgeUtils;
 import com.inspur.emmcloud.util.privates.DataCleanManager;
 import com.inspur.emmcloud.util.privates.TabAndAppExistUtils;
 import com.inspur.emmcloud.util.privates.cache.AppConfigCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.MyAppCacheUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -525,9 +526,11 @@ public class SettingActivity extends BaseActivity {
                         ClientConfigUpdateUtils.getInstance().clearDbDataConfigWithClearAllCache();
                         ImageDisplayUtils.getInstance().clearAllCache();
                         //因为断网时清除所有缓存会清掉
-                        MyAppCacheUtils.clearMyAppList(SettingActivity.this);
-                        //清除全部缓存时是否需要清除掉小程序，如果需要，解开下面一行的注释
-//					ReactNativeFlow.deleteReactNativeInstallDir(MyAppConfig.getReactInstallPath(SettingActivity.this,userId));
+                        Router router = Router.getInstance();
+                        if (router.getService(ApplicationService.class) != null) {
+                            ApplicationService service = router.getService(ApplicationService.class);
+                            service.clearMyAppList(SettingActivity.this);
+                        }
                         ToastUtils.show(getApplicationContext(),
                                 R.string.data_clear_success);
                         //((MyApplication) getApplicationContext()).exit();
@@ -536,7 +539,7 @@ public class SettingActivity extends BaseActivity {
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                                 | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
-                        new AppBadgeUtils(MyApplication.getInstance()).getAppBadgeCountFromServer();
+                        new AppBadgeUtils(SettingActivity.this).getAppBadgeCountFromServer();
                     }
                 })
                 .show();

@@ -1,9 +1,12 @@
 package com.inspur.emmcloud.servcieimpl;
 
 import android.app.Activity;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
+import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.push.PushManagerUtils;
 import com.inspur.emmcloud.bean.chat.Message;
@@ -11,17 +14,24 @@ import com.inspur.emmcloud.componentservice.communication.CommunicationService;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
 import com.inspur.emmcloud.componentservice.communication.OnCreateGroupConversationListener;
 import com.inspur.emmcloud.componentservice.communication.ShareToConversationListener;
+import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.ui.chat.ConversationBaseActivity;
 import com.inspur.emmcloud.ui.chat.ShareToConversationBlankActivity;
+import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
+import com.inspur.emmcloud.ui.mine.setting.NetWorkStateDetailActivity;
+import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.MessageSendManager;
 import com.inspur.emmcloud.util.privates.NotifyUtil;
 import com.inspur.emmcloud.util.privates.VoiceCommunicationManager;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 
 import org.json.JSONArray;
+
+import java.util.List;
 
 /**
  * Created by chenmch on 2019/6/3.
@@ -131,4 +141,20 @@ public class CommunicationServiceImpl implements CommunicationService {
             return "";
         }
     }
+
+    @Override
+    public void startNetWorkStateActivity(Activity activity) {
+        IntentUtils.startActivity(activity, NetWorkStateDetailActivity.class);
+    }
+
+    @Override
+    public String getMyAppFragmentHeaderText(String simpleName) {
+        return AppTabUtils.getTabTitle(BaseApplication.getInstance(), simpleName);
+    }
+
+    @Override
+    public String getUserIconUrl(ContactUser contactUser) {
+        return APIUri.getUserIconUrl(BaseApplication.getInstance(), contactUser.getId());
+    }
+
 }
