@@ -11,7 +11,6 @@ import android.content.Context;
 
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
-import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
@@ -37,7 +36,7 @@ public class ChatCreateUtils {
     private OnCreateGroupChannelListener onCreateGroupChannelListener;
     private LoadingDialog loadingDlg;
     private boolean isShowErrorAlert = true;
-    private ScheduleApiService scheduleApiService;
+//    private ScheduleApiService scheduleApiService;
 
     public void createDirectChannel(Activity context, String uid,
                                     OnCreateDirectChannelListener onCreateDirectChannelListener) {
