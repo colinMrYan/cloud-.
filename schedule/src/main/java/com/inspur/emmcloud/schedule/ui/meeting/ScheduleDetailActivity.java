@@ -176,8 +176,8 @@ public class ScheduleDetailActivity extends BaseActivity {
         isHistorySchedule = System.currentTimeMillis() > scheduleEvent.getEndTime();
         headText.setText(getString(isFromCalendar ? R.string.schedule_calendar_detail : R.string.schedule_meeting_booking_detail));
         scheduleTitleText.setText(scheduleEvent.getTitle());
-        scheduleTimeText.setText(getString(R.string.meeting_detail_time, getScheduleTime()));
-        scheduleRemindText.setText(getString(R.string.meeting_detail_remind, ScheduleAlertTimeActivity.getAlertTimeNameByTime(scheduleEvent.getRemindEventObj().getAdvanceTimeSpan(), scheduleEvent.getAllDay())));
+        scheduleTimeText.setText(getString(R.string.schedule_meeting_detail_time, getScheduleTime()));
+        scheduleRemindText.setText(getString(R.string.schedule_meeting_detail_remind, ScheduleAlertTimeActivity.getAlertTimeNameByTime(scheduleEvent.getRemindEventObj().getAdvanceTimeSpan(), scheduleEvent.getAllDay())));
         //来自会议
         scheduleInviteLayout.setVisibility(View.VISIBLE);
         scheduleAttendLayout.setVisibility(StringUtils.isBlank(getScheduleParticipant()) ? View.GONE : View.VISIBLE);   //参会人
@@ -195,10 +195,10 @@ public class ScheduleDetailActivity extends BaseActivity {
                 myInfo = new ContactUser();
             }
             String userName = myInfo.getName();
-            scheduleInviteText.setText(getString(R.string.meeting_detail_inviter, userName));
+            scheduleInviteText.setText(getString(R.string.schedule_meeting_detail_inviter, userName));
         }
         scheduleInviteText.setVisibility(StringUtils.isBlank(scheduleEvent.getOwner()) ? View.GONE : View.VISIBLE);
-        attendeeText.setText(getString(R.string.meeting_detail_attendee, getScheduleParticipant())); //参会人
+        attendeeText.setText(getString(R.string.schedule_meeting_detail_attendee, getScheduleParticipant())); //参会人
         scheduleNoteText.setText(scheduleEvent.getNote());             //备注
         scheduleNoteLayout.setVisibility(StringUtil.isBlank(scheduleEvent.getNote()) ? View.GONE : View.VISIBLE);
 
@@ -215,12 +215,12 @@ public class ScheduleDetailActivity extends BaseActivity {
             if (StringUtils.isBlank(locationObj.getBuilding()) && StringUtils.isBlank(locationObj.getDisplayName())) {
                 scheduleLocationLayout.setVisibility(View.GONE);
             } else {
-                String locationData = getString(R.string.meeting_detail_location) + scheduleEvent.getScheduleLocationObj().getBuilding() + " " + scheduleEvent.getScheduleLocationObj().getDisplayName();
+                String locationData = getString(R.string.schedule_every_detail_location) + scheduleEvent.getScheduleLocationObj().getBuilding() + " " + scheduleEvent.getScheduleLocationObj().getDisplayName();
                 scheduleLocationText.setText(locationData);
             }
         }
 
-        scheduleCreateTimeText.setText(getString(R.string.meeting_detail_create, TimeUtils.calendar2FormatString(this,
+        scheduleCreateTimeText.setText(getString(R.string.schedule_meeting_detail_create, TimeUtils.calendar2FormatString(this,
                 TimeUtils.timeLong2Calendar(scheduleEvent.getCreationTime()), TimeUtils.FORMAT_MONTH_DAY_HOUR_MINUTE)));
         scheduleMoreImg.setVisibility((PreferencesByUserAndTanentUtils.getBoolean(BaseApplication.getInstance(), Constant.PREF_IS_MEETING_ADMIN,
                 false) || (scheduleEvent.getOwner().equals(BaseApplication.getInstance().getUid())) && System.currentTimeMillis() < scheduleEvent.getEndTime()) ? View.VISIBLE : View.GONE);
@@ -309,7 +309,7 @@ public class ScheduleDetailActivity extends BaseActivity {
 
             //管理员不显示发起群聊 (创建者跟参会人)
             if (relatedPersonFlag && WebServiceRouterManager.getInstance().isV1xVersionChat()) {
-                moreTextList.add(getString(R.string.meeting_create_group_chat)); //会议群聊
+                moreTextList.add(getString(R.string.schedule_meeting_create_group_chat)); //会议群聊
                 scheduleApiService.getCalendarBindChat(scheduleId);
             }
 
@@ -404,7 +404,7 @@ public class ScheduleDetailActivity extends BaseActivity {
         } else {
             ContactUser isHaveInfo = contactService != null ? contactService.getContactUserByUid(participant.getId()) : null;
             if (StringUtils.isBlank(participantList.get(0).getId()) || isHaveInfo == null) {  //id为空但是有name的情况
-                return getString(R.string.meeting_detail_attendee_num,
+                return getString(R.string.schedule_meeting_detail_attendee_num,
                         participantList.get(0).getName() + participantList.get(0).getEmail(),
                         participantList.size());
             }
@@ -413,7 +413,7 @@ public class ScheduleDetailActivity extends BaseActivity {
             if (contactUser != null) {
                 name = contactUser.getName();
             }
-            return getString(R.string.meeting_detail_attendee_num, name, participantList.size());
+            return getString(R.string.schedule_meeting_detail_attendee_num, name, participantList.size());
         }
     }
 
@@ -514,7 +514,7 @@ public class ScheduleDetailActivity extends BaseActivity {
                 break;
             case SCHEDULE_INVITE:
                 uidList.add(scheduleEvent.getOwner());
-                bundle.putString("title", getString(R.string.meeting_detail_invite));
+                bundle.putString("title", getString(R.string.schedule_meeting_detail_invite));
                 break;
             default:
                 break;
@@ -569,7 +569,7 @@ public class ScheduleDetailActivity extends BaseActivity {
                     IntentUtils.startActivity(ScheduleDetailActivity.this, ScheduleAddActivity.class, bundle, true);
                 } else if (tag.equals(getString(isFromCalendar ? R.string.schedule_calendar_delete : R.string.schedule_meeting_cancel))) {
                     showConfirmClearDialog(scheduleEvent);
-                } else if (tag.equals(getString(R.string.meeting_create_group_chat))) {
+                } else if (tag.equals(getString(R.string.schedule_meeting_create_group_chat))) {
                     new ScheduleGroupCreateUtils().startGroupChat(ScheduleDetailActivity.this, scheduleEvent, chatGroupId, null);
                 }
                 dialog.dismiss();
@@ -590,7 +590,7 @@ public class ScheduleDetailActivity extends BaseActivity {
      */
     private void showConfirmClearDialog(final Schedule schedule) {
         new CustomDialog.MessageDialogBuilder(ScheduleDetailActivity.this)
-                .setMessage(getString(isFromCalendar ? R.string.calendar_cancel_the_schedule : R.string.meeting_cancel_the_meeting))
+                .setMessage(getString(isFromCalendar ? R.string.schedule_calendar_cancel_the_schedule : R.string.schedule_meeting_cancel_the_meeting))
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

@@ -77,12 +77,12 @@ public class TaskSetActivity extends BaseActivity {
             }
         });
         MessionSetModel levelModel = new MessionSetModel("");
-        levelModel.setContent(getString(R.string.mession_set_level));
+        levelModel.setContent(getString(R.string.schedule_mession_set_level));
         levelModel.setShow("1");
         taskSetModel.add(levelModel);
 
         MessionSetModel timeModel = new MessionSetModel("");
-        timeModel.setContent(getString(R.string.mession_set_time));
+        timeModel.setContent(getString(R.string.schedule_mession_set_time));
         taskSetModel.add(timeModel);
 
     }

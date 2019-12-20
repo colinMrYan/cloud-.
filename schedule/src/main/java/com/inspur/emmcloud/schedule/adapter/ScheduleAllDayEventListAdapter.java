@@ -53,7 +53,7 @@ public class ScheduleAllDayEventListAdapter extends BaseAdapter {
      */
     private void showConfirmClearDialog(final Event event) {
         new CustomDialog.MessageDialogBuilder(context)
-                .setMessage(event.getEventType().equals(Schedule.TYPE_MEETING) ? R.string.meeting_cancel_the_meeting : R.string.calendar_cancel_the_schedule)
+                .setMessage(event.getEventType().equals(Schedule.TYPE_MEETING) ? R.string.schedule_meeting_cancel_the_meeting : R.string.schedule_calendar_cancel_the_schedule)
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

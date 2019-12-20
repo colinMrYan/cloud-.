@@ -281,7 +281,7 @@ public class TaskListFragment extends Fragment {
                                        final int position, long id) {
             if (currentIndex == 0 || currentIndex == 1) {
                 new CustomDialog.MessageDialogBuilder(getActivity())
-                        .setMessage(R.string.mession_set_finish)
+                        .setMessage(R.string.schedule_mession_set_finish)
                         .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {

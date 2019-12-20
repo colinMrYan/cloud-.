@@ -380,7 +380,7 @@
                     android:drawableLeft="@drawable/ic_schedule_meeting_calendar"
                     android:drawablePadding="12dp"
                     android:gravity="center_vertical"
-                    android:text="@string/calendar"
+                    android:text="@string/schedule_schedule_calendar"
                     android:textColor="#333333"
                     android:textSize="16sp" />
 

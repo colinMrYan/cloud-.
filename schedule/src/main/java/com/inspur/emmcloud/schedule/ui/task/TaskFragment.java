@@ -110,10 +110,10 @@ public class TaskFragment extends BaseFragment {
         initFragmentList();
         tabLayoutSchedule = rootView.findViewById(R.id.tl_schedule_task);
         taskViewPager = rootView.findViewById(R.id.viewpager_calendar_holder);
-        tabLayoutSchedule.addTab(tabLayoutSchedule.newTab().setText(R.string.work_task_mine), true);
-        tabLayoutSchedule.addTab(tabLayoutSchedule.newTab().setText(R.string.work_task_involved), false);
-        tabLayoutSchedule.addTab(tabLayoutSchedule.newTab().setText(R.string.work_task_focused), false);
-        tabLayoutSchedule.addTab(tabLayoutSchedule.newTab().setText(R.string.work_task_done), false);
+        tabLayoutSchedule.addTab(tabLayoutSchedule.newTab().setText(R.string.schedule_task_mine), true);
+        tabLayoutSchedule.addTab(tabLayoutSchedule.newTab().setText(R.string.schedule_task_involved), false);
+        tabLayoutSchedule.addTab(tabLayoutSchedule.newTab().setText(R.string.schedule_task_focused), false);
+        tabLayoutSchedule.addTab(tabLayoutSchedule.newTab().setText(R.string.schedule_task_done), false);
 
         tabLayoutSchedule.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override

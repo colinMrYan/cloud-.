@@ -66,12 +66,12 @@ public class TaskTagAddActivity extends BaseActivity  {
     }
 
     private void initData() {
-        TagColorBean tagColorPink = new TagColorBean("PINK", getString(R.string.mession_delete_red));
-        TagColorBean tagColorOrange = new TagColorBean("ORANGE", getString(R.string.mession_delete_orange));
-        TagColorBean tagColorYellow = new TagColorBean("YELLOW", getString(R.string.mession_delete_yellow));
-        TagColorBean tagColorGreen = new TagColorBean("GREEN", getString(R.string.mession_delete_green));
-        TagColorBean tagColorBlue = new TagColorBean("BLUE", getString(R.string.mession_delete_blue));
-        TagColorBean tagColorPurple = new TagColorBean("PURPLE", getString(R.string.mession_delete_purple));
+        TagColorBean tagColorPink = new TagColorBean("PINK", getString(R.string.schedule_mession_delete_red));
+        TagColorBean tagColorOrange = new TagColorBean("ORANGE", getString(R.string.schedule_mession_delete_orange));
+        TagColorBean tagColorYellow = new TagColorBean("YELLOW", getString(R.string.schedule_mession_delete_yellow));
+        TagColorBean tagColorGreen = new TagColorBean("GREEN", getString(R.string.schedule_mession_delete_green));
+        TagColorBean tagColorBlue = new TagColorBean("BLUE", getString(R.string.schedule_mession_delete_blue));
+        TagColorBean tagColorPurple = new TagColorBean("PURPLE", getString(R.string.schedule_mession_delete_purple));
 
         tagColorBeans.add(tagColorPink);
         tagColorBeans.add(tagColorOrange);

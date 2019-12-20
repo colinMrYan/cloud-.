@@ -486,12 +486,12 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
         }
 
         if (startTimeCalendar.after(endTimeCalendar)) {
-            ToastUtils.show(ScheduleAddActivity.this, R.string.calendar_start_or_end_time_illegal);
+            ToastUtils.show(ScheduleAddActivity.this, R.string.schedule_calendar_start_or_end_time_illegal);
             return false;
         }
 
         if (endTimeCalendar.before(Calendar.getInstance()) && schedule.getScheduleCalendar().equals(AccountType.APP_MEETING.toString())) {
-            ToastUtils.show(ScheduleAddActivity.this, R.string.calendar_end_time_no_before_current);
+            ToastUtils.show(ScheduleAddActivity.this, R.string.schedule_calendar_end_time_no_before_current);
             return false;
         }
 
@@ -864,7 +864,7 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
         @Override
         public void returnAddScheduleSuccess(GetIDResult getIDResult) {
             LoadingDialog.dimissDlg(loadingDlg);
-            ToastUtils.show(getApplicationContext(), R.string.calendar_add_success);
+            ToastUtils.show(getApplicationContext(), R.string.schedule_calendar_add_success);
             schedule.setId(getIDResult.getId());
             //向系统日历里添加日历时需要判断同步开关是否打开，打开的时候则添加，不打开则不不管
             if (syncCalendarSwitch.isChecked()) {

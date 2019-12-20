@@ -907,7 +907,7 @@ public class TaskAddActivity extends BaseActivity {
         @Override
         public void returnUpdateTaskSuccess(int defaultValue) {
             ToastUtils.show(getApplicationContext(),
-                    getString(R.string.mession_saving_success));
+                    getString(R.string.schedule_mession_saving_success));
             setResult(RESULT_OK);
             deleteTaskTags();
 
@@ -942,7 +942,7 @@ public class TaskAddActivity extends BaseActivity {
             List<Attachment> attachments = taskResult.getAttachments();
             taskResult.setAttachments(attachments);
             ToastUtils.show(TaskAddActivity.this,
-                    getString(R.string.mession_upload_attachment_success));
+                    getString(R.string.schedule_mession_upload_attachment_success));
         }
 
         @Override

@@ -438,7 +438,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toLeftOf="@+id/iv_task_end_alert_enter"
-                    android:text="@string/calendar_no_alert"
+                    android:text="@string/schedule_calendar_no_alert"
                     android:textColor="#888888"
                     android:textSize="16sp" />
 

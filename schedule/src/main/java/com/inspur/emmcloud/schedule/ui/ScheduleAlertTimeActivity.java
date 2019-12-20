@@ -35,12 +35,12 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
     ImageView noAlertSelectImage;
     int alertTime = -1;
     String[] alertTimeArray = {
-            BaseApplication.getInstance().getString(R.string.calendar_when_event_occurs),
-            BaseApplication.getInstance().getString(R.string.calendar_ten_minite_ago),
-            BaseApplication.getInstance().getString(R.string.calendar_twenty_minite_ago),
-            BaseApplication.getInstance().getString(R.string.calendar_thirty_minite_ago),
-            BaseApplication.getInstance().getString(R.string.calendar_one_hour_ago),
-            BaseApplication.getInstance().getString(R.string.calendar_one_day_ago)};
+            BaseApplication.getInstance().getString(R.string.schedule_calendar_when_event_occurs),
+            BaseApplication.getInstance().getString(R.string.schedule_calendar_ten_minite_ago),
+            BaseApplication.getInstance().getString(R.string.schedule_calendar_twenty_minite_ago),
+            BaseApplication.getInstance().getString(R.string.schedule_calendar_thirty_minite_ago),
+            BaseApplication.getInstance().getString(R.string.schedule_calendar_one_hour_ago),
+            BaseApplication.getInstance().getString(R.string.schedule_calendar_one_day_ago)};
     String[] allDayAlertTimeArray = {
             BaseApplication.getInstance().getString(R.string.schedule_alert_time_occur),
             BaseApplication.getInstance().getString(R.string.schedule_alert_time_before_one_day),
@@ -58,12 +58,12 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
     @SuppressLint("StringFormatMatches")
     public static String getAlertTimeNameByTime(int alertTime, boolean isAllDay) {
         String[] alertTimeArray = {
-                BaseApplication.getInstance().getString(R.string.calendar_when_event_occurs),
-                BaseApplication.getInstance().getString(R.string.calendar_ten_minite_ago),
-                BaseApplication.getInstance().getString(R.string.calendar_twenty_minite_ago),
-                BaseApplication.getInstance().getString(R.string.calendar_thirty_minite_ago),
-                BaseApplication.getInstance().getString(R.string.calendar_one_hour_ago),
-                BaseApplication.getInstance().getString(R.string.calendar_one_day_ago)};
+                BaseApplication.getInstance().getString(R.string.schedule_calendar_when_event_occurs),
+                BaseApplication.getInstance().getString(R.string.schedule_calendar_ten_minite_ago),
+                BaseApplication.getInstance().getString(R.string.schedule_calendar_twenty_minite_ago),
+                BaseApplication.getInstance().getString(R.string.schedule_calendar_thirty_minite_ago),
+                BaseApplication.getInstance().getString(R.string.schedule_calendar_one_hour_ago),
+                BaseApplication.getInstance().getString(R.string.schedule_calendar_one_day_ago)};
         String[] allDayAlertTimeArray = {
                 BaseApplication.getInstance().getString(R.string.schedule_alert_time_occur),
                 BaseApplication.getInstance().getString(R.string.schedule_alert_time_before_one_day),
@@ -72,7 +72,7 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
         String[] returnAlertTimeString = isAllDay ? allDayAlertTimeArray : alertTimeArray;
         int[] returnAlertTimeInt = isAllDay ? alertTimeAllDayIntArray : alertTimeIntArray;
         if (alertTime == -1 || (isAllDay && alertTime == 0)) {
-            return BaseApplication.getInstance().getString(R.string.calendar_no_alert);
+            return BaseApplication.getInstance().getString(R.string.schedule_calendar_no_alert);
         }
         for (int i = 0; i < returnAlertTimeInt.length; i++) {
             if (alertTime == returnAlertTimeInt[i]) {
@@ -97,7 +97,7 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
                 }
             }
         }
-        return BaseApplication.getInstance().getString(R.string.calendar_no_alert);
+        return BaseApplication.getInstance().getString(R.string.schedule_calendar_no_alert);
     }
 
     @Override
@@ -109,7 +109,7 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
         isAllDay = getIntent().getExtras().containsKey(EXTRA_SCHEDULE_IS_ALL_DAY) ?
                 getIntent().getExtras().getBoolean(EXTRA_SCHEDULE_IS_ALL_DAY) : false;
         alertTimeArray[0] = getIntent().getExtras().containsKey(EXTRA_IS_TASK) ?
-                getApplication().getString(R.string.calendar_when_event_finished) : alertTimeArray[0];
+                getApplication().getString(R.string.schedule_calendar_when_event_finished) : alertTimeArray[0];
         alertTimeString = isAllDay ? allDayAlertTimeArray : alertTimeArray;
         alertTimeInt = isAllDay ? alertTimeAllDayIntArray : alertTimeIntArray;
         if (alertTime != -1) {
@@ -164,7 +164,7 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
         Intent intent = new Intent();
         String name = "";
         if (selectPosition == -1) {
-            name = getString(R.string.calendar_no_alert);
+            name = getString(R.string.schedule_calendar_no_alert);
         } else {
             name = alertTimeString[selectPosition];
         }

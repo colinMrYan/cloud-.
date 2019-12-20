@@ -54,7 +54,7 @@
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
                 android:paddingLeft="16dp"
-                android:text="@string/calendar"
+                android:text="@string/schedule_schedule_calendar"
                 android:textColor="#999999"
                 android:textSize="13sp" />
 
@@ -80,7 +80,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="16dp"
                     android:layout_toRightOf="@id/iv_holiday_color"
-                    android:text="@string/calendar_china_holiday"
+                    android:text="@string/schedule_calendar_china_holiday"
                     android:textColor="#333333"
                     android:textSize="16sp" />
 
@@ -141,7 +141,7 @@
                     android:layout_height="wrap_content"
                     android:paddingBottom="11dp"
                     android:paddingTop="11dp"
-                    android:text="@string/calendar_add_calendar"
+                    android:text="@string/schedule_calendar_add_calendar"
                     android:textColor="#36A5F6"
                     android:textSize="16sp" />
             </LinearLayout>

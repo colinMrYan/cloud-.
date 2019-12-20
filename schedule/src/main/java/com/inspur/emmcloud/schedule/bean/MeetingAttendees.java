@@ -54,19 +54,19 @@ public class MeetingAttendees {
         String name = "";
         switch (type) {
             case MEETING_ATTENDEES_INVITE:
-                name = BaseApplication.getInstance().getString(R.string.meeting_detail_invite);
+                name = BaseApplication.getInstance().getString(R.string.schedule_meeting_detail_invite);
                 break;
             case Participant.CALENDAR_RESPONSE_TYPE_ACCEPT:
-                name = BaseApplication.getInstance().getString(R.string.meeting_detail_attendee_accept);
+                name = BaseApplication.getInstance().getString(R.string.schedule_meeting_detail_attendee_accept);
                 break;
             case Participant.CALENDAR_RESPONSE_TYPE_DECLINE:
-                name = BaseApplication.getInstance().getString(R.string.meeting_detail_attendee_decline);
+                name = BaseApplication.getInstance().getString(R.string.schedule_meeting_detail_attendee_decline);
                 break;
             case Participant.CALENDAR_RESPONSE_TYPE_UNKNOWN:
-                name = BaseApplication.getInstance().getString(R.string.meeting_detail_attendee_unknown);
+                name = BaseApplication.getInstance().getString(R.string.schedule_meeting_detail_attendee_unknown);
                 break;
             case Participant.CALENDAR_RESPONSE_TYPE_TENTATIVE:
-                name = BaseApplication.getInstance().getString(R.string.meeting_detail_attendee_tentative);
+                name = BaseApplication.getInstance().getString(R.string.schedule_meeting_detail_attendee_tentative);
             default:
                 break;
         }

@@ -214,7 +214,7 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
 
     private void initTabLayout() {
         tabLayout = rootView.findViewById(R.id.tab_layout_schedule);
-        int[] tabTitleResIds = {R.string.work_schedule, R.string.work_meeting_text, R.string.work_mession};
+        int[] tabTitleResIds = {R.string.schedule_work_schedule, R.string.schedule_work_meeting_text, R.string.schedule_work_mession};
         for (int i = 0; i < tabTitleResIds.length; i++) {
             TabLayout.Tab tab = tabLayout.newTab();
             tab.setCustomView(R.layout.schedule_tablayout_text_item_view);

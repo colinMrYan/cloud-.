@@ -61,7 +61,7 @@ public class TaskListAdapter extends BaseAdapter {
         TextView deadLineText = convertView.findViewById(R.id.tv_task_deadline);
         if (!StringUtils.isBlank(deadLine)) {
             deadLineText.setVisibility(View.VISIBLE);
-            deadLineText.setText(context.getString(R.string.work_task_end, deadLine));
+            deadLineText.setText(context.getString(R.string.schedule_task_end, deadLine));
         } else {
             deadLineText.setVisibility(View.GONE);
         }

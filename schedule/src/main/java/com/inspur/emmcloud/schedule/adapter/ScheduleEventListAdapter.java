@@ -62,7 +62,7 @@ public class ScheduleEventListAdapter extends RecyclerView.Adapter<ScheduleEvent
         } else if (event.getEventType().equals(Schedule.TYPE_MEETING)) {
             holder.eventPositionText.setVisibility(View.VISIBLE);
             if (!StringUtils.isBlank(event.getEventSubTitle())) {
-                holder.eventPositionText.setText(context.getString(R.string.meeting_detail_location) + event.getEventSubTitle());
+                holder.eventPositionText.setText(context.getString(R.string.schedule_every_detail_location) + event.getEventSubTitle());
             }
 
         }

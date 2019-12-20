@@ -438,8 +438,8 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         if (!StringUtils.isBlank(event.getEventSubTitle())) {
             builder.append(getString(R.string.schedule_location)).append(" : ").append(event.getEventSubTitle()).append("\n");
         }
-        builder.append(getString(R.string.meeting_start_time)).append(" : ").append(startTime).append("\n")
-                .append(getString(R.string.meeting_end_time)).append(" : ").append(endTime);
+        builder.append(getString(R.string.schedule_meeting_start_time)).append(" : ").append(startTime).append("\n")
+                .append(getString(R.string.schedule_meeting_end_time)).append(" : ").append(endTime);
         Router router = Router.getInstance();
         if (router.getService(CommunicationService.class) != null) {
             CommunicationService service = router.getService(CommunicationService.class);
@@ -472,7 +472,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
 
             @Override
             public void createFail() {
-                ToastUtils.show(R.string.meeting_group_chat_fail);
+                ToastUtils.show(R.string.schedule_meeting_group_chat_fail);
             }
         });
     }

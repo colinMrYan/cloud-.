@@ -281,13 +281,13 @@ public class MeetingAttendeeStateActivity extends BaseActivity implements SwipeR
             ImageDisplayUtils.getInstance().displayRoundedImage(attendeeHeadImage, photoUrl, R.drawable.icon_person_default, context, 15);
             for (int num = 0; num < recordParticipants.size(); num++) {
                 if (participant.getId().equals(recordParticipants.get(num).getId()) && participant.getName().equals(recordParticipants.get(num).getName())) {
-                    attendeeType.setText(R.string.meeting_detail_record_title);
+                    attendeeType.setText(R.string.schedule_meeting_detail_record_title);
                     attendeeType.setVisibility(View.VISIBLE);
                 }
             }
             for (int num = 0; num < contactParticipants.size(); num++) {
                 if (participant.getId().equals(contactParticipants.get(num).getId()) && participant.getName().equals(contactParticipants.get(num).getName())) {
-                    attendeeType.setText(attendeeType.getText() + " " + BaseApplication.getInstance().getString(R.string.meeting_detail_conference_title));
+                    attendeeType.setText(attendeeType.getText() + " " + BaseApplication.getInstance().getString(R.string.schedule_meeting_detail_conference_title));
                     attendeeType.setVisibility(View.VISIBLE);
                 }
             }
