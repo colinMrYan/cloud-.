@@ -46,10 +46,6 @@ public class VolumeFileDownloadManager {
     }
 
     public VolumeFileDownloadManager() {
-        refreshCache();
-    }
-
-    private void refreshCache() {
         volumeFileDownloadList = VolumeFileDownloadCacheUtils.getVolumeFileListInDownloading();
         boolean isNeedUpdateVolumeFileDownloadStatus = false;
         for (VolumeFile volumeFile : volumeFileDownloadList) {
@@ -66,6 +62,11 @@ public class VolumeFileDownloadManager {
         if (isNeedUpdateVolumeFileDownloadStatus) {
             VolumeFileDownloadCacheUtils.saveVolumeFileList(volumeFileDownloadList);
         }
+    }
+
+    private void refreshCache() {
+//        volumeFileDownloadList.clear();
+//        volumeFileDownloadList = VolumeFileDownloadCacheUtils.getVolumeFileListInDownloading();
     }
 
     /**
@@ -92,7 +93,7 @@ public class VolumeFileDownloadManager {
      *
      * @return
      */
-    public List<VolumeFile> getUnFinishDownloadList() {
+    public synchronized List<VolumeFile> getUnFinishDownloadList() {
         refreshCache();
         volumeFileDownloadingList.clear();
         for (VolumeFile volumeFile : volumeFileDownloadList) {
@@ -107,7 +108,7 @@ public class VolumeFileDownloadManager {
     /**
      * 获取已下载完成的文件列表  (下载成功 or 下载失败)
      */
-    public List<VolumeFile> getFinishDownloadList() {
+    public synchronized List<VolumeFile> getFinishDownloadList() {
         refreshCache();
         volumeFileDownloadedList.clear();
 //        for (VolumeFile volumeFile : volumeFileDownloadList) {
@@ -146,7 +147,6 @@ public class VolumeFileDownloadManager {
                                     businessProgressCallback.onSuccess(downloadVolumeFile);
                                 }
                             });
-                            resetVolumeFileStatus(volumeFile);
                         } else {
                             businessProgressCallback.onLoading(downloadVolumeFile.getProgress(), downloadVolumeFile.getCompleteSize(), "");
                         }
