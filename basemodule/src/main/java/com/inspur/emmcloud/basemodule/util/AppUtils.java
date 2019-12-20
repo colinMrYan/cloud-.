@@ -39,6 +39,7 @@ import com.github.zafarkhaja.semver.Version;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.EncryptUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.baselib.util.NotificationSetUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.ResolutionUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
@@ -46,6 +47,7 @@ import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.R;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.push.PushManagerUtils;
 import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
@@ -346,7 +348,7 @@ public class AppUtils {
     public static int getSDKVersionNumber() {
         int sdkVersion;
         try {
-            sdkVersion = Integer.valueOf(android.os.Build.VERSION.SDK);
+            sdkVersion = Integer.valueOf(Build.VERSION.SDK);
         } catch (NumberFormatException e) {
             sdkVersion = 0;
         }
@@ -354,7 +356,7 @@ public class AppUtils {
     }
 
     public static String getReleaseVersion() {
-        return android.os.Build.VERSION.RELEASE;
+        return Build.VERSION.RELEASE;
     }
 
     /**
@@ -364,7 +366,7 @@ public class AppUtils {
      */
     public static String GetChangShang() {
 
-        String manString = android.os.Build.MANUFACTURER;
+        String manString = Build.MANUFACTURER;
         if (TextUtils.isEmpty(manString)) {
             return "UNKNOWN";
         }
@@ -390,7 +392,7 @@ public class AppUtils {
      * @return
      */
     public static String GetModel() {
-        String modelStr = android.os.Build.MODEL;
+        String modelStr = Build.MODEL;
         modelStr = modelStr.replace(" ", "-");
         if (TextUtils.isEmpty(modelStr)) {
             return "UNKNOWN";
@@ -540,7 +542,7 @@ public class AppUtils {
      * @return 系统版本号
      */
     public static String getSystemVersion() {
-        return android.os.Build.VERSION.RELEASE;
+        return Build.VERSION.RELEASE;
     }
 
     /**
@@ -1147,5 +1149,25 @@ public class AppUtils {
         }
 
 
+    }
+
+    /**
+     * 开始推送
+     *
+     * @param context
+     */
+    public static void judgeAndStartPush(Context context) {
+        if (BaseApplication.getInstance().isHaveLogin()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                if (NotificationSetUtils.isNotificationEnabled(context) &&
+                        (PreferencesByUserAndTanentUtils.getBoolean(context, Constant.PUSH_SWITCH_FLAG, true))) {
+                    PushManagerUtils.getInstance().startPush();
+                }
+            } else {
+                if (PreferencesByUserAndTanentUtils.getBoolean(context, Constant.PUSH_SWITCH_FLAG, true)) {
+                    PushManagerUtils.getInstance().startPush();
+                }
+            }
+        }
     }
 }

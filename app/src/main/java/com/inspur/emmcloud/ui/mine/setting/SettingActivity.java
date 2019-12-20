@@ -197,7 +197,7 @@ public class SettingActivity extends BaseActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 boolean pushSwitchFlag = PreferencesByUserAndTanentUtils.getBoolean(SettingActivity.this, Constant.PUSH_SWITCH_FLAG, true);
-                if (isChecked != pushSwitchFlag) {
+                if (isChecked != pushSwitchFlag || !NotificationSetUtils.isNotificationEnabled(SettingActivity.this)) {
                     if (isChecked) {    //代表上升沿 先检测
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                             showNotificationDlg(isChecked);
@@ -418,6 +418,7 @@ public class SettingActivity extends BaseActivity {
                     .show();
         } else {
             PreferencesByUserAndTanentUtils.putBoolean(SettingActivity.this, Constant.PUSH_SWITCH_FLAG, isChecked);
+            PushManagerUtils.getInstance().startPush();
             notificationSwitch.setChecked(isChecked);
         }
     }
