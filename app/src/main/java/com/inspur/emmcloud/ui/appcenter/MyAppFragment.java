@@ -37,7 +37,6 @@ import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
@@ -140,7 +139,6 @@ public class MyAppFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LogUtils.jasonDebug("onCreate------------");
         registerReceiver();
         EventBus.getDefault().register(this);
     }
@@ -149,7 +147,6 @@ public class MyAppFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        LogUtils.jasonDebug("onCreateView------------");
         View view = inflater.inflate(R.layout.fragment_app, container, false);
         unbinder = ButterKnife.bind(this, view);
         checkingNetStateUtils = new CheckingNetStateUtils(getContext(), NetUtils.pingUrls, NetUtils.httpUrls);
@@ -162,7 +159,6 @@ public class MyAppFragment extends BaseFragment {
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        LogUtils.jasonDebug("onHiddenChanged------------" + hidden);
         if (!hidden) {
             refreshDataAndWidgetOnPageVisible();
         }
@@ -171,7 +167,6 @@ public class MyAppFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        LogUtils.jasonDebug("onResume------------");
         refreshDataAndWidgetOnPageVisible();
     }
 

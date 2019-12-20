@@ -7,17 +7,17 @@ import android.util.DisplayMetrics;
 import android.view.Display;
 import android.widget.ScrollView;
 
-public class MaxHightScrollView extends ScrollView {
+public class MaxHeightScrollView extends ScrollView {
     private Context mContext;
 
 
-    public MaxHightScrollView(Context context, AttributeSet attrs) {
+    public MaxHeightScrollView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context);
 
     }
 
-    public MaxHightScrollView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public MaxHeightScrollView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
     }

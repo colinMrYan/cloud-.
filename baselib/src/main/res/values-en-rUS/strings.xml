@@ -61,7 +61,7 @@
     <string name="cancel_filter">Cancle filter</string>
     <string name="only_free">Only free</string>
     <string name="invite_friends_text">Recommend Cloud+ to Friends</string>
-    <string name="tab_not_support_tips">%1$s function has been revised , Please<Data><![CDATA[<font color=\'#0F7BCA\'>upgrade</font>]]></Data></string>
+    <string name="tab_not_support_tips">%1$s function has been revised, please <Data><![CDATA[<font color=\'#0F7BCA\'>upgrade</font>]]></Data></string>
     <string name="choose">Choose</string>
     <string name="file_type">File type</string>
     <string name="app_update_prepare">Ready to download</string>

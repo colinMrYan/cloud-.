@@ -49,8 +49,6 @@ import java.util.Calendar;
 import java.util.List;
 
 import butterknife.BindView;
-
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -71,7 +69,9 @@ public class ScheduleHomeFragment extends BaseFragment {
     @BindView(R.id.tv_date)
     TextView dateText;
     @BindView(R.id.tv_error_info)
-    private TextView errorInfoText;
+    TextView errorInfoText;
+    @BindView(R.id.rl_error)
+    RelativeLayout errorLayout;
     private ScheduleFragment scheduleFragment;
     private MeetingFragment meetingFragment;
     private TaskFragment taskFragment;
@@ -131,7 +131,6 @@ public class ScheduleHomeFragment extends BaseFragment {
             case Constant.EVENTBUS_TAG_EWS_401:
                 if (errorLayout.getVisibility() != View.VISIBLE) {
                     errorLayout.setVisibility(View.VISIBLE);
-//                    String ewsAccount = (String) eventMessage.getMessageObj();
                     errorInfoText.setText(getString(R.string.schedule_exchange_login_fail));
                 }
                 break;
@@ -262,7 +261,7 @@ public class ScheduleHomeFragment extends BaseFragment {
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, isSelect ? 20 : 18);
         int textColorNormal = ResourceUtils.getResValueOfAttr(getActivity(), R.attr.schedule_tab_text_color_normal);
         int textColorSelect = ResourceUtils.getResValueOfAttr(getActivity(), R.attr.schedule_tab_text_color_select);
-        textView.setTextColor(ContextCompat.getColor(MyApplication.getInstance(),isSelect?textColorSelect:textColorNormal));
+        textView.setTextColor(ContextCompat.getColor(MyApplication.getInstance(), isSelect ? textColorSelect : textColorNormal));
     }
 
     private String getExchangeScheduleCalendar() {
@@ -293,10 +292,10 @@ public class ScheduleHomeFragment extends BaseFragment {
                         IntentUtils.startActivity(getActivity(), ScheduleAddActivity.class, bundle);
                         break;
                     case 2:
-                        if(viewPager.getCurrentItem() == 2){
+                        if (viewPager.getCurrentItem() == 2) {
                             recordUserClickWorkFunction(PV_COLLECTION_MISSION);
                             IntentUtils.startActivity(getActivity(), TaskAddActivity.class);
-                        }else{
+                        } else {
                             recordUserClickWorkFunction(PV_COLLECTION_MEETING);
                             calendarType = getExchangeScheduleCalendar();
                             bundle.putString(ScheduleAddActivity.EXTRA_SCHEDULE_SCHEDULECALENDAR_TYPE,
@@ -305,10 +304,10 @@ public class ScheduleHomeFragment extends BaseFragment {
                         }
                         break;
                     case 3:
-                        if(viewPager.getCurrentItem() == 0){
+                        if (viewPager.getCurrentItem() == 0) {
                             recordUserClickWorkFunction(PV_COLLECTION_MISSION);
                             IntentUtils.startActivity(getActivity(), TaskAddActivity.class);
-                        }else if(viewPager.getCurrentItem() == 1){
+                        } else if (viewPager.getCurrentItem() == 1) {
                             recordUserClickWorkFunction(PV_COLLECTION_MEETING);
                             calendarType = getExchangeScheduleCalendar();
                             bundle.putString(ScheduleAddActivity.EXTRA_SCHEDULE_SCHEDULECALENDAR_TYPE,
@@ -329,8 +328,8 @@ public class ScheduleHomeFragment extends BaseFragment {
                             IntentUtils.startActivity(getActivity(), TaskSetActivity.class);
                         }
                         break;
-                        default:
-                            break;
+                    default:
+                        break;
                 }
             }
         });
@@ -362,7 +361,7 @@ public class ScheduleHomeFragment extends BaseFragment {
         return menuItemList;
     }
 
-    @OnClick({R.id.ibt_add, R.id.ibt_today,R.id.rl_error})
+    @OnClick({R.id.ibt_add, R.id.ibt_today, R.id.rl_error})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ibt_add:

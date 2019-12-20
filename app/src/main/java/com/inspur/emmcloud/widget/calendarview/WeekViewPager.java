@@ -192,7 +192,10 @@ public final class WeekViewPager extends ViewPager {
             mDelegate.mCalendarSelectListener.onCalendarSelect(emmCalendar, false);
         }
         int i = CalendarUtil.getWeekFromDayInMonth(emmCalendar, mDelegate.getWeekStart());
-        mParentLayout.updateSelectWeek(i);
+        if (mParentLayout != null) {
+            mParentLayout.updateSelectWeek(i);
+        }
+
     }
 
     /**

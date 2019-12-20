@@ -25,8 +25,11 @@ import com.inspur.emmcloud.basemodule.ui.BaseFragment;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.web.R;
+import com.inspur.emmcloud.web.R2;
 
 import java.util.List;
+
+import butterknife.BindView;
 
 /**
  * Created by chenmch on 2018/11/27.
@@ -34,10 +37,13 @@ import java.util.List;
 
 public class ImpBaseFragment extends BaseFragment {
     protected static final String JAVASCRIPT_PREFIX = "javascript:";
-    protected RelativeLayout functionLayout;
-    protected LinearLayout webFunctionLayout;
     protected List<MainTabMenu> optionMenuList;
-    protected TextView headerText;
+    @BindView(R2.id.function_layout)
+    RelativeLayout functionLayout;
+    @BindView(R2.id.ll_web_function)
+    LinearLayout webFunctionLayout;
+    @BindView(R2.id.header_text)
+    TextView headerText;
     private int functionLayoutWidth = -1;
     private int webFunctionLayoutWidth = -1;
 
