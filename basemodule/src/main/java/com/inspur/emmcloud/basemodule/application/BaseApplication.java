@@ -96,6 +96,7 @@ public abstract class BaseApplication extends MultiDexApplication {
         Router.registerComponent("com.inspur.emmcloud.news.applike.NewsAppLike");
         Router.registerComponent("com.inspur.emmcloud.webex.applike.WebexAppLike");
         Router.registerComponent("com.inspur.emmcloud.mail.applike.MailAppLike");
+        Router.registerComponent("com.inspur.emmcloud.schedule.applike.ScheduleAppLike");
         Router.registerComponent("com.inspur.emmcloud.application.applike.ApplicationAppLike");
         CrashHandler crashHandler = CrashHandler.getInstance();
         crashHandler.init(getInstance());
@@ -231,7 +232,6 @@ public abstract class BaseApplication extends MultiDexApplication {
         }
         if (!StringUtils.isBlank(extraHeaderKey) && !StringUtils.isBlank(extraHeaderValue)) {
             params.addHeader(extraHeaderKey, extraHeaderValue);
-            LogUtils.jasonDebug("extraHeaderValue==" + extraHeaderValue);
         }
         params.addHeader("Accept-Language", LanguageManager.getInstance().getCurrentAppLanguage());
         return params;

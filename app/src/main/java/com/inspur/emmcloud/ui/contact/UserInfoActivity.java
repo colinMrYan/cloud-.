@@ -29,9 +29,10 @@ import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
-import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.contact.ContactOrg;
+import com.inspur.emmcloud.componentservice.communication.Conversation;
+import com.inspur.emmcloud.componentservice.communication.OnCreateDirectConversationListener;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
@@ -372,7 +373,7 @@ public class UserInfoActivity extends BaseActivity {
     private void createDirectChannel() {
         if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
             new ConversationCreateUtils().createDirectConversation(UserInfoActivity.this, contactUser.getId(),
-                    new ConversationCreateUtils.OnCreateDirectConversationListener() {
+                    new OnCreateDirectConversationListener() {
                         @Override
                         public void createDirectConversationSuccess(Conversation conversation) {
                             Bundle bundle = new Bundle();

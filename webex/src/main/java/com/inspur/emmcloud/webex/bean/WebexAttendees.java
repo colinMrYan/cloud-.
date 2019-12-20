@@ -1,7 +1,7 @@
 package com.inspur.emmcloud.webex.bean;
 
 import com.inspur.emmcloud.baselib.util.JSONUtils;
-import com.inspur.emmcloud.basemodule.bean.SearchModel;
+import com.inspur.emmcloud.componentservice.communication.SearchModel;
 
 import org.json.JSONObject;
 

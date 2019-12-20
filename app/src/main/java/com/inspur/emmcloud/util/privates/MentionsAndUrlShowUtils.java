@@ -5,7 +5,7 @@ import android.text.Spanned;
 
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
-import com.inspur.emmcloud.bean.schedule.MentionsAndUrl;
+import com.inspur.emmcloud.basemodule.bean.MentionsAndUrl;
 import com.inspur.emmcloud.widget.spans.URLClickableSpan;
 
 import org.apache.commons.lang3.StringEscapeUtils;

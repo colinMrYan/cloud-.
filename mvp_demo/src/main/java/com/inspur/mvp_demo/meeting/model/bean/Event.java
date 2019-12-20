@@ -145,11 +145,11 @@ public class Event {
     public int getEventIconResId() {
         int eventIconResId = -1;
         if (getEventType().equals(Schedule.TYPE_CALENDAR)) {
-            eventIconResId = R.drawable.ic_schedule_event_calendar_select;
+            eventIconResId = R.drawable.ic_schedule_event_calendar_select_mvp;
         } else if (getEventType().equals(Schedule.TYPE_MEETING)) {
-            eventIconResId = R.drawable.ic_schedule_event_meeting_normal;
+            eventIconResId = R.drawable.ic_schedule_event_meeting_normal_mvp;
         } else {
-            eventIconResId = R.drawable.ic_schedule_event_task_normal;
+            eventIconResId = R.drawable.ic_schedule_event_task_normal_mvp;
         }
         return eventIconResId;
     }

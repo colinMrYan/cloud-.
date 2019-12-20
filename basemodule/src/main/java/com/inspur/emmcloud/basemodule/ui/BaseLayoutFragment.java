@@ -27,8 +27,7 @@ public abstract class BaseLayoutFragment extends BaseFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (rootView == null) {
-            rootView = inflater
-                    .inflate(R.layout.fragment_schedule, container, false);
+            rootView = inflater.inflate(R.layout.fragment_schedule, container, false);
         }
         ViewGroup parent = (ViewGroup) rootView.getParent();
         if (parent != null) {

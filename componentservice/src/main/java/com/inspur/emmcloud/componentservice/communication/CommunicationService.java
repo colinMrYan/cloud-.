@@ -1,11 +1,13 @@
 package com.inspur.emmcloud.componentservice.communication;
 
+import android.content.Context;
+
 import android.app.Activity;
 
 import com.inspur.emmcloud.componentservice.CoreService;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 
-import org.json.JSONObject;
+import org.json.JSONArray;
 
 import java.util.List;
 
@@ -30,7 +32,7 @@ public interface CommunicationService extends CoreService {
 
     void shareTxtPlainToConversation(String content, ShareToConversationListener listener);
 
-    void openConversationByChannelId(JSONObject jsonObject);
+    void openConversationByChannelId(String cid);
 
     void MessageSendManagerOnDestroy();
 
@@ -38,6 +40,11 @@ public interface CommunicationService extends CoreService {
 
     //退出登录停止语音通话
     void stopVoiceCommunication();
+
+    void createGroupConversation(Context context, JSONArray peopleArray, String groupName,
+                                 OnCreateGroupConversationListener onCreateGroupConversationListener);
+
+    String getShowName(Conversation conversation);
 
     //打开网络检测
     void startNetWorkStateActivity(Activity activity);

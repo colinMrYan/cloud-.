@@ -5,6 +5,14 @@ import com.inspur.emmcloud.basemodule.bean.GetUploadPushInfoResult;
 import com.inspur.emmcloud.bean.ChatFileUploadInfo;
 import com.inspur.emmcloud.bean.appcenter.GetClientIdRsult;
 import com.inspur.emmcloud.bean.appcenter.GetIDResult;
+import com.inspur.emmcloud.bean.appcenter.GetMyAppResult;
+import com.inspur.emmcloud.bean.appcenter.GetRecommendAppWidgetListResult;
+import com.inspur.emmcloud.bean.appcenter.GetRemoveAppResult;
+import com.inspur.emmcloud.bean.appcenter.GetSearchAppResult;
+import com.inspur.emmcloud.bean.appcenter.GetWebAppRealUrlResult;
+import com.inspur.emmcloud.bean.appcenter.ReactNativeDownloadUrlBean;
+import com.inspur.emmcloud.bean.appcenter.ReactNativeInstallUriBean;
+import com.inspur.emmcloud.bean.appcenter.ReactNativeUpdateBean;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailDetailResult;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailFolderResult;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailListResult;
@@ -19,7 +27,6 @@ import com.inspur.emmcloud.bean.appcenter.volume.Volume;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeDetail;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
-import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetAllRobotsResult;
 import com.inspur.emmcloud.bean.chat.GetChannelListResult;
 import com.inspur.emmcloud.bean.chat.GetChannelMessagesResult;
@@ -53,36 +60,17 @@ import com.inspur.emmcloud.bean.mine.GetUploadMyHeadResult;
 import com.inspur.emmcloud.bean.mine.GetUserCardMenusResult;
 import com.inspur.emmcloud.bean.mine.GetUserHeadUploadResult;
 import com.inspur.emmcloud.bean.mine.UserProfileInfoBean;
-import com.inspur.emmcloud.bean.schedule.GetScheduleListResult;
-import com.inspur.emmcloud.bean.schedule.Schedule;
-import com.inspur.emmcloud.bean.schedule.calendar.GetHolidayDataResult;
-import com.inspur.emmcloud.bean.schedule.calendar.GetMyCalendarResult;
-import com.inspur.emmcloud.bean.schedule.calendar.GetScheduleBasicDataResult;
-import com.inspur.emmcloud.bean.schedule.calendar.ScheduleCalendar;
-import com.inspur.emmcloud.bean.schedule.meeting.Building;
-import com.inspur.emmcloud.bean.schedule.meeting.GetIsMeetingAdminResult;
-import com.inspur.emmcloud.bean.schedule.meeting.GetLocationResult;
-import com.inspur.emmcloud.bean.schedule.meeting.GetMeetingListResult;
-import com.inspur.emmcloud.bean.schedule.meeting.GetMeetingRoomListResult;
-import com.inspur.emmcloud.bean.schedule.meeting.GetOfficeListResult;
-import com.inspur.emmcloud.bean.schedule.meeting.GetTagResult;
-import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
-import com.inspur.emmcloud.bean.schedule.meeting.Office;
-import com.inspur.emmcloud.bean.schedule.task.Attachment;
-import com.inspur.emmcloud.bean.schedule.task.GetTaskAddResult;
-import com.inspur.emmcloud.bean.schedule.task.GetTaskListResult;
-import com.inspur.emmcloud.bean.schedule.task.Task;
 import com.inspur.emmcloud.bean.system.GetAppConfigResult;
 import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.bean.system.GetBoolenResult;
 import com.inspur.emmcloud.bean.system.GetUpgradeResult;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
 import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
+import com.inspur.emmcloud.componentservice.communication.Conversation;
 import com.inspur.reactnative.bean.ReactNativeDownloadUrlBean;
 import com.inspur.reactnative.bean.ReactNativeInstallUriBean;
 import com.inspur.reactnative.bean.ReactNativeUpdateBean;
 
-import java.util.Calendar;
 import java.util.List;
 
 public class APIInterfaceInstance implements APIInterface {
@@ -246,18 +234,6 @@ public class APIInterfaceInstance implements APIInterface {
 
     }
 
-    @Override
-    public void returnMeetingRoomListSuccess(
-            GetMeetingRoomListResult getMeetingRoomsResult) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnMeetingRoomListFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
-    }
 
     @Override
     public void returnMsgSuccess(GetMsgResult getMsgResult) {
@@ -398,12 +374,6 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnMeetingListFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
     public void returnUploadTrainTicketSuccess() {
         // TODO Auto-generated method stub
 
@@ -411,41 +381,6 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnUploadTrainTicketFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
-    }
-
-
-    @Override
-    public void returnLocationResultSuccess(GetLocationResult getLoctionResult) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnLocationResultFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnOfficeListResultSuccess(GetOfficeListResult getOfficeListResult) {
-
-    }
-
-    @Override
-    public void returnOfficeListResultFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnAddMeetingOfficeSuccess(Office office, Building building) {
-
-    }
-
-    @Override
-    public void returnAddMeetingOfficeFail(String error, int errorCode) {
         // TODO Auto-generated method stub
 
     }
@@ -462,209 +397,6 @@ public class APIInterfaceInstance implements APIInterface {
 
     }
 
-    @Override
-    public void returnRecentTasksSuccess(GetTaskListResult getTaskListResult) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnRecentTasksFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnMyCalendarSuccess(GetMyCalendarResult getMyCalendarResult) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnMyCalendarFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnDelelteCalendarByIdSuccess() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnDelelteCalendarByIdFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnUpdateCalendarSuccess() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnUpdateCalendarFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnGetTagResultSuccess(GetTagResult getTagResult) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnGetTagResultFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnAddCalEventSuccess(GetIDResult getIDResult) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnAddCalEventFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnDeleteTagSuccess() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnDeleteTagFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnCreateTagSuccess() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnCreateTagFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnCreateTaskSuccess(GetTaskAddResult getTaskAddResult) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnCreateTaskFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnDeleteTaskSuccess() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnDeleteTaskFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnInviteMateForTaskSuccess(String subject) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnInviteMateForTaskFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnUpdateTaskSuccess(int position) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnUpdateTaskFail(String error, int errorCode, int position) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnAttachmentSuccess(Task taskResult) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnAttachmentFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnAddAttachMentSuccess(Attachment attachment) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnAddAttachMentFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnGetTasksSuccess(GetTaskListResult getTaskListResult) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnGetTasksFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnDelTaskMemSuccess() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnDelTaskMemFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnDelTripSuccess() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnDelTripFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
-    }
 
     @Override
     public void returnDndSuccess() {
@@ -691,16 +423,6 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnDeleteMeetingSuccess(Meeting meeting) {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
-    public void returnDeleteMeetingFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
     public void returnDelMembersSuccess(
             ChannelGroup channelGroup) {
         // TODO Auto-generated method stub
@@ -710,74 +432,6 @@ public class APIInterfaceInstance implements APIInterface {
     @Override
     public void returnDelMembersFail(String error, int errorCode) {
         // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnDelAttachmentSuccess(int position) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnDelAttachmentFail(String error, int errorCode, int position) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnChangeMessionOwnerSuccess(String managerName) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnChangeMessionOwnerFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnChangeMessionTagSuccess() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnChangeMessionTagFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnDeleteOfficeSuccess(Office office) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnDeleteOfficeFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnSetMeetingCommonBuildingSuccess(Building building) {
-
-    }
-
-    @Override
-    public void returnSetMeetingCommonBuildingFail(String error, int errorCode) {
-
-    }
-
-    @Override
-    public void returnCancelMeetingCommonBuildingSuccess(Building building) {
-
-    }
-
-    @Override
-    public void returnCancelMeetingCommonBuildingFail(String error, int errorCode) {
 
     }
 
@@ -792,21 +446,6 @@ public class APIInterfaceInstance implements APIInterface {
         // TODO Auto-generated method stub
     }
 
-    @Override
-    public void returnIsMeetingAdminSuccess(GetIsMeetingAdminResult getIsAdmin) {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
-    public void returnIsMeetingAdminFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-    }
-
-
-    @Override
-    public void returnMeetingRoomListSuccess(
-            GetMeetingRoomListResult getMeetingRoomsResult, boolean isFilte) {
-    }
 
     @Override
     public void returnFindSearchFail(String error, int errorCode) {
@@ -1451,116 +1090,6 @@ public class APIInterfaceInstance implements APIInterface {
     public void returnUserCardMenusFail(String error, int errorCode) {
     }
 
-    @Override
-    public void returnScheduleListSuccess(GetScheduleListResult getScheduleListResult, Calendar startCalendar, Calendar endCalendar, ScheduleCalendar scheduleCalendar) {
-
-    }
-
-
-    @Override
-    public void returnScheduleListFail(String error, int errorCode, ScheduleCalendar scheduleCalendar) {
-
-    }
-
-    @Override
-    public void returnAddScheduleSuccess(GetIDResult getIDResult) {
-
-    }
-
-    @Override
-    public void returnAddScheduleFail(String error, int errorCode) {
-
-    }
-
-    @Override
-    public void returnUpdateScheduleSuccess() {
-
-    }
-
-    @Override
-    public void returnUpdateScheduleFail(String error, int errorCode) {
-
-    }
-
-    @Override
-    public void returnDeleteScheduleSuccess(String scheduleId) {
-
-    }
-
-    @Override
-    public void returnDeleteScheduleFail(String error, int errorCode) {
-
-    }
-
-    @Override
-    public void returnDelTaskTagSuccess() {
-
-    }
-
-    @Override
-    public void returnDelTaskTagFail(String error, int errorCode) {
-
-    }
-
-    @Override
-    public void returnAddTaskTagSuccess() {
-
-    }
-
-    @Override
-    public void returnAddTaskTagFail(String error, int errorCode) {
-
-    }
-
-    @Override
-    public void returnAddMeetingSuccess() {
-
-    }
-
-    @Override
-    public void returnAddMeetingFail(String error, int errorCode) {
-
-    }
-
-    @Override
-    public void returnDelMeetingSuccess(Schedule meeting) {
-
-    }
-
-    @Override
-    public void returnDelMeetingFail(String error, int errorCode) {
-
-    }
-
-    @Override
-    public void returnMeetingDataFromIdSuccess(Schedule meeting) {
-
-    }
-
-    @Override
-    public void returnMeetingDataFromIdFail(String error, int errorCode) {
-
-    }
-
-    @Override
-    public void returnScheduleDataFromIdSuccess(Schedule schedule) {
-
-    }
-
-    @Override
-    public void returnScheduleDataFromIdFail(String error, int errorCode) {
-
-    }
-
-    @Override
-    public void returnMeetingListSuccess(GetMeetingListResult getMeetingListByMeetingRoomResult) {
-
-    }
-
-    @Override
-    public void returnMeetingListByMeetingRoomFail(String error, int errorCode) {
-
-    }
 
     @Override
     public void returnNaviBarModelSuccess(NaviBarModel naviBarModel) {
@@ -1572,85 +1101,6 @@ public class APIInterfaceInstance implements APIInterface {
 
     }
 
-    @Override
-    public void returnMeetingHistoryListSuccess(GetMeetingListResult getMeetingListByMeetingRoomResult) {
-
-    }
-
-    @Override
-    public void returnMeetingHistoryListFail(String error, int errorCode) {
-
-    }
-
-    @Override
-    public void returnUpdateMeetingSuccess() {
-
-    }
-
-    @Override
-    public void returnUpdateMeetingFail(String error, int errorCode) {
-
-    }
-
-    @Override
-    public void returnHolidayDataSuccess(GetHolidayDataResult getHolidayDataResult) {
-
-    }
-
-    @Override
-    public void returnHolidayDataFail(String error, int errorCode) {
-
-    }
-
-    @Override
-    public void returnTransmitPictureSuccess(String cid, String description, Message message) {
-
-    }
-
-    @Override
-    public void returnTransmitPictureError(String error, int errorCode) {
-
-    }
-
-    @Override
-    public void returnSetCalendarChatBindSuccess(String calendarId, String chatId) {
-
-    }
-
-    @Override
-    public void returnSetCalendarChatBindFail(String error, int errorCode) {
-
-    }
-
-    @Override
-    public void returnGetCalendarChatBindSuccess(String calendar, String cid) {
-
-    }
-
-    @Override
-    public void returnGetCalendarChatBindFail(String error, int errorCode) {
-
-    }
-
-    @Override
-    public void returnScheduleBasicDataSuccess(GetScheduleBasicDataResult getScheduleBasicDataResult) {
-
-    }
-
-    @Override
-    public void returnScheduleBasicDataFail(String error, int errorCode) {
-
-    }
-
-    @Override
-    public void returnAttendMeetingStatusSuccess(String result, String responseType) {
-
-    }
-
-    @Override
-    public void returnAttendMeetingStatusFail(String error, int errorCode) {
-
-    }
 
     @Override
     public void returnShareFileToFriendsFromVolumeSuccess(String newPath, VolumeFile volumeFile) {
@@ -1699,6 +1149,16 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnMoveOrCopyFileBetweenVolumeFail(GetReturnMoveOrCopyErrorResult errorResult, int errorCode, String srcVolumeFilePath, String operation, List<VolumeFile> volumeFileList) {
+
+    }
+
+    @Override
+    public void returnTransmitPictureSuccess(String cid, String description, Message message) {
+
+    }
+
+    @Override
+    public void returnTransmitPictureError(String error, int errorCode) {
 
     }
 
