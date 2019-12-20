@@ -11,7 +11,7 @@ import org.xutils.db.annotation.Table;
 
 import java.io.Serializable;
 
-@Table(name = "DownloadFile")
+@Table(name = "DownloadInfo")
 public class DownloadInfo implements Serializable {
     public static final String TYPE_MESSAGE = "message";
     public static final String TYPE_VOLUME = "volume";
