@@ -625,6 +625,11 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".ui.appcenter.ReactNativeAppActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
             android:name=".ui.chat.ModifyChannelGroupNameActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
