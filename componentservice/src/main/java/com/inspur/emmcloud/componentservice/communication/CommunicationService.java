@@ -53,9 +53,5 @@ public interface CommunicationService extends CoreService {
 
     String getUserIconUrl(ContactUser uid);
 
-    ContactUser getContactUser(String email);
 
-    Class getContactSearchActivity();
-
-    List<ContactUser> getContantUserList(List<String> uidList);
 }

@@ -157,18 +157,4 @@ public class CommunicationServiceImpl implements CommunicationService {
         return APIUri.getUserIconUrl(BaseApplication.getInstance(), contactUser.getId());
     }
 
-    @Override
-    public ContactUser getContactUser(String email) {
-        return ContactUserCacheUtils.getContactUserByEmail(email);
-    }
-
-    @Override
-    public Class getContactSearchActivity() {
-        return ContactSearchActivity.class;
-    }
-
-    @Override
-    public List<ContactUser> getContantUserList(List<String> uidList) {
-        return ContactUserCacheUtils.getSoreUserList(uidList);
-    }
 }
