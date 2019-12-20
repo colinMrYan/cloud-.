@@ -5,6 +5,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.view.ViewGroup;
 
+import com.inspur.emmcloud.ui.appcenter.volume.view.VolumeFileTransferFragment;
+
 import java.util.List;
 
 /**
@@ -13,9 +15,9 @@ import java.util.List;
 
 public class AllVolumeFragmentAdapter extends FragmentPagerAdapter {
     //存放fragment的集合
-    private List<Fragment> taskListFragmentList;
+    private List<VolumeFileTransferFragment> taskListFragmentList;
 
-    public AllVolumeFragmentAdapter(FragmentManager fm, List<Fragment> taskListFragmentList) {
+    public AllVolumeFragmentAdapter(FragmentManager fm, List<VolumeFileTransferFragment> taskListFragmentList) {
         super(fm);
         this.taskListFragmentList = taskListFragmentList;
     }
@@ -30,7 +32,7 @@ public class AllVolumeFragmentAdapter extends FragmentPagerAdapter {
         return taskListFragmentList.size();
     }
 
-    public List<Fragment> getTaskListFragment() {
+    public List<VolumeFileTransferFragment> getTaskListFragment() {
         return taskListFragmentList;
     }
 

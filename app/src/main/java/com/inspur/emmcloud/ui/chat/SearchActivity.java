@@ -729,17 +729,18 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                 conversation = conversationFromChatContentList.get(i).getConversation();
             }
             if (conversation != null && (conversation.getType().equals(Conversation.TYPE_GROUP))) {
-                SearchModel searchModel = conversation.conversation2SearchModel();
-                displayImg(searchModel, searchHolder.headImageView);
-                searchHolder.nameTextView.setText(searchModel.getName().toString());
+                String icon = DirectChannelUtils.getDirectChannelIcon(MyApplication.getInstance(), conversation.getName());
+                ImageDisplayUtils.getInstance().displayImageByTag(searchHolder.headImageView, icon, R.drawable.icon_channel_group_default);
+                searchHolder.nameTextView.setText(conversation.getName().toString());
                 String string = getString(R.string.chat_contact_related_message, conversationFromChatContentList.get(i).getMessageNum());
                 searchHolder.detailTextView.setText(string);
                 searchHolder.detailTextView.setVisibility(View.VISIBLE);
             }
 
             if (conversation != null && (conversation.getType().equals(Conversation.TYPE_TRANSFER))) {
+                String icon = DirectChannelUtils.getDirectChannelIcon(MyApplication.getInstance(), conversation.getName());
+                ImageDisplayUtils.getInstance().displayImageByTag(searchHolder.headImageView, icon, R.drawable.ic_file_transfer);
                 searchHolder.nameTextView.setText(getString(R.string.chat_file_transfer));
-                ImageDisplayUtils.getInstance().displayImageByTag(searchHolder.headImageView, conversation.getAvatar(), R.drawable.ic_file_transfer);
                 String string = getString(R.string.chat_contact_related_message, conversationFromChatContentList.get(i).getMessageNum());
                 searchHolder.detailTextView.setText(string);
                 searchHolder.detailTextView.setVisibility(View.VISIBLE);
@@ -747,7 +748,16 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             if (conversation != null && conversation.getType().equals(Conversation.TYPE_DIRECT)) {
                 String icon = DirectChannelUtils.getDirectChannelIcon(MyApplication.getInstance(), conversation.getName());
                 ImageDisplayUtils.getInstance().displayImageByTag(searchHolder.headImageView, icon, R.drawable.icon_person_default);
-                searchHolder.nameTextView.setText(conversation.getShowName());
+                searchHolder.nameTextView.setText(conversation.getShowName().toString());
+                String string = getString(R.string.chat_contact_related_message, conversationFromChatContentList.get(i).getMessageNum());
+                searchHolder.detailTextView.setText(string);
+                searchHolder.detailTextView.setVisibility(View.VISIBLE);
+            }
+
+            if (conversation != null && conversation.getType().equals(Conversation.TYPE_CAST)) {
+                String icon = DirectChannelUtils.getDirectChannelIcon(MyApplication.getInstance(), conversation.getName());
+                ImageDisplayUtils.getInstance().displayImageByTag(searchHolder.headImageView, icon, R.drawable.icon_person_default);
+                searchHolder.nameTextView.setText(conversation.getShowName().toString());
                 String string = getString(R.string.chat_contact_related_message, conversationFromChatContentList.get(i).getMessageNum());
                 searchHolder.detailTextView.setText(string);
                 searchHolder.detailTextView.setVisibility(View.VISIBLE);

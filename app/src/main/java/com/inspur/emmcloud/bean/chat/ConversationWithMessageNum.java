@@ -1,5 +1,7 @@
 package com.inspur.emmcloud.bean.chat;
 
+import com.inspur.emmcloud.componentservice.communication.Conversation;
+
 import java.io.Serializable;
 
 /**
