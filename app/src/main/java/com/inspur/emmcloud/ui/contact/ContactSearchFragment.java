@@ -39,7 +39,6 @@ import com.inspur.emmcloud.baselib.widget.MaxHeightScrollView;
 import com.inspur.emmcloud.baselib.widget.NoHorScrollView;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.MyDialog;
-import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
@@ -48,12 +47,14 @@ import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
-import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.bean.contact.ContactClickMessage;
 import com.inspur.emmcloud.bean.contact.ContactOrg;
 import com.inspur.emmcloud.bean.contact.FirstGroupTextModel;
+import com.inspur.emmcloud.componentservice.communication.Conversation;
+import com.inspur.emmcloud.componentservice.communication.OnCreateDirectConversationListener;
+import com.inspur.emmcloud.componentservice.communication.SearchModel;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
@@ -176,6 +177,11 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
     private int originCurrentArea = 0; // orgin页面目前的搜索模式
     private int searchArea = 0; // 搜索范围
     private String title;
+    // popupWindow中的控件与数据
+    private LinearLayout popSecondGroupLayou;
+    private LinearLayout popThirdGroupLayou;
+    private ListView popSecondGroupListView;
+    private ListView popThirdGroupListView;
     private List<SearchModel> searchChannelGroupList = new ArrayList<>(); // 群组搜索结果
     private List<Contact> searchContactList = new ArrayList<Contact>(); // 通讯录搜索结果
     private PopAdapter popSecondGroupAdapter;
@@ -818,26 +824,26 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                         switch (searchArea) {
                             case SEARCH_ALL:
                                 if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
-                                    searchChannelGroupList = ChannelGroupCacheUtils
+                                    threadSearchChannelGroupList = ChannelGroupCacheUtils
                                             .getSearchChannelGroupSearchModelList(MyApplication.getInstance(),
                                                     searchText);
                                 } else {
-                                    searchChannelGroupList = ConversationCacheUtils.getSearchConversationSearchModelList(MyApplication.getInstance(), searchText);
+                                    threadSearchChannelGroupList = ConversationCacheUtils.getSearchConversationSearchModelList(MyApplication.getInstance(), searchText);
                                 }
 
-                                searchContactList = ContactUserCacheUtils.getSearchContact(searchText, null, 4);
+                                threadSearchContactList = ContactUserCacheUtils.getSearchContact(searchText, null, 4);
                                 break;
                             case SEARCH_CHANNELGROUP:
                                 if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
-                                    searchChannelGroupList = ChannelGroupCacheUtils
+                                    threadSearchChannelGroupList = ChannelGroupCacheUtils
                                             .getSearchChannelGroupSearchModelList(MyApplication.getInstance(),
                                                     searchText);
                                 } else {
-                                    searchChannelGroupList = ConversationCacheUtils.getSearchConversationSearchModelList(MyApplication.getInstance(), searchText);
+                                    threadSearchChannelGroupList = ConversationCacheUtils.getSearchConversationSearchModelList(MyApplication.getInstance(), searchText);
                                 }
                                 break;
                             case SEARCH_CONTACT:
-                                searchContactList = ContactUserCacheUtils.getSearchContact(searchText, null, 4);
+                                threadSearchContactList = ContactUserCacheUtils.getSearchContact(searchText, null, 4);
                                 break;
 
                             default:
@@ -972,8 +978,6 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
 
     private void initPopView() {
         // TODO Auto-generated method stub
-
-
         LinearLayoutManager layoutManager1 = new LinearLayoutManager(getActivity());
         LinearLayoutManager layoutManager2 = new LinearLayoutManager(getActivity());
         layoutManager1.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -1266,7 +1270,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
         if (NetUtils.isNetworkConnected(getActivity().getApplicationContext())) {
             if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
                 new ConversationCreateUtils().createDirectConversation(getActivity(), id,
-                        new ConversationCreateUtils.OnCreateDirectConversationListener() {
+                        new OnCreateDirectConversationListener() {
                             @Override
                             public void createDirectConversationSuccess(Conversation conversation) {
                                 Bundle bundle = new Bundle();
@@ -1820,5 +1824,4 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
             this.mItemClickListener = listener;
         }
     }
-
 }

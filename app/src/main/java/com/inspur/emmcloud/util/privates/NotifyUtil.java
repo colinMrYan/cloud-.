@@ -15,7 +15,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
-import com.inspur.emmcloud.bean.chat.Conversation;
+import com.inspur.emmcloud.componentservice.communication.Conversation;
 import com.inspur.emmcloud.ui.chat.VoiceCommunicationActivity;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 

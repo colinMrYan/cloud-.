@@ -24,8 +24,8 @@ import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.bean.Enterprise;
-import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResultWithoutSerializable;
+import com.inspur.emmcloud.componentservice.communication.SearchModel;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
@@ -182,31 +182,10 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
         }
     }
 
-    class BridgeActionListener implements DialogInterface.OnClickListener {
-        AlertButton alertButton;
-        Promise promise;
-
-        public BridgeActionListener(final AlertButton alertButton, Promise promise) {
-            this.alertButton = alertButton;
-            this.promise = promise;
-        }
-
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            dialog.dismiss();
-            try {
-                promise.resolve(alertButton.getCode());
-            } catch (Exception e) {
-                promise.reject(e);
-            }
-        }
-    }
-
     @ReactMethod
     public void showToast(String content, Promise promise) {
         ToastUtils.show(MyApplication.getInstance(), content, Toast.LENGTH_LONG);
     }
-
 
     /**
      * 通讯录选人
@@ -269,7 +248,6 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
     public void exit() {
         getCurrentActivity().finish();
     }
-
 
     @Override
     public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
@@ -354,5 +332,25 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
     @Override
     public void onNewIntent(Intent intent) {
 
+    }
+
+    class BridgeActionListener implements DialogInterface.OnClickListener {
+        AlertButton alertButton;
+        Promise promise;
+
+        public BridgeActionListener(final AlertButton alertButton, Promise promise) {
+            this.alertButton = alertButton;
+            this.promise = promise;
+        }
+
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            dialog.dismiss();
+            try {
+                promise.resolve(alertButton.getCode());
+            } catch (Exception e) {
+                promise.reject(e);
+            }
+        }
     }
 }

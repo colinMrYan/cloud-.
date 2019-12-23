@@ -2,20 +2,7 @@ package com.inspur.emmcloud.api;
 
 import com.inspur.emmcloud.basemodule.bean.GetUploadPushInfoResult;
 import com.inspur.emmcloud.bean.ChatFileUploadInfo;
-import com.inspur.emmcloud.bean.appcenter.App;
-import com.inspur.emmcloud.bean.appcenter.GetAddAppResult;
-import com.inspur.emmcloud.bean.appcenter.GetAllAppResult;
-import com.inspur.emmcloud.bean.appcenter.GetAppGroupResult;
 import com.inspur.emmcloud.bean.appcenter.GetClientIdRsult;
-import com.inspur.emmcloud.bean.appcenter.GetIDResult;
-import com.inspur.emmcloud.bean.appcenter.GetMyAppResult;
-import com.inspur.emmcloud.bean.appcenter.GetRecommendAppWidgetListResult;
-import com.inspur.emmcloud.bean.appcenter.GetRemoveAppResult;
-import com.inspur.emmcloud.bean.appcenter.GetSearchAppResult;
-import com.inspur.emmcloud.bean.appcenter.GetWebAppRealUrlResult;
-import com.inspur.emmcloud.bean.appcenter.ReactNativeDownloadUrlBean;
-import com.inspur.emmcloud.bean.appcenter.ReactNativeInstallUriBean;
-import com.inspur.emmcloud.bean.appcenter.ReactNativeUpdateBean;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailDetailResult;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailFolderResult;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailListResult;
@@ -30,7 +17,6 @@ import com.inspur.emmcloud.bean.appcenter.volume.Volume;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeDetail;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
-import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetAllRobotsResult;
 import com.inspur.emmcloud.bean.chat.GetChannelListResult;
 import com.inspur.emmcloud.bean.chat.GetChannelMessagesResult;
@@ -64,76 +50,36 @@ import com.inspur.emmcloud.bean.mine.GetUploadMyHeadResult;
 import com.inspur.emmcloud.bean.mine.GetUserCardMenusResult;
 import com.inspur.emmcloud.bean.mine.GetUserHeadUploadResult;
 import com.inspur.emmcloud.bean.mine.UserProfileInfoBean;
-import com.inspur.emmcloud.bean.schedule.GetScheduleListResult;
-import com.inspur.emmcloud.bean.schedule.Schedule;
-import com.inspur.emmcloud.bean.schedule.calendar.GetHolidayDataResult;
-import com.inspur.emmcloud.bean.schedule.calendar.GetMyCalendarResult;
-import com.inspur.emmcloud.bean.schedule.calendar.GetScheduleBasicDataResult;
-import com.inspur.emmcloud.bean.schedule.calendar.ScheduleCalendar;
-import com.inspur.emmcloud.bean.schedule.meeting.Building;
-import com.inspur.emmcloud.bean.schedule.meeting.GetIsMeetingAdminResult;
-import com.inspur.emmcloud.bean.schedule.meeting.GetLocationResult;
-import com.inspur.emmcloud.bean.schedule.meeting.GetMeetingListResult;
-import com.inspur.emmcloud.bean.schedule.meeting.GetMeetingRoomListResult;
-import com.inspur.emmcloud.bean.schedule.meeting.GetOfficeListResult;
-import com.inspur.emmcloud.bean.schedule.meeting.GetTagResult;
-import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
-import com.inspur.emmcloud.bean.schedule.meeting.Office;
-import com.inspur.emmcloud.bean.schedule.task.Attachment;
-import com.inspur.emmcloud.bean.schedule.task.GetTaskAddResult;
-import com.inspur.emmcloud.bean.schedule.task.GetTaskListResult;
-import com.inspur.emmcloud.bean.schedule.task.Task;
 import com.inspur.emmcloud.bean.system.GetAppConfigResult;
 import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.bean.system.GetBoolenResult;
 import com.inspur.emmcloud.bean.system.GetUpgradeResult;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
-import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
 import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
+import com.inspur.emmcloud.componentservice.communication.Conversation;
+import com.inspur.reactnative.bean.ReactNativeDownloadUrlBean;
+import com.inspur.reactnative.bean.ReactNativeInstallUriBean;
+import com.inspur.reactnative.bean.ReactNativeUpdateBean;
 
-import java.util.Calendar;
 import java.util.List;
 
 public interface APIInterface {
 
-    void returnAllAppsSuccess(GetAllAppResult getAllAppResult);
 
-    void returnAllAppsFail(String error, int errorCode);
 
-    void returnAllAppsFreshSuccess(GetAllAppResult getAllAppResult);
-
-    void returnAllAppsFreshFail(String error, int errorCode);
-
-    void returnAllAppsMoreSuccess(GetAllAppResult getAllAppResult);
-
-    void returnAllAppsMoreFail(String error, int errorCode);
-
-    void returnAddAppSuccess(GetAddAppResult getAddAppResult);
-
-    void returnAddAppFail(String error, int errorCode);
-
-    void returnRemoveAppSuccess(GetRemoveAppResult getRemoveAppResult);
-
-    void returnRemoveAppFail(String error, int errorCode);
-
-    void returnMyAppSuccess(GetMyAppResult getMyAppResult);
-
-    void returnMyAppFail(String error, int errorCode);
 
     void returnUpgradeSuccess(GetUpgradeResult getUpgradeResult, boolean isManualCheck);
 
     void returnUpgradeFail(String error, boolean isManualCheck, int errorCode);
 
-    void returnSearchAppSuccess(GetSearchAppResult getAllAppResult);
 
-    void returnSearchAppFail(String error, int errorCode);
+    void returnGetDownloadReactNativeUrlSuccess(ReactNativeDownloadUrlBean reactNativeDownloadUrlBean);
 
-    void returnSearchAppMoreSuccess(GetSearchAppResult getAllAppResult);
+    void returnGetDownloadReactNativeUrlFail(String error, int errorCode);
 
-    void returnSearchAppMoreFail(String error, int errorCode);
+    void returnGetReactNativeInstallUrlSuccess(ReactNativeInstallUriBean reactNativeInstallUriBean);
 
-
-
+    void returnGetReactNativeInstallUrlFail(String error, int errorCode);
 
 
     void returnUploadMyHeadSuccess(GetUploadMyHeadResult getUploadMyInfoResult, String filePath);
@@ -175,13 +121,6 @@ public interface APIInterface {
     void returnUploadResImgSuccess(GetNewsImgResult getNewsImgResult, String fakeMessageId);
 
     void returnUploadResImgFail(String error, int errorCode, String fakeMessageId);
-
-
-    void returnMeetingRoomListSuccess(GetMeetingRoomListResult getMeetingRoomsResult);
-
-    void returnMeetingRoomListFail(String error, int errorCode);
-
-    void returnMeetingRoomListSuccess(GetMeetingRoomListResult getMeetingRoomsResult, boolean isFilte);
 
     void returnMsgSuccess(GetMsgResult getMsgResult);
 
@@ -231,91 +170,9 @@ public interface APIInterface {
 
     void returnUploadTrainTicketFail(String error, int errorCode);
 
-
-
-    void returnLocationResultSuccess(GetLocationResult getLoctionResult);
-
-    void returnLocationResultFail(String error, int errorCode);
-
-    void returnOfficeListResultSuccess(GetOfficeListResult getOfficeListResult);
-
-    void returnOfficeListResultFail(String error, int errorCode);
-
-    void returnAddMeetingOfficeSuccess(Office office, Building building);
-
-    void returnAddMeetingOfficeFail(String error, int errorCode);
-
     void returnAddMembersSuccess(ChannelGroup channelGroup);
 
     void returnAddMembersFail(String error, int errorCode);
-
-    void returnRecentTasksSuccess(GetTaskListResult getTaskListResult);
-
-    void returnRecentTasksFail(String error, int errorCode);
-
-    void returnMyCalendarSuccess(GetMyCalendarResult getMyCalendarResult);
-
-    void returnMyCalendarFail(String error, int errorCode);
-
-    void returnDelelteCalendarByIdSuccess();
-
-    void returnDelelteCalendarByIdFail(String error, int errorCode);
-
-    void returnUpdateCalendarSuccess();
-
-    void returnUpdateCalendarFail(String error, int errorCode);
-
-    void returnGetTagResultSuccess(GetTagResult getTagResult);
-
-    void returnGetTagResultFail(String error, int errorCode);
-
-    void returnAddCalEventSuccess(GetIDResult getIDResult);
-
-    void returnAddCalEventFail(String error, int errorCode);
-
-    void returnDeleteTagSuccess();
-
-    void returnDeleteTagFail(String error, int errorCode);
-
-    void returnCreateTagSuccess();
-
-    void returnCreateTagFail(String error, int errorCode);
-
-    void returnCreateTaskSuccess(GetTaskAddResult getTaskAddResult);
-
-    void returnCreateTaskFail(String error, int errorCode);
-
-    void returnDeleteTaskSuccess();
-
-    void returnDeleteTaskFail(String error, int errorCode);
-
-    void returnInviteMateForTaskSuccess(String subobject);
-
-    void returnInviteMateForTaskFail(String error, int errorCode);
-
-    void returnUpdateTaskSuccess(int position);
-
-    void returnUpdateTaskFail(String error, int errorCode, int position);
-
-    void returnAttachmentSuccess(Task taskResult);
-
-    void returnAttachmentFail(String error, int errorCode);
-
-    void returnAddAttachMentSuccess(Attachment attachment);
-
-    void returnAddAttachMentFail(String error, int errorCode);
-
-    void returnGetTasksSuccess(GetTaskListResult getTaskListResult);
-
-    void returnGetTasksFail(String error, int errorCode);
-
-    void returnDelTaskMemSuccess();
-
-    void returnDelTaskMemFail(String error, int errorCode);
-
-    void returnDelTripSuccess();
-
-    void returnDelTripFail(String error, int errorCode);
 
     void returnDndSuccess();
 
@@ -327,59 +184,16 @@ public interface APIInterface {
 
     void returnTripArriveFail(String error, int errorCode);
 
-    void returnDeleteMeetingSuccess(Meeting meeting);
 
-    void returnDeleteMeetingFail(String error, int errorCode);
 
     void returnDelMembersSuccess(ChannelGroup channelGroup);
 
     void returnDelMembersFail(String error, int errorCode);
 
-    void returnDelAttachmentSuccess(int position);
-
-    void returnDelAttachmentFail(String error, int errorCode, int position);
-
-    void returnChangeMessionOwnerSuccess(String managerName);
-
-    void returnChangeMessionOwnerFail(String error, int errorCode);
-
-    void returnChangeMessionTagSuccess();
-
-    void returnChangeMessionTagFail(String error, int errorCode);
-
-    void returnDelTaskTagSuccess();
-
-    void returnDelTaskTagFail(String error, int errorCode);
-
-    void returnAddTaskTagSuccess();
-
-    void returnAddTaskTagFail(String error, int errorCode);
-
-    void returnDeleteOfficeSuccess(Office office);
-
-    void returnDeleteOfficeFail(String error, int errorCode);
-
-    void returnSetMeetingCommonBuildingSuccess(Building building);
-
-    void returnSetMeetingCommonBuildingFail(String error, int errorCode);
-
-    void returnCancelMeetingCommonBuildingSuccess(Building building);
-
-    void returnCancelMeetingCommonBuildingFail(String error, int errorCode);
 
     void returnKnowledgeListSuccess(GetKnowledgeInfo getKnowledgeInfo);
 
     void returnKnowledgeListFail(String error, int errorCode);
-
-    void returnIsMeetingAdminSuccess(GetIsMeetingAdminResult getIsAdmin);
-
-    void returnIsMeetingAdminFail(String error, int errorCode);
-
-    void returnScheduleBasicDataSuccess(GetScheduleBasicDataResult getScheduleBasicDataResult);
-
-    void returnScheduleBasicDataFail(String error, int errorCode);
-
-
 
     void returnFindSearchFail(String error, int errorCode);
 
@@ -393,16 +207,6 @@ public interface APIInterface {
 
     void returnRobotByIdFail(String error, int errorCode);
 
-
-
-    void returnGetAppTabsSuccess(GetAppMainTabResult getAppTabsResult);
-
-    void returnGetAppTabsFail(String error, int errorCode);
-
-    void returnUserAppsSuccess(GetAppGroupResult getAppGroupResult, String clientConfigMyAppVersion);
-
-    void returnUserAppsFail(String error, int errorCode);
-
     void returnReactNativeUpdateSuccess(ReactNativeUpdateBean reactNativeUpdateBean);
 
     void returnReactNativeUpdateFail(String error, int errorCode);
@@ -410,14 +214,6 @@ public interface APIInterface {
     void returnGetClientIdResultSuccess(GetClientIdRsult getClientIdRsult);
 
     void returnGetClientIdResultFail(String error, int errorCode);
-
-    void returnGetDownloadReactNativeUrlSuccess(ReactNativeDownloadUrlBean reactNativeDownloadUrlBean);
-
-    void returnGetDownloadReactNativeUrlFail(String error, int errorCode);
-
-    void returnGetReactNativeInstallUrlSuccess(ReactNativeInstallUriBean reactNativeInstallUriBean);
-
-    void returnGetReactNativeInstallUrlFail(String error, int errorCode);
 
     void returnVeriryApprovalPasswordSuccess(String password);
 
@@ -456,10 +252,6 @@ public interface APIInterface {
 
     void returnDeviceLogListFail(String error, int errorCode);
 
-    void returnAppInfoSuccess(App app);
-
-    void returnAppInfoFail(String error, int errorCode);
-
     void returnAppConfigSuccess(GetAppConfigResult getAppConfigResult);
 
     void returnAppConfigFail(String error, int errorCode);
@@ -469,10 +261,6 @@ public interface APIInterface {
     void returnSaveWebAutoRotateConfigFail(String error, int errorCode);
 
     void returnUploadPositionSuccess();
-
-    void returnWebAppRealUrlSuccess(GetWebAppRealUrlResult getWebAppRealUrlResult);
-
-    void returnWebAppRealUrlFail();
 
     void returnSaveConfigSuccess();
 
@@ -523,9 +311,6 @@ public interface APIInterface {
 
     void returnMoveOrCopyFileBetweenVolumeFail(GetReturnMoveOrCopyErrorResult errorResult, int errorCode, String srcVolumeFilePath, String operation, List<VolumeFile> volumeFileList);
 
-    void returnRecommendAppWidgetListSuccess(GetRecommendAppWidgetListResult getRecommendAppWidgetListResult);
-
-    void returnRecommendAppWidgetListFail(String error, int errorCode);
 
     void returnCreateShareVolumeSuccess(Volume volume);
 
@@ -688,17 +473,11 @@ public interface APIInterface {
 
     void returnCreateGroupConversationFail(String error, int errorCode);
 
-    void returnBadgeCountSuccess(BadgeBodyModel badgeBodyModel);
 
-    void returnBadgeCountFail(String error, int errorCode);
 
     void returnDeleteConversationSuccess(String cid);
 
     void returnDeleteConversationFail(String error, int errorCode);
-
-    void returnCheckCloudPluseConnectionSuccess(byte[] arg0, String url);
-
-    void returnCheckCloudPluseConnectionError(String error, int responseCode, String url);
 
     void returnMailFolderSuccess(GetMailFolderResult getMailForderResult);
 
@@ -734,78 +513,13 @@ public interface APIInterface {
 
     void returnUserCardMenusFail(String error, int errorCode);
 
-    void returnScheduleListSuccess(GetScheduleListResult getScheduleListResult, Calendar startCalendar, Calendar endCalendar, ScheduleCalendar scheduleCalendar);
-
-    void returnScheduleListFail(String error, int errorCode, ScheduleCalendar scheduleCalendar);
-
-    void returnAddScheduleSuccess(GetIDResult getIDResult);
-
-    void returnAddScheduleFail(String error, int errorCode);
-
-    void returnUpdateScheduleSuccess();
-
-    void returnUpdateScheduleFail(String error, int errorCode);
-
-    void returnDeleteScheduleSuccess(String scheduleId);
-
-    void returnDeleteScheduleFail(String error, int errorCode);
-
-    void returnAddMeetingSuccess();
-
-    void returnAddMeetingFail(String error, int errorCode);
-
-    void returnDelMeetingSuccess(Schedule meeting);
-
-    void returnDelMeetingFail(String error, int errorCode);
-
-    //会议-通过id获取
-    void returnMeetingDataFromIdSuccess(Schedule meeting);
-
-    void returnMeetingDataFromIdFail(String error, int errorCode);
-
-    //日程-通过id获取
-    void returnScheduleDataFromIdSuccess(Schedule schedule);
-
-    void returnScheduleDataFromIdFail(String error, int errorCode);
-
-    void returnMeetingListSuccess(GetMeetingListResult getMeetingListByMeetingRoomResult);
-
-    void returnMeetingListFail(String error, int errorCode);
-
-    void returnMeetingListByMeetingRoomFail(String error, int errorCode);
-
     void returnNaviBarModelSuccess(NaviBarModel naviBarModel);
 
     void returnNaviBarModelFail(String error, int errorCode);
 
-
-    void returnMeetingHistoryListSuccess(GetMeetingListResult getMeetingListByMeetingRoomResult);
-
-    void returnMeetingHistoryListFail(String error, int errorCode);
-
-    void returnUpdateMeetingSuccess();
-
-    void returnUpdateMeetingFail(String error, int errorCode);
-
-    void returnHolidayDataSuccess(GetHolidayDataResult getHolidayDataResult);
-
-    void returnHolidayDataFail(String error, int errorCode);
-
     void returnTransmitPictureSuccess(String cid, String description, Message message);
 
     void returnTransmitPictureError(String error, int errorCode);
-
-    void returnSetCalendarChatBindSuccess(String calendarId, String chatId);
-
-    void returnSetCalendarChatBindFail(String error, int errorCode);
-
-    void returnGetCalendarChatBindSuccess(String calendarId, String cid);
-
-    void returnGetCalendarChatBindFail(String error, int errorCode);
-
-    void returnAttendMeetingStatusSuccess(String result, String responseType);
-
-    void returnAttendMeetingStatusFail(String error, int errorCode);
 
     void returnShareFileToFriendsFromVolumeSuccess(String newPath, VolumeFile volumeFile);
 

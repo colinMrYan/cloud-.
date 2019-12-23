@@ -285,13 +285,23 @@ public class Constant {
     public static final String AROUTER_CLASS_APP_INDEX = "/app/IndexActivity";
     public static final String AROUTER_CLASS_APP_NETWORK_DETAIL = "/app/NetWorkStateDetailActivity";
     public static final String AROUTER_CLASS_APP_WEB_ERROR_DETAIL = "/app/WebViewNetStateDetailActivity";
+    public static final String AROUTER_CLASS_APPCENTER_REACT_NATIVE = "/app/ReactNativeAppActivity";
 
     public static final String AROUTER_CLASS_AROUTER_DEGRADE = "/aRouter/degrade";
     public static final String AROUTER_CLASS_MAIL_LOGIN = "/mail/login";
     public static final String AROUTER_CLASS_MAIL_HOME = "/mail/home";
     public static final String AROUTER_CLASS_GROUP_NEWS = "/group/news";
-
     public static final String AROUTER_CLASS_WEBEX_MAIN = "/webex/WebexMyMeetingActivity";
+
+    public static final String AROUTER_CLASS_APPCENTER_TEST = "/application/ApplicationTestActivity";
+    public static final String AROUTER_CLASS_APPCENTER = "/application/AppCenterActivity";
+    public static final String AROUTER_CLASS_APPCENTER_MORE = "/application/AppCenterMoreActivity";
+    public static final String AROUTER_CLASS_APPCENTER_DETAIL = "/application/AppDetailActivity";
+    public static final String AROUTER_CLASS_APPCENTER_GROUP = "/application/AppGroupActivity";
+    public static final String AROUTER_CLASS_APPCENTER_SEARCH = "/application/AppSearchActivity";
+
+    public static final String AROUTER_CLASS_SCHEDLE_TEST = "/schedule/test";
+    public static final String AROUTER_CLASS_SCHEDLE_ADD = "/schedule/add";
 
     //参会状态
     public static final int ATTEND_MEETING_STATUS_ACCEPT = 1;

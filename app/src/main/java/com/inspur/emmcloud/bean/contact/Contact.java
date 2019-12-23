@@ -1,6 +1,6 @@
 package com.inspur.emmcloud.bean.contact;
 
-import com.inspur.emmcloud.basemodule.bean.SearchModel;
+import com.inspur.emmcloud.componentservice.communication.SearchModel;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 
 import java.io.Serializable;

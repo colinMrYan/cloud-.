@@ -1,0 +1,5 @@
+<resources>
+    <!-- 集团新闻 部分 -->
+    <string name="mvp_demo_meeting_search">搜索會議</string>
+    <string name="mvp_demo_schedule_meeting_no_meeting_today">暂无会议</string>
+</resources>

@@ -37,7 +37,7 @@ public class DbCacheUtils {
                 .setDbName("emm.db")
                 // 不设置dbDir时, 默认存储在app的私有目录.
                 .setDbDir(new File(dbCachePath))
-                .setDbVersion(26)
+                .setDbVersion(27)
                 .setAllowTransaction(true)
                 .setDbOpenListener(new DbManager.DbOpenListener() {
                     @Override
@@ -137,15 +137,15 @@ public class DbCacheUtils {
                                     db.execNonQuery("ALTER TABLE Message ADD COLUMN lifeCycleState INTEGER DEFAULT 1");
                                 }
                             }
-                            if (oldVersion < 26) {
+                            if (oldVersion < 27) {
                                 if (tableIsExist(db, "VolumeFile")) {
-                                    db.execNonQuery("ALTER TABLE Message ADD COLUMN lifeCycleState INTEGER DEFAULT 1");
+                                    db.execNonQuery("DROP TABLE IF EXISTS VolumeFile");
                                 }
                                 if (tableIsExist(db, "VolumeFileUpload")) {
-                                    db.execNonQuery("ALTER TABLE Message ADD COLUMN lifeCycleState INTEGER DEFAULT 1");
+                                    db.execNonQuery("DROP TABLE IF EXISTS VolumeFileUpload");
                                 }
                                 if (tableIsExist(db, "DownloadFile")) {
-                                    db.execNonQuery("ALTER TABLE Message ADD COLUMN lifeCycleState INTEGER DEFAULT 1");
+                                    db.execNonQuery("DROP TABLE IF EXISTS DownloadFile");
                                 }
                             }
                         } catch (Exception e) {

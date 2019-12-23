@@ -92,7 +92,7 @@ public class ImageDisplayUtils {
                 .showImageForEmptyUri(defaultDrawableId)
                 .showImageOnFail(defaultDrawableId)
                 .showImageOnLoading(defaultDrawableId)
-                .cacheOnDisk(!uri.startsWith("drawable:"))
+                .cacheOnDisk(StringUtils.isBlank(uri) ? false : !uri.startsWith("drawable:"))
                 .considerExifParams(true)
                 .bitmapConfig(Bitmap.Config.ARGB_8888)   //设置图片的解码类型
                 .displayer(new RoundedBitmapDisplayer(DensityUtil.dip2px(context, dp)))

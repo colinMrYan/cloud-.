@@ -7,6 +7,7 @@ import com.inspur.emmcloud.basemodule.bean.GetLanguageResult;
 import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
 import com.inspur.emmcloud.basemodule.bean.GetUploadPushInfoResult;
 import com.inspur.emmcloud.basemodule.bean.PVCollectModel;
+import com.inspur.emmcloud.basemodule.bean.badge.BadgeBodyModel;
 
 import java.util.List;
 
@@ -85,6 +86,26 @@ public class BaseModuleAPIInterfaceInstance implements BaseModuleAPIInterface {
 
     @Override
     public void returnUploadApiRequestRecordFail() {
+
+    }
+
+    @Override
+    public void returnCheckCloudPluseConnectionSuccess(byte[] arg0, String url) {
+
+    }
+
+    @Override
+    public void returnCheckCloudPluseConnectionError(String error, int responseCode, String url) {
+
+    }
+
+    @Override
+    public void returnBadgeCountSuccess(BadgeBodyModel badgeBodyModel) {
+
+    }
+
+    @Override
+    public void returnBadgeCountFail(String error, int errorCode) {
 
     }
 }

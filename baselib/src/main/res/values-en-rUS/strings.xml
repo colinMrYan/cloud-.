@@ -163,7 +163,6 @@
     <string name="monthly_a">Monthly</string>
     <string name="repeat">Repeat</string>
     <string name="add_event">Add Event</string>
-    <string name="calendar">Calendar</string>
     <string name="all_day">All Day</string>
     <string name="delete_group_member"> Delete Members</string>
     <string name="tax_ticket_info"> VAT Invoice Information</string>
@@ -393,135 +392,13 @@
     <string name="work_nomeeting_text">No meetings </string>
     <string name="work_notask_text">No todo</string>
     <string name="work_nocal_text">No agenda</string>
-    <string name="work_meeting_text">Meeting</string>
+
     <string name="work_calendar_text">Enterprise Calendar</string>
     <string name="work_task_text">Todo</string>
     <string name="work_info_text">Info bar</string>
     <string name="time">Time</string>
     <string name="work_search_hint">Search calendars, tasks</string>
-    <string name="work_mession">Task</string>
-    <string name="work_schedule">Calendar</string>
-    <string name="work_task_mine">Mine</string>
-    <string name="work_task_involved">Participant</string>
-    <string name="work_task_focused">Attention</string>
-    <string name="work_task_done">Completed</string>
-    <string name="work_task_all">Whole</string>
-    <string name="work_task_end">%1$s End</string>
 
-    <!-- 日程 （新）-->
-    <string name="schedule_event_alert">Alert</string>
-    <string name="schedule_calendar_add">Add Schedule</string>
-    <string name="schedule_calendar_detail">Schedule Details</string>
-    <string name="schedule_setting_list_view">List View</string>
-    <string name="schedule_setting_day_view">Day View</string>
-    <string name="schedule_calendar_company">My Schedule</string>
-    <string name="schedule_setting_divide_group">Divide groups</string>
-    <string name="schedule_setting_quarter">Quarter</string>
-    <string name="schedule_setting_month">Month</string>
-    <string name="schedule_setting_view">View</string>
-    <string name="schedule_calendar_input_content_hint">Please enter the schedule topic</string>
-    <string name="schedule_calendar_time_alert">End time cannot be earlier than start time</string>
-    <string name="schedule_alert_time_occur">On day of event(9 AM)</string>
-    <string name="schedule_alert_time_before_one_day">1 day before(9 AM)</string>
-    <string name="schedule_alert_time_before_two_day">2 day before(9 AM)</string>
-    <string name="schedule_alert_time_before_a_week">1 Week before(9 AM)</string>
-    <string name="schedule_alert_time_before_minutes">%1$s minutes before</string>
-    <string name="schedule_alert_time_before_hours">%1$s hours before</string>
-    <string name="schedule_alert_time_before_days">%1$s days before</string>
-    <string name="schedule_calendar_modify">Modify Schedule</string>
-    <string name="schedule_calendar_delete">Delete Schedule</string>
-    <string name="schedule_calendar_create">New Schedule</string>
-    <string name="schedule_calendar_my_schedule">Schedule</string>
-    <string name="schedule_calendar_my_meeting">Meeting</string>
-    <string name="schedule_calendar_my_task">Task</string>
-    <string name="schedule_calendar_all_day">All day</string>
-    <string name="schedule_calendar_am">AM</string>
-    <string name="schedule_calendar_pm">PM</string>
-    <string name="schedule_calendar_so_on">... </string>
-    <string name="schedule_calendar_schedules">schedules</string>
-    <string name="schedule_account_select">Account</string>
-    <string name="schedule_sync_sys_calendar">Synchronize to local calendar</string>
-
-    <string name="schedule_calendar_no_schedule_today">No Schedule</string>
-    <string name="schedule_meeting_no_meeting_today">No Meeting</string>
-    <string name="schedule_task_no_task_today">No Task</string>
-
-    <string name="schedule_add">Create</string>
-    <string name="schedule_update">Update</string>
-    <string name="schedule_add_position">Please enter the location...</string>
-    <!--任务（新）-->
-    <string name="schedule_task_add">Add Task</string>
-    <string name="schedule_task_detail">Task Detail</string>
-    <string name="schedule_task_content_hint">Please enter the content</string>
-    <string name="schedule_task_priority">Priority</string>
-    <string name="schedule_task_category">Category</string>
-    <string name="schedule_task_category_no">No</string>
-    <string name="schedule_task_manager">Manager</string>
-    <string name="schedule_task_participant">Participant</string>
-    <string name="schedule_task_manager_num_0">0 People</string>
-    <string name="schedule_task_participant_num_0">0 People</string>
-    <string name="schedule_task_deadline">Deadline</string>
-    <string name="schedule_task_state">State</string>
-    <string name="schedule_task_state_active">Ongoing</string>
-    <string name="schedule_task_stop_alert">End Reminder</string>
-    <string name="schedule_task_more">More</string>
-    <string name="schedule_task_attachment">Attachment</string>
-    <string name="schedule_task_create">New Task</string>
-    <string name="schedule_task_project_manager">Tag manager</string>
-    <string name="schedule_task_project_manager_add">OK</string>
-    <string name="schedule_task_add_manager">Add Manager</string>
-    <string name="schedule_task_add_participant">Add Participant</string>
-    <string name="schedule_task_label">Tag</string>
-    <string name="schedule_task_label_add_hint">Please enter a tag name</string>
-    <string name="schedule_task_label_color">Tag Color</string>
-    <string name="schedule_task_delete_the_tag">Delete Tag</string>
-    <string name="schedule_task_tag_name_null_hint">Tag name cannot be empty</string>
-    <string name="schedule_task_title_is_empty">Task title cannot be empty</string>
-    <string name="schedule_task_title_is_length">Task title up to 64 characters</string>
-    <string name="schedule_task_a_person">person</string>
-    <string name="schedule_task_tag_name_length">Tag name up to 64 characters</string>
-    <string name="schedule_click_to_add_schedule">Click to Add Schedule</string>
-    <string name="schedule_exchange_login_fail">Exchange account password changed, please update</string>
-    <string name="schedule_account_type">Calendar</string>
-    <string name="schedule_cloud_calendar">Cloud+ Schedule</string>
-    <string name="schedule_cloud_meeting">Cloud+ Meeting</string>
-
-    <!--会议（新）-->
-    <string name="schedule_meeting_booking">Book Meeting</string>
-    <string name="schedule_meeting_room_booking">New Meeting</string>
-    <string name="schedule_meeting_add_content_hint">Please enter the  topic</string>
-    <string name="schedule_meeting_add_location_hint">Please select a meeting place</string>
-    <string name="schedule_meeting_room_booking_detail">Meeting Room Details</string>
-    <string name="schedule_meeting_add_attendee_title">Attendee</string>
-    <string name="schedule_meeting_add_record_holder_title">Recorder</string>
-    <string name="schedule_meeting_add_conference_title">Contact</string>
-    <string name="schedule_meeting_select_attendee_title">Select attendee</string>
-    <string name="schedule_meeting_booking_detail">Meeting Details</string>
-    <string name="schedule_meeting_select_record_holder_title">Select Recorder</string>
-    <string name="schedule_meeting_select_conference_title">Select Contact</string>
-    <string name="schedule_meeting_add_note">Note</string>
-    <string name="schedule_meeting_add_alert_time">Alert</string>
-    <string name="schedule_meeting_history">History Meetings</string>
-    <string name="schedule_meeting_search">Search Meeting</string>
-    <string name="schedule_meeting_booking_room">Book a Meeting Room</string>
-    <string name="schedule_meeting_room_list">Meeting Room List</string>
-    <string name="schedule_meeting_in_meeting">Meeting</string>
-    <string name="schedule_meeting_be_free">Free</string>
-    <string name="schedule_choose_common_office">Common office locations</string>
-    <string name="schedule_meeting_change">Modify Meeting</string>
-    <string name="schedule_meeting_cancel">Delete Meeting</string>
-    <string name="schedule_meeting_my_create">Created</string>
-    <string name="schedule_meeting_my_take_part_in">Involved</string>
-    <string name="schedule_meeting_attend_reply">Reply Attend Meeting</string>
-    <string name="schedule_meeting_attend_or_not">Attend Or Not</string>
-    <string name="schedule_meeting_attend_status_default">No Reply</string>
-    <string name="schedule_meeting_attend_unknown">No Response</string>
-    <string name="schedule_meeting_attend_ignore">Tentative</string>
-    <string name="schedule_meeting_attend_accept">Accept</string>
-    <string name="schedule_meeting_attend_reject">Reject</string>
-    <string name="chat_group_chanel_not_exist">chat message does not exist</string>
-    <string name="schedule_delete_ac">Delete Account</string>
-    <string name="schedule_modify_ac">Modify Account</string>
 
     <!-- 发现部分 -->
     <string name="find">Discover</string>
@@ -551,33 +428,12 @@
     <string name="find_search_news">News</string>
 
     <!-- 应用部分 -->
-    <string name="app_not_support_app_type">Does not support opening application of this type</string>
     <string name="application">App</string>
-    <string name="adding"> Adding</string>
-    <string name="add_app"> Add App</string>
-    <string name="app_search_null"> Not get a search result</string>
-    <string name="app_input_search_key"> Please input the key words</string>
-    <string name="app_must_be_app_cannot_edit">All applications are necessary and non-editable</string>
-    <string name="app_center">APP Center</string>
-    <string name="app_commonly_use">Common mode</string>
-    <string name="app_commonly_use_close">Common off</string>
-    <string name="app_center_more_apps">More Apps</string>
-    <string name="app_input_mail_password">Please Enter the company email password</string>
-    <string name="app_need_input_mail_password">Please enter the password when you first use it or your password has been changed</string>
-    <string name="app_download">App downloading：</string>
-    <string name="app_password_error">Password is wrong, please re-enter</string>
-    <string name="app_password_encrypt_error">Password encryption error</string>
-    <string name="app_recommand">Recommend</string>
-    <string name="app_classification">Classification</string>
-    <string name="app_create_shortcut_no_more_remind">No more reminders</string>
-    <string name="app_commonly_use_app">Do you want to add mobile registration to desktop shortcuts, one click sign in? </string>
     <string name="app_update_function">This feature is not supported by the current version, please upgrade to the latest version</string>
     <string name="app_new_function">New</string>
-    <string name="no_app">No app currently added</string>
     <string name="detail">Details</string>
     <string name="search">Enter Keywords</string>
     <string name="delete">Delete</string>
-    <string name="app_sort_order">Edit</string>
 
     <!--云盘 Cloud Driver-->
     <string name="clouddriver_my_file">My Files</string>
@@ -873,8 +729,6 @@
     <string name="meeting_choosing_date">Select time</string>
     <string name="meeting_from">From</string>
     <string name="meeting_to">To</string>
-    <string name="meeting_start_time">From</string>
-    <string name="meeting_end_time">To</string>
     <string name="meeting_room_booking_notice_edit">Enter notes</string>
     <string name="meeting_booking_detail">Details of the meeting</string>
     <string name="meeting_booking_no_time">Time is empty, please select period</string>
@@ -946,10 +800,8 @@
     <string name="meeting_detail_attendee_decline">Decline</string>
     <string name="meeting_detail_attendee_unknown">No Response</string>
     <string name="meeting_detail_attendee_tentative">Tentative</string>
-    <string name="meeting_detail_invite">Inviter</string>
     <string name="meeting_group_chat_fail">Meeting chat fail</string>
-    <string name="meeting_create_group_chat">Meeting Chat</string>
-    <string name="meeting_cancel_the_meeting">Are you sure to cancel the meeting?</string>
+
 
     <!-- 会议预定错误提示 -->
     <string name="meeting_user_profile_broken">Departmental information loss</string>
@@ -967,61 +819,6 @@
     <string name="meeting_user_profile_missing">User profile missing</string>
     <string name="meeting_department_booking_times_over_run">Department booking time over run</string>
 
-    <string name="meeting_detail_time">Time：%1$s</string>
-    <string name="meeting_detail_remind">Alert：%1$s</string>
-    <string name="meeting_detail_create">%1$s Created</string>
-    <string name="meeting_detail_inviter">Inviter：%1$s</string>
-    <string name="meeting_detail_attendee">Attendee：%1$s</string>
-    <string name="meeting_detail_record_holder">Recorder：%1$s</string>
-    <string name="meeting_detail_conference">Contact：%1$s</string>
-    <string name="meeting_detail_record_title">Recorder</string>
-    <string name="meeting_detail_conference_title">Contact</string>
-    <string name="meeting_detail_note">Note：%1$s</string>
-    <string name="meeting_detail_sign">Meeting Sign</string>
-    <string name="meeting_detail_summary">十 Add Summary</string>
-    <string name="meeting_detail_change_meeting">Change Meeting</string>
-    <string name="meeting_detail_show_qrcode">Show QrCode</string>
-    <string name="meeting_detail_add_participant">Add Participant</string>
-    <string name="meeting_detail_before_beginning">Before Beginning</string>
-    <string name="meeting_detail_ten_minutes">Ten Minutes Before</string>
-    <string name="meeting_detail_twenty_minutes">Twenty Minutes Before</string>
-    <string name="meeting_detail_thirty_minutes">Thirty Minutes Before</string>
-    <string name="meeting_detail_one_hour">One Hour Before</string>
-    <string name="meeting_detail_one_day">One Day Before</string>
-    <string name="meeting_detail_attendee_num">%1$s et al. %2$d</string>
-    <string name="meeting_detail_location">Location：</string>
-
-
-    <!-- 日历 -->
-    <string name="calendar_detail">Calendar Details</string>
-    <string name="calendar_adjust">Adjust</string>
-    <string name="calendar_please_input_title">Please enter a title </string>
-    <string name="calendar_start_or_end_time_illegal">End time should not be less than the start time</string>
-    <string name="calendar_end_time_no_before_current">End time cannot be earlier than current time</string>
-    <string name="calendar_title_cannot_exceed_num">Title should not exceed 100 characters</string>
-    <string name="calendar_select_calendar">Select a calendar type </string>
-    <string name="calendar_add_success">Add successfully</string>
-    <string name="calendar_every_year">Every Year</string>
-    <string name="monthly">Every Month</string>
-    <string name="weekly">Every Week</string>
-    <string name="every_day">Every Day</string>
-    <string name="calendar_when_event_occurs">At time of event</string>
-    <string name="calendar_five_minite_ago">5 minutes before start</string>
-    <string name="calendar_ten_minite_ago">10 minutes before start</string>
-    <string name="calendar_fifteen_minite_ago">15 minutes before start</string>
-    <string name="calendar_twenty_minite_ago">20 minutes before start</string>
-    <string name="calendar_thirty_minite_ago">30 minutes before start</string>
-    <string name="calendar_one_hour_ago">1 hour before start</string>
-    <string name="calendar_two_hours_ago">2 hours before start</string>
-    <string name="calendar_one_day_ago">24 hours before start</string>
-    <string name="calendar_two_days_ago">Two days before start</string>
-    <string name="calendar_a_week_ago">1 week before start</string>
-    <string name="calendar_add_calendar">Add Calendars</string>
-    <string name="calendar_divide_into_groups">Grouping</string>
-    <string name="calendar_no_alert">None</string>
-    <string name="calendar_when_event_finished">Finished</string>
-    <string name="calendar_cancel_the_schedule">Are you sure to cancel the schedule?</string>
-    <string name="calendar_china_holiday">Holiday</string>
 
     <!-- 通用 -->
     <string name="save">Save</string>
@@ -1039,9 +836,8 @@
     <string name="mession_not_change_charge_person">The owner of the task is not yours, you can not change the person in charge</string>
     <string name="mession_choose_charge_person">Select Task Owner</string>
     <string name="mession_invate_members">Invitation to Staff</string>
-    <string name="mession_saving_success">Saved successfully</string>
-    <string name="mession_upload_attachment_success">Upload file successful</string>
-    <string name="mession_upload_attachment_fail">Upload file failed</string>
+
+
     <string name="mession_detail">Task Details</string>
     <string name="mession_name">Mission name</string>
     <string name="mession_priority">Priority</string>
@@ -1057,14 +853,14 @@
     <string name="mession_finish_history">Historical task</string>
     <string name="mession_list_name">Enter task title</string>
     <string name="mession_no_more">Task name can not exceed 64 characters</string>
-    <string name="mession_set_finish">Are you sure you want to finish the task?</string>
+
     <string name="mession_list">Todo List</string>
     <string name="mession_types">Mine|Involved|Starred</string>
     <string name="mession_reset">Reset filter</string>
     <string name="mession_cancel">Cancel filter</string>
     <string name="mession_add_mession">Quick add task</string>
-    <string name="mession_set_level">Priority</string>
-    <string name="mession_set_time">Time</string>
+
+
     <string name="mession_set_asc">Positive sequence</string>
     <string name="mession_set_desc">Reverse</string>
     <string name="finish">Done</string>
@@ -1072,12 +868,7 @@
     <string name="mession_set_filter">Filter</string>
     <string name="mession_set_has_finished">Completed</string>
     <string name="mession_delete_tag">Are you sure you want to delete the label?</string>
-    <string name="mession_delete_red">Red</string>
-    <string name="mession_delete_orange">Orange</string>
-    <string name="mession_delete_yellow">Yellow</string>
-    <string name="mession_delete_green">Green</string>
-    <string name="mession_delete_blue">Blue</string>
-    <string name="mession_delete_purple">Purple</string>
+
     <string name="mession_delete_exist">Tag already existed</string>
     <string name="mession_delete_no_empty">Please input the title</string>
     <string name="mession_add_tag">Tag</string>
@@ -1087,7 +878,11 @@
     <string name="mession_manage_tag">Tag</string>
     <string name="add_mession">Add Tasks</string>
     <string name="no_work_content">No job content</string>
+    <string name="schedule_calendar_all_day">All Day</string>
 
+    <string name="meeting_trip_start_time">Start Time</string>
+    <string name="schedule_calendar_no_schedule_today">No Schedule</string>
+    <string name="chat_group_chanel_not_exist">chat message does not exist</string>
 
     <!--网络链接及网络诊断-->
     <string name="net_connected_error">No internet available,please check</string>
