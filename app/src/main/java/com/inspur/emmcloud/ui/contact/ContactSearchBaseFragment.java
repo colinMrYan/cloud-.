@@ -16,12 +16,15 @@ import com.inspur.emmcloud.basemodule.ui.BaseFragment;
 import com.inspur.emmcloud.basemodule.util.ClientConfigUpdateUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.bean.contact.ContactOrg;
 import com.inspur.emmcloud.bean.contact.ContactProtoBuf;
+import com.inspur.emmcloud.componentservice.communication.SearchModel;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.util.privates.cache.ContactOrgCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,6 +35,10 @@ public class ContactSearchBaseFragment extends BaseFragment {
     protected static final int REFRESH_DATA = 6;
     private static final int DATA_READY = 7;
     protected Handler handler;
+    protected List<SearchModel> searchChannelGroupList = new ArrayList<>(); // 群组搜索结果
+    protected List<Contact> searchContactList = new ArrayList<>(); // 通讯录搜索结果
+    protected List<SearchModel> threadSearchChannelGroupList = new ArrayList<>(); // 线程中的群组搜索结果
+    protected List<Contact> threadSearchContactList = new ArrayList<>(); // 线程中的通讯录搜索结果
     private LoadingDialog loadingDlg;
     private boolean isContactUserReady = false;
     private boolean isContactOrgReady = false;
@@ -63,6 +70,10 @@ public class ContactSearchBaseFragment extends BaseFragment {
             public void handleMessage(Message message) {
                 switch (message.what) {
                     case REFRESH_DATA:
+                        searchChannelGroupList.clear();
+                        searchChannelGroupList.addAll(threadSearchChannelGroupList);
+                        searchContactList.clear();
+                        searchContactList.addAll(threadSearchContactList);
                         showSearchPop();
                         break;
                     case DATA_READY:
