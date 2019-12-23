@@ -18,13 +18,15 @@ import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.ZipUtils;
 import com.inspur.emmcloud.basemodule.bean.Enterprise;
 import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.basemodule.push.PushManagerUtils;
 import com.inspur.emmcloud.basemodule.ui.BaseFragment;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.LanguageManager;
+import com.inspur.emmcloud.bean.appcenter.AndroidBundleBean;
 import com.inspur.reactnative.AuthorizationManagerPackage;
-import com.inspur.reactnative.ReactNativeInitInfoUtils;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.reactnativecomponent.swiperefreshlayout.RCTSwipeRefreshLayoutPackage;
 import com.reactnativenavigation.bridge.NavigationReactPackage;
@@ -123,17 +125,29 @@ public class FindFragment extends BaseFragment implements DefaultHardwareBackBtn
 
         //这里与IOS传值有所不同，建议是保留原来版本即上面的传值方式，下面是IOS传值方式
         //bundle.putString("profile",myInfo);
-        bundle.putString("systemName", ReactNativeInitInfoUtils.SYSTEM);
-        bundle.putString("systemVersion", ReactNativeInitInfoUtils.getSystemVersion(getActivity()));
+        bundle.putString("systemName", "Android");
+        bundle.putString("systemVersion", AppUtils.getSystemVersion());
         bundle.putString("locale", LanguageManager.getInstance().getCurrentAppLanguage());
-        bundle.putString("reactNativeVersion", ReactNativeInitInfoUtils.getReactNativeVersion(reactCurrentFilePath));
+
+        AndroidBundleBean androidBundleBean = new AndroidBundleBean(FileUtils.readFile(reactCurrentFilePath + "/bundle.json",
+                "UTF-8").toString());
+        bundle.putString("reactNativeVersion", androidBundleBean.getVersion());
         bundle.putString("accessToken", ((MyApplication) getActivity().getApplicationContext()).getToken());
-        bundle.putString("pushId", ReactNativeInitInfoUtils.getPushId(getActivity()));
-        bundle.putString("pushType", ReactNativeInitInfoUtils.getPushType(getActivity()));
+        bundle.putString("pushId", PushManagerUtils.getInstance().getPushId(getActivity()));
+        bundle.putString("pushType", getPushType());
         bundle.putSerializable("userProfile", myInfo);
         bundle.putSerializable("currentEnterprise", ((MyApplication) getActivity().getApplicationContext()).getCurrentEnterprise().toJSONObject().toString());
         bundle.putString("appVersion", AppUtils.getVersion(getActivity()));
         return bundle;
+    }
+
+    private String getPushType() {
+        if (AppUtils.getIsHuaWei()) {
+            return Constant.HUAWEI_FLAG;
+        } else if (AppUtils.getIsXiaoMi()) {
+            return Constant.XIAOMI_FLAG;
+        }
+        return "jiguang";
     }
 
 

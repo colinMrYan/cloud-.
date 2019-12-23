@@ -14,6 +14,7 @@ import com.inspur.emmcloud.basemodule.bean.GetLanguageResult;
 import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
 import com.inspur.emmcloud.basemodule.bean.GetUploadPushInfoResult;
 import com.inspur.emmcloud.basemodule.bean.PVCollectModel;
+import com.inspur.emmcloud.basemodule.bean.badge.BadgeBodyModel;
 import com.inspur.emmcloud.basemodule.interf.ExceptionUploadInterface;
 import com.inspur.emmcloud.basemodule.push.PushManagerUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
@@ -464,6 +465,85 @@ public class BaseModuleApiService {
             public void callbackFail(String error, int responseCode) {
                 // TODO Auto-generated method stub
                 apiInterface.returnUploadApiRequestRecordFail();
+            }
+        });
+    }
+
+    /**
+     * 获取网络连通状态
+     *
+     * @param url
+     */
+    public void getCloudConnectStateUrl(final String url) {
+        RequestParams params = ((BaseApplication) context.getApplicationContext())
+                .getHttpRequestParams(url);
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, url) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnCheckCloudPluseConnectionSuccess(arg0, url);
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                if (responseCode == 302 || responseCode == 301) {
+                    apiInterface.returnCheckCloudPluseConnectionSuccess(null, url);
+                } else {
+                    apiInterface.returnCheckCloudPluseConnectionError(error, responseCode, url);
+                }
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getCloudConnectStateUrl(url);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+        });
+    }
+
+
+    /**
+     * 获取app badge数量
+     */
+    public void getBadgeCount() {
+        final String url = BaseModuleApiUri.getBadgeCountUrl();
+        RequestParams params = BaseApplication.getInstance().getHttpRequestParams(url);
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, url) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnBadgeCountSuccess(new BadgeBodyModel(new String(arg0)));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnBadgeCountFail(error, responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getBadgeCount();
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                refreshToken(oauthCallBack, requestTime);
             }
         });
     }

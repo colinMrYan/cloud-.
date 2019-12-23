@@ -1,5 +1,8 @@
 package com.inspur.emmcloud.componentservice.appcenter;
 
+import android.app.Activity;
+import android.os.Bundle;
+
 import com.inspur.emmcloud.componentservice.CoreService;
 
 /**
@@ -8,4 +11,6 @@ import com.inspur.emmcloud.componentservice.CoreService;
 
 public interface AppcenterService extends CoreService {
     void startSyncCommonAppService();
+
+    void startReactNativeApp(Activity activity, Bundle bundle);
 }

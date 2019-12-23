@@ -15,7 +15,6 @@ import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.ContactAPIService;
 import com.inspur.emmcloud.baselib.router.Router;
-import com.inspur.emmcloud.baselib.util.NotificationSetUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
@@ -43,6 +42,7 @@ import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
 import com.inspur.emmcloud.componentservice.Schedule.ScheduleService;
+import com.inspur.emmcloud.componentservice.appcenter.ApplicationService;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.interf.CommonCallBack;
@@ -52,7 +52,6 @@ import com.inspur.emmcloud.service.LocationService;
 import com.inspur.emmcloud.util.privates.AppConfigUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.MessageSendManager;
-import com.inspur.emmcloud.util.privates.MyAppWidgetUtils;
 import com.inspur.emmcloud.util.privates.ProfileUtils;
 import com.inspur.emmcloud.util.privates.ReactNativeUtils;
 import com.inspur.emmcloud.util.privates.SplashPageUtils;
@@ -116,16 +115,7 @@ public class IndexActivity extends IndexBaseActivity {
         MyApplication.getInstance().setIndexActvityRunning(true);
         MyApplication.getInstance().restartAllDb();
         MyApplication.getInstance().clearUserPhotoMap();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            if (NotificationSetUtils.isNotificationEnabled(this) &&
-                    (PreferencesByUserAndTanentUtils.getBoolean(IndexActivity.this, Constant.PUSH_SWITCH_FLAG, true))) {
-                PushManagerUtils.getInstance().startPush();
-            }
-        } else {
-            if (PreferencesByUserAndTanentUtils.getBoolean(IndexActivity.this, Constant.PUSH_SWITCH_FLAG, true)) {
-                PushManagerUtils.getInstance().startPush();
-            }
-        }
+        AppUtils.judgeAndStartPush(IndexActivity.this);
         initScheduleCalendar();
         MessageSendManager.getInstance().initMessageStatus();
     }
@@ -176,9 +166,12 @@ public class IndexActivity extends IndexBaseActivity {
      * 获取我的应用推荐小部件数据,如果到了更新时间才请求
      */
     private void getMyAppRecommendWidgets() {
-        if (MyAppWidgetUtils.checkNeedUpdateMyAppWidget(IndexActivity.this)) {
-            MyAppWidgetUtils.getInstance(getApplicationContext()).getMyAppWidgetsFromNet();
+        Router router = Router.getInstance();
+        if (router.getService(ApplicationService.class) != null) {
+            ApplicationService service = router.getService(ApplicationService.class);
+            service.getMyAppRecommendWidgets();
         }
+
     }
 
     /**
