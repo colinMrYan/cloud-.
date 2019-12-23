@@ -1157,17 +1157,9 @@ public class AppUtils {
      * @param context
      */
     public static void judgeAndStartPush(Context context) {
-        if (BaseApplication.getInstance().isHaveLogin()) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                if (NotificationSetUtils.isNotificationEnabled(context) &&
-                        (PreferencesByUserAndTanentUtils.getBoolean(context, Constant.PUSH_SWITCH_FLAG, true))) {
-                    PushManagerUtils.getInstance().startPush();
-                }
-            } else {
-                if (PreferencesByUserAndTanentUtils.getBoolean(context, Constant.PUSH_SWITCH_FLAG, true)) {
-                    PushManagerUtils.getInstance().startPush();
-                }
-            }
+        if (BaseApplication.getInstance().isHaveLogin() && NotificationSetUtils.isNotificationEnabled(context) &&
+                (PreferencesByUserAndTanentUtils.getBoolean(context, Constant.PUSH_SWITCH_FLAG, true))) {
+            PushManagerUtils.getInstance().startPush();
         }
     }
 }
