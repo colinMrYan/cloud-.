@@ -55,6 +55,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="44dp"
                         android:background="#F8F9FB"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
                         android:visibility="gone">
 
                         <TextView

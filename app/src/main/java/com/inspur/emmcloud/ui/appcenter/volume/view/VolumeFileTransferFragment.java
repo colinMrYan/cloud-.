@@ -164,6 +164,11 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
 
         unFinishedVolumeFileList = presenter.getUnFinishVolumeFileList(currentIndex);
         finishedVolumeFileList = presenter.getFinishVolumeFileList(currentIndex);
+        if (unFinishedVolumeFileList == null || unFinishedVolumeFileList.size() == 0) {
+//            finishCountTipTv.requestFocus();
+            finishCountTipTv.setFocusable(true);
+            finishCountTipTv.setFocusableInTouchMode(true);
+        }
 
         recyclerView.setLayoutManager(new CusRecyclerViewLinearLayoutManager(getActivity()));
         finishRecyclerView.setLayoutManager(new CusRecyclerViewLinearLayoutManager(getActivity()));
@@ -697,6 +702,12 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
         adapter.setUnfinishedFileList(unFinishedVolumeFileList);
         adapter.notifyDataSetChanged();
         refreshOperationTotal();
+        if (finishedVolumeFileList.size() == 0 && unFinishedVolumeFileList.size() == 0) {
+            showNoDataLayout();
+        } else {
+            showListLayout();
+        }
+        Log.d("zhang", "onDataChange: currentIndex = " + currentIndex);
         Log.d("zhang", "onDataChange: 监听到数据变化 unFinishedVolumeFileList.size = " + unFinishedVolumeFileList.size());
         Log.d("zhang", "onDataChange: 监听到数据变化 finishedVolumeFileList.size = " + finishedVolumeFileList.size());
     }
