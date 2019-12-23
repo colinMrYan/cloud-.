@@ -5,7 +5,6 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
-import com.inspur.emmcloud.componentservice.communication.Conversation;
 import com.inspur.emmcloud.componentservice.communication.SearchModel;
 
 /**
@@ -42,27 +41,5 @@ public class ConversationOrContactGetIconUtil {
         }
         ImageDisplayUtils.getInstance().displayImageByTag(
                 photoImg, icon, defaultIcon);
-    }
-
-    public static String getIconByConversation(Conversation conversation) {
-        String icon = "";
-        switch (conversation.getType()) {
-            case Conversation.TYPE_DIRECT:
-                icon = DirectChannelUtils.getDirectChannelIcon(MyApplication.getInstance(), conversation.getName());
-                break;
-            case Conversation.TYPE_CAST:
-                icon = DirectChannelUtils.getRobotIcon(MyApplication.getInstance(), conversation.getName());
-                break;
-            case Conversation.TYPE_LINK:
-                icon = conversation.getAvatar();
-                break;
-            case Conversation.TYPE_TRANSFER:
-                icon = "drawable//" + R.drawable.ic_file_transfer;
-                break;
-            default:
-                icon = "drawable//" + R.drawable.icon_channel_group_default;
-                break;
-        }
-        return icon;
     }
 }
