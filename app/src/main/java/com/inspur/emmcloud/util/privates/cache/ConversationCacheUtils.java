@@ -415,8 +415,8 @@ public class ConversationCacheUtils {
         return Conversation.conversationList2SearchModelList(conversationList);
     }
 
-    public static List<SearchModel> getSearchConversationPrivateChatSearchModelList(Context context,
-                                                                                    String searchText) {
+    public static List<Conversation> getSearchConversationPrivateChatSearchModelList(Context context,
+                                                                                     String searchText) {
         List<Conversation> conversationList = null;
         if (!StringUtils.isBlank(searchText)) {
 
@@ -433,7 +433,8 @@ public class ConversationCacheUtils {
                 conversationList = DbCacheUtils.getDb(context).selector(Conversation.class)
                         .where("id", "!=", "")
                         .and(WhereBuilder.b("showName", "like", searchStr).or("pyFull", "like", searchStrPYFull))
-                        .and(WhereBuilder.b("type", "=", Conversation.TYPE_DIRECT).or("type", "=", Conversation.TYPE_TRANSFER))
+                        .and(WhereBuilder.b("type", "=", Conversation.TYPE_DIRECT).or("type", "=", Conversation.TYPE_TRANSFER)
+                                .or("type", "=", Conversation.TYPE_CAST))
                         .orderBy("lastUpdate", true).findAll();
             } catch (Exception e) {
                 // TODO: handle exception
@@ -443,7 +444,8 @@ public class ConversationCacheUtils {
         if (conversationList == null) {
             conversationList = new ArrayList<>();
         }
-        return Conversation.conversationList2SearchModelList(conversationList);
+        //  return Conversation.conversationList2SearchModelList(conversationList);
+        return conversationList;
     }
 
 //    public static List<String> getConversationExistMemberUidList(Context context,String id,int limit){

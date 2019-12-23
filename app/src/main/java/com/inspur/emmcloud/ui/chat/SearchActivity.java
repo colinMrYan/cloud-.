@@ -1,8 +1,6 @@
 package com.inspur.emmcloud.ui.chat;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -10,12 +8,9 @@ import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -24,15 +19,14 @@ import android.widget.TextView;
 import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.adapter.ConversationFromChatContentAdapter;
+import com.inspur.emmcloud.adapter.GroupOrContactAdapter;
+import com.inspur.emmcloud.adapter.PrivateChatAdapter;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
-import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
 import com.inspur.emmcloud.baselib.widget.ClearEditText;
 import com.inspur.emmcloud.basemodule.config.Constant;
-import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
-import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.ConversationWithMessageNum;
@@ -46,16 +40,13 @@ import com.inspur.emmcloud.componentservice.communication.SearchModel;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
-import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
-import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.privates.ShareUtil;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -109,14 +100,14 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     ClearEditText searchEdit;
     private List<SearchModel> contactList = new ArrayList<>();
     private List<SearchModel> groupConversationList = new ArrayList<>();
-    private List<SearchModel> directConversationList = new ArrayList<>();
+    private List<Conversation> directConversationList = new ArrayList<>();
     private List<ConversationWithMessageNum> conversationFromChatContentList = new ArrayList<>();
     private Runnable searchRunnable;
     private String searchArea = SEARCH_ALL;
     private Handler handler;
     private GroupOrContactAdapter groupAdapter;
     private GroupOrContactAdapter contactAdapter;
-    private GroupOrContactAdapter privateChatAdapter;
+    private PrivateChatAdapter privateChatAdapter;
     private ConversationFromChatContentAdapter conversationFromChatContentAdapter;
     private String searchText;
     private long lastSearchTime = 0;
@@ -145,7 +136,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         handMessage();
         initSearchRunnable();
         groupAdapter = new GroupOrContactAdapter();
-        privateChatAdapter = new GroupOrContactAdapter();
+        privateChatAdapter = new PrivateChatAdapter();
         contactAdapter = new GroupOrContactAdapter();
         conversationFromChatContentAdapter = new ConversationFromChatContentAdapter();
         searchEdit.setOnEditorActionListener(onEditorActionListener);
@@ -228,13 +219,14 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                         allContactLayout.setVisibility(contactList.size() > 0 ? View.VISIBLE : View.GONE);
                         allContentLayout.setVisibility(conversationFromChatContentList.size() > 0 ? View.VISIBLE : View.GONE);
                         allPrivateChatLayout.setVisibility(directConversationList.size() > 0 ? View.VISIBLE : View.GONE);
-                        groupAdapter.setContentList(groupConversationList);
-                        privateChatAdapter.setContentList(directConversationList);
-                        contactAdapter.setContentList(contactList);
+                        groupAdapter.setContentList(groupConversationList); //搜索群组
                         groupAdapter.notifyDataSetChanged();
-                        contactAdapter.notifyDataSetChanged();
-                        conversationFromChatContentAdapter.notifyDataSetChanged();
+                        privateChatAdapter.setConversationList(directConversationList); //私聊搜索
                         privateChatAdapter.notifyDataSetChanged();
+                        contactAdapter.setContentList(contactList); //搜索联系人刷新
+                        contactAdapter.notifyDataSetChanged();
+                        conversationFromChatContentAdapter.setConversationList(conversationFromChatContentList);//频道内消息刷新
+                        conversationFromChatContentAdapter.notifyDataSetChanged();
                         break;
                     case CLEAR_DATA:
                         break;
@@ -291,23 +283,32 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             handleShare(adapterView, i);
             return;
         }
+        Bundle bundle = new Bundle();
         switch (adapterView.getId()) {
             case R.id.lv_search_group:
-                openChannel(groupConversationList.get(i));
+                if (i < groupConversationList.size()) {
+                    openChannel(groupConversationList.get(i));
+                }
                 break;
             case R.id.lv_search_contact:
-                Bundle bundle = new Bundle();
-                bundle.putString("uid", contactList.get(i).getId());
-                IntentUtils.startActivity(this, UserInfoActivity.class, bundle);
+                if (i < contactList.size()) {
+                    bundle.putString("uid", contactList.get(i).getId());
+                    IntentUtils.startActivity(this, UserInfoActivity.class, bundle);
+                }
                 break;
             case R.id.lv_search_contact_from_chat:
-                Intent intent = new Intent(SearchActivity.this, CommunicationSearchMessagesActivity.class);
-                intent.putExtra(SEARCH_ALL_FROM_CHAT, conversationFromChatContentList.get(i));
-                intent.putExtra(SEARCH_CONTENT, searchText);
-                startActivity(intent);
+                if (i < conversationFromChatContentList.size()) {
+                    Intent intent = new Intent(SearchActivity.this, CommunicationSearchMessagesActivity.class);
+                    intent.putExtra(SEARCH_ALL_FROM_CHAT, conversationFromChatContentList.get(i));
+                    intent.putExtra(SEARCH_CONTENT, searchText);
+                    startActivity(intent);
+                }
                 break;
             case R.id.lv_search_private_chat:
-                openChannel(directConversationList.get(i));
+                if (i < directConversationList.size()) {
+                    bundle.putString(ConversationActivity.EXTRA_CID, directConversationList.get(i).getId());
+                    IntentUtils.startActivity(this, ConversationActivity.class, bundle, true);
+                }
                 break;
             default:
                 break;
@@ -333,26 +334,18 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
 
 
     private void handleShare(AdapterView<?> adapterView, int position) {
-
         SearchModel searchModel;
-
         switch (adapterView.getId()) {
             case R.id.lv_search_group:
                 searchModel = groupConversationList.get(position);
-//                startChannelActivity(groupConversationList.get(position).getId());
-
                 handleSearchModelShare(searchModel);
                 break;
             case R.id.lv_search_contact:
                 searchModel = contactList.get(position);
-//                Bundle bundle = new Bundle();
-//                bundle.putString("uid", contactList.get(position).getId());
-//                IntentUtils.startActivity(this, UserInfoActivity.class, bundle);
-
                 handleSearchModelShare(searchModel);
                 break;
             case R.id.lv_search_private_chat:
-                searchModel = directConversationList.get(position);
+                searchModel = directConversationList.get(position).conversation2SearchModel();
                 handleSearchModelShare(searchModel);
                 break;
             case R.id.lv_search_contact_from_chat:
@@ -430,35 +423,37 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        List<SearchModel> groupsSearchList;
-                        List<SearchModel> privateChatSearchList;
-                        List<Contact> contactsSearchList = new ArrayList<>();
-                        contactList = new ArrayList<>();
-                        List<ConversationWithMessageNum> conversationFromChatContentNums = new ArrayList<>();
+                        List<SearchModel> groupsSearchList = new ArrayList<>();        //群组
+                        List<Conversation> privateChatSearchList = new ArrayList<>();  //私聊
+                        List<Contact> contactsSearchList = new ArrayList<>(); //联系人
+                        List<ConversationWithMessageNum> conversationFromChatContentNums = new ArrayList<>();//
                         switch (searchArea) {
                             case SEARCH_ALL:
+                                /***搜索群组***/
                                 if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
-                                    groupsSearchList = ChannelGroupCacheUtils
-                                            .getSearchChannelGroupSearchModelList(MyApplication.getInstance(),
-                                                    searchText);
+                                    groupsSearchList = ChannelGroupCacheUtils.getSearchChannelGroupSearchModelList(MyApplication.getInstance(), searchText);
                                 } else {
                                     groupsSearchList = ConversationCacheUtils.getSearchConversationSearchModelList(MyApplication.getInstance(), searchText);
-                                }
-                                privateChatSearchList = ConversationCacheUtils.getSearchConversationPrivateChatSearchModelList(MyApplication.getInstance(), searchText);
-                                directConversationList = new ArrayList<>();
-                                for (int i = 0; i < (privateChatSearchList.size() > 3 ? 3 : privateChatSearchList.size()); i++) {
-                                    directConversationList.add(privateChatSearchList.get(i));
                                 }
                                 groupConversationList = new ArrayList<>();
                                 for (int i = 0; i < (groupsSearchList.size() > 3 ? 3 : groupsSearchList.size()); i++) {
                                     groupConversationList.add(groupsSearchList.get(i));
                                 }
+                                /***搜索私聊***/
+                                privateChatSearchList = ConversationCacheUtils.getSearchConversationPrivateChatSearchModelList(MyApplication.getInstance(), searchText);
+                                directConversationList = new ArrayList<>();
+                                for (int i = 0; i < (privateChatSearchList.size() > 3 ? 3 : privateChatSearchList.size()); i++) {
+                                    directConversationList.add(privateChatSearchList.get(i));
+                                }
+                                /***搜索联系人***/
                                 if (isSearchContacts) {
+                                    contactList = new ArrayList<>();
                                     contactsSearchList = ContactUserCacheUtils.getSearchContact(searchText, null, 3);
                                 }
                                 for (int j = 0; j < contactsSearchList.size(); j++) {
                                     contactList.add(contactsSearchList.get(j).contact2SearchModel());
                                 }
+                                /***通过聊天内容搜索***/
                                 conversationFromChatContentNums = oriChannelInfoByKeyword(searchText);
                                 conversationFromChatContentList = new ArrayList<>();
                                 for (int m = 0; m < conversationFromChatContentNums.size(); m++) {
@@ -473,26 +468,6 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                                             iterator.remove();
                                         }
                                     }
-                                }
-                                break;
-                            case SEARCH_GROUP:
-                                if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
-                                    groupsSearchList = ChannelGroupCacheUtils
-                                            .getSearchChannelGroupSearchModelList(MyApplication.getInstance(),
-                                                    searchText);
-                                } else {
-                                    groupsSearchList = ConversationCacheUtils.getSearchConversationSearchModelList(MyApplication.getInstance(), searchText);
-                                }
-                                groupConversationList = new ArrayList<>();
-                                for (int i = 0; i < (groupsSearchList.size() > 3 ? 3 : groupsSearchList.size()); i++) {
-                                    groupConversationList.add(groupsSearchList.get(i));
-                                }
-                                break;
-                            case SEARCH_CONTACT:
-                                contactsSearchList = ContactUserCacheUtils.getSearchContact(searchText, null, 3);
-                                contactList = new ArrayList<>();
-                                for (int j = 0; j < contactsSearchList.size(); j++) {
-                                    contactList.add(contactsSearchList.get(j).contact2SearchModel());
                                 }
                                 break;
                             default:
@@ -544,45 +519,45 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         return conversationFromChatContentResultList;
     }
 
-    /**
-     * 统一显示图片
-     *
-     * @param searchModel
-     * @param photoImg
-     */
-    private void displayImg(SearchModel searchModel, CircleTextImageView photoImg) {
-        Integer defaultIcon = null; // 默认显示图标
-        String icon = null;
-        String type = searchModel.getType();
-        if (type.equals(SearchModel.TYPE_GROUP)) {
-            File file = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH,
-                    MyApplication.getInstance().getTanent() + searchModel.getId() + "_100.png1");
-            photoImg.setTag("");
-            if (file.exists()) {
-                Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-                photoImg.setImageBitmap(bitmap);
-            } else {
-                photoImg.setImageResource(R.drawable.icon_channel_group_default);
-            }
-            return;
-        } else if (type.equals(SearchModel.TYPE_STRUCT)) {
-            defaultIcon = R.drawable.ic_contact_sub_struct;
-        } else if (type.equals(SearchModel.TYPE_TRANSFER)) {
-            defaultIcon = R.drawable.ic_file_transfer;
-        } else if (type.equals(SearchModel.TYPE_DIRECT)) {
-            defaultIcon = R.drawable.icon_person_default;
-            icon = CommunicationUtils.getHeadUrl(searchModel);
-        } else {
-            defaultIcon = R.drawable.icon_person_default;
-            if (!searchModel.getId().equals("null")) {
-                icon = APIUri.getChannelImgUrl(MyApplication.getInstance(), searchModel.getId());
-            }
-
-        }
-        ImageDisplayUtils.getInstance().displayImageByTag(
-                photoImg, icon, defaultIcon);
-
-    }
+//    /**
+//     * 统一显示图片
+//     *
+//     * @param searchModel
+//     * @param photoImg
+//     */
+//    private void displayImg(SearchModel searchModel, CircleTextImageView photoImg) {
+//        Integer defaultIcon = null; // 默认显示图标
+//        String icon = null;
+//        String type = searchModel.getType();
+//        if (type.equals(SearchModel.TYPE_GROUP)) {
+//            File file = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH,
+//                    MyApplication.getInstance().getTanent() + searchModel.getId() + "_100.png1");
+//            photoImg.setTag("");
+//            if (file.exists()) {
+//                Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+//                photoImg.setImageBitmap(bitmap);
+//            } else {
+//                photoImg.setImageResource(R.drawable.icon_channel_group_default);
+//            }
+//            return;
+//        } else if (type.equals(SearchModel.TYPE_STRUCT)) {
+//            defaultIcon = R.drawable.ic_contact_sub_struct;
+//        } else if (type.equals(SearchModel.TYPE_TRANSFER)) {
+//            defaultIcon = R.drawable.ic_file_transfer;
+//        } else if (type.equals(SearchModel.TYPE_DIRECT)) {
+//            defaultIcon = R.drawable.icon_person_default;
+//            icon = CommunicationUtils.getHeadUrl(searchModel);
+//        } else {
+//            defaultIcon = R.drawable.icon_person_default;
+//            if (!searchModel.getId().equals("null")) {
+//                icon = APIUri.getChannelImgUrl(MyApplication.getInstance(), searchModel.getId());
+//            }
+//
+//        }
+//        ImageDisplayUtils.getInstance().displayImageByTag(
+//                photoImg, icon, defaultIcon);
+//
+//    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -632,128 +607,192 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         }
     }
 
-    /***/
-    class SearchHolder {
-        public CircleTextImageView headImageView;
-        public TextView nameTextView;
-        public TextView detailTextView;
-    }
+//     /***/
+//    class SearchHolder {
+//        public CircleTextImageView headImageView;
+//        public TextView nameTextView;
+//        public TextView detailTextView;
+//    }
+
+//    /**
+//     * 根据去群组或者联系人名称搜获获得SearchModel的适配
+//     */
+//    class GroupOrContactAdapter extends BaseAdapter {
+//
+//        private List<SearchModel> contentList = new ArrayList<>();
+//
+//        public void setContentList(List<SearchModel> contentList) {
+//            this.contentList = contentList;
+//        }
+//
+//        @Override
+//        public int getCount() {
+//            return contentList.size();
+//        }
+//
+//        @Override
+//        public Object getItem(int i) {
+//            return null;
+//        }
+//
+//        @Override
+//        public long getItemId(int i) {
+//            return 0;
+//        }
+//
+//        @Override
+//        public View getView(int i, View view, ViewGroup viewGroup) {
+//            SearchHolder searchHolder = new SearchHolder();
+//            if (view == null) {
+//                view = LayoutInflater.from(SearchActivity.this).inflate(R.layout.communication_search_contact_item, null);
+//                searchHolder.headImageView = view.findViewById(R.id.iv_contact_head);
+//                searchHolder.nameTextView = view.findViewById(R.id.tv_contact_name);
+//                searchHolder.detailTextView = view.findViewById(R.id.tv_contact_detail);
+//                view.setTag(searchHolder);
+//            } else {
+//                searchHolder = (SearchHolder) view.getTag();
+//            }
+//            SearchModel searchModel = contentList.get(i);
+//            if (searchModel != null) {
+//                displayImg(searchModel, searchHolder.headImageView);
+//                searchHolder.nameTextView.setText(searchModel.getName().toString());
+//                CommunicationUtils.setUserDescText(searchModel, searchHolder.detailTextView);
+//            }
+//            //刷新数据
+//            return view;
+//        }
+//    }
 
     /**
-     * 根据去群组或者联系人名称搜获获得SearchModel的适配
+     * 单聊频道
      */
-    class GroupOrContactAdapter extends BaseAdapter {
-
-        private List<SearchModel> contentList = new ArrayList<>();
-
-        public void setContentList(List<SearchModel> contentList) {
-            this.contentList = contentList;
-        }
-
-        @Override
-        public int getCount() {
-            return contentList.size();
-        }
-
-        @Override
-        public Object getItem(int i) {
-            return null;
-        }
-
-        @Override
-        public long getItemId(int i) {
-            return 0;
-        }
-
-        @Override
-        public View getView(int i, View view, ViewGroup viewGroup) {
-            SearchHolder searchHolder = new SearchHolder();
-            if (view == null) {
-                view = LayoutInflater.from(SearchActivity.this).inflate(R.layout.communication_search_contact_item, null);
-                searchHolder.headImageView = view.findViewById(R.id.iv_contact_head);
-                searchHolder.nameTextView = view.findViewById(R.id.tv_contact_name);
-                searchHolder.detailTextView = view.findViewById(R.id.tv_contact_detail);
-                view.setTag(searchHolder);
-            } else {
-                searchHolder = (SearchHolder) view.getTag();
-            }
-            SearchModel searchModel = contentList.get(i);
-            if (searchModel != null) {
-                displayImg(searchModel, searchHolder.headImageView);
-                searchHolder.nameTextView.setText(searchModel.getName().toString());
-                CommunicationUtils.setUserDescText(searchModel, searchHolder.detailTextView);
-            }
-            //刷新数据
-            return view;
-        }
-    }
+//    class PrivateChatAdapter extends BaseAdapter {
+//
+//        private List<Conversation> conversationList = new ArrayList<>();
+//
+//        public void setConversationList(List<Conversation> contentList) {
+//            this.conversationList = contentList;
+//        }
+//
+//        @Override
+//        public int getCount() {
+//            return conversationList.size();
+//        }
+//
+//        @Override
+//        public Object getItem(int i) {
+//            return null;
+//        }
+//
+//        @Override
+//        public long getItemId(int i) {
+//            return 0;
+//        }
+//
+//        @Override
+//        public View getView(int i, View view, ViewGroup viewGroup) {
+//            SearchHolder searchHolder = new SearchHolder();
+//            if (view == null) {
+//                view = LayoutInflater.from(SearchActivity.this).inflate(R.layout.communication_search_contact_item, null);
+//                searchHolder.headImageView = view.findViewById(R.id.iv_contact_head);
+//                searchHolder.nameTextView = view.findViewById(R.id.tv_contact_name);
+//                searchHolder.detailTextView = view.findViewById(R.id.tv_contact_detail);
+//                view.setTag(searchHolder);
+//            } else {
+//                searchHolder = (SearchHolder) view.getTag();
+//            }
+//            Conversation conversation = conversationList.get(i);
+//            if (conversation != null) {
+//                String icon ="";
+//                switch (conversation.getType()){
+//                    case Conversation.TYPE_CAST:
+//                        icon = DirectChannelUtils.getRobotIcon(MyApplication.getInstance(), conversation.getName());
+//                        break;
+//                    case Conversation.TYPE_DIRECT:
+//                        icon =  DirectChannelUtils.getDirectChannelIcon(MyApplication.getInstance(), conversation.getName());
+//                        break;
+//                }
+//                ImageDisplayUtils.getInstance().displayImageByTag(searchHolder.headImageView, icon, R.drawable.icon_person_default);
+//                searchHolder.nameTextView.setText(conversation.getShowName().toString());
+//                CommunicationUtils.setUserDescText(conversation.conversation2SearchModel(), searchHolder.detailTextView);
+//            }
+//            //刷新数据
+//            return view;
+//        }
+//    }
 
     /**
      * 从聊天记录中搜索联系人
      */
-    class ConversationFromChatContentAdapter extends BaseAdapter {
-
-        @Override
-        public int getCount() {
-            if (conversationFromChatContentList.size() > 3) {
-                return 3;
-            } else {
-                return conversationFromChatContentList.size();
-            }
-        }
-
-        @Override
-        public Object getItem(int i) {
-            return null;
-        }
-
-        @Override
-        public long getItemId(int i) {
-            return 0;
-        }
-
-        @Override
-        public View getView(int i, View view, ViewGroup viewGroup) {
-            SearchHolder searchHolder = new SearchHolder();
-            if (view == null) {
-                view = LayoutInflater.from(SearchActivity.this).inflate(R.layout.communication_search_contact_item, null);
-                searchHolder.headImageView = view.findViewById(R.id.iv_contact_head);
-                searchHolder.nameTextView = view.findViewById(R.id.tv_contact_name);
-                searchHolder.detailTextView = view.findViewById(R.id.tv_contact_detail);
-                view.setTag(searchHolder);
-            } else {
-                searchHolder = (SearchHolder) view.getTag();
-            }
-            Conversation conversation = null;
-            if (conversationFromChatContentList.size() > 0) {
-                conversation = conversationFromChatContentList.get(i).getConversation();
-            }
-            if (conversation != null && (conversation.getType().equals(Conversation.TYPE_GROUP))) {
-                SearchModel searchModel = conversation.conversation2SearchModel();
-                displayImg(searchModel, searchHolder.headImageView);
-                searchHolder.nameTextView.setText(searchModel.getName().toString());
-                String string = getString(R.string.chat_contact_related_message, conversationFromChatContentList.get(i).getMessageNum());
-                searchHolder.detailTextView.setText(string);
-                searchHolder.detailTextView.setVisibility(View.VISIBLE);
-            }
-
-            if (conversation != null && (conversation.getType().equals(Conversation.TYPE_TRANSFER))) {
-                searchHolder.nameTextView.setText(getString(R.string.chat_file_transfer));
-                ImageDisplayUtils.getInstance().displayImageByTag(searchHolder.headImageView, conversation.getAvatar(), R.drawable.ic_file_transfer);
-                String string = getString(R.string.chat_contact_related_message, conversationFromChatContentList.get(i).getMessageNum());
-                searchHolder.detailTextView.setText(string);
-                searchHolder.detailTextView.setVisibility(View.VISIBLE);
-            }
-            if (conversation != null && conversation.getType().equals(Conversation.TYPE_DIRECT)) {
-                String icon = DirectChannelUtils.getDirectChannelIcon(MyApplication.getInstance(), conversation.getName());
-                ImageDisplayUtils.getInstance().displayImageByTag(searchHolder.headImageView, icon, R.drawable.icon_person_default);
-                searchHolder.nameTextView.setText(conversation.getShowName());
-                String string = getString(R.string.chat_contact_related_message, conversationFromChatContentList.get(i).getMessageNum());
-                searchHolder.detailTextView.setText(string);
-                searchHolder.detailTextView.setVisibility(View.VISIBLE);
-            }
-            //刷新数据
-            return view;
-        }
-    }
+//    class ConversationFromChatContentAdapter extends BaseAdapter {
+//
+//        List<ConversationWithMessageNum> conversationWithNumList=new ArrayList<>();
+//
+//        public void setConversationList(List<ConversationWithMessageNum> conversationWithMessageNumList) {
+//            this.conversationWithNumList = conversationWithMessageNumList;
+//        }
+//
+//        @Override
+//        public int getCount() {
+//            if (conversationWithNumList.size() > 3) {
+//                return 3;
+//            } else {
+//                return conversationWithNumList.size();
+//            }
+//        }
+//
+//        @Override
+//        public Object getItem(int i) {
+//            return null;
+//        }
+//
+//        @Override
+//        public long getItemId(int i) {
+//            return 0;
+//        }
+//
+//        @Override
+//        public View getView(int i, View view, ViewGroup viewGroup) {
+//            SearchHolder searchHolder = new SearchHolder();
+//            if (view == null) {
+//                view = LayoutInflater.from(SearchActivity.this).inflate(R.layout.communication_search_contact_item, null);
+//                searchHolder.headImageView = view.findViewById(R.id.iv_contact_head);
+//                searchHolder.nameTextView = view.findViewById(R.id.tv_contact_name);
+//                searchHolder.detailTextView = view.findViewById(R.id.tv_contact_detail);
+//                view.setTag(searchHolder);
+//            } else {
+//                searchHolder = (SearchHolder) view.getTag();
+//            }
+//            Conversation conversation = null;
+//            if (conversationFromChatContentList.size() > 0) {
+//                conversation = conversationFromChatContentList.get(i).getConversation();
+//            }
+//            if (conversation != null && (conversation.getType().equals(Conversation.TYPE_GROUP))) {
+//                SearchModel searchModel = conversation.conversation2SearchModel();
+//                displayImg(searchModel, searchHolder.headImageView);
+//                searchHolder.nameTextView.setText(searchModel.getName().toString());
+//                String string = getString(R.string.chat_contact_related_message, conversationFromChatContentList.get(i).getMessageNum());
+//                searchHolder.detailTextView.setText(string);
+//                searchHolder.detailTextView.setVisibility(View.VISIBLE);
+//            }
+//
+//            if (conversation != null && (conversation.getType().equals(Conversation.TYPE_TRANSFER))) {
+//                searchHolder.nameTextView.setText(getString(R.string.chat_file_transfer));
+//                ImageDisplayUtils.getInstance().displayImageByTag(searchHolder.headImageView, conversation.getAvatar(), R.drawable.ic_file_transfer);
+//                String string = getString(R.string.chat_contact_related_message, conversationFromChatContentList.get(i).getMessageNum());
+//                searchHolder.detailTextView.setText(string);
+//                searchHolder.detailTextView.setVisibility(View.VISIBLE);
+//            }
+//            if (conversation != null && conversation.getType().equals(Conversation.TYPE_DIRECT)) {
+//                String icon = DirectChannelUtils.getDirectChannelIcon(MyApplication.getInstance(), conversation.getName());
+//                ImageDisplayUtils.getInstance().displayImageByTag(searchHolder.headImageView, icon, R.drawable.icon_person_default);
+//                searchHolder.nameTextView.setText(conversation.getShowName());
+//                String string = getString(R.string.chat_contact_related_message, conversationFromChatContentList.get(i).getMessageNum());
+//                searchHolder.detailTextView.setText(string);
+//                searchHolder.detailTextView.setVisibility(View.VISIBLE);
+//            }
+//            //刷新数据
+//            return view;
+//        }
+//    }
 }
