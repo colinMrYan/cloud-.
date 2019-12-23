@@ -285,6 +285,7 @@ public class Constant {
     public static final String AROUTER_CLASS_APP_INDEX = "/app/IndexActivity";
     public static final String AROUTER_CLASS_APP_NETWORK_DETAIL = "/app/NetWorkStateDetailActivity";
     public static final String AROUTER_CLASS_APP_WEB_ERROR_DETAIL = "/app/WebViewNetStateDetailActivity";
+    public static final String AROUTER_CLASS_APPCENTER_REACT_NATIVE = "/app/ReactNativeAppActivity";
 
     public static final String AROUTER_CLASS_AROUTER_DEGRADE = "/aRouter/degrade";
     public static final String AROUTER_CLASS_MAIL_LOGIN = "/mail/login";
@@ -298,7 +299,6 @@ public class Constant {
     public static final String AROUTER_CLASS_APPCENTER_DETAIL = "/application/AppDetailActivity";
     public static final String AROUTER_CLASS_APPCENTER_GROUP = "/application/AppGroupActivity";
     public static final String AROUTER_CLASS_APPCENTER_SEARCH = "/application/AppSearchActivity";
-    public static final String AROUTER_CLASS_APPCENTER_REACT_NATIVE = "/application/ReactNativeAppActivity";
 
     public static final String AROUTER_CLASS_SCHEDLE_TEST = "/schedule/test";
     public static final String AROUTER_CLASS_SCHEDLE_ADD = "/schedule/add";
