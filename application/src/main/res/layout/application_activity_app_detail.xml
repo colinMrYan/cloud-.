@@ -77,10 +77,10 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="19dp"
                     android:layout_marginRight="19dp"
-                    android:background="@drawable/selector_app_status_btn"
+                    android:background="@drawable/application_selector_app_status_btn"
                     android:focusable="false"
                     android:onClick="onClick"
-                    android:textColor="@drawable/seclector_app_status_text"
+                    android:textColor="@drawable/application_seclector_app_status_text"
                     android:textSize="15sp" />
             </RelativeLayout>
 

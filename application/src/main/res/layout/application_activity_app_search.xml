@@ -60,7 +60,7 @@
             android:background="@null"
             android:onClick="onSearch"
             android:text="@string/application_search"
-            android:textColor="@drawable/seclector_search_btn_text"
+            android:textColor="@drawable/application_seclector_search_btn_text"
             android:textSize="@dimen/header_textsize"
             android:visibility="gone" />
 

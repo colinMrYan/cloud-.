@@ -23,6 +23,6 @@ public class ApplicationTestActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_app_test;
+        return R.layout.application_activity_app_test;
     }
 }

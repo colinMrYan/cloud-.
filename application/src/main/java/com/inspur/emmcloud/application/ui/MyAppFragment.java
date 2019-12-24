@@ -128,7 +128,7 @@ public class MyAppFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         checkingNetStateUtils = new CheckingNetStateUtils(getContext(), NetUtils.pingUrls, NetUtils.httpUrls);
-        rootView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_app, null);
+        rootView = LayoutInflater.from(getActivity()).inflate(R.layout.application_fragment, null);
         copyData();
         initViews();
         registerReceiver();
@@ -160,7 +160,7 @@ public class MyAppFragment extends BaseFragment {
         setFragmentStatusBarCommon();
         if (rootView == null) {
             rootView = inflater
-                    .inflate(R.layout.fragment_app, container, false);
+                    .inflate(R.layout.application_fragment, container, false);
         }
         ViewGroup parent = (ViewGroup) rootView.getParent();
         if (parent != null) {
@@ -868,7 +868,7 @@ public class MyAppFragment extends BaseFragment {
         @Override
         public View getView(final int listPosition, View convertView,
                             ViewGroup parent) {
-            convertView = LayoutInflater.from(getActivity()).inflate(R.layout.app_drag_item, null);
+            convertView = LayoutInflater.from(getActivity()).inflate(R.layout.application_drag_item, null);
             if (listPosition == (getCount() - 1)) {
                 View dividerView = (View) convertView.findViewById(R.id.v_applist_devid);
                 dividerView.setVisibility(View.GONE);

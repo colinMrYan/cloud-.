@@ -71,7 +71,7 @@ public class DragAdapter extends BaseAdapter {
     public View getView(final int position, View convertView, ViewGroup parent) {
         final App app = getItem(position);
         convertView = LayoutInflater.from(context).inflate(
-                R.layout.my_app_item_view, null);
+                R.layout.application_app_item_view, null);
         //应用图标
         ImageViewRound appIconImg = (ImageViewRound) convertView
                 .findViewById(R.id.icon_image);

@@ -100,7 +100,7 @@ public class AppCenterActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_app_center;
+        return R.layout.application_activity_app_center;
     }
 
 
@@ -114,9 +114,9 @@ public class AppCenterActivity extends BaseActivity {
         findViewById(R.id.search_img).setVisibility(View.VISIBLE);
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         recommendView = LayoutInflater.from(this).inflate(
-                R.layout.app_recommend_layout, null);
+                R.layout.application_recommend_layout, null);
         View classView = LayoutInflater.from(this).inflate(
-                R.layout.app_categories_layout, null);
+                R.layout.application_categories_layout, null);
         recommendListView = (ScrollViewWithListView) recommendView.findViewById(R.id.svwwlv_apps);
         recommendListView.setFocusable(false); //lbc
         classListView = (ListView) classView.findViewById(R.id.app_center_categories_list);
@@ -417,7 +417,7 @@ public class AppCenterActivity extends BaseActivity {
     class RecommendAppAdapter extends BaseAdapter {
         @Override
         public View getView(final int listPosition, View convertView, ViewGroup parent) {
-            convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.my_app_recommand_app_item_view, null);
+            convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.application_app_recommand_app_item_view, null);
             final int appListIndex = listPosition;
             List<App> appItemList = appList.get(appListIndex);
             if (appItemList.size() > 0) {
@@ -476,7 +476,7 @@ public class AppCenterActivity extends BaseActivity {
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             convertView = LayoutInflater.from(AppCenterActivity.this).
-                    inflate(R.layout.app_center_category_item, null);
+                    inflate(R.layout.application_center_category_item, null);
             ((TextView) convertView.findViewById(R.id.app_center_categories_item_txt)).
                     setText(categoryAppList.get(position).getCategoryName());
             ImageDisplayUtils.getInstance().displayImage((ImageView) convertView.
@@ -559,7 +559,7 @@ public class AppCenterActivity extends BaseActivity {
 
         @Override
         public RecommendViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = inflater.inflate(R.layout.app_center_recommand_app_item, null);
+            View view = inflater.inflate(R.layout.application_center_recommand_app_item, null);
             RecommendViewHolder viewHolder = new RecommendViewHolder(view);
             viewHolder.recommendAppImg = (ImageView) view.findViewById(R.id.app_center_recommand_app_img);
             viewHolder.recommendAppText = (TextView) view.findViewById(R.id.app_center_recommand_app_text);

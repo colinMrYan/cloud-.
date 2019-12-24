@@ -35,7 +35,7 @@ public class AppGroupAdapter extends RecyclerView.Adapter<AppGroupAdapter.AppGro
 
     @Override
     public AppGroupHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.my_app_group_item, null);
+        View view = inflater.inflate(R.layout.application_app_group_item, null);
         AppGroupHolder holder = new AppGroupHolder(view);
         holder.imageView = (ImageView) view
                 .findViewById(R.id.img_group_icon);

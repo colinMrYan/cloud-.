@@ -73,7 +73,7 @@ public class AppSearchActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_app_search;
+        return R.layout.application_activity_app_search;
     }
 
     /**
