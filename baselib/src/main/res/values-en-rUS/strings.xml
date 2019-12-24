@@ -796,11 +796,6 @@
     <string name="meeting_room_booked">Time has been booked, please choose again</string>
     <string name="meeting_room_ilegal_time">Time is illegal, please check</string>
     <string name="meeting_room_time_late">Start time cannot be earlier than the current time</string>
-    <string name="meeting_detail_attendee_accept">Accept</string>
-    <string name="meeting_detail_attendee_decline">Decline</string>
-    <string name="meeting_detail_attendee_unknown">No Response</string>
-    <string name="meeting_detail_attendee_tentative">Tentative</string>
-    <string name="meeting_group_chat_fail">Meeting chat fail</string>
 
 
     <!-- 会议预定错误提示 -->
