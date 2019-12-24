@@ -26,6 +26,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -173,11 +174,19 @@ public class VolumeFileUploadManager extends APIInterfaceInstance {
     public synchronized List<VolumeFile> getFinishUploadList() {
         refreshCache();
         List<VolumeFile> volumeFileList = new ArrayList<>();
-        for (int i = 0; i < volumeFileUploadList.size(); i++) {
-            VolumeFileUpload volumeFileUpload = volumeFileUploadList.get(i);
+        //如本地文件已删除，则删除上传完成记录
+        Iterator<VolumeFileUpload> iterator = volumeFileUploadList.iterator();
+        while (iterator.hasNext()) {
+            VolumeFileUpload volumeFileUpload = iterator.next();
             if (volumeFileUpload.getStatus().equals(VolumeFile.STATUS_NORMAL) || volumeFileUpload.getStatus().equals(VolumeFile.STATUS_SUCCESS)) {
                 VolumeFile mockVolumeFile = VolumeFile.getMockVolumeFile(volumeFileUpload);
-                volumeFileList.add(mockVolumeFile);
+                String localFilePath = mockVolumeFile.getLocalFilePath();
+                File file = new File(localFilePath);
+                if (!file.exists() || !file.isFile()) {
+                    iterator.remove();
+                } else {
+                    volumeFileList.add(mockVolumeFile);
+                }
             }
         }
         return volumeFileList;

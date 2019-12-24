@@ -576,6 +576,7 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
         }
         if (currentIndex == 0) {
             FileDownloadManager.getInstance().deleteDownloadFile(filePathList);
+            LoadObservable.getInstance().notifyDateChange();
         }
     }
 
