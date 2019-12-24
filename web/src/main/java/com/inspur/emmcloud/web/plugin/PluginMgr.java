@@ -341,6 +341,7 @@ public class PluginMgr {
             }
             entries.clear();
         }
+        impCallBackInterface = null;
     }
 
     /**

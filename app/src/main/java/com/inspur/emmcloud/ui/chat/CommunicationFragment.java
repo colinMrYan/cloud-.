@@ -17,7 +17,6 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -101,6 +100,9 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -110,80 +112,64 @@ import io.reactivex.schedulers.Schedulers;
 import io.socket.client.Socket;
 
 
-
 /**
  * 沟通页面
  */
-public class CommunicationFragment extends BaseFragment {
+public class CommunicationFragment extends BaseFragment implements View.OnClickListener {
 
     private static final int CREATE_CHANNEL_GROUP = 1;
     private static final int REQUEST_SCAN_LOGIN_QRCODE_RESULT = 5;
     //代表最近消息或者离线消息获取成功
     private static final String FLAG_GET_MESSAGE_SUCCESS = "get_message_success";
-    private View rootView;
-    private RecyclerView conversionRecycleView;
-    private SwipeRefreshLayout swipeRefreshLayout;
+
+    @BindView(R.id.refresh_layout)
+    SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.rcv_conversation)
+    RecyclerView conversionRecycleView;
+    @BindView(R.id.header_text)
+    TextView titleText;
+    @BindView(R.id.rl_no_chat)
+    RelativeLayout noDataLayout;
+    @BindView(R.id.more_function_list_img)
+    ImageView headerFunctionOptionImg;
+    @BindView(R.id.contact_img)
+    ImageView contactImg;
     private ChatAPIService apiService;
     private List<UIConversation> displayUIConversationList = new ArrayList<>();
     private ConversationAdapter conversationAdapter;
     private CommunicationFragmentReceiver receiver;
-    private TextView titleText;
-    private RelativeLayout noDataLayout;
     private boolean isGroupIconCreate = false;
     private PopupWindow popupWindow;
-    private boolean isFirstConnectWebsockt = true;//判断是否第一次连上websockt
+    private boolean isFirstConnectWebsocket = true;//判断是否第一次连上websocket
     private LoadingDialog loadingDlg;
-    private ImageView headerFunctionOptionImg;
-    private ImageView contactImg;
-    private TextView contactSearchTextView;
     private CheckingNetStateUtils checkingNetStateUtils;
-    private OnClickListener onViewClickListener = new OnClickListener() {
-
-        @Override
-        public void onClick(View v) {
-            // TODO Auto-generated method stub
-            switch (v.getId()) {
-                case R.id.more_function_list_img:
-                    showPopupWindow(rootView.findViewById(R.id.more_function_list_img));
-                    break;
-                case R.id.contact_img:
-                    Bundle bundle = new Bundle();
-                    bundle.putInt("select_content", 4);
-                    bundle.putBoolean("isMulti_select", false);
-                    bundle.putString("title",
-                            getActivity().getString(R.string.adress_list));
-                    IntentUtils.startActivity(getActivity(),
-                            ContactSearchActivity.class, bundle);
-                    PVCollectModelCacheUtils.saveCollectModel("contact", "communicate");
-                    break;
-                case R.id.message_create_group_layout:
-                    Intent contactIntent = new Intent();
-                    contactIntent.putExtra(ContactSearchFragment.EXTRA_TYPE, 2);
-                    contactIntent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, true);
-                    contactIntent.putExtra(ContactSearchFragment.EXTRA_TITLE,
-                            getActivity().getString(R.string.message_create_group));
-                    contactIntent.setClass(getActivity(), ContactSearchActivity.class);
-                    startActivityForResult(contactIntent, CREATE_CHANNEL_GROUP);
-                    popupWindow.dismiss();
-                    break;
-                case R.id.message_scan_layout:
-                    AppUtils.openScanCode(CommunicationFragment.this, REQUEST_SCAN_LOGIN_QRCODE_RESULT);
-                    popupWindow.dismiss();
-                    break;
-                case R.id.tv_search_contact:
-                    IntentUtils.startActivity(getActivity(), SearchActivity.class);
-                    break;
-                default:
-                    break;
-            }
-        }
-    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden) {
+            setFragmentStatusBarCommon();
+        }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_OPEN_DEFALT_TAB, null));
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_communication, container, false);
+        unbinder = ButterKnife.bind(this, view);
         setLastMessageId();
         initView();
         sortConversationList();// 对Channel 进行排序
@@ -193,6 +179,7 @@ public class CommunicationFragment extends BaseFragment {
         checkingNetStateUtils = new CheckingNetStateUtils(getContext(), NetUtils.pingUrls, NetUtils.httpUrls);
         //将此句挪到此处，为了防止广播注册太晚接收不到WS状态，这里重新获取下
         showSocketStatusInTitle(WebSocketPush.getInstance().getWebsocketStatus());
+        return view;
     }
 
     /**
@@ -201,6 +188,7 @@ public class CommunicationFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        setFragmentStatusBarCommon();
         checkingNetStateUtils.getNetStateResult(5);
     }
 
@@ -208,20 +196,64 @@ public class CommunicationFragment extends BaseFragment {
         // TODO Auto-generated method stub
         apiService = new ChatAPIService(getActivity());
         apiService.setAPIInterface(new WebService());
-        rootView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_communication, null);
-        headerFunctionOptionImg = rootView.findViewById(R.id.more_function_list_img);
-        headerFunctionOptionImg.setOnClickListener(onViewClickListener);
-        contactImg = rootView.findViewById(R.id.contact_img);
-        contactImg.setOnClickListener(onViewClickListener);
-        titleText = rootView.findViewById(R.id.header_text);
-        noDataLayout = rootView.findViewById(R.id.rl_no_chat);
-        contactSearchTextView = rootView.findViewById(R.id.tv_search_contact);
-        contactSearchTextView.setOnClickListener(onViewClickListener);
-        initPullRefreshLayout();
+        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg_blue), getResources().getColor(R.color.header_bg_blue));
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                WebSocketPush.getInstance().startWebSocket();
+                getConversationList();
+                getMessage();
+            }
+        });
         initRecycleView();
         loadingDlg = new LoadingDialog(getActivity());
     }
 
+    @OnClick({R.id.more_function_list_img, R.id.contact_img, R.id.tv_search_contact})
+    public void onViewClick(View view) {
+        switch (view.getId()) {
+            case R.id.more_function_list_img:
+                showPopupWindow();
+                break;
+            case R.id.contact_img:
+                Bundle bundle = new Bundle();
+                bundle.putInt("select_content", 4);
+                bundle.putBoolean("isMulti_select", false);
+                bundle.putString("title",
+                        getActivity().getString(R.string.adress_list));
+                IntentUtils.startActivity(getActivity(),
+                        ContactSearchActivity.class, bundle);
+                PVCollectModelCacheUtils.saveCollectModel("contact", "communicate");
+                break;
+            case R.id.tv_search_contact:
+                IntentUtils.startActivity(getActivity(), SearchActivity.class);
+                break;
+        }
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.message_create_group_layout:
+                Intent contactIntent = new Intent();
+                contactIntent.putExtra(ContactSearchFragment.EXTRA_TYPE, 2);
+                contactIntent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, true);
+                contactIntent.putExtra(ContactSearchFragment.EXTRA_TITLE,
+                        getActivity().getString(R.string.message_create_group));
+                contactIntent.setClass(getActivity(), ContactSearchActivity.class);
+                startActivityForResult(contactIntent, CREATE_CHANNEL_GROUP);
+                popupWindow.dismiss();
+                break;
+            case R.id.message_scan_layout:
+                AppUtils.openScanCode(CommunicationFragment.this, REQUEST_SCAN_LOGIN_QRCODE_RESULT);
+                popupWindow.dismiss();
+                break;
+
+            default:
+                break;
+        }
+    }
     /**
      * 注册接收消息的广播
      */
@@ -233,27 +265,9 @@ public class CommunicationFragment extends BaseFragment {
     }
 
     /**
-     * 初始化PullRefreshLayout
-     */
-    private void initPullRefreshLayout() {
-        swipeRefreshLayout = (SwipeRefreshLayout) rootView
-                .findViewById(R.id.refresh_layout);
-        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg_blue), getResources().getColor(R.color.header_bg_blue));
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                WebSocketPush.getInstance().startWebSocket();
-                getConversationList();
-                getMessage();
-            }
-        });
-    }
-
-    /**
      * 初始化ListView
      */
     private void initRecycleView() {
-        conversionRecycleView = rootView.findViewById(R.id.rcv_conversation);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         conversionRecycleView.setLayoutManager(linearLayoutManager);
         conversationAdapter = new ConversationAdapter(getActivity(), displayUIConversationList);
@@ -396,26 +410,6 @@ public class CommunicationFragment extends BaseFragment {
         }
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_OPEN_DEFALT_TAB, null));
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        setFragmentStatusBarCommon();
-        if (rootView == null) {
-            rootView = inflater.inflate(R.layout.fragment_message, container,
-                    false);
-        }
-        ViewGroup parent = (ViewGroup) rootView.getParent();
-        if (parent != null) {
-            parent.removeView(rootView);
-        }
-        return rootView;
-    }
 
     @Override
     public void onPause() {
@@ -427,10 +421,8 @@ public class CommunicationFragment extends BaseFragment {
 
     /**
      * 通讯录和创建群组，扫一扫合并
-     *
-     * @param view
      */
-    private void showPopupWindow(View view) {
+    private void showPopupWindow() {
         View contentView = LayoutInflater.from(getActivity())
                 .inflate(R.layout.pop_message_window_view, null);
         popupWindow = new PopupWindow(contentView,
@@ -449,13 +441,14 @@ public class CommunicationFragment extends BaseFragment {
                 AppUtils.setWindowBackgroundAlpha(getActivity(), 1.0f);
             }
         });
-        contentView.findViewById(R.id.message_create_group_layout).setOnClickListener(onViewClickListener);
-        contentView.findViewById(R.id.message_scan_layout).setOnClickListener(onViewClickListener);
+        contentView.findViewById(R.id.message_create_group_layout).setOnClickListener(this);
+        contentView.findViewById(R.id.message_scan_layout).setOnClickListener(this);
         popupWindow.setBackgroundDrawable(getResources().getDrawable(
                 R.drawable.pop_window_view_tran));
         AppUtils.setWindowBackgroundAlpha(getActivity(), 0.8f);
         // 设置好参数之后再show
-        popupWindow.showAsDropDown(view);
+        popupWindow.showAsDropDown(headerFunctionOptionImg);
+
     }
 
 
@@ -662,10 +655,10 @@ public class CommunicationFragment extends BaseFragment {
         } else if (socketStatus.equals(Socket.EVENT_CONNECT)) {
             getMessage();
             //当断开以后连接成功(非第一次连接上)后重新拉取一遍消息
-            if (!isFirstConnectWebsockt) {
+            if (!isFirstConnectWebsocket) {
                 getConversationList();
             }
-            isFirstConnectWebsockt = false;
+            isFirstConnectWebsocket = false;
             String appTabs = PreferencesByUserAndTanentUtils.getString(getActivity(), Constant.PREF_APP_TAB_BAR_INFO_CURRENT, "");
             if (!StringUtils.isBlank(appTabs)) {
                 titleText.setText(AppTabUtils.getTabTitle(getActivity(), getClass().getSimpleName()));

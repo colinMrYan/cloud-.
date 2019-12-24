@@ -106,11 +106,6 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        // super.onSaveInstanceState(outState);
-    }
-
-    @Override
     protected void onStart() {
         super.onStart();
         checkForceGuesture();
@@ -705,10 +700,6 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
             String mainTabName = getMainTabName(tabId);
             PVCollectModelCacheUtils.saveCollectModel(mainTabName, mainTabName);
             isSystemChangeTag = true;
-        }
-        //每次切换到工作tab时需要发出通知，刷新日程数据
-        if (tabId.equals(Constant.APP_TAB_BAR_WORK)) {
-            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED));
         }
     }
 
