@@ -147,7 +147,7 @@ public class MyAppFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_app, container, false);
+        View view = inflater.inflate(R.layout.application_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
         checkingNetStateUtils = new CheckingNetStateUtils(getContext(), NetUtils.pingUrls, NetUtils.httpUrls);
         copyData();
@@ -889,7 +889,7 @@ public class MyAppFragment extends BaseFragment {
         @Override
         public View getView(final int listPosition, View convertView,
                             ViewGroup parent) {
-            convertView = LayoutInflater.from(getActivity()).inflate(R.layout.app_drag_item, null);
+            convertView = LayoutInflater.from(getActivity()).inflate(R.layout.application_drag_item, null);
             if (listPosition == (getCount() - 1)) {
                 View dividerView = (View) convertView.findViewById(R.id.v_applist_devid);
                 dividerView.setVisibility(View.GONE);
