@@ -32,7 +32,7 @@ import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
 import com.inspur.emmcloud.baselib.widget.FlowLayout;
-import com.inspur.emmcloud.baselib.widget.MaxHightScrollView;
+import com.inspur.emmcloud.baselib.widget.MaxHeightScrollView;
 import com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
@@ -88,7 +88,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
     private FlowLayout flowLayout;
     private EditText searchEdit;
     private MyTextWatcher myTextWatcher;
-    private MaxHightScrollView searchEditLayout;
+    private MaxHeightScrollView searchEditLayout;
     private ListView searchListView;
     private MySwipeRefreshLayout swipeRefreshLayout;
     private Adapter adapter;
@@ -117,7 +117,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
         flowLayout = (FlowLayout) findViewById(R.id.flowlayout);
         myTextWatcher = new MyTextWatcher();
         flowAddEdit();
-        searchEditLayout = (MaxHightScrollView) findViewById(R.id.search_edit_layout);
+        searchEditLayout = (MaxHeightScrollView) findViewById(R.id.search_edit_layout);
         swipeRefreshLayout = (MySwipeRefreshLayout) findViewById(R.id.refresh_layout);
         swipeRefreshLayout.setOnLoadListener(this);
         swipeRefreshLayout.setEnabled(false);

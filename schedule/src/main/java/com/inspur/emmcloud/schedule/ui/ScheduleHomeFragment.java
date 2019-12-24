@@ -1,6 +1,5 @@
 package com.inspur.emmcloud.schedule.ui;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -28,6 +27,7 @@ import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseFragment;
 import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.schedule.R;
+import com.inspur.emmcloud.schedule.R2;
 import com.inspur.emmcloud.schedule.adapter.ScheduleHomeFragmentAdapter;
 import com.inspur.emmcloud.schedule.bean.calendar.AccountType;
 import com.inspur.emmcloud.schedule.bean.calendar.ScheduleCalendar;
@@ -49,38 +49,66 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 /**
  * Created by yufuchang on 2019/3/28.
  */
-public class ScheduleHomeFragment extends BaseFragment implements View.OnClickListener {
+public class ScheduleHomeFragment extends BaseFragment {
 
     private static final String PV_COLLECTION_CAL = "calendar";
     private static final String PV_COLLECTION_MISSION = "task";
     private static final String PV_COLLECTION_MEETING = "meeting";
-    private View rootView;
-    private TabLayout tabLayout;
-    private CustomScrollViewPager viewPager;
-    private ImageButton todayImgBtn;
+    @BindView(R2.id.tab_layout_schedule)
+    TabLayout tabLayout;
+    @BindView(R2.id.view_pager_all_schedule)
+    CustomScrollViewPager viewPager;
+    @BindView(R2.id.ibt_today)
+    ImageButton todayImgBtn;
+    @BindView(R2.id.tv_date)
+    TextView dateText;
+    @BindView(R2.id.tv_error_info)
+    TextView errorInfoText;
+    @BindView(R2.id.rl_error)
+    RelativeLayout errorLayout;
     private ScheduleFragment scheduleFragment;
     private MeetingFragment meetingFragment;
     private TaskFragment taskFragment;
-    private TextView dateText;
-    private RelativeLayout errorLayout;
-    private TextView errorInfoText;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        initView();
         EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.schedule_fragment_home, container, false);
+        unbinder = ButterKnife.bind(this, view);
+        initView();
+        return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        dateText.setText(Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "");
-        scheduleFragment.updateCurrentDate();
+        setFragmentStatusBarCommon();
+        refreshDate();
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden) {
+            setFragmentStatusBarCommon();
+            refreshDate();
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED));
+        }
     }
 
 
@@ -90,19 +118,10 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
         EventBus.getDefault().unregister(this);
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        setFragmentStatusBarCommon();
-        if (rootView == null) {
-            rootView = inflater.inflate(R.layout.schedule_fragment_home, container,
-                    false);
-        }
-        ViewGroup parent = (ViewGroup) rootView.getParent();
-        if (parent != null) {
-            parent.removeView(rootView);
-        }
-        return rootView;
+
+    private void refreshDate() {
+        dateText.setText(Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "");
+        scheduleFragment.updateCurrentDate();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -114,7 +133,6 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
             case Constant.EVENTBUS_TAG_EWS_401:
                 if (errorLayout.getVisibility() != View.VISIBLE) {
                     errorLayout.setVisibility(View.VISIBLE);
-//                    String ewsAccount = (String) eventMessage.getMessageObj();
                     errorInfoText.setText(getString(R.string.schedule_exchange_login_fail));
                 }
                 break;
@@ -154,8 +172,6 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
         }
     }
 
-    ;
-
     /**
      * 记录用户点击
      *
@@ -166,15 +182,9 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
     }
 
     private void initView() {
-        Activity tes = getActivity();
-        rootView = LayoutInflater.from(getActivity()).inflate(R.layout.schedule_fragment_home, null);
-        dateText = rootView.findViewById(R.id.tv_date);
-        todayImgBtn = rootView.findViewById(R.id.ibt_today);
-        todayImgBtn.setOnClickListener(this);
-        rootView.findViewById(R.id.ibt_add).setOnClickListener(this);
         initTabLayout();
-        viewPager = rootView.findViewById(R.id.view_pager_all_schedule);
         viewPager.setScrollable(false);
+        viewPager.setOffscreenPageLimit(4);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -202,18 +212,15 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
         list.add(scheduleFragment);
         list.add(meetingFragment);
         list.add(taskFragment);
-        errorLayout = rootView.findViewById(R.id.rl_error);
+
         //初始化adapter
         ScheduleHomeFragmentAdapter adapter = new ScheduleHomeFragmentAdapter(getActivity().getSupportFragmentManager(), list);
         //将适配器和ViewPager结合
         viewPager.setAdapter(adapter);
-        errorLayout = rootView.findViewById(R.id.rl_error);
-        errorInfoText = rootView.findViewById(R.id.tv_error_info);
-        errorLayout.setOnClickListener(this);
+
     }
 
     private void initTabLayout() {
-        tabLayout = rootView.findViewById(R.id.tab_layout_schedule);
         int[] tabTitleResIds = {R.string.schedule_work_schedule, R.string.schedule_work_meeting_text, R.string.schedule_work_mession};
         for (int i = 0; i < tabTitleResIds.length; i++) {
             TabLayout.Tab tab = tabLayout.newTab();
@@ -357,17 +364,20 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
         return menuItemList;
     }
 
-    @Override
+    @OnClick({R2.id.ibt_add, R2.id.ibt_today, R2.id.rl_error})
     public void onClick(View view) {
         int i = view.getId();
         if (i == R.id.ibt_add) {
             showAddPopMenu(view);
+
         } else if (i == R.id.ibt_today) {
             scheduleFragment.setScheduleBackToToday();
-        }else if(i==R.id.rl_error){
+
+        } else if (i == R.id.rl_error) {
             Bundle bundle = new Bundle();
             bundle.putString("from", "schedule_exchange_login");
             ARouter.getInstance().build(Constant.AROUTER_CLASS_MAIL_LOGIN).with(bundle).navigation();
+
         }
     }
 

@@ -123,9 +123,7 @@ public class CalendarUtils {
                     String exchangePassword = PreferencesByUserAndTanentUtils.getString(BaseApplication.getInstance(), Constant.PREF_MAIL_PASSWORD, "");
                     if (!StringUtils.isBlank(exchangeAccount) && !StringUtils.isBlank(exchangePassword)) {
                         exchangeAuthHeaderValue = exchangeAccount + ":" + exchangePassword;
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
-                            exchangeAuthHeaderValue = Base64.encodeToString(exchangeAuthHeaderValue.getBytes(), Base64.NO_WRAP);
-                        }
+                        exchangeAuthHeaderValue = Base64.encodeToString(exchangeAuthHeaderValue.getBytes(), Base64.NO_WRAP);
                     }
                     break;
                 default:

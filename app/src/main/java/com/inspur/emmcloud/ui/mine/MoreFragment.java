@@ -15,7 +15,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -23,7 +22,6 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.MineAPIService;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
@@ -47,6 +45,7 @@ import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.ui.mine.card.CardPackageActivity;
 import com.inspur.emmcloud.ui.mine.feedback.FeedBackActivity;
 import com.inspur.emmcloud.ui.mine.myinfo.MyInfoActivity;
+import com.inspur.emmcloud.ui.mine.setting.AboutActivity;
 import com.inspur.emmcloud.ui.mine.setting.EnterpriseSwitchActivity;
 import com.inspur.emmcloud.ui.mine.setting.SettingActivity;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
@@ -57,6 +56,9 @@ import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 import static android.app.Activity.RESULT_OK;
 
 /**
@@ -65,21 +67,30 @@ import static android.app.Activity.RESULT_OK;
 public class MoreFragment extends BaseFragment {
 
     private static final int REQUEST_CODE_UPDATE_USER_PHOTO = 3;
-    private View rootView;
+    @BindView(R.id.expandable_list)
+    ExpandableListView expandListView;
     private List<MineLayoutItemGroup> mineLayoutItemGroupList = new ArrayList<>();
     private BaseExpandableListAdapter adapter;
     private MyClickListener myClickListener = new MyClickListener();
     private GetMyInfoResult getMyInfoResult;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
-        LayoutInflater inflater =
-                (LayoutInflater) getActivity().getSystemService(getActivity().LAYOUT_INFLATER_SERVICE);
-        rootView = inflater.inflate(R.layout.fragment_mine, null);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_mine, container, false);
+        unbinder = ButterKnife.bind(this, view);
+        setFragmentStatusBarWhite();
         initData();
         initViews();
+        return view;
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden) {
+            setFragmentStatusBarWhite();
+        }
     }
 
     private void initData() {
@@ -139,24 +150,11 @@ public class MoreFragment extends BaseFragment {
         getUserCardMenu();
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        setFragmentStatusBarWhite();
-        if (rootView == null) {
-            rootView = inflater.inflate(R.layout.fragment_mine, container, false);
-        }
-        ViewGroup parent = (ViewGroup) rootView.getParent();
-        if (parent != null) {
-            parent.removeView(rootView);
-        }
-        return rootView;
-    }
 
     /**
      * 初始化views
      */
     private void initViews() {
-        ExpandableListView expandListView = rootView.findViewById(R.id.expandable_list);
         expandListView.setGroupIndicator(null);
         expandListView.setVerticalScrollBarEnabled(false);
         expandListView.setHeaderDividersEnabled(false);
@@ -193,10 +191,8 @@ public class MoreFragment extends BaseFragment {
                     recordUserClick("wallet");
                     break;
                 case "my_aboutUs_function":
-//                    IntentUtils.startActivity(getActivity(), AboutActivity.class);
-//                    recordUserClick("about");
-                    LogUtils.YfcDebug("点击关于");
-                    ARouter.getInstance().build(Constant.AROUTER_CLASS_APPCENTER).navigation();
+                    IntentUtils.startActivity(getActivity(), AboutActivity.class);
+                    recordUserClick("about");
                     break;
                 case "my_feedback_function":
                     IntentUtils.startActivity(getActivity(), FeedBackActivity.class);

@@ -275,6 +275,10 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
                 originalSearchModelList.add(searchModel);
             }
         }
+        if (attendeeSearchModelList.size() == 0 && !StringUtils.isBlank(schedule.getOwner())) {
+            SearchModel searchModel = getSearchModel(schedule.getOwner());
+            attendeeSearchModelList.add(searchModel);
+        }
         remindEvent = schedule.getRemindEventObj();
         startTimeCalendar = schedule.getStartTimeCalendar();
         endTimeCalendar = schedule.getEndTimeCalendar();

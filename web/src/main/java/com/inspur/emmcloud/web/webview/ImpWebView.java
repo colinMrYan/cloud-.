@@ -24,6 +24,7 @@ import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ParseHtmlUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
@@ -120,6 +121,7 @@ public class ImpWebView extends WebView {
     }
 
     //imp修改处
+    @Override
     public ImpWebChromeClient getWebChromeClient() {
         return impWebChromeClient;
     }
@@ -138,7 +140,6 @@ public class ImpWebView extends WebView {
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             CookieManager.getInstance().setAcceptThirdPartyCookies(this, true);
         }
-
     }
 
     // 重置当前接口的webview
@@ -157,6 +158,7 @@ public class ImpWebView extends WebView {
         if (pluginMgr != null) {
             pluginMgr.onDestroy();
         }
+
     }
 
     public void onActivityResume() {
@@ -175,6 +177,16 @@ public class ImpWebView extends WebView {
         if (pluginMgr != null) {
             pluginMgr.onNewIntent(intent);
         }
+    }
+
+    @Override
+    public void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        this.removeJavascriptInterface(method);
+        //显示webview网页标题
+        this.removeJavascriptInterface("getContent");
+        onActivityDestroy();
+
     }
 
     public ImpCallBackInterface getImpCallBackInterface() {
@@ -235,6 +247,7 @@ public class ImpWebView extends WebView {
     /*
      * 测量webview高度和宽度
      */
+    @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         invalidate();
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
@@ -353,8 +366,10 @@ public class ImpWebView extends WebView {
 //        return true;
 //    }
 
+    @Override
     public void destroy() {
         this.destroyed = true;
+        LogUtils.jasonDebug("webview----destroy");
         if (handler != null) {
             handler = null;
         }
@@ -509,7 +524,10 @@ public class ImpWebView extends WebView {
                 }
             }
             if (!isWebControlLoading) {
-                handler.sendEmptyMessage(DIMISS_LOADING);
+                if (handler != null) {
+                    handler.sendEmptyMessage(DIMISS_LOADING);
+                }
+
             }
         }
 
