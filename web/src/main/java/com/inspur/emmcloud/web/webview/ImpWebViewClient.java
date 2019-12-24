@@ -16,6 +16,7 @@ import android.webkit.SslErrorHandler;
 import android.webkit.ValueCallback;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -168,6 +169,26 @@ public class ImpWebViewClient extends WebViewClient {
         handler.proceed();
     }
 
+    @Override
+    public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
+        if (url.toLowerCase().contains("/favicon.ico")) {
+            try {
+                return new WebResourceResponse("image/png", null, null);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+
+    @Override
+    public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && !request.isForMainFrame() && request.getUrl().getPath().equals("/favicon.ico")) {
+            return shouldInterceptRequest(view, request.getUrl().toString());
+        }
+        return null;
+    }
 
     @TargetApi(Build.VERSION_CODES.N)
     @Override

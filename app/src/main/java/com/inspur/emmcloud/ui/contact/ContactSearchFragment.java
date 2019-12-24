@@ -134,8 +134,6 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
     private int originCurrentArea = 0; // orgin页面目前的搜索模式
     private int searchArea = 0; // 搜索范围
     private String title;
-    private List<SearchModel> searchChannelGroupList = new ArrayList<>(); // 群组搜索结果
-    private List<Contact> searchContactList = new ArrayList<Contact>(); // 通讯录搜索结果
     // popupWindow中的控件与数据
     private LinearLayout popSecondGroupLayou;
     private LinearLayout popThirdGroupLayou;
@@ -818,26 +816,26 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                         switch (searchArea) {
                             case SEARCH_ALL:
                                 if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
-                                    searchChannelGroupList = ChannelGroupCacheUtils
+                                    threadSearchChannelGroupList = ChannelGroupCacheUtils
                                             .getSearchChannelGroupSearchModelList(MyApplication.getInstance(),
                                                     searchText);
                                 } else {
-                                    searchChannelGroupList = ConversationCacheUtils.getSearchConversationSearchModelList(MyApplication.getInstance(), searchText);
+                                    threadSearchChannelGroupList = ConversationCacheUtils.getSearchConversationSearchModelList(MyApplication.getInstance(), searchText);
                                 }
 
-                                searchContactList = ContactUserCacheUtils.getSearchContact(searchText, null, 4);
+                                threadSearchContactList = ContactUserCacheUtils.getSearchContact(searchText, null, 4);
                                 break;
                             case SEARCH_CHANNELGROUP:
                                 if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
-                                    searchChannelGroupList = ChannelGroupCacheUtils
+                                    threadSearchChannelGroupList = ChannelGroupCacheUtils
                                             .getSearchChannelGroupSearchModelList(MyApplication.getInstance(),
                                                     searchText);
                                 } else {
-                                    searchChannelGroupList = ConversationCacheUtils.getSearchConversationSearchModelList(MyApplication.getInstance(), searchText);
+                                    threadSearchChannelGroupList = ConversationCacheUtils.getSearchConversationSearchModelList(MyApplication.getInstance(), searchText);
                                 }
                                 break;
                             case SEARCH_CONTACT:
-                                searchContactList = ContactUserCacheUtils.getSearchContact(searchText, null, 4);
+                                threadSearchContactList = ContactUserCacheUtils.getSearchContact(searchText, null, 4);
                                 break;
 
                             default:
