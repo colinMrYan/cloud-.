@@ -1,6 +1,9 @@
 package com.inspur.emmcloud.componentservice.app;
 
 
+import android.app.Activity;
+import android.os.Bundle;
+
 import com.inspur.emmcloud.componentservice.CoreService;
 
 /**
@@ -14,4 +17,5 @@ public interface AppService extends CoreService {
 
     boolean isTabExist(String tabId);
 
+    void startReactNativeApp(Activity activity, Bundle bundle);
 }
