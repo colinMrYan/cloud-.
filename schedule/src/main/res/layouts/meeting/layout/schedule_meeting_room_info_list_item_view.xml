@@ -59,7 +59,7 @@
                         android:layout_height="6dp"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="10dp"
-                        android:src="@drawable/ic_schedule_meeting_point_grey" />
+                        android:src="@drawable/schedule_meeting_point_grey_ic" />
                     <TextView
                         android:id="@+id/tv_title"
                         android:layout_width="match_parent"

@@ -34,7 +34,7 @@ public class WeekBar extends LinearLayout {
     public WeekBar(Context context) {
         super(context);
         if ("com.inspur.emmcloud.schedule.widget.calendarview.WeekBar".equals(getClass().getName())) {
-            LayoutInflater.from(context).inflate(R.layout.cv_week_bar, this, true);
+            LayoutInflater.from(context).inflate(R.layout.schedule_cv_week_bar, this, true);
         }
     }
 

@@ -60,7 +60,7 @@ public class ScheduleMeetingRoomDurationAdapter extends BaseAdapter {
         // TODO Auto-generated method stub
         MeetingSchedule meetingSchedule = meetingScheduleList.get(position);
         Meeting meeting = meetingSchedule.getMeeting();
-        convertView = LayoutInflater.from(context).inflate(R.layout.meeting_room_info_list_item_view, null);
+        convertView = LayoutInflater.from(context).inflate(R.layout.schedule_meeting_room_info_list_item_view, null);
         RelativeLayout meetingContentLayout = convertView.findViewById(R.id.rl_meeting_content);
         LinearLayout meetingAddLayout = convertView.findViewById(R.id.ll_meeting_add);
         TextView timeText = convertView.findViewById(R.id.tv_time);

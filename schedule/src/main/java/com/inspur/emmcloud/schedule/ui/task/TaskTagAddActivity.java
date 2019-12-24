@@ -62,7 +62,7 @@ public class TaskTagAddActivity extends BaseActivity  {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_task_tags_add;
+        return R.layout.schedule_task_tags_add_activity;
     }
 
     private void initData() {
@@ -195,7 +195,7 @@ public class TaskTagAddActivity extends BaseActivity  {
         public View getView(int i, View view, ViewGroup viewGroup) {
             ColorTagHolder colorTagHolder = new ColorTagHolder();
             if (view == null) {
-                view = View.inflate(TaskTagAddActivity.this, R.layout.task_manage_item, null);
+                view = View.inflate(TaskTagAddActivity.this, R.layout.schedule_task_manage_item, null);
                 colorTagHolder.colorFlagImage = view.findViewById(R.id.iv_task_tag_flag);
                 colorTagHolder.colorSelectImage = view.findViewById(R.id.iv_task_tag_select);
                 colorTagHolder.colorNameText = view.findViewById(R.id.tv_task_tag_name);

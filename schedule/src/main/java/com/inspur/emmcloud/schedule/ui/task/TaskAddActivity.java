@@ -152,7 +152,7 @@ public class TaskAddActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_task_add;
+        return R.layout.schedule_task_add_activity;
     }
 
     private void initData() {
@@ -837,7 +837,7 @@ public class TaskAddActivity extends BaseActivity {
             final int num = i;
             AttachmentHolder otherHolder = new AttachmentHolder();
             if (view == null) {
-                view = View.inflate(TaskAddActivity.this, R.layout.item_attachments_abstract, null);
+                view = View.inflate(TaskAddActivity.this, R.layout.schedule_attachments_abstract_item, null);
                 otherHolder.attachmentDeleteImageView = view.findViewById(R.id.iv_delete_attachemnt);
                 otherHolder.attachmentImageView = view.findViewById(R.id.iv_attachemnt_img);
                 otherHolder.attachmentNameText = view.findViewById(R.id.tv_add_attachment_name);

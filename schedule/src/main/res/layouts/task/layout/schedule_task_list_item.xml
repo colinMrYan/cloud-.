@@ -21,7 +21,7 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:scaleType="fitXY"
-            android:src="@drawable/ic_task_item" />
+            android:src="@drawable/task_item_ic" />
 
         <TextView
             android:id="@+id/tv_task_name"
@@ -43,7 +43,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="12dp"
             android:layout_marginRight="16dp"
-            android:src="@drawable/ic_task_level" />
+            android:src="@drawable/task_level_ic" />
     </RelativeLayout>
 
     <TextView

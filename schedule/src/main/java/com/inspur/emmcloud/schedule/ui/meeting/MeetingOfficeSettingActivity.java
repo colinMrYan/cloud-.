@@ -46,7 +46,7 @@ public class MeetingOfficeSettingActivity extends BaseActivity implements Expand
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_meeting_office_setting;
+        return R.layout.schedule_meeting_office_setting_activity;
     }
 
     private void initView() {

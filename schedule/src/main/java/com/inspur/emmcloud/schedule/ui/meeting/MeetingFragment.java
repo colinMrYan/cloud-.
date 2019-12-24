@@ -63,7 +63,7 @@ public class MeetingFragment extends BaseFragment implements MySwipeRefreshLayou
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        rootView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_schedule_meeting, null);
+        rootView = LayoutInflater.from(getActivity()).inflate(R.layout.schedule_fragment_meeting, null);
         if (getArguments() != null) {
             isHistoryMeeting = getArguments().getBoolean(Constant.EXTRA_IS_HISTORY_MEETING, false);
         }
@@ -106,7 +106,7 @@ public class MeetingFragment extends BaseFragment implements MySwipeRefreshLayou
                              Bundle savedInstanceState) {
         if (rootView == null) {
             rootView = inflater
-                    .inflate(R.layout.fragment_schedule_meeting, container, false);
+                    .inflate(R.layout.schedule_fragment_meeting, container, false);
         }
         ViewGroup parent = (ViewGroup) rootView.getParent();
         if (parent != null) {

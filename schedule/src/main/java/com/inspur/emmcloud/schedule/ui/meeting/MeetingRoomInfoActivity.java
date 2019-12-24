@@ -92,7 +92,7 @@ public class MeetingRoomInfoActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_meeting_room_info;
+        return R.layout.schedule_meeting_room_info_activity;
     }
 
     private void initView() {
@@ -199,16 +199,16 @@ public class MeetingRoomInfoActivity extends BaseActivity {
             int equipmentResId = -1;
             switch (equipment) {
                 case "PROJECTOR":
-                    equipmentResId = R.drawable.ic_schedule_meeting_room_equipment_projector;
+                    equipmentResId = R.drawable.schedule_meeting_room_equipment_projector_ic;
                     break;
                 case "WHITE_BOARD":
-                    equipmentResId = R.drawable.ic_schedule_meeting_room_equipment_white_borad;
+                    equipmentResId = R.drawable.schedule_meeting_room_equipment_white_borad_ic;
                     break;
                 case "CONFERENCE_PHONE":
-                    equipmentResId = R.drawable.ic_schedule_meeting_room_equipment_conference_phone;
+                    equipmentResId = R.drawable.schedule_meeting_room_equipment_conference_phone_ic;
                     break;
                 case "WIFI":
-                    equipmentResId = R.drawable.ic_schedule_meeting_room_equipment_wifi;
+                    equipmentResId = R.drawable.schedule_meeting_room_equipment_wifi_ic;
                     break;
                 default:
                     continue;
@@ -233,7 +233,7 @@ public class MeetingRoomInfoActivity extends BaseActivity {
         viewList.clear();
         for (int i = 0; i < meetingRoom.getMaxAhead(); i++) {
             View allDayMeetingView = LayoutInflater.from(this).inflate(
-                    R.layout.meeting_room_use_day_view, null);
+                    R.layout.schedule_meeting_room_use_day_view, null);
             viewList.add(allDayMeetingView);
             ListView meetingListView = allDayMeetingView
                     .findViewById(R.id.lv_meeting);

@@ -2,8 +2,8 @@ package com.inspur.emmcloud.schedule.applike;
 
 import com.inspur.emmcloud.baselib.applicationlike.IApplicationLike;
 import com.inspur.emmcloud.baselib.router.Router;
-import com.inspur.emmcloud.componentservice.Schedule.ScheduleService;
 import com.inspur.emmcloud.componentservice.mail.MailService;
+import com.inspur.emmcloud.componentservice.schedule.ScheduleService;
 import com.inspur.emmcloud.schedule.serviceimpl.ScheduleServiceImpl;
 
 

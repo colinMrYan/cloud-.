@@ -91,7 +91,7 @@ public class ScheduleMeetingRoomAdapter extends BaseExpandableListAdapter {
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         MeetingRoom meetingRoom = meetingRoomAreaList.get(groupPosition).getMeetingRoomList().get(childPosition);
-        convertView = LayoutInflater.from(context).inflate(R.layout.meeting_room_expandale_child_item, null);
+        convertView = LayoutInflater.from(context).inflate(R.layout.schedule_meeting_room_expandale_child_item, null);
         TextView nameText = convertView.findViewById(R.id.tv_name);
         TextView statusText = convertView.findViewById(R.id.tv_status);
         ImageView statusPointImg = convertView.findViewById(R.id.iv_status_point);
@@ -107,7 +107,7 @@ public class ScheduleMeetingRoomAdapter extends BaseExpandableListAdapter {
         boolean isInMeeting = meetingRoom.getLight().equals("RED");
         statusText.setText(isInMeeting ? context.getResources().getString(R.string.schedule_meeting_in_meeting) :
                 context.getResources().getString(R.string.schedule_meeting_be_free));
-        statusPointImg.setImageResource(isInMeeting ? R.drawable.ic_schedule_meeting_room_busy : R.drawable.ic_schedule_meeting_room_free);
+        statusPointImg.setImageResource(isInMeeting ? R.drawable.schedule_meeting_room_busy_ic : R.drawable.schedule_meeting_room_free_ic);
         statusText.setTextColor(Color.parseColor(isInMeeting ? "#FF0000" : "#7ED321"));
         return convertView;
     }
@@ -122,11 +122,11 @@ public class ScheduleMeetingRoomAdapter extends BaseExpandableListAdapter {
             params.setMargins(marginLeft, 0, 0, 0);
             imageView.setLayoutParams(params);
             if (degree < 40) {
-                imageView.setImageResource(R.drawable.ic_schedule_meeting_room_status_empty);
+                imageView.setImageResource(R.drawable.ischedule_meeting_room_status_empty_ic);
             } else if (degree > 70) {
-                imageView.setImageResource(R.drawable.ic_schedule_meeting_room_status_full);
+                imageView.setImageResource(R.drawable.schedule_meeting_room_status_full_ic);
             } else {
-                imageView.setImageResource(R.drawable.ic_schedule_meeting_room_status_half);
+                imageView.setImageResource(R.drawable.schedule_meeting_room_status_half_ic);
             }
             dayStatusLayout.addView(imageView);
         }
@@ -137,16 +137,16 @@ public class ScheduleMeetingRoomAdapter extends BaseExpandableListAdapter {
             int equipmentResId = -1;
             switch (equipment) {
                 case "PROJECTOR":
-                    equipmentResId = R.drawable.ic_schedule_meeting_room_equipment_projector;
+                    equipmentResId = R.drawable.schedule_meeting_room_equipment_projector_ic;
                     break;
                 case "WHITE_BOARD":
-                    equipmentResId = R.drawable.ic_schedule_meeting_room_equipment_white_borad;
+                    equipmentResId = R.drawable.schedule_meeting_room_equipment_white_borad_ic;
                     break;
                 case "CONFERENCE_PHONE":
-                    equipmentResId = R.drawable.ic_schedule_meeting_room_equipment_conference_phone;
+                    equipmentResId = R.drawable.schedule_meeting_room_equipment_conference_phone_ic;
                     break;
                 case "WIFI":
-                    equipmentResId = R.drawable.ic_schedule_meeting_room_equipment_wifi;
+                    equipmentResId = R.drawable.schedule_meeting_room_equipment_wifi_ic;
                     break;
                 default:
                     continue;

@@ -250,7 +250,7 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_meeting_add;
+        return R.layout.schedule_meeting_add_activity;
     }
 
 
