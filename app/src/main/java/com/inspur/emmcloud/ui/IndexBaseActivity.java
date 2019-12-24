@@ -31,6 +31,7 @@ import com.inspur.emmcloud.baselib.util.SelectorUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.ConfirmDialog;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
+import com.inspur.emmcloud.basemodule.bean.badge.BadgeBodyModel;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseFragmentActivity;
 import com.inspur.emmcloud.basemodule.util.ECMShortcutBadgeNumberManagerUtils;
@@ -38,18 +39,16 @@ import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
-import com.inspur.emmcloud.bean.appcenter.App;
-import com.inspur.emmcloud.bean.appcenter.AppGroupBean;
 import com.inspur.emmcloud.bean.contact.ContactClickMessage;
 import com.inspur.emmcloud.bean.system.ChangeTabBean;
 import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.bean.system.MainTabResult;
 import com.inspur.emmcloud.bean.system.TabBean;
-import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
 import com.inspur.emmcloud.broadcastreceiver.NetworkChangeReceiver;
 import com.inspur.emmcloud.broadcastreceiver.ScreenBroadcastReceiver;
+import com.inspur.emmcloud.componentservice.Schedule.ScheduleService;
+import com.inspur.emmcloud.componentservice.application.ApplicationService;
 import com.inspur.emmcloud.componentservice.web.WebService;
-import com.inspur.emmcloud.ui.appcenter.MyAppFragment;
 import com.inspur.emmcloud.ui.chat.CommunicationFragment;
 import com.inspur.emmcloud.ui.chat.CommunicationV0Fragment;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
@@ -57,9 +56,7 @@ import com.inspur.emmcloud.ui.find.FindFragment;
 import com.inspur.emmcloud.ui.mine.MoreFragment;
 import com.inspur.emmcloud.ui.mine.setting.CreateGestureActivity;
 import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
-import com.inspur.emmcloud.ui.schedule.ScheduleHomeFragment;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
-import com.inspur.emmcloud.util.privates.cache.MyAppCacheUtils;
 import com.inspur.emmcloud.widget.MyFragmentTabHost;
 import com.inspur.emmcloud.widget.tipsview.TipsView;
 
@@ -69,7 +66,6 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -107,11 +103,6 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
         registerNetWorkListenerAccordingSysLevel();
         registerScreenReceiver();
         initTabs();
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        // super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -197,10 +188,18 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
                                     }
                                     break;
                                 case Constant.APP_TAB_BAR_WORK:
-                                    tabBean = new TabBean(getString(R.string.work), ScheduleHomeFragment.class, mainTabResult);
+                                    Router router = Router.getInstance();
+                                    if (router.getService(ScheduleService.class) != null) {
+                                        ScheduleService service = router.getService(ScheduleService.class);
+                                        tabBean = new TabBean(getString(R.string.work), service.getImpFragmentClass(), mainTabResult);
+                                    }
                                     break;
                                 case Constant.APP_TAB_BAR_APPLICATION:
-                                    tabBean = new TabBean(getString(R.string.application), MyAppFragment.class, mainTabResult);
+                                    Router routerApplication = Router.getInstance();
+                                    if (routerApplication.getService(ApplicationService.class) != null) {
+                                        ApplicationService service = routerApplication.getService(ApplicationService.class);
+                                        tabBean = new TabBean(getString(R.string.application), service.getMyAppFragment(), mainTabResult);
+                                    }
                                     break;
                                 case Constant.APP_TAB_BAR_PROFILE:
                                     tabBean = new TabBean(getString(R.string.mine), MoreFragment.class, mainTabResult);
@@ -224,7 +223,6 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
                                 WebService service = router.getService(WebService.class);
                                 tabBean = new TabBean(getString(R.string.web), service.getImpFragmentClass(), mainTabResult);
                             }
-
                             break;
                     }
                     if (tabBean == null) {
@@ -464,22 +462,12 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
      * @return
      */
     private int getFilterAppStoreBadgeNum(Map<String, Integer> appBadgeMap) {
-        Map<String, Integer> appBadgeMapSum = new HashMap<>();
-        appBadgeMapSum.putAll(appBadgeMap);
-        int appStoreBadgeNum = 0;
-        List<AppGroupBean> appGroupBeanList = MyAppCacheUtils.getMyAppList(this);
-        for (AppGroupBean appGroupBean : appGroupBeanList) {
-            List<App> appList = appGroupBean.getAppItemList();
-            for (App app : appList) {
-                Integer num = appBadgeMapSum.get(app.getAppID());
-                if (num != null) {
-                    appStoreBadgeNum = appStoreBadgeNum + num;
-                    appBadgeMapSum.remove(app.getAppID());
-                }
-
-            }
+        Router router = Router.getInstance();
+        if (router.getService(ApplicationService.class) != null) {
+            ApplicationService service = router.getService(ApplicationService.class);
+            return service.getFilterAppStoreBadgeNum(appBadgeMap);
         }
-        return appStoreBadgeNum;
+        return 0;
     }
 
     private void setTabBarBadge(String tabName, int number) {
@@ -712,10 +700,6 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
             String mainTabName = getMainTabName(tabId);
             PVCollectModelCacheUtils.saveCollectModel(mainTabName, mainTabName);
             isSystemChangeTag = true;
-        }
-        //每次切换到工作tab时需要发出通知，刷新日程数据
-        if (tabId.equals(Constant.APP_TAB_BAR_WORK)) {
-            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED));
         }
     }
 

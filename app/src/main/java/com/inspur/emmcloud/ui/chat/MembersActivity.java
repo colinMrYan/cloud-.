@@ -29,12 +29,12 @@ import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.FlowLayout;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
-import com.inspur.emmcloud.baselib.widget.MaxHightScrollView;
+import com.inspur.emmcloud.baselib.widget.MaxHeightScrollView;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
-import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.PersonDto;
+import com.inspur.emmcloud.componentservice.communication.Conversation;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
@@ -83,7 +83,7 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
     @BindView(R.id.flow_layout)
     FlowLayout flowLayout;
     @BindView(R.id.search_edit_layout)
-    MaxHightScrollView searchEditLayout;
+    MaxHeightScrollView searchEditLayout;
 
     EditText editText;
     private CharacterParser characterParser;// 汉字转拼音

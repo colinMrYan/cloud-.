@@ -6,7 +6,6 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,6 +13,7 @@ import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.SpannableString;
 import android.view.View;
@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ChannelMessageAdapter;
@@ -30,6 +31,7 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
+import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.ListUtils;
@@ -43,7 +45,6 @@ import com.inspur.emmcloud.basemodule.api.APIDownloadCallBack;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.DownloadFileCategory;
 import com.inspur.emmcloud.basemodule.bean.EventMessage;
-import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
@@ -63,7 +64,6 @@ import com.inspur.emmcloud.basemodule.util.imagepicker.bean.ImageItem;
 import com.inspur.emmcloud.basemodule.util.imagepicker.ui.ImageGridActivity;
 import com.inspur.emmcloud.basemodule.util.mycamera.MyCameraActivity;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
-import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetChannelMessagesResult;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentMediaImage;
@@ -72,6 +72,10 @@ import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
 import com.inspur.emmcloud.bean.chat.UIMessage;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
 import com.inspur.emmcloud.bean.system.VoiceResult;
+import com.inspur.emmcloud.componentservice.Schedule.ScheduleService;
+import com.inspur.emmcloud.componentservice.communication.Conversation;
+import com.inspur.emmcloud.componentservice.communication.OnCreateDirectConversationListener;
+import com.inspur.emmcloud.componentservice.communication.SearchModel;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.interf.ResultCallback;
@@ -82,7 +86,6 @@ import com.inspur.emmcloud.ui.chat.pop.PopupWindowList;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
-import com.inspur.emmcloud.ui.schedule.meeting.ScheduleAddActivity;
 import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
@@ -166,87 +169,9 @@ public class ConversationActivity extends ConversationBaseActivity {
 
     private UIMessage backUiMessage = null;
 
-    /**
-     * 根据播放状态设置VoiceAnimView的背景
-     *
-     * @param voiceAnimView
-     * @param isPlaying
-     * @param isMyMsg
-     */
-    private void setVoiceAnimViewBgByPlayStatus(View voiceAnimView, boolean isPlaying, boolean isMyMsg) {
-        if (voiceAnimView != null) {
-            if (isPlaying) {
-                voiceAnimView.setBackgroundResource(isMyMsg ? R.drawable.chat_voice_message_play_right : R.drawable.chat_voice_message_play_left);
-                AnimationDrawable drawable = (AnimationDrawable) voiceAnimView
-                        .getBackground();
-                if (drawable.isRunning()) {
-                    drawable.stop();
-                }
-                drawable.start();
-            } else {
-                voiceAnimView.setBackgroundResource(isMyMsg ? R.drawable.ic_chat_msg_card_voice_right_level_3 : R.drawable.ic_chat_msg_card_voice_left_level_3);
-            }
-        }
-    }
 
-    /**
-     * 播放语音
-     *
-     * @param fileSavePath
-     * @param voiceAnimView
-     * @param isMyMsg
-     */
-    private void playVoiceFile(String fileSavePath, final View voiceAnimView, final boolean isMyMsg, final UIMessage uiMessage) {
-        MediaPlayerManagerUtils.getManager().play(fileSavePath, new MediaPlayerManagerUtils.PlayCallback() {
-            @Override
-            public void onPrepared() {
-            }
 
-            @Override
-            public void onComplete() {
-                setVoiceAnimViewBgByPlayStatus(voiceAnimView, false, isMyMsg);
-                findNextPackVoiceMessageAndClick(uiMessage);
-            }
 
-            @Override
-            public void onStop() {
-                setVoiceAnimViewBgByPlayStatus(voiceAnimView, false, isMyMsg);
-            }
-        });
-    }
-
-    /**
-     * 查找下一条未播放的语音消息并点击（点击包含下载，播放动画，播放语音消息等操作）
-     *
-     * @param uiMessage
-     */
-    private void findNextPackVoiceMessageAndClick(UIMessage uiMessage) {
-        //找到当前语音消息的位置，并判断当前播放的消息不是自己发的
-        int index = uiMessageList.indexOf(uiMessage);
-        if (index != -1 && !uiMessage.getMessage().getFromUser().equals(BaseApplication.getInstance().getUid())) {
-            //找到当前语音消息后面的UIMessageList
-            List<UIMessage> nextUIMessageList = uiMessageList.subList(index, uiMessageList.size());
-            //遍历nextUIMessageList
-            for (final UIMessage uiMessagePlay : nextUIMessageList) {
-                Message messagePlay = uiMessagePlay.getMessage();
-                //找到第一条不是自己发出的，未播放过的语音消息
-                if (!messagePlay.getFromUser().equals(BaseApplication.getInstance().getUid())
-                        && messagePlay.getType().equals(Message.MESSAGE_TYPE_MEDIA_VOICE)
-                        && messagePlay.getLifeCycleState() == 0) {
-                    //找到未播放的消息在消息列表里的位置滑动到此消息的位置并播放
-                    final int playIndex = uiMessageList.indexOf(uiMessagePlay);
-                    msgListView.MoveToPosition(playIndex);
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            voiceBubbleOnClick(linearLayoutManager.findViewByPosition(playIndex), uiMessagePlay);
-                        }
-                    }, 100);
-                    break;
-                }
-            }
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -494,6 +419,80 @@ public class ConversationActivity extends ConversationBaseActivity {
         });
     }
 
+    /**
+     * 播放语音
+     *
+     * @param fileSavePath
+     * @param isMyMsg
+     */
+    private void playVoiceFile(String fileSavePath, final boolean isMyMsg, final UIMessage uiMessage) {
+        MediaPlayerManagerUtils.getManager().play(fileSavePath, new MediaPlayerManagerUtils.PlayCallback() {
+            @Override
+            public void onPrepared() {
+            }
+
+            @Override
+            public void onComplete() {
+                findNextPackVoiceMessageAndClick(uiMessage);
+                uiMessage.setVoicePlayState(DisplayMediaVoiceMsg.VOICE_PLAY_COMPELTE);
+                refreshAdapterItem(uiMessage);
+
+            }
+
+            @Override
+            public void onStop() {
+                uiMessage.setVoicePlayState(DisplayMediaVoiceMsg.VOICE_PLAY_STOP);
+                refreshAdapterItem(uiMessage);
+            }
+        });
+    }
+
+    /**
+     * 刷新指定消息的item
+     *
+     * @param uiMessage
+     */
+    private void refreshAdapterItem(UIMessage uiMessage) {
+        int position = uiMessageList.indexOf(uiMessage);
+        if (position != -1) {
+            adapter.notifyItemChanged(position);
+        }
+    }
+
+    /**
+     * 查找下一条未播放的语音消息并点击（点击包含下载，播放动画，播放语音消息等操作）
+     *
+     * @param uiMessage
+     */
+    private void findNextPackVoiceMessageAndClick(UIMessage uiMessage) {
+        //找到当前语音消息的位置，并判断当前播放的消息不是自己发的
+        int index = uiMessageList.indexOf(uiMessage);
+        if (index != -1 && !uiMessage.getMessage().getFromUser().equals(BaseApplication.getInstance().getUid())) {
+            //找到当前语音消息后面的UIMessageList
+            List<UIMessage> nextUIMessageList = uiMessageList.subList(index, uiMessageList.size());
+            //遍历nextUIMessageList
+            for (final UIMessage uiMessagePlay : nextUIMessageList) {
+                Message messagePlay = uiMessagePlay.getMessage();
+                //找到第一条不是自己发出的，未播放过的语音消息
+                if (!messagePlay.getFromUser().equals(BaseApplication.getInstance().getUid())
+                        && messagePlay.getType().equals(Message.MESSAGE_TYPE_MEDIA_VOICE)
+                        && messagePlay.getLifeCycleState() == 0) {
+                    //找到未播放的消息在消息列表里的位置滑动到此消息的位置并播放
+                    final int playIndex = uiMessageList.indexOf(uiMessagePlay);
+                    msgListView.MoveToPosition(playIndex);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            uiMessagePlay.setVoicePlayState(DisplayMediaVoiceMsg.VOICE_PLAYING);
+                            voiceBubbleOnClick(uiMessagePlay);
+                        }
+                    }, 100);
+                    break;
+                }
+            }
+        }
+    }
+
     private void showRequestSmallWindowDialog() {
         new CustomDialog.MessageDialogBuilder(this)
                 .setMessage(getString(R.string.permission_grant_window_alert, AppUtils.getAppName(this)))
@@ -630,6 +629,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     private void initMsgListView() {
         linearLayoutManager = new LinearLayoutManager(this);
         msgListView.setLayoutManager(linearLayoutManager);
+        ((DefaultItemAnimator) msgListView.getItemAnimator()).setSupportsChangeAnimations(false);
         adapter = new ChannelMessageAdapter(ConversationActivity.this, conversation.getType(), chatInputMenu);
         adapter.setItemClickListener(new ChannelMessageAdapter.MyItemClickListener() {
             @Override
@@ -1577,7 +1577,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     private void createDirectChannel(String uid, final UIMessage uiMessage) {
         if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
             new ConversationCreateUtils().createDirectConversation(this, uid,
-                    new ConversationCreateUtils.OnCreateDirectConversationListener() {
+                    new OnCreateDirectConversationListener() {
                         @Override
                         public void createDirectConversationSuccess(Conversation conversation) {
                             transmitMsg(conversation.getId(), uiMessage);
@@ -1831,7 +1831,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 }
                 break;
             case Message.MESSAGE_TYPE_MEDIA_VOICE:
-                voiceBubbleOnClick(view, uiMessage);
+                voiceBubbleOnClick(uiMessage);
                 break;
             default:
                 NotificationUpgradeUtils upgradeUtils = new NotificationUpgradeUtils(context,
@@ -1844,18 +1844,12 @@ public class ConversationActivity extends ConversationBaseActivity {
     /**
      * 语音播放点击事件
      **/
-    private void voiceBubbleOnClick(final View cardContentView, final UIMessage uiMessage) {
-
+    private void voiceBubbleOnClick(final UIMessage uiMessage) {
         if (uiMessage.getSendStatus() != 1) {
             return;
         }
         final Message message = uiMessage.getMessage();
         final boolean isMyMsg = message.getFromUser().equals(MyApplication.getInstance().getUid());
-        final View voiceAnimView = isMyMsg ? cardContentView.findViewById(R.id.v_voice_anim_right) : cardContentView.findViewById(R.id.v_voice_anim_left);
-        final CustomLoadingView downloadLoadingView = (CustomLoadingView) cardContentView.findViewById(isMyMsg ? R.id.qlv_downloading_left : R.id.qlv_downloading_right);
-        if (downloadLoadingView.getVisibility() == View.VISIBLE) {
-            return;
-        }
         final String fileSavePath = MyAppConfig.getCacheVoiceFilePath(message.getChannel(), message.getId());
         if (MediaPlayerManagerUtils.getManager().isPlaying(fileSavePath)) {
             MediaPlayerManagerUtils.getManager().stop();
@@ -1867,24 +1861,24 @@ public class ConversationActivity extends ConversationBaseActivity {
 
 
         if (!FileUtils.isFileExist(fileSavePath)) {
-            downloadLoadingView.setVisibility(View.VISIBLE);
+            uiMessage.setVoicePlayState(DisplayMediaVoiceMsg.VOICE_NOT_DOWNLOAD);
+            refreshAdapterItem(uiMessage);
             String source = APIUri.getChatVoiceFileResouceUrl(message.getChannel(), message.getMsgContentMediaVoice().getMedia());
             new DownLoaderUtils().startDownLoad(source, fileSavePath, new APIDownloadCallBack(source) {
 
                 @Override
                 public void callbackSuccess(File file) {
-                    downloadLoadingView.setVisibility(View.GONE);
                     //当下载完成时如果mediaplayer没有被占用则播放语音
                     if (!MediaPlayerManagerUtils.getManager().isPlaying()) {
-                        playVoiceFile(fileSavePath, voiceAnimView, isMyMsg, uiMessage);
-                        setVoiceAnimViewBgByPlayStatus(voiceAnimView, true, isMyMsg);
+                        playVoiceFile(fileSavePath, isMyMsg, uiMessage);
+                        uiMessage.setVoicePlayState(DisplayMediaVoiceMsg.VOICE_PLAYING);
+                        setVoiceUnPack(ConversationActivity.this, message);
+                        refreshAdapterItem(uiMessage);
                     }
-                    setVoiceUnPack(cardContentView.findViewById(R.id.v_pack), ConversationActivity.this, message);
                 }
 
                 @Override
                 public void callbackError(Throwable arg0, boolean arg1) {
-                    downloadLoadingView.setVisibility(View.GONE);
                     ToastUtils.show(MyApplication.getInstance(), R.string.play_fail);
                 }
 
@@ -1893,9 +1887,10 @@ public class ConversationActivity extends ConversationBaseActivity {
                 }
             });
         } else {
-            playVoiceFile(fileSavePath, voiceAnimView, isMyMsg, uiMessage);
-            setVoiceAnimViewBgByPlayStatus(voiceAnimView, true, isMyMsg);
-            setVoiceUnPack(cardContentView.findViewById(R.id.v_pack), ConversationActivity.this, message);
+            playVoiceFile(fileSavePath, isMyMsg, uiMessage);
+            uiMessage.setVoicePlayState(DisplayMediaVoiceMsg.VOICE_PLAYING);
+            setVoiceUnPack(ConversationActivity.this, message);
+            refreshAdapterItem(uiMessage);
         }
     }
 
@@ -1906,10 +1901,9 @@ public class ConversationActivity extends ConversationBaseActivity {
      * @param context
      * @param message
      */
-    private void setVoiceUnPack(View unPackView, Context context, Message message) {
+    private void setVoiceUnPack(Context context, Message message) {
         message.setLifeCycleState(Message.MESSAGE_LIFE_UNPACK);
         MessageCacheUtil.saveMessageLifeCycleState(context, message);
-        unPackView.setVisibility(View.GONE);
     }
 
     /**
@@ -1956,7 +1950,9 @@ public class ConversationActivity extends ConversationBaseActivity {
                         break;
                     case R.string.voice_to_word:
                         recognizerMediaVoiceMessage(uiMessage, messageView);
-                        setVoiceUnPack(messageView.findViewById(R.id.v_pack), ConversationActivity.this, uiMessage.getMessage());
+                        setVoiceUnPack(ConversationActivity.this, uiMessage.getMessage());
+                        uiMessage.setVoicePlayState(DisplayMediaVoiceMsg.VOICE_PLAY_STOP);
+                        refreshAdapterItem(uiMessage);
                         break;
                     case R.string.chat_resend_message:
                         resendMessage(uiMessage);
@@ -2060,10 +2056,12 @@ public class ConversationActivity extends ConversationBaseActivity {
      * 文本信息添加到日程
      */
     private void addTextToSchedule(String content) {
-        Intent intent = new Intent();
-        intent.putExtra(Constant.EXTRA_SCHEDULE_TITLE_EVENT, content);
-        intent.setClass(ConversationActivity.this, ScheduleAddActivity.class);
-        startActivity(intent);
+        Router router = Router.getInstance();
+        if (router.getService(ScheduleService.class) != null) {
+            Bundle bundle = new Bundle();
+            bundle.putString(Constant.EXTRA_SCHEDULE_TITLE_EVENT, content);
+            ARouter.getInstance().build(Constant.AROUTER_CLASS_SCHEDLE_ADD).with(bundle).navigation(ConversationActivity.this);
+        }
     }
 
     /**

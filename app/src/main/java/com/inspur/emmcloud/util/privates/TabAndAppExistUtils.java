@@ -2,16 +2,14 @@ package com.inspur.emmcloud.util.privates;
 
 import android.content.Context;
 
+import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
-import com.inspur.emmcloud.bean.appcenter.App;
-import com.inspur.emmcloud.bean.appcenter.AppGroupBean;
 import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.bean.system.MainTabResult;
-import com.inspur.emmcloud.util.privates.cache.MyAppCacheUtils;
+import com.inspur.emmcloud.componentservice.application.ApplicationService;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by yufuchang on 2018/5/14.
@@ -46,15 +44,10 @@ public class TabAndAppExistUtils {
      * @return
      */
     public static boolean isAppExist(Context context, String scheme) {
-        List<AppGroupBean> appGroupList = MyAppCacheUtils.getMyAppList(context);
-        for (int i = 0; i < appGroupList.size(); i++) {
-            AppGroupBean appGroupBean = appGroupList.get(i);
-            List<App> appList = appGroupBean.getAppItemList();
-            for (int j = 0; j < appList.size(); j++) {
-                if (appList.get(j).getUri().equals(scheme)) {
-                    return true;
-                }
-            }
+        Router router = Router.getInstance();
+        if (router.getService(ApplicationService.class) != null) {
+            ApplicationService service = router.getService(ApplicationService.class);
+            return service.isAppExist(context, scheme);
         }
         return false;
     }
@@ -67,15 +60,10 @@ public class TabAndAppExistUtils {
      * @return
      */
     public static String getVolumeIconUrl(Context context, String scheme) {
-        List<AppGroupBean> appGroupList = MyAppCacheUtils.getMyAppList(context);
-        for (int i = 0; i < appGroupList.size(); i++) {
-            AppGroupBean appGroupBean = appGroupList.get(i);
-            List<App> appList = appGroupBean.getAppItemList();
-            for (int j = 0; j < appList.size(); j++) {
-                if (appList.get(j).getUri().equals(scheme)) {
-                    return appList.get(j).getAppIcon();
-                }
-            }
+        Router router = Router.getInstance();
+        if (router.getService(ApplicationService.class) != null) {
+            ApplicationService service = router.getService(ApplicationService.class);
+            return service.getVolumeIconUrl(context, scheme);
         }
         return "";
     }

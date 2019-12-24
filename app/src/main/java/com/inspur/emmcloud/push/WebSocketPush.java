@@ -15,6 +15,8 @@ import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.bean.EventMessage;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
+import com.inspur.emmcloud.basemodule.bean.badge.BadgeBodyModel;
+import com.inspur.emmcloud.basemodule.bean.badge.GetWebSocketBadgeResult;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.push.PushManagerUtils;
 import com.inspur.emmcloud.basemodule.util.AppExceptionCacheUtils;
@@ -27,8 +29,6 @@ import com.inspur.emmcloud.bean.WSCommandBatch;
 import com.inspur.emmcloud.bean.chat.GetVoiceAndVideoResult;
 import com.inspur.emmcloud.bean.chat.WSCommand;
 import com.inspur.emmcloud.bean.chat.WSPushContent;
-import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
-import com.inspur.emmcloud.bean.system.badge.GetWebSocketBadgeResult;
 import com.inspur.emmcloud.componentservice.login.LoginService;
 import com.inspur.emmcloud.util.privates.MessageSendManager;
 

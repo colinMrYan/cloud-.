@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name_application">application</string>
+
+    <!-- 应用部分 -->
+    <string name="application_app_not_support_app_type">不支持打开此类型应用</string>
+    <string name="application_adding"> 添加中</string>
+    <string name="application_add_app"> 添加应用</string>
+    <string name="application_app_search_null"> 未搜索到任何应用</string>
+    <string name="application_app_input_search_key"> 请输入搜索关键字</string>
+    <string name="application_delete">删除</string>
+    <string name="application_app_must_be_app_cannot_edit">当前应用皆为必装，不可编辑</string>
+    <string name="application_app_center">应用中心</string>
+    <string name="application_detail">详情</string>
+    <string name="application_search">请输入关键字</string>
+    <string name="application_app_commonly_use">开启常用模式</string>
+    <string name="application_app_commonly_use_close">结束常用模式</string>
+    <string name="application_app_center_more_apps">更多应用</string>
+    <string name="application_app_input_mail_password">请输入公司邮箱密码</string>
+    <string name="application_app_need_input_mail_password">第一次使用或密码修改后需要输入</string>
+    <string name="application_app_download">应用下载中：</string>
+    <string name="application_app_password_error">密码错误，请重新输入</string>
+    <string name="application_app_password_encrypt_error">密码加密出错</string>
+    <string name="application_app_recommand">推荐</string>
+    <string name="application_app_classification">分类</string>
+    <string name="application_app_create_shortcut_no_more_remind">不再提醒</string>
+    <string name="application_app_commonly_use_app">是否将移动签到添加到桌面快捷方式，一键签到?</string>
+    <string name="application_no_app">当前没有添加应用</string>
+    <string name="application_app_sort_order">调整顺序</string>
+</resources>

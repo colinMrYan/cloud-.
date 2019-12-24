@@ -1,7 +1,7 @@
 package com.inspur.emmcloud.ui.chat.mvp.contract;
 
 import com.inspur.emmcloud.basemodule.mvp.BaseView;
-import com.inspur.emmcloud.bean.chat.Conversation;
+import com.inspur.emmcloud.componentservice.communication.Conversation;
 
 import java.util.List;
 

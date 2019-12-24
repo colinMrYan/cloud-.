@@ -35,11 +35,11 @@ import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.Channel;
-import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.mine.GetUserCardMenusResult;
 import com.inspur.emmcloud.bean.system.MainTabProperty;
 import com.inspur.emmcloud.bean.system.MineLayoutItem;
 import com.inspur.emmcloud.bean.system.MineLayoutItemGroup;
+import com.inspur.emmcloud.componentservice.communication.Conversation;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.ui.mine.card.CardPackageActivity;
@@ -56,6 +56,9 @@ import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 import static android.app.Activity.RESULT_OK;
 
 /**
@@ -64,21 +67,30 @@ import static android.app.Activity.RESULT_OK;
 public class MoreFragment extends BaseFragment {
 
     private static final int REQUEST_CODE_UPDATE_USER_PHOTO = 3;
-    private View rootView;
+    @BindView(R.id.expandable_list)
+    ExpandableListView expandListView;
     private List<MineLayoutItemGroup> mineLayoutItemGroupList = new ArrayList<>();
     private BaseExpandableListAdapter adapter;
     private MyClickListener myClickListener = new MyClickListener();
     private GetMyInfoResult getMyInfoResult;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
-        LayoutInflater inflater =
-                (LayoutInflater) getActivity().getSystemService(getActivity().LAYOUT_INFLATER_SERVICE);
-        rootView = inflater.inflate(R.layout.fragment_mine, null);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_mine, container, false);
+        unbinder = ButterKnife.bind(this, view);
+        setFragmentStatusBarWhite();
         initData();
         initViews();
+        return view;
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden) {
+            setFragmentStatusBarWhite();
+        }
     }
 
     private void initData() {
@@ -138,24 +150,11 @@ public class MoreFragment extends BaseFragment {
         getUserCardMenu();
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        setFragmentStatusBarWhite();
-        if (rootView == null) {
-            rootView = inflater.inflate(R.layout.fragment_mine, container, false);
-        }
-        ViewGroup parent = (ViewGroup) rootView.getParent();
-        if (parent != null) {
-            parent.removeView(rootView);
-        }
-        return rootView;
-    }
 
     /**
      * 初始化views
      */
     private void initViews() {
-        ExpandableListView expandListView = rootView.findViewById(R.id.expandable_list);
         expandListView.setGroupIndicator(null);
         expandListView.setVerticalScrollBarEnabled(false);
         expandListView.setHeaderDividersEnabled(false);

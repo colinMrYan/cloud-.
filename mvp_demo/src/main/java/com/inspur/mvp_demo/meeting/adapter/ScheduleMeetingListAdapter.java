@@ -58,7 +58,7 @@ public class ScheduleMeetingListAdapter extends BaseAdapter {
         ViewHolder holder;
         if (null == view) {
             holder = new ViewHolder();
-            view = View.inflate(context, R.layout.schedule_meeting_list_item_view, null);
+            view = View.inflate(context, R.layout.schedule_meeting_list_item_mvp_view, null);
             holder.buildingText = view.findViewById(R.id.tv_building);
             holder.dateText = view.findViewById(R.id.tv_date);
             holder.displayNameText = view.findViewById(R.id.tv_display_name);
@@ -88,9 +88,9 @@ public class ScheduleMeetingListAdapter extends BaseAdapter {
         holder.dateText.setText(dateBuilder.toString());
         holder.buildingText.setText(meeting.getScheduleLocationObj().getBuilding());
         if (StringUtils.isBlank(meeting.getScheduleLocationObj().getId())) {
-            holder.iconImg.setImageResource(R.drawable.ic_schedule_meeting_type_out);
+            holder.iconImg.setImageResource(R.drawable.ic_schedule_meeting_type_out_mvp);
         } else {
-            holder.iconImg.setImageResource(R.drawable.ic_schedule_meeting_type_common);
+            holder.iconImg.setImageResource(R.drawable.ic_schedule_meeting_type_common_mvp);
         }
         view.setOnClickListener(new View.OnClickListener() {
             @Override

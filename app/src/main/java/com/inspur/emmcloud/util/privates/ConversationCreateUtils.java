@@ -17,7 +17,9 @@ import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
-import com.inspur.emmcloud.bean.chat.Conversation;
+import com.inspur.emmcloud.componentservice.communication.Conversation;
+import com.inspur.emmcloud.componentservice.communication.OnCreateDirectConversationListener;
+import com.inspur.emmcloud.componentservice.communication.OnCreateGroupConversationListener;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 
 import org.json.JSONArray;
@@ -114,17 +116,17 @@ public class ConversationCreateUtils {
         return nameBuilder.toString();
     }
 
-    public interface OnCreateDirectConversationListener {
-        void createDirectConversationSuccess(Conversation conversation);
-
-        void createDirectConversationFail();
-    }
-
-    public interface OnCreateGroupConversationListener {
-        void createGroupConversationSuccess(Conversation conversation);
-
-        void createGroupConversationFail();
-    }
+//    public interface OnCreateDirectConversationListener {
+//        void createDirectConversationSuccess(Conversation conversation);
+//
+//        void createDirectConversationFail();
+//    }
+//
+//    public interface OnCreateGroupConversationListener {
+//        void createGroupConversationSuccess(Conversation conversation);
+//
+//        void createGroupConversationFail();
+//    }
 
     private class WebService extends APIInterfaceInstance {
 

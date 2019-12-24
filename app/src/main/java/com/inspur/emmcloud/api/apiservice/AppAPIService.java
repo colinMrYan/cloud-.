@@ -19,15 +19,14 @@ import com.inspur.emmcloud.basemodule.api.HttpUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.bean.appcenter.GetClientIdRsult;
-import com.inspur.emmcloud.bean.appcenter.ReactNativeUpdateBean;
 import com.inspur.emmcloud.bean.system.GetAppConfigResult;
 import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.bean.system.GetUpgradeResult;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
-import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
 import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
 import com.inspur.emmcloud.componentservice.login.LoginService;
 import com.inspur.emmcloud.componentservice.login.OauthCallBack;
+import com.inspur.reactnative.bean.ReactNativeUpdateBean;
 
 import org.xutils.http.RequestParams;
 
@@ -500,81 +499,6 @@ public class AppAPIService {
     }
 
 
-    /**
-     * 获取app badge数量
-     */
-    public void getBadgeCount() {
-        final String url = APIUri.getBadgeCountUrl();
-        RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, url) {
-            @Override
-            public void callbackSuccess(byte[] arg0) {
-                apiInterface.returnBadgeCountSuccess(new BadgeBodyModel(new String(arg0)));
-            }
 
-            @Override
-            public void callbackFail(String error, int responseCode) {
-                apiInterface.returnBadgeCountFail(error, responseCode);
-            }
 
-            @Override
-            public void callbackTokenExpire(long requestTime) {
-                OauthCallBack oauthCallBack = new OauthCallBack() {
-                    @Override
-                    public void reExecute() {
-                        getBadgeCount();
-                    }
-
-                    @Override
-                    public void executeFailCallback() {
-                        callbackFail("", -1);
-                    }
-                };
-                refreshToken(oauthCallBack, requestTime);
-            }
-        });
-    }
-
-    /**
-     * 获取网络连通状态
-     *
-     * @param url
-     */
-    public void getCloudConnectStateUrl(final String url) {
-        RequestParams params = ((MyApplication) context.getApplicationContext())
-                .getHttpRequestParams(url);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, url) {
-            @Override
-            public void callbackSuccess(byte[] arg0) {
-                apiInterface.returnCheckCloudPluseConnectionSuccess(arg0, url);
-            }
-
-            @Override
-            public void callbackFail(String error, int responseCode) {
-                if (responseCode == 302 || responseCode == 301) {
-                    apiInterface.returnCheckCloudPluseConnectionSuccess(null, url);
-                } else {
-                    apiInterface.returnCheckCloudPluseConnectionError(error, responseCode, url);
-                }
-            }
-
-            @Override
-            public void callbackTokenExpire(long requestTime) {
-                OauthCallBack oauthCallBack = new OauthCallBack() {
-                    @Override
-                    public void reExecute() {
-                        getCloudConnectStateUrl(url);
-                    }
-
-                    @Override
-                    public void executeFailCallback() {
-                        callbackFail("", -1);
-                    }
-                };
-                refreshToken(
-                        oauthCallBack, requestTime);
-            }
-
-        });
-    }
 }

@@ -37,7 +37,7 @@ public class MeetingHistoryActivity extends BaseMvpActivity<MeetingHistoryPresen
 
     @Override
     public int getLayoutResId() {
-        return R.layout.fragment_schedule_meeting;
+        return R.layout.fragment_schedule_meetin_mvp;
     }
 
     private void init() {
