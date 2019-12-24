@@ -22,7 +22,7 @@ import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
-import com.inspur.emmcloud.componentservice.appcenter.ApplicationService;
+import com.inspur.emmcloud.componentservice.application.ApplicationService;
 import com.inspur.emmcloud.componentservice.communication.OnFinishActivityListener;
 import com.inspur.emmcloud.componentservice.communication.OnGetWebAppRealUrlListener;
 

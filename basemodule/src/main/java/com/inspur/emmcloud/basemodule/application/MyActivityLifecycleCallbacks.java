@@ -12,7 +12,7 @@ import com.inspur.emmcloud.basemodule.util.AppExceptionManager;
 import com.inspur.emmcloud.basemodule.util.AppPVManager;
 import com.inspur.emmcloud.basemodule.util.ClientIDUtils;
 import com.inspur.emmcloud.componentservice.app.AppService;
-import com.inspur.emmcloud.componentservice.appcenter.ApplicationService;
+import com.inspur.emmcloud.componentservice.application.ApplicationService;
 import com.inspur.emmcloud.componentservice.login.LoginService;
 import com.inspur.emmcloud.componentservice.setting.SettingService;
 

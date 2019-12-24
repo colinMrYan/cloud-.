@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.componentservice.appcenter;
+package com.inspur.emmcloud.componentservice.application;
 
 import android.app.Activity;
 import android.content.Context;

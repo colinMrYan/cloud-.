@@ -10,7 +10,7 @@ import java.util.List;
 
 
 /**
- * classes : com.inspur.emmcloud.bean.appcenter.AppGroupBean Create at 2016年12月14日
+ * classes : com.inspur.emmcloud.bean.application.AppGroupBean Create at 2016年12月14日
  * 下午5:36:46
  */
 public class AppGroupBean {

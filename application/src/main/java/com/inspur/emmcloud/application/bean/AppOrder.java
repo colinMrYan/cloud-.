@@ -5,7 +5,7 @@ import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
 
 /**
- * classes : com.inspur.emmcloud.bean.appcenter.AppOrder
+ * classes : com.inspur.emmcloud.bean.application.AppOrder
  * Create at 2016年12月17日 下午2:53:19
  */
 @Table(name = "AppOrder")
