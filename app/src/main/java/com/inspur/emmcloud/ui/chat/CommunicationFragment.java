@@ -17,7 +17,6 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -116,7 +115,7 @@ import io.socket.client.Socket;
 /**
  * 沟通页面
  */
-public class CommunicationFragment extends BaseFragment {
+public class CommunicationFragment extends BaseFragment implements View.OnClickListener {
 
     private static final int CREATE_CHANNEL_GROUP = 1;
     private static final int REQUEST_SCAN_LOGIN_QRCODE_RESULT = 5;
@@ -144,33 +143,6 @@ public class CommunicationFragment extends BaseFragment {
     private boolean isFirstConnectWebsocket = true;//判断是否第一次连上websocket
     private LoadingDialog loadingDlg;
     private CheckingNetStateUtils checkingNetStateUtils;
-    private OnClickListener onViewClickListener = new OnClickListener() {
-
-        @Override
-        public void onClick(View v) {
-            // TODO Auto-generated method stub
-            switch (v.getId()) {
-                case R.id.message_create_group_layout:
-                    Intent contactIntent = new Intent();
-                    contactIntent.putExtra(ContactSearchFragment.EXTRA_TYPE, 2);
-                    contactIntent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, true);
-                    contactIntent.putExtra(ContactSearchFragment.EXTRA_TITLE,
-                            getActivity().getString(R.string.message_create_group));
-                    contactIntent.setClass(getActivity(), ContactSearchActivity.class);
-                    startActivityForResult(contactIntent, CREATE_CHANNEL_GROUP);
-                    popupWindow.dismiss();
-                    break;
-                case R.id.message_scan_layout:
-                    AppUtils.openScanCode(CommunicationFragment.this, REQUEST_SCAN_LOGIN_QRCODE_RESULT);
-                    popupWindow.dismiss();
-                    break;
-
-                default:
-                    break;
-            }
-        }
-    };
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -238,7 +210,7 @@ public class CommunicationFragment extends BaseFragment {
     }
 
     @OnClick({R.id.more_function_list_img, R.id.contact_img, R.id.tv_search_contact})
-    public void onClick(View view) {
+    public void onViewClick(View view) {
         switch (view.getId()) {
             case R.id.more_function_list_img:
                 showPopupWindow();
@@ -260,7 +232,28 @@ public class CommunicationFragment extends BaseFragment {
 
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.message_create_group_layout:
+                Intent contactIntent = new Intent();
+                contactIntent.putExtra(ContactSearchFragment.EXTRA_TYPE, 2);
+                contactIntent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, true);
+                contactIntent.putExtra(ContactSearchFragment.EXTRA_TITLE,
+                        getActivity().getString(R.string.message_create_group));
+                contactIntent.setClass(getActivity(), ContactSearchActivity.class);
+                startActivityForResult(contactIntent, CREATE_CHANNEL_GROUP);
+                popupWindow.dismiss();
+                break;
+            case R.id.message_scan_layout:
+                AppUtils.openScanCode(CommunicationFragment.this, REQUEST_SCAN_LOGIN_QRCODE_RESULT);
+                popupWindow.dismiss();
+                break;
 
+            default:
+                break;
+        }
+    }
     /**
      * 注册接收消息的广播
      */
@@ -448,8 +441,8 @@ public class CommunicationFragment extends BaseFragment {
                 AppUtils.setWindowBackgroundAlpha(getActivity(), 1.0f);
             }
         });
-        contentView.findViewById(R.id.message_create_group_layout).setOnClickListener(onViewClickListener);
-        contentView.findViewById(R.id.message_scan_layout).setOnClickListener(onViewClickListener);
+        contentView.findViewById(R.id.message_create_group_layout).setOnClickListener(this);
+        contentView.findViewById(R.id.message_scan_layout).setOnClickListener(this);
         popupWindow.setBackgroundDrawable(getResources().getDrawable(
                 R.drawable.pop_window_view_tran));
         AppUtils.setWindowBackgroundAlpha(getActivity(), 0.8f);

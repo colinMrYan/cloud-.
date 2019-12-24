@@ -29,6 +29,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.application.R;
+import com.inspur.emmcloud.application.R2;
 import com.inspur.emmcloud.application.adapter.RecommendAppWidgetListAdapter;
 import com.inspur.emmcloud.application.api.ApplicationAPIService;
 import com.inspur.emmcloud.application.api.ApplicationApiInterfaceImpl;
@@ -104,28 +105,28 @@ public class MyAppFragment extends BaseFragment {
 
     private static final int REQUEST_SCAN_LOGIN_QRCODE_RESULT = 5;
     private static final String ACTION_NAME = "add_app";
-    @BindView(R.id.my_app_list)
+    @BindView(R2.id.my_app_list)
     ListView appListView;
-    @BindView(R.id.ibt_appcenter_config)
+    @BindView(R2.id.ibt_appcenter_config)
     ImageButton configBtn;
-    @BindView(R.id.ibt_appcenter_enter)
+    @BindView(R2.id.ibt_appcenter_enter)
     ImageButton appcenterEnterBtn;
-    @BindView(R.id.bt_sort_finish)
+    @BindView(R2.id.bt_sort_finish)
     Button sortFinishBtn;
-    @BindView(R.id.tv_header)
+    @BindView(R2.id.tv_header)
     TextView headerText;
-    @BindView(R.id.refresh_layout)
+    @BindView(R2.id.refresh_layout)
     MySwipeRefreshLayout swipeRefreshLayout;
-    @BindView(R.id.my_app_recommend_app_widget_layout)
+    @BindView(R2.id.my_app_recommend_app_widget_layout)
     RelativeLayout myAppRecommendAppWidgetLayout;
-    @BindView(R.id.rl_no_app)
+    @BindView(R2.id.rl_no_app)
     RelativeLayout noAppLayout;
-    @BindView(R.id.my_app_recommend_app_wiget_recyclerview)
+    @BindView(R2.id.my_app_recommend_app_wiget_recyclerview)
     RecyclerView recommendAppWidgetListView;
     private long lastOnItemClickTime = 0;//防止多次点击
     private AppListAdapter appListAdapter;
     private BroadcastReceiver mBroadcastReceiver;
-    private MyAppAPIService apiService;
+    private ApplicationAPIService apiService;
     private MyAppSaveTask myAppSaveTask;
     private Map<String, Integer> appStoreBadgeMap = new HashMap<>();
     private RecommendAppWidgetListAdapter recommendAppWidgetListAdapter = null;
@@ -386,7 +387,7 @@ public class MyAppFragment extends BaseFragment {
     private void setTabTitle() {
         String appTabs = PreferencesByUserAndTanentUtils.getString(getActivity(), Constant.PREF_APP_TAB_BAR_INFO_CURRENT, "");
         if (!StringUtils.isBlank(appTabs)) {
-            headerText.setText(getHeaderText(getClass().getSimpleName());
+            headerText.setText(getHeaderText(getClass().getSimpleName()));
         }
     }
 
@@ -837,25 +838,25 @@ public class MyAppFragment extends BaseFragment {
                 && (MyAppCacheUtils.getMyAppListFromNet(getActivity()).size() != appListAdapter.getCount());
     }
 
-    @OnClick({R.id.my_app_recommend_app_widget_img, R.id.ibt_appcenter_config, R.id.bt_sort_finish, R.id.ibt_appcenter_enter})
+    @OnClick({R2.id.my_app_recommend_app_widget_img, R2.id.ibt_appcenter_config, R2.id.bt_sort_finish, R2.id.ibt_appcenter_enter})
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.my_app_recommend_app_widget_img:
-                myAppRecommendAppWidgetLayout.setVisibility(View.GONE);
-                MyAppWidgetUtils.saveNotShowDate(getActivity(), TimeUtils.getEndTime());
-                break;
-            case R.id.ibt_appcenter_enter:
-                IntentUtils.startActivity(getActivity(), AppCenterActivity.class);
-                PVCollectModelCacheUtils.saveCollectModel("appcenter", "application");
-                break;
-            case R.id.ibt_appcenter_config:
-                showPopupWindow(view);
-                break;
-            case R.id.bt_sort_finish:
-                appListAdapter.setCanEdit(false);
-                appListAdapter.notifyDataSetChanged();
-                setAppEditStatus(false);
-                break;
+        int i = view.getId();
+        if (i == R.id.my_app_recommend_app_widget_img) {
+            myAppRecommendAppWidgetLayout.setVisibility(View.GONE);
+            MyAppWidgetUtils.saveNotShowDate(getActivity(), TimeUtils.getEndTime());
+
+        } else if (i == R.id.ibt_appcenter_enter) {
+            IntentUtils.startActivity(getActivity(), AppCenterActivity.class);
+            PVCollectModelCacheUtils.saveCollectModel("appcenter", "application");
+
+        } else if (i == R.id.ibt_appcenter_config) {
+            showPopupWindow(view);
+
+        } else if (i == R.id.bt_sort_finish) {
+            appListAdapter.setCanEdit(false);
+            appListAdapter.notifyDataSetChanged();
+            setAppEditStatus(false);
+
         }
     }
 

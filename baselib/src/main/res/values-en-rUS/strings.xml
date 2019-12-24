@@ -175,7 +175,6 @@
     <string name="message_without_interruption">Mute Notifications</string>
     <string name="channel_single_chat_images">Images</string>
     <string name="channel_single_chat_files">Files</string>
-    <string name="login_hint_text">Name/E-mail/Phone</string>
     <string name="modify_group_name">Group Contact Card</string>
     <string name="choose_common_office">common office address</string>
     <string name="please_click_choosing_time">Please click and choose time</string>
@@ -1091,11 +1090,7 @@
     <!--科大讯飞语音-->
     <string name="voice_input">Voice Input</string>
 
-    <string name="clear">Clear</string>
-    <string name="confirm_clear">Confirm clear?</string>
-    <string name="login_more_current_enterprise">Current System：</string>
-    <string name="login_more_scan_find_left">Scan to[</string>
-    <string name="login_more_scan_find_right">]Do you decide to add？</string>
+
     <string name="cluster_default">default</string>
 
     <string name="volume_read_write_permission">Can View/Upload</string>

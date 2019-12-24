@@ -177,11 +177,6 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
     private int originCurrentArea = 0; // orgin页面目前的搜索模式
     private int searchArea = 0; // 搜索范围
     private String title;
-    // popupWindow中的控件与数据
-    private LinearLayout popSecondGroupLayou;
-    private LinearLayout popThirdGroupLayou;
-    private ListView popSecondGroupListView;
-    private ListView popThirdGroupListView;
     private List<SearchModel> searchChannelGroupList = new ArrayList<>(); // 群组搜索结果
     private List<Contact> searchContactList = new ArrayList<Contact>(); // 通讯录搜索结果
     private PopAdapter popSecondGroupAdapter;

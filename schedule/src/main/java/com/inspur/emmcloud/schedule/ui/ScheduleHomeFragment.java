@@ -1,6 +1,5 @@
 package com.inspur.emmcloud.schedule.ui;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -28,6 +27,7 @@ import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseFragment;
 import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.schedule.R;
+import com.inspur.emmcloud.schedule.R2;
 import com.inspur.emmcloud.schedule.adapter.ScheduleHomeFragmentAdapter;
 import com.inspur.emmcloud.schedule.bean.calendar.AccountType;
 import com.inspur.emmcloud.schedule.bean.calendar.ScheduleCalendar;
@@ -61,17 +61,17 @@ public class ScheduleHomeFragment extends BaseFragment {
     private static final String PV_COLLECTION_CAL = "calendar";
     private static final String PV_COLLECTION_MISSION = "task";
     private static final String PV_COLLECTION_MEETING = "meeting";
-    @BindView(R.id.tab_layout_schedule)
+    @BindView(R2.id.tab_layout_schedule)
     TabLayout tabLayout;
-    @BindView(R.id.view_pager_all_schedule)
+    @BindView(R2.id.view_pager_all_schedule)
     CustomScrollViewPager viewPager;
-    @BindView(R.id.ibt_today)
+    @BindView(R2.id.ibt_today)
     ImageButton todayImgBtn;
-    @BindView(R.id.tv_date)
+    @BindView(R2.id.tv_date)
     TextView dateText;
-    @BindView(R.id.tv_error_info)
+    @BindView(R2.id.tv_error_info)
     TextView errorInfoText;
-    @BindView(R.id.rl_error)
+    @BindView(R2.id.rl_error)
     RelativeLayout errorLayout;
     private ScheduleFragment scheduleFragment;
     private MeetingFragment meetingFragment;
@@ -107,6 +107,7 @@ public class ScheduleHomeFragment extends BaseFragment {
         if (!hidden) {
             setFragmentStatusBarCommon();
             refreshDate();
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED));
         }
     }
 
@@ -183,6 +184,7 @@ public class ScheduleHomeFragment extends BaseFragment {
     private void initView() {
         initTabLayout();
         viewPager.setScrollable(false);
+        viewPager.setOffscreenPageLimit(4);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -362,20 +364,19 @@ public class ScheduleHomeFragment extends BaseFragment {
         return menuItemList;
     }
 
-    @OnClick({R.id.ibt_add, R.id.ibt_today, R.id.rl_error})
+    @OnClick({R2.id.ibt_add, R2.id.ibt_today, R2.id.rl_error})
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.ibt_add:
-                showAddPopMenu(view);
-                break;
-            case R.id.ibt_today:
-                scheduleFragment.setScheduleBackToToday();
-                break;
-            case R.id.rl_error:
-                Bundle bundle = new Bundle();
-                bundle.putString("from", "schedule_exchange_login");
-                ARouter.getInstance().build(Constant.AROUTER_CLASS_MAIL_LOGIN).with(bundle).navigation();
-                break;
+        int i = view.getId();
+        if (i == R.id.ibt_add) {
+            showAddPopMenu(view);
+
+        } else if (i == R.id.ibt_today) {
+            scheduleFragment.setScheduleBackToToday();
+
+        } else if (i == R.id.rl_error) {
+            Bundle bundle = new Bundle();
+            bundle.putString("from", "schedule_exchange_login");
+            ARouter.getInstance().build(Constant.AROUTER_CLASS_MAIL_LOGIN).with(bundle).navigation();
 
         }
     }

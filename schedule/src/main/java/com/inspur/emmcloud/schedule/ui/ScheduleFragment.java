@@ -32,6 +32,7 @@ import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.componentservice.communication.CommunicationService;
 import com.inspur.emmcloud.componentservice.communication.ShareToConversationListener;
 import com.inspur.emmcloud.schedule.R;
+import com.inspur.emmcloud.schedule.R2;
 import com.inspur.emmcloud.schedule.adapter.ScheduleAllDayEventListAdapter;
 import com.inspur.emmcloud.schedule.adapter.ScheduleEventListAdapter;
 import com.inspur.emmcloud.schedule.api.ScheduleAPIInterfaceImpl;
@@ -62,6 +63,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import butterknife.BindView;
+
 /**
  * Created by yufuchang on 2019/2/18.
  */
@@ -69,13 +72,20 @@ import java.util.Map;
 public class ScheduleFragment extends ScheduleBaseFragment implements
         View.OnClickListener, ScheduleEventListener,
         ScheduleEventListAdapter.OnItemClickLister {
-    private TextView scheduleSumText;
-    private RecyclerView eventRecyclerView;
-    private LinearLayout scheduleListDefaultLayout;
-    private RelativeLayout allDayLayout;
-    private RelativeLayout eventAllDayLayout;
-    private ImageView eventAllDayImg;
-    private TextView eventAllDayTitleText;
+    @BindView(R2.id.tv_schedule_sum)
+    TextView scheduleSumText;
+    @BindView(R2.id.recycler_view_event)
+    RecyclerView eventRecyclerView;
+    @BindView(R2.id.rl_schedule_list_default)
+    LinearLayout scheduleListDefaultLayout;
+    @BindView(R2.id.rl_all_day)
+    RelativeLayout allDayLayout;
+    @BindView(R2.id.rl_event_all_day)
+    RelativeLayout eventAllDayLayout;
+    @BindView(R2.id.iv_event_all_day)
+    ImageView eventAllDayImg;
+    @BindView(R2.id.tv_event_title_all_day)
+    TextView eventAllDayTitleText;
     private ScheduleEventListAdapter scheduleEventListAdapter;
     private Boolean isEventShowTypeList;
     private ScheduleAPIService apiService;
@@ -89,7 +99,6 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
 
     @Override
     protected void init() {
-        EventBus.getDefault().register(this);
         apiService = new ScheduleAPIService(getActivity());
         apiService.setAPIInterface(new WebService());
         pageStartCalendar = TimeUtils.getDayBeginCalendar(Calendar.getInstance());
@@ -114,20 +123,6 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
 
     private void initView() {
         loadingDlg = new LoadingDialog(getActivity());
-        contentLayout = rootView.findViewById(R.id.rl_content);
-        calendarView = rootView.findViewById(R.id.calendar_view_schedule);
-        calendarLayout = rootView.findViewById(R.id.calendar_layout_schedule);
-        scheduleDataText = rootView.findViewById(R.id.tv_schedule_date);
-        calendarViewExpandImg = rootView.findViewById(R.id.iv_calendar_view_expand);
-        calendarDayView = rootView.findViewById(R.id.calendar_day_view);
-        scheduleSumText = rootView.findViewById(R.id.tv_schedule_sum);
-        eventScrollView = rootView.findViewById(R.id.scroll_view_event);
-        eventRecyclerView = rootView.findViewById(R.id.recycler_view_event);
-        scheduleListDefaultLayout = rootView.findViewById(R.id.rl_schedule_list_default);
-        allDayLayout = rootView.findViewById(R.id.rl_all_day);
-        eventAllDayLayout = rootView.findViewById(R.id.rl_event_all_day);
-        eventAllDayImg = rootView.findViewById(R.id.iv_event_all_day);
-        eventAllDayTitleText = rootView.findViewById(R.id.tv_event_title_all_day);
         calendarLayout.setExpandListener(this);
         calendarView.setOnCalendarSelectListener(this);
         calendarViewExpandImg.setOnClickListener(this);
@@ -165,11 +160,6 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         calendarDayView.setOnLongClickListener(this);
         calendarDayView.setOnClickListener(this);
     }
-
-//    @Override
-//    protected void initScheduleCalendar() {
-//        scheduleCalendarList = ScheduleCalendarCacheUtils.getScheduleCalendarList(BaseApplication.getInstance(), true);
-//    }
 
     /**
      * 设置事件展示样式-日视图和列表视图

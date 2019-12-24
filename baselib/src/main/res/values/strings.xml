@@ -187,7 +187,6 @@
     <string name="channel_single_chat_images">聊天图片</string>
     <string name="channel_single_chat_files">文件</string>
     <string name="channel_search_more_group_members">查看全部群成员</string>
-    <string name="login_hint_text">用户名/邮箱/手机号</string>
     <string name="modify_group_name">群名片</string>
     <string name="choose_common_office">常用办公地点</string>
     <string name="please_click_choosing_time">请点击选择时间</string>
@@ -1146,12 +1145,7 @@
     <string name="volume_read_permission">拥有查看权限</string>
     <string name="volume_no_permission">无权限</string>
 
-    <string name="clear">清除</string>
-    <string name="confirm_clear">确认清除？</string>
-    <string name="login_more_current_enterprise">当前登录系统：</string>
 
-    <string name="login_more_scan_find_left">扫描到[</string>
-    <string name="login_more_scan_find_right">]确定添加吗？</string>
 
     <string name="cluster_default">默认</string>
 

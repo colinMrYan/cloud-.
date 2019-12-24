@@ -701,10 +701,6 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
             PVCollectModelCacheUtils.saveCollectModel(mainTabName, mainTabName);
             isSystemChangeTag = true;
         }
-        //每次切换到工作tab时需要发出通知，刷新日程数据
-        if (tabId.equals(Constant.APP_TAB_BAR_WORK)) {
-            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED));
-        }
     }
 
     @Override
