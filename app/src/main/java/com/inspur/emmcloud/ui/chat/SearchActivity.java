@@ -102,6 +102,10 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     private List<SearchModel> groupConversationList = new ArrayList<>();
     private List<Conversation> directConversationList = new ArrayList<>();
     private List<ConversationWithMessageNum> conversationFromChatContentList = new ArrayList<>();
+    private List<SearchModel> contactResultList = new ArrayList<>();
+    private List<SearchModel> groupConversationResultList = new ArrayList<>();
+    private List<Conversation> directConversationResultList = new ArrayList<>();
+    private List<ConversationWithMessageNum> conversationFromChatContentResultList = new ArrayList<>();
     private Runnable searchRunnable;
     private String searchArea = SEARCH_ALL;
     private Handler handler;
@@ -211,21 +215,32 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                         if (directConversationList == null) {
                             directConversationList = new ArrayList<>();
                         }
-                        searchMoreContentLayout.setVisibility(contactList.size() > 2 ? View.VISIBLE : View.GONE);
-                        searchMoreGroupLayout.setVisibility(groupConversationList.size() > 2 ? View.VISIBLE : View.GONE);
-                        searchMorePrivateChatLayout.setVisibility(directConversationList.size() > 2 ? View.VISIBLE : View.GONE);
-                        searchMoreContactFromChatLayout.setVisibility(conversationFromChatContentList.size() > 2 ? View.VISIBLE : View.GONE);
-                        allGroupLayout.setVisibility(groupConversationList.size() > 0 ? View.VISIBLE : View.GONE);
-                        allContactLayout.setVisibility(contactList.size() > 0 ? View.VISIBLE : View.GONE);
-                        allContentLayout.setVisibility(conversationFromChatContentList.size() > 0 ? View.VISIBLE : View.GONE);
-                        allPrivateChatLayout.setVisibility(directConversationList.size() > 0 ? View.VISIBLE : View.GONE);
-                        groupAdapter.setContentList(groupConversationList); //搜索群组
+                        if (conversationFromChatContentList == null) {
+                            conversationFromChatContentList = new ArrayList<>();
+                        }
+                        contactResultList.clear();
+                        contactResultList.addAll(contactList);
+                        groupConversationResultList.clear();
+                        groupConversationResultList.addAll(groupConversationList);
+                        directConversationResultList.clear();
+                        directConversationResultList.addAll(directConversationList);
+                        conversationFromChatContentResultList.clear();
+                        conversationFromChatContentResultList.addAll(conversationFromChatContentList);
+                        searchMoreContentLayout.setVisibility(contactResultList.size() > 2 ? View.VISIBLE : View.GONE);
+                        searchMoreGroupLayout.setVisibility(groupConversationResultList.size() > 2 ? View.VISIBLE : View.GONE);
+                        searchMorePrivateChatLayout.setVisibility(directConversationResultList.size() > 2 ? View.VISIBLE : View.GONE);
+                        searchMoreContactFromChatLayout.setVisibility(conversationFromChatContentResultList.size() > 2 ? View.VISIBLE : View.GONE);
+                        allGroupLayout.setVisibility(groupConversationResultList.size() > 0 ? View.VISIBLE : View.GONE);
+                        allContactLayout.setVisibility(contactResultList.size() > 0 ? View.VISIBLE : View.GONE);
+                        allContentLayout.setVisibility(conversationFromChatContentResultList.size() > 0 ? View.VISIBLE : View.GONE);
+                        allPrivateChatLayout.setVisibility(directConversationResultList.size() > 0 ? View.VISIBLE : View.GONE);
+                        groupAdapter.setContentList(groupConversationResultList); //搜索群组
                         groupAdapter.notifyDataSetChanged();
-                        privateChatAdapter.setConversationList(directConversationList); //私聊搜索
+                        privateChatAdapter.setConversationList(directConversationResultList); //私聊搜索
                         privateChatAdapter.notifyDataSetChanged();
-                        contactAdapter.setContentList(contactList); //搜索联系人刷新
+                        contactAdapter.setContentList(contactResultList); //搜索联系人刷新
                         contactAdapter.notifyDataSetChanged();
-                        conversationFromChatContentAdapter.setConversationList(conversationFromChatContentList);//频道内消息刷新
+                        conversationFromChatContentAdapter.setConversationList(conversationFromChatContentResultList);//频道内消息刷新
                         conversationFromChatContentAdapter.notifyDataSetChanged();
                         break;
                     case CLEAR_DATA:
@@ -286,27 +301,27 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         Bundle bundle = new Bundle();
         switch (adapterView.getId()) {
             case R.id.lv_search_group:
-                if (i < groupConversationList.size()) {
-                    openChannel(groupConversationList.get(i));
+                if (i < groupConversationResultList.size()) {
+                    openChannel(groupConversationResultList.get(i));
                 }
                 break;
             case R.id.lv_search_contact:
-                if (i < contactList.size()) {
-                    bundle.putString("uid", contactList.get(i).getId());
+                if (i < contactResultList.size()) {
+                    bundle.putString("uid", contactResultList.get(i).getId());
                     IntentUtils.startActivity(this, UserInfoActivity.class, bundle);
                 }
                 break;
             case R.id.lv_search_contact_from_chat:
-                if (i < conversationFromChatContentList.size()) {
+                if (i < conversationFromChatContentResultList.size()) {
                     Intent intent = new Intent(SearchActivity.this, CommunicationSearchMessagesActivity.class);
-                    intent.putExtra(SEARCH_ALL_FROM_CHAT, conversationFromChatContentList.get(i));
+                    intent.putExtra(SEARCH_ALL_FROM_CHAT, conversationFromChatContentResultList.get(i));
                     intent.putExtra(SEARCH_CONTENT, searchText);
                     startActivity(intent);
                 }
                 break;
             case R.id.lv_search_private_chat:
-                if (i < directConversationList.size()) {
-                    bundle.putString(ConversationActivity.EXTRA_CID, directConversationList.get(i).getId());
+                if (i < directConversationResultList.size()) {
+                    bundle.putString(ConversationActivity.EXTRA_CID, directConversationResultList.get(i).getId());
                     IntentUtils.startActivity(this, ConversationActivity.class, bundle, true);
                 }
                 break;
@@ -337,11 +352,11 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         SearchModel searchModel;
         switch (adapterView.getId()) {
             case R.id.lv_search_group:
-                searchModel = groupConversationList.get(position);
+                searchModel = groupConversationResultList.get(position);
                 handleSearchModelShare(searchModel);
                 break;
             case R.id.lv_search_contact:
-                searchModel = contactList.get(position);
+                searchModel = contactResultList.get(position);
                 handleSearchModelShare(searchModel);
                 break;
             case R.id.lv_search_private_chat:
@@ -349,7 +364,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                 handleSearchModelShare(searchModel);
                 break;
             case R.id.lv_search_contact_from_chat:
-                ConversationWithMessageNum conversationFromChatContent = conversationFromChatContentList.get(position);
+                ConversationWithMessageNum conversationFromChatContent = conversationFromChatContentResultList.get(position);
                 final Conversation conversation = conversationFromChatContent.getConversation();
                 searchModel = conversation.conversation2SearchModel();
                 ShareUtil.share(this, searchModel, shareContent);
@@ -423,13 +438,10 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        List<SearchModel> groupsSearchList = new ArrayList<>();        //群组
-                        List<Conversation> privateChatSearchList = new ArrayList<>();  //私聊
-                        List<Contact> contactsSearchList = new ArrayList<>(); //联系人
-                        List<ConversationWithMessageNum> conversationFromChatContentNums = new ArrayList<>();//
                         switch (searchArea) {
                             case SEARCH_ALL:
                                 /***搜索群组***/
+                                List<SearchModel> groupsSearchList;
                                 if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
                                     groupsSearchList = ChannelGroupCacheUtils.getSearchChannelGroupSearchModelList(MyApplication.getInstance(), searchText);
                                 } else {
@@ -440,21 +452,22 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                                     groupConversationList.add(groupsSearchList.get(i));
                                 }
                                 /***搜索私聊***/
-                                privateChatSearchList = ConversationCacheUtils.getSearchConversationPrivateChatSearchModelList(MyApplication.getInstance(), searchText);
+                                List<Conversation> privateChatSearchList = ConversationCacheUtils.getSearchConversationPrivateChatSearchModelList(MyApplication.getInstance(), searchText);
                                 directConversationList = new ArrayList<>();
                                 for (int i = 0; i < (privateChatSearchList.size() > 3 ? 3 : privateChatSearchList.size()); i++) {
                                     directConversationList.add(privateChatSearchList.get(i));
                                 }
                                 /***搜索联系人***/
+                                List<Contact> contactsSearchList = new ArrayList<>(); //联系人
                                 if (isSearchContacts) {
-                                    contactList = new ArrayList<>();
                                     contactsSearchList = ContactUserCacheUtils.getSearchContact(searchText, null, 3);
                                 }
+                                contactList = new ArrayList<>();
                                 for (int j = 0; j < contactsSearchList.size(); j++) {
                                     contactList.add(contactsSearchList.get(j).contact2SearchModel());
                                 }
                                 /***通过聊天内容搜索***/
-                                conversationFromChatContentNums = oriChannelInfoByKeyword(searchText);
+                                List<ConversationWithMessageNum> conversationFromChatContentNums = oriChannelInfoByKeyword(searchText);
                                 conversationFromChatContentList = new ArrayList<>();
                                 for (int m = 0; m < conversationFromChatContentNums.size(); m++) {
                                     conversationFromChatContentList.add(conversationFromChatContentNums.get(m));
@@ -464,8 +477,25 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                                     Iterator<ConversationWithMessageNum> iterator = conversationFromChatContentList.iterator();
                                     while (iterator.hasNext()) {
                                         ConversationWithMessageNum fromChatContent = iterator.next();
-                                        if (fromChatContent.getConversation().getType().equals(Conversation.TYPE_CAST)) {
+                                        String input = fromChatContent.getConversation().getInput();
+                                        int inputNum = 0;
+                                        if (!StringUtils.isBlank(input)) {
+                                            inputNum = Integer.parseInt(input);
+                                        }
+                                        if (fromChatContent.getConversation().getType().equals(Conversation.TYPE_CAST) && inputNum == 0) {
                                             iterator.remove();
+                                        }
+                                    }
+                                    Iterator<Conversation> iteratorPrivateChat = directConversationList.iterator();
+                                    while (iteratorPrivateChat.hasNext()) {
+                                        Conversation tempConversation = iteratorPrivateChat.next();
+                                        String input = tempConversation.getInput();
+                                        int inputNum = 0;
+                                        if (!StringUtils.isBlank(input)) {
+                                            inputNum = Integer.parseInt(input);
+                                        }
+                                        if (tempConversation.getType().equals(Conversation.TYPE_CAST) && inputNum == 0) {
+                                            iteratorPrivateChat.remove();
                                         }
                                     }
                                 }

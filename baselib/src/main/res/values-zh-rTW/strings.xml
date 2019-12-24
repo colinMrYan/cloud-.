@@ -813,9 +813,6 @@
     <string name="meeting_room_ilegal_time">時間非法，請檢查 </string>
     <string name="meeting_room_time_late">開始時間不能早於當前時間</string>
 
-    <string name="schedule_add">新建</string>
-    <string name="schedule_update">编辑</string>
-    <string name="schedule_add_position">请输入地点...</string>
 
 
     <!-- 会议预定错误提示 -->
