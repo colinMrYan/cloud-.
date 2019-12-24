@@ -202,7 +202,17 @@ public class CommunicationV0Fragment extends BaseFragment {
     @Override
     public void onResume() {
         checkingNetStateUtils.getNetStateResult(5);
+        setFragmentStatusBarCommon();
         super.onResume();
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden) {
+            checkingNetStateUtils.getNetStateResult(5);
+            setFragmentStatusBarCommon();
+        }
     }
 
     /**

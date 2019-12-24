@@ -46,8 +46,8 @@ import com.inspur.emmcloud.bean.system.MainTabResult;
 import com.inspur.emmcloud.bean.system.TabBean;
 import com.inspur.emmcloud.broadcastreceiver.NetworkChangeReceiver;
 import com.inspur.emmcloud.broadcastreceiver.ScreenBroadcastReceiver;
-import com.inspur.emmcloud.componentservice.appcenter.ApplicationService;
 import com.inspur.emmcloud.componentservice.schedule.ScheduleService;
+import com.inspur.emmcloud.componentservice.application.ApplicationService;
 import com.inspur.emmcloud.componentservice.web.WebService;
 import com.inspur.emmcloud.ui.chat.CommunicationFragment;
 import com.inspur.emmcloud.ui.chat.CommunicationV0Fragment;
@@ -103,11 +103,6 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
         registerNetWorkListenerAccordingSysLevel();
         registerScreenReceiver();
         initTabs();
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        // super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -705,10 +700,6 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
             String mainTabName = getMainTabName(tabId);
             PVCollectModelCacheUtils.saveCollectModel(mainTabName, mainTabName);
             isSystemChangeTag = true;
-        }
-        //每次切换到工作tab时需要发出通知，刷新日程数据
-        if (tabId.equals(Constant.APP_TAB_BAR_WORK)) {
-            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED));
         }
     }
 

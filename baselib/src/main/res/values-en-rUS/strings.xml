@@ -61,7 +61,7 @@
     <string name="cancel_filter">Cancle filter</string>
     <string name="only_free">Only free</string>
     <string name="invite_friends_text">Recommend Cloud+ to Friends</string>
-    <string name="tab_not_support_tips">%1$s function has been revised , Please<Data><![CDATA[<font color=\'#0F7BCA\'>upgrade</font>]]></Data></string>
+    <string name="tab_not_support_tips">%1$s function has been revised, please <Data><![CDATA[<font color=\'#0F7BCA\'>upgrade</font>]]></Data></string>
     <string name="choose">Choose</string>
     <string name="file_type">File type</string>
     <string name="app_update_prepare">Ready to download</string>
@@ -175,7 +175,6 @@
     <string name="message_without_interruption">Mute Notifications</string>
     <string name="channel_single_chat_images">Images</string>
     <string name="channel_single_chat_files">Files</string>
-    <string name="login_hint_text">Name/E-mail/Phone</string>
     <string name="modify_group_name">Group Contact Card</string>
     <string name="choose_common_office">common office address</string>
     <string name="please_click_choosing_time">Please click and choose time</string>
@@ -1086,11 +1085,7 @@
     <!--科大讯飞语音-->
     <string name="voice_input">Voice Input</string>
 
-    <string name="clear">Clear</string>
-    <string name="confirm_clear">Confirm clear?</string>
-    <string name="login_more_current_enterprise">Current System：</string>
-    <string name="login_more_scan_find_left">Scan to[</string>
-    <string name="login_more_scan_find_right">]Do you decide to add？</string>
+
     <string name="cluster_default">default</string>
 
     <string name="volume_read_write_permission">Can View/Upload</string>

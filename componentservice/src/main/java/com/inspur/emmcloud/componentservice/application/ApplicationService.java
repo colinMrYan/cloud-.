@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.componentservice.appcenter;
+package com.inspur.emmcloud.componentservice.application;
 
 import android.app.Activity;
 import android.content.Context;
@@ -36,5 +36,8 @@ public interface ApplicationService extends CoreService {
     void getMyAppRecommendWidgets();
 
     void getWebAppRealUrl(OnGetWebAppRealUrlListener listener, String url);
+
+    void startSyncCommonAppService();
+
 
 }

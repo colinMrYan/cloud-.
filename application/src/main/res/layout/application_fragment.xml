@@ -90,7 +90,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginRight="15dp"
         android:layout_marginBottom="20dp"
-        android:background="@drawable/shape_recommend_widget_layout"
+        android:background="@drawable/application_shape_recommend_widget_layout"
         android:paddingTop="4dp"
         android:paddingBottom="4dp"
         android:visibility="gone">

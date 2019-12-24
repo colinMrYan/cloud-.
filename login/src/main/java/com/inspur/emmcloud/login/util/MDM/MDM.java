@@ -11,8 +11,8 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
-import com.inspur.emmcloud.basemodule.util.Res;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.login.R;
 import com.inspur.emmcloud.login.api.LoginAPIInterfaceImpl;
 import com.inspur.emmcloud.login.api.LoginAPIService;
 import com.inspur.emmcloud.login.api.LoginAPIUri;
@@ -97,7 +97,7 @@ public class MDM extends LoginAPIInterfaceImpl {
                 break;
             case STATUS_NOT_REGISTERED:
                 goDeviceRegister();
-            ToastUtils.show(context, Res.getStringID("device_not_register"));
+                ToastUtils.show(context, R.string.login_device_not_register);
                 break;
             case STATUS_IN_BLACKLIST:
                 showWraningDlg(STATUS_IN_BLACKLIST);
@@ -119,7 +119,7 @@ public class MDM extends LoginAPIInterfaceImpl {
             mdmListener.dimissExternalLoadingDlg();
         }
         Bundle bundle = new Bundle();
-        bundle.putString("appName", context.getString(Res.getStringID("device_registe")));
+        bundle.putString("appName", context.getString(R.string.login_device_registe));
         bundle.putString("function", "mdm");
         bundle.putString("uri", LoginAPIUri.getDeviceRegisterUrl(context));
         ARouter.getInstance().build(Constant.AROUTER_CLASS_WEB_MAIN).with(bundle).navigation();
@@ -154,24 +154,24 @@ public class MDM extends LoginAPIInterfaceImpl {
     private void showWraningDlg(final int status) {
         String title = "";
         if (status == STATUS_DISABLE) {
-            title = context.getString(Res.getStringID("device_disabled_cannot_login"));
+            title = context.getString(R.string.login_device_disabled_cannot_login);
         } else if (status == STATUS_WAITING_VERIFY) {
             if (isImpActivity) {
                 title = context
-                        .getString(Res.getStringID("register_submit_waitting_verify"));
+                        .getString(R.string.login_register_submit_waitting_verify);
             } else {
-                title = context.getString(Res.getStringID("device_waitting_verify"));
+                title = context.getString(R.string.login_device_waitting_verify);
             }
         } else {
-            title = context.getString(Res.getStringID("device_in_blacklist"));
+            title = context.getString(R.string.login_device_in_blacklist);
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context,
                 android.R.style.Theme_Holo_Light_Dialog);
 
-        builder.setTitle(context.getString(Res.getStringID("mdm_tips")));
+        builder.setTitle(context.getString(R.string.prompt));
         builder.setMessage(title);
-        builder.setPositiveButton(context.getString(Res.getStringID("mdm_sure")),
+        builder.setPositiveButton(context.getString(R.string.ok),
                 new OnClickListener() {
 
                     @Override

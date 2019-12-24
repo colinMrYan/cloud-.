@@ -61,7 +61,7 @@ public class AppDetailActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_app_detail;
+        return R.layout.application_activity_app_detail;
     }
 
 
@@ -193,7 +193,7 @@ public class AppDetailActivity extends BaseActivity {
 
         @Override
         public AppDetailImageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = inflater.inflate(R.layout.app_intr_img_view, null);
+            View view = inflater.inflate(R.layout.application_intr_img_view, null);
             AppDetailImageViewHolder viewHolder = new AppDetailImageViewHolder(view);
             viewHolder.appDetailImg = (ImageView) view.findViewById(R.id.detail_img);
             return viewHolder;

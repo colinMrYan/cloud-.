@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * classes : com.inspur.emmcloud.bean.appcenter.GetAppGroupResult
+ * classes : com.inspur.emmcloud.bean.application.GetAppGroupResult
  * Create at 2016年12月14日 下午7:49:58
  */
 public class GetAppGroupResult {

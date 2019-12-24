@@ -187,7 +187,7 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
             public void onSuccess(VolumeFile volumeFile) {
                 Log.d("zhang", "handleUploadCallback onSuccess: ");
 //                holder.descTv.setText(R.string.download_complete);
-                holder.itemView.setEnabled(false);
+//                holder.itemView.setEnabled(false);
 //                fileList.remove(volumeFile);
                 //下载成功停留2S中转换状态
 //                VolumeFileUpload volumeFileUpload = VolumeFileUploadManager.getInstance().
@@ -247,7 +247,7 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
                 Log.d("zhang", "handleDownloadCallback onSuccess: ");
                 holder.progressBar.setStatus(CircleProgressBar.Status.Success);
                 holder.descTv.setText(R.string.download_complete);
-                holder.itemView.setEnabled(false);
+//                holder.itemView.setEnabled(false);
 //                fileList.remove(volumeFile);
                 //下载成功停留2S中转换状态
 //                originVolumeFile.setStatus(VolumeFile.STATUS_NORMAL);

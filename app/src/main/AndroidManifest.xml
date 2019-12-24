@@ -244,6 +244,9 @@
                 <data android:mimeType="application/x-compress"></data>
                 <data android:mimeType="application/x-7z-compressed"></data>
                 <data android:mimeType="application/zip"></data>
+                <data android:mimeType="application/rar"></data>
+                <data android:mimeType="application/x-rar"></data>
+                <data android:mimeType="application/x-bzip2"></data>
                 <data android:mimeType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"></data>
                 <data android:mimeType="application/vnd.openxmlformats-officedocument.spreadsheetml.template"></data>
                 <data android:mimeType="application/vnd.openxmlformats-officedocument.wordprocessingml.document"></data>

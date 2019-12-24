@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * classes : com.inspur.emmcloud.bean.appcenter.GetSearchAppResult
+ * classes : com.inspur.emmcloud.bean.application.GetSearchAppResult
  * Create at 2017年1月17日 下午2:21:11
  */
 public class GetSearchAppResult {

@@ -2,6 +2,8 @@ package com.inspur.emmcloud.ui.chat;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.AnimationDrawable;
+import android.os.Handler;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +18,8 @@ import com.inspur.emmcloud.adapter.ChannelMessageAdapter;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.CustomLoadingView;
+import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentMediaVoice;
 import com.inspur.emmcloud.bean.chat.UIMessage;
@@ -29,6 +33,13 @@ import com.inspur.emmcloud.widget.bubble.BubbleLayout;
 public class DisplayMediaVoiceMsg {
     public static final boolean IS_VOICE_WORD_OPEN = true;
     public static final boolean IS_VOICE_WORD_CLOUSE = false;
+    public static final int VOICE_NOT_DOWNLOAD = 0;
+    public static final int VOICE_DOWNLOADING = 1;
+    public static final int VOICE_DOWNLOAD_FINISH = 2;
+    public static final int VOICE_NOT_PLAY = 3;
+    public static final int VOICE_PLAYING = 4;
+    public static final int VOICE_PLAY_COMPELTE = 5;
+    public static final int VOICE_PLAY_STOP = 6;
 
     public static View getView(final Context context, final UIMessage uiMessage, final ChannelMessageAdapter.MyItemClickListener mItemClickListener) {
         final Message message = uiMessage.getMessage();
@@ -48,7 +59,15 @@ public class DisplayMediaVoiceMsg {
         //校正UI，因消息部分未支持撤回机制，暂不开放，控制两分以内发送的消息才显示校正
         //TextView correctedSpeechInputText = (TextView) cardContentView.findViewById(R.id.tv_corrected_speech_input);
         //correctedSpeechInputText.setVisibility(((System.currentTimeMillis() - message.getCreationDate() <= 120 * 1000) && isMyMsg)?View.VISIBLE:View.GONE);
+        final String fileSavePath = MyAppConfig.getCacheVoiceFilePath(message.getChannel(), message.getId());
         durationText.setVisibility(View.VISIBLE);
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                setVoiceAnimViewBgByPlayStatus(voiceAnimView, uiMessage.getVoicePlayState() == VOICE_PLAYING, isMyMsg);
+            }
+        });
+
         MsgContentMediaVoice msgContentMediaVoice = message.getMsgContentMediaVoice();
         TextView speechText = (TextView) cardContentView.findViewById(R.id.tv_voice_card_word);
         int duration = msgContentMediaVoice.getDuration();
@@ -72,15 +91,12 @@ public class DisplayMediaVoiceMsg {
         voiceBubbleLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                downloadLoadingView.setVisibility(FileUtils.isFileExist(fileSavePath) ? View.GONE : View.VISIBLE);
                 if (mItemClickListener != null) {
                     mItemClickListener.onCardItemClick(cardContentView, uiMessage);
                 }
             }
         });
-
-
-
 
         voiceBubbleLayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -95,5 +111,26 @@ public class DisplayMediaVoiceMsg {
     }
 
 
+    /**
+     * 根据播放状态设置VoiceAnimView的背景
+     *
+     * @param voiceAnimView
+     * @param isPlaying
+     * @param isMyMsg
+     */
+    private static void setVoiceAnimViewBgByPlayStatus(View voiceAnimView, boolean isPlaying, boolean isMyMsg) {
+        if (voiceAnimView != null) {
+            if (isPlaying) {
+                voiceAnimView.setBackgroundResource(isMyMsg ? R.drawable.chat_voice_message_play_right : R.drawable.chat_voice_message_play_left);
+                final AnimationDrawable drawable = (AnimationDrawable) voiceAnimView.getBackground();
+                if (drawable.isRunning()) {
+                    drawable.stop();
+                }
+                drawable.start();
+            } else {
+                voiceAnimView.setBackgroundResource(isMyMsg ? R.drawable.ic_chat_msg_card_voice_right_level_3 : R.drawable.ic_chat_msg_card_voice_left_level_3);
+            }
+        }
+    }
 
 }

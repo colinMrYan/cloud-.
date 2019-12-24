@@ -91,7 +91,7 @@ public class AppCenterAdapter extends BaseAdapter {
             holder = new Holder();
             LayoutInflater vi = (LayoutInflater) activity
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = vi.inflate(R.layout.all_app_item_view, null);
+            convertView = vi.inflate(R.layout.application_all_app_item_view, null);
             holder.iconImg = (ImageView) convertView
                     .findViewById(R.id.app_icon_img);
             holder.nameText = (TextView) convertView

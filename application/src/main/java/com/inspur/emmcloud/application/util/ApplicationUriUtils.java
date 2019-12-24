@@ -14,7 +14,7 @@ import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
-import com.inspur.emmcloud.componentservice.appcenter.AppcenterService;
+import com.inspur.emmcloud.componentservice.app.AppService;
 import com.inspur.emmcloud.componentservice.communication.OnGetWebAppRealUrlListener;
 
 
@@ -68,8 +68,8 @@ public class ApplicationUriUtils {
                 Bundle bundle = new Bundle();
                 bundle.putString("ecc-app-react-native", uri);
                 Router router = Router.getInstance();
-                if (router.getService(AppcenterService.class) != null) {
-                    AppcenterService service = router.getService(AppcenterService.class);
+                if (router.getService(AppService.class) != null) {
+                    AppService service = router.getService(AppService.class);
                     service.startReactNativeApp(activity, bundle);
                 }
                 break;

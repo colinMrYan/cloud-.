@@ -3,8 +3,10 @@ package com.inspur.emmcloud.schedule.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -17,11 +19,12 @@ import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
-import com.inspur.emmcloud.basemodule.ui.BaseLayoutFragment;
+import com.inspur.emmcloud.basemodule.ui.BaseFragment;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.schedule.R;
+import com.inspur.emmcloud.schedule.R2;
 import com.inspur.emmcloud.schedule.api.ScheduleAPIInterfaceImpl;
 import com.inspur.emmcloud.schedule.api.ScheduleAPIService;
 import com.inspur.emmcloud.schedule.bean.Schedule;
@@ -46,13 +49,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by chenmch on 2019/7/12.
  */
 
-public class ScheduleBaseFragment extends BaseLayoutFragment implements View.OnLongClickListener,
+public class ScheduleBaseFragment extends BaseFragment implements View.OnLongClickListener,
         CalendarView.OnCalendarSelectListener, CalendarLayout.CalendarExpandListener,
         DragScaleView.OnMoveListener, View.OnTouchListener {
     private static final String PV_COLLECTION_CAL = "calendar";
@@ -63,29 +69,44 @@ public class ScheduleBaseFragment extends BaseLayoutFragment implements View.OnL
     protected Calendar pageEndCalendar = Calendar.getInstance();
     protected Map<Integer, List<Holiday>> yearHolidayListMap = new HashMap<>();
     protected Calendar selectCalendar = Calendar.getInstance();
-    protected CalendarView calendarView;
-    protected CalendarLayout calendarLayout;
-    protected TextView scheduleDataText;
-    protected ImageView calendarViewExpandImg;
-    protected CalendarDayView calendarDayView;
-    protected RelativeLayout contentLayout;
-    protected DragScaleView dragScaleView;
-    protected ScrollView eventScrollView;
+    @BindView(R2.id.calendar_view_schedule)
+    CalendarView calendarView;
+    @BindView(R2.id.calendar_layout_schedule)
+    CalendarLayout calendarLayout;
+    @BindView(R2.id.tv_schedule_date)
+    TextView scheduleDataText;
+    @BindView(R2.id.iv_calendar_view_expand)
+    ImageView calendarViewExpandImg;
+    @BindView(R2.id.calendar_day_view)
+    CalendarDayView calendarDayView;
+    @BindView(R2.id.rl_content)
+    RelativeLayout contentLayout;
+    @BindView(R2.id.scroll_view_event)
+    ScrollView eventScrollView;
+    DragScaleView dragScaleView;
+
     private float contentLayoutTouchY = -1;
     private ScheduleAPIService apiService;
     private Event modifyEvent;
     private Calendar currentCalendar = Calendar.getInstance();
 
     @Override
-    protected void onCreate() {
-        init();
+    public void onCreate(Bundle savedInstanceState) {
+        // TODO Auto-generated method stub
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
         apiService = new ScheduleAPIService(getActivity());
         apiService.setAPIInterface(new WebService());
     }
 
+
     @Override
-    public int getLayoutResId() {
-        return R.layout.fragment_schedule;
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_schedule, container, false);
+        unbinder = ButterKnife.bind(this, view);
+        init();
+        return view;
     }
 
     protected void init() {

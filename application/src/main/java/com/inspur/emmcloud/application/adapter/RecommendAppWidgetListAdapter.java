@@ -35,7 +35,7 @@ public class RecommendAppWidgetListAdapter extends RecyclerView.Adapter<Recommen
 
     @Override
     public RecommendAppWidgetListAdapter.RecommendAppAdapterHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.app_recommand_widget_app_item, null);
+        View view = inflater.inflate(R.layout.application_recommand_widget_app_item, null);
         RecommendAppAdapterHolder recommendAppAdapterHolder = new RecommendAppAdapterHolder(view);
         recommendAppAdapterHolder.recommendAppImg = (ImageView) view.findViewById(R.id.my_app_recommend_app_widget_img);
         return recommendAppAdapterHolder;

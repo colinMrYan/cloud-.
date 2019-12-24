@@ -20,6 +20,7 @@ import com.inspur.emmcloud.basemodule.ui.BaseFragment;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.schedule.R;
+import com.inspur.emmcloud.schedule.R2;
 import com.inspur.emmcloud.schedule.adapter.ScheduleMeetingListAdapter;
 import com.inspur.emmcloud.schedule.api.ScheduleAPIInterfaceImpl;
 import com.inspur.emmcloud.schedule.api.ScheduleAPIService;
@@ -37,17 +38,23 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by chenmch on 2019/4/6.
  */
 
 public class MeetingFragment extends BaseFragment implements MySwipeRefreshLayout.OnRefreshListener
         , MySwipeRefreshLayout.OnLoadListener, ScheduleMeetingListAdapter.OnItemClickLister {
-
-    private MySwipeRefreshLayout swipeRefreshLayout;
-    private ListView meetingListView;
-    private ClearEditText searchEdit;
-    private LinearLayout meetingListDefaultLayout;
+    @BindView(R2.id.swipe_refresh_layout)
+    MySwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R2.id.lv_view_meeting)
+    ListView meetingListView;
+    @BindView(R2.id.ev_search)
+    ClearEditText searchEdit;
+    @BindView(R2.id.rl_meeting_list_default)
+    LinearLayout meetingListDefaultLayout;
     private ScheduleMeetingListAdapter scheduleMeetingListAdapter;
     private List<Meeting> meetingList = new ArrayList<>();
     private List<Meeting> uiMeetingList = new ArrayList<>();
@@ -56,22 +63,28 @@ public class MeetingFragment extends BaseFragment implements MySwipeRefreshLayou
     private int currentPageSize = 50;
     private boolean isPullUp = false;
     private boolean isHistoryMeeting = false;
-    private View rootView;
     private boolean isRefresh = false;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        rootView = LayoutInflater.from(getActivity()).inflate(R.layout.schedule_fragment_meeting, null);
+        EventBus.getDefault().register(this);
         if (getArguments() != null) {
             isHistoryMeeting = getArguments().getBoolean(Constant.EXTRA_IS_HISTORY_MEETING, false);
         }
-        EventBus.getDefault().register(this);
-        swipeRefreshLayout = rootView.findViewById(R.id.swipe_refresh_layout);
-        meetingListView = rootView.findViewById(R.id.lv_view_meeting);
-        searchEdit = rootView.findViewById(R.id.ev_search);
-        meetingListDefaultLayout = rootView.findViewById(R.id.rl_meeting_list_default);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.schedule_fragment_meeting, container, false);
+        unbinder = ButterKnife.bind(this, view);
+        initView();
+        return view;
+    }
+
+    private void initView() {
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setOnLoadListener(this);
         if (isHistoryMeeting) {
@@ -99,20 +112,6 @@ public class MeetingFragment extends BaseFragment implements MySwipeRefreshLayou
                 searchMeeting(s);
             }
         });
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        if (rootView == null) {
-            rootView = inflater
-                    .inflate(R.layout.schedule_fragment_meeting, container, false);
-        }
-        ViewGroup parent = (ViewGroup) rootView.getParent();
-        if (parent != null) {
-            parent.removeView(rootView);
-        }
-        return rootView;
     }
 
     private void searchMeeting(Editable s) {
@@ -164,7 +163,6 @@ public class MeetingFragment extends BaseFragment implements MySwipeRefreshLayou
     }
 
 
-
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -185,16 +183,6 @@ public class MeetingFragment extends BaseFragment implements MySwipeRefreshLayou
             long startTime = TimeUtils.getDayBeginCalendar(Calendar.getInstance()).getTimeInMillis();
             swipeRefreshLayout.setRefreshing(true);
             List<ScheduleCalendar> scheduleCalendarList = ScheduleCalendarCacheUtils.getScheduleCalendarList(BaseApplication.getInstance());
-//            ScheduleCalendar appScheduleCalendar = null;
-//            for (ScheduleCalendar scheduleCalendar : scheduleCalendarList) {
-//                if (scheduleCalendar.getAcType().equals(AccountType.APP_MEETING.toString()) || scheduleCalendar.getAcType().equals(AccountType.APP_SCHEDULE.toString())) {
-//                    appScheduleCalendar = scheduleCalendar;
-//                    continue;
-//                }
-//                apiService.getMeetingListByTime(startTime, scheduleCalendar);
-//            }
-//            apiService.getMeetingListByTime(startTime, appScheduleCalendar);
-
             ScheduleCalendar scheduleCalendar = null;
             for (int i = 0; i < scheduleCalendarList.size(); i++) {
                 if (scheduleCalendarList.get(i).getAcType().equals(AccountType.EXCHANGE.toString())) {

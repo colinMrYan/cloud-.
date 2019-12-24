@@ -17,6 +17,7 @@ public class UIMessage implements Serializable {
     private String senderPhotoUrl;
     private int sendStatus = 1;//0 发送中  1发送成功  2发送失败
     private List<MarkDownLink> markDownLinkList = new ArrayList<>();
+    private int voicePlayState = 0;//0 未下载，1下载中，2，下载完成，3，未播放,4，播放中，5，播放完成，6，播放停止
 
     public UIMessage(Message message) {
         this.message = message;
@@ -102,6 +103,14 @@ public class UIMessage implements Serializable {
 
     public void setSenderPhotoUrl(String senderPhotoUrl) {
         this.senderPhotoUrl = senderPhotoUrl;
+    }
+
+    public int getVoicePlayState() {
+        return voicePlayState;
+    }
+
+    public void setVoicePlayState(int voicePlayState) {
+        this.voicePlayState = voicePlayState;
     }
 
     public boolean equals(Object other) { // 重写equals方法，后面最好重写hashCode方法

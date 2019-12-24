@@ -37,7 +37,7 @@
         android:paddingBottom="5dp"
         android:paddingLeft="5dp"
         android:scaleType="centerInside"
-        android:src="@drawable/app_delete"
+        android:src="@drawable/application_delete"
         android:visibility="gone" />
 
     <TextView

@@ -36,7 +36,7 @@ public class AppCenterMoreActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_app_center_more;
+        return R.layout.application_activity_app_center_more;
     }
 
 
@@ -99,7 +99,7 @@ public class AppCenterMoreActivity extends BaseActivity {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             App app = appList.get(position);
-            convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.app_center_more_app_item_view, null);
+            convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.application_center_more_app_item_view, null);
             ((TextView) convertView.findViewById(R.id.app_name_text)).setText(app.getAppName());
             ((TextView) convertView.findViewById(R.id.txt_app_note)).setText(app.getNote());
             ImageDisplayUtils.getInstance().displayImage((ImageView) convertView.
