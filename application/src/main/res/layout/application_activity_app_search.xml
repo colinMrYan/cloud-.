@@ -69,7 +69,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@id/search_btn"
-            android:background="@drawable/bg_search_frame"
+            android:background="@drawable/application_bg_search_frame"
             android:padding="6dp">
 
             <ImageView

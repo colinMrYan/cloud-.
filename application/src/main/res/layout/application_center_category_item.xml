@@ -12,7 +12,7 @@
         android:layout_marginBottom="9dp"
         android:layout_marginRight="11dp"
         android:layout_marginTop="9dp"
-        android:src="@drawable/icon_app_center_categories" />
+        android:src="@drawable/application_app_center_categories" />
 
     <TextView
         android:id="@+id/app_center_categories_item_txt"

@@ -481,7 +481,7 @@ public class AppCenterActivity extends BaseActivity {
                     setText(categoryAppList.get(position).getCategoryName());
             ImageDisplayUtils.getInstance().displayImage((ImageView) convertView.
                             findViewById(R.id.app_center_categories_icon_img),
-                    categoryAppList.get(position).getCategoryIco(), R.drawable.icon_app_center_categories);
+                    categoryAppList.get(position).getCategoryIco(), R.drawable.application_app_center_categories);
             return convertView;
         }
 
@@ -526,7 +526,7 @@ public class AppCenterActivity extends BaseActivity {
             AppAdsBean appAdsBean = adsList.get(newPosition);
             ImageView imageView = new ImageView(AppCenterActivity.this);
             imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-            ImageDisplayUtils.getInstance().displayImage(imageView, appAdsBean.getLegend(), R.drawable.app_center_banner);
+            ImageDisplayUtils.getInstance().displayImage(imageView, appAdsBean.getLegend(), R.drawable.application_center_banner);
             imageView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
