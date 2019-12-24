@@ -16,6 +16,7 @@ import com.inspur.emmcloud.application.util.AppId2AppAndOpenAppUtils;
 import com.inspur.emmcloud.application.util.MyAppCacheUtils;
 import com.inspur.emmcloud.application.util.MyAppWidgetUtils;
 import com.inspur.emmcloud.application.util.WebAppUtils;
+import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
@@ -138,6 +139,18 @@ public class ApplicationServiceImpl implements ApplicationService {
     public void getWebAppRealUrl(OnGetWebAppRealUrlListener listener, String url) {
         new WebAppUtils(BaseApplication.getInstance(), listener).getWebAppRealUrl(url);
     }
+
+    @Override
+    public void startSyncCommonAppService() {
+        Router router = Router.getInstance();
+        if (router.getService(ApplicationService.class) != null) {
+            ApplicationService service = router.getService(ApplicationService.class);
+            service.syncCommonApp();
+        }
+
+    }
+
+
 
 
     class WebService extends ApplicationApiInterfaceImpl {

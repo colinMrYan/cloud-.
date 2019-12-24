@@ -12,7 +12,7 @@ import com.inspur.emmcloud.basemodule.util.AppExceptionManager;
 import com.inspur.emmcloud.basemodule.util.AppPVManager;
 import com.inspur.emmcloud.basemodule.util.ClientIDUtils;
 import com.inspur.emmcloud.componentservice.app.AppService;
-import com.inspur.emmcloud.componentservice.appcenter.AppcenterService;
+import com.inspur.emmcloud.componentservice.appcenter.ApplicationService;
 import com.inspur.emmcloud.componentservice.login.LoginService;
 import com.inspur.emmcloud.componentservice.setting.SettingService;
 
@@ -149,8 +149,8 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
     private void startSyncCommonAppService() {
         // TODO Auto-generated method stub
         Router router = Router.getInstance();
-        if (router.getService(AppcenterService.class) != null) {
-            AppcenterService service = router.getService(AppcenterService.class);
+        if (router.getService(ApplicationService.class) != null) {
+            ApplicationService service = router.getService(ApplicationService.class);
             service.startSyncCommonAppService();
         }
     }

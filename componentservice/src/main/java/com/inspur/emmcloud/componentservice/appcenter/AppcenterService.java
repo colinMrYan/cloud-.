@@ -10,7 +10,5 @@ import com.inspur.emmcloud.componentservice.CoreService;
  */
 
 public interface AppcenterService extends CoreService {
-    void startSyncCommonAppService();
-
     void startReactNativeApp(Activity activity, Bundle bundle);
 }

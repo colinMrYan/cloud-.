@@ -37,4 +37,7 @@ public interface ApplicationService extends CoreService {
 
     void getWebAppRealUrl(OnGetWebAppRealUrlListener listener, String url);
 
+    void startSyncCommonAppService();
+
+
 }
