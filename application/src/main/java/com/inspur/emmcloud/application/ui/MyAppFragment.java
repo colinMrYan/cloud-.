@@ -147,7 +147,7 @@ public class MyAppFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_app, container, false);
+        View view = inflater.inflate(R.layout.application_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
         checkingNetStateUtils = new CheckingNetStateUtils(getContext(), NetUtils.pingUrls, NetUtils.httpUrls);
         copyData();
@@ -705,10 +705,10 @@ public class MyAppFragment extends BaseFragment {
     private List<MenuItem> getAddMenuList() {
         List<MenuItem> menuItemList = new ArrayList<>();//
         menuItemList.add(new MenuItem(R.drawable.ic_message_menu_scan_black, 1, getActivity().getString(R.string.sweep)));
-        menuItemList.add(new MenuItem(R.drawable.ic_change_app_order, 2, getString(R.string.application_app_sort_order)));
+        menuItemList.add(new MenuItem(R.drawable.application_ic_change_app_order, 2, getString(R.string.application_app_sort_order)));
         boolean isOpenCommAppFromSer = AppConfigCacheUtils.getAppConfigValue(getContext(), "EnableCommonFunction", "true").equals("true");
         if (isOpenCommAppFromSer) {
-            menuItemList.add(new MenuItem(MyAppCacheUtils.getNeedCommonlyUseApp() ? R.drawable.ic_commonly_use_open : R.drawable.ic_commonly_use_close
+            menuItemList.add(new MenuItem(MyAppCacheUtils.getNeedCommonlyUseApp() ? R.drawable.application_ic_commonly_use_open : R.drawable.application_ic_commonly_use_close
                     , 3, getActivity().getString(MyAppCacheUtils.getNeedCommonlyUseApp() ? R.string.application_app_commonly_use_close : R.string.application_app_commonly_use)));
         }
         return menuItemList;
@@ -889,7 +889,7 @@ public class MyAppFragment extends BaseFragment {
         @Override
         public View getView(final int listPosition, View convertView,
                             ViewGroup parent) {
-            convertView = LayoutInflater.from(getActivity()).inflate(R.layout.app_drag_item, null);
+            convertView = LayoutInflater.from(getActivity()).inflate(R.layout.application_drag_item, null);
             if (listPosition == (getCount() - 1)) {
                 View dividerView = (View) convertView.findViewById(R.id.v_applist_devid);
                 dividerView.setVisibility(View.GONE);

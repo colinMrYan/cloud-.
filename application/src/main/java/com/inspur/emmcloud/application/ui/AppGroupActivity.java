@@ -41,7 +41,7 @@ public class AppGroupActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_group_app;
+        return R.layout.application_activity_group_app;
     }
 
     /**

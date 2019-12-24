@@ -50,7 +50,7 @@ import com.inspur.emmcloud.bean.mine.GetExperienceUpgradeFlagResult;
 import com.inspur.emmcloud.bean.system.AppConfig;
 import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
 import com.inspur.emmcloud.bean.system.navibar.NaviBarScheme;
-import com.inspur.emmcloud.componentservice.appcenter.ApplicationService;
+import com.inspur.emmcloud.componentservice.application.ApplicationService;
 import com.inspur.emmcloud.service.CoreService;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.chat.DisplayMediaVoiceMsg;

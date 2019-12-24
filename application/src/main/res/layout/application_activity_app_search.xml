@@ -60,7 +60,7 @@
             android:background="@null"
             android:onClick="onSearch"
             android:text="@string/application_search"
-            android:textColor="@drawable/seclector_search_btn_text"
+            android:textColor="@drawable/application_seclector_search_btn_text"
             android:textSize="@dimen/header_textsize"
             android:visibility="gone" />
 
@@ -69,7 +69,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@id/search_btn"
-            android:background="@drawable/bg_search_frame"
+            android:background="@drawable/application_bg_search_frame"
             android:padding="6dp">
 
             <ImageView
