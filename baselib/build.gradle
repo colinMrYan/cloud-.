@@ -140,5 +140,4 @@ dependencies {
     api deps.wechatOpenSdk
     api deps.rx.rxjava
     api deps.rx.rxandroid
-    implementation files('libs/denosexJNI_V1.0.jar')
 }
