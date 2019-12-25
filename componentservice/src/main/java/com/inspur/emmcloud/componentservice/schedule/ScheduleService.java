@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.componentservice.Schedule;
+package com.inspur.emmcloud.componentservice.schedule;
 
 import com.inspur.emmcloud.componentservice.CoreService;
 

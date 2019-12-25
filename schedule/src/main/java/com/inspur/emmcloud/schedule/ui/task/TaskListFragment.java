@@ -64,7 +64,7 @@ public class TaskListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        rootView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_task_list, null);
+        rootView = LayoutInflater.from(getActivity()).inflate(R.layout.schedule_task_list_fragment, null);
         initViews();
         EventBus.getDefault().register(this);
     }
@@ -74,7 +74,7 @@ public class TaskListFragment extends Fragment {
                              Bundle savedInstanceState) {
         if (rootView == null) {
             rootView = inflater
-                    .inflate(R.layout.fragment_task_list, container, false);
+                    .inflate(R.layout.schedule_task_list_fragment, container, false);
         }
         ViewGroup parent = (ViewGroup) rootView.getParent();
         if (parent != null) {

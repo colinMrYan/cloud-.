@@ -96,7 +96,7 @@ public class CalendarSettingActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_calendar_setting;
+        return R.layout.schedule_calendar_setting_activity;
     }
 
     public void onClick(View v) {

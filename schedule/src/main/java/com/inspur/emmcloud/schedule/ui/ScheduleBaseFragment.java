@@ -158,7 +158,7 @@ public class ScheduleBaseFragment extends BaseFragment implements View.OnLongCli
         if (isExpand) {
             onCalendarSelect(calendarView.getSelectedCalendar(), false);
         }
-        calendarViewExpandImg.setImageResource(isExpand ? R.drawable.ic_schedule_up : R.drawable.ic_schedule_down);
+        calendarViewExpandImg.setImageResource(isExpand ? R.drawable.schedule_up_ic : R.drawable.ic_schedule_down);
     }
 
     @Override

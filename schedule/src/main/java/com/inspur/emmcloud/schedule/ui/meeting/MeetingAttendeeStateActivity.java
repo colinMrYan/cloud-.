@@ -70,7 +70,7 @@ public class MeetingAttendeeStateActivity extends BaseActivity implements SwipeR
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_meeting_attendee_state;
+        return R.layout.schedule_meeting_attendee_state_activity;
     }
 
     private void getMeetingData() {
@@ -269,7 +269,7 @@ public class MeetingAttendeeStateActivity extends BaseActivity implements SwipeR
         @Override
         public View getChildView(int i, int i1, boolean b, View view, ViewGroup viewGroup) {
             Participant participant = meetingAttendeesList.get(i).getMeetingAttendeesList().get(i1);
-            view = LayoutInflater.from(context).inflate(R.layout.meeting_attendees_expandale_child_item, null);
+            view = LayoutInflater.from(context).inflate(R.layout.schedule_meeting_attendees_expandale_child_item, null);
             TextView attendeeNameText = view.findViewById(R.id.tv_attendee_name);
             ImageView attendeeHeadImage = view.findViewById(R.id.iv_attendee_head);
             TextView attendeeType = view.findViewById(R.id.tv_attendee_type);

@@ -86,7 +86,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_meeting_room_list;
+        return R.layout.scheudle_meeting_room_list_activity;
     }
 
     private void initView() {

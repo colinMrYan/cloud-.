@@ -16,7 +16,7 @@ public class MeetingHistoryActivity extends BaseFragmentActivity {
 
     @Override
     public void onCreate() {
-        setContentView(R.layout.activity_meeting_history);
+        setContentView(R.layout.schedule_meeting_history_activity);
         setStatus();
         meetingFragment = new MeetingFragment();
         Intent intent=new Intent();

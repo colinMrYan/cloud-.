@@ -4,7 +4,7 @@ import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
-import com.inspur.emmcloud.componentservice.Schedule.ScheduleService;
+import com.inspur.emmcloud.componentservice.schedule.ScheduleService;
 import com.inspur.emmcloud.schedule.api.ScheduleAPIInterfaceImpl;
 import com.inspur.emmcloud.schedule.bean.calendar.AccountType;
 import com.inspur.emmcloud.schedule.bean.calendar.CalendarColor;

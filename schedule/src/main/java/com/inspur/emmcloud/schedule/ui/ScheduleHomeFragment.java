@@ -345,20 +345,20 @@ public class ScheduleHomeFragment extends BaseFragment {
         List<MenuItem> menuItemList = new ArrayList<>();
         switch (viewPager.getCurrentItem()) {
             case 0:
-                menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_calendar, 1, getActivity().getString(R.string.schedule_calendar_create)));
-                menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_meeting, 2, getString(R.string.schedule_meeting_room_booking)));
-                menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_task, 3, getActivity().getString(R.string.schedule_task_create)));
-                menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_meeting_room, 4, getActivity().getString(R.string.schedule_meeting_booking_room)));
-                menuItemList.add(new MenuItem(R.drawable.ic_schedule_setting, 5, getString(R.string.settings)));
+                menuItemList.add(new MenuItem(R.drawable.schedule_add_calendar_ic, 1, getActivity().getString(R.string.schedule_calendar_create)));
+                menuItemList.add(new MenuItem(R.drawable.schedule_add_meeting_ic, 2, getString(R.string.schedule_meeting_room_booking)));
+                menuItemList.add(new MenuItem(R.drawable.schedule_add_task_ic, 3, getActivity().getString(R.string.schedule_task_create)));
+                menuItemList.add(new MenuItem(R.drawable.schedule_add_meeting_room_ic, 4, getActivity().getString(R.string.schedule_meeting_booking_room)));
+                menuItemList.add(new MenuItem(R.drawable.schedule_setting_ic, 5, getString(R.string.settings)));
                 break;
             case 1:
-                menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_meeting, 3, getString(R.string.schedule_meeting_room_booking)));
-                menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_meeting_room, 4, getActivity().getString(R.string.schedule_meeting_booking_room)));
-                menuItemList.add(new MenuItem(R.drawable.ic_schedule_meeting_history, 5, getActivity().getString(R.string.schedule_meeting_history)));
+                menuItemList.add(new MenuItem(R.drawable.schedule_add_meeting_ic, 3, getString(R.string.schedule_meeting_room_booking)));
+                menuItemList.add(new MenuItem(R.drawable.schedule_add_meeting_room_ic, 4, getActivity().getString(R.string.schedule_meeting_booking_room)));
+                menuItemList.add(new MenuItem(R.drawable.schedule_meeting_history_ic, 5, getActivity().getString(R.string.schedule_meeting_history)));
                 break;
             case 2:
-                menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_task, 2, getActivity().getString(R.string.schedule_task_create)));
-                menuItemList.add(new MenuItem(R.drawable.ic_schedule_setting, 5, getString(R.string.settings)));
+                menuItemList.add(new MenuItem(R.drawable.schedule_add_task_ic, 2, getActivity().getString(R.string.schedule_task_create)));
+                menuItemList.add(new MenuItem(R.drawable.schedule_setting_ic, 5, getString(R.string.settings)));
                 break;
         }
         return menuItemList;
@@ -380,6 +380,5 @@ public class ScheduleHomeFragment extends BaseFragment {
 
         }
     }
-
 
 }

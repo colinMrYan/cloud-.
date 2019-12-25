@@ -52,7 +52,7 @@ public class TaskListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         convertView = LayoutInflater.from(context)
-                .inflate(R.layout.task_list_item, null);
+                .inflate(R.layout.schedule_task_list_item, null);
         Task task = taskList.get(position);
         ((TextView) convertView.findViewById(R.id.tv_task_name))
                 .setText(task.getTitle());

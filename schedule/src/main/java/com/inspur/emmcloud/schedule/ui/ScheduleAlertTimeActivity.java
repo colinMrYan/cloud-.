@@ -140,7 +140,7 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_schedule_alert_time;
+        return R.layout.schedule_alert_time_activity;
     }
 
     public void onClick(View v) {
