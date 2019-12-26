@@ -11,7 +11,7 @@ import android.os.PowerManager;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.baselib.util.LogUtils;
-import com.inspur.emmcloud.interf.CommonCallBack;
+import com.inspur.emmcloud.componentservice.app.CommonCallBack;
 
 /**
  * 音乐播放管理类

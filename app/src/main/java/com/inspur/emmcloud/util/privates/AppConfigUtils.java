@@ -12,8 +12,8 @@ import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.system.AppConfig;
 import com.inspur.emmcloud.bean.system.GetAppConfigResult;
+import com.inspur.emmcloud.componentservice.app.CommonCallBack;
 import com.inspur.emmcloud.componentservice.application.ApplicationService;
-import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.util.privates.cache.AppConfigCacheUtils;
 
 import java.util.List;

@@ -1162,4 +1162,29 @@ public class AppUtils {
             PushManagerUtils.getInstance().startPush();
         }
     }
+
+    /**
+     * 打开url
+     *
+     * @param context
+     * @param uri
+     */
+    public static void openUrl(Activity context, String uri) {
+        openUrl(context, uri, "  ", true);
+    }
+
+    /**
+     * 打开url
+     *
+     * @param context
+     * @param uri
+     */
+    public static void openUrl(Activity context, String uri, String appName, boolean isHaveNavBar) {
+        Bundle bundle = new Bundle();
+        bundle.putString("uri", uri);
+        LogUtils.jasonDebug("uri===" + uri);
+        bundle.putString("appName", appName);
+        bundle.putBoolean(Constant.WEB_FRAGMENT_SHOW_HEADER, isHaveNavBar);
+        ARouter.getInstance().build(Constant.AROUTER_CLASS_WEB_MAIN).with(bundle).navigation();
+    }
 }
