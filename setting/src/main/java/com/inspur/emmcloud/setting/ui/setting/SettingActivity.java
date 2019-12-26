@@ -26,6 +26,8 @@ import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.TimePicker.Utils.AppConfig;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
+import com.inspur.emmcloud.basemodule.app.navibar.NaviBarModel;
+import com.inspur.emmcloud.basemodule.app.navibar.NaviBarScheme;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.EventMessage;
 import com.inspur.emmcloud.basemodule.bean.Language;
@@ -40,6 +42,7 @@ import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.basemodule.util.TabAndAppExistUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.componentservice.CoreService;
@@ -99,7 +102,7 @@ public class SettingActivity extends BaseActivity {
                     break;
                 case R.id.switch_view_setting_voice_2_word:
                     PreferencesByUserAndTanentUtils.putBoolean(SettingActivity.this, Constant.PREF_APP_OPEN_VOICE_WORD_SWITCH,
-                            b ? DisplayMediaVoiceMsg.IS_VOICE_WORD_OPEN : DisplayMediaVoiceMsg.IS_VOICE_WORD_CLOUSE);
+                            b ? Constant.IS_VOICE_WORD_OPEN : Constant.IS_VOICE_WORD_CLOUSE);
                     break;
                 case R.id.switch_view_setting_experience_upgrade:
                     boolean isExperienceUpgradeFlag = PreferencesByUserAndTanentUtils.getBoolean(BaseApplication.getInstance(), Constant.PREF_EXPERIENCE_UPGRATE, false);
@@ -426,7 +429,7 @@ public class SettingActivity extends BaseActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         PushManagerUtils.getInstance().unregisterPushId2Emm();
                         dialog.dismiss();
-                        boolean isCommunicateExist = TabAndAppExistUtils.isTabExist(MyApplication.getInstance(), Constant.APP_TAB_BAR_COMMUNACATE);
+                        boolean isCommunicateExist = TabAndAppExistUtils.isTabExist(BaseApplication.getInstance(), Constant.APP_TAB_BAR_COMMUNACATE);
                         if (NetUtils.isNetworkConnected(getApplicationContext(), false) && WebServiceRouterManager.getInstance().isV1xVersionChat() && isCommunicateExist) {
                             loadingDlg.show();
                             WSAPIService.getInstance().sendAppStatus("REMOVED");
@@ -500,7 +503,7 @@ public class SettingActivity extends BaseActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                         DataCleanManager.cleanWebViewCache(SettingActivity.this);
-                        ((MyApplication) getApplicationContext()).deleteAllDb();
+                        ((BaseApplication) getApplicationContext()).deleteAllDb();
                         String msgCachePath = MyAppConfig.getFileDownloadDirPath();
                         String imgCachePath = MyAppConfig.LOCAL_CACHE_PATH;
                         String offlineAppPath = MyAppConfig.LOCAL_OFFLINE_APP_PATH;

@@ -1,7 +1,6 @@
-package com.inspur.emmcloud.bean.system;
+package com.inspur.emmcloud.basemodule.app.maintab;
 
 import com.inspur.emmcloud.baselib.util.JSONUtils;
-import com.inspur.emmcloud.basemodule.bean.MainTabMenu;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

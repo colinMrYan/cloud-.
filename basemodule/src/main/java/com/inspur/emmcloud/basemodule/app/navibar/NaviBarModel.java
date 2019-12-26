@@ -1,9 +1,10 @@
-package com.inspur.emmcloud.bean.system.navibar;
+package com.inspur.emmcloud.basemodule.app.navibar;
 
 /**
  * Created by yufuchang on 2019/4/12.
  */
-/*{
+
+/**{
         "command": "FORWARD",
         "version": "v1.0.1",
         "payload": {

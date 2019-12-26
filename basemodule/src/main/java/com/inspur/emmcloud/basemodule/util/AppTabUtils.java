@@ -1,19 +1,17 @@
-package com.inspur.emmcloud.util.privates;
+package com.inspur.emmcloud.basemodule.util;
 
 import android.content.Context;
 
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.basemodule.app.maintab.GetAppMainTabResult;
+import com.inspur.emmcloud.basemodule.app.maintab.MainTabPayLoad;
+import com.inspur.emmcloud.basemodule.app.maintab.MainTabProperty;
+import com.inspur.emmcloud.basemodule.app.maintab.MainTabResult;
+import com.inspur.emmcloud.basemodule.app.maintab.MainTabTitleResult;
+import com.inspur.emmcloud.basemodule.app.navibar.NaviBarModel;
+import com.inspur.emmcloud.basemodule.app.navibar.NaviBarScheme;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
-import com.inspur.emmcloud.basemodule.util.LanguageManager;
-import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
-import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
-import com.inspur.emmcloud.bean.system.MainTabPayLoad;
-import com.inspur.emmcloud.bean.system.MainTabProperty;
-import com.inspur.emmcloud.bean.system.MainTabResult;
-import com.inspur.emmcloud.bean.system.MainTabTitleResult;
-import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
-import com.inspur.emmcloud.bean.system.navibar.NaviBarScheme;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -138,7 +136,7 @@ public class AppTabUtils {
      */
     public static ArrayList<MainTabResult> getMainTabResultList(Context context) {
         ArrayList<MainTabResult> mainTabResultList = new ArrayList<>();
-        String currentTabLayoutName = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(),Constant.APP_TAB_LAYOUT_NAME,"");
+        String currentTabLayoutName = PreferencesByUserAndTanentUtils.getString(BaseApplication.getInstance(), Constant.APP_TAB_LAYOUT_NAME, "");
         NaviBarModel naviBarModel = new NaviBarModel(PreferencesByUserAndTanentUtils.getString(context,Constant.APP_TAB_LAYOUT_DATA,""));
         List<NaviBarScheme> naviBarSchemeList = naviBarModel.getNaviBarPayload().getNaviBarSchemeList();
         //首先根据用户设置的模式来获取naviBarSchemeList

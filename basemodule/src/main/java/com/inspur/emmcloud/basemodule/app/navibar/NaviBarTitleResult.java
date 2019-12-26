@@ -1,22 +1,22 @@
-package com.inspur.emmcloud.bean.system;
+package com.inspur.emmcloud.basemodule.app.navibar;
 
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 
 /**
- * Created by yufuchang on 2018/7/12.
+ * Created by yufuchang on 2019/4/12.
  */
 
-public class MainTabTitleResult {
+public class NaviBarTitleResult {
     private String zhHans;
     private String zhHant;
     private String enUS;
 
-    public MainTabTitleResult() {
+    public NaviBarTitleResult() {
     }
 
     ;
 
-    public MainTabTitleResult(String response) {
+    public NaviBarTitleResult(String response) {
         this.zhHans = JSONUtils.getString(response, "zh-Hans", "");
         this.zhHant = JSONUtils.getString(response, "zh-Hant", "");
         this.enUS = JSONUtils.getString(response, "en-US", "");

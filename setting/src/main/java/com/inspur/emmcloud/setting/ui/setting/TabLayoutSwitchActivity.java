@@ -12,17 +12,14 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
+import com.inspur.emmcloud.basemodule.app.navibar.NaviBarModel;
+import com.inspur.emmcloud.basemodule.app.navibar.NaviBarScheme;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
-import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
-import com.inspur.emmcloud.bean.system.navibar.NaviBarScheme;
-import com.inspur.emmcloud.ui.IndexActivity;
 
 import java.util.List;
 
@@ -93,7 +90,7 @@ public class TabLayoutSwitchActivity extends BaseActivity {
      * @param selectIndex
      */
     private void showTabLayoutSwitch(final int selectIndex){
-        final String currentTabLayoutName = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(),Constant.APP_TAB_LAYOUT_NAME,"");
+        final String currentTabLayoutName = PreferencesByUserAndTanentUtils.getString(BaseApplication.getInstance(), Constant.APP_TAB_LAYOUT_NAME, "");
         final String selectedTabLayoutName = naviBarModel.getNaviBarPayload().getNaviBarSchemeList().get(selectIndex).getName();
         new CustomDialog.MessageDialogBuilder(this)
                 .setMessage(getString(R.string.mine_tab_layout_switch,getTabLayoutName(selectIndex)))
@@ -124,7 +121,7 @@ public class TabLayoutSwitchActivity extends BaseActivity {
      */
     private int getSelectedShow(int index) {
         List<NaviBarScheme> naviBarSchemeList = naviBarModel.getNaviBarPayload().getNaviBarSchemeList();
-        String currentTabLayoutName = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(),Constant.APP_TAB_LAYOUT_NAME,"");
+        String currentTabLayoutName = PreferencesByUserAndTanentUtils.getString(BaseApplication.getInstance(), Constant.APP_TAB_LAYOUT_NAME, "");
         if(StringUtils.isBlank(currentTabLayoutName)){
             currentTabLayoutName = naviBarModel.getNaviBarPayload().getDefaultScheme();
         }

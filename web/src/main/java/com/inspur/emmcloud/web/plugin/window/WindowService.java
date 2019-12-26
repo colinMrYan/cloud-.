@@ -5,7 +5,7 @@ import android.os.Bundle;
 
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
-import com.inspur.emmcloud.basemodule.bean.MainTabMenu;
+import com.inspur.emmcloud.basemodule.app.maintab.MainTabMenu;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.web.plugin.ImpPlugin;
 import com.inspur.emmcloud.web.ui.ImpActivity;

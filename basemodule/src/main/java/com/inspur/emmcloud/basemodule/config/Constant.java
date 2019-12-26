@@ -325,4 +325,10 @@ public class Constant {
     public static final String TYPE_DOWNLOAD = "download";
     public static final String TYPE_UPLOAD = "upload";
 
+    /**
+     * 语音转文字开关
+     */
+    public static final boolean IS_VOICE_WORD_OPEN = true;
+    public static final boolean IS_VOICE_WORD_CLOUSE = false;
+
 }
