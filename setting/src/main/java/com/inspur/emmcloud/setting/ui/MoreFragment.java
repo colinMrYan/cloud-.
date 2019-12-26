@@ -21,19 +21,20 @@ import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
-import com.inspur.emmcloud.basemodule.app.maintab.MainTabProperty;
-import com.inspur.emmcloud.basemodule.app.maintab.MineLayoutItem;
-import com.inspur.emmcloud.basemodule.app.maintab.MineLayoutItemGroup;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseFragment;
 import com.inspur.emmcloud.basemodule.util.AppTabUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
+import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
+import com.inspur.emmcloud.componentservice.application.maintab.MainTabProperty;
+import com.inspur.emmcloud.componentservice.application.maintab.MineLayoutItem;
+import com.inspur.emmcloud.componentservice.application.maintab.MineLayoutItemGroup;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
 import com.inspur.emmcloud.setting.api.SettingAPIInterfaceImpl;
 import com.inspur.emmcloud.setting.bean.GetUserCardMenusResult;
@@ -347,7 +348,7 @@ public class MoreFragment extends BaseFragment {
         private void setViewByLayoutItem(View convertView, MineLayoutItem layoutItem) {
             CircleTextImageView iconImg = convertView.findViewById(R.id.iv_icon);
             TextView titleText = convertView.findViewById(R.id.tv_name_tips);
-            titleText.setText(layoutItem.getTitle());
+            titleText.setText(layoutItem.getTitle(LanguageManager.getInstance().getCurrentAppLanguage()));
             String iconUrl = getIconUrl(layoutItem.getIco());
             ImageDisplayUtils.getInstance().displayImage(iconImg, iconUrl, R.drawable.ic_mine_item_default);
         }

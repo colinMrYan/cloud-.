@@ -3,15 +3,15 @@ package com.inspur.emmcloud.basemodule.util;
 import android.content.Context;
 
 import com.inspur.emmcloud.baselib.util.StringUtils;
-import com.inspur.emmcloud.basemodule.app.maintab.GetAppMainTabResult;
-import com.inspur.emmcloud.basemodule.app.maintab.MainTabPayLoad;
-import com.inspur.emmcloud.basemodule.app.maintab.MainTabProperty;
-import com.inspur.emmcloud.basemodule.app.maintab.MainTabResult;
-import com.inspur.emmcloud.basemodule.app.maintab.MainTabTitleResult;
-import com.inspur.emmcloud.basemodule.app.navibar.NaviBarModel;
-import com.inspur.emmcloud.basemodule.app.navibar.NaviBarScheme;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.componentservice.application.maintab.GetAppMainTabResult;
+import com.inspur.emmcloud.componentservice.application.maintab.MainTabPayLoad;
+import com.inspur.emmcloud.componentservice.application.maintab.MainTabProperty;
+import com.inspur.emmcloud.componentservice.application.maintab.MainTabResult;
+import com.inspur.emmcloud.componentservice.application.maintab.MainTabTitleResult;
+import com.inspur.emmcloud.componentservice.application.navibar.NaviBarModel;
+import com.inspur.emmcloud.componentservice.application.navibar.NaviBarScheme;
 
 import org.greenrobot.eventbus.EventBus;
 

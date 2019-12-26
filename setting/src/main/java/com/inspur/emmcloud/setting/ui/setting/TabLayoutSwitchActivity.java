@@ -14,12 +14,12 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
-import com.inspur.emmcloud.basemodule.app.navibar.NaviBarModel;
-import com.inspur.emmcloud.basemodule.app.navibar.NaviBarScheme;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.componentservice.application.navibar.NaviBarModel;
+import com.inspur.emmcloud.componentservice.application.navibar.NaviBarScheme;
 
 import java.util.List;
 

@@ -3,10 +3,10 @@ package com.inspur.emmcloud.basemodule.util;
 import android.content.Context;
 
 import com.inspur.emmcloud.baselib.router.Router;
-import com.inspur.emmcloud.basemodule.app.maintab.GetAppMainTabResult;
-import com.inspur.emmcloud.basemodule.app.maintab.MainTabResult;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.componentservice.application.ApplicationService;
+import com.inspur.emmcloud.componentservice.application.maintab.GetAppMainTabResult;
+import com.inspur.emmcloud.componentservice.application.maintab.MainTabResult;
 
 import java.util.ArrayList;
 

@@ -3,7 +3,7 @@ package com.inspur.emmcloud.web.ui;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.inspur.emmcloud.basemodule.app.maintab.MainTabMenu;
+import com.inspur.emmcloud.componentservice.application.maintab.MainTabMenu;
 import com.inspur.emmcloud.web.plugin.window.DropItemTitle;
 import com.inspur.emmcloud.web.plugin.window.OnKeyDownListener;
 

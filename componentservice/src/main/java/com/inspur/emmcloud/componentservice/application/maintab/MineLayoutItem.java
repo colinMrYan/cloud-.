@@ -1,8 +1,7 @@
-package com.inspur.emmcloud.basemodule.app.maintab;
+package com.inspur.emmcloud.componentservice.application.maintab;
 
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
-import com.inspur.emmcloud.basemodule.util.LanguageManager;
 
 import org.json.JSONObject;
 
@@ -24,21 +23,6 @@ public class MineLayoutItem {
             ico = JSONUtils.getString(object, "ico", "");
             uri = JSONUtils.getString(object, "uri", "");
             title = JSONUtils.getString(object, "title", "");
-            if (!StringUtils.isBlank(title)) {
-                switch (LanguageManager.getInstance().getCurrentAppLanguage()) {
-                    case "zh-Hant":
-                        title = JSONUtils.getString(title, "zh-Hans", "");
-                        break;
-                    case "en-US":
-                    case "en":
-                        title = JSONUtils.getString(title, "en-US", "");
-                        break;
-                    default:
-                        title = JSONUtils.getString(title, "zh-Hans", "");
-                        break;
-
-                }
-            }
         } else {
             id = content;
         }
@@ -79,8 +63,24 @@ public class MineLayoutItem {
         this.uri = uri;
     }
 
-    public String getTitle() {
-        return title;
+    public String getTitle(String language) {
+        String titleByLanguage = "";
+        if (!StringUtils.isBlank(title)) {
+            switch (language) {
+                case "zh-Hant":
+                    titleByLanguage = JSONUtils.getString(title, "zh-Hans", "");
+                    break;
+                case "en-US":
+                case "en":
+                    titleByLanguage = JSONUtils.getString(title, "en-US", "");
+                    break;
+                default:
+                    titleByLanguage = JSONUtils.getString(title, "zh-Hans", "");
+                    break;
+
+            }
+        }
+        return titleByLanguage;
     }
 
     public void setTitle(String title) {

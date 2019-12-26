@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.basemodule.app.navibar;
+package com.inspur.emmcloud.componentservice.application.navibar;
 
 /**
  * Created by yufuchang on 2019/4/12.

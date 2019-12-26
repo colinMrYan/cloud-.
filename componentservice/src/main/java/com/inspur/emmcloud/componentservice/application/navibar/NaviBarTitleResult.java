@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.basemodule.app.navibar;
+package com.inspur.emmcloud.componentservice.application.navibar;
 
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 

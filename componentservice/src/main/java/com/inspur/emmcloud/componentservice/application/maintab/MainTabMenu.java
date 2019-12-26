@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.basemodule.app.maintab;
+package com.inspur.emmcloud.componentservice.application.maintab;
 
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 

@@ -1,7 +1,7 @@
 package com.inspur.emmcloud.setting.bean;
 
 import com.inspur.emmcloud.baselib.util.JSONUtils;
-import com.inspur.emmcloud.basemodule.app.maintab.MineLayoutItem;
+import com.inspur.emmcloud.componentservice.application.maintab.MineLayoutItem;
 
 import org.json.JSONArray;
 

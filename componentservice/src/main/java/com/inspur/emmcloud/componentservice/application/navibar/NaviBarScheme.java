@@ -1,7 +1,7 @@
-package com.inspur.emmcloud.basemodule.app.navibar;
+package com.inspur.emmcloud.componentservice.application.navibar;
 
 import com.inspur.emmcloud.baselib.util.JSONUtils;
-import com.inspur.emmcloud.basemodule.app.maintab.MainTabResult;
+import com.inspur.emmcloud.componentservice.application.maintab.MainTabResult;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
