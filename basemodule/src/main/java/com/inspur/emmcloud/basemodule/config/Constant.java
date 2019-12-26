@@ -303,6 +303,8 @@ public class Constant {
     public static final String AROUTER_CLASS_SCHEDLE_TEST = "/schedule/test";
     public static final String AROUTER_CLASS_SCHEDLE_ADD = "/schedule/add";
 
+    public static final String AROUTER_CLASS_APP_MAIN = "/app/main";
+
     //参会状态
     public static final int ATTEND_MEETING_STATUS_ACCEPT = 1;
     public static final int ATTEND_MEETING_STATUS_REJECT = 2;

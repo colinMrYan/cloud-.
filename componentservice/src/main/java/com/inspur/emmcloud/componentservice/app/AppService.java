@@ -3,8 +3,10 @@ package com.inspur.emmcloud.componentservice.app;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
 
 import com.inspur.emmcloud.componentservice.CoreService;
+
 
 /**
  * Created by chenmch on 2019/6/6.
@@ -18,4 +20,8 @@ public interface AppService extends CoreService {
     boolean isTabExist(String tabId);
 
     void startReactNativeApp(Activity activity, Bundle bundle);
+
+    void checkAppUpdate(boolean isManualCheck, Handler handler);
+
+    void initProfile(Activity activity, boolean isShowLoadingDlg, CommonCallBack commonCallBack);
 }

@@ -11,6 +11,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
@@ -54,6 +55,7 @@ import pl.droidsonroids.gif.GifImageView;
  *
  * @author Administrator
  */
+@Route(path = Constant.AROUTER_CLASS_APP_MAIN)
 public class MainActivity extends BaseActivity {
 
     private static final int LOGIN_SUCCESS = 0;

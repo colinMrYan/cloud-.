@@ -1,0 +1,141 @@
+package com.inspur.emmcloud.setting.ui.setting;
+
+import android.support.v4.view.ViewPager;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+
+import com.alibaba.android.arouter.launcher.ARouter;
+import com.gyf.barlibrary.ImmersionBar;
+import com.inspur.emmcloud.baselib.router.Router;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.basemodule.util.FileUtils;
+import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
+import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.componentservice.app.AppService;
+import com.inspur.emmcloud.componentservice.app.CommonCallBack;
+import com.inspur.emmcloud.setting.adapter.SettingMyViewPagerAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+/**
+ * 功能介绍页面 com.inspur.emmcloud.ui.GuideActivity
+ */
+public class GuideActivity extends BaseActivity {
+
+    @BindView(R.id.viewpager)
+    ViewPager viewPager;
+    private List<View> guideViewList = new ArrayList<>();
+
+    @Override
+    public void onCreate() {
+        ButterKnife.bind(this);
+        ImmersionBar.with(this).navigationBarColor(android.R.color.white).navigationBarDarkIcon(true, 1.0f).init();
+        deleteReactNativeResource();
+        initView();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_guide;
+    }
+
+    protected int getStatusType() {
+        return STATUS_NO_SET;
+    }
+
+    /**
+     * 删除老版本（低于2.0.0）的React文件目录
+     */
+    private void deleteReactNativeResource() {
+        try {
+            String reactNativeResourceFolderPath = getDir("ReactResource", MODE_PRIVATE).getPath();
+            if (FileUtils.isFolderExist((reactNativeResourceFolderPath))) {
+                FileUtils.deleteFile(reactNativeResourceFolderPath);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void initView() {
+        // TODO Auto-generated method stub
+        List<Integer> splashResIdList = new ArrayList<>();
+        //刚安装App初次进入
+        if (PreferencesUtils.getBoolean(getApplicationContext(), "isFirst", true) && AppUtils.isAppVersionStandard()) {
+            splashResIdList.add(R.drawable.guide_page_1);
+            splashResIdList.add(R.drawable.guide_page_2);
+            splashResIdList.add(R.drawable.guide_page_3);
+            splashResIdList.add(R.drawable.guide_page_4);
+            splashResIdList.add(R.drawable.guide_page_5);
+            splashResIdList.add(R.drawable.guide_page_6);
+        } else {//版本升级进入
+            splashResIdList.add(R.drawable.guide_page_new_1);
+            splashResIdList.add(R.drawable.guide_page_new_2);
+            splashResIdList.add(R.drawable.guide_page_new_3);
+        }
+
+        for (int i = 0; i < splashResIdList.size(); i++) {
+            View guideView = LayoutInflater.from(this).inflate(R.layout.view_pager_guide, null);
+            ImageView img = (ImageView) guideView.findViewById(R.id.img);
+            ImageDisplayUtils.getInstance().displayImageNoCache(img, "drawable://" + splashResIdList.get(i));
+            if (i == splashResIdList.size() - 1) {
+                Button enterButton = ((Button) guideView
+                        .findViewById(R.id.enter_app_btn));
+                enterButton.setVisibility(View.VISIBLE);
+                // 当从关于页面跳转到此页面时，按钮显示不同的内容
+                if (getIntent().getExtras() != null && getIntent().getExtras().getString("from", "").equals("about")) {
+                    enterButton.setText(getString(R.string.return_app));
+                }
+                enterButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (getIntent().getExtras() != null && getIntent().getExtras().getString("from", "").equals("about")) {
+                            finish();
+                        } else {
+                            // 将首次进入应用的标志位置为false
+                            PreferencesUtils.putBoolean(getApplicationContext(),
+                                    "isFirst", false);
+                            String accessToken = PreferencesUtils.getString(
+                                    GuideActivity.this, "accessToken", "");
+                            if (!StringUtils.isBlank(accessToken)) {
+                                if (AppUtils.isAppHasUpgraded(GuideActivity.this) && NetUtils.isNetworkConnected(GuideActivity.this)) {
+                                    AppService appService = Router.getInstance().getService(AppService.class);
+                                    if (appService != null) {
+                                        appService.initProfile(GuideActivity.this, false, new CommonCallBack() {
+                                            @Override
+                                            public void execute() {
+                                                ARouter.getInstance().build(Constant.AROUTER_CLASS_APP_INDEX).navigation(GuideActivity.this);
+                                                finish();
+                                            }
+                                        });
+                                    }
+                                }
+                            } else {
+                                BaseApplication.getInstance().signout();
+                            }
+                        }
+                    }
+                });
+            }
+            guideViewList.add(guideView);
+        }
+        viewPager.setAdapter(new SettingMyViewPagerAdapter(getApplicationContext(), guideViewList));
+    }
+
+//    @Override
+//    protected void attachBaseContext(Context newBase) {
+//        super.attachBaseContext(LanguageManager.getInstance().attachBaseContext(newBase));
+//    }
+}

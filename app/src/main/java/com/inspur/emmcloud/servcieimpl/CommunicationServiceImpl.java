@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.servcieimpl;
 
 import android.app.Activity;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
@@ -19,7 +18,6 @@ import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.ui.chat.ConversationBaseActivity;
 import com.inspur.emmcloud.ui.chat.ShareToConversationBlankActivity;
-import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.mine.setting.NetWorkStateDetailActivity;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
@@ -27,11 +25,8 @@ import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.MessageSendManager;
 import com.inspur.emmcloud.util.privates.NotifyUtil;
 import com.inspur.emmcloud.util.privates.VoiceCommunicationManager;
-import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 
 import org.json.JSONArray;
-
-import java.util.List;
 
 /**
  * Created by chenmch on 2019/6/3.

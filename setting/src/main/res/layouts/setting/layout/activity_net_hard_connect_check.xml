@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fitsSystemWindows="true">
+
+    <RelativeLayout
+        android:id="@+id/rl_header"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/header_height"
+        android:background="?attr/header_bg">
+
+        <ImageButton
+            android:id="@+id/ibt_back"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_centerVertical="true"
+            android:background="@null"
+            android:onClick="onClick"
+            android:padding="11dp"
+            android:scaleType="fitXY"
+            android:src="?attr/ic_back_btn" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="@string/net_diagnosis_hard_detail_title"
+            android:textColor="?attr/header_text_color"
+            android:textSize="@dimen/header_textsize" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/rl_header">
+
+        <TextView
+            android:id="@+id/tv_checking_hard_detail_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/net_diagnosis_hard_detail_content"
+            android:textColor="#FF333333"
+            android:textSize="17dp" />
+
+        <TextView
+            android:id="@+id/tv_checking_hard_detail_frist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_checking_hard_detail_title"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="30dp"
+            android:paddingRight="20dp"
+            android:text="@string/net_diagnosis_hard_detail_content_frist"
+            android:textColor="#FF666666"
+            android:textSize="15dp" />
+
+        <TextView
+            android:id="@+id/tv_checking_hard_detail_second"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_checking_hard_detail_frist"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="25dp"
+            android:paddingRight="20dp"
+            android:text="@string/net_diagnosis_hard_detail_content_second"
+            android:textColor="#FF666666"
+            android:textSize="15dp" />
+
+        <TextView
+            android:id="@+id/tv_show_system_hard_setting"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_checking_hard_detail_second"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="90dp"
+            android:background="@drawable/bg_net_setting_tip"
+            android:gravity="center"
+            android:onClick="onClick"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:text="@string/net_diagnosis_hard_detail_setting"
+            android:textColor="#0F7BCA"
+            android:textSize="17sp"></TextView>
+    </RelativeLayout>
+
+
+</RelativeLayout>
