@@ -26,6 +26,8 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -189,6 +191,18 @@ public class VolumeFileUploadManager extends APIInterfaceInstance {
                 }
             }
         }
+        Collections.sort(volumeFileList, new Comparator<VolumeFile>() {
+            @Override
+            public int compare(VolumeFile volumeFileA, VolumeFile volumeFileB) {
+                if (volumeFileA.getLastUpdate() == volumeFileB.getLastUpdate()) {
+                    return 0;
+                } else if (volumeFileA.getLastUpdate() < volumeFileB.getLastUpdate()) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            }
+        });
         return volumeFileList;
     }
 
