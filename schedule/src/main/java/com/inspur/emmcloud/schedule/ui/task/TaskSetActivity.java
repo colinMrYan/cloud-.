@@ -49,7 +49,7 @@ public class TaskSetActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_task_set;
+        return R.layout.schedule_task_set_activity;
     }
 
     /**
@@ -134,7 +134,7 @@ public class TaskSetActivity extends BaseActivity {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             int positionChoose = PreferencesUtils.getInt(TaskSetActivity.this, TASK_SET_ORDER, -1);
-            convertView = LayoutInflater.from(TaskSetActivity.this).inflate(R.layout.task_set_item, null);
+            convertView = LayoutInflater.from(TaskSetActivity.this).inflate(R.layout.schedule_task_set_item, null);
             convertView.findViewById(R.id.v_head_line).setVisibility(position == 0 ? View.GONE : View.VISIBLE);
             ((TextView) (convertView.findViewById(R.id.tv_task_set))).setText(taskSetModel.get(position).getContent());
             convertView.findViewById(R.id.iv_selected).setVisibility(position == positionChoose ? View.VISIBLE : View.GONE);

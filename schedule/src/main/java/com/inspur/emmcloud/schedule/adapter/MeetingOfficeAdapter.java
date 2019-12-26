@@ -94,7 +94,7 @@ public class MeetingOfficeAdapter extends BaseExpandableListAdapter {
                              ViewGroup parent) {
         Building building = locationList.get(groupPosition).getOfficeBuildingList().get(childPosition);
         convertView = LayoutInflater.from(context).inflate(
-                R.layout.meeting_location_expandale_child_item, null);
+                R.layout.schedule_meeting_location_expandale_child_item, null);
         TextView nameText = convertView.findViewById(R.id.tv_name);
         ImageView selectImg = convertView.findViewById(R.id.iv_select);
         nameText.setText(building.getName());

@@ -196,11 +196,11 @@ public class Event {
     public int getEventIconResId(boolean isSelect) {
         int eventIconResId = -1;
         if (getEventType().equals(Schedule.TYPE_CALENDAR)) {
-            eventIconResId = isSelect ? R.drawable.ic_schedule_event_calendar_select : R.drawable.ic_schedule_event_calendar_normal;
+            eventIconResId = isSelect ? R.drawable.schedule_event_calendar_select_ic : R.drawable.schedule_event_calendar_normal_ic;
         } else if (getEventType().equals(Schedule.TYPE_MEETING)) {
-            eventIconResId = isSelect ? R.drawable.ic_schedule_event_meeting_select : R.drawable.ic_schedule_event_meeting_normal;
+            eventIconResId = isSelect ? R.drawable.schedule_event_meeting_select_ic : R.drawable.schedule_event_meeting_normal_ic;
         } else {
-            eventIconResId = isSelect ? R.drawable.ic_schedule_event_task_select : R.drawable.ic_schedule_event_task_normal;
+            eventIconResId = isSelect ? R.drawable.schedule_event_task_select_ic : R.drawable.schedule_event_task_normal_ic;
         }
         return eventIconResId;
     }

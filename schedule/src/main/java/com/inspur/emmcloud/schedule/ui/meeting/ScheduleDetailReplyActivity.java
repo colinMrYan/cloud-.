@@ -39,7 +39,7 @@ public class ScheduleDetailReplyActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_meeting_detail_reply;
+        return R.layout.schedule_meeting_detail_reply_activity;
     }
 
     @Override
@@ -133,7 +133,7 @@ public class ScheduleDetailReplyActivity extends BaseActivity {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
-                convertView = View.inflate(context, R.layout.meeting_reply_item, null);
+                convertView = View.inflate(context, R.layout.schedule_meeting_reply_item, null);
             }
             ReplyAttendResult info = dataList.get(position);
             ((TextView) convertView.findViewById(R.id.tv_meeting_reply)).setText(info.content);

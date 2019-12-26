@@ -53,7 +53,7 @@ public class TaskTagsManageActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_task_manage;
+        return R.layout.schedule_task_manage_activity;
     }
 
     /**
@@ -164,7 +164,7 @@ public class TaskTagsManageActivity extends BaseActivity {
         public View getView(int i, View view, ViewGroup viewGroup) {
             ManageTagsHolder manageTagsHolder;
             if (null == view) {
-                view = View.inflate(TaskTagsManageActivity.this, R.layout.task_manage_item, null);
+                view = View.inflate(TaskTagsManageActivity.this, R.layout.schedule_task_manage_item, null);
                 manageTagsHolder = new ManageTagsHolder();
                 manageTagsHolder.tagNameText = view.findViewById(R.id.tv_task_tag_name);
                 manageTagsHolder.tagFlagImage = view.findViewById(R.id.iv_task_tag_flag);

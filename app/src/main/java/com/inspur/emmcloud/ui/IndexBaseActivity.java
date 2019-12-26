@@ -46,7 +46,7 @@ import com.inspur.emmcloud.bean.system.MainTabResult;
 import com.inspur.emmcloud.bean.system.TabBean;
 import com.inspur.emmcloud.broadcastreceiver.NetworkChangeReceiver;
 import com.inspur.emmcloud.broadcastreceiver.ScreenBroadcastReceiver;
-import com.inspur.emmcloud.componentservice.Schedule.ScheduleService;
+import com.inspur.emmcloud.componentservice.schedule.ScheduleService;
 import com.inspur.emmcloud.componentservice.application.ApplicationService;
 import com.inspur.emmcloud.componentservice.web.WebService;
 import com.inspur.emmcloud.ui.chat.CommunicationFragment;

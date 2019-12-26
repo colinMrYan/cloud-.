@@ -26,9 +26,10 @@ public class VoiceCommunicationCommonLine {
         if (!VoiceCommunicationManager.getInstance().isVoiceBusy() && !AppUtils.isPhoneInUse()) {
             VoiceCommunicationManager.getInstance().getChannelInfoByChannelId(agoraChannelId, getVoiceAndVideoResult.getContextParamsType(), getVoiceAndVideoResult.getChannel());
         } else {
+            //如果是忙碌，需要先去获取频道消息才给别人发送拒绝消息
             String channelId = customProtocol.getParamMap().get(Constant.COMMAND_CHANNEL_ID);
-            String fromUid = customProtocol.getParamMap().get(Constant.COMMAND_UID);
-            VoiceCommunicationManager.getInstance().sendRefuseMessageToInviter(channelId, agoraChannelId, fromUid);
+            String fromUid = getVoiceAndVideoResult.getFromUid();
+            VoiceCommunicationManager.getInstance().getRefuseChannelInfoByChannelId(agoraChannelId, channelId, fromUid, true);
         }
     }
 

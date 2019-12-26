@@ -97,7 +97,7 @@
                         android:layout_height="17dp"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="4dp"
-                        android:src="@drawable/ic_schedule_meeting_room_people" />
+                        android:src="@drawable/schedule_meeting_room_people_ic" />
 
                     <TextView
                         android:id="@+id/tv_people_num"

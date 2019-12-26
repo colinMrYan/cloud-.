@@ -44,7 +44,7 @@ public class TaskFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        rootView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_all_task_list, null);
+        rootView = LayoutInflater.from(getActivity()).inflate(R.layout.schedule_all_task_list_fragment, null);
         initViews();
     }
 
@@ -53,7 +53,7 @@ public class TaskFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         if (rootView == null) {
             rootView = inflater
-                    .inflate(R.layout.fragment_all_task_list, container, false);
+                    .inflate(R.layout.schedule_all_task_list_fragment, container, false);
         }
         ViewGroup parent = (ViewGroup) rootView.getParent();
         if (parent != null) {

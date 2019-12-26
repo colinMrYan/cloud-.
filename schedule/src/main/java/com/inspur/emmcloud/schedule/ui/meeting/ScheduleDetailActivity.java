@@ -167,7 +167,7 @@ public class ScheduleDetailActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_schedule_detail_latest;
+        return R.layout.schedule_detail_latest_activity;
     }
 
     @SuppressLint("StringFormatInvalid")

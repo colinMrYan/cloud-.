@@ -78,7 +78,7 @@ public class MeetingFragment extends BaseFragment implements MySwipeRefreshLayou
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_schedule_meeting, container, false);
+        View view = inflater.inflate(R.layout.schedule_fragment_meeting, container, false);
         unbinder = ButterKnife.bind(this, view);
         initView();
         return view;

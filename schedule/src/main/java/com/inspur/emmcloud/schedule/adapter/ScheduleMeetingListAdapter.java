@@ -88,9 +88,9 @@ public class ScheduleMeetingListAdapter extends BaseAdapter {
         holder.dateText.setText(dateBuilder.toString());
         holder.buildingText.setText(meeting.getScheduleLocationObj().getBuilding());
         if (StringUtils.isBlank(meeting.getScheduleLocationObj().getId())) {
-            holder.iconImg.setImageResource(R.drawable.ic_schedule_meeting_type_out);
+            holder.iconImg.setImageResource(R.drawable.schedule_meeting_type_out_ic);
         } else {
-            holder.iconImg.setImageResource(R.drawable.ic_schedule_meeting_type_common);
+            holder.iconImg.setImageResource(R.drawable.schedule_meeting_type_common_ic);
         }
         view.setOnClickListener(new View.OnClickListener() {
             @Override
