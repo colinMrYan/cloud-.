@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.application.bean;
+package com.inspur.emmcloud.basemodule.application;
 
 
 import org.json.JSONException;

@@ -1,9 +1,8 @@
-package com.inspur.emmcloud.application.util;
+package com.inspur.emmcloud.basemodule.util;
 
 import android.content.Context;
 
-import com.inspur.emmcloud.application.bean.AppConfig;
-import com.inspur.emmcloud.basemodule.util.DbCacheUtils;
+import com.inspur.emmcloud.basemodule.bean.AppConfig;
 
 import java.util.List;
 

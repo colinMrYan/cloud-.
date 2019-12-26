@@ -3,9 +3,9 @@ package com.inspur.emmcloud.api;
 
 import com.inspur.emmcloud.basemodule.app.maintab.GetAppMainTabResult;
 import com.inspur.emmcloud.basemodule.app.navibar.NaviBarModel;
+import com.inspur.emmcloud.basemodule.application.GetClientIdRsult;
 import com.inspur.emmcloud.basemodule.bean.GetUploadPushInfoResult;
 import com.inspur.emmcloud.bean.ChatFileUploadInfo;
-import com.inspur.emmcloud.bean.appcenter.GetClientIdRsult;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailDetailResult;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailFolderResult;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailListResult;

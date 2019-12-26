@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.application.bean;
+package com.inspur.emmcloud.basemodule.bean;
 
 import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;

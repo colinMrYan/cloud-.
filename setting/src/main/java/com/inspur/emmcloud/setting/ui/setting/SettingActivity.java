@@ -24,11 +24,11 @@ import com.inspur.emmcloud.baselib.util.NotificationSetUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
-import com.inspur.emmcloud.baselib.widget.TimePicker.Utils.AppConfig;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.app.navibar.NaviBarModel;
 import com.inspur.emmcloud.basemodule.app.navibar.NaviBarScheme;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.bean.AppConfig;
 import com.inspur.emmcloud.basemodule.bean.EventMessage;
 import com.inspur.emmcloud.basemodule.bean.Language;
 import com.inspur.emmcloud.basemodule.config.Constant;
@@ -36,6 +36,7 @@ import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.push.PushManagerUtils;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.AppBadgeUtils;
+import com.inspur.emmcloud.basemodule.util.AppConfigCacheUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.ClientConfigUpdateUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
@@ -247,7 +248,7 @@ public class SettingActivity extends BaseActivity {
     private String getTabLayoutName() {
         NaviBarModel naviBarModel = new NaviBarModel(PreferencesByUserAndTanentUtils.getString(this, Constant.APP_TAB_LAYOUT_DATA, ""));
         List<NaviBarScheme> naviBarSchemeList = naviBarModel.getNaviBarPayload().getNaviBarSchemeList();
-        String currentTabLayoutName = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.APP_TAB_LAYOUT_NAME, "");
+        String currentTabLayoutName = PreferencesByUserAndTanentUtils.getString(BaseApplication.getInstance(), Constant.APP_TAB_LAYOUT_NAME, "");
         if (StringUtils.isBlank(currentTabLayoutName)) {
             currentTabLayoutName = naviBarModel.getNaviBarPayload().getDefaultScheme();
         }
