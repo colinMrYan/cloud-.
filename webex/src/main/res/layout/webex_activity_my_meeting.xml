@@ -92,7 +92,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
                             android:adjustViewBounds="true"
-                            android:src="@drawable/ic_webex_no_meeting" />
+                            android:src="@drawable/webex_ic_no_meeting" />
 
                         <TextView
                             android:id="@+id/tv_no_meeting"
@@ -125,21 +125,21 @@
             android:layout_width="180dp"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginTop="50dp"
             android:layout_marginRight="18dp"
+            android:layout_marginTop="50dp"
             android:adjustViewBounds="true"
-            android:src="@drawable/mask_guide_webex_schedule" />
+            android:src="@drawable/webex_mask_guide_schedule" />
 
         <ImageView
             android:id="@+id/iv_schedule_ok"
             android:layout_width="90dp"
             android:layout_height="wrap_content"
-            android:layout_below="@id/iv_mask_schedule"
             android:layout_alignParentRight="true"
-            android:layout_marginTop="15dp"
+            android:layout_below="@id/iv_mask_schedule"
             android:layout_marginRight="59dp"
+            android:layout_marginTop="15dp"
             android:adjustViewBounds="true"
             android:onClick="onClick"
-            android:src="@drawable/mask_guide_webex_schedule_mask_guide_webex_schedule_ok" />
+            android:src="@drawable/webex_mask_guide_schedule_ok" />
     </RelativeLayout>
 </RelativeLayout>

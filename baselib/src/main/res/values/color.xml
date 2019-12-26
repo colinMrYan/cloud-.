@@ -142,11 +142,6 @@
     <color name="btn_filled_blue_bg_pressed">#243f55</color>
     <color name="btn_filled_blue_bg_disabled">#80416f96</color>
 
-    <color name="schedule_red">#FF0000</color>
-    <color name="schedule_orange">#FF8603</color>
-    <color name="schedule_yellow">#FFCC07</color>
-    <color name="schedule_green">#7ED321</color>
-    <color name="schedule_blue">#6EAEF6</color>
-    <color name="schedule_purple">#E434FF</color>
-    <color name="schedule_brown">#986533</color>
+
+    <color name="color_image_grid_header">#22292c</color>
 </resources>

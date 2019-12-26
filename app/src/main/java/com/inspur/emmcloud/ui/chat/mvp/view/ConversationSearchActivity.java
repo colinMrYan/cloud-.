@@ -8,10 +8,10 @@ import android.view.View;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseMvpActivity;
-import com.inspur.emmcloud.bean.chat.Conversation;
+import com.inspur.emmcloud.componentservice.communication.Conversation;
+import com.inspur.emmcloud.componentservice.communication.SearchModel;
 import com.inspur.emmcloud.ui.chat.SearchActivity;
 import com.inspur.emmcloud.ui.chat.mvp.adapter.ChatRecentAdapter;
 import com.inspur.emmcloud.ui.chat.mvp.contract.ConversionSearchContract;

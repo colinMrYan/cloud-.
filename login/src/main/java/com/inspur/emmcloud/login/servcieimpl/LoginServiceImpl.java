@@ -28,6 +28,7 @@ public class LoginServiceImpl extends LoginAPIInterfaceImpl implements LoginServ
     @Override
     public void logout(Context context) {
         OauthUtils.getInstance().cancelToken();
+        PreferencesUtils.putString(context, "myInfo", "");
         PreferencesUtils.putString(context, "accessToken", "");
         PreferencesUtils.putString(context, "refreshToken", "");
         PreferencesUtils.putString(context, "userRealName", "");

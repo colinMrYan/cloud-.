@@ -17,6 +17,8 @@ public interface VolumeFileTransferContract {
     }
 
     interface Presenter {
-        List<VolumeFile> getVolumeFileList(int index);
+        List<VolumeFile> getFinishVolumeFileList(int index);
+
+        List<VolumeFile> getUnFinishVolumeFileList(int index);
     }
 }

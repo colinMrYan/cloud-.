@@ -11,9 +11,12 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
-import com.inspur.emmcloud.bean.chat.Conversation;
+import com.inspur.emmcloud.componentservice.communication.Conversation;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -136,6 +139,8 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity {
         public void returnConversationInfoSuccess(Conversation conversation) {
             LoadingDialog.dimissDlg(loadingDlg);
             ConversationBaseActivity.this.conversation = conversation;
+            ConversationCacheUtils.saveConversation(BaseApplication.getInstance(), conversation);
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_CHAT_CHANGE, conversation));
             initChannelMessage();
         }
 

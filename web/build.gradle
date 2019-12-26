@@ -20,7 +20,7 @@ android {
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
@@ -66,8 +66,8 @@ dependencies {
     annotationProcessor deps.ARouter.router_anno
     implementation deps.butterknife.butterknife
     annotationProcessor deps.butterknife.butterknife_compiler
-    implementation 'com.alipay.android.phone.mobilesdk:logging:2.0.0'
-    implementation 'com.alipay.android.phone.scancode:fakeframework:2.0.1@aar'
-    implementation 'com.alipay.android.phone.scancode:mascanengine-api:2.0.1@aar'
-    implementation 'com.alipay.android.phone.scancode:bqcscanservice-api:2.0.1@aar'
+    implementation deps.scancode.mobilesdk
+    implementation deps.scancode.fakeframework
+    implementation deps.scancode.mascanengine_api
+    implementation deps.scancode.bqcscanservice_api
 }

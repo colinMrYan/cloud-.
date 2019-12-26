@@ -10,8 +10,11 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.gyf.barlibrary.BarHide;
+import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.basemodule.R;
 import com.inspur.emmcloud.basemodule.util.imageedit.IMGEditActivity;
@@ -32,18 +35,20 @@ public class ImagePreviewActivity extends ImagePreviewBaseActivity implements
     private TextView OKText; // 确认图片的选择
     private View bottomBar;
     private AppCompatCheckBox originCheck;
+    private View statusBarView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setNavigationBarColor(android.R.color.black);
         isOrigin = getIntent().getBooleanExtra(ImagePreviewActivity.ISORIGIN,
                 false);
         imagePicker.addOnImageSelectedListener(this);
-
         OKText = (TextView) topBar.findViewById(R.id.tv_ok);
         OKText.setVisibility(View.VISIBLE);
-
+        statusBarView = findViewById(R.id.v_status_bar);
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) statusBarView.getLayoutParams();
+        params.height = ImmersionBar.getStatusBarHeight(this);
+        statusBarView.setLayoutParams(params);
         bottomBar = findViewById(R.id.bottom_bar);
         bottomBar.setVisibility(View.VISIBLE);
         originCheck = findViewById(R.id.cb_origin);
@@ -65,6 +70,7 @@ public class ImagePreviewActivity extends ImagePreviewBaseActivity implements
         });
         originCheck.setVisibility(imagePicker.isSupportOrigin() ? View.VISIBLE : View.GONE);
         originCheck.setChecked(isOrigin);
+        setEditBtnStatus(!isOrigin);
         // 初始化当前页面的状态
         onImageSelected(0, null, true);
         ImageItem item = mImageItems.get(mCurrentPosition);
@@ -89,13 +95,7 @@ public class ImagePreviewActivity extends ImagePreviewBaseActivity implements
                         mCurrentPosition = position;
                         ImageItem item = mImageItems.get(mCurrentPosition);
                         boolean isSelected = imagePicker.isSelect(item);
-                        if (isSelected) {
-                            editBtn.setTextColor(Color.parseColor("#ffffff"));
-                            editBtn.setEnabled(true);
-                        } else {
-                            editBtn.setEnabled(false);
-                            editBtn.setTextColor(Color.parseColor("#4f87a2"));
-                        }
+                        setEditBtnStatus(isSelected);
                         mCbCheck.setChecked(isSelected);
                     }
                 });
@@ -111,14 +111,11 @@ public class ImagePreviewActivity extends ImagePreviewBaseActivity implements
                     // Toast.makeText(ImagePreviewActivity.this,
                     // ImagePreviewActivity.this.getString(R.string.select_limit,
                     // selectLimit), Toast.LENGTH_SHORT).show();
-                    mCbCheck.setChecked(true);
-                    editBtn.setTextColor(Color.parseColor("#ffffff"));
                     editBtn.setEnabled(true);
                 } else {
-                    editBtn.setEnabled(false);
-                    editBtn.setTextColor(Color.parseColor("#4f87a2"));
                     mCbCheck.setChecked(false);
                 }
+                setEditBtnStatus(mCbCheck.isChecked());
                 imagePicker.addSelectedImageItem(mCurrentPosition, imageItem,
                         mCbCheck.isChecked());
             }
@@ -127,8 +124,14 @@ public class ImagePreviewActivity extends ImagePreviewBaseActivity implements
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 isOrigin = b;
+                setEditBtnStatus(!isOrigin);
             }
         });
+    }
+
+    private void setEditBtnStatus(boolean isEnable) {
+        editBtn.setTextColor(isEnable ? Color.parseColor("#ffffff") : Color.parseColor("#888888"));
+        editBtn.setEnabled(isEnable);
     }
 
     /**
@@ -204,6 +207,7 @@ public class ImagePreviewActivity extends ImagePreviewBaseActivity implements
             // R.anim.fade_out));
             topBar.setVisibility(View.GONE);
             bottomBar.setVisibility(View.GONE);
+            ImmersionBar.with(this).hideBar(BarHide.FLAG_HIDE_STATUS_BAR).navigationBarColor(R.color.color_image_grid_header).init();
             // tintManager.setStatusBarTintResource(R.color.transparent);//通知栏所需颜色
             // 给最外层布局加上这个属性表示，Activity全屏显示，且状态栏被隐藏覆盖掉。
             // if (Build.VERSION.SDK_INT >= 16)
@@ -213,6 +217,7 @@ public class ImagePreviewActivity extends ImagePreviewBaseActivity implements
             // R.anim.top_in));
             // bottomBar.setAnimation(AnimationUtils.loadAnimation(this,
             // R.anim.fade_in));
+            ImmersionBar.with(this).hideBar(BarHide.FLAG_SHOW_BAR).init();
             topBar.setVisibility(View.VISIBLE);
             bottomBar.setVisibility(View.VISIBLE);
             // tintManager.setStatusBarTintResource(R.color.status_bar);//通知栏所需颜色

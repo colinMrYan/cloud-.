@@ -18,7 +18,7 @@ import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
-import com.inspur.emmcloud.bean.chat.Conversation;
+import com.inspur.emmcloud.componentservice.communication.Conversation;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -65,7 +65,7 @@ public class ConversationNameModifyActivity extends BaseActivity {
                     ToastUtils.show(getApplicationContext(), R.string.group_name_cannot_null);
                     return;
                 }
-                if (name.length() > 40) {
+                if (name.length() > 25) {
                     ToastUtils.show(getApplicationContext(), R.string.group_name_longth_valid);
                     return;
                 }

@@ -420,7 +420,13 @@ public class VoiceCommunicationManager {
      * @return
      */
     private String getSchema(String cmd, String channelId, String roomId) {
-        return "ecc-cloudplus-cmd://" + getChannelType() + "?cmd=" + cmd + "&channelid=" + channelId + "&roomid=" + roomId + "&uid=" + BaseApplication.getInstance().getUid();
+        String scheme = "ecc-cloudplus-cmd://" + getChannelType() + "?cmd=" + cmd + "&channelid=" + channelId + "&roomid=" +
+                roomId;
+        //只有是refuse命令的时候才加uid，uid为声网的uid
+        if (cmd.equals("refuse")) {
+            return scheme + "&uid=" + getAgoraUidByCloudUid(BaseApplication.getInstance().getUid());
+        }
+        return scheme;
     }
 
     private String getChannelType() {
@@ -499,14 +505,14 @@ public class VoiceCommunicationManager {
             switch (command) {
                 case Constant.COMMAND_REFUSE:
                     if (customProtocol.getParamMap().get(Constant.COMMAND_ROOM_ID).equals(agoraChannelId)) {
-                        VoiceCommunicationCommonLine.onUserReject(getAgoraUidByCloudUid(customProtocol.getParamMap()
-                                .get(Constant.COMMAND_UID)), VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_REFUSE);
+                        VoiceCommunicationCommonLine.onUserReject(Integer.parseInt(customProtocol.getParamMap().get(Constant.COMMAND_UID)),
+                                VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_REFUSE);
                     }
                     break;
                 case Constant.COMMAND_DESTROY:
                     if (customProtocol.getParamMap().get(Constant.COMMAND_ROOM_ID).equals(agoraChannelId)) {
-                        VoiceCommunicationCommonLine.onUserReject(getAgoraUidByCloudUid(customProtocol.getParamMap().
-                                get(Constant.COMMAND_UID)), VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_LEAVE);
+                        VoiceCommunicationCommonLine.onUserReject(Integer.parseInt(customProtocol.getParamMap().get(Constant.COMMAND_UID)),
+                                VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_LEAVE);
                     }
                     break;
                 //正在通话中 消息是invite消息  三者打进电话 发拒绝消息
@@ -641,7 +647,7 @@ public class VoiceCommunicationManager {
         if (getCommunicationState() == COMMUNICATION_STATE_ING || isInviter()) {
             leaveChannel();
         } else {
-            if (agoraChannelId != null) {
+            if (isVoiceBusy()) {
                 remindEmmServerRefuseChannel(agoraChannelId);
             }
         }
@@ -1068,7 +1074,8 @@ public class VoiceCommunicationManager {
      * @param agoraChannelId
      */
     public void sendRefuseMessageToInviter(String channelId, String agoraChannelId, String fromUid) {
-        String scheme = "ecc-cloudplus-cmd://voice_channel?cmd=refuse&channelid=" + channelId + "&roomid=" + agoraChannelId + "&uid=" + BaseApplication.getInstance().getUid();
+        String scheme = "ecc-cloudplus-cmd://" + getChannelType() + "?cmd=refuse&channelid=" + channelId + "&roomid=" + agoraChannelId + "&uid=" +
+                getAgoraUidByCloudUid(BaseApplication.getInstance().getUid());
         WSAPIService.getInstance().sendStartVoiceAndVideoCallMessage(channelId, agoraChannelId, scheme, "VOICE", getUidArray( fromUid), Constant.VIDEO_CALL_REFUSE);
     }
 

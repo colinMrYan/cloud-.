@@ -6,15 +6,14 @@ import android.os.Message;
 
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
-import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
-import com.inspur.emmcloud.bean.appcenter.AppCommonlyUse;
 import com.inspur.emmcloud.bean.system.AppConfig;
 import com.inspur.emmcloud.bean.system.GetAppConfigResult;
+import com.inspur.emmcloud.componentservice.application.ApplicationService;
 import com.inspur.emmcloud.interf.CommonCallBack;
-import com.inspur.emmcloud.util.privates.cache.AppCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.AppConfigCacheUtils;
 
 import java.util.List;
@@ -63,11 +62,14 @@ public class AppConfigUtils {
     private void syncCommonAppToLocalDb() {
         String commonAppListJson = AppConfigCacheUtils.getAppConfigValue(context, Constant.CONCIG_COMMON_FUNCTIONS, "null");
         if (!commonAppListJson.equals("null") && !StringUtils.isBlank(commonAppListJson)) {
-            List<AppCommonlyUse> commonAppList = AppCacheUtils.getCommonlyUseList(context);
-            if (commonAppList.size() == 0) {
-                commonAppList = JSONUtils.parseArray(commonAppListJson, AppCommonlyUse.class);
-                AppCacheUtils.saveAppCommonlyUseList(context, commonAppList);
+            Router router = Router.getInstance();
+            if (router.getService(ApplicationService.class) != null) {
+                ApplicationService service = router.getService(ApplicationService.class);
+                if (service.getAppCommonlyUseSize() == 0) {
+                    service.saveAppCommonlyUseList(context, commonAppListJson);
+                }
             }
+
         }
     }
 

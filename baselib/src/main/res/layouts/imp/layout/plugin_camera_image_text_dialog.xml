@@ -20,7 +20,7 @@
             android:paddingBottom="12dp"
             android:paddingLeft="15dp"
             android:paddingRight="12dp"
-            android:paddingTop="20dp"
+            android:paddingTop="40dp"
             android:text="@string/image_cancel"
             android:textColor="@color/image_color_primary"
             android:textSize="16sp" />
@@ -35,7 +35,7 @@
             android:paddingBottom="12dp"
             android:paddingLeft="12dp"
             android:paddingRight="15dp"
-            android:paddingTop="20dp"
+            android:paddingTop="40dp"
             android:text="@string/image_done"
             android:textColor="@color/image_color_accent"
             android:textSize="16sp" />

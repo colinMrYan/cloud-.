@@ -172,25 +172,6 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
 
-        <activity
-            android:name=".ui.appcenter.AppCenterActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.appcenter.AppCenterMoreActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.appcenter.AppSearchActivity"
-            android:launchMode="singleTask"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.appcenter.AppDetailActivity"
-            android:launchMode="singleTask"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-
 
         <activity
             android:name=".ui.ShareFilesActivity"
@@ -263,6 +244,9 @@
                 <data android:mimeType="application/x-compress"></data>
                 <data android:mimeType="application/x-7z-compressed"></data>
                 <data android:mimeType="application/zip"></data>
+                <data android:mimeType="application/rar"></data>
+                <data android:mimeType="application/x-rar"></data>
+                <data android:mimeType="application/x-bzip2"></data>
                 <data android:mimeType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"></data>
                 <data android:mimeType="application/vnd.openxmlformats-officedocument.spreadsheetml.template"></data>
                 <data android:mimeType="application/vnd.openxmlformats-officedocument.wordprocessingml.document"></data>
@@ -594,11 +578,6 @@
             android:name=".ui.mine.setting.RecommendAppActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.appcenter.AppGroupActivity"
-            android:launchMode="singleTask"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.mine.feedback.FeedBackActivity"
@@ -680,14 +659,7 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
-        <activity
-            android:name=".ui.schedule.meeting.MeetingRoomInfoActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.schedule.meeting.MeetingHistoryActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+
         <activity
             android:name=".ui.find.DocumentActivity"
             android:launchMode="singleTask"
@@ -698,67 +670,9 @@
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.schedule.meeting.ScheduleAddActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.schedule.meeting.ScheduleDetailActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.schedule.meeting.ScheduleDetailReplyActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.schedule.meeting.MeetingRoomListActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.schedule.meeting.MeetingOfficeSettingActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.schedule.meeting.MeetingAttendeeStateActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
 
-        <activity
-            android:name=".ui.schedule.ScheduleAlertTimeActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.schedule.calendar.CalendarSettingActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.schedule.calendar.CalendarAccountSelectActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-
-        <activity
-            android:name=".ui.schedule.task.TaskAddActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.schedule.task.TaskTagAddActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.schedule.task.TaskTagsManageActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.schedule.task.TaskSetActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.chat.ChannelMembersDelActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-
-        <activity
-            android:name=".ui.schedule.ScheduleTypeSelectActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
 
@@ -819,7 +733,6 @@
         <service android:name=".service.LocationService"></service>
         <service android:name=".service.CoreService"></service>
         <service android:name=".service.CoreInnerService"></service>
-        <service android:name=".service.SyncCommonAppService"></service>
         <service android:name=".service.VoiceHoldService" />
 
         <receiver

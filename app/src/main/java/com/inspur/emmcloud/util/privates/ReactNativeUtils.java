@@ -2,10 +2,10 @@ package com.inspur.emmcloud.util.privates;
 
 import android.content.Context;
 
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.AppAPIService;
+import com.inspur.emmcloud.api.apiservice.ReactNativeAPIService;
 import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.ClientIDUtils;
@@ -13,9 +13,8 @@ import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.bean.appcenter.AndroidBundleBean;
-import com.inspur.emmcloud.bean.appcenter.ReactNativeUpdateBean;
 import com.inspur.emmcloud.ui.find.FindFragment;
-import com.inspur.reactnative.ReactNativeFlow;
+import com.inspur.reactnative.bean.ReactNativeUpdateBean;
 
 import java.io.File;
 
@@ -30,7 +29,7 @@ public class ReactNativeUtils {
 
     public ReactNativeUtils(Context context) {
         this.context = context;
-        uid = ((MyApplication) context.getApplicationContext()).getUid();
+        uid = ((BaseApplication) context.getApplicationContext()).getUid();
     }
 
     public void init() {
@@ -39,7 +38,7 @@ public class ReactNativeUtils {
             ReactNativeFlow.initReactNative(context, uid);
         } else {
 
-            new ClientIDUtils(MyApplication.getInstance(), new ClientIDUtils.OnGetClientIdListener() {
+            new ClientIDUtils(BaseApplication.getInstance(), new ClientIDUtils.OnGetClientIdListener() {
                 @Override
                 public void getClientIdSuccess(String clientId) {
                     updateReactNative();
@@ -60,7 +59,7 @@ public class ReactNativeUtils {
         StringBuilder describeVersionAndTime = FileUtils.readFile(reactNativeCurrentPath + "/bundle.json", "UTF-8");
         AndroidBundleBean androidBundleBean = new AndroidBundleBean(describeVersionAndTime.toString());
         if (NetUtils.isNetworkConnected(context, false)) {
-            AppAPIService apiService = new AppAPIService(context);
+            ReactNativeAPIService apiService = new ReactNativeAPIService(context);
             apiService.setAPIInterface(new WebService());
             apiService.getReactNativeUpdate(androidBundleBean.getVersion(), androidBundleBean.getCreationDate(), clientId);
         }

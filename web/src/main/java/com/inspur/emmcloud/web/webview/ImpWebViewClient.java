@@ -2,6 +2,7 @@ package com.inspur.emmcloud.web.webview;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.net.http.SslError;
@@ -15,6 +16,7 @@ import android.webkit.SslErrorHandler;
 import android.webkit.ValueCallback;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -29,6 +31,7 @@ import com.inspur.emmcloud.web.ui.ImpCallBackInterface;
 
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -166,6 +169,26 @@ public class ImpWebViewClient extends WebViewClient {
         handler.proceed();
     }
 
+    @Override
+    public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
+        if (url.toLowerCase().contains("/favicon.ico")) {
+            try {
+                return new WebResourceResponse("image/png", null, null);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+
+    @Override
+    public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && !request.isForMainFrame() && request.getUrl().getPath().equals("/favicon.ico")) {
+            return shouldInterceptRequest(view, request.getUrl().toString());
+        }
+        return null;
+    }
 
     @TargetApi(Build.VERSION_CODES.N)
     @Override
@@ -263,7 +286,21 @@ public class ImpWebViewClient extends WebViewClient {
             try {
                 Intent intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME);
                 intent.setComponent(null);
-                webView.getContext().startActivity(intent);
+                List<ResolveInfo> resolveInfoList = BaseApplication.getInstance().getPackageManager().queryIntentActivities(intent, 0);
+                boolean isMyAppScheme = false;
+                if (url.startsWith("mailto:") || url.startsWith("tel:") || url.startsWith("geo:") || url.startsWith("sms:") || url.startsWith("smsto:")) {
+                    isMyAppScheme = true;
+                } else if (resolveInfoList != null && resolveInfoList.size() > 0) {
+                    for (ResolveInfo resolveInfo : resolveInfoList) {
+                        if (resolveInfo.activityInfo.packageName.equals(BaseApplication.getInstance().getPackageName())) {
+                            isMyAppScheme = true;
+                            break;
+                        }
+                    }
+                }
+                if (isMyAppScheme) {
+                    webView.getContext().startActivity(intent);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

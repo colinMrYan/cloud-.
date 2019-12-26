@@ -8,10 +8,10 @@ import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.DbCacheUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
-import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.ConversationWithMessageNum;
 import com.inspur.emmcloud.bean.chat.MatheSet;
 import com.inspur.emmcloud.bean.chat.Message;
+import com.inspur.emmcloud.componentservice.communication.Conversation;
 
 import org.xutils.common.util.KeyValue;
 import org.xutils.db.sqlite.WhereBuilder;
@@ -212,6 +212,24 @@ public class MessageCacheUtil {
                 return;
             }
             DbCacheUtils.getDb(context).update(Message.class, WhereBuilder.b("id", "in", messageIdList), new KeyValue("read", 1));
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 设置消息为已拆包状态
+     *
+     * @param context
+     * @param message
+     */
+    public static void saveMessageLifeCycleState(Context context, Message message) {
+        try {
+            if (message == null) {
+                return;
+            }
+            DbCacheUtils.getDb(context).saveOrUpdate(message);
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -785,9 +803,6 @@ public class MessageCacheUtil {
                 if (cidNumMap.containsKey(tempConversation.getId())) {
                     ConversationWithMessageNum conversationFromChatContent =
                             new ConversationWithMessageNum(tempConversation, cidNumMap.get(tempConversation.getId()));
-                    if (tempConversation.getType().equals(Conversation.TYPE_DIRECT)) {
-                        conversationFromChatContent.initSingleChatContact();
-                    }
                     conversationFromChatContentList.add(conversationFromChatContent);
                 }
             }

@@ -58,16 +58,6 @@ android {
                             'src/main/res/layouts/mine/myinfo',//我的信息
                             'src/main/res/layouts/mine/setting',//设置
                             'src/main/res/layouts/mine',//其他设置内容
-                            'src/main/res/layouts/work/approval',//待办任务
-                            'src/main/res/layouts/work/calendar',//日历
-                            'src/main/res/layouts/work/meeting',//会议
-                            'src/main/res/layouts/work/task',//任务
-                            'src/main/res/layouts/work',//其他工作相关布局
-                            'src/main/res/layouts/schedule',//日程
-                            'src/main/res/layouts/schedule/schedule',//日程_日程
-                            'src/main/res/layouts/schedule/calendar',//日程_日历
-                            'src/main/res/layouts/schedule/task',//日程_任务
-                            'src/main/res/layouts/schedule/meeting',//日程_任务
                             'src/main/res/layouts/notsupport',//不支持此功能页面
                             'src/main/res/layouts/imp',//imp插件
                             'src/main/res/layouts/widgets/popwindow',//popwindow
@@ -86,7 +76,7 @@ android {
 }
 
 dependencies {
-    api fileTree(dir: 'libs', include: ['*.jar'])
+    api fileTree(include: ['*.jar'], dir: 'libs')
     api deps.support.compat
     api deps.support.design
     api deps.support.v7.appcompat
@@ -102,12 +92,11 @@ dependencies {
     api deps.fastjson
     api deps.commonsLang3
     api deps.amapLocation
-
     api(deps.socket) {
         exclude group: 'org.json', module: 'json'
     }
     api deps.pinyin4j
-//    api deps.universalImageLoader
+    //    api deps.universalImageLoader
     api(deps.PhotoView) {
         exclude module: 'support-compat'
         exclude module: 'support-core-utils'
@@ -126,7 +115,6 @@ dependencies {
     api deps.RecordWave
     api deps.mp3spi
     api deps.Mp3Converter
-
     api deps.commonsCodec
     api deps.oss
     api deps.protobuf
@@ -136,8 +124,6 @@ dependencies {
     api deps.bmelnychukAtv
     api deps.immersionbar
     api deps.SegmentControlView
-
-
     androidTestApi(deps.support.test.runner) {
         exclude module: 'support-annotations'
     }
@@ -147,11 +133,10 @@ dependencies {
     api deps.ARouter.arouter_api
     api deps.ical4j
     api deps.fingerprintidentify
-
     api deps.S3.aws_android_sdk_s3
     api deps.S3.aws_android_sdk_core
-    api (deps.S3.aws_android_sdk_mobile_client){ transitive = true }
-    api (deps.S3.aws_auth){ transitive = true }
+    api(deps.S3.aws_android_sdk_mobile_client) { transitive = true }
+    api(deps.S3.aws_auth) { transitive = true }
     api deps.wechatOpenSdk
     api deps.rx.rxjava
     api deps.rx.rxandroid

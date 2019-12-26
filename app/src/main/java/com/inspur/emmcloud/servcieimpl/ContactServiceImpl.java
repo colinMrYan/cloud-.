@@ -3,6 +3,7 @@ package com.inspur.emmcloud.servcieimpl;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.componentservice.contact.ContactService;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
+import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 
 import java.util.List;
@@ -30,5 +31,10 @@ public class ContactServiceImpl implements ContactService {
     @Override
     public ContactUser getContactUserByMail(String mail) {
         return ContactUserCacheUtils.getContactUserByEmail(mail);
+    }
+
+    @Override
+    public Class getContactSearchActivity() {
+        return ContactSearchActivity.class;
     }
 }

@@ -30,7 +30,7 @@ public class VolumeFileDownloadCacheUtils {
         return volumeFileList;
     }
 
-    public static void saveVolumeFile(VolumeFile volumeFile) {
+    public synchronized static void saveVolumeFile(VolumeFile volumeFile) {
         try {
             if (volumeFile != null) {
                 DbCacheUtils.getDb().saveOrUpdate(volumeFile);

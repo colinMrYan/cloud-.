@@ -6,8 +6,8 @@ import android.text.Spanned;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.bean.MentionsAndUrl;
 import com.inspur.emmcloud.basemodule.config.Constant;
-import com.inspur.emmcloud.bean.schedule.MentionsAndUrl;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.widget.spans.URLClickableSpan;
 

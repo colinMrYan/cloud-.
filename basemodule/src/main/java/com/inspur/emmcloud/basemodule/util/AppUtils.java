@@ -23,9 +23,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Process;
+import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -37,6 +39,7 @@ import com.github.zafarkhaja.semver.Version;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.EncryptUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.baselib.util.NotificationSetUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.ResolutionUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
@@ -44,13 +47,17 @@ import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.R;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.push.PushManagerUtils;
 import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.componentservice.web.WebService;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.lang.reflect.Method;
+import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -140,8 +147,8 @@ public class AppUtils {
             final ContentResolver cr = context.getContentResolver();
             String AUTHORITY = "com.android.launcher2.settings";
             final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/favorites?notify=true");
-            Cursor c = cr.query(CONTENT_URI, new String[] { "title", "iconResource" }, "title=?",
-                    new String[] { context.getString(R.string.app_name) }, null);
+            Cursor c = cr.query(CONTENT_URI, new String[]{"title", "iconResource"}, "title=?",
+                    new String[]{context.getString(R.string.app_name)}, null);
 
             if (c != null && c.getCount() > 0) {
                 isInstallShortcut = true;
@@ -341,7 +348,7 @@ public class AppUtils {
     public static int getSDKVersionNumber() {
         int sdkVersion;
         try {
-            sdkVersion = Integer.valueOf(android.os.Build.VERSION.SDK);
+            sdkVersion = Integer.valueOf(Build.VERSION.SDK);
         } catch (NumberFormatException e) {
             sdkVersion = 0;
         }
@@ -349,7 +356,7 @@ public class AppUtils {
     }
 
     public static String getReleaseVersion() {
-        return android.os.Build.VERSION.RELEASE;
+        return Build.VERSION.RELEASE;
     }
 
     /**
@@ -359,7 +366,7 @@ public class AppUtils {
      */
     public static String GetChangShang() {
 
-        String manString = android.os.Build.MANUFACTURER;
+        String manString = Build.MANUFACTURER;
         if (TextUtils.isEmpty(manString)) {
             return "UNKNOWN";
         }
@@ -385,7 +392,7 @@ public class AppUtils {
      * @return
      */
     public static String GetModel() {
-        String modelStr = android.os.Build.MODEL;
+        String modelStr = Build.MODEL;
         modelStr = modelStr.replace(" ", "-");
         if (TextUtils.isEmpty(modelStr)) {
             return "UNKNOWN";
@@ -535,7 +542,7 @@ public class AppUtils {
      * @return 系统版本号
      */
     public static String getSystemVersion() {
-        return android.os.Build.VERSION.RELEASE;
+        return Build.VERSION.RELEASE;
     }
 
     /**
@@ -713,7 +720,6 @@ public class AppUtils {
         activity.startActivityForResult(
                 Intent.createChooser(intent, activity.getString(R.string.please_select_app_of_mail)), 1);
     }
-
 
 
     /**
@@ -898,6 +904,7 @@ public class AppUtils {
         }
         return appIconResName;
     }
+
     /**
      * 判断权限集合
      * permissions 权限数组
@@ -1090,6 +1097,69 @@ public class AppUtils {
         } catch (Exception e) {
             e.printStackTrace();
             return false;
+        }
+    }
+
+    public static boolean needAuthorizationToken(String url) {
+        //检查每一个路由是否
+        WebServiceRouterManager manager = WebServiceRouterManager.getInstance();
+        if (url.startsWith(manager.getClusterEcm()) ||
+                url.startsWith(manager.getClusterChat()) ||
+                url.startsWith(manager.getClusterSchedule()) ||
+                url.startsWith(manager.getClusterDistribution()) ||
+                url.startsWith(manager.getClusterNews()) ||
+                url.startsWith(manager.getClusterCloudDrive()) ||
+                url.startsWith(manager.getClusterStorageLegacy()) ||
+                url.startsWith(manager.getClusterChatSocket()) ||
+                url.startsWith(manager.getClusterEmm()) ||
+                url.startsWith(manager.getClusterClientRegistry()) ||
+                url.startsWith(manager.getClusterBot())) {
+            return true;
+        }
+        URL urlHost = null;
+        try {
+            urlHost = new URL(url);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        String urlHostPath = urlHost.getHost();
+        return (urlHostPath.endsWith(Constant.INSPUR_HOST_URL)) || urlHostPath.endsWith(Constant.INSPURONLINE_HOST_URL) || urlHost.getPath().endsWith("/app/mdm/v3.0/loadForRegister");
+    }
+
+    /**
+     * 通知图库更新图片
+     *
+     * @param context
+     * @param filePath
+     */
+    public static void refreshMedia(Context context, final String filePath) {
+        if (AppUtils.getIsXiaoMi()) {
+            File file = new File(filePath);
+            // 其次把文件插入到系统图库
+            try {
+                MediaStore.Images.Media.insertImage(context.getContentResolver(),
+                        file.getAbsolutePath(), file.getName(), null);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            // 最后通知图库更新
+            LocalBroadcastManager.getInstance(context).sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)));
+        } else {
+            new MediaScanner(context).scanFile(filePath);
+        }
+
+
+    }
+
+    /**
+     * 开始推送
+     *
+     * @param context
+     */
+    public static void judgeAndStartPush(Context context) {
+        if (BaseApplication.getInstance().isHaveLogin() && NotificationSetUtils.isNotificationEnabled(context) &&
+                (PreferencesByUserAndTanentUtils.getBoolean(context, Constant.PUSH_SWITCH_FLAG, true))) {
+            PushManagerUtils.getInstance().startPush();
         }
     }
 }

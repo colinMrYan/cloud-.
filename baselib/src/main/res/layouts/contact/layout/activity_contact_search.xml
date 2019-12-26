@@ -60,7 +60,7 @@
         android:layout_below="@id/rl_header"
         android:background="@color/content_bg">
 
-        <com.inspur.emmcloud.baselib.widget.MaxHightScrollView
+        <com.inspur.emmcloud.baselib.widget.MaxHeightScrollView
             android:id="@+id/search_edit_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -72,7 +72,7 @@
                 android:layout_height="wrap_content"
                 android:minHeight="45dp"
                 android:paddingBottom="3dp"
-                android:paddingLeft="5dp"
+                android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:paddingTop="3dp">
 
@@ -83,7 +83,7 @@
                     android:layout_centerVertical="true"
                     android:gravity="center_vertical" />
             </RelativeLayout>
-        </com.inspur.emmcloud.baselib.widget.MaxHightScrollView>
+        </com.inspur.emmcloud.baselib.widget.MaxHeightScrollView>
 
         <View
             android:id="@+id/space_edit"
@@ -321,7 +321,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_toLeftOf="@+id/pop_third_group_more_text"
-                            android:paddingLeft="7dp" />
+                            android:paddingLeft="15dp" />
 
                         <TextView
                             android:id="@+id/pop_third_group_more_text"

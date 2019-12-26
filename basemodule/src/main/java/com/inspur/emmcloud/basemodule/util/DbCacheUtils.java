@@ -16,6 +16,7 @@ import com.inspur.emmcloud.basemodule.config.Constant;
 
 import org.greenrobot.eventbus.EventBus;
 import org.xutils.DbManager;
+import org.xutils.ex.DbException;
 import org.xutils.x;
 
 import java.io.File;
@@ -36,7 +37,7 @@ public class DbCacheUtils {
                 .setDbName("emm.db")
                 // 不设置dbDir时, 默认存储在app的私有目录.
                 .setDbDir(new File(dbCachePath))
-                .setDbVersion(24)
+                .setDbVersion(27)
                 .setAllowTransaction(true)
                 .setDbOpenListener(new DbManager.DbOpenListener() {
                     @Override
@@ -131,6 +132,22 @@ public class DbCacheUtils {
                                     EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_CONVERSATION_ADD_SHOW_CONTENT));
                                 }
                             }
+                            if (oldVersion < 25) {
+                                if (tableIsExist(db, "Message")) {
+                                    db.execNonQuery("ALTER TABLE Message ADD COLUMN lifeCycleState INTEGER DEFAULT 1");
+                                }
+                            }
+                            if (oldVersion < 27) {
+                                if (tableIsExist(db, "VolumeFile")) {
+                                    db.execNonQuery("DROP TABLE IF EXISTS VolumeFile");
+                                }
+                                if (tableIsExist(db, "VolumeFileUpload")) {
+                                    db.execNonQuery("DROP TABLE IF EXISTS VolumeFileUpload");
+                                }
+                                if (tableIsExist(db, "DownloadFile")) {
+                                    db.execNonQuery("DROP TABLE IF EXISTS DownloadFile");
+                                }
+                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -213,6 +230,24 @@ public class DbCacheUtils {
             // TODO: handle exception
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 根据表名删除数据库
+     */
+    public static void deleteDbByTableName(Context context, String tableName) {
+        try {
+            if (db != null) {
+                if (tableIsExist(db, tableName)) {
+                    db.execNonQuery("DROP TABLE IF EXISTS " + tableName);
+                }
+            }
+        } catch (DbException e) {
+            e.printStackTrace();
+        } finally {
+            closeDb(context);
+        }
+
     }
 
     /**

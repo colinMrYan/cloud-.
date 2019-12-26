@@ -14,7 +14,7 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.ContactAPIService;
-import com.inspur.emmcloud.baselib.util.NotificationSetUtils;
+import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
@@ -23,8 +23,8 @@ import com.inspur.emmcloud.basemodule.bean.GetAllConfigVersionResult;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.push.PushManagerUtils;
-import com.inspur.emmcloud.basemodule.service.PVCollectService;
 import com.inspur.emmcloud.basemodule.util.ApiRequestRecordUploadUtils;
+import com.inspur.emmcloud.basemodule.util.AppPVManager;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.ClientConfigUpdateUtils;
 import com.inspur.emmcloud.basemodule.util.ClientIDUtils;
@@ -32,7 +32,6 @@ import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
-import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetAllRobotsResult;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.contact.ContactOrg;
@@ -40,12 +39,12 @@ import com.inspur.emmcloud.bean.contact.ContactProtoBuf;
 import com.inspur.emmcloud.bean.contact.GetContactOrgListUpateResult;
 import com.inspur.emmcloud.bean.contact.GetContactUserListUpateResult;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
-import com.inspur.emmcloud.bean.schedule.calendar.AccountType;
-import com.inspur.emmcloud.bean.schedule.calendar.CalendarColor;
-import com.inspur.emmcloud.bean.schedule.calendar.ScheduleCalendar;
 import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
+import com.inspur.emmcloud.componentservice.application.ApplicationService;
+import com.inspur.emmcloud.componentservice.communication.Conversation;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
+import com.inspur.emmcloud.componentservice.schedule.ScheduleService;
 import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.service.CoreService;
@@ -53,7 +52,6 @@ import com.inspur.emmcloud.service.LocationService;
 import com.inspur.emmcloud.util.privates.AppConfigUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.MessageSendManager;
-import com.inspur.emmcloud.util.privates.MyAppWidgetUtils;
 import com.inspur.emmcloud.util.privates.ProfileUtils;
 import com.inspur.emmcloud.util.privates.ReactNativeUtils;
 import com.inspur.emmcloud.util.privates.SplashPageUtils;
@@ -63,7 +61,6 @@ import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.ScheduleCalendarCacheUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -118,32 +115,29 @@ public class IndexActivity extends IndexBaseActivity {
         MyApplication.getInstance().setIndexActvityRunning(true);
         MyApplication.getInstance().restartAllDb();
         MyApplication.getInstance().clearUserPhotoMap();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            if (NotificationSetUtils.isNotificationEnabled(this) &&
-                    (PreferencesByUserAndTanentUtils.getBoolean(IndexActivity.this, Constant.PUSH_SWITCH_FLAG, true))) {
-                PushManagerUtils.getInstance().startPush();
-            }
-        } else {
-            if (PreferencesByUserAndTanentUtils.getBoolean(IndexActivity.this, Constant.PUSH_SWITCH_FLAG, true)) {
-                PushManagerUtils.getInstance().startPush();
-            }
-        }
+        AppUtils.judgeAndStartPush(IndexActivity.this);
         initScheduleCalendar();
         MessageSendManager.getInstance().initMessageStatus();
     }
 
     protected void initScheduleCalendar() {
-        List<ScheduleCalendar> scheduleCalendarList = ScheduleCalendarCacheUtils.getScheduleCalendarList(BaseApplication.getInstance());
-        if (scheduleCalendarList.size() == 0) {
-            scheduleCalendarList.add(new ScheduleCalendar(CalendarColor.BLUE, "", "", "", AccountType.APP_SCHEDULE));
-            scheduleCalendarList.add(new ScheduleCalendar(CalendarColor.ORANGE, "", "", "", AccountType.APP_MEETING));
-            String account = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, "");
-            String password = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_PASSWORD, "");
-            if (!StringUtils.isBlank(account) && !StringUtils.isBlank(password)) {
-                scheduleCalendarList.add(new ScheduleCalendar(CalendarColor.GREEN, account, account, password, AccountType.EXCHANGE));
-            }
-            ScheduleCalendarCacheUtils.saveScheduleCalendarList(BaseApplication.getInstance(), scheduleCalendarList);
+
+        Router router = Router.getInstance();
+        if (router.getService(ScheduleService.class) != null) {
+            ScheduleService service = router.getService(ScheduleService.class);
+            service.initScheduleCalendar();
         }
+//        List<ScheduleCalendar> scheduleCalendarList = ScheduleCalendarCacheUtils.getScheduleCalendarList(BaseApplication.getInstance());
+//        if (scheduleCalendarList.size() == 0) {
+//            scheduleCalendarList.add(new ScheduleCalendar(CalendarColor.BLUE, "", "", "", AccountType.APP_SCHEDULE));
+//            scheduleCalendarList.add(new ScheduleCalendar(CalendarColor.ORANGE, "", "", "", AccountType.APP_MEETING));
+//            String account = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, "");
+//            String password = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_PASSWORD, "");
+//            if (!StringUtils.isBlank(account) && !StringUtils.isBlank(password)) {
+//                scheduleCalendarList.add(new ScheduleCalendar(CalendarColor.GREEN, account, account, password, AccountType.EXCHANGE));
+//            }
+//            ScheduleCalendarCacheUtils.saveScheduleCalendarList(BaseApplication.getInstance(), scheduleCalendarList);
+//        }
     }
 
     private void initView() {
@@ -172,32 +166,23 @@ public class IndexActivity extends IndexBaseActivity {
      * 获取我的应用推荐小部件数据,如果到了更新时间才请求
      */
     private void getMyAppRecommendWidgets() {
-        if (MyAppWidgetUtils.checkNeedUpdateMyAppWidget(IndexActivity.this)) {
-            MyAppWidgetUtils.getInstance(getApplicationContext()).getMyAppWidgetsFromNet();
+        Router router = Router.getInstance();
+        if (router.getService(ApplicationService.class) != null) {
+            ApplicationService service = router.getService(ApplicationService.class);
+            service.getMyAppRecommendWidgets();
         }
+
     }
 
     /**
      * 启动服务
      */
     private void startService() {
-        startUploadPVCollectService();
+        //app应用行为分析上传
+        new AppPVManager().uploadPV();
         startCoreService();
         startLocationService();
     }
-
-    /***
-     * 打开app应用行为分析上传的Service;
-     */
-    private void startUploadPVCollectService() {
-        // TODO Auto-generated method stub
-        if (!AppUtils.isServiceWork(getApplicationContext(), PVCollectService.class.getName())) {
-            Intent intent = new Intent();
-            intent.setClass(this, PVCollectService.class);
-            startService(intent);
-        }
-    }
-
 
     /**
      * 打开保活服务

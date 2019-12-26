@@ -9,26 +9,29 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
-import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
-import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.chat.GetSendMsgResult;
 import com.inspur.emmcloud.bean.chat.Message;
+import com.inspur.emmcloud.componentservice.communication.Conversation;
+import com.inspur.emmcloud.componentservice.communication.OnCreateDirectConversationListener;
+import com.inspur.emmcloud.componentservice.communication.SearchModel;
 import com.inspur.emmcloud.componentservice.communication.ShareToConversationListener;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.MessageSendManager;
+import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 
 import org.greenrobot.eventbus.EventBus;
@@ -95,45 +98,52 @@ public class ShareToConversationBlankActivity extends BaseActivity {
                 break;
         }
 
-//        ARouter.getInstance().build(Constant.AROUTER_CLASS_CONTACT_SEARCH).with(bundle).navigation(this, REQUEST_SELECT_CONTACT);
-        ARouter.getInstance().build(Constant.AROUTER_CLASS_CONVERSATION_SEARCH).with(bundle).navigation(this, REQUEST_SELECT_CONTACT);
+        if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
+            ARouter.getInstance().build(Constant.AROUTER_CLASS_CONTACT_SEARCH).with(bundle).navigation(this, REQUEST_SELECT_CONTACT);
+        } else {
+            ARouter.getInstance().build(Constant.AROUTER_CLASS_CONVERSATION_SEARCH).with(bundle).navigation(this, REQUEST_SELECT_CONTACT);
+        }
     }
 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_SELECT_CONTACT && resultCode == RESULT_OK) {
-
-            handleShareResult(data);
-
-//            String result = data.getStringExtra("searchResult");
-//            JSONObject jsonObject = JSONUtils.getJSONObject(result);
-//            if (jsonObject.has("people")) {
-//                JSONArray peopleArray = JSONUtils.getJSONArray(jsonObject, "people", new JSONArray());
-//                if (peopleArray.length() > 0) {
-//                    JSONObject peopleObj = JSONUtils.getJSONObject(peopleArray, 0, new JSONObject());
-//                    String uid = JSONUtils.getString(peopleObj, "pid", "");
-//                    Conversation conversation = ConversationCacheUtils.getDirectConversationToUser(BaseApplication.getInstance(), uid);
-//                    if (conversation == null) {
-//                        createDirectChannel(uid);
-//                    } else {
-//                        cid = conversation.getId();
-//                        sendMessage();
-//                    }
-//
-//                }
-//            }
-//            if (jsonObject.has("channelGroup")) {
-//                JSONArray channelGroupArray = JSONUtils.getJSONArray(jsonObject, "channelGroup", new JSONArray());
-//                if (channelGroupArray.length() > 0) {
-//                    JSONObject cidObj = JSONUtils.getJSONObject(channelGroupArray, 0, new JSONObject());
-//                    cid = JSONUtils.getString(cidObj, "cid", "");
-//                    sendMessage();
-//                }
-//            }
+        if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
+            if (requestCode == REQUEST_SELECT_CONTACT && resultCode == RESULT_OK) {
+                String result = data.getStringExtra("searchResult");
+                JSONObject jsonObject = JSONUtils.getJSONObject(result);
+                if (jsonObject.has("people")) {
+                    JSONArray peopleArray = JSONUtils.getJSONArray(jsonObject, "people", new JSONArray());
+                    if (peopleArray.length() > 0) {
+                        JSONObject peopleObj = JSONUtils.getJSONObject(peopleArray, 0, new JSONObject());
+                        String uid = JSONUtils.getString(peopleObj, "pid", "");
+                        Conversation conversation = ConversationCacheUtils.getDirectConversationToUser(BaseApplication.getInstance(), uid);
+                        if (conversation == null) {
+                            createDirectChannel(uid);
+                        } else {
+                            cid = conversation.getId();
+                            sendMessage();
+                        }
+                    }
+                }
+                if (jsonObject.has("channelGroup")) {
+                    JSONArray channelGroupArray = JSONUtils.getJSONArray(jsonObject, "channelGroup", new JSONArray());
+                    if (channelGroupArray.length() > 0) {
+                        JSONObject cidObj = JSONUtils.getJSONObject(channelGroupArray, 0, new JSONObject());
+                        cid = JSONUtils.getString(cidObj, "cid", "");
+                        sendMessage();
+                    }
+                }
+            } else {
+                callbackCancel();
+            }
         } else {
-            callbackCancel();
+            if (requestCode == REQUEST_SELECT_CONTACT && resultCode == RESULT_OK) {
+                handleShareResult(data);
+            } else {
+                callbackCancel();
+            }
         }
     }
 
@@ -176,7 +186,7 @@ public class ShareToConversationBlankActivity extends BaseActivity {
     private void createDirectChannel(String uid) {
         if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
             new ConversationCreateUtils().createDirectConversation(ShareToConversationBlankActivity.this, uid,
-                    new ConversationCreateUtils.OnCreateDirectConversationListener() {
+                    new OnCreateDirectConversationListener() {
                         @Override
                         public void createDirectConversationSuccess(Conversation conversation) {
                             cid = conversation.getId();

@@ -138,6 +138,7 @@ public class Constant {
     public static final String EVENTBUS_TAG_SCHEDULE_HOLIDAY_CHANGE = "tag_schedule_holiday_changed";
     public static final String EVENTBUS_TAG_SCHEDULE_TASK_DATA_CHANGED = "tag_schedule_task_data_changed";
     public static final String EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED = "tag_schedule_calendar_data_changed";
+    public static final String EVENTBUS_TAG_SCHEDULE_HIDE_EXCHANGE_ACCOUNT_ERROR = "tag_schedule_hide_exchange_account_error";
     public static final String EVENTBUS_TASK_ORDER_CHANGE = "task_order_change";
     public static final String EVENTBUS_TAG_SELECT_CALENDAR_CHANGED = "tag_select_calendar_changed";
     public static final String EVENTBUS_TAG_SAFE_UNLOCK = "tag_safe_unlock";//二次认证（刷脸、手势认证通过）
@@ -252,7 +253,7 @@ public class Constant {
     //COMMUNICATION_LONG_CLICK_TO_SCHEDULE
 
     public static final String SCHEDULE_QUERY = "schedule_query";
-    public static final String SCHEDULE_DETAIL = "schedule_detail";
+    public static final String OPEN_SCHEDULE_DETAIL = "schedule_detail";
 
 
     public static final String SMS_LOGIN_START_TIME = "sms_login_start_time";
@@ -260,6 +261,7 @@ public class Constant {
 
     public static final String AROUTER_CLASS_COMMUNICATION_MEMBER = "/communication/MembersActivity";
     public static final String AROUTER_CLASS_COMMUNICATION_IMAGEPAGER = "/communication/ImagePagerActivity";
+    public static final String AROUTER_CLASS_COMMUNICATION_SHARE_FILE = "/communication/ShareFilesActivity";
 
     public static final String AROUTER_CLASS_LOGIN_MAIN = "/login/LoginActivity";
     public static final String AROUTER_CLASS_LOGIN_PASSWORD_MODIFY = "/login/PasswordModifyActivity";
@@ -283,13 +285,23 @@ public class Constant {
     public static final String AROUTER_CLASS_APP_INDEX = "/app/IndexActivity";
     public static final String AROUTER_CLASS_APP_NETWORK_DETAIL = "/app/NetWorkStateDetailActivity";
     public static final String AROUTER_CLASS_APP_WEB_ERROR_DETAIL = "/app/WebViewNetStateDetailActivity";
+    public static final String AROUTER_CLASS_APPCENTER_REACT_NATIVE = "/app/ReactNativeAppActivity";
 
     public static final String AROUTER_CLASS_AROUTER_DEGRADE = "/aRouter/degrade";
     public static final String AROUTER_CLASS_MAIL_LOGIN = "/mail/login";
     public static final String AROUTER_CLASS_MAIL_HOME = "/mail/home";
     public static final String AROUTER_CLASS_GROUP_NEWS = "/group/news";
-
     public static final String AROUTER_CLASS_WEBEX_MAIN = "/webex/WebexMyMeetingActivity";
+
+    public static final String AROUTER_CLASS_APPCENTER_TEST = "/application/ApplicationTestActivity";
+    public static final String AROUTER_CLASS_APPCENTER = "/application/AppCenterActivity";
+    public static final String AROUTER_CLASS_APPCENTER_MORE = "/application/AppCenterMoreActivity";
+    public static final String AROUTER_CLASS_APPCENTER_DETAIL = "/application/AppDetailActivity";
+    public static final String AROUTER_CLASS_APPCENTER_GROUP = "/application/AppGroupActivity";
+    public static final String AROUTER_CLASS_APPCENTER_SEARCH = "/application/AppSearchActivity";
+
+    public static final String AROUTER_CLASS_SCHEDLE_TEST = "/schedule/test";
+    public static final String AROUTER_CLASS_SCHEDLE_ADD = "/schedule/add";
 
     //参会状态
     public static final int ATTEND_MEETING_STATUS_ACCEPT = 1;

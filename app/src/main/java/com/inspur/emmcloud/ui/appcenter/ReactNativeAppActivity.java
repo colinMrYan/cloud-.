@@ -3,15 +3,15 @@ package com.inspur.emmcloud.ui.appcenter;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.beefe.picker.PickerViewPackage;
-import com.facebook.react.BuildConfig;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactRootView;
 import com.facebook.react.common.LifecycleState;
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
 import com.facebook.react.shell.MainReactPackage;
 import com.horcrux.svg.SvgPackage;
-import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.BuildConfig;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
@@ -22,10 +22,12 @@ import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.util.ZipUtils;
 import com.inspur.emmcloud.baselib.widget.dialogs.ReactLoadingDlg;
 import com.inspur.emmcloud.basemodule.api.APIDownloadCallBack;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.Enterprise;
 import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.basemodule.push.PushManagerUtils;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.AppExceptionCacheUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
@@ -36,12 +38,11 @@ import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.bean.appcenter.AndroidBundleBean;
-import com.inspur.emmcloud.bean.appcenter.ReactNativeDownloadUrlBean;
-import com.inspur.emmcloud.bean.appcenter.ReactNativeInstallUriBean;
+import com.inspur.emmcloud.util.privates.ReactNativeFlow;
 import com.inspur.reactnative.AuthorizationManagerPackage;
-import com.inspur.reactnative.ReactNativeFlow;
-import com.inspur.reactnative.ReactNativeInitInfoUtils;
 import com.inspur.reactnative.ReactNativeWritableNativeMap;
+import com.inspur.reactnative.bean.ReactNativeDownloadUrlBean;
+import com.inspur.reactnative.bean.ReactNativeInstallUriBean;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.reactnativecomponent.swiperefreshlayout.RCTSwipeRefreshLayoutPackage;
 import com.reactnativenavigation.bridge.NavigationReactPackage;
@@ -51,7 +52,7 @@ import java.io.File;
 /**
  * Created by yufuchang on 2017/3/15.
  */
-
+@Route(path = Constant.AROUTER_CLASS_APPCENTER_REACT_NATIVE)
 public class ReactNativeAppActivity extends BaseActivity implements DefaultHardwareBackBtnHandler {
     private ReactInstanceManager mReactInstanceManager;
     private ReactNativeAPIService reactNativeAPIService;
@@ -84,13 +85,12 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
      * 初始化RN应用Activity
      */
     private void init() {
-        String token = ((MyApplication) getApplicationContext())
+        String token = ((BaseApplication) getApplicationContext())
                 .getToken();
         loadingDialog = new ReactLoadingDlg(this);
         reactNativeAPIService = new ReactNativeAPIService(ReactNativeAppActivity.this);
         reactNativeAPIService.setAPIInterface(new WebService());
     }
-
 
 
     /**
@@ -136,7 +136,7 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
         boolean needCheckUpdate = true;//检查更新标志，如果需要从网络获取应用则不用再执行更新检查
         appModule = ReactNativeFlow.getAppModuleFromScheme(reactNativeAppScheme);
         reactAppFilePath = MyAppConfig.getReactAppFilePath(ReactNativeAppActivity.this,
-                ((MyApplication) getApplication()).getUid(), appModule);
+                ((BaseApplication) getApplication()).getUid(), appModule);
         if (!StringUtils.isBlank(appModule) && FileUtils.isFileExist(reactAppFilePath + "/index.android.bundle")) {
             //已安装应用
             createReactRootView(reactAppFilePath);
@@ -168,7 +168,7 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
                 loadingDialog.show();
             }
 
-            new ClientIDUtils(MyApplication.getInstance(), new ClientIDUtils.OnGetClientIdListener() {
+            new ClientIDUtils(BaseApplication.getInstance(), new ClientIDUtils.OnGetClientIdListener() {
                 @Override
                 public void getClientIdSuccess(String clientId) {
                     StringBuilder describeVersionAndTime = ReactNativeFlow.getBundleDotJsonFromFile(reactAppFilePath);
@@ -246,23 +246,26 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
         bundle.putString("name", getMyInfoResult.getName());
         bundle.putString("mail", getMyInfoResult.getMail());
         bundle.putString("avatar", getMyInfoResult.getAvatar());
-        Enterprise currentEnterprise = ((MyApplication) getApplicationContext()).getCurrentEnterprise();
+        Enterprise currentEnterprise = ((BaseApplication) getApplicationContext()).getCurrentEnterprise();
         bundle.putString("enterpriseCode", currentEnterprise.getCode());
         bundle.putString("enterpriseName", currentEnterprise.getName());
         bundle.putString("enterpriseId", currentEnterprise.getId());
 
         //这里与IOS传值有所不同，建议是保留原来版本即上面的传值方式，下面是IOS传值方式
         //bundle.putString("profile",myInfo);
-        bundle.putString("systemName", ReactNativeInitInfoUtils.SYSTEM);
-        bundle.putString("systemVersion", ReactNativeInitInfoUtils.getSystemVersion(ReactNativeAppActivity.this));
+        bundle.putString("systemName", "Android");
+        bundle.putString("systemVersion", AppUtils.getSystemVersion());
         bundle.putString("locale", LanguageManager.getInstance().getCurrentAppLanguage());
-        bundle.putString("reactNativeVersion", ReactNativeInitInfoUtils.getReactNativeVersion(reactAppFilePath));
-        bundle.putString("accessToken", ((MyApplication) getApplicationContext()).getToken());
-        bundle.putString("pushId", ReactNativeInitInfoUtils.getPushId(ReactNativeAppActivity.this));
-        bundle.putString("pushType", ReactNativeInitInfoUtils.getPushType(ReactNativeAppActivity.this));
-        bundle.putString("appVersion", AppUtils.getVersion(ReactNativeAppActivity.this));
+
+        AndroidBundleBean androidBundleBean = new AndroidBundleBean(FileUtils.readFile(reactAppFilePath + "/bundle.json",
+                "UTF-8").toString());
+        bundle.putString("reactNativeVersion", androidBundleBean.getVersion());
+        bundle.putString("accessToken", (BaseApplication.getInstance().getToken()));
+        bundle.putString("pushId", PushManagerUtils.getInstance().getPushId(this));
+        bundle.putString("pushType", getPushType());
         bundle.putSerializable("userProfile", myInfo);
-        bundle.putSerializable("currentEnterprise", ((MyApplication) getApplicationContext()).getCurrentEnterprise().toJSONObject().toString());
+        bundle.putSerializable("currentEnterprise", (BaseApplication.getInstance().getCurrentEnterprise().toJSONObject().toString()));
+        bundle.putString("appVersion", AppUtils.getVersion(this));
 
         /**
          * 增加RN路径上的约定参数
@@ -279,6 +282,15 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
         return bundle;
     }
 
+    private String getPushType() {
+        if (AppUtils.getIsHuaWei()) {
+            return Constant.HUAWEI_FLAG;
+        } else if (AppUtils.getIsXiaoMi()) {
+            return Constant.XIAOMI_FLAG;
+        }
+        return "jiguang";
+    }
+
     @Override
     public void invokeDefaultOnBackPressed() {
         super.onBackPressed();
@@ -292,7 +304,7 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
      */
     private void changeReactNativeAppByOrder(ReactNativeDownloadUrlBean reactNativeDownloadUrlBean) {
         int state = ReactNativeFlow.checkReactNativeOperation(reactNativeDownloadUrlBean.getCommand());
-        String userId = ((MyApplication) getApplication()).getUid();
+        String userId = ((BaseApplication) getApplication()).getUid();
         String reactNatviveTempPath = MyAppConfig.getReactTempFilePath(ReactNativeAppActivity.this, userId);
         String preVersion = "", currentVersion = "";
         if (state == ReactNativeFlow.REACT_NATIVE_RESET) {
@@ -326,7 +338,7 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
     private void getDownlaodUrl(final ReactNativeInstallUriBean reactNativeInstallUriBean) {
         if (NetUtils.isNetworkConnected(ReactNativeAppActivity.this)) {
 
-            new ClientIDUtils(MyApplication.getInstance(), new ClientIDUtils.OnGetClientIdListener() {
+            new ClientIDUtils(BaseApplication.getInstance(), new ClientIDUtils.OnGetClientIdListener() {
                 @Override
                 public void getClientIdSuccess(String clientId) {
                     StringBuilder describeVersionAndTime = ReactNativeFlow.getBundleDotJsonFromFile(reactAppFilePath);
@@ -348,7 +360,7 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
      * @param reactNativeDownloadUrlBean
      */
     private void downloadReactNativeZip(final ReactNativeDownloadUrlBean reactNativeDownloadUrlBean) {
-        final String userId = ((MyApplication) getApplication()).getUid();
+        final String userId = ((BaseApplication) getApplication()).getUid();
         final String reactZipDownloadFromUri = APIUri.getZipUrl() + reactNativeDownloadUrlBean.getUri();
         final String reactZipFilePath = MyAppConfig.getFileDownloadDirPath() + userId + "/" + reactNativeDownloadUrlBean.getUri();
         APIDownloadCallBack progressCallback = new APIDownloadCallBack(ReactNativeAppActivity.this, reactZipDownloadFromUri) {
@@ -438,7 +450,7 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
             }
             WebServiceMiddleUtils.hand(ReactNativeAppActivity.this,
                     error, errorCode);
-            if(!FileUtils.isFileExist(reactAppFilePath + "/index.android.bundle")){
+            if (!FileUtils.isFileExist(reactAppFilePath + "/index.android.bundle")) {
                 finish();
             }
         }
@@ -459,7 +471,7 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
             }
             WebServiceMiddleUtils.hand(ReactNativeAppActivity.this,
                     error, errorCode);
-            if(!FileUtils.isFileExist(reactAppFilePath + "/index.android.bundle")){
+            if (!FileUtils.isFileExist(reactAppFilePath + "/index.android.bundle")) {
                 finish();
             }
         }

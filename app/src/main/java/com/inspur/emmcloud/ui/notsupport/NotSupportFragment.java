@@ -19,6 +19,9 @@ import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.UpgradeUtils;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * 如果有不支持的功能时显示这个界面
  */
@@ -28,9 +31,10 @@ public class NotSupportFragment extends BaseFragment {
     private static final int NO_NEED_UPGRADE = 10;
     private static final int UPGRADE_FAIL = 11;
     private static final int DONOT_UPGRADE = 12;
-    private View rootView;
-    private LayoutInflater inflater;
-    private TextView unknownFuctionText;
+    @BindView(R.id.app_unknow_text)
+    TextView unknownFunctionText;
+    @BindView(R.id.header_text)
+    TextView headerText;
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -50,41 +54,27 @@ public class NotSupportFragment extends BaseFragment {
     };
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
-        inflater = (LayoutInflater) getActivity().getSystemService(
-                getActivity().LAYOUT_INFLATER_SERVICE);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_unknown, container, false);
+        unbinder = ButterKnife.bind(this, view);
+        initView();
+        return view;
+    }
 
-        rootView = inflater.inflate(R.layout.fragment_unknown, null);
-        unknownFuctionText = (TextView) rootView.findViewById(R.id.app_unknow_text);
+
+    private void initView() {
         String title = getTabTitle();
-        ((TextView) rootView.findViewById(R.id.header_text)).setText(title);
+        headerText.setText(title);
         //应用功能已改版，请升级到最新版本
-        unknownFuctionText.setOnClickListener(new View.OnClickListener() {
+        unknownFunctionText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 UpgradeUtils upgradeUtils = new UpgradeUtils(getActivity(), handler, true);
                 upgradeUtils.checkUpdate(true);
             }
         });
-        unknownFuctionText.setText(Html.fromHtml(getResources().getString(R.string.tab_not_support_tips, title)));
-
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        setFragmentStatusBarCommon();
-        if (rootView == null) {
-            rootView = inflater.inflate(R.layout.fragment_unknown, container,
-                    false);
-        }
-        ViewGroup parent = (ViewGroup) rootView.getParent();
-        if (parent != null) {
-            parent.removeView(rootView);
-        }
-        return rootView;
+        unknownFunctionText.setText(Html.fromHtml(getResources().getString(R.string.tab_not_support_tips, title)));
     }
 
     /**

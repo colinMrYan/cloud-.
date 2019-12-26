@@ -37,11 +37,11 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="12dp"
-                android:textAllCaps="false"
                 android:background="@drawable/app_news_dialog_day_button"
                 android:drawablePadding="11dp"
                 android:onClick="onClick"
                 android:text="@string/help"
+                android:textAllCaps="false"
                 android:textSize="@dimen/content_title_textsize"
                 android:visibility="visible" />
         </LinearLayout>
@@ -79,10 +79,9 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_weight="1"
-                android:textAllCaps="false"
                 android:background="@drawable/app_news_dialog_day_button"
-                android:onClick="onClick"
                 android:text="@string/news_font_normal"
+                android:textAllCaps="false"
                 android:textColor="#FF999999"
                 android:textSize="@dimen/content_title_textsize" />
 
@@ -93,10 +92,9 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_weight="1"
-                android:textAllCaps="false"
                 android:background="@drawable/app_news_dialog_day_button"
-                android:onClick="onClick"
                 android:text="@string/news_font_middle"
+                android:textAllCaps="false"
                 android:textSize="@dimen/content_title_textsize" />
 
             <Button
@@ -106,10 +104,9 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_weight="1"
-                android:textAllCaps="false"
                 android:background="@drawable/app_news_dialog_day_button"
-                android:onClick="onClick"
                 android:text="@string/news_font_big_text"
+                android:textAllCaps="false"
                 android:textSize="@dimen/content_title_textsize" />
 
             <Button
@@ -119,10 +116,9 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_weight="1"
-                android:textAllCaps="false"
                 android:background="@drawable/app_news_dialog_day_button"
-                android:onClick="onClick"
                 android:text="@string/news_font_biggest_text"
+                android:textAllCaps="false"
                 android:textSize="@dimen/content_title_textsize" />
 
 

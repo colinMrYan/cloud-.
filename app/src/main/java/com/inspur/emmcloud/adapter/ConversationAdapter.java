@@ -20,9 +20,9 @@ import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
-import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.UIConversation;
+import com.inspur.emmcloud.componentservice.communication.Conversation;
 import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
 
 import java.io.File;
@@ -88,7 +88,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
      */
     public void setNetExceptionView(Boolean NetState) {
         if (false == NetState && !haveHeaderView()) {
-            addHeaderView(LayoutInflater.from(context).inflate(R.layout.recycleview_header_item, null));
+            addHeaderView(LayoutInflater.from(context).inflate(R.layout.header_error, null));
         } else if (true == NetState && haveHeaderView()) {
             deleteHeaderView();
         }

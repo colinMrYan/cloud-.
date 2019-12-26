@@ -14,13 +14,14 @@ import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
-import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
-import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
+import com.inspur.emmcloud.componentservice.communication.Conversation;
+import com.inspur.emmcloud.componentservice.communication.OnCreateDirectConversationListener;
+import com.inspur.emmcloud.componentservice.communication.SearchModel;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.ui.chat.mvp.view.ConversationSearchActivity;
@@ -29,6 +30,7 @@ import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import butterknife.BindView;
@@ -131,63 +133,70 @@ public class ShareLinkActivity extends BaseActivity {
         intent.putExtra(ContactSearchFragment.EXTRA_SHOW_COMFIRM_DIALOG, true);
         intent.setClass(getApplicationContext(),
                 ContactSearchActivity.class);
-//        startActivityForResult(intent, SHARE_LINK);
-
-        Intent shareIntent = new Intent(this, ConversationSearchActivity.class);
-        shareIntent.putExtra(Constant.SHARE_CONTENT, title);
-
-        startActivityForResult(shareIntent, SHARE_LINK);
+        if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
+            startActivityForResult(intent, SHARE_LINK);
+        } else {
+            Intent shareIntent = new Intent(this, ConversationSearchActivity.class);
+            shareIntent.putExtra(Constant.SHARE_CONTENT, title);
+            startActivityForResult(shareIntent, SHARE_LINK);
+        }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
+            if (resultCode == RESULT_OK && requestCode == SHARE_LINK
+                    && NetUtils.isNetworkConnected(getApplicationContext())) {
 
-        if (resultCode == RESULT_OK && requestCode == SHARE_LINK
-                && NetUtils.isNetworkConnected(getApplicationContext())) {
-            handleShareResult(data);
+                String result = data.getStringExtra("searchResult");
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+                    String userOrGroupId = "";
+                    boolean isGroup = false;
+                    if (jsonObject.has("people")) {
+                        JSONArray peopleArray = jsonObject.getJSONArray("people");
+                        if (peopleArray.length() > 0) {
+                            JSONObject peopleObj = peopleArray.getJSONObject(0);
+                            String uid = peopleObj.getString("pid");
+                            userOrGroupId = uid;
+                            isGroup = false;
+                            // createDirectChannel(uid);
+                        }
+                    }
 
-//            String result = data.getStringExtra("searchResult");
-//            try {
-//                JSONObject jsonObject = new JSONObject(result);
-//                String userOrGroupId = "";
-//                boolean isGroup = false;
-//                if (jsonObject.has("people")) {
-//                    JSONArray peopleArray = jsonObject.getJSONArray("people");
-//                    if (peopleArray.length() > 0) {
-//                        JSONObject peopleObj = peopleArray.getJSONObject(0);
-//                        String uid = peopleObj.getString("pid");
-//                        userOrGroupId = uid;
-//                        isGroup = false;
-//                        // createDirectChannel(uid);
-//                    }
-//                }
-//
-//                if (jsonObject.has("channelGroup")) {
-//                    JSONArray channelGroupArray = jsonObject
-//                            .getJSONArray("channelGroup");
-//                    if (channelGroupArray.length() > 0) {
-//                        JSONObject cidObj = channelGroupArray.getJSONObject(0);
-//                        String cid = cidObj.getString("cid");
-//                        userOrGroupId = cid;
-//                        isGroup = true;
-//                        //startChannelActivity(cid);
-//                    }
-//                }
-//                if (isGroup) {
-//                    startChannelActivity(userOrGroupId);
-//                } else {
-//                    createDirectChannel(userOrGroupId);
-//                }
-//
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//                ToastUtils.show(MyApplication.getInstance(), getString(R.string.baselib_share_fail));
-//                finish();
-//            }
+                    if (jsonObject.has("channelGroup")) {
+                        JSONArray channelGroupArray = jsonObject
+                                .getJSONArray("channelGroup");
+                        if (channelGroupArray.length() > 0) {
+                            JSONObject cidObj = channelGroupArray.getJSONObject(0);
+                            String cid = cidObj.getString("cid");
+                            userOrGroupId = cid;
+                            isGroup = true;
+                            //startChannelActivity(cid);
+                        }
+                    }
+                    if (isGroup) {
+                        startChannelActivity(userOrGroupId);
+                    } else {
+                        createDirectChannel(userOrGroupId);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    ToastUtils.show(MyApplication.getInstance(), getString(R.string.baselib_share_fail));
+                    finish();
+                }
+            } else {
+                finish();
+            }
         } else {
-            finish();
+            if (resultCode == RESULT_OK && requestCode == SHARE_LINK
+                    && NetUtils.isNetworkConnected(getApplicationContext())) {
+                handleShareResult(data);
+            } else {
+                finish();
+            }
         }
     }
 
@@ -228,7 +237,7 @@ public class ShareLinkActivity extends BaseActivity {
     private void createDirectChannel(String uid) {
         if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
             new ConversationCreateUtils().createDirectConversation(ShareLinkActivity.this, uid,
-                    new ConversationCreateUtils.OnCreateDirectConversationListener() {
+                    new OnCreateDirectConversationListener() {
                         @Override
                         public void createDirectConversationSuccess(Conversation conversation) {
                             startChannelActivity(conversation.getId());

@@ -17,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -34,11 +35,10 @@ import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
 import com.inspur.emmcloud.baselib.widget.FlowLayout;
-import com.inspur.emmcloud.baselib.widget.MaxHightScrollView;
+import com.inspur.emmcloud.baselib.widget.MaxHeightScrollView;
 import com.inspur.emmcloud.baselib.widget.NoHorScrollView;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.MyDialog;
-import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
@@ -47,12 +47,14 @@ import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
-import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.bean.contact.ContactClickMessage;
 import com.inspur.emmcloud.bean.contact.ContactOrg;
 import com.inspur.emmcloud.bean.contact.FirstGroupTextModel;
+import com.inspur.emmcloud.componentservice.communication.Conversation;
+import com.inspur.emmcloud.componentservice.communication.OnCreateDirectConversationListener;
+import com.inspur.emmcloud.componentservice.communication.SearchModel;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
@@ -80,6 +82,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 import static android.app.Activity.RESULT_OK;
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 
@@ -102,25 +108,63 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
     private static final int SEARCH_CONTACT = 2;
     private static final int SEARCH_NOTHIING = 4;
     private static final int REQUEST_SEARCH_MORE = 5;
-    private View rootView;
+    @BindView(R.id.flowlayout)
+    FlowLayout flowLayout;
+    @BindView(R.id.tv_header)
+    TextView headerText;
+    @BindView(R.id.tv_tab_header)
+    TextView tabHeaderText;
+    @BindView(R.id.ibt_back)
+    ImageButton backImgBtn;
+    @BindView(R.id.origin_layout)
+    LinearLayout originLayout; // 进入后看到的页面
+    @BindView(R.id.origin_all_layout)
+    RelativeLayout originAllLayout;// 进入后看到的界面和打开某项后的list的layout
+    @BindView(R.id.ok_text)
+    TextView okText;
+    @BindView(R.id.open_group_layout)
+    LinearLayout openGroupLayout;// 打开某项后的layout
+    @BindView(R.id.open_title_list)
+    RecyclerView openGroupTitleListView; // 第一组 通讯录导航列表
+    @BindView(R.id.second_title_text)
+    TextView secondTitleText;
+    @BindView(R.id.open_first_group_list)
+    ListView openGroupListView; // 第一组数据
+    @BindView(R.id.second_group_list)
+    ListView secondGroupListView;// 第二组数据
+    @BindView(R.id.search_edit_layout)
+    MaxHeightScrollView searchEditLayout;
+    @BindView(R.id.pop_second_group_layout)
+    LinearLayout popSecondGroupLayout;
+    @BindView(R.id.pop_third_group_layout)
+    LinearLayout popThirdGroupLayout;
+    @BindView(R.id.pop_second_group_list)
+    ListView popSecondGroupListView;
+    @BindView(R.id.pop_third_group_list)
+    ListView popThirdGroupListView;
+    @BindView(R.id.pop_second_group_more_text)
+    TextView popSecondGroupMoreText;
+    @BindView(R.id.pop_third_group_more_text)
+    TextView popThirdGroupMoreText;
+    @BindView(R.id.pop_layout)
+    NoHorScrollView popLayout;
+    @BindView(R.id.rl_select_all)
+    RelativeLayout selectAllLayout;
+    @BindView(R.id.iv_select_all)
+    ImageView selectAllImg;
+    @BindView(R.id.pop_second_title_list)
+    RecyclerView popSecondGroupTitleListView; // 第二组 群组导航列表
+    @BindView(R.id.pop_third_title_list)
+    RecyclerView popThirdGroupTitleListView; // 第三组 通讯录导航列表
+    @BindView(R.id.struct_layout)
+    RelativeLayout structLayout;
+    @BindView(R.id.channel_group_layout)
+    RelativeLayout channelGroupLayout;
     private boolean isSearchSingle = false; // 判断是否搜索单一项
     private boolean isContainMe = false; // 搜索结果是否可以包含自己
     private boolean isMultiSelect = false;
     private int searchContent = -1;
-    private FlowLayout flowLayout;
     private EditText searchEdit;
-    private TextView headerText;
-    private TextView tabHeaderText;
-    private LinearLayout originLayout; // 进入后看到的页面
-    private RelativeLayout originAllLayout;// 进入后看到的界面和打开某项后的list的layout
-    private LinearLayout openGroupLayou;// 打开某项后的layout
-    private RecyclerView openGroupTitleListView; // 第一组 通讯录导航列表
-    private TextView secondTitleText;
-
-    private ListView openGroupListView; // 第一组数据
-    private ListView secondGroupListView;// 第二组数据
-    private MaxHightScrollView searchEditLayout;
-
     private List<SearchModel> commonContactList = new ArrayList<>();
     private List<Contact> openGroupContactList = new ArrayList<>();
     private List<SearchModel> openGroupChannelList = new ArrayList<>();
@@ -133,22 +177,8 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
     private int originCurrentArea = 0; // orgin页面目前的搜索模式
     private int searchArea = 0; // 搜索范围
     private String title;
-    private List<SearchModel> searchChannelGroupList = new ArrayList<>(); // 群组搜索结果
-    private List<Contact> searchContactList = new ArrayList<Contact>(); // 通讯录搜索结果
-    // popupWindow中的控件与数据
-    private LinearLayout popSecondGroupLayou;
-    private LinearLayout popThirdGroupLayou;
-    private ListView popSecondGroupListView;
-    private ListView popThirdGroupListView;
     private PopAdapter popSecondGroupAdapter;
     private PopAdapter popThirdGroupAdapter;
-    private TextView popSecondGroupMoreText;
-    private TextView popThirdGroupMoreText;
-    private NoHorScrollView popLayout;
-    private RelativeLayout selectAllLayout;
-    private ImageView selectAllImg;
-    private RecyclerView popSecondGroupTitleListView; // 第二组 群组导航列表
-    private RecyclerView popThirdGroupTitleListView; // 第三组 通讯录导航列表
     private List<FirstGroupTextModel> popSecondGroupTextList = new ArrayList<>();
     private List<FirstGroupTextModel> popThirdGroupTextList = new ArrayList<>();
     private GroupTitleAdapter popSecondGroupTitleAdapter;
@@ -160,7 +190,6 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
     private long lastBackTime;
     private int selectLimit = 5000;
     private List<SearchModel> currentSelectAllSearchModelList = new ArrayList<>();
-
     private boolean isShowConfirmDialog = false;
     private String sureDialogMessage;
 
@@ -168,35 +197,34 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        rootView = LayoutInflater.from(getActivity()).inflate(R.layout.activity_contact_search, null);
-        getIntentData();
-        initView();
-        initSearchRunnable();
         EventBus.getDefault().register(this);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.activity_contact_search, container, false);
+        unbinder = ButterKnife.bind(this, view);
         setFragmentStatusBarCommon();
-        if (rootView == null) {
-            rootView = inflater.inflate(R.layout.activity_contact_search, container,
-                    false);
-        }
-        ViewGroup parent = (ViewGroup) rootView.getParent();
-        if (parent != null) {
-            parent.removeView(rootView);
-        }
-        return rootView;
+        getIntentData();
+        initView();
+        initSearchRunnable();
+        return view;
+    }
+
+
+    @Override
+    public void onResume() {
+        setFragmentStatusBarCommon();
+        super.onResume();
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (handler != null) {
-            handler = null;
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden) {
+            setFragmentStatusBarCommon();
         }
-        EventBus.getDefault().unregister(this);
     }
 
     /**
@@ -308,12 +336,10 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
         }
         initSearchArea();
         if (searchContent == SEARCH_CHANNELGROUP) {
-            (rootView.findViewById(R.id.struct_layout))
-                    .setVisibility(View.GONE);
+            structLayout.setVisibility(View.GONE);
         }
         if (searchContent == SEARCH_CONTACT) {
-            (rootView.findViewById(R.id.channel_group_layout))
-                    .setVisibility(View.GONE);
+            channelGroupLayout.setVisibility(View.GONE);
         }
         if (searchContent == SEARCH_NOTHIING) {
             originCurrentArea = SEARCH_ALL;
@@ -334,33 +360,21 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
 
     private void initView() {
         // TODO Auto-generated method stub
-        headerText = rootView.findViewById(R.id.tv_header);
-        tabHeaderText = rootView.findViewById(R.id.tv_tab_header);
         boolean isFromTab = getActivity().getClass().getSimpleName().equals(IndexActivity.class.getSimpleName());
-        rootView.findViewById(R.id.ibt_back).setVisibility(isFromTab ? View.GONE : View.VISIBLE);
+        backImgBtn.setVisibility(isFromTab ? View.GONE : View.VISIBLE);
         headerText.setVisibility(isFromTab ? View.GONE : View.VISIBLE);
         tabHeaderText.setVisibility(isFromTab ? View.VISIBLE : View.GONE);
-        originAllLayout = rootView.findViewById(R.id.origin_all_layout);
-        originLayout = rootView.findViewById(R.id.origin_layout);
-        openGroupLayou = rootView.findViewById(R.id.open_group_layout);
-        openGroupTitleListView = rootView.findViewById(R.id.open_title_list);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         openGroupTitleListView.setLayoutManager(layoutManager);
-        openGroupListView = rootView.findViewById(R.id.open_first_group_list);
-        secondGroupListView = rootView.findViewById(R.id.second_group_list);
-        secondTitleText = rootView.findViewById(R.id.second_title_text);
+
         myTextWatcher = new MyTextWatcher();
-        flowLayout = rootView.findViewById(R.id.flowlayout);
-        TextView okText = rootView.findViewById(R.id.ok_text);
-        selectAllLayout = rootView.findViewById(R.id.rl_select_all);
-        selectAllImg = rootView.findViewById(R.id.iv_select_all);
+
         // 单选时隐藏输入框或者不选时
         if (!isMultiSelect || searchContent == SEARCH_NOTHIING) {
             okText.setVisibility(View.GONE);
         }
         flowAddEdit();
-        searchEditLayout = (MaxHightScrollView) rootView.findViewById(R.id.search_edit_layout);
         initSecondGroup();
         initPopView();
         if (selectMemList.size() > 0) {
@@ -371,23 +385,9 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
         }
         headerText.setText(title);
         tabHeaderText.setText(title);
-        setOnClickListeners();
+
     }
 
-    /**
-     * 设置响应事件
-     */
-    private void setOnClickListeners() {
-        ContactSearchClickListener contactSearchClickListener = new ContactSearchClickListener();
-        rootView.findViewById(R.id.ibt_back).setOnClickListener(contactSearchClickListener);
-        rootView.findViewById(R.id.ok_text).setOnClickListener(contactSearchClickListener);
-        rootView.findViewById(R.id.struct_layout).setOnClickListener(contactSearchClickListener);
-        rootView.findViewById(R.id.channel_group_layout).setOnClickListener(contactSearchClickListener);
-        rootView.findViewById(R.id.layout).setOnClickListener(contactSearchClickListener);
-        rootView.findViewById(R.id.pop_second_group_more_text).setOnClickListener(contactSearchClickListener);
-        rootView.findViewById(R.id.pop_third_group_more_text).setOnClickListener(contactSearchClickListener);
-        rootView.findViewById(R.id.rl_select_all).setOnClickListener(contactSearchClickListener);
-    }
 
     /**
      * 初始化第二组的数据
@@ -459,9 +459,9 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
      * 群组或通讯录打开浏览页面
      */
     private void displayOpenLayout() {
-        if (openGroupLayou.getVisibility() != View.VISIBLE) {
+        if (openGroupLayout.getVisibility() != View.VISIBLE) {
             originLayout.setVisibility(View.GONE);
-            openGroupLayou.setVisibility(View.VISIBLE);
+            openGroupLayout.setVisibility(View.VISIBLE);
             groupTitleAdapter = new GroupTitleAdapter();
             openGroupTitleListView.setAdapter(groupTitleAdapter);
             if (openGroupTextList.size() > 0) {
@@ -484,11 +484,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                     // TODO Auto-generated method stub
                     if (originCurrentArea == SEARCH_CONTACT) {
                         Contact contact = openGroupContactList.get(position);
-                        if (contact.getType().toLowerCase().equals("user")) {
-                            changeMembers(contact.contact2SearchModel());
-                        } else {
-                            openContact(contact);
-                        }
+                        changeMembers(contact.contact2SearchModel());
                     } else if (originCurrentArea == SEARCH_CHANNELGROUP) {
                         changeMembers(openGroupChannelList.get(position));
                     }
@@ -536,7 +532,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
             initSearchArea();
             openGroupTextList.clear();
             originLayout.setVisibility(View.VISIBLE);
-            openGroupLayou.setVisibility(View.GONE);
+            openGroupLayout.setVisibility(View.GONE);
         } else if (position != openGroupTextList.size() - 1) {
             FirstGroupTextModel firstGroupTextModel = openGroupTextList
                     .get(position);
@@ -617,14 +613,20 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
         displayOpenLayout();
     }
 
-    /**
-     * 添加联系人
-     */
+
     private void changeMembers(SearchModel searchModel) {
+        changeMembers(searchModel, false);
+    }
+
+    /**
+     * 更改SearchModel选中状态或者打开SearchModel
+     *
+     * @param searchModel
+     * @param isSelectImgClick 是否是点击选择按钮进入到此方法
+     */
+    private void changeMembers(SearchModel searchModel, boolean isSelectImgClick) {
         if (searchModel != null) {
-            if (searchContent == SEARCH_NOTHIING) {
-                CommonContactCacheUtils.saveCommonContact(
-                        getActivity().getApplicationContext(), searchModel);
+            if (searchContent == SEARCH_NOTHIING || (!isSelectImgClick && searchModel.getType().equals(SearchModel.TYPE_STRUCT) && !selectMemList.contains(searchModel))) {
                 checkInfoOrEnterChannel(searchModel);
                 return;
             }
@@ -662,7 +664,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
      * @param removeSearchModel
      */
     private void notifySelectAllStatus(SearchModel removeSearchModel) {
-        if (openGroupLayou.getVisibility() == View.VISIBLE && selectAllImg.getVisibility() == View.VISIBLE && selectAllImg.isSelected()) {
+        if (openGroupLayout.getVisibility() == View.VISIBLE && selectAllImg.getVisibility() == View.VISIBLE && selectAllImg.isSelected()) {
             if (currentSelectAllSearchModelList.contains(removeSearchModel)) {
                 selectAllImg.setImageResource(R.drawable.ic_select_no);
                 selectAllImg.setSelected(false);
@@ -692,7 +694,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
             searchModelList = openGroupChannelList;
         }
         for (SearchModel searchModel : searchModelList) {
-            if (isHaveStaticSearchModel(searchModel) || searchModel.getType().equals(SearchModel.TYPE_STRUCT)) {
+            if (isHaveStaticSearchModel(searchModel)) {
                 continue;
             }
             if (isSetSelectAll) {
@@ -715,30 +717,28 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
      */
     private void checkInfoOrEnterChannel(final SearchModel searchModel) {
         // TODO Auto-generated method stub
-        // TODO Auto-generated method stub
-        Intent intent = new Intent();
-        String id = searchModel.getId();
-        String type = searchModel.getType();
-        if (type.equals("STRUCT")) {
-            return;
-        }
-        if (id.equals("null")) {
+
+        if (searchModel.getId().equals("null")) {
             ToastUtils.show(getActivity().getApplicationContext(), R.string.cannot_view_info);
             return;
         }
-        CommonContactCacheUtils.saveCommonContact(getActivity().getApplicationContext(),
-                searchModel);
-        if (type.equals("USER")) {
-            intent.putExtra("uid", id);
-            intent.setClass(getActivity().getApplicationContext(), UserInfoActivity.class);
-            startActivity(intent);
-        } else {
-            intent.setClass(getActivity().getApplicationContext(), WebServiceRouterManager.getInstance().isV0VersionChat() ? ChannelV0Activity.class : ConversationActivity.class);
-            intent.putExtra("title", searchModel.getName());
-            intent.putExtra("cid", searchModel.getId());
-            intent.putExtra("channelType", searchModel.getType());
-            startActivity(intent);
+        switch (searchModel.getType()) {
+            case SearchModel.TYPE_USER:
+                CommonContactCacheUtils.saveCommonContact(getActivity().getApplicationContext(), searchModel);
+                startActivity(new Intent(getActivity(), UserInfoActivity.class).putExtra("uid", searchModel.getId()));
+                break;
+            case SearchModel.TYPE_STRUCT:
+                openContact(Contact.SearchModel2Contact(searchModel));
+                break;
+            case SearchModel.TYPE_GROUP:
+            case SearchModel.TYPE_TRANSFER:
+                startActivity(new Intent(getActivity().getApplicationContext(),
+                        WebServiceRouterManager.getInstance().isV0VersionChat() ?
+                                ChannelV0Activity.class : ConversationActivity.class).putExtra("title", searchModel.getName()).putExtra("cid", searchModel.getId()).putExtra("channelType", searchModel.getType()));
+                break;
         }
+
+
     }
 
     /**
@@ -752,17 +752,17 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
             TextView searchResultText = new TextView(getActivity());
             FlowLayout.LayoutParams params = new FlowLayout.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.leftMargin = DensityUtil.dip2px(MyApplication.getInstance(), 5);
+            params.leftMargin = DensityUtil.dip2px(5);
+            params.rightMargin = DensityUtil.dip2px(3);
             params.topMargin = DensityUtil.dip2px(MyApplication.getInstance(), 2);
             params.bottomMargin = params.topMargin;
             searchResultText.setLayoutParams(params);
-            int piddingTop = DensityUtil.dip2px(getActivity().getApplicationContext(), 1);
-            int piddingLeft = DensityUtil.dip2px(getActivity().getApplicationContext(), 5);
-            searchResultText.setPadding(piddingLeft, piddingTop, piddingLeft, piddingTop);
+            int paddingTop = DensityUtil.dip2px(getActivity().getApplicationContext(), 1);
+            searchResultText.setPadding(0, paddingTop, 0, paddingTop);
             searchResultText.setGravity(Gravity.CENTER);
             searchResultText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-            searchResultText.setTextColor(Color.parseColor("#0F7BCA"));
-            searchResultText.setText(selectMemList.get(i).getName());
+            searchResultText.setTextColor(searchModel.getType().equals(SearchModel.TYPE_STRUCT) ? Color.parseColor("#0C6FB7") : Color.parseColor("#36A5F6"));
+            searchResultText.setText(selectMemList.get(i).getName() + ",");
             searchResultText.setOnClickListener(new View.OnClickListener() {
 
                 @Override
@@ -789,11 +789,11 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
             FlowLayout.LayoutParams params = new FlowLayout.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT, DensityUtil.dip2px(
                     getActivity().getApplicationContext(), ViewGroup.LayoutParams.WRAP_CONTENT));
-            params.topMargin = DensityUtil.dip2px(getActivity().getApplicationContext(), 2);
+            params.topMargin = DensityUtil.dip2px(2);
             params.bottomMargin = params.topMargin;
-            int piddingTop = DensityUtil.dip2px(MyApplication.getInstance(), 1);
-            int piddingLeft = DensityUtil.dip2px(MyApplication.getInstance(), 10);
-            searchEdit.setPadding(piddingLeft, piddingTop, piddingLeft, piddingTop);
+            int piddingTop = DensityUtil.dip2px(1);
+            int piddingRight = DensityUtil.dip2px(5);
+            searchEdit.setPadding(piddingRight, piddingTop, piddingRight, piddingTop);
             searchEdit.setLayoutParams(params);
             searchEdit.setSingleLine(true);
             searchEdit.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
@@ -817,26 +817,26 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                         switch (searchArea) {
                             case SEARCH_ALL:
                                 if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
-                                    searchChannelGroupList = ChannelGroupCacheUtils
+                                    threadSearchChannelGroupList = ChannelGroupCacheUtils
                                             .getSearchChannelGroupSearchModelList(MyApplication.getInstance(),
                                                     searchText);
                                 } else {
-                                    searchChannelGroupList = ConversationCacheUtils.getSearchConversationSearchModelList(MyApplication.getInstance(), searchText);
+                                    threadSearchChannelGroupList = ConversationCacheUtils.getSearchConversationSearchModelList(MyApplication.getInstance(), searchText);
                                 }
 
-                                searchContactList = ContactUserCacheUtils.getSearchContact(searchText, null, 4);
+                                threadSearchContactList = ContactUserCacheUtils.getSearchContact(searchText, null, 4);
                                 break;
                             case SEARCH_CHANNELGROUP:
                                 if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
-                                    searchChannelGroupList = ChannelGroupCacheUtils
+                                    threadSearchChannelGroupList = ChannelGroupCacheUtils
                                             .getSearchChannelGroupSearchModelList(MyApplication.getInstance(),
                                                     searchText);
                                 } else {
-                                    searchChannelGroupList = ConversationCacheUtils.getSearchConversationSearchModelList(MyApplication.getInstance(), searchText);
+                                    threadSearchChannelGroupList = ConversationCacheUtils.getSearchConversationSearchModelList(MyApplication.getInstance(), searchText);
                                 }
                                 break;
                             case SEARCH_CONTACT:
-                                searchContactList = ContactUserCacheUtils.getSearchContact(searchText, null, 4);
+                                threadSearchContactList = ContactUserCacheUtils.getSearchContact(searchText, null, 4);
                                 break;
 
                             default:
@@ -860,6 +860,8 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
         JSONArray peopleArray = new JSONArray();
         JSONArray channelGroupArray = new JSONArray();
         JSONObject searchResultObj = new JSONObject();
+        //将选中的组织转化成组织下的所有人员
+        convertContactOrg2ContactUser();
         for (int i = 0; i < selectMemList.size(); i++) {
             SearchModel searchModel = selectMemList.get(i);
             if (searchModel.getType().equals(SearchModel.TYPE_USER)) {
@@ -907,6 +909,26 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
         }
     }
 
+    private void convertContactOrg2ContactUser() {
+        List<String> contactOrgIdList = new ArrayList<>();
+        if (selectMemList.size() > 0) {
+            Iterator<SearchModel> it = selectMemList.iterator();
+            while (it.hasNext()) {
+                SearchModel searchModel = it.next();
+                if (searchModel.getType().equals(SearchModel.TYPE_STRUCT)) {
+                    contactOrgIdList.add(searchModel.getId());
+                    it.remove();
+                }
+
+            }
+        }
+        if (contactOrgIdList.size() > 0) {
+            List<ContactUser> contactUserList = ContactUserCacheUtils.getContactUserListInContactOrgList(contactOrgIdList);
+            selectMemList.addAll(Contact.contactUser2SearchModelList(contactUserList));
+            selectMemList.removeAll(excludeSearchModelList);
+        }
+    }
+
     /**
      * 弹出分享确认框
      */
@@ -949,15 +971,6 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
 
     private void initPopView() {
         // TODO Auto-generated method stub
-        popLayout = (NoHorScrollView) rootView.findViewById(R.id.pop_layout);
-        popSecondGroupLayou = (LinearLayout) rootView.findViewById(R.id.pop_second_group_layout);
-        popThirdGroupLayou = (LinearLayout) rootView.findViewById(R.id.pop_third_group_layout);
-        popSecondGroupListView = (ListView) rootView.findViewById(R.id.pop_second_group_list);
-        popThirdGroupListView = (ListView) rootView.findViewById(R.id.pop_third_group_list);
-        popSecondGroupMoreText = (TextView) rootView.findViewById(R.id.pop_second_group_more_text);
-        popThirdGroupMoreText = (TextView) rootView.findViewById(R.id.pop_third_group_more_text);
-        popSecondGroupTitleListView = (RecyclerView) rootView.findViewById(R.id.pop_second_title_list);
-        popThirdGroupTitleListView = (RecyclerView) rootView.findViewById(R.id.pop_third_title_list);
         LinearLayoutManager layoutManager1 = new LinearLayoutManager(getActivity());
         LinearLayoutManager layoutManager2 = new LinearLayoutManager(getActivity());
         layoutManager1.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -1011,41 +1024,41 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
             // 控制“更多”按钮的显示和隐藏 当全选时三个group的进行设置
             popSecondGroupMoreText.setVisibility(searchChannelGroupList.size() > 3 ? View.VISIBLE : View.GONE);
             popThirdGroupMoreText.setVisibility(searchContactList.size() > 3 ? View.VISIBLE : View.GONE);
-            popSecondGroupLayou.setVisibility(View.VISIBLE);
-            popThirdGroupLayou.setVisibility(View.VISIBLE);
+            popSecondGroupLayout.setVisibility(View.VISIBLE);
+            popThirdGroupLayout.setVisibility(View.VISIBLE);
             refreshListView(popSecondGroupListView, popSecondGroupAdapter);
             refreshListView(popThirdGroupListView, popThirdGroupAdapter);
         } else if (!isSearchSingle) {
             if (searchArea == SEARCH_CONTACT) {
                 popThirdGroupMoreText.setVisibility(searchContactList.size() > 3 ? View.VISIBLE : View.GONE);
-                popSecondGroupLayou.setVisibility(View.GONE);
-                popThirdGroupLayou.setVisibility(View.VISIBLE);
+                popSecondGroupLayout.setVisibility(View.GONE);
+                popThirdGroupLayout.setVisibility(View.VISIBLE);
                 refreshListView(popThirdGroupListView, popThirdGroupAdapter);
             } else if (searchArea == SEARCH_CHANNELGROUP) {
                 popSecondGroupMoreText.setVisibility(searchChannelGroupList.size() > 3 ? View.VISIBLE : View.GONE);
-                popSecondGroupLayou.setVisibility(View.VISIBLE);
-                popThirdGroupLayou.setVisibility(View.GONE);
+                popSecondGroupLayout.setVisibility(View.VISIBLE);
+                popThirdGroupLayout.setVisibility(View.GONE);
                 popSecondGroupAdapter.notifyDataSetChanged();
             }
             refreshListView(popSecondGroupListView, popSecondGroupAdapter);
         } else {
             if (searchArea == SEARCH_CONTACT) {
                 popThirdGroupMoreText.setVisibility(searchContactList.size() > 3 ? View.VISIBLE : View.GONE);
-                popSecondGroupLayou.setVisibility(View.GONE);
-                popThirdGroupLayou.setVisibility(View.VISIBLE);
+                popSecondGroupLayout.setVisibility(View.GONE);
+                popThirdGroupLayout.setVisibility(View.VISIBLE);
                 refreshListView(popThirdGroupListView, popThirdGroupAdapter);
             } else {
                 popSecondGroupMoreText.setVisibility(searchChannelGroupList.size() > 3 ? View.VISIBLE : View.GONE);
-                popSecondGroupLayou.setVisibility(View.VISIBLE);
-                popThirdGroupLayou.setVisibility(View.GONE);
+                popSecondGroupLayout.setVisibility(View.VISIBLE);
+                popThirdGroupLayout.setVisibility(View.GONE);
                 refreshListView(popSecondGroupListView, popSecondGroupAdapter);
             }
         }
         // notifyPopFirstGroupText(openGroupTextList);
-        if (popSecondGroupLayou.getVisibility() == View.VISIBLE) {
+        if (popSecondGroupLayout.getVisibility() == View.VISIBLE) {
             notifyPopSecondGroupText(openGroupTextList);
         }
-        if (popThirdGroupLayou.getVisibility() == View.VISIBLE) {
+        if (popThirdGroupLayout.getVisibility() == View.VISIBLE) {
             notifyPopThirdGroupText(openGroupTextList);
         }
     }
@@ -1058,7 +1071,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
         popLayout.setVisibility(View.GONE);
         originAllLayout.setVisibility(View.VISIBLE);
         // 重置origin页面的一些搜索参数
-        isSearchSingle = openGroupLayou.getVisibility() == View.VISIBLE;
+        isSearchSingle = openGroupLayout.getVisibility() == View.VISIBLE;
     }
 
     /**
@@ -1211,7 +1224,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
      */
     public boolean isOpenGroupLayoutVisiable() {
         int openGroupTextListSize = openGroupTextList.size();
-        return openGroupLayou.getVisibility() == View.VISIBLE && openGroupTextListSize > 1;
+        return openGroupLayout.getVisibility() == View.VISIBLE && openGroupTextListSize > 1;
     }
 
     /**
@@ -1250,7 +1263,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
         if (NetUtils.isNetworkConnected(getActivity().getApplicationContext())) {
             if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
                 new ConversationCreateUtils().createDirectConversation(getActivity(), id,
-                        new ConversationCreateUtils.OnCreateDirectConversationListener() {
+                        new OnCreateDirectConversationListener() {
                             @Override
                             public void createDirectConversationSuccess(Conversation conversation) {
                                 Bundle bundle = new Bundle();
@@ -1330,6 +1343,78 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
         return completeName;
     }
 
+    @OnClick({R.id.pop_second_group_more_text, R.id.ibt_back, R.id.ok_text, R.id.struct_layout, R.id.channel_group_layout, R.id.layout, R.id.pop_third_group_more_text, R.id.rl_select_all})
+    public void onClick(View v) {
+        Intent intent = new Intent(getActivity().getApplicationContext(),
+                ContactSearchMoreActivity.class);
+        intent.putExtra(EXTRA_LIMIT, selectLimit);
+        switch (v.getId()) {
+            case R.id.pop_second_group_more_text:
+                intent.putExtra("groupTextList",
+                        (Serializable) popSecondGroupTextList);
+                intent.putExtra("groupTextList",
+                        (Serializable) popSecondGroupTextList);
+                intent.putExtra("selectMemList", (Serializable) selectMemList);
+                intent.putExtra("groupPosition", 2);
+                intent.putExtra("searchText", searchEdit.getText().toString());
+                intent.putExtra("searchContent", searchContent);
+                intent.putExtra("isMultiSelect", isMultiSelect);
+                if (excludeSearchModelList.size() > 0) {
+                    intent.putExtra(ContactSearchMoreActivity.EXTRA_EXCLUDE_SEARCH_MODEL_LIST, (Serializable) excludeSearchModelList);
+                }
+                startActivityForResult(intent, REQUEST_SEARCH_MORE);
+                break;
+            case R.id.pop_third_group_more_text:
+                FirstGroupTextModel groupTextModel = new FirstGroupTextModel(getString(R.string.origanization_struct), "");
+                List<FirstGroupTextModel> popGroupTextList = new ArrayList<>();
+                popGroupTextList.add(groupTextModel);
+                intent.putExtra("groupTextList",
+                        (Serializable) popGroupTextList);
+                intent.putExtra("selectMemList", (Serializable) selectMemList);
+                intent.putExtra("groupPosition", 3);
+                intent.putExtra("searchText", searchEdit.getText().toString());
+                intent.putExtra("searchContent", searchContent);
+                intent.putExtra("isMultiSelect", isMultiSelect);
+                if (excludeSearchModelList.size() > 0) {
+                    intent.putExtra(ContactSearchMoreActivity.EXTRA_EXCLUDE_SEARCH_MODEL_LIST, (Serializable) excludeSearchModelList);
+                }
+                startActivityForResult(intent, REQUEST_SEARCH_MORE);
+                break;
+            case R.id.ibt_back:
+                InputMethodUtils.hide(getActivity());
+                getActivity().finish();
+                break;
+            case R.id.ok_text:
+                InputMethodUtils.hide(getActivity());
+                returnSearchResultData();
+                break;
+            case R.id.struct_layout:
+                openContact(null);
+                break;
+            case R.id.channel_group_layout:
+                showAllChannelGroup();
+                break;
+            case R.id.layout:
+                if (searchEdit != null) {
+                    InputMethodUtils.display(getActivity(), searchEdit);
+                }
+                break;
+
+            case R.id.rl_select_all:
+                setSelectAllMembers();
+                break;
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (handler != null) {
+            handler = null;
+        }
+        EventBus.getDefault().unregister(this);
+    }
+
     public interface MyItemClickListener {
         void onItemClick(View view, int position);
     }
@@ -1368,72 +1453,6 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
             // TODO Auto-generated method stub
             if (mListener != null) {
                 mListener.onItemClick(v, getPosition());
-            }
-        }
-    }
-
-    class ContactSearchClickListener implements View.OnClickListener {
-
-        @Override
-        public void onClick(View v) {
-            Intent intent = new Intent(getActivity().getApplicationContext(),
-                    ContactSearchMoreActivity.class);
-            intent.putExtra(EXTRA_LIMIT, selectLimit);
-            switch (v.getId()) {
-                case R.id.pop_second_group_more_text:
-                    intent.putExtra("groupTextList",
-                            (Serializable) popSecondGroupTextList);
-                    intent.putExtra("groupTextList",
-                            (Serializable) popSecondGroupTextList);
-                    intent.putExtra("selectMemList", (Serializable) selectMemList);
-                    intent.putExtra("groupPosition", 2);
-                    intent.putExtra("searchText", searchEdit.getText().toString());
-                    intent.putExtra("searchContent", searchContent);
-                    intent.putExtra("isMultiSelect", isMultiSelect);
-                    if (excludeSearchModelList.size() > 0) {
-                        intent.putExtra(ContactSearchMoreActivity.EXTRA_EXCLUDE_SEARCH_MODEL_LIST, (Serializable) excludeSearchModelList);
-                    }
-                    startActivityForResult(intent, REQUEST_SEARCH_MORE);
-                    break;
-                case R.id.pop_third_group_more_text:
-                    FirstGroupTextModel groupTextModel = new FirstGroupTextModel(getString(R.string.origanization_struct), "");
-                    List<FirstGroupTextModel> popGroupTextList = new ArrayList<>();
-                    popGroupTextList.add(groupTextModel);
-                    intent.putExtra("groupTextList",
-                            (Serializable) popGroupTextList);
-                    intent.putExtra("selectMemList", (Serializable) selectMemList);
-                    intent.putExtra("groupPosition", 3);
-                    intent.putExtra("searchText", searchEdit.getText().toString());
-                    intent.putExtra("searchContent", searchContent);
-                    intent.putExtra("isMultiSelect", isMultiSelect);
-                    if (excludeSearchModelList.size() > 0) {
-                        intent.putExtra(ContactSearchMoreActivity.EXTRA_EXCLUDE_SEARCH_MODEL_LIST, (Serializable) excludeSearchModelList);
-                    }
-                    startActivityForResult(intent, REQUEST_SEARCH_MORE);
-                    break;
-                case R.id.ibt_back:
-                    InputMethodUtils.hide(getActivity());
-                    getActivity().finish();
-                    break;
-                case R.id.ok_text:
-                    InputMethodUtils.hide(getActivity());
-                    returnSearchResultData();
-                    break;
-                case R.id.struct_layout:
-                    openContact(null);
-                    break;
-                case R.id.channel_group_layout:
-                    showAllChannelGroup();
-                    break;
-                case R.id.layout:
-                    if (searchEdit != null) {
-                        InputMethodUtils.display(getActivity(), searchEdit);
-                    }
-                    break;
-
-                case R.id.rl_select_all:
-                    setSelectAllMembers();
-                    break;
             }
         }
     }
@@ -1523,11 +1542,9 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-            SearchModel searchModel = null;
+            final SearchModel searchModel = originCurrentArea == SEARCH_CONTACT ? openGroupContactList.get(position).contact2SearchModel() : openGroupChannelList.get(position);
             if (originCurrentArea == SEARCH_CONTACT) {
-                Contact contact = openGroupContactList.get(position);
-                searchModel = contact.contact2SearchModel();
-                if (contact.getType().equals(Contact.TYPE_USER)) { // 如果通讯录是人的话就显示头像
+                if (searchModel.getType().equals(Contact.TYPE_USER) || selectMemList.contains(searchModel)) { // 如果通讯录是人的话就显示头像
                     viewHolder.rightArrowImg.setVisibility(View.INVISIBLE);
                 } else {
                     viewHolder.rightArrowImg.setVisibility(View.VISIBLE);
@@ -1536,29 +1553,29 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
 
             } else {
                 viewHolder.rightArrowImg.setVisibility(View.INVISIBLE);
-                searchModel = openGroupChannelList.get(position);
                 viewHolder.nameText.setText(searchModel.getName());
             }
             CommunicationUtils.setUserDescText(searchModel, viewHolder.descTv, false);
 
-            if (searchModel != null) {
-                displayImg(searchModel, viewHolder.photoImg);
-                if (searchContent == SEARCH_NOTHIING || !isMultiSelect) {
-                    viewHolder.selectedImg.setVisibility(View.GONE);
-                } else if (searchModel.getType().equals(SearchModel.TYPE_STRUCT)) {
-                    viewHolder.selectedImg.setVisibility(View.GONE);
+            displayImg(searchModel, viewHolder.photoImg);
+            if (searchContent == SEARCH_NOTHIING || !isMultiSelect) {
+                viewHolder.selectedImg.setVisibility(View.GONE);
+            } else {
+                viewHolder.selectedImg.setVisibility(View.VISIBLE);
+                if (isHaveStaticSearchModel(searchModel)) {
+                    viewHolder.selectedImg.setImageResource(R.drawable.ic_select_not_cancel);
+                } else if (selectMemList.contains(searchModel)) {
+                    viewHolder.selectedImg.setImageResource(R.drawable.ic_select_yes);
                 } else {
-                    viewHolder.selectedImg.setVisibility(View.VISIBLE);
-                    if (isHaveStaticSearchModel(searchModel)) {
-                        viewHolder.selectedImg.setImageResource(R.drawable.ic_select_not_cancel);
-                    } else if (selectMemList.contains(searchModel)) {
-                        viewHolder.selectedImg.setImageResource(R.drawable.ic_select_yes);
-                    } else {
-                        viewHolder.selectedImg.setImageResource(R.drawable.ic_select_no);
-                    }
+                    viewHolder.selectedImg.setImageResource(R.drawable.ic_select_no);
                 }
-
             }
+            viewHolder.selectedImg.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    changeMembers(searchModel, true);
+                }
+            });
             return convertView;
         }
     }
@@ -1756,7 +1773,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                     if (arg1 != count - 1) {
                         arg0.titleImg.setVisibility(View.VISIBLE);
                         arg0.titleText
-                                .setTextColor(Color.parseColor("#018DD4"));
+                                .setTextColor(Color.parseColor("#36A5F6"));
                     } else {
                         arg0.titleImg.setVisibility(View.GONE);
                         arg0.titleText
@@ -1771,7 +1788,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                 arg0.titleText.setText(openGroupTextList.get(arg1).getName());
                 if (arg1 != count - 1) {
                     arg0.titleImg.setVisibility(View.VISIBLE);
-                    arg0.titleText.setTextColor(Color.parseColor("#018DD4"));
+                    arg0.titleText.setTextColor(Color.parseColor("#36A5F6"));
                 } else {
                     arg0.titleImg.setVisibility(View.GONE);
                     arg0.titleText.setTextColor(Color.parseColor("#666666"));

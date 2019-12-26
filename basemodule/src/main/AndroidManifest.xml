@@ -145,7 +145,7 @@
         <meta-data
             android:name="android.notch_support"
             android:value="true" />
-        <!-- 适配小米(xiao mi)刘海屏 -->
+        <!--适配小米(xiao mi)刘海屏 -->
         <meta-data
             android:name="notch.config"
             android:value="portrait|landscape" />
@@ -390,9 +390,6 @@
             android:screenOrientation="unspecified"
             android:theme="@style/Theme.Transparent.Permission" />
 
-        <service android:name=".service.PVCollectService"></service>
-        <service android:name=".service.AppExceptionService"></service>
-
         <activity
             android:name=".util.imagepicker.ui.ImageGridActivity"
             android:resizeableActivity="true"
@@ -400,7 +397,11 @@
         <activity
             android:name=".util.imagepicker.ui.ImagePreviewActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.notch_support"
+                android:value="true" />
+        </activity>
         <activity
             android:name=".util.imagepicker.ui.ImageCropActivity"
             android:resizeableActivity="true"
@@ -416,8 +417,7 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:stateNotNeeded="true"
-            android:supportsRtl="true" />
-
+            android:supportsRtl="true"></activity>
         <activity
             android:name=".ui.NoPermissionDialogActivity"
             android:launchMode="singleInstance"

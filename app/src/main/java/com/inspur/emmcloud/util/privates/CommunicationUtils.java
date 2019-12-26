@@ -13,11 +13,9 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
-import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.compressor.Compressor;
-import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.Email;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentAttachmentCard;
@@ -29,6 +27,8 @@ import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
 import com.inspur.emmcloud.bean.chat.MsgContentTextPlain;
 import com.inspur.emmcloud.bean.chat.Phone;
 import com.inspur.emmcloud.bean.contact.ContactOrg;
+import com.inspur.emmcloud.componentservice.communication.Conversation;
+import com.inspur.emmcloud.componentservice.communication.SearchModel;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.ui.chat.DisplayMediaImageMsg;
 import com.inspur.emmcloud.util.privates.cache.ContactOrgCacheUtils;
@@ -532,12 +532,8 @@ public class CommunicationUtils {
                 icon = "file://" + file.getAbsolutePath();
             }
         } else if (type.equals(SearchModel.TYPE_DIRECT)) {
-            String uid;
             Conversation conversation = ConversationCacheUtils.getConversation(BaseApplication.getInstance(), searchModel.getId());
-            List<String> memberList = conversation.getMemberList();
-            uid = memberList.get(0).equals(BaseApplication.getInstance().getUid()) ?
-                    memberList.get(1) : memberList.get(0);
-            icon = APIUri.getChannelImgUrl(MyApplication.getInstance(), uid);
+            icon = DirectChannelUtils.getDirectChannelIcon(MyApplication.getInstance(), conversation.getName());
         } else {
             if (!searchModel.getId().equals("null")) {
                 icon = APIUri.getChannelImgUrl(MyApplication.getInstance(), searchModel.getId());

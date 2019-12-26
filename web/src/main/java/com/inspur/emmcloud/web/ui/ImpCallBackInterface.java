@@ -44,4 +44,8 @@ public interface ImpCallBackInterface {
     boolean isWebFromIndex();
 
     void showLoadFailLayout(String url, String description);
+
+    void showScreenshotImg(String sceenshotImgPath);
+
+    void hideScreenshotImg();
 }

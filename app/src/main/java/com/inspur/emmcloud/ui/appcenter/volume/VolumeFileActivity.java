@@ -28,7 +28,6 @@ import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
-import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
@@ -41,12 +40,15 @@ import com.inspur.emmcloud.basemodule.util.imagepicker.bean.ImageItem;
 import com.inspur.emmcloud.basemodule.util.mycamera.MyCameraActivity;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFileUpload;
-import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
+import com.inspur.emmcloud.componentservice.communication.Conversation;
+import com.inspur.emmcloud.componentservice.communication.OnCreateDirectConversationListener;
+import com.inspur.emmcloud.componentservice.communication.SearchModel;
 import com.inspur.emmcloud.ui.appcenter.volume.view.VolumeFileTransferActivity;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
+import com.inspur.emmcloud.util.privates.NetworkMobileTipUtil;
 import com.inspur.emmcloud.util.privates.VolumeFilePrivilegeUtils;
 import com.inspur.emmcloud.util.privates.VolumeFileUploadManager;
 
@@ -133,25 +135,25 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                     return;
                 }
                 VolumeFile volumeFile = volumeFileList.get(position);
-                    if (adapter.getSelectVolumeFileList().size() == 0) {
-                        if (!adapter.getMultiselect()) {
-                            Bundle bundle = new Bundle();
-                            if (volumeFile.getType().equals(VolumeFile.FILE_TYPE_DIRECTORY)) {
-                                boolean isVolumeFileWriteable = VolumeFilePrivilegeUtils.getVolumeFileWritable(getApplicationContext(), volumeFile);
-                                boolean isVolumeFileReadable = VolumeFilePrivilegeUtils.getVolumeFileReadable(getApplicationContext(), volumeFile);
-                                if (isVolumeFileWriteable || isVolumeFileReadable) {
-                                    bundle.putSerializable("volume", volume);
-                                    bundle.putSerializable("currentDirAbsolutePath", currentDirAbsolutePath + volumeFile.getName() + "/");
-                                    bundle.putSerializable("title", volumeFile.getName());
-                                    bundle.putBoolean("isOpenFromParentDirectory", true);
-                                    IntentUtils.startActivity(VolumeFileActivity.this, VolumeFileActivity.class, bundle);
-                                } else {
-                                    ToastUtils.show(R.string.volume_no_permission);
-                                }
+                if (adapter.getSelectVolumeFileList().size() == 0) {
+                    if (!adapter.getMultiselect()) {
+                        Bundle bundle = new Bundle();
+                        if (volumeFile.getType().equals(VolumeFile.FILE_TYPE_DIRECTORY)) {
+                            boolean isVolumeFileWriteable = VolumeFilePrivilegeUtils.getVolumeFileWritable(getApplicationContext(), volumeFile);
+                            boolean isVolumeFileReadable = VolumeFilePrivilegeUtils.getVolumeFileReadable(getApplicationContext(), volumeFile);
+                            if (isVolumeFileWriteable || isVolumeFileReadable) {
+                                bundle.putSerializable("volume", volume);
+                                bundle.putSerializable("currentDirAbsolutePath", currentDirAbsolutePath + volumeFile.getName() + "/");
+                                bundle.putSerializable("title", volumeFile.getName());
+                                bundle.putBoolean("isOpenFromParentDirectory", true);
+                                IntentUtils.startActivity(VolumeFileActivity.this, VolumeFileActivity.class, bundle);
                             } else {
-                                downloadOrOpenVolumeFile(volumeFile);
+                                ToastUtils.show(R.string.volume_no_permission);
                             }
+                        } else {
+                            downloadOrOpenVolumeFile(volumeFile);
                         }
+                    }
                 }
 
             }
@@ -161,32 +163,6 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                 VolumeFile volumeFile = volumeFileList.get(position);
                 if (/*volumeFile.getStatus().equals("normal") && */!adapter.getMultiselect()) {
                     showFileOperationDlg(volumeFileList.get(position));
-                }
-            }
-
-            @Override
-            public void onItemDropDownImgClick(View view, int position) {
-                if (!adapter.getMultiselect()) {
-                    showFileOperationDlg(volumeFileList.get(position));
-                } else {
-                    adapter.setVolumeFileSelect(position);
-                }
-
-            }
-
-            @Override
-            public void onItemOperationTextClick(View view, int position) {
-                VolumeFile volumeFile = volumeFileList.get(position);
-                if (volumeFile.getStatus().equals(VolumeFile.STATUS_UPLOAD_IND)) {
-                    //取消上传
-                    VolumeFileUploadManager.getInstance().cancelVolumeFileUploadService(volumeFile);
-                    volumeFileList.remove(position);
-                    adapter.notifyItemRemoved(position);
-                } else if (NetUtils.isNetworkConnected(VolumeFileActivity.this)) {
-                    //重新上传
-                    volumeFile.setStatus(VolumeFile.STATUS_UPLOAD_IND);
-                    VolumeFileUploadManager.getInstance().reUploadFile(volumeFile);
-                    adapter.notifyItemChanged(position);
                 }
             }
         });
@@ -240,7 +216,9 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                 showUploadOperationPopWindow(new ArrayList<VolumeFile>());
                 break;
             case R.id.iv_down_up_list:
-                startActivity(new Intent(this, VolumeFileTransferActivity.class));
+                if (!ClickRuleUtil.isFastClick()) {
+                    startActivity(new Intent(this, VolumeFileTransferActivity.class));
+                }
                 break;
             case R.id.operation_sort_text:
                 showSortOperationPop();
@@ -450,7 +428,6 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         getBatchOprationSelectAllText.setText(R.string.select_all);
         batchOprationHeaderText.setText(getString(R.string.clouddriver_has_selected, 0));
         batchOprationHeaderLayout.setVisibility(isMutiselect ? View.VISIBLE : View.GONE);
-        adapter.setShowFileOperationDropDownImg(!isMutiselect);
         adapter.setMultiselect(isMutiselect);
     }
 
@@ -470,15 +447,62 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                     if (pathList == null) {
                         pathList = new ArrayList<>();
                     }
-                    for (int i = 0; i < pathList.size(); i++) {
-                        uploadFile(pathList.get(i));
+
+                    final ArrayList<String> resultPathList = pathList;
+                    long totalSize = 0L;
+                    for (int i = 0; i < resultPathList.size(); i++) {
+                        String filePath = resultPathList.get(i);
+                        if (filePath == null) {
+                            ToastUtils.show(getApplicationContext(), R.string.clouddriver_file_no_exist);
+                            return;
+                        }
+                        File file = new File(filePath);
+                        totalSize = totalSize + file.length();
                     }
+
+                    NetworkMobileTipUtil.checkEnvironment(this, R.string.volume_file_upload_network_type_warning,
+                            totalSize, new NetworkMobileTipUtil.Callback() {
+                                @Override
+                                public void cancel() {
+
+                                }
+
+                                @Override
+                                public void onNext() {
+                                    for (int i = 0; i < resultPathList.size(); i++) {
+                                        uploadFile(resultPathList.get(i));
+                                    }
+                                }
+                            });
                 }
                 return;
             } else if (requestCode == REQUEST_OPEN_CEMERA //拍照返回
                     && NetUtils.isNetworkConnected(getApplicationContext())) {
-                String imgPath = data.getExtras().getString(MyCameraActivity.OUT_FILE_PATH);
-                uploadFile(imgPath);
+                final String imgPath = data.getExtras().getString(MyCameraActivity.OUT_FILE_PATH);
+                if (imgPath == null) {
+                    ToastUtils.show(getApplicationContext(), R.string.clouddriver_file_no_exist);
+                    return;
+                }
+                File file = new File(imgPath);
+                if (!file.exists()) {
+                    ToastUtils.show(getApplicationContext(), R.string.clouddriver_file_no_exist);
+                    return;
+
+                }
+                long totalSize = file.length();
+                NetworkMobileTipUtil.checkEnvironment(this, R.string.volume_file_upload_network_type_warning,
+                        totalSize, new NetworkMobileTipUtil.Callback() {
+                            @Override
+                            public void cancel() {
+
+                            }
+
+                            @Override
+                            public void onNext() {
+                                uploadFile(imgPath);
+                            }
+                        });
+
                 return;
             } else if (requestCode == REQUEST_SHOW_FILE_FILTER) {  //移动文件
                 getVolumeFileList(false);
@@ -499,12 +523,35 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
             }
         } else if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {  // 图库选择图片返回
             if (data != null && requestCode == REQUEST_OPEN_GALLERY) {
-                ArrayList<ImageItem> imageItemList = (ArrayList<ImageItem>) data
+                final ArrayList<ImageItem> imageItemList = (ArrayList<ImageItem>) data
                         .getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
+
+                long totalSize = 0L;
                 for (int i = 0; i < imageItemList.size(); i++) {
-                    String imgPath = imageItemList.get(i).path;
-                    uploadFile(imgPath);
+                    String filePath = imageItemList.get(i).path;
+                    if (filePath == null) {
+                        ToastUtils.show(getApplicationContext(), R.string.clouddriver_file_no_exist);
+                        return;
+                    }
+                    File file = new File(filePath);
+                    totalSize = totalSize + file.length();
                 }
+
+                NetworkMobileTipUtil.checkEnvironment(this, R.string.volume_file_upload_network_type_warning,
+                        totalSize, new NetworkMobileTipUtil.Callback() {
+                            @Override
+                            public void cancel() {
+
+                            }
+
+                            @Override
+                            public void onNext() {
+                                for (int i = 0; i < imageItemList.size(); i++) {
+                                    String imgPath = imageItemList.get(i).path;
+                                    uploadFile(imgPath);
+                                }
+                            }
+                        });
             }
             return;
         }
@@ -532,7 +579,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     private void createDirectChannel(String uid) {
         if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
             new ConversationCreateUtils().createDirectConversation(this, uid,
-                    new ConversationCreateUtils.OnCreateDirectConversationListener() {
+                    new OnCreateDirectConversationListener() {
                         @Override
                         public void createDirectConversationSuccess(Conversation conversation) {
                             startChannelActivity(conversation.getId());
