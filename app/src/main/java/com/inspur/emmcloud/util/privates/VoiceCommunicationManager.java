@@ -511,8 +511,12 @@ public class VoiceCommunicationManager {
                     break;
                 case Constant.COMMAND_DESTROY:
                     if (customProtocol.getParamMap().get(Constant.COMMAND_ROOM_ID).equals(agoraChannelId)) {
-                        VoiceCommunicationCommonLine.onUserReject(Integer.parseInt(customProtocol.getParamMap().get(Constant.COMMAND_UID)),
-                                VoiceCommunicationJoinChannelInfoBean.CONNECT_STATE_LEAVE);
+                        VoiceCommunicationToastUtil.showToast(false, "");
+                        handleDestroy();
+                        //防止在声网回调和小窗打开Activity同步进行，接收到回调没关上Activity的情况
+                        if (BaseApplication.getInstance().isActivityExist(VoiceCommunicationActivity.class)) {
+                            BaseApplication.getInstance().closeActivity(VoiceCommunicationActivity.class.getSimpleName());
+                        }
                     }
                     break;
                 //正在通话中 消息是invite消息  三者打进电话 发拒绝消息
@@ -550,6 +554,24 @@ public class VoiceCommunicationManager {
             WebService webService = new WebService();
             webService.setCloudPlusChannelId(cloudPlusId);
             webService.setCommunicationType(communicationType);
+            chatAPIService.setAPIInterface(webService);
+            chatAPIService.getAgoraChannelInfo(agoraChannelId);
+        }
+    }
+
+    /**
+     * 通过agoraChannelId获取Channel信息
+     *
+     * @param agoraChannelId
+     */
+    public void getRefuseChannelInfoByChannelId(String agoraChannelId, String cloudPlusChannelId, String fromUid, boolean isRefuseCall) {
+        if (NetUtils.isNetworkConnected(BaseApplication.getInstance())) {
+            ChatAPIService chatAPIService = new ChatAPIService(BaseApplication.getInstance());
+            WebService webService = new WebService();
+            webService.setRefuseCall(true);
+            webService.setRefuseAgoraChannelId(agoraChannelId);
+            webService.setRefuseCloudPlusChannelId(cloudPlusChannelId);
+            webService.setRefuseCloudPlusUserId(fromUid);
             chatAPIService.setAPIInterface(webService);
             chatAPIService.getAgoraChannelInfo(agoraChannelId);
         }
@@ -1073,9 +1095,9 @@ public class VoiceCommunicationManager {
      * @param channelId
      * @param agoraChannelId
      */
-    public void sendRefuseMessageToInviter(String channelId, String agoraChannelId, String fromUid) {
+    public void sendRefuseMessageToInviter(String channelId, String agoraChannelId, String fromUid, int agoraId) {
         String scheme = "ecc-cloudplus-cmd://" + getChannelType() + "?cmd=refuse&channelid=" + channelId + "&roomid=" + agoraChannelId + "&uid=" +
-                getAgoraUidByCloudUid(BaseApplication.getInstance().getUid());
+                agoraId;
         WSAPIService.getInstance().sendStartVoiceAndVideoCallMessage(channelId, agoraChannelId, scheme, "VOICE", getUidArray( fromUid), Constant.VIDEO_CALL_REFUSE);
     }
 
@@ -1107,18 +1129,37 @@ public class VoiceCommunicationManager {
         return null;
     }
 
+    private int getRefuseAgoraId(GetVoiceCommunicationResult getVoiceCommunicationResult, String refuseCloudPlusUserId) {
+        for (VoiceCommunicationJoinChannelInfoBean voiceCommunicationJoinChannelInfoBean : getVoiceCommunicationResult.getVoiceCommunicationJoinChannelInfoBeanList()) {
+            if (voiceCommunicationJoinChannelInfoBean.getUserId().equals(refuseCloudPlusUserId)) {
+                return voiceCommunicationJoinChannelInfoBean.getAgoraUid();
+            }
+        }
+        return 0;
+    }
+
     class WebService extends APIInterfaceInstance {
         private Activity activity;
         private String communicationType;
         private String cloudPlusChannelId;
+        private boolean isRefuseCall = false;
+        private String refuseAgoraChannelId;
+        private String refuseCloudPlusChannelId;
+        private String refuseCloudPlusUserId;
 
         @Override
         public void returnGetVoiceCommunicationChannelInfoSuccess(GetVoiceCommunicationResult getVoiceCommunicationResult) {
-            agoraChannelId = getVoiceCommunicationResult.getChannelId();
-            getVoiceCommunicationMemberList().clear();
-            getVoiceCommunicationMemberList().addAll(getVoiceCommunicationResult.getVoiceCommunicationJoinChannelInfoBeanList());
-            inviteeInfoBean = getMyCommunicationInfoBean(getVoiceCommunicationResult);
-            startVoiceOrVideoCall(agoraChannelId, communicationType, cloudPlusChannelId);
+            if (isRefuseCall) {
+                int agoraId = getRefuseAgoraId(getVoiceCommunicationResult, refuseCloudPlusUserId);
+                sendRefuseMessageToInviter(refuseCloudPlusChannelId, refuseAgoraChannelId, refuseCloudPlusUserId, agoraId);
+            } else {
+                agoraChannelId = getVoiceCommunicationResult.getChannelId();
+                getVoiceCommunicationMemberList().clear();
+                getVoiceCommunicationMemberList().addAll(getVoiceCommunicationResult.getVoiceCommunicationJoinChannelInfoBeanList());
+                inviteeInfoBean = getMyCommunicationInfoBean(getVoiceCommunicationResult);
+                startVoiceOrVideoCall(agoraChannelId, communicationType, cloudPlusChannelId);
+            }
+
         }
 
         @Override
@@ -1156,6 +1197,22 @@ public class VoiceCommunicationManager {
 
         public void setCloudPlusChannelId(String cloudPlusChannelId) {
             this.cloudPlusChannelId = cloudPlusChannelId;
+        }
+
+        public void setRefuseCall(boolean refuseCall) {
+            isRefuseCall = refuseCall;
+        }
+
+        public void setRefuseAgoraChannelId(String refuseAgoraChannelId) {
+            this.refuseAgoraChannelId = refuseAgoraChannelId;
+        }
+
+        public void setRefuseCloudPlusChannelId(String refuseCloudPlusChannelId) {
+            this.refuseCloudPlusChannelId = refuseCloudPlusChannelId;
+        }
+
+        public void setRefuseCloudPlusUserId(String refuseCloudPlusUserId) {
+            this.refuseCloudPlusUserId = refuseCloudPlusUserId;
         }
     }
 }
