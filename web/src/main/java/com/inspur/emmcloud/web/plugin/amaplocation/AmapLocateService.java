@@ -12,7 +12,6 @@ import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
-import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
@@ -91,7 +90,7 @@ public class AmapLocateService extends ImpPlugin implements
                     startLocation();
                 } else {
                     new CustomDialog.MessageDialogBuilder(getActivity())
-                            .setMessage(getTipsMessage())
+                            .setMessage(getActivity().getString(R.string.imp_location_enable, AppUtils.getAppName(getFragmentContext())))
                             .setCancelable(false)
                             .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                                 @Override
@@ -115,18 +114,6 @@ public class AmapLocateService extends ImpPlugin implements
                 ToastUtils.show(getFragmentContext(), PermissionRequestManagerUtils.getInstance().getPermissionToast(getFragmentContext(), permissions));
             }
         });
-    }
-
-    /**
-     * 根据不同的中英文提示获取提示信息
-     *
-     * @return
-     */
-    private String getTipsMessage() {
-        return LanguageManager.getInstance().getCurrentAppLanguage().equals("en") ?
-                getActivity().getString(R.string.imp_location_enable_en, AppUtils.getAppName(getFragmentContext()))
-                : getActivity().getString(R.string.imp_location_enable, AppUtils.getAppName(getFragmentContext()),
-                AppUtils.getAppName(getFragmentContext()));
     }
 
     /**
