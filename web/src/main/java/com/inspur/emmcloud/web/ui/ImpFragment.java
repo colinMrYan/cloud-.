@@ -46,6 +46,7 @@ import com.inspur.emmcloud.basemodule.bean.MainTabMenu;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppWebConfig;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
@@ -73,7 +74,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -614,16 +614,10 @@ public class ImpFragment extends ImpBaseFragment implements View.OnClickListener
         webViewHeaders.put("Accept-Language", LanguageManager.getInstance().getCurrentAppLanguage());
     }
 
-    /**
-     * 根据规则添加token
-     * 当URL主域名是Constant.INSPUR_HOST_URL
-     * 或者Constant.INSPURONLINE_HOST_URL结尾时添加token
-     */
     private void addAuthorizationToken(String url) {
         try {
-            URL urlHost = new URL(url);
             String token = BaseApplication.getInstance().getToken();
-            if (token != null && (urlHost.getHost().endsWith(Constant.INSPUR_HOST_URL)) || urlHost.getHost().endsWith(Constant.INSPURONLINE_HOST_URL) || urlHost.getPath().endsWith("/app/mdm/v3.0/loadForRegister")) {
+            if (token != null && AppUtils.needAuthorizationToken(url)) {
                 webViewHeaders.put("Authorization", token);
             }
         } catch (Exception e) {
