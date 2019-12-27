@@ -747,6 +747,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
                     return;
                 }
             }
+            VolumeFileDownloadManager.getInstance().resetVolumeFileStatus(volumeFile);
             VolumeFileDownloadManager.getInstance().downloadFile(volumeFile,
                     currentDirAbsolutePath + volumeFile.getName());
         }

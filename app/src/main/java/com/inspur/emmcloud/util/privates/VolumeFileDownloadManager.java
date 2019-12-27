@@ -140,16 +140,7 @@ public class VolumeFileDownloadManager {
             if (downloadVolumeFile.getId().equals(volumeFile.getId())) {
                 if (businessProgressCallback != null) {
                     if (downloadVolumeFile.getStatus().equals(VolumeFile.STATUS_LOADING)) {
-                        if (downloadVolumeFile.getProgress() == 100) {
-                            new android.os.Handler().post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    businessProgressCallback.onSuccess(downloadVolumeFile);
-                                }
-                            });
-                        } else {
-                            businessProgressCallback.onLoading(downloadVolumeFile.getProgress(), downloadVolumeFile.getCompleteSize(), "");
-                        }
+                        businessProgressCallback.onLoading(downloadVolumeFile.getProgress(), downloadVolumeFile.getCompleteSize(), "");
                     } else if (downloadVolumeFile.getStatus().equals(VolumeFile.STATUS_FAIL)) {
                         new android.os.Handler().post(new Runnable() {
                             @Override
@@ -222,6 +213,8 @@ public class VolumeFileDownloadManager {
         volumeFile.setLastRecordTime(System.currentTimeMillis());
         volumeFile.setCompleteSize(volumeFile.getProgress() / 100 * volumeFile.getSize());
         if (!isReload) {
+            volumeFile.setProgress(0);
+            volumeFile.setCompleteSize(0);
             volumeFileDownloadList.add(0, volumeFile);
             VolumeFileDownloadCacheUtils.saveVolumeFileList(volumeFileDownloadList);
         } else {
@@ -411,19 +404,17 @@ public class VolumeFileDownloadManager {
         if (volumeFile.getBusinessProgressCallback() != null) {
             volumeFile.setBusinessProgressCallback(null);
         }
-        VolumeFileDownloadCacheUtils.deleteVolumeFile(volumeFile);
-        for (int i = 0; i < volumeFileDownloadList.size(); i++) {
-            VolumeFile downloadVolumeFile = volumeFileDownloadList.get(i);
-            if (volumeFile.getId().equals(downloadVolumeFile.getId())) {
-                if (downloadVolumeFile.getCancelable() != null) {
-                    downloadVolumeFile.getCancelable().cancel();
-                    downloadVolumeFile.setCancelable(null);
-                }
-                if (downloadVolumeFile.getBusinessProgressCallback() != null) {
-                    downloadVolumeFile.setBusinessProgressCallback(null);
-                }
-                volumeFileDownloadList.remove(volumeFile);
-                break;
+        VolumeFile downloadInfo = getManagerVolumeFileInfo(volumeFile);
+        deleteDownloadInfo(volumeFile);
+        VolumeFileDownloadCacheUtils.deleteVolumeFile(downloadInfo);
+
+        if (downloadInfo != null) {
+            if (downloadInfo.getCancelable() != null) {
+                downloadInfo.getCancelable().cancel();
+                downloadInfo.setCancelable(null);
+            }
+            if (downloadInfo.getBusinessProgressCallback() != null) {
+                downloadInfo.setBusinessProgressCallback(null);
             }
         }
     }
