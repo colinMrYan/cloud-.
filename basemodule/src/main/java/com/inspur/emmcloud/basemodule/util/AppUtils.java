@@ -16,6 +16,7 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Paint;
 import android.graphics.Paint.FontMetrics;
+import android.location.LocationManager;
 import android.net.TrafficStats;
 import android.net.Uri;
 import android.os.Binder;
@@ -24,6 +25,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Process;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -1162,4 +1164,67 @@ public class AppUtils {
             PushManagerUtils.getInstance().startPush();
         }
     }
+
+    /**
+     * 判断定位服务是否开启
+     *
+     * @param
+     * @return true 表示开启
+     */
+    public static boolean isLocationEnabled(Context context) {
+        int locationMode = 0;
+        String locationProviders;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+            return locationManager.isLocationEnabled();
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            try {
+                locationMode = Settings.Secure.getInt(context.getContentResolver(), Settings.Secure.LOCATION_MODE);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+            return locationMode != Settings.Secure.LOCATION_MODE_OFF;
+        } else {
+            locationProviders = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+            return !StringUtils.isEmpty(locationProviders);
+        }
+    }
+
+    /**
+     * 直接跳转至位置信息设置界面
+     */
+    public static void openLocationSetting(Context context) {
+        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+        context.startActivity(intent);
+    }
+
+    /**
+     * 让用户去打开wifi
+     */
+    public static void openWifiSetting(Context context) {
+        //第一种
+//      Intent intent = new Intent();
+//      intent.setAction("android.net.wifi.PICK_WIFI_NETWORK");
+//      startActivity(intent);
+
+        //第二种
+//      Intent wifiSettingsIntent = new Intent("android.settings.WIFI_SETTINGS");
+//      startActivity(wifiSettingsIntent);
+
+        //第三种
+//      Intent intent = new Intent();
+//      if(android.os.Build.VERSION.SDK_INT >= 11){
+//          //Honeycomb
+//          intent.setClassName("com.android.settings", "com.android.settings.Settings$WifiSettingsActivity");
+//       }else{
+//          //other versions
+//           intent.setClassName("com.android.settings", "com.android.settings.wifi.WifiSettings");
+//       }
+//       startActivity(intent);
+        //第四种
+        Intent wifiSettingsIntent = new Intent("android.settings.WIFI_SETTINGS");
+        context.startActivity(wifiSettingsIntent);
+    }
+
 }
