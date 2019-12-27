@@ -1182,7 +1182,7 @@ public class AppUtils {
                 locationMode = Settings.Secure.getInt(context.getContentResolver(), Settings.Secure.LOCATION_MODE);
             } catch (Exception e) {
                 e.printStackTrace();
-                return false;
+                return true;
             }
             return locationMode != Settings.Secure.LOCATION_MODE_OFF;
         } else {

@@ -698,7 +698,7 @@
     <string name="news_font_middle">Middle</string>
     <string name="news_font_big_text">Large</string>
     <string name="news_font_biggest_text">Extra</string>
-    <string name="imp_location_enable">%1$s is unable to locate your position. Make sure mobile network and GPS services are enabled in your device\'s settings</string>
+    <string name="imp_location_enable_en">%1$s is unable to locate your position. Make sure mobile network and GPS services are enabled in your device\'s settings</string>
 
     <!-- 审批页面 -->
     <string name="onekey_approval_text">Approval</string>

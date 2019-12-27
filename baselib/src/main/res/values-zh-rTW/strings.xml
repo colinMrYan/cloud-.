@@ -716,7 +716,7 @@
     <string name="news_font_big_text">大</string>
     <string name="news_font_middle">中</string>
     <string name="news_font_biggest_text">超大</string>
-    <string name="imp_location_enable">%1$s 不能確定你的位置，你可以通過以下操作提高微信的定位精確度：在位置設定中打開GPS和無線網路</string>
+    <string name="imp_location_enable">%1$s 不能確定你的位置，你可以通過以下操作提高 %2$s 的定位精確度：在位置設定中打開GPS和無線網路</string>
     <!-- 審批頁面 -->
     <string name="onekey_approval_text">審批</string>
 
