@@ -24,6 +24,7 @@ import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.Res;
+import com.inspur.emmcloud.basemodule.util.UrlParseUtils;
 import com.inspur.emmcloud.web.plugin.ImpPlugin;
 import com.inspur.emmcloud.web.plugin.filetransfer.filemanager.FileManagerActivity;
 import com.inspur.emmcloud.web.ui.ImpFragment;
@@ -644,7 +645,7 @@ public class FileTransferService extends ImpPlugin {
             if (!StringUtils.isBlank(cookie)) {
                 urlConnection.setRequestProperty("Cookie", cookie);
             }
-            String filename = getFileName(urlConnection);
+            String filename = getFileName(urlConnection, urlString);
             filename = URLDecoder.decode(filename, "UTF-8");   //防止文件名乱码
             String[] array = filename.split("\\.");
             int arrayLength = array.length;
@@ -737,7 +738,7 @@ public class FileTransferService extends ImpPlugin {
      * @param urlConnection
      * @return
      */
-    private String getFileName(HttpURLConnection urlConnection) {
+    private String getFileName(HttpURLConnection urlConnection, String urlConnectString) {
         String filename = null;
         String headField = urlConnection.getHeaderField("Content-Disposition");
         if (!StringUtils.isBlank(headField)) {
@@ -756,7 +757,11 @@ public class FileTransferService extends ImpPlugin {
             }
 
         }
-        filename = urlConnection.getURL().getFile();
+        try {
+            filename = new URL(UrlParseUtils.getUrlHostAndPath(urlConnectString)).getFile();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         if (filename.contains("/")) {
             String[] array = filename.split("/");
             filename = array[array.length - 1];

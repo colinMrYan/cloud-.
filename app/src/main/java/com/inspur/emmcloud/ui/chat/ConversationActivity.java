@@ -95,6 +95,7 @@ import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.privates.MediaPlayerManagerUtils;
 import com.inspur.emmcloud.util.privates.MessageSendManager;
 import com.inspur.emmcloud.util.privates.NotificationUpgradeUtils;
+import com.inspur.emmcloud.util.privates.TabAndAppExistUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
 import com.inspur.emmcloud.util.privates.Voice2StringMessageUtils;
 import com.inspur.emmcloud.util.privates.audioformat.AudioMp3ToPcm;
@@ -1711,11 +1712,15 @@ public class ConversationActivity extends ConversationBaseActivity {
                 case Message.MESSAGE_TYPE_TEXT_PLAIN:
                     operationIdList.add(R.string.chat_long_click_copy);
                     operationIdList.add(R.string.chat_long_click_transmit);
-                    operationIdList.add(R.string.chat_long_click_schedule);
+                    if (TabAndAppExistUtils.isTabExist(this, Constant.APP_TAB_BAR_WORK)) {
+                        operationIdList.add(R.string.chat_long_click_schedule);
+                    }
                     break;
                 case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
                     operationIdList.add(R.string.chat_long_click_transmit);
-                    operationIdList.add(R.string.chat_long_click_schedule);
+                    if (TabAndAppExistUtils.isTabExist(this, Constant.APP_TAB_BAR_WORK)) {
+                        operationIdList.add(R.string.chat_long_click_schedule);
+                    }
                     break;
                 case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
 

@@ -1100,6 +1100,13 @@ public class AppUtils {
         }
     }
 
+    /**
+     * 根据规则添加token
+     * 当URL主域名是Constant.INSPUR_HOST_URL
+     * 或者Constant.INSPURONLINE_HOST_URL结尾时添加token
+     * 或者以强哥的特殊路由
+     * 或者以路由开始的需要加token
+     */
     public static boolean needAuthorizationToken(String url) {
         //检查每一个路由是否
         WebServiceRouterManager manager = WebServiceRouterManager.getInstance();
