@@ -46,8 +46,8 @@ import com.inspur.emmcloud.bean.system.MainTabResult;
 import com.inspur.emmcloud.bean.system.TabBean;
 import com.inspur.emmcloud.broadcastreceiver.NetworkChangeReceiver;
 import com.inspur.emmcloud.broadcastreceiver.ScreenBroadcastReceiver;
-import com.inspur.emmcloud.componentservice.schedule.ScheduleService;
 import com.inspur.emmcloud.componentservice.application.ApplicationService;
+import com.inspur.emmcloud.componentservice.schedule.ScheduleService;
 import com.inspur.emmcloud.componentservice.web.WebService;
 import com.inspur.emmcloud.ui.chat.CommunicationFragment;
 import com.inspur.emmcloud.ui.chat.CommunicationV0Fragment;
@@ -59,6 +59,7 @@ import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.widget.MyFragmentTabHost;
 import com.inspur.emmcloud.widget.tipsview.TipsView;
+import com.tinkerpatch.sdk.TinkerPatch;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -95,6 +96,11 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
 
     @Override
     public void onCreate() {
+        try {
+            TinkerPatch.with().fetchPatchUpdate(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         setContentView(R.layout.activity_index);
         ButterKnife.bind(this);
         clearOldMainTabData();
