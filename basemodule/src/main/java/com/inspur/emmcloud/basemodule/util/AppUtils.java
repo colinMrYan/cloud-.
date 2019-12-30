@@ -348,7 +348,7 @@ public class AppUtils {
     public static int getSDKVersionNumber() {
         int sdkVersion;
         try {
-            sdkVersion = Integer.valueOf(Build.VERSION.SDK);
+            sdkVersion = Integer.valueOf(android.os.Build.VERSION.SDK);
         } catch (NumberFormatException e) {
             sdkVersion = 0;
         }
@@ -356,7 +356,7 @@ public class AppUtils {
     }
 
     public static String getReleaseVersion() {
-        return Build.VERSION.RELEASE;
+        return android.os.Build.VERSION.RELEASE;
     }
 
     /**
@@ -366,7 +366,7 @@ public class AppUtils {
      */
     public static String GetChangShang() {
 
-        String manString = Build.MANUFACTURER;
+        String manString = android.os.Build.MANUFACTURER;
         if (TextUtils.isEmpty(manString)) {
             return "UNKNOWN";
         }
@@ -392,7 +392,7 @@ public class AppUtils {
      * @return
      */
     public static String GetModel() {
-        String modelStr = Build.MODEL;
+        String modelStr = android.os.Build.MODEL;
         modelStr = modelStr.replace(" ", "-");
         if (TextUtils.isEmpty(modelStr)) {
             return "UNKNOWN";
@@ -542,7 +542,7 @@ public class AppUtils {
      * @return 系统版本号
      */
     public static String getSystemVersion() {
-        return Build.VERSION.RELEASE;
+        return android.os.Build.VERSION.RELEASE;
     }
 
     /**
@@ -750,13 +750,16 @@ public class AppUtils {
     private static String getDeviceUUID(final Context context) {
         try {
             final String[] uniqueId = new String[1];
-            TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-            String tmDevice, tmSerial, androidId;
-            tmDevice = "" + tm.getDeviceId();
-            tmSerial = "" + tm.getSimSerialNumber();
-            androidId = "" + android.provider.Settings.Secure.getString(context.getContentResolver(),
+            String androidId = "" + android.provider.Settings.Secure.getString(context.getContentResolver(),
                     android.provider.Settings.Secure.ANDROID_ID);
-            UUID deviceUuid = new UUID(androidId.hashCode(), ((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
+            String deviceInfo = "1234" + Build.BOARD.length() % 10
+                    + Build.BRAND.length() % 10
+                    + Build.DEVICE.length() % 10 + Build.DISPLAY.length() % 10
+                    + Build.HOST.length() % 10 + Build.ID.length() % 10
+                    + Build.MANUFACTURER.length() % 10 + Build.MODEL.length() % 10
+                    + Build.PRODUCT.length() % 10 + Build.TAGS.length() % 10
+                    + Build.TYPE.length() % 10 + Build.USER.length() % 10;// 12 位
+            UUID deviceUuid = new UUID(androidId.hashCode(), deviceInfo.hashCode());
             uniqueId[0] = deviceUuid.toString();
             return uniqueId[0];
         } catch (SecurityException e) {

@@ -337,7 +337,7 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
 //                syncCalendarSwitch.isChecked() == isChecked;
                 if (isChecked) {
                     PermissionRequestManagerUtils.getInstance().requestRuntimePermission(
-                            ScheduleAddActivity.this, Permissions.CALENDAR, new PermissionRequestCallback() {
+                            ScheduleAddActivity.this, Permissions.WRITE_CALENDAR, new PermissionRequestCallback() {
                                 @Override
                                 public void onPermissionRequestSuccess(List<String> permissions) {
                                 }
