@@ -25,12 +25,30 @@ public class EmmPhoneStateLinstener extends PhoneStateListener {
         super.onCallStateChanged(state, incomingNumber);
         //如果电话不是空闲状态，就挂断云+语音通话
         //如果是空闲状态则此处不做处理，走后续云+语音通话逻辑
-        if (state != TelephonyManager.CALL_STATE_IDLE) {
-            Router router = Router.getInstance();
-            if (router.getService(CommunicationService.class) != null) {
-                CommunicationService service = router.getService(CommunicationService.class);
-                service.stopVoiceCommunication();
-            }
+        switch (state) {
+            case TelephonyManager.CALL_STATE_IDLE:
+//             System.out.println("挂断");
+                break;
+            case TelephonyManager.CALL_STATE_OFFHOOK:
+//            System.out.println("接听");
+                Router router = Router.getInstance();
+                if (router.getService(CommunicationService.class) != null) {
+                    CommunicationService service = router.getService(CommunicationService.class);
+                    service.stopVoiceCommunication();
+                }
+                break;
+            case TelephonyManager.CALL_STATE_RINGING:
+//             System.out.println("响铃:来电号码"+incomingNumber);
+                //输出来电号码
+                break;
         }
+
+//        if (state != TelephonyManager.CALL_STATE_IDLE) {
+//            Router router = Router.getInstance();
+//            if (router.getService(CommunicationService.class) != null) {
+//                CommunicationService service = router.getService(CommunicationService.class);
+//                service.stopVoiceCommunication();
+//            }
+//        }
     }
 }
