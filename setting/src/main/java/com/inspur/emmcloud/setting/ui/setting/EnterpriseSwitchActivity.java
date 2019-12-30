@@ -126,7 +126,7 @@ public class EnterpriseSwitchActivity extends BaseActivity {
 //        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 //        startActivity(intent);
 //        Bundle bundle =new Bundle();
-        ARouter.getInstance().build(Constant.AROUTER_CLASS_APP_MAIN).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK).navigation(this);
+        ARouter.getInstance().build(Constant.AROUTER_CLASS_APP_MAIN).withFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK).navigation(this);
     }
 
     public void onClick(View v) {

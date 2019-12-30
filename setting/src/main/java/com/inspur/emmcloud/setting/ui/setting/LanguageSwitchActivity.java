@@ -133,8 +133,8 @@ public class LanguageSwitchActivity extends BaseActivity implements LanguageMana
 //                        startActivity(intentLog);
                         Bundle build = new Bundle();
                         build.putBoolean(LANGUAGE_CHANGE, true);
-                        ARouter.getInstance().build(Constant.AROUTER_CLASS_APP_INDEX).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                                | Intent.FLAG_ACTIVITY_CLEAR_TASK).with(build).navigation(LanguageSwitchActivity.this);
+                        ARouter.getInstance().build(Constant.AROUTER_CLASS_APP_INDEX).withFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                                .with(build).navigation(LanguageSwitchActivity.this);
                     }
                 })
                 .show();

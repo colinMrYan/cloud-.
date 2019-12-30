@@ -26,6 +26,7 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.router.Router;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.SelectorUtils;
@@ -316,6 +317,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
                             confirmDialog.dismiss();
                         }
                     });
+                    LogUtils.LbcDebug("confirmDialog111111111111111111111111111111");
                     confirmDialog.show();
                 }
             } catch (Exception e) {

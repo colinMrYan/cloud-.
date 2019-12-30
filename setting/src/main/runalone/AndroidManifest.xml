@@ -78,7 +78,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.setting.SettingActivity"
-            android:launchMode="singleTask"
+
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity

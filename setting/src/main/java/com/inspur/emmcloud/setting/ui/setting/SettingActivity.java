@@ -537,8 +537,7 @@ public class SettingActivity extends BaseActivity {
 //                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 //                                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 //                        startActivity(intent);
-                        ARouter.getInstance().build(Constant.AROUTER_CLASS_APP_INDEX).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                                | Intent.FLAG_ACTIVITY_CLEAR_TASK).navigation(SettingActivity.this);
+                        ARouter.getInstance().build(Constant.AROUTER_CLASS_APP_INDEX).withFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK).navigation(SettingActivity.this);
                         new AppBadgeUtils(SettingActivity.this).getAppBadgeCountFromServer();
                     }
                 })

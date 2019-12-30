@@ -111,7 +111,7 @@ public class TabLayoutSwitchActivity extends BaseActivity {
 //                            Intent intent = new Intent(TabLayoutSwitchActivity.this, IndexActivity.class);
 //                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 //                            startActivity(intent);
-                            ARouter.getInstance().build(Constant.AROUTER_CLASS_APP_INDEX).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                            ARouter.getInstance().build(Constant.AROUTER_CLASS_APP_INDEX).withFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)
                                     .navigation(TabLayoutSwitchActivity.this);
                         }
                     }
