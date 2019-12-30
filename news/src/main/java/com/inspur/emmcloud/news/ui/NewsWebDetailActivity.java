@@ -67,7 +67,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.json.JSONObject;
 
 import java.lang.reflect.Method;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
@@ -147,11 +146,9 @@ public class NewsWebDetailActivity extends BaseActivity {
     private void loadUrlWithHeader(String url) {
         if (webViewHeaders == null) {
             webViewHeaders = new HashMap<>();
-            // 根据规则添加token当URL主域名是Constant.INSPUR_HOST_URL或者Constant.INSPURONLINE_HOST_URL结尾时添加token
             try {
-                URL urlHost = new URL(url);
                 String token = BaseApplication.getInstance().getToken();
-                if (token != null && (urlHost.getHost().endsWith(Constant.INSPUR_HOST_URL)) || urlHost.getHost().endsWith(Constant.INSPURONLINE_HOST_URL)) {
+                if (token != null && AppUtils.needAuthorizationToken(url)) {
                     webViewHeaders.put("Authorization", token);
                 }
             } catch (Exception e) {
