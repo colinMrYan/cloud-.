@@ -20,6 +20,7 @@ import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.setting.R;
 import com.inspur.emmcloud.setting.api.SettingAPIInterfaceImpl;
 import com.inspur.emmcloud.setting.api.SettingAPIService;
 import com.inspur.emmcloud.setting.bean.BindingDevice;
@@ -62,20 +63,19 @@ public class DeviceInfoActivity extends BaseActivity {
     }
 
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.ibt_back:
-                finish();
-                break;
-            case R.id.bt_device_unbound:
-                showUnbindDevicePromptDlg();
-                break;
-            case R.id.device_id_text:
-                ClipboardManager cmb = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                cmb.setPrimaryClip(ClipData.newPlainText(null, bindingDevice.getDeviceId()));
-                ToastUtils.show(this, R.string.copyed_to_paste_board);
-                break;
-            default:
-                break;
+        int i = v.getId();
+        if (i == R.id.ibt_back) {
+            finish();
+
+        } else if (i == R.id.bt_device_unbound) {
+            showUnbindDevicePromptDlg();
+
+        } else if (i == R.id.device_id_text) {
+            ClipboardManager cmb = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            cmb.setPrimaryClip(ClipData.newPlainText(null, bindingDevice.getDeviceId()));
+            ToastUtils.show(this, R.string.copyed_to_paste_board);
+
+        } else {
         }
     }
 

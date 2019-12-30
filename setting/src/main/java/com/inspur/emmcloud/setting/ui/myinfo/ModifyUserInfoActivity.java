@@ -10,6 +10,7 @@ import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.setting.R;
 import com.inspur.emmcloud.setting.api.SettingAPIInterfaceImpl;
 import com.inspur.emmcloud.setting.api.SettingAPIService;
 import com.inspur.emmcloud.setting.bean.SettingGetBoolenResult;

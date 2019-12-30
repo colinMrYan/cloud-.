@@ -11,11 +11,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.alibaba.android.arouter.launcher.ARouter;
-import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.setting.R;
+import com.inspur.emmcloud.setting.R2;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,9 +27,9 @@ import butterknife.ButterKnife;
 public class ThemeSwitchActivity extends BaseActivity {
     private static final int[] THEME_FLAG = {R.drawable.ic_mine_theme_white, R.drawable.ic_mine_theme_grey, R.drawable.ic_mine_theme_blue};
     private static final int[] THEME_NAME = {R.string.mine_theme_white, R.string.mine_theme_grey, R.string.mine_theme_blue};
-    @BindView(R.id.tv_header)
+    @BindView(R2.id.tv_header)
     TextView headerText;
-    @BindView(R.id.lv)
+    @BindView(R2.id.lv)
     ListView listView;
 
     public static String getThemeName() {

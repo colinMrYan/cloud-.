@@ -21,6 +21,8 @@ import com.inspur.emmcloud.basemodule.push.PushManagerUtils;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.componentservice.communication.CommunicationService;
+import com.inspur.emmcloud.setting.R;
+import com.inspur.emmcloud.setting.R2;
 import com.inspur.emmcloud.setting.adapter.EnterpriseAdapter;
 
 import java.util.List;
@@ -34,9 +36,9 @@ import butterknife.ButterKnife;
 
 public class EnterpriseSwitchActivity extends BaseActivity {
 
-    @BindView(R.id.lv_enterprise)
+    @BindView(R2.id.lv_enterprise)
     ScrollViewWithListView enterpriseListView;
-    @BindView(R.id.rl_setting_close_auto_select)
+    @BindView(R2.id.rl_setting_close_auto_select)
     RelativeLayout closeAutoSelectLayout;
     private GetMyInfoResult getMyInfoResult;
     private List<Enterprise> enterpriseList;
@@ -128,17 +130,13 @@ public class EnterpriseSwitchActivity extends BaseActivity {
     }
 
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.ibt_back:
-                finish();
-                break;
-            case R.id.rl_setting_close_auto_select:
-                v.setVisibility(View.GONE);
-                PreferencesByUsersUtils.putString(this, Constant.PREF_SELECT_LOGIN_ENTERPRISE_ID, "");
-                ToastUtils.show(BaseApplication.getInstance(), R.string.turn_off_success);
-                break;
-            default:
-                break;
+        int id = v.getId();
+        if (id == R.id.ibt_back) {
+            finish();
+        } else if (id == R.id.rl_setting_close_auto_select) {
+            v.setVisibility(View.GONE);
+            PreferencesByUsersUtils.putString(this, Constant.PREF_SELECT_LOGIN_ENTERPRISE_ID, "");
+            ToastUtils.show(BaseApplication.getInstance(), R.string.turn_off_success);
         }
     }
 

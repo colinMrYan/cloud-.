@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.NotificationSetUtils;
@@ -48,9 +49,13 @@ import com.inspur.emmcloud.componentservice.CoreService;
 import com.inspur.emmcloud.componentservice.application.ApplicationService;
 import com.inspur.emmcloud.componentservice.application.navibar.NaviBarModel;
 import com.inspur.emmcloud.componentservice.application.navibar.NaviBarScheme;
+import com.inspur.emmcloud.componentservice.communication.CommunicationService;
+import com.inspur.emmcloud.setting.R;
+import com.inspur.emmcloud.setting.R2;
 import com.inspur.emmcloud.setting.api.SettingAPIInterfaceImpl;
 import com.inspur.emmcloud.setting.api.SettingAPIService;
 import com.inspur.emmcloud.setting.bean.GetExperienceUpgradeFlagResult;
+import com.inspur.emmcloud.setting.widget.DataCleanManager;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -65,27 +70,27 @@ import butterknife.OnClick;
 public class SettingActivity extends BaseActivity {
 
     private static final int DATA_CLEAR_SUCCESS = 0;
-    @BindView(R.id.switch_view_setting_web_rotate)
+    @BindView(R2.id.switch_view_setting_web_rotate)
     SwitchCompat webRotateSwitch;
-    @BindView(R.id.switch_view_setting_voice_2_word)
+    @BindView(R2.id.switch_view_setting_voice_2_word)
     SwitchCompat voice2WordSwitch;
-    @BindView(R.id.rl_setting_voice_2_word)
+    @BindView(R2.id.rl_setting_voice_2_word)
     RelativeLayout voice2WordLayout;
-    @BindView(R.id.rl_setting_experience_upgrade)
+    @BindView(R2.id.rl_setting_experience_upgrade)
     RelativeLayout experienceUpgradeLayout;
-    @BindView(R.id.switch_view_setting_experience_upgrade)
+    @BindView(R2.id.switch_view_setting_experience_upgrade)
     SwitchCompat experienceUpgradeSwitch;
-    @BindView(R.id.tv_setting_language_name)
+    @BindView(R2.id.tv_setting_language_name)
     TextView languageNameText;
-    @BindView(R.id.iv_setting_language_flag)
+    @BindView(R2.id.iv_setting_language_flag)
     ImageView languageFlagImg;
-    @BindView(R.id.tv_setting_theme_name)
+    @BindView(R2.id.tv_setting_theme_name)
     TextView themeNameText;
-    @BindView(R.id.rl_setting_switch_tablayout)
+    @BindView(R2.id.rl_setting_switch_tablayout)
     RelativeLayout switchTabLayout;
-    @BindView(R.id.tv_setting_tab_name)
+    @BindView(R2.id.tv_setting_tab_name)
     TextView tabName;
-    @BindView(R.id.switch_view_setting_notification)
+    @BindView(R2.id.switch_view_setting_notification)
     SwitchCompat notificationSwitch;
     int REQUEST_CODE_CAMERA = 10002;
     Uri fileUri = null;
@@ -95,24 +100,23 @@ public class SettingActivity extends BaseActivity {
     private CompoundButton.OnCheckedChangeListener onCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-            switch (compoundButton.getId()) {
-                case R.id.switch_view_setting_web_rotate:
-                    AppConfig appConfig = new AppConfig(Constant.CONCIG_WEB_AUTO_ROTATE, String.valueOf(b));
-                    AppConfigCacheUtils.saveAppConfig(BaseApplication.getInstance(), appConfig);
-                    saveWebAutoRotateConfig(b);
-                    break;
-                case R.id.switch_view_setting_voice_2_word:
-                    PreferencesByUserAndTanentUtils.putBoolean(SettingActivity.this, Constant.PREF_APP_OPEN_VOICE_WORD_SWITCH,
-                            b ? Constant.IS_VOICE_WORD_OPEN : Constant.IS_VOICE_WORD_CLOUSE);
-                    break;
-                case R.id.switch_view_setting_experience_upgrade:
-                    boolean isExperienceUpgradeFlag = PreferencesByUserAndTanentUtils.getBoolean(BaseApplication.getInstance(), Constant.PREF_EXPERIENCE_UPGRATE, false);
-                    if (isExperienceUpgradeFlag != b) {
-                        updateUserExperienceUpgradeFlag();
-                    }
-                    break;
-                default:
-                    break;
+            int i = compoundButton.getId();
+            if (i == R.id.switch_view_setting_web_rotate) {
+                AppConfig appConfig = new AppConfig(Constant.CONCIG_WEB_AUTO_ROTATE, String.valueOf(b));
+                AppConfigCacheUtils.saveAppConfig(BaseApplication.getInstance(), appConfig);
+                saveWebAutoRotateConfig(b);
+
+            } else if (i == R.id.switch_view_setting_voice_2_word) {
+                PreferencesByUserAndTanentUtils.putBoolean(SettingActivity.this, Constant.PREF_APP_OPEN_VOICE_WORD_SWITCH,
+                        b ? Constant.IS_VOICE_WORD_OPEN : Constant.IS_VOICE_WORD_CLOUSE);
+
+            } else if (i == R.id.switch_view_setting_experience_upgrade) {
+                boolean isExperienceUpgradeFlag = PreferencesByUserAndTanentUtils.getBoolean(BaseApplication.getInstance(), Constant.PREF_EXPERIENCE_UPGRATE, false);
+                if (isExperienceUpgradeFlag != b) {
+                    updateUserExperienceUpgradeFlag();
+                }
+
+            } else {
             }
         }
     };
@@ -339,39 +343,37 @@ public class SettingActivity extends BaseActivity {
         };
     }
 
-    @OnClick(R.id.bt_setting_signout)
+    @OnClick(R2.id.bt_setting_signout)
     public void onClick(View v) {
         // TODO Auto-generated method stub
-        switch (v.getId()) {
-            case R.id.ibt_back:
-                finish();
-                break;
-            case R.id.bt_setting_signout:
-                showSignoutDlg();
-                break;
-            case R.id.rl_setting_language:
-                IntentUtils.startActivity(SettingActivity.this,
-                        LanguageSwitchActivity.class);
-                break;
-            case R.id.clear_cache_layout:
-                showClearCacheDlg();
-                break;
-            case R.id.rl_setting_self_start: //TODO zyj
-//                UriUtils.openUrl(this, "http://www.baidu.com");
+        int i = v.getId();
+        if (i == R.id.ibt_back) {
+            finish();
+
+        } else if (i == R.id.bt_setting_signout) {
+            showSignoutDlg();
+
+        } else if (i == R.id.rl_setting_language) {
+            IntentUtils.startActivity(SettingActivity.this,
+                    LanguageSwitchActivity.class);
+
+        } else if (i == R.id.clear_cache_layout) {
+            showClearCacheDlg();
+
+        } else if (i == R.id.rl_setting_self_start) {//                UriUtils.openUrl(this, "http://www.baidu.com");
 //                ARouter.getInstance().build("/meeting/history").navigation();
 //                startActivity(new Intent(this, VolumeFileTransferActivity.class));
-                break;
-            case R.id.rl_setting_account_safe:
-                IntentUtils.startActivity(SettingActivity.this, SafeCenterActivity.class);
-                break;
-            case R.id.rl_setting_switch_theme:
-                IntentUtils.startActivity(SettingActivity.this, ThemeSwitchActivity.class);
-                break;
-            case R.id.rl_setting_switch_tablayout:
-                IntentUtils.startActivity(SettingActivity.this, TabLayoutSwitchActivity.class);
-                break;
-            default:
-                break;
+
+        } else if (i == R.id.rl_setting_account_safe) {
+            IntentUtils.startActivity(SettingActivity.this, SafeCenterActivity.class);
+
+        } else if (i == R.id.rl_setting_switch_theme) {
+            IntentUtils.startActivity(SettingActivity.this, ThemeSwitchActivity.class);
+
+        } else if (i == R.id.rl_setting_switch_tablayout) {
+            IntentUtils.startActivity(SettingActivity.this, TabLayoutSwitchActivity.class);
+
+        } else {
         }
     }
 
@@ -433,7 +435,12 @@ public class SettingActivity extends BaseActivity {
                         boolean isCommunicateExist = TabAndAppExistUtils.isTabExist(BaseApplication.getInstance(), Constant.APP_TAB_BAR_COMMUNACATE);
                         if (NetUtils.isNetworkConnected(getApplicationContext(), false) && WebServiceRouterManager.getInstance().isV1xVersionChat() && isCommunicateExist) {
                             loadingDlg.show();
-                            WSAPIService.getInstance().sendAppStatus("REMOVED");
+                            CommunicationService communicationService = Router.getInstance().getService(CommunicationService.class);
+                            if (communicationService != null) {
+                                communicationService.sendAppStatus("REMOVED");
+                            }
+                            // CommunicationService communicationService =
+                            // WSAPIService.getInstance().sendAppStatus("REMOVED");
                         } else {
                             BaseApplication.getInstance().signout();
                         }
@@ -509,7 +516,7 @@ public class SettingActivity extends BaseActivity {
                         String imgCachePath = MyAppConfig.LOCAL_CACHE_PATH;
                         String offlineAppPath = MyAppConfig.LOCAL_OFFLINE_APP_PATH;
                         String userSpacePath = MyAppConfig.LOCAL_IMP_USER_OPERATE_DIC;
-                        PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_GET_OFFLINE_LAST_MID, "");
+                        PreferencesByUserAndTanentUtils.putString(BaseApplication.getInstance(), Constant.PREF_GET_OFFLINE_LAST_MID, "");
                         DataCleanManager.cleanApplicationData(SettingActivity.this,
                                 msgCachePath, imgCachePath, offlineAppPath, userSpacePath);
                         BaseApplication.getInstance().setIsContactReady(false);
@@ -525,11 +532,13 @@ public class SettingActivity extends BaseActivity {
                         ToastUtils.show(getApplicationContext(),
                                 R.string.data_clear_success);
                         //((MyApplication) getApplicationContext()).exit();
-                        Intent intent = new Intent(SettingActivity.this,
-                                IndexActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
+//                        Intent intent = new Intent(SettingActivity.this,
+//                                IndexActivity.class);
+//                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+//                                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                        startActivity(intent);
+                        ARouter.getInstance().build(Constant.AROUTER_CLASS_APP_INDEX).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                                | Intent.FLAG_ACTIVITY_CLEAR_TASK).navigation(SettingActivity.this);
                         new AppBadgeUtils(SettingActivity.this).getAppBadgeCountFromServer();
                     }
                 })
@@ -562,7 +571,7 @@ public class SettingActivity extends BaseActivity {
 
     private void saveWebAutoRotateConfig(boolean isWebAutoRotate) {
         if (NetUtils.isNetworkConnected(this)) {
-            AppAPIService apiService = new AppAPIService(this);
+            SettingAPIService apiService = new SettingAPIService(this);
             apiService.saveWebAutoRotateConfig(isWebAutoRotate);
         }
     }
@@ -571,7 +580,6 @@ public class SettingActivity extends BaseActivity {
         if (NetUtils.isNetworkConnected(BaseApplication.getInstance(), false)) {
             apiService.getUserExperienceUpgradeFlag();
         }
-
     }
 
     private void updateUserExperienceUpgradeFlag() {

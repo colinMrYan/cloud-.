@@ -8,6 +8,8 @@ import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.setting.R;
+import com.inspur.emmcloud.setting.R2;
 import com.inspur.emmcloud.setting.adapter.CardStackAdapter;
 import com.inspur.emmcloud.setting.api.SettingAPIInterfaceImpl;
 import com.inspur.emmcloud.setting.api.SettingAPIService;
@@ -28,7 +30,7 @@ import butterknife.ButterKnife;
  */
 public class CardPackageActivity extends BaseActivity implements RxCardStackView.ItemExpendListener {
     private static final int CARD_PACKAGE_SET_REQUEST = 1;
-    @BindView(R.id.stackview_card_package)
+    @BindView(R2.id.stackview_card_package)
     RxCardStackView cardStackView;
     private CardStackAdapter cardStackAdapter;
     private LoadingDialog loadingDialog;
@@ -83,15 +85,13 @@ public class CardPackageActivity extends BaseActivity implements RxCardStackView
     }
 
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.ibt_back:
-                finish();
-                break;
-            case R.id.tv_set:
-                Intent intent = new Intent();
-                intent.setClass(CardPackageActivity.this, CardPackageSetActivity.class);
-                startActivityForResult(intent, CARD_PACKAGE_SET_REQUEST);
-                break;
+        int id = view.getId();
+        if (id == R.id.ibt_back) {
+            finish();
+        } else if (id == R.id.tv_set) {
+            Intent intent = new Intent();
+            intent.setClass(CardPackageActivity.this, CardPackageSetActivity.class);
+            startActivityForResult(intent, CARD_PACKAGE_SET_REQUEST);
         }
     }
 

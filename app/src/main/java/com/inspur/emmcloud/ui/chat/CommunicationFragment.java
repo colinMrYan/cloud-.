@@ -24,6 +24,7 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ConversationAdapter;
@@ -76,7 +77,6 @@ import com.inspur.emmcloud.componentservice.communication.OnCreateGroupConversat
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
-import com.inspur.emmcloud.ui.mine.setting.NetWorkStateDetailActivity;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationGroupIconUtils;
@@ -322,7 +322,7 @@ public class CommunicationFragment extends BaseFragment implements View.OnClickL
 
             @Override
             public void onNetExceptionWightClick() {
-                IntentUtils.startActivity(getActivity(), NetWorkStateDetailActivity.class);
+                ARouter.getInstance().build(Constant.AROUTER_CLASS_APP_NETWORK_DETAIL).navigation(getActivity());
             }
         });
         conversionRecycleView.setAdapter(conversationAdapter);

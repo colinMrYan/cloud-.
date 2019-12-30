@@ -3,12 +3,13 @@ package com.inspur.emmcloud.setting.ui.setting;
 import android.content.Intent;
 import android.view.View;
 
-import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.ProgressWebView;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.setting.R;
+import com.inspur.emmcloud.setting.R2;
 import com.inspur.emmcloud.setting.api.SettingAPIUri;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.socialize.PlatformConfig;
@@ -33,7 +34,7 @@ import butterknife.OnClick;
 
 public class RecommendAppActivity extends BaseActivity {
     private final String RECOMMAND_APP_URL = SettingAPIUri.getRecommandAppUrl();
-    @BindView(R.id.webview)
+    @BindView(R2.id.webview)
     ProgressWebView webView;
     private CustomShareListener mShareListener;
 
@@ -56,12 +57,9 @@ public class RecommendAppActivity extends BaseActivity {
     }
 
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.ibt_back:
-                finish();
-                break;
-            default:
-                break;
+        int id = v.getId();
+        if (id == R.id.ibt_back) {
+            finish();
         }
     }
 
@@ -72,7 +70,7 @@ public class RecommendAppActivity extends BaseActivity {
         UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
     }
 
-    @OnClick(R.id.share_img)
+    @OnClick(R2.id.share_img)
     public void ShareWeb() {
 
         mShareListener = new CustomShareListener(this);

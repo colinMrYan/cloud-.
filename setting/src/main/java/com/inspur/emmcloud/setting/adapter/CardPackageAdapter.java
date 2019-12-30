@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.setting.R;
 import com.inspur.emmcloud.setting.api.OnCardPackageClickListener;
 import com.inspur.emmcloud.setting.bean.CardPackageBean;
 

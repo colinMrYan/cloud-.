@@ -47,6 +47,7 @@ import com.inspur.emmcloud.basemodule.util.mycamera.CameraUtils;
 import com.inspur.emmcloud.basemodule.util.mycamera.FocusSurfaceView;
 import com.inspur.emmcloud.componentservice.app.AppService;
 import com.inspur.emmcloud.componentservice.app.CommonCallBack;
+import com.inspur.emmcloud.setting.R;
 import com.inspur.emmcloud.setting.api.SettingAPIInterfaceImpl;
 import com.inspur.emmcloud.setting.api.SettingAPIService;
 import com.inspur.emmcloud.setting.bean.GetFaceSettingResult;
@@ -398,12 +399,9 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
     }
 
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.close_camera_btn:
-                onBackPressed();
-                break;
-            default:
-                break;
+        int i = v.getId();
+        if (i == R.id.close_camera_btn) {
+            onBackPressed();
         }
     }
 

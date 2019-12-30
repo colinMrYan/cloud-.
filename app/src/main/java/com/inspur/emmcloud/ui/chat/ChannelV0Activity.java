@@ -17,6 +17,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ChannelMsgAdapter;
@@ -56,7 +58,6 @@ import com.inspur.emmcloud.broadcastreceiver.MsgReceiver;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
-import com.inspur.emmcloud.ui.mine.setting.FaceVerifyActivity;
 import com.inspur.emmcloud.util.privates.ChannelInfoUtils;
 import com.inspur.emmcloud.util.privates.ConbineMsg;
 import com.inspur.emmcloud.util.privates.DirectChannelUtils;
@@ -89,6 +90,7 @@ import static android.R.attr.path;
  *
  * @author Fortune Yu; create at 2016年8月29日
  */
+@Route(path = Constant.AROUTER_CLASS_APP_CHANNEL_V0)
 public class ChannelV0Activity extends BaseActivity {
 
     private static final int HAND_CALLBACK_MESSAGE = 1;
@@ -690,7 +692,7 @@ public class ChannelV0Activity extends BaseActivity {
         bundle.putBoolean("isFaceVerifyExperience", false);
         bundle.putBoolean("isFaceLogin", true);
         bundle.putString("token", token);
-        IntentUtils.startActivity(ChannelV0Activity.this, FaceVerifyActivity.class, bundle);
+        ARouter.getInstance().build(Constant.AROUTER_CLASS_SETTING_FACEVERIFY).with(bundle).navigation(this);
     }
 
     /**

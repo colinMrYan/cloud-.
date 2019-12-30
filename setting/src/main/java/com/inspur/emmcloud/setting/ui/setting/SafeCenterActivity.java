@@ -15,6 +15,8 @@ import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.setting.R;
+import com.inspur.emmcloud.setting.R2;
 import com.inspur.emmcloud.setting.api.SettingAPIInterfaceImpl;
 import com.inspur.emmcloud.setting.api.SettingAPIService;
 import com.inspur.emmcloud.setting.bean.UserProfileInfoBean;
@@ -29,13 +31,13 @@ import butterknife.ButterKnife;
 
 public class SafeCenterActivity extends BaseActivity {
 
-    @BindView(R.id.ll_password)
+    @BindView(R2.id.ll_password)
     LinearLayout passwordLayout;
-    @BindView(R.id.rl_password_modify)
+    @BindView(R2.id.rl_password_modify)
     RelativeLayout passwordModifyLayout;
-    @BindView(R.id.rl_password_reset)
+    @BindView(R2.id.rl_password_reset)
     RelativeLayout passwordResetLayout;
-    @BindView(R.id.tv_setting_safe_gesture_face)
+    @BindView(R2.id.tv_setting_safe_gesture_face)
     TextView safeGestureFaceText;
 
     @Override
@@ -81,37 +83,29 @@ public class SafeCenterActivity extends BaseActivity {
     }
 
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.ibt_back:
-                finish();
-                break;
-            case R.id.rl_setting_safe_gesture_face:
-                if (CreateGestureActivity.getGestureCodeIsOpenByUser(this)) {
-                    IntentUtils.startActivity(this, SafeGustureFaceSettingActivity.class);
-                } else {
-                    IntentUtils.startActivity(SafeCenterActivity.this, CreateGestureActivity.class);
-                }
+        int id = view.getId();
+        if (id == R.id.ibt_back) {
+            finish();
+        } else if (id == R.id.rl_setting_safe_gesture_face) {
+            if (CreateGestureActivity.getGestureCodeIsOpenByUser(this)) {
+                IntentUtils.startActivity(this, SafeGustureFaceSettingActivity.class);
+            } else {
+                IntentUtils.startActivity(SafeCenterActivity.this, CreateGestureActivity.class);
+            }
 
-                break;
-            case R.id.rl_setting_face_unlock:
-                intentFaceVerifyActivity(true);
-                break;
-            case R.id.rl_setting_safe_account_device:
-                IntentUtils.startActivity(this, DeviceManagerActivity.class);
-                break;
-            case R.id.rl_password_modify:
-                ARouter.getInstance().build(Constant.AROUTER_CLASS_LOGIN_PASSWORD_MODIFY).navigation();
-                break;
-            case R.id.rl_password_reset:
-                String myInfo = PreferencesUtils.getString(this, "myInfo", "");
-                GetMyInfoResult getMyInfoResult = new GetMyInfoResult(myInfo);
-                Bundle bundle = new Bundle();
-                bundle.putInt("extra_mode", 2);
-                bundle.putString("extra_phone", getMyInfoResult.getPhoneNumber());
-                ARouter.getInstance().build(Constant.AROUTER_CLASS_LOGIN_BY_SMS).with(bundle).navigation();
-                break;
-            default:
-                break;
+        } else if (id == R.id.rl_setting_face_unlock) {
+            intentFaceVerifyActivity(true);
+        } else if (id == R.id.rl_setting_safe_account_device) {
+            IntentUtils.startActivity(this, DeviceManagerActivity.class);
+        } else if (id == R.id.rl_password_modify) {
+            ARouter.getInstance().build(Constant.AROUTER_CLASS_LOGIN_PASSWORD_MODIFY).navigation();
+        } else if (id == R.id.rl_password_reset) {
+            String myInfo = PreferencesUtils.getString(this, "myInfo", "");
+            GetMyInfoResult getMyInfoResult = new GetMyInfoResult(myInfo);
+            Bundle bundle = new Bundle();
+            bundle.putInt("extra_mode", 2);
+            bundle.putString("extra_phone", getMyInfoResult.getPhoneNumber());
+            ARouter.getInstance().build(Constant.AROUTER_CLASS_LOGIN_BY_SMS).with(bundle).navigation();
         }
     }
 

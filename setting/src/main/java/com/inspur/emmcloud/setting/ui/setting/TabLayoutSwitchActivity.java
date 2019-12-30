@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
@@ -20,6 +21,8 @@ import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.componentservice.application.navibar.NaviBarModel;
 import com.inspur.emmcloud.componentservice.application.navibar.NaviBarScheme;
+import com.inspur.emmcloud.setting.R;
+import com.inspur.emmcloud.setting.R2;
 
 import java.util.List;
 
@@ -31,9 +34,9 @@ import butterknife.ButterKnife;
  */
 
 public class TabLayoutSwitchActivity extends BaseActivity {
-    @BindView(R.id.tv_header)
+    @BindView(R2.id.tv_header)
     TextView headerText;
-    @BindView(R.id.lv)
+    @BindView(R2.id.lv)
     ListView listView;
     private NaviBarModel naviBarModel;
 
@@ -105,9 +108,11 @@ public class TabLayoutSwitchActivity extends BaseActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         if (!currentTabLayoutName.equals(selectedTabLayoutName)) {
                             PreferencesByUserAndTanentUtils.putString(BaseApplication.getInstance(), Constant.APP_TAB_LAYOUT_NAME, selectedTabLayoutName);
-                            Intent intent = new Intent(TabLayoutSwitchActivity.this, IndexActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
+//                            Intent intent = new Intent(TabLayoutSwitchActivity.this, IndexActivity.class);
+//                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                            startActivity(intent);
+                            ARouter.getInstance().build(Constant.AROUTER_CLASS_APP_INDEX).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                                    .navigation(TabLayoutSwitchActivity.this);
                         }
                     }
                 })

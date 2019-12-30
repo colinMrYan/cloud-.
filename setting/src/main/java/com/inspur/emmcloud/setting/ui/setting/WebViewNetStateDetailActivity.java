@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
-import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.CustomLoadingView;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
@@ -19,6 +18,8 @@ import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.CheckingNetStateUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.setting.R;
+import com.inspur.emmcloud.setting.R2;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -36,25 +37,25 @@ public class WebViewNetStateDetailActivity extends BaseActivity {
     public static String EXTRA_OUTSIDE_URL = "extra_outside_url";
     public static String EXTRA_OUTSIDE_URL_REQUEST_RESULT = "extra_outside_url_request_result";
     public static String[] subUrls = {"www.baidu.com", "www.aliyun.com"};
-    @BindView(R.id.tv_check_net_url_content)
+    @BindView(R2.id.tv_check_net_url_content)
     TextView checkNetUrlContentText;
-    @BindView(R.id.tv_check_net_result_content)
+    @BindView(R2.id.tv_check_net_result_content)
     TextView checkNetResultText;
-    @BindView(R.id.tv_check_net_current_net_type)
+    @BindView(R2.id.tv_check_net_current_net_type)
     TextView currentNetTypeText;
-    @BindView(R.id.tv_check_net_current_net_state)
+    @BindView(R2.id.tv_check_net_current_net_state)
     TextView currentNetStateText;
-    @BindView(R.id.iv_ping_inspur_state)
+    @BindView(R2.id.iv_ping_inspur_state)
     ImageView pingInspurStateImage;
-    @BindView(R.id.iv_ping_inspur_loading)
+    @BindView(R2.id.iv_ping_inspur_loading)
     CustomLoadingView pingInspurLoadingImage;
-    @BindView(R.id.iv_ping_baidu_state)
+    @BindView(R2.id.iv_ping_baidu_state)
     ImageView pingBaiduStateImage;
-    @BindView(R.id.iv_ping_baidu_loading)
+    @BindView(R2.id.iv_ping_baidu_loading)
     CustomLoadingView pingBaiduLoadingImage;
-    @BindView(R.id.iv_ping_ali_state)
+    @BindView(R2.id.iv_ping_ali_state)
     ImageView pingAliStateImage;
-    @BindView(R.id.iv_ping_ali_loading)
+    @BindView(R2.id.iv_ping_ali_loading)
     CustomLoadingView pingAliLoadingImage;
 
     CheckingNetStateUtils checkingNetStateUtils;
@@ -143,16 +144,16 @@ public class WebViewNetStateDetailActivity extends BaseActivity {
     }
 
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.ibt_back:
-                finish();
-                break;
-            case R.id.tv_copy_net_url:
-                copyToClipboard(this, urlContent);
-                break;
-            case R.id.tv_copy_net_result_content:
-                copyToClipboard(this, checkNetResultContent);
-                break;
+        int i = v.getId();
+        if (i == R.id.ibt_back) {
+            finish();
+
+        } else if (i == R.id.tv_copy_net_url) {
+            copyToClipboard(this, urlContent);
+
+        } else if (i == R.id.tv_copy_net_result_content) {
+            copyToClipboard(this, checkNetResultContent);
+
         }
     }
 

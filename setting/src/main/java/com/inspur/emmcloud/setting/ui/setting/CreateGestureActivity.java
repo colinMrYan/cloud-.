@@ -5,13 +5,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.gyf.barlibrary.ImmersionBar;
-import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
+import com.inspur.emmcloud.setting.R;
+import com.inspur.emmcloud.setting.R2;
 import com.inspur.emmcloud.setting.widget.LockPatternIndicator;
 import com.inspur.emmcloud.setting.widget.LockPatternUtil;
 import com.inspur.emmcloud.setting.widget.LockPatternView;
@@ -30,6 +32,7 @@ import butterknife.OnClick;
  * create gesture activity
  * Created by Sym on 2015/12/23.
  */
+@Route(path = Constant.AROUTER_CLASS_SETTING_CREATE_GESTURE)
 public class CreateGestureActivity extends BaseActivity {
 
     public static final String GESTURE_CODE = "gesture_code";
@@ -37,15 +40,15 @@ public class CreateGestureActivity extends BaseActivity {
     public static final String CREATE_GESTURE_CODE_SUCCESS = "create_gesture_code_success";
     public static final String EXTRA_FORCE_SET = "extra_force_set";
     private static final long DELAYTIME = 600L;
-    @BindView(R.id.lockPatterIndicator)
+    @BindView(R2.id.lockPatterIndicator)
     LockPatternIndicator lockPatternIndicator;
-    @BindView(R.id.lockPatternView)
+    @BindView(R2.id.lockPatternView)
     LockPatternView lockPatternView;
-    @BindView(R.id.gesture_reset_btn)
+    @BindView(R2.id.gesture_reset_btn)
     Button resetBtn;
-    @BindView(R.id.gesture_message_text)
+    @BindView(R2.id.gesture_message_text)
     TextView gestrueMessage;
-    @BindView(R.id.tv_force_gesture_create)
+    @BindView(R2.id.tv_force_gesture_create)
     TextView forceGestureCreate;
     private List<LockPatternView.Cell> mChosenPattern = null;
     /**
@@ -197,7 +200,7 @@ public class CreateGestureActivity extends BaseActivity {
     /**
      * 重新设置手势
      */
-    @OnClick(R.id.gesture_reset_btn)
+    @OnClick(R2.id.gesture_reset_btn)
     public void resetGesture() {
         mChosenPattern = null;
         lockPatternIndicator.setDefaultIndicator();
@@ -206,10 +209,9 @@ public class CreateGestureActivity extends BaseActivity {
     }
 
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.ibt_back:
-                finish();
-                break;
+        int id = view.getId();
+        if (id == R.id.ibt_back) {
+            finish();
         }
     }
 

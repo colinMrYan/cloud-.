@@ -634,4 +634,43 @@ public class SettingAPIService {
 
         });
     }
+
+    /**
+     * 保存webview是否自动旋转配置项
+     *
+     * @param isWebAutoRotate
+     */
+    public void saveWebAutoRotateConfig(final boolean isWebAutoRotate) {
+        final String url = SettingAPIUri.seetingSaveAppConfigUrl("WebAutoRotate");
+        RequestParams params = ((BaseApplication) context.getApplicationContext()).getHttpRequestParams(url);
+        params.setBodyContent(isWebAutoRotate + "");
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, url) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // apiInterface.returnSaveWebAutoRotateConfigSuccess(isWebAutoRotate);
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // apiInterface.returnSaveWebAutoRotateConfigFail(error, responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        saveWebAutoRotateConfig(isWebAutoRotate);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                refreshToken(oauthCallBack, requestTime);
+            }
+        });
+    }
+
 }

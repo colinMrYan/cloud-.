@@ -304,6 +304,13 @@ public class Constant {
     public static final String AROUTER_CLASS_SCHEDLE_ADD = "/schedule/add";
 
     public static final String AROUTER_CLASS_APP_MAIN = "/app/main";
+    public static final String AROUTER_CLASS_APP_CONVERSATION_V1 = "/app/ConversationActivity";
+    public static final String AROUTER_CLASS_APP_CHANNEL_V0 = "/app/ChannelV0Activity";
+
+    public static final String AROUTER_CLASS_SETTING_CREATE_GESTURE = "/setting/CreateGestureActivity";
+    public static final String AROUTER_CLASS_SETTING_TEST = "/setting/test";
+    public static final String AROUTER_CLASS_SETTING_GUIDE = "/setting/guide";
+    public static final String AROUTER_CLASS_SETTING_FACEVERIFY = "/setting/FaceVerify";
 
     //参会状态
     public static final int ATTEND_MEETING_STATUS_ACCEPT = 1;

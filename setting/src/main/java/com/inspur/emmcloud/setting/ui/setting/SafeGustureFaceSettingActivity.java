@@ -13,25 +13,26 @@ import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.setting.R;
+import com.inspur.emmcloud.setting.R2;
 import com.inspur.emmcloud.setting.util.FingerPrintUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
 /**
  * Created by chenmch on 2019/1/25.
  */
 
 public class SafeGustureFaceSettingActivity extends BaseActivity {
-    @BindView(R.id.switch_view_setting_safe_start_guesture)
+    @BindView(R2.id.switch_view_setting_safe_start_guesture)
     SwitchCompat guestureSwitchView;
-    @BindView(R.id.switch_view_setting_safe_start_face)
+    @BindView(R2.id.switch_view_setting_safe_start_face)
     SwitchCompat fingerPrintSwitchView;
-    @BindView(R.id.rl_setting_safe_reset_guesture)
+    @BindView(R2.id.rl_setting_safe_reset_guesture)
     RelativeLayout resetGuestureLayout;
-    @BindView(R.id.rl_finger_print)
+    @BindView(R2.id.rl_finger_print)
     RelativeLayout fingerPrintLayout;
-    @BindView(R.id.tv_fingerprint_face_unlock)
+    @BindView(R2.id.tv_fingerprint_face_unlock)
     TextView fingerPrintFaceText;
 
     @Override
@@ -105,18 +106,18 @@ public class SafeGustureFaceSettingActivity extends BaseActivity {
     }
 
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.ibt_back:
-                finish();
-                break;
-            case R.id.rl_setting_safe_reset_guesture:
-                Bundle bundle = new Bundle();
-                bundle.putString(GestureLoginActivity.GESTURE_CODE_CHANGE, "reset");
-                IntentUtils.startActivity(SafeGustureFaceSettingActivity.this, GestureLoginActivity.class, bundle);
-                break;
-            case R.id.rl_setting_safe_reset_face:
-                intentFaceVerifyActivity(true);
-                break;
+        int i = v.getId();
+        if (i == R.id.ibt_back) {
+            finish();
+
+        } else if (i == R.id.rl_setting_safe_reset_guesture) {
+            Bundle bundle = new Bundle();
+            bundle.putString(GestureLoginActivity.GESTURE_CODE_CHANGE, "reset");
+            IntentUtils.startActivity(SafeGustureFaceSettingActivity.this, GestureLoginActivity.class, bundle);
+
+        } else if (i == R.id.rl_setting_safe_reset_face) {
+            intentFaceVerifyActivity(true);
+
         }
     }
 

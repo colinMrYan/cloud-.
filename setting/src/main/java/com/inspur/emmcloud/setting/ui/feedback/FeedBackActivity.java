@@ -12,18 +12,19 @@ import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.setting.R;
+import com.inspur.emmcloud.setting.R2;
 import com.inspur.emmcloud.setting.api.SettingAPIService;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class FeedBackActivity extends BaseActivity {
-    @BindView(R.id.et_feedback_content)
+    @BindView(R2.id.et_feedback_content)
     EditText feedbackContentEdit;
-    @BindView(R.id.et_feedback_contact)
+    @BindView(R2.id.et_feedback_contact)
     EditText feedbackContactEdit;
-    @BindView(R.id.switch_compat_anonymous)
+    @BindView(R2.id.switch_compat_anonymous)
     SwitchCompat anonymousSwitch;
 
     TextWatcher mTextWatcher = new TextWatcher() {
@@ -78,22 +79,17 @@ public class FeedBackActivity extends BaseActivity {
         return R.layout.activity_feedback;
     }
 
-    @OnClick(R.id.bt_submit_feedback)
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.ibt_back:
-                finish();
-                break;
-            case R.id.bt_submit_feedback:
-                String content = feedbackContentEdit.getText().toString();
-                if (TextUtils.isEmpty(content.trim())) {
-                    ToastUtils.show(getApplicationContext(), getString(R.string.feed_back_no_empty));
-                } else if (NetUtils.isNetworkConnected(getApplicationContext())) {
-                    uploadFeedback();
-                }
-                break;
-            default:
-                break;
+        int id = v.getId();
+        if (id == R.id.ibt_back) {
+            finish();
+        } else if (id == R.id.bt_submit_feedback) {
+            String content = feedbackContentEdit.getText().toString();
+            if (TextUtils.isEmpty(content.trim())) {
+                ToastUtils.show(getApplicationContext(), getString(R.string.feed_back_no_empty));
+            } else if (NetUtils.isNetworkConnected(getApplicationContext())) {
+                uploadFeedback();
+            }
         }
     }
 

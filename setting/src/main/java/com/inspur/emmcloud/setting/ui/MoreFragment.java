@@ -15,17 +15,21 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.launcher.ARouter;
+import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
+import com.inspur.emmcloud.basemodule.api.BaseModuleApiUri;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseFragment;
 import com.inspur.emmcloud.basemodule.util.AppTabUtils;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
@@ -35,8 +39,12 @@ import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.componentservice.application.maintab.MainTabProperty;
 import com.inspur.emmcloud.componentservice.application.maintab.MineLayoutItem;
 import com.inspur.emmcloud.componentservice.application.maintab.MineLayoutItemGroup;
+import com.inspur.emmcloud.componentservice.communication.CommunicationService;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
+import com.inspur.emmcloud.setting.R;
+import com.inspur.emmcloud.setting.R2;
 import com.inspur.emmcloud.setting.api.SettingAPIInterfaceImpl;
+import com.inspur.emmcloud.setting.api.SettingAPIService;
 import com.inspur.emmcloud.setting.bean.GetUserCardMenusResult;
 import com.inspur.emmcloud.setting.ui.card.CardPackageActivity;
 import com.inspur.emmcloud.setting.ui.feedback.FeedBackActivity;
@@ -58,8 +66,9 @@ import static android.app.Activity.RESULT_OK;
  */
 public class MoreFragment extends BaseFragment {
 
+    public static final String EXTRA_CONVERSATION = "conversation";
     private static final int REQUEST_CODE_UPDATE_USER_PHOTO = 3;
-    @BindView(R.id.expandable_list)
+    @BindView(R2.id.expandable_list)
     ExpandableListView expandListView;
     private List<MineLayoutItemGroup> mineLayoutItemGroupList = new ArrayList<>();
     private BaseExpandableListAdapter adapter;
@@ -191,26 +200,28 @@ public class MoreFragment extends BaseFragment {
                     recordUserClick("feedback");
                     break;
                 case "my_customerService_function":
-                    if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
-                        Channel customerChannel = ChannelCacheUtils.getCustomerChannel(BaseApplication.getInstance());
-                        if (customerChannel != null) {
-                            Bundle bundle = new Bundle();
-                            bundle.putString("cid", customerChannel.getCid());
-                            // 为区分来自云+客服添加一个from值，在ChannelActivity里使用
-                            bundle.putString("from", "customer");
-                            IntentUtils.startActivity(getActivity(), ChannelV0Activity.class, bundle);
-                        }
-                    } else if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
-                        Conversation conversation =
-                                ConversationCacheUtils.getCustomerConversation(MyApplication.getInstance());
-                        if (conversation != null) {
-                            Bundle bundle = new Bundle();
-                            bundle.putSerializable(ConversationActivity.EXTRA_CONVERSATION, conversation);
-                            bundle.putString("from", "customer");
-                            IntentUtils.startActivity(getActivity(), ConversationActivity.class, bundle);
+                    Router router = Router.getInstance();
+                    if (router.getService(CommunicationService.class) != null) {
+                        CommunicationService service = router.getService(CommunicationService.class);
+                        if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
+                            String cid = service.getCustomerChannelV0(BaseApplication.getInstance());
+                            if (!StringUtils.isBlank(cid)) {
+                                Bundle bundle = new Bundle();
+                                bundle.putString("cid", cid);
+                                // 为区分来自云+客服添加一个from值，在ChannelActivity里使用
+                                bundle.putString("from", "customer");
+                                ARouter.getInstance().build(Constant.AROUTER_CLASS_APP_CHANNEL_V0).with(bundle).navigation(getActivity());
+                            }
+                        } else if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
+                            Conversation conversation = service.getCustomerConversation(BaseApplication.getInstance());
+                            if (conversation == null) {
+                                Bundle bundle = new Bundle();
+                                bundle.putSerializable(EXTRA_CONVERSATION, conversation);
+                                bundle.putString("from", "customer");
+                                ARouter.getInstance().build(Constant.AROUTER_CLASS_APP_CONVERSATION_V1).with(bundle).navigation(getActivity());
+                            }
                         }
                     }
-
                     recordUserClick("customservice");
                     break;
                 default:
@@ -218,7 +229,7 @@ public class MoreFragment extends BaseFragment {
             }
         } else {
             if (uri.startsWith("http")) {
-                UriUtils.openUrl(getActivity(), uri);
+                AppUtils.openUrl(getActivity(), uri);
             } else {
                 try {
                     Intent intent = Intent.parseUri(uri, Intent.URI_INTENT_SCHEME);
@@ -249,8 +260,8 @@ public class MoreFragment extends BaseFragment {
     }
 
     private void getUserCardMenu() {
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-            MineAPIService apiService = new MineAPIService(getActivity());
+        if (NetUtils.isNetworkConnected(BaseApplication.getInstance())) {
+            SettingAPIService apiService = new SettingAPIService(getActivity());
             apiService.setAPIInterface(new WebService());
             apiService.getUserCardMenus();
         }
@@ -315,12 +326,13 @@ public class MoreFragment extends BaseFragment {
                 ImageView photoImg = convertView.findViewById(R.id.iv_photo);
                 TextView nameText = convertView.findViewById(R.id.tv_name);
                 TextView enterpriseText = convertView.findViewById(R.id.tv_enterprise);
-                String photoUri = APIUri.getUserIconUrl(getActivity(), BaseApplication.getInstance().getUid());
+                String photoUri = BaseModuleApiUri.getUserPhoto(BaseApplication.getInstance(), BaseApplication.getInstance().getUid());
+                //String photoUri = APIUri.getUserIconUrl(getActivity(), BaseApplication.getInstance().getUid());
                 ImageDisplayUtils.getInstance().displayImage(photoImg, photoUri, R.drawable.icon_photo_default);
                 String userName =
                         PreferencesUtils.getString(getActivity(), "userRealName", getString(R.string.not_set));
                 nameText.setText(userName);
-                enterpriseText.setText(BaseApplication.getInstance().getCurrentEnterprise().getName());
+                enterpriseText.setText(BaseApplication.getInstance().getCurrentEnterprise() != null ? BaseApplication.getInstance().getCurrentEnterprise().getName() : "");
                 String UserCardMenus = PreferencesByUserAndTanentUtils.getString(BaseApplication.getInstance(), Constant.PREF_MINE_USER_MENUS, "");
                 GetUserCardMenusResult getUserCardMenusResult = new GetUserCardMenusResult(UserCardMenus);
                 final List<MineLayoutItem> mineLayoutItemList = getUserCardMenusResult.getMineLayoutItemList();
@@ -418,16 +430,16 @@ public class MoreFragment extends BaseFragment {
     private class MyClickListener implements View.OnClickListener {
         @Override
         public void onClick(View view) {
-            switch (view.getId()) {
-                case R.id.tv_enterprise:
-                    IntentUtils.startActivity(getActivity(), EnterpriseSwitchActivity.class);
-                    break;
-                case R.id.ll_my_info:
-                    Intent intent = new Intent();
-                    intent.setClass(getActivity(), MyInfoActivity.class);
-                    startActivityForResult(intent, REQUEST_CODE_UPDATE_USER_PHOTO);
-                    recordUserClick("profile");
-                    break;
+            int i = view.getId();
+            if (i == R.id.tv_enterprise) {
+                IntentUtils.startActivity(getActivity(), EnterpriseSwitchActivity.class);
+
+            } else if (i == R.id.ll_my_info) {
+                Intent intent = new Intent();
+                intent.setClass(getActivity(), MyInfoActivity.class);
+                startActivityForResult(intent, REQUEST_CODE_UPDATE_USER_PHOTO);
+                recordUserClick("profile");
+
             }
         }
     }

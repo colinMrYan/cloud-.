@@ -1,4 +1,5 @@
-package com.inspur.emmcloud.setting.bean;
+package com.inspur.emmcloud.bean.system;
+
 
 import com.facebook.react.bridge.WritableNativeArray;
 import com.facebook.react.bridge.WritableNativeMap;

@@ -4,11 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.push.PushManagerUtils;
 import com.inspur.emmcloud.basemodule.util.AppTabUtils;
+import com.inspur.emmcloud.bean.chat.Channel;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.componentservice.communication.CommunicationService;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
@@ -24,6 +27,8 @@ import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.MessageSendManager;
 import com.inspur.emmcloud.util.privates.NotifyUtil;
 import com.inspur.emmcloud.util.privates.VoiceCommunicationManager;
+import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 
 import org.json.JSONArray;
 
@@ -45,6 +50,12 @@ public class CommunicationServiceImpl implements CommunicationService {
     @Override
     public void sendAppStatus() {
         WebSocketPush.getInstance().sendAppStatus();
+    }
+
+    @Override
+    public void sendAppStatus(String AppState) {
+        WSAPIService.getInstance().sendAppStatus(AppState);
+        //  WebSocketPush.getInstance().sendAppStatus(AppState);
     }
 
     @Override
@@ -138,7 +149,8 @@ public class CommunicationServiceImpl implements CommunicationService {
 
     @Override
     public void startNetWorkStateActivity(Activity activity) {
-        IntentUtils.startActivity(activity, NetWorkStateDetailActivity.class);
+        ARouter.getInstance().build(Constant.AROUTER_CLASS_APP_NETWORK_DETAIL).navigation(activity);
+        //  IntentUtils.startActivity(activity, NetWorkStateDetailActivity.class);
     }
 
     @Override
@@ -151,4 +163,18 @@ public class CommunicationServiceImpl implements CommunicationService {
         return APIUri.getUserIconUrl(BaseApplication.getInstance(), contactUser.getId());
     }
 
+    @Override
+    public String getCustomerChannelV0(Context context) {
+        Channel customerChannel = ChannelCacheUtils.getCustomerChannel(context);
+        if (customerChannel != null) {
+            return customerChannel.getCid();
+        } else {
+            return "";
+        }
+    }
+
+    @Override
+    public Conversation getCustomerConversation(Context context) {
+        return ConversationCacheUtils.getCustomerConversation(context);
+    }
 }

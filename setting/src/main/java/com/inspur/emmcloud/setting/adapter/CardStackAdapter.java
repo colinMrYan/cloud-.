@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.setting.R;
 import com.inspur.emmcloud.setting.bean.CardPackageBean;
 import com.inspur.emmcloud.setting.widget.cardstack.RxAdapterStack;
 import com.inspur.emmcloud.setting.widget.cardstack.RxCardStackView;
@@ -27,13 +28,12 @@ public class CardStackAdapter extends RxAdapterStack<CardPackageBean> {
     @Override
     protected RxCardStackView.ViewHolder onCreateView(ViewGroup parent, int viewType) {
         View view;
-        switch (viewType) {
-            case R.layout.list_card_item:
-                view = getLayoutInflater().inflate(R.layout.list_card_item, parent, false);
-                return new ColorItemViewHolder(view);
-            default:
-                view = getLayoutInflater().inflate(R.layout.list_card_item, parent, false);
-                return new ColorItemViewHolder(view);
+        if (viewType == R.layout.list_card_item) {
+            view = getLayoutInflater().inflate(R.layout.list_card_item, parent, false);
+            return new ColorItemViewHolder(view);
+        } else {
+            view = getLayoutInflater().inflate(R.layout.list_card_item, parent, false);
+            return new ColorItemViewHolder(view);
         }
     }
 

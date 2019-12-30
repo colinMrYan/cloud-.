@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.baselib.router.Router;
@@ -20,6 +21,8 @@ import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.componentservice.app.AppService;
 import com.inspur.emmcloud.componentservice.app.CommonCallBack;
+import com.inspur.emmcloud.setting.R;
+import com.inspur.emmcloud.setting.R2;
 import com.inspur.emmcloud.setting.adapter.SettingMyViewPagerAdapter;
 
 import java.util.ArrayList;
@@ -31,9 +34,10 @@ import butterknife.ButterKnife;
 /**
  * 功能介绍页面 com.inspur.emmcloud.ui.GuideActivity
  */
+@Route(path = Constant.AROUTER_CLASS_SETTING_GUIDE)
 public class GuideActivity extends BaseActivity {
 
-    @BindView(R.id.viewpager)
+    @BindView(R2.id.viewpager)
     ViewPager viewPager;
     private List<View> guideViewList = new ArrayList<>();
 

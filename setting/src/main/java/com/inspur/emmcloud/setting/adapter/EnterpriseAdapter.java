@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.Enterprise;
+import com.inspur.emmcloud.setting.R;
+import com.inspur.emmcloud.setting.R2;
 
 import java.util.List;
 
@@ -65,9 +67,9 @@ public class EnterpriseAdapter extends BaseAdapter {
     }
 
     public class Holder {
-        @BindView(R.id.iv_select)
+        @BindView(R2.id.iv_select)
         ImageView selectImg;
-        @BindView(R.id.tv_name)
+        @BindView(R2.id.tv_name)
         TextView enterpriseName;
 
         public Holder(View view) {

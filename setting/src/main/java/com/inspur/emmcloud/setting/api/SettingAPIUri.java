@@ -141,4 +141,15 @@ public class SettingAPIUri {
         return WebServiceRouterManager.getInstance().getClusterEmm() + "api/sys/v6.0/config/UserCardMenus";
     }
 
+    /**
+     * 存储app配置url
+     *
+     * @param key
+     * @return
+     */
+    public static String seetingSaveAppConfigUrl(String key) {
+        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/sys/v6.0/config/" + key;
+    }
+
+
 }

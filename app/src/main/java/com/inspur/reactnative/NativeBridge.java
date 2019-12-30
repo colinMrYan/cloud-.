@@ -24,7 +24,7 @@ import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.bean.Enterprise;
-import com.inspur.emmcloud.bean.mine.GetMyInfoResultWithoutSerializable;
+import com.inspur.emmcloud.bean.system.GetMyInfoResultWithoutSerializable;
 import com.inspur.emmcloud.componentservice.communication.SearchModel;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;

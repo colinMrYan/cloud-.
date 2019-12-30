@@ -20,6 +20,7 @@ import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.CheckingNetStateUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.setting.R;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -264,24 +265,22 @@ public class NetWorkStateDetailActivity extends BaseActivity {
     }
 
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.ibt_back:
-                finish();
-                break;
-            case R.id.rl_net_error_fix:
-                IntentUtils.startActivity(this, NetHardConnectCheckActivity.class);
-                break;
-            case R.id.rl_portal_tip:
-                String activityName = getResources().getString(R.string.net_network_authentication);
-                if (PortalUrl != null && PortalUrl != "") {
-                    //  UriUtils.openUrl(this, PortalUrl, activityName,true);
-                    AppUtils.openUrl(this, PortalUrl, activityName, true);
-                }
-                break;
-            case R.id.rl_checking_dns_state:
-                break;
-            default:
-                break;
+        int i = v.getId();
+        if (i == R.id.ibt_back) {
+            finish();
+
+        } else if (i == R.id.rl_net_error_fix) {
+            IntentUtils.startActivity(this, NetHardConnectCheckActivity.class);
+
+        } else if (i == R.id.rl_portal_tip) {
+            String activityName = getResources().getString(R.string.net_network_authentication);
+            if (PortalUrl != null && PortalUrl != "") {
+                //  UriUtils.openUrl(this, PortalUrl, activityName,true);
+                AppUtils.openUrl(this, PortalUrl, activityName, true);
+            }
+
+        } else if (i == R.id.rl_checking_dns_state) {
+        } else {
         }
     }
 

@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -122,6 +123,7 @@ import java.util.Map;
 
 import butterknife.BindView;
 
+@Route(path = Constant.AROUTER_CLASS_APP_CONVERSATION_V1)
 public class ConversationActivity extends ConversationBaseActivity {
 
     public static final String CLOUD_PLUS_CHANNEL_ID = "channel_id";
@@ -168,9 +170,6 @@ public class ConversationActivity extends ConversationBaseActivity {
     private PopupWindowList mPopupWindowList; //仿微信长按处理
 
     private UIMessage backUiMessage = null;
-
-
-
 
 
     @Override

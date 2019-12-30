@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.OverScroller;
 
-import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.setting.R;
 
 import java.util.ArrayList;
 import java.util.List;

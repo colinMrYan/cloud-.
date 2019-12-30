@@ -4,8 +4,8 @@ import android.content.Intent;
 import android.provider.Settings;
 import android.view.View;
 
-import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.setting.R;
 
 /**
  * Created by libaochao on 2018/11/23.
@@ -24,13 +24,13 @@ public class NetHardConnectCheckActivity extends BaseActivity {
     }
 
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.ibt_back:
-                finish();
-                break;
-            case R.id.tv_show_system_hard_setting:
-                startActivity(new Intent(Settings.ACTION_SETTINGS));
-                break;
+        int i = v.getId();
+        if (i == R.id.ibt_back) {
+            finish();
+
+        } else if (i == R.id.tv_show_system_hard_setting) {
+            startActivity(new Intent(Settings.ACTION_SETTINGS));
+
         }
     }
 

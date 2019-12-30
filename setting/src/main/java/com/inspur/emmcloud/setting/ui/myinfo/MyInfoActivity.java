@@ -30,6 +30,8 @@ import com.inspur.emmcloud.basemodule.util.imagepicker.ui.ImageGridActivity;
 import com.inspur.emmcloud.basemodule.util.imagepicker.view.CropImageView;
 import com.inspur.emmcloud.componentservice.contact.ContactService;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
+import com.inspur.emmcloud.setting.R;
+import com.inspur.emmcloud.setting.R2;
 import com.inspur.emmcloud.setting.api.SettingAPIInterfaceImpl;
 import com.inspur.emmcloud.setting.api.SettingAPIService;
 import com.inspur.emmcloud.setting.bean.GetUploadMyHeadResult;
@@ -46,33 +48,33 @@ public class MyInfoActivity extends BaseActivity {
     private static final int REQUEST_CODE_SELECT_IMG = 1;
     private static final int USER_INFO_CHANGE = 10;
 
-    @BindView(R.id.iv_photo)
+    @BindView(R2.id.iv_photo)
     ImageView photoImg;
-    @BindView(R.id.tv_name)
+    @BindView(R2.id.tv_name)
     TextView nameText;
-    @BindView(R.id.rl_employee_no)
+    @BindView(R2.id.rl_employee_no)
     RelativeLayout employeeNOLayout;
-    @BindView(R.id.rl_office_phone)
+    @BindView(R2.id.rl_office_phone)
     RelativeLayout officePhoneLayout;
-    @BindView(R.id.rl_phone)
+    @BindView(R2.id.rl_phone)
     RelativeLayout phoneLayout;
-    @BindView(R.id.rl_enterprise)
+    @BindView(R2.id.rl_enterprise)
     RelativeLayout enterpriseLayout;
-    @BindView(R.id.rl_mail)
+    @BindView(R2.id.rl_mail)
     RelativeLayout mailLayout;
-    @BindView(R.id.rl_photo)
+    @BindView(R2.id.rl_photo)
     RelativeLayout photoLayout;
-    @BindView(R.id.tv_employee_no)
+    @BindView(R2.id.tv_employee_no)
     TextView employeeNOText;
-    @BindView(R.id.tv_office_phone)
+    @BindView(R2.id.tv_office_phone)
     TextView officePhoneText;
-    @BindView(R.id.tv_phone)
+    @BindView(R2.id.tv_phone)
     TextView phoneText;
-    @BindView(R.id.tv_enterprise)
+    @BindView(R2.id.tv_enterprise)
     TextView enterpriseText;
-    @BindView(R.id.tv_mail)
+    @BindView(R2.id.tv_mail)
     TextView mailText;
-    @BindView(R.id.tv_department)
+    @BindView(R2.id.tv_department)
     TextView departmentText;
 
     private SettingAPIService apiService;
@@ -126,21 +128,17 @@ public class MyInfoActivity extends BaseActivity {
 
     public void onClick(View v) {
         // TODO Auto-generated method stub
-        switch (v.getId()) {
-            case R.id.iv_photo:
-                if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-                    initImagePicker();
-                    Intent intent = new Intent(getApplicationContext(), ImageGridActivity.class);
-                    startActivityForResult(intent, REQUEST_CODE_SELECT_IMG);
-                } else {
-                    ToastUtils.show(MyInfoActivity.this, getString(R.string.user_no_storage));
-                }
-                break;
-            case R.id.ibt_back:
-                finishActivity();
-                break;
-            default:
-                break;
+        int id = v.getId();
+        if (id == R.id.iv_photo) {
+            if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+                initImagePicker();
+                Intent intent = new Intent(getApplicationContext(), ImageGridActivity.class);
+                startActivityForResult(intent, REQUEST_CODE_SELECT_IMG);
+            } else {
+                ToastUtils.show(MyInfoActivity.this, getString(R.string.user_no_storage));
+            }
+        } else if (id == R.id.ibt_back) {
+            finishActivity();
         }
     }
 

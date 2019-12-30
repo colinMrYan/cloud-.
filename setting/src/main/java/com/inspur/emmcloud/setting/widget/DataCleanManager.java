@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.util.privates;
+package com.inspur.emmcloud.setting.widget;
 
 import android.content.Context;
 import android.os.Environment;

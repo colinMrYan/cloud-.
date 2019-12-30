@@ -6,19 +6,20 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 
-import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.setting.R;
+import com.inspur.emmcloud.setting.R2;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class FaceSettingActivity extends BaseActivity {
 
-    @BindView(R.id.switch_view_setting_safe_start_guesture)
+    @BindView(R2.id.switch_view_setting_safe_start_guesture)
     SwitchCompat openFaceVertifyBtn;
-    @BindView(R.id.rl_setting_safe_reset_face)
+    @BindView(R2.id.rl_setting_safe_reset_face)
     RelativeLayout faceRelativeLayout;
 
     @Override
@@ -65,15 +66,11 @@ public class FaceSettingActivity extends BaseActivity {
     }
 
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.ibt_back:
-                finish();
-                break;
-            case R.id.rl_setting_safe_reset_face:
-                intentFaceVerifyActivity(true);
-                break;
-            default:
-                break;
+        int id = view.getId();
+        if (id == R.id.ibt_back) {
+            finish();
+        } else if (id == R.id.rl_setting_safe_reset_face) {
+            intentFaceVerifyActivity(true);
         }
     }
 }

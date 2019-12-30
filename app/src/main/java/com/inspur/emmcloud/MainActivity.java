@@ -32,7 +32,6 @@ import com.inspur.emmcloud.bean.system.SplashDefaultBean;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
 import com.inspur.emmcloud.componentservice.login.LoginService;
 import com.inspur.emmcloud.ui.IndexActivity;
-import com.inspur.emmcloud.ui.mine.setting.GuideActivity;
 import com.inspur.emmcloud.util.privates.NotificationUpgradeUtils;
 import com.inspur.emmcloud.util.privates.SplashPageUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -271,8 +270,8 @@ public class MainActivity extends BaseActivity {
             Boolean isFirst = PreferencesUtils.getBoolean(
                     MainActivity.this, "isFirst", true);
             if (AppUtils.isAppHasUpgraded(getApplicationContext()) || isFirst) {
-                IntentUtils.startActivity(MainActivity.this,
-                        GuideActivity.class, true);
+                ARouter.getInstance().build(Constant.AROUTER_CLASS_SETTING_GUIDE).navigation(MainActivity.this);
+                finish();
             } else {
                 String accessToken = PreferencesUtils.getString(MainActivity.this,
                         "accessToken", "");

@@ -12,7 +12,7 @@ import android.view.HapticFeedbackConstants;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.setting.R;
 
 import java.util.ArrayList;
 import java.util.List;

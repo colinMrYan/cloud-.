@@ -7,6 +7,10 @@ import android.graphics.Paint.Style;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.inspur.emmcloud.setting.R;
+
+import java.util.List;
+
 
 /**
  * indicator(three rows and three columns)

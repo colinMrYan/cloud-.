@@ -5,6 +5,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.setting.R;
+import com.inspur.emmcloud.setting.R2;
 import com.inspur.emmcloud.setting.adapter.CardPackageAdapter;
 import com.inspur.emmcloud.setting.api.OnCardPackageClickListener;
 import com.inspur.emmcloud.setting.bean.CardPackageBean;
@@ -18,7 +20,7 @@ import butterknife.ButterKnife;
  */
 public class CardPackageSetActivity extends BaseActivity {
 
-    @BindView(R.id.recyclerview_card_package)
+    @BindView(R2.id.recyclerview_card_package)
     RecyclerView cardPackageRecyclerView;
     private CardPackageAdapter cardPackageAdapter;
 
@@ -52,11 +54,10 @@ public class CardPackageSetActivity extends BaseActivity {
     }
 
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.ibt_back:
-                setResult(RESULT_OK);
-                finish();
-                break;
+        int id = view.getId();
+        if (id == R.id.ibt_back) {
+            setResult(RESULT_OK);
+            finish();
         }
     }
 

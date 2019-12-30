@@ -15,6 +15,7 @@ import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
 import com.inspur.emmcloud.baselib.widget.dialogs.MyDialog;
+import com.inspur.emmcloud.basemodule.api.BaseModuleApiUri;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
@@ -22,6 +23,8 @@ import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.setting.R;
+import com.inspur.emmcloud.setting.R2;
 import com.inspur.emmcloud.setting.widget.LockPatternUtil;
 import com.inspur.emmcloud.setting.widget.LockPatternView;
 import com.wei.android.lib.fingerprintidentify.FingerprintIdentify;
@@ -46,13 +49,13 @@ public class GestureLoginActivity extends BaseActivity {
     public final static String GESTURE_CODE_CHANGE = "gesture_code_change";
     private static final int GESTURE_CODE_TIMES = 5;
     private static final long DELAYTIME = 600l;
-    @BindView(R.id.lockPatternView)
+    @BindView(R2.id.lockPatternView)
     LockPatternView lockPatternView;
-    @BindView(R.id.gestrue_message_text)
+    @BindView(R2.id.gestrue_message_text)
     TextView gestureMessage;
-    @BindView(R.id.forget_gesture_btn)
+    @BindView(R2.id.forget_gesture_btn)
     Button forgetGestureBtn;
-    @BindView(R.id.btn_use_finger_print)
+    @BindView(R2.id.btn_use_finger_print)
     Button fingerPrintBtn;
     private String gesturePassword;
     private boolean isLogin = false;
@@ -140,7 +143,7 @@ public class GestureLoginActivity extends BaseActivity {
                 isLogin = true;
             }
         }
-        String userHeadImgUri = APIUri.getChannelImgUrl(GestureLoginActivity.this, ((MyApplication) getApplication()).getUid());
+        String userHeadImgUri = BaseModuleApiUri.getUserPhoto(GestureLoginActivity.this, ((BaseApplication) getApplication()).getUid());
         CircleTextImageView circleImageView = findViewById(R.id.gesture_login_user_head_img);
         ImageDisplayUtils.getInstance().displayImage(circleImageView,
                 userHeadImgUri, R.drawable.icon_person_default);
@@ -313,7 +316,7 @@ public class GestureLoginActivity extends BaseActivity {
                 lockPatternView.postClearPatternRunnable(DELAYTIME);
                 if ((GESTURE_CODE_TIMES - errorTime) == 0) {
                     clearGestureInfo();
-                    ((MyApplication) getApplication()).signout();
+                    ((BaseApplication) getApplication()).signout();
                 }
                 break;
             case CORRECT:
@@ -325,16 +328,14 @@ public class GestureLoginActivity extends BaseActivity {
     /**
      * 忘记手势密码（去账号登录界面）
      */
-    @OnClick({R.id.forget_gesture_btn, R.id.btn_use_finger_print})
+    @OnClick({R2.id.forget_gesture_btn, R2.id.btn_use_finger_print})
     public void forgetGesturePasswrod(View view) {
-        switch (view.getId()) {
-            case R.id.forget_gesture_btn:
-                clearGestureInfo();
-                ((BaseApplication) getApplication()).signout();
-                break;
-            case R.id.btn_use_finger_print:
-                initFingerPrint();
-                break;
+        int i = view.getId();
+        if (i == R.id.forget_gesture_btn) {
+            clearGestureInfo();
+            ((BaseApplication) getApplication()).signout();
+        } else if (i == R.id.btn_use_finger_print) {
+            initFingerPrint();
         }
     }
 

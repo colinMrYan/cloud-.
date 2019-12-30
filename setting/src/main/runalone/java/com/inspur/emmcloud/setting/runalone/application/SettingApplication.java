@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.schedule.runalone.application;
+package com.inspur.emmcloud.setting.runalone.application;
 
 
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
@@ -13,6 +13,6 @@ public class SettingApplication extends BaseApplication {
 
     @Override
     public String getIntentClassRouterAfterLogin() {
-        return Constant.AROUTER_CLASS_SCHEDLE_TEST;
+        return Constant.AROUTER_CLASS_SETTING_TEST;
     }
 }

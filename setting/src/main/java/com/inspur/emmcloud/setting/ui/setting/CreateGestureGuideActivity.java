@@ -4,8 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.setting.R;
+import com.inspur.emmcloud.setting.R2;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -34,19 +35,15 @@ public class CreateGestureGuideActivity extends BaseActivity {
         return R.layout.activity_create_gesture_guide;
     }
 
-    @OnClick(R.id.bt_create_gesture)
+    @OnClick(R2.id.bt_create_gesture)
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.ibt_back:
-                finish();
-                break;
-            case R.id.bt_create_gesture:
-                Intent intent = new Intent();
-                intent.setClass(CreateGestureGuideActivity.this, CreateGestureActivity.class);
-                startActivity(intent);
-                break;
-            default:
-                break;
+        int id = view.getId();
+        if (id == R.id.ibt_back) {
+            finish();
+        } else if (id == R.id.bt_create_gesture) {
+            Intent intent = new Intent();
+            intent.setClass(CreateGestureGuideActivity.this, CreateGestureActivity.class);
+            startActivity(intent);
         }
     }
 

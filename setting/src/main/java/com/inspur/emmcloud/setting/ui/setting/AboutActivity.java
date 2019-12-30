@@ -8,7 +8,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
@@ -22,6 +21,8 @@ import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.componentservice.app.AppService;
+import com.inspur.emmcloud.setting.R;
+import com.inspur.emmcloud.setting.R2;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,13 +37,13 @@ public class AboutActivity extends BaseActivity {
     private static final int NO_NEED_UPGRADE = 10;
     private static final int UPGRADE_FAIL = 11;
     private static final int DONOT_UPGRADE = 12;
-    @BindView(R.id.tv_app_version)
+    @BindView(R2.id.tv_app_version)
     TextView appVersionText;
-    @BindView(R.id.iv_logo)
+    @BindView(R2.id.iv_logo)
     ImageView logoImg;
-    @BindView(R.id.rl_protocol)
+    @BindView(R2.id.rl_protocol)
     RelativeLayout protocolLayout;
-    @BindView(R.id.rl_invite_friends)
+    @BindView(R2.id.rl_invite_friends)
     RelativeLayout inviteFriendsLayout;
     private Handler handler;
 
@@ -62,7 +63,7 @@ public class AboutActivity extends BaseActivity {
         return R.layout.activity_about;
     }
 
-    @OnLongClick(R.id.iv_logo)
+    @OnLongClick(R2.id.iv_logo)
     public boolean onLongClick(View v) {
         new ActionSheetDialog.ActionListSheetBuilder(AboutActivity.this)
 //						.setTitle(getString(R.string.current_system)+"-->"+ (StringUtils.isBlank(enterpriseName)?getString(R.string.cluster_default):enterpriseName))
@@ -90,30 +91,23 @@ public class AboutActivity extends BaseActivity {
 
     public void onClick(View v) {
         // TODO Auto-generated method stub
-        switch (v.getId()) {
-            case R.id.ibt_back:
-                finish();
-                break;
-            case R.id.rl_welcome:
-                Bundle bundle = new Bundle();
-                bundle.putString("from", "about");
-                IntentUtils.startActivity(AboutActivity.this, GuideActivity.class,
-                        bundle);
-                break;
-            case R.id.rl_protocol:
-                IntentUtils.startActivity(AboutActivity.this, ServiceTermActivity.class);
-                break;
-            case R.id.rl_check_update:
-                AppService appService = Router.getInstance().getService(AppService.class);
-                if (appService != null) {
-                    appService.checkAppUpdate(true, handler);
-                }
-                break;
-            case R.id.rl_invite_friends:
-                IntentUtils.startActivity(AboutActivity.this, RecommendAppActivity.class);
-                break;
-            default:
-                break;
+        int id = v.getId();
+        if (id == R.id.ibt_back) {
+            finish();
+        } else if (id == R.id.rl_welcome) {
+            Bundle bundle = new Bundle();
+            bundle.putString("from", "about");
+            IntentUtils.startActivity(AboutActivity.this, GuideActivity.class,
+                    bundle);
+        } else if (id == R.id.rl_protocol) {
+            IntentUtils.startActivity(AboutActivity.this, ServiceTermActivity.class);
+        } else if (id == R.id.rl_check_update) {
+            AppService appService = Router.getInstance().getService(AppService.class);
+            if (appService != null) {
+                appService.checkAppUpdate(true, handler);
+            }
+        } else if (id == R.id.rl_invite_friends) {
+            IntentUtils.startActivity(AboutActivity.this, RecommendAppActivity.class);
         }
     }
 
