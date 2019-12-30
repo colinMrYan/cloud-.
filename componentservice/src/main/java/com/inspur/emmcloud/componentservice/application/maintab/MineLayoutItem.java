@@ -66,20 +66,23 @@ public class MineLayoutItem {
     public String getTitle(String language) {
         String titleByLanguage = "";
         if (!StringUtils.isBlank(title)) {
-            switch (language) {
-                case "zh-Hant":
-                    titleByLanguage = JSONUtils.getString(title, "zh-Hans", "");
-                    break;
-                case "en-US":
-                case "en":
-                    titleByLanguage = JSONUtils.getString(title, "en-US", "");
-                    break;
-                default:
-                    titleByLanguage = JSONUtils.getString(title, "zh-Hans", "");
-                    break;
-
+            if (JSONUtils.isJSONObject(title)) {
+                switch (language) {
+                    case "zh-Hant":
+                        titleByLanguage = JSONUtils.getString(title, "zh-Hans", "");
+                        break;
+                    case "en-US":
+                    case "en":
+                        titleByLanguage = JSONUtils.getString(title, "en-US", "");
+                        break;
+                    default:
+                        titleByLanguage = JSONUtils.getString(title, "zh-Hans", "");
+                        break;
+                }
+            } else {
+                titleByLanguage = title;
             }
-        }
+            }
         return titleByLanguage;
     }
 
