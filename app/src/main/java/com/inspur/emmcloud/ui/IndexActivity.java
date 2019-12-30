@@ -7,6 +7,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -79,7 +80,7 @@ import io.reactivex.schedulers.Schedulers;
  *
  * @author Administrator
  */
-
+@Route(path = Constant.AROUTER_CLASS_APP_INDEX)
 public class IndexActivity extends IndexBaseActivity {
     private static final int SYNC_ALL_BASE_DATA_SUCCESS = 0;
     private static final int RELOAD_WEB = 3;

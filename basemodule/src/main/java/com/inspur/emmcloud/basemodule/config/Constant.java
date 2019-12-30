@@ -283,8 +283,8 @@ public class Constant {
     public static final String AROUTER_CLASS_SETTING_SERVICE_NO_PERMISSION = "/setting/NoPermissionDialogActivity";
 
     public static final String AROUTER_CLASS_APP_INDEX = "/app/IndexActivity";
-    public static final String AROUTER_CLASS_APP_NETWORK_DETAIL = "/app/NetWorkStateDetailActivity";
-    public static final String AROUTER_CLASS_APP_WEB_ERROR_DETAIL = "/app/WebViewNetStateDetailActivity";
+    public static final String AROUTER_CLASS_APP_NETWORK_DETAIL = "/setting/NetWorkStateDetailActivity";
+    public static final String AROUTER_CLASS_APP_WEB_ERROR_DETAIL = "/setting/WebViewNetStateDetailActivity";
     public static final String AROUTER_CLASS_APPCENTER_REACT_NATIVE = "/app/ReactNativeAppActivity";
 
     public static final String AROUTER_CLASS_AROUTER_DEGRADE = "/aRouter/degrade";

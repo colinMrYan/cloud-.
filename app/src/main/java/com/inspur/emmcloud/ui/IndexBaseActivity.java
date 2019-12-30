@@ -22,7 +22,6 @@ import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TextView;
 
-import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -74,7 +73,7 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-@Route(path = Constant.AROUTER_CLASS_APP_INDEX)
+
 public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChangeListener, OnTouchListener {
     public static final String EXTRA_FORCE_SET = "extra_force_set";
     private static final int REQUEST_CREATE_GUESTURE = 1;

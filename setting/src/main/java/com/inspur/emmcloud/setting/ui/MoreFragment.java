@@ -393,8 +393,6 @@ public class MoreFragment extends BaseFragment {
                 }
                 userCardMenuLayout.addView(menuImgBtn);
             }
-
-
         }
 
         private String getIconUrl(String icon) {
