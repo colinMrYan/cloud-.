@@ -14,7 +14,6 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.bean.chat.PersonDto;
@@ -82,7 +81,6 @@ public class ChannelMemberListAdapter extends BaseAdapter implements SectionInde
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        LogUtils.jasonDebug("position-==-" + position);
         ViewHolder holder = null;
         if (convertView == null) {
             inflater = (LayoutInflater) mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
