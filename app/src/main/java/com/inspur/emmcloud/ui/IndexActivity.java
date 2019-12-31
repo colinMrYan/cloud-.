@@ -47,7 +47,6 @@ import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.componentservice.schedule.ScheduleService;
 import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.push.WebSocketPush;
-import com.inspur.emmcloud.service.CoreService;
 import com.inspur.emmcloud.service.LocationService;
 import com.inspur.emmcloud.util.privates.AppConfigUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
@@ -180,20 +179,20 @@ public class IndexActivity extends IndexBaseActivity {
     private void startService() {
         //app应用行为分析上传
         new AppPVManager().uploadPV();
-        startCoreService();
+//        startCoreService();
         startLocationService();
     }
 
-    /**
-     * 打开保活服务
-     */
-    private void startCoreService() {
-        if (AppUtils.getSDKVersionNumber() < 26) {
-            Intent intent = new Intent();
-            intent.setClass(this, CoreService.class);
-            startService(intent);
-        }
-    }
+//    /**
+//     * 打开保活服务
+//     */
+//    private void startCoreService() {
+//        if (AppUtils.getSDKVersionNumber() < 26) {
+//            Intent intent = new Intent();
+//            intent.setClass(this, CoreService.class);
+//            startService(intent);
+//        }
+//    }
 
 
     /**

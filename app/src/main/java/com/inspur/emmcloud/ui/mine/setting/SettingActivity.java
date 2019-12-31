@@ -51,7 +51,6 @@ import com.inspur.emmcloud.bean.system.AppConfig;
 import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
 import com.inspur.emmcloud.bean.system.navibar.NaviBarScheme;
 import com.inspur.emmcloud.componentservice.application.ApplicationService;
-import com.inspur.emmcloud.service.CoreService;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.chat.DisplayMediaVoiceMsg;
 import com.inspur.emmcloud.util.privates.DataCleanManager;
@@ -443,18 +442,18 @@ public class SettingActivity extends BaseActivity {
                         } else {
                             MyApplication.getInstance().signout();
                         }
-                        stopAppService();
+//                        stopAppService();
                     }
                 })
                 .show();
     }
 
-    /**
-     * 关闭服务
-     */
-    private void stopAppService() {
-        stopService(new Intent(getApplicationContext(), CoreService.class));
-    }
+//    /**
+//     * 关闭服务
+//     */
+//    private void stopAppService() {
+//        stopService(new Intent(getApplicationContext(), CoreService.class));
+//    }
 
 
     /**
@@ -560,7 +559,7 @@ public class SettingActivity extends BaseActivity {
             EventBus.getDefault().unregister(this);
             LoadingDialog.dimissDlg(loadingDlg);
             MyApplication.getInstance().signout();
-            stopAppService();
+//            stopAppService();
         }
 
     }
