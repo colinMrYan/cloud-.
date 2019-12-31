@@ -12,10 +12,14 @@ import com.inspur.emmcloud.componentservice.communication.CommunicationService;
 
 /**
  * 小米6上测试，来电，去电，接听action都是：android.intent.action.PHONE_STATE
+ * 此广播需要授予android.permission.READ_PHONE_STATE,否则监听不到广播，如果有权限能监听到广播，以下代码有效
+ * 无权限接收不到广播则不关心系统电话对云+语音通话的影响
  * Created by: yufuchang
  * Date: 2019/11/29
  */
 public class EmmPhoneReceiver extends BroadcastReceiver {
+    //微信7.0.9语音通话中，有系统电话拨入，当系统电话接听时，挂断微信语音通话
+    //微信7.0.9语音通话中，给别人拨打系统电话，微信语音通话立即挂断
     @Override
     public void onReceive(Context context, Intent intent) {
         //如果是去电
