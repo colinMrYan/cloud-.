@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.web.plugin.amaplocation;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
@@ -9,9 +10,12 @@ import com.amap.api.location.AMapLocationListener;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
+import com.inspur.emmcloud.web.R;
 import com.inspur.emmcloud.web.plugin.ImpPlugin;
 
 import org.json.JSONException;
@@ -82,7 +86,27 @@ public class AmapLocateService extends ImpPlugin implements
         PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getFragmentContext(), Permissions.LOCATION, new PermissionRequestCallback() {
             @Override
             public void onPermissionRequestSuccess(List<String> permissions) {
-                startLocation();
+                if (AppUtils.isLocationEnabled(getActivity())) {
+                    startLocation();
+                } else {
+                    new CustomDialog.MessageDialogBuilder(getActivity())
+                            .setMessage(getActivity().getString(R.string.imp_location_enable, AppUtils.getAppName(getFragmentContext())))
+                            .setCancelable(false)
+                            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            })
+                            .setPositiveButton(R.string.go_setting, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    AppUtils.openLocationSetting(getActivity());
+                                    dialog.dismiss();
+                                }
+                            })
+                            .show();
+                }
             }
 
             @Override

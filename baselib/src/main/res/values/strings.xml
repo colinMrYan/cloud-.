@@ -157,6 +157,7 @@
     <string name="input_correct_emails">请输入正确的的电子邮箱地址</string>
     <string name="select_all">全选</string>
     <string name="skip">跳过</string>
+    <string name="go_setting">去设置</string>
 
 
     <!-- 新添加部分 -->
@@ -714,6 +715,7 @@
     <string name="news_font_middle">中</string>
     <string name="news_font_big_text">大</string>
     <string name="news_font_biggest_text">超大</string>
+    <string name="imp_location_enable">%1$s 不能确定你的位置，你可以通过以下操作提高定位精确度：在位置设置中打开GPS和无线网络</string>
 
     <!-- 审批页面 -->
     <string name="onekey_approval_text">审批</string>
