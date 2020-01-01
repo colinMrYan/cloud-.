@@ -31,7 +31,7 @@
     <string name="user_modify_user_info">修改信息</string>
     <string name="please_input_change">请输入修改</string>
 
-    <string name="not_set">未设置</string>
+
     <string name="user_worker_num">工号</string>
     <string name="phone_num">手机号</string>
     <string name="user_company_info">企业信息</string>
@@ -43,7 +43,7 @@
     <string name="feed_back_out_of_length">您输入的字数已经超过了限制</string>
 
     <string name="check_update_text">检查新版本</string>
-    <string name="app_is_lastest_version">当前已是最新版本</string>
+
     <string name="invite_friends_text">把云+推荐给朋友</string>
 
     <string name="setting_join_experience_plan">加入升级体验计划</string>

@@ -29,12 +29,12 @@
     <string name="resend_code">Resend(51)</string>
     <string name="user_modify_user_info">Modify user info</string>
     <string name="please_input_change">Please type change</string>
-    <string name="not_set">Not Set</string>
+
     <string name="user_worker_num">NO.</string>
     <string name="phone_num">Mobile number</string>
     <string name="user_company_info">Enterprise</string>
     <string name="check_update_text">Check New Version</string>
-    <string name="app_is_lastest_version">This is the lastest version</string>
+
 
     <string name="about_text">About</string>
     <string name="about_welcome_text">Welcome Page</string>

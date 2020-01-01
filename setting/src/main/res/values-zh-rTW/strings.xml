@@ -28,7 +28,7 @@
     <string name="resend_code">重新發送(51)</string>
     <string name="user_modify_user_info">修改資訊</string>
     <string name="please_input_change">請輸入修改</string>
-    <string name="not_set">未設置</string>
+
     <string name="user_worker_num">工號</string>
     <string name="phone_num">手機號</string>
     <string name="user_company_info">企業資訊</string>
@@ -42,7 +42,7 @@
 
 
     <string name="check_update_text">檢查新版本</string>
-    <string name="app_is_lastest_version">當前已是最新版本</string>
+
     <string name="invite_friends_text">把雲+推薦給朋友</string>
 
     <string name="setting_join_experience_plan">加入升級體驗計劃</string>
