@@ -23,14 +23,30 @@ public class EmmPhoneStateLinstener extends PhoneStateListener {
         //注意，方法必须写在super方法后面，否则incomingNumber无法获取到值，想获取到值仍然需要动态获取电话（接听或挂断电话、监听通话状态）。
         //此处只需要得到电话的忙闲状态，所以暂时不考虑获取以上权限，微信也没有获取此权限，推断微信应该也只得到了电话的忙闲状态
         super.onCallStateChanged(state, incomingNumber);
+        switch (state) {
+            case TelephonyManager.CALL_STATE_IDLE:
+                break;
+            case TelephonyManager.CALL_STATE_OFFHOOK:
+                Router router = Router.getInstance();
+                if (router.getService(CommunicationService.class) != null) {
+                    CommunicationService service = router.getService(CommunicationService.class);
+                    service.stopVoiceCommunication();
+                }
+                break;
+            case TelephonyManager.CALL_STATE_RINGING:
+                break;
+            default:
+                break;
+        }
+
         //如果电话不是空闲状态，就挂断云+语音通话
         //如果是空闲状态则此处不做处理，走后续云+语音通话逻辑
-        if (state != TelephonyManager.CALL_STATE_IDLE) {
-            Router router = Router.getInstance();
-            if (router.getService(CommunicationService.class) != null) {
-                CommunicationService service = router.getService(CommunicationService.class);
-                service.stopVoiceCommunication();
-            }
-        }
+//        if (state != TelephonyManager.CALL_STATE_IDLE) {
+//            Router router = Router.getInstance();
+//            if (router.getService(CommunicationService.class) != null) {
+//                CommunicationService service = router.getService(CommunicationService.class);
+//                service.stopVoiceCommunication();
+//            }
+//        }
     }
 }

@@ -591,42 +591,42 @@
         <service android:name=".service.CoreInnerService"></service>
         <service android:name=".service.VoiceHoldService" />
 
-        <receiver
-            android:name=".broadcastreceiver.ActionReceiver"
-            android:exported="true">
-            <!--网络改变-->
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-            </intent-filter>
+        <!--        <receiver-->
+        <!--            android:name=".broadcastreceiver.ActionReceiver"-->
+        <!--            android:exported="true">-->
+        <!--            &lt;!&ndash;网络改变&ndash;&gt;-->
+        <!--            <intent-filter>-->
+        <!--                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />-->
+        <!--            </intent-filter>-->
 
-            <!--屏幕点亮和熄灭   此种方式删除  采用动态注册-->
-            <!--<intent-filter>
-                <action android:name="android.intent.action.ACTION_SCREEN_OFF" />
-                <action android:name="android.intent.action.ACTION_SCREEN_ON" />
-            </intent-filter>-->
+        <!--            &lt;!&ndash;屏幕点亮和熄灭   此种方式删除  采用动态注册&ndash;&gt;-->
+        <!--            &lt;!&ndash;<intent-filter>-->
+        <!--                <action android:name="android.intent.action.ACTION_SCREEN_OFF" />-->
+        <!--                <action android:name="android.intent.action.ACTION_SCREEN_ON" />-->
+        <!--            </intent-filter>&ndash;&gt;-->
 
-            <!--屏幕解锁-->
-            <intent-filter>
-                <action android:name="android.intent.action.USER_PRESENT" />
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-            </intent-filter>
-            <!-- Optional -->
-            <!--安装卸载应用广播-->
-            <intent-filter>
-                <action android:name="android.intent.action.PACKAGE_ADDED" />
-                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+        <!--            &lt;!&ndash;屏幕解锁&ndash;&gt;-->
+        <!--            <intent-filter>-->
+        <!--                <action android:name="android.intent.action.USER_PRESENT" />-->
+        <!--                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />-->
+        <!--            </intent-filter>-->
+        <!--            &lt;!&ndash; Optional &ndash;&gt;-->
+        <!--            &lt;!&ndash;安装卸载应用广播&ndash;&gt;-->
+        <!--            <intent-filter>-->
+        <!--                <action android:name="android.intent.action.PACKAGE_ADDED" />-->
+        <!--                <action android:name="android.intent.action.PACKAGE_REMOVED" />-->
 
-                <data android:scheme="package" />
-            </intent-filter>
-            <!--闹钟广播，怎么用？-->
-            <intent-filter>
-                <action android:name="${applicationId}.TIMER_ACTION_REPEATING" />
-            </intent-filter>
-            <!--开机广播-->
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
+        <!--                <data android:scheme="package" />-->
+        <!--            </intent-filter>-->
+        <!--            &lt;!&ndash;闹钟广播，怎么用？&ndash;&gt;-->
+        <!--            <intent-filter>-->
+        <!--                <action android:name="${applicationId}.TIMER_ACTION_REPEATING" />-->
+        <!--            </intent-filter>-->
+        <!--            &lt;!&ndash;开机广播&ndash;&gt;-->
+        <!--            <intent-filter>-->
+        <!--                <action android:name="android.intent.action.BOOT_COMPLETED" />-->
+        <!--            </intent-filter>-->
+        <!--        </receiver>-->
 
         <receiver
             android:name=".broadcastreceiver.AppRegister"

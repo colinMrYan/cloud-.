@@ -30,7 +30,7 @@ public final class Permissions {
     public static final String WRITE_CALL_LOG = "android.permission.WRITE_CALL_LOG";
     public static final String ADD_VOICEMAIL = "com.android.voicemail.permission.ADD_VOICEMAIL";
     public static final String USE_SIP = "android.permission.USE_SIP";
-    public static final String PROCESS_OUTGOING_CALLS = "android.permission.PROCESS_OUTGOING_CALLS";
+//    public static final String PROCESS_OUTGOING_CALLS = "android.permission.PROCESS_OUTGOING_CALLS";
 
     public static final String BODY_SENSORS = "android.permission.BODY_SENSORS";
 
@@ -57,7 +57,8 @@ public final class Permissions {
             Permissions.WRITE_CALL_LOG,
             Permissions.ADD_VOICEMAIL,
             Permissions.USE_SIP,
-            Permissions.PROCESS_OUTGOING_CALLS};
+//            Permissions.PROCESS_OUTGOING_CALLS
+    };
     public static final String[] SENSORS = new String[]{Permissions.BODY_SENSORS};
     public static final String[] SMS = new String[]{
             Permissions.SEND_SMS,
@@ -69,9 +70,9 @@ public final class Permissions {
             Permissions.READ_EXTERNAL_STORAGE,
             Permissions.WRITE_EXTERNAL_STORAGE};
 
-    public static final String[] CALENDAR = new String[]{
-            Permissions.READ_CALENDAR, Permissions.WRITE_CALENDAR
-    };
+//    public static final String[] CALENDAR = new String[]{
+//            Permissions.READ_CALENDAR, Permissions.WRITE_CALENDAR
+//    };
 
     /**
      * Turn permissions into text.
@@ -125,13 +126,13 @@ public final class Permissions {
                 case READ_CALL_LOG:
                 case WRITE_CALL_LOG:
                 case USE_SIP:
-                case PROCESS_OUTGOING_CALLS: {
-                    String message = context.getString(R.string.permission_name_phone);
-                    if (!textList.contains(message)) {
-                        textList.add(message);
-                    }
-                    break;
-                }
+//                case PROCESS_OUTGOING_CALLS: {
+//                    String message = context.getString(R.string.permission_name_phone);
+//                    if (!textList.contains(message)) {
+//                        textList.add(message);
+//                    }
+//                    break;
+//                }
                 case BODY_SENSORS: {
                     String message = context.getString(R.string.permission_name_sensors);
                     if (!textList.contains(message)) {

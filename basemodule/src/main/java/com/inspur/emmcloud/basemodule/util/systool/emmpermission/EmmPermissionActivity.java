@@ -20,6 +20,7 @@ import android.view.WindowManager;
 
 import com.inspur.emmcloud.basemodule.R;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.basemodule.util.systool.emmpermission.util.ObjectUtils;
 
 import java.util.ArrayDeque;
@@ -82,6 +83,10 @@ public class EmmPermissionActivity extends AppCompatActivity {
         setRequestedOrientation(requestedOrientation);
     }
 
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LanguageManager.getInstance().attachBaseContext(newBase));
+    }
     /**
      * 恢复activity中的数据
      *

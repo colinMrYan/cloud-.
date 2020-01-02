@@ -45,7 +45,6 @@ import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.TabAndAppExistUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
-import com.inspur.emmcloud.componentservice.CoreService;
 import com.inspur.emmcloud.componentservice.application.ApplicationService;
 import com.inspur.emmcloud.componentservice.application.navibar.NaviBarModel;
 import com.inspur.emmcloud.componentservice.application.navibar.NaviBarScheme;
@@ -56,6 +55,7 @@ import com.inspur.emmcloud.setting.api.SettingAPIInterfaceImpl;
 import com.inspur.emmcloud.setting.api.SettingAPIService;
 import com.inspur.emmcloud.setting.bean.GetExperienceUpgradeFlagResult;
 import com.inspur.emmcloud.setting.widget.DataCleanManager;
+
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -444,18 +444,18 @@ public class SettingActivity extends BaseActivity {
                         } else {
                             BaseApplication.getInstance().signout();
                         }
-                        stopAppService();
+//                        stopAppService();
                     }
                 })
                 .show();
     }
 
-    /**
-     * 关闭服务
-     */
-    private void stopAppService() {
-        stopService(new Intent(getApplicationContext(), CoreService.class));
-    }
+//    /**
+//     * 关闭服务
+//     */
+//    private void stopAppService() {
+//        stopService(new Intent(getApplicationContext(), CoreService.class));
+//    }
 
 
     /**
@@ -563,6 +563,8 @@ public class SettingActivity extends BaseActivity {
             LoadingDialog.dimissDlg(loadingDlg);
             BaseApplication.getInstance().signout();
             stopAppService();
+            MyApplication.getInstance().signout();
+//            stopAppService();
         }
 
     }

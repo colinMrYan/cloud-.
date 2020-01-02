@@ -1,4 +1,3 @@
-
 buildscript {
     repositories {
         maven {
@@ -15,6 +14,7 @@ import com.android.build.OutputFile
 
 apply from: "../node_modules/react-native/react.gradle"
 apply from: "../node_modules/react-native-vector-icons/fonts.gradle"
+apply from: 'tinkerpatch.gradle'
 
 /**
  * Set this to true to create two separate APKs instead of one:
@@ -46,9 +46,9 @@ android {
     buildToolsVersion versions.androidTools
     aaptOptions.cruncherEnabled = false
     aaptOptions.useNewCruncher = false
-    if (project.hasProperty('devBuild')){
+    if (project.hasProperty('devBuild')) {
         splits.abi.enable = false
-        splits.density.enable =false
+        splits.density.enable = false
     }
     defaultConfig {
         applicationId "com.inspur.emmcloud"
@@ -151,5 +151,9 @@ dependencies {
     implementation project(':react-native-svg')
     implementation project(':react-native-vector-icons')
     implementation project(':react-native-navigation')
+    //无需引入tinker的任何库,使用tinkerpatch sdk即可
+    implementation("com.tinkerpatch.sdk:tinkerpatch-android-sdk:${TINKERPATCH_VERSION}") {
+        changing = true
+    }
 }
 

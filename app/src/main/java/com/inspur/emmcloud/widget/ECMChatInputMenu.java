@@ -296,7 +296,7 @@ public class ECMChatInputMenu extends LinearLayout {
         inputEdit.setInputWatcher(new ChatInputEdit.InputWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                boolean isContentBlank = (s.length() == 0);
+                boolean isContentBlank = StringUtils.isBlank(s.toString());
                 if (isContentBlank) {
                     chatInputMenuListener.onChatDraftsClear();
                 }

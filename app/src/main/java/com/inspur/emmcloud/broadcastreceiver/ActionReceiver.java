@@ -4,8 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.inspur.emmcloud.basemodule.util.AppUtils;
-
 /**
  * 在华为mate9，系统8.0.0上测试
  * 广播接收器会接收到广播信息
@@ -20,7 +18,7 @@ public class ActionReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        AppUtils.judgeAndStartPush(context);
+//        AppUtils.judgeAndStartPush(context);
     }
 
 }

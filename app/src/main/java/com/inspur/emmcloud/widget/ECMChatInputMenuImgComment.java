@@ -28,6 +28,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.NoScrollGridView;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
@@ -134,7 +135,7 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
         inputEdit.setInputWatcher(new ChatInputEdit.InputWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                boolean isContentBlank = (s.length() == 0);
+                boolean isContentBlank = StringUtils.isBlank(s.toString());
                 sendBtn.setEnabled(!isContentBlank);
                 sendBtn.setTextColor(isContentBlank ? Color.parseColor("#999999") : Color.parseColor("#000000"));
                 if (canMentions && count == 1) {

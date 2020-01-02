@@ -146,7 +146,8 @@ buildscript {
         classpath deps.butterknife.gradle_plugin
         // 请加入如下插件，简化配置
         classpath 'com.android.boost.dependency:easyaar:3.3.6'
-
+        // TinkerPatch 插件
+        classpath("com.tinkerpatch.sdk:tinkerpatch-gradle-plugin:${TINKERPATCH_VERSION}") { changing = true }
     }
 }
 

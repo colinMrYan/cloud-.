@@ -16,6 +16,7 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Paint;
 import android.graphics.Paint.FontMetrics;
+import android.location.LocationManager;
 import android.net.TrafficStats;
 import android.net.Uri;
 import android.os.Binder;
@@ -24,6 +25,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Process;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -348,7 +350,7 @@ public class AppUtils {
     public static int getSDKVersionNumber() {
         int sdkVersion;
         try {
-            sdkVersion = Integer.valueOf(Build.VERSION.SDK);
+            sdkVersion = Integer.valueOf(android.os.Build.VERSION.SDK);
         } catch (NumberFormatException e) {
             sdkVersion = 0;
         }
@@ -356,7 +358,7 @@ public class AppUtils {
     }
 
     public static String getReleaseVersion() {
-        return Build.VERSION.RELEASE;
+        return android.os.Build.VERSION.RELEASE;
     }
 
     /**
@@ -366,7 +368,7 @@ public class AppUtils {
      */
     public static String GetChangShang() {
 
-        String manString = Build.MANUFACTURER;
+        String manString = android.os.Build.MANUFACTURER;
         if (TextUtils.isEmpty(manString)) {
             return "UNKNOWN";
         }
@@ -392,7 +394,7 @@ public class AppUtils {
      * @return
      */
     public static String GetModel() {
-        String modelStr = Build.MODEL;
+        String modelStr = android.os.Build.MODEL;
         modelStr = modelStr.replace(" ", "-");
         if (TextUtils.isEmpty(modelStr)) {
             return "UNKNOWN";
@@ -542,7 +544,7 @@ public class AppUtils {
      * @return 系统版本号
      */
     public static String getSystemVersion() {
-        return Build.VERSION.RELEASE;
+        return android.os.Build.VERSION.RELEASE;
     }
 
     /**
@@ -750,13 +752,16 @@ public class AppUtils {
     private static String getDeviceUUID(final Context context) {
         try {
             final String[] uniqueId = new String[1];
-            TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-            String tmDevice, tmSerial, androidId;
-            tmDevice = "" + tm.getDeviceId();
-            tmSerial = "" + tm.getSimSerialNumber();
-            androidId = "" + android.provider.Settings.Secure.getString(context.getContentResolver(),
+            String androidId = "" + android.provider.Settings.Secure.getString(context.getContentResolver(),
                     android.provider.Settings.Secure.ANDROID_ID);
-            UUID deviceUuid = new UUID(androidId.hashCode(), ((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
+            String deviceInfo = "1234" + Build.BOARD.length() % 10
+                    + Build.BRAND.length() % 10
+                    + Build.DEVICE.length() % 10 + Build.DISPLAY.length() % 10
+                    + Build.HOST.length() % 10 + Build.ID.length() % 10
+                    + Build.MANUFACTURER.length() % 10 + Build.MODEL.length() % 10
+                    + Build.PRODUCT.length() % 10 + Build.TAGS.length() % 10
+                    + Build.TYPE.length() % 10 + Build.USER.length() % 10;// 12 位
+            UUID deviceUuid = new UUID(androidId.hashCode(), deviceInfo.hashCode());
             uniqueId[0] = deviceUuid.toString();
             return uniqueId[0];
         } catch (SecurityException e) {
@@ -1171,6 +1176,68 @@ public class AppUtils {
     }
 
     /**
+     * 判断定位服务是否开启
+     *
+     * @param
+     * @return true 表示开启
+     */
+    public static boolean isLocationEnabled(Context context) {
+        int locationMode = 0;
+        String locationProviders;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+            return locationManager.isLocationEnabled();
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            try {
+                locationMode = Settings.Secure.getInt(context.getContentResolver(), Settings.Secure.LOCATION_MODE);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return true;
+            }
+            return locationMode != Settings.Secure.LOCATION_MODE_OFF;
+        } else {
+            locationProviders = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+            return !StringUtils.isEmpty(locationProviders);
+        }
+    }
+
+    /**
+     * 直接跳转至位置信息设置界面
+     */
+    public static void openLocationSetting(Context context) {
+        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+        context.startActivity(intent);
+    }
+
+    /**
+     * 让用户去打开wifi
+     */
+    public static void openWifiSetting(Context context) {
+        //第一种
+//      Intent intent = new Intent();
+//      intent.setAction("android.net.wifi.PICK_WIFI_NETWORK");
+//      startActivity(intent);
+
+        //第二种
+//      Intent wifiSettingsIntent = new Intent("android.settings.WIFI_SETTINGS");
+//      startActivity(wifiSettingsIntent);
+
+        //第三种
+//      Intent intent = new Intent();
+//      if(android.os.Build.VERSION.SDK_INT >= 11){
+//          //Honeycomb
+//          intent.setClassName("com.android.settings", "com.android.settings.Settings$WifiSettingsActivity");
+//       }else{
+//          //other versions
+//           intent.setClassName("com.android.settings", "com.android.settings.wifi.WifiSettings");
+//       }
+//       startActivity(intent);
+        //第四种
+        Intent wifiSettingsIntent = new Intent("android.settings.WIFI_SETTINGS");
+        context.startActivity(wifiSettingsIntent);
+    }
+
+    /**
      * 打开url
      *
      * @param context
@@ -1194,4 +1261,5 @@ public class AppUtils {
         bundle.putBoolean(Constant.WEB_FRAGMENT_SHOW_HEADER, isHaveNavBar);
         ARouter.getInstance().build(Constant.AROUTER_CLASS_WEB_MAIN).with(bundle).navigation();
     }
+
 }
