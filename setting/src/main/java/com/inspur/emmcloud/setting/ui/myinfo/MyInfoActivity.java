@@ -96,7 +96,7 @@ public class MyInfoActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_my_info;
+        return R.layout.setting_my_info_activity;
     }
 
     @Override

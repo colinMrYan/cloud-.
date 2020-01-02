@@ -28,18 +28,18 @@ public class CardStackAdapter extends RxAdapterStack<CardPackageBean> {
     @Override
     protected RxCardStackView.ViewHolder onCreateView(ViewGroup parent, int viewType) {
         View view;
-        if (viewType == R.layout.list_card_item) {
-            view = getLayoutInflater().inflate(R.layout.list_card_item, parent, false);
+        if (viewType == R.layout.setting_list_card_item) {
+            view = getLayoutInflater().inflate(R.layout.setting_list_card_item, parent, false);
             return new ColorItemViewHolder(view);
         } else {
-            view = getLayoutInflater().inflate(R.layout.list_card_item, parent, false);
+            view = getLayoutInflater().inflate(R.layout.setting_list_card_item, parent, false);
             return new ColorItemViewHolder(view);
         }
     }
 
     @Override
     public int getItemViewType(int position) {
-        return R.layout.list_card_item;
+        return R.layout.setting_list_card_item;
     }
 
     /**

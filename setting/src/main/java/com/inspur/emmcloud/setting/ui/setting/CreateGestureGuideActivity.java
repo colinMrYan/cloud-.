@@ -32,7 +32,7 @@ public class CreateGestureGuideActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_create_gesture_guide;
+        return R.layout.setting_create_gesture_guide_activity;
     }
 
     @OnClick(R2.id.bt_create_gesture)

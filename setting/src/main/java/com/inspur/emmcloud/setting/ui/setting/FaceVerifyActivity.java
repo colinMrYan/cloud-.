@@ -128,7 +128,7 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_face_verification;
+        return R.layout.setting_face_verification_activity;
     }
 
     @Override
@@ -173,7 +173,7 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
             @Override
             public void run() {
                 tipText.setVisibility(View.VISIBLE);
-                tipText.setText(getString(R.string.put_body_right));
+                tipText.setText(getString(R.string.setting_put_body_right));
             }
         };
         startTime = System.currentTimeMillis();
@@ -382,7 +382,7 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
                                 ImageUtils.saveImage(getApplicationContext(), "face_unlock.png", cropBitmap);
                             }
                             tipText.setVisibility(View.VISIBLE);
-                            tipText.setText(R.string.face_verifying);
+                            tipText.setText(R.string.setting_face_verifying);
                             if (isFaceSetting) {
                                 faceSetting(cropBitmap);
                             } else {
@@ -433,7 +433,7 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
         switch (code) {
             case 200:
                 tipText.setVisibility(View.GONE);
-                ToastUtils.show(getApplicationContext(), getString(R.string.face_verify_success));
+                ToastUtils.show(getApplicationContext(), getString(R.string.setting_face_verify_success));
                 if (isFaceLogin) {
                     Bundle bundle = new Bundle();
                     bundle.putString("token", token);
@@ -449,28 +449,28 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
             case 201:
                 if (!checkIsTimeout()) {
                     tipText.setVisibility(View.VISIBLE);
-                    tipText.setText(getString(R.string.no_face));
+                    tipText.setText(getString(R.string.setting_no_face));
                     delayTotakePicture(1000);
                 }
                 break;
             case 202:
                 if (!checkIsTimeout()) {
                     tipText.setVisibility(View.VISIBLE);
-                    tipText.setText(getString(R.string.put_body_right));
+                    tipText.setText(getString(R.string.setting_put_body_right));
                     delayTotakePicture(1000);
                 }
                 break;
             case 203:
                 if (!checkIsTimeout()) {
                     tipText.setVisibility(View.VISIBLE);
-                    tipText.setText(getString(R.string.get_closer));
+                    tipText.setText(getString(R.string.setting_get_closer));
                     delayTotakePicture(1000);
                 }
                 break;
             case 204:
                 if (!checkIsTimeout()) {
                     tipText.setVisibility(View.VISIBLE);
-                    tipText.setText(getString(R.string.blink));
+                    tipText.setText(getString(R.string.setting_blink));
                     delayTotakePicture(1000);
                 }
                 break;
@@ -502,7 +502,7 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
     private void showFaceVerifyFailDlg() {
         if (isFaceSetting || isFaceVerityTest) {
             new CustomDialog.MessageDialogBuilder(FaceVerifyActivity.this)
-                    .setMessage(R.string.face_verify_fail)
+                    .setMessage(R.string.setting_face_verify_fail)
                     .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -514,7 +514,7 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
                     .show();
         } else if (CreateGestureActivity.getGestureCodeIsOpenByUser(FaceVerifyActivity.this)) {
             new CustomDialog.MessageDialogBuilder(FaceVerifyActivity.this)
-                    .setMessage(R.string.face_verify_fail)
+                    .setMessage(R.string.setting_face_verify_fail)
                     .setNegativeButton(getString(R.string.retry), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -523,7 +523,7 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
                             delayTotakePicture(1000);
                         }
                     })
-                    .setPositiveButton(R.string.switch_gesture_unlock, new DialogInterface.OnClickListener() {
+                    .setPositiveButton(R.string.setting_switch_gesture_unlock, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
@@ -537,7 +537,7 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
                     .show();
         } else {
             new CustomDialog.MessageDialogBuilder(FaceVerifyActivity.this)
-                    .setMessage(R.string.face_verify_fail)
+                    .setMessage(R.string.setting_face_verify_fail)
                     .setNegativeButton(getString(R.string.retry), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -546,7 +546,7 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
                             delayTotakePicture(1000);
                         }
                     })
-                    .setPositiveButton(R.string.off_face_verify_relogin, new DialogInterface.OnClickListener() {
+                    .setPositiveButton(R.string.setting_off_face_verify_relogin, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             PreferencesByUsersUtils.putBoolean(FaceVerifyActivity.this, FaceVerifyActivity.FACE_VERIFT_IS_OPEN, false);

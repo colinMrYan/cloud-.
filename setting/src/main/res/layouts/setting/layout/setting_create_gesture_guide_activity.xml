@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="@string/safe_center_gesture"
+            android:text="@string/setting_safe_center_gesture"
             android:textColor="?attr/header_text_color"
             android:textSize="@dimen/header_textsize" />
     </RelativeLayout>
@@ -58,7 +58,7 @@
             android:maxLines="3"
             android:paddingLeft="37dp"
             android:paddingRight="37dp"
-            android:text="@string/create_gesture_guid"
+            android:text="@string/setting_create_gesture_guid"
             android:textSize="16sp" />
 
         <com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButton
@@ -70,7 +70,7 @@
             android:layout_marginRight="25dp"
             android:elevation="1dp"
             android:gravity="center"
-            android:text="@string/create_gesture_code"
+            android:text="@string/setting_create_gesture_code"
             android:textColor="@android:color/white"
             android:textSize="15sp"
             app:cus_backgroundColor="#36A5F6"

@@ -53,7 +53,7 @@ public class RecommendAppActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_recommend_app;
+        return R.layout.setting_recommend_app_activity;
     }
 
     public void onClick(View v) {

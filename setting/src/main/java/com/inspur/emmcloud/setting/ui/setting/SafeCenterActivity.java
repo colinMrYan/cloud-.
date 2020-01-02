@@ -49,12 +49,12 @@ public class SafeCenterActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_safe_center;
+        return R.layout.setting_safe_center_activity;
     }
 
     private void initView() {
         safeGestureFaceText.setText(FingerPrintUtils.getFingerPrintInstance().isFingerPrintAvaiable(this) ?
-                R.string.setting_safe_gesture_face : R.string.safe_center_gesture);
+                R.string.setting_safe_gesture_face : R.string.setting_safe_center_gesture);
         setUserInfoConfig(null);
     }
 

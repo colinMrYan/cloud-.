@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="@string/net_diagnosis_title"
+            android:text="@string/setting_net_diagnosis_title"
             android:textColor="?attr/header_text_color"
             android:textSize="@dimen/header_textsize" />
     </RelativeLayout>
@@ -61,7 +61,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="30dp"
-                    android:background="@drawable/ic_netchecking_hard_device" />
+                    android:background="@drawable/setting_ic_netchecking_hard_device" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -76,7 +76,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true"
                     android:layout_marginTop="30dp"
-                    android:text="@string/net_diagnosis_hard_link_title"
+                    android:text="@string/setting_net_diagnosis_hard_link_title"
                     android:textColor="#FF333333"
                     android:textSize="17dp"></TextView>
 
@@ -87,7 +87,7 @@
                     android:layout_below="@id/tv_checking_hard_title"
                     android:layout_marginRight="14dp"
                     android:layout_marginTop="10dp"
-                    android:text="@string/net_diagnosis_hard_link_conent"
+                    android:text="@string/setting_net_diagnosis_hard_link_conent"
                     android:textColor="#666666"
                     android:textSize="15dp"></TextView>
 
@@ -134,7 +134,7 @@
                             android:layout_height="15dp"
                             android:layout_marginLeft="4dp"
                             android:layout_marginTop="14dp"
-                            android:background="@drawable/ic_fix_left_arrow"
+                            android:background="@drawable/setting_ic_fix_left_arrow"
                             android:scaleType="fitCenter" />
 
                         <TextView
@@ -144,7 +144,7 @@
                             android:layout_marginLeft="4dp"
                             android:layout_marginTop="11dp"
                             android:layout_toRightOf="@id/iv_fix_left_arrow"
-                            android:text="@string/net_diagnosis_hard_to_fix"
+                            android:text="@string/setting_net_diagnosis_hard_to_fix"
                             android:textColor="#FFF54949"
                             android:textSize="15sp" />
 
@@ -154,7 +154,7 @@
                             android:layout_marginLeft="4dp"
                             android:layout_marginTop="16dp"
                             android:layout_toRightOf="@id/tv_fix"
-                            android:background="@drawable/ic_fix_right_arrow"
+                            android:background="@drawable/setting_ic_fix_right_arrow"
                             android:scaleType="fitCenter" />
                     </RelativeLayout>
 
@@ -194,7 +194,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_marginLeft="18dp"
                     android:layout_marginTop="30dp"
-                    android:background="@drawable/ic_netchecking_route" />
+                    android:background="@drawable/setting_ic_netchecking_route" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -208,7 +208,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true"
                     android:layout_marginTop="30dp"
-                    android:text="@string/net_diagnosis_wifi_link_title"
+                    android:text="@string/setting_net_diagnosis_wifi_link_title"
                     android:textColor="#FF333333"
                     android:textSize="17dp"></TextView>
 
@@ -220,7 +220,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_marginRight="14dp"
                     android:layout_marginTop="64dp"
-                    android:text="@string/net_diagnosis_wifi_link_conent"
+                    android:text="@string/setting_net_diagnosis_wifi_link_conent"
                     android:textColor="#666666"
                     android:textSize="15dp"></TextView>
 
@@ -263,7 +263,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="4dp"
-                        android:text="@string/net_diagnosis_portal_to_set"
+                        android:text="@string/setting_net_diagnosis_portal_to_set"
                         android:textColor="#FFF54949"
                         android:textSize="15sp" />
 
@@ -273,7 +273,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="4dp"
                         android:layout_toRightOf="@id/tv_portal_click_tip"
-                        android:src="@drawable/ic_fix_right_arrow" />
+                        android:src="@drawable/setting_ic_fix_right_arrow" />
                 </RelativeLayout>
 
                 <View
@@ -325,7 +325,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true"
                     android:layout_marginTop="30dp"
-                    android:text="@string/net_diagnosis_dns_link_title"
+                    android:text="@string/setting_net_diagnosis_dns_link_title"
                     android:textColor="#FF333333"
                     android:textSize="17dp"></TextView>
 
@@ -340,7 +340,7 @@
                         android:id="@+id/tv_inspur_content"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/net_ping_url_inspur"
+                        android:text="@string/setting_net_ping_url_inspur"
                         android:textColor="#0F7BCA"
                         android:textSize="15sp" />
 
@@ -375,7 +375,7 @@
                         android:id="@+id/tv_baidu_content"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/net_ping_url_baidu"
+                        android:text="@string/setting_net_ping_url_baidu"
                         android:textColor="#0F7BCA"
                         android:textSize="15sp" />
 
@@ -410,7 +410,7 @@
                         android:id="@+id/tv_ali_content"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/net_ping_url_ali"
+                        android:text="@string/setting_net_ping_url_ali"
                         android:textColor="#0F7BCA"
                         android:textSize="15sp" />
 
@@ -446,7 +446,7 @@
                         android:id="@+id/tv_cloudpluse_content"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/net_ping_url_cloud"
+                        android:text="@string/setting_net_ping_url_cloud"
                         android:textColor="#0F7BCA"
                         android:textSize="15sp" />
 

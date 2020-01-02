@@ -43,7 +43,7 @@ public class SafeGustureFaceSettingActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_safe_guestur_face_setting;
+        return R.layout.setting_safe_guestur_face_setting_activity;
     }
 
     private void initView() {
@@ -70,7 +70,7 @@ public class SafeGustureFaceSettingActivity extends BaseActivity {
             }
         });
         fingerPrintFaceText.setText(FingerPrintUtils.getFingerPrintInstance().isFingerPrintAvaiable(this) ?
-                R.string.setting_safe_gesture_face : R.string.safe_center_gesture);
+                R.string.setting_safe_gesture_face : R.string.setting_safe_center_gesture);
 
         fingerPrintSwitchView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override

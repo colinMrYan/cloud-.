@@ -48,7 +48,7 @@
                 android:layout_height="18dp"
                 android:layout_alignBottom="@id/iv_photo"
                 android:layout_centerHorizontal="true"
-                android:src="@drawable/ic_mine_photo_edit" />
+                android:src="@drawable/setting_ic_mine_photo_edit" />
         </RelativeLayout>
 
         <TextView
@@ -78,7 +78,7 @@
                 android:layout_height="wrap_content"
                 android:paddingBottom="11dp"
                 android:paddingTop="11dp"
-                android:text="@string/user_worker_num"
+                android:text="@string/setting_user_worker_num"
                 android:textColor="#333333"
                 android:textSize="16sp" />
 
@@ -154,7 +154,7 @@
                 android:layout_height="wrap_content"
                 android:paddingBottom="11dp"
                 android:paddingTop="11dp"
-                android:text="@string/phone_num"
+                android:text="@string/setting_phone_num"
                 android:textColor="#333333"
                 android:textSize="16sp" />
 
@@ -192,7 +192,7 @@
                 android:layout_height="wrap_content"
                 android:paddingBottom="11dp"
                 android:paddingTop="11dp"
-                android:text="@string/user_company_info"
+                android:text="@string/setting_user_company_info"
                 android:textColor="#333333"
                 android:textSize="16sp" />
 

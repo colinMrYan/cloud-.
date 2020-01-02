@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="@string/net_check_error_detail_title"
+            android:text="@string/setting_net_check_error_detail_title"
             android:textColor="?attr/header_text_color"
             android:textSize="@dimen/header_textsize" />
     </RelativeLayout>
@@ -81,7 +81,7 @@
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentTop="true"
                         android:layout_marginTop="20dp"
-                        android:text="@string/net_check_net_url"
+                        android:text="@string/setting_net_check_net_url"
                         android:textColor="#333333"
                         android:textSize="17dp"></TextView>
 
@@ -103,7 +103,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:onClick="onClick"
-                        android:text="@string/net_diagnosis_copy"
+                        android:text="@string/setting_net_diagnosis_copy"
                         android:textColor="#36A5F6" />
 
                     <View
@@ -139,7 +139,7 @@
                         android:layout_alignParentTop="true"
                         android:layout_marginLeft="20dp"
                         android:layout_marginTop="20dp"
-                        android:background="@drawable/ic_check_net_result" />
+                        android:background="@drawable/setting_ic_check_net_result" />
                 </RelativeLayout>
 
                 <LinearLayout
@@ -154,7 +154,7 @@
                         android:layout_height="24dp"
                         android:layout_marginTop="20dp"
                         android:maxHeight="60dp"
-                        android:text="@string/net_check_net_request_result"
+                        android:text="@string/setting_net_check_net_request_result"
                         android:textColor="#333333"
                         android:textSize="17dp"></TextView>
 
@@ -176,7 +176,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:onClick="onClick"
-                        android:text="@string/net_diagnosis_copy"
+                        android:text="@string/setting_net_diagnosis_copy"
                         android:textColor="#36A5F6" />
 
                     <View
@@ -213,7 +213,7 @@
                         android:layout_alignParentTop="true"
                         android:layout_marginLeft="18dp"
                         android:layout_marginTop="20dp"
-                        android:background="@drawable/ic_net_check_route" />
+                        android:background="@drawable/setting_ic_net_check_route" />
                 </RelativeLayout>
 
                 <LinearLayout
@@ -228,7 +228,7 @@
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentTop="true"
                         android:layout_marginTop="20dp"
-                        android:text="@string/net_check_net_state"
+                        android:text="@string/setting_net_check_net_state"
                         android:textColor="#333333"
                         android:textSize="17dp"></TextView>
 
@@ -286,7 +286,7 @@
                         android:layout_alignParentTop="true"
                         android:layout_marginLeft="18dp"
                         android:layout_marginTop="20dp"
-                        android:background="@drawable/ic_net_check_connect" />
+                        android:background="@drawable/setting_ic_net_check_connect" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -302,7 +302,7 @@
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentTop="true"
                         android:layout_marginTop="20dp"
-                        android:text="@string/net_diagnosis_dns_link_title"
+                        android:text="@string/setting_net_diagnosis_dns_link_title"
                         android:textColor="#333333"
                         android:textSize="17dp"></TextView>
 
@@ -317,7 +317,7 @@
                             android:id="@+id/tv_inspur_content"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/net_ping_url_inspur"
+                            android:text="@string/setting_net_ping_url_inspur"
                             android:textColor="#0F7BCA"
                             android:textSize="15sp" />
 
@@ -352,7 +352,7 @@
                             android:id="@+id/tv_baidu_content"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/net_ping_url_baidu"
+                            android:text="@string/setting_net_ping_url_baidu"
                             android:textColor="#0F7BCA"
                             android:textSize="15sp" />
 
@@ -387,7 +387,7 @@
                             android:id="@+id/tv_ali_content"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/net_ping_url_ali"
+                            android:text="@string/setting_net_ping_url_ali"
                             android:textColor="#0F7BCA"
                             android:textSize="15sp" />
 
@@ -423,7 +423,7 @@
                             android:id="@+id/tv_cloudpluse_content"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/net_ping_url_cloud"
+                            android:text="@string/setting_net_ping_url_cloud"
                             android:textColor="#0F7BCA"
                             android:textSize="15sp" />
 

@@ -34,7 +34,7 @@ public class CardPackageAdapter extends RecyclerView.Adapter<CardPackageAdapter.
 
     @Override
     public CardPackageHold onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.card_package_set_item, null);
+        View view = inflater.inflate(R.layout.setting_card_package_set_item, null);
         CardPackageHold holder = new CardPackageHold(view);
         holder.companyNameText = (TextView) view.findViewById(R.id.tv_card_package_set_item);
         holder.switchView = view.findViewById(R.id.switch_card_package_set_item);

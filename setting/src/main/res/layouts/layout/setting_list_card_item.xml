@@ -29,7 +29,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="17dp"
-            android:text="@string/card_package_taxpayer"
+            android:text="@string/setting_card_package_taxpayer"
             android:textColor="#ACACAC"
             android:textSize="12sp" />
 
@@ -57,7 +57,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/card_package_address"
+            android:text="@string/setting_card_package_address"
             android:textColor="#ACACAC"
             android:textSize="12sp" />
 
@@ -71,7 +71,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/card_package_phone_number"
+            android:text="@string/setting_card_package_phone_number"
             android:textColor="#ACACAC"
             android:textSize="12sp" />
 

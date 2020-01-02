@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="@string/more_feedback"
+            android:text="@string/setting_more_feedback"
             android:textColor="?attr/header_text_color"
             android:textSize="@dimen/header_textsize" />
     </RelativeLayout>
@@ -44,7 +44,7 @@
         android:layout_marginTop="10dp"
         android:background="@drawable/bg_feedback_content"
         android:gravity="top"
-        android:hint="@string/feed_back_content_hint"
+        android:hint="@string/setting_feed_back_content_hint"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
         android:paddingTop="14dp"
@@ -59,7 +59,7 @@
         android:layout_marginRight="15dp"
         android:layout_marginTop="10dp"
         android:background="@drawable/bg_feedback_content"
-        android:hint="@string/feed_back_contact_hint"
+        android:hint="@string/setting_feed_back_contact_hint"
         android:maxLines="1"
         android:paddingBottom="10dp"
         android:paddingLeft="15dp"
@@ -78,7 +78,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="@string/feed_back_without_name"
+            android:text="@string/setting_feed_back_without_name"
             android:textColor="#333333"
             android:textSize="16sp" />
 
@@ -101,7 +101,7 @@
         android:layout_marginRight="25dp"
         android:elevation="1dp"
         android:gravity="center"
-        android:text="@string/feed_back_submit"
+        android:text="@string/setting_feed_back_submit"
         android:textColor="@android:color/white"
         android:textSize="15sp"
         app:cus_backgroundColor="#36A5F6"

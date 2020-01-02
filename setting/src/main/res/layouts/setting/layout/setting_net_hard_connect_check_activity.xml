@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="@string/net_diagnosis_hard_detail_title"
+            android:text="@string/setting_net_diagnosis_hard_detail_title"
             android:textColor="?attr/header_text_color"
             android:textSize="@dimen/header_textsize" />
     </RelativeLayout>
@@ -42,7 +42,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="20dp"
-            android:text="@string/net_diagnosis_hard_detail_content"
+            android:text="@string/setting_net_diagnosis_hard_detail_content"
             android:textColor="#FF333333"
             android:textSize="17dp" />
 
@@ -54,7 +54,7 @@
             android:layout_marginLeft="15dp"
             android:layout_marginTop="30dp"
             android:paddingRight="20dp"
-            android:text="@string/net_diagnosis_hard_detail_content_frist"
+            android:text="@string/setting_net_diagnosis_hard_detail_content_frist"
             android:textColor="#FF666666"
             android:textSize="15dp" />
 
@@ -66,7 +66,7 @@
             android:layout_marginLeft="15dp"
             android:layout_marginTop="25dp"
             android:paddingRight="20dp"
-            android:text="@string/net_diagnosis_hard_detail_content_second"
+            android:text="@string/setting_net_diagnosis_hard_detail_content_second"
             android:textColor="#FF666666"
             android:textSize="15dp" />
 
@@ -82,7 +82,7 @@
             android:onClick="onClick"
             android:paddingBottom="10dp"
             android:paddingTop="10dp"
-            android:text="@string/net_diagnosis_hard_detail_setting"
+            android:text="@string/setting_net_diagnosis_hard_detail_setting"
             android:textColor="#0F7BCA"
             android:textSize="17sp"></TextView>
     </RelativeLayout>

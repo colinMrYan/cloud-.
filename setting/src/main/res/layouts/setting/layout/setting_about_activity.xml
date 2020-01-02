@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="@string/about_text"
+            android:text="@string/setting_about_text"
             android:textColor="?attr/header_text_color"
             android:textSize="@dimen/header_textsize" />
     </RelativeLayout>
@@ -83,7 +83,7 @@
                     android:layout_centerVertical="true"
                     android:paddingBottom="11dp"
                     android:paddingTop="11dp"
-                    android:text="@string/about_welcome_text"
+                    android:text="@string/setting_about_welcome_text"
                     android:textColor="#333333"
                     android:textSize="16sp" />
 
@@ -117,7 +117,7 @@
                     android:paddingBottom="11dp"
                     android:paddingLeft="16dp"
                     android:paddingTop="11dp"
-                    android:text="@string/about_protocol_text"
+                    android:text="@string/setting_about_protocol_text"
                     android:textColor="#333333"
                     android:textSize="16sp" />
 
@@ -150,7 +150,7 @@
                     android:layout_centerVertical="true"
                     android:paddingBottom="11dp"
                     android:paddingTop="11dp"
-                    android:text="@string/check_update_text"
+                    android:text="@string/setting_check_update_text"
                     android:textColor="#333333"
                     android:textSize="16sp" />
 
@@ -184,7 +184,7 @@
                     android:paddingBottom="11dp"
                     android:paddingLeft="16dp"
                     android:paddingTop="11dp"
-                    android:text="@string/invite_friends_text"
+                    android:text="@string/setting_invite_friends_text"
                     android:textColor="#333333"
                     android:textSize="16sp" />
 

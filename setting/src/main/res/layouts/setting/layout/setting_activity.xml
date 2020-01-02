@@ -129,7 +129,7 @@
                     android:layout_centerVertical="true"
                     android:paddingBottom="11dp"
                     android:paddingTop="11dp"
-                    android:text="@string/mine_theme_switch"
+                    android:text="@string/setting_mine_theme_switch"
                     android:textColor="#333333"
                     android:textSize="16sp" />
 
@@ -177,7 +177,7 @@
                     android:layout_centerVertical="true"
                     android:paddingBottom="11dp"
                     android:paddingTop="11dp"
-                    android:text="@string/mine_tab_layout"
+                    android:text="@string/setting_mine_tab_layout"
                     android:textColor="#333333"
                     android:textSize="16sp" />
 

@@ -53,7 +53,7 @@ public class EnterpriseSwitchActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_mine_enterprise_switch;
+        return R.layout.setting_mine_enterprise_switch_activity;
     }
 
     private void getEnterpriseList() {
@@ -87,7 +87,7 @@ public class EnterpriseSwitchActivity extends BaseActivity {
      */
     private void showSwitchEnterpriseConfirmDlg(final Enterprise enterprise) {
         new CustomDialog.MessageDialogBuilder(EnterpriseSwitchActivity.this)
-                .setMessage(getString(R.string.sure_switch_to, enterprise.getName()))
+                .setMessage(getString(R.string.setting_sure_switch_to, enterprise.getName()))
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

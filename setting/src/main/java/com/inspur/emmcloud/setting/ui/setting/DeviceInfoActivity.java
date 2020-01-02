@@ -59,7 +59,7 @@ public class DeviceInfoActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_setting_device_info;
+        return R.layout.setting_device_info_activity;
     }
 
     public void onClick(View v) {
@@ -83,7 +83,7 @@ public class DeviceInfoActivity extends BaseActivity {
      * 弹出解绑设备提示框
      */
     private void showUnbindDevicePromptDlg() {
-        String warningText = bindingDevice.getDeviceId().equals(AppUtils.getMyUUID(getApplicationContext())) ? getString(R.string.device_current_unbind_warning) : getString(R.string.device_other_unbind_warning, bindingDevice.getDeviceModel());
+        String warningText = bindingDevice.getDeviceId().equals(AppUtils.getMyUUID(getApplicationContext())) ? getString(R.string.setting_device_current_unbind_warning) : getString(R.string.setting_device_other_unbind_warning, bindingDevice.getDeviceModel());
         new CustomDialog.MessageDialogBuilder(DeviceInfoActivity.this)
                 .setMessage(warningText)
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -144,7 +144,7 @@ public class DeviceInfoActivity extends BaseActivity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            convertView = LayoutInflater.from(DeviceInfoActivity.this).inflate(R.layout.item_view_device_log, null);
+            convertView = LayoutInflater.from(DeviceInfoActivity.this).inflate(R.layout.setting_item_view_device_log, null);
             BindingDeviceLog log = bindingDeviceLogList.get(position);
             String time = TimeUtils.getTime(log.getTime(), TimeUtils.getFormat(DeviceInfoActivity.this, TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE));
             ((TextView) convertView.findViewById(R.id.time_text)).setText(time);
@@ -159,7 +159,7 @@ public class DeviceInfoActivity extends BaseActivity {
             if (loadingDialog != null && loadingDialog.isShowing()) {
                 loadingDialog.dismiss();
             }
-            ToastUtils.show(getApplicationContext(), R.string.device_unbind_sucess);
+            ToastUtils.show(getApplicationContext(), R.string.setting_device_unbind_sucess);
             if (bindingDevice.getDeviceId().equals(AppUtils.getMyUUID(getApplicationContext()))) {
                 ((BaseApplication) getApplication()).signout();
             } else {

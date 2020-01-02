@@ -20,7 +20,7 @@ public class NetHardConnectCheckActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_net_hard_connect_check;
+        return R.layout.setting_net_hard_connect_check_activity;
     }
 
     public void onClick(View v) {

@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="@string/invite_friends_text"
+            android:text="@string/setting_invite_friends_text"
             android:textColor="?attr/header_text_color"
             android:textSize="@dimen/header_textsize" />
 

@@ -71,7 +71,7 @@
                     android:maxLines="1"
                     android:paddingBottom="11dp"
                     android:paddingTop="11dp"
-                    android:text="@string/close_auto_select_enterprise"
+                    android:text="@string/setting_close_auto_select_enterprise"
                     android:textColor="#333333"
                     android:textSize="16sp" />
 

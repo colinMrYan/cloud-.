@@ -51,7 +51,7 @@ public class GuideActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_guide;
+        return R.layout.setting_guide_activity;
     }
 
     protected int getStatusType() {
@@ -91,7 +91,7 @@ public class GuideActivity extends BaseActivity {
         }
 
         for (int i = 0; i < splashResIdList.size(); i++) {
-            View guideView = LayoutInflater.from(this).inflate(R.layout.view_pager_guide, null);
+            View guideView = LayoutInflater.from(this).inflate(R.layout.setting_view_pager_guide, null);
             ImageView img = (ImageView) guideView.findViewById(R.id.img);
             ImageDisplayUtils.getInstance().displayImageNoCache(img, "drawable://" + splashResIdList.get(i));
             if (i == splashResIdList.size() - 1) {

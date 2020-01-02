@@ -856,7 +856,7 @@
     <string name="net_connected_error">No internet available,please check</string>
 
 
-    <string name="net_diagnosis_copy">Click here to copy</string>
+    <string name="setting_net_diagnosis_copy">Click here to copy</string>
     <string name="net_no_network_available">No Network Available</string>
 
     <string name="function_net_load_fail">Loading Fail</string>

@@ -44,7 +44,7 @@ public class FeedBackActivity extends BaseActivity {
             int len = editable.length();
 
             if (len > 200) {
-                ToastUtils.show(FeedBackActivity.this, getString(R.string.feed_back_out_of_length));
+                ToastUtils.show(FeedBackActivity.this, getString(R.string.setting_feed_back_out_of_length));
                 int selEndIndex = Selection.getSelectionEnd(editable);
                 String str = editable.toString();
                 //截取新字符串
@@ -76,7 +76,7 @@ public class FeedBackActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_feedback;
+        return R.layout.setting_feedback_activity;
     }
 
     public void onClick(View v) {
@@ -86,7 +86,7 @@ public class FeedBackActivity extends BaseActivity {
         } else if (id == R.id.bt_submit_feedback) {
             String content = feedbackContentEdit.getText().toString();
             if (TextUtils.isEmpty(content.trim())) {
-                ToastUtils.show(getApplicationContext(), getString(R.string.feed_back_no_empty));
+                ToastUtils.show(getApplicationContext(), getString(R.string.setting_feed_back_no_empty));
             } else if (NetUtils.isNetworkConnected(getApplicationContext())) {
                 uploadFeedback();
             }

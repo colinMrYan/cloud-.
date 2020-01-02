@@ -1,147 +1,147 @@
 <resources>
-    <string name="more_feedback">意見回饋</string>
-    <string name="feed_back_content_hint">請輸入建議和意見</string>
-    <string name="feed_back_contact_hint">在此輸入聯繫方式</string>
-    <string name="feed_back_without_name">匿名提交</string>
-    <string name="feed_back_submit">提交反饋</string>
+    <string name="setting_more_feedback">意見回饋</string>
+    <string name="setting_feed_back_content_hint">請輸入建議和意見</string>
+    <string name="setting_feed_back_contact_hint">在此輸入聯繫方式</string>
+    <string name="setting_feed_back_without_name">匿名提交</string>
+    <string name="setting_feed_back_submit">提交反饋</string>
 
-    <string name="card_package_welcome">歡迎使用卡包</string>
-    <string name="card_package_collect">將您常用資訊卡片歸集一處</string>
-    <string name="card_package_taxpayer">納稅人識別號</string>
-    <string name="card_package_address">地址</string>
-    <string name="card_package_phone_number">電話</string>
+    <string name="setting_card_package_welcome">歡迎使用卡包</string>
+    <string name="setting_card_package_collect">將您常用資訊卡片歸集一處</string>
+    <string name="setting_card_package_taxpayer">納稅人識別號</string>
+    <string name="setting_card_package_address">地址</string>
+    <string name="setting_card_package_phone_number">電話</string>
 
     <!--九宮格-->
     <!-- Gesture login activity -->
-    <string name="gesture_forget_gesture">忘記手勢密碼</string>
-    <string name="gesture_default">請繪製手勢密碼</string>
-    <string name="gesture_error">手勢密碼輸入錯誤</string>
-    <string name="gesture_correct">輸入正確</string>
-    <string name="gesture_code_error">密碼錯誤，還可以再試</string>
-    <string name="gesture_code_time">次</string>
-    <string name="gesture_code_tips">5次失敗後，需要重新登入</string>
+    <string name="setting_gesture_forget_gesture">忘記手勢密碼</string>
+    <string name="setting_gesture_default">請繪製手勢密碼</string>
+    <string name="setting_gesture_error">手勢密碼輸入錯誤</string>
+    <string name="setting_gesture_correct">輸入正確</string>
+    <string name="setting_gesture_code_error">密碼錯誤，還可以再試</string>
+    <string name="setting_gesture_code_time">次</string>
+    <string name="setting_gesture_code_tips">5次失敗後，需要重新登入</string>
 
-    <string name="forgetpwd">忘記密碼</string>
+    <string name="setting_forgetpwd">忘記密碼</string>
 
-    <string name="safe_center_use_finger_print_unlock">指紋解鎖</string>
+    <string name="setting_safe_center_use_finger_print_unlock">指紋解鎖</string>
 
-    <string name="resend_code">重新發送(51)</string>
-    <string name="user_modify_user_info">修改資訊</string>
-    <string name="please_input_change">請輸入修改</string>
+    <string name="setting_resend_code">重新發送(51)</string>
+    <string name="setting_user_modify_user_info">修改資訊</string>
+    <string name="setting_please_input_change">請輸入修改</string>
 
-    <string name="user_worker_num">工號</string>
-    <string name="phone_num">手機號</string>
-    <string name="user_company_info">企業資訊</string>
-
-
-    <string name="about_text">關於</string>
-    <string name="about_welcome_text">歡迎頁面</string>
-    <string name="about_protocol_text">服務協定</string>
-    <string name="feed_back_no_empty">請輸入回饋意見</string>
-    <string name="feed_back_out_of_length">您輸入的字數已經超過了限制</string>
+    <string name="setting_user_worker_num">工號</string>
+    <string name="setting_phone_num">手機號</string>
+    <string name="setting_user_company_info">企業資訊</string>
 
 
-    <string name="check_update_text">檢查新版本</string>
+    <string name="setting_about_text">關於</string>
+    <string name="setting_about_welcome_text">歡迎頁面</string>
+    <string name="setting_about_protocol_text">服務協定</string>
+    <string name="setting_feed_back_no_empty">請輸入回饋意見</string>
+    <string name="setting_feed_back_out_of_length">您輸入的字數已經超過了限制</string>
 
-    <string name="invite_friends_text">把雲+推薦給朋友</string>
+
+    <string name="setting_check_update_text">檢查新版本</string>
+
+    <string name="setting_invite_friends_text">把雲+推薦給朋友</string>
 
     <string name="setting_join_experience_plan">加入升級體驗計劃</string>
     <string name="setting_gesture_force_set">根據企業安全性原則，需要您設置手勢密碼</string>
     <string name="setting_gesture_force_open">根據企業安全性原則，您不可以關閉手勢密碼</string>
 
     <!-- Create gesture activity -->
-    <string name="create_gesture_default">繪製解鎖圖案</string>
-    <string name="create_gesture_correct">再次繪製解鎖圖案</string>
-    <string name="create_gesture_less_error">至少連接4個點，請重新輸入</string>
-    <string name="create_gesture_confirm_error">與上一次繪製不一致，請重新繪製</string>
-    <string name="create_gesture_confirm_correct">設置成功</string>
-    <string name="create_gesture_reset">重新設置</string>
-    <string name="create_gesture_code">創建手勢密碼</string>
-    <string name="create_gesture_guid">您可以創建一個雲+解鎖圖案，這樣他人在借用您的手機時，將無法可打開雲+</string>
+    <string name="setting_create_gesture_default">繪製解鎖圖案</string>
+    <string name="setting_create_gesture_correct">再次繪製解鎖圖案</string>
+    <string name="setting_create_gesture_less_error">至少連接4個點，請重新輸入</string>
+    <string name="setting_create_gesture_confirm_error">與上一次繪製不一致，請重新繪製</string>
+    <string name="setting_create_gesture_confirm_correct">設置成功</string>
+    <string name="setting_create_gesture_reset">重新設置</string>
+    <string name="setting_create_gesture_code">創建手勢密碼</string>
+    <string name="setting_create_gesture_guid">您可以創建一個雲+解鎖圖案，這樣他人在借用您的手機時，將無法可打開雲+</string>
     <!--安全中心-->
     <string name="setting_safe_gesture_face">指紋、手勢密碼</string>
     <string name="setting_face_unlock">刷臉解鎖設定</string>
     <string name="setting_safe_face_id_unlock">刷臉解鎖</string>
     <string name="setting_safe_gesture_face_setting">面容ID、手勢密碼設定</string>
     <string name="setting_safe_center">帳號、設備安全</string>
-    <string name="safe_center_gesture">手勢密碼</string>
-    <string name="safe_center_finger_print">指紋</string>
-    <string name="switch_gesture_unlock">手勢解鎖</string>
-    <string name="switch_gesture_reset_unlock">重置手勢解鎖</string>
-    <string name="put_face_in_frame">請把臉放入框內保持不動</string>
-    <string name="experience_face_verify">體驗刷臉</string>
-    <string name="no_face">没有检测到脸</string>
-    <string name="put_body_right">請保證姿勢</string>
-    <string name="get_closer">請靠近一點</string>
-    <string name="blink">請眨眨眼</string>
-    <string name="face_verify_success">刷脸成功</string>
-    <string name="face_verify_fail">抱歉，沒有認出你來</string>
-    <string name="face_enter">人臉識別</string>
-    <string name="face_login">刷臉登錄</string>
-    <string name="off_face_verify_relogin">關閉刷臉，重新登錄</string>
-    <string name="face_verifying">驗證中</string>
-    <string name="finger_print_times_use_up">您的識別次數用盡，請嘗試手勢解鎖，或者一段時間後重試</string>
-    <string name="finger_print_try_times">指紋認證失敗，您還可以嘗試%1$d次</string>
-    <string name="finger_print_id">%1$s的觸控ID</string>
-    <string name="finger_print_by_finger_print">通過指紋驗證解鎖%1$s</string>
-    <string name="close_auto_select_enterprise">下次登入默認使用該企業</string>
+    <string name="setting_safe_center_gesture">手勢密碼</string>
+    <string name="setting_safe_center_finger_print">指紋</string>
+    <string name="setting_switch_gesture_unlock">手勢解鎖</string>
+    <string name="setting_switch_gesture_reset_unlock">重置手勢解鎖</string>
+    <string name="setting_put_face_in_frame">請把臉放入框內保持不動</string>
+    <string name="setting_experience_face_verify">體驗刷臉</string>
+    <string name="setting_no_face">没有检测到脸</string>
+    <string name="setting_put_body_right">請保證姿勢</string>
+    <string name="setting_get_closer">請靠近一點</string>
+    <string name="setting_blink">請眨眨眼</string>
+    <string name="setting_face_verify_success">刷脸成功</string>
+    <string name="setting_face_verify_fail">抱歉，沒有認出你來</string>
+    <string name="setting_face_enter">人臉識別</string>
+    <string name="setting_face_login">刷臉登錄</string>
+    <string name="setting_off_face_verify_relogin">關閉刷臉，重新登錄</string>
+    <string name="setting_face_verifying">驗證中</string>
+    <string name="setting_finger_print_times_use_up">您的識別次數用盡，請嘗試手勢解鎖，或者一段時間後重試</string>
+    <string name="setting_finger_print_try_times">指紋認證失敗，您還可以嘗試%1$d次</string>
+    <string name="setting_finger_print_id">%1$s的觸控ID</string>
+    <string name="setting_finger_print_by_finger_print">通過指紋驗證解鎖%1$s</string>
+    <string name="setting_close_auto_select_enterprise">下次登入默認使用該企業</string>
 
-    <string name="language_set_text">語言切換</string>
+    <string name="setting_language_set_text">語言切換</string>
 
-    <string name="mine_theme_switch">換膚</string>
-    <string name="mine_theme_white">清新白</string>
-    <string name="mine_theme_grey">優雅灰</string>
-    <string name="mine_theme_blue">商務藍</string>
+    <string name="setting_mine_theme_switch">換膚</string>
+    <string name="setting_mine_theme_white">清新白</string>
+    <string name="setting_mine_theme_grey">優雅灰</string>
+    <string name="setting_mine_theme_blue">商務藍</string>
 
-    <string name="mine_tab_layout">佈局切換</string>
-    <string name="mine_tab_layout_switch">是否切換為：%1$s</string>
+    <string name="setting_mine_tab_layout">佈局切換</string>
+    <string name="setting_mine_tab_layout_switch">是否切換為：%1$s</string>
     <!--网络链接及网络诊断-->
-    <string name="net_diagnosis_title">網絡診斷</string>
-    <string name="net_diagnosis_hard_link_title">檢測網絡設定</string>
-    <string name="net_diagnosis_wifi_link_title">檢測Wi-Fi路由器狀態</string>
-    <string name="net_diagnosis_dns_link_title">網絡連通性檢測</string>
-    <string name="net_diagnosis_hard_link_conent">當前檢查項目包含：硬件鏈接是否通暢，是否有鏈接Wi-Fi、4G、LTE等</string>
-    <string name="net_diagnosis_hard_to_fix">去修復</string>
-    <string name="net_diagnosis_portal_to_set">去認證</string>
-    <string name="net_diagnosis_wifi_link_conent">當前檢查項目包含：鏈接到的Wi-Fi是否有驗证需求,如果有需要先驗證此Wi-Fi才可繼續訪問</string>
-    <string name="net_network_authentication">網絡認證</string>
-    <string name="net_diagnosis_hard_detail_title">硬件鏈接診斷</string>
-    <string name="net_diagnosis_hard_detail_content">建議按照以下方法檢查網絡硬件鏈接</string>
-    <string name="net_diagnosis_hard_detail_content_frist">1、打開手機“設置”並把“Wi-Fi”開關保持開啟狀態。</string>
-    <string name="net_diagnosis_hard_detail_content_second">2、打開手機“設置”-"通用"-“蜂窩移動網絡”，並把“蜂窩移動數據”開關保持開啟狀態。</string>
-    <string name="net_diagnosis_hard_detail_setting">去設置</string>
-    <string name="net_ping_url_baidu">百度</string>
-    <string name="net_ping_url_inspur">浪潮</string>
-    <string name="net_ping_url_ali">阿里</string>
-    <string name="net_ping_url_cloud">雲＋</string>
-    <string name="net_check_error_detail_title">異常信息</string>
-    <string name="net_check_net_url">網址</string>
-    <string name="net_check_net_request_result">請求結果</string>
-    <string name="net_check_net_state">網絡狀態</string>
-    <string name="net_check_net_current_type">當前網絡類型：</string>
-    <string name="net_check_net_current_state">連接狀態：</string>
-    <string name="net_check_net_current_state_connected">已連接</string>
-    <string name="net_check_net_current_state_unconnected">未連接</string>
-    <string name="net_check_net_current_state_unknown">未知</string>
+    <string name="setting_net_diagnosis_title">網絡診斷</string>
+    <string name="setting_net_diagnosis_hard_link_title">檢測網絡設定</string>
+    <string name="setting_net_diagnosis_wifi_link_title">檢測Wi-Fi路由器狀態</string>
+    <string name="setting_net_diagnosis_dns_link_title">網絡連通性檢測</string>
+    <string name="setting_net_diagnosis_hard_link_conent">當前檢查項目包含：硬件鏈接是否通暢，是否有鏈接Wi-Fi、4G、LTE等</string>
+    <string name="setting_net_diagnosis_hard_to_fix">去修復</string>
+    <string name="setting_net_diagnosis_portal_to_set">去認證</string>
+    <string name="setting_net_diagnosis_wifi_link_conent">當前檢查項目包含：鏈接到的Wi-Fi是否有驗证需求,如果有需要先驗證此Wi-Fi才可繼續訪問</string>
+    <string name="setting_net_network_authentication">網絡認證</string>
+    <string name="setting_net_diagnosis_hard_detail_title">硬件鏈接診斷</string>
+    <string name="setting_net_diagnosis_hard_detail_content">建議按照以下方法檢查網絡硬件鏈接</string>
+    <string name="setting_net_diagnosis_hard_detail_content_frist">1、打開手機“設置”並把“Wi-Fi”開關保持開啟狀態。</string>
+    <string name="setting_net_diagnosis_hard_detail_content_second">2、打開手機“設置”-"通用"-“蜂窩移動網絡”，並把“蜂窩移動數據”開關保持開啟狀態。</string>
+    <string name="setting_net_diagnosis_hard_detail_setting">去設置</string>
+    <string name="setting_net_ping_url_baidu">百度</string>
+    <string name="setting_net_ping_url_inspur">浪潮</string>
+    <string name="setting_net_ping_url_ali">阿里</string>
+    <string name="setting_net_ping_url_cloud">雲＋</string>
+    <string name="setting_net_check_error_detail_title">異常信息</string>
+    <string name="setting_net_check_net_url">網址</string>
+    <string name="setting_net_check_net_request_result">請求結果</string>
+    <string name="setting_net_check_net_state">網絡狀態</string>
+    <string name="setting_net_check_net_current_type">當前網絡類型：</string>
+    <string name="setting_net_check_net_current_state">連接狀態：</string>
+    <string name="setting_net_check_net_current_state_connected">已連接</string>
+    <string name="setting_net_check_net_current_state_unconnected">未連接</string>
+    <string name="setting_net_check_net_current_state_unknown">未知</string>
 
     <string name="settings_device_manager">設備查看與管理</string>
-    <string name="service_term">服務協定</string>
-    <string name="software_service_term">服務協定</string>
+    <string name="setting_service_term">服務協定</string>
+    <string name="setting_software_service_term">服務協定</string>
 
-    <string name="device_unbind_sucess">設備解綁成功！</string>
-    <string name="device_other_unbind_warning">解綁後，從%1$s上登錄，您需要重新註冊設備</string>
-    <string name="device_current_unbind_warning">解綁後，您需要重新登入並注册設備</string>
-    <string name="last_use_time">上次使用時間</string>
-    <string name="bind_device">綁定設備</string>
-    <string name="current_device">當前設備</string>
-    <string name="history_device">歷史設備</string>
-    <string name="device_history_use">歷史使用</string>
-    <string name="device_bind_time_title">綁定時間: </string>
-    <string name="device_bind_time">綁定時間</string>
-    <string name="device_info">設備詳情</string>
-    <string name="device_id">設備ID</string>
-    <string name="unbind_this_device">解綁此設備</string>
-    <string name="sure_switch_to">確定切換到%1$s</string>
+    <string name="setting_device_unbind_sucess">設備解綁成功！</string>
+    <string name="setting_device_other_unbind_warning">解綁後，從%1$s上登錄，您需要重新註冊設備</string>
+    <string name="setting_device_current_unbind_warning">解綁後，您需要重新登入並注册設備</string>
+    <string name="setting_last_use_time">上次使用時間</string>
+    <string name="setting_bind_device">綁定設備</string>
+    <string name="setting_current_device">當前設備</string>
+    <string name="setting_history_device">歷史設備</string>
+    <string name="setting_device_history_use">歷史使用</string>
+    <string name="setting_device_bind_time_title">綁定時間: </string>
+    <string name="setting_device_bind_time">綁定時間</string>
+    <string name="setting_device_info">設備詳情</string>
+    <string name="setting_device_id">設備ID</string>
+    <string name="setting_unbind_this_device">解綁此設備</string>
+    <string name="setting_sure_switch_to">確定切換到%1$s</string>
 
-    <string name="enter_app">進入應用</string>
+    <string name="setting_enter_app">進入應用</string>
 </resources>

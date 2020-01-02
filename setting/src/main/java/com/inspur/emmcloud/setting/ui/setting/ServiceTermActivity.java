@@ -19,7 +19,7 @@ public class ServiceTermActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_service_term;
+        return R.layout.setting_service_term_activity;
     }
 
     public void onClick(View v) {

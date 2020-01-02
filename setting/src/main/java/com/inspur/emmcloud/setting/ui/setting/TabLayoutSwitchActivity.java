@@ -44,7 +44,7 @@ public class TabLayoutSwitchActivity extends BaseActivity {
     public void onCreate() {
         ButterKnife.bind(this);
         naviBarModel = new NaviBarModel(PreferencesByUserAndTanentUtils.getString(this,Constant.APP_TAB_LAYOUT_DATA,""));
-        headerText.setText(R.string.mine_tab_layout);
+        headerText.setText(R.string.setting_mine_tab_layout);
         listView.setAdapter(new Adapter());
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -57,7 +57,7 @@ public class TabLayoutSwitchActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_mine_tab_layout_switch;
+        return R.layout.setting_mine_tab_layout_switch_activity;
     }
 
     public void onClick(View v) {
@@ -96,7 +96,7 @@ public class TabLayoutSwitchActivity extends BaseActivity {
         final String currentTabLayoutName = PreferencesByUserAndTanentUtils.getString(BaseApplication.getInstance(), Constant.APP_TAB_LAYOUT_NAME, "");
         final String selectedTabLayoutName = naviBarModel.getNaviBarPayload().getNaviBarSchemeList().get(selectIndex).getName();
         new CustomDialog.MessageDialogBuilder(this)
-                .setMessage(getString(R.string.mine_tab_layout_switch,getTabLayoutName(selectIndex)))
+                .setMessage(getString(R.string.setting_mine_tab_layout_switch, getTabLayoutName(selectIndex)))
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -156,7 +156,7 @@ public class TabLayoutSwitchActivity extends BaseActivity {
 
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
-            view = LayoutInflater.from(TabLayoutSwitchActivity.this).inflate(R.layout.mine_setting_tab_layout_list_item, null);
+            view = LayoutInflater.from(TabLayoutSwitchActivity.this).inflate(R.layout.setting_mine_setting_tab_layout_list_item, null);
             TextView tabLayoutNameText = view.findViewById(R.id.tv_tab_layout_name);
             ImageView selectImg = view.findViewById(R.id.iv_select);
             tabLayoutNameText.setText(getTabLayoutName(i));

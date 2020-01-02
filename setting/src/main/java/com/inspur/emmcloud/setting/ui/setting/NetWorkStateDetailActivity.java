@@ -76,7 +76,7 @@ public class NetWorkStateDetailActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_network_state_detail;
+        return R.layout.setting_network_state_detail_activity;
     }
 
     @Override
@@ -93,7 +93,7 @@ public class NetWorkStateDetailActivity extends BaseActivity {
         hardImageView = findViewById(R.id.iv_hard_state_log);
         portalImageView = findViewById(R.id.iv_portal_state_log);
         drawableError = getBaseContext().getResources().getDrawable(R.drawable.ic_netchecking_error);
-        drawableRightArrow = getBaseContext().getResources().getDrawable(R.drawable.ic_fix_left_arrow);
+        drawableRightArrow = getBaseContext().getResources().getDrawable(R.drawable.setting_ic_fix_left_arrow);
         drawableSuccess = getBaseContext().getResources().getDrawable(R.drawable.ic_netchecking_ok);
         drawableDomainError = getBaseContext().getResources().getDrawable(R.drawable.ic_checking_domain_error);
         drawableDomainSuccess = getBaseContext().getResources().getDrawable(R.drawable.ic_checking_domain_success);
@@ -273,7 +273,7 @@ public class NetWorkStateDetailActivity extends BaseActivity {
             IntentUtils.startActivity(this, NetHardConnectCheckActivity.class);
 
         } else if (i == R.id.rl_portal_tip) {
-            String activityName = getResources().getString(R.string.net_network_authentication);
+            String activityName = getResources().getString(R.string.setting_net_network_authentication);
             if (PortalUrl != null && PortalUrl != "") {
                 //  UriUtils.openUrl(this, PortalUrl, activityName,true);
                 AppUtils.openUrl(this, PortalUrl, activityName, true);

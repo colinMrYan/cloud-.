@@ -134,7 +134,7 @@ public class WebViewNetStateDetailActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_webview_net_state_detail;
+        return R.layout.setting_webview_net_state_detail_activity;
     }
 
     @Override
@@ -174,7 +174,7 @@ public class WebViewNetStateDetailActivity extends BaseActivity {
         checkingNetStateUtils.CheckNetPingThreadStart(subUrls, 5, Constant.EVENTBUS_TAG_NET_PING_CONNECTION);
         checkingNetStateUtils.CheckNetHttpThreadStart(CheckHttpUrls);
         String networksType = checkingNetStateUtils.getNetworksType();
-        currentNetTypeText.setText(getString(R.string.net_check_net_current_type) + networksType);   //net_check_net_current_type
+        currentNetTypeText.setText(getString(R.string.setting_net_check_net_current_type) + networksType);   //net_check_net_current_type
 
     }
 
@@ -205,20 +205,20 @@ public class WebViewNetStateDetailActivity extends BaseActivity {
                 pingInspurLoadingImage.setVisibility(View.GONE);
             }
         }
-        String netStatePre = getApplication().getString(R.string.net_check_net_current_state);
+        String netStatePre = getApplication().getString(R.string.setting_net_check_net_current_state);
         if (pingBaiduLoadingImage.getVisibility() == View.GONE && pingAliLoadingImage.getVisibility() == View.GONE &&
                 pingInspurLoadingImage.getVisibility() == View.GONE) {
             if (pingBaiduStateImage.getBackground().equals(drawableError) && pingAliStateImage.getBackground().equals(drawableError)
                     && pingInspurStateImage.getBackground().equals(drawableError)) {
-                currentNetStateText.setText(netStatePre + getApplication().getString(R.string.net_check_net_current_state_unconnected));
+                currentNetStateText.setText(netStatePre + getApplication().getString(R.string.setting_net_check_net_current_state_unconnected));
             } else {
-                currentNetStateText.setText(netStatePre + getApplication().getString(R.string.net_check_net_current_state_connected));
+                currentNetStateText.setText(netStatePre + getApplication().getString(R.string.setting_net_check_net_current_state_connected));
             }
         } else {
-            currentNetStateText.setText(netStatePre + getApplication().getString(R.string.net_check_net_current_state_unknown));
+            currentNetStateText.setText(netStatePre + getApplication().getString(R.string.setting_net_check_net_current_state_unknown));
         }
         String networksType = checkingNetStateUtils.getNetworksType();
-        currentNetTypeText.setText(getString(R.string.net_check_net_current_type) + networksType);   //net_check_net_current_type
+        currentNetTypeText.setText(getString(R.string.setting_net_check_net_current_type) + networksType);   //net_check_net_current_type
     }
 
 

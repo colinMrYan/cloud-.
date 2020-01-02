@@ -47,7 +47,7 @@ public class LanguageSwitchActivity extends BaseActivity implements LanguageMana
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_mine_language_switch;
+        return R.layout.setting_mine_language_switch_activity;
     }
 
     /**
@@ -185,7 +185,7 @@ public class LanguageSwitchActivity extends BaseActivity implements LanguageMana
                     .from(getApplicationContext());
             if (convertView == null) {
                 convertView = inflater.inflate(
-                        R.layout.mine_setting_language_list_item, null);
+                        R.layout.setting_mine_setting_language_list_item, null);
                 holder = new ViewHolder();
                 holder.nameText = convertView
                         .findViewById(R.id.tv_language_name);

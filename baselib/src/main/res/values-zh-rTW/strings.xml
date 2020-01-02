@@ -874,7 +874,7 @@
     <string name="net_connected_error">網絡不給力，請檢查網絡設置</string>
 
 
-    <string name="net_diagnosis_copy">點此複製該內容</string>
+    <string name="setting_net_diagnosis_copy">點此複製該內容</string>
     <string name="net_no_network_available">無網絡</string>
 
     <string name="function_net_load_fail">網絡加載失敗</string>

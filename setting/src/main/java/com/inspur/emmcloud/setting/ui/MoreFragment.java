@@ -78,7 +78,7 @@ public class MoreFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_mine, container, false);
+        View view = inflater.inflate(R.layout.setting_mine_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
         setFragmentStatusBarWhite();
         initData();
@@ -114,7 +114,7 @@ public class MoreFragment extends BaseFragment {
                     new MineLayoutItem("my_cardbox_function", "personcenter_cardbox", "", getString(R.string.wallet)));
             MineLayoutItemGroup mineLayoutItemGroupAboutUs = new MineLayoutItemGroup();
             mineLayoutItemGroupAboutUs.getMineLayoutItemList().add(new MineLayoutItem("my_aboutUs_function",
-                    "personcenter_aboutus", "", getString(R.string.about_text)));
+                    "personcenter_aboutus", "", getString(R.string.setting_about_text)));
             mineLayoutItemGroupList.add(mineLayoutItemGroupPersonalInfo);
             mineLayoutItemGroupList.add(mineLayoutItemGroupSetting);
             mineLayoutItemGroupList.add(mineLayoutItemGroupCardbox);
@@ -134,7 +134,7 @@ public class MoreFragment extends BaseFragment {
                             break;
                         case "my_feedback_function":
                             mineLayoutItem.setIco("personcenter_feedback");
-                            mineLayoutItem.setTitle(getString(R.string.more_feedback));
+                            mineLayoutItem.setTitle(getString(R.string.setting_more_feedback));
                             break;
                         case "my_customerService_function":
                             mineLayoutItem.setIco("personcenter_customerService");
@@ -142,7 +142,7 @@ public class MoreFragment extends BaseFragment {
                             break;
                         case "my_aboutUs_function":
                             mineLayoutItem.setIco("personcenter_aboutUs");
-                            mineLayoutItem.setTitle(getString(R.string.about_text));
+                            mineLayoutItem.setTitle(getString(R.string.setting_about_text));
                             break;
                     }
                 }
@@ -322,7 +322,7 @@ public class MoreFragment extends BaseFragment {
                                  View convertView, ViewGroup parent) {
             MineLayoutItem layoutItem = (MineLayoutItem) getChild(groupPosition, childPosition);
             if (layoutItem.getId().equals("my_personalInfo_function")) {
-                convertView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_mine_my_info_card, null);
+                convertView = LayoutInflater.from(getActivity()).inflate(R.layout.setting_mine_my_info_card_fragment, null);
                 ImageView photoImg = convertView.findViewById(R.id.iv_photo);
                 TextView nameText = convertView.findViewById(R.id.tv_name);
                 TextView enterpriseText = convertView.findViewById(R.id.tv_enterprise);
@@ -348,7 +348,7 @@ public class MoreFragment extends BaseFragment {
                 }
                 enterpriseText.setCompoundDrawables(null, null, drawable, null);
             } else {
-                convertView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_mine_common_item_view, null);
+                convertView = LayoutInflater.from(getActivity()).inflate(R.layout.setting_mine_common_item_view_fragment, null);
                 View lineView = convertView.findViewById(R.id.line);
 //                lineView.setVisibility(
 //                        (childPosition == getChildrenCount(groupPosition) - 1) ? View.INVISIBLE : View.VISIBLE);

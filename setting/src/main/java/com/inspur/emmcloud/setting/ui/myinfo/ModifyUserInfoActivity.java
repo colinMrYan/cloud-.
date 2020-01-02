@@ -56,7 +56,7 @@ public class ModifyUserInfoActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_modify_userinfo;
+        return R.layout.setting_modify_userinfo_activity;
     }
 
     public void onClick(View v) {

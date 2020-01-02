@@ -62,7 +62,7 @@ public class FaceSettingActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_face_setting;
+        return R.layout.setting_face_setting_activity;
     }
 
     public void onClick(View view) {

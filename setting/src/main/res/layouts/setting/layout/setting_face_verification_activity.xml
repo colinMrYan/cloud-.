@@ -60,7 +60,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/ic_setting_face_verification_bg"></View>
+                android:background="@drawable/setting_ic_setting_face_verification_bg"></View>
         </com.inspur.emmcloud.baselib.widget.SquareLayout>
     </LinearLayout>
 
@@ -77,7 +77,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="@string/put_face_in_frame"
+            android:text="@string/setting_put_face_in_frame"
             android:textColor="#4cc7ff"
             android:textSize="17sp" />
 
@@ -86,7 +86,7 @@
             android:layout_height="110dp"
             android:layout_marginTop="5dp"
             android:scaleType="fitXY"
-            android:src="@drawable/ic_setting_face_hint" />
+            android:src="@drawable/setting_ic_setting_face_hint" />
     </LinearLayout>
 
 
@@ -98,6 +98,6 @@
         android:onClick="onClick"
         android:padding="12dp"
         android:scaleType="fitXY"
-        android:src="@drawable/pup_close_before" />
+        android:src="@drawable/setting_pup_close_before" />
 
 </RelativeLayout>

@@ -32,7 +32,7 @@ public class CardPackageSetActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_card_package_set;
+        return R.layout.setting_card_package_set_activity;
     }
 
     /**

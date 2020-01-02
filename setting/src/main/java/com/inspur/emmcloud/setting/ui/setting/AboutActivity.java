@@ -60,7 +60,7 @@ public class AboutActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_about;
+        return R.layout.setting_about_activity;
     }
 
     @OnLongClick(R2.id.iv_logo)

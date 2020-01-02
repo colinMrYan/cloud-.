@@ -50,7 +50,7 @@ public class CardPackageActivity extends BaseActivity implements RxCardStackView
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_card_package;
+        return R.layout.setting_card_package_activity;
     }
 
     protected int getStatusType() {
