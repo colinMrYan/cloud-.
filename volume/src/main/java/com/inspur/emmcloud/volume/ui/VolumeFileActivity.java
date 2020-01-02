@@ -1,6 +1,5 @@
 package com.inspur.emmcloud.volume.ui;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -40,8 +39,8 @@ import com.inspur.emmcloud.basemodule.util.mycamera.MyCameraActivity;
 import com.inspur.emmcloud.componentservice.communication.CommunicationService;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
 import com.inspur.emmcloud.componentservice.communication.GetCreateSingleChannelResult;
-import com.inspur.emmcloud.componentservice.communication.OnCreateDirectConversationV0Listener;
 import com.inspur.emmcloud.componentservice.communication.OnCreateDirectConversationListener;
+import com.inspur.emmcloud.componentservice.communication.OnCreateDirectConversationV0Listener;
 import com.inspur.emmcloud.componentservice.communication.SearchModel;
 import com.inspur.emmcloud.componentservice.volume.VolumeFile;
 import com.inspur.emmcloud.componentservice.volume.VolumeFileUpload;
@@ -206,6 +205,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         }
     }
 
+    @OnClick({R2.id.btn_upload_file})
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.ibt_back) {

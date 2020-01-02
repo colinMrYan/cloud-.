@@ -66,27 +66,22 @@ public class ShareVolumeNameModifyActivity extends BaseActivity {
     }
 
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R2.id.ibt_back:
-                finish();
-                break;
-            case R2.id.save_text:
-                String name = editText.getText().toString();
-                if (StringUtils.isBlank(name)) {
-                    ToastUtils.show(getApplicationContext(), isVolumeNameModify ? R.string.clouddriver_input_volume_name : R.string.clouddriver_input_volume_group_name);
-                } else if (isVolumeNameModify) {
-                    if (!FomatUtils.isValidFileName(name)) {
-                        ToastUtils.show(getApplicationContext(), R.string.clouddriver_volume_name_invaliad);
-                    } else {
-                        updateShareVolumeName(name);
-                    }
+        int id = v.getId();
+        if (id == R.id.ibt_back) {
+            finish();
+        } else if (id == R.id.save_text) {
+            String name = editText.getText().toString();
+            if (StringUtils.isBlank(name)) {
+                ToastUtils.show(getApplicationContext(), isVolumeNameModify ? R.string.clouddriver_input_volume_name : R.string.clouddriver_input_volume_group_name);
+            } else if (isVolumeNameModify) {
+                if (!FomatUtils.isValidFileName(name)) {
+                    ToastUtils.show(getApplicationContext(), R.string.clouddriver_volume_name_invaliad);
                 } else {
-                    updateGroupName(name);
+                    updateShareVolumeName(name);
                 }
-                break;
-
-            default:
-                break;
+            } else {
+                updateGroupName(name);
+            }
         }
     }
 

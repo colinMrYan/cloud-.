@@ -2,7 +2,6 @@ package com.inspur.emmcloud.volume.ui.view;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -214,22 +213,12 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
         if (ClickRuleUtil.isFastClick()) {
             return;
         }
-
-        switch (v.getId()) {
-            case R2.id.operation_total_btn:
-                switch (currentIndex) {
-                    case 0:
-                        handleDownloadOperation();
-                        break;
-                    case 1:
-                        handleUploadOperation();
-                        break;
-                    default:
-                        break;
-                }
-                break;
-            default:
-                break;
+        if (v.getId() == R.id.operation_total_btn) {
+            if (currentIndex == 0) {
+                handleDownloadOperation();
+            } else if (currentIndex == 1) {
+                handleUploadOperation();
+            }
         }
     }
 

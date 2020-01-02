@@ -9,7 +9,6 @@ import android.view.View;
 
 import com.inspur.emmcloud.componentservice.volume.VolumeFile;
 import com.inspur.emmcloud.volume.R;
-import com.inspur.emmcloud.volume.R2;
 import com.inspur.emmcloud.volume.adapter.VolumeFileAdapter;
 
 /**
@@ -70,12 +69,9 @@ public class VolumeFileFilterActvity extends VolumeFileBaseActivity {
     }
 
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R2.id.ibt_back:
-                finishActivity();
-                break;
-            default:
-                break;
+        int id = v.getId();
+        if (id == R.id.ibt_back) {
+            finishActivity();
         }
     }
 

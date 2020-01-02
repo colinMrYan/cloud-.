@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
@@ -142,55 +143,49 @@ public class VolumeFileDownloadActivity extends BaseActivity {
     }
 
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R2.id.ibt_back:
-                finish();
-                break;
-            case R2.id.download_btn:
-                if (FileUtils.isFileExist(fileSavePath)) {
-                    FileUtils.openFile(BaseApplication.getInstance(), fileSavePath);
-                } else {
-                    NetworkMobileTipUtil.checkEnvironment(this, R.string.volume_file_download_network_type_warning,
-                            volumeFile.getSize(), new NetworkMobileTipUtil.Callback() {
-                                @Override
-                                public void cancel() {
+        int id = v.getId();
+        if (id == R.id.ibt_back) {
+            finish();
+        } else if (id == R.id.download_btn) {
+            if (FileUtils.isFileExist(fileSavePath)) {
+                FileUtils.openFile(BaseApplication.getInstance(), fileSavePath);
+            } else {
+                NetworkMobileTipUtil.checkEnvironment(this, R.string.volume_file_download_network_type_warning,
+                        volumeFile.getSize(), new NetworkMobileTipUtil.Callback() {
+                            @Override
+                            public void cancel() {
 
-                                }
+                            }
 
-                                @Override
-                                public void onNext() {
-                                    downloadFile();
-                                }
-                            });
-                }
-                break;
-            case R2.id.file_download_close_img:
-                downloadBtn.setText(R.string.redownload);
-                downloadBtn.setVisibility(View.VISIBLE);
-                downloadStatusLayout.setVisibility(View.GONE);
-                List<VolumeFile> volumeFileList = VolumeFileDownloadManager.getInstance().getAllDownloadVolumeFile();
+                            @Override
+                            public void onNext() {
+                                downloadFile();
+                            }
+                        });
+            }
+        } else if (id == R.id.file_download_close_img) {
+            downloadBtn.setText(R.string.redownload);
+            downloadBtn.setVisibility(View.VISIBLE);
+            downloadStatusLayout.setVisibility(View.GONE);
+            List<VolumeFile> volumeFileList = VolumeFileDownloadManager.getInstance().getAllDownloadVolumeFile();
 
-                if (NetUtils.isNetworkConnected(BaseApplication.getInstance())) {
-                    volumeFile.setVolumeFileAbsolutePath(currentDirAbsolutePath);
-                    for (VolumeFile file : volumeFileList) {
-                        if (file.getId().equals(volumeFile.getId())) {
-                            VolumeFileDownloadManager.getInstance().cancelDownloadVolumeFile(volumeFile);
-                            return;
-                        }
+            if (NetUtils.isNetworkConnected(BaseApplication.getInstance())) {
+                volumeFile.setVolumeFileAbsolutePath(currentDirAbsolutePath);
+                for (VolumeFile file : volumeFileList) {
+                    if (file.getId().equals(volumeFile.getId())) {
+                        VolumeFileDownloadManager.getInstance().cancelDownloadVolumeFile(volumeFile);
+                        return;
                     }
                 }
-                break;
-            case R2.id.tv_share:
-                String fileSavePath = FileDownloadManager.getInstance().getDownloadFilePath(
-                        DownloadFileCategory.CATEGORY_VOLUME_FILE, volumeFile.getId(), volumeFile.getName());
-                if (!StringUtils.isBlank(fileSavePath)) {
-                    shareFile(fileSavePath);
-                } else {
-                    ToastUtils.show(getString(R.string.clouddriver_volume_frist_download));
-                }
-                break;
-            default:
-                break;
+            }
+        } else if (id == R.id.tv_share) {
+            String fileSavePath = FileDownloadManager.getInstance().getDownloadFilePath(
+                    DownloadFileCategory.CATEGORY_VOLUME_FILE, volumeFile.getId(), volumeFile.getName());
+            if (!StringUtils.isBlank(fileSavePath)) {
+                shareFile(fileSavePath);
+            } else {
+                ToastUtils.show(getString(R.string.clouddriver_volume_frist_download));
+            }
         }
     }
 

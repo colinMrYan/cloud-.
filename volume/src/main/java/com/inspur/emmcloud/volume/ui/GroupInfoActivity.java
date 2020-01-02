@@ -7,14 +7,12 @@ import android.widget.AdapterView;
 import android.widget.TextView;
 
 import com.alibaba.android.arouter.launcher.ARouter;
-import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.NoScrollGridView;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
-
 import com.inspur.emmcloud.componentservice.communication.SearchModel;
 import com.inspur.emmcloud.volume.R;
 import com.inspur.emmcloud.volume.R2;
@@ -78,24 +76,19 @@ public class GroupInfoActivity extends BaseActivity {
     }
 
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R2.id.ibt_back:
-                onBackPressed();
-                break;
-            case R2.id.volume_member_layout:
-                Bundle bundle = new Bundle();
-                bundle.putString("title", getString(R.string.clouddriver_volume_group_member));
-                bundle.putInt(MEMBER_PAGE_STATE, CHECK_STATE);
-                bundle.putStringArrayList("uidList", group.getMemberUidList());
-                ARouter.getInstance().build(Constant.AROUTER_CLASS_COMMUNICATION_MEMBER).with(bundle).navigation(this);
-                break;
-            case R2.id.volume_name_layout:
-                Intent intent = new Intent(GroupInfoActivity.this, ShareVolumeNameModifyActivity.class);
-                intent.putExtra("group", group);
-                startActivityForResult(intent, UPDATE_GROUP_NAME);
-                break;
-            default:
-                break;
+        int id = v.getId();
+        if (id == R.id.ibt_back) {
+            onBackPressed();
+        } else if (id == R.id.volume_member_layout) {
+            Bundle bundle = new Bundle();
+            bundle.putString("title", getString(R.string.clouddriver_volume_group_member));
+            bundle.putInt(MEMBER_PAGE_STATE, CHECK_STATE);
+            bundle.putStringArrayList("uidList", group.getMemberUidList());
+            ARouter.getInstance().build(Constant.AROUTER_CLASS_COMMUNICATION_MEMBER).with(bundle).navigation(this);
+        } else if (id == R.id.volume_name_layout) {
+            Intent intent = new Intent(GroupInfoActivity.this, ShareVolumeNameModifyActivity.class);
+            intent.putExtra("group", group);
+            startActivityForResult(intent, UPDATE_GROUP_NAME);
         }
     }
 

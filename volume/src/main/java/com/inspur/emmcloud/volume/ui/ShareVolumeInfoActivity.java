@@ -120,26 +120,21 @@ public class ShareVolumeInfoActivity extends BaseActivity {
     }
 
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R2.id.ibt_back:
-                onBackPressed();
-                break;
-            case R2.id.volume_member_layout:
-                Bundle bundle = new Bundle();
-                bundle.putString("title", getString(R.string.clouddriver_volume_member));
-                bundle.putInt(MEMBER_PAGE_STATE, CHECK_STATE);
-                bundle.putStringArrayList("uidList", volumeDetail.getMemberUidList());
-                ARouter.getInstance().build(Constant.AROUTER_CLASS_COMMUNICATION_MEMBER).with(bundle).navigation(this);
-                break;
-            case R2.id.volume_name_layout:
-                if (isOwner) {
-                    Intent intent = new Intent(ShareVolumeInfoActivity.this, ShareVolumeNameModifyActivity.class);
-                    intent.putExtra("volume", volume);
-                    startActivityForResult(intent, UPDATE_VOLUME_NAME);
-                }
-                break;
-            default:
-                break;
+        int id = v.getId();
+        if (id == R.id.ibt_back) {
+            onBackPressed();
+        } else if (id == R.id.volume_member_layout) {
+            Bundle bundle = new Bundle();
+            bundle.putString("title", getString(R.string.clouddriver_volume_member));
+            bundle.putInt(MEMBER_PAGE_STATE, CHECK_STATE);
+            bundle.putStringArrayList("uidList", volumeDetail.getMemberUidList());
+            ARouter.getInstance().build(Constant.AROUTER_CLASS_COMMUNICATION_MEMBER).with(bundle).navigation(this);
+        } else if (id == R.id.volume_name_layout) {
+            if (isOwner) {
+                Intent intent = new Intent(ShareVolumeInfoActivity.this, ShareVolumeNameModifyActivity.class);
+                intent.putExtra("volume", volume);
+                startActivityForResult(intent, UPDATE_VOLUME_NAME);
+            }
         }
     }
 

@@ -418,23 +418,19 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
             if (ClickRuleUtil.isFastClick()) {
                 return;
             }
-            switch (v.getId()) {
-                case R2.id.volume_file_transfer_item_status:
-                    changeStatus(position);
-                    notifyItemChanged(position);
-                    if (callBack != null) {
-                        callBack.onStatusChange(unfinishedFileList);
-                    }
-                    break;
-                case R2.id.volume_file_transfer_item_desc:
-                    handleDescFail(position);
-                    notifyItemChanged(position);
-                    if (callBack != null) {
-                        callBack.onStatusChange(unfinishedFileList);
-                    }
-                    break;
-                default:
-                    break;
+            int id = v.getId();
+            if (id == R.id.volume_file_transfer_item_status) {
+                changeStatus(position);
+                notifyItemChanged(position);
+                if (callBack != null) {
+                    callBack.onStatusChange(unfinishedFileList);
+                }
+            } else if (id == R.id.volume_file_transfer_item_desc) {
+                handleDescFail(position);
+                notifyItemChanged(position);
+                if (callBack != null) {
+                    callBack.onStatusChange(unfinishedFileList);
+                }
             }
         }
 

@@ -118,47 +118,38 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
 
     @OnClick({R2.id.btn_location_select_to, R2.id.btn_location_select_upload_to})
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R2.id.ibt_back:
-                finish();
-                break;
-            case R2.id.iv_head_operation:
-                showCreateFolderDlg();
-                break;
-
-            case R2.id.location_select_cancel_text:
-                Intent intentResult = new Intent();
-                intentResult.putExtra(VolumeFileBaseActivity.EXTRA_OPERATION_FAIL_FILES, (Serializable) copyOrMoveErrorFiles);
-                setResult(RESULT_OK, intentResult);
-                finish();
-                break;
-            case R2.id.location_select_new_forder_text:
-                showCreateFolderDlg();
-                break;
-            case R2.id.btn_location_select_to:
-                if (fromVolume == null) {
-                    fromVolume = volume;
-                }
-                String operationFileAbsolutePath = getIntent().getStringExtra(EXTRA_OPERATION_FILE_DIR_ABS_PATH);
-                if (!isFunctionCopy && operationFileAbsolutePath.equals(currentDirAbsolutePath) && volume.getId().equals(fromVolume.getId())) {
-                    ToastUtils.show(getApplicationContext(), R.string.file_exist_current_directory);
+        int id = v.getId();
+        if (id == R.id.ibt_back) {
+            finish();
+        } else if (id == R.id.iv_head_operation) {
+            showCreateFolderDlg();
+        } else if (id == R.id.location_select_cancel_text) {
+            Intent intentResult = new Intent();
+            intentResult.putExtra(VolumeFileBaseActivity.EXTRA_OPERATION_FAIL_FILES, (Serializable) copyOrMoveErrorFiles);
+            setResult(RESULT_OK, intentResult);
+            finish();
+        } else if (id == R.id.location_select_new_forder_text) {
+            showCreateFolderDlg();
+        } else if (id == R.id.btn_location_select_to) {
+            if (fromVolume == null) {
+                fromVolume = volume;
+            }
+            String operationFileAbsolutePath = getIntent().getStringExtra(EXTRA_OPERATION_FILE_DIR_ABS_PATH);
+            if (!isFunctionCopy && operationFileAbsolutePath.equals(currentDirAbsolutePath) && volume.getId().equals(fromVolume.getId())) {
+                ToastUtils.show(getApplicationContext(), R.string.file_exist_current_directory);
+                return;
+            }
+            List<VolumeFile> operationFileList = (List<VolumeFile>) getIntent().getSerializableExtra("volumeFileList");
+            for (int i = 0; i < operationFileList.size(); i++) {
+                String volumeFilePath = operationFileAbsolutePath + operationFileList.get(i).getName();
+                if (currentDirAbsolutePath.startsWith(volumeFilePath)) {
+                    ToastUtils.show(getApplicationContext(), isFunctionCopy ? R.string.file_cannot_copy_here : R.string.file_cannot_move_here);
                     return;
                 }
-                List<VolumeFile> operationFileList = (List<VolumeFile>) getIntent().getSerializableExtra("volumeFileList");
-                for (int i = 0; i < operationFileList.size(); i++) {
-                    String volumeFilePath = operationFileAbsolutePath + operationFileList.get(i).getName();
-                    if (currentDirAbsolutePath.startsWith(volumeFilePath)) {
-                        ToastUtils.show(getApplicationContext(), isFunctionCopy ? R.string.file_cannot_copy_here : R.string.file_cannot_move_here);
-                        return;
-                    }
-                }
-                copyOrMoveFileBetweenVolume(operationFileAbsolutePath, isFunctionCopy ? "copy" : "move");
-                break;
-            case R2.id.btn_location_select_upload_to:
-                goUploadPage();
-                break;
-            default:
-                break;
+            }
+            copyOrMoveFileBetweenVolume(operationFileAbsolutePath, isFunctionCopy ? "copy" : "move");
+        } else if (id == R.id.btn_location_select_upload_to) {
+            goUploadPage();
         }
     }
 

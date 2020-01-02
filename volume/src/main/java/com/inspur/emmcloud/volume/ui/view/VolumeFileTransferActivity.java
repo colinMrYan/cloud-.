@@ -125,27 +125,15 @@ public class VolumeFileTransferActivity extends BaseMvpActivity implements Volum
         adapter = new AllVolumeFragmentAdapter(getSupportFragmentManager(), list);
     }
 
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R2.id.ibt_back:
-                finish();
-                break;
-            default:
-                break;
-        }
-    }
-
     @OnClick({R2.id.header_left_text, R2.id.header_right_text})
-    public void onClickView(View v) {
-        switch (v.getId()) {
-            case R2.id.header_left_text:
-                list.get(currentIndex).clickHeaderLeft();
-                break;
-            case R2.id.header_right_text:
-                list.get(currentIndex).clickHeaderRight();
-                break;
-            default:
-                break;
+    public void onClick(View v) {
+        int id = v.getId();
+        if (id == R.id.ibt_back) {
+            finish();
+        } else if (id == R.id.header_left_text) {
+            list.get(currentIndex).clickHeaderLeft();
+        } else if (id == R.id.header_right_text) {
+            list.get(currentIndex).clickHeaderRight();
         }
     }
 

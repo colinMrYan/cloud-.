@@ -190,19 +190,15 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
 
     }
 
-    @OnClick({R2.id.iv_down_up_list, R2.id.ibt_back, R2.id.option_img})
+    @OnClick(R2.id.iv_down_up_list)
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R2.id.ibt_back:
-                finish();
-                break;
-            case R2.id.option_img:
-                break;
-            case R2.id.iv_down_up_list:
-                startActivity(new Intent(this, VolumeFileTransferActivity.class));
-                break;
-            default:
-                break;
+        int id = v.getId();
+        if (id == R.id.ibt_back) {
+            finish();
+        } else if (id == R.id.option_img) {
+
+        } else if (id == R.id.iv_down_up_list) {
+            startActivity(new Intent(this, VolumeFileTransferActivity.class));
         }
     }
 

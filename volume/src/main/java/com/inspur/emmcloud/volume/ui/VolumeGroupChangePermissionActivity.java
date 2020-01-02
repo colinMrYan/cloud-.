@@ -134,11 +134,9 @@ public class VolumeGroupChangePermissionActivity extends BaseActivity {
         }
     }
 
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R2.id.ibt_back:
-                finish();
-                break;
+    public void onClick(View v) {
+        if (v.getId() == R.id.ibt_back) {
+            finish();
         }
     }
 

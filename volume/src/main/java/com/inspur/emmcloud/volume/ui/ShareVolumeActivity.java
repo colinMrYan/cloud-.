@@ -176,15 +176,11 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
     }
 
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R2.id.ibt_back:
-                finish();
-                break;
-            case R2.id.add_img:
-                showCreateShareVolumeDlg();
-                break;
-            default:
-                break;
+        int id = v.getId();
+        if (id == R.id.ibt_back) {
+            finish();
+        } else if (id == R.id.add_img) {
+            showCreateShareVolumeDlg();
         }
     }
 
