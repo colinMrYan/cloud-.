@@ -81,7 +81,4 @@ public interface VolumeAPIInterface {
 
     void returnUpdateVolumeGroupPermissionSuccess(GetVolumeGroupPermissionResult getVolumeGroupPermissionResult);
     void returnUpdateVolumeGroupPermissionFail(String error, int errorCode);
-
-    void returnCallbackAfterFileUploadSuccess(VolumeFile volumeFile);
-    void returnCallbackAfterFileUploadFail(String error, int errorCode);
 }

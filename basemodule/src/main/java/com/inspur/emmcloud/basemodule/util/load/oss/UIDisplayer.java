@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.volume.util.oss;
+package com.inspur.emmcloud.basemodule.util.load.oss;
 
 import android.app.Activity;
 import android.app.AlertDialog;

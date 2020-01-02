@@ -1,6 +1,5 @@
 package com.inspur.emmcloud.volume.api;
 
-import android.app.Application;
 import android.content.Context;
 
 import com.inspur.emmcloud.baselib.router.Router;
@@ -1032,40 +1031,6 @@ public class VolumeAPIService {
                     @Override
                     public void reExecute() {
                         updateVolumeFileGroupPermission(volumeId, path, group, privilege, recurse);
-                    }
-
-                    @Override
-                    public void executeFailCallback() {
-                        callbackFail("", -1);
-                    }
-                };
-                refreshToken(
-                        oauthCallBack, requestTime);
-            }
-        });
-    }
-
-    public void callbackAfterFileUpload(final String url, final JSONObject obj) {
-        RequestParams params = BaseApplication.getInstance().getHttpRequestParams(url);
-        params.setBodyContent(obj.toString());
-        params.setAsJsonContent(true);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, url) {
-            @Override
-            public void callbackSuccess(byte[] arg0) {
-                apiInterface.returnCallbackAfterFileUploadSuccess(new VolumeFile(new String(arg0)));
-            }
-
-            @Override
-            public void callbackFail(String error, int responseCode) {
-                apiInterface.returnCallbackAfterFileUploadFail(error, responseCode);
-            }
-
-            @Override
-            public void callbackTokenExpire(long requestTime) {
-                OauthCallBack oauthCallBack = new OauthCallBack() {
-                    @Override
-                    public void reExecute() {
-                        callbackAfterFileUpload(url, obj);
                     }
 
                     @Override

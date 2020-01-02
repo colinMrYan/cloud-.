@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.volume.util.oss;
+package com.inspur.emmcloud.basemodule.util.load.oss;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,6 +17,7 @@ import com.alibaba.sdk.android.oss.common.auth.OSSCredentialProvider;
 import com.alibaba.sdk.android.oss.internal.OSSAsyncTask;
 import com.alibaba.sdk.android.oss.model.ResumableUploadRequest;
 import com.alibaba.sdk.android.oss.model.ResumableUploadResult;
+import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
@@ -25,7 +26,7 @@ import com.inspur.emmcloud.componentservice.download.ProgressCallback;
 import com.inspur.emmcloud.componentservice.volume.GetVolumeFileUploadTokenResult;
 import com.inspur.emmcloud.componentservice.volume.VolumeFile;
 import com.inspur.emmcloud.componentservice.volume.VolumeFileUploadService;
-import com.inspur.emmcloud.volume.util.VolumeFileUploadManager;
+import com.inspur.emmcloud.componentservice.volume.VolumeService;
 
 import java.io.File;
 import java.util.HashMap;
@@ -100,7 +101,11 @@ public class OssService implements VolumeFileUploadService {
                             String result = (String) msg.obj;
                             progressCallback.onSuccess(new VolumeFile(result));
                         }
-                        VolumeFileUploadManager.getInstance().cancelVolumeFileUploadService(mockVolumeFile);
+                        Router router = Router.getInstance();
+                        VolumeService volumeService = router.getService(VolumeService.class);
+                        if (volumeService != null) {
+                            volumeService.cancelVolumeFileUploadService(mockVolumeFile);
+                        }
                         break;
                     case FAIL:
                         if (progressCallback != null) {

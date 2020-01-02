@@ -20,6 +20,7 @@ import com.inspur.emmcloud.basemodule.push.PushManagerUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.componentservice.login.LoginService;
 import com.inspur.emmcloud.componentservice.login.OauthCallBack;
+import com.inspur.emmcloud.componentservice.volume.VolumeFile;
 
 import org.json.JSONObject;
 import org.xutils.http.HttpMethod;
@@ -544,6 +545,40 @@ public class BaseModuleApiService {
                     }
                 };
                 refreshToken(oauthCallBack, requestTime);
+            }
+        });
+    }
+
+    public void callbackAfterFileUpload(final String url, final JSONObject obj) {
+        RequestParams params = BaseApplication.getInstance().getHttpRequestParams(url);
+        params.setBodyContent(obj.toString());
+        params.setAsJsonContent(true);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, url) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnCallbackAfterFileUploadSuccess(new VolumeFile(new String(arg0)));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnCallbackAfterFileUploadFail(error, responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        callbackAfterFileUpload(url, obj);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                refreshToken(
+                        oauthCallBack, requestTime);
             }
         });
     }

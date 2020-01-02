@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.volume.util.oss;
+package com.inspur.emmcloud.basemodule.util.load.oss;
 
 import com.alibaba.sdk.android.oss.callback.OSSProgressCallback;
 import com.alibaba.sdk.android.oss.model.OSSRequest;

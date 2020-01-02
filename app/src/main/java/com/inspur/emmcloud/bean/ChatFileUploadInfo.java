@@ -2,7 +2,7 @@ package com.inspur.emmcloud.bean;
 
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.componentservice.download.ProgressCallback;
-import com.inspur.emmcloud.interf.VolumeFileUploadService;
+import com.inspur.emmcloud.componentservice.volume.VolumeFileUploadService;
 
 /**
  * Created by chenmch on 2019/8/20.

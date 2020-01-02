@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.volume.util.s3;
+package com.inspur.emmcloud.basemodule.util.load.s3;
 
 import com.amazonaws.AbortedException;
 import com.amazonaws.AmazonClientException;

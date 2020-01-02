@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.volume.util.oss;
+package com.inspur.emmcloud.basemodule.util.load.oss;
 
 import android.util.Log;
 
@@ -27,9 +27,9 @@ public class MultiPartUploadManager {
     private OSS oss;
     private String bucket;
     private int partSize;
-    private com.inspur.emmcloud.volume.util.oss.UIDisplayer UIDisplayer;
+    private UIDisplayer UIDisplayer;
 
-    public MultiPartUploadManager(OSS oss, String bucket, int partSize, com.inspur.emmcloud.volume.util.oss.UIDisplayer UIDisplayer) {
+    public MultiPartUploadManager(OSS oss, String bucket, int partSize, UIDisplayer UIDisplayer) {
         this.oss = oss;
         this.bucket = bucket;
         this.partSize = partSize;

@@ -197,14 +197,4 @@ public class VolumeAPIInterfaceInstance implements VolumeAPIInterface{
     public void returnUpdateVolumeGroupPermissionFail(String error, int errorCode) {
 
     }
-
-    @Override
-    public void returnCallbackAfterFileUploadSuccess(VolumeFile volumeFile) {
-
-    }
-
-    @Override
-    public void returnCallbackAfterFileUploadFail(String error, int errorCode) {
-
-    }
 }

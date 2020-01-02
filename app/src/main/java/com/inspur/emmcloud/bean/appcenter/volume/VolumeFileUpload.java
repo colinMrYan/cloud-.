@@ -1,8 +1,9 @@
 package com.inspur.emmcloud.bean.appcenter.volume;
 
 import com.inspur.emmcloud.componentservice.download.ProgressCallback;
+import com.inspur.emmcloud.componentservice.volume.GetVolumeFileUploadTokenResult;
 import com.inspur.emmcloud.componentservice.volume.VolumeFile;
-import com.inspur.emmcloud.interf.VolumeFileUploadService;
+import com.inspur.emmcloud.componentservice.volume.VolumeFileUploadService;
 
 import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;

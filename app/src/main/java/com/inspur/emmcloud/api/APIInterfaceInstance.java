@@ -8,7 +8,6 @@ import com.inspur.emmcloud.bean.appcenter.mail.GetMailDetailResult;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailFolderResult;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailListResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileListResult;
-import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileUploadTokenResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeListResult;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.GetAllRobotsResult;
@@ -51,6 +50,7 @@ import com.inspur.emmcloud.bean.system.SplashPageBean;
 import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
 import com.inspur.emmcloud.componentservice.communication.GetCreateSingleChannelResult;
+import com.inspur.emmcloud.componentservice.volume.GetVolumeFileUploadTokenResult;
 import com.inspur.emmcloud.componentservice.volume.VolumeFile;
 import com.inspur.reactnative.bean.ReactNativeDownloadUrlBean;
 import com.inspur.reactnative.bean.ReactNativeInstallUriBean;
@@ -571,6 +571,11 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
+    public void returnChatFileUploadTokenSuccess(GetVolumeFileUploadTokenResult getVolumeFileUploadTokenResult, ChatFileUploadInfo chatFileUploadInfo) {
+
+    }
+
+    @Override
     public void returnFaceSettingSuccess(GetFaceSettingResult getFaceSettingResult) {
     }
 
@@ -610,11 +615,6 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnUploadPushInfoResultFail(String error, int errorCode) {
-    }
-
-    @Override
-    public void returnChatFileUploadTokenSuccess(GetVolumeFileUploadTokenResult getVolumeFileUploadTokenResult, ChatFileUploadInfo chatFileUploadInfo) {
-
     }
 
     @Override

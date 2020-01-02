@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.volume.util.s3;
+package com.inspur.emmcloud.basemodule.util.load.s3;
 
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.BasicSessionCredentials;
@@ -11,6 +11,8 @@ import com.amazonaws.regions.Region;
 import com.amazonaws.services.s3.S3ClientOptions;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.basemodule.api.BaseModuleAPIInterfaceInstance;
+import com.inspur.emmcloud.basemodule.api.BaseModuleApiService;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
@@ -19,8 +21,6 @@ import com.inspur.emmcloud.componentservice.volume.GetVolumeFileUploadTokenResul
 import com.inspur.emmcloud.componentservice.volume.VolumeFile;
 import com.inspur.emmcloud.componentservice.volume.VolumeFileUpload;
 import com.inspur.emmcloud.componentservice.volume.VolumeFileUploadService;
-import com.inspur.emmcloud.volume.api.VolumeAPIInterfaceInstance;
-import com.inspur.emmcloud.volume.api.VolumeAPIService;
 
 import org.json.JSONObject;
 
@@ -30,7 +30,7 @@ import java.io.File;
  * Created by chenmch on 2019/9/5.
  */
 
-public class S3Service extends VolumeAPIInterfaceInstance implements VolumeFileUploadService {
+public class S3Service extends BaseModuleAPIInterfaceInstance implements VolumeFileUploadService {
     private GetVolumeFileUploadTokenResult getVolumeFileUploadTokenResult;
     private ProgressCallback progressCallback;
     private TransferUtility mTransferUtility;
@@ -188,7 +188,7 @@ public class S3Service extends VolumeAPIInterfaceInstance implements VolumeFileU
 
     private void callback(String localFilePath) {
         if (NetUtils.isNetworkConnected(BaseApplication.getInstance(), false)) {
-            VolumeAPIService apiService = new VolumeAPIService(BaseApplication.getInstance());
+            BaseModuleApiService apiService = new BaseModuleApiService(BaseApplication.getInstance());
             apiService.setAPIInterface(this);
             File file = new File(localFilePath);
             JSONObject obj = new JSONObject();

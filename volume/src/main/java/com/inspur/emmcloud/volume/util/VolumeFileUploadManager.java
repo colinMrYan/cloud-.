@@ -9,6 +9,8 @@ import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.util.load.oss.OssService;
+import com.inspur.emmcloud.basemodule.util.load.s3.S3Service;
 import com.inspur.emmcloud.componentservice.download.ProgressCallback;
 import com.inspur.emmcloud.componentservice.volume.GetVolumeFileUploadTokenResult;
 import com.inspur.emmcloud.componentservice.volume.VolumeFile;
@@ -17,8 +19,6 @@ import com.inspur.emmcloud.componentservice.volume.VolumeFileUploadService;
 import com.inspur.emmcloud.volume.api.VolumeAPIInterfaceInstance;
 import com.inspur.emmcloud.volume.api.VolumeAPIService;
 import com.inspur.emmcloud.volume.ui.observe.LoadObservable;
-import com.inspur.emmcloud.volume.util.oss.OssService;
-import com.inspur.emmcloud.volume.util.s3.S3Service;
 
 import org.greenrobot.eventbus.EventBus;
 
