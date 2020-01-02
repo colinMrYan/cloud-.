@@ -56,7 +56,6 @@ import com.inspur.emmcloud.setting.api.SettingAPIService;
 import com.inspur.emmcloud.setting.bean.GetExperienceUpgradeFlagResult;
 import com.inspur.emmcloud.setting.widget.DataCleanManager;
 
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -562,8 +561,8 @@ public class SettingActivity extends BaseActivity {
             EventBus.getDefault().unregister(this);
             LoadingDialog.dimissDlg(loadingDlg);
             BaseApplication.getInstance().signout();
-            stopAppService();
-            MyApplication.getInstance().signout();
+            //    stopAppService();
+            //  BaseApplication.getInstance().signout();
 //            stopAppService();
         }
 
