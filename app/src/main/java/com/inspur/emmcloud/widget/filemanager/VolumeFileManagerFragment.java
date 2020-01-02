@@ -18,7 +18,7 @@ import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileListResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeListResult;
 import com.inspur.emmcloud.bean.appcenter.volume.Volume;
-import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
+import com.inspur.emmcloud.componentservice.volume.VolumeFile;
 import com.inspur.emmcloud.widget.filemanager.adapter.TitleAdapter;
 import com.inspur.emmcloud.widget.filemanager.adapter.VolumeFileInManagerAdapter;
 import com.inspur.emmcloud.widget.filemanager.adapter.base.RecyclerViewAdapter;

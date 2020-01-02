@@ -1,5 +1,7 @@
 package com.inspur.emmcloud.interf;
 
+import com.inspur.emmcloud.componentservice.download.ProgressCallback;
+
 /**
  * Created by chenmch on 2017/12/5.
  */

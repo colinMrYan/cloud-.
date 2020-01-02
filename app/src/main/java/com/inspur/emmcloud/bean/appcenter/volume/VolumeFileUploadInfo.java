@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.bean.appcenter.volume;
 
-import com.inspur.emmcloud.interf.ProgressCallback;
+import com.inspur.emmcloud.componentservice.download.ProgressCallback;
+import com.inspur.emmcloud.componentservice.volume.VolumeFile;
 import com.inspur.emmcloud.interf.VolumeFileUploadService;
 
 /**

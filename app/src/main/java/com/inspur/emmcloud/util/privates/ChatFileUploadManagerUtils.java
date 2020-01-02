@@ -6,12 +6,10 @@ import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.ChatFileUploadInfo;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileUploadTokenResult;
-import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.chat.Message;
-import com.inspur.emmcloud.interf.ProgressCallback;
+import com.inspur.emmcloud.componentservice.download.ProgressCallback;
+import com.inspur.emmcloud.componentservice.volume.VolumeFile;
 import com.inspur.emmcloud.interf.VolumeFileUploadService;
-import com.inspur.emmcloud.util.privates.oss.OssService;
-import com.inspur.emmcloud.util.privates.s3.S3Service;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -112,13 +110,13 @@ public class ChatFileUploadManagerUtils extends APIInterfaceInstance {
         switch (getVolumeFileUploadTokenResult.getStorage()) {
             case "ali_oss":
                 try {
-                    volumeFileUploadService = new OssService(getVolumeFileUploadTokenResult, mockVolumeFile);
+//                    volumeFileUploadService = new OssService(getVolumeFileUploadTokenResult, mockVolumeFile);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
                 break;
             case "aws_s3":
-                volumeFileUploadService = new S3Service(getVolumeFileUploadTokenResult);
+//                volumeFileUploadService = new S3Service(getVolumeFileUploadTokenResult);
                 break;
             default:
                 break;

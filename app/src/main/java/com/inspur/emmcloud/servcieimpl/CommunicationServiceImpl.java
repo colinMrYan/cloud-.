@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.servcieimpl;
 
 import android.app.Activity;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
@@ -12,6 +11,9 @@ import com.inspur.emmcloud.basemodule.push.PushManagerUtils;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.componentservice.communication.CommunicationService;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
+import com.inspur.emmcloud.componentservice.communication.GetCreateSingleChannelResult;
+import com.inspur.emmcloud.componentservice.communication.OnCreateDirectConversationListener;
+import com.inspur.emmcloud.componentservice.communication.OnCreateDirectConversationV0Listener;
 import com.inspur.emmcloud.componentservice.communication.OnCreateGroupConversationListener;
 import com.inspur.emmcloud.componentservice.communication.ShareToConversationListener;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
@@ -19,19 +21,16 @@ import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.ui.chat.ConversationBaseActivity;
 import com.inspur.emmcloud.ui.chat.ShareToConversationBlankActivity;
-import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.mine.setting.NetWorkStateDetailActivity;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
+import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.MessageSendManager;
 import com.inspur.emmcloud.util.privates.NotifyUtil;
 import com.inspur.emmcloud.util.privates.VoiceCommunicationManager;
-import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 
 import org.json.JSONArray;
-
-import java.util.List;
 
 /**
  * Created by chenmch on 2019/6/3.
@@ -132,6 +131,36 @@ public class CommunicationServiceImpl implements CommunicationService {
         new ConversationCreateUtils().createGroupConversation((Activity) context, peopleArray, groupName, onCreateGroupConversationListener);
     }
 
+    @Override
+    public void createDirectChannel(final Context context, String uid, final OnCreateDirectConversationListener onCreateDirectConversationListener) {
+        new ConversationCreateUtils().createDirectConversation((Activity) context, uid, new OnCreateDirectConversationListener() {
+            @Override
+            public void createDirectConversationSuccess(Conversation conversation) {
+                onCreateDirectConversationListener.createDirectConversationSuccess(conversation);
+            }
+
+            @Override
+            public void createDirectConversationFail() {
+
+            }
+        });
+    }
+
+    @Override
+    public void createDirectChannelV0(Context context, String uid, final OnCreateDirectConversationV0Listener onCreateDirectConversationV0Listener) {
+        new ChatCreateUtils().createDirectChannel((Activity) context, uid, new ChatCreateUtils.OnCreateDirectChannelListener() {
+            @Override
+            public void createDirectChannelSuccess(GetCreateSingleChannelResult getCreateSingleChannelResult) {
+                onCreateDirectConversationV0Listener.createDirectChatSuccess(getCreateSingleChannelResult);
+            }
+
+            @Override
+            public void createDirectChannelFail() {
+
+            }
+        });
+    }
+
 
     @Override
     public String getShowName(Conversation conversation) {
@@ -155,6 +184,11 @@ public class CommunicationServiceImpl implements CommunicationService {
     @Override
     public String getUserIconUrl(ContactUser contactUser) {
         return APIUri.getUserIconUrl(BaseApplication.getInstance(), contactUser.getId());
+    }
+
+    @Override
+    public String getUserIconUrl(String uid) {
+        return APIUri.getUserIconUrl(BaseApplication.getInstance(), uid);
     }
 
 }

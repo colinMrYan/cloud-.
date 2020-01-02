@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
@@ -25,11 +26,10 @@ import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
-import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
+import com.inspur.emmcloud.componentservice.communication.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.componentservice.communication.OnCreateDirectConversationListener;
 import com.inspur.emmcloud.componentservice.communication.SearchModel;
-import com.inspur.emmcloud.ui.appcenter.volume.VolumeHomePageActivity;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.ui.chat.mvp.view.ConversationSearchActivity;
@@ -239,10 +239,10 @@ public class ShareFilesActivity extends BaseActivity {
         if (FileUtils.isFileInListExist(uriList)) {
             //提前一步清空上次一分享未成功的页面残余
             EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_VOLUME_FILE_LOCATION_SELECT_CLOSE));
-            Intent intent = new Intent();
-            intent.setClass(ShareFilesActivity.this, VolumeHomePageActivity.class);
-            intent.putExtra(Constant.SHARE_FILE_URI_LIST, (Serializable) uriList);
-            startActivity(intent);
+            //跳转到云盘首页
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(Constant.SHARE_FILE_URI_LIST, (Serializable) uriList);
+            ARouter.getInstance().build(Constant.AROUTER_CLASS_VOLUME_HOME).with(bundle).navigation();
         } else {
             ToastUtils.show(MyApplication.getInstance(), getString(R.string.share_has_not_exist_file));
         }

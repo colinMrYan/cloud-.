@@ -32,7 +32,6 @@ import com.inspur.emmcloud.componentservice.mail.MailService;
 import com.inspur.emmcloud.componentservice.mail.OnExchangeLoginListener;
 import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.ui.appcenter.ReactNativeAppActivity;
-import com.inspur.emmcloud.ui.appcenter.volume.VolumeHomePageActivity;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.ui.chat.ConversationBaseActivity;
@@ -226,7 +225,7 @@ public class AppSchemeHandleActivity extends BaseActivity {
                                     if (host.equals("news")) {
                                         ARouter.getInstance().build(Constant.AROUTER_CLASS_GROUP_NEWS).navigation();
                                     } else if (host.equals("volume")) {
-                                        IntentUtils.startActivity(AppSchemeHandleActivity.this, VolumeHomePageActivity.class);
+                                        ARouter.getInstance().build(Constant.AROUTER_CLASS_VOLUME_HOME).navigation();
                                     } else {
                                         showSchemeUnknownWarning();
                                     }

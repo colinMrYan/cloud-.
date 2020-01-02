@@ -45,7 +45,7 @@
         </FrameLayout>
     </LinearLayout>
 
-    <com.inspur.emmcloud.widget.tipsview.TipsView
+    <com.inspur.emmcloud.basemodule.util.tipsview.TipsView
         android:id="@+id/tip"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

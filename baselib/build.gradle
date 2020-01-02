@@ -42,7 +42,7 @@ android {
             res.srcDirs =
                     [
                             'src/main/res/layouts/app/groupnews',//新闻
-                            'src/main/res/layouts/app/volume',//网盘
+//                            'src/main/res/layouts/app/volume',//网盘
                             'src/main/res/layouts/app/webex',//网盘
                             'src/main/res/layouts/app/mail',//网盘
                             'src/main/res/layouts/app',//应用中心，应用详情，React应用等布局

@@ -32,6 +32,7 @@ import com.inspur.emmcloud.basemodule.bean.DownloadFileCategory;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.FileDownloadManager;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
+import com.inspur.emmcloud.basemodule.util.NetworkMobileTipUtil;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.DownloadInfo;
 import com.inspur.emmcloud.bean.chat.Message;
@@ -40,7 +41,6 @@ import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
 import com.inspur.emmcloud.interf.ChatProgressCallback;
 import com.inspur.emmcloud.util.privates.ChatFileDownloadManager;
 import com.inspur.emmcloud.util.privates.DownloadCacheUtils;
-import com.inspur.emmcloud.util.privates.NetworkMobileTipUtil;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
 
@@ -157,7 +157,7 @@ public class GroupFileActivity extends BaseActivity {
 
     private void showSortOperationPop() {
         View contentView = LayoutInflater.from(GroupFileActivity.this)
-                .inflate(R.layout.app_volume_file_sort_operation_pop, null);
+                .inflate(R.layout.volume_app_volume_file_sort_operation_pop, null);
         sortOperationPop = new PopupWindow(contentView,
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT, true);
@@ -245,7 +245,7 @@ public class GroupFileActivity extends BaseActivity {
 
     private void showFileFilterPop(View v) {
         View contentView = LayoutInflater.from(GroupFileActivity.this)
-                .inflate(R.layout.app_volume_file_filter_pop, null);
+                .inflate(R.layout.volume_app_volume_file_filter_pop, null);
         final PopupWindow fileFilterPop = new PopupWindow(contentView,
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT, true);
@@ -530,7 +530,7 @@ public class GroupFileActivity extends BaseActivity {
             ViewHolder holder;
             if (convertView == null) {
                 holder = new ViewHolder();
-                convertView = LayoutInflater.from(GroupFileActivity.this).inflate(R.layout.app_volume_file_item_view, null);
+                convertView = LayoutInflater.from(GroupFileActivity.this).inflate(R.layout.volume_app_volume_file_item_view, null);
                 holder.fileImg = convertView.findViewById(R.id.file_type_img);
                 holder.fileNameText = convertView.findViewById(R.id.tv_file_name);
                 holder.fileSizeText = convertView.findViewById(R.id.tv_file_size);

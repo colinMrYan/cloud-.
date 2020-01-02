@@ -3,6 +3,7 @@ package com.inspur.emmcloud.bean.appcenter.volume;
 import com.alibaba.fastjson.TypeReference;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.componentservice.volume.VolumeFile;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

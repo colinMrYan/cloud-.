@@ -4,8 +4,8 @@ import android.util.Log;
 
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.bean.DownloadFileCategory;
-import com.inspur.emmcloud.basemodule.bean.FileDownloadInfo;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.componentservice.download.FileDownloadInfo;
 
 import java.io.File;
 import java.util.ArrayList;

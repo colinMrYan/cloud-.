@@ -14,9 +14,7 @@ import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
-import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
-import com.inspur.emmcloud.interf.ProgressCallback;
-import com.inspur.emmcloud.util.privates.VolumeFileUploadManager;
+import com.inspur.emmcloud.componentservice.volume.VolumeFile;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -169,24 +167,24 @@ public class VolumeFileInManagerAdapter extends RecyclerView.Adapter<VolumeFileI
         holder.fileTimeText.setText(fileTime);
         if (!isStatusNomal) {
             LogUtils.jasonDebug("volumeFileStatus==" + volumeFileStatus);
-            if (volumeFileStatus.equals(VolumeFile.STATUS_LOADING)) {
-                VolumeFileUploadManager.getInstance().setBusinessProgressCallback(volumeFile, new ProgressCallback() {
-                    @Override
-                    public void onSuccess(VolumeFile newVolumeFile) {
-//                        replaceVolumeFileData(volumeFile, newVolumeFile);
-                    }
-
-                    @Override
-                    public void onLoading(int progress, long current, String speed) {
-                    }
-
-                    @Override
-                    public void onFail() {
-                        volumeFile.setStatus(VolumeFile.STATUS_FAIL);
-                        notifyItemChanged(position);
-                    }
-                });
-            }
+//            if (volumeFileStatus.equals(VolumeFile.STATUS_LOADING)) {
+//                VolumeFileUploadManager.getInstance().setBusinessProgressCallback(volumeFile, new ProgressCallback() {
+//                    @Override
+//                    public void onSuccess(VolumeFile newVolumeFile) {
+////                        replaceVolumeFileData(volumeFile, newVolumeFile);
+//                    }
+//
+//                    @Override
+//                    public void onLoading(int progress, long current, String speed) {
+//                    }
+//
+//                    @Override
+//                    public void onFail() {
+//                        volumeFile.setStatus(VolumeFile.STATUS_FAIL);
+//                        notifyItemChanged(position);
+//                    }
+//                });
+//            }
 
         }
     }

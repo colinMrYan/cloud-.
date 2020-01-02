@@ -34,7 +34,7 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public Class getContactSearchActivity() {
-        return ContactSearchActivity.class;
+    public String getUserName(String uid) {
+        return ContactUserCacheUtils.getUserName(uid);
     }
 }

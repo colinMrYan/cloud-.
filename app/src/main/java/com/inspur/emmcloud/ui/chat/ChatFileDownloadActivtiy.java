@@ -19,13 +19,13 @@ import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.FileDownloadManager;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.util.NetworkMobileTipUtil;
 import com.inspur.emmcloud.bean.DownloadInfo;
-import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
+import com.inspur.emmcloud.componentservice.volume.VolumeFile;
 import com.inspur.emmcloud.interf.ChatProgressCallback;
 import com.inspur.emmcloud.util.privates.ChatFileDownloadManager;
-import com.inspur.emmcloud.util.privates.NetworkMobileTipUtil;
 
 import org.xutils.common.Callback;
 
@@ -107,7 +107,7 @@ public class ChatFileDownloadActivtiy extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_volume_file_download;
+        return R.layout.activity_chat_file_download;
     }
 
     public void onClick(View v) {
