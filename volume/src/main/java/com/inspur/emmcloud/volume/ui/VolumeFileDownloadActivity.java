@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.volume.ui;
 
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -8,10 +9,12 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.DownloadFileCategory;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
@@ -33,6 +36,8 @@ import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.shareboard.SnsPlatform;
 import com.umeng.socialize.utils.ShareBoardlistener;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -198,6 +203,8 @@ public class VolumeFileDownloadActivity extends BaseActivity {
                             ShareFile2OutAppUtils.shareFile2WeChat(getApplicationContext(), filePath);
                         } else if (snsPlatform.mKeyword.equals("QQ")) {
                             ShareFile2OutAppUtils.shareFileToQQ(getApplicationContext(), filePath);
+                        } else if (snsPlatform.mKeyword.equals("CLOUDPLUSE")) {
+                            shareToFriends(volumeFile);
                         }
                     }
                 });
@@ -207,7 +214,25 @@ public class VolumeFileDownloadActivity extends BaseActivity {
         if (AppUtils.isAppInstalled(BaseApplication.getInstance(), ShareFile2OutAppUtils.PACKAGE_MOBILE_QQ)) {
             shareAction.addButton(PlatformName.QQ, "QQ", "umeng_socialize_qq", "umeng_socialize_qq");
         }
+        shareAction.addButton(getString(R.string.internal_sharing), "CLOUDPLUSE", "ic_launcher_share", "ic_launcher_share");
         shareAction.open();
+    }
+
+    /**
+     * 分享到频道
+     */
+    private void shareToFriends(VolumeFile volumeFile) {
+        List<String> urlList = new ArrayList<>();
+        String filePath = volumeFile.getLocalFilePath();
+        if (StringUtils.isBlank(filePath) || !FileUtils.isFileExist(filePath)) {
+            ToastUtils.show(this, getString(R.string.share_not_support));
+            return;
+        }
+        urlList.add(filePath);
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(Constant.SHARE_FILE_URI_LIST, (Serializable) urlList);
+        ARouter.getInstance().build(Constant.AROUTER_CLASS_COMMUNICATION_SHARE_FILE).with(bundle).navigation();
     }
 
     /**
