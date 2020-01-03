@@ -90,13 +90,14 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
+        ButterKnife.bind(this);
+        init();
+        getVolumeList(true, true);
     }
 
     @Override
     public void onCreate() {
-        ButterKnife.bind(this);
-        init();
-        getVolumeList(true, true);
+
     }
 
     @Override

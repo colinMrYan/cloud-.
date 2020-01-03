@@ -1,7 +1,7 @@
-package com.inspur.mvp_demo.runalone.application;
-
+package com.inspur.emmcloud.volume.runalone.application;
 
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.config.Constant;
 
 /**
  * Created by chenmch on 2019/5/7.
