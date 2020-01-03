@@ -181,7 +181,7 @@ public class ConversationQrCodeActivity extends BaseActivity {
                     }
                 });
 
-        shareAction.addButton(getString(R.string.clouddrive_internal_sharing), "CLOUDPLUSE", "ic_launcher_share", "ic_launcher_share");
+        shareAction.addButton(getString(R.string.internal_sharing), "CLOUDPLUSE", "ic_launcher_share", "ic_launcher_share");
         if (AppUtils.isAvilibleByPackageName(BaseApplication.getInstance(), ShareFile2OutAppUtils.PACKAGE_WECHAT)) {
             shareAction.addButton(PlatformName.WEIXIN, "wechat", "umeng_socialize_wechat", "umeng_socialize_wechat");
             shareAction.addButton(PlatformName.WEIXIN_CIRCLE, "wxcircle", "umeng_socialize_wxcircle", "umeng_socialize_wxcircle");

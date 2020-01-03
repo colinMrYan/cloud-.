@@ -125,7 +125,7 @@ public class ShareVolumeInfoActivity extends BaseActivity {
             onBackPressed();
         } else if (id == R.id.volume_member_layout) {
             Bundle bundle = new Bundle();
-            bundle.putString("title", getString(R.string.clouddriver_volume_member));
+            bundle.putString("title", getString(R.string.volume_clouddriver_volume_member));
             bundle.putInt(MEMBER_PAGE_STATE, CHECK_STATE);
             bundle.putStringArrayList("uidList", volumeDetail.getMemberUidList());
             ARouter.getInstance().build(Constant.AROUTER_CLASS_COMMUNICATION_MEMBER).with(bundle).navigation(this);
@@ -175,14 +175,14 @@ public class ShareVolumeInfoActivity extends BaseActivity {
                     Bundle bundle = new Bundle();
                     bundle.putInt("select_content", 2);
                     bundle.putBoolean("isMulti_select", true);
-                    bundle.putString("title", getString(R.string.clouddriver_add_volume_member));
+                    bundle.putString("title", getString(R.string.volume_clouddriver_add_volume_member));
                     bundle.putStringArrayList("excludeContactUidList", volumeDetail.getMemberUidList());
                     ARouter.getInstance().build(Constant.AROUTER_CLASS_CONTACT_SEARCH).with(bundle)
                             .navigation(ShareVolumeInfoActivity.this, ADD_MEMBER);
                 } else if ((position == memberGrid.getCount() - 1) && isOwner) {
                     Bundle bundle = new Bundle();
                     bundle.putStringArrayList("memberUidList", volumeDetail.getMemberUidList());
-                    bundle.putString("title", getString(R.string.clouddriver_del_member));
+                    bundle.putString("title", getString(R.string.volume_clouddriver_del_member));
                     ARouter.getInstance().build(Constant.AROUTER_CLASS_COMMUNICATION_MEMBER_DEL).with(bundle)
                             .navigation(ShareVolumeInfoActivity.this, DEL_MEMBER);
 
@@ -227,7 +227,7 @@ public class ShareVolumeInfoActivity extends BaseActivity {
     }
 
     private void updateVolumeMemNum() {
-        volumeMemberText.setText(getString(R.string.clouddriver_all_volume_member_size, volumeDetail.getMemberUidList().size()));
+        volumeMemberText.setText(getString(R.string.volume_clouddriver_all_volume_member_size, volumeDetail.getMemberUidList().size()));
     }
 
     @Override

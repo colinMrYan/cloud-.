@@ -53,8 +53,8 @@ public class ShareVolumeNameModifyActivity extends BaseActivity {
         } else {
             group = (Group) getIntent().getSerializableExtra("group");
         }
-        headerText.setText(isVolumeNameModify ? R.string.clouddriver_update_volume_name : R.string.clouddriver_update_group_name);
-        editGroupNameTipsText.setText(R.string.clouddriver_volume_name);
+        headerText.setText(isVolumeNameModify ? R.string.volume_clouddriver_update_volume_name : R.string.volume_clouddriver_update_group_name);
+        editGroupNameTipsText.setText(R.string.volume_clouddriver_volume_name);
         EditTextUtils.setText(editText, isVolumeNameModify ? volume.getName() : group.getName());
         editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MyAppConfig.VOLUME_MAX_FILE_NAME_LENGTH)});
         loadingDlg = new LoadingDialog(ShareVolumeNameModifyActivity.this);
@@ -72,10 +72,10 @@ public class ShareVolumeNameModifyActivity extends BaseActivity {
         } else if (id == R.id.save_text) {
             String name = editText.getText().toString();
             if (StringUtils.isBlank(name)) {
-                ToastUtils.show(getApplicationContext(), isVolumeNameModify ? R.string.clouddriver_input_volume_name : R.string.clouddriver_input_volume_group_name);
+                ToastUtils.show(getApplicationContext(), isVolumeNameModify ? R.string.volume_clouddriver_input_volume_name : R.string.volume_clouddriver_input_volume_group_name);
             } else if (isVolumeNameModify) {
                 if (!FomatUtils.isValidFileName(name)) {
-                    ToastUtils.show(getApplicationContext(), R.string.clouddriver_volume_name_invaliad);
+                    ToastUtils.show(getApplicationContext(), R.string.volume_clouddriver_volume_name_invaliad);
                 } else {
                     updateShareVolumeName(name);
                 }

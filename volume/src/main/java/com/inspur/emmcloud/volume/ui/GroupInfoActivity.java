@@ -63,10 +63,10 @@ public class GroupInfoActivity extends BaseActivity {
         loadingDlg = new LoadingDialog(this);
         apiService = new VolumeAPIService(this);
         apiService.setAPIInterface(new WebService());
-        headerText.setText(R.string.clouddriver_volume_group_info);
+        headerText.setText(R.string.volume_clouddriver_volume_group_info);
         group = (Group) getIntent().getSerializableExtra("group");
         volumeMemList = getIntent().getStringArrayListExtra("volumeMemList");
-        groupNameTitle.setText(R.string.clouddriver_volume_group_name);
+        groupNameTitle.setText(R.string.volume_clouddriver_volume_group_name);
         showGroupDetail();
     }
 
@@ -81,7 +81,7 @@ public class GroupInfoActivity extends BaseActivity {
             onBackPressed();
         } else if (id == R.id.volume_member_layout) {
             Bundle bundle = new Bundle();
-            bundle.putString("title", getString(R.string.clouddriver_volume_group_member));
+            bundle.putString("title", getString(R.string.volume_clouddriver_volume_group_member));
             bundle.putInt(MEMBER_PAGE_STATE, CHECK_STATE);
             bundle.putStringArrayList("uidList", group.getMemberUidList());
             ARouter.getInstance().build(Constant.AROUTER_CLASS_COMMUNICATION_MEMBER).with(bundle).navigation(this);
@@ -105,14 +105,14 @@ public class GroupInfoActivity extends BaseActivity {
                 if (position == memberGrid.getCount() - 2) {
                     bundle.putInt("select_content", 2);
                     bundle.putBoolean("isMulti_select", true);
-                    bundle.putString("title", getString(R.string.clouddriver_add_volume_member));
+                    bundle.putString("title", getString(R.string.volume_clouddriver_add_volume_member));
                     bundle.putStringArrayList("excludeContactUidList", group.getMemberUidList());
                     ARouter.getInstance().build(Constant.AROUTER_CLASS_CONTACT_SEARCH).with(bundle)
                             .navigation(GroupInfoActivity.this, ADD_MEMBER);
 
                 } else if (position == memberGrid.getCount() - 1) {
                     bundle.putStringArrayList("memberUidList", group.getMemberUidList());
-                    bundle.putString("title", getString(R.string.clouddriver_del_volume_group_member));
+                    bundle.putString("title", getString(R.string.volume_clouddriver_del_volume_group_member));
                     ARouter.getInstance().build(Constant.AROUTER_CLASS_COMMUNICATION_MEMBER_DEL).with(bundle)
                             .navigation(GroupInfoActivity.this, DEL_MEMBER);
                 } else {
@@ -127,7 +127,7 @@ public class GroupInfoActivity extends BaseActivity {
     }
 
     private void updateGroupMemNum() {
-        groupMemberText.setText(getString(R.string.clouddriver_all_group_member_size, group.getMemberUidList().size()));
+        groupMemberText.setText(getString(R.string.volume_clouddriver_all_group_member_size, group.getMemberUidList().size()));
     }
 
 

@@ -123,10 +123,10 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
             @Override
             public void onSelectedItemClick(View view, int position) {
                 adapter.setVolumeFileSelect(position);
-                batchOprationHeaderText.setText(getString(R.string.clouddriver_has_selected, adapter.getSelectVolumeFileList().size()));
+                batchOprationHeaderText.setText(getString(R.string.volume_clouddriver_has_selected, adapter.getSelectVolumeFileList().size()));
                 setBottomOperationItemShow(adapter.getSelectVolumeFileList());
-                getBatchOprationSelectAllText.setText((volumeFileList.size() == adapter.getSelectVolumeFileList().size()) ? R.string.clouddriver_select_nothing : R.string.select_all);
-                batchOprationHeaderText.setText(getString(R.string.clouddriver_has_selected, adapter.getSelectVolumeFileList().size()));
+                getBatchOprationSelectAllText.setText((volumeFileList.size() == adapter.getSelectVolumeFileList().size()) ? R.string.volume_clouddriver_select_nothing : R.string.select_all);
+                batchOprationHeaderText.setText(getString(R.string.volume_clouddriver_has_selected, adapter.getSelectVolumeFileList().size()));
             }
 
             @Override
@@ -341,16 +341,16 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         String sortTypeShowTxt;
         switch (sortType) {
             case SORT_BY_NAME_DOWN:
-                sortTypeShowTxt = getString(R.string.clouddriver_sort_by_name_dasc);
+                sortTypeShowTxt = getString(R.string.sort_by_name_dasc);
                 break;
             case SORT_BY_TIME_UP:
-                sortTypeShowTxt = getString(R.string.clouddriver_sort_by_time_asc);
+                sortTypeShowTxt = getString(R.string.sort_by_time_asc);
                 break;
             case SORT_BY_TIME_DOWN:
-                sortTypeShowTxt = getString(R.string.clouddriver_sort_by_time_dasc);
+                sortTypeShowTxt = getString(R.string.sort_by_time_dasc);
                 break;
             default:
-                sortTypeShowTxt = getString(R.string.clouddriver_sort_by_name_asc);
+                sortTypeShowTxt = getString(R.string.sort_by_name_asc);
                 break;
         }
         operationSortText.setText(sortTypeShowTxt);
@@ -407,15 +407,15 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
      */
     private void setMutiSelect(boolean isMutiselect) {
         getBatchOprationSelectAllText.setText(R.string.select_all);
-        batchOprationHeaderText.setText(getString(R.string.clouddriver_has_selected, 0));
+        batchOprationHeaderText.setText(getString(R.string.volume_clouddriver_has_selected, 0));
         batchOprationHeaderLayout.setVisibility(isMutiselect ? View.VISIBLE : View.GONE);
         adapter.setMultiselect(isMutiselect);
     }
 
     private void setSelectAll(boolean isSelectAll) {
-        getBatchOprationSelectAllText.setText(isSelectAll ? R.string.clouddriver_select_nothing : R.string.select_all);
+        getBatchOprationSelectAllText.setText(isSelectAll ? R.string.volume_clouddriver_select_nothing : R.string.select_all);
         adapter.setSelectAll(isSelectAll);
-        batchOprationHeaderText.setText(getString(R.string.clouddriver_has_selected, adapter.getSelectVolumeFileList().size()));
+        batchOprationHeaderText.setText(getString(R.string.volume_clouddriver_has_selected, adapter.getSelectVolumeFileList().size()));
     }
 
     @Override
@@ -434,7 +434,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                     for (int i = 0; i < resultPathList.size(); i++) {
                         String filePath = resultPathList.get(i);
                         if (filePath == null) {
-                            ToastUtils.show(getApplicationContext(), R.string.clouddriver_file_no_exist);
+                            ToastUtils.show(getApplicationContext(), R.string.volume_clouddriver_file_no_exist);
                             return;
                         }
                         File file = new File(filePath);
@@ -461,12 +461,12 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                     && NetUtils.isNetworkConnected(getApplicationContext())) {
                 final String imgPath = data.getExtras().getString(MyCameraActivity.OUT_FILE_PATH);
                 if (imgPath == null) {
-                    ToastUtils.show(getApplicationContext(), R.string.clouddriver_file_no_exist);
+                    ToastUtils.show(getApplicationContext(), R.string.volume_clouddriver_file_no_exist);
                     return;
                 }
                 File file = new File(imgPath);
                 if (!file.exists()) {
-                    ToastUtils.show(getApplicationContext(), R.string.clouddriver_file_no_exist);
+                    ToastUtils.show(getApplicationContext(), R.string.volume_clouddriver_file_no_exist);
                     return;
 
                 }
@@ -511,7 +511,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                 for (int i = 0; i < imageItemList.size(); i++) {
                     String filePath = imageItemList.get(i).path;
                     if (filePath == null) {
-                        ToastUtils.show(getApplicationContext(), R.string.clouddriver_file_no_exist);
+                        ToastUtils.show(getApplicationContext(), R.string.volume_clouddriver_file_no_exist);
                         return;
                     }
                     File file = new File(filePath);
@@ -608,12 +608,12 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
      */
     private void uploadFile(String filePath) {
         if (filePath == null) {
-            ToastUtils.show(getApplicationContext(), R.string.clouddriver_file_no_exist);
+            ToastUtils.show(getApplicationContext(), R.string.volume_clouddriver_file_no_exist);
             return;
         }
         File file = new File(filePath);
         if (!file.exists()) {
-            ToastUtils.show(getApplicationContext(), R.string.clouddriver_file_no_exist);
+            ToastUtils.show(getApplicationContext(), R.string.volume_clouddriver_file_no_exist);
             return;
 
         }
@@ -686,7 +686,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
             bundle.putSerializable("currentDirAbsolutePath", parentDirAbsolutePath);
             if (parentDirAbsolutePath.equals("/")) {
                 if (volume.getType().equals("private")) {
-                    parentForderName = getString(R.string.clouddriver_my_file);
+                    parentForderName = getString(R.string.volume_clouddriver_my_file);
                 } else {
                     parentForderName = volume.getName();
                 }

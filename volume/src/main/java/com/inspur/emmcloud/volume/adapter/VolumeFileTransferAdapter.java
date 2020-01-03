@@ -133,7 +133,7 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
                     holder.descTv.setText(R.string.download_complete);
                     break;
                 case VolumeFile.TYPE_UPLOAD:
-                    holder.descTv.setText(R.string.clouddriver_upload_success);
+                    holder.descTv.setText(R.string.volume_clouddriver_upload_success);
                     break;
                 default:
                     holder.descTv.setText(FileUtils.formatFileSize(volumeFile.getSize()));
@@ -439,7 +439,7 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
             final int position = (int) v.getTag();
             final VolumeFile recordVolumeFile = unfinishedFileList.get(position);
             new CustomDialog.MessageDialogBuilder(context)
-                    .setMessage(R.string.clouddriver_sure_delete_file)
+                    .setMessage(R.string.volume_clouddriver_sure_delete_file)
                     .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {

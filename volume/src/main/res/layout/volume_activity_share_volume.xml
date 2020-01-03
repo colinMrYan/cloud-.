@@ -30,7 +30,7 @@
             android:maxLines="1"
             android:paddingLeft="100dp"
             android:paddingRight="100dp"
-            android:text="@string/clouddriver_share_volume"
+            android:text="@string/volume_clouddriver_share_volume"
             android:textColor="?attr/header_text_color"
             android:textSize="@dimen/header_textsize" />
 

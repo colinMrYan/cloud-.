@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.content.FileProvider;
+
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.R;
@@ -57,7 +58,7 @@ public class ShareFile2OutAppUtils {
             intent.setComponent(new ComponentName("com.tencent.mobileqq", "com.tencent.mobileqq.activity.JumpActivity"));
             mContext.startActivity(intent);
         } else {
-            ToastUtils.show(mContext.getString(R.string.volume_please_install_qq));
+            ToastUtils.show(mContext.getString(R.string.please_install_qq));
         }
     }
 
@@ -86,7 +87,7 @@ public class ShareFile2OutAppUtils {
                 ToastUtils.show(R.string.baselib_share_fail);
             }
         } else {
-            ToastUtils.show(mContext.getString(R.string.volume_please_install_qq));
+            ToastUtils.show(mContext.getString(R.string.please_install_qq));
         }
     }
 
@@ -117,7 +118,7 @@ public class ShareFile2OutAppUtils {
                 ToastUtils.show(R.string.baselib_share_fail);
             }
         } else {
-            ToastUtils.show(context.getString(R.string.volume_please_install_wechat));
+            ToastUtils.show(context.getString(R.string.please_install_wechat));
         }
     }
 

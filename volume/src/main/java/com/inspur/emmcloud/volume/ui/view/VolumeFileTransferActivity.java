@@ -150,7 +150,7 @@ public class VolumeFileTransferActivity extends BaseMvpActivity implements Volum
             headerRightTv.setVisibility(View.GONE);
             backBtn.setVisibility(View.VISIBLE);
         } else {
-            setTitleText(getString(R.string.clouddriver_has_selected, selectVolumeFileList.size()));
+            setTitleText(getString(R.string.volume_clouddriver_has_selected, selectVolumeFileList.size()));
             headerLeftTv.setVisibility(View.VISIBLE);
             headerRightTv.setVisibility(View.VISIBLE);
             backBtn.setVisibility(View.GONE);

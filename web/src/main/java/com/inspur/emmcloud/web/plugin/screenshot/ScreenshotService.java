@@ -120,7 +120,7 @@ public class ScreenshotService extends ImpPlugin {
         if (AppUtils.isAppInstalled(BaseApplication.getInstance(), "com.tencent.mobileqq")) {
             shareAction.addButton(PlatformName.QQ, "qq", "umeng_socialize_qq", "umeng_socialize_qq");
         }
-        shareAction.addButton(getFragmentContext().getString(R.string.clouddrive_internal_sharing), "CLOUDPLUSE", "ic_launcher_share", "ic_launcher_share");
+        shareAction.addButton(getFragmentContext().getString(R.string.internal_sharing), "CLOUDPLUSE", "ic_launcher_share", "ic_launcher_share");
         shareAction.open();
 
     }

@@ -193,20 +193,20 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
                 R.layout.volume_dialog_update_name_input);
         createShareVolumeDlg.setCancelable(false);
         final EditText inputEdit = createShareVolumeDlg.findViewById(R.id.edit);
-        inputEdit.setHint(R.string.clouddriver_input_volume_name);
+        inputEdit.setHint(R.string.volume_clouddriver_input_volume_name);
         inputEdit.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MyAppConfig.VOLUME_MAX_FILE_NAME_LENGTH)});
         inputEdit.setInputType(InputType.TYPE_CLASS_TEXT);
-        ((TextView) createShareVolumeDlg.findViewById(R.id.app_update_title)).setText(R.string.clouddriver_create_volume);
+        ((TextView) createShareVolumeDlg.findViewById(R.id.app_update_title)).setText(R.string.volume_clouddriver_create_volume);
         Button okBtn = createShareVolumeDlg.findViewById(R.id.ok_btn);
-        okBtn.setText(R.string.create);
+        okBtn.setText(R.string.volume_create);
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String shareVolumeName = inputEdit.getText().toString();
                 if (StringUtils.isBlank(shareVolumeName)) {
-                    ToastUtils.show(getApplicationContext(), R.string.clouddriver_input_volume_name);
+                    ToastUtils.show(getApplicationContext(), R.string.volume_clouddriver_input_volume_name);
                 } else if (!FomatUtils.isValidFileName(shareVolumeName)) {
-                    ToastUtils.show(getApplicationContext(), R.string.clouddriver_volume_name_invaliad);
+                    ToastUtils.show(getApplicationContext(), R.string.volume_clouddriver_volume_name_invaliad);
                 } else {
                     createShareVolume(shareVolumeName);
                 }
@@ -243,7 +243,7 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
         final List<VolumeActionData> volumeActionDataList = new ArrayList<>();
         volumeDetailAction = getString(R.string.detail);
         deleteVolumeAction = getString(R.string.delete);
-        renameVolumeAction = getString(R.string.rename);
+        renameVolumeAction = getString(R.string.volume_rename);
         volumeActionDataList.add(new VolumeActionData(volumeDetailAction, R.drawable.ic_volume_detail, selectVolumeList.size() == 1 && true));
         volumeActionDataList.add(new VolumeActionData(deleteVolumeAction, R.drawable.ic_volume_delete, isOwner));
         volumeActionDataList.add(new VolumeActionData(renameVolumeAction, R.drawable.ic_volume_rename, selectVolumeList.size() == 1 && isOwner));
@@ -288,7 +288,7 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
      */
     protected void showVolumeDelWranibgDlg() {
         new CustomDialog.MessageDialogBuilder(ShareVolumeActivity.this)
-                .setMessage(R.string.clouddriver_sure_delete_volume)
+                .setMessage(R.string.volume_clouddriver_sure_delete_volume)
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -320,16 +320,16 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
         inputEdit.setSelectAllOnFocus(true);
         inputEdit.setInputType(InputType.TYPE_CLASS_TEXT);
         inputEdit.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MyAppConfig.VOLUME_MAX_FILE_NAME_LENGTH)});
-        ((TextView) updateShareVolumeNameDlg.findViewById(R.id.app_update_title)).setText(R.string.rename);
+        ((TextView) updateShareVolumeNameDlg.findViewById(R.id.app_update_title)).setText(R.string.volume_rename);
         Button okBtn = updateShareVolumeNameDlg.findViewById(R.id.ok_btn);
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String shareVolumeName = inputEdit.getText().toString();
                 if (StringUtils.isBlank(shareVolumeName)) {
-                    ToastUtils.show(getApplicationContext(), R.string.clouddriver_input_volume_name);
+                    ToastUtils.show(getApplicationContext(), R.string.volume_clouddriver_input_volume_name);
                 } else if (!FomatUtils.isValidFileName(shareVolumeName)) {
-                    ToastUtils.show(getApplicationContext(), R.string.clouddriver_volume_name_invaliad);
+                    ToastUtils.show(getApplicationContext(), R.string.volume_clouddriver_volume_name_invaliad);
                 } else if (!shareVolumeName.equals(volume.getName())) {
                     updateShareVolumeName(volume, shareVolumeName);
                 } else {

@@ -246,7 +246,7 @@ public class ChatFileDownloadActivtiy extends BaseActivity {
                 progressBar.setProgress(progress);
                 String totleSize = FileUtils.formatFileSize(downloadInfo.getSize());
                 String currentSize = FileUtils.formatFileSize(current);
-                progressText.setText(getString(R.string.clouddriver_downloading_status, currentSize, totleSize));
+                progressText.setText(getString(R.string.downloading_status, currentSize, totleSize));
             }
 
             @Override

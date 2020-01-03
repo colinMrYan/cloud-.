@@ -71,7 +71,7 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
         apiService = new VolumeAPIService(this);
         apiService.setAPIInterface(new WebService());
         uploadFileBtn.setVisibility(View.GONE);
-        locationSelectToBtn.setText(isFunctionCopy ? R.string.clouddriver_copy2_current_directory : R.string.clouddriver_move2_current_directory);
+        locationSelectToBtn.setText(isFunctionCopy ? R.string.volume_clouddriver_copy2_current_directory : R.string.volume_clouddriver_move2_current_directory);
         headerOperationLayout.setVisibility(View.GONE);
         locationSelectCancelText.setVisibility(View.VISIBLE);
         locationSelectBarLayout.setVisibility(View.VISIBLE);
@@ -107,7 +107,7 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
             }
         });
         pathText.setVisibility(View.VISIBLE);
-        pathText.setText(getString(R.string.clouddriver_current_directory_hint, currentDirAbsolutePath));
+        pathText.setText(getString(R.string.volume_clouddriver_current_directory_hint, currentDirAbsolutePath));
         List<Uri> fileShareUriList = (List<Uri>) getIntent().getSerializableExtra(Constant.SHARE_FILE_URI_LIST);
         if (fileShareUriList != null) {
             shareUriList.addAll(fileShareUriList);
@@ -136,14 +136,14 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
             }
             String operationFileAbsolutePath = getIntent().getStringExtra(EXTRA_OPERATION_FILE_DIR_ABS_PATH);
             if (!isFunctionCopy && operationFileAbsolutePath.equals(currentDirAbsolutePath) && volume.getId().equals(fromVolume.getId())) {
-                ToastUtils.show(getApplicationContext(), R.string.file_exist_current_directory);
+                ToastUtils.show(getApplicationContext(), R.string.volume_file_exist_current_directory);
                 return;
             }
             List<VolumeFile> operationFileList = (List<VolumeFile>) getIntent().getSerializableExtra("volumeFileList");
             for (int i = 0; i < operationFileList.size(); i++) {
                 String volumeFilePath = operationFileAbsolutePath + operationFileList.get(i).getName();
                 if (currentDirAbsolutePath.startsWith(volumeFilePath)) {
-                    ToastUtils.show(getApplicationContext(), isFunctionCopy ? R.string.file_cannot_copy_here : R.string.file_cannot_move_here);
+                    ToastUtils.show(getApplicationContext(), isFunctionCopy ? R.string.volume_file_cannot_copy_here : R.string.volume_file_cannot_move_here);
                     return;
                 }
             }

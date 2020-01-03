@@ -219,7 +219,7 @@
                     android:layout_centerHorizontal="true"
                     android:onClick="onClick"
                     android:padding="12dp"
-                    android:text="@string/clouddriver_multi_select"
+                    android:text="@string/volume_clouddriver_multi_select"
                     android:textColor="#666666"
                     android:textSize="15sp"
                     android:visibility="gone" />
@@ -231,7 +231,7 @@
                     android:layout_alignParentRight="true"
                     android:onClick="onClick"
                     android:padding="12dp"
-                    android:text="@string/clouddriver_volume_file_filter"
+                    android:text="@string/volume_clouddriver_volume_file_filter"
                     android:textColor="#666666"
                     android:textSize="15sp" />
 
@@ -284,7 +284,7 @@
                     android:layout_marginBottom="150dp"
                     android:gravity="center"
                     android:padding="10dp"
-                    android:text="@string/clouddriver_volume_upload_file"
+                    android:text="@string/volume_clouddriver_volume_upload_file"
                     android:textColor="#2586CD"
                     app:cus_borderColor="#2586CD"
                     app:cus_borderWidth="0.6dp"
@@ -319,7 +319,7 @@
                 android:layout_centerVertical="true"
                 android:onClick="onClick"
                 android:padding="12dp"
-                android:text="@string/clouddriver_create_folder"
+                android:text="@string/volume_clouddriver_create_folder"
                 android:textColor="#36A5F6"
                 android:textSize="15sp" />
 
@@ -337,7 +337,7 @@
                 android:paddingTop="7dp"
                 android:paddingRight="13dp"
                 android:paddingBottom="7dp"
-                android:text="@string/clouddriver_move2_current_directory"
+                android:text="@string/volume_clouddriver_move2_current_directory"
                 android:textColor="@android:color/white"
                 android:textSize="15sp"
                 app:cus_backgroundColor="#36A5F6"

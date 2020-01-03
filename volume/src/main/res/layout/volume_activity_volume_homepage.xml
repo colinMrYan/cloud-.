@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@id/ibt_back"
-            android:text="@string/cloud_drive"
+            android:text="@string/volume_cloud_drive"
             android:textColor="?attr/header_text_color"
             android:textSize="@dimen/header_textsize_big" />
 

@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="@string/clouddriver_volume_info"
+            android:text="@string/volume_clouddriver_volume_info"
             android:textColor="?attr/header_text_color"
             android:textSize="@dimen/header_textsize" />
     </RelativeLayout>
@@ -129,7 +129,7 @@
                     android:layout_centerVertical="true"
                     android:paddingBottom="10dp"
                     android:paddingTop="10dp"
-                    android:text="@string/clouddriver_volume_name"
+                    android:text="@string/volume_clouddriver_volume_name"
                     android:textColor="#FF333333"
                     android:textSize="@dimen/content_title_textsize" />
 
@@ -176,7 +176,7 @@
                     android:paddingBottom="10dp"
                     android:paddingLeft="15dp"
                     android:paddingTop="15dp"
-                    android:text="@string/clouddriver_upload_permission"
+                    android:text="@string/volume_clouddriver_upload_permission"
                     android:textColor="#666666"
                     android:textSize="15sp" />
 
@@ -204,7 +204,7 @@
                     android:paddingBottom="10dp"
                     android:paddingLeft="15dp"
                     android:paddingTop="15dp"
-                    android:text="@string/clouddriver_watch_permission"
+                    android:text="@string/volume_clouddriver_watch_permission"
                     android:textColor="#666666"
                     android:textSize="15sp" />
 

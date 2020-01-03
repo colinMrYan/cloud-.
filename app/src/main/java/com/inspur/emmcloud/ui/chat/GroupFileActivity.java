@@ -193,16 +193,16 @@ public class GroupFileActivity extends BaseActivity {
         String sortTypeShowTxt;
         switch (sortType) {
             case SORT_BY_NAME_DOWN:
-                sortTypeShowTxt = getString(R.string.clouddriver_sort_by_name_dasc);
+                sortTypeShowTxt = getString(R.string.sort_by_name_dasc);
                 break;
             case SORT_BY_TIME_UP:
-                sortTypeShowTxt = getString(R.string.clouddriver_sort_by_time_asc);
+                sortTypeShowTxt = getString(R.string.sort_by_time_asc);
                 break;
             case SORT_BY_TIME_DOWN:
-                sortTypeShowTxt = getString(R.string.clouddriver_sort_by_time_dasc);
+                sortTypeShowTxt = getString(R.string.sort_by_time_dasc);
                 break;
             default:
-                sortTypeShowTxt = getString(R.string.clouddriver_sort_by_name_asc);
+                sortTypeShowTxt = getString(R.string.sort_by_name_asc);
                 break;
         }
         operationSortText.setText(sortTypeShowTxt);

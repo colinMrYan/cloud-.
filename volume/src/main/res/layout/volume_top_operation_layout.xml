@@ -27,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="@string/clouddriver_volume_upload_image"
+            android:text="@string/volume_clouddriver_volume_upload_image"
             android:textColor="#36A5F6"
             android:textSize="12sp" />
     </LinearLayout>
@@ -51,7 +51,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="@string/clouddriver_volume_upload_take_photo"
+            android:text="@string/volume_clouddriver_volume_upload_take_photo"
             android:textColor="#36A5F6"
             android:textSize="12sp" />
     </LinearLayout>
@@ -75,7 +75,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="@string/clouddriver_volume_upload_file"
+            android:text="@string/volume_clouddriver_volume_upload_file"
             android:textColor="#36A5F6"
             android:textSize="12sp" />
     </LinearLayout>
@@ -99,7 +99,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="@string/clouddriver_create_folder"
+            android:text="@string/volume_clouddriver_create_folder"
             android:textColor="#36A5F6"
             android:textSize="12sp" />
     </LinearLayout>
@@ -147,7 +147,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="@string/copy"
+            android:text="@string/volume_copy"
             android:textColor="#36A5F6"
             android:textSize="12sp" />
     </LinearLayout>
@@ -171,7 +171,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="@string/move"
+            android:text="@string/volume_move"
             android:textColor="#36A5F6"
             android:textSize="12sp" />
     </LinearLayout>
@@ -219,7 +219,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="@string/rename"
+            android:text="@string/volume_rename"
             android:textColor="#36A5F6"
             android:textSize="12sp" />
     </LinearLayout>

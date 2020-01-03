@@ -184,7 +184,7 @@ public class VolumeFileDownloadActivity extends BaseActivity {
             if (!StringUtils.isBlank(fileSavePath)) {
                 shareFile(fileSavePath);
             } else {
-                ToastUtils.show(getString(R.string.clouddriver_volume_frist_download));
+                ToastUtils.show(getString(R.string.volume_clouddriver_volume_frist_download));
             }
         }
     }
@@ -259,7 +259,7 @@ public class VolumeFileDownloadActivity extends BaseActivity {
                 String totalSize = FileUtils.formatFileSize(volumeFile.getSize());
                 String currentSize = FileUtils.formatFileSize(current);
                 if (current >= 0) {
-                    progressText.setText(getString(R.string.clouddriver_downloading_status, currentSize, totalSize));
+                    progressText.setText(getString(R.string.downloading_status, currentSize, totalSize));
                 }
             }
 

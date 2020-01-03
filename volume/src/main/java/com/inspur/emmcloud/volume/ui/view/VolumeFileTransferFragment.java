@@ -376,7 +376,7 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
                 }
                 if (downloadedAdapter.getSelectVolumeFileList().size() == finishedVolumeFileList.size()) {
                     headerRightTv.setSelected(false);
-                    headerRightTv.setText(R.string.clouddriver_select_nothing);
+                    headerRightTv.setText(R.string.volume_clouddriver_select_nothing);
                 } else {
                     headerRightTv.setSelected(true);
                     headerRightTv.setText(R.string.select_all);
@@ -398,7 +398,7 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
                     }
                     if (downloadedAdapter.getSelectVolumeFileList().size() == finishedVolumeFileList.size()) {
                         headerRightTv.setSelected(false);
-                        headerRightTv.setText(R.string.clouddriver_select_nothing);
+                        headerRightTv.setText(R.string.volume_clouddriver_select_nothing);
                     } else {
                         headerRightTv.setSelected(true);
                         headerRightTv.setText(R.string.select_all);
@@ -432,7 +432,7 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
             boolean isSelect = headerRightTv.isSelected();
             List<VolumeFile> list = new ArrayList<>(finishedVolumeFileList);
             downloadedAdapter.setSelectVolumeFileList(isSelect ? list : new ArrayList<VolumeFile>());
-            headerRightTv.setText(isSelect ? R.string.clouddriver_select_nothing : R.string.select_all);
+            headerRightTv.setText(isSelect ? R.string.volume_clouddriver_select_nothing : R.string.select_all);
             downloadedAdapter.notifyDataSetChanged();
             headerRightTv.setSelected(!isSelect);
             setBottomOperationItemShow(downloadedAdapter.getSelectVolumeFileList());
@@ -519,7 +519,7 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
      */
     protected void showFileDelWranibgDlg(final List<VolumeFile> deleteVolumeFile) {
         new CustomDialog.MessageDialogBuilder(getActivity())
-                .setMessage(R.string.clouddriver_sure_delete_file)
+                .setMessage(R.string.volume_clouddriver_sure_delete_file)
                 .setCancelable(false)
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
@@ -585,13 +585,13 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
                             if (!StringUtils.isBlank(filePath)) {
                                 ShareFile2OutAppUtils.shareFile2WeChat(BaseApplication.getInstance(), filePath);
                             } else {
-                                ToastUtils.show(getString(R.string.clouddriver_volume_frist_download));
+                                ToastUtils.show(getString(R.string.volume_clouddriver_volume_frist_download));
                             }
                         } else if (snsPlatform.mKeyword.equals("QQ")) {
                             if (!StringUtils.isBlank(filePath)) {
                                 ShareFile2OutAppUtils.shareFileToQQ(BaseApplication.getInstance(), filePath);
                             } else {
-                                ToastUtils.show(getString(R.string.clouddriver_volume_frist_download));
+                                ToastUtils.show(getString(R.string.volume_clouddriver_volume_frist_download));
                             }
                         } else if (snsPlatform.mKeyword.equals("CLOUDPLUSE")) {
                             shareToFriends(volumeFile);
@@ -604,7 +604,7 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
         if (AppUtils.isAppInstalled(BaseApplication.getInstance(), ShareFile2OutAppUtils.PACKAGE_MOBILE_QQ)) {
             shareAction.addButton(PlatformName.QQ, "QQ", "umeng_socialize_qq", "umeng_socialize_qq");
         }
-        shareAction.addButton(getString(R.string.clouddrive_internal_sharing), "CLOUDPLUSE", "ic_launcher_share", "ic_launcher_share");
+        shareAction.addButton(getString(R.string.internal_sharing), "CLOUDPLUSE", "ic_launcher_share", "ic_launcher_share");
         shareAction.open();
 
     }

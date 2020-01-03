@@ -109,7 +109,7 @@ public class InvoiceService extends ImpPlugin {
     private void initInvoice() {
         IWXAPI api = WXAPIFactory.createWXAPI(getFragmentContext(), Constant.WECHAT_APPID, false);
         if (!api.isWXAppInstalled()) {
-            ToastUtils.show(R.string.volume_please_install_wechat);
+            ToastUtils.show(R.string.please_install_wechat);
             return;
         }
         String completeUrl = WebAPIUri.getWechatTicketUrl();
