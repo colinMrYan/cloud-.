@@ -229,13 +229,16 @@ public class MainActivity extends BaseActivity {
                         if (second < SPLASH_SHOW_TIME_BY_SECOND) {
                             skipText.setText(getString(R.string.skip) + " " + (SPLASH_SHOW_TIME_BY_SECOND - second));
                         } else {
-                            skipText.setEnabled(false);
-                            destroyTimer();
-                            startApp();
+                            if (skipText.isEnabled()) {
+                                destroyTimer();
+                                startApp();
+                            }
+
                         }
+
+
                     }
                 });
-
 
             }
         };
@@ -253,7 +256,7 @@ public class MainActivity extends BaseActivity {
 
     @OnClick(R.id.tv_skip)
     public void skipSplash() {
-        if (!ClickRuleUtil.isFastClick()) {
+        if (!ClickRuleUtil.isFastClick() && skipText.isEnabled()) {
             destroyTimer();
             startApp();
         }
@@ -266,6 +269,7 @@ public class MainActivity extends BaseActivity {
     private void startApp() {
         //当弹出锁屏界面时不进行跳转，需要解锁完成之后在进行页面跳转，防止出现跳转界面遮盖处锁屏界面
         if (!MyApplication.getInstance().isSafeLock()) {
+            skipText.setEnabled(false);
             Boolean isFirst = PreferencesUtils.getBoolean(
                     MainActivity.this, "isFirst", true);
             if (AppUtils.isAppHasUpgraded(getApplicationContext()) || isFirst) {
