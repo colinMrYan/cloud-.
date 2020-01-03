@@ -156,6 +156,7 @@ public class CommunicationFragment extends BaseFragment implements View.OnClickL
         super.onHiddenChanged(hidden);
         if (!hidden) {
             setFragmentStatusBarCommon();
+            checkingNetStateUtils.getNetStateResult(5);
         }
     }
 
@@ -189,7 +190,6 @@ public class CommunicationFragment extends BaseFragment implements View.OnClickL
     public void onResume() {
         super.onResume();
         setFragmentStatusBarCommon();
-        checkingNetStateUtils.getNetStateResult(5);
     }
 
     private void initView() {
