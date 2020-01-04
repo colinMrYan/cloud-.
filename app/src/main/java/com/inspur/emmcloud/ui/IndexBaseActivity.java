@@ -22,18 +22,22 @@ import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.router.Router;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.SelectorUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.ConfirmDialog;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.bean.badge.BadgeBodyModel;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseFragmentActivity;
+import com.inspur.emmcloud.basemodule.util.AppTabUtils;
 import com.inspur.emmcloud.basemodule.util.ECMShortcutBadgeNumberManagerUtils;
 import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
@@ -41,22 +45,21 @@ import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.contact.ContactClickMessage;
 import com.inspur.emmcloud.bean.system.ChangeTabBean;
-import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
-import com.inspur.emmcloud.bean.system.MainTabResult;
 import com.inspur.emmcloud.bean.system.TabBean;
 import com.inspur.emmcloud.broadcastreceiver.NetworkChangeReceiver;
 import com.inspur.emmcloud.broadcastreceiver.ScreenBroadcastReceiver;
 import com.inspur.emmcloud.componentservice.application.ApplicationService;
 import com.inspur.emmcloud.componentservice.schedule.ScheduleService;
+import com.inspur.emmcloud.componentservice.application.maintab.GetAppMainTabResult;
+import com.inspur.emmcloud.componentservice.application.maintab.MainTabResult;
+import com.inspur.emmcloud.componentservice.schedule.ScheduleService;
+import com.inspur.emmcloud.componentservice.setting.SettingService;
 import com.inspur.emmcloud.componentservice.web.WebService;
 import com.inspur.emmcloud.ui.chat.CommunicationFragment;
 import com.inspur.emmcloud.ui.chat.CommunicationV0Fragment;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.ui.find.FindFragment;
-import com.inspur.emmcloud.ui.mine.MoreFragment;
-import com.inspur.emmcloud.ui.mine.setting.CreateGestureActivity;
 import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
-import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.widget.MyFragmentTabHost;
 import com.inspur.emmcloud.widget.tipsview.TipsView;
 import com.tinkerpatch.sdk.TinkerPatch;
@@ -73,7 +76,9 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+
 public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChangeListener, OnTouchListener {
+    public static final String EXTRA_FORCE_SET = "extra_force_set";
     private static final int REQUEST_CREATE_GUESTURE = 1;
     @BindView(android.R.id.tabhost)
     public MyFragmentTabHost mTabHost;
@@ -144,10 +149,12 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
     private void checkForceGuesture() {
         int doubleValidation = PreferencesByUserAndTanentUtils.getInt(MyApplication.getInstance(),
                 Constant.PREF_MNM_DOUBLE_VALIADATION, -1);
-        if (doubleValidation == 1 && !CreateGestureActivity.getGestureCodeIsOpenByUser(MyApplication.getInstance())) {
-            Intent intent = new Intent(this, CreateGestureActivity.class);
-            intent.putExtra(CreateGestureActivity.EXTRA_FORCE_SET, true);
-            startActivityForResult(intent, REQUEST_CREATE_GUESTURE);
+        Router router = Router.getInstance();
+        SettingService settingService = router.getService(SettingService.class);
+        if (settingService != null && doubleValidation == 1 && settingService.getGestureCodeIsOpenByUser(BaseApplication.getInstance())) {
+            Bundle bundle = new Bundle();
+            bundle.putBoolean(EXTRA_FORCE_SET, true);
+            ARouter.getInstance().build(Constant.AROUTER_CLASS_SETTING_CREATE_GESTURE).with(bundle).navigation(this, REQUEST_CREATE_GUESTURE);
         }
 
     }
@@ -181,6 +188,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
                 for (int i = 0; i < mainTabResultList.size(); i++) {
                     TabBean tabBean = null;
                     MainTabResult mainTabResult = mainTabResultList.get(i);
+                    Router router = Router.getInstance();
                     switch (mainTabResult.getType()) {
                         case Constant.APP_TAB_TYPE_NATIVE:
                             switch (mainTabResult.getUri()) {
@@ -194,7 +202,6 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
                                     }
                                     break;
                                 case Constant.APP_TAB_BAR_WORK:
-                                    Router router = Router.getInstance();
                                     if (router.getService(ScheduleService.class) != null) {
                                         ScheduleService service = router.getService(ScheduleService.class);
                                         tabBean = new TabBean(getString(R.string.work), service.getImpFragmentClass(), mainTabResult);
@@ -208,7 +215,11 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
                                     }
                                     break;
                                 case Constant.APP_TAB_BAR_PROFILE:
-                                    tabBean = new TabBean(getString(R.string.mine), MoreFragment.class, mainTabResult);
+                                    router = Router.getInstance();
+                                    if (router.getService(SettingService.class) != null) {
+                                        SettingService service = router.getService(SettingService.class);
+                                        tabBean = new TabBean(getString(R.string.mine), service.getImpFragmentClass(), mainTabResult);
+                                    }
                                     break;
                                 case Constant.APP_TAB_BAR_CONTACT:
                                     tabBean = new TabBean(getString(R.string.contact), ContactSearchFragment.class,
@@ -224,7 +235,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
                             }
                             break;
                         case Constant.APP_TAB_TYPE_WEB:
-                            Router router = Router.getInstance();
+                            router = Router.getInstance();
                             if (router.getService(WebService.class) != null) {
                                 WebService service = router.getService(WebService.class);
                                 tabBean = new TabBean(getString(R.string.web), service.getImpFragmentClass(), mainTabResult);

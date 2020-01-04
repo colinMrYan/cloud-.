@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.bean.system;
 
 import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.basemodule.bean.AppConfig;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

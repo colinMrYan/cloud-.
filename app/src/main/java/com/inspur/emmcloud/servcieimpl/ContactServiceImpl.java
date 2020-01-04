@@ -37,4 +37,11 @@ public class ContactServiceImpl implements ContactService {
     public Class getContactSearchActivity() {
         return ContactSearchActivity.class;
     }
+
+    @Override
+    public void saveContactUser(ContactUser contactUser) {
+        if (contactUser != null) {
+            ContactUserCacheUtils.saveContactUser(contactUser);
+        }
+    }
 }

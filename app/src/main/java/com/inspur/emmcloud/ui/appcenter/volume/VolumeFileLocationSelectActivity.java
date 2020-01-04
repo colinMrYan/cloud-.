@@ -216,6 +216,9 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
         }
     }
 
+    /**
+     * 复制或移动文件
+     **/
     private void copyOrMoveFileBetweenVolume(String fileOrgPath, String operation) {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
             loadingDlg.show();

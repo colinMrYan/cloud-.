@@ -1,5 +1,7 @@
 package com.inspur.emmcloud.bean.system;
 
+import com.inspur.emmcloud.componentservice.application.maintab.MainTabResult;
+
 /**
  * Created by yufuchang on 2017/4/28.
  */

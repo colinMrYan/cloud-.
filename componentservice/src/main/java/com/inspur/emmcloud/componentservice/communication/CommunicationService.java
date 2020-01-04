@@ -1,15 +1,12 @@
 package com.inspur.emmcloud.componentservice.communication;
 
-import android.content.Context;
-
 import android.app.Activity;
+import android.content.Context;
 
 import com.inspur.emmcloud.componentservice.CoreService;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 
 import org.json.JSONArray;
-
-import java.util.List;
 
 /**
  * Created by chenmch on 2019/5/31.
@@ -23,6 +20,8 @@ public interface CommunicationService extends CoreService {
     void closeWebSocket();
 
     void sendAppStatus();
+
+    void sendAppStatus(String AppState);
 
     void stopPush();
 
@@ -53,5 +52,7 @@ public interface CommunicationService extends CoreService {
 
     String getUserIconUrl(ContactUser uid);
 
+    String getCustomerChannelV0(Context context);
 
+    Conversation getCustomerConversation(Context context);
 }

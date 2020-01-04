@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -48,6 +49,7 @@ import com.inspur.emmcloud.basemodule.bean.EventMessage;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.basemodule.util.AppConfigCacheUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.DownLoaderUtils;
 import com.inspur.emmcloud.basemodule.util.FileDownloadManager;
@@ -57,6 +59,7 @@ import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
 import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
+import com.inspur.emmcloud.basemodule.util.TabAndAppExistUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.basemodule.util.compressor.Compressor;
 import com.inspur.emmcloud.basemodule.util.imagepicker.ImagePicker;
@@ -93,11 +96,9 @@ import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.privates.MediaPlayerManagerUtils;
 import com.inspur.emmcloud.util.privates.MessageSendManager;
 import com.inspur.emmcloud.util.privates.NotificationUpgradeUtils;
-import com.inspur.emmcloud.util.privates.TabAndAppExistUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
 import com.inspur.emmcloud.util.privates.Voice2StringMessageUtils;
 import com.inspur.emmcloud.util.privates.audioformat.AudioMp3ToPcm;
-import com.inspur.emmcloud.util.privates.cache.AppConfigCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
@@ -123,6 +124,7 @@ import java.util.Map;
 
 import butterknife.BindView;
 
+@Route(path = Constant.AROUTER_CLASS_APP_CONVERSATION_V1)
 public class ConversationActivity extends ConversationBaseActivity {
 
     public static final String CLOUD_PLUS_CHANNEL_ID = "channel_id";
@@ -169,9 +171,6 @@ public class ConversationActivity extends ConversationBaseActivity {
     private PopupWindowList mPopupWindowList; //仿微信长按处理
 
     private UIMessage backUiMessage = null;
-
-
-
 
 
     @Override

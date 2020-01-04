@@ -39,13 +39,13 @@ import com.inspur.emmcloud.bean.contact.ContactProtoBuf;
 import com.inspur.emmcloud.bean.contact.GetContactOrgListUpateResult;
 import com.inspur.emmcloud.bean.contact.GetContactUserListUpateResult;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
-import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
-import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
+import com.inspur.emmcloud.componentservice.app.CommonCallBack;
 import com.inspur.emmcloud.componentservice.application.ApplicationService;
+import com.inspur.emmcloud.componentservice.application.maintab.GetAppMainTabResult;
+import com.inspur.emmcloud.componentservice.application.navibar.NaviBarModel;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.componentservice.schedule.ScheduleService;
-import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.service.LocationService;
 import com.inspur.emmcloud.util.privates.AppConfigUtils;
@@ -289,6 +289,7 @@ public class IndexActivity extends IndexBaseActivity {
                             getContactOrg();
                         }
                         WebSocketPush.getInstance().startWebSocket();// 启动webSocket推送
+                        //LogUtils.LbcDebug("1111111111111111111111111111111");
                         batteryWhiteListRemind(IndexActivity.this);
                         break;
                     case RELOAD_WEB:

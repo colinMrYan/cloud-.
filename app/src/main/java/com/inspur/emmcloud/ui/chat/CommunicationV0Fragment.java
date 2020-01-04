@@ -29,6 +29,7 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -44,6 +45,7 @@ import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.ui.BaseFragment;
+import com.inspur.emmcloud.basemodule.util.AppTabUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.CheckingNetStateUtils;
 import com.inspur.emmcloud.basemodule.util.DbCacheUtils;
@@ -62,14 +64,12 @@ import com.inspur.emmcloud.bean.chat.MessageReadCreationDate;
 import com.inspur.emmcloud.bean.chat.Msg;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.system.EmmAction;
-import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
-import com.inspur.emmcloud.bean.system.MainTabProperty;
-import com.inspur.emmcloud.bean.system.MainTabResult;
 import com.inspur.emmcloud.broadcastreceiver.MsgReceiver;
+import com.inspur.emmcloud.componentservice.application.maintab.GetAppMainTabResult;
+import com.inspur.emmcloud.componentservice.application.maintab.MainTabProperty;
+import com.inspur.emmcloud.componentservice.application.maintab.MainTabResult;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
-import com.inspur.emmcloud.ui.mine.setting.NetWorkStateDetailActivity;
-import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.ChannelGroupIconUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils.OnCreateGroupChannelListener;
@@ -256,7 +256,7 @@ public class CommunicationV0Fragment extends BaseFragment {
         netExceptionView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                IntentUtils.startActivity(getActivity(), NetWorkStateDetailActivity.class);
+                ARouter.getInstance().build(Constant.AROUTER_CLASS_APP_NETWORK_DETAIL).navigation(getActivity());
             }
         });
         handMessage();

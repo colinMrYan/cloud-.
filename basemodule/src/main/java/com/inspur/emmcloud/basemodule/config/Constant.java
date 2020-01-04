@@ -283,8 +283,8 @@ public class Constant {
     public static final String AROUTER_CLASS_SETTING_SERVICE_NO_PERMISSION = "/setting/NoPermissionDialogActivity";
 
     public static final String AROUTER_CLASS_APP_INDEX = "/app/IndexActivity";
-    public static final String AROUTER_CLASS_APP_NETWORK_DETAIL = "/app/NetWorkStateDetailActivity";
-    public static final String AROUTER_CLASS_APP_WEB_ERROR_DETAIL = "/app/WebViewNetStateDetailActivity";
+    public static final String AROUTER_CLASS_APP_NETWORK_DETAIL = "/setting/NetWorkStateDetailActivity";
+    public static final String AROUTER_CLASS_APP_WEB_ERROR_DETAIL = "/setting/WebViewNetStateDetailActivity";
     public static final String AROUTER_CLASS_APPCENTER_REACT_NATIVE = "/app/ReactNativeAppActivity";
 
     public static final String AROUTER_CLASS_AROUTER_DEGRADE = "/aRouter/degrade";
@@ -302,6 +302,15 @@ public class Constant {
 
     public static final String AROUTER_CLASS_SCHEDLE_TEST = "/schedule/test";
     public static final String AROUTER_CLASS_SCHEDLE_ADD = "/schedule/add";
+
+    public static final String AROUTER_CLASS_APP_MAIN = "/app/main";
+    public static final String AROUTER_CLASS_APP_CONVERSATION_V1 = "/app/ConversationActivity";
+    public static final String AROUTER_CLASS_APP_CHANNEL_V0 = "/app/ChannelV0Activity";
+
+    public static final String AROUTER_CLASS_SETTING_CREATE_GESTURE = "/setting/CreateGestureActivity";
+    public static final String AROUTER_CLASS_SETTING_TEST = "/setting/test";
+    public static final String AROUTER_CLASS_SETTING_GUIDE = "/setting/guide";
+    public static final String AROUTER_CLASS_SETTING_FACEVERIFY = "/setting/FaceVerify";
 
     //参会状态
     public static final int ATTEND_MEETING_STATUS_ACCEPT = 1;
@@ -322,5 +331,11 @@ public class Constant {
      */
     public static final String TYPE_DOWNLOAD = "download";
     public static final String TYPE_UPLOAD = "upload";
+
+    /**
+     * 语音转文字开关
+     */
+    public static final boolean IS_VOICE_WORD_OPEN = true;
+    public static final boolean IS_VOICE_WORD_CLOUSE = false;
 
 }

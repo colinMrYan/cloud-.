@@ -1,0 +1,152 @@
+<resources>
+    <string name="setting_more_feedback">Feedback</string>
+    <string name="setting_feed_back_content_hint">Please enter suggestions and comments</string>
+
+    <string name="setting_feed_back_contact_hint">Enter your contact information here</string>
+    <string name="setting_feed_back_without_name">Anonymous</string>
+    <string name="setting_feed_back_submit">Submit feedback</string>
+
+    <string name="setting_card_package_welcome">Welcome to use the package</string>
+    <string name="setting_card_package_collect">Put your usual information cards in one place</string>
+    <string name="setting_card_package_taxpayer">Taxpayer identification number</string>
+    <string name="setting_card_package_address">Address</string>
+    <string name="setting_card_package_phone_number">Telephone</string>
+
+    <!--九宫格-->
+    <!-- Gesture login activity -->
+    <string name="setting_gesture_forget_gesture">Forget gesture code</string>
+    <string name="setting_gesture_default">Please enter your gesture password</string>
+    <string name="setting_gesture_error">Gesture password input error</string>
+    <string name="setting_gesture_correct">Input correct</string>
+    <string name="setting_gesture_code_error">Password error, you can try again </string>
+    <string name="setting_gesture_code_time"> times</string>
+    <string name="setting_gesture_code_tips">After 5 failures, you need to log in again</string>
+
+    <string name="setting_forgetpwd">Forget Password</string>
+
+    <string name="setting_safe_center_use_finger_print_unlock">Touch ID</string>
+
+    <string name="setting_resend_code">Resend(51)</string>
+    <string name="setting_user_modify_user_info">Modify user info</string>
+    <string name="setting_please_input_change">Please type change</string>
+
+    <string name="setting_user_worker_num">NO.</string>
+    <string name="setting_phone_num">Mobile number</string>
+    <string name="setting_user_company_info">Enterprise</string>
+    <string name="setting_check_update_text">Check New Version</string>
+
+
+    <string name="setting_about_text">About</string>
+    <string name="setting_about_welcome_text">Welcome Page</string>
+    <string name="setting_about_protocol_text">Services Agreement</string>
+    <string name="setting_feed_back_no_empty">Feedback</string>
+    <string name="setting_feed_back_out_of_length">Please limit your feedback to 200 words</string>
+
+    <string name="setting_invite_friends_text">Recommend Cloud+ to Friends</string>
+
+    <string name="setting_join_experience_plan">Join Early Experience Program</string>
+    <string name="setting_gesture_force_set">According to the enterprise security policy, you need to set a gesture password</string>
+    <string name="setting_gesture_force_open">You can\'t turn off the gesture password according to the enterprise security policy</string>
+
+    <!-- Create gesture activity -->
+    <string name="setting_create_gesture_default">Draw the Unlock Pattern</string>
+    <string name="setting_create_gesture_correct">Draw your pattern again</string>
+    <string name="setting_create_gesture_less_error">At least 4 points required. Please re-enter</string>
+    <string name="setting_create_gesture_confirm_error">Not match. Please draw it again</string>
+    <string name="setting_create_gesture_confirm_correct">Success</string>
+    <string name="setting_create_gesture_reset">Reset</string>
+    <string name="setting_create_gesture_code">Pattern</string>
+    <string name="setting_create_gesture_guid">You can create a cloud +  unlock pattern so that others can\'t open the cloud + when they borrow your cell phone</string>
+
+    <!--安全中心-->
+    <string name="setting_safe_gesture_face">Touch ID,Gesture Password Settings</string>
+    <string name="setting_face_unlock">Face Enter Setting</string>
+    <string name="setting_safe_face_id_unlock">Face Enter</string>
+    <string name="setting_safe_gesture_face_setting">Face ID and Gesture Password Settings</string>
+    <string name="setting_safe_center">Account,Device Security</string>
+    <string name="setting_safe_center_gesture">Gesture Password</string>
+    <string name="setting_safe_center_finger_print">Turn On Touch ID Lock</string>
+
+    <string name="setting_switch_gesture_unlock">Turn On Password Lock</string>
+    <string name="setting_switch_gesture_reset_unlock">Reset Gesture Password</string>
+    <string name="setting_put_face_in_frame">Put your face into the frame</string>
+    <string name="setting_experience_face_verify">Have a try</string>
+    <string name="setting_no_face">No face</string>
+    <string name="setting_put_body_right">Face no clear</string>
+    <string name="setting_get_closer">Face no clear</string>
+    <string name="setting_blink">Blink</string>
+    <string name="setting_face_verify_success">Success</string>
+    <string name="setting_face_verify_fail">Sorry,we couldn’t identify you</string>
+    <string name="setting_face_enter">Face Recognition</string>
+    <string name="setting_face_login">Face Login</string>
+    <string name="setting_off_face_verify_relogin">Turn Off it and relogin </string>
+    <string name="setting_face_verifying">Verifying</string>
+    <string name="setting_finger_print_times_use_up">Your recognition times are exhausted. Please try gesture unlocking or try again after a period of time.</string>
+    <string name="setting_finger_print_try_times">If fingerprint authentication fails, you can also try %1$d</string>
+    <string name="setting_finger_print_id">%1$s Touch ID</string>
+    <string name="setting_finger_print_by_finger_print">By verifying Touch ID unlock %1$s </string>
+    <string name="setting_close_auto_select_enterprise">Turn off auto selection enterprise</string>
+
+    <string name="setting_language_set_text">Language</string>
+
+    <string name="setting_mine_theme_switch">Theme</string>
+    <string name="setting_mine_theme_white">White</string>
+    <string name="setting_mine_theme_grey">Grey</string>
+    <string name="setting_mine_theme_blue">Blue</string>
+
+    <string name="setting_mine_tab_layout">Layout Switching</string>
+    <string name="setting_mine_tab_layout_switch">Switch to：%1$s</string>
+
+    <!--网络链接及网络诊断-->
+    <string name="setting_net_diagnosis_title">Network Diagnoses</string>
+    <string name="setting_net_diagnosis_hard_link_title">Detect network settings</string>
+    <string name="setting_net_diagnosis_wifi_link_title">Detect router</string>
+    <string name="setting_net_diagnosis_dns_link_title">Network Connectivity Detection</string>
+    <string name="setting_net_diagnosis_hard_link_conent">Contained Items:Connection status of Wi-Fi,4G,LTE and so on.</string>
+    <string name="setting_net_diagnosis_hard_to_fix">Repair</string>
+    <string name="setting_net_diagnosis_portal_to_set">Authentication</string>
+    <string name="setting_net_diagnosis_wifi_link_conent">Contained Items:Does Connected Wi-Fi have verification requirement? if yes,Please verify Wi-Fi first, then continue to visit.</string>
+    <string name="setting_net_network_authentication">Network Certification</string>
+    <string name="setting_net_diagnosis_hard_detail_title">Hardware Link Diagnoses</string>
+    <string name="setting_net_diagnosis_hard_detail_content">Recommend to do as follows</string>
+    <string name="setting_net_diagnosis_hard_detail_content_frist">1.Turn on the phone \"Settings\" and turn on the \"Wi-Fi\".</string>
+    <string name="setting_net_diagnosis_hard_detail_content_second">2.Open the phone \"Settings\" and turn on the \"Cellular data\".</string>
+    <string name="setting_net_diagnosis_hard_detail_setting">Go To Set</string>
+    <string name="setting_net_ping_url_baidu">Baidu</string>
+    <string name="setting_net_ping_url_inspur">Inspur</string>
+    <string name="setting_net_ping_url_ali">Alibaba</string>
+    <string name="setting_net_ping_url_cloud">Cloud+</string>
+    <string name="setting_net_check_error_detail_title">Exception Information</string>
+    <string name="setting_net_check_net_url">Website</string>
+    <string name="setting_net_check_net_request_result">Result</string>
+    <string name="setting_net_check_net_state">Net State</string>
+    <string name="setting_net_check_net_current_type">Net Type：</string>
+    <string name="setting_net_check_net_current_state">Net State：</string>
+    <string name="setting_net_check_net_current_state_connected">Connected</string>
+    <string name="setting_net_check_net_current_state_unconnected">Unconnected</string>
+    <string name="setting_net_check_net_current_state_unknown">Unknown</string>
+
+    <string name="settings_device_manager">Device Management</string>
+
+    <string name="setting_service_term">Services Agreement</string>
+    <string name="setting_software_service_term">Services Agreement</string>
+
+    <string name="setting_device_unbind_sucess">Device unbound successfully!</string>
+    <string name="setting_device_other_unbind_warning">After unbinding, log on from %1$s, you need to re register the device</string>
+    <string name="setting_device_current_unbind_warning">After unbinding, you need to log in again and register your device</string>
+    <string name="setting_last_use_time">Last use time</string>
+    <string name="setting_bind_device">Current Binding Devices</string>
+    <string name="setting_current_device">Current device</string>
+    <string name="setting_history_device">Using Devices History</string>
+    <string name="setting_device_history_use">Historical use</string>
+    <string name="setting_device_bind_time_title">Binding time: </string>
+    <string name="setting_device_bind_time">Binding time</string>
+    <string name="setting_device_info">Device details</string>
+    <string name="setting_device_id">Device ID</string>
+    <string name="setting_unbind_this_device">Unbound this device</string>
+    <string name="setting_sure_switch_to">Make sure to switch to %1$s</string>
+
+    <string name="setting_enter_app">Enter the application</string>
+
+
+</resources>
