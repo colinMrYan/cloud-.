@@ -37,4 +37,11 @@ public class ContactServiceImpl implements ContactService {
     public String getUserName(String uid) {
         return ContactUserCacheUtils.getUserName(uid);
     }
+
+    @Override
+    public void saveContactUser(ContactUser contactUser) {
+        if (contactUser != null) {
+            ContactUserCacheUtils.saveContactUser(contactUser);
+        }
+    }
 }

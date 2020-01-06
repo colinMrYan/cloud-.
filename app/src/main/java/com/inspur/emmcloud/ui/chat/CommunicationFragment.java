@@ -24,6 +24,7 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ConversationAdapter;
@@ -44,6 +45,7 @@ import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.ui.BaseFragment;
+import com.inspur.emmcloud.basemodule.util.AppTabUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.CheckingNetStateUtils;
 import com.inspur.emmcloud.basemodule.util.DownLoaderUtils;
@@ -65,9 +67,9 @@ import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.UIConversation;
 import com.inspur.emmcloud.bean.chat.WSCommand;
 import com.inspur.emmcloud.bean.system.EmmAction;
-import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
-import com.inspur.emmcloud.bean.system.MainTabProperty;
-import com.inspur.emmcloud.bean.system.MainTabResult;
+import com.inspur.emmcloud.componentservice.application.maintab.GetAppMainTabResult;
+import com.inspur.emmcloud.componentservice.application.maintab.MainTabProperty;
+import com.inspur.emmcloud.componentservice.application.maintab.MainTabResult;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
 import com.inspur.emmcloud.componentservice.communication.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.componentservice.communication.OnCreateDirectConversationListener;
@@ -75,8 +77,6 @@ import com.inspur.emmcloud.componentservice.communication.OnCreateGroupConversat
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
-import com.inspur.emmcloud.ui.mine.setting.NetWorkStateDetailActivity;
-import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationGroupIconUtils;
@@ -156,6 +156,7 @@ public class CommunicationFragment extends BaseFragment implements View.OnClickL
         super.onHiddenChanged(hidden);
         if (!hidden) {
             setFragmentStatusBarCommon();
+            checkingNetStateUtils.getNetStateResult(5);
         }
     }
 
@@ -189,7 +190,6 @@ public class CommunicationFragment extends BaseFragment implements View.OnClickL
     public void onResume() {
         super.onResume();
         setFragmentStatusBarCommon();
-        checkingNetStateUtils.getNetStateResult(5);
     }
 
     private void initView() {
@@ -322,7 +322,7 @@ public class CommunicationFragment extends BaseFragment implements View.OnClickL
 
             @Override
             public void onNetExceptionWightClick() {
-                IntentUtils.startActivity(getActivity(), NetWorkStateDetailActivity.class);
+                ARouter.getInstance().build(Constant.AROUTER_CLASS_APP_NETWORK_DETAIL).navigation(getActivity());
             }
         });
         conversionRecycleView.setAdapter(conversationAdapter);

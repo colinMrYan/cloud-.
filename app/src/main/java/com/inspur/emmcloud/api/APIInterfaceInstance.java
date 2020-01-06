@@ -1,9 +1,9 @@
 package com.inspur.emmcloud.api;
 
 
+import com.inspur.emmcloud.basemodule.application.GetClientIdRsult;
 import com.inspur.emmcloud.basemodule.bean.GetUploadPushInfoResult;
 import com.inspur.emmcloud.bean.ChatFileUploadInfo;
-import com.inspur.emmcloud.bean.appcenter.GetClientIdRsult;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailDetailResult;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailFolderResult;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailListResult;
@@ -33,21 +33,12 @@ import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.find.GetKnowledgeInfo;
 import com.inspur.emmcloud.bean.find.GetTripArriveCity;
 import com.inspur.emmcloud.bean.find.Trip;
-import com.inspur.emmcloud.bean.mine.GetBindingDeviceResult;
-import com.inspur.emmcloud.bean.mine.GetCardPackageResult;
-import com.inspur.emmcloud.bean.mine.GetDeviceLogResult;
-import com.inspur.emmcloud.bean.mine.GetExperienceUpgradeFlagResult;
-import com.inspur.emmcloud.bean.mine.GetFaceSettingResult;
-import com.inspur.emmcloud.bean.mine.GetUploadMyHeadResult;
-import com.inspur.emmcloud.bean.mine.GetUserCardMenusResult;
-import com.inspur.emmcloud.bean.mine.GetUserHeadUploadResult;
-import com.inspur.emmcloud.bean.mine.UserProfileInfoBean;
 import com.inspur.emmcloud.bean.system.GetAppConfigResult;
-import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.bean.system.GetBoolenResult;
 import com.inspur.emmcloud.bean.system.GetUpgradeResult;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
-import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
+import com.inspur.emmcloud.componentservice.application.maintab.GetAppMainTabResult;
+import com.inspur.emmcloud.componentservice.application.navibar.NaviBarModel;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
 import com.inspur.emmcloud.componentservice.communication.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.componentservice.volume.GetVolumeFileUploadTokenResult;
@@ -63,22 +54,6 @@ public class APIInterfaceInstance implements APIInterface {
 
     public APIInterfaceInstance() {
         super();
-    }
-
-    @Override
-    public void returnUnBindDeviceSuccess() {
-    }
-
-    @Override
-    public void returnUnBindDeviceFail(String error, int errorCode) {
-    }
-
-    @Override
-    public void returnBindingDeviceListSuccess(GetBindingDeviceResult getBindingDeviceResult) {
-    }
-
-    @Override
-    public void returnBindingDeviceListFail(String error, int errorCode) {
     }
 
 
@@ -110,18 +85,6 @@ public class APIInterfaceInstance implements APIInterface {
 
     }
 
-
-    @Override
-    public void returnUploadMyHeadSuccess(
-            GetUploadMyHeadResult getUploadMyInfoResult, String filePath) {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
-    public void returnUploadMyHeadFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
-    }
 
     @Override
     public void returnChannelListSuccess(
@@ -170,17 +133,6 @@ public class APIInterfaceInstance implements APIInterface {
 
     }
 
-    @Override
-    public void returnModifyUserInfoSucces(GetBoolenResult getBoolenResult) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnModifyUserInfoFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
-    }
 
     @Override
     public void returnWebSocketUrlSuccess(
@@ -283,18 +235,6 @@ public class APIInterfaceInstance implements APIInterface {
 
     }
 
-    @Override
-    public void returnUserHeadUploadSuccess(
-            GetUserHeadUploadResult getUserHeadUploadResult) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnUserHeadUploadFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
-    }
 
     @Override
     public void returnCreateSingleChannelSuccess(
@@ -508,15 +448,6 @@ public class APIInterfaceInstance implements APIInterface {
 
     }
 
-    @Override
-    public void returnUserProfileConfigSuccess(UserProfileInfoBean userProfileInfoBean) {
-
-    }
-
-    @Override
-    public void returnUserProfileConfigFail(String error, int errorCode) {
-
-    }
 
     @Override
     public void returnSplashPageInfoSuccess(SplashPageBean splashPageBean) {
@@ -528,17 +459,6 @@ public class APIInterfaceInstance implements APIInterface {
 
     }
 
-
-
-    @Override
-    public void returnDeviceLogListSuccess(GetDeviceLogResult getDeviceLogResult) {
-
-    }
-
-    @Override
-    public void returnDeviceLogListFail(String error, int errorCode) {
-
-    }
 
     @Override
     public void returnAppConfigSuccess(GetAppConfigResult getAppConfigResult) {
@@ -575,21 +495,6 @@ public class APIInterfaceInstance implements APIInterface {
 
     }
 
-    @Override
-    public void returnFaceSettingSuccess(GetFaceSettingResult getFaceSettingResult) {
-    }
-
-    @Override
-    public void returnFaceSettingFail(String error, int errorCode) {
-    }
-
-    @Override
-    public void returnFaceVerifySuccess(GetFaceSettingResult getFaceSettingResult) {
-    }
-
-    @Override
-    public void returnFaceVerifyFail(String error, int errorCode) {
-    }
 
     @Override
     public void returnOpenActionBackgroudUrlSuccess() {
@@ -662,15 +567,6 @@ public class APIInterfaceInstance implements APIInterface {
 
     }
 
-    @Override
-    public void returnCardPackageListSuccess(GetCardPackageResult getCardPackageResult) {
-
-    }
-
-    @Override
-    public void returnCardPackageListFail(String error, int errorCode) {
-
-    }
 
     @Override
     public void returnGetVoiceCommunicationResultSuccess(GetVoiceCommunicationResult getVoiceCommunicationResult) {
@@ -790,21 +686,6 @@ public class APIInterfaceInstance implements APIInterface {
     public void returnUpdateConversationNameFail(String error, int errorCode) {
     }
 
-    @Override
-    public void returnExperienceUpgradeFlagSuccess(GetExperienceUpgradeFlagResult getExperienceUpgradeFlagResult) {
-    }
-
-    @Override
-    public void returnExperienceUpgradeFlagFail(String error, int errorCode) {
-    }
-
-    @Override
-    public void returnUpdateExperienceUpgradeFlagSuccess() {
-    }
-
-    @Override
-    public void returnUpdateExperienceUpgradeFlagFail(String error, int errorCode) {
-    }
 
     @Override
     public void returnCreateDirectConversationSuccess(Conversation conversation) {
@@ -891,14 +772,6 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnRemoveMailFail(String error, int errorCode) {
-    }
-
-    @Override
-    public void returnUserCardMenusSuccess(GetUserCardMenusResult getUserCardMenusResult) {
-    }
-
-    @Override
-    public void returnUserCardMenusFail(String error, int errorCode) {
     }
 
 

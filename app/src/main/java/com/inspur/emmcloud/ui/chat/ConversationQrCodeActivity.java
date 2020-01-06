@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.chat;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -39,7 +40,6 @@ import com.inspur.emmcloud.componentservice.communication.SearchModel;
 import com.inspur.emmcloud.ui.chat.mvp.view.ConversationSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
-import com.inspur.emmcloud.ui.mine.setting.RecommendAppActivity;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.umeng.commonsdk.UMConfigure;
@@ -346,7 +346,7 @@ public class ConversationQrCodeActivity extends BaseActivity {
 
     private static class CustomShareListener implements UMShareListener {
 
-        private WeakReference<RecommendAppActivity> mActivity;
+        private WeakReference<Activity> mActivity;
 
         private CustomShareListener(ConversationQrCodeActivity activity) {
             mActivity = new WeakReference(activity);

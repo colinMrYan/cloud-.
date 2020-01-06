@@ -23,7 +23,6 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -64,6 +63,7 @@ import com.inspur.emmcloud.basemodule.util.imagepicker.ImagePicker;
 import com.inspur.emmcloud.basemodule.util.imagepicker.bean.ImageItem;
 import com.inspur.emmcloud.basemodule.util.imagepicker.ui.ImageGridActivity;
 import com.inspur.emmcloud.basemodule.util.mycamera.MyCameraActivity;
+import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.chat.GetChannelMessagesResult;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentMediaImage;
@@ -77,7 +77,6 @@ import com.inspur.emmcloud.componentservice.communication.OnCreateDirectConversa
 import com.inspur.emmcloud.componentservice.communication.SearchModel;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.componentservice.schedule.ScheduleService;
-import com.inspur.emmcloud.componentservice.volume.VolumeFile;
 import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.interf.ResultCallback;
 import com.inspur.emmcloud.push.WebSocketPush;
@@ -124,7 +123,7 @@ import java.util.Map;
 
 import butterknife.BindView;
 
-@Route(path = Constant.AROUTER_CLASS_CONVERSATION)
+@Route(path = Constant.AROUTER_CLASS_APP_CONVERSATION_V1)
 public class ConversationActivity extends ConversationBaseActivity {
 
     public static final String CLOUD_PLUS_CHANNEL_ID = "channel_id";
@@ -171,7 +170,6 @@ public class ConversationActivity extends ConversationBaseActivity {
     private PopupWindowList mPopupWindowList; //仿微信长按处理
 
     private UIMessage backUiMessage = null;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

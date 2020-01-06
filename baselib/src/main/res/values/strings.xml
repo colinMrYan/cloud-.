@@ -15,14 +15,17 @@
     <string name="resolution_warning">您的设备分辨率小于800*480，无法运行此程序</string>
     <string name="retry">重试</string>
     <string name="re_login">重新登录</string>
-    <string name="software_service_term">服务协议</string>
+
     <string name="update_fail">更新失败</string>
     <string name="downloading_package">下载中，请稍候....</string>
-    <string name="service_term">服务协议</string>
+
     <string name="prompt">提示</string>
     <string name="nothing">无 </string>
     <string name="function_intr">功能介绍 </string>
-    <string name="enter_app">进入应用</string>
+    <string name="user_depart_info_text">部门信息</string>
+    <string name="feed_back_upload">提交</string>
+
+
     <string name="sweep">扫一扫</string>
     <string name="send">发送</string>
     <string name="picture">图片</string>
@@ -54,8 +57,7 @@
     <string name="cannot_download_for_network_exception">网络有问题，无法下载</string>
     <string name="cannot_show_for_too_big">图片太大无法显示</string>
     <string name="unknown_error">未知的错误</string>
-    <string name="check_update_text">检查新版本</string>
-    <string name="app_is_lastest_version">当前已是最新版本</string>
+
     <string name="check_update_fail">检查新版本失败</string>
     <string name="upgrade">立即更新</string>
     <string name="not_upgrade">下次再说</string>
@@ -66,7 +68,7 @@
     <string name="only_free">仅显示空闲</string>
     <string name="file_no_identifiable">不能识别的文件类型</string>
     <string name="login_code_login_text">短信登录</string>
-    <string name="invite_friends_text">把云+推荐给朋友</string>
+
     <string name="tab_not_support_tips">%1$s功能已改版，请<Data><![CDATA[<font color=\'#0F7BCA\'>升级到最新版本</font>]]></Data></string>
     <string name="choose">选择</string>
     <string name="file_type">文件类型</string>
@@ -141,7 +143,7 @@
     <string name="network_exception">网络不可用，请检查您的网络设置</string>
     <string name="network_timeout">网络超时，请检查您的网络设置</string>
     <string name="net_request_failed">服务未能正确响应</string>
-    <string name="phone_num">手机号</string>
+
     <string name="mail">邮箱</string>
     <string name="register">注册</string>
     <string name="remark">备注</string>
@@ -194,7 +196,7 @@
     <string name="meeting_room">会议室</string>
     <string name="building">建筑</string>
     <string name="am">上午</string>
-    <string name="please_input_change">请输入修改</string>
+
     <string name="my_stroke">我的行程</string>
     <string name="title">标题</string>
     <string name="channel_hide_chat">隐藏聊天</string>
@@ -473,7 +475,7 @@
     <string name="moments">动态</string>
     <!-- 我的页面部分 -->
     <string name="data_clear_success">清除成功</string>
-    <string name="not_set">未设置</string>
+
     <string name="mine">我</string>
     <string name="take_camera">相机拍摄</string>
     <string name="gallery">手机相册</string>
@@ -482,7 +484,7 @@
     <string name="follow_system">跟随系统</string>
     <string name="more_message">消息通知</string>
     <string name="more_allApps">所有应用</string>
-    <string name="more_feedback">意见反馈</string>
+
     <string name="more_pushlist_text">推送列表</string>
     <string name="more_invitefriend_text">邀请好友使用Cloud</string>
     <string name="account_security_head">账号与安全</string>
@@ -490,21 +492,15 @@
     <string name="account_security_mail">当前绑定邮箱</string>
     <string name="account_security_mobile">当前绑定手机</string>
     <string name="account_security_sign_record">账户登录记录</string>
-    <string name="about_text">关于</string>
-    <string name="about_welcome_text">欢迎页面</string>
+
+
     <string name="about_newfun_text">新功能介绍</string>
-    <string name="about_protocol_text">服务协议</string>
     <string name="cloud_version">Cloud 版本</string>
-    <string name="feed_back_no_empty">请输入反馈意见</string>
-    <string name="feed_back_out_of_length">您输入的字数已经超过了限制</string>
     <string name="feed_back_advice">您的意见和建议</string>
     <string name="feed_back_welcom">欢迎提出宝贵的建议和意见！我们会用心倾听并持续改进产品，把更好的体验带给您</string>
     <string name="feed_back_input_phone">输入电话或邮箱</string>
-    <string name="feed_back_upload">提交</string>
-    <string name="feed_back_without_name">匿名提交</string>
-    <string name="feed_back_content_hint">请输入建议和意见</string>
-    <string name="feed_back_contact_hint">在此输入联系方式</string>
-    <string name="feed_back_submit">提交反馈</string>
+
+
     <string name="invite_friend_invite_text">邀请好友使用</string>
     <string name="invite_friend_code">直接扫描二维码邀请好友安装Cloud</string>
     <string name="invite_friend_recommend">推荐【Cloud】给好友</string>
@@ -520,7 +516,7 @@
     <string name="settings_open_msg">已开启</string>
     <string name="settings_conbine_weibo">绑定微博</string>
     <string name="settings_conbined">已绑定</string>
-    <string name="language_set_text">语言切换</string>
+
     <string name="language_simple">简体中文</string>
     <string name="language_traditionalTW">繁體中文</string>
     <string name="language_traditionalHK">繁體中文（香港）</string>
@@ -529,46 +525,25 @@
     <string name="my_setting_tips_quit">确定清除应用内所有缓存数据？清除后将退出应用</string>
     <string name="get_language_error">未获取到可用的语言包，请联系管理员</string>
     <string name="app_customer">云+客服</string>
-    <string name="settings_device_manager">设备查看与管理</string>
-    <string name="device_unbind_sucess">设备解绑成功！</string>
-    <string name="device_other_unbind_warning">解绑后，从%1$s上登录，您需要重新注册设备</string>
-    <string name="device_current_unbind_warning">解绑后，您需要重新登录并注册设备</string>
-    <string name="last_use_time">上次使用时间</string>
-    <string name="bind_device">绑定设备</string>
-    <string name="current_device">当前设备</string>
-    <string name="history_device">历史设备</string>
-    <string name="device_history_use">历史使用</string>
-    <string name="device_bind_time_title">绑定时间：</string>
-    <string name="device_bind_time">绑定时间</string>
-    <string name="device_info">设备详情</string>
-    <string name="device_id">设备ID</string>
-    <string name="unbind_this_device">解绑此设备</string>
-    <string name="sure_switch_to">确定切换到%1$s</string>
+
+
     <string name="fail_to_switch_enterprise">企业切换失败！</string>
     <string name="select_enterprise">选择企业</string>
     <string name="switch_enterprise">切换企业</string>
     <string name="current_enterprise">当前企业</string>
     <string name="auto_select_enterprise">下次自动帮我选择</string>
-    <string name="close_auto_select_enterprise">下次登录默认使用该企业</string>
+
     <string name="web_app_auto_rotate">Web应用支持旋转</string>
     <string name="turn_off_success">关闭成功</string>
     <string name="signout_fail">注销失败，请确保网络连接正常</string>
-    <string name="setting_join_experience_plan">加入升级体验计划</string>
-    <string name="setting_gesture_force_set">根据企业安全性原则，需要您设置手势密码</string>
-    <string name="setting_gesture_force_open">根据企业安全性原则，您不可以关闭手势密码</string>
+
 
     <string name="setting_update_this_time_hint">本次更新</string>
     <string name="setting_update_wifi_download_package_hint">WiFi下已自动下载安装包</string>
 
     <string name="contact">通讯录</string>
     <string name="web">web</string>
-    <string name="mine_theme_switch">换肤</string>
-    <string name="mine_theme_white">清新白</string>
-    <string name="mine_theme_grey">优雅灰</string>
-    <string name="mine_theme_blue">商务蓝</string>
 
-    <string name="mine_tab_layout">布局切换</string>
-    <string name="mine_tab_layout_switch">是否切换为：%1$s</string>
 
     <!-- 修改密码部分 -->
     <string name="modify_input_user_new_password">请输入新密码</string>
@@ -595,7 +570,7 @@
 
     <!-- 用户信息页面部分 -->
     <string name="user_info_text">个人信息</string>
-    <string name="user_depart_info_text">部门信息</string>
+
     <string name="user_info_head">头像</string>
     <string name="user_info_name">姓名</string>
     <string name="user_depart">部门</string>
@@ -603,10 +578,10 @@
     <string name="user_service_and_support">服务与支持</string>
     <string name="user_info_sex">性别</string>
     <string name="user_qr_code">我的二维码</string>
-    <string name="user_company_info">企业信息</string>
+
     <string name="user_sms_moidify_password">通过手机号码验证码修改</string>
-    <string name="resend_code">重新发送(51)</string>
-    <string name="user_modify_user_info">修改信息</string>
+
+
     <string name="user_modify_modify">修改</string>
     <string name="user_info_my_info">个人信息</string>
     <string name="user_info_organ">浪潮国际</string>
@@ -615,7 +590,7 @@
     <string name="user_telephone">座机</string>
     <string name="user_no_storage">没有存储设备</string>
     <string name="user_employee_num">员工编号</string>
-    <string name="user_worker_num">工号</string>
+
     <string name="user_new_chat">发起会话</string>
     <string name="user_send_message">发消息</string>
 
@@ -812,41 +787,15 @@
 
     <!--网络链接及网络诊断-->
     <string name="net_connected_error">网络不给力，请检查网络设置</string>
-    <string name="net_diagnosis_title">网络诊断</string>
-    <string name="net_diagnosis_hard_link_title">检测网络设置</string>
-    <string name="net_diagnosis_wifi_link_title">检测Wi-Fi路由器状态</string>
-    <string name="net_diagnosis_dns_link_title">网络连通性检测</string>
-    <string name="net_diagnosis_hard_link_conent">当前检查项目包含：硬件链接是否通畅，是否有链接Wi-Fi、4G、LTE等</string>
-    <string name="net_diagnosis_hard_to_fix">去修复</string>
-    <string name="net_diagnosis_portal_to_set">去认证</string>
-    <string name="net_diagnosis_wifi_link_conent">当前检查项目包含：链接到的Wi-Fi是否有验证需求,如果有需要先验证此Wi-Fi才可继续访问</string>
-    <string name="net_network_authentication">网络认证</string>
-    <string name="net_diagnosis_hard_detail_title">硬件链接诊断</string>
-    <string name="net_diagnosis_hard_detail_content">建议按照以下方法检查网络硬件链接</string>
-    <string name="net_diagnosis_hard_detail_content_frist">1、打开手机“设置”并把“Wi-Fi”开关保持开启状态。</string>
-    <string name="net_diagnosis_hard_detail_content_second">2、打开手机“设置”-"通用"-“蜂窝移动网络”，并把“蜂窝移动数据”开关保持开启状态。</string>
-    <string name="net_diagnosis_hard_detail_setting">去设置</string>
-    <string name="net_ping_url_baidu">百度</string>
-    <string name="net_ping_url_inspur">浪潮</string>
-    <string name="net_ping_url_ali">阿里</string>
-    <string name="net_ping_url_cloud">云＋</string>
-    <string name="net_diagnosis_copy">点此复制该内容</string>
     <string name="net_no_network_available">无网络</string>
 
-
-    <string name="net_check_net_url">网址</string>
-    <string name="net_check_net_request_result">请求结果</string>
-    <string name="net_check_net_state">网络状态</string>
-    <string name="net_check_net_current_type">当前网络类型：</string>
-    <string name="net_check_net_current_state">连接状态：</string>
-    <string name="net_check_net_current_state_connected">已连接</string>
-    <string name="net_check_net_current_state_unconnected">未连接</string>
-    <string name="net_check_net_current_state_unknown">未知</string>
 
     <string name="function_net_load_fail">网络加载失败</string>
     <string name="function_net_over_load">重新加载</string>
     <string name="function_net_look_error_detail">查看异常信息</string>
-    <string name="net_check_error_detail_title">异常信息</string>
+    <string name="not_set">未设置</string>
+    <string name="app_is_lastest_version">当前已是最新版本</string>
+
     <!--电源白名单-->
     <string name="battery_tip_content">系统已对该应用开启省电优化，可能导致消息延迟或丢失，请将其加入到省电优化白名单（点击“去设置”，在弹出对话框中点击“允许”)</string>
     <string name="white_list_tip_content">由于系统限制，请您手动开启本软件自启动权限，从而保障软件运行的最佳环境（点击“去设置”)</string>
@@ -919,7 +868,7 @@
     <string name="dialogtitle"> 温馨提示</string>
     <string name="assemble_json_exception">组装Json对象出现异常！</string>
     <string name="inputpwd">请输入手势密码</string>
-    <string name="forgetpwd">忘记密码</string>
+
     <string name="download_fail">下载失败</string>
     <string name="download_success">下载成功</string>
     <string name="file_downloading">文件下载中，请稍候...</string>
@@ -984,54 +933,7 @@
     <!--华为推送-->
     <string name="hwpush_ability_value" translatable="false">successRateAnalytics</string>
 
-    <!--安全中心-->
-    <string name="setting_safe_gesture_face">指纹、手势密码</string>
-    <string name="setting_face_unlock">刷脸解锁设置</string>
-    <string name="setting_safe_gesture_face_setting">面容ID、手势密码设置</string>
-    <string name="setting_safe_face_id_unlock">刷脸解锁</string>
-    <string name="setting_safe_center">账号、设备安全</string>
-    <string name="safe_center_gesture">手势密码</string>
-    <string name="safe_center_finger_print">指纹</string>
-    <string name="safe_cloud_touch_id">%1$s </string>
-    <string name="safe_center_use_finger_print_unlock">指纹解锁</string>
-    <string name="switch_gesture_unlock">手势解锁</string>
-    <string name="switch_gesture_reset_unlock">重置手势解锁</string>
-    <string name="put_face_in_frame">请把脸放入框内保持不动</string>
-    <string name="experience_face_verify">体验刷脸</string>
-    <string name="no_face">没有检测到脸</string>
-    <string name="put_body_right">请保持姿势</string>
-    <string name="get_closer">请靠近一点</string>
-    <string name="blink">请眨眨眼</string>
-    <string name="face_verify_success">刷脸成功</string>
-    <string name="face_verify_fail">抱歉，没有认出你来</string>
-    <string name="face_enter">人脸识别</string>
-    <string name="face_login">刷脸登录</string>
-    <string name="off_face_verify_relogin">关闭刷脸，重新登录</string>
-    <string name="face_verifying">验证中</string>
-    <string name="finger_print_times_use_up">您的识别次数用尽，请尝试手势解锁，或者一段时间后重试</string>
-    <string name="finger_print_try_times">指纹认证失败，您还可以尝试%1$d次</string>
-    <string name="finger_print_id">%1$s的触控ID</string>
-    <string name="finger_print_by_finger_print">通过指纹验证解锁%1$s</string>
 
-    <!--九宫格-->
-    <!-- Gesture login activity -->
-    <string name="gesture_forget_gesture">忘记手势密码</string>
-    <string name="gesture_default">请输入手势密码</string>
-    <string name="gesture_error">手势密码输入错误</string>
-    <string name="gesture_correct">输入正确</string>
-    <string name="gesture_code_error">密码错误，还可以再试</string>
-    <string name="gesture_code_time">次</string>
-    <string name="gesture_code_tips">5次失败后，需要重新登录</string>
-
-    <!-- Create gesture activity -->
-    <string name="create_gesture_default">绘制解锁图案</string>
-    <string name="create_gesture_correct">再次绘制解锁图案</string>
-    <string name="create_gesture_less_error">至少连接4个点，请重新输入</string>
-    <string name="create_gesture_confirm_error">与上一次绘制不一致，请重新绘制</string>
-    <string name="create_gesture_confirm_correct">设置成功</string>
-    <string name="create_gesture_reset">重新设置</string>
-    <string name="create_gesture_code">创建手势密码</string>
-    <string name="create_gesture_guid">您可以创建一个云+解锁图案，这样他人在借用您的手机时，将无法打开云+</string>
     <string name="safe_center_enable">已启用</string>
     <string name="safe_center_unenable">未启用</string>
 
@@ -1077,11 +979,7 @@
     <string name="net_work_fail">由于新版本增强了安全认证功能，需要您重新登录</string>
 
     <string name="card_package_manage">管理卡片</string>
-    <string name="card_package_welcome">欢迎使用卡包</string>
-    <string name="card_package_collect">将您常用信息卡片归集一处</string>
-    <string name="card_package_taxpayer">纳税人识别号</string>
-    <string name="card_package_address">地址</string>
-    <string name="card_package_phone_number">电话</string>
+
 
     <string name="agora_app_id">a6aec906dc794e799bf08c332039376e</string>
 

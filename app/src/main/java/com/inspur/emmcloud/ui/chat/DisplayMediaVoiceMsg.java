@@ -31,8 +31,7 @@ import com.inspur.emmcloud.widget.bubble.BubbleLayout;
  */
 
 public class DisplayMediaVoiceMsg {
-    public static final boolean IS_VOICE_WORD_OPEN = true;
-    public static final boolean IS_VOICE_WORD_CLOUSE = false;
+
     public static final int VOICE_NOT_DOWNLOAD = 0;
     public static final int VOICE_DOWNLOADING = 1;
     public static final int VOICE_DOWNLOAD_FINISH = 2;

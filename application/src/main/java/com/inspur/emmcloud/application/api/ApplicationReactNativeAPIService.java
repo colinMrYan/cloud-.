@@ -2,13 +2,13 @@ package com.inspur.emmcloud.application.api;
 
 import android.content.Context;
 
-import com.inspur.emmcloud.application.bean.GetClientIdRsult;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
 import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
 import com.inspur.emmcloud.basemodule.api.HttpUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.application.GetClientIdRsult;
 import com.inspur.emmcloud.componentservice.login.LoginService;
 import com.inspur.emmcloud.componentservice.login.OauthCallBack;
 

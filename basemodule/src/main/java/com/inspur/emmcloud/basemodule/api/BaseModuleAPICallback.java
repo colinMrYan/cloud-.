@@ -10,11 +10,9 @@ import android.content.Context;
 
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
-import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.ApiRequestRecord;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.ApiRequestRecordCacheUtils;
-import com.inspur.emmcloud.basemodule.util.AppExceptionCacheUtils;
 
 import org.xutils.common.Callback.CommonCallback;
 import org.xutils.ex.HttpException;
@@ -86,9 +84,9 @@ public abstract class BaseModuleAPICallback implements CommonCallback<byte[]> {
             } else {
                 callbackFail(error, responseCode);
                 //网络异常检测出现301不记录日志
-                if (!(responseCode == 301 && url.startsWith("http://www.inspuronline.com/#/auth"))) {
-                    AppExceptionCacheUtils.saveAppException(BaseApplication.getInstance(), errorLevel, url, error, responseCode);
-                }
+//                if (!(responseCode == 301 && url.startsWith("http://www.inspuronline.com/#/auth"))) {
+//                    AppExceptionCacheUtils.saveAppException(BaseApplication.getInstance(), errorLevel, url, error, responseCode);
+//                }
             }
         } catch (Exception e) {
             // TODO: handle exception

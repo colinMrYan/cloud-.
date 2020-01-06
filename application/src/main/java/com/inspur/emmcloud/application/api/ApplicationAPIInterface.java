@@ -4,11 +4,11 @@ import com.inspur.emmcloud.application.bean.App;
 import com.inspur.emmcloud.application.bean.GetAddAppResult;
 import com.inspur.emmcloud.application.bean.GetAllAppResult;
 import com.inspur.emmcloud.application.bean.GetAppGroupResult;
-import com.inspur.emmcloud.application.bean.GetClientIdRsult;
 import com.inspur.emmcloud.application.bean.GetRecommendAppWidgetListResult;
 import com.inspur.emmcloud.application.bean.GetRemoveAppResult;
 import com.inspur.emmcloud.application.bean.GetSearchAppResult;
 import com.inspur.emmcloud.application.bean.GetWebAppRealUrlResult;
+import com.inspur.emmcloud.basemodule.application.GetClientIdRsult;
 import com.inspur.emmcloud.basemodule.bean.badge.BadgeBodyModel;
 
 /**

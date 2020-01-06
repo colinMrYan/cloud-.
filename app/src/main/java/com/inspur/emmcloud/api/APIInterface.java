@@ -6,13 +6,22 @@ import com.inspur.emmcloud.bean.appcenter.GetClientIdRsult;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailDetailResult;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailFolderResult;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailListResult;
+import com.inspur.emmcloud.bean.appcenter.volume.GetReturnMoveOrCopyErrorResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileListResult;
+import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileUploadTokenResult;
+import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeGroupPermissionResult;
+import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeGroupResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeListResult;
+import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeResultWithPermissionResult;
+import com.inspur.emmcloud.bean.appcenter.volume.Volume;
+import com.inspur.emmcloud.bean.appcenter.volume.VolumeDetail;
+import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.GetAllRobotsResult;
 import com.inspur.emmcloud.bean.chat.GetChannelListResult;
 import com.inspur.emmcloud.bean.chat.GetChannelMessagesResult;
 import com.inspur.emmcloud.bean.chat.GetConversationListResult;
+import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.chat.GetFileUploadResult;
 import com.inspur.emmcloud.bean.chat.GetMsgCommentCountResult;
 import com.inspur.emmcloud.bean.chat.GetMsgCommentResult;
@@ -48,9 +57,6 @@ import com.inspur.emmcloud.bean.system.GetUpgradeResult;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
 import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
-import com.inspur.emmcloud.componentservice.communication.GetCreateSingleChannelResult;
-import com.inspur.emmcloud.componentservice.volume.GetVolumeFileUploadTokenResult;
-import com.inspur.emmcloud.componentservice.volume.VolumeFile;
 import com.inspur.reactnative.bean.ReactNativeDownloadUrlBean;
 import com.inspur.reactnative.bean.ReactNativeInstallUriBean;
 import com.inspur.reactnative.bean.ReactNativeUpdateBean;
@@ -76,10 +82,6 @@ public interface APIInterface {
     void returnGetReactNativeInstallUrlFail(String error, int errorCode);
 
 
-    void returnUploadMyHeadSuccess(GetUploadMyHeadResult getUploadMyInfoResult, String filePath);
-
-    void returnUploadMyHeadFail(String error, int errorCode);
-
     void returnChannelListSuccess(GetChannelListResult getSessionListResult);
 
     void returnChannelListFail(String error, int errorCode);
@@ -99,10 +101,6 @@ public interface APIInterface {
     void returnMsgCommentCountSuccess(GetMsgCommentCountResult getMsgCommentCountResult, String mid);
 
     void returnMsgCommentCountFail(String error, int errorCode);
-
-    void returnModifyUserInfoSucces(GetBoolenResult getBoolenResult);
-
-    void returnModifyUserInfoFail(String error, int errorCode);
 
     void returnWebSocketUrlSuccess(GetWebSocketUrlResult getWebSocketResult);
 
@@ -135,10 +133,6 @@ public interface APIInterface {
     void returnSearchChannelGroupSuccess(GetSearchChannelGroupResult getSearchChannelGroupResult);
 
     void returnSearchChannelGroupFail(String error, int errorCode);
-
-    void returnUserHeadUploadSuccess(GetUserHeadUploadResult getUserHeadUploadResult);
-
-    void returnUserHeadUploadFail(String error, int errorCode);
 
     void returnCreateSingleChannelSuccess(GetCreateSingleChannelResult getCreatSingleChannelResult);
 
@@ -221,30 +215,9 @@ public interface APIInterface {
 
     void returnAppTabAutoFail(String error, int errorCode);
 
-    void returnUserProfileConfigSuccess(UserProfileInfoBean userProfileInfoBean);
-
-    void returnUserProfileConfigFail(String error, int errorCode);
-
-    void returnBindingDeviceListSuccess(GetBindingDeviceResult getBindingDeviceResult);
-
-    void returnBindingDeviceListFail(String error, int errorCode);
-
-    void returnUnBindDeviceSuccess();
-
-    void returnUnBindDeviceFail(String error, int errorCode);
-
-
-
     void returnSplashPageInfoSuccess(SplashPageBean splashPageBean);
 
     void returnSplashPageInfoFail(String error, int errorCode);
-
-
-
-
-    void returnDeviceLogListSuccess(GetDeviceLogResult getDeviceLogResult);
-
-    void returnDeviceLogListFail(String error, int errorCode);
 
     void returnAppConfigSuccess(GetAppConfigResult getAppConfigResult);
 
@@ -263,14 +236,6 @@ public interface APIInterface {
     void returnChatFileUploadTokenSuccess(GetVolumeFileUploadTokenResult getVolumeFileUploadTokenResult, ChatFileUploadInfo chatFileUploadInfo);
 
     void returnChatFileUploadTokenFail(String error, int errorCode, ChatFileUploadInfo chatFileUploadInfo);
-
-    void returnFaceSettingSuccess(GetFaceSettingResult getFaceSettingResult);
-
-    void returnFaceSettingFail(String error, int errorCode);
-
-    void returnFaceVerifySuccess(GetFaceSettingResult getFaceSettingResult);
-
-    void returnFaceVerifyFail(String error, int errorCode);
 
     void returnUploadPushInfoResultSuccess(GetUploadPushInfoResult getUploadPushInfoResult);
 
@@ -304,9 +269,7 @@ public interface APIInterface {
 
     void returnContactOrgListUpdateFail(String error, int errorCode);
 
-    void returnCardPackageListSuccess(GetCardPackageResult getCardPackageResult);
 
-    void returnCardPackageListFail(String error, int errorCode);
 
     void returnGetVoiceCommunicationResultSuccess(GetVoiceCommunicationResult getVoiceCommunicationResult);
 
@@ -361,13 +324,7 @@ public interface APIInterface {
 
     void returnUpdateConversationNameFail(String error, int errorCode);
 
-    void returnExperienceUpgradeFlagSuccess(GetExperienceUpgradeFlagResult getExperienceUpgradeFlagResult);
 
-    void returnExperienceUpgradeFlagFail(String error, int errorCode);
-
-    void returnUpdateExperienceUpgradeFlagSuccess();
-
-    void returnUpdateExperienceUpgradeFlagFail(String error, int errorCode);
 
     void returnCreateDirectConversationSuccess(Conversation conversation);
 
@@ -412,10 +369,6 @@ public interface APIInterface {
     void returnRemoveMailSuccess();
 
     void returnRemoveMailFail(String error, int errorCode);
-
-    void returnUserCardMenusSuccess(GetUserCardMenusResult getUserCardMenusResult);
-
-    void returnUserCardMenusFail(String error, int errorCode);
 
     void returnNaviBarModelSuccess(NaviBarModel naviBarModel);
 

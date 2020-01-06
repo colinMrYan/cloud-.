@@ -17,6 +17,6 @@ public interface ContactService extends CoreService {
 
     ContactUser getContactUserByMail(String mail);
 
+    void saveContactUser(ContactUser contactUser);
     String getUserName(String uid);
-
 }

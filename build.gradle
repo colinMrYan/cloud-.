@@ -163,8 +163,8 @@ allprojects {
             url "http://mvn.cloud.alipay.com/nexus/content/repositories/releases/"
         }
         maven { url 'http://maven.aliyun.com/nexus/content/repositories/google/' }
-        jcenter()
         mavenCentral()
+        jcenter(){ url 'http://jcenter.bintray.com/'}
         maven {
             // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
             url "$rootDir/node_modules/react-native/android"

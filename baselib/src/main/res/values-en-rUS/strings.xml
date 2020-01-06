@@ -12,14 +12,17 @@
     <string name="resolution_valiad">Your device resolution is less than 800*480, unable to run this program</string>
     <string name="retry">Retry</string>
     <string name="re_login">ReLogin</string>
-    <string name="software_service_term">Services Agreement</string>
+    <string name="feed_back_upload">Submit</string>
+
     <string name="update_fail">Update failed</string>
     <string name="downloading_package">Please wait a minute while downloading</string>
-    <string name="service_term">Services Agreement</string>
+    <string name="not_set">Not Set</string>
+    <string name="app_is_lastest_version">This is the lastest version</string>
+
     <string name="prompt">Info</string>
     <string name="nothing">Nothing </string>
     <string name="function_intr">Function Introduction </string>
-    <string name="enter_app">Enter the application</string>
+    <string name="user_depart_info_text">Departmental Information</string>
     <string name="sweep">Scan</string>
     <string name="send">Send</string>
     <string name="picture">Picture</string>
@@ -50,8 +53,7 @@
     <string name="cannot_download_for_network_exception">Network exception,unable to download</string>
     <string name="cannot_show_for_too_big">The picture is too big to show</string>
     <string name="unknown_error">Unknown Error</string>
-    <string name="check_update_text">Check New Version</string>
-    <string name="app_is_lastest_version">This is the lastest version</string>
+
     <string name="check_update_fail">Checking new version failed</string>
     <string name="upgrade">Update</string>
     <string name="not_upgrade">Skip</string>
@@ -60,7 +62,7 @@
     <string name="more_work_place">More work places...</string>
     <string name="cancel_filter">Cancle filter</string>
     <string name="only_free">Only free</string>
-    <string name="invite_friends_text">Recommend Cloud+ to Friends</string>
+
     <string name="tab_not_support_tips">%1$s function has been revised, please <Data><![CDATA[<font color=\'#0F7BCA\'>upgrade</font>]]></Data></string>
     <string name="choose">Choose</string>
     <string name="file_type">File type</string>
@@ -136,7 +138,7 @@
     <string name="network_exception">Network unavailable,please check</string>
     <string name="network_timeout">Network timeout, please check</string>
     <string name="net_request_failed">The server failed to respond correctly</string>
-    <string name="phone_num">Mobile number</string>
+
     <string name="mail">Email</string>
     <string name="register">Register</string>
     <string name="remark">Remarks</string>
@@ -185,7 +187,7 @@
     <string name="meeting_room">Meeting Room</string>
     <string name="building">Building</string>
     <string name="am">AM</string>
-    <string name="please_input_change">Please type change</string>
+
     <string name="channel_search_more_group_members">All Members</string>
     <string name="channel_set_sticky"> Sticky on Top</string>
     <string name="my_stroke">My Travel</string>
@@ -458,7 +460,7 @@
 
     <!-- 我的页面部分 -->
     <string name="data_clear_success">Clear Successfully</string>
-    <string name="not_set">Not Set</string>
+
     <string name="mine">Me</string>
     <string name="take_camera">Take a Photo</string>
     <string name="gallery">Choose from Gallery</string>
@@ -467,7 +469,7 @@
     <string name="follow_system">Follow System</string>
     <string name="more_message">Message notice</string>
     <string name="more_allApps">All Apps</string>
-    <string name="more_feedback">Feedback</string>
+
     <string name="more_pushlist_text">Push List</string>
     <string name="more_invitefriend_text">Invite your friends to Cloud</string>
     <string name="account_security_head">Account Security</string>
@@ -475,21 +477,18 @@
     <string name="account_security_mail">Current binding mailbox</string>
     <string name="account_security_mobile">Current binding phone</string>
     <string name="account_security_sign_record">Account Records</string>
-    <string name="about_text">About</string>
-    <string name="about_welcome_text">Welcome Page</string>
+
+
     <string name="about_newfun_text">What\'s New</string>
-    <string name="about_protocol_text">Services Agreement</string>
+
     <string name="cloud_version">Cloud Version</string>
-    <string name="feed_back_no_empty">Feedback</string>
-    <string name="feed_back_out_of_length">Please limit your feedback to 200 words</string>
+
+
     <string name="feed_back_advice">Suggestion and Advice</string>
     <string name="feed_back_welcom">Welcome valuable suggestions and comments! We will listen carefully and continuously improve products, to bring you a better experience</string>
     <string name="feed_back_input_phone">Enter the phone or mail</string>
-    <string name="feed_back_upload">Submit</string>
-    <string name="feed_back_without_name">Anonymous</string>
-    <string name="feed_back_content_hint">Please enter suggestions and comments</string>
-    <string name="feed_back_contact_hint">Enter your contact information here</string>
-    <string name="feed_back_submit">Submit feedback</string>
+
+
     <string name="invite_friend_invite_text">Invite a friend</string>
     <string name="invite_friend_code">Scan QR code to install  Cloud+ directly</string>
     <string name="invite_friend_recommend">推荐【Cloud+】给好友</string>
@@ -505,7 +504,7 @@
     <string name="settings_open_msg">On</string>
     <string name="settings_conbine_weibo">Binding microblogging</string>
     <string name="settings_conbined">Bound</string>
-    <string name="language_set_text">Language</string>
+
     <string name="language_simple">简体中文</string>
     <string name="language_traditionalTW">繁體中文</string>
     <string name="language_traditionalHK">繁體中文（香港）</string>
@@ -514,42 +513,21 @@
     <string name="my_setting_tips_quit">Sure to clear all cache? App will close after clear</string>
     <string name="get_language_error">Not available to the language package, please contact the administrator</string>
     <string name="app_customer">Cloud+ Customer</string>
-    <string name="settings_device_manager">Device Management</string>
-    <string name="device_unbind_sucess">Device unbound successfully!</string>
-    <string name="device_other_unbind_warning">After unbinding, log on from %1$s, you need to re register the device</string>
-    <string name="device_current_unbind_warning">After unbinding, you need to log in again and register your device</string>
-    <string name="last_use_time">Last use time</string>
-    <string name="bind_device">Current Binding Devices</string>
-    <string name="current_device">Current device</string>
-    <string name="history_device">Using Devices History</string>
-    <string name="device_history_use">Historical use</string>
-    <string name="device_bind_time_title">Binding time: </string>
-    <string name="device_bind_time">Binding time</string>
-    <string name="device_info">Device details</string>
-    <string name="device_id">Device ID</string>
-    <string name="unbind_this_device">Unbound this device</string>
-    <string name="sure_switch_to">Make sure to switch to %1$s</string>
+
+
     <string name="fail_to_switch_enterprise">Failed to switch enterprise!</string>
     <string name="select_enterprise">Select enterprise</string>
     <string name="auto_select_enterprise">Automatically choose</string>
-    <string name="close_auto_select_enterprise">Turn off auto selection enterprise</string>
+
     <string name="turn_off_success">Turn off successfully</string>
     <string name="switch_enterprise">Switch</string>
     <string name="current_enterprise">Current enterprise</string>
     <string name="web_app_auto_rotate">Web App Rotation</string>
     <string name="signout_fail">Signout failure,please make sure the network connection is normal</string>
-    <string name="setting_join_experience_plan">Join Early Experience Program</string>
-    <string name="setting_gesture_force_set">According to the enterprise security policy, you need to set a gesture password</string>
-    <string name="setting_gesture_force_open">You can\'t turn off the gesture password according to the enterprise security policy</string>
+
     <string name="contact">Contact</string>
     <string name="web">web</string>
-    <string name="mine_theme_switch">Theme</string>
-    <string name="mine_theme_white">White</string>
-    <string name="mine_theme_grey">Grey</string>
-    <string name="mine_theme_blue">Blue</string>
 
-    <string name="mine_tab_layout">Layout Switching</string>
-    <string name="mine_tab_layout_switch">Switch to：%1$s</string>
 
     <!-- 修改密码部分 -->
     <string name="modify_input_user_new_password">Enter a new password</string>
@@ -576,21 +554,18 @@
     <string name="setting_update_this_time_hint">Update</string>
     <string name="setting_update_wifi_download_package_hint">The package has been automatically downloaded under WiFi</string>
 
+
     <!-- 用户信息页面部分 -->
     <string name="user_info_text">Profile</string>
     <string name="user_info_head">Avatar</string>
     <string name="user_info_name">Name</string>
     <string name="user_info_sex">Sex</string>
     <string name="user_depart">Department</string>
-    <string name="user_depart_info_text">Departmental Information</string>
     <string name="user_telephone">Office Phone</string>
     <string name="user_function_introduction">Function Introduction</string>
     <string name="user_service_and_support">Service And Support</string>
     <string name="user_qr_code">My Qr Code</string>
-    <string name="user_company_info">Enterprise</string>
     <string name="user_sms_moidify_password">Change password by phone</string>
-    <string name="resend_code">Resend(51)</string>
-    <string name="user_modify_user_info">Modify user info</string>
     <string name="user_modify_modify">Modify</string>
     <string name="user_info_my_info">Profile</string>
     <string name="user_info_organ">Inspur</string>
@@ -598,7 +573,6 @@
     <string name="user_info_title">Title</string>
     <string name="user_no_storage">No Storage</string>
     <string name="user_employee_num">NO.</string>
-    <string name="user_worker_num">NO.</string>
     <string name="user_new_chat">Messages</string>
     <string name="user_send_message">Messages</string>
     <!--Imp插件调整字体大小-->
@@ -791,40 +765,15 @@
 
     <!--网络链接及网络诊断-->
     <string name="net_connected_error">No internet available,please check</string>
-    <string name="net_diagnosis_title">Network Diagnoses</string>
-    <string name="net_diagnosis_hard_link_title">Detect network settings</string>
-    <string name="net_diagnosis_wifi_link_title">Detect router</string>
-    <string name="net_diagnosis_dns_link_title">Network Connectivity Detection</string>
-    <string name="net_diagnosis_hard_link_conent">Contained Items:Connection status of Wi-Fi,4G,LTE and so on.</string>
-    <string name="net_diagnosis_hard_to_fix">Repair</string>
-    <string name="net_diagnosis_portal_to_set">Authentication</string>
-    <string name="net_diagnosis_wifi_link_conent">Contained Items:Does Connected Wi-Fi have verification requirement? if yes,Please verify Wi-Fi first, then continue to visit.</string>
-    <string name="net_network_authentication">Network Certification</string>
-    <string name="net_diagnosis_hard_detail_title">Hardware Link Diagnoses</string>
-    <string name="net_diagnosis_hard_detail_content">Recommend to do as follows</string>
-    <string name="net_diagnosis_hard_detail_content_frist">1.Turn on the phone \"Settings\" and turn on the \"Wi-Fi\".</string>
-    <string name="net_diagnosis_hard_detail_content_second">2.Open the phone \"Settings\" and turn on the \"Cellular data\".</string>
-    <string name="net_diagnosis_hard_detail_setting">Go To Set</string>
-    <string name="net_ping_url_baidu">Baidu</string>
-    <string name="net_ping_url_inspur">Inspur</string>
-    <string name="net_ping_url_ali">Alibaba</string>
-    <string name="net_ping_url_cloud">Cloud+</string>
 
-    <string name="net_check_net_url">Website</string>
-    <string name="net_check_net_request_result">Result</string>
-    <string name="net_check_net_state">Net State</string>
-    <string name="net_check_net_current_type">Net Type：</string>
-    <string name="net_check_net_current_state">Net State：</string>
-    <string name="net_check_net_current_state_connected">Connected</string>
-    <string name="net_check_net_current_state_unconnected">Unconnected</string>
-    <string name="net_check_net_current_state_unknown">Unknown</string>
-    <string name="net_diagnosis_copy">Click here to copy</string>
+
+    <string name="setting_net_diagnosis_copy">Click here to copy</string>
     <string name="net_no_network_available">No Network Available</string>
 
     <string name="function_net_load_fail">Loading Fail</string>
     <string name="function_net_over_load">Reload</string>
     <string name="function_net_look_error_detail">Check Exception Information</string>
-    <string name="net_check_error_detail_title">Exception Information</string>
+
 
     <!--电源白名单-->
     <string name="battery_tip_content">System has applied battery optimizations to the App,which may cause messages be delayed or missed,please add this to battery optimizations whitelist.(Click Set,then in the dialog pops,click Allow)</string>
@@ -899,7 +848,7 @@
     <string name="dialogtitle"> Tips</string>
     <string name="assemble_json_exception">Json objects assembled exception！</string>
     <string name="inputpwd">Please enter a password gesture</string>
-    <string name="forgetpwd">Forget Password</string>
+
     <string name="download_fail">Download Failed</string>
     <string name="download_success">Download Success</string>
     <string name="file_downloading">Downloading...Please wait</string>
@@ -940,53 +889,7 @@
     <!--闪屏页文字资源-->
     <string name="splash_skip">Enter immediately</string>
 
-    <!--安全中心-->
-    <string name="setting_safe_gesture_face">Touch ID,Gesture Password Settings</string>
-    <string name="setting_face_unlock">Face Enter Setting</string>
-    <string name="setting_safe_face_id_unlock">Face Enter</string>
-    <string name="setting_safe_gesture_face_setting">Face ID and Gesture Password Settings</string>
-    <string name="setting_safe_center">Account,Device Security</string>
-    <string name="safe_center_gesture">Gesture Password</string>
-    <string name="safe_center_finger_print">Turn On Touch ID Lock</string>
-    <string name="safe_center_use_finger_print_unlock">Touch ID</string>
-    <string name="switch_gesture_unlock">Turn On Password Lock</string>
-    <string name="switch_gesture_reset_unlock">Reset Gesture Password</string>
-    <string name="put_face_in_frame">Put your face into the frame</string>
-    <string name="experience_face_verify">Have a try</string>
-    <string name="no_face">No face</string>
-    <string name="put_body_right">Face no clear</string>
-    <string name="get_closer">Face no clear</string>
-    <string name="blink">Blink</string>
-    <string name="face_verify_success">Success</string>
-    <string name="face_verify_fail">Sorry,we couldn’t identify you</string>
-    <string name="face_enter">Face Recognition</string>
-    <string name="face_login">Face Login</string>
-    <string name="off_face_verify_relogin">Turn Off it and relogin </string>
-    <string name="face_verifying">Verifying</string>
-    <string name="finger_print_times_use_up">Your recognition times are exhausted. Please try gesture unlocking or try again after a period of time.</string>
-    <string name="finger_print_try_times">If fingerprint authentication fails, you can also try %1$d</string>
-    <string name="finger_print_id">%1$s Touch ID</string>
-    <string name="finger_print_by_finger_print">By verifying Touch ID unlock %1$s </string>
 
-    <!--九宫格-->
-    <!-- Gesture login activity -->
-    <string name="gesture_forget_gesture">Forget gesture code</string>
-    <string name="gesture_default">Please enter your gesture password</string>
-    <string name="gesture_error">Gesture password input error</string>
-    <string name="gesture_correct">Input correct</string>
-    <string name="gesture_code_error">Password error, you can try again </string>
-    <string name="gesture_code_time"> times</string>
-    <string name="gesture_code_tips">After 5 failures, you need to log in again</string>
-
-    <!-- Create gesture activity -->
-    <string name="create_gesture_default">Draw the Unlock Pattern</string>
-    <string name="create_gesture_correct">Draw your pattern again</string>
-    <string name="create_gesture_less_error">At least 4 points required. Please re-enter</string>
-    <string name="create_gesture_confirm_error">Not match. Please draw it again</string>
-    <string name="create_gesture_confirm_correct">Success</string>
-    <string name="create_gesture_reset">Reset</string>
-    <string name="create_gesture_code">Pattern</string>
-    <string name="create_gesture_guid">You can create a cloud +  unlock pattern so that others can\'t open the cloud + when they borrow your cell phone</string>
     <string name="safe_center_enable">Enabled</string>
     <string name="safe_center_unenable">Not Set</string>
 
@@ -1019,11 +922,6 @@
     <string name="net_work_fail">Since the new version enhances the security authentication feature, you need to log in</string>
 
     <string name="card_package_manage">Management card</string>
-    <string name="card_package_welcome">Welcome to use the package</string>
-    <string name="card_package_collect">Put your usual information cards in one place</string>
-    <string name="card_package_taxpayer">Taxpayer identification number</string>
-    <string name="card_package_address">Address</string>
-    <string name="card_package_phone_number">Telephone</string>
 
     <string name="voice_communication_invite_you">I invite you to make voice calls.</string>
     <string name="voice_communication_members">Call member</string>
