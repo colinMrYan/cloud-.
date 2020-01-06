@@ -3,9 +3,6 @@ package com.inspur.emmcloud.api;
 import com.inspur.emmcloud.basemodule.application.GetClientIdRsult;
 import com.inspur.emmcloud.basemodule.bean.GetUploadPushInfoResult;
 import com.inspur.emmcloud.bean.ChatFileUploadInfo;
-import com.inspur.emmcloud.bean.appcenter.mail.GetMailDetailResult;
-import com.inspur.emmcloud.bean.appcenter.mail.GetMailFolderResult;
-import com.inspur.emmcloud.bean.appcenter.mail.GetMailListResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileListResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeListResult;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
@@ -325,36 +322,6 @@ public interface APIInterface {
 
     void returnDeleteConversationFail(String error, int errorCode);
 
-    void returnMailFolderSuccess(GetMailFolderResult getMailForderResult);
-
-    void returnMailFolderFail(String error, int errorCode);
-
-    void returnMailListSuccess(String folderId, int pageSize, int offset, GetMailListResult getMailListResult);
-
-    void returnMailListFail(String folderId, int pageSize, int offset, String error, int errorCode);
-
-    void returnMailDetailSuccess(GetMailDetailResult getMailDetailResult);
-
-    void returnMailDetailSuccess(byte[] arg0);
-
-    void returnMailDetailFail(String error, int errorCode);
-
-    void returnMailLoginSuccess();
-
-    void returnMailLoginFail(String error, int errorCode);
-
-    void returnMailCertificateUploadSuccess(byte[] arg0);
-
-    void returnMailCertificateUploadFail(String error, int errorCode);
-
-    void returnSendMailSuccess();
-
-    void returnSendMailFail(String error, int errorCode);
-
-    void returnRemoveMailSuccess();
-
-    void returnRemoveMailFail(String error, int errorCode);
-
     void returnNaviBarModelSuccess(NaviBarModel naviBarModel);
 
     void returnNaviBarModelFail(String error, int errorCode);
@@ -370,10 +337,6 @@ public interface APIInterface {
     void returnInvitationContentSuccess(ScanCodeJoinConversationBean scanCodeJoinConversationBean);
 
     void returnInvitationContentFail(String error, int errorCode);
-
-    void returnJoinConversationSuccess(Conversation conversation);
-
-    void returnJoinConversationFail(String error, int errorCode);
 
     void returnVolumeListSuccess(GetVolumeListResult getVolumeListResult);
     void returnVolumeListFail(String error, int errorCode);
