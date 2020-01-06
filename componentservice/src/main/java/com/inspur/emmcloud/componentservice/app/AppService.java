@@ -21,7 +21,7 @@ public interface AppService extends CoreService {
 
     void startReactNativeApp(Activity activity, Bundle bundle);
 
-    void checkAppUpdate(boolean isManualCheck, Handler handler);
+    void checkAppUpdate(Activity activity, boolean isManualCheck, Handler handler);
 
     void initProfile(Activity activity, boolean isShowLoadingDlg, CommonCallBack commonCallBack);
 }

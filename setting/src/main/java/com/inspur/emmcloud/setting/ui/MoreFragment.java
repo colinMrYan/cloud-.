@@ -214,7 +214,7 @@ public class MoreFragment extends BaseFragment {
                             }
                         } else if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
                             Conversation conversation = service.getCustomerConversation(BaseApplication.getInstance());
-                            if (conversation == null) {
+                            if (conversation != null) {
                                 Bundle bundle = new Bundle();
                                 bundle.putSerializable(EXTRA_CONVERSATION, conversation);
                                 bundle.putString("from", "customer");

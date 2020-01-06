@@ -106,6 +106,7 @@
         android:textSize="15sp"
         app:cus_backgroundColor="#36A5F6"
         app:cus_borderWidth="0dp"
+        android:onClick="onClick"
         app:cus_isRadiusAdjustBounds="true" />
 
 
