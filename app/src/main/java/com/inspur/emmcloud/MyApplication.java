@@ -77,7 +77,7 @@ public class MyApplication extends BaseApplication implements ReactApplication {
                     .reflectPatchLibrary()
                     .setPatchRollbackOnScreenOff(true)
                     .setPatchRestartOnSrceenOff(true)
-                    .setFetchPatchIntervalByHours(1)
+                    .setFetchPatchIntervalByHours(3)
             ;
             // 获取当前的补丁版本
             Log.d("zhang", "Current patch version is " + TinkerPatch.with().getPatchVersion());

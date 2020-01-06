@@ -1,6 +1,6 @@
 package com.inspur.emmcloud.basemodule.util;
 
-import com.inspur.emmcloud.basemodule.bean.FileDownloadInfo;
+import com.inspur.emmcloud.componentservice.download.FileDownloadInfo;
 
 import org.xutils.db.sqlite.WhereBuilder;
 

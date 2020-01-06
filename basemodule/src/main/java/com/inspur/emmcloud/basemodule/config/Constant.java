@@ -262,6 +262,8 @@ public class Constant {
     public static final String AROUTER_CLASS_COMMUNICATION_MEMBER = "/communication/MembersActivity";
     public static final String AROUTER_CLASS_COMMUNICATION_IMAGEPAGER = "/communication/ImagePagerActivity";
     public static final String AROUTER_CLASS_COMMUNICATION_SHARE_FILE = "/communication/ShareFilesActivity";
+    public static final String AROUTER_CLASS_COMMUNICATION_MEMBER_DEL = "/communication/ChannelMembersDelActivity";
+    public static final String AROUTER_CLASS_CONVERSATION = "/communication/ConversationActivity";
 
     public static final String AROUTER_CLASS_LOGIN_MAIN = "/login/LoginActivity";
     public static final String AROUTER_CLASS_LOGIN_PASSWORD_MODIFY = "/login/PasswordModifyActivity";
@@ -292,6 +294,7 @@ public class Constant {
     public static final String AROUTER_CLASS_MAIL_HOME = "/mail/home";
     public static final String AROUTER_CLASS_GROUP_NEWS = "/group/news";
     public static final String AROUTER_CLASS_WEBEX_MAIN = "/webex/WebexMyMeetingActivity";
+    public static final String AROUTER_CLASS_VOLUME_HOME = "/volume/home";
 
     public static final String AROUTER_CLASS_APPCENTER_TEST = "/application/ApplicationTestActivity";
     public static final String AROUTER_CLASS_APPCENTER = "/application/AppCenterActivity";

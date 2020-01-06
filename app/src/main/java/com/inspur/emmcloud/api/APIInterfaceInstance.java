@@ -7,22 +7,13 @@ import com.inspur.emmcloud.bean.ChatFileUploadInfo;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailDetailResult;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailFolderResult;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailListResult;
-import com.inspur.emmcloud.bean.appcenter.volume.GetReturnMoveOrCopyErrorResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileListResult;
-import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileUploadTokenResult;
-import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeGroupPermissionResult;
-import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeGroupResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeListResult;
-import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeResultWithPermissionResult;
-import com.inspur.emmcloud.bean.appcenter.volume.Volume;
-import com.inspur.emmcloud.bean.appcenter.volume.VolumeDetail;
-import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.GetAllRobotsResult;
 import com.inspur.emmcloud.bean.chat.GetChannelListResult;
 import com.inspur.emmcloud.bean.chat.GetChannelMessagesResult;
 import com.inspur.emmcloud.bean.chat.GetConversationListResult;
-import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.chat.GetFileUploadResult;
 import com.inspur.emmcloud.bean.chat.GetMsgCommentCountResult;
 import com.inspur.emmcloud.bean.chat.GetMsgCommentResult;
@@ -49,6 +40,9 @@ import com.inspur.emmcloud.bean.system.SplashPageBean;
 import com.inspur.emmcloud.componentservice.application.maintab.GetAppMainTabResult;
 import com.inspur.emmcloud.componentservice.application.navibar.NaviBarModel;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
+import com.inspur.emmcloud.componentservice.communication.GetCreateSingleChannelResult;
+import com.inspur.emmcloud.componentservice.volume.GetVolumeFileUploadTokenResult;
+import com.inspur.emmcloud.componentservice.volume.VolumeFile;
 import com.inspur.reactnative.bean.ReactNativeDownloadUrlBean;
 import com.inspur.reactnative.bean.ReactNativeInstallUriBean;
 import com.inspur.reactnative.bean.ReactNativeUpdateBean;
@@ -497,179 +491,10 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnVolumeListSuccess(GetVolumeListResult getVolumeListResult) {
-    }
-
-    @Override
-    public void returnVolumeListFail(String error, int errorCode) {
-    }
-
-    @Override
-    public void returnVolumeFileListSuccess(GetVolumeFileListResult getVolumeFileListResult) {
-    }
-
-    @Override
-    public void returnVolumeFileListFail(String error, int errorCode) {
-    }
-
-    @Override
-    public void returnVolumeFileUploadTokenSuccess(GetVolumeFileUploadTokenResult getVolumeFileUploadTokenResult, String fileLocalPath, VolumeFile mockVolumeFile, int transferObserverId) {
-    }
-
-    @Override
-    public void returnVolumeFileUploadTokenFail(VolumeFile mockVolumeFile, String error, int errorCode, String filePath) {
-    }
-
-    @Override
-    public void returnCreateForderSuccess(VolumeFile volumeFile) {
-    }
-
-    @Override
-    public void returnCreateForderFail(String error, int errorCode) {
-    }
-
-    @Override
-    public void returnVolumeFileDeleteSuccess(List<VolumeFile> deleteVolumeFileList) {
-    }
-
-    @Override
-    public void returnVolumeFileDeleteFail(String error, int errorCode) {
-    }
-
-    @Override
-    public void returnVolumeFileRenameSuccess(VolumeFile oldVolumeFile, String fileNewName) {
-    }
-
-    @Override
-    public void returnVolumeFileRenameFail(String error, int errorCode) {
-    }
-
-    @Override
-    public void returnMoveFileSuccess(List<VolumeFile> movedVolumeFileList) {
-    }
-
-    @Override
-    public void returnMoveFileFail(String error, int errorCode) {
-    }
-
-    @Override
-    public void returnCopyFileSuccess() {
-    }
-
-    @Override
-    public void returnCopyFileFail(String error, int errorCode) {
-    }
-
-    @Override
-    public void returnCopyFileBetweenVolumeSuccess() {
+    public void returnChatFileUploadTokenSuccess(GetVolumeFileUploadTokenResult getVolumeFileUploadTokenResult, ChatFileUploadInfo chatFileUploadInfo) {
 
     }
 
-    @Override
-    public void returnCopyFileBetweenVolumeFail(String error, int errorCode, VolumeFile volumeFile) {
-
-    }
-
-    @Override
-    public void returnCreateShareVolumeSuccess(Volume volume) {
-    }
-
-    @Override
-    public void returnCreateShareVolumeFail(String error, int errorCode) {
-    }
-
-    @Override
-    public void returnUpdateShareVolumeNameSuccess(Volume volume, String name) {
-    }
-
-    @Override
-    public void returnUpdateShareVolumeNameFail(String error, int errorCode) {
-    }
-
-    @Override
-    public void returnRemoveShareVolumeSuccess(Volume volume) {
-    }
-
-    @Override
-    public void returnRemoveShareVolumeFail(String error, int errorCode) {
-    }
-
-
-    @Override
-    public void returnVolumeDetailSuccess(VolumeDetail volumeDetail) {
-    }
-
-    @Override
-    public void returnVolumeDetailFail(String error, int errorCode) {
-    }
-
-    @Override
-    public void returnVolumeMemAddSuccess(List<String> uidList) {
-    }
-
-    @Override
-    public void returnVolumeMemAddFail(String error, int errorCode) {
-    }
-
-    @Override
-    public void returnVolumeMemDelSuccess(List<String> uidList) {
-    }
-
-    @Override
-    public void returnVolumeMemDelFail(String error, int errorCode) {
-    }
-
-    @Override
-    public void returnUpdateGroupNameSuccess(String name) {
-    }
-
-    @Override
-    public void returnUpdateGroupNameFail(String error, int errorCode) {
-    }
-
-    @Override
-    public void returnGroupMemAddSuccess(List<String> uidList) {
-    }
-
-    @Override
-    public void returnGroupMemAddFail(String error, int errorCode) {
-    }
-
-    @Override
-    public void returnGroupMemDelSuccess(List<String> uidList) {
-    }
-
-    @Override
-    public void returnGroupMemDelFail(String error, int errorCode) {
-    }
-
-    @Override
-    public void returnVolumeGroupContainMeSuccess(GetVolumeGroupResult getVolumeGroupResult) {
-    }
-
-    @Override
-    public void returnVolumeGroupContainMeFail(String error, int errorCode) {
-    }
-
-    @Override
-    public void returnVolumeGroupSuccess(GetVolumeResultWithPermissionResult getVolumeResultWithPermissionResult) {
-
-    }
-
-    @Override
-    public void returnVolumeGroupFail(String error, int errorCode) {
-
-    }
-
-    @Override
-    public void returnUpdateVolumeGroupPermissionSuccess(GetVolumeGroupPermissionResult getVolumeGroupPermissionResult) {
-
-    }
-
-    @Override
-    public void returnUpdateVolumeGroupPermissionFail(String error, int errorCode) {
-
-    }
 
     @Override
     public void returnOpenActionBackgroudUrlSuccess() {
@@ -695,11 +520,6 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnUploadPushInfoResultFail(String error, int errorCode) {
-    }
-
-    @Override
-    public void returnChatFileUploadTokenSuccess(GetVolumeFileUploadTokenResult getVolumeFileUploadTokenResult, ChatFileUploadInfo chatFileUploadInfo) {
-
     }
 
     @Override
@@ -977,16 +797,6 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnCallbackAfterFileUploadSuccess(VolumeFile volumeFile) {
-
-    }
-
-    @Override
-    public void returnCallbackAfterFileUploadFail(String error, int errorCode) {
-
-    }
-
-    @Override
     public void returnInvitationContentSuccess(ScanCodeJoinConversationBean scanCodeJoinConversationBean) {
 
     }
@@ -1007,12 +817,22 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnMoveOrCopyFileBetweenVolumeSuccess(String operation) {
+    public void returnVolumeListSuccess(GetVolumeListResult getVolumeListResult) {
 
     }
 
     @Override
-    public void returnMoveOrCopyFileBetweenVolumeFail(GetReturnMoveOrCopyErrorResult errorResult, int errorCode, String srcVolumeFilePath, String operation, List<VolumeFile> volumeFileList) {
+    public void returnVolumeListFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnVolumeFileListSuccess(GetVolumeFileListResult getVolumeFileListResult) {
+
+    }
+
+    @Override
+    public void returnVolumeFileListFail(String error, int errorCode) {
 
     }
 

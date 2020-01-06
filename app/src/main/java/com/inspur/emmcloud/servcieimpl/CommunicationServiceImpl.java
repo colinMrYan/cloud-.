@@ -15,6 +15,9 @@ import com.inspur.emmcloud.bean.chat.Channel;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.componentservice.communication.CommunicationService;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
+import com.inspur.emmcloud.componentservice.communication.GetCreateSingleChannelResult;
+import com.inspur.emmcloud.componentservice.communication.OnCreateDirectConversationListener;
+import com.inspur.emmcloud.componentservice.communication.OnCreateDirectConversationV0Listener;
 import com.inspur.emmcloud.componentservice.communication.OnCreateGroupConversationListener;
 import com.inspur.emmcloud.componentservice.communication.ShareToConversationListener;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
@@ -22,6 +25,7 @@ import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.ui.chat.ConversationBaseActivity;
 import com.inspur.emmcloud.ui.chat.ShareToConversationBlankActivity;
+import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.MessageSendManager;
@@ -137,6 +141,36 @@ public class CommunicationServiceImpl implements CommunicationService {
         new ConversationCreateUtils().createGroupConversation((Activity) context, peopleArray, groupName, onCreateGroupConversationListener);
     }
 
+    @Override
+    public void createDirectChannel(final Context context, String uid, final OnCreateDirectConversationListener onCreateDirectConversationListener) {
+        new ConversationCreateUtils().createDirectConversation((Activity) context, uid, new OnCreateDirectConversationListener() {
+            @Override
+            public void createDirectConversationSuccess(Conversation conversation) {
+                onCreateDirectConversationListener.createDirectConversationSuccess(conversation);
+            }
+
+            @Override
+            public void createDirectConversationFail() {
+
+            }
+        });
+    }
+
+    @Override
+    public void createDirectChannelV0(Context context, String uid, final OnCreateDirectConversationV0Listener onCreateDirectConversationV0Listener) {
+        new ChatCreateUtils().createDirectChannel((Activity) context, uid, new ChatCreateUtils.OnCreateDirectChannelListener() {
+            @Override
+            public void createDirectChannelSuccess(GetCreateSingleChannelResult getCreateSingleChannelResult) {
+                onCreateDirectConversationV0Listener.createDirectChatSuccess(getCreateSingleChannelResult);
+            }
+
+            @Override
+            public void createDirectChannelFail() {
+
+            }
+        });
+    }
+
 
     @Override
     public String getShowName(Conversation conversation) {
@@ -161,6 +195,11 @@ public class CommunicationServiceImpl implements CommunicationService {
     @Override
     public String getUserIconUrl(ContactUser contactUser) {
         return APIUri.getUserIconUrl(BaseApplication.getInstance(), contactUser.getId());
+    }
+
+    @Override
+    public String getUserIconUrl(String uid) {
+        return APIUri.getUserIconUrl(BaseApplication.getInstance(), uid);
     }
 
     @Override

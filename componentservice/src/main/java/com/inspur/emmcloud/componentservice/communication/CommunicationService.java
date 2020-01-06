@@ -42,6 +42,10 @@ public interface CommunicationService extends CoreService {
 
     void createGroupConversation(Context context, JSONArray peopleArray, String groupName,
                                  OnCreateGroupConversationListener onCreateGroupConversationListener);
+    //V1 单聊
+    void createDirectChannel(Context context, String uid, OnCreateDirectConversationListener onCreateDirectConversationListener);
+    //V0 单聊
+    void createDirectChannelV0(Context context, String uid, OnCreateDirectConversationV0Listener onCreateDirectConversationV0Listener);
 
     String getShowName(Conversation conversation);
 
@@ -50,7 +54,8 @@ public interface CommunicationService extends CoreService {
 
     String getMyAppFragmentHeaderText(String simpleName);
 
-    String getUserIconUrl(ContactUser uid);
+    String getUserIconUrl(ContactUser contactUser);
+    String getUserIconUrl(String uid);
 
     String getCustomerChannelV0(Context context);
 

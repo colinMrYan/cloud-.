@@ -66,7 +66,6 @@ import com.inspur.emmcloud.basemodule.util.imagepicker.ImagePicker;
 import com.inspur.emmcloud.basemodule.util.imagepicker.bean.ImageItem;
 import com.inspur.emmcloud.basemodule.util.imagepicker.ui.ImageGridActivity;
 import com.inspur.emmcloud.basemodule.util.mycamera.MyCameraActivity;
-import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.chat.GetChannelMessagesResult;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentMediaImage;
@@ -80,6 +79,7 @@ import com.inspur.emmcloud.componentservice.communication.OnCreateDirectConversa
 import com.inspur.emmcloud.componentservice.communication.SearchModel;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.componentservice.schedule.ScheduleService;
+import com.inspur.emmcloud.componentservice.volume.VolumeFile;
 import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.interf.ResultCallback;
 import com.inspur.emmcloud.push.WebSocketPush;
@@ -171,7 +171,6 @@ public class ConversationActivity extends ConversationBaseActivity {
     private PopupWindowList mPopupWindowList; //仿微信长按处理
 
     private UIMessage backUiMessage = null;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

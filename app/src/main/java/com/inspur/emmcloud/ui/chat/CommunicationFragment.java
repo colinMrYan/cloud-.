@@ -60,7 +60,6 @@ import com.inspur.emmcloud.bean.WSCommandBatch;
 import com.inspur.emmcloud.bean.chat.ChannelMessageReadStateResult;
 import com.inspur.emmcloud.bean.chat.ChannelMessageSet;
 import com.inspur.emmcloud.bean.chat.GetConversationListResult;
-import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.chat.GetOfflineMessageListResult;
 import com.inspur.emmcloud.bean.chat.GetRecentMessageListResult;
 import com.inspur.emmcloud.bean.chat.GetVoiceAndVideoResult;
@@ -72,6 +71,7 @@ import com.inspur.emmcloud.componentservice.application.maintab.GetAppMainTabRes
 import com.inspur.emmcloud.componentservice.application.maintab.MainTabProperty;
 import com.inspur.emmcloud.componentservice.application.maintab.MainTabResult;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
+import com.inspur.emmcloud.componentservice.communication.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.componentservice.communication.OnCreateDirectConversationListener;
 import com.inspur.emmcloud.componentservice.communication.OnCreateGroupConversationListener;
 import com.inspur.emmcloud.push.WebSocketPush;

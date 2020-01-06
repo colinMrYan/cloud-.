@@ -47,7 +47,7 @@
             android:drawableRight="@drawable/ic_volume_menu_drop_down"
             android:onClick="onClick"
             android:padding="12dp"
-            android:text="@string/clouddriver_sort_by_name_asc"
+            android:text="@string/sort_by_name_asc"
             android:textColor="#666666"
             android:textSize="15sp" />
 
@@ -60,7 +60,7 @@
             android:paddingTop="12dp"
             android:paddingRight="12dp"
             android:paddingBottom="12dp"
-            android:text="@string/clouddriver_file_filter"
+            android:text="@string/file_filter"
             android:textColor="#666666"
             android:textSize="15sp" />
 

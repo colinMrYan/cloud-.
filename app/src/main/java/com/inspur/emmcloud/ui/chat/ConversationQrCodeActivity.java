@@ -29,11 +29,12 @@ import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.util.ShareFile2OutAppUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
-import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.chat.ScanCodeJoinConversationBean;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
+import com.inspur.emmcloud.componentservice.communication.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.componentservice.communication.OnCreateDirectConversationListener;
 import com.inspur.emmcloud.componentservice.communication.SearchModel;
 import com.inspur.emmcloud.ui.chat.mvp.view.ConversationSearchActivity;
@@ -41,7 +42,6 @@ import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
-import com.inspur.emmcloud.util.privates.ShareFile2OutAppUtils;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.ShareAction;
@@ -181,7 +181,7 @@ public class ConversationQrCodeActivity extends BaseActivity {
                     }
                 });
 
-        shareAction.addButton(getString(R.string.clouddrive_internal_sharing), "CLOUDPLUSE", "ic_launcher_share", "ic_launcher_share");
+        shareAction.addButton(getString(R.string.internal_sharing), "CLOUDPLUSE", "ic_launcher_share", "ic_launcher_share");
         if (AppUtils.isAvilibleByPackageName(BaseApplication.getInstance(), ShareFile2OutAppUtils.PACKAGE_WECHAT)) {
             shareAction.addButton(PlatformName.WEIXIN, "wechat", "umeng_socialize_wechat", "umeng_socialize_wechat");
             shareAction.addButton(PlatformName.WEIXIN_CIRCLE, "wxcircle", "umeng_socialize_wxcircle", "umeng_socialize_wxcircle");

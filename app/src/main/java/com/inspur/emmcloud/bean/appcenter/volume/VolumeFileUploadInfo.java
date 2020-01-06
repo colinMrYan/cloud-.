@@ -1,7 +1,9 @@
 package com.inspur.emmcloud.bean.appcenter.volume;
 
-import com.inspur.emmcloud.interf.ProgressCallback;
-import com.inspur.emmcloud.interf.VolumeFileUploadService;
+import com.inspur.emmcloud.componentservice.download.ProgressCallback;
+import com.inspur.emmcloud.componentservice.volume.GetVolumeFileUploadTokenResult;
+import com.inspur.emmcloud.componentservice.volume.VolumeFile;
+import com.inspur.emmcloud.componentservice.volume.VolumeFileUploadService;
 
 /**
  * 云盘文件上传信息类
