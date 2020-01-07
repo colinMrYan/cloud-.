@@ -119,7 +119,6 @@
     <string name="setting_net_ping_url_inspur">浪潮</string>
     <string name="setting_net_ping_url_ali">阿里</string>
     <string name="setting_net_ping_url_cloud">云＋</string>
-    <string name="setting_net_diagnosis_copy">点此复制该内容</string>
     <string name="setting_net_check_error_detail_title">异常信息</string>
 
     <string name="settings_device_manager">设备查看与管理</string>

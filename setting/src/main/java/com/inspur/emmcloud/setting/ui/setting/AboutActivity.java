@@ -104,7 +104,7 @@ public class AboutActivity extends BaseActivity {
         } else if (id == R.id.rl_check_update) {
             AppService appService = Router.getInstance().getService(AppService.class);
             if (appService != null) {
-                appService.checkAppUpdate(true, handler);
+                appService.checkAppUpdate(this, true, handler);
             }
         } else if (id == R.id.rl_invite_friends) {
             IntentUtils.startActivity(AboutActivity.this, RecommendAppActivity.class);
