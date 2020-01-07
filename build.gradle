@@ -140,6 +140,7 @@ buildscript {
         jcenter()
         mavenCentral()
         google()
+        maven {url  uri('release')}
     }
     dependencies {
         classpath deps.android.gradlePlugin
@@ -148,6 +149,7 @@ buildscript {
         classpath 'com.android.boost.dependency:easyaar:3.3.6'
         // TinkerPatch 插件
         classpath("com.tinkerpatch.sdk:tinkerpatch-gradle-plugin:${TINKERPATCH_VERSION}") { changing = true }
+        classpath 'com.inspur:comgradle:1.0'
     }
 }
 
@@ -171,6 +173,7 @@ allprojects {
         }
         maven { url "https://jitpack.io" } // PhotoView
         google()
+        maven {url  uri('../release')}
     }
     configurations.all {
         // React Native依赖的findbugs版本更高

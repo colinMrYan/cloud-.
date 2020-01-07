@@ -1,19 +1,5 @@
-
-buildscript {
-    repositories {
-        maven {
-            url uri('../release')
-        }
-    }
-    dependencies {
-        classpath 'com.inspur:comgradle:1.0'
-    }
-}
 apply plugin: 'com.inspur.comgradle'
 apply plugin: 'com.jakewharton.butterknife'
-
-
-
 android {
     compileSdkVersion versions.compileSdk
     buildToolsVersion versions.androidTools
@@ -85,4 +71,26 @@ dependencies {
     implementation deps.butterknife.butterknife
     annotationProcessor deps.butterknife.butterknife_compiler
     implementation deps.pagerslidingtabstrip
+}
+
+
+repositories {
+    mavenCentral()
+}
+
+apply plugin: 'maven'
+def MAVEN_LOCAL_PATH = uri("../release")
+def ARTIFACT_ID = 'schedule'
+def VERSION_NAME = '1.0.0'
+def GROUP_ID = 'com.inspur.emmcloud'
+uploadArchives() {
+    repositories {
+        mavenDeployer {
+            repository(url: uri(MAVEN_LOCAL_PATH))
+            pom.groupId = GROUP_ID
+            pom.artifactId = ARTIFACT_ID
+            pom.version = VERSION_NAME
+            pom.packaging = 'aar'
+        }
+    }
 }
