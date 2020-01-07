@@ -288,7 +288,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
      */
     private void showSortOperationPop() {
         View contentView = LayoutInflater.from(VolumeFileActivity.this)
-                .inflate(R.layout.volume_app_volume_file_sort_operation_pop, null);
+                .inflate(R.layout.file_sort_operation_pop, null);
         sortOperationPop = new PopupWindow(contentView,
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT, true);
@@ -362,7 +362,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
      */
     private void showFileFilterPop(View v) {
         View contentView = LayoutInflater.from(VolumeFileActivity.this)
-                .inflate(R.layout.volume_app_volume_file_filter_pop, null);
+                .inflate(R.layout.file_filter_pop, null);
         final PopupWindow fileFilterPop = new PopupWindow(contentView,
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT, true);
@@ -441,7 +441,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                         totalSize = totalSize + file.length();
                     }
 
-                    NetworkMobileTipUtil.checkEnvironment(this, R.string.volume_file_upload_network_type_warning,
+                    NetworkMobileTipUtil.checkEnvironment(this, R.string.file_upload_network_type_warning,
                             totalSize, new NetworkMobileTipUtil.Callback() {
                                 @Override
                                 public void cancel() {
@@ -471,7 +471,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
 
                 }
                 long totalSize = file.length();
-                NetworkMobileTipUtil.checkEnvironment(this, R.string.volume_file_upload_network_type_warning,
+                NetworkMobileTipUtil.checkEnvironment(this, R.string.file_upload_network_type_warning,
                         totalSize, new NetworkMobileTipUtil.Callback() {
                             @Override
                             public void cancel() {
@@ -518,7 +518,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                     totalSize = totalSize + file.length();
                 }
 
-                NetworkMobileTipUtil.checkEnvironment(this, R.string.volume_file_upload_network_type_warning,
+                NetworkMobileTipUtil.checkEnvironment(this, R.string.file_upload_network_type_warning,
                         totalSize, new NetworkMobileTipUtil.Callback() {
                             @Override
                             public void cancel() {

@@ -41,7 +41,7 @@ public class VolumeFileFilterPopGridAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        convertView = LayoutInflater.from(context).inflate(R.layout.volume_app_volume_file_filter_pop_grid_item_view, null);
+        convertView = LayoutInflater.from(context).inflate(R.layout.file_filter_pop_grid_item_view, null);
         ((ImageView) convertView.findViewById(R.id.filter_type_img)).setImageResource(filterTypeIconIds[position]);
         ((TextView) convertView.findViewById(R.id.filter_type_text)).setText(filterTypeNameIds[position]);
         return convertView;

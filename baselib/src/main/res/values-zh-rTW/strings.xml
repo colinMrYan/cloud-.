@@ -468,6 +468,8 @@
     <string name="audio">音訊</string>
     <string name="other">其他</string>
     <string name="people_num">%1$d人</string>
+    <string name="file_upload_network_type_warning">當前處於非Wi-Fi環境，繼續上傳將消耗運營商流量，請確認是否繼續</string>
+    <string name="file_download_network_type_warning">當前處於非Wi-Fi環境，繼續下載將消耗運營商流量，請確認是否繼續</string>
 
     <!-- 我的頁面部分 -->
     <string name="moments">动态</string>

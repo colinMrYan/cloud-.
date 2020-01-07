@@ -60,8 +60,6 @@
     <string name="volume_clouddriver_file_permission_manager">Permissions</string>
     <string name="volume_clouddriver_volume_frist_download">Please download before uploading</string>
     <string name="volume_upload_to_current_directory">Upload to Current Directory</string>
-    <string name="volume_file_upload_network_type_warning">Currently not connected to Wi-Fi,uploading will use mobile traffic,continue?</string>
-    <string name="volume_file_download_network_type_warning">Currently not connected to Wi-Fi,downloading will use mobile traffic,continue?</string>
     <string name="volume_file_transfer">File Transfer</string>
     <string name="volume_file_transfer_download_list">Download List</string>
     <string name="volume_file_transfer_upload_list">Upload List</string>

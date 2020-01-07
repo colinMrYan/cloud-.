@@ -71,8 +71,6 @@
     <string name="volume_file_rename">文件重命名</string>
     <string name="volume_folder_rename">文件夹重命名</string>
     <string name="volume_cloud_drive">云盘</string>
-    <string name="volume_file_upload_network_type_warning">当前处于非Wi-Fi环境，继续上传将消耗运营商流量，请确认是否继续</string>
-    <string name="volume_file_download_network_type_warning">当前处于非Wi-Fi环境，继续下载将消耗运营商流量，请确认是否继续</string>
     <string name="volume_file_transfer">文件传输</string>
     <string name="volume_file_transfer_download_list">下载列表</string>
     <string name="volume_file_transfer_upload_list">上传列表</string>
