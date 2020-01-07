@@ -3,7 +3,6 @@
 
     <color name="content_border">#c8c7cc</color>
 
-
     <color name="header_bg_blue">#0F7BCA</color>
     <color name="header_bg_white">#FDFDFD</color>
     <color name="header_bg_grey">#EEEEEE</color>
@@ -66,17 +65,13 @@
     <color name="app_dialog_night_background_btn">#FF3B4451</color>
     <color name="app_dialog_night_line_color">#FF161E29</color>
     <color name="app_dialog_night_font_size_color">#FF1D2128</color>
-
     <!-- 聊天界面背景色 -->
     <color name="channel_background_color">#F4F4F4</color>
-
     <!-- 评论页面背景色 -->
     <color name="comment_background_color">#F4F4F4</color>
-
     <!-- 二维码识别 -->
     <color name="lightgreen">#99CC33</color>
     <color name="green">#00CC00</color>
-
     <!-- 日期 -->
 
     <!-- 通讯录 -->
@@ -103,8 +98,6 @@
     <color name="cal_purple">#800080</color>
 
     <!-- 集成九宫格排序 -->
-
-
     <color name="scan_result_color">#E8E8E8</color>
 
     <!--九宫格-->
@@ -130,8 +123,6 @@
     <color name="voice_communication_function_unavailiable_text">#CBCCCE</color>
 
     <color name="content_background">#f2f2f2</color>
-
-
     <color name="app_font_color">#35A4F6</color>
 
     <color name="btn_color_blue">#00A8E1</color>
@@ -141,7 +132,28 @@
     <color name="btn_filled_blue_bg_normal">#416f96</color>
     <color name="btn_filled_blue_bg_pressed">#243f55</color>
     <color name="btn_filled_blue_bg_disabled">#80416f96</color>
-
-
     <color name="color_image_grid_header">#22292c</color>
+
+
+    <!-- UI 颜色标准化 基础颜色设置 -->
+    <!-- UI 字体颜色 -->
+    <color name="color_text_common_level_one">#333333</color>
+    <color name="color_text_common_level_two">#888888</color>
+    <color name="color_text_link">#36A5F6</color>
+    <color name="color_text_help">#999999</color>
+    <color name="color_text_Anti_White">#FFFFFF</color>
+    <!-- UI 图标背景颜色 -->
+    <!--主色-->
+    <color name="color_base_blue">#36A5F6</color>
+    <!--辅色-->
+    <color name="color_icon_common">#95B0C5</color>
+    <color name="color_icon_foot_bar">#B2B7BA</color>
+    <color name="color_icon_index_bar">#333333</color>
+    <color name="color_icon_sub_main">#FF979797</color>
+    <color name="color_bg_content_grey">#FFF6F6F6</color>
+    <color name="color_bg_content_white">#FFFFFF</color>
+    <!--全局-->
+    <color name="color_bg_common">#F8F9FB</color>
+    <color name="color_divider">#DDDDDD</color>
+
 </resources>

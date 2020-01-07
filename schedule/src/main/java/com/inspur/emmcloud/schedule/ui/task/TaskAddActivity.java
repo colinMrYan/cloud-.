@@ -445,7 +445,7 @@ public class TaskAddActivity extends BaseActivity {
      * 上传附件公共函数
      */
     private void updateAttachment(Intent data, boolean isPictureAttach) {
-        // sendFileMsg(data, isPictureAttach);
+        sendFileMsg(data, isPictureAttach);
     }
 
     /**
@@ -453,8 +453,8 @@ public class TaskAddActivity extends BaseActivity {
      *
      * @param data
      */
-//    private void sendFileMsg(Intent data, boolean isPictureAttachment) {
-//
+    private void sendFileMsg(Intent data, boolean isPictureAttachment) {
+
 //        String filePath;
 //        if (isPictureAttachment) {
 //            Uri uri = data.getData();
@@ -466,11 +466,10 @@ public class TaskAddActivity extends BaseActivity {
 //        attachmentLocalPath = filePath;
 //        if (NetUtils.isNetworkConnected(this)) {
 //            loadingDlg.show();
-//            ChatAPIService apiService = new ChatAPIService(TaskAddActivity.this);
 //            apiService.setAPIInterface(new TaskAddActivity.WebService());
 //            apiService.uploadMsgResource(filePath, System.currentTimeMillis() + "", false);
 //        }
-//    }
+    }
 
     /**
      * 添加或者更新Task 有效性检测

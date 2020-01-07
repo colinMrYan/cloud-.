@@ -42,8 +42,8 @@ public class AppServiceImpl implements AppService {
     }
 
     @Override
-    public void checkAppUpdate(boolean isManualCheck, Handler handler) {
-        UpgradeUtils upgradeUtils = new UpgradeUtils(BaseApplication.getInstance(),
+    public void checkAppUpdate(Activity activity, boolean isManualCheck, Handler handler) {
+        UpgradeUtils upgradeUtils = new UpgradeUtils(activity,
                 handler, true);
         upgradeUtils.checkUpdate(true);
     }

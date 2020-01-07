@@ -15,10 +15,9 @@
     <string name="resolution_warning">您的设备分辨率小于800*480，无法运行此程序</string>
     <string name="retry">重试</string>
     <string name="re_login">重新登录</string>
-
+    <string name="setting_net_diagnosis_copy">点此复制该内容</string>
     <string name="update_fail">更新失败</string>
     <string name="downloading_package">下载中，请稍候....</string>
-
     <string name="prompt">提示</string>
     <string name="nothing">无 </string>
     <string name="function_intr">功能介绍 </string>

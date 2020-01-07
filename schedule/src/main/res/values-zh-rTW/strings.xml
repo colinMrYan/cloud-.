@@ -162,7 +162,7 @@
     <string name="schedule_account_type">賬戶</string>
     <string name="schedule_cloud_calendar">云+ 日程</string>
     <string name="schedule_cloud_meeting">云+ 會議</string>
-    <string name="schedule_sync_sys_calendar">同步到本地日程</string>
+    <string name="schedule_sync_sys_calendar">同步到本地日曆</string>
 
 
     <!--会议-->
