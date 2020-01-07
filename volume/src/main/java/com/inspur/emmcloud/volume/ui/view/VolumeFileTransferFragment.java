@@ -231,7 +231,7 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
             totalSize = totalSize + volumeFile.getSize();
         }
         if (operationTotalBtn.isSelected()) {
-            NetworkMobileTipUtil.checkEnvironment(getActivity(), R.string.volume_file_download_network_type_warning,
+            NetworkMobileTipUtil.checkEnvironment(getActivity(), R.string.file_download_network_type_warning,
                     totalSize, new NetworkMobileTipUtil.Callback() {
                         @Override
                         public void cancel() {
@@ -271,7 +271,7 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
             totalSize = totalSize + volumeFile.getSize();
         }
         if (operationTotalBtn.isSelected()) {
-            NetworkMobileTipUtil.checkEnvironment(getActivity(), R.string.volume_file_upload_network_type_warning,
+            NetworkMobileTipUtil.checkEnvironment(getActivity(), R.string.file_upload_network_type_warning,
                     totalSize, new NetworkMobileTipUtil.Callback() {
                         @Override
                         public void cancel() {

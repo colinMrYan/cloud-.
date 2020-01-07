@@ -313,7 +313,7 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
         } else if (status.equals(VolumeFile.STATUS_PAUSE)) {
             if (volumeFile.getLoadType().equals(VolumeFile.TYPE_UPLOAD)) {
                 //继续上传
-                NetworkMobileTipUtil.checkEnvironment(context, R.string.volume_file_upload_network_type_warning,
+                NetworkMobileTipUtil.checkEnvironment(context, R.string.file_upload_network_type_warning,
                         volumeFile.getSize(), new NetworkMobileTipUtil.Callback() {
                             @Override
                             public void cancel() {
@@ -334,7 +334,7 @@ public class VolumeFileTransferAdapter extends RecyclerView.Adapter<VolumeFileTr
 
             } else if (volumeFile.getLoadType().equals(VolumeFile.TYPE_DOWNLOAD)) {
                 //继续下载
-                NetworkMobileTipUtil.checkEnvironment(context, R.string.volume_file_download_network_type_warning,
+                NetworkMobileTipUtil.checkEnvironment(context, R.string.file_download_network_type_warning,
                         volumeFile.getSize(), new NetworkMobileTipUtil.Callback() {
                             @Override
                             public void cancel() {

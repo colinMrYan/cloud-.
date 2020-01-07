@@ -64,8 +64,6 @@
     <string name="volume_clouddriver_file_permission_manager">許可權管理</string>
     <string name="volume_upload_to_current_directory">上傳到目前的目錄</string>
     <string name="volume_clouddriver_volume_frist_download">转发前请将文件下载至本地</string>
-    <string name="volume_file_upload_network_type_warning">當前處於非Wi-Fi環境，繼續上傳將消耗運營商流量，請確認是否繼續</string>
-    <string name="volume_file_download_network_type_warning">當前處於非Wi-Fi環境，繼續下載將消耗運營商流量，請確認是否繼續</string>
     <string name="volume_file_transfer">文件傳輸</string>
     <string name="volume_file_transfer_download_list">下載列表</string>
     <string name="volume_file_transfer_upload_list">上傳列表</string>

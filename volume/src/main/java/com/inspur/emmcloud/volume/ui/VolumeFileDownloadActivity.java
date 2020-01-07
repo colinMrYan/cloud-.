@@ -155,7 +155,7 @@ public class VolumeFileDownloadActivity extends BaseActivity {
             if (FileUtils.isFileExist(fileSavePath)) {
                 FileUtils.openFile(BaseApplication.getInstance(), fileSavePath);
             } else {
-                NetworkMobileTipUtil.checkEnvironment(this, R.string.volume_file_download_network_type_warning,
+                NetworkMobileTipUtil.checkEnvironment(this, R.string.file_download_network_type_warning,
                         volumeFile.getSize(), new NetworkMobileTipUtil.Callback() {
                             @Override
                             public void cancel() {

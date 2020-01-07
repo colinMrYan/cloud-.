@@ -467,6 +467,8 @@
     <string name="audio">音频</string>
     <string name="other">其他</string>
     <string name="people_num">%1$d人</string>
+    <string name="file_upload_network_type_warning">当前处于非Wi-Fi环境，继续上传将消耗运营商流量，请确认是否继续</string>
+    <string name="file_download_network_type_warning">当前处于非Wi-Fi环境，继续下载将消耗运营商流量，请确认是否继续</string>
 
     <!--Webex 邮箱-->
     <string name="mail_install_cert"><u>安装数字证书</u></string>

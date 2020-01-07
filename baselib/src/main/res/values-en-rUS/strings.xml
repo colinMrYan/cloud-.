@@ -454,7 +454,8 @@
     <string name="audio">Audio</string>
     <string name="other">Other</string>
     <string name="people_num">%1$d</string>
-
+    <string name="file_upload_network_type_warning">Currently not connected to Wi-Fi,uploading will use mobile traffic,continue?</string>
+    <string name="file_download_network_type_warning">Currently not connected to Wi-Fi,downloading will use mobile traffic,continue?</string>
     <!-- 我的页面部分 -->
     <string name="moments">Moments</string>
 

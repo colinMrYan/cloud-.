@@ -157,7 +157,7 @@ public class GroupFileActivity extends BaseActivity {
 
     private void showSortOperationPop() {
         View contentView = LayoutInflater.from(GroupFileActivity.this)
-                .inflate(R.layout.volume_app_volume_file_sort_operation_pop, null);
+                .inflate(R.layout.file_sort_operation_pop, null);
         sortOperationPop = new PopupWindow(contentView,
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT, true);
@@ -245,7 +245,7 @@ public class GroupFileActivity extends BaseActivity {
 
     private void showFileFilterPop(View v) {
         View contentView = LayoutInflater.from(GroupFileActivity.this)
-                .inflate(R.layout.volume_app_volume_file_filter_pop, null);
+                .inflate(R.layout.file_filter_pop, null);
         final PopupWindow fileFilterPop = new PopupWindow(contentView,
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT, true);
@@ -358,7 +358,7 @@ public class GroupFileActivity extends BaseActivity {
                     ChatFileDownloadManager.getInstance().cancelDownloadFile(downloadInfo);
                     DownloadCacheUtils.saveDownloadFile(downloadInfo);
                 } else if (status.equals(DownloadInfo.STATUS_PAUSE) || status.equals(DownloadInfo.STATUS_FAIL)) {
-                    NetworkMobileTipUtil.checkEnvironment(this, R.string.volume_file_download_network_type_warning, downloadInfo.getSize(),
+                    NetworkMobileTipUtil.checkEnvironment(this, R.string.file_download_network_type_warning, downloadInfo.getSize(),
                             new NetworkMobileTipUtil.Callback() {
                                 @Override
                                 public void cancel() {
@@ -530,7 +530,7 @@ public class GroupFileActivity extends BaseActivity {
             ViewHolder holder;
             if (convertView == null) {
                 holder = new ViewHolder();
-                convertView = LayoutInflater.from(GroupFileActivity.this).inflate(R.layout.volume_app_volume_file_item_view, null);
+                convertView = LayoutInflater.from(GroupFileActivity.this).inflate(R.layout.volume_file_item_view, null);
                 holder.fileImg = convertView.findViewById(R.id.file_type_img);
                 holder.fileNameText = convertView.findViewById(R.id.tv_file_name);
                 holder.fileSizeText = convertView.findViewById(R.id.tv_file_size);

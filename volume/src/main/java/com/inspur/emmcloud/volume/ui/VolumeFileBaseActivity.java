@@ -413,7 +413,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
             }
             //批量下载
             volumeActionLayout.setVisibility(View.VISIBLE);
-            NetworkMobileTipUtil.checkEnvironment(this, R.string.volume_file_download_network_type_warning, totalDownloadSize,
+            NetworkMobileTipUtil.checkEnvironment(this, R.string.file_download_network_type_warning, totalDownloadSize,
                     new NetworkMobileTipUtil.Callback() {
                         @Override
                         public void cancel() {
