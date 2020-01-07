@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.volume.bean;
 
 import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.componentservice.volume.Volume;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

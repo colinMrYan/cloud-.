@@ -13,7 +13,7 @@
         android:layout_marginLeft="14dp"
         android:layout_marginRight="10dp"
         android:scaleType="fitXY"
-        android:src="@drawable/ic_volume_share_volume" />
+        android:src="@drawable/volume_ic_share_volume" />
 
     <RelativeLayout
         android:layout_width="match_parent"

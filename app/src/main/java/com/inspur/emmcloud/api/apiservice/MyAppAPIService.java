@@ -15,9 +15,6 @@ import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
 import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
 import com.inspur.emmcloud.basemodule.api.HttpUtils;
-import com.inspur.emmcloud.basemodule.application.BaseApplication;
-import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileListResult;
-import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeListResult;
 import com.inspur.emmcloud.componentservice.login.LoginService;
 import com.inspur.emmcloud.componentservice.login.OauthCallBack;
 
@@ -76,81 +73,6 @@ public class MyAppAPIService {
                     @Override
                     public void reExecute() {
                         syncCommonApp(commonAppListJson);
-                    }
-
-                    @Override
-                    public void executeFailCallback() {
-                        callbackFail("", -1);
-                    }
-                };
-                refreshToken(
-                        oauthCallBack, requestTime);
-            }
-
-        });
-    }
-
-    public void getVolumeList() {
-        final String url = APIUri.getVolumeListUrl();
-        RequestParams params = ((BaseApplication) context.getApplicationContext()).getHttpRequestParams(url);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, url) {
-            @Override
-            public void callbackSuccess(byte[] arg0) {
-                apiInterface.returnVolumeListSuccess(new GetVolumeListResult(new String(arg0)));
-            }
-
-            @Override
-            public void callbackFail(String error, int responseCode) {
-                apiInterface.returnVolumeListFail(error, responseCode);
-            }
-
-            @Override
-            public void callbackTokenExpire(long requestTime) {
-                OauthCallBack oauthCallBack = new OauthCallBack() {
-                    @Override
-                    public void reExecute() {
-                        getVolumeList();
-                    }
-
-                    @Override
-                    public void executeFailCallback() {
-                        callbackFail("", -1);
-                    }
-                };
-                refreshToken(
-                        oauthCallBack, requestTime);
-            }
-
-        });
-    }
-
-    /**
-     * 获取云盘文件列表
-     *
-     * @param volumeId
-     * @param currentDirAbsolutePath
-     */
-    public void getVolumeFileList(final String volumeId, final String currentDirAbsolutePath) {
-        final String url = APIUri.getVolumeFileOperationUrl(volumeId);
-        RequestParams params = ((BaseApplication) context.getApplicationContext()).getHttpRequestParams(url);
-        params.addParameter("path", currentDirAbsolutePath);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, url) {
-            @Override
-            public void callbackSuccess(byte[] arg0) {
-                apiInterface.returnVolumeFileListSuccess(new GetVolumeFileListResult(new String(arg0)));
-            }
-
-            @Override
-            public void callbackFail(String error, int responseCode) {
-                apiInterface.returnVolumeFileListFail(error, responseCode);
-            }
-
-            @Override
-            public void callbackTokenExpire(long requestTime) {
-                OauthCallBack oauthCallBack = new OauthCallBack() {
-                    @Override
-                    public void reExecute() {
-                        getVolumeFileList(volumeId, currentDirAbsolutePath);
                     }
 
                     @Override

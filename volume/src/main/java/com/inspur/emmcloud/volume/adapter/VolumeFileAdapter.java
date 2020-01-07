@@ -154,7 +154,7 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.volume_file_item_view, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.file_item_view, parent, false);
         ViewHolder holder = new ViewHolder(view, mItemClickListener);
         return holder;
     }
@@ -169,7 +169,7 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
         if (selectVolumeFileList.size() > 0) {
             holder.fileSelcetImg.setImageResource(selectVolumeFileList.contains(volumeFile) ? R.drawable.ic_select_yes : R.drawable.ic_select_no);
         } else {
-            holder.fileSelcetImg.setImageResource(R.drawable.ic_volume_no_selected);
+            holder.fileSelcetImg.setImageResource(R.drawable.ic_no_selected);
         }
         showVolumeFileTypeImg(holder.fileTypeImg, volumeFile);
         holder.fileNameText.setText(volumeFile.getName());

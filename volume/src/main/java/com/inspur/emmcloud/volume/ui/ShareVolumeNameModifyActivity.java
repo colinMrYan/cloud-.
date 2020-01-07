@@ -15,12 +15,12 @@ import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.componentservice.volume.Volume;
 import com.inspur.emmcloud.volume.R;
 import com.inspur.emmcloud.volume.R2;
 import com.inspur.emmcloud.volume.api.VolumeAPIInterfaceInstance;
 import com.inspur.emmcloud.volume.api.VolumeAPIService;
 import com.inspur.emmcloud.volume.bean.Group;
-import com.inspur.emmcloud.volume.bean.Volume;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

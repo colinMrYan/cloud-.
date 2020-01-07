@@ -3,8 +3,6 @@ package com.inspur.emmcloud.api;
 import com.inspur.emmcloud.basemodule.application.GetClientIdRsult;
 import com.inspur.emmcloud.basemodule.bean.GetUploadPushInfoResult;
 import com.inspur.emmcloud.bean.ChatFileUploadInfo;
-import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileListResult;
-import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeListResult;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.GetAllRobotsResult;
 import com.inspur.emmcloud.bean.chat.GetChannelListResult;
@@ -47,13 +45,9 @@ import java.util.List;
 
 public interface APIInterface {
 
-
-
-
     void returnUpgradeSuccess(GetUpgradeResult getUpgradeResult, boolean isManualCheck);
 
     void returnUpgradeFail(String error, boolean isManualCheck, int errorCode);
-
 
     void returnGetDownloadReactNativeUrlSuccess(ReactNativeDownloadUrlBean reactNativeDownloadUrlBean);
 
@@ -154,8 +148,6 @@ public interface APIInterface {
 
     void returnTripArriveFail(String error, int errorCode);
 
-
-
     void returnDelMembersSuccess(ChannelGroup channelGroup);
 
     void returnDelMembersFail(String error, int errorCode);
@@ -230,8 +222,6 @@ public interface APIInterface {
     void returnOpenDecideBotRequestSuccess();
 
     void returnOpenDecideBotRequestFail(String error, int errorCode);
-
-
 
     void returnContactUserListSuccess(byte[] bytes, String saveConfigVersion);
 
@@ -337,10 +327,4 @@ public interface APIInterface {
     void returnInvitationContentSuccess(ScanCodeJoinConversationBean scanCodeJoinConversationBean);
 
     void returnInvitationContentFail(String error, int errorCode);
-
-    void returnVolumeListSuccess(GetVolumeListResult getVolumeListResult);
-    void returnVolumeListFail(String error, int errorCode);
-
-    void returnVolumeFileListSuccess(GetVolumeFileListResult getVolumeFileListResult);
-    void returnVolumeFileListFail(String error, int errorCode);
 }

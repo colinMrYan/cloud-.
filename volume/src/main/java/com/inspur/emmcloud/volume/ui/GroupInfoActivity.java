@@ -14,13 +14,13 @@ import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.componentservice.communication.SearchModel;
+import com.inspur.emmcloud.componentservice.volume.Volume;
 import com.inspur.emmcloud.volume.R;
 import com.inspur.emmcloud.volume.R2;
 import com.inspur.emmcloud.volume.adapter.VolumeInfoMemberAdapter;
 import com.inspur.emmcloud.volume.api.VolumeAPIInterfaceInstance;
 import com.inspur.emmcloud.volume.api.VolumeAPIService;
 import com.inspur.emmcloud.volume.bean.Group;
-import com.inspur.emmcloud.volume.bean.Volume;
 
 import java.util.ArrayList;
 import java.util.List;

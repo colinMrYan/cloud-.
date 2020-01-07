@@ -1,7 +1,6 @@
-package com.inspur.emmcloud.volume.bean;
+package com.inspur.emmcloud.componentservice.volume;
 
 import com.inspur.emmcloud.baselib.util.JSONUtils;
-import com.inspur.emmcloud.basemodule.application.BaseApplication;
 
 import org.json.JSONObject;
 
@@ -82,10 +81,6 @@ public class Volume implements Serializable {
 
     public void setQuotaUsed(long quotaUsed) {
         this.quotaUsed = quotaUsed;
-    }
-
-    public boolean isOwner() {
-        return BaseApplication.getInstance().getUid().equals(owner);
     }
 
     public void setOwner(String owner) {

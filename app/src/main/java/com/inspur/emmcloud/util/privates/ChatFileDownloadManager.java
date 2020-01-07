@@ -43,20 +43,20 @@ public class ChatFileDownloadManager {
 
     private void refreshCache() {
         downloadInfoList = DownloadCacheUtils.getAllDownloadingList();
-        boolean isNeedUpdateVolumeFileDownloadStatus = false;
+        boolean isNeedUpdateFileDownloadStatus = false;
         for (DownloadInfo downloadInfo : downloadInfoList) {
             if (downloadInfo.getStatus().equals(DownloadInfo.STATUS_LOADING)) {
                 downloadInfo.setStatus(DownloadInfo.STATUS_PAUSE);
-                isNeedUpdateVolumeFileDownloadStatus = true;
+                isNeedUpdateFileDownloadStatus = true;
             }
 
             if (downloadInfo.getStatus().equals(DownloadInfo.STATUS_SUCCESS) ||
                     downloadInfo.getStatus().equals(DownloadInfo.STATUS_FAIL)) {
-                isNeedUpdateVolumeFileDownloadStatus = true;
+                isNeedUpdateFileDownloadStatus = true;
             }
         }
 
-        if (isNeedUpdateVolumeFileDownloadStatus) {
+        if (isNeedUpdateFileDownloadStatus) {
             DownloadCacheUtils.saveDownloadFileList(downloadInfoList);
         }
     }

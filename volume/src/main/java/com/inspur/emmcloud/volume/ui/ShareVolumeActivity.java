@@ -23,9 +23,9 @@ import com.inspur.emmcloud.baselib.util.FomatUtils;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.baselib.widget.FileActionData;
+import com.inspur.emmcloud.baselib.widget.FileActionLayout;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
-import com.inspur.emmcloud.baselib.widget.VolumeActionData;
-import com.inspur.emmcloud.baselib.widget.VolumeActionLayout;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.MyDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
@@ -37,13 +37,13 @@ import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.componentservice.volume.Volume;
 import com.inspur.emmcloud.componentservice.volume.VolumeFile;
 import com.inspur.emmcloud.volume.R;
 import com.inspur.emmcloud.volume.R2;
 import com.inspur.emmcloud.volume.api.VolumeAPIInterfaceInstance;
 import com.inspur.emmcloud.volume.api.VolumeAPIService;
 import com.inspur.emmcloud.volume.bean.GetVolumeListResult;
-import com.inspur.emmcloud.volume.bean.Volume;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -70,7 +70,7 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
     @BindView(R2.id.share_volume_list)
     ListView shareVolumeListView;
     @BindView(R2.id.ll_volume_bottom_action)
-    VolumeActionLayout bottomActionLayout;
+    FileActionLayout bottomActionLayout;
     private List<Volume> shareVolumeList = new ArrayList<>();
     private List<Volume> selectedShareVolumeList = new ArrayList<>();
     private Adapter adapter;
@@ -230,7 +230,7 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
         adapter.notifyDataSetChanged();
         boolean isOwner = true;
         for (int i = 0; i < selectVolumeList.size(); i++) {
-            if (!selectVolumeList.get(i).isOwner()) {
+            if (!selectVolumeList.get(i).getOwner().equals(BaseApplication.getInstance().getUid())) {
                 isOwner = false;
                 break;
             }
@@ -240,16 +240,16 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
             return;
         }
         bottomActionLayout.setVisibility(selectVolumeList.size() > 0 ? View.VISIBLE : View.GONE);
-        final List<VolumeActionData> volumeActionDataList = new ArrayList<>();
+        final List<FileActionData> volumeActionDataList = new ArrayList<>();
         volumeDetailAction = getString(R.string.detail);
         deleteVolumeAction = getString(R.string.delete);
         renameVolumeAction = getString(R.string.volume_rename);
-        volumeActionDataList.add(new VolumeActionData(volumeDetailAction, R.drawable.ic_volume_detail, selectVolumeList.size() == 1 && true));
-        volumeActionDataList.add(new VolumeActionData(deleteVolumeAction, R.drawable.ic_volume_delete, isOwner));
-        volumeActionDataList.add(new VolumeActionData(renameVolumeAction, R.drawable.ic_volume_rename, selectVolumeList.size() == 1 && isOwner));
-        bottomActionLayout.setVolumeActionData(volumeActionDataList, new VolumeActionLayout.VolumeActionClickListener() {
+        volumeActionDataList.add(new FileActionData(volumeDetailAction, R.drawable.volume_ic_detail, selectVolumeList.size() == 1 && true));
+        volumeActionDataList.add(new FileActionData(deleteVolumeAction, R.drawable.volume_ic_delete, isOwner));
+        volumeActionDataList.add(new FileActionData(renameVolumeAction, R.drawable.volume_ic_rename, selectVolumeList.size() == 1 && isOwner));
+        bottomActionLayout.setFileActionData(volumeActionDataList, new FileActionLayout.FileActionClickListener() {
             @Override
-            public void volumeActionSelectedListener(String actionName) {
+            public void fileActionSelectedListener(String actionName) {
                 handleVolumeAction(actionName);
             }
         });
@@ -439,7 +439,7 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
             loadingDlg.show();
             for (int i = 0; i < selectedShareVolumeList.size(); i++) {
-                if (selectedShareVolumeList.get(i).isOwner() == true) {
+                if (selectedShareVolumeList.get(i).getOwner().equals(BaseApplication.getInstance().getUid())) {
                     apiService.removeShareVolumeName(selectedShareVolumeList.get(i));
                 }
             }
@@ -495,7 +495,7 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
                 holder = (Holder) convertView.getTag();
             }
             if (selectedShareVolumeList.size() == 0) {
-                holder.imageView.setImageResource(R.drawable.ic_volume_no_selected);
+                holder.imageView.setImageResource(R.drawable.ic_no_selected);
             } else {
                 boolean haveSelectedVolume = selectedShareVolumeList.contains(shareVolumeList.get(position));
                 holder.imageView.setImageResource(haveSelectedVolume ? R.drawable.ic_select_yes : R.drawable.ic_select_no);
