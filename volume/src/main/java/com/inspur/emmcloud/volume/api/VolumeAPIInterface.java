@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.volume.api;
 
 import com.inspur.emmcloud.componentservice.volume.GetVolumeFileUploadTokenResult;
+import com.inspur.emmcloud.componentservice.volume.Volume;
 import com.inspur.emmcloud.componentservice.volume.VolumeFile;
 import com.inspur.emmcloud.volume.bean.GetReturnMoveOrCopyErrorResult;
 import com.inspur.emmcloud.volume.bean.GetVolumeFileListResult;
@@ -8,7 +9,6 @@ import com.inspur.emmcloud.volume.bean.GetVolumeGroupPermissionResult;
 import com.inspur.emmcloud.volume.bean.GetVolumeGroupResult;
 import com.inspur.emmcloud.volume.bean.GetVolumeListResult;
 import com.inspur.emmcloud.volume.bean.GetVolumeResultWithPermissionResult;
-import com.inspur.emmcloud.volume.bean.Volume;
 import com.inspur.emmcloud.volume.bean.VolumeDetail;
 
 import java.util.List;

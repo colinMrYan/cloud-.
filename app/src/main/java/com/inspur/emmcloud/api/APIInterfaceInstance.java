@@ -4,8 +4,6 @@ package com.inspur.emmcloud.api;
 import com.inspur.emmcloud.basemodule.application.GetClientIdRsult;
 import com.inspur.emmcloud.basemodule.bean.GetUploadPushInfoResult;
 import com.inspur.emmcloud.bean.ChatFileUploadInfo;
-import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileListResult;
-import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeListResult;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.GetAllRobotsResult;
 import com.inspur.emmcloud.bean.chat.GetChannelListResult;
@@ -48,11 +46,9 @@ import java.util.List;
 
 public class APIInterfaceInstance implements APIInterface {
 
-
     public APIInterfaceInstance() {
         super();
     }
-
 
     @Override
     public void returnMsgCommentCountSuccess(GetMsgCommentCountResult getMsgCommentCountResult, String mid) {
@@ -736,27 +732,6 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnInvitationContentFail(String error, int errorCode) {
-
-    }
-
-
-    @Override
-    public void returnVolumeListSuccess(GetVolumeListResult getVolumeListResult) {
-
-    }
-
-    @Override
-    public void returnVolumeListFail(String error, int errorCode) {
-
-    }
-
-    @Override
-    public void returnVolumeFileListSuccess(GetVolumeFileListResult getVolumeFileListResult) {
-
-    }
-
-    @Override
-    public void returnVolumeFileListFail(String error, int errorCode) {
 
     }
 

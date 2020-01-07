@@ -4,9 +4,9 @@ import android.content.Context;
 
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.componentservice.volume.Volume;
 import com.inspur.emmcloud.componentservice.volume.VolumeFile;
 import com.inspur.emmcloud.volume.bean.GetVolumeFileListResult;
-import com.inspur.emmcloud.volume.bean.Volume;
 import com.inspur.emmcloud.volume.bean.VolumeGroupContainMe;
 
 import java.util.ArrayList;

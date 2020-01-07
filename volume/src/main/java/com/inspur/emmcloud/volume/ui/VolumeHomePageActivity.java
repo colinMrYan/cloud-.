@@ -25,6 +25,7 @@ import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.componentservice.volume.Volume;
 import com.inspur.emmcloud.componentservice.volume.VolumeFile;
 import com.inspur.emmcloud.volume.R;
 import com.inspur.emmcloud.volume.R2;
@@ -32,7 +33,6 @@ import com.inspur.emmcloud.volume.adapter.VolumeRecentUseAdapter;
 import com.inspur.emmcloud.volume.api.VolumeAPIInterfaceInstance;
 import com.inspur.emmcloud.volume.api.VolumeAPIService;
 import com.inspur.emmcloud.volume.bean.GetVolumeListResult;
-import com.inspur.emmcloud.volume.bean.Volume;
 import com.inspur.emmcloud.volume.bean.VolumeHomePageDirectory;
 import com.inspur.emmcloud.volume.ui.view.VolumeFileTransferActivity;
 import com.inspur.emmcloud.volume.util.VolumeFileDownloadManager;
@@ -121,8 +121,8 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
         volumeRecentUseListView.setAdapter(volumeRecentUseAdapter);
         swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getApplicationContext(), R.color.header_bg_blue), ContextCompat.getColor(getApplicationContext(), R.color.header_bg_blue));
         swipeRefreshLayout.setOnRefreshListener(this);
-        volumeHomePageDirectoryList.add(new VolumeHomePageDirectory(R.drawable.ic_volume_my_file, getString(R.string.volume_clouddriver_my_file), ""));
-        volumeHomePageDirectoryList.add(new VolumeHomePageDirectory(R.drawable.ic_volume_share_volume, getString(R.string.volume_clouddriver_share_volume), ""));
+        volumeHomePageDirectoryList.add(new VolumeHomePageDirectory(R.drawable.volume_ic_my_file, getString(R.string.volume_clouddriver_my_file), ""));
+        volumeHomePageDirectoryList.add(new VolumeHomePageDirectory(R.drawable.volume_ic_share_volume, getString(R.string.volume_clouddriver_share_volume), ""));
         adapter = new Adapter();
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

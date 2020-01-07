@@ -21,12 +21,12 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.adapter.VolumeFileFilterPopGridAdapter;
+import com.inspur.emmcloud.adapter.FileFilterPopGridAdapter;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
-import com.inspur.emmcloud.baselib.widget.VolumeActionData;
-import com.inspur.emmcloud.baselib.widget.VolumeActionLayout;
+import com.inspur.emmcloud.baselib.widget.FileActionData;
+import com.inspur.emmcloud.baselib.widget.FileActionLayout;
 import com.inspur.emmcloud.baselib.widget.progressbar.CircleProgressBar;
 import com.inspur.emmcloud.basemodule.bean.DownloadFileCategory;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
@@ -71,14 +71,14 @@ public class GroupFileActivity extends BaseActivity {
     TextView operationSortText;
     @BindView(R.id.tv_filter_by_file_type)
     TextView filterByFileTypeText;
-    final List<VolumeActionData> volumeActionDataList = new ArrayList<>();
+    final List<FileActionData> fileActionDataList = new ArrayList<>();
     private String cid;
     private List<Message> fileMessageList = new ArrayList<>();
     private PopupWindow sortOperationPop;
     private GroupFileAdapter adapter;
     private FileSortComparable fileSortComparable;
-    @BindView(R.id.ll_volume_action)
-    VolumeActionLayout volumeActionLayout;
+    @BindView(R.id.ll_file_action)
+    FileActionLayout fileActionLayout;
     private List<Message> selectGroupFileList = new ArrayList<>();
     private String downLoadAction; //弹框点击状态
     List<Message> fileTypeMessageListWithOrder = new ArrayList<>();
@@ -174,7 +174,7 @@ public class GroupFileActivity extends BaseActivity {
                 getApplicationContext(), R.drawable.pop_window_view_tran));
         sortOperationPop.setOutsideTouchable(true);
         sortOperationPop.showAsDropDown(operationSortText);
-        Drawable drawable = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_volume_menu_drop_up);
+        Drawable drawable = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_menu_drop_up);
         drawable.setBounds(0, 0, DensityUtil.dip2px(getApplicationContext(), 14), DensityUtil.dip2px(getApplicationContext(), 14));
         operationSortText.setCompoundDrawables(null, null, drawable, null);
         sortOperationPop.setOnDismissListener(new PopupWindow.OnDismissListener() {
@@ -187,7 +187,7 @@ public class GroupFileActivity extends BaseActivity {
     }
 
     private void setOperationSort() {
-        Drawable drawableDown = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_volume_menu_drop_down);
+        Drawable drawableDown = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_menu_drop_down);
         drawableDown.setBounds(0, 0, DensityUtil.dip2px(getApplicationContext(), 14), DensityUtil.dip2px(getApplicationContext(), 14));
         operationSortText.setCompoundDrawables(null, null, drawableDown, null);
         String sortTypeShowTxt;
@@ -250,7 +250,7 @@ public class GroupFileActivity extends BaseActivity {
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT, true);
         GridView fileFilterGrid = contentView.findViewById(R.id.file_filter_type_grid);
-        fileFilterGrid.setAdapter(new VolumeFileFilterPopGridAdapter(GroupFileActivity.this));
+        fileFilterGrid.setAdapter(new FileFilterPopGridAdapter(GroupFileActivity.this));
         fileFilterGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -291,7 +291,7 @@ public class GroupFileActivity extends BaseActivity {
         if (selectGroupFileList.size() > 0) {
             holder.selectImg.setImageResource(selectGroupFileList.contains(message) ? R.drawable.ic_select_yes : R.drawable.ic_select_no);
         } else {
-            holder.selectImg.setImageResource(R.drawable.ic_volume_no_selected);
+            holder.selectImg.setImageResource(R.drawable.ic_no_selected);
         }
 //        holder.fileTimeText.setText(TimeUtils.getChannelMsgDisplayTime(GroupFileActivity.this, message.getCreationDate()));
         holder.fileTimeText.setText(TimeUtils.getTime(message.getCreationDate(), format));
@@ -417,23 +417,23 @@ public class GroupFileActivity extends BaseActivity {
     /**
      * 根据所选文件的类型展示操作按钮
      */
-    protected void setBottomOperationItemShow(List<Message> selectVolumeFileList) {
+    protected void setBottomOperationItemShow(List<Message> selectFileList) {
         downLoadAction = getString(R.string.download);
-        volumeActionDataList.clear();
-        volumeActionDataList.add(new VolumeActionData(downLoadAction, R.drawable.ic_volume_download, true));
-        for (int i = 0; i < volumeActionDataList.size(); i++) {
-            if (!volumeActionDataList.get(i).isShow()) {
-                volumeActionDataList.remove(i);
+        fileActionDataList.clear();
+        fileActionDataList.add(new FileActionData(downLoadAction, R.drawable.ic_file_download, true));
+        for (int i = 0; i < fileActionDataList.size(); i++) {
+            if (!fileActionDataList.get(i).isShow()) {
+                fileActionDataList.remove(i);
                 i--;
                 continue;
             }
         }
-        volumeActionLayout.setVisibility(selectVolumeFileList.size() > 0 && volumeActionDataList.size() > 0 ? View.VISIBLE : View.GONE);
-        volumeActionLayout.clearView();
-        volumeActionLayout.setVolumeActionData(volumeActionDataList, new VolumeActionLayout.VolumeActionClickListener() {
+        fileActionLayout.setVisibility(selectFileList.size() > 0 && fileActionDataList.size() > 0 ? View.VISIBLE : View.GONE);
+        fileActionLayout.clearView();
+        fileActionLayout.setFileActionData(fileActionDataList, new FileActionLayout.FileActionClickListener() {
             @Override
-            public void volumeActionSelectedListener(String actionName) {
-                volumeActionLayout.setVisibility(View.GONE);
+            public void fileActionSelectedListener(String actionName) {
+                fileActionLayout.setVisibility(View.GONE);
                 handleDownLoadAction(actionName);
             }
         });
@@ -530,7 +530,7 @@ public class GroupFileActivity extends BaseActivity {
             ViewHolder holder;
             if (convertView == null) {
                 holder = new ViewHolder();
-                convertView = LayoutInflater.from(GroupFileActivity.this).inflate(R.layout.volume_file_item_view, null);
+                convertView = LayoutInflater.from(GroupFileActivity.this).inflate(R.layout.file_item_view, null);
                 holder.fileImg = convertView.findViewById(R.id.file_type_img);
                 holder.fileNameText = convertView.findViewById(R.id.tv_file_name);
                 holder.fileSizeText = convertView.findViewById(R.id.tv_file_size);

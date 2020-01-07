@@ -30,9 +30,9 @@ import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.baselib.widget.FileActionData;
+import com.inspur.emmcloud.baselib.widget.FileActionLayout;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
-import com.inspur.emmcloud.baselib.widget.VolumeActionData;
-import com.inspur.emmcloud.baselib.widget.VolumeActionLayout;
 import com.inspur.emmcloud.baselib.widget.dialogs.ActionSheetDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.MyDialog;
@@ -54,6 +54,7 @@ import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.basemodule.util.tipsview.TipsView;
 import com.inspur.emmcloud.basemodule.util.tipsview.animator.BallView;
 import com.inspur.emmcloud.basemodule.util.tipsview.animator.Point;
+import com.inspur.emmcloud.componentservice.volume.Volume;
 import com.inspur.emmcloud.componentservice.volume.VolumeFile;
 import com.inspur.emmcloud.volume.R;
 import com.inspur.emmcloud.volume.R2;
@@ -62,7 +63,6 @@ import com.inspur.emmcloud.volume.api.VolumeAPIInterfaceInstance;
 import com.inspur.emmcloud.volume.api.VolumeAPIService;
 import com.inspur.emmcloud.volume.bean.GetVolumeFileListResult;
 import com.inspur.emmcloud.volume.bean.GetVolumeGroupResult;
-import com.inspur.emmcloud.volume.bean.Volume;
 import com.inspur.emmcloud.volume.bean.VolumeGroupContainMe;
 import com.inspur.emmcloud.volume.util.VolumeFileDownloadManager;
 import com.inspur.emmcloud.volume.util.VolumeFilePrivilegeUtils;
@@ -112,8 +112,8 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     protected static final String SORT_BY_NAME_DOWN = "sort_by_name_down";
     protected static final String SORT_BY_TIME_UP = "sort_by_time_up";
     protected static final String SORT_BY_TIME_DOWN = "sort_by_time_down";
-    final List<VolumeActionData> volumeActionDataList = new ArrayList<>();
-    final List<VolumeActionData> volumeActionHideList = new ArrayList<>();
+    final List<FileActionData> volumeActionDataList = new ArrayList<>();
+    final List<FileActionData> volumeActionHideList = new ArrayList<>();
     public VolumeFile shareToVolumeFile;
     protected LoadingDialog loadingDlg;
     protected VolumeFileAdapter adapter;
@@ -139,7 +139,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     @BindView(R2.id.btn_upload_file)
     CustomRoundButton uploadFileBtn;
     @BindView(R2.id.ll_volume_action)
-    VolumeActionLayout volumeActionLayout;
+    FileActionLayout fileActionLayout;
     @BindView(R2.id.tipview_red_point)
     TipsView redPointView;
     @BindView(R2.id.rl_tip_view)
@@ -359,19 +359,19 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
                 break;
             }
         }
-        volumeActionDataList.add(new VolumeActionData(openAction, R.drawable.volume_open_file,
+        volumeActionDataList.add(new FileActionData(openAction, R.drawable.volume_open_file,
                 selectVolumeFileList.size() == 1 && isAllDownloadAction));
-        volumeActionDataList.add(new VolumeActionData(downloadAction, R.drawable.ic_volume_download,
+        volumeActionDataList.add(new FileActionData(downloadAction, R.drawable.ic_file_download,
                 selectVolumeFileList.size() >= 1 && !isVolumeContainDir
                         && (isVolumeFileReadable || isVolumeFileWriteable) && !isAllDownloadAction));
-        volumeActionDataList.add(new VolumeActionData(copyAction, R.drawable.ic_volume_copy, (isVolumeFileReadable || isVolumeFileWriteable)));
-        volumeActionDataList.add(new VolumeActionData(moveToAction, R.drawable.ic_volume_move, isVolumeFileWriteable));
-        volumeActionDataList.add(new VolumeActionData(shareTo, R.drawable.ic_volume_share, selectVolumeFileList.size() == 1 &&
+        volumeActionDataList.add(new FileActionData(copyAction, R.drawable.volume_ic_copy, (isVolumeFileReadable || isVolumeFileWriteable)));
+        volumeActionDataList.add(new FileActionData(moveToAction, R.drawable.volume_ic_move, isVolumeFileWriteable));
+        volumeActionDataList.add(new FileActionData(shareTo, R.drawable.volume_ic_share, selectVolumeFileList.size() == 1 &&
                 !isVolumeFileDirectory && (isVolumeFileWriteable || isVolumeFileReadable)));
-        volumeActionDataList.add(new VolumeActionData(renameAction, R.drawable.ic_volume_rename,
+        volumeActionDataList.add(new FileActionData(renameAction, R.drawable.volume_ic_rename,
                 isVolumeFileWriteable && selectVolumeFileList.size() == 1));
-        volumeActionDataList.add(new VolumeActionData(deleteAction, R.drawable.ic_volume_delete, isVolumeFileWriteable));
-        volumeActionDataList.add(new VolumeActionData(permissionAction, R.drawable.ic_volume_permission,
+        volumeActionDataList.add(new FileActionData(deleteAction, R.drawable.volume_ic_delete, isVolumeFileWriteable));
+        volumeActionDataList.add(new FileActionData(permissionAction, R.drawable.volume_ic_permission,
                 isVolumeFileDirectory && selectVolumeFileList.size() == 1 &&
                         (isVolumeFileWriteable || isVolumeFileReadable) &&
                         (volumeFrom != MY_VOLUME) && isOwner && volume.getType().equals("public")));
@@ -387,15 +387,15 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
                 volumeActionHideList.add(volumeActionDataList.get(i - 1));
                 volumeActionDataList.remove(i - 1);
             }
-            volumeActionDataList.add(new VolumeActionData(moreAction, R.drawable.ic_volume_more, (selectVolumeFileList.size() == 1
+            volumeActionDataList.add(new FileActionData(moreAction, R.drawable.ic_file_more, (selectVolumeFileList.size() == 1
                     && (isVolumeFileWriteable || isVolumeFileReadable))));
         }
-        volumeActionLayout.setVisibility(selectVolumeFileList.size() > 0 && volumeActionDataList.size() > 0 ? View.VISIBLE : View.GONE);
-        volumeActionLayout.clearView();
-        volumeActionLayout.setVolumeActionData(volumeActionDataList, new VolumeActionLayout.VolumeActionClickListener() {
+        fileActionLayout.setVisibility(selectVolumeFileList.size() > 0 && volumeActionDataList.size() > 0 ? View.VISIBLE : View.GONE);
+        fileActionLayout.clearView();
+        fileActionLayout.setFileActionData(volumeActionDataList, new FileActionLayout.FileActionClickListener() {
             @Override
-            public void volumeActionSelectedListener(String actionName) {
-                volumeActionLayout.setVisibility(View.GONE);
+            public void fileActionSelectedListener(String actionName) {
+                fileActionLayout.setVisibility(View.GONE);
                 handleVolumeAction(actionName);
             }
         });
@@ -412,7 +412,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
                 totalDownloadSize = totalDownloadSize + file.getSize();
             }
             //批量下载
-            volumeActionLayout.setVisibility(View.VISIBLE);
+            fileActionLayout.setVisibility(View.VISIBLE);
             NetworkMobileTipUtil.checkEnvironment(this, R.string.file_download_network_type_warning, totalDownloadSize,
                     new NetworkMobileTipUtil.Callback() {
                         @Override
@@ -422,7 +422,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
 
                         @Override
                         public void onNext() {
-                            volumeActionLayout.setVisibility(View.GONE);
+                            fileActionLayout.setVisibility(View.GONE);
                             handleDownloadList();
                         }
                     });
@@ -483,7 +483,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        volumeActionLayout.setVisibility(View.GONE);
+                        fileActionLayout.setVisibility(View.GONE);
                         deleteFile(deleteVolumeFile);
                         dialog.dismiss();
                     }

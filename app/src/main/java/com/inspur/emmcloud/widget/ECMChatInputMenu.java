@@ -139,7 +139,7 @@ public class ECMChatInputMenu extends LinearLayout {
     ImageView voiceInputCloseImg;
     @BindView(R.id.voice_input_speak_tip)
     TextView voiceInputSpeakTipTv;
-    @BindView(R.id.volume_level_img)
+    @BindView(R.id.voice_level_img)
     ImageView voiceInputLevelImg;
     @BindView(R.id.volume_level_img_shade)
     RoundedImageView voiceInputLevelImgShade;   //伴随音量大小
@@ -1315,7 +1315,7 @@ public class ECMChatInputMenu extends LinearLayout {
         emotionBtn.setImageResource(isShowEmotion ? R.drawable.ic_chat_input_keyboard : R.drawable.ic_chat_btn_emotion);
     }
 
-    @OnTouch({R.id.volume_level_img})
+    @OnTouch({R.id.voice_level_img})
     public boolean onTouch(View v, MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:

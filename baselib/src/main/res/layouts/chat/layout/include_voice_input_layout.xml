@@ -56,7 +56,7 @@
             android:id="@+id/voice_input_speak_tip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/volume_level_img"
+            android:layout_above="@+id/voice_level_img"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="10dp"
             android:text="@string/voice_input_tip_speak"
@@ -64,7 +64,7 @@
             android:textSize="14sp" />
 
         <ImageView
-            android:id="@+id/volume_level_img"
+            android:id="@+id/voice_level_img"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_centerInParent="true"
@@ -101,7 +101,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginRight="63dp"
-            android:layout_toLeftOf="@id/volume_level_img"
+            android:layout_toLeftOf="@id/voice_level_img"
             android:text="@string/voice_input_clear"
             android:textColor="@color/voice_communication_function_default"
             android:textSize="16sp" />
@@ -112,7 +112,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="53dp"
-            android:layout_toRightOf="@+id/volume_level_img"
+            android:layout_toRightOf="@+id/voice_level_img"
             android:padding="10dp"
             android:text="@string/send"
             android:textColor="@color/voice_communication_function_default"

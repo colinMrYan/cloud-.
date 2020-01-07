@@ -18,8 +18,8 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
-import com.inspur.emmcloud.baselib.widget.VolumeActionData;
-import com.inspur.emmcloud.baselib.widget.VolumeActionLayout;
+import com.inspur.emmcloud.baselib.widget.FileActionData;
+import com.inspur.emmcloud.baselib.widget.FileActionLayout;
 import com.inspur.emmcloud.baselib.widget.dialogs.ActionSheetDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
@@ -75,14 +75,14 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
     @BindView(R2.id.volume_file_transfer_empty_layout)
     View noDataLayout;
     protected static final int SHARE_IMAGE_OR_FILES = 7;
-    final List<VolumeActionData> volumeActionDataList = new ArrayList<>();
-    final List<VolumeActionData> volumeActionHideList = new ArrayList<>();
+    final List<FileActionData> volumeActionDataList = new ArrayList<>();
+    final List<FileActionData> volumeActionHideList = new ArrayList<>();
     @BindView(R2.id.batch_operation_header_text)
     TextView batchOprationHeaderText;
     @BindView(R2.id.batch_operation_select_all_text)
     TextView getBatchOprationSelectAllText;
     @BindView(R2.id.ll_volume_action)
-    VolumeActionLayout volumeActionLayout;
+    FileActionLayout fileActionLayout;
     CustomShareListener mShareListener;
 
     @BindView(R2.id.operation_total_layout)
@@ -452,8 +452,8 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
      * tab切换时reset 已下载界面
      */
     public void hideBottomOperationItemShow() {
-        if (downloadedAdapter != null && volumeActionLayout != null) {
-            volumeActionLayout.setVisibility(View.GONE);
+        if (downloadedAdapter != null && fileActionLayout != null) {
+            fileActionLayout.setVisibility(View.GONE);
             if (selectCallBack != null) {
                 selectCallBack.onSelect(new ArrayList<VolumeFile>());
             }
@@ -470,8 +470,8 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
         shareTo = getString(R.string.baselib_share_to);
         volumeActionDataList.clear();
         volumeActionHideList.clear();
-        volumeActionDataList.add(new VolumeActionData(deleteAction, R.drawable.ic_volume_delete, true));
-        volumeActionDataList.add(new VolumeActionData(shareTo, R.drawable.ic_volume_share, selectVolumeFileList.size() == 1));
+        volumeActionDataList.add(new FileActionData(deleteAction, R.drawable.volume_ic_delete, true));
+        volumeActionDataList.add(new FileActionData(shareTo, R.drawable.volume_ic_share, selectVolumeFileList.size() == 1));
         for (int i = 0; i < volumeActionDataList.size(); i++) {
             if (!volumeActionDataList.get(i).isShow()) {
                 volumeActionDataList.remove(i);
@@ -480,12 +480,12 @@ public class VolumeFileTransferFragment extends BaseMvpFragment<VolumeFileTransf
             }
         }
 
-        volumeActionLayout.setVisibility(selectVolumeFileList.size() > 0 && volumeActionDataList.size() > 0 ? View.VISIBLE : View.GONE);
-        volumeActionLayout.clearView();
-        volumeActionLayout.setVolumeActionData(volumeActionDataList, new VolumeActionLayout.VolumeActionClickListener() {
+        fileActionLayout.setVisibility(selectVolumeFileList.size() > 0 && volumeActionDataList.size() > 0 ? View.VISIBLE : View.GONE);
+        fileActionLayout.clearView();
+        fileActionLayout.setFileActionData(volumeActionDataList, new FileActionLayout.FileActionClickListener() {
             @Override
-            public void volumeActionSelectedListener(String actionName) {
-                volumeActionLayout.setVisibility(View.GONE);
+            public void fileActionSelectedListener(String actionName) {
+                fileActionLayout.setVisibility(View.GONE);
                 handleVolumeAction(actionName);
             }
         });

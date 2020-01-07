@@ -4,15 +4,15 @@ package com.inspur.emmcloud.baselib.widget;
  * Created by libaochao on 2019/9/23.
  */
 
-public class VolumeActionData {
+public class FileActionData {
     private String actionName;
     private int actionIc;
     private boolean isShow = false;
 
-    public VolumeActionData() {
+    public FileActionData() {
     }
 
-    public VolumeActionData(String actionName, int actionIc, boolean isShow) {
+    public FileActionData(String actionName, int actionIc, boolean isShow) {
         this.actionName = actionName;
         this.actionIc = actionIc;
         this.isShow = isShow;

@@ -151,7 +151,7 @@
             app:waterWaveColor="#ffffff" />
 
         <ImageView
-            android:id="@+id/volume_level_img"
+            android:id="@+id/voice_level_img"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_centerHorizontal="true"
@@ -162,7 +162,7 @@
             android:id="@+id/voice_input_close_img"
             android:layout_width="80dp"
             android:layout_height="70dp"
-            android:layout_below="@id/volume_level_img"
+            android:layout_below="@id/voice_level_img"
             android:layout_centerHorizontal="true"
             android:padding="25dp"
             android:src="@drawable/ic_arrow_down" />

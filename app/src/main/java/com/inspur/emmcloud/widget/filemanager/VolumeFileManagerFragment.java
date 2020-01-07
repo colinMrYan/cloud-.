@@ -10,15 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
-import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
-import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileListResult;
-import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeListResult;
-import com.inspur.emmcloud.bean.appcenter.volume.Volume;
+import com.inspur.emmcloud.componentservice.volume.GetVolumeFileListListener;
+import com.inspur.emmcloud.componentservice.volume.GetVolumeListListener;
+import com.inspur.emmcloud.componentservice.volume.Volume;
 import com.inspur.emmcloud.componentservice.volume.VolumeFile;
+import com.inspur.emmcloud.componentservice.volume.VolumeService;
 import com.inspur.emmcloud.widget.filemanager.adapter.TitleAdapter;
 import com.inspur.emmcloud.widget.filemanager.adapter.VolumeFileInManagerAdapter;
 import com.inspur.emmcloud.widget.filemanager.adapter.base.RecyclerViewAdapter;
@@ -51,7 +50,6 @@ public class VolumeFileManagerFragment extends Fragment {
     /**
      * 当前文件夹路径
      **/
-    protected GetVolumeFileListResult getVolumeFileListResult;
     protected String fileFilterType = "";
     /**
      * 显示的文件类型
@@ -69,7 +67,9 @@ public class VolumeFileManagerFragment extends Fragment {
     private RecyclerView fileRecyclerView;
     private TitleAdapter titleAdapter;
     private LoadingDialog loadingDlg;
-    private MyAppAPIService apiServiceBase;
+    /**
+     * 云盘返回的volume
+     */
     private Volume volume;
     private List<TitlePath> backlist = new ArrayList<>();
     private int maximum = 1;
@@ -96,8 +96,6 @@ public class VolumeFileManagerFragment extends Fragment {
         fileRecyclerView.setAdapter(fileAdapter);
         refreshTitleState(getString(R.string.chat_filemanager_volume), currentDirAbsolutePath);
         loadingDlg = new LoadingDialog(getContext());
-        apiServiceBase = new MyAppAPIService(getContext());
-        apiServiceBase.setAPIInterface(new WebServiceBase());
         fileAdapter.setItemClickListener(new VolumeFileInManagerAdapter.MyItemClickListener() {
 
             @Override
@@ -158,7 +156,9 @@ public class VolumeFileManagerFragment extends Fragment {
         }
     }
 
-    /**返回结果**/
+    /**
+     * 返回结果
+     **/
     private void returnSelectResult() {
         Intent intent = new Intent();
         intent.putExtra("isNativeFile", false);
@@ -184,16 +184,26 @@ public class VolumeFileManagerFragment extends Fragment {
 
     public void getMyVolume() {
         if (NetUtils.isNetworkConnected(getContext()) && volume == null) {
-            loadingDlg.show();
-            apiServiceBase.getVolumeList();
+            Router router = Router.getInstance();
+            final VolumeService volumeService = router.getService(VolumeService.class);
+            if (volumeService != null) {
+                loadingDlg.show();
+                volumeService.getVolumeList(new GetVolumeListListener() {
+                    @Override
+                    public void onSuccess(Volume resultVolume) {
+                        volume = resultVolume;
+                        getVolumeFileList(false);
+                    }
+
+                    @Override
+                    public void onFail() {
+                        LoadingDialog.dimissDlg(loadingDlg);
+                        volume = null;
+                    }
+                });
+            }
         }
     }
-
-   /**获取当前的网盘**/
-   public void setMyVolume(Volume volume) {
-       this.volume = volume;
-       getVolumeFileList(false);
-   }
 
     /**
      * 文件排序,可以被继承此Activity的实例重写进行排序
@@ -212,7 +222,9 @@ public class VolumeFileManagerFragment extends Fragment {
         volumeFileList.addAll(VolumeFileNormalList);
     }
 
-    /**刷新导航条状态**/
+    /**
+     * 刷新导航条状态
+     **/
     void refreshTitleState(String title, String path) {
         TitlePath filePath = new TitlePath();
         filePath.setNameState(title + "/");
@@ -221,7 +233,9 @@ public class VolumeFileManagerFragment extends Fragment {
         titleRecyclerview.smoothScrollToPosition(titleAdapter.getItemCount());
     }
 
-    /**获取文件列表**/
+    /**
+     * 获取文件列表
+     **/
     protected void getVolumeFileList(boolean isShowDlg) {
         if (NetUtils.isNetworkConnected(getContext()) && volume != null) {
             loadingDlg.show(isShowDlg);
@@ -229,7 +243,44 @@ public class VolumeFileManagerFragment extends Fragment {
             if (currentDirAbsolutePath.length() > 1) {
                 path = currentDirAbsolutePath.substring(0, currentDirAbsolutePath.length() - 1);
             }
-            apiServiceBase.getVolumeFileList(volume.getId(), path);
+
+            Router router = Router.getInstance();
+            VolumeService volumeService = router.getService(VolumeService.class);
+            if (volumeService != null) {
+                volumeService.getVolumeFileList(volume.getId(), path, fileFilterType, new GetVolumeFileListListener() {
+
+                    @Override
+                    public void onSuccess(List<VolumeFile> fileList) {
+                        LoadingDialog.dimissDlg(loadingDlg);
+                        volumeFileList = fileList;
+                        sortVolumeFileList();
+                        fileAdapter.setVolumeFileList(volumeFileList);
+                        fileAdapter.setCurrentDirAbsolutePath(currentDirAbsolutePath);
+                        fileAdapter.notifyDataSetChanged();
+                        titleAdapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onFail() {
+                        LoadingDialog.dimissDlg(loadingDlg);
+                        if (isBack) {
+                            if (backlist.size() > 0) {
+                                Collections.reverse(backlist);
+                                for (int i = 0; i < backlist.size(); i++) {
+                                    titleAdapter.addItem(backlist.get(i));
+                                    currentDirAbsolutePath = titleAdapter.getCurrentPath();
+                                }
+                                backlist.clear();
+                            }
+                        } else {
+                            if (titleAdapter.getItemCount() > 1) {
+                                titleAdapter.removeLast();
+                                currentDirAbsolutePath = titleAdapter.getCurrentPath();
+                            }
+                        }
+                    }
+                });
+            }
         }
     }
 
@@ -272,62 +323,6 @@ public class VolumeFileManagerFragment extends Fragment {
                 }
             }
             return sortResult;
-        }
-    }
-
-    private class WebServiceBase extends APIInterfaceInstance {
-
-        @Override
-        public void returnVolumeListSuccess(GetVolumeListResult getVolumeListResult) {
-            volume = getVolumeListResult.getMyVolume();
-            getVolumeFileList(true);
-
-        }
-
-        @Override
-        public void returnVolumeListFail(String error, int errorCode) {
-            LoadingDialog.dimissDlg(loadingDlg);
-            volume = null;
-            getVolumeFileList(false);
-
-        }
-
-        @Override
-        public void returnVolumeFileListSuccess(GetVolumeFileListResult volumeFileListResult) {
-            LoadingDialog.dimissDlg(loadingDlg);
-            getVolumeFileListResult = volumeFileListResult;
-            if (StringUtils.isBlank(fileFilterType)) {
-                volumeFileList = getVolumeFileListResult.getVolumeFileList();
-            } else if (fileFilterType.equals(VolumeFile.FILE_TYPE_DIRECTORY)) {
-                volumeFileList = getVolumeFileListResult.getVolumeFileDirectoryList();
-            } else {
-                volumeFileList = getVolumeFileListResult.getVolumeFileFilterList(fileFilterType);
-            }
-            sortVolumeFileList();
-            fileAdapter.setVolumeFileList(volumeFileList);
-            fileAdapter.setCurrentDirAbsolutePath(currentDirAbsolutePath);
-            fileAdapter.notifyDataSetChanged();
-            titleAdapter.notifyDataSetChanged();
-        }
-
-        @Override
-        public void returnVolumeFileListFail(String error, int errorCode) {
-            LoadingDialog.dimissDlg(loadingDlg);
-            if (isBack) {
-                if (backlist.size() > 0) {
-                    Collections.reverse(backlist);
-                    for (int i = 0; i < backlist.size(); i++) {
-                        titleAdapter.addItem(backlist.get(i));
-                        currentDirAbsolutePath = titleAdapter.getCurrentPath();
-                    }
-                    backlist.clear();
-                }
-            } else {
-                if (titleAdapter.getItemCount() > 1) {
-                    titleAdapter.removeLast();
-                    currentDirAbsolutePath = titleAdapter.getCurrentPath();
-                }
-            }
         }
     }
 }

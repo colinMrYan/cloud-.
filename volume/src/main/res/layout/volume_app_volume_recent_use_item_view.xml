@@ -19,7 +19,7 @@
             android:layout_marginRight="12dp"
             android:layout_marginTop="12dp"
             android:scaleType="fitXY"
-            android:src="@drawable/ic_volume_recent_use" />
+            android:src="@drawable/volume_ic_recent_use" />
 
         <TextView
             android:id="@+id/volume_name_text"

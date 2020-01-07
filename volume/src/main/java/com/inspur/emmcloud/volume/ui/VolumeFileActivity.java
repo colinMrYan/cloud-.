@@ -305,13 +305,13 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                 getApplicationContext(), R.drawable.pop_window_view_tran));
         sortOperationPop.setOutsideTouchable(true);
         sortOperationPop.showAsDropDown(operationSortText);
-        Drawable drawable = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_volume_menu_drop_up);
+        Drawable drawable = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_menu_drop_up);
         drawable.setBounds(0, 0, DensityUtil.dip2px(getApplicationContext(), 14), DensityUtil.dip2px(getApplicationContext(), 14));
         operationSortText.setCompoundDrawables(null, null, drawable, null);
         sortOperationPop.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
-                Drawable drawable1 = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_volume_menu_drop_down);
+                Drawable drawable1 = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_menu_drop_down);
                 drawable1.setBounds(0, 0, DensityUtil.dip2px(getApplicationContext(), 14), DensityUtil.dip2px(getApplicationContext(), 14));
                 operationSortText.setCompoundDrawables(null, null, drawable1, null);
                 String sortTypeOld = PreferencesByUserAndTanentUtils.getString(BaseApplication.getInstance(), Constant.PREF_VOLUME_FILE_SORT_TYPE, SORT_BY_NAME_UP);

@@ -81,7 +81,7 @@
                 android:onClick="onClick"
                 android:padding="13dp"
                 android:scaleType="fitXY"
-                android:src="@drawable/ic_volume_down_up_list"
+                android:src="@drawable/volume_ic_down_up_list"
                 android:tint="?attr/header_text_color" />
 
         </RelativeLayout>

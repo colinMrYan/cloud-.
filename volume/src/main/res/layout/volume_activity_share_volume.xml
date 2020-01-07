@@ -47,7 +47,7 @@
             android:paddingRight="10dp"
             android:paddingTop="14dp"
             android:scaleType="fitXY"
-            android:src="@drawable/ic_volume_head_operation"
+            android:src="@drawable/volume_ic_head_operation"
             android:tint="?attr/header_text_color" />
     </RelativeLayout>
 
@@ -68,7 +68,7 @@
             android:dividerHeight="0dp"></ListView>
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <com.inspur.emmcloud.baselib.widget.VolumeActionLayout
+    <com.inspur.emmcloud.baselib.widget.FileActionLayout
         android:id="@+id/ll_volume_bottom_action"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -76,7 +76,7 @@
         android:background="#ffffff"
         android:paddingBottom="10dp"
         android:paddingTop="8dp"
-        android:visibility="gone"></com.inspur.emmcloud.baselib.widget.VolumeActionLayout>
+        android:visibility="gone"></com.inspur.emmcloud.baselib.widget.FileActionLayout>
 
 
 </RelativeLayout>

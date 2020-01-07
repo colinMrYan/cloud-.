@@ -11,7 +11,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.ui.BaseFragmentActivity;
-import com.inspur.emmcloud.bean.appcenter.volume.Volume;
+import com.inspur.emmcloud.componentservice.volume.Volume;
 import com.inspur.emmcloud.widget.filemanager.adapter.FileFragmentPagerAdapter;
 
 import java.util.ArrayList;
