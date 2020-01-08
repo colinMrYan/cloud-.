@@ -4,11 +4,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -43,7 +43,6 @@ import com.inspur.emmcloud.application.widget.AdsViewPager;
 import com.inspur.emmcloud.application.widget.ECMSpaceItemDecoration;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout;
 import com.inspur.emmcloud.baselib.widget.ScrollViewWithListView;
@@ -87,7 +86,7 @@ public class AppCenterActivity extends BaseActivity {
     private Timer timer;
     private Handler mHandler;
     private AdsViewPager adsViewPager;
-    private AdsAppPagerAdapter adspagerAdapter;
+    private AdsAppPagerAdapter adsPagerAdapter;
     private View recommendView;
     private RelativeLayout adsPagerContainer;
 
@@ -112,19 +111,20 @@ public class AppCenterActivity extends BaseActivity {
     private void initView() {
         setTitleText(R.string.application_app_center);
         findViewById(R.id.search_img).setVisibility(View.VISIBLE);
-        viewPager = (ViewPager) findViewById(R.id.viewpager);
+        viewPager = findViewById(R.id.viewpager);
         recommendView = LayoutInflater.from(this).inflate(
                 R.layout.application_recommend_layout, null);
         View classView = LayoutInflater.from(this).inflate(
                 R.layout.application_categories_layout, null);
-        recommendListView = (ScrollViewWithListView) recommendView.findViewById(R.id.svwwlv_apps);
-        recommendListView.setFocusable(false); //lbc
-        classListView = (ListView) classView.findViewById(R.id.app_center_categories_list);
-        recommendSwipeRefreshLayout = (MySwipeRefreshLayout) recommendView.findViewById(R.id.refresh_layout);
-        recommendSwipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg_blue), getResources().getColor(R.color.header_bg_blue));
+        recommendListView = recommendView.findViewById(R.id.svwwlv_apps);
+        //lbc
+        recommendListView.setFocusable(false);
+        classListView = classView.findViewById(R.id.app_center_categories_list);
+        recommendSwipeRefreshLayout = recommendView.findViewById(R.id.refresh_layout);
+        recommendSwipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(this, R.color.color_text_link), ContextCompat.getColor(this, R.color.color_text_link));
         recommendSwipeRefreshLayout.setOnRefreshListener(new AppCenterRefreshListener());
-        classSwipeRefreshLayout = (SwipeRefreshLayout) classView.findViewById(R.id.refresh_layout);
-        classSwipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg_blue), getResources().getColor(R.color.header_bg_blue));
+        classSwipeRefreshLayout = classView.findViewById(R.id.refresh_layout);
+        classSwipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(this, R.color.color_text_link), ContextCompat.getColor(this, R.color.color_text_link));
         classSwipeRefreshLayout.setOnRefreshListener(new AppCenterRefreshListener());
         recommendAppAdapter = new RecommendAppAdapter();
         recommendListView.setAdapter(recommendAppAdapter);
@@ -229,18 +229,19 @@ public class AppCenterActivity extends BaseActivity {
      */
     private void initAdsViewPager() {
         if (adsPagerContainer == null) {
-            adsPagerContainer = (RelativeLayout) recommendView.findViewById(R.id.rl_ads_app);
+            adsPagerContainer = recommendView.findViewById(R.id.rl_ads_app);
         }
         // 当个数大于0时
         if (adsList.size() > 0) {
-            adsPagerContainer.setVisibility(View.VISIBLE); //设置显示
+            //设置显示
+            adsPagerContainer.setVisibility(View.VISIBLE);
             //当adapter 为空时
             if (adsViewPager == null) {
-                adsViewPager = (AdsViewPager) recommendView.findViewById(R.id.avp_ads);
-                adspagerAdapter = new AdsAppPagerAdapter();
+                adsViewPager = recommendView.findViewById(R.id.avp_ads);
+                adsPagerAdapter = new AdsAppPagerAdapter();
                 adsViewPager.setOffscreenPageLimit(DensityUtil.dip2px(AppCenterActivity.this, 3));
                 adsViewPager.setPageMargin(DensityUtil.dip2px(AppCenterActivity.this, 5));
-                adsViewPager.setAdapter(adspagerAdapter);
+                adsViewPager.setAdapter(adsPagerAdapter);
                 adsViewPager.setFocusable(true);
                 adsViewPager.setFocusableInTouchMode(true);
                 //触摸事件通过mAdspager下发触摸事件
@@ -251,7 +252,7 @@ public class AppCenterActivity extends BaseActivity {
                     }
                 });
             } else {
-                adspagerAdapter.notifyDataSetChanged();
+                adsPagerAdapter.notifyDataSetChanged();
             }
             //如果广告数目大于1则启动定时器
             if (adsList.size() > 1) {
@@ -288,6 +289,7 @@ public class AppCenterActivity extends BaseActivity {
         //定时轮播图片，需要在主线程里面修改 UI
         if (mHandler == null) {
             mHandler = new Handler() {
+                @Override
                 public void handleMessage(Message msg) {
                     switch (msg.what) {
                         case UPDATE_VIEWPAGER:
@@ -381,7 +383,6 @@ public class AppCenterActivity extends BaseActivity {
     class AppCenterRefreshListener implements SwipeRefreshLayout.OnRefreshListener {
         @Override
         public void onRefresh() {
-            LogUtils.LbcDebug("AppCenterRefreshListener");
             getAllApp();
         }
     }
@@ -400,8 +401,10 @@ public class AppCenterActivity extends BaseActivity {
 
         @Override
         public void onPageSelected(int arg0) {
-            int recommendTabTextColor = arg0 == 0 ? Color.parseColor("#4990E2") : Color.parseColor("#999999");
-            int classTabTextColor = arg0 == 1 ? Color.parseColor("#4990E2") : Color.parseColor("#999999");
+            int recommendTabTextColor = arg0 == 0 ? ContextCompat.getColor(AppCenterActivity.this, R.color.color_text_link)
+                    : ContextCompat.getColor(AppCenterActivity.this, R.color.color_text_help);
+            int classTabTextColor = arg0 == 1 ? ContextCompat.getColor(AppCenterActivity.this, R.color.color_text_link)
+                    : ContextCompat.getColor(AppCenterActivity.this, R.color.color_text_help);
             int recommendTabFooterViewVisible = arg0 == 0 ? View.VISIBLE : View.INVISIBLE;
             int classTabFooterViewVisible = arg0 == 1 ? View.VISIBLE : View.INVISIBLE;
             ((TextView) findViewById(R.id.recommand_tab_text)).setTextColor(recommendTabTextColor);
@@ -561,8 +564,8 @@ public class AppCenterActivity extends BaseActivity {
         public RecommendViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = inflater.inflate(R.layout.application_center_recommand_app_item, null);
             RecommendViewHolder viewHolder = new RecommendViewHolder(view);
-            viewHolder.recommendAppImg = (ImageView) view.findViewById(R.id.app_center_recommand_app_img);
-            viewHolder.recommendAppText = (TextView) view.findViewById(R.id.app_center_recommand_app_text);
+            viewHolder.recommendAppImg = view.findViewById(R.id.app_center_recommand_app_img);
+            viewHolder.recommendAppText = view.findViewById(R.id.app_center_recommand_app_text);
             return viewHolder;
         }
 
