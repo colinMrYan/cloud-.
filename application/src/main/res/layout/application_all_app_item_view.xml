@@ -10,16 +10,11 @@
         android:id="@+id/app_icon_img"
         android:layout_width="45dp"
         android:layout_height="45dp"
-        android:layout_marginBottom="15dp"
         android:layout_marginLeft="18dp"
-        android:layout_marginRight="18dp"
         android:layout_marginTop="15dp"
+        android:layout_marginRight="18dp"
+        android:layout_marginBottom="15dp"
         android:scaleType="fitXY" />
-
-    <View
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_below="@id/app_icon_img" />
 
     <TextView
         android:id="@+id/tv_name_tips"
@@ -28,12 +23,10 @@
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@+id/app_status_btn"
         android:layout_toRightOf="@id/app_icon_img"
-        android:textColor="@color/color_text_common_level_one"
         android:ellipsize="end"
         android:singleLine="true"
-        android:textSize="@dimen/content_normal_textsize"
-
-        />
+        android:textColor="@color/color_text_common_level_one"
+        android:textSize="@dimen/content_normal_textsize" />
 
     <Button
         android:id="@+id/app_status_btn"

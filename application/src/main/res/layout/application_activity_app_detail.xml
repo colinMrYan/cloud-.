@@ -11,7 +11,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_below="@id/rl_header"
-        android:background="@color/white"
+        android:background="@color/color_bg_content_white"
         android:scrollbars="none">
 
         <LinearLayout
@@ -22,7 +22,7 @@
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="1px"
-                android:background="#c8d3dc" />
+                android:background="@color/color_divider" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -65,7 +65,7 @@
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:singleLine="true"
-                        android:textColor="#88AABE"
+                        android:textColor="@color/color_text_common_level_two"
                         android:textSize="@dimen/content_small_textsize" />
                 </LinearLayout>
 
@@ -107,14 +107,14 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1.0"
-                        android:background="#f9f9f9"
+                        android:background="@color/color_bg_content_white"
                         android:clickable="true"
                         android:gravity="center"
                         android:onClick="onClick"
                         android:paddingTop="7dp"
                         android:paddingBottom="7dp"
                         android:text="详情"
-                        android:textColor="#4990E2"
+                        android:textColor="@color/color_text_link"
                         android:textSize="@dimen/content_normal_textsize" />
 
                     <View
@@ -128,14 +128,14 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1.0"
-                        android:background="#f9f9f9"
+                        android:background="@color/color_bg_content_white"
                         android:clickable="true"
                         android:gravity="center"
                         android:onClick="onClick"
                         android:paddingTop="7dp"
                         android:paddingBottom="7dp"
                         android:text="@string/comment"
-                        android:textColor="#999999"
+                        android:textColor="@color/color_text_help"
                         android:textSize="@dimen/content_normal_textsize" />
                 </LinearLayout>
 
@@ -182,13 +182,13 @@
                 android:layout_marginLeft="18dp"
                 android:layout_marginTop="2dp"
                 android:text="@string/nothing"
-                android:textColor="#88AABE"
+                android:textColor="@color/color_text_common_level_two"
                 android:textSize="@dimen/content_small_textsize" />
 
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="1px"
-                android:background="#c8d3dc"
+                android:background="@color/color_divider"
                 android:visibility="gone" />
 
 
@@ -206,7 +206,7 @@
                 android:id="@+id/division_line_view"
                 android:layout_width="fill_parent"
                 android:layout_height="1px"
-                android:background="#c8d3dc"
+                android:background="@color/color_divider"
                 android:visibility="gone" />
 
             <android.support.v4.view.ViewPager
