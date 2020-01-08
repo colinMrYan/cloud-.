@@ -3,20 +3,20 @@
     android:id="@+id/volume_group_rl"
     android:layout_width="wrap_content"
     android:layout_height="56dp"
-    android:background="@color/white">
+    android:background="@color/color_bg_content_white">
 
     <TextView
         android:id="@+id/tv_volume_group_name"
         android:layout_width="wrap_content"
         android:layout_height="44dp"
-        android:layout_centerVertical="true"
-        android:gravity="center_vertical"
-        android:paddingLeft="12dp"
         android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
         android:layout_toLeftOf="@+id/tv_volume_group_permission"
         android:ellipsize="middle"
+        android:gravity="center_vertical"
+        android:paddingLeft="12dp"
         android:singleLine="true"
-        android:textColor="#333333"
+        android:textColor="@color/color_text_common_level_one"
         android:textSize="17sp" />
 
     <TextView
@@ -40,14 +40,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="0.5px"
+        android:layout_height="1px"
         android:layout_alignParentBottom="true"
-        android:background="@color/color_list_divider" />
-    <!--<ImageView-->
-    <!--android:id="@+id/volume_group_arrow_img"-->
-    <!--android:layout_width="30dp"-->
-    <!--android:layout_height="30dp"-->
-    <!--android:layout_centerVertical="true"-->
-    <!--android:layout_alignParentRight="true"-->
-    <!--android:src="@drawable/right_arrow"/>-->
+        android:background="@color/color_divider" />
 </RelativeLayout>

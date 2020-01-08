@@ -14,10 +14,10 @@
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@+id/num_text"
         android:ellipsize="middle"
-        android:paddingBottom="10dp"
         android:paddingTop="10dp"
+        android:paddingBottom="10dp"
         android:singleLine="true"
-        android:textColor="#FF333333"
+        android:textColor="@color/color_text_common_level_one"
         android:textSize="@dimen/content_title_textsize" />
 
     <TextView
@@ -29,10 +29,10 @@
         android:layout_toLeftOf="@+id/arrow"
         android:ellipsize="end"
         android:gravity="right"
-        android:paddingBottom="10dp"
         android:paddingTop="10dp"
+        android:paddingBottom="10dp"
         android:singleLine="true"
-        android:textColor="#FF8F8E94"
+        android:textColor="@color/color_text_common_level_two"
         android:textSize="@dimen/content_title_textsize" />
 
     <ImageView
@@ -46,7 +46,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="0.5px"
+        android:layout_height="1px"
         android:layout_alignParentBottom="true"
-        android:background="@color/color_list_divider" />
+        android:background="@color/color_divider" />
 </RelativeLayout>
