@@ -26,7 +26,6 @@
                 android:scaleType="fitXY"
                 android:src="?attr/ic_back_btn" />
 
-
             <TextView
                 android:id="@+id/header_text"
                 android:layout_width="match_parent"
@@ -48,7 +47,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/rl_header"
-        android:background="@color/content_bg">
+        android:background="@color/color_bg_common">
 
         <TextView
             android:id="@+id/tv_volume_permission_manager"
@@ -57,7 +56,7 @@
             android:paddingLeft="12dp"
             android:paddingTop="5dp"
             android:text="@string/volume_clouddriver_file_permission_manager"
-            android:textColor="#99999999" />
+            android:textColor="@color/color_text_common_level_two" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -68,14 +67,14 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="0.5px"
-                android:background="#33333333" />
+                android:layout_height="1px"
+                android:background="@color/color_divider" />
 
             <RelativeLayout
                 android:id="@+id/rl_volume_read_write_permission"
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
-                android:background="#ffffffff">
+                android:background="@color/color_bg_content_white">
 
                 <TextView
                     android:id="@+id/tv_volume_write_permission"
@@ -84,7 +83,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="12dp"
                     android:gravity="center_vertical"
-                    android:textColor="#333333"
+                    android:textColor="@color/color_text_common_level_one"
                     android:textSize="17sp" />
 
                 <android.support.v7.widget.SwitchCompat
@@ -98,15 +97,15 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="0.5dp"
+                android:layout_height="1px"
                 android:layout_marginLeft="12dp"
-                android:background="#33333333" />
+                android:background="@color/color_divider" />
 
             <RelativeLayout
                 android:id="@+id/rl_volume_read_permission"
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
-                android:background="#ffffffff">
+                android:background="@color/color_bg_content_white">
 
                 <TextView
                     android:id="@+id/tv_volume_read_permission"
@@ -115,7 +114,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="12dp"
                     android:gravity="center_vertical"
-                    android:textColor="#333333"
+                    android:textColor="@color/color_text_common_level_one"
                     android:textSize="17sp" />
 
                 <android.support.v7.widget.SwitchCompat
@@ -129,8 +128,8 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="0.5px"
-                android:background="#33333333" />
+                android:layout_height="1px"
+                android:background="@color/color_divider" />
         </LinearLayout>
 
     </RelativeLayout>
