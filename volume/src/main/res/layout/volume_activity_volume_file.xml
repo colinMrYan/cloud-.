@@ -171,14 +171,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/rl_header"
-        android:background="@android:color/white"
+        android:background="@color/color_bg_content_white"
         android:ellipsize="middle"
         android:paddingLeft="12dp"
         android:paddingTop="9dp"
         android:paddingRight="10dp"
         android:paddingBottom="9dp"
         android:singleLine="true"
-        android:textColor="#333333"
+        android:textColor="@color/color_text_common_level_one"
         android:textSize="16sp"
         android:visibility="gone" />
 
@@ -188,7 +188,7 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/rl_bottom_all_action"
         android:layout_below="@id/path_text"
-        android:background="@color/content_bg"
+        android:background="@color/color_bg_common"
         android:scrollbars="vertical">
 
         <RelativeLayout
@@ -199,7 +199,7 @@
                 android:id="@+id/operation_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#fafafa"
+                android:background="@color/color_bg_content_grey"
                 android:visibility="gone">
 
                 <TextView
@@ -209,7 +209,7 @@
                     android:drawableRight="@drawable/ic_menu_drop_down"
                     android:onClick="onClick"
                     android:padding="12dp"
-                    android:textColor="#666666"
+                    android:textColor="@color/color_text_tip"
                     android:textSize="15sp" />
 
                 <TextView
@@ -220,7 +220,7 @@
                     android:onClick="onClick"
                     android:padding="12dp"
                     android:text="@string/volume_clouddriver_multi_select"
-                    android:textColor="#666666"
+                    android:textColor="@color/color_text_tip"
                     android:textSize="15sp"
                     android:visibility="gone" />
 
@@ -232,31 +232,29 @@
                     android:onClick="onClick"
                     android:padding="12dp"
                     android:text="@string/volume_clouddriver_volume_file_filter"
-                    android:textColor="#666666"
+                    android:textColor="@color/color_text_tip"
                     android:textSize="15sp" />
 
                 <View
                     android:id="@+id/line"
                     android:layout_width="match_parent"
-                    android:layout_height="0.5px"
+                    android:layout_height="1px"
                     android:layout_below="@id/operation_sort_text"
-                    android:background="@color/color_list_divider" />
+                    android:background="@color/color_divider" />
             </RelativeLayout>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/lv_file"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@id/operation_layout"
-                android:divider="#00000000"
-                android:dividerHeight="0dp" />
+                android:layout_below="@id/operation_layout" />
 
             <LinearLayout
                 android:id="@+id/data_blank_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="112dp"
-                android:background="@color/content_bg"
+                android:background="@color/color_bg_common"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
 
@@ -274,7 +272,7 @@
                     android:layout_marginTop="16dp"
                     android:paddingBottom="50dp"
                     android:text="@string/no_file"
-                    android:textColor="#666666"
+                    android:textColor="@color/color_text_tip"
                     android:textSize="14sp" />
 
                 <com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButton
@@ -285,8 +283,8 @@
                     android:gravity="center"
                     android:padding="10dp"
                     android:text="@string/volume_clouddriver_volume_upload_file"
-                    android:textColor="#2586CD"
-                    app:cus_borderColor="#2586CD"
+                    android:textColor="@color/color_text_link"
+                    app:cus_borderColor="@color/color_text_link"
                     app:cus_borderWidth="0.6dp"
                     app:cus_radius="4dp" />
             </LinearLayout>
@@ -298,19 +296,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="#ffffff">
+        android:background="@color/color_bg_content_white">
 
         <RelativeLayout
             android:id="@+id/bottom_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#ffffff"
+            android:background="@color/color_bg_content_white"
             android:visibility="gone">
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="@color/color_list_divider" />
+                android:layout_height="1px"
+                android:background="@color/color_divider" />
 
             <TextView
                 android:id="@+id/location_select_new_forder_text"
@@ -320,7 +318,7 @@
                 android:onClick="onClick"
                 android:padding="12dp"
                 android:text="@string/volume_clouddriver_create_folder"
-                android:textColor="#36A5F6"
+                android:textColor="@color/color_text_link"
                 android:textSize="15sp" />
 
             <com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButton
@@ -338,9 +336,9 @@
                 android:paddingRight="13dp"
                 android:paddingBottom="7dp"
                 android:text="@string/volume_clouddriver_move2_current_directory"
-                android:textColor="@android:color/white"
+                android:textColor="@color/color_text_Anti_White"
                 android:textSize="15sp"
-                app:cus_backgroundColor="#36A5F6"
+                app:cus_backgroundColor="@color/color_base_blue"
                 app:cus_radius="2dp" />
 
             <com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButton
@@ -358,10 +356,10 @@
                 android:paddingRight="13dp"
                 android:paddingBottom="7dp"
                 android:text="@string/volume_upload_to_current_directory"
-                android:textColor="@android:color/white"
+                android:textColor="@color/color_text_Anti_White"
                 android:textSize="15sp"
                 android:visibility="gone"
-                app:cus_backgroundColor="#36A5F6"
+                app:cus_backgroundColor="@color/color_base_blue"
                 app:cus_radius="2dp" />
 
         </RelativeLayout>
@@ -370,7 +368,7 @@
             android:id="@+id/ll_volume_action"
             android:layout_width="match_parent"
             android:layout_height="58dp"
-            android:background="#ffffff"
+            android:background="@color/color_bg_content_white"
             android:paddingTop="8dp"
             android:paddingBottom="10dp"
             android:visibility="gone" />

@@ -15,9 +15,9 @@
             android:layout_width="34dp"
             android:layout_height="34dp"
             android:layout_centerVertical="true"
-            android:layout_marginBottom="10dp"
-            android:layout_marginRight="12dp"
             android:layout_marginTop="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginBottom="10dp"
             android:scaleType="fitXY"
             android:src="@drawable/volume_ic_recent_use" />
 
@@ -30,7 +30,7 @@
             android:layout_toRightOf="@id/volume_img"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="#333333"
+            android:textColor="@color/color_text_common_level_one"
             android:textSize="17sp" />
 
         <TextView
@@ -41,13 +41,13 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
             android:paddingRight="12dp"
-            android:textColor="#8f8e94"
+            android:textColor="@color/color_text_common_level_two"
             android:textSize="15sp" />
     </RelativeLayout>
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="0.5px"
+        android:layout_height="1px"
         android:layout_below="@id/layout"
-        android:background="@color/color_list_divider"></View>
+        android:background="@color/color_list_divider" />
 </RelativeLayout>

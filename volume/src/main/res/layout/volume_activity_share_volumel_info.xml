@@ -22,7 +22,6 @@
             android:scaleType="fitXY"
             android:src="?attr/ic_back_btn" />
 
-
         <TextView
             android:id="@+id/header_text"
             android:layout_width="wrap_content"
@@ -39,7 +38,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/rl_header"
-        android:background="@color/content_bg"
+        android:background="@color/color_bg_common"
         android:gravity="center"
         android:orientation="vertical">
 
@@ -58,21 +57,21 @@
                     android:id="@+id/gv_member"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/white"
+                    android:background="@color/color_bg_content_white"
                     android:horizontalSpacing="18dp"
                     android:listSelector="@android:color/transparent"
                     android:numColumns="5"
-                    android:paddingBottom="10dp"
                     android:paddingLeft="15dp"
-                    android:paddingRight="15dp"
                     android:paddingTop="19dp"
+                    android:paddingRight="15dp"
+                    android:paddingBottom="10dp"
                     android:stretchMode="columnWidth"
-                    android:verticalSpacing="10dp"></com.inspur.emmcloud.baselib.widget.NoScrollGridView>
+                    android:verticalSpacing="10dp" />
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0.5px"
-                    android:background="@color/color_list_divider" />
+                    android:layout_height="1px"
+                    android:background="@color/color_divider" />
 
                 <RelativeLayout
                     android:id="@+id/volume_member_layout"
@@ -88,9 +87,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:paddingBottom="10dp"
                         android:paddingTop="10dp"
-                        android:textColor="#FF333333"
+                        android:paddingBottom="10dp"
+                        android:textColor="@color/color_text_common_level_one"
                         android:textSize="@dimen/content_title_textsize" />
 
                     <ImageView
@@ -103,15 +102,15 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0.5px"
-                    android:background="@color/color_list_divider" />
+                    android:layout_height="1px"
+                    android:background="@color/color_divider" />
             </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="0.5px"
+                android:layout_height="1px"
                 android:layout_marginTop="10dp"
-                android:background="@color/color_list_divider" />
+                android:background="@color/color_divider" />
 
             <RelativeLayout
                 android:id="@+id/volume_name_layout"
@@ -127,10 +126,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:paddingBottom="10dp"
                     android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
                     android:text="@string/volume_clouddriver_volume_name"
-                    android:textColor="#FF333333"
+                    android:textColor="@color/color_text_common_level_one"
                     android:textSize="@dimen/content_title_textsize" />
 
                 <TextView
@@ -143,10 +142,10 @@
                     android:layout_toRightOf="@id/volume_name_title"
                     android:ellipsize="end"
                     android:gravity="right"
-                    android:paddingBottom="10dp"
                     android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
                     android:singleLine="true"
-                    android:textColor="#FF8F8E94"
+                    android:textColor="@color/color_text_common_level_two"
                     android:textSize="@dimen/content_title_textsize" />
 
                 <ImageView
@@ -160,8 +159,8 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="0.5px"
-                android:background="@color/color_list_divider" />
+                android:layout_height="1px"
+                android:background="@color/color_divider" />
 
             <LinearLayout
                 android:id="@+id/ll_write_group"
@@ -173,21 +172,20 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="10dp"
                     android:paddingLeft="15dp"
                     android:paddingTop="15dp"
+                    android:paddingBottom="10dp"
                     android:text="@string/volume_clouddriver_upload_permission"
-                    android:textColor="#666666"
+                    android:textColor="@color/color_text_tip"
                     android:textSize="15sp" />
-
 
                 <com.inspur.emmcloud.baselib.widget.ScrollViewWithListView
                     android:id="@+id/slv_write_group"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/white"
+                    android:background="@color/color_bg_content_white"
                     android:divider="@null"
-                    android:dividerHeight="0dp"></com.inspur.emmcloud.baselib.widget.ScrollViewWithListView>
+                    android:dividerHeight="0dp" />
 
             </LinearLayout>
 
@@ -201,11 +199,11 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="10dp"
                     android:paddingLeft="15dp"
                     android:paddingTop="15dp"
+                    android:paddingBottom="10dp"
                     android:text="@string/volume_clouddriver_watch_permission"
-                    android:textColor="#666666"
+                    android:textColor="@color/color_text_tip"
                     android:textSize="15sp" />
 
 
@@ -213,9 +211,9 @@
                     android:id="@+id/slv_read_group"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/white"
+                    android:background="@color/color_bg_content_white"
                     android:divider="@null"
-                    android:dividerHeight="0dp"></com.inspur.emmcloud.baselib.widget.ScrollViewWithListView>
+                    android:dividerHeight="0dp" />
 
             </LinearLayout>
         </LinearLayout>

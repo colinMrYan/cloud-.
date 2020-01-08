@@ -68,7 +68,7 @@
                     android:gravity="center"
                     android:includeFontPadding="false"
                     android:text="1"
-                    android:textColor="@color/black"
+                    android:textColor="@color/color_text_common_level_one"
                     android:textSize="5sp" />
             </RelativeLayout>
 
@@ -92,7 +92,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/rl_header"
-        android:background="@color/content_bg"
+        android:background="@color/color_bg_common"
         android:scrollbars="vertical">
 
         <ListView
@@ -100,7 +100,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:divider="@null"
-            android:dividerHeight="0dp"></ListView>
+            android:dividerHeight="0dp" />
 
         <LinearLayout
             android:id="@+id/volume_recent_use_layout"
@@ -116,7 +116,7 @@
                 android:paddingTop="14dp"
                 android:paddingBottom="10dp"
                 android:text="最近使用"
-                android:textColor="#666666"
+                android:textColor="@color/color_text_tip"
                 android:textSize="15sp" />
 
             <ListView
@@ -124,7 +124,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:divider="@null"
-                android:dividerHeight="0dp"></ListView>
+                android:dividerHeight="0dp" />
         </LinearLayout>
     </android.support.v4.widget.SwipeRefreshLayout>
 </RelativeLayout>

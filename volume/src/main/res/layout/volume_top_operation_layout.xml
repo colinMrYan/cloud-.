@@ -5,8 +5,8 @@
     android:layout_height="wrap_content"
     android:background="#ffffff"
     android:orientation="horizontal"
-    android:paddingBottom="10dp"
-    android:paddingTop="8dp">
+    android:paddingTop="8dp"
+    android:paddingBottom="10dp">
 
     <LinearLayout
         android:id="@+id/ll_volume_upload_image_pop"
@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="@string/volume_clouddriver_volume_upload_image"
-            android:textColor="#36A5F6"
+            android:textColor="@color/color_text_link"
             android:textSize="12sp" />
     </LinearLayout>
 
@@ -52,7 +52,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="@string/volume_clouddriver_volume_upload_take_photo"
-            android:textColor="#36A5F6"
+            android:textColor="@color/color_text_link"
             android:textSize="12sp" />
     </LinearLayout>
 
@@ -76,7 +76,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="@string/volume_clouddriver_volume_upload_file"
-            android:textColor="#36A5F6"
+            android:textColor="@color/color_text_link"
             android:textSize="12sp" />
     </LinearLayout>
 
@@ -100,7 +100,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="@string/volume_clouddriver_create_folder"
-            android:textColor="#36A5F6"
+            android:textColor="@color/color_text_link"
             android:textSize="12sp" />
     </LinearLayout>
 
@@ -124,7 +124,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="@string/download"
-            android:textColor="#36A5F6"
+            android:textColor="@color/color_text_link"
             android:textSize="12sp" />
     </LinearLayout>
 
@@ -148,7 +148,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="@string/volume_copy"
-            android:textColor="#36A5F6"
+            android:textColor="@color/color_text_link"
             android:textSize="12sp" />
     </LinearLayout>
 
@@ -172,7 +172,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="@string/volume_move"
-            android:textColor="#36A5F6"
+            android:textColor="@color/color_text_link"
             android:textSize="12sp" />
     </LinearLayout>
 
@@ -196,7 +196,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="@string/delete"
-            android:textColor="#36A5F6"
+            android:textColor="@color/color_text_link"
             android:textSize="12sp" />
     </LinearLayout>
 
@@ -220,7 +220,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="@string/volume_rename"
-            android:textColor="#36A5F6"
+            android:textColor="@color/color_text_link"
             android:textSize="12sp" />
     </LinearLayout>
 
@@ -244,7 +244,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="@string/more"
-            android:textColor="#36A5F6"
+            android:textColor="@color/color_text_link"
             android:textSize="12sp" />
     </LinearLayout>
 
