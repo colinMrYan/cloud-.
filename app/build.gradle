@@ -35,9 +35,19 @@ android {
     buildToolsVersion versions.androidTools
     aaptOptions.cruncherEnabled = false
     aaptOptions.useNewCruncher = false
+    def propertiesMap = project.getProperties();
+    for(String mp:propertiesMap.keySet()){
+        println "key="+mp;
+        println "value="+propertiesMap.get(mp);
+    }
+
+
     if (project.hasProperty('devBuild')) {
+        println "dev========================================================"
         splits.abi.enable = false
         splits.density.enable = false
+    }else{
+        println "release========================================================"
     }
     defaultConfig {
         applicationId "com.inspur.emmcloud"
@@ -116,6 +126,24 @@ android {
             }
         }
     }
+    if (project.hasProperty('devBuild')){
+        println "devBuild:!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+        tasks.whenTaskAdded { task ->
+            if (task.name.contains("lint")
+                    ||task.name.contains("Aidl")//用不到测试的时候就可以先关闭
+                    ||task.name.contains("mockableAndroidJar")
+                    ||task.name.contains("UnitTest")
+                    ||task.name.contains("AndroidTest")//用不到NDK和JNI的也关闭掉
+                    || task.name.contains("Ndk")
+                    || task.name.contains("Jni")
+            ) {
+                task.enabled = false
+            }
+        }
+    }else {
+        println "RelaseBuild:!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+    }
+
 }
 
 combuild {
@@ -145,4 +173,50 @@ dependencies {
         changing = true
     }
 }
+
+class BuildTimeListener implements TaskExecutionListener,BuildListener{
+    private Clock clock;
+    private times = []
+
+    @Override
+    void buildStarted(Gradle gradle) {
+    }
+
+    @Override
+    void beforeExecute(Task task) {
+        clock = new org.gradle.util.Clock()
+    }
+
+    @Override
+    void settingsEvaluated(Settings settings) {
+    }
+
+    @Override
+    void afterExecute(Task task, TaskState state) {
+        def ms = clock.getTimeInMs()
+        times.add([ms, task.path])
+    }
+
+    @Override
+    void projectsLoaded(Gradle gradle) {
+    }
+
+    @Override
+    void projectsEvaluated(Gradle gradle) {
+    }
+
+    @Override
+    void buildFinished(BuildResult result) {
+        println "Task spend time:====================================="
+        for (time in times) {
+            if (time[0] >= 50) {
+                printf "%7sms  %s\n", time
+            }
+        }
+    }
+}
+
+//将监听器添加到 gradle任务中
+project.gradle.addListener(new BuildTimeListener())
+
 
