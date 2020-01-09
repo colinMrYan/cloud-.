@@ -22,7 +22,7 @@
     <string name="volume_clouddriver_upload_fail">Failed to Upload</string>
     <string name="volume_clouddriver_upload_again">Upload Again</string>>
     <string name="volume_clouddriver_download_size">Download(%1$s)</string>
-    <string name="volume_clouddriver_file_name_invaliad">No special characters can be included in the file name: / \ " : | * ? &lt; &gt; </string>
+    <string name="volume_clouddriver_file_name_invaliad">No special characters can be included in the file name: / \u005c \u0022 : | * ? &lt; &gt; </string>
     <string name="volume_clouddriver_select_photo">Gallery</string>
     <string name="volume_clouddriver_select_file">File</string>
     <string name="volume_clouddriver_volume_info">Shared Disk Details</string>
@@ -36,8 +36,8 @@
     <string name="volume_clouddriver_add_volume_member">Add Member</string>
     <string name="volume_clouddriver_del_volume_group_member">Delete Member</string>
     <string name="volume_clouddriver_add_volume_group_member">Add Member</string>
-    <string name="volume_clouddriver_directory_name_invaliad">No special characters can be included in the directory name: / \ " : | * ? &lt; &gt; </string>
-    <string name="volume_clouddriver_volume_name_invaliad">No special characters can be included in the shared disk name: / \ " : | * ? &lt; &gt;  </string>
+    <string name="volume_clouddriver_directory_name_invaliad">No special characters can be included in the directory name: / \u005c \u0022 : | * ? &lt; &gt; </string>
+    <string name="volume_clouddriver_volume_name_invaliad">No special characters can be included in the shared disk name: / \u005c \u0022 : | * ? &lt; &gt;  </string>
     <string name="volume_clouddriver_exists_same_name">Already exists file / folder of the same name</string>
     <string name="volume_clouddriver_volume_group_info">Group Detaiks</string>
     <string name="volume_clouddriver_volume_group_member">Group Member</string>

@@ -14,7 +14,6 @@
         android:theme="@style/AppTheme_0"
         tools:replace="android:allowBackup,label">
 
-
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -27,7 +26,6 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-
 
         <activity-alias
             android:name=".zhihuichengjian"
@@ -177,7 +175,6 @@
                 <data android:mimeType="application/vnd.openxmlformats-officedocument.presentationml.presentation"></data>
             </intent-filter>
         </activity>
-
 
         <activity
             android:name=".ui.AppSchemeHandleActivity"
@@ -418,7 +415,6 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
 
-
         <activity
             android:name=".ui.contact.ContactSearchActivity"
             android:resizeableActivity="true"
@@ -427,7 +423,6 @@
             android:name=".ui.contact.ContactOrgStructureActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
-
 
         <activity
             android:name=".ui.contact.UserInfoActivity"
@@ -439,8 +434,6 @@
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
-
-
 
         <activity
             android:name=".ui.contact.ContactSearchMoreActivity"
@@ -532,58 +525,7 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
 
-
         <!-- 云盘 -->
-        <activity
-            android:name=".ui.appcenter.volume.VolumeHomePageActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.appcenter.volume.VolumeFileActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.appcenter.volume.VolumeFileDownloadActivity"
-            android:launchMode="singleTask"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.appcenter.volume.VolumeFileLocationSelectActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.appcenter.volume.VolumeFileFilterActvity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.appcenter.volume.ShareVolumeActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.appcenter.volume.GroupInfoActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.appcenter.volume.ShareVolumeInfoActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.appcenter.volume.ShareVolumeNameModifyActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.appcenter.volume.VolumeFilePermissionManagerActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.appcenter.volume.VolumeGroupChangePermissionActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.appcenter.volume.view.VolumeFileTransferActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-
 
         <!-- service -->
         <service android:name=".service.LocationService"></service>
