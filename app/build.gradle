@@ -2,9 +2,8 @@ apply plugin: 'com.inspur.comgradle'
 apply plugin: 'com.alipay.apollo.baseline.platform'
 import com.android.build.OutputFile
 
-apply from: "../node_modules/react-native/react.gradle"
-apply from: "../node_modules/react-native-vector-icons/fonts.gradle"
-apply from: 'tinkerpatch.gradle'
+
+
 
 /**
  * Set this to true to create two separate APKs instead of one:
@@ -35,19 +34,21 @@ android {
     buildToolsVersion versions.androidTools
     aaptOptions.cruncherEnabled = false
     aaptOptions.useNewCruncher = false
-    def propertiesMap = project.getProperties();
-    for(String mp:propertiesMap.keySet()){
-        println "key="+mp;
-        println "value="+propertiesMap.get(mp);
+    def isDebug = false
+    for(String s : gradle.startParameter.taskNames) {
+        if (s.contains("Debug") | s.contains("debug")) {
+            isDebug = true
+            break
+        }
     }
 
-
-    if (project.hasProperty('devBuild')) {
-        println "dev========================================================"
+    if (isDebug) {
         splits.abi.enable = false
         splits.density.enable = false
-    }else{
-        println "release========================================================"
+    }else {
+        apply from: "../node_modules/react-native/react.gradle"
+        apply from: "../node_modules/react-native-vector-icons/fonts.gradle"
+        apply from: 'tinkerpatch.gradle'
     }
     defaultConfig {
         applicationId "com.inspur.emmcloud"
@@ -126,8 +127,7 @@ android {
             }
         }
     }
-    if (project.hasProperty('devBuild')){
-        println "devBuild:!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+    if (isDebug){
         tasks.whenTaskAdded { task ->
             if (task.name.contains("lint")
                     ||task.name.contains("Aidl")//用不到测试的时候就可以先关闭
@@ -140,10 +140,7 @@ android {
                 task.enabled = false
             }
         }
-    }else {
-        println "RelaseBuild:!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
     }
-
 }
 
 combuild {
@@ -217,6 +214,6 @@ class BuildTimeListener implements TaskExecutionListener,BuildListener{
 }
 
 //将监听器添加到 gradle任务中
-project.gradle.addListener(new BuildTimeListener())
+project.gradle.addListener(new BuildTimeListener());
 
 
