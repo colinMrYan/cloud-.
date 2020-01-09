@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.news.ui;
 
+import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -85,7 +86,7 @@ public class GroupNewsActivity extends BaseFragmentActivity {
         PagerSlidingTabStrip pagerSlidingTabStrip = findViewById(R.id.tabs);
         pagerSlidingTabStrip.setVisibility(View.VISIBLE);
         pagerSlidingTabStrip.setDividerColor(ContextCompat.getColor(this, R.color.content_border));
-        pagerSlidingTabStrip.setIndicatorColor(ContextCompat.getColor(this, R.color.color_text_common_level_one));
+        pagerSlidingTabStrip.setIndicatorColor(Color.parseColor("#00000000"));
         pagerSlidingTabStrip.setTextSize(17);
         pagerSlidingTabStrip.setUnderlineHeight(1);
         pagerSlidingTabStrip.setTextColor(ContextCompat.getColor(this, R.color.color_text_common_level_one));
