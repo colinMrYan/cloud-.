@@ -134,8 +134,6 @@ android {
                     ||task.name.contains("mockableAndroidJar")
                     ||task.name.contains("UnitTest")
                     ||task.name.contains("AndroidTest")//用不到NDK和JNI的也关闭掉
-                    || task.name.contains("Ndk")
-                    || task.name.contains("Jni")
             ) {
                 task.enabled = false
             }
