@@ -437,7 +437,8 @@
             android:textSize="15sp"
             app:cus_backgroundColor="#36A5F6"
             app:cus_borderWidth="0dp"
-            app:cus_isRadiusAdjustBounds="true" />
+            app:cus_isRadiusAdjustBounds="true"
+            android:onClick="onClick"/>
 
     </RelativeLayout>
 

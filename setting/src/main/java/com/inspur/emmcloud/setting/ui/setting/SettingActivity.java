@@ -342,7 +342,6 @@ public class SettingActivity extends BaseActivity {
         };
     }
 
-    @OnClick(R2.id.bt_setting_signout)
     public void onClick(View v) {
         // TODO Auto-generated method stub
         int i = v.getId();
