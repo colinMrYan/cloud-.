@@ -74,7 +74,7 @@
             android:layout_below="@id/iv_no_news"
             android:layout_centerHorizontal="true"
             android:text="@string/news_fail_load_check_net"
-            android:textColor="#666666"
+            android:textColor="@color/color_text_tip"
             android:textSize="16sp" />
 
     </RelativeLayout>

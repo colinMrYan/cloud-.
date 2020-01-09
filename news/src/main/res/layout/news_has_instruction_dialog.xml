@@ -28,13 +28,13 @@
                 android:paddingBottom="7dp"
                 android:paddingTop="12dp"
                 android:text="@string/news_has_instructions_news"
-                android:textColor="@color/black"
+                android:textColor="@color/color_text_common_level_one"
                 android:textSize="@dimen/bigger_textsize" />
 
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="1dp"
-                android:background="@color/content_border" />
+                android:background="@color/color_divider" />
 
             <TextView
                 android:id="@+id/news_has_instrcution_text"
@@ -50,13 +50,13 @@
                 android:maxHeight="500dp"
                 android:maxLines="10"
                 android:scrollbars="vertical"
-                android:textColor="@color/app_dialog_title_color"
+                android:textColor="@color/color_text_tip"
                 android:textSize="@dimen/header_textsize" />
 
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="1dp"
-                android:background="@color/content_border" />
+                android:background="@color/color_divider" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -93,7 +93,7 @@
                     android:padding="12dp"
                     android:text="@string/news_has_instructions_known"
                     android:textAllCaps="false"
-                    android:textColor="@color/app_dialog_update_color"
+                    android:textColor="@color/color_text_link"
                     android:textSize="@dimen/header_textsize" />
             </LinearLayout>
         </LinearLayout>

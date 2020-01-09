@@ -1,9 +1,9 @@
 package com.inspur.emmcloud.news.ui;
 
-import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.util.TypedValue;
 import android.view.View;
@@ -75,21 +75,21 @@ public class GroupNewsActivity extends BaseFragmentActivity {
         //pagerAdapter
         pagerAdapter = new MyPagerAdapter(getSupportFragmentManager(), titleList);
         //获取获取viewPager，并设置
-        ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+        ViewPager viewPager = findViewById(R.id.pager);
         //设置page的间距
         int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics());
         viewPager.setPageMargin(pageMargin);
         viewPager.setAdapter(pagerAdapter);
         viewPager.setCurrentItem(0, true);
         //获取PagerSlidingTabStrip，并初始化设置
-        PagerSlidingTabStrip pagerSlidingTabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+        PagerSlidingTabStrip pagerSlidingTabStrip = findViewById(R.id.tabs);
         pagerSlidingTabStrip.setVisibility(View.VISIBLE);
-        pagerSlidingTabStrip.setDividerColor(getResources().getColor(R.color.content_border));
-        pagerSlidingTabStrip.setIndicatorColor(Color.parseColor("#00000000"));
+        pagerSlidingTabStrip.setDividerColor(ContextCompat.getColor(this, R.color.content_border));
+        pagerSlidingTabStrip.setIndicatorColor(ContextCompat.getColor(this, R.color.color_text_common_level_one));
         pagerSlidingTabStrip.setTextSize(17);
         pagerSlidingTabStrip.setUnderlineHeight(1);
-        pagerSlidingTabStrip.setTextColor(Color.parseColor("#333333"));
-        pagerSlidingTabStrip.setSelectedTextColor(Color.parseColor("#0F7BCA"));
+        pagerSlidingTabStrip.setTextColor(ContextCompat.getColor(this, R.color.color_text_common_level_one));
+        pagerSlidingTabStrip.setSelectedTextColor(ContextCompat.getColor(this, R.color.color_text_link));
         pagerSlidingTabStrip.setFadeEnabled(false);
         pagerSlidingTabStrip.setZoomMax(0);
         pagerSlidingTabStrip.setSmoothScrollWhenClickTab(false);
