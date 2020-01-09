@@ -197,6 +197,12 @@ public class ImpFragment extends ImpBaseFragment implements View.OnClickListener
     public void onResume() {
         super.onResume();
         webView.onActivityResume();
+        if (headerLayout.getVisibility() == View.VISIBLE) {
+            setFragmentStatusBarCommon();
+        } else {
+            setFragmentStatusBarWhite();
+        }
+
     }
 
     @Override
@@ -554,9 +560,9 @@ public class ImpFragment extends ImpBaseFragment implements View.OnClickListener
     }
 
     public void setTitle(String title) {
-        if (!StringUtils.isBlank(title)) {
+        if (!StringUtils.isBlank(title)&&headerText!=null) {
             urlTitleMap.put(webView.getUrl(), title);
-            headerText.setText(title);
+             headerText.setText(title);
         }
     }
 

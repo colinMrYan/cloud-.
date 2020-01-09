@@ -2,7 +2,6 @@ package com.inspur.emmcloud.login.api;
 
 import com.inspur.emmcloud.login.bean.GetDeviceCheckResult;
 import com.inspur.emmcloud.login.bean.GetLoginResult;
-import com.inspur.emmcloud.login.bean.GetMDMStateResult;
 import com.inspur.emmcloud.login.bean.GetRegisterCheckResult;
 import com.inspur.emmcloud.login.bean.LoginDesktopCloudPlusBean;
 import com.inspur.emmcloud.login.bean.UploadMDMInfoResult;
@@ -91,15 +90,6 @@ public class LoginAPIInterfaceImpl implements LoginAPIInterface {
 
     }
 
-    @Override
-    public void returnMDMStateSuccess(GetMDMStateResult getMDMStateResult) {
-
-    }
-
-    @Override
-    public void returnMDMStateFail(String error, int errorCode) {
-
-    }
 
     @Override
     public void returnUploadMDMInfoSuccess(UploadMDMInfoResult uploadMDMInfoResult) {

@@ -5,6 +5,7 @@ import com.inspur.emmcloud.setting.bean.GetCardPackageResult;
 import com.inspur.emmcloud.setting.bean.GetDeviceLogResult;
 import com.inspur.emmcloud.setting.bean.GetExperienceUpgradeFlagResult;
 import com.inspur.emmcloud.setting.bean.GetFaceSettingResult;
+import com.inspur.emmcloud.setting.bean.GetMDMStateResult;
 import com.inspur.emmcloud.setting.bean.GetUploadMyHeadResult;
 import com.inspur.emmcloud.setting.bean.GetUserCardMenusResult;
 import com.inspur.emmcloud.setting.bean.GetUserHeadUploadResult;
@@ -145,4 +146,15 @@ public class SettingAPIInterfaceImpl implements SettingAPIInterface {
     public void returnModifyUserInfoFail(String error, int errorCode) {
 
     }
+
+    @Override
+    public void returnMDMStateSuccess(GetMDMStateResult getMDMStateResult) {
+
+    }
+
+    @Override
+    public void returnMDMStateFail(String error, int errorCode) {
+
+    }
+
 }
