@@ -11,7 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/header_height"
         android:background="?attr/header_bg">
-
         <ImageButton
             android:id="@+id/ibt_back"
             android:layout_width="44dp"
@@ -89,7 +88,6 @@
             android:layout_marginLeft="8dp"
             android:layout_toRightOf="@id/tv_anonymous" />
     </RelativeLayout>
-
     <com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButton
         android:id="@+id/bt_submit_feedback"
         android:layout_width="match_parent"
