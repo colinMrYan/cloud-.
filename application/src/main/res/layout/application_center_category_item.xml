@@ -33,7 +33,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="0.6dp"
+        android:layout_height="0.5px"
         android:layout_below="@id/app_center_categories_icon_img"
         android:background="@color/color_divider" />
 
