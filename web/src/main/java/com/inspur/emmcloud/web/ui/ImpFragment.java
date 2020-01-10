@@ -197,12 +197,6 @@ public class ImpFragment extends ImpBaseFragment implements View.OnClickListener
     public void onResume() {
         super.onResume();
         webView.onActivityResume();
-        if (headerLayout.getVisibility() == View.VISIBLE) {
-            setFragmentStatusBarCommon();
-        } else {
-            setFragmentStatusBarWhite();
-        }
-
     }
 
     @Override

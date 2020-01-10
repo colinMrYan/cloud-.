@@ -94,12 +94,6 @@ public class MoreFragment extends BaseFragment {
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        setFragmentStatusBarWhite();
-    }
-
     private void initData() {
         String myInfo = PreferencesUtils.getString(BaseApplication.getInstance(), "myInfo", "");
         getMyInfoResult = new GetMyInfoResult(myInfo);
