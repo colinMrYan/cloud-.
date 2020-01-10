@@ -554,9 +554,9 @@ public class ImpFragment extends ImpBaseFragment implements View.OnClickListener
     }
 
     public void setTitle(String title) {
-        if (!StringUtils.isBlank(title)) {
+        if (!StringUtils.isBlank(title)&&headerText!=null) {
             urlTitleMap.put(webView.getUrl(), title);
-            headerText.setText(title);
+             headerText.setText(title);
         }
     }
 
