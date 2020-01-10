@@ -15,11 +15,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -39,6 +38,8 @@ import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
+import com.inspur.emmcloud.baselib.widget.popmenu.DropPopMenu;
+import com.inspur.emmcloud.baselib.widget.popmenu.MenuItem;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.EventMessage;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
@@ -115,7 +116,7 @@ import io.socket.client.Socket;
 /**
  * 沟通页面
  */
-public class CommunicationFragment extends BaseFragment implements View.OnClickListener {
+public class CommunicationFragment extends BaseFragment {
 
     private static final int CREATE_CHANNEL_GROUP = 1;
     private static final int REQUEST_SCAN_LOGIN_QRCODE_RESULT = 5;
@@ -234,28 +235,6 @@ public class CommunicationFragment extends BaseFragment implements View.OnClickL
 
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.message_create_group_layout:
-                Intent contactIntent = new Intent();
-                contactIntent.putExtra(ContactSearchFragment.EXTRA_TYPE, 2);
-                contactIntent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, true);
-                contactIntent.putExtra(ContactSearchFragment.EXTRA_TITLE,
-                        getActivity().getString(R.string.message_create_group));
-                contactIntent.setClass(getActivity(), ContactSearchActivity.class);
-                startActivityForResult(contactIntent, CREATE_CHANNEL_GROUP);
-                popupWindow.dismiss();
-                break;
-            case R.id.message_scan_layout:
-                AppUtils.openScanCode(CommunicationFragment.this, REQUEST_SCAN_LOGIN_QRCODE_RESULT);
-                popupWindow.dismiss();
-                break;
-
-            default:
-                break;
-        }
-    }
     /**
      * 注册接收消息的广播
      */
@@ -425,32 +404,31 @@ public class CommunicationFragment extends BaseFragment implements View.OnClickL
      * 通讯录和创建群组，扫一扫合并
      */
     private void showPopupWindow() {
-        View contentView = LayoutInflater.from(getActivity())
-                .inflate(R.layout.pop_message_window_view, null);
-        popupWindow = new PopupWindow(contentView,
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT, true);
-        popupWindow.setTouchable(true);
-        popupWindow.setTouchInterceptor(new View.OnTouchListener() {
+        DropPopMenu dropPopMenu = new DropPopMenu(getActivity());
+        List<MenuItem> menuItemList = new ArrayList<>();
+        menuItemList.add(new MenuItem(R.drawable.ic_message_menu_creat_group_black, 1, getActivity().getString(R.string.message_create_group)));
+        menuItemList.add(new MenuItem(R.drawable.ic_message_menu_scan_black, 2, getString(R.string.sweep)));
+        dropPopMenu.setMenuList(menuItemList);
+        dropPopMenu.show(headerFunctionOptionImg);
+        dropPopMenu.setOnItemClickListener(new DropPopMenu.OnItemClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return false;
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id, MenuItem menuItem) {
+                switch (position) {
+                    case 0:
+                        Intent contactIntent = new Intent();
+                        contactIntent.putExtra(ContactSearchFragment.EXTRA_TYPE, 2);
+                        contactIntent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, true);
+                        contactIntent.putExtra(ContactSearchFragment.EXTRA_TITLE,
+                                getActivity().getString(R.string.message_create_group));
+                        contactIntent.setClass(getActivity(), ContactSearchActivity.class);
+                        startActivityForResult(contactIntent, CREATE_CHANNEL_GROUP);
+                        break;
+                    case 1:
+                        AppUtils.openScanCode(CommunicationFragment.this, REQUEST_SCAN_LOGIN_QRCODE_RESULT);
+                        break;
+                }
             }
         });
-        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
-            @Override
-            public void onDismiss() {
-                AppUtils.setWindowBackgroundAlpha(getActivity(), 1.0f);
-            }
-        });
-        contentView.findViewById(R.id.message_create_group_layout).setOnClickListener(this);
-        contentView.findViewById(R.id.message_scan_layout).setOnClickListener(this);
-        popupWindow.setBackgroundDrawable(getResources().getDrawable(
-                R.drawable.pop_window_view_tran));
-        AppUtils.setWindowBackgroundAlpha(getActivity(), 0.8f);
-        // 设置好参数之后再show
-        popupWindow.showAsDropDown(headerFunctionOptionImg);
-
     }
 
 

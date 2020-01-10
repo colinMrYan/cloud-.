@@ -92,6 +92,7 @@ public class OauthUtils extends LoginAPIInterfaceImpl {
             PreferencesUtils.putInt(BaseApplication.getInstance(), "keepAlive", keepAlive);
             PreferencesUtils.putString(BaseApplication.getInstance(), "tokenType", tokenType);
             PreferencesUtils.putInt(BaseApplication.getInstance(), "expiresIn", expiresIn);
+            PreferencesUtils.putLong(BaseApplication.getInstance(), "token_get_time", System.currentTimeMillis());
             BaseApplication.getInstance().setAccessToken(accessToken);
             BaseApplication.getInstance().setRefreshToken(refreshToken);
             Router router = Router.getInstance();
