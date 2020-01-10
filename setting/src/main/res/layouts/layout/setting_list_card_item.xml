@@ -14,7 +14,7 @@
         android:background="@drawable/shape_top_rectangle_with_radius"
         android:gravity="center_vertical"
         android:paddingLeft="22dp"
-        android:textColor="@color/white"
+        android:textColor="@color/color_text_Anti_White"
         android:textSize="17sp" />
 
     <LinearLayout
@@ -30,56 +30,56 @@
             android:layout_height="wrap_content"
             android:paddingTop="17dp"
             android:text="@string/setting_card_package_taxpayer"
-            android:textColor="#ACACAC"
+            android:textColor="@color/color_text_help"
             android:textSize="12sp" />
 
         <TextView
             android:id="@+id/tv_taxpayer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#666666"
+            android:textColor="@color/color_text_tip"
             android:textSize="20sp" />
 
         <TextView
             android:id="@+id/txt_bank"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#ACACAC"
+            android:textColor="@color/color_text_help"
             android:textSize="12sp" />
 
         <TextView
             android:id="@+id/tv_bank_code"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#666666"
+            android:textColor="@color/color_text_tip"
             android:textSize="20sp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/setting_card_package_address"
-            android:textColor="#ACACAC"
+            android:textColor="@color/color_text_help"
             android:textSize="12sp" />
 
         <TextView
             android:id="@+id/tv_address"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#666666"
+            android:textColor="@color/color_text_tip"
             android:textSize="20sp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/setting_card_package_phone_number"
-            android:textColor="#ACACAC"
+            android:textColor="@color/color_text_help"
             android:textSize="12sp" />
 
         <TextView
             android:id="@+id/tv_phone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#666666"
+            android:textColor="@color/color_text_tip"
             android:textSize="20sp" />
     </LinearLayout>
 
