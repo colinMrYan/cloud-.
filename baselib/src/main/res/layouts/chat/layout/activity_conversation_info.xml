@@ -23,7 +23,6 @@
             android:scaleType="fitXY"
             android:src="?attr/ic_back_btn" />
 
-
         <TextView
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
@@ -33,7 +32,6 @@
             android:textColor="?attr/header_text_color"
             android:textSize="@dimen/header_textsize" />
 
-
         <ImageView
             android:id="@+id/iv_calendar_detail_more"
             android:layout_width="wrap_content"
@@ -42,10 +40,10 @@
             android:layout_centerVertical="true"
             android:adjustViewBounds="true"
             android:onClick="onClick"
-            android:paddingBottom="17dp"
             android:paddingLeft="13dp"
-            android:paddingRight="16dp"
             android:paddingTop="17dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="17dp"
             android:scaleType="fitXY"
             android:src="?attr/ic_header_option"
             android:visibility="gone" />
@@ -69,22 +67,22 @@
                     android:id="@+id/rv_conversation_members_head"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="#FFFFFF"
+                    android:background="@color/color_bg_content_white"
                     android:listSelector="@android:color/transparent"
                     android:numColumns="5"
-                    android:paddingBottom="10dp"
                     android:paddingLeft="9dp"
-                    android:paddingRight="9dp"></com.inspur.emmcloud.baselib.widget.NoScrollGridView>
+                    android:paddingRight="9dp"
+                    android:paddingBottom="10dp" />
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/rl_more_members"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#FFFFFF"
+                android:background="@color/color_bg_content_white"
                 android:onClick="onClick"
-                android:paddingBottom="25dp"
                 android:paddingTop="15dp"
+                android:paddingBottom="25dp"
                 android:visibility="gone">
 
                 <LinearLayout
@@ -99,22 +97,21 @@
                         android:layout_height="wrap_content"
                         android:includeFontPadding="false"
                         android:text="@string/channel_search_more_group_members"
-                        android:textColor="#999999"
+                        android:textColor="@color/color_text_common_level_two"
                         android:textSize="15sp" />
                 </LinearLayout>
             </RelativeLayout>
 
             <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5px"
-                android:layout_marginLeft="16dp"
-                android:background="@color/color_list_divider" />
+                style="@style/divide_style"
+                android:layout_marginLeft="16dp" />
+
             <RelativeLayout
                 android:id="@+id/rl_conversation_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:background="#FFFFFF"
+                android:background="@color/color_bg_content_white"
                 android:onClick="onClick"
                 android:paddingLeft="16dp">
 
@@ -123,11 +120,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:paddingBottom="11dp"
                     android:paddingTop="11dp"
+                    android:paddingBottom="11dp"
                     android:singleLine="true"
                     android:text="@string/channel_group_name"
-                    android:textColor="#FF333333"
+                    android:textColor="@color/color_text_common_level_one"
                     android:textSize="16sp" />
 
                 <ImageView
@@ -149,25 +146,23 @@
                     android:layout_toLeftOf="@id/iv_conversation_name_arrow"
                     android:layout_toRightOf="@id/tv_conversation_title"
                     android:gravity="right"
-                    android:paddingBottom="10dp"
-                    android:paddingRight="1dp"
                     android:paddingTop="8dp"
+                    android:paddingRight="1dp"
+                    android:paddingBottom="10dp"
                     android:singleLine="true"
-                    android:textColor="#888888"
+                    android:textColor="@color/color_text_common_level_two"
                     android:textSize="16sp" />
 
                 <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5px"
-                    android:layout_below="@id/tv_conversation_title"
-                    android:background="@color/color_list_divider" />
+                    style="@style/divide_style"
+                    android:layout_below="@id/tv_conversation_title" />
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/rl_conversation_qr"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#FFFFFF"
+                android:background="@color/color_bg_content_white"
                 android:onClick="onClick"
                 android:paddingLeft="16dp">
 
@@ -176,10 +171,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:paddingBottom="11dp"
                     android:paddingTop="11dp"
+                    android:paddingBottom="11dp"
                     android:text="@string/channel_group_qrcode"
-                    android:textColor="#FF333333"
+                    android:textColor="@color/color_text_common_level_one"
                     android:textSize="16sp" />
 
                 <ImageView
@@ -193,10 +188,8 @@
                     android:src="@drawable/ic_arrow_right" />
 
                 <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5px"
-                    android:layout_below="@id/tv_conversation_qr_title"
-                    android:background="@color/color_list_divider" />
+                    style="@style/divide_style"
+                    android:layout_below="@id/tv_conversation_qr_title" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -204,7 +197,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:background="#FFFFFF"
+                android:background="@color/color_bg_content_white"
                 android:onClick="onClick"
                 android:paddingLeft="16dp">
 
@@ -213,10 +206,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:paddingBottom="11dp"
                     android:paddingTop="11dp"
+                    android:paddingBottom="11dp"
                     android:text="@string/channel_group_image"
-                    android:textColor="#FF333333"
+                    android:textColor="@color/color_text_common_level_one"
                     android:textSize="16sp" />
 
                 <ImageView
@@ -230,17 +223,15 @@
                     android:src="@drawable/ic_arrow_right" />
 
                 <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5px"
-                    android:layout_below="@id/tv_conversation_images"
-                    android:background="@color/color_list_divider" />
+                    style="@style/divide_style"
+                    android:layout_below="@id/tv_conversation_images" />
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/rl_conversation_files"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#FFFFFF"
+                android:background="@color/color_bg_content_white"
                 android:onClick="onClick"
                 android:paddingLeft="16dp">
 
@@ -249,10 +240,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:paddingBottom="11dp"
                     android:paddingTop="11dp"
+                    android:paddingBottom="11dp"
                     android:text="@string/channel_group_file"
-                    android:textColor="#FF333333"
+                    android:textColor="@color/color_text_common_level_one"
                     android:textSize="16sp" />
 
                 <ImageView
@@ -266,17 +257,15 @@
                     android:src="@drawable/ic_arrow_right" />
 
                 <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5px"
-                    android:layout_below="@id/tv_conversation_files_title"
-                    android:background="@color/color_list_divider" />
+                    style="@style/divide_style"
+                    android:layout_below="@id/tv_conversation_files_title" />
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/rl_conversation_search_record"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#FFFFFF"
+                android:background="@color/color_bg_content_white"
                 android:onClick="onClick"
                 android:paddingLeft="16dp">
 
@@ -285,10 +274,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:paddingBottom="11dp"
                     android:paddingTop="11dp"
+                    android:paddingBottom="11dp"
                     android:text="@string/chat_group_message_search"
-                    android:textColor="#FF333333"
+                    android:textColor="@color/color_text_common_level_one"
                     android:textSize="16sp" />
 
                 <ImageView
@@ -302,10 +291,8 @@
                     android:src="@drawable/ic_arrow_right" />
 
                 <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5px"
-                    android:layout_below="@id/tv_conversation_search_record"
-                    android:background="@color/color_list_divider" />
+                    style="@style/divide_style"
+                    android:layout_below="@id/tv_conversation_search_record" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -313,7 +300,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:background="#FFFFFF"
+                android:background="@color/color_bg_content_white"
                 android:onClick="onClick"
                 android:paddingLeft="16dp"
                 android:visibility="gone">
@@ -323,10 +310,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:paddingBottom="11dp"
                     android:paddingTop="11dp"
+                    android:paddingBottom="11dp"
                     android:text="@string/chat_group_message_search"
-                    android:textColor="#FF333333"
+                    android:textColor="@color/color_text_common_level_one"
                     android:textSize="16sp" />
 
                 <ImageView
@@ -340,10 +327,8 @@
                     android:src="@drawable/ic_arrow_right" />
 
                 <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5px"
-                    android:layout_below="@id/tv_channel_search_record_have_margin"
-                    android:background="@color/color_list_divider" />
+                    style="@style/divide_style"
+                    android:layout_below="@id/tv_channel_search_record_have_margin" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -351,7 +336,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:background="#FFFFFF"
+                android:background="@color/color_bg_content_white"
                 android:onClick="onClick"
                 android:paddingLeft="16dp">
 
@@ -360,10 +345,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:paddingBottom="11dp"
                     android:paddingTop="11dp"
+                    android:paddingBottom="11dp"
                     android:text="@string/channel_set_sticky"
-                    android:textColor="#FF333333"
+                    android:textColor="@color/color_text_common_level_one"
                     android:textSize="16sp" />
 
                 <android.support.v7.widget.SwitchCompat
@@ -377,17 +362,15 @@
                     android:src="@drawable/ic_arrow_right" />
 
                 <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5px"
-                    android:layout_below="@id/tv_conversation_sticky_title"
-                    android:background="@color/color_list_divider" />
+                    style="@style/divide_style"
+                    android:layout_below="@id/tv_conversation_sticky_title" />
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/rl_conversation_mute_notification"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#FFFFFF"
+                android:background="@color/color_bg_content_white"
                 android:onClick="onClick"
                 android:paddingLeft="16dp">
 
@@ -396,10 +379,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:paddingBottom="11dp"
                     android:paddingTop="11dp"
+                    android:paddingBottom="11dp"
                     android:text="@string/message_without_interruption"
-                    android:textColor="#FF333333"
+                    android:textColor="@color/color_text_common_level_one"
                     android:textSize="16sp" />
 
                 <android.support.v7.widget.SwitchCompat
@@ -413,19 +396,17 @@
                     android:src="@drawable/ic_arrow_right" />
 
                 <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5px"
-                    android:layout_below="@id/tv_conversation_mute_notification_title"
-                    android:background="@color/color_list_divider" />
+                    style="@style/divide_style"
+                    android:layout_below="@id/tv_conversation_mute_notification_title" />
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/rl_conversation_quit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="34dp"
                 android:layout_marginTop="10dp"
-                android:background="#FFFFFF"
+                android:layout_marginBottom="34dp"
+                android:background="@color/color_bg_content_white"
                 android:onClick="onClick">
 
                 <TextView
@@ -434,18 +415,16 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:gravity="center"
-                    android:paddingBottom="11dp"
                     android:paddingTop="11dp"
+                    android:paddingBottom="11dp"
                     android:text="@string/quit_dismiss_group"
-                    android:textColor="@color/red_f3323b"
+                    android:textColor="@color/color_text_red"
                     android:textSize="16sp" />
 
                 <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5px"
+                    style="@style/divide_style"
                     android:layout_below="@id/tv_conversation_quit_title"
-                    android:layout_marginLeft="16dp"
-                    android:background="@color/color_list_divider" />
+                    android:layout_marginLeft="16dp" />
             </RelativeLayout>
         </LinearLayout>
     </ScrollView>

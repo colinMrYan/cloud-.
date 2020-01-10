@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main_layout"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
     <RelativeLayout
         android:id="@+id/rl_header"
         android:layout_width="match_parent"
         android:layout_height="44dp"
-        android:background="#F2F2F2">
+        android:background="@color/color_bg_content_white">
 
         <RelativeLayout
             android:id="@+id/rl_conversation_group_search"
@@ -41,7 +41,7 @@
                 android:hint="@string/search"
                 android:imeOptions="actionSearch"
                 android:singleLine="true"
-                android:textColor="#000000"
+                android:textColor="@color/color_text_common_level_one"
                 android:textSize="@dimen/content_normal_textsize">
 
                 <requestFocus />
@@ -57,7 +57,7 @@
             android:gravity="center_vertical"
             android:onClick="onClick"
             android:text="@string/cancel"
-            android:textColor="#FF000000"
+            android:textColor="@color/color_text_common_level_one"
             android:textSize="17sp" />
 
     </RelativeLayout>
