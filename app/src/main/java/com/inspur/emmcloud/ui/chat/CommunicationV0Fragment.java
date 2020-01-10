@@ -15,7 +15,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.view.ContextThemeWrapper;
 import android.text.Html;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -23,7 +22,6 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
@@ -41,6 +39,8 @@ import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
+import com.inspur.emmcloud.baselib.widget.popmenu.DropPopMenu;
+import com.inspur.emmcloud.baselib.widget.popmenu.MenuItem;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
@@ -396,67 +396,33 @@ public class CommunicationV0Fragment extends BaseFragment {
      * @param view
      */
     private void showPopupWindow(View view) {
-        // 一个自定义的布局，作为显示的内容
-        View contentView = LayoutInflater.from(getActivity())
-                .inflate(R.layout.pop_message_window_view, null);
-        // 设置按钮的点击事件
-        popupWindow = new PopupWindow(contentView,
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT, true);
-        popupWindow.setTouchable(true);
-        popupWindow.setTouchInterceptor(new View.OnTouchListener() {
+        DropPopMenu dropPopMenu = new DropPopMenu(getActivity());
+        List<MenuItem> menuItemList = new ArrayList<>();
+        menuItemList.add(new MenuItem(R.drawable.ic_message_menu_creat_group_black, 1, getActivity().getString(R.string.message_create_group)));
+        menuItemList.add(new MenuItem(R.drawable.ic_message_menu_scan_black, 2, getString(R.string.sweep)));
+        dropPopMenu.setMenuList(menuItemList);
+        dropPopMenu.show(view);
+        dropPopMenu.setOnItemClickListener(new DropPopMenu.OnItemClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return false;
-                // 这里如果返回true的话，touch事件将被拦截
-                // 拦截后 PopupWindow的onTouchEvent不被调用，这样点击外部区域无法dismiss
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id, MenuItem menuItem) {
+                switch (position) {
+                    case 1:
+                        Intent intent = new Intent();
+                        intent.putExtra("select_content", 2);
+                        intent.putExtra("isMulti_select", true);
+                        intent.putExtra("title",
+                                getActivity().getString(R.string.creat_group));
+                        intent.setClass(getActivity(), ContactSearchActivity.class);
+                        startActivityForResult(intent, CREAT_CHANNEL_GROUP);
+                        popupWindow.dismiss();
+                        break;
+                    case 2:
+                        AppUtils.openScanCode(CommunicationV0Fragment.this, SCAN_LOGIN_QRCODE_RESULT);
+                        popupWindow.dismiss();
+                        break;
+                }
             }
         });
-
-        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
-            @Override
-            public void onDismiss() {
-                backgroundAlpha(1.0f);
-            }
-        });
-
-        RelativeLayout createGroupLayout = (RelativeLayout) contentView
-                .findViewById(R.id.message_create_group_layout);
-        createGroupLayout.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.putExtra("select_content", 2);
-                intent.putExtra("isMulti_select", true);
-                intent.putExtra("title",
-                        getActivity().getString(R.string.creat_group));
-                intent.setClass(getActivity(), ContactSearchActivity.class);
-                startActivityForResult(intent, CREAT_CHANNEL_GROUP);
-                popupWindow.dismiss();
-            }
-        });
-
-
-        RelativeLayout scanLayout = (RelativeLayout) contentView.findViewById(R.id.message_scan_layout);
-        scanLayout.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                Intent intent = new Intent();
-//                intent.setClass(getActivity(), PreviewDecodeActivity.class);
-//                intent.putExtra("from", "CommunicationFragment");
-//                startActivityForResult(intent, SCAN_LOGIN_QRCODE_RESULT);
-                AppUtils.openScanCode(CommunicationV0Fragment.this, SCAN_LOGIN_QRCODE_RESULT);
-                popupWindow.dismiss();
-            }
-        });
-
-        // 如果不设置PopupWindow的背景，无论是点击外部区域还是Back键都无法dismiss弹框
-        // 我觉得这里是API的一个bug
-        popupWindow.setBackgroundDrawable(getResources().getDrawable(
-                R.drawable.pop_window_view_tran));
-        backgroundAlpha(0.8f);
-        // 设置好参数之后再show
-        popupWindow.showAsDropDown(view);
 
     }
 

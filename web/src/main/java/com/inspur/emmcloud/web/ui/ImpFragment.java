@@ -158,15 +158,12 @@ public class ImpFragment extends ImpBaseFragment implements View.OnClickListener
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.web_fragment_imp, container, false);
         unbinder = ButterKnife.bind(this, view);
-
-
+        initViews();
         if (headerLayout.getVisibility() == View.VISIBLE) {
             setFragmentStatusBarCommon();
         } else {
             setFragmentStatusBarWhite();
         }
-
-        initViews();
         //String version = getArguments().getString(Constant.WEB_FRAGMENT_VERSION, "");
         // if (!version.equals(getArguments().getString(Constant.WEB_FRAGMENT_VERSION, ""))) {
         //    initFragmentViews();
