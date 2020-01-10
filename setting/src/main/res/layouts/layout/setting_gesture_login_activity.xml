@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/grey_f6f6f6"
+    android:background="@color/color_bg_content_grey"
     android:orientation="vertical">
 
     <com.inspur.emmcloud.baselib.widget.CircleTextImageView
@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"
-        android:textColor="#000000"
+        android:textColor="@color/color_text_common_level_one"
         android:textSize="@dimen/content_title_textsize" />
 
     <TextView
