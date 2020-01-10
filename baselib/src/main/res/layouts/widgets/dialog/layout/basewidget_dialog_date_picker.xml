@@ -9,6 +9,6 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:calendarViewShown="false"
-        android:datePickerMode="spinner"></DatePicker>
+        android:datePickerMode="spinner" />
 
 </RelativeLayout>

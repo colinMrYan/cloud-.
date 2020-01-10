@@ -12,7 +12,7 @@
         android:layout_width="36dp"
         android:layout_height="36dp"
         android:layout_centerVertical="true"
-        android:scaleType="centerInside"></ImageView>
+        android:scaleType="centerInside" />
 
     <ImageView
         android:id="@+id/iv_dir_enter"
@@ -51,7 +51,7 @@
             android:ellipsize="middle"
             android:gravity="left"
             android:singleLine="true"
-            android:textColor="#333333"
+            android:textColor="@color/color_text_common_level_one"
             android:textSize="16sp" />
 
         <TextView
@@ -60,7 +60,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_file_name"
             android:gravity="center"
-            android:textColor="#999999"
+            android:textColor="@color/color_text_common_level_two"
             android:textSize="14sp" />
 
         <TextView
@@ -71,7 +71,7 @@
             android:layout_toRightOf="@id/tv_file_child_count"
             android:gravity="center"
             android:paddingLeft="7dp"
-            android:textColor="#999999"
+            android:textColor="@color/color_text_common_level_two"
             android:textSize="14sp"
             android:visibility="gone" />
 
@@ -79,10 +79,10 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="0.5px"
+        android:layout_height="1px"
         android:layout_below="@id/iv_file_icon"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
-        android:background="@color/color_list_divider"></View>
+        android:background="@color/color_divider" />
 </RelativeLayout>

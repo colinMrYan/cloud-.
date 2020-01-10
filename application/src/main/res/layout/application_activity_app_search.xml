@@ -44,7 +44,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/view_layout1"
-        android:background="#c3ced7"
+        android:background="@color/color_bg_content_white"
         android:paddingLeft="12dp"
         android:paddingTop="8dp"
         android:paddingRight="12dp"
@@ -105,7 +105,7 @@
         android:layout_width="fill_parent"
         android:layout_height="0.5px"
         android:layout_below="@id/search_layout"
-        android:background="#a4b0b9" />
+        android:background="@color/color_divider" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -116,7 +116,7 @@
             android:id="@+id/search_app_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:dividerHeight="0.5px" />
+            android:dividerHeight="1px" />
     </RelativeLayout>
 
 </RelativeLayout>

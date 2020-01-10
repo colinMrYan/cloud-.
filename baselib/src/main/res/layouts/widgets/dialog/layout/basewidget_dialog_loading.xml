@@ -15,7 +15,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:cus_loading_view_size="32dp"
-        app:loading_color="#ffffff" />
+        app:loading_color="@color/color_bg_content_white" />
 
     <TextView
         android:id="@+id/loading_text"
@@ -26,6 +26,6 @@
         android:ellipsize="end"
         android:maxLines="2"
         android:maxWidth="200dp"
-        android:textColor="#ffffff"
+        android:textColor="@color/color_bg_content_white"
         android:textSize="@dimen/content_small_textsize" />
 </LinearLayout>

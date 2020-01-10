@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff"
+    android:background="@color/color_bg_content_white"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
@@ -22,7 +22,7 @@
             app:tabIndicatorHeight="0dp"
             app:tabSelectedTextColor="#333333"
             app:tabTextAppearance="@style/ScheduleTabLayoutTextStyle"
-            app:tabTextColor="#888888" />
+            app:tabTextColor="@color/color_text_common_level_two" />
 
         <ImageButton
             android:id="@+id/ibt_add"

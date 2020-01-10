@@ -26,14 +26,14 @@
                 android:maxLines="2"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
-                android:textColor="#333333"
+                android:textColor="@color/color_text_common_level_one"
                 android:textSize="17sp" />
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="0.5px"
+                android:layout_height="1px"
                 android:layout_below="@id/title"
-                android:background="@color/color_list_divider" />
+                android:background="@color/color_divider" />
         </RelativeLayout>
 
 
@@ -42,8 +42,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
-            android:divider="@color/color_list_divider"
-            android:dividerHeight="0.5px" />
+            android:divider="@color/color_divider"
+            android:dividerHeight="1px" />
     </LinearLayout>
 
 
@@ -56,7 +56,7 @@
         android:background="@drawable/widght_actionsheet_cancel_selector"
         android:gravity="center"
         android:text="@string/cancel"
-        android:textColor="#0F7BCA"
+        android:textColor="@color/color_text_link"
         android:textSize="18sp" />
 
 </LinearLayout>

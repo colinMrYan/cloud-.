@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:layout_below="@id/rl_header"
         android:divider="@color/color_divider"
-        android:dividerHeight="0.5dp"
+        android:dividerHeight="1px"
         android:scrollbars="none" />
 
 </RelativeLayout>
