@@ -1,20 +1,9 @@
-buildscript {
-    repositories {
-        maven {
-            url uri('../release')
-        }
-    }
-    dependencies {
-        classpath 'com.inspur:comgradle:1.0'
-    }
-}
 apply plugin: 'com.inspur.comgradle'
 apply plugin: 'com.alipay.apollo.baseline.platform'
 import com.android.build.OutputFile
 
-apply from: "../node_modules/react-native/react.gradle"
-apply from: "../node_modules/react-native-vector-icons/fonts.gradle"
-apply from: 'tinkerpatch.gradle'
+
+
 
 /**
  * Set this to true to create two separate APKs instead of one:
@@ -45,9 +34,21 @@ android {
     buildToolsVersion versions.androidTools
     aaptOptions.cruncherEnabled = false
     aaptOptions.useNewCruncher = false
-    if (project.hasProperty('devBuild')) {
+    def isDebug = false
+    for(String s : gradle.startParameter.taskNames) {
+        if (s.contains("Debug") | s.contains("debug")) {
+            isDebug = true
+            break
+        }
+    }
+
+    if (isDebug) {
         splits.abi.enable = false
         splits.density.enable = false
+    }else {
+        apply from: "../node_modules/react-native/react.gradle"
+        apply from: "../node_modules/react-native-vector-icons/fonts.gradle"
+        apply from: 'tinkerpatch.gradle'
     }
     defaultConfig {
         applicationId "com.inspur.emmcloud"
@@ -84,7 +85,7 @@ android {
         lintConfig file("lint.xml")
         abortOnError false
         checkReleaseBuilds false
-        disable 'MissingTranslation', 'ExtraTranslation'
+        disable 'MissingTranslation', 'ExtraTranslation','TypographyFractions','TypographyQuotes'
     }
 
     applicationVariants.all { variant ->
@@ -126,6 +127,18 @@ android {
             }
         }
     }
+    if (isDebug){
+        tasks.whenTaskAdded { task ->
+            if (task.name.contains("lint")
+                    ||task.name.contains("Aidl")//用不到测试的时候就可以先关闭
+                    ||task.name.contains("mockableAndroidJar")
+                    ||task.name.contains("UnitTest")
+                    ||task.name.contains("AndroidTest")//用不到NDK和JNI的也关闭掉
+            ) {
+                task.enabled = false
+            }
+        }
+    }
 }
 
 combuild {
@@ -155,4 +168,50 @@ dependencies {
         changing = true
     }
 }
+
+class BuildTimeListener implements TaskExecutionListener,BuildListener{
+    private Clock clock;
+    private times = []
+
+    @Override
+    void buildStarted(Gradle gradle) {
+    }
+
+    @Override
+    void beforeExecute(Task task) {
+        clock = new org.gradle.util.Clock()
+    }
+
+    @Override
+    void settingsEvaluated(Settings settings) {
+    }
+
+    @Override
+    void afterExecute(Task task, TaskState state) {
+        def ms = clock.getTimeInMs()
+        times.add([ms, task.path])
+    }
+
+    @Override
+    void projectsLoaded(Gradle gradle) {
+    }
+
+    @Override
+    void projectsEvaluated(Gradle gradle) {
+    }
+
+    @Override
+    void buildFinished(BuildResult result) {
+        println "Task spend time:====================================="
+        for (time in times) {
+            if (time[0] >= 50) {
+                printf "%7sms  %s\n", time
+            }
+        }
+    }
+}
+
+//将监听器添加到 gradle任务中
+project.gradle.addListener(new BuildTimeListener());
+
 

@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.CustomLoadingView;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
@@ -60,7 +59,7 @@ public class WebViewNetStateDetailActivity extends BaseActivity {
     CustomLoadingView pingAliLoadingImage;
 
     CheckingNetStateUtils checkingNetStateUtils;
-    private String[] CheckHttpUrls = {""};
+    private String[] CheckHttpUrls  ={""};
     private String urlContent; //展示url
     private String checkNetResultContent; //网络状态详情
     private Drawable drawableError;
@@ -82,7 +81,6 @@ public class WebViewNetStateDetailActivity extends BaseActivity {
         if (getIntent().hasExtra(EXTRA_OUTSIDE_URL_REQUEST_RESULT)) {
             checkNetResultContent = getIntent().getStringExtra(EXTRA_OUTSIDE_URL_REQUEST_RESULT);
         }
-        CheckHttpUrls = (new NetUtils()).getHttpUrls();
     }
 
     private void iniView() {

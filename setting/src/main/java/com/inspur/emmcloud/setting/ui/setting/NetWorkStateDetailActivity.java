@@ -73,6 +73,8 @@ public class NetWorkStateDetailActivity extends BaseActivity {
     @Override
     public void onCreate() {
         checkingNetStateUtils = new CheckingNetStateUtils(this);
+        CheckHttpUrls = new NetUtils().getHttpUrls();
+        PortalCheckingUrls = CheckHttpUrls[0];
         iniView();
     }
 

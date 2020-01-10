@@ -90,6 +90,7 @@ public class ScheduleHomeFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.schedule_fragment_home, container, false);
         unbinder = ButterKnife.bind(this, view);
+        setFragmentStatusBarCommon();
         initView();
         return view;
     }
@@ -97,7 +98,6 @@ public class ScheduleHomeFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        setFragmentStatusBarCommon();
         refreshDate();
     }
 
