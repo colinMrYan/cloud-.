@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main_layout"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
     <RelativeLayout
@@ -36,14 +36,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/rl_header"
-        android:background="@color/content_bg">
+        android:background="@color/color_bg_content_white">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            android:background="@color/white">
+            android:background="@color/color_bg_content_white">
 
             <GridView
                 android:id="@+id/gv_member"
@@ -57,7 +57,7 @@
                 android:paddingRight="20dp"
                 android:paddingBottom="8dp"
                 android:stretchMode="columnWidth"
-                android:verticalSpacing="5dp"></GridView>
+                android:verticalSpacing="5dp" />
         </RelativeLayout>
 
     </RelativeLayout>

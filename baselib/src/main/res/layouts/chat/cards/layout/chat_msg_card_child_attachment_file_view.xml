@@ -9,15 +9,15 @@
     app:bl_arrowPosition="16dp"
     app:bl_arrowWidth="4.5dp"
     app:bl_cornersRadius="8dp"
-    app:bl_strokeColor="#AAAAAA"
-    app:bl_strokeWidth="0.5px">
+    app:bl_strokeColor="@color/color_text_common_level_one"
+    app:bl_strokeWidth="1px">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="10dp">
+        android:paddingTop="10dp"
+        android:paddingRight="10dp">
 
 
         <ImageView
@@ -40,7 +40,7 @@
                 android:ellipsize="end"
                 android:lineSpacingMultiplier="1.1"
                 android:maxLines="3"
-                android:textColor="#333333"
+                android:textColor="@color/color_text_common_level_one"
                 android:textSize="15sp" />
 
             <TextView
@@ -50,7 +50,7 @@
                 android:layout_below="@id/tv_file_name"
                 android:layout_marginTop="5dp"
                 android:paddingBottom="5dp"
-                android:textColor="#888888"
+                android:textColor="@color/color_text_common_level_two"
                 android:textSize="12sp" />
         </RelativeLayout>
     </RelativeLayout>

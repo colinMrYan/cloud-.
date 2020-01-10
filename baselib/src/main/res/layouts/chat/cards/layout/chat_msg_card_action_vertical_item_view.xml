@@ -7,18 +7,16 @@
         android:id="@+id/action_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="7dp"
         android:paddingTop="7dp"
-        android:textColor="#0F7BCA"
+        android:paddingBottom="7dp"
+        android:textColor="@color/color_text_link"
         android:textSize="15sp" />
 
     <View
         android:id="@+id/divider_view"
         android:layout_width="match_parent"
-        android:layout_height="0.6dp"
+        android:layout_height="1px"
         android:layout_below="@id/action_text"
-        android:background="@color/color_list_divider">
-
-    </View>
+        android:background="@color/color_divider" />
 
 </RelativeLayout>

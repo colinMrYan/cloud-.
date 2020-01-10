@@ -3,22 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="7dp"
-    android:paddingTop="7dp">
+    android:paddingTop="7dp"
+    android:paddingBottom="7dp">
 
     <TextView
         android:id="@+id/send_time_text"
         android:layout_width="wrap_content"
         android:layout_height="20dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="8dp"
         android:layout_marginTop="12dp"
+        android:layout_marginBottom="8dp"
         android:background="@color/transparent"
         android:gravity="center"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
         android:singleLine="true"
-        android:textColor="#97A3B4"
+        android:textColor="@color/color_text_common_level_two"
         android:textSize="@dimen/content_mini_textsize" />
 
     <RelativeLayout
@@ -53,7 +53,7 @@
                 android:maxLines="1"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:textColor="#666666"
+                android:textColor="@color/color_text_tip"
                 android:textSize="14sp" />
 
             <RelativeLayout
@@ -85,7 +85,7 @@
                         android:layout_centerInParent="true"
                         android:visibility="gone"
                         app:cus_loading_view_size="18dp"
-                        app:loading_color="#666666" />
+                        app:loading_color="@color/color_text_tip" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -94,7 +94,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
-                    android:layout_toRightOf="@id/rl_send_status"></RelativeLayout>
+                    android:layout_toRightOf="@id/rl_send_status" />
             </RelativeLayout>
         </RelativeLayout>
     </RelativeLayout>

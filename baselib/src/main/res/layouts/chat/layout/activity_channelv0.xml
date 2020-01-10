@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main_layout"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="@color/white"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_bg_content_white"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
@@ -23,22 +23,6 @@
             android:padding="11dp"
             android:scaleType="fitXY"
             android:src="?attr/ic_back_btn" />
-
-        <!--<ImageView-->
-        <!--android:id="@+id/iv_config"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_alignParentRight="true"-->
-        <!--android:layout_centerVertical="true"-->
-        <!--android:adjustViewBounds="true"-->
-        <!--android:clickable="true"-->
-        <!--android:onClick="onClick"-->
-        <!--android:paddingBottom="13dp"-->
-        <!--android:paddingLeft="12dp"-->
-        <!--android:paddingRight="15dp"-->
-        <!--android:paddingTop="13dp"-->
-        <!--android:scaleType="fitXY"-->
-        <!--android:src="@drawable/ic_config" />-->
 
         <ImageView
             android:id="@+id/iv_config"
@@ -80,10 +64,10 @@
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/refresh_layout"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@color/content_bg"
+        android:background="@color/color_bg_content_white"
         android:scrollbars="vertical">
 
         <RelativeLayout
@@ -97,18 +81,17 @@
                 android:descendantFocusability="beforeDescendants"
                 android:divider="@null"
                 android:dividerHeight="0dp"
-                android:listSelector="#00000000"
+                android:listSelector="@android:color/transparent"
                 android:scrollbarStyle="insideInset"
                 android:scrollbars="none" />
 
         </RelativeLayout>
 
     </android.support.v4.widget.SwipeRefreshLayout>
-    >
 
     <com.inspur.emmcloud.widget.ECMChatInputMenuV0
         android:id="@+id/chat_input_menu"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></com.inspur.emmcloud.widget.ECMChatInputMenuV0>
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

@@ -10,8 +10,8 @@
     app:bl_arrowPosition="16dp"
     app:bl_arrowWidth="4.5dp"
     app:bl_cornersRadius="8dp"
-    app:bl_strokeColor="#AAAAAA"
-    app:bl_strokeWidth="0.5px">
+    app:bl_strokeColor="@color/color_text_common_level_two"
+    app:bl_strokeWidth="1px">
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -24,7 +24,7 @@
             android:layout_marginBottom="5dp"
             android:lineSpacingMultiplier="1.2"
             android:minWidth="40dp"
-            android:textColor="@color/black"
+            android:textColor="@color/color_text_common_level_one"
             android:textIsSelectable="false"
             android:textSize="15sp" />
 
@@ -35,10 +35,9 @@
             android:layout_below="@id/tv_name_tips"
             android:lineSpacingMultiplier="1.2"
             android:minWidth="40dp"
-            android:textColor="@color/black"
+            android:textColor="@color/color_text_common_level_one"
             android:textIsSelectable="false"
             android:textSize="15sp" />
-
 
     </RelativeLayout>
 </com.inspur.emmcloud.widget.bubble.BubbleLayout>

@@ -20,9 +20,9 @@
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@id/divider_view"
         android:gravity="center"
-        android:paddingBottom="7dp"
         android:paddingTop="7dp"
-        android:textColor="#0F7BCA"
+        android:paddingBottom="7dp"
+        android:textColor="@color/color_text_link"
         android:textSize="15sp" />
 
 </RelativeLayout>

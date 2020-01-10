@@ -9,8 +9,8 @@
     app:bl_arrowPosition="16dp"
     app:bl_arrowWidth="4.5dp"
     app:bl_cornersRadius="8dp"
-    app:bl_strokeColor="#AAAAAA"
-    app:bl_strokeWidth="0.5px">
+    app:bl_strokeColor="@color/color_text_common_level_two"
+    app:bl_strokeWidth="1px">
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -24,7 +24,7 @@
             android:lineSpacingMultiplier="1.2"
             android:minWidth="60dp"
             android:text="@string/comment_hallcomment_text"
-            android:textColor="#8f8e94"
+            android:textColor="@color/color_text_common_level_two"
             android:textSize="@dimen/content_smaller_textsize" />
 
         <com.inspur.emmcloud.widget.TextViewWithSpan
@@ -35,7 +35,7 @@
             android:lineSpacingMultiplier="1.2"
             android:minWidth="60dp"
             android:paddingTop="8dp"
-            android:textColor="#000000"
+            android:textColor="@color/color_text_common_level_one"
             android:textSize="16sp" />
     </RelativeLayout>
 </com.inspur.emmcloud.widget.bubble.BubbleLayout>
