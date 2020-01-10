@@ -190,7 +190,6 @@ public class CommunicationV0Fragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        checkingNetStateUtils = new CheckingNetStateUtils(getContext(), NetUtils.pingUrls, NetUtils.httpUrls);
         initView();
         sortChannelList();// 对Channel 进行排序
         registerMessageFragmentReceiver();
@@ -201,6 +200,7 @@ public class CommunicationV0Fragment extends BaseFragment {
 
     @Override
     public void onResume() {
+        checkingNetStateUtils = new CheckingNetStateUtils(getContext(), NetUtils.pingUrls, (new NetUtils()).getHttpUrls());
         checkingNetStateUtils.getNetStateResult(5);
         setFragmentStatusBarCommon();
         super.onResume();
@@ -210,6 +210,7 @@ public class CommunicationV0Fragment extends BaseFragment {
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         if (!hidden) {
+            checkingNetStateUtils = new CheckingNetStateUtils(getContext(), NetUtils.pingUrls, (new NetUtils()).getHttpUrls());
             checkingNetStateUtils.getNetStateResult(5);
             setFragmentStatusBarCommon();
         }
