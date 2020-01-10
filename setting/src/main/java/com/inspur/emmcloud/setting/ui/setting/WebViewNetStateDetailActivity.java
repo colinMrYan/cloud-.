@@ -59,7 +59,7 @@ public class WebViewNetStateDetailActivity extends BaseActivity {
     CustomLoadingView pingAliLoadingImage;
 
     CheckingNetStateUtils checkingNetStateUtils;
-    private String[] CheckHttpUrls = NetUtils.httpUrls;
+    private String[] CheckHttpUrls  ={""};
     private String urlContent; //展示url
     private String checkNetResultContent; //网络状态详情
     private Drawable drawableError;
@@ -172,6 +172,7 @@ public class WebViewNetStateDetailActivity extends BaseActivity {
      */
     private void checkingNetConnectState() {
         checkingNetStateUtils.CheckNetPingThreadStart(subUrls, 5, Constant.EVENTBUS_TAG_NET_PING_CONNECTION);
+        CheckHttpUrls = (new NetUtils()).getHttpUrls();
         checkingNetStateUtils.CheckNetHttpThreadStart(CheckHttpUrls);
         String networksType = checkingNetStateUtils.getNetworksType();
         currentNetTypeText.setText(getString(R.string.setting_net_check_net_current_type) + networksType);   //net_check_net_current_type

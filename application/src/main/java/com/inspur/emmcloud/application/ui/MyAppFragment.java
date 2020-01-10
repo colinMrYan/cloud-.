@@ -150,7 +150,6 @@ public class MyAppFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.application_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
         setFragmentStatusBarCommon();
-        checkingNetStateUtils = new CheckingNetStateUtils(getContext(), NetUtils.pingUrls, NetUtils.httpUrls);
         copyData();
         initViews();
         getMyAppRecommendWidgetsUpdate();
@@ -183,6 +182,7 @@ public class MyAppFragment extends BaseFragment {
             new AppBadgeUtils(BaseApplication.getInstance()).getAppBadgeCountFromServer();
         }
         refreshRecommendAppWidgetView();
+        checkingNetStateUtils = new CheckingNetStateUtils(getContext(), NetUtils.pingUrls, (new NetUtils()).getHttpUrls());
         checkingNetStateUtils.getNetStateResult(5);
     }
 
