@@ -23,7 +23,6 @@ import com.inspur.emmcloud.setting.bean.SettingGetBoolenResult;
 import com.inspur.emmcloud.setting.bean.UserProfileInfoBean;
 
 import org.xutils.http.RequestParams;
-import org.xutils.x;
 
 import java.io.File;
 
