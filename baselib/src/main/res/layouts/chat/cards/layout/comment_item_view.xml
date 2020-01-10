@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
+    android:background="@color/color_bg_content_white"
     android:orientation="horizontal"
     android:paddingLeft="16dp"
     android:paddingRight="16dp">
@@ -33,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_marginLeft="12dp"
-                android:textColor="@color/text_grey"
+                android:textColor="@color/color_text_tip"
                 android:textSize="15sp" />
 
             <TextView
@@ -43,7 +43,7 @@
                 android:layout_toLeftOf="@+id/commentdetail_time_text"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:textColor="@color/header_bg_blue"
+                android:textColor="@color/color_text_link"
                 android:textSize="@dimen/content_normal_textsize" />
         </RelativeLayout>
 
@@ -53,7 +53,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/layout"
             android:layout_marginTop="3dp"
-            android:textColor="#6a7d84"
+            android:textColor="@color/color_text_tip"
             android:textSize="@dimen/content_normal_textsize" />
     </RelativeLayout>
 

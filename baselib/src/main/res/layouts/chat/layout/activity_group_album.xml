@@ -51,7 +51,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/rl_header"
-        android:background="#FFECEFF3">
+        android:background="@color/color_bg_content_white">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view_album"
@@ -61,18 +61,6 @@
             android:overScrollMode="never"
             android:verticalSpacing="5dp" />
 
-        <!--<GridView-->
-        <!--android:id="@+id/gv_album"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:visibility="gone"-->
-        <!--android:horizontalSpacing="5dp"-->
-        <!--android:listSelector="@android:color/transparent"-->
-        <!--android:numColumns="4"-->
-        <!--android:padding="5dp"-->
-        <!--android:stretchMode="columnWidth"-->
-        <!--android:verticalSpacing="5dp" >-->
-        <!--</GridView>-->
     </RelativeLayout>
 
     <RelativeLayout
@@ -81,7 +69,7 @@
         android:layout_height="match_parent"
         android:layout_below="@id/rl_header"
         android:layout_centerInParent="true"
-        android:background="#00000000"
+        android:background="@android:color/transparent"
         android:gravity="center"
         android:visibility="gone">
 
@@ -101,7 +89,7 @@
             android:layout_marginTop="18dp"
             android:layout_marginBottom="30dp"
             android:text="@string/no_channel_album"
-            android:textColor="#999999"
+            android:textColor="@color/color_text_common_level_two"
             android:textSize="16sp" />
     </RelativeLayout>
 </RelativeLayout>

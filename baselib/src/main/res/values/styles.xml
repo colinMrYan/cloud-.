@@ -416,7 +416,7 @@
     <style name="divide_style">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1px</item>
-        <item name="android:background">#dddddd</item>
+        <item name="android:background">@color/color_divider</item>
     </style>
 
 </resources>

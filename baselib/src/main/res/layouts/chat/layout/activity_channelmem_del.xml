@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main_layout"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
     <RelativeLayout
@@ -51,14 +51,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/rl_header"
-        android:background="@color/content_bg">
+        android:background="@color/color_bg_content_white">
 
         <ListView
             android:id="@+id/member_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:divider="@color/color_list_divider"
-            android:dividerHeight="0.5dp" />
+            android:divider="@color/color_divider"
+            android:dividerHeight="1px" />
     </RelativeLayout>
 
 

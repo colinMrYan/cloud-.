@@ -67,7 +67,7 @@
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@color/content_bg"
+        android:background="@color/color_bg_content_white"
         android:scrollbars="vertical">
 
         <RelativeLayout
@@ -85,10 +85,10 @@
                 android:gravity="center"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
-                android:textColor="@android:color/white"
+                android:textColor="@color/color_text_Anti_White"
                 android:textSize="14sp"
                 android:visibility="gone"
-                app:cus_backgroundColor="#7f36A5F6"
+                app:cus_backgroundColor="@color/color_base_blue"
                 app:cus_borderWidth="0dp"
                 app:cus_isRadiusAdjustBounds="true" />
 
@@ -99,7 +99,7 @@
                 android:descendantFocusability="beforeDescendants"
                 android:divider="@null"
                 android:dividerHeight="0dp"
-                android:listSelector="#00000000"
+                android:listSelector="@android:color/transparent"
                 android:scrollbarStyle="insideInset"
                 android:scrollbars="none" />
 
