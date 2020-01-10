@@ -22,7 +22,7 @@
     <string name="volume_clouddriver_upload_fail">上傳失敗</string>
     <string name="volume_clouddriver_upload_again">重新上傳</string>
     <string name="volume_clouddriver_download_size">下載(%1$s)</string>
-    <string name="volume_clouddriver_file_name_invaliad">檔案名中不能包含特殊字元 / \ " : | * ? &lt; &gt; </string>
+    <string name="volume_clouddriver_file_name_invaliad">檔案名中不能包含特殊字元 / \u005c \u0022 : | * ? &lt; &gt; </string>
     <string name="volume_clouddriver_select_photo">選擇照片</string>
     <string name="volume_clouddriver_select_file">選擇檔</string>
     <string name="volume_clouddriver_volume_info">網盤詳情</string>
@@ -36,8 +36,8 @@
     <string name="volume_clouddriver_add_volume_member">添加網盤成員</string>
     <string name="volume_clouddriver_del_volume_group_member">刪除組成員</string>
     <string name="volume_clouddriver_add_volume_group_member">添加組成員</string>
-    <string name="volume_clouddriver_directory_name_invaliad">資料夾名中不能包含特殊字元 / \ " : | * ? &lt; &gt;  </string>
-    <string name="volume_clouddriver_volume_name_invaliad">網盤名中不能包含特殊字元 / \ " : | * ? &lt; &gt;  </string>
+    <string name="volume_clouddriver_directory_name_invaliad">資料夾名中不能包含特殊字元 / \u005c \u0022 : | * ? &lt; &gt;  </string>
+    <string name="volume_clouddriver_volume_name_invaliad">網盤名中不能包含特殊字元 / \u005c \u0022 : | * ? &lt; &gt;  </string>
     <string name="volume_clouddriver_exists_same_name">已存在同名檔/資料夾</string>
     <string name="volume_file_rename">檔重命名</string>
     <string name="volume_folder_rename">文件夾命名</string>

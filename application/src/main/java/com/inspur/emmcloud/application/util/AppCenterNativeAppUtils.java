@@ -210,7 +210,7 @@ public class AppCenterNativeAppUtils {
 
     private class WebService extends ApplicationApiInterfaceImpl {
         @Override
-        public void returnVeriryApprovalPasswordSuccess(String password) {
+        public void returnVeriryApprovalPasswordSuccess(String password, String locationUrl) {
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }

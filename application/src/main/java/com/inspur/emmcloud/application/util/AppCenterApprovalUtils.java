@@ -20,8 +20,6 @@ import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 
-import java.net.URLEncoder;
-
 /**
  * Created by yufuchang on 2018/1/17.
  */
@@ -110,26 +108,10 @@ public class AppCenterApprovalUtils {
         }
     }
 
-    /**
-     * 打开其他第三方Web原生应用
-     */
-    public void openWebApprovalApp() {
-        String myInfo = PreferencesUtils.getString(context, "myInfo");
-        GetMyInfoResult getMyInfoResult = new GetMyInfoResult(myInfo);
-        String password = PreferencesByUserAndTanentUtils.getString(context, "approvalPassword");
-        try {
-            password = URLEncoder.encode(password, "UTF-8");
-        } catch (Exception e) {
-            e.printStackTrace();
-            password = PreferencesByUserAndTanentUtils.getString(context, "approvalPassword");
-        }
-        String url = app.getUri() + "?username=" + getMyInfoResult.getCode() + "&md5pw=" + password;
-        ApplicationUriUtils.openUrl(context, url);
-    }
 
     private class WebService extends ApplicationApiInterfaceImpl {
         @Override
-        public void returnVeriryApprovalPasswordSuccess(String password) {
+        public void returnVeriryApprovalPasswordSuccess(String password, String locationUrl) {
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }
@@ -137,7 +119,8 @@ public class AppCenterApprovalUtils {
                 passwordInputDlg.dismiss();
             }
             PreferencesByUserAndTanentUtils.putString(context, "approvalPassword", password);
-            openWebApprovalApp();
+            locationUrl = "http://ishenpi.inspur.com:8090" + locationUrl;
+            ApplicationUriUtils.openUrl(context, locationUrl);
         }
 
         @Override

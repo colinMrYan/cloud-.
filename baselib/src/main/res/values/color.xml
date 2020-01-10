@@ -140,6 +140,7 @@
     <color name="color_text_common_level_one">#333333</color>
     <color name="color_text_common_level_two">#999999</color>
     <color name="color_text_link">#36A5F6</color>
+    <!--提示类的文字颜色 或 其他666-->
     <color name="color_text_tip">#666666</color>
     <color name="color_text_help">#999999</color>
     <color name="color_text_Anti_White">#FFFFFF</color>
@@ -153,6 +154,8 @@
     <color name="color_icon_sub_main">#FF979797</color>
     <color name="color_bg_content_grey">#FFF6F6F6</color>
     <color name="color_bg_content_white">#FFFFFF</color>
+    <!--通用背景黑色  之前的000换成333-->
+    <color name="color_bg_content_black">#333333</color>
     <!--全局-->
     <color name="color_bg_common">#F8F9FB</color>
     <color name="color_divider">#DDDDDD</color>
