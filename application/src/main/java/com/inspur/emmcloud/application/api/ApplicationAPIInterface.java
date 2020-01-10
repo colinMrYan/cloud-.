@@ -48,7 +48,7 @@ public interface ApplicationAPIInterface {
 
     void returnRecommendAppWidgetListFail(String error, int errorCode);
 
-    void returnVeriryApprovalPasswordSuccess(String password);
+    void returnVeriryApprovalPasswordSuccess(String password, String locationUrl);
 
     void returnVeriryApprovalPasswordFail(String error, int errorCode);
 

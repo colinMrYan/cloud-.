@@ -171,6 +171,7 @@ public class CommunicationFragment extends BaseFragment implements View.OnClickL
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_communication, container, false);
         unbinder = ButterKnife.bind(this, view);
+        setFragmentStatusBarCommon();
         setLastMessageId();
         initView();
         sortConversationList();// 对Channel 进行排序
@@ -189,7 +190,7 @@ public class CommunicationFragment extends BaseFragment implements View.OnClickL
     @Override
     public void onResume() {
         super.onResume();
-        setFragmentStatusBarCommon();
+        checkingNetStateUtils.getNetStateResult(5);
     }
 
     private void initView() {

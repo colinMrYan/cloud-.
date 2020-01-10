@@ -26,7 +26,6 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.router.Router;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.SelectorUtils;
@@ -38,6 +37,7 @@ import com.inspur.emmcloud.basemodule.bean.badge.BadgeBodyModel;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseFragmentActivity;
 import com.inspur.emmcloud.basemodule.util.AppTabUtils;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.ECMShortcutBadgeNumberManagerUtils;
 import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
@@ -50,7 +50,6 @@ import com.inspur.emmcloud.bean.system.TabBean;
 import com.inspur.emmcloud.broadcastreceiver.NetworkChangeReceiver;
 import com.inspur.emmcloud.broadcastreceiver.ScreenBroadcastReceiver;
 import com.inspur.emmcloud.componentservice.application.ApplicationService;
-import com.inspur.emmcloud.componentservice.schedule.ScheduleService;
 import com.inspur.emmcloud.componentservice.application.maintab.GetAppMainTabResult;
 import com.inspur.emmcloud.componentservice.application.maintab.MainTabResult;
 import com.inspur.emmcloud.componentservice.schedule.ScheduleService;
@@ -101,10 +100,12 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
 
     @Override
     public void onCreate() {
-        try {
-            TinkerPatch.with().fetchPatchUpdate(true);
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (!AppUtils.isApkDebugable(this)) {
+            try {
+                TinkerPatch.with().fetchPatchUpdate(true);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         setContentView(R.layout.activity_index);
         ButterKnife.bind(this);

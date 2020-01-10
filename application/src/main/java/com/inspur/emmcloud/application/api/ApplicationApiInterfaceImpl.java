@@ -97,7 +97,7 @@ public class ApplicationApiInterfaceImpl implements ApplicationAPIInterface {
     }
 
     @Override
-    public void returnVeriryApprovalPasswordSuccess(String password) {
+    public void returnVeriryApprovalPasswordSuccess(String password, String locationUrl) {
 
     }
 
