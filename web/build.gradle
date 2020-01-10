@@ -1,13 +1,3 @@
-buildscript {
-    repositories {
-        maven {
-            url uri('../release')
-        }
-    }
-    dependencies {
-        classpath 'com.inspur:comgradle:1.0'
-    }
-}
 apply plugin: 'com.inspur.comgradle'
 apply plugin: 'com.jakewharton.butterknife'
 
@@ -43,10 +33,29 @@ android {
 //        lintConfig file("lint.xml")
         abortOnError false
         checkReleaseBuilds false
-//        disable 'MissingTranslation', 'ExtraTranslation'
+        disable 'MissingTranslation', 'ExtraTranslation','TypographyFractions','TypographyQuotes'
     }
 
     resourcePrefix project.getName()+"_"
+    def isDebug = false
+    for(String s : gradle.startParameter.taskNames) {
+        if (s.contains("Debug") | s.contains("debug")) {
+            isDebug = true
+            break
+        }
+    }
+    if(isDebug){
+        tasks.whenTaskAdded { task ->
+            if (task.name.contains("lint")
+                    ||task.name.contains("Aidl")//用不到测试的时候就可以先关闭
+                    ||task.name.contains("mockableAndroidJar")
+                    ||task.name.contains("UnitTest")
+                    ||task.name.contains("AndroidTest")//用不到NDK和JNI的也关闭掉
+            ) {
+                task.enabled = false
+            }
+        }
+    }
 }
 
 combuild {
@@ -70,4 +79,25 @@ dependencies {
     implementation deps.scancode.fakeframework
     implementation deps.scancode.mascanengine_api
     implementation deps.scancode.bqcscanservice_api
+}
+
+repositories {
+    mavenCentral()
+}
+
+apply plugin: 'maven'
+def MAVEN_LOCAL_PATH = uri("../release")
+def ARTIFACT_ID = 'web'
+def VERSION_NAME = '1.0.0'
+def GROUP_ID = 'com.inspur.emmcloud'
+uploadArchives() {
+    repositories {
+        mavenDeployer {
+            repository(url: uri(MAVEN_LOCAL_PATH))
+            pom.groupId = GROUP_ID
+            pom.artifactId = ARTIFACT_ID
+            pom.version = VERSION_NAME
+            pom.packaging = 'aar'
+        }
+    }
 }

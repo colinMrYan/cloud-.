@@ -28,7 +28,7 @@ public class NetUtils {
     public static final String NETWORK_TYPE_4G = "4g";
     public static final String NETWORK_TYPE_MOBILE = "mobile";
     public static final String[] pingUrls = {"www.baidu.com", "www.aliyun.com"};
-    public static final String[] httpUrls = {WebServiceRouterManager.getInstance().getClusterEmm() + "api/mam/v3.0/heart/success/#/auth/0" + (int) (1 + Math.random() * 100000)};
+   // public static final String[] httpUrls = {WebServiceRouterManager.getInstance().getClusterEmm() + "api/mam/v3.0/heart/success/#/auth/0" + (int) (1 + Math.random() * 100000)};
 
     /**
      * 没有连接网络
@@ -76,6 +76,10 @@ public class NetUtils {
      */
     public static NetworkInfo mNetworkInfo;
 
+    public String[] getHttpUrls(){
+        String[] httpUrls=  {WebServiceRouterManager.getInstance().getClusterEmm() + "api/mam/v3.0/heart/success"};
+        return httpUrls;
+    }
 
     // 判断是否有网络连接
     public static boolean isNetworkConnected(Context context) {

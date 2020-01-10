@@ -149,17 +149,17 @@ public class MyAppFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.application_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
-        checkingNetStateUtils = new CheckingNetStateUtils(getContext(), NetUtils.pingUrls, NetUtils.httpUrls);
+        setFragmentStatusBarCommon();
         copyData();
         initViews();
         getMyAppRecommendWidgetsUpdate();
         return view;
     }
-
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         if (!hidden) {
+            setFragmentStatusBarCommon();
             refreshDataAndWidgetOnPageVisible();
         }
     }
@@ -175,7 +175,6 @@ public class MyAppFragment extends BaseFragment {
      * 当页面出现的时候刷新数据和界面
      */
     private void refreshDataAndWidgetOnPageVisible() {
-        setFragmentStatusBarCommon();
         if (ClientConfigUpdateUtils.getInstance().isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_MY_APP)) {
             getMyApp();
         }
@@ -183,6 +182,7 @@ public class MyAppFragment extends BaseFragment {
             new AppBadgeUtils(BaseApplication.getInstance()).getAppBadgeCountFromServer();
         }
         refreshRecommendAppWidgetView();
+        checkingNetStateUtils = new CheckingNetStateUtils(getContext(), NetUtils.pingUrls, (new NetUtils()).getHttpUrls());
         checkingNetStateUtils.getNetStateResult(5);
     }
 

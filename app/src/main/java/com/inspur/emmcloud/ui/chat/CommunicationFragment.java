@@ -156,6 +156,7 @@ public class CommunicationFragment extends BaseFragment implements View.OnClickL
         super.onHiddenChanged(hidden);
         if (!hidden) {
             setFragmentStatusBarCommon();
+            checkingNetStateUtils = new CheckingNetStateUtils(getContext(), NetUtils.pingUrls, (new NetUtils()).getHttpUrls());
             checkingNetStateUtils.getNetStateResult(5);
         }
     }
@@ -171,13 +172,13 @@ public class CommunicationFragment extends BaseFragment implements View.OnClickL
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_communication, container, false);
         unbinder = ButterKnife.bind(this, view);
+        setFragmentStatusBarCommon();
         setLastMessageId();
         initView();
         sortConversationList();// 对Channel 进行排序
         registerMessageFragmentReceiver();
         getConversationList();
         setHeaderFunctionOptions(null);
-        checkingNetStateUtils = new CheckingNetStateUtils(getContext(), NetUtils.pingUrls, NetUtils.httpUrls);
         //将此句挪到此处，为了防止广播注册太晚接收不到WS状态，这里重新获取下
         showSocketStatusInTitle(WebSocketPush.getInstance().getWebsocketStatus());
         return view;
@@ -189,7 +190,8 @@ public class CommunicationFragment extends BaseFragment implements View.OnClickL
     @Override
     public void onResume() {
         super.onResume();
-        setFragmentStatusBarCommon();
+        checkingNetStateUtils = new CheckingNetStateUtils(getContext(), NetUtils.pingUrls, (new NetUtils()).getHttpUrls());
+        checkingNetStateUtils.getNetStateResult(5);
     }
 
     private void initView() {
