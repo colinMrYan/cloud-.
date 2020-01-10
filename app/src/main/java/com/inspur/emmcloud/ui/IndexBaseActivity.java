@@ -52,6 +52,7 @@ import com.inspur.emmcloud.broadcastreceiver.ScreenBroadcastReceiver;
 import com.inspur.emmcloud.componentservice.application.ApplicationService;
 import com.inspur.emmcloud.componentservice.application.maintab.GetAppMainTabResult;
 import com.inspur.emmcloud.componentservice.application.maintab.MainTabResult;
+import com.inspur.emmcloud.componentservice.login.LoginService;
 import com.inspur.emmcloud.componentservice.schedule.ScheduleService;
 import com.inspur.emmcloud.componentservice.setting.SettingService;
 import com.inspur.emmcloud.componentservice.web.WebService;
@@ -115,6 +116,20 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
         registerNetWorkListenerAccordingSysLevel();
         registerScreenReceiver();
         initTabs();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        int expiresIn = PreferencesUtils.getInt(this, "expiresIn", 0);
+        long tokenGetTime = PreferencesUtils.getLong(this, "token_get_time", 0L);
+        if (System.currentTimeMillis() >= expiresIn + tokenGetTime) {
+            Router router = Router.getInstance();
+            if (router.getService(LoginService.class) != null) {
+                LoginService service = router.getService(LoginService.class);
+                service.refreshToken(null, System.currentTimeMillis());
+            }
+        }
     }
 
     @Override

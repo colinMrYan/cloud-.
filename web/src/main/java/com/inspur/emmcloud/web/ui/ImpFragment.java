@@ -551,9 +551,9 @@ public class ImpFragment extends ImpBaseFragment implements View.OnClickListener
     }
 
     public void setTitle(String title) {
-        if (!StringUtils.isBlank(title)&&headerText!=null) {
+        if (!StringUtils.isBlank(title) && headerText != null) {
             urlTitleMap.put(webView.getUrl(), title);
-             headerText.setText(title);
+            headerText.setText(title);
         }
     }
 
@@ -561,10 +561,13 @@ public class ImpFragment extends ImpBaseFragment implements View.OnClickListener
      * 解决有的机型Webview goback时候不会获取title的问题
      */
     private void setGoBackTitle() {
-        String title = urlTitleMap.get(webView.getUrl());
-        if (!StringUtils.isBlank(title)) {
-            headerText.setText(title);
+        if (headerText != null) {
+            String title = urlTitleMap.get(webView.getUrl());
+            if (!StringUtils.isBlank(title)) {
+                headerText.setText(title);
+            }
         }
+
     }
 
     /**

@@ -414,7 +414,7 @@ public class CommunicationFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id, MenuItem menuItem) {
                 switch (position) {
-                    case 1:
+                    case 0:
                         Intent contactIntent = new Intent();
                         contactIntent.putExtra(ContactSearchFragment.EXTRA_TYPE, 2);
                         contactIntent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, true);
@@ -422,11 +422,9 @@ public class CommunicationFragment extends BaseFragment {
                                 getActivity().getString(R.string.message_create_group));
                         contactIntent.setClass(getActivity(), ContactSearchActivity.class);
                         startActivityForResult(contactIntent, CREATE_CHANNEL_GROUP);
-                        popupWindow.dismiss();
                         break;
-                    case 2:
+                    case 1:
                         AppUtils.openScanCode(CommunicationFragment.this, REQUEST_SCAN_LOGIN_QRCODE_RESULT);
-                        popupWindow.dismiss();
                         break;
                 }
             }
