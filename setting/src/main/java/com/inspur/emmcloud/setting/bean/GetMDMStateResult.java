@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.login.bean;
+package com.inspur.emmcloud.setting.bean;
 
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 

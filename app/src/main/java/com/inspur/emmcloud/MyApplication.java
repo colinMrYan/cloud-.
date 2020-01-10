@@ -12,6 +12,7 @@ import com.horcrux.svg.SvgPackage;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.componentservice.communication.CommunicationService;
 import com.inspur.reactnative.AuthorizationManagerPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -27,7 +28,6 @@ import java.util.List;
  * Application class
  */
 public class MyApplication extends BaseApplication implements ReactApplication {
-    private ApplicationLike tinkerApplicationLike;
     /**
      * ReactNative相关代码
      */
@@ -48,6 +48,7 @@ public class MyApplication extends BaseApplication implements ReactApplication {
             );
         }
     };
+    private ApplicationLike tinkerApplicationLike;
 
     public void onCreate() {
         super.onCreate();
@@ -65,7 +66,7 @@ public class MyApplication extends BaseApplication implements ReactApplication {
      */
     private void initHotfix() {
         // 我们可以从这里获得Tinker加载过程的信息
-        if (BuildConfig.TINKER_ENABLE) {
+        if (!AppUtils.isApkDebugable(BaseApplication.getInstance())) {
             tinkerApplicationLike = TinkerPatchApplicationLike.getTinkerPatchApplicationLike();
             // 初始化TinkerPatch SDK
             TinkerPatch.init(

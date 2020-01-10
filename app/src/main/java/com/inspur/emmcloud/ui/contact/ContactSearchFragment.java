@@ -212,13 +212,6 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
         return view;
     }
 
-
-    @Override
-    public void onResume() {
-        setFragmentStatusBarCommon();
-        super.onResume();
-    }
-
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);

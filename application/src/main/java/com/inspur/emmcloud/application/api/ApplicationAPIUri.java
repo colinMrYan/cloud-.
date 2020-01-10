@@ -78,7 +78,7 @@ public class ApplicationAPIUri {
      * 行政审批验证密码
      */
     public static String getVeriryApprovalPasswordUrl() {
-        return WebServiceRouterManager.getInstance().getClusterEmm() + "proxy/shenpi/langchao.ecgap.inportal/login/CheckLoginDB.aspx?";
+        return "http://ishenpi.inspur.com:8090/Inspur/login.jhtml?";
     }
 
 

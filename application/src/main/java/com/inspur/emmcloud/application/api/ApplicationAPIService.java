@@ -25,6 +25,8 @@ import com.inspur.emmcloud.componentservice.login.LoginService;
 import com.inspur.emmcloud.componentservice.login.OauthCallBack;
 
 import org.xutils.http.RequestParams;
+import org.xutils.http.app.RedirectHandler;
+import org.xutils.http.request.UriRequest;
 
 
 public class ApplicationAPIService {
@@ -338,22 +340,28 @@ public class ApplicationAPIService {
     public void veriryApprovalPassword(String userName, final String password) {
         String completeUrl = ApplicationAPIUri.getVeriryApprovalPasswordUrl();
         RequestParams params = new RequestParams(completeUrl);
-        params.addQueryStringParameter("userName", userName);
-        params.addQueryStringParameter("userPass", password);
+        params.addQueryStringParameter("username", userName);
+        params.addQueryStringParameter("md5pw", password);
+        params.setRedirectHandler(new RedirectHandler() {
+            @Override
+
+            public RequestParams getRedirectParams(UriRequest uriRequest) throws Throwable {
+                String locationUrl = uriRequest.getResponseHeader("Location");
+                apiInterface.returnVeriryApprovalPasswordSuccess(password, locationUrl);
+                return null;
+            }
+        });
         HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(byte[] arg0) {
-                if (arg0 != null && new String(arg0).equals("登录成功")) {
-                    apiInterface.returnVeriryApprovalPasswordSuccess(password);
-                } else {
-                    apiInterface.returnVeriryApprovalPasswordFail("", -1);
-                }
-
+                apiInterface.returnVeriryApprovalPasswordFail("", -1);
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnVeriryApprovalPasswordFail(error, responseCode);
+                if (responseCode != 302) {
+                    apiInterface.returnVeriryApprovalPasswordFail(error, responseCode);
+                }
             }
 
             @Override
