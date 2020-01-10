@@ -10,6 +10,7 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
@@ -19,6 +20,7 @@ import com.inspur.emmcloud.setting.R;
 import com.inspur.emmcloud.setting.R2;
 import com.inspur.emmcloud.setting.api.SettingAPIInterfaceImpl;
 import com.inspur.emmcloud.setting.api.SettingAPIService;
+import com.inspur.emmcloud.setting.bean.GetMDMStateResult;
 import com.inspur.emmcloud.setting.bean.UserProfileInfoBean;
 import com.inspur.emmcloud.setting.util.FingerPrintUtils;
 
@@ -40,11 +42,16 @@ public class SafeCenterActivity extends BaseActivity {
     @BindView(R2.id.tv_setting_safe_gesture_face)
     TextView safeGestureFaceText;
 
+    LoadingDialog loadingDialog;
+    SettingAPIService apiService;
     @Override
     public void onCreate() {
         ButterKnife.bind(this);
+        apiService = new SettingAPIService(SafeCenterActivity.this);
+        apiService.setAPIInterface(new WebService());
         initView();
         getUserInfoConfig();
+        getMDMState();
     }
 
     @Override
@@ -53,9 +60,11 @@ public class SafeCenterActivity extends BaseActivity {
     }
 
     private void initView() {
+        loadingDialog = new LoadingDialog(this);
         safeGestureFaceText.setText(FingerPrintUtils.getFingerPrintInstance().isFingerPrintAvaiable(this) ?
                 R.string.setting_safe_gesture_face : R.string.setting_safe_center_gesture);
         setUserInfoConfig(null);
+        setMDMLayoutState(1);
     }
 
     /**
@@ -81,6 +90,28 @@ public class SafeCenterActivity extends BaseActivity {
 
         }
     }
+
+    private void getMDMState() {
+        if (NetUtils.isNetworkConnected(this)) {
+            loadingDialog.show();
+            apiService.getMDMState();
+        } else {
+            setMDMLayoutState(null);
+        }
+    }
+
+    /**
+     * 设置设备管理layout显示状态
+     *
+     * @param mdmState
+     */
+    private void setMDMLayoutState(Integer mdmState) {
+        if (mdmState == null) {
+            mdmState = PreferencesByUserAndTanentUtils.getInt(getApplicationContext(), "mdm_state", 1);
+        }
+        (findViewById(R.id.rl_device_manager)).setVisibility((mdmState == 1) ? View.VISIBLE : View.GONE);
+    }
+
 
     public void onClick(View view) {
         int id = view.getId();
@@ -125,8 +156,6 @@ public class SafeCenterActivity extends BaseActivity {
      */
     private void getUserInfoConfig() {
         if (NetUtils.isNetworkConnected(SafeCenterActivity.this, false)) {
-            SettingAPIService apiService = new SettingAPIService(SafeCenterActivity.this);
-            apiService.setAPIInterface(new WebService());
             apiService.getUserProfileConfigInfo();
         } else {
             setUserInfoConfig(null);
@@ -145,6 +174,26 @@ public class SafeCenterActivity extends BaseActivity {
         @Override
         public void returnUserProfileConfigFail(String error, int errorCode) {
         }
+
+        @Override
+        public void returnMDMStateSuccess(GetMDMStateResult getMDMStateResult) {
+            if (loadingDialog != null && loadingDialog.isShowing()) {
+                loadingDialog.dismiss();
+            }
+            int mdmState = getMDMStateResult.getMdmState();
+            PreferencesByUserAndTanentUtils.putInt(getApplicationContext(), "mdm_state", mdmState);
+            setMDMLayoutState(mdmState);
+
+        }
+
+        @Override
+        public void returnMDMStateFail(String error, int errorCode) {
+            if (loadingDialog != null && loadingDialog.isShowing()) {
+                loadingDialog.dismiss();
+            }
+            setMDMLayoutState(null);
+        }
+
 
     }
 }
