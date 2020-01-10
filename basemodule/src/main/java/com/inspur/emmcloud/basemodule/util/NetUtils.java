@@ -28,7 +28,7 @@ public class NetUtils {
     public static final String NETWORK_TYPE_4G = "4g";
     public static final String NETWORK_TYPE_MOBILE = "mobile";
     public static final String[] pingUrls = {"www.baidu.com", "www.aliyun.com"};
-    public static final String[] httpUrls = {WebServiceRouterManager.getInstance().getClusterEmm() + "api/mam/v3.0/heart/success/#/auth/0" + (int) (1 + Math.random() * 100000)};
+   // public static final String[] httpUrls = {WebServiceRouterManager.getInstance().getClusterEmm() + "api/mam/v3.0/heart/success"};
 
     /**
      * 没有连接网络
@@ -63,6 +63,11 @@ public class NetUtils {
      */
     public static final int NETWORK_UNKNOW = -2;
     private static final String TAG = "PingNet";
+
+    public  String[] getHttpUrls(){
+      String[] httpUrls = {WebServiceRouterManager.getInstance().getClusterEmm() + "api/mam/v3.0/heart/success"} ;
+      return httpUrls;
+    }
     /**
      * 定义电话管理器对象
      */

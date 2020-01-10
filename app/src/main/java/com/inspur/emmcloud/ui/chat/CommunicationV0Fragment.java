@@ -36,6 +36,7 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.baselib.util.ImageUtils;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
@@ -190,7 +191,7 @@ public class CommunicationV0Fragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        checkingNetStateUtils = new CheckingNetStateUtils(getContext(), NetUtils.pingUrls, NetUtils.httpUrls);
+        checkingNetStateUtils = new CheckingNetStateUtils(getContext(), NetUtils.pingUrls,(new NetUtils()).getHttpUrls());
         initView();
         sortChannelList();// 对Channel 进行排序
         registerMessageFragmentReceiver();
@@ -201,6 +202,7 @@ public class CommunicationV0Fragment extends BaseFragment {
 
     @Override
     public void onResume() {
+        checkingNetStateUtils = new CheckingNetStateUtils(getContext(), NetUtils.pingUrls,(new NetUtils()).getHttpUrls());
         checkingNetStateUtils.getNetStateResult(5);
         setFragmentStatusBarCommon();
         super.onResume();
@@ -210,6 +212,7 @@ public class CommunicationV0Fragment extends BaseFragment {
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         if (!hidden) {
+            checkingNetStateUtils = new CheckingNetStateUtils(getContext(), NetUtils.pingUrls,(new NetUtils()).getHttpUrls());
             checkingNetStateUtils.getNetStateResult(5);
             setFragmentStatusBarCommon();
         }

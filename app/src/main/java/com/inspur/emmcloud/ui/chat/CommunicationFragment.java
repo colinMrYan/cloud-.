@@ -35,6 +35,7 @@ import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
@@ -177,7 +178,7 @@ public class CommunicationFragment extends BaseFragment implements View.OnClickL
         registerMessageFragmentReceiver();
         getConversationList();
         setHeaderFunctionOptions(null);
-        checkingNetStateUtils = new CheckingNetStateUtils(getContext(), NetUtils.pingUrls, NetUtils.httpUrls);
+        checkingNetStateUtils = new CheckingNetStateUtils(getContext(), NetUtils.pingUrls, (new NetUtils()).getHttpUrls());
         //将此句挪到此处，为了防止广播注册太晚接收不到WS状态，这里重新获取下
         showSocketStatusInTitle(WebSocketPush.getInstance().getWebsocketStatus());
         return view;

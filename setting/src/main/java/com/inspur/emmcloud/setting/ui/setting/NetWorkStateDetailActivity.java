@@ -37,8 +37,8 @@ import java.net.URL;
 public class NetWorkStateDetailActivity extends BaseActivity {
     public static String[] subUrls = {"www.baidu.com", "www.aliyun.com"};
     CheckingNetStateUtils checkingNetStateUtils;
-    private String PortalCheckingUrls = NetUtils.httpUrls[0];
-    private String[] CheckHttpUrls = NetUtils.httpUrls;
+    private String PortalCheckingUrls = "";
+    private String[] CheckHttpUrls = {""};
     private ImageView hardImageView;
     private ImageView portalImageView;
     private ImageView ping1UrlImageView;
@@ -66,6 +66,8 @@ public class NetWorkStateDetailActivity extends BaseActivity {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
+        CheckHttpUrls = (new NetUtils()).getHttpUrls();
+        PortalCheckingUrls = CheckHttpUrls[0];
     }
 
     @Override

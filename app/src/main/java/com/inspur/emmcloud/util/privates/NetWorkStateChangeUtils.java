@@ -18,7 +18,7 @@ public class NetWorkStateChangeUtils {
 
 
     private static NetWorkStateChangeUtils netWorkStateChangeUtils;
-    private CheckingNetStateUtils checkingNetStateUtils = new CheckingNetStateUtils(MyApplication.getInstance(), NetUtils.pingUrls, NetUtils.httpUrls);
+    private CheckingNetStateUtils checkingNetStateUtils = new CheckingNetStateUtils(MyApplication.getInstance(), NetUtils.pingUrls, (new NetUtils()).getHttpUrls());
 
 
     private NetWorkStateChangeUtils() {

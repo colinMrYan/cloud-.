@@ -52,6 +52,7 @@ import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
@@ -149,7 +150,7 @@ public class MyAppFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.application_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
-        checkingNetStateUtils = new CheckingNetStateUtils(getContext(), NetUtils.pingUrls, NetUtils.httpUrls);
+        checkingNetStateUtils = new CheckingNetStateUtils(getContext(), NetUtils.pingUrls,(new NetUtils()).getHttpUrls());
         copyData();
         initViews();
         getMyAppRecommendWidgetsUpdate();
@@ -183,6 +184,7 @@ public class MyAppFragment extends BaseFragment {
             new AppBadgeUtils(BaseApplication.getInstance()).getAppBadgeCountFromServer();
         }
         refreshRecommendAppWidgetView();
+        checkingNetStateUtils = new CheckingNetStateUtils(getContext(), NetUtils.pingUrls,(new NetUtils()).getHttpUrls());
         checkingNetStateUtils.getNetStateResult(5);
     }
 
