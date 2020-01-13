@@ -35,13 +35,14 @@
 
         <ImageView
             android:id="@+id/more_function_list_img"
-            android:layout_width="46dp"
+            android:layout_width="38dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:layout_marginRight="8dp"
             android:clickable="true"
             android:paddingLeft="8dp"
-            android:paddingRight="16dp"
+            android:paddingRight="8dp"
             android:scaleType="centerInside"
             android:src="?attr/ic_add" />
     </RelativeLayout>
