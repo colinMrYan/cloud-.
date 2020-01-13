@@ -77,7 +77,7 @@
                     android:maxLines="1"
                     android:paddingLeft="9dp"
                     android:text="@string/join_discuss"
-                    android:textColor="@color/color_text_Anti_White"
+                    android:textColor="#e0ffffff"
                     android:textSize="16sp" />
 
             </RelativeLayout>
