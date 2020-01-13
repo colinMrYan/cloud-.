@@ -7,7 +7,7 @@
         android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/content_bg"
+        android:background="@color/color_bg_content_white"
         android:scrollbars="vertical">
 
         <com.inspur.emmcloud.baselib.widget.NoHorScrollView
@@ -36,9 +36,9 @@
 
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
+                        android:layout_height="1px"
                         android:layout_below="@id/avp_ads"
-                        android:background="#C8C7CC" />
+                        android:background="@color/color_divider" />
                 </RelativeLayout>
 
                 <com.inspur.emmcloud.baselib.widget.ScrollViewWithListView
@@ -48,7 +48,7 @@
                     android:layout_below="@id/rl_ads_app"
                     android:divider="@null"
                     android:dividerHeight="0dp"
-                    android:overScrollMode="never"></com.inspur.emmcloud.baselib.widget.ScrollViewWithListView>
+                    android:overScrollMode="never" />
             </RelativeLayout>
         </com.inspur.emmcloud.baselib.widget.NoHorScrollView>
 

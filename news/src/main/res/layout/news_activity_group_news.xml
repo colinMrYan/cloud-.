@@ -36,7 +36,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_below="@id/rl_header"
-        android:background="@color/white">
+        android:background="@color/color_bg_content_white">
 
         <com.gxz.PagerSlidingTabStrip
             android:id="@+id/tabs"
@@ -49,7 +49,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tabs"
-            android:background="@color/content_bg" />
+            android:background="@color/color_bg_content_white" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -74,7 +74,7 @@
             android:layout_below="@id/iv_no_news"
             android:layout_centerHorizontal="true"
             android:text="@string/news_fail_load_check_net"
-            android:textColor="#666666"
+            android:textColor="@color/color_text_tip"
             android:textSize="16sp" />
 
     </RelativeLayout>

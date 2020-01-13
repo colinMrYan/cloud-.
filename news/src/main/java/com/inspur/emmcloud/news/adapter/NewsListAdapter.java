@@ -2,6 +2,7 @@ package com.inspur.emmcloud.news.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,7 +65,7 @@ public class NewsListAdapter extends BaseAdapter {
         }
         String uri = handlePoster(position);
         ImageDisplayUtils.getInstance().displayImage(holder.imageView, uri, R.drawable.ic_app_news_default_icon);
-        holder.title.setTextColor(groupNewsList.get(position).isImportant() ? Color.RED : 0xff203b4f);
+        holder.title.setTextColor(groupNewsList.get(position).isImportant() ? Color.RED : ContextCompat.getColor(context, R.color.color_text_common_level_one));
         holder.title.setText(groupNewsList.get(position).getTitle());
         String postTime = groupNewsList.get(position).getCreationDate();
         postTime = TimeUtils.Calendar2TimeString(TimeUtils.timeLong2Calendar(Long.parseLong(postTime)), TimeUtils.getFormat(context, TimeUtils.FORMAT_YEAR_MONTH_DAY_BY_NEWS));

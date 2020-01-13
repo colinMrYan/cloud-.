@@ -18,6 +18,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:text="@string/more"
-        android:textColor="#36A5F6"
+        android:textColor="@color/color_text_link"
         android:textSize="12sp" />
 </LinearLayout>

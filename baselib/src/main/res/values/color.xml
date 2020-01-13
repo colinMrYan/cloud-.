@@ -145,6 +145,7 @@
     <color name="color_text_red">#FF4242</color>
     <color name="color_text_help">#999999</color>
     <color name="color_text_Anti_White">#FFFFFF</color>
+    <color name="color_text_title_yellow">#FF9F00</color>
     <!-- UI 图标背景颜色 -->
     <!--主色-->
     <color name="color_base_blue">#36A5F6</color>

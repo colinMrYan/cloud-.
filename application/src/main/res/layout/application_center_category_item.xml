@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#FFFFFF"
+    android:background="@color/color_bg_content_white"
     android:paddingLeft="15dp">
 
     <ImageView
@@ -20,8 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@id/app_center_categories_icon_img"
-        android:text="协同效率"
-        android:textColor="#333333"
+        android:textColor="@color/color_text_common_level_one"
         android:textSize="17dp" />
 
     <ImageView
@@ -34,8 +33,8 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="0.6dp"
+        android:layout_height="0.5px"
         android:layout_below="@id/app_center_categories_icon_img"
-        android:background="@color/color_list_divider" />
+        android:background="@color/color_divider" />
 
 </RelativeLayout>

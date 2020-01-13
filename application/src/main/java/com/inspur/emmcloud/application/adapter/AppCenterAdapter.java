@@ -89,15 +89,11 @@ public class AppCenterAdapter extends BaseAdapter {
         Holder holder = null;
         if (convertView == null) {
             holder = new Holder();
-            LayoutInflater vi = (LayoutInflater) activity
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater vi = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = vi.inflate(R.layout.application_all_app_item_view, null);
-            holder.iconImg = (ImageView) convertView
-                    .findViewById(R.id.app_icon_img);
-            holder.nameText = (TextView) convertView
-                    .findViewById(R.id.tv_name_tips);
-            holder.statusBtn = (Button) convertView
-                    .findViewById(R.id.app_status_btn);
+            holder.iconImg = convertView.findViewById(R.id.app_icon_img);
+            holder.nameText = convertView.findViewById(R.id.tv_name_tips);
+            holder.statusBtn = convertView.findViewById(R.id.app_status_btn);
             convertView.setTag(holder);
         } else {
             holder = (Holder) convertView.getTag();
