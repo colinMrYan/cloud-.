@@ -180,7 +180,7 @@ public class CommunicationFragment extends BaseFragment implements View.OnClickL
         registerMessageFragmentReceiver();
         getConversationList();
         setHeaderFunctionOptions(null);
-        checkingNetStateUtils = new CheckingNetStateUtils(getContext(), NetUtils.pingUrls, NetUtils.httpUrls);
+        checkingNetStateUtils = new CheckingNetStateUtils(getContext(), NetUtils.pingUrls,(new NetUtils()).getHttpUrls());
         //将此句挪到此处，为了防止广播注册太晚接收不到WS状态，这里重新获取下
         showSocketStatusInTitle(WebSocketPush.getInstance().getWebsocketStatus());
         return view;

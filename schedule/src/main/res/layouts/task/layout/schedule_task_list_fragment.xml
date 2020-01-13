@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff"
+    android:background="@color/color_bg_content_white"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:ignore="RtlHardcoded,HardcodedText,RtlSymmetry,SmallSp">
@@ -27,7 +27,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"
             android:text="@string/schedule_task_no_task_today"
-            android:textColor="#999999"
+            android:textColor="@color/color_text_common_level_two"
             android:textSize="16sp" />
 
         <com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout
@@ -39,7 +39,7 @@
                 android:id="@+id/lv_task"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:divider="@color/color_list_divider"
+                android:divider="@color/color_divider"
                 android:dividerHeight="0.5px" />
         </com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout>
 
@@ -63,7 +63,7 @@
             android:background="@drawable/shape_login_btn_nor"
             android:onClick="onClick"
             android:text="@string/schedule_task_reset"
-            android:textColor="#ffffff"
+            android:textColor="@color/color_text_Anti_White"
             android:textSize="18sp"></Button>
 
         <Button
@@ -76,7 +76,7 @@
             android:background="@drawable/shape_login_btn_nor"
             android:onClick="onClick"
             android:text="@string/schedule_task_cancel_filter"
-            android:textColor="#ffffff"
+            android:textColor="@color/color_text_Anti_White"
             android:textSize="18sp"></Button>
     </LinearLayout>
 </RelativeLayout>

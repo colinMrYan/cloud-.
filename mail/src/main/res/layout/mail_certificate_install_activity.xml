@@ -72,7 +72,7 @@
                     android:layout_height="wrap_content"
                     android:paddingTop="10dp"
                     android:text="安装指南"
-                    android:textColor="#333333"
+                    android:textColor="@color/color_text_common_level_one"
                     android:textSize="14sp" />
 
                 <TextView
@@ -84,7 +84,7 @@
                     android:layout_alignParentLeft="true"
                     android:paddingTop="4dp"
                     android:text="1、首先将证书导入到手机（ios可以通过其他邮箱将pfx证书或者p12证书以附件形式发送到本邮箱，然后将此证书附件下载）"
-                    android:textColor="#666666" />
+                    android:textColor="@color/color_text_tip" />
 
                 <TextView
                     android:id="@+id/tv_installed_tip2"
@@ -93,7 +93,7 @@
                     android:layout_below="@id/tv_installed_tip1"
                     android:paddingTop="2dp"
                     android:text="2、点击右下角的安装证书进行安装"
-                    android:textColor="#666666" />
+                    android:textColor="@color/color_text_tip" />
             </RelativeLayout>
 
             <!-- 已安证书详情-->
@@ -112,7 +112,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="已安装证书"
-                    android:textColor="#333333"
+                    android:textColor="@color/color_text_common_level_one"
                     android:textSize="14sp" />
 
                 <RelativeLayout
@@ -149,7 +149,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentRight="true"
                                 android:text="使用中"
-                                android:textColor="#4A90E2"
+                                android:textColor="@color/color_base_blue"
                                 android:textSize="14sp" />
                         </RelativeLayout>
 
@@ -165,7 +165,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="颁发给："
-                                android:textColor="#666666" />
+                                android:textColor="@color/color_text_tip" />
 
                             <TextView
                                 android:id="@+id/tv_installed_cer_owner_name"
@@ -173,7 +173,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="90dp"
                                 android:text="李宝超"
-                                android:textColor="#666666"
+                                android:textColor="@color/color_text_tip"
                                 android:textSize="14sp" />
                         </RelativeLayout>
 
@@ -189,7 +189,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="颁发者："
-                                android:textColor="#666666" />
+                                android:textColor="@color/color_text_tip" />
 
                             <TextView
                                 android:id="@+id/tv_installed_cer_issuer_name"
@@ -197,7 +197,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="90dp"
                                 android:text="使用中"
-                                android:textColor="#666666"
+                                android:textColor="@color/color_text_tip"
                                 android:textSize="14sp" />
                         </RelativeLayout>
 
@@ -213,7 +213,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="有效期至："
-                                android:textColor="#666666" />
+                                android:textColor="@color/color_text_tip" />
 
                             <TextView
                                 android:id="@+id/tv_installed_cer_final_data"
@@ -221,7 +221,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="90dp"
                                 android:text="2023-03-12 18:08:00"
-                                android:textColor="#666666"
+                                android:textColor="@color/color_text_tip"
                                 android:textSize="14sp" />
                         </RelativeLayout>
 
@@ -236,7 +236,7 @@
                                 android:id="@+id/v_topline1"
                                 android:layout_width="match_parent"
                                 android:layout_height="1dp"
-                                android:background="#C8C7CC"></View>
+                                android:background="@color/color_divider"></View>
 
                             <TextView
                                 android:id="@+id/tv_encryption_title"
@@ -245,7 +245,7 @@
                                 android:layout_marginTop="12dp"
                                 android:layout_marginBottom="12dp"
                                 android:text="加密发送邮件的内容和附件"
-                                android:textColor="#333333"
+                                android:textColor="@color/color_text_common_level_one"
                                 android:textSize="14sp" />
 
                             <android.support.v7.widget.SwitchCompat
@@ -254,7 +254,7 @@
                                 android:layout_height="51dp"
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
-                                android:textColor="#666666"
+                                android:textColor="@color/color_text_tip"
                                 android:textSize="14sp" />
                         </RelativeLayout>
 
@@ -268,7 +268,7 @@
                                 android:id="@+id/v_topline2"
                                 android:layout_width="match_parent"
                                 android:layout_height="1dp"
-                                android:background="#C8C7CC"></View>
+                                android:background="@color/color_divider"></View>
 
                             <TextView
                                 android:id="@+id/tv_signature_title"
@@ -277,7 +277,7 @@
                                 android:layout_marginTop="12dp"
                                 android:layout_marginBottom="12dp"
                                 android:text="加签发送邮件的内容和附件"
-                                android:textColor="#333333"
+                                android:textColor="@color/color_text_common_level_one"
                                 android:textSize="14sp" />
 
                             <android.support.v7.widget.SwitchCompat
@@ -286,7 +286,7 @@
                                 android:layout_height="51dp"
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
-                                android:textColor="#666666"
+                                android:textColor="@color/color_text_tip"
                                 android:textSize="14sp" />
                         </RelativeLayout>
 
@@ -328,7 +328,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="颁发给："
-                        android:textColor="#666666" />
+                        android:textColor="@color/color_text_tip" />
 
                     <TextView
                         android:id="@+id/tv_new_cer_ower_name"
@@ -336,7 +336,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="98dp"
                         android:text="李宝超"
-                        android:textColor="#666666" />
+                        android:textColor="@color/color_text_tip" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -349,7 +349,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="颁发者："
-                        android:textColor="#666666" />
+                        android:textColor="@color/color_text_tip" />
 
                     <TextView
                         android:id="@+id/tv_new_cer_issuer_name"
@@ -357,7 +357,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="98dp"
                         android:text="浪潮"
-                        android:textColor="#666666" />
+                        android:textColor="@color/color_text_tip" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -370,7 +370,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="有效期至："
-                        android:textColor="#666666" />
+                        android:textColor="@color/color_text_tip" />
 
                     <TextView
                         android:id="@+id/tv_new_cer_final_data"
@@ -378,7 +378,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="98dp"
                         android:text="2023-03-12 18:09:11"
-                        android:textColor="#666666" />
+                        android:textColor="@color/color_text_tip" />
                 </RelativeLayout>
             </LinearLayout>
         </RelativeLayout>

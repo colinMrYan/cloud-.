@@ -34,6 +34,6 @@
         android:layout_toRightOf="@id/iv_calendar_icon"
         android:ellipsize="end"
         android:maxLines="1"
-        android:textColor="#333333"
+        android:textColor="@color/color_text_common_level_one"
         android:textSize="16sp" />
 </RelativeLayout>

@@ -2,13 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff"
+    android:background="@color/color_bg_content_white"
     android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#f9f9f9">
+        android:background="@color/color_bg_common">
 
         <ImageButton
             android:id="@+id/ibt_menu_back"
@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:onClick="onClick"
-            android:textColor="#333333"
+            android:textColor="@color/color_text_common_level_one"
             android:textSize="17sp" />
     </RelativeLayout>
 

@@ -65,7 +65,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
-                    android:textColor="#333333"
+                    android:textColor="@color/color_text_common_level_one"
                     android:textSize="20sp" />
 
                 <TextView
@@ -76,7 +76,7 @@
                     android:ellipsize="end"
                     android:gravity="end"
                     android:maxLines="1"
-                    android:textColor="#333333"
+                    android:textColor="@color/color_text_common_level_one"
                     android:textSize="16sp" />
             </RelativeLayout>
 
@@ -105,7 +105,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_toRightOf="@id/iv_people_num"
-                        android:textColor="#94AFC4"
+                        android:textColor="@color/color_icon_common"
                         android:textSize="16sp" />
                 </RelativeLayout>
 
@@ -122,24 +122,24 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5px"
-            android:background="@color/color_list_divider" />
+            android:background="@color/color_divider" />
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tl_meeting_tab"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:background="@color/white"
+            android:background="@color/color_bg_content_white"
             app:tabGravity="fill"
             app:tabMode="scrollable"
-            app:tabSelectedTextColor="#36A5F6"
-            app:tabTextColor="#333333" />
+            app:tabSelectedTextColor="@color/color_text_link"
+            app:tabTextColor="@color/color_text_common_level_one" />
 
         <android.support.v4.view.ViewPager
             android:id="@+id/view_pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/content_bg"
+            android:background="@color/color_bg_common"
             android:paddingTop="5dp" />
     </LinearLayout>
 
