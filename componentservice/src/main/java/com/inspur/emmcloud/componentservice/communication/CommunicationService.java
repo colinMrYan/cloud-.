@@ -2,6 +2,7 @@ package com.inspur.emmcloud.componentservice.communication;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Bundle;
 
 import com.inspur.emmcloud.componentservice.CoreService;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
@@ -60,4 +61,6 @@ public interface CommunicationService extends CoreService {
     String getCustomerChannelV0(Context context);
 
     Conversation getCustomerConversation(Context context);
+
+    void startImagePagerV0Activity(Activity activity, Bundle bundle);
 }

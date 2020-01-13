@@ -2,6 +2,7 @@ package com.inspur.emmcloud.application.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,6 +21,7 @@ import com.inspur.emmcloud.application.bean.App;
 import com.inspur.emmcloud.application.bean.GetAddAppResult;
 import com.inspur.emmcloud.application.util.AppCenterNativeAppUtils;
 import com.inspur.emmcloud.application.util.ApplicationUriUtils;
+import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.config.Constant;
@@ -27,9 +29,11 @@ import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.componentservice.communication.CommunicationService;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -78,11 +82,14 @@ public class AppDetailActivity extends BaseActivity {
         appDetailImageAdapter.setOnRecommandItemClickListener(new OnAppDetailImageItemClickListener() {
             @Override
             public void onAppDetailImageItemClick(View view, int position) {
-//                Intent intent = new Intent();
-//                intent.setClass(getApplicationContext(), ImagePagerV0Activity.class);
-//                intent.putExtra(ImagePagerV0Activity.EXTRA_IMAGE_INDEX, position);
-//                intent.putExtra(ImagePagerV0Activity.EXTRA_IMAGE_URLS, (ArrayList<String>) app.getLegendList());
-//                startActivity(intent);
+                Router router = Router.getInstance();
+                if (router.getService(CommunicationService.class) != null) {
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("image_index", position);
+                    bundle.putSerializable("image_urls", (ArrayList<String>) app.getLegendList());
+                    CommunicationService service = router.getService(CommunicationService.class);
+                    service.startImagePagerV0Activity(AppDetailActivity.this, bundle);
+                }
             }
         });
         intrImgListView.setAdapter(appDetailImageAdapter);
