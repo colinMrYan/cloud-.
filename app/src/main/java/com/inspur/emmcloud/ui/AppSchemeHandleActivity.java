@@ -390,7 +390,7 @@ public class AppSchemeHandleActivity extends BaseActivity {
     private boolean isLinkFromQQBrowser(Bundle bundle) {
         if (bundle != null) {
             String urlContent = bundle.getString("url", "");
-            return bundle.containsKey("url") && !StringUtils.isBlank(urlContent) && StringUtils.isHttpUrl(urlContent);
+            return !StringUtils.isBlank(urlContent) && StringUtils.isHttpUrl(urlContent);
         }
         return false;
     }
