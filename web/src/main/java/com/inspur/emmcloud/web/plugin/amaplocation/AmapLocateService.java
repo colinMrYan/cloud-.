@@ -48,7 +48,7 @@ public class AmapLocateService extends ImpPlugin implements
     private List<AMapLocation> aMapLocationList = new ArrayList<>();
     private int locationCount = 0;
     private AlertDialog dialog;
-
+    private int openLocationStatus = 0;//0代表初始状态，1代表点击了设置,2，代表点了设置之后已经重新定位
     @Override
     public void execute(String action, JSONObject paramsObject) {
         LogUtils.YfcDebug("paramsObject:" + paramsObject.toString());
@@ -101,6 +101,7 @@ public class AmapLocateService extends ImpPlugin implements
                             .setPositiveButton(R.string.go_setting, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
+                                    openLocationStatus = 1;
                                     AppUtils.openLocationSetting(getActivity());
                                     dialog.dismiss();
                                 }
@@ -140,6 +141,15 @@ public class AmapLocateService extends ImpPlugin implements
         mlocationClient.setLocationListener(this);
         mlocationClient.startLocation();
 
+    }
+
+    @Override
+    public void onActivityResume() {
+        super.onActivityResume();
+        if (openLocationStatus == 1 && AppUtils.isLocationEnabled(getFragmentContext())) {
+            startLocation();
+            openLocationStatus = 2;
+        }
     }
 
     @Override
