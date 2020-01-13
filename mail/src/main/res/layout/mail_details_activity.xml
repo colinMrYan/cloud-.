@@ -45,7 +45,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_below="@id/rl_header"
-            android:background="#ffffff">
+            android:background="@color/color_bg_content_white">
 
             <RelativeLayout
                 android:id="@+id/rl_mail_content"
@@ -56,7 +56,7 @@
                     android:id="@+id/ll_mail_header"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="#f9f9f9"
+                    android:background="@color/color_bg_common"
                     android:orientation="vertical">
 
                     <RelativeLayout
@@ -109,7 +109,7 @@
                             android:layout_height="wrap_content"
                             android:hint="发送人:"
                             android:text="日&#12288;期:"
-                            android:textColor="#666666"
+                            android:textColor="@color/color_text_tip"
                             android:textSize="14dp" />
 
                         <TextView
@@ -118,7 +118,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="10dp"
                             android:layout_toRightOf="@id/tv_mail_send_time_tips"
-                            android:textColor="#666666"
+                            android:textColor="@color/color_text_tip"
                             android:textSize="14dp" />
                     </RelativeLayout>
 
@@ -135,7 +135,7 @@
                             android:layout_height="wrap_content"
                             android:hint="发送人:"
                             android:text="发送人:"
-                            android:textColor="#666666"
+                            android:textColor="@color/color_text_tip"
                             android:textSize="14dp" />
 
                         <TextView
@@ -144,7 +144,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="10dp"
                             android:layout_toRightOf="@id/tv_mail_sender_tips"
-                            android:textColor="#666666"
+                            android:textColor="@color/color_text_tip"
                             android:textSize="14dp" />
                     </RelativeLayout>
 
@@ -166,7 +166,7 @@
                             android:paddingLeft="10dp"
                             android:paddingRight="15dp"
                             android:text="展开"
-                            android:textColor="#FF4A90E2"
+                            android:textColor="@color/color_base_blue"
                             android:textSize="14dp" />
 
                         <RelativeLayout
@@ -188,7 +188,7 @@
                                     android:gravity="center_vertical"
                                     android:hint="发送人:"
                                     android:text="收件人:"
-                                    android:textColor="#666666"
+                                    android:textColor="@color/color_text_tip"
                                     android:textSize="14dp" />
 
                                 <TextView
@@ -199,7 +199,7 @@
                                     android:ellipsize="end"
                                     android:gravity="center_vertical"
                                     android:singleLine="true"
-                                    android:textColor="#666666" />
+                                    android:textColor="@color/color_text_tip" />
                             </RelativeLayout>
 
                             <com.inspur.emmcloud.baselib.widget.FlowLayout
@@ -231,7 +231,7 @@
                             android:paddingLeft="10dp"
                             android:paddingRight="15dp"
                             android:text="展开"
-                            android:textColor="#FF4A90E2"
+                            android:textColor="@color/color_base_blue"
                             android:textSize="14dp" />
 
                         <RelativeLayout
@@ -253,7 +253,7 @@
                                     android:gravity="center_vertical"
                                     android:hint="发送人:"
                                     android:text="抄送人:"
-                                    android:textColor="#666666"
+                                    android:textColor="@color/color_text_tip"
                                     android:textSize="14dp" />
 
                                 <TextView
@@ -264,7 +264,7 @@
                                     android:ellipsize="end"
                                     android:gravity="center_vertical"
                                     android:singleLine="true"
-                                    android:textColor="#666666" />
+                                    android:textColor="@color/color_text_tip" />
                             </RelativeLayout>
 
                             <com.inspur.emmcloud.baselib.widget.FlowLayout
@@ -279,7 +279,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="0.5px"
                         android:layout_marginTop="12dp"
-                        android:background="#C8C7CC"></View>
+                        android:background="@color/color_divider"></View>
                 </LinearLayout>
 
                 <com.inspur.emmcloud.baselib.widget.ScrollViewWithListView
@@ -330,7 +330,7 @@
                         android:paddingRight="15dp"
                         android:paddingTop="12dp"
                         android:text="本邮件为加密邮件，您的邮箱账号未安装任何数字证书，请先进行数字证书安装，再查看邮件！"
-                        android:textColor="#666666" />
+                        android:textColor="@color/color_text_tip" />
 
 
                     <TextView
@@ -340,7 +340,7 @@
                         android:onClick="onClick"
                         android:padding="25dp"
                         android:text="@string/mail_install_cert"
-                        android:textColor="#FF4A90E2"
+                        android:textColor="@color/color_base_blue"
                         android:textSize="16sp" />
                 </LinearLayout>
             </RelativeLayout>
@@ -353,7 +353,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:background="#F9F9F9">
+            android:background="@color/color_bg_common">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -383,7 +383,7 @@
                         android:layout_below="@id/iv_reply"
                         android:layout_centerHorizontal="true"
                         android:text="回复"
-                        android:textColor="#333333"
+                        android:textColor="@color/color_text_common_level_one"
                         android:textSize="12sp" />
                 </RelativeLayout>
 
@@ -409,7 +409,7 @@
                         android:layout_below="@id/iv_reply_all"
                         android:layout_marginBottom="4dp"
                         android:text="回复全部"
-                        android:textColor="#333333"
+                        android:textColor="@color/color_text_common_level_one"
                         android:textSize="12sp" />
                 </RelativeLayout>
 
@@ -433,7 +433,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/iv_forward"
                         android:text="转发"
-                        android:textColor="#333333"
+                        android:textColor="@color/color_text_common_level_one"
                         android:textSize="12sp" />
                 </RelativeLayout>
             </LinearLayout>

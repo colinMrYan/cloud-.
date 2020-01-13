@@ -51,7 +51,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/rl_header"
-        android:background="@color/content_bg"
+        android:background="@color/color_bg_common"
         android:orientation="vertical">
 
         <RelativeLayout
@@ -59,7 +59,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:background="@color/white"
+            android:background="@color/color_bg_content_white"
             android:onClick="onClick"
             android:paddingLeft="14dp">
 
@@ -70,7 +70,7 @@
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp"
                 android:text="@string/schedule_calendar_no_alert"
-                android:textColor="#FF333333"
+                android:textColor="@color/color_text_common_level_one"
                 android:textSize="16sp" />
 
             <ImageView
@@ -89,14 +89,14 @@
             android:layout_height="0.5px"
             android:layout_below="@id/rl_no_alert"
             android:layout_marginLeft="16dp"
-            android:background="#DDDDDD" />
+            android:background="@color/color_divider" />
 
         <ListView
             android:id="@+id/lv_alert_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:background="@color/white"
+            android:background="@color/color_bg_content_white"
             android:divider="#DDDDDD"
             android:dividerHeight="0.5px"
             android:listSelector="@android:color/transparent"
@@ -106,7 +106,7 @@
             android:layout_width="match_parent"
             android:layout_height="0.5px"
             android:layout_marginLeft="16dp"
-            android:background="#DDDDDD" />
+            android:background="@color/color_divider" />
     </LinearLayout>
 
 </RelativeLayout>

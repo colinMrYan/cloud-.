@@ -66,6 +66,8 @@ public class NetWorkStateDetailActivity extends BaseActivity {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
+        CheckHttpUrls = (new NetUtils()).getHttpUrls();
+        PortalCheckingUrls = CheckHttpUrls[0];
     }
 
     @Override
