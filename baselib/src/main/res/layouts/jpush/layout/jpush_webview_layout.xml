@@ -9,7 +9,7 @@
         android:id="@+id/rlRichpushTitleBar"
         android:layout_width="match_parent"
         android:layout_height="40.0dp"
-        android:background="#29313a">
+        android:background="@color/color_bg_content_black">
 
         <ImageButton
             android:id="@+id/imgRichpushBtnBack"
@@ -39,7 +39,7 @@
             android:layout_toRightOf="@id/imgView"
             android:clickable="false"
             android:text=" "
-            android:textColor="#ffffff"
+            android:textColor="@color/color_text_Anti_White"
             android:textSize="20sp" />
     </RelativeLayout>
 
@@ -55,6 +55,6 @@
         android:id="@+id/fullWebView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#000000" />
+        android:background="@color/color_bg_content_black" />
 
 </cn.jpush.android.ui.FullScreenView>

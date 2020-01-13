@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
     <LinearLayout
@@ -14,14 +14,14 @@
             android:id="@+id/preload_webview"
             android:layout_width="match_parent"
             android:layout_height="1px"
-            android:visibility="gone"></WebView>
+            android:visibility="gone" />
 
         <FrameLayout
             android:id="@+id/realtabcontent"
             android:layout_width="fill_parent"
             android:layout_height="0dip"
             android:layout_weight="1"
-            android:background="#fafafa" />
+            android:background="@color/color_bg_content_white" />
 
         <!-- 添加这行代码可以让上下颜色一致 -->
         <!-- android:paddingTop="18dp" -->

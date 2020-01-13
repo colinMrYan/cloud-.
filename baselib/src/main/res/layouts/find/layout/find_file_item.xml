@@ -4,10 +4,10 @@
     android:layout_height="match_parent"
     android:background="@drawable/selector_list"
     android:orientation="vertical"
-    android:paddingBottom="17dp"
     android:paddingLeft="18dp"
+    android:paddingTop="13dp"
     android:paddingRight="14dp"
-    android:paddingTop="13dp">
+    android:paddingBottom="17dp">
 
     <RelativeLayout
         android:id="@+id/find_file_layout"
@@ -41,7 +41,7 @@
                 android:layout_gravity="left"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:textColor="#FF444444"
+                android:textColor="@color/color_text_common_level_one"
                 android:textSize="@dimen/button_textsize"
                 android:textStyle="bold" />
 
@@ -56,21 +56,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingRight="6dp"
-                    android:textColor="#FF444444"
+                    android:textColor="@color/color_text_common_level_one"
                     android:textSize="@dimen/content_small_textsize" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingRight="6dp"
-                    android:textColor="#FF444444"
+                    android:textColor="@color/color_text_common_level_one"
                     android:textSize="@dimen/content_small_textsize" />
 
                 <TextView
                     android:id="@+id/file_time_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#FF444444"></TextView>
+                    android:textColor="@color/color_text_common_level_one" />
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>

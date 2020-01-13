@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/color_bg_content_white"
     android:orientation="vertical"
     android:paddingTop="22dp">
 
@@ -12,22 +12,22 @@
         android:layout_marginLeft="22dp"
         android:layout_marginRight="22dp"
         android:text="@string/baselib_share_send_to"
-        android:textColor="#333333"
+        android:textColor="@color/color_text_common_level_one"
         android:textSize="16sp" />
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="22dp"
-        android:layout_marginRight="22dp"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="22dp">
 
         <com.inspur.emmcloud.baselib.widget.CircleTextImageView
-                android:id="@+id/iv_share_user_head"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_centerVertical="true"
-                android:layout_gravity="center" />
+            android:id="@+id/iv_share_user_head"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center" />
 
         <TextView
             android:id="@+id/tv_share_user_name"
@@ -39,7 +39,7 @@
             android:ellipsize="end"
             android:maxLines="2"
             android:paddingRight="16dp"
-            android:textColor="#333333"
+            android:textColor="@color/color_text_common_level_one"
             android:textSize="16sp" />
     </RelativeLayout>
 
@@ -47,19 +47,16 @@
         android:id="@+id/tv_share_file_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
         android:layout_marginLeft="22dp"
-        android:layout_marginRight="22dp"
         android:layout_marginTop="20dp"
-        android:background="#F6F6F6"
+        android:layout_marginRight="22dp"
+        android:layout_marginBottom="30dp"
+        android:background="@color/color_text_Anti_White"
         android:gravity="left"
         android:maxLines="3"
         android:padding="5dp" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5px"
-        android:background="#DDDDDD" />
+    <View style="@style/divide_style" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -78,13 +75,13 @@
             android:padding="12dp"
             android:text="@string/cancel"
             android:textAllCaps="false"
-            android:textColor="#36A5F6"
+            android:textColor="@color/color_text_link"
             android:textSize="@dimen/header_function_textsize" />
 
         <View
-            android:layout_width="0.5px"
+            android:layout_width="1px"
             android:layout_height="40dp"
-            android:background="#DDDDDD" />
+            android:background="@color/color_divider" />
 
         <Button
             android:id="@+id/ok_btn"
@@ -96,7 +93,7 @@
             android:padding="12dp"
             android:text="@string/ok"
             android:textAllCaps="false"
-            android:textColor="#36A5F6"
+            android:textColor="@color/color_text_link"
             android:textSize="@dimen/header_function_textsize" />
     </LinearLayout>
 </LinearLayout>

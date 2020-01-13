@@ -10,7 +10,7 @@
         android:id="@+id/umeng_socialize_share_titlebar"
         android:layout_width="match_parent"
         android:layout_height="54dp"
-        android:background="#0086DC">
+        android:background="@color/color_base_blue">
 
         <TextView
             android:id="@+id/umeng_title"
@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text=""
-            android:textColor="#ffffff"
+            android:textColor="@color/color_text_Anti_White"
             android:textSize="18sp" />
 
         <RelativeLayout
@@ -48,7 +48,7 @@
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
             android:text="分享"
-            android:textColor="#ffffff"
+            android:textColor="@color/color_text_Anti_White"
             android:textSize="15sp" />
     </RelativeLayout>
 
@@ -57,30 +57,30 @@
         android:layout_width="fill_parent"
         android:layout_height="180dp"
         android:layout_below="@id/umeng_socialize_share_titlebar"
-        android:background="#ffffff"
+        android:background="@color/color_text_Anti_White"
         android:bufferType="spannable"
         android:gravity="top"
         android:hint="编辑分享内容"
         android:lineSpacingExtra="3dp"
-        android:paddingBottom="10dp"
         android:paddingLeft="15dp"
-        android:paddingRight="15dp"
         android:paddingTop="8dp"
-        android:textColor="#000000"
+        android:paddingRight="15dp"
+        android:paddingBottom="10dp"
+        android:textColor="@color/color_text_common_level_one"
         android:textSize="15sp" />
 
     <TextView
         android:id="@+id/umeng_socialize_share_word_num"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignRight="@id/umeng_socialize_share_edittext"
         android:layout_below="@id/umeng_socialize_share_edittext"
-        android:background="#ffffff"
+        android:layout_alignRight="@id/umeng_socialize_share_edittext"
+        android:background="@color/color_bg_content_white"
         android:gravity="right"
-        android:paddingBottom="10dp"
         android:paddingRight="15dp"
+        android:paddingBottom="10dp"
         android:singleLine="true"
-        android:textColor="#98999B"
+        android:textColor="@color/color_text_common_level_two"
         android:textSize="14sp" />
 
     <RelativeLayout
@@ -90,7 +90,7 @@
         android:layout_below="@id/umeng_socialize_share_word_num"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:background="#F2F5F6"
+        android:background="@color/color_bg_content_white"
         android:visibility="gone">
 
         <RelativeLayout
@@ -98,9 +98,9 @@
             android:layout_width="62dp"
             android:layout_height="62dp"
             android:layout_centerVertical="true"
-            android:layout_marginBottom="15dp"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
             android:background="@drawable/umeng_socialize_edit_bg">
 
             <ImageView
@@ -119,7 +119,7 @@
             android:layout_marginTop="20dp"
             android:layout_toRightOf="@id/umeng_image_edge"
             android:singleLine="true"
-            android:textColor="#575A5C"
+            android:textColor="@color/color_text_tip"
             android:textSize="14sp"
             android:visibility="gone" />
 
@@ -127,12 +127,11 @@
             android:id="@+id/umeng_del"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:layout_alignRight="@id/umeng_image_edge"
             android:layout_alignTop="@id/umeng_image_edge"
-            android:layout_marginRight="-10dp"
+            android:layout_alignRight="@id/umeng_image_edge"
             android:layout_marginTop="-10dp"
+            android:layout_marginRight="-10dp"
             android:background="@drawable/umeng_socialize_delete" />
-
 
     </RelativeLayout>
 

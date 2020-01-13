@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff">
+    android:background="@color/color_bg_content_white">
 
     <ImageView
         android:id="@+id/iv_splash_logo"
@@ -29,7 +29,7 @@
         android:layout_marginTop="28dp"
         android:background="@drawable/app_bg_splash_skip_btn"
         android:gravity="center"
-        android:textColor="@android:color/white"
+        android:textColor="@color/color_text_Anti_White"
         android:textSize="14sp"
         android:visibility="gone" />
 </RelativeLayout>

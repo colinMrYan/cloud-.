@@ -7,18 +7,15 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#F1F3F4"
+        android:background="@color/color_bg_content_white"
         android:orientation="vertical">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@color/grey_line_color" />
+        <View style="@style/divide_style" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:background="@color/color_bg_content_white"
             android:paddingTop="7dp"
             android:paddingBottom="5dp">
 
@@ -69,11 +66,10 @@
                     android:paddingBottom="7dp"
                     android:stateListAnimator="@null"
                     android:text="@string/hold_to_talk"
-                    android:textColor="#666666"
+                    android:textColor="@color/color_text_tip"
                     android:textSize="16sp"
                     android:visibility="gone" />
             </RelativeLayout>
-
 
             <RelativeLayout
                 android:id="@+id/right_layout"
@@ -92,7 +88,7 @@
                     android:background="@drawable/bg_chat_input_send_btn_disable"
                     android:gravity="center"
                     android:text="@string/send"
-                    android:textColor="#ffffff"
+                    android:textColor="@color/color_text_Anti_White"
                     android:textSize="13sp"
                     android:visibility="gone" />
 
@@ -116,7 +112,7 @@
             android:id="@+id/add_menu_layout"
             android:layout_width="match_parent"
             android:layout_height="274dp"
-            android:background="#f5f5f5"
+            android:background="@color/color_bg_content_grey"
             android:paddingLeft="20dp"
             android:paddingTop="25dp"
             android:paddingRight="20dp"
@@ -134,7 +130,7 @@
         android:id="@+id/voice_input_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
+        android:background="@color/color_bg_content_white"
         android:paddingTop="60dp"
         android:paddingBottom="20dp"
         android:visibility="gone">
@@ -167,6 +163,5 @@
             android:padding="25dp"
             android:src="@drawable/ic_arrow_down" />
     </RelativeLayout>
-
 
 </RelativeLayout>

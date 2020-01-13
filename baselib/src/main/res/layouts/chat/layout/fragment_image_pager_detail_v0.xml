@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:background="#10000000">
 
+    <!--zyj TODO-->
     <com.inspur.emmcloud.widget.SmoothImageView
         android:id="@+id/image"
         android:layout_width="match_parent"

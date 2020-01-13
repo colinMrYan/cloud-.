@@ -56,7 +56,7 @@
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
         android:elevation="6dp"
-        android:textColor="#333333" />
+        android:textColor="@color/color_text_common_level_one" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -65,7 +65,7 @@
         android:layout_marginRight="22dp"
         android:layout_below="@id/rl_header"
         android:layout_marginTop="43dp"
-        android:background="@color/white"
+        android:background="@color/color_bg_content_white"
         android:elevation="5dp">
 
         <ImageView
@@ -86,7 +86,7 @@
             android:drawableLeft="@drawable/ic_group_share"
             android:drawablePadding="5dp"
             android:text="@string/chat_group_qr_code_share"
-            android:textColor="#36A5F6"
+            android:textColor="@color/color_text_link"
             android:textSize="13sp" />
 
         <TextView
@@ -95,7 +95,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/btn_share_group_qrcode"
             android:gravity="center"
-            android:textColor="#FF999999"
+            android:textColor="@color/color_text_common_level_two"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:textSize="13sp" />

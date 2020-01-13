@@ -4,10 +4,10 @@
     android:layout_height="wrap_content"
     android:background="@drawable/selector_list"
     android:orientation="vertical"
-    android:paddingBottom="17dp"
     android:paddingLeft="18dp"
+    android:paddingTop="13dp"
     android:paddingRight="14dp"
-    android:paddingTop="13dp">
+    android:paddingBottom="17dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -42,7 +42,7 @@
                     android:id="@+id/find_travel_start"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#FF444444"
+                    android:textColor="@color/color_text_common_level_one"
                     android:textSize="@dimen/button_textsize"
                     android:textStyle="bold" />
 
@@ -52,7 +52,7 @@
                     android:paddingLeft="3dp"
                     android:paddingRight="3dp"
                     android:text="-"
-                    android:textColor="#FF444444"
+                    android:textColor="@color/color_text_common_level_one"
                     android:textSize="@dimen/button_textsize"
                     android:textStyle="bold" />
 
@@ -60,7 +60,7 @@
                     android:id="@+id/find_travel_end"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#FF444444"
+                    android:textColor="@color/color_text_common_level_one"
                     android:textSize="@dimen/button_textsize"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -70,7 +70,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:textColor="#FF444444"
+                android:textColor="@color/color_text_common_level_one"
                 android:textSize="@dimen/content_small_textsize" />
         </LinearLayout>
 
@@ -87,7 +87,7 @@
                 android:id="@+id/find_travel_num"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#FF333333"
+                android:textColor="@color/color_text_common_level_one"
                 android:textSize="19sp" />
 
             <TextView
@@ -96,10 +96,9 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:textColor="#FF444444"
+                android:textColor="@color/color_text_common_level_one"
                 android:textSize="16sp" />
         </LinearLayout>
-
 
     </RelativeLayout>
 

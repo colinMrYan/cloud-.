@@ -22,7 +22,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:background="#E6000000"
+                android:background="@color/color_bg_content_black"
                 android:paddingBottom="10dp">
 
                 <ImageView
@@ -32,10 +32,10 @@
                     android:layout_alignParentRight="true"
                     android:adjustViewBounds="true"
                     android:onClick="onClick"
-                    android:paddingBottom="5dp"
                     android:paddingLeft="15dp"
-                    android:paddingRight="15dp"
                     android:paddingTop="15dp"
+                    android:paddingRight="15dp"
+                    android:paddingBottom="5dp"
                     android:scaleType="fitXY"
                     android:src="@drawable/ic_chat_enter_channel_imgs"
                     android:visibility="gone" />
@@ -45,10 +45,10 @@
                     android:layout_width="50dp"
                     android:layout_height="40dp"
                     android:onClick="onClick"
-                    android:paddingBottom="5dp"
                     android:paddingLeft="17dp"
-                    android:paddingRight="15dp"
                     android:paddingTop="17dp"
+                    android:paddingRight="15dp"
+                    android:paddingBottom="5dp"
                     android:scaleType="centerInside"
                     android:src="@drawable/ic_chat_img_display_close" />
             </RelativeLayout>
@@ -65,12 +65,12 @@
                 android:gravity="center"
                 android:minWidth="110dp"
                 android:onClick="onClick"
-                android:paddingBottom="4dp"
                 android:paddingLeft="10dp"
-                android:paddingRight="10dp"
                 android:paddingTop="4dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="4dp"
                 android:text="@string/chat_full_image"
-                android:textColor="@color/white"
+                android:textColor="@color/color_text_Anti_White"
                 android:visibility="gone" />
 
 
@@ -79,11 +79,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_alignParentBottom="true"
-                android:background="#E6000000"
+                android:background="@color/color_bg_content_black"
                 android:gravity="right"
                 android:orientation="horizontal"
-                android:paddingBottom="7dp"
-                android:paddingTop="10dp">
+                android:paddingTop="10dp"
+                android:paddingBottom="7dp">
 
                 <RelativeLayout
                     android:id="@+id/write_comment_layout"
@@ -94,7 +94,6 @@
                     android:layout_weight="1"
                     android:onClick="onClick"
                     android:visibility="gone">
-
 
                     <TextView
                         android:layout_width="200dp"
@@ -107,9 +106,8 @@
                         android:maxLines="1"
                         android:paddingLeft="9dp"
                         android:text="@string/join_discuss"
-                        android:textColor="#e0ffffff"
+                        android:textColor="@color/color_text_Anti_White"
                         android:textSize="16sp" />
-
 
                 </RelativeLayout>
 
@@ -124,7 +122,7 @@
                     android:gravity="center"
                     android:onClick="onClick"
                     android:padding="5dp"
-                    android:textColor="@color/white"
+                    android:textColor="@color/color_text_Anti_White"
                     android:textSize="16sp"
                     android:visibility="gone" />
 
@@ -151,7 +149,7 @@
             android:background="@android:color/transparent"
             android:gravity="center"
             android:text="%1$d/%2$d"
-            android:textColor="@android:color/white"
+            android:textColor="@color/color_text_Anti_White"
             android:textSize="18sp"
             android:visibility="gone" />
 
@@ -159,7 +157,7 @@
             android:id="@+id/ll_input"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#00000000"
+            android:background="@android:color/transparent"
             android:orientation="vertical"
             android:visibility="gone">
 
@@ -168,7 +166,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:background="@color/transparent"
+                android:background="@android:color/transparent"
                 android:onClick="onClick" />
 
             <com.inspur.emmcloud.widget.ECMChatInputMenuImgComment

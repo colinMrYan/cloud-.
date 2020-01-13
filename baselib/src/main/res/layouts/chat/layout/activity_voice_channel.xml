@@ -3,7 +3,7 @@
     android:id="@+id/rl_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/content_bg"
+    android:background="@color/color_bg_content_white"
     android:fitsSystemWindows="true">
 
     <RelativeLayout
@@ -50,7 +50,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="21dp"
                 android:gravity="center_horizontal"
-                android:textColor="#333333"
+                android:textColor="@color/color_text_common_level_one"
                 android:textSize="20sp" />
 
             <TextView
@@ -60,7 +60,7 @@
                 android:layout_marginTop="6dp"
                 android:gravity="center_horizontal"
                 android:text="@string/voice_communication_invite_you"
-                android:textColor="#333333"
+                android:textColor="@color/color_text_common_level_one"
                 android:textSize="13sp" />
         </LinearLayout>
 
@@ -102,7 +102,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:text="@string/voice_communication_members"
-                android:textColor="#333333"
+                android:textColor="@color/color_text_common_level_one"
                 android:textSize="13dp" />
 
             <android.support.v7.widget.RecyclerView
@@ -129,20 +129,20 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="136dp"
             android:text=""
-            android:textColor="#333333"
+            android:textColor="@color/color_text_common_level_one"
             android:textSize="16sp" />
 
         <Chronometer
             android:id="@+id/tv_voice_communication_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
             android:layout_gravity="center_horizontal"
-            android:visibility="gone"
             android:layout_marginBottom="136dp"
-            android:textColor="#333333"
-            android:textSize="16sp" />
+            android:textColor="@color/color_text_common_level_one"
+            android:textSize="16sp"
+            android:visibility="gone" />
 
         <LinearLayout
             android:id="@+id/ll_voice_communication_function_group"
@@ -176,7 +176,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="13dp"
                     android:text="@string/voice_communication_mute"
-                    android:textColor="#333333"
+                    android:textColor="@color/color_text_common_level_one"
                     android:textSize="13sp" />
             </LinearLayout>
 
@@ -204,16 +204,16 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="13dp"
                     android:text="@string/voice_communication_excuse"
-                    android:textColor="#333333"
+                    android:textColor="@color/color_text_common_level_one"
                     android:textSize="13sp" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/ll_group_hands_free"
                 android:layout_width="0dp"
-                android:onClick="onClick"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:onClick="onClick"
                 android:orientation="vertical">
 
                 <ImageView
@@ -231,7 +231,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="13dp"
                     android:text="@string/voice_communication_hands_free"
-                    android:textColor="#333333"
+                    android:textColor="@color/color_text_common_level_one"
                     android:textSize="13sp" />
             </LinearLayout>
 
@@ -260,11 +260,10 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="13dp"
                     android:text="@string/voice_communication_tran_video"
-                    android:textColor="#333333"
+                    android:textColor="@color/color_text_common_level_one"
                     android:textSize="13sp" />
             </LinearLayout>
         </LinearLayout>
-
 
         <RelativeLayout
             android:id="@+id/rl_voice_communication_operate"
@@ -313,8 +312,8 @@
                     android:id="@+id/img_mute_direct"
                     android:layout_width="64dp"
                     android:layout_height="64dp"
-                    android:clickable="false"
                     android:layout_gravity="center_horizontal"
+                    android:clickable="false"
                     android:padding="2dp"
                     android:src="@drawable/icon_direct_mute" />
 
@@ -323,11 +322,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:clickable="false"
                     android:layout_marginTop="13dp"
+                    android:clickable="false"
                     android:gravity="center_horizontal"
                     android:text="@string/voice_communication_mute"
-                    android:textColor="#333333"
+                    android:textColor="@color/color_text_common_level_one"
                     android:textSize="13sp" />
             </LinearLayout>
 
@@ -352,10 +351,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:gravity="center_horizontal"
                     android:layout_marginTop="13dp"
+                    android:gravity="center_horizontal"
                     android:text="@string/voice_communication_hung_up_direct"
-                    android:textColor="#333333"
+                    android:textColor="@color/color_text_common_level_one"
                     android:textSize="13sp" />
             </LinearLayout>
 
@@ -380,10 +379,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:gravity="center_horizontal"
                     android:layout_marginTop="13dp"
+                    android:gravity="center_horizontal"
                     android:text="@string/voice_communication_answer_phone_direct"
-                    android:textColor="#333333"
+                    android:textColor="@color/color_text_common_level_one"
                     android:textSize="13sp" />
             </LinearLayout>
 
@@ -409,11 +408,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:clickable="false"
                     android:layout_marginTop="13dp"
+                    android:clickable="false"
                     android:gravity="center_horizontal"
                     android:text="@string/voice_communication_hands_free"
-                    android:textColor="#333333"
+                    android:textColor="@color/color_text_common_level_one"
                     android:textSize="13sp" />
             </LinearLayout>
         </LinearLayout>
@@ -444,7 +443,6 @@
             android:layout_height="167dp"
             android:layout_alignParentRight="true" />
 
-
         <RelativeLayout
             android:id="@+id/rl_person_info"
             android:layout_width="wrap_content"
@@ -466,7 +464,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@+id/img_video_head"
-                android:textColor="#ffffff"
+                android:textColor="@color/color_text_Anti_White"
                 android:textSize="28sp" />
 
             <TextView
@@ -474,10 +472,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tv_video_name"
-                android:layout_marginTop="10dp"
                 android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
                 android:layout_toRightOf="@id/img_video_head"
-                android:textColor="#ffffff"
+                android:textColor="@color/color_text_Anti_White"
                 android:textSize="16sp" />
         </RelativeLayout>
 
@@ -549,7 +547,7 @@
                     android:layout_marginTop="12dp"
                     android:gravity="center_horizontal"
                     android:text="@string/video_communication_turn_to_voice_call"
-                    android:textColor="#ffffff"
+                    android:textColor="@color/color_text_Anti_White"
                     android:textSize="12sp" />
             </LinearLayout>
 
@@ -574,7 +572,7 @@
                     android:layout_marginTop="12dp"
                     android:gravity="center_horizontal"
                     android:text="@string/cancel"
-                    android:textColor="#ffffff"
+                    android:textColor="@color/color_text_Anti_White"
                     android:textSize="12sp" />
             </LinearLayout>
 
@@ -600,7 +598,7 @@
                     android:layout_marginTop="12dp"
                     android:gravity="center_horizontal"
                     android:text="@string/voice_communication_answer_phone_direct"
-                    android:textColor="#ffffff"
+                    android:textColor="@color/color_text_Anti_White"
                     android:textSize="12sp" />
             </LinearLayout>
 
@@ -625,7 +623,7 @@
                     android:layout_marginTop="12dp"
                     android:gravity="center_horizontal"
                     android:text="@string/video_communication_switch_camera"
-                    android:textColor="#ffffff"
+                    android:textColor="@color/color_text_Anti_White"
                     android:textSize="12sp" />
             </LinearLayout>
         </LinearLayout>

@@ -20,7 +20,7 @@
         android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="8dp"
-        android:textColor="#0F7BCA"
+        android:textColor="@color/color_base_blue"
         android:textSize="12sp" />
 
 </RelativeLayout>

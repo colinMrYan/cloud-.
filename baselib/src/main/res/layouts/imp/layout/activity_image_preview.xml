@@ -2,13 +2,13 @@
     android:id="@+id/content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000">
+    android:background="@color/color_bg_content_black">
 
     <com.inspur.emmcloud.basemodule.util.imagepicker.view.ViewPagerFixed
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#000" />
+        android:background="@color/color_bg_content_black" />
 
     <RelativeLayout
         android:id="@+id/top_bar"
@@ -20,7 +20,7 @@
         <View
             android:id="@+id/v_status_bar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"></View>
+            android:layout_height="wrap_content" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -49,14 +49,14 @@
                 android:paddingLeft="10dp"
                 android:paddingRight="15dp"
                 android:paddingTop="10dp"
-                android:textColor="@android:color/white"
+                android:textColor="@color/color_text_Anti_White"
                 android:textSize="@dimen/header_function_textsize"
                 android:textStyle="normal" />
         </RelativeLayout>
 
-
     </RelativeLayout>
 
+    <!--zyj TODO-->
     <RelativeLayout
         android:id="@+id/bottom_bar"
         android:layout_width="match_parent"
@@ -75,7 +75,7 @@
             android:paddingRight="20dp"
             android:text="@string/edit"
             android:textAllCaps="false"
-            android:textColor="#ffffff"
+            android:textColor="@color/color_text_Anti_White"
             android:textSize="16sp" />
 
         <android.support.v7.widget.AppCompatCheckBox
@@ -89,7 +89,7 @@
             android:includeFontPadding="true"
             android:paddingLeft="8dp"
             android:text="@string/origin"
-            android:textColor="#ffffff"
+            android:textColor="@color/color_text_Anti_White"
             android:textSize="16sp" />
 
         <com.inspur.emmcloud.basemodule.util.imagepicker.view.SuperCheckBox
@@ -104,7 +104,7 @@
             android:includeFontPadding="true"
             android:paddingLeft="8dp"
             android:text="@string/select"
-            android:textColor="#ffffff"
+            android:textColor="@color/color_text_Anti_White"
             android:visibility="gone" />
     </RelativeLayout>
 
