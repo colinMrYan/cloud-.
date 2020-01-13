@@ -49,7 +49,7 @@
                 android:paddingTop="7dp"
                 android:paddingBottom="7dp"
                 android:text="@string/application_app_classification"
-                android:textColor="@color/color_text_red"
+                android:textColor="@color/color_text_help"
                 android:textSize="@dimen/content_normal_textsize" />
         </LinearLayout>
 
