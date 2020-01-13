@@ -52,7 +52,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="55dp"
-        android:background="@color/color_bg_content_grey">
+        android:background="#FDFDFD">
 
         <TextView
             android:id="@+id/tv_search_contact"
