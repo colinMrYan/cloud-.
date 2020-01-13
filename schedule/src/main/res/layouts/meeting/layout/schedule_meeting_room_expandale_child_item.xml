@@ -18,7 +18,7 @@
             android:layout_toLeftOf="@+id/rl_status"
             android:ellipsize="end"
             android:paddingLeft="16dp"
-            android:textColor="#FF333333"
+            android:textColor="@color/color_text_common_level_one"
             android:textSize="20sp" />
 
         <RelativeLayout
@@ -74,7 +74,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@id/iv_people_num"
-                android:textColor="#94AFC4"
+                android:textColor="@color/color_icon_common"
                 android:textSize="16sp" />
         </RelativeLayout>
 
@@ -101,5 +101,5 @@
         android:id="@+id/view_divider"
         android:layout_width="match_parent"
         android:layout_height="10dp"
-        android:background="@color/content_bg"></View>
+        android:background="@color/color_divider"></View>
 </LinearLayout>

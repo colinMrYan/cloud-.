@@ -7,7 +7,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#FFFFFF">
+        android:background="@color/color_bg_content_white">
 
         <TextView
             android:id="@+id/tv_schedule_type_name"
@@ -16,7 +16,7 @@
             android:layout_marginLeft="16dp"
             android:paddingBottom="11dp"
             android:paddingTop="11dp"
-            android:textColor="#333333"
+            android:textColor="@color/color_text_common_level_one"
             android:textSize="@dimen/header_function_textsize" />
 
         <ImageView
@@ -33,7 +33,7 @@
         android:layout_width="match_parent"
         android:layout_height="0.5px"
         android:layout_marginLeft="16dp"
-        android:background="@color/color_list_divider"
+        android:background="@color/color_divider"
         android:paddingLeft="16dp"></View>
 
 </LinearLayout>

@@ -44,7 +44,7 @@
             android:paddingRight="6dp"
             android:paddingTop="6dp"
             android:singleLine="true"
-            android:textColor="#333333"
+            android:textColor="@color/color_text_common_level_one"
             android:textSize="13sp">
 
             <requestFocus />
@@ -55,7 +55,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/rl_meeting_search"
-        android:background="@color/content_bg">
+        android:background="@color/color_bg_common">
 
         <com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout
             android:id="@+id/swipe_refresh_layout"
@@ -92,7 +92,7 @@
                 android:layout_marginTop="18dp"
                 android:singleLine="true"
                 android:text="@string/schedule_meeting_no_meeting_today"
-                android:textColor="#999999"
+                android:textColor="@color/color_text_common_level_two"
                 android:textSize="16sp" />
         </LinearLayout>
     </RelativeLayout>

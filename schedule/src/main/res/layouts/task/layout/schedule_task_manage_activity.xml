@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/content_bg"
+    android:background="@color/color_bg_common"
     android:fitsSystemWindows="true">
 
     <RelativeLayout
@@ -54,7 +54,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/rl_header"
         android:layout_marginBottom="100dp"
-        android:background="#FFFFFF"
+        android:background="@color/color_bg_content_white"
         android:dividerHeight="0.5px"
         android:paddingLeft="16dp"></ListView>
 
@@ -73,7 +73,7 @@
         android:text="@string/schedule_task_project_manager_add"
         android:textColor="@android:color/white"
         android:textSize="15sp"
-        app:cus_backgroundColor="#36A5F6"
+        app:cus_backgroundColor="@color/color_base_blue"
         app:cus_borderWidth="0dp"
         app:cus_isRadiusAdjustBounds="true" />
 </RelativeLayout>
