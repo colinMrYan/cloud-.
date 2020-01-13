@@ -7,16 +7,15 @@
         android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/content_bg"
+        android:background="@color/color_bg_content_white"
         android:scrollbars="vertical">
 
         <ListView
             android:id="@+id/app_center_categories_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:divider="#00000000"
-            android:dividerHeight="0px"
             android:overScrollMode="never"
+            android:divider="@null"
             android:scrollbars="none" />
     </android.support.v4.widget.SwipeRefreshLayout>
 

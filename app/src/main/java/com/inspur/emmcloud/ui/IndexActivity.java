@@ -289,7 +289,6 @@ public class IndexActivity extends IndexBaseActivity {
                             getContactOrg();
                         }
                         WebSocketPush.getInstance().startWebSocket();// 启动webSocket推送
-                        //LogUtils.LbcDebug("1111111111111111111111111111111");
                         batteryWhiteListRemind(IndexActivity.this);
                         break;
                     case RELOAD_WEB:

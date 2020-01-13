@@ -89,8 +89,7 @@ public class AppDetailActivity extends BaseActivity {
         ((TextView) findViewById(R.id.tv_name)).setText(app.getAppName());
         ((TextView) findViewById(R.id.profile_text)).setText(app.getNote());
         if (!StringUtils.isBlank(app.getDescription())) {
-            ((TextView) findViewById(R.id.intr_text)).setText(app
-                    .getDescription());
+            ((TextView) findViewById(R.id.intr_text)).setText(app.getDescription());
         }
         showAppStatusBtn(app);
     }
@@ -195,7 +194,7 @@ public class AppDetailActivity extends BaseActivity {
         public AppDetailImageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = inflater.inflate(R.layout.application_intr_img_view, null);
             AppDetailImageViewHolder viewHolder = new AppDetailImageViewHolder(view);
-            viewHolder.appDetailImg = (ImageView) view.findViewById(R.id.detail_img);
+            viewHolder.appDetailImg = view.findViewById(R.id.detail_img);
             return viewHolder;
         }
 

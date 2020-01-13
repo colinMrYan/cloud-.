@@ -27,7 +27,7 @@
                 android:gravity="center_horizontal"
                 android:paddingTop="23dp"
                 android:text="@string/prompt"
-                android:textColor="@color/black"
+                android:textColor="@color/color_text_common_level_one"
                 android:textSize="@dimen/bigger_textsize" />
 
             <TextView
@@ -44,7 +44,7 @@
                 android:maxHeight="500dp"
                 android:maxLines="10"
                 android:scrollbars="vertical"
-                android:textColor="@color/app_dialog_title_color"
+                android:textColor="@color/color_text_tip"
                 android:textSize="@dimen/header_textsize" />
 
             <CheckBox
@@ -57,7 +57,7 @@
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="1dp"
-                android:background="@color/content_border" />
+                android:background="@color/color_divider" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -75,14 +75,14 @@
                     android:gravity="center"
                     android:padding="12dp"
                     android:text="@string/cancel"
-                    android:textColor="@color/app_dialog_title_color"
+                    android:textColor="@color/color_text_tip"
                     android:textSize="@dimen/header_textsize" />
 
                 <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
-                    android:background="@color/content_border" />
+                    android:background="@color/color_divider" />
 
                 <Button
                     android:id="@+id/ok_btn"
@@ -93,7 +93,7 @@
                     android:gravity="center"
                     android:padding="12dp"
                     android:text="@string/ok"
-                    android:textColor="@color/app_dialog_update_color"
+                    android:textColor="@color/color_text_link"
                     android:textSize="@dimen/header_textsize" />
             </LinearLayout>
         </LinearLayout>

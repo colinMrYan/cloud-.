@@ -233,6 +233,7 @@ public class LoginUtils extends LoginAPIInterfaceImpl implements LanguageManager
             PreferencesUtils.putInt(activity, "keepAlive", keepAlive);
             PreferencesUtils.putString(activity, "tokenType", tokenType);
             PreferencesUtils.putInt(activity, "expiresIn", expiresIn);
+            PreferencesUtils.putLong(activity, "token_get_time", System.currentTimeMillis());
         }
     }
 
