@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="#D4E0E5">
-
+    <!--zyj TODO-->
 
     <RelativeLayout
         android:id="@+id/umeng_socialize_titlebar"
         android:layout_width="match_parent"
         android:layout_height="54dp"
-        android:background="#0086DC">
+        android:background="@color/color_base_blue">
 
         <TextView
             android:id="@+id/umeng_title"
@@ -17,19 +17,17 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text=""
-            android:textColor="#ffffff"
+            android:textColor="@color/color_text_Anti_White"
             android:textSize="18sp" />
 
         <RelativeLayout
             android:id="@+id/umeng_back"
             android:layout_width="60dp"
             android:layout_height="match_parent"
-
             android:onClick="onCancel"
             android:visibility="visible">
 
             <ImageButton
-
                 android:layout_width="12dp"
                 android:layout_height="20dp"
                 android:layout_centerVertical="true"
@@ -48,7 +46,7 @@
             android:background="@drawable/umeng_socialize_btn_bg"
             android:padding="4dp"
             android:text="分享"
-            android:textColor="#ffffff" />
+            android:textColor="@color/color_text_Anti_White" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -58,6 +56,7 @@
         android:layout_alignParentBottom="true"
         android:background="#AAAAAA"
         android:visibility="visible">
+        <!--zyj TODO-->
 
         <CheckBox
             android:id="@+id/umeng_socialize_follow_check"
@@ -75,7 +74,7 @@
             android:layout_marginLeft="15dp"
             android:layout_toRightOf="@id/umeng_socialize_follow_check"
             android:text="关注官方微博"
-            android:textColor="#f8f8f8"
+            android:textColor="@color/color_text_Anti_White"
             android:textSize="16sp"
             android:visibility="gone" />
     </RelativeLayout>
@@ -95,7 +94,7 @@
         android:layout_height="fill_parent"
         android:layout_above="@id/umeng_socialize_follow"
         android:layout_below="@id/umeng_socialize_titlebar"
-        android:background="#F2F5F6"
+        android:background="@color/color_bg_content_white"
         android:visibility="visible" />
 
     <RelativeLayout
@@ -103,7 +102,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_below="@id/umeng_socialize_titlebar"
-        android:background="#F2F5F6">
+        android:background="@color/color_bg_content_white">
 
         <LinearLayout
             android:layout_width="80dp"

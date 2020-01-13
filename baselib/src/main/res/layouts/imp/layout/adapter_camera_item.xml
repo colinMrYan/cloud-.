@@ -14,7 +14,7 @@
         android:drawableTop="@drawable/web_camera_grid_camera"
         android:gravity="center"
         android:text="拍摄照片"
-        android:textColor="#CDCECE"
+        android:textColor="@color/color_text_common_level_two"
         android:textSize="14sp" />
 
 </RelativeLayout>

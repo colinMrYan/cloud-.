@@ -51,12 +51,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/rl_header"
-        android:background="@color/content_bg">
+        android:background="@color/color_bg_content_white">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:background="@color/color_bg_content_white"
             android:orientation="vertical"
             android:paddingLeft="12dp"
             android:paddingRight="11dp">
@@ -81,7 +81,7 @@
                     android:layout_centerVertical="true"
                     android:layout_toRightOf="@id/trip_logo"
                     android:paddingLeft="10dp"
-                    android:textColor="#FF333333"
+                    android:textColor="@color/color_text_common_level_one"
                     android:textSize="@dimen/header_textsize" />
 
                 <TextView
@@ -91,14 +91,11 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:paddingRight="4dp"
-                    android:textColor="#FF333333"
+                    android:textColor="@color/color_text_common_level_one"
                     android:textSize="@dimen/content_smaller_textsize" />
             </RelativeLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="#FFCDCDCD" />
+            <View style="@style/divide_style" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -111,7 +108,7 @@
                     android:id="@+id/trip_from"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#FF333333"
+                    android:textColor="@color/color_text_common_level_one"
                     android:textSize="30sp" />
 
                 <TextView
@@ -121,14 +118,14 @@
                     android:paddingLeft="35dp"
                     android:paddingRight="35dp"
                     android:text="G208"
-                    android:textColor="#FFA6A6A6"
+                    android:textColor="@color/color_text_common_level_two"
                     android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/trip_destination"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#FF333333"
+                    android:textColor="@color/color_text_common_level_one"
                     android:textSize="30sp" />
             </LinearLayout>
 
@@ -143,8 +140,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="14dp"
-                    android:textColor="#FF333333"
-                    android:textSize="16sp"></TextView>
+                    android:textColor="@color/color_text_common_level_one"
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/trip_cost_text"
@@ -153,14 +150,11 @@
                     android:layout_alignParentRight="true"
                     android:paddingRight="15dp"
                     android:text="¥398"
-                    android:textColor="#FF333333"
-                    android:textSize="16sp"></TextView>
+                    android:textColor="@color/color_text_common_level_one"
+                    android:textSize="16sp" />
             </RelativeLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="#FFCDCDCD" />
+            <View style="@style/divide_style" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -185,7 +179,7 @@
                     android:layout_centerVertical="true"
                     android:layout_toRightOf="@id/trip_user_logo"
                     android:paddingLeft="19dp"
-                    android:textColor="#FF333333"
+                    android:textColor="@color/color_text_common_level_one"
                     android:textSize="18sp" />
 
                 <ImageView

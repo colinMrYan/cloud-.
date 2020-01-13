@@ -16,7 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/voice_word_voice"
-            android:textColor="@color/white"
+            android:textColor="@color/color_text_Anti_White"
             android:textSize="30sp" />
 
         <ImageView
@@ -49,7 +49,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/voice_word_word"
-            android:textColor="@color/white"
+            android:textColor="@color/color_text_Anti_White"
             android:textSize="30sp" />
     </LinearLayout>
 
@@ -62,6 +62,6 @@
         android:layout_marginBottom="15dp"
         android:layout_marginTop="15dp"
         android:text="@string/voice_word_tran"
-        android:textColor="@color/white"
+        android:textColor="@color/color_text_Anti_White"
         android:textSize="12sp" />
 </LinearLayout>

@@ -16,7 +16,6 @@
             android:layout_height="40dp" />
     </com.inspur.emmcloud.baselib.widget.SquareLayout>
 
-
     <TextView
         android:id="@+id/tv_name"
         android:layout_width="match_parent"
@@ -26,7 +25,7 @@
         android:ellipsize="end"
         android:gravity="center_horizontal"
         android:singleLine="true"
-        android:textColor="#FF333333"
+        android:textColor="@color/color_text_common_level_one"
         android:textSize="@dimen/content_smaller_textsize"
         android:visibility="gone" />
 

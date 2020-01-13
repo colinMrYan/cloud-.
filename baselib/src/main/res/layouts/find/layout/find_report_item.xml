@@ -4,10 +4,10 @@
     android:layout_height="wrap_content"
     android:background="@drawable/selector_list"
     android:orientation="horizontal"
-    android:paddingBottom="17dp"
     android:paddingLeft="18dp"
+    android:paddingTop="13dp"
     android:paddingRight="13dp"
-    android:paddingTop="13dp">
+    android:paddingBottom="17dp">
 
     <RelativeLayout
         android:id="@+id/find_report_layout"
@@ -37,7 +37,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
-                android:textColor="#FF444444"
+                android:textColor="@color/color_text_common_level_one"
                 android:textSize="@dimen/button_textsize"
                 android:textStyle="bold" />
 
@@ -53,7 +53,7 @@
                     android:id="@+id/find_report_time_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#FFA5A5A5"
+                    android:textColor="@color/color_text_common_level_two"
                     android:textSize="@dimen/content_smaller_textsize" />
             </LinearLayout>
         </LinearLayout>

@@ -9,12 +9,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@null"
-        android:paddingBottom="15dp"
         android:paddingLeft="25dp"
-        android:paddingRight="25dp"
         android:paddingTop="15dp"
+        android:paddingRight="25dp"
+        android:paddingBottom="15dp"
         android:text="3:4"
-        android:textColor="#FFFFFB"
+        android:textColor="@color/color_text_Anti_White"
         android:textSize="16sp" />
 
     <Button
@@ -22,12 +22,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@null"
-        android:paddingBottom="15dp"
         android:paddingLeft="25dp"
-        android:paddingRight="25dp"
         android:paddingTop="15dp"
+        android:paddingRight="25dp"
+        android:paddingBottom="15dp"
         android:text="4:3"
-        android:textColor="#FFFFFB"
+        android:textColor="@color/color_text_Anti_White"
         android:textSize="16sp" />
 
     <Button
@@ -35,12 +35,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@null"
-        android:paddingBottom="15dp"
         android:paddingLeft="25dp"
-        android:paddingRight="25dp"
         android:paddingTop="15dp"
+        android:paddingRight="25dp"
+        android:paddingBottom="15dp"
         android:text="9:16"
-        android:textColor="#FFFFFB"
+        android:textColor="@color/color_text_Anti_White"
         android:textSize="16sp" />
 
     <Button
@@ -48,12 +48,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@null"
-        android:paddingBottom="15dp"
         android:paddingLeft="25dp"
-        android:paddingRight="25dp"
         android:paddingTop="15dp"
+        android:paddingRight="25dp"
+        android:paddingBottom="15dp"
         android:text="16:9"
-        android:textColor="#FFFFFB"
+        android:textColor="@color/color_text_Anti_White"
         android:textSize="16sp" />
 
 </LinearLayout>

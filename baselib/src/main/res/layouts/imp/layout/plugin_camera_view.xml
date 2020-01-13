@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000"
+    android:background="@color/color_bg_content_black"
     android:orientation="vertical">
 
     <FrameLayout
@@ -18,7 +18,7 @@
             android:id="@+id/image_photo"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#000"
+            android:background="@color/color_bg_content_black"
             android:visibility="invisible" />
     </FrameLayout>
 
@@ -55,7 +55,6 @@
             android:src="@drawable/plugin_cemera_btn_camera_switch" />
 
     </LinearLayout>
-
 
     <com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary.CaptureLayout
         android:id="@+id/capture_layout"

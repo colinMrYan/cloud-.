@@ -10,6 +10,7 @@
     android:orientation="horizontal"
     android:padding="4dp">
 
+    <!--zyj TODO-->
     <com.inspur.emmcloud.basemodule.util.imageedit.view.IMGColorRadio
         android:id="@+id/cr_white"
         android:layout_width="28dp"

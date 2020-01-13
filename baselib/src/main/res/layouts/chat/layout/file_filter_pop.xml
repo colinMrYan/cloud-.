@@ -2,13 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#fafafa"
+    android:background="@color/color_bg_content_grey"
     android:orientation="vertical">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5px"
-        android:background="@color/color_list_divider" />
+    <View style="@style/divide_style" />
 
     <GridView
         android:id="@+id/file_filter_type_grid"
@@ -16,8 +13,8 @@
         android:layout_height="wrap_content"
         android:listSelector="@android:color/transparent"
         android:numColumns="4"
-        android:paddingBottom="20dp"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:stretchMode="columnWidth"></GridView>
+        android:paddingBottom="20dp"
+        android:stretchMode="columnWidth" />
 </LinearLayout>

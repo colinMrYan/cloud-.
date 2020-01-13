@@ -28,8 +28,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
         android:layout_marginTop="10dp"
+        android:layout_marginRight="15dp"
         android:background="?attr/mine_my_info_card_bg"
         android:orientation="vertical">
 
@@ -47,7 +47,7 @@
             android:layout_marginTop="10dp"
             android:paddingBottom="16dp"
             android:text="@string/chat_file_transfer"
-            android:textColor="#333333"
+            android:textColor="@color/color_text_common_level_one"
             android:textSize="17sp" />
     </LinearLayout>
 
@@ -57,17 +57,17 @@
         android:layout_marginLeft="32dp"
         android:layout_marginTop="28dp"
         android:text="@string/function_intr"
-        android:textColor="#999999"
+        android:textColor="@color/color_text_common_level_two"
         android:textSize="14sp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="32dp"
-        android:layout_marginRight="22dp"
         android:layout_marginTop="2dp"
+        android:layout_marginRight="22dp"
         android:text="@string/chat_file_transfer_content"
-        android:textColor="#333333"
+        android:textColor="@color/color_text_common_level_one"
         android:textSize="16sp" />
 
 
