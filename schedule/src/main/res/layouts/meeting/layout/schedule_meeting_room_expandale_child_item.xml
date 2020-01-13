@@ -101,5 +101,5 @@
         android:id="@+id/view_divider"
         android:layout_width="match_parent"
         android:layout_height="10dp"
-        android:background="@color/color_divider"></View>
+        android:background="@color/color_bg_common"></View>
 </LinearLayout>
