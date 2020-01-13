@@ -21,7 +21,7 @@
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@+id/iv_arrow"
         android:layout_toRightOf="@id/iv_icon"
-        android:textColor="#333333"
+        android:textColor="@color/color_text_common_level_one"
         android:textSize="16sp" />
 
     <ImageView
@@ -39,5 +39,5 @@
         android:layout_height="0.5px"
         android:layout_below="@id/iv_icon"
         android:layout_marginLeft="59dp"
-        android:background="#dddddd" />
+        android:background="@color/color_divider" />
 </RelativeLayout>

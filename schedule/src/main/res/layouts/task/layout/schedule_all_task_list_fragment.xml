@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff"
+    android:background="@color/color_bg_content_white"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:ignore="RtlHardcoded,HardcodedText,RtlSymmetry,SmallSp">
@@ -13,7 +13,7 @@
         android:id="@+id/rl_tab_layout"
         android:layout_width="match_parent"
         android:layout_height="35dp"
-        android:background="#F8F9FB">
+        android:background="@color/color_bg_common">
 
         <RelativeLayout
             android:id="@+id/rl_all_task"
@@ -37,7 +37,7 @@
                 android:layout_alignLeft="@id/tv_schedule_all"
                 android:layout_alignParentBottom="true"
                 android:layout_alignRight="@id/tv_schedule_all"
-                android:background="#36A5F6" />
+                android:background="@color/color_base_blue" />
         </RelativeLayout>
 
 
@@ -49,7 +49,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_toRightOf="@id/rl_all_task"
-            android:background="#333333"
+            android:background="@color/color_text_common_level_one"
             android:visibility="gone" />
 
         <android.support.design.widget.TabLayout
@@ -60,9 +60,9 @@
             android:layout_toRightOf="@+id/v_schedule_line"
             app:tabGravity="fill"
             app:tabMode="scrollable"
-            app:tabSelectedTextColor="#333333"
+            app:tabSelectedTextColor="@color/color_text_common_level_one"
             app:tabTextAppearance="@style/ScheduleTaskTabLayoutTextStyle"
-            app:tabTextColor="#333333" />
+            app:tabTextColor="@color/color_text_common_level_one" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -71,7 +71,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/rl_tab_layout"
         android:layout_centerVertical="true"
-        android:background="#F2F2F2"
+        android:background="@color/color_bg_common"
         android:paddingBottom="10dp"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
@@ -104,7 +104,7 @@
                 android:hint="@string/search"
                 android:imeOptions="actionSearch"
                 android:singleLine="true"
-                android:textColor="#333333"
+                android:textColor="@color/color_text_common_level_one"
                 android:textSize="13sp">
 
                 <requestFocus />

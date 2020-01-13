@@ -3,7 +3,7 @@
     android:id="@+id/main_layout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/content_bg"
+    android:background="@color/color_bg_common"
     android:fitsSystemWindows="true">
 
     <RelativeLayout

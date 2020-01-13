@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/content_bg"
+    android:background="@color/color_bg_common"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
@@ -55,7 +55,7 @@
                 android:layout_marginTop="8dp"
                 android:paddingLeft="16dp"
                 android:text="@string/schedule_schedule_calendar"
-                android:textColor="#999999"
+                android:textColor="@color/color_text_common_level_two"
                 android:textSize="13sp" />
 
             <RelativeLayout
@@ -63,7 +63,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
-                android:background="#FFFFFF"
+                android:background="@color/color_bg_content_white"
                 android:paddingLeft="16dp">
 
                 <ImageView
@@ -81,7 +81,7 @@
                     android:layout_marginLeft="16dp"
                     android:layout_toRightOf="@id/iv_holiday_color"
                     android:text="@string/schedule_calendar_china_holiday"
-                    android:textColor="#333333"
+                    android:textColor="@color/color_text_common_level_one"
                     android:textSize="16sp" />
 
                 <android.support.v7.widget.SwitchCompat
@@ -100,13 +100,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="0.5px"
                 android:layout_marginLeft="16dp"
-                android:background="@color/color_list_divider" />
+                android:background="@color/color_divider" />
 
             <com.inspur.emmcloud.baselib.widget.ScrollViewWithListView
                 android:id="@+id/listview_list_calendars"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#FFFFFF"
+                android:background="@color/color_bg_content_white"
                 android:divider="@color/color_list_divider"
                 android:dividerHeight="0.5px"
                 android:paddingLeft="16dp"></com.inspur.emmcloud.baselib.widget.ScrollViewWithListView>
@@ -115,7 +115,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0.5px"
                 android:layout_marginLeft="16dp"
-                android:background="@color/color_list_divider" />
+                android:background="@color/color_divider" />
 
             <LinearLayout
                 android:id="@+id/ll_add_calendar"
@@ -142,7 +142,7 @@
                     android:paddingBottom="11dp"
                     android:paddingTop="11dp"
                     android:text="@string/schedule_calendar_add_calendar"
-                    android:textColor="#36A5F6"
+                    android:textColor="@color/color_base_blue"
                     android:textSize="16sp" />
             </LinearLayout>
 
@@ -150,7 +150,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0.5px"
                 android:layout_marginLeft="16dp"
-                android:background="@color/color_list_divider" />
+                android:background="@color/color_divider" />
 
             <TextView
                 android:id="@+id/tv_view"
@@ -160,14 +160,14 @@
                 android:layout_marginTop="8dp"
                 android:paddingLeft="16dp"
                 android:text="@string/schedule_setting_view"
-                android:textColor="#999999"
+                android:textColor="@color/color_text_common_level_two"
                 android:textSize="13sp" />
 
             <RelativeLayout
                 android:id="@+id/rl_list_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#FFFFFF"
+                android:background="@color/color_bg_content_white"
                 android:onClick="onClick"
                 android:paddingLeft="16dp"
                 android:paddingRight="15dp">
@@ -179,7 +179,7 @@
                     android:paddingBottom="10dp"
                     android:paddingTop="12dp"
                     android:text="@string/schedule_setting_list_view"
-                    android:textColor="#333333"
+                    android:textColor="@color/color_text_common_level_one"
                     android:textSize="16sp" />
 
                 <ImageView
@@ -196,13 +196,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="0.5px"
                 android:layout_marginLeft="16dp"
-                android:background="#DDDDDD" />
+                android:background="@color/color_divider" />
 
             <RelativeLayout
                 android:id="@+id/rl_day_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#FFFFFF"
+                android:background="@color/color_bg_content_white"
                 android:onClick="onClick"
                 android:paddingLeft="16dp"
                 android:paddingRight="15dp">
@@ -214,7 +214,7 @@
                     android:paddingBottom="10dp"
                     android:paddingTop="12dp"
                     android:text="@string/schedule_setting_day_view"
-                    android:textColor="#333333"
+                    android:textColor="@color/color_text_common_level_one"
                     android:textSize="16sp" />
 
                 <ImageView
@@ -232,7 +232,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0.5px"
                 android:layout_marginLeft="16dp"
-                android:background="#DDDDDD" />
+                android:background="@color/color_divider" />
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>

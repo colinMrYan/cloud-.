@@ -26,12 +26,12 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@id/iv_folder_icon"
-        android:textColor="#666666"
+        android:textColor="@color/color_text_tip"
         android:textSize="17sp" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5px"
         android:layout_below="@id/iv_folder_icon"
-        android:background="#c8c7cc"></View>
+        android:background="@color/color_bg_common"></View>
 </RelativeLayout>

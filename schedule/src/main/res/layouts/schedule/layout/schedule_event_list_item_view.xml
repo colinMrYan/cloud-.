@@ -30,7 +30,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:textColor="#333333"
+                android:textColor="@color/color_text_common_level_one"
                 android:textSize="15sp" />
 
             <TextView
@@ -51,7 +51,7 @@
             android:layout_marginTop="8dp"
             android:ellipsize="end"
             android:singleLine="true"
-            android:textColor="#333333"
+            android:textColor="@color/color_text_common_level_one"
             android:textSize="15sp" />
 
         <TextView
@@ -59,7 +59,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:textColor="#888888"
+            android:textColor="@color/color_text_common_level_two"
             android:textSize="13sp" />
     </LinearLayout>
 
@@ -76,5 +76,5 @@
         android:layout_height="0.5px"
         android:layout_below="@id/ll_content"
         android:layout_marginTop="11dp"
-        android:background="@color/color_list_divider"></View>
+        android:background="@color/color_divider"></View>
 </RelativeLayout>

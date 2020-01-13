@@ -136,7 +136,7 @@
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:onClick="onClick"
-                        android:textColor="#2788CF"
+                        android:textColor="@color/color_base_blue"
                         android:textSize="15sp"
                         android:visibility="gone" />
 
@@ -157,7 +157,7 @@
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
                     android:layout_marginTop="12dp"
-                    android:background="#C8C7CC"></View>
+                    android:background="@color/color_divider"></View>
             </RelativeLayout>
 
             <!-- 邮件抄送人-->
@@ -206,7 +206,7 @@
                         android:background="@null"
                         android:ellipsize="end"
                         android:maxLines="1"
-                        android:textColor="#2788CF"
+                        android:textColor="@color/color_base_blue"
                         android:textSize="15sp"
                         android:visibility="gone" />
 
@@ -227,7 +227,7 @@
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
                     android:layout_marginTop="12dp"
-                    android:background="#C8C7CC"></View>
+                    android:background="@color/color_divider"></View>
             </RelativeLayout>
 
             <!-- 邮件发件人-->
@@ -279,7 +279,7 @@
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
                     android:layout_marginTop="12dp"
-                    android:background="#C8C7CC"
+                    android:background="@color/color_divider"
                     android:visibility="gone"></View>
             </RelativeLayout>
 
@@ -337,7 +337,7 @@
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
                     android:layout_marginTop="12dp"
-                    android:background="#C8C7CC"></View>
+                    android:background="@color/color_divider"></View>
             </RelativeLayout>
 
             <!-- 邮件内容编写-->
@@ -392,7 +392,7 @@
                         android:id="@+id/v_include_topLine"
                         android:layout_width="match_parent"
                         android:layout_height="0.5sp"
-                        android:background="#C8C7CC"></View>
+                        android:background="@color/color_divider"></View>
 
                     <CheckBox
                         android:id="@+id/cb_fw_body"
