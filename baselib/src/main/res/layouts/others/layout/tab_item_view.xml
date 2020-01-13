@@ -10,8 +10,8 @@
         android:layout_centerInParent="true"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:paddingBottom="3dp"
-        android:paddingTop="2dp">
+        android:paddingTop="2dp"
+        android:paddingBottom="3dp">
 
         <ImageView
             android:id="@+id/imageview"
@@ -37,10 +37,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignRight="@id/layout"
-        android:paddingBottom="4dp"
         android:paddingLeft="5dp"
-        android:paddingRight="10dp"
         android:paddingTop="3dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="4dp"
         android:visibility="invisible">
 
         <TextView
@@ -50,7 +50,7 @@
             android:background="@drawable/bg_tips_new_message"
             android:gravity="center"
             android:includeFontPadding="false"
-            android:textColor="@color/white"
+            android:textColor="@color/color_text_Anti_White"
             android:textSize="@dimen/content_moresmaller_textsize" />
     </RelativeLayout>
 
@@ -59,9 +59,9 @@
         android:layout_width="10dp"
         android:layout_height="10dp"
         android:layout_alignRight="@id/layout"
-        android:layout_marginRight="16dp"
         android:layout_marginTop="5dp"
+        android:layout_marginRight="16dp"
         android:background="@drawable/bg_tips_new_message"
-        android:visibility="gone"></View>
+        android:visibility="gone" />
 
 </RelativeLayout>

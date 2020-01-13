@@ -9,8 +9,8 @@
     app:bl_arrowPosition="16dp"
     app:bl_arrowWidth="4.5dp"
     app:bl_cornersRadius="8dp"
-    app:bl_strokeColor="#AAAAAA"
-    app:bl_strokeWidth="0.5px">
+    app:bl_strokeColor="@color/color_text_common_level_two"
+    app:bl_strokeWidth="1px">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="2"
-                android:textColor="@color/black"
+                android:textColor="@color/color_text_common_level_one"
                 android:textSize="17sp" />
 
             <TextView
@@ -49,7 +49,7 @@
                 android:layout_marginTop="6dp"
                 android:ellipsize="end"
                 android:maxLines="3"
-                android:textColor="#999999"
+                android:textColor="@color/color_text_common_level_two"
                 android:textSize="15sp" />
         </RelativeLayout>
     </RelativeLayout>

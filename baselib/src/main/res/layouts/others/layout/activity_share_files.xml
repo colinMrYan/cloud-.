@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main_layout"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
     <RelativeLayout
@@ -44,11 +44,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:background="#FFFFFF"
+            android:background="@color/color_bg_content_white"
             android:minHeight="150dp"
-            android:paddingBottom="16dp"
             android:paddingLeft="10dp"
-            android:paddingRight="10dp" />
+            android:paddingRight="10dp"
+            android:paddingBottom="16dp" />
 
         <RelativeLayout
             android:id="@+id/rl_image"
@@ -56,8 +56,8 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:paddingBottom="10dp"
             android:paddingTop="10dp"
+            android:paddingBottom="10dp"
             android:visibility="gone">
 
             <ImageView
@@ -79,10 +79,10 @@
                 android:layout_below="@+id/img_file_icon"
                 android:layout_centerHorizontal="true"
                 android:maxWidth="170dp"
-                android:paddingBottom="10dp"
                 android:paddingTop="5dp"
+                android:paddingBottom="10dp"
                 android:singleLine="true"
-                android:textColor="#333333"
+                android:textColor="@color/color_text_common_level_one"
                 android:textSize="17sp"
                 android:visibility="gone" />
         </RelativeLayout>
@@ -91,9 +91,9 @@
             android:id="@+id/rl_file"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingBottom="30dp"
             android:paddingLeft="15dp"
-            android:paddingTop="15dp">
+            android:paddingTop="15dp"
+            android:paddingBottom="30dp">
 
             <ImageView
                 android:id="@+id/iv_file_icon"
@@ -109,7 +109,7 @@
                 android:maxLines="3"
                 android:paddingLeft="10dp"
                 android:paddingRight="15dp"
-                android:textColor="#333333"
+                android:textColor="@color/color_text_common_level_one"
                 android:textSize="17sp" />
 
             <TextView
@@ -121,9 +121,9 @@
                 android:ellipsize="end"
                 android:maxLines="2"
                 android:paddingLeft="10dp"
-                android:paddingRight="15dp"
                 android:paddingTop="4dp"
-                android:textColor="#8F8E94"
+                android:paddingRight="15dp"
+                android:textColor="@color/color_text_common_level_two"
                 android:textSize="14sp" />
 
         </RelativeLayout>
@@ -132,25 +132,23 @@
             android:id="@+id/rl_file_list"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingBottom="30dp"
             android:paddingLeft="15dp"
-            android:paddingTop="15dp">
+            android:paddingTop="15dp"
+            android:paddingBottom="30dp">
 
             <ListView
                 android:id="@+id/lv_files_list"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"></ListView>
+                android:layout_height="wrap_content" />
         </RelativeLayout>
 
     </RelativeLayout>
 
     <View
         android:id="@+id/view_line_channel"
-        android:layout_width="match_parent"
-        android:layout_height="0.5px"
+        style="@style/divide_style"
         android:layout_below="@id/rl_show_files"
-        android:layout_marginLeft="16dp"
-        android:background="@color/color_list_divider" />
+        android:layout_marginLeft="16dp" />
 
     <RelativeLayout
         android:id="@+id/rl_channel_share"
@@ -159,8 +157,8 @@
         android:layout_below="@id/rl_show_files"
         android:layout_marginLeft="20dp"
         android:onClick="onClick"
-        android:paddingBottom="10dp"
-        android:paddingTop="10dp">
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
 
         <ImageView
             android:id="@+id/img_channel_share_icon"
@@ -192,11 +190,9 @@
 
     <View
         android:id="@+id/view_line_volume"
-        android:layout_width="match_parent"
-        android:layout_height="0.5px"
+        style="@style/divide_style"
         android:layout_below="@id/rl_channel_share"
-        android:layout_marginLeft="16dp"
-        android:background="@color/color_list_divider" />
+        android:layout_marginLeft="16dp" />
 
     <RelativeLayout
         android:id="@+id/rl_volume_share"
@@ -205,8 +201,8 @@
         android:layout_below="@id/rl_channel_share"
         android:layout_marginLeft="20dp"
         android:onClick="onClick"
-        android:paddingBottom="10dp"
-        android:paddingTop="10dp">
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
 
         <ImageView
             android:id="@+id/img_volume_share_icon"
@@ -237,10 +233,8 @@
 
     <View
         android:id="@+id/view_line_bottom"
-        android:layout_width="match_parent"
-        android:layout_height="0.5px"
+        style="@style/divide_style"
         android:layout_below="@id/rl_volume_share"
-        android:layout_marginLeft="16dp"
-        android:background="@color/color_list_divider" />
+        android:layout_marginLeft="16dp" />
 
 </RelativeLayout>

@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!--zyj TODO-->
     <com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary.CropView
         android:id="@+id/crop_view"
         android:layout_width="match_parent"
@@ -34,5 +35,5 @@
         android:layout_marginBottom="140dp"
         android:paddingLeft="10dp"
         android:scrollbars="none"
-        android:visibility="gone"></android.support.v7.widget.RecyclerView>
+        android:visibility="gone" />
 </RelativeLayout>

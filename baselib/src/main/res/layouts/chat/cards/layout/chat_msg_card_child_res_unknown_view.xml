@@ -9,7 +9,7 @@
     app:bl_arrowPosition="16dp"
     app:bl_arrowWidth="4.5dp"
     app:bl_cornersRadius="8dp"
-    app:bl_strokeColor="#AAAAAA"
+    app:bl_strokeColor="@color/color_text_common_level_two"
     app:bl_strokeWidth="0.5px">
 
     <TextView
@@ -18,6 +18,6 @@
         android:layout_height="wrap_content"
         android:lineSpacingMultiplier="1.2"
         android:padding="10dp"
-        android:textColor="@color/msg_content_color"
+        android:textColor="@color/color_text_common_level_two"
         android:textSize="@dimen/content_title_textsize" />
 </com.inspur.emmcloud.widget.bubble.BubbleLayout>

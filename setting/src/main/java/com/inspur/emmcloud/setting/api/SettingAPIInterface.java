@@ -5,6 +5,7 @@ import com.inspur.emmcloud.setting.bean.GetCardPackageResult;
 import com.inspur.emmcloud.setting.bean.GetDeviceLogResult;
 import com.inspur.emmcloud.setting.bean.GetExperienceUpgradeFlagResult;
 import com.inspur.emmcloud.setting.bean.GetFaceSettingResult;
+import com.inspur.emmcloud.setting.bean.GetMDMStateResult;
 import com.inspur.emmcloud.setting.bean.GetUploadMyHeadResult;
 import com.inspur.emmcloud.setting.bean.GetUserCardMenusResult;
 import com.inspur.emmcloud.setting.bean.GetUserHeadUploadResult;
@@ -67,4 +68,8 @@ public interface SettingAPIInterface {
     void returnModifyUserInfoSucces(SettingGetBoolenResult getBoolenResult);
 
     void returnModifyUserInfoFail(String error, int errorCode);
+
+    void returnMDMStateSuccess(GetMDMStateResult getMDMStateResult);
+
+    void returnMDMStateFail(String error, int errorCode);
 }

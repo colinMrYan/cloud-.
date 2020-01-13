@@ -9,17 +9,17 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/comment_background_color">
+        android:background="@color/color_bg_content_white">
 
         <RelativeLayout
             android:id="@+id/msg_display_header_layout"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/shape_fileupround_layout"
-            android:paddingBottom="10dp"
             android:paddingLeft="15dp"
+            android:paddingTop="10dp"
             android:paddingRight="20dp"
-            android:paddingTop="10dp">
+            android:paddingBottom="10dp">
 
             <com.inspur.emmcloud.baselib.widget.CircleTextImageView
                 android:id="@+id/sender_photo_img"
@@ -35,7 +35,7 @@
                 android:layout_toRightOf="@id/sender_photo_img"
                 android:paddingRight="6dp"
                 android:singleLine="true"
-                android:textColor="@color/header_bg_blue"
+                android:textColor="@color/color_text_link"
                 android:textSize="@dimen/content_normal_textsize" />
 
             <TextView
@@ -46,7 +46,7 @@
                 android:layout_toRightOf="@id/sender_photo_img"
                 android:paddingRight="6dp"
                 android:singleLine="true"
-                android:textColor="#6a7d84"
+                android:textColor="@color/color_text_tip"
                 android:textSize="@dimen/content_small_textsize" />
         </RelativeLayout>
 
@@ -55,13 +55,13 @@
             android:layout_width="match_parent"
             android:layout_height="0px"
             android:layout_below="@id/msg_display_header_layout"
-            android:background="@color/color_list_divider" />
+            android:background="@color/color_divider" />
 
         <RelativeLayout
             android:id="@+id/msg_display_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/line_view"></RelativeLayout>
+            android:layout_below="@id/line_view" />
     </RelativeLayout>
 
     <com.inspur.emmcloud.baselib.widget.ScrollViewWithListView
@@ -69,7 +69,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:divider="@color/content_bg"
+        android:divider="@color/color_bg_content_white"
         android:dividerHeight="0dp" />
 
 </LinearLayout>

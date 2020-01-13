@@ -27,6 +27,6 @@
         android:gravity="center_horizontal"
         android:lines="2"
         android:text="@string/album"
-        android:textSize="12sp"></TextView>
+        android:textSize="12sp" />
 
 </LinearLayout>

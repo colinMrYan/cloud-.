@@ -2,7 +2,7 @@
     android:id="@+id/content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000"
+    android:background="@color/color_bg_content_black"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
@@ -10,6 +10,7 @@
         android:id="@+id/top_bar"
         layout="@layout/include_top_bar" />
 
+    <!--zyj TODO-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -30,6 +31,7 @@
             android:stretchMode="columnWidth"
             android:verticalSpacing="2dp" />
 
+        <!--zyj TODO-->
         <RelativeLayout
             android:id="@+id/footer_bar"
             android:layout_width="match_parent"
@@ -53,7 +55,7 @@
                 android:singleLine="true"
                 android:text="@string/all_images"
                 android:textAllCaps="false"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/color_text_Anti_White"
                 android:textSize="16sp" />
 
             <android.support.v7.widget.AppCompatCheckBox
@@ -67,7 +69,7 @@
                 android:includeFontPadding="true"
                 android:paddingLeft="8dp"
                 android:text="@string/origin"
-                android:textColor="#ffffff"
+                android:textColor="@color/color_text_Anti_White"
                 android:textSize="16sp" />
 
             <Button
@@ -81,12 +83,12 @@
                 android:paddingRight="16dp"
                 android:text="@string/preview"
                 android:textAllCaps="false"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/color_text_Anti_White"
                 android:textSize="16sp" />
 
+            <!--zyj TODO-->
             <View
-                android:layout_width="1px"
-                android:layout_height="match_parent"
+                style="@style/divide_style"
                 android:layout_marginBottom="12dp"
                 android:layout_marginTop="12dp"
                 android:background="#cc111111" />

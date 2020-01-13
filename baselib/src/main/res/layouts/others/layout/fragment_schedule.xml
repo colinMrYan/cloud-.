@@ -3,19 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff"
+    android:background="@color/color_bg_content_white"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
-
 
     <TextView
         android:id="@+id/tv_schedule_search"
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:layout_gravity="center"
-        android:layout_marginBottom="10dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
+        android:layout_marginBottom="10dp"
         android:background="@drawable/bg_schedule_search"
         android:gravity="center"
         android:hint="@string/work_search_hint"
@@ -26,11 +25,12 @@
         android:id="@+id/calendar_layout_schedule"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#ffffff"
+        android:background="@color/color_bg_content_white"
         android:orientation="vertical"
         app:calendar_content_view_id="@+id/ll_date_and_arrow"
         app:default_status="shrink">
 
+        <!--zyj TODO-->
         <com.inspur.emmcloud.schedule.widget.calendarview.CalendarView
             android:id="@+id/calendar_view_schedule"
             android:layout_width="match_parent"
@@ -70,13 +70,13 @@
             android:id="@+id/ll_date_and_arrow"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/content_background"
+            android:background="@color/color_bg_content_white"
             android:orientation="vertical">
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white">
+                android:background="@color/color_bg_content_white">
 
                 <ImageView
                     android:id="@+id/iv_calendar_view_expand"
@@ -91,31 +91,31 @@
                     android:layout_width="match_parent"
                     android:layout_height="10dp"
                     android:layout_below="@id/iv_calendar_view_expand"
-                    android:background="@color/content_bg"></View>
+                    android:background="@color/color_bg_content_white" />
 
                 <TextView
                     android:id="@+id/tv_schedule_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/view_space"
-                    android:drawablePadding="6dp"
                     android:drawableRight="@drawable/basemodule_drop_down_black"
-                    android:paddingBottom="10dp"
+                    android:drawablePadding="6dp"
                     android:paddingLeft="16dp"
                     android:paddingTop="10dp"
-                    android:textColor="#333333"
+                    android:paddingBottom="10dp"
+                    android:textColor="@color/color_text_common_level_one"
                     android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/tv_schedule_sum"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
                     android:layout_below="@id/view_space"
-                    android:paddingBottom="10dp"
-                    android:paddingRight="17dp"
+                    android:layout_alignParentRight="true"
                     android:paddingTop="10dp"
-                    android:textColor="#333333"
+                    android:paddingRight="17dp"
+                    android:paddingBottom="10dp"
+                    android:textColor="@color/color_text_common_level_one"
                     android:textSize="15sp" />
 
                 <RelativeLayout
@@ -123,13 +123,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tv_schedule_sum"
-                    android:background="#ffffff"
+                    android:background="@color/color_bg_content_white"
                     android:visibility="gone">
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5px"
-                        android:background="@color/color_list_divider"></View>
+                    <View style="@style/divide_style" />
 
                     <TextView
                         android:id="@+id/tv_all_day"
@@ -138,7 +135,7 @@
                         android:layout_centerVertical="true"
                         android:gravity="center"
                         android:text="@string/schedule_calendar_all_day"
-                        android:textColor="#888888"
+                        android:textColor="@color/color_text_common_level_two"
                         android:textSize="11sp" />
 
                     <RelativeLayout
@@ -148,8 +145,8 @@
                         android:layout_centerVertical="true"
                         android:layout_toRightOf="@id/tv_all_day"
                         android:background="@drawable/schedule_calendar_view_event_bg_blue"
-                        android:paddingBottom="6dp"
-                        android:paddingTop="6dp">
+                        android:paddingTop="6dp"
+                        android:paddingBottom="6dp">
 
                         <ImageView
                             android:id="@+id/iv_event_all_day"
@@ -169,21 +166,19 @@
                             android:ellipsize="end"
                             android:maxLines="1"
                             android:paddingRight="7dp"
-                            android:textColor="#333333"
+                            android:textColor="@color/color_text_common_level_one"
                             android:textSize="13sp" />
                     </RelativeLayout>
 
-
                 </RelativeLayout>
             </RelativeLayout>
-
 
             <ScrollView
                 android:id="@+id/scroll_view_event"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:background="@color/white"
+                android:background="@color/color_bg_content_white"
                 android:paddingRight="17dp"
                 android:scrollbars="none">
 
@@ -195,13 +190,13 @@
                         android:id="@+id/calendar_day_view"
                         android:layout_width="match_parent"
                         android:layout_height="968dp"
-                        android:paddingBottom="4dp"
-                        android:paddingTop="4dp"></com.inspur.emmcloud.schedule.widget.calendardayview.CalendarDayView>
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp" />
 
                     <RelativeLayout
                         android:id="@+id/rl_content"
                         android:layout_width="match_parent"
-                        android:layout_height="968dp"></RelativeLayout>
+                        android:layout_height="968dp" />
                 </RelativeLayout>
 
 
@@ -211,14 +206,14 @@
                 android:id="@+id/recycler_view_event"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"></android.support.v7.widget.RecyclerView>
+                android:layout_weight="1" />
 
             <LinearLayout
                 android:id="@+id/rl_schedule_list_default"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:background="@color/content_bg"
+                android:background="@color/color_bg_content_white"
                 android:gravity="center"
                 android:orientation="vertical">
 
@@ -231,12 +226,11 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/iv_schedule_list_view_default"
-                    android:layout_marginBottom="30dp"
                     android:layout_marginTop="18dp"
+                    android:layout_marginBottom="30dp"
                     android:singleLine="true"
                     android:text="@string/schedule_calendar_no_schedule_today"
-                    android:textColor="#999999"
+                    android:textColor="@color/color_text_common_level_two"
                     android:textSize="16sp" />
             </LinearLayout>
 

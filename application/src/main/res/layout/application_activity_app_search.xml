@@ -35,16 +35,16 @@
     <View
         android:id="@+id/view_layout1"
         android:layout_width="fill_parent"
-        android:layout_height="1px"
+        android:layout_height="0.5px"
         android:layout_below="@id/rl_header"
-        android:background="#a4b0b9" />
+        android:background="@color/color_divider" />
 
     <RelativeLayout
         android:id="@+id/search_layout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/view_layout1"
-        android:background="#c3ced7"
+        android:background="@color/color_bg_content_white"
         android:paddingLeft="12dp"
         android:paddingTop="8dp"
         android:paddingRight="12dp"
@@ -92,7 +92,7 @@
                 android:hint="@string/application_search"
                 android:imeOptions="actionSearch"
                 android:singleLine="true"
-                android:textColor="#000000"
+                android:textColor="@color/color_text_common_level_one"
                 android:textSize="@dimen/content_normal_textsize">
 
                 <requestFocus />
@@ -103,9 +103,9 @@
     <View
         android:id="@+id/view_layout2"
         android:layout_width="fill_parent"
-        android:layout_height="1px"
+        android:layout_height="0.5px"
         android:layout_below="@id/search_layout"
-        android:background="#a4b0b9" />
+        android:background="@color/color_divider" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -115,7 +115,8 @@
         <ListView
             android:id="@+id/search_app_list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"></ListView>
+            android:layout_height="match_parent"
+            android:dividerHeight="1px" />
     </RelativeLayout>
 
 </RelativeLayout>

@@ -7,22 +7,22 @@
         android:id="@+id/blank_layout"
         android:layout_width="match_parent"
         android:layout_height="10dp"
-        android:background="@android:color/transparent"></RelativeLayout>
+        android:background="@android:color/transparent" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/blank_layout"
-        android:background="@color/white"
+        android:background="@color/color_bg_content_white"
         android:paddingLeft="14dp">
 
         <TextView
             android:id="@+id/tv_name_tips"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingBottom="8dp"
             android:paddingTop="8dp"
-            android:textColor="#999999"
+            android:paddingBottom="8dp"
+            android:textColor="@color/color_text_common_level_two"
             android:textSize="14sp" />
 
         <TextView
@@ -31,19 +31,17 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:paddingBottom="8dp"
             android:paddingLeft="10dp"
-            android:paddingRight="10dp"
             android:paddingTop="8dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="8dp"
             android:text="@string/more"
-            android:textColor="#0F7BCA"
+            android:textColor="@color/color_text_link"
             android:textSize="14sp" />
 
         <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_below="@id/tv_name_tips"
-            android:background="#c8c7cc" />
+            style="@style/divide_style"
+            android:layout_below="@id/tv_name_tips" />
     </RelativeLayout>
 
 </RelativeLayout>

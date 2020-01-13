@@ -45,7 +45,7 @@ public class AppCenterMoreActivity extends BaseActivity {
      */
     private void initView() {
         setTitleText(R.string.application_app_center_more_apps);
-        appCenterMoreListView = (ListView) findViewById(R.id.app_center_more_apps);
+        appCenterMoreListView = findViewById(R.id.app_center_more_apps);
         if (getIntent().hasExtra(APP_CENTER_APPLIST)) {
             appList = (List<App>) getIntent().getSerializableExtra(APP_CENTER_APPLIST);
             if (appList != null) {

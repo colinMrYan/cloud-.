@@ -16,6 +16,7 @@ import com.inspur.emmcloud.setting.bean.GetCardPackageResult;
 import com.inspur.emmcloud.setting.bean.GetDeviceLogResult;
 import com.inspur.emmcloud.setting.bean.GetExperienceUpgradeFlagResult;
 import com.inspur.emmcloud.setting.bean.GetFaceSettingResult;
+import com.inspur.emmcloud.setting.bean.GetMDMStateResult;
 import com.inspur.emmcloud.setting.bean.GetUploadMyHeadResult;
 import com.inspur.emmcloud.setting.bean.GetUserCardMenusResult;
 import com.inspur.emmcloud.setting.bean.SettingGetBoolenResult;
@@ -672,5 +673,80 @@ public class SettingAPIService {
             }
         });
     }
+
+    /**
+     * 获取是否启动MDM
+     */
+    public void getMDMState(){
+        final String completeUrl = SettingAPIUri.getMDMStateUrl();
+        RequestParams params = ((BaseApplication) context.getApplicationContext())
+                .getHttpRequestParams(completeUrl);
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnMDMStateSuccess(new GetMDMStateResult(new String(arg0)));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnMDMStateFail(error,responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getMDMState();
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                refreshToken(oauthCallBack, requestTime);
+            }
+        });
+    }
+
+//    /**
+//     * 获取是否启动MDM
+//     */
+//    public void getMDMState1() {
+//        final String completeUrl = SettingAPIUri.getMDMStateUrl();
+//        RequestParams params = ((BaseApplication) context.getApplicationContext())
+//                .getHttpRequestParams(completeUrl);
+//        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+//            @Override
+//            public void callbackSuccess(byte[] arg0) {
+//                apiInterface.returnMDMStateSuccess(new GetMDMStateResult(new String(arg0)));
+//            }
+//
+//            @Override
+//            public void callbackFail(String error, int responseCode) {
+//                apiInterface.returnMDMStateFail(error, responseCode);
+//            }
+//
+//            @Override
+//            public void callbackTokenExpire(long requestTime) {
+//                OauthCallBack oauthCallBack = new OauthCallBack() {
+//                    @Override
+//                    public void reExecute() {
+//                        getMDMState();
+//                    }
+//
+//                    @Override
+//                    public void executeFailCallback() {
+//                        callbackFail("", -1);
+//                    }
+//                };
+//                OauthUtils.getInstance().refreshToken(
+//                        oauthCallBack, requestTime);
+//            }
+//
+//        });
+//    }
+
 
 }

@@ -51,7 +51,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/rl_header"
-        android:background="@color/content_bg"
+        android:background="@color/color_bg_content_white"
         android:paddingTop="10dp">
 
         <TextView
@@ -60,7 +60,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
             android:text="@string/channel_group_members_name"
-            android:textColor="#999999"
+            android:textColor="@color/color_text_common_level_two"
             android:textSize="15sp" />
 
         <com.inspur.emmcloud.baselib.widget.ClearEditText
@@ -76,7 +76,7 @@
             android:paddingRight="15dp"
             android:paddingBottom="10dp"
             android:singleLine="true"
-            android:textColor="#FF333333"
+            android:textColor="@color/color_text_common_level_one"
             android:textSize="@dimen/content_title_textsize" />
     </RelativeLayout>
 

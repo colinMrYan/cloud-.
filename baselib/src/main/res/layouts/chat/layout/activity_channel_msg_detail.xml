@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main_layout"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="@color/white"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_bg_content_white"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
@@ -40,8 +40,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@color/comment_background_color">
-
+        android:background="@color/color_bg_content_white">
 
         <ScrollView
             android:id="@+id/scrollview"
@@ -63,6 +62,6 @@
     <com.inspur.emmcloud.widget.ECMChatInputMenuV0
         android:id="@+id/chat_input_menu"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></com.inspur.emmcloud.widget.ECMChatInputMenuV0>
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

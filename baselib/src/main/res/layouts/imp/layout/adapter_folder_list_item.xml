@@ -5,6 +5,7 @@
     android:background="@color/color_image_grid_header"
     android:gravity="center_vertical"
     android:orientation="horizontal">
+    <!--zyj TODO-->
 
     <ImageView
         android:id="@+id/iv_cover"
@@ -26,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/all_images"
-            android:textColor="@android:color/white"
+            android:textColor="@color/color_text_Anti_White"
             android:textSize="17sp" />
 
         <TextView
@@ -34,7 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:textColor="#d2d2d7"
+            android:textColor="@color/color_text_common_level_two"
             android:textSize="14sp" />
     </LinearLayout>
 

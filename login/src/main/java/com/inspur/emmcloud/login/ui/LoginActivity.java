@@ -83,7 +83,12 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void initView() {
-        welcomeText.setText(getString(R.string.login_tv_welcome, AppUtils.getAppName(this)));
+        String appVersionFlag = AppUtils.getManifestAppVersionFlag(this);
+        if (appVersionFlag != null && appVersionFlag.equals("zhihuiguozi")) {
+            welcomeText.setText(getString(R.string.login_tv_welcome_zhihuiguozi, AppUtils.getAppName(this)));
+        } else {
+            welcomeText.setText(getString(R.string.login_tv_welcome, AppUtils.getAppName(this)));
+        }
         LoadingDlg = new LoadingDialog(LoginActivity.this, getString(R.string.login_loading_text));
         EditWatcher watcher = new EditWatcher();
         usernameEdit.addTextChangedListener(watcher);

@@ -19,13 +19,12 @@
             android:layout_centerVertical="true"
             android:layout_marginTop="25.5dp"
             android:onClick="onClick"
-            android:paddingBottom="9dp"
             android:paddingLeft="8.5dp"
-            android:paddingRight="9.5dp"
             android:paddingTop="9dp"
+            android:paddingRight="9.5dp"
+            android:paddingBottom="9dp"
             android:scaleType="fitXY"
             android:src="@drawable/web_ali_scan_back" />
-
 
     </FrameLayout>
 
@@ -56,6 +55,7 @@
                 android:layout_height="wrap_content"
                 android:measureAllChildren="true">
 
+                <!--zyj TODO-->
                 <com.inspur.emmcloud.basemodule.util.imageedit.view.IMGColorGroup
                     android:id="@+id/cg_colors"
                     android:layout_width="wrap_content"
@@ -111,7 +111,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="@string/image_mosaic_tip"
-                    android:textColor="@color/white"
+                    android:textColor="@color/color_text_Anti_White"
                     android:textSize="12sp" />
 
             </ViewSwitcher>
@@ -157,7 +157,7 @@
                         android:button="@drawable/plugin_camera_image_btn_doodle"
                         android:gravity="center"
                         android:onClick="onClick"
-                        android:textColor="#FFF" />
+                        android:textColor="@color/color_text_Anti_White" />
 
                     <Space
                         android:layout_width="25dp"
@@ -173,7 +173,7 @@
                         android:onClick="onClick"
                         android:padding="10dp"
                         android:src="@drawable/plugin_camera_image_btn_text"
-                        android:textColor="#FFF" />
+                        android:textColor="@color/color_text_Anti_White" />
 
                     <Space
                         android:layout_width="25dp"
@@ -186,7 +186,7 @@
                         android:button="@drawable/plugin_camera_image_btn_mosaic"
                         android:gravity="center"
                         android:onClick="onClick"
-                        android:textColor="#FFF" />
+                        android:textColor="@color/color_text_Anti_White" />
 
                     <Space
                         android:layout_width="25dp"
@@ -202,7 +202,7 @@
                         android:onClick="onClick"
                         android:padding="10dp"
                         android:src="@drawable/plugin_camera_image_btn_clip"
-                        android:textColor="#FFF" />
+                        android:textColor="@color/color_text_Anti_White" />
 
                 </RadioGroup>
 
@@ -214,14 +214,14 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
-                    android:minHeight="0dp"
                     android:minWidth="0dp"
-                    android:paddingBottom="5dp"
+                    android:minHeight="0dp"
                     android:paddingLeft="12dp"
-                    android:paddingRight="12dp"
                     android:paddingTop="5dp"
+                    android:paddingRight="12dp"
+                    android:paddingBottom="5dp"
                     android:text="@string/image_done"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/color_text_Anti_White"
                     android:textSize="15sp"
                     app:cus_backgroundColor="#36A5F6"
                     app:cus_radius="3dp" />
@@ -229,6 +229,5 @@
 
         </RelativeLayout>
     </LinearLayout>
-
 
 </LinearLayout>

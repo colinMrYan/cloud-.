@@ -9,8 +9,8 @@
     app:bl_arrowPosition="16dp"
     app:bl_arrowWidth="4.5dp"
     app:bl_cornersRadius="8dp"
-    app:bl_strokeColor="#AAAAAA"
-    app:bl_strokeWidth="0.5px">
+    app:bl_strokeColor="@color/color_text_common_level_two"
+    app:bl_strokeWidth="1px">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,10 +26,10 @@
                 android:id="@+id/filecard_download_img"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
-                android:layout_marginRight="10dp"
+                android:layout_alignParentRight="true"
                 android:layout_marginTop="5dp"
+                android:layout_marginRight="10dp"
                 android:src="@drawable/icon_file_download" />
 
             <ImageView
@@ -44,8 +44,8 @@
         <View
             android:id="@+id/line_view"
             android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/grey_line_color" />
+            android:layout_height="1px"
+            android:background="@color/color_divider" />
 
         <LinearLayout
             android:id="@+id/bottom_layout"
@@ -63,7 +63,7 @@
                 android:layout_weight="3.5"
                 android:ellipsize="middle"
                 android:singleLine="true"
-                android:textColor="@color/text_grey"
+                android:textColor="@color/color_text_common_level_one"
                 android:textSize="15sp" />
 
             <TextView
@@ -74,7 +74,7 @@
                 android:layout_weight="1"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:textColor="@color/text_grey"
+                android:textColor="@color/color_text_common_level_one"
                 android:textSize="15sp" />
         </LinearLayout>
 
