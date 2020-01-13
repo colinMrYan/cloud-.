@@ -73,14 +73,14 @@
 
         <ImageView
             android:id="@+id/more_function_list_img"
-            android:layout_width="46dp"
+            android:layout_width="38dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:layout_marginRight="8dp"
             android:clickable="true"
             android:paddingLeft="8dp"
-            android:paddingRight="16dp"
-            android:scaleType="centerInside"
+            android:paddingRight="8dp"
             android:src="?attr/ic_add"
             android:tint="?attr/header_text_color" />
         <!--android:src="@drawable/selector_people_btn"-->
