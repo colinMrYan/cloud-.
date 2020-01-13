@@ -11,8 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/rl_header"
-        android:divider="@color/color_divider"
-        android:dividerHeight="1px"
+        android:divider="@null"
         android:scrollbars="none" />
 
 </RelativeLayout>
