@@ -90,7 +90,7 @@
             android:layout_centerInParent="true"
             android:minWidth="100dp"
             android:minHeight="100dp"
-            android:src="@color/color_base_blue"
+            android:src="#3336A5F6"
             android:visibility="invisible"
             app:riv_corner_radius="35dp"
             app:riv_oval="true" />

@@ -90,7 +90,7 @@
         android:layout_below="@id/umeng_socialize_share_word_num"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:background="@color/color_bg_content_white"
+        android:background="@color/color_bg_content_grey"
         android:visibility="gone">
 
         <RelativeLayout

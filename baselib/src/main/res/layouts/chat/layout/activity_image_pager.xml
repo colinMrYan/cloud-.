@@ -22,7 +22,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:background="@color/color_bg_content_black"
+                android:background="#E6000000"
                 android:paddingBottom="10dp">
 
                 <ImageView
@@ -73,13 +73,12 @@
                 android:textColor="@color/color_text_Anti_White"
                 android:visibility="gone" />
 
-
             <LinearLayout
                 android:id="@+id/ll_image_operation"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_alignParentBottom="true"
-                android:background="@color/color_bg_content_black"
+                android:background="#E6000000"
                 android:gravity="right"
                 android:orientation="horizontal"
                 android:paddingTop="10dp"

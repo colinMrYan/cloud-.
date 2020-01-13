@@ -11,7 +11,7 @@
         android:id="@+id/rl_search_contact"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/color_bg_content_white">
+        android:background="@color/header_bg_white">
 
         <TextView
             android:id="@+id/tv_search_contact"
