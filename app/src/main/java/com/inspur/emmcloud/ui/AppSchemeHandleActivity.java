@@ -589,7 +589,9 @@ public class AppSchemeHandleActivity extends BaseActivity {
                     simpleEventMessage.setMessageObj(Constant.ACTION_CALENDAR);
                     EventBus.getDefault().post(simpleEventMessage);
                 } else if (!StringUtils.isBlank(query.getQueryParameter("id"))) {
-                    //openScheduleActivity(query.getQueryParameter("id"), ScheduleDetailActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString(Constant.SCHEDULE_QUERY, query.getQueryParameter("id"));
+                    ARouter.getInstance().build(Constant.AROUTER_CLASS_SCHEDLE_DETAIL).with(bundle).navigation();
                 }
                 finish();
                 break;
@@ -598,7 +600,9 @@ public class AppSchemeHandleActivity extends BaseActivity {
                     simpleEventMessage.setMessageObj(Constant.ACTION_TASK);
                     EventBus.getDefault().post(simpleEventMessage);
                 } else if (!StringUtils.isBlank(query.getQueryParameter("id"))) {
-                    //openScheduleActivity(query.getQueryParameter("id"), TaskAddActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString(Constant.SCHEDULE_QUERY, query.getQueryParameter("id"));
+                    ARouter.getInstance().build(Constant.AROUTER_CLASS_SCHEDLE_DETAIL).with(bundle).navigation();
                 }
                 finish();
                 break;
@@ -607,7 +611,9 @@ public class AppSchemeHandleActivity extends BaseActivity {
                     simpleEventMessage.setMessageObj(Constant.ACTION_MEETING);
                     EventBus.getDefault().postSticky(simpleEventMessage);
                 } else if (!StringUtils.isBlank(query.getQueryParameter("id"))) {
-                    //  openScheduleActivity(query.getQueryParameter("id"), ScheduleDetailActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString(Constant.SCHEDULE_QUERY, query.getQueryParameter("id"));
+                    ARouter.getInstance().build(Constant.AROUTER_CLASS_SCHEDLE_DETAIL).with(bundle).navigation();
                 }
                 finish();
                 break;
