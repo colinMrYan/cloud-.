@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:scaleType="fitXY"
         app:riv_border_color="#cccccc"
-        app:riv_border_width="1px"
+        app:riv_border_width="0.5px"
         app:riv_corner_radius="6dp"
         app:riv_oval="false" />
 
@@ -31,7 +31,7 @@
         android:layout_alignRight="@+id/content_img"
         android:layout_marginBottom="5dp"
         android:layout_marginRight="15dp"
-        android:background="@color/color_bg_content_black"
+        android:background="#26000000"
         android:padding="5dp"
         android:text="@string/long_img"
         android:textColor="@color/color_text_Anti_White"

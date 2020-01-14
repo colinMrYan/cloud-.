@@ -9,8 +9,8 @@
     app:bl_arrowPosition="16dp"
     app:bl_arrowWidth="4.5dp"
     app:bl_cornersRadius="8dp"
-    app:bl_strokeColor="@color/color_text_common_level_one"
-    app:bl_strokeWidth="1px">
+    app:bl_strokeColor="#AAAAAA"
+    app:bl_strokeWidth="0.5px">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -18,7 +18,6 @@
         android:paddingLeft="10dp"
         android:paddingTop="10dp"
         android:paddingRight="10dp">
-
 
         <ImageView
             android:id="@+id/iv_file_icon"

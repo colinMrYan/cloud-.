@@ -7,7 +7,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/color_bg_content_white"
+        android:background="@color/color_bg_content_grey"
         android:orientation="vertical">
 
         <View style="@style/divide_style" />
@@ -130,7 +130,7 @@
         android:id="@+id/voice_input_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/color_bg_content_white"
+        android:background="@color/color_bg_common"
         android:paddingTop="60dp"
         android:paddingBottom="20dp"
         android:visibility="gone">

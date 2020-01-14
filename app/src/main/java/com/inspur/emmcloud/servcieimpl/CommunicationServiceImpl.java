@@ -3,10 +3,12 @@ package com.inspur.emmcloud.servcieimpl;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
+import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.push.PushManagerUtils;
@@ -24,6 +26,7 @@ import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.ui.chat.ConversationBaseActivity;
+import com.inspur.emmcloud.ui.chat.ImagePagerV0Activity;
 import com.inspur.emmcloud.ui.chat.ShareToConversationBlankActivity;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
@@ -215,5 +218,10 @@ public class CommunicationServiceImpl implements CommunicationService {
     @Override
     public Conversation getCustomerConversation(Context context) {
         return ConversationCacheUtils.getCustomerConversation(context);
+    }
+
+    @Override
+    public void startImagePagerV0Activity(Activity activity, Bundle bundle) {
+        IntentUtils.startActivity(activity, ImagePagerV0Activity.class, bundle);
     }
 }

@@ -357,6 +357,11 @@ public class AppSchemeHandleActivity extends BaseActivity {
                     finish();
                 }
             } else {
+                Bundle bundle = getIntent().getExtras();
+                if (isLinkFromQQBrowser(bundle)) {
+                    handleLinkShare(getShareLinkContent());
+                    return;
+                }
                 if (uri != null) {
                     uriList.add(GetPathFromUri4kitkat.getPathByUri(MyApplication.getInstance(), uri));
                 }
@@ -373,6 +378,21 @@ public class AppSchemeHandleActivity extends BaseActivity {
             ToastUtils.show(AppSchemeHandleActivity.this, getString(R.string.share_not_support));
             finish();
         }
+    }
+
+    /**
+     * 如果传入的内容是一个image类型，且bundle不为空，且有一个key为url，且内容就是一个url
+     * 则认为是一个来自qq浏览器的链接分享走分享链接的逻辑,否则走之前的逻辑
+     *
+     * @param bundle
+     * @return
+     */
+    private boolean isLinkFromQQBrowser(Bundle bundle) {
+        if (bundle != null) {
+            String urlContent = bundle.getString("url", "");
+            return !StringUtils.isBlank(urlContent) && StringUtils.isHttpUrl(urlContent);
+        }
+        return false;
     }
 
     /**

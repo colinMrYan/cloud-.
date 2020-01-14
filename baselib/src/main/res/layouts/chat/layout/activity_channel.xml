@@ -67,7 +67,7 @@
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@color/color_bg_content_white"
+        android:background="@color/color_bg_common"
         android:scrollbars="vertical">
 
         <RelativeLayout
@@ -88,7 +88,7 @@
                 android:textColor="@color/color_text_Anti_White"
                 android:textSize="14sp"
                 android:visibility="gone"
-                app:cus_backgroundColor="@color/color_base_blue"
+                app:cus_backgroundColor="#7f36A5F6"
                 app:cus_borderWidth="0dp"
                 app:cus_isRadiusAdjustBounds="true" />
 
