@@ -44,7 +44,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/view_layout1"
-        android:background="@color/color_bg_content_white"
+        android:background="#c3ced7"
         android:paddingLeft="12dp"
         android:paddingTop="8dp"
         android:paddingRight="12dp"
