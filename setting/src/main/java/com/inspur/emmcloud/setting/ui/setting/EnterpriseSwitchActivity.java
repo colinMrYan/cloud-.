@@ -119,6 +119,7 @@ public class EnterpriseSwitchActivity extends BaseActivity {
         PushManagerUtils.getInstance().stopPush();
         BaseApplication.getInstance().clearNotification();
         BaseApplication.getInstance().removeAllCookie();
+        BaseApplication.getInstance().removeAllSessionCookie();
         BaseApplication.getInstance().clearUserPhotoMap();
         PreferencesUtils.putBoolean(EnterpriseSwitchActivity.this, Constant.PREF_MDM_STATUS_PASS, false);
 //        Intent intent = new Intent(EnterpriseSwitchActivity.this,
