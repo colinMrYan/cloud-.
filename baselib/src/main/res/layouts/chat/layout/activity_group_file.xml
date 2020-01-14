@@ -76,7 +76,7 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/rl_bottom_all_action"
         android:layout_below="@id/rl_order_by"
-        android:background="@color/color_bg_common">
+        android:background="#FFECEFF3">
 
         <ListView
             android:id="@+id/lv_file"

@@ -48,7 +48,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:divider="@color/transparent"
-                android:dividerHeight="0dp"></com.inspur.emmcloud.baselib.widget.ScrollViewWithListView>
+                android:dividerHeight="0.5px"></com.inspur.emmcloud.baselib.widget.ScrollViewWithListView>
 
 
             <RelativeLayout
