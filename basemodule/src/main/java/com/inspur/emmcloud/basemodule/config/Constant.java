@@ -305,6 +305,7 @@ public class Constant {
 
     public static final String AROUTER_CLASS_SCHEDLE_TEST = "/schedule/test";
     public static final String AROUTER_CLASS_SCHEDLE_ADD = "/schedule/add";
+    public static final String AROUTER_CLASS_SCHEDLE_DETAIL = "/schedule/detail";
 
     public static final String AROUTER_CLASS_APP_MAIN = "/app/main";
     public static final String AROUTER_CLASS_APP_CONVERSATION_V1 = "/app/ConversationActivity";

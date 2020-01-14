@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
@@ -63,6 +64,7 @@ import butterknife.ButterKnife;
 /**
  * Created by yufuchang on 2019/4/16.
  */
+@Route(path = Constant.AROUTER_CLASS_SCHEDLE_DETAIL)
 public class ScheduleDetailActivity extends BaseActivity {
 
     public static final String EXTRA_SCHEDULE_ENTITY = "extra_schedule_entity";
