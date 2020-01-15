@@ -64,7 +64,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            android:background="@color/color_text_common_level_one"
+            android:background="@android:color/transparent"
             android:drawableLeft="@drawable/setting_ic_finger_print_btn"
             android:drawablePadding="5dp"
             android:focusable="false"
