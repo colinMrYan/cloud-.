@@ -167,7 +167,7 @@
     <string name="please_input_remark">請輸入備註資訊</string>
     <string name="alert_cycle">提醒週期</string>
     <string name="cycle">週期</string>
-    <string name="calendar_divide_into_groups">分組</string>
+    <string name="schedule_calendar_divide_into_groups">分組</string>
     <string name="quarter">季度</string>
     <string name="monthly_a">月度</string>
     <string name="repeat">重複</string>
