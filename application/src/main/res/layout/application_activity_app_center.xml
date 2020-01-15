@@ -53,6 +53,12 @@
                 android:textSize="@dimen/content_normal_textsize" />
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_gravity="center_vertical"
+            android:background="@color/color_divider" />
+
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"

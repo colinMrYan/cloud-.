@@ -40,7 +40,6 @@ import com.inspur.emmcloud.application.bean.AppAdsBean;
 import com.inspur.emmcloud.application.bean.AppGroupBean;
 import com.inspur.emmcloud.application.bean.GetAllAppResult;
 import com.inspur.emmcloud.application.widget.AdsViewPager;
-import com.inspur.emmcloud.application.widget.ECMSpaceItemDecoration;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
@@ -439,7 +438,6 @@ public class AppCenterActivity extends BaseActivity {
                 }
             });
             RecyclerView recommendRecyclerView = (RecyclerView) convertView.findViewById(R.id.app_center_recomand_recycleview);
-            recommendRecyclerView.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(AppCenterActivity.this, 11)));
             GridLayoutManager gridLayoutManager = new GridLayoutManager(AppCenterActivity.this, 5);
             recommendRecyclerView.setLayoutManager(gridLayoutManager);
             RecommendAppListAdapter recommendAppListAdapter = new RecommendAppListAdapter(AppCenterActivity.this, listPosition);

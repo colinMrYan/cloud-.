@@ -200,6 +200,8 @@
     <string name="schedule_meeting_add_content_hint">請輸入主題...</string>
     <string name="schedule_meeting_add_location_hint">請選擇會議地點...</string>
     <string name="schedule_meeting_detail_location">會議地點：</string>
+    <string name="schedule_meeting_no_permission">您沒有許可權預定會議室，請聯系管理員開通</string>
+
     <string name="schedule_delete_ac">刪除賬户</string>
     <string name="schedule_modify_ac">修改賬户</string>
     <string name="schedule_meeting_create_group_chat">會議群聊</string>

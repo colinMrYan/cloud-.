@@ -202,8 +202,8 @@
     <string name="schedule_meeting_detail_invite">Inviter</string>
     <string name="schedule_meeting_start_time">From</string>
     <string name="schedule_meeting_end_time">To</string>
+    <string name="schedule_meeting_no_permission">No permission to reserve the meeting room. Please contact the administrator to open it</string>
     <string name="schedule_meeting_detail_location">Location：</string>
     <string name="schedule_chat_search_related_messages">%1$s Messages</string>
     <string name="schedule_calendar">Calendar</string>
-
 </resources>
