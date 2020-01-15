@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -209,7 +210,8 @@ public class ImageDetailFragment extends Fragment {
      * @param bitmap
      */
     public String saveBitmapFile(Bitmap bitmap) {
-        File temp = new File("/sdcard/IMP-Cloud/cache/chat/");// 要保存文件先创建文件夹
+        String saveImageFolder = "IMP-Cloud/cache/chat/";
+        File temp = new File(Environment.getExternalStorageDirectory() + "/" + saveImageFolder);// 要保存文件先创建文件夹
         if (!temp.exists()) {
             temp.mkdir();
         }
@@ -225,7 +227,7 @@ public class ImageDetailFragment extends Fragment {
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
             bos.flush();
             bos.close();
-            ToastUtils.show(BaseApplication.getInstance(), BaseApplication.getInstance().getString(R.string.save_success));
+            ToastUtils.show(BaseApplication.getInstance(), BaseApplication.getInstance().getString(R.string.communication_save_image_success, saveImageFolder));
         } catch (IOException e) {
             ToastUtils.show(BaseApplication.getInstance(), BaseApplication.getInstance().getString(R.string.save_fail));
             e.printStackTrace();

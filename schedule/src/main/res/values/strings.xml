@@ -126,6 +126,7 @@
     <string name="schedule_meeting_attend_accept">接受</string>
     <string name="schedule_meeting_attend_ignore">暂定</string>
     <string name="schedule_meeting_attend_reject">拒绝</string>
+    <string name="schedule_meeting_no_permission">您没有权限预定会议室，请联系管理员开通</string>
 
     <string name="schedule_add">新建</string>
     <string name="schedule_update">编辑</string>

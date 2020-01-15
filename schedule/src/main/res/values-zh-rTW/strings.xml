@@ -196,6 +196,7 @@
     <string name="schedule_meeting_attend_ignore">忽略</string>
     <string name="schedule_meeting_attend_accept">接受</string>
     <string name="schedule_meeting_attend_reject">拒絕</string>
+    <string name="schedule_meeting_no_permission">您沒有許可權預定會議室，請聯系管理員開通</string>
 
     <string name="schedule_delete_ac">刪除賬户</string>
     <string name="schedule_modify_ac">修改賬户</string>
