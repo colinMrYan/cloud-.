@@ -3,6 +3,7 @@ package com.inspur.emmcloud.schedule.ui.meeting;
 import android.view.View;
 import android.widget.ExpandableListView;
 
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
@@ -130,6 +131,9 @@ public class MeetingOfficeSettingActivity extends BaseActivity implements Expand
             LoadingDialog.dimissDlg(loadingDlg);
             locationList = getLocationResult.getLocList();
             adapter.setData(locationList);
+            if (locationList.size() == 0) {
+                ToastUtils.show(R.string.schedule_meeting_no_permission);
+            }
 
         }
 
