@@ -122,7 +122,7 @@
     <string name="schedule_calendar_two_days_ago">Two days before start</string>
     <string name="schedule_calendar_a_week_ago">1 week before start</string>
     <string name="schedule_calendar_add_calendar">Add Calendars</string>
-    <string name="calendar_divide_into_groups">Grouping</string>
+    <string name="schedule_calendar_divide_into_groups">Grouping</string>
     <string name="schedule_calendar_no_alert">None</string>
     <string name="schedule_calendar_when_event_finished">Finished</string>
     <string name="schedule_calendar_cancel_the_schedule">Are you sure to cancel the schedule?</string>
@@ -192,11 +192,18 @@
     <string name="schedule_meeting_detail_thirty_minutes">Thirty Minutes Before</string>
     <string name="schedule_meeting_detail_one_hour">One Hour Before</string>
     <string name="schedule_meeting_detail_one_day">One Day Before</string>
+    <string name="schedule_meeting_detail_attendee_accept">Accept</string>
+    <string name="schedule_meeting_detail_attendee_decline">Decline</string>
+    <string name="schedule_meeting_detail_attendee_unknown">Unknown</string>
+    <string name="schedule_meeting_detail_attendee_tentative">Tentative</string>
+    <string name="schedule_meeting_group_chat_fail">Chat fail</string>
     <string name="schedule_meeting_detail_attendee_num">%1$s et al. %2$d</string>
     <string name="schedule_meeting_create_group_chat">Meeting Chat</string>
     <string name="schedule_meeting_detail_invite">Inviter</string>
     <string name="schedule_meeting_start_time">From</string>
     <string name="schedule_meeting_end_time">To</string>
     <string name="schedule_meeting_no_permission">No permission to reserve the meeting room. Please contact the administrator to open it</string>
-
+    <string name="schedule_meeting_detail_location">Location：</string>
+    <string name="schedule_chat_search_related_messages">%1$s Messages</string>
+    <string name="schedule_calendar">Calendar</string>
 </resources>

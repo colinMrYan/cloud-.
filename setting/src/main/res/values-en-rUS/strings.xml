@@ -147,6 +147,7 @@
     <string name="setting_sure_switch_to">Make sure to switch to %1$s</string>
 
     <string name="setting_enter_app">Enter the application</string>
+    <string name="setting_safe_cloud_touch_id">%1$s </string>
 
 
 </resources>

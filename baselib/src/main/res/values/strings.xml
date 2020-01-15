@@ -169,7 +169,7 @@
     <string name="please_input_remark">请输入备注信息</string>
     <string name="alert_cycle">提醒周期</string>
     <string name="cycle">周期</string>
-    <string name="calendar_divide_into_groups">分组</string>
+    <string name="schedule_calendar_divide_into_groups">分组</string>
     <string name="quarter">季度</string>
     <string name="monthly_a">月度</string>
     <string name="repeat">重复</string>
