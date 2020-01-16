@@ -142,6 +142,7 @@
     <string name="setting_device_id">設備ID</string>
     <string name="setting_unbind_this_device">解綁此設備</string>
     <string name="setting_sure_switch_to">確定切換到%1$s</string>
+    <string name="setting_safe_cloud_touch_id">%1$s </string>
 
     <string name="setting_enter_app">進入應用</string>
 </resources>

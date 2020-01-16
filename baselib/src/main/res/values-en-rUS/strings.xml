@@ -49,6 +49,7 @@
     <string name="modify_success">Successfully Modified</string>
     <string name="save_success">Saved</string>
     <string name="save_fail">Unsaved</string>
+    <string name="communication_save_image_success">Image saved to \"%1$s\"</string>
     <string name="picture_cannot_show">Picture cannot be displayed</string>
     <string name="cannot_download_for_network_exception">Network exception,unable to download</string>
     <string name="cannot_show_for_too_big">The picture is too big to show</string>

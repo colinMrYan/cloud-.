@@ -52,6 +52,7 @@
     <string name="modify_success">修改成功</string>
     <string name="save_success">保存成功</string>
     <string name="save_fail">保存失敗</string>
+    <string name="communication_save_image_success">圖片已保存至%1$s資料夾</string>
     <string name="picture_cannot_show">圖片無法顯示</string>
     <string name="cannot_download_for_network_exception">網路有問題，無法下載</string>
     <string name="cannot_show_for_too_big">圖片太大無法顯示</string>
@@ -167,7 +168,7 @@
     <string name="please_input_remark">請輸入備註資訊</string>
     <string name="alert_cycle">提醒週期</string>
     <string name="cycle">週期</string>
-    <string name="calendar_divide_into_groups">分組</string>
+    <string name="schedule_calendar_divide_into_groups">分組</string>
     <string name="quarter">季度</string>
     <string name="monthly_a">月度</string>
     <string name="repeat">重複</string>
