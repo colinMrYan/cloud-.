@@ -47,7 +47,7 @@
             android:layout_marginTop="10dp"
             android:paddingBottom="16dp"
             android:text="@string/chat_file_transfer"
-            android:textColor="@color/color_text_common_level_one"
+            android:textColor="?attr/header_text_color"
             android:textSize="17sp" />
     </LinearLayout>
 

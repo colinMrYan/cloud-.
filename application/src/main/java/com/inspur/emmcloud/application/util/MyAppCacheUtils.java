@@ -125,8 +125,9 @@ public class MyAppCacheUtils {
 
     /**
      * 获取是否需要显示常用app
-     *isShowCommAppFromSer  服务端拉取是否显示常用应用  true：显示本地最近常用操作按钮 然后根据 isShowCommAppFromNative 显示最近常用应用UI false：隐藏本地操作按钮
+     * isShowCommAppFromSer  服务端拉取是否显示常用应用  true：显示本地最近常用操作按钮 然后根据 isShowCommAppFromNative 显示最近常用应用UI false：隐藏本地操作按钮
      * isShowCommAppFromNative 最近常用操作按钮本地存储状态
+     *
      * @return
      */
     public static boolean getNeedCommonlyUseApp() {
@@ -186,19 +187,15 @@ public class MyAppCacheUtils {
     /**
      * 应用排序接口，比较权重，用于展示APP
      */
-    public static class SortCommonlyUseAppClass implements Comparator {
-        public int compare(Object arg0, Object arg1) {
-            App appItemA = (App) arg0;
-            App appItemB = (App) arg1;
-            double appSortA = appItemA.getWeight();
-            double appSortB = appItemB.getWeight();
-            if (appSortA == 0 || appSortB == 0) {
-                return -1;
-            }
+    public static class SortCommonlyUseAppClass implements Comparator<App> {
+        @Override
+        public int compare(App arg0, App arg1) {
+            double appSortA = arg0.getWeight();
+            double appSortB = arg1.getWeight();
             if (appSortA > appSortB) {
-                return -1;
-            } else if (appSortA < appSortB) {
                 return 1;
+            } else if (appSortA < appSortB) {
+                return -1;
             } else {
                 return 0;
             }
