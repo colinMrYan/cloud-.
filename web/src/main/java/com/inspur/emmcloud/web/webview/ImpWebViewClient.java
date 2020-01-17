@@ -179,7 +179,7 @@ public class ImpWebViewClient extends WebViewClient {
                 e.printStackTrace();
             }
         }
-        return null;
+        return super.shouldInterceptRequest(view, url);
     }
 
 
@@ -189,7 +189,7 @@ public class ImpWebViewClient extends WebViewClient {
                 !StringUtils.isBlank(request.getUrl().getPath()) && request.getUrl().getPath().equals("/favicon.ico")) {
             return shouldInterceptRequest(view, request.getUrl().toString());
         }
-        return null;
+        return super.shouldInterceptRequest(view, request);
     }
 
     @TargetApi(Build.VERSION_CODES.N)
