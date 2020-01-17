@@ -21,6 +21,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.web.api.WebAPIInterfaceImpl;
@@ -184,7 +185,8 @@ public class ImpWebViewClient extends WebViewClient {
 
     @Override
     public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && !request.isForMainFrame() && request.getUrl().getPath().equals("/favicon.ico")) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && !request.isForMainFrame() &&
+                !StringUtils.isBlank(request.getUrl().getPath()) && request.getUrl().getPath().equals("/favicon.ico")) {
             return shouldInterceptRequest(view, request.getUrl().toString());
         }
         return null;

@@ -193,9 +193,9 @@ public class MyAppCacheUtils {
             double appSortA = arg0.getWeight();
             double appSortB = arg1.getWeight();
             if (appSortA > appSortB) {
-                return 1;
-            } else if (appSortA < appSortB) {
                 return -1;
+            } else if (appSortA < appSortB) {
+                return 1;
             } else {
                 return 0;
             }
