@@ -64,9 +64,9 @@
                 android:layout_height="wrap_content"
                 android:background="#FFFFFF"
                 android:hint="@string/schedule_task_label_add_hint"
-                android:paddingBottom="11dp"
                 android:paddingLeft="16dp"
                 android:paddingTop="11dp"
+                android:paddingBottom="11dp"
                 android:textColorHint="@color/color_text_common_level_two"
                 android:textSize="16sp" />
 
@@ -77,9 +77,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
                 android:text="@string/schedule_task_label_color"
                 android:textColor="@color/color_text_common_level_two"
                 android:textSize="13sp" />
@@ -89,7 +89,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/color_bg_content_white"
-                android:paddingLeft="16dp"></com.inspur.emmcloud.baselib.widget.ScrollViewWithListView>
+                android:divider="@color/color_list_divider"
+                android:dividerHeight="1px"
+                android:paddingLeft="16dp" />
 
             <TextView
                 android:id="@+id/tv_delecte_tag"
@@ -99,8 +101,8 @@
                 android:background="@color/color_bg_content_white"
                 android:gravity="center"
                 android:onClick="onClick"
-                android:paddingBottom="11dp"
                 android:paddingTop="11dp"
+                android:paddingBottom="11dp"
                 android:text="@string/schedule_task_delete_the_tag"
                 android:textColor="#FF4242"
                 android:textSize="16sp"
