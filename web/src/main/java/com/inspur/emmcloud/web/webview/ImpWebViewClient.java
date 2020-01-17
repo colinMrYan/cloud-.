@@ -186,7 +186,7 @@ public class ImpWebViewClient extends WebViewClient {
     @Override
     public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && !request.isForMainFrame() &&
-                (StringUtils.isBlank(request.getUrl().getPath()) || request.getUrl().getPath().equals("/favicon.ico"))) {
+                !StringUtils.isBlank(request.getUrl().getPath()) && request.getUrl().getPath().equals("/favicon.ico")) {
             return shouldInterceptRequest(view, request.getUrl().toString());
         }
         return null;
