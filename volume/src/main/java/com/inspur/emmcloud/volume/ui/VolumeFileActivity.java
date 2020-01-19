@@ -549,7 +549,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         bundle.putString("share_type", "file");
         bundle.putString("path", currentDirAbsolutePath); //currentDirAbsolutePath
         bundle.putSerializable("share_obj_form_volume", (Serializable) shareToVolumeFile);
-        ARouter.getInstance().build(Constant.AROUTER_CLASS_CONVERSATION).with(bundle).navigation(this);
+        ARouter.getInstance().build(Constant.AROUTER_CLASS_APP_CONVERSATION_V1).with(bundle).navigation(this);
     }
 
     /**

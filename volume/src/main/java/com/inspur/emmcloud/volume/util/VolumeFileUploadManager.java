@@ -212,7 +212,11 @@ public class VolumeFileUploadManager extends VolumeAPIInterfaceInstance {
             if (volumeFileUpload.getStatus().equals(VolumeFile.STATUS_LOADING) || volumeFileUpload.getStatus().equals(VolumeFile.STATUS_PAUSE) ||
                     volumeFileUpload.getStatus().equals(VolumeFile.STATUS_FAIL)) {
                 VolumeFile mockVolumeFile = VolumeFile.getMockVolumeFile(volumeFileUpload);
-                volumeFileList.add(mockVolumeFile);
+                if (volumeFileUpload.getStatus().equals(VolumeFile.STATUS_FAIL) && volumeFileUpload.getProgress() == 100) {
+                    //假失败----->上传进度已经100 但是状态时失败的情况  不删除数据库
+                } else {
+                    volumeFileList.add(mockVolumeFile);
+                }
             }
 
         }
