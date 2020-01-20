@@ -155,6 +155,7 @@ public class MyAppFragment extends BaseFragment {
         getMyAppRecommendWidgetsUpdate();
         return view;
     }
+
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
@@ -751,22 +752,24 @@ public class MyAppFragment extends BaseFragment {
         List<AppOrder> appOrderList = AppCacheUtils.getAllAppOrderList(getActivity());
         int appListSize = appGroupList.size();
         for (int i = 0; i < appListSize; i++) {
-            List<App> appItemList = appGroupList.get(i).getAppItemList();
-            int appGroupSize = appItemList.size();
-            for (int j = 0; j < appGroupSize; j++) {
-                App app = appItemList.get(j);
-                AppOrder appOrderCache = new AppOrder();
-                appOrderCache.setAppID(app.getAppID());
-                int index = appOrderList.indexOf(appOrderCache);
-                if (index != -1) {
-                    app.setOrderId(Integer.parseInt(appOrderList.get(index).getOrderId()));
+            if (i == 0 && appGroupList.get(0).getCategoryID().equals("commonly")) {
+                Collections.sort(appGroupList.get(0).getAppItemList(), new MyAppCacheUtils.SortCommonlyUseAppClass());
+            } else {
+                List<App> appItemList = appGroupList.get(i).getAppItemList();
+                int appGroupSize = appItemList.size();
+                for (int j = 0; j < appGroupSize; j++) {
+                    App app = appItemList.get(j);
+                    AppOrder appOrderCache = new AppOrder();
+                    appOrderCache.setAppID(app.getAppID());
+                    int index = appOrderList.indexOf(appOrderCache);
+                    if (index != -1) {
+                        app.setOrderId(Integer.parseInt(appOrderList.get(index).getOrderId()));
+                    }
                 }
+                Collections.sort(appGroupList.get(i).getAppItemList(), new SortAppClass());
             }
-            Collections.sort(appGroupList.get(i).getAppItemList(), new SortAppClass());
         }
-        if (MyAppCacheUtils.getNeedCommonlyUseApp()) {
-            Collections.sort(appGroupList.get(0).getAppItemList(), new MyAppCacheUtils.SortCommonlyUseAppClass());
-        }
+
     }
 
     /**
@@ -912,11 +915,13 @@ public class MyAppFragment extends BaseFragment {
             dragGridViewAdapter.setGroupPosition(listPosition);
             dragGridView.setOnChangeListener(new DragGridView.OnChanageListener() {
                 @Override
-                public void onChange(int listPosition, int from, int to) {
-                    handAppOrderChange(appGroupItemList, from, to);
-                    dragGridViewAdapter.notifyDataSetChanged();
-                    //去掉在排序完成之后的刷新，这里不影响删除应用相关的逻辑
-                    saveAppChangeOrder(listPosition);
+                public void onChange(int position, int from, int to) {
+                    if (!(listPosition == 0 && appAdapterList.get(0).getCategoryID().equals("commonly"))) {
+                        handAppOrderChange(appGroupItemList, from, to);
+                        dragGridViewAdapter.notifyDataSetChanged();
+                        //去掉在排序完成之后的刷新，这里不影响删除应用相关的逻辑
+                        saveAppChangeOrder(position);
+                    }
                 }
             });
             dragGridView.setOnItemClickListener(new OnItemClickListener() {
