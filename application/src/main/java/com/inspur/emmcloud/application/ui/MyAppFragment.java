@@ -52,7 +52,6 @@ import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
@@ -764,6 +763,9 @@ public class MyAppFragment extends BaseFragment {
                 }
             }
             Collections.sort(appGroupList.get(i).getAppItemList(), new SortAppClass());
+        }
+        if (MyAppCacheUtils.getNeedCommonlyUseApp()) {
+            Collections.sort(appGroupList.get(0).getAppItemList(), new MyAppCacheUtils.SortCommonlyUseAppClass());
         }
     }
 
