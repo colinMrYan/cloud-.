@@ -377,7 +377,15 @@ public class WebServiceRouterManager {
     }
 
     public String getIDMUrl() {
-        String clusterId = PreferencesUtils.getString(BaseApplication.getInstance(), Constant.PREF_CLOUD_IDM, Constant.DEFAULT_CLUSTER_ID);
-        return StringUtils.isBlank(clusterId) ? Constant.DEFAULT_CLUSTER_ID : clusterId;
+        String clusterId = PreferencesUtils.getString(BaseApplication.getInstance(), Constant.PREF_CLOUD_IDM, "");
+        String appVersionFlag = AppUtils.getManifestAppVersionFlag(BaseApplication.getInstance());
+        if (StringUtils.isBlank(clusterId)) {
+            if (appVersionFlag.equals("zhihuiguozi")) {
+                return Constant.DEFAULT_CLUSTER_ID_ZHIHUIGUOZI;
+            } else {
+                return Constant.DEFAULT_CLUSTER_ID;
+            }
+        }
+        return clusterId;
     }
 }

@@ -95,7 +95,7 @@ public class LoginMoreActivity extends BaseActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                         PreferencesUtils.putString(LoginMoreActivity.this, Constant.PREF_LOGIN_ENTERPRISE_NAME, "");
-                        PreferencesUtils.putString(LoginMoreActivity.this, Constant.PREF_CLOUD_IDM, Constant.DEFAULT_CLUSTER_ID);
+                        PreferencesUtils.putString(LoginMoreActivity.this, Constant.PREF_CLOUD_IDM, "");
                         PreferencesByUsersUtils.putString(getApplicationContext(), Constant.PREF_SELECT_LOGIN_ENTERPRISE_ID, "");
                         finish();
                     }
@@ -146,7 +146,10 @@ public class LoginMoreActivity extends BaseActivity {
                         Intent intent = new Intent();
                         intent.putExtra("loginEnterprise", loginMoreBean.getName());
                         setResult(RESULT_OK, intent);
-                        PreferencesUtils.putString(LoginMoreActivity.this, Constant.PREF_CLOUD_IDM, StringUtils.isBlank(loginMoreBean.getUrl()) ? Constant.DEFAULT_CLUSTER_ID : (loginMoreBean.getUrl() + "/"));
+                        //todo  此处应做非空判断，如果为空需要给出提示，后续版本进行更改
+                        if (!StringUtils.isBlank(loginMoreBean.getUrl())) {
+                            PreferencesUtils.putString(LoginMoreActivity.this, Constant.PREF_CLOUD_IDM, loginMoreBean.getUrl() + "/");
+                        }
                         resetEnterpriseLayout.setVisibility(View.VISIBLE);
                         PreferencesUtils.putString(LoginMoreActivity.this, Constant.PREF_LOGIN_ENTERPRISE_NAME, loginMoreBean.getName());
                         PreferencesByUsersUtils.putString(getApplicationContext(), Constant.PREF_SELECT_LOGIN_ENTERPRISE_ID, "");

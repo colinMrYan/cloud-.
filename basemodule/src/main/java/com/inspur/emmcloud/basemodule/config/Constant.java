@@ -89,6 +89,7 @@ public class Constant {
     public static final String DEFAULT_CLUSTER_EMM = "https://emm.inspur.com/";//EMM默认
     public static final String DEFAULT_CLUSTER_ECM = "https://ecm.inspur.com/";//ECM默认
     public static final String DEFAULT_CLUSTER_ID = "https://id.inspuronline.com/";//ID默认
+    public static final String DEFAULT_CLUSTER_ID_ZHIHUIGUOZI = "http://cloud-id.sasac.tj.gov.cn";
 
     public static final String EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE = "tag_reveive_single_ws_message";
     public static final String EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE_CONVERSATION = "tag_reveive_single_ws_message_conversation";
