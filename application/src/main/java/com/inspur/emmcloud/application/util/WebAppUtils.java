@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.application.util;
 
+import android.app.Activity;
 import android.content.Context;
 
 import com.inspur.emmcloud.application.api.ApplicationAPIService;
@@ -14,20 +15,20 @@ import com.inspur.emmcloud.componentservice.communication.OnGetWebAppRealUrlList
  */
 
 public class WebAppUtils {
-    private Context context;
+    private Activity activity;
     private OnGetWebAppRealUrlListener onGetWebAppRealUrlListener;
     private LoadingDialog loadingDlg;
 
-    public WebAppUtils(Context context, OnGetWebAppRealUrlListener onGetWebAppRealUrlListener) {
-        this.context = context;
+    public WebAppUtils(Activity activity, OnGetWebAppRealUrlListener onGetWebAppRealUrlListener) {
+        this.activity = activity;
         this.onGetWebAppRealUrlListener = onGetWebAppRealUrlListener;
-        loadingDlg = new LoadingDialog(context);
+        loadingDlg = new LoadingDialog(activity);
     }
 
     public void getWebAppRealUrl(String url) {
-        if (NetUtils.isNetworkConnected(context, false)) {
+        if (NetUtils.isNetworkConnected(activity, false)) {
             loadingDlg.show();
-            ApplicationAPIService apiService = new ApplicationAPIService(context);
+            ApplicationAPIService apiService = new ApplicationAPIService(activity);
             apiService.setAPIInterface(new WebService());
             apiService.getWebAppRealUrl(url);
         } else if (onGetWebAppRealUrlListener != null) {

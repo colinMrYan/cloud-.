@@ -565,7 +565,7 @@ public class AppSchemeHandleActivity extends BaseActivity {
         Router router = Router.getInstance();
         if (router.getService(ApplicationService.class) != null) {
             ApplicationService service = router.getService(ApplicationService.class);
-            service.getWebAppRealUrl(new OnGetWebAppRealUrlListener() {
+            service.getWebAppRealUrl(AppSchemeHandleActivity.this,new OnGetWebAppRealUrlListener() {
                 @Override
                 public void getWebAppRealUrlSuccess(String webAppUrl) {
                     boolean isUriHasTitle = (openMode != null && openMode.equals("1"));
