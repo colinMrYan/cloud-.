@@ -15,6 +15,7 @@ import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.ContactAPIService;
 import com.inspur.emmcloud.baselib.router.Router;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
@@ -38,6 +39,7 @@ import com.inspur.emmcloud.bean.contact.ContactOrg;
 import com.inspur.emmcloud.bean.contact.ContactProtoBuf;
 import com.inspur.emmcloud.bean.contact.GetContactOrgListUpateResult;
 import com.inspur.emmcloud.bean.contact.GetContactUserListUpateResult;
+import com.inspur.emmcloud.bean.contact.GetMultiContactResult;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.componentservice.app.CommonCallBack;
 import com.inspur.emmcloud.componentservice.application.ApplicationService;
@@ -96,6 +98,7 @@ public class IndexActivity extends IndexBaseActivity {
         getInitData();
         startService();
         uploadApiRequestRecord();
+        getMultipleContactOrg();
     }
 
     private void getNaviTabData(String naviTabSaveConfigVersion) {
@@ -469,6 +472,18 @@ public class IndexActivity extends IndexBaseActivity {
     }
 
     /**
+     * 获取多组织
+     * 对应的人有
+     */
+    private void getMultipleContactOrg(){
+        if(NetUtils.isNetworkConnected(getApplicationContext(),false)){
+            ContactAPIService apiService = new ContactAPIService(IndexActivity.this);
+            apiService.setAPIInterface(new WebService());
+            apiService.getMultipleContactOrgList();
+        }
+    }
+
+    /**
      * 获取所有的Robot
      */
     private void getAllRobotInfo() {
@@ -721,6 +736,17 @@ public class IndexActivity extends IndexBaseActivity {
         @Override
         public void returnNaviBarModelFail(String error, int errorCode) {
             super.returnNaviBarModelFail(error, errorCode);
+        }
+
+        @Override
+        public void returnMultiContactOrgSuccess(GetMultiContactResult getMultiContactResult) {
+            super.returnMultiContactOrgSuccess(getMultiContactResult);
+            ContactOrgCacheUtils.saveMultiOrg(getMultiContactResult.getMultiOrgList());
+        }
+
+        @Override
+        public void returnMultiContactOrgFail(String error, int errorCode) {
+            super.returnMultiContactOrgFail(error, errorCode);
         }
     }
 

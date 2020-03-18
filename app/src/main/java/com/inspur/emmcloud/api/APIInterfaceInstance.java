@@ -24,6 +24,7 @@ import com.inspur.emmcloud.bean.chat.Robot;
 import com.inspur.emmcloud.bean.chat.ScanCodeJoinConversationBean;
 import com.inspur.emmcloud.bean.contact.GetContactOrgListUpateResult;
 import com.inspur.emmcloud.bean.contact.GetContactUserListUpateResult;
+import com.inspur.emmcloud.bean.contact.GetMultiContactResult;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.find.GetKnowledgeInfo;
 import com.inspur.emmcloud.bean.find.GetTripArriveCity;
@@ -537,6 +538,16 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnContactOrgListFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnMultiContactOrgSuccess(GetMultiContactResult getMultiContactResult) {
+
+    }
+
+    @Override
+    public void returnMultiContactOrgFail(String error, int errorCode) {
 
     }
 

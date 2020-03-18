@@ -23,6 +23,7 @@ import com.inspur.emmcloud.bean.chat.Robot;
 import com.inspur.emmcloud.bean.chat.ScanCodeJoinConversationBean;
 import com.inspur.emmcloud.bean.contact.GetContactOrgListUpateResult;
 import com.inspur.emmcloud.bean.contact.GetContactUserListUpateResult;
+import com.inspur.emmcloud.bean.contact.GetMultiContactResult;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.find.GetKnowledgeInfo;
 import com.inspur.emmcloud.bean.find.GetTripArriveCity;
@@ -230,6 +231,10 @@ public interface APIInterface {
     void returnContactOrgListSuccess(byte[] bytes, String saveConfigVersion);
 
     void returnContactOrgListFail(String error, int errorCode);
+
+    void returnMultiContactOrgSuccess(GetMultiContactResult getMultiContactResult);
+    void returnMultiContactOrgFail(String error,int errorCode);
+
 
     void returnContactUserListUpdateSuccess(GetContactUserListUpateResult getContactUserListUpateResult,
                                             String saveConfigVersion);
