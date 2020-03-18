@@ -19,6 +19,7 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
@@ -160,6 +161,7 @@ public class UserInfoActivity extends BaseActivity {
         String globalName = contactUser.getNameGlobal();
         String telStr = contactUser.getTel();
         String officeStr = contactUser.getOffice();
+        LogUtils.YfcDebug("人员的所有组织："+JSONUtils.toJSONString(ContactOrgCacheUtils.getMultiOrgByInspurId("12418")));
 
         String headUrl = APIUri.getUserIconUrl(UserInfoActivity.this, contactUser.getId());
         ContactOrg contactOrg = ContactOrgCacheUtils.getContactOrg(contactUser.getParentId());

@@ -7,6 +7,7 @@ import com.inspur.emmcloud.basemodule.util.DbCacheUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.bean.contact.ContactOrg;
+import com.inspur.emmcloud.bean.contact.MultiOrg;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 
 import org.xutils.db.sqlite.WhereBuilder;
@@ -166,5 +167,48 @@ public class ContactOrgCacheUtils {
             e.printStackTrace();
         }
         return contactList;
+    }
+
+    /**
+     * 删除MultiOrg
+     */
+    private static void deleteMultiOrg(){
+        try {
+            DbCacheUtils.getDb().dropTable(MultiOrg.class);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 保存多组织数据
+     * @param multiOrgList
+     */
+    public static void saveMultiOrg(List<MultiOrg> multiOrgList){
+        deleteMultiOrg();
+        try {
+            DbCacheUtils.getDb().saveOrUpdate(multiOrgList);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 根据人员inspurId获取人员的所有组织
+     * @param inspurId
+     * @return
+     */
+    public static List<ContactOrg> getMultiOrgByInspurId(String inspurId){
+        List<ContactOrg> contactOrgList = new ArrayList<>();
+        try {
+            List<MultiOrg> multiOrgList = DbCacheUtils.getDb().selector(MultiOrg.class).where("inspurId", "=", inspurId).findAll();
+            for (int i = 0; i < multiOrgList.size(); i++) {
+                contactOrgList.add(getContactOrg(multiOrgList.get(i).getOrgId()));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return contactOrgList;
     }
 }
