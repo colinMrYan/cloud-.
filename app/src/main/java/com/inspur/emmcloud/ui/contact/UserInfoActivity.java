@@ -9,20 +9,24 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import com.inspur.emmcloud.R;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.adapter.DepartMentAdpater;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.baselib.widget.ScrollViewWithListView;
 import com.inspur.emmcloud.baselib.widget.dialogs.ActionSheetDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.config.Constant;
@@ -44,6 +48,7 @@ import com.inspur.emmcloud.util.privates.cache.ContactOrgCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -57,6 +62,7 @@ import butterknife.ButterKnife;
 public class UserInfoActivity extends BaseActivity {
 
     private static final String USER_UID = "uid";
+    public static final String ORG_ID = "org_id";
     private static final int USER_INFO_ACTIVITY_REQUEST_CODE = 1;
 
     @BindView(R.id.tv_add_system_contact)
@@ -102,6 +108,8 @@ public class UserInfoActivity extends BaseActivity {
 //    private LinearLayout mobilePositionLayout;
     @BindView(R.id.rl_contact_way)
     RelativeLayout userContactWayLayout;
+    @BindView(R.id.lv_department)
+    ScrollViewWithListView departMentListView;
 
     private ContactUser contactUser;
     private String parentUid;
@@ -161,20 +169,34 @@ public class UserInfoActivity extends BaseActivity {
         String globalName = contactUser.getNameGlobal();
         String telStr = contactUser.getTel();
         String officeStr = contactUser.getOffice();
-        LogUtils.YfcDebug("人员的所有组织："+JSONUtils.toJSONString(ContactOrgCacheUtils.getMultiOrgByInspurId("12418")));
-
         String headUrl = APIUri.getUserIconUrl(UserInfoActivity.this, contactUser.getId());
-        ContactOrg contactOrg = ContactOrgCacheUtils.getContactOrg(contactUser.getParentId());
 
-        if (contactOrg != null) {
-            String organize = contactOrg.getName();
-            if (!StringUtils.isBlank(organize)) {
-                departmentLayout.setVisibility(View.VISIBLE);
-                departmentText.setText(organize);
-            } else {
-                departmentLayout.setVisibility(View.GONE);
-            }
+        //从多组织表里获取组织
+        final List<ContactOrg> contactOrgList = ContactOrgCacheUtils.getMultiOrgByInspurId(contactUser.getId());
+        //如果不是多组织的则走原来逻辑
+        if(contactOrgList.size() == 0){
+            contactOrgList.add(ContactOrgCacheUtils.getContactOrg(contactUser.getParentId()));
         }
+        DepartMentAdpater departMentAdpater = new DepartMentAdpater(this,contactOrgList);
+        departMentAdpater.setDepartMentDetailListener(new DepartMentAdpater.DepartMentDetailListener() {
+            @Override
+            public void onDepartMentDetailClickListener(int postion) {
+                Bundle bundle = new Bundle();
+                bundle.putString(ORG_ID, contactOrgList.get(postion).getId());
+                IntentUtils.startActivity(UserInfoActivity.this, ContactOrgStructureActivity.class, bundle);
+            }
+        });
+        departMentListView.setAdapter(departMentAdpater);
+
+//        if (contactOrg != null) {
+//            String organize = contactOrg.getName();
+//            if (!StringUtils.isBlank(organize)) {
+//                departmentLayout.setVisibility(View.VISIBLE);
+//                departmentText.setText(organize);
+//            } else {
+//                departmentLayout.setVisibility(View.GONE);
+//            }
+//        }
 
         if (!StringUtils.isBlank(mail)) {
             mailLayout.setVisibility(View.VISIBLE);
@@ -270,11 +292,11 @@ public class UserInfoActivity extends BaseActivity {
             case R.id.iv_start_chat:
                 createDirectChannel();
                 break;
-            case R.id.iv_user_depart_detail:
-                Bundle bundle = new Bundle();
-                bundle.putString(USER_UID, parentUid);
-                IntentUtils.startActivity(UserInfoActivity.this, ContactOrgStructureActivity.class, bundle);
-                break;
+//            case R.id.iv_user_depart_detail:
+//                Bundle bundle = new Bundle();
+//                bundle.putString(USER_UID, parentUid);
+//                IntentUtils.startActivity(UserInfoActivity.this, ContactOrgStructureActivity.class, bundle);
+//                break;
             case R.id.rl_user_contact:
                 showCallUserDialog(contactUser.getMobile());
                 break;

@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.util.privates.cache;
 
 import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.DbCacheUtils;
@@ -210,5 +211,18 @@ public class ContactOrgCacheUtils {
             e.printStackTrace();
         }
         return contactOrgList;
+    }
+
+    public static List<ContactUser> getContactUserByInspurId(String inspurId){
+        List<ContactUser> contactUserList = new ArrayList<>();
+        try {
+            contactUserList.addAll(DbCacheUtils.getDb().selector(ContactUser.class).where("id", "=", inspurId).findAll());
+//            for (int i = 0; i < multiOrgList.size(); i++) {
+//                contactOrgList.add(getContactOrg(multiOrgList.get(i).getOrgId()));
+//            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return contactUserList;
     }
 }
