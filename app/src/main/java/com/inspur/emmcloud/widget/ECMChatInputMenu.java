@@ -44,6 +44,7 @@ import com.inspur.emmcloud.baselib.widget.dialogs.ActionSheetDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.basemodule.util.AppRoleUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.ClickRuleUtil;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
@@ -873,11 +874,11 @@ public class ECMChatInputMenu extends LinearLayout {
                 isInputVoiceEnable = false;
             }
 
-            if (isInputPhotoEnable) {
+            if (isInputPhotoEnable && AppRoleUtils.isCanSendImage()) {
                 inputTypeBeanList.add(new InputTypeBean(functionIconArray[0], functionNameArray[0], functionActionArray[0]));
                 inputTypeBeanList.add(new InputTypeBean(functionIconArray[1], functionNameArray[1], functionActionArray[1]));
             }
-            if (isInputFileEnable) {
+            if (isInputFileEnable && AppRoleUtils.isCanSendFile()) {
                 inputTypeBeanList.add(new InputTypeBean(functionIconArray[2], functionNameArray[2], functionActionArray[2]));
             }
             if (isInputVoiceEnable) {

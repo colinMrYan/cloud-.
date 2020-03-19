@@ -50,6 +50,7 @@ import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.componentservice.schedule.ScheduleService;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.service.LocationService;
+import com.inspur.emmcloud.ui.chat.mvp.model.api.ApiService;
 import com.inspur.emmcloud.util.privates.AppConfigUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.MessageSendManager;
@@ -157,10 +158,23 @@ public class IndexActivity extends IndexBaseActivity {
         }
         PushManagerUtils.getInstance().registerPushId2Emm();
         ClientConfigUpdateUtils.getInstance().getAllConfigUpdate();
+        getAppRole();
+
         getAllRobotInfo();
         getAllChannelGroup();
         updateReactNative();  //从服务端获取显示tab
         getMyAppRecommendWidgets();
+    }
+
+    /**
+     * 获取app权限
+     */
+    private void getAppRole() {
+        if(NetUtils.isNetworkConnected(this)){
+            AppAPIService appAPIService = new AppAPIService(this);
+            appAPIService.setAPIInterface(new WebService());
+            appAPIService.getAppRole();
+        }
     }
 
     /**
@@ -748,6 +762,17 @@ public class IndexActivity extends IndexBaseActivity {
         @Override
         public void returnMultiContactOrgFail(String error, int errorCode) {
             super.returnMultiContactOrgFail(error, errorCode);
+        }
+
+        @Override
+        public void returnAppRoleSuccess(String appRole) {
+            super.returnAppRoleSuccess(appRole);
+            PreferencesByUserAndTanentUtils.putString(IndexActivity.this,Constant.APP_ROLE,appRole);
+        }
+
+        @Override
+        public void returnAppRoleFail(String error, int errorCode) {
+            super.returnAppRoleFail(error, errorCode);
         }
     }
 

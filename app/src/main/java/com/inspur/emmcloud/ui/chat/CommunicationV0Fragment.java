@@ -45,6 +45,7 @@ import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.ui.BaseFragment;
+import com.inspur.emmcloud.basemodule.util.AppRoleUtils;
 import com.inspur.emmcloud.basemodule.util.AppTabUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.CheckingNetStateUtils;
@@ -242,7 +243,7 @@ public class CommunicationV0Fragment extends BaseFragment {
                     if (!mainTabProperty.isCanCreate()) {
                         rootView.findViewById(R.id.more_function_list_img).setVisibility(View.GONE);
                     }
-                    if (!mainTabProperty.isCanContact()) {
+                    if (!mainTabProperty.isCanContact() || !AppRoleUtils.isShowContact()) {
                         rootView.findViewById(R.id.contact_img).setVisibility(View.GONE);
                     }
                 }

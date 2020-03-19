@@ -232,7 +232,7 @@ public class ContactAPIService {
      * 获取多组织接口
      */
     public void getMultipleContactOrgList(){
-        String url = "https://emm.inspur.com/api/sys/v3.0/contacts/userMultiOrgs";
+        String url = APIUri.getMultiOrgUrl();
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
         x.http().post(params, new BaseModuleAPICallback(context, url) {
             @Override

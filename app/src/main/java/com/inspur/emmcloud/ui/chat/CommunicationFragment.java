@@ -29,6 +29,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ConversationAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
@@ -47,6 +48,7 @@ import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.ui.BaseFragment;
+import com.inspur.emmcloud.basemodule.util.AppRoleUtils;
 import com.inspur.emmcloud.basemodule.util.AppTabUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.CheckingNetStateUtils;
@@ -208,10 +210,19 @@ public class CommunicationFragment extends BaseFragment {
                 WebSocketPush.getInstance().startWebSocket();
                 getConversationList();
                 getMessage();
+                getAppRole();
             }
         });
         initRecycleView();
         loadingDlg = new LoadingDialog(getActivity());
+    }
+
+    private void getAppRole() {
+        if(NetUtils.isNetworkConnected(getActivity(),false)){
+            AppAPIService appAPIService = new AppAPIService(getActivity());
+            appAPIService.setAPIInterface(new WebService());
+            appAPIService.getAppRole();
+        }
     }
 
     @OnClick({R.id.more_function_list_img, R.id.contact_img, R.id.tv_search_contact})
@@ -366,7 +377,7 @@ public class CommunicationFragment extends BaseFragment {
                         if (!mainTabProperty.isCanCreate()) {
                             headerFunctionOptionImg.setVisibility(View.GONE);
                         }
-                        if (!mainTabProperty.isCanContact()) {
+                        if (!mainTabProperty.isCanContact() || !AppRoleUtils.isShowContact()) {
                             contactImg.setVisibility(View.GONE);
                         }
                     }
@@ -1337,6 +1348,18 @@ public class CommunicationFragment extends BaseFragment {
 //            LoadingDialog.dimissDlg(loadingDlg);
 //            WebServiceMiddleUtils.hand(MyApplication.getInstance(), error, errorCode);
 //        }
+
+
+        @Override
+        public void returnAppRoleSuccess(String appRole) {
+            super.returnAppRoleSuccess(appRole);
+            PreferencesByUserAndTanentUtils.putString(getActivity(),Constant.APP_ROLE,appRole);
+        }
+
+        @Override
+        public void returnAppRoleFail(String error, int errorCode) {
+            super.returnAppRoleFail(error, errorCode);
+        }
     }
 
 

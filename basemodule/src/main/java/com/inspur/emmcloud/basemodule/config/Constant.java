@@ -343,4 +343,6 @@ public class Constant {
     public static final boolean IS_VOICE_WORD_OPEN = true;
     public static final boolean IS_VOICE_WORD_CLOUSE = false;
 
+    public static final String APP_ROLE = "app_role";
+
 }

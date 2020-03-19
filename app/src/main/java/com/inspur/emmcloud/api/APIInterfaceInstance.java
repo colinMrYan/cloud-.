@@ -747,6 +747,16 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
+    public void returnAppRoleSuccess(String appRole) {
+
+    }
+
+    @Override
+    public void returnAppRoleFail(String error, int errorCode) {
+
+    }
+
+    @Override
     public void returnTransmitPictureSuccess(String cid, String description, Message message) {
 
     }

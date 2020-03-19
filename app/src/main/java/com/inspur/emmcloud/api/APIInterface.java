@@ -332,4 +332,7 @@ public interface APIInterface {
     void returnInvitationContentSuccess(ScanCodeJoinConversationBean scanCodeJoinConversationBean);
 
     void returnInvitationContentFail(String error, int errorCode);
+
+    void returnAppRoleSuccess(String appRole);
+    void returnAppRoleFail(String error, int errorCode);
 }
