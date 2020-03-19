@@ -98,7 +98,6 @@ public class IndexActivity extends IndexBaseActivity {
         getInitData();
         startService();
         uploadApiRequestRecord();
-        getMultipleContactOrg();
     }
 
     private void getNaviTabData(String naviTabSaveConfigVersion) {
@@ -290,6 +289,7 @@ public class IndexActivity extends IndexBaseActivity {
                                     .setIsContactReady(true);
                             notifySyncAllBaseDataSuccess();
                             getContactOrg();
+                            getMultipleContactOrg();
                         }
                         WebSocketPush.getInstance().startWebSocket();// 启动webSocket推送
                         batteryWhiteListRemind(IndexActivity.this);
@@ -396,6 +396,7 @@ public class IndexActivity extends IndexBaseActivity {
         }
         if (isContactOrgUpdate) {
             getContactOrg();
+            getMultipleContactOrg();
         }
         if (isNaviTabUpdate) {
             getNaviTabData(ClientConfigUpdateUtils.getInstance().getItemNewVersion(ClientConfigItem.CLIENT_CONFIG_NAVI_TAB));
