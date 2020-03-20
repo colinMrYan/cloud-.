@@ -27,6 +27,7 @@ import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.ClearEditText;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.AppRoleUtils;
 import com.inspur.emmcloud.basemodule.util.AppTabUtils;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
@@ -174,7 +175,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             if (mainTabResults.get(i).getUri().equals(Constant.APP_TAB_BAR_COMMUNACATE)) {
                 MainTabProperty mainTabProperty = mainTabResults.get(i).getMainTabProperty();
                 if (mainTabProperty != null) {
-                    if (!mainTabProperty.isCanContact()) {
+                    if (!mainTabProperty.isCanContact() || !AppRoleUtils.isShowContact()) {
                         isSearchContacts = false;
                         break;
                     }

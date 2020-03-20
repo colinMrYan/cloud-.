@@ -15,6 +15,7 @@ import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.ContactAPIService;
 import com.inspur.emmcloud.baselib.router.Router;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
@@ -38,6 +39,7 @@ import com.inspur.emmcloud.bean.contact.ContactOrg;
 import com.inspur.emmcloud.bean.contact.ContactProtoBuf;
 import com.inspur.emmcloud.bean.contact.GetContactOrgListUpateResult;
 import com.inspur.emmcloud.bean.contact.GetContactUserListUpateResult;
+import com.inspur.emmcloud.bean.contact.GetMultiContactResult;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.componentservice.app.CommonCallBack;
 import com.inspur.emmcloud.componentservice.application.ApplicationService;
@@ -48,6 +50,7 @@ import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.componentservice.schedule.ScheduleService;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.service.LocationService;
+import com.inspur.emmcloud.ui.chat.mvp.model.api.ApiService;
 import com.inspur.emmcloud.util.privates.AppConfigUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.MessageSendManager;
@@ -155,10 +158,23 @@ public class IndexActivity extends IndexBaseActivity {
         }
         PushManagerUtils.getInstance().registerPushId2Emm();
         ClientConfigUpdateUtils.getInstance().getAllConfigUpdate();
+        getAppRole();
+
         getAllRobotInfo();
         getAllChannelGroup();
         updateReactNative();  //从服务端获取显示tab
         getMyAppRecommendWidgets();
+    }
+
+    /**
+     * 获取app权限
+     */
+    private void getAppRole() {
+        if(NetUtils.isNetworkConnected(this)){
+            AppAPIService appAPIService = new AppAPIService(this);
+            appAPIService.setAPIInterface(new WebService());
+            appAPIService.getAppRole();
+        }
     }
 
     /**
@@ -287,6 +303,7 @@ public class IndexActivity extends IndexBaseActivity {
                                     .setIsContactReady(true);
                             notifySyncAllBaseDataSuccess();
                             getContactOrg();
+                            getMultipleContactOrg();
                         }
                         WebSocketPush.getInstance().startWebSocket();// 启动webSocket推送
                         batteryWhiteListRemind(IndexActivity.this);
@@ -393,6 +410,7 @@ public class IndexActivity extends IndexBaseActivity {
         }
         if (isContactOrgUpdate) {
             getContactOrg();
+            getMultipleContactOrg();
         }
         if (isNaviTabUpdate) {
             getNaviTabData(ClientConfigUpdateUtils.getInstance().getItemNewVersion(ClientConfigItem.CLIENT_CONFIG_NAVI_TAB));
@@ -465,6 +483,18 @@ public class IndexActivity extends IndexBaseActivity {
                 apiService.getContactOrgListUpdate(contactOrgLastQuetyTime, saveConfigVersion);
             }
 
+        }
+    }
+
+    /**
+     * 获取多组织
+     * 对应的人有
+     */
+    private void getMultipleContactOrg(){
+        if(NetUtils.isNetworkConnected(getApplicationContext(),false)){
+            ContactAPIService apiService = new ContactAPIService(IndexActivity.this);
+            apiService.setAPIInterface(new WebService());
+            apiService.getMultipleContactOrgList();
         }
     }
 
@@ -721,6 +751,28 @@ public class IndexActivity extends IndexBaseActivity {
         @Override
         public void returnNaviBarModelFail(String error, int errorCode) {
             super.returnNaviBarModelFail(error, errorCode);
+        }
+
+        @Override
+        public void returnMultiContactOrgSuccess(GetMultiContactResult getMultiContactResult) {
+            super.returnMultiContactOrgSuccess(getMultiContactResult);
+            ContactOrgCacheUtils.saveMultiOrg(getMultiContactResult.getMultiOrgList());
+        }
+
+        @Override
+        public void returnMultiContactOrgFail(String error, int errorCode) {
+            super.returnMultiContactOrgFail(error, errorCode);
+        }
+
+        @Override
+        public void returnAppRoleSuccess(String appRole) {
+            super.returnAppRoleSuccess(appRole);
+            PreferencesByUserAndTanentUtils.putString(IndexActivity.this,Constant.APP_ROLE,appRole);
+        }
+
+        @Override
+        public void returnAppRoleFail(String error, int errorCode) {
+            super.returnAppRoleFail(error, errorCode);
         }
     }
 

@@ -1100,4 +1100,20 @@ public class APIUri {
         return getUrlBaseVolume() + "/" + volume + "/file/share/channel/" + channel;
     }
 
+    /**
+     * 获取应用权限的请求地址
+     * @return
+     */
+    public static String getAppRoleUrl(){
+        return getEMMBaseUrl() + "api/sys/v3.0/config/clientConfig";
+    }
+
+    /**
+     * 获取多组织表
+     * @return
+     */
+    public static String getMultiOrgUrl(){
+        return getEMMBaseUrl() + "api/sys/v3.0/contacts/userMultiOrgs";
+    }
+
 }

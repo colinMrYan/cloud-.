@@ -11,6 +11,10 @@ public class MainTabTitleResult {
     private String zhHant;
     private String enUS;
 
+    private String headerZhHans;
+    private String headerZhHant;
+    private String headerEnUs;
+
     public MainTabTitleResult() {
     }
 
@@ -20,6 +24,10 @@ public class MainTabTitleResult {
         this.zhHans = JSONUtils.getString(response, "zh-Hans", "");
         this.zhHant = JSONUtils.getString(response, "zh-Hant", "");
         this.enUS = JSONUtils.getString(response, "en-US", "");
+
+        this.headerEnUs = JSONUtils.getString(response,"header-zh-US","");
+        this.headerZhHant = JSONUtils.getString(response,"header-zh-Hant","");
+        this.headerZhHans = JSONUtils.getString(response,"header-zh-Hans","");
     }
 
     public String getZhHans() {
@@ -44,6 +52,30 @@ public class MainTabTitleResult {
 
     public void setEnUS(String enUS) {
         this.enUS = enUS;
+    }
+
+    public String getHeaderZhHans() {
+        return headerZhHans;
+    }
+
+    public void setHeaderZhHans(String headerZhHans) {
+        this.headerZhHans = headerZhHans;
+    }
+
+    public String getHeaderZhHant() {
+        return headerZhHant;
+    }
+
+    public void setHeaderZhHant(String headerZhHant) {
+        this.headerZhHant = headerZhHant;
+    }
+
+    public String getHeaderEnUs() {
+        return headerEnUs;
+    }
+
+    public void setHeaderEnUs(String headerEnUs) {
+        this.headerEnUs = headerEnUs;
     }
 
     public String getTabTileByLanguage(String language) {

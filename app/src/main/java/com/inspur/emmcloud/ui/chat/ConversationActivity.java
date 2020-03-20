@@ -15,6 +15,8 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.Selection;
+import android.text.Spannable;
 import android.text.SpannableString;
 import android.view.View;
 import android.view.WindowManager;
@@ -36,6 +38,7 @@ import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.ListUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.CustomLoadingView;
@@ -103,6 +106,7 @@ import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.util.privates.richtext.markdown.MarkDown;
+import com.inspur.emmcloud.widget.ChatInputEdit;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
 import com.inspur.emmcloud.widget.ECMChatInputMenu.ChatInputMenuListener;
 import com.inspur.emmcloud.widget.ECMChatInputMenuCallback;
@@ -663,6 +667,9 @@ public class ConversationActivity extends ConversationBaseActivity {
             public void onCardItemClick(View view, UIMessage uiMessage) {
                 if (StringUtils.isBlank(uiMessage.getMessage().getRecallFrom()) && uiMessage.getSendStatus() == 1) {
                     ConversationActivity.this.onCardItemClick(ConversationActivity.this, view, uiMessage);
+                }else if(!StringUtils.isBlank(uiMessage.getMessage().getRecallFrom())){
+                    chatInputMenu.getInputEdit().setText(uiMessage.getMessage().getShowContent());
+                    setEditTextCursorLocation(chatInputMenu.getInputEdit());
                 }
             }
 
@@ -685,6 +692,18 @@ public class ConversationActivity extends ConversationBaseActivity {
 
         });
         msgListView.setAdapter(adapter);
+    }
+
+    /**
+     * 光标定位到最后
+     * @param editText
+     */
+    public void setEditTextCursorLocation(ChatInputEdit editText) {
+        CharSequence text = editText.getText();
+        if (text instanceof Spannable) {
+            Spannable spanText = (Spannable) text;
+            Selection.setSelection(spanText, text.length());
+        }
     }
 
     /**

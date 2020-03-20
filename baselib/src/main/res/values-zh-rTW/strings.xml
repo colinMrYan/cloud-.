@@ -1038,6 +1038,8 @@
 
     <string name="welcome_to">歡迎使用</string>
 
+    <string name="recall_reedit">重新編輯</string>
+
     <string name="user_call">呼叫</string>
     <string name="cloud_plus_update">%1$s更新</string>
 

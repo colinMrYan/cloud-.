@@ -35,7 +35,7 @@ public interface ApplicationService extends CoreService {
 
     void getMyAppRecommendWidgets();
 
-    void getWebAppRealUrl(OnGetWebAppRealUrlListener listener, String url);
+    void getWebAppRealUrl(Activity activity,OnGetWebAppRealUrlListener listener, String url);
 
     void startSyncCommonAppService();
 
