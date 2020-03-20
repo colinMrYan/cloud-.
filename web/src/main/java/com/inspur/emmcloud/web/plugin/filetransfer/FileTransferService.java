@@ -750,6 +750,7 @@ public class FileTransferService extends ImpPlugin {
                     if (filename.length() > 2 && filename.startsWith("\"") && filename.endsWith("\"")) {
                         filename = filename.substring(1, filename.length() - 1);
                     }
+                    filename = filename.replaceAll("/", "_");
                     return filename;
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -771,6 +772,7 @@ public class FileTransferService extends ImpPlugin {
             // 默认取一个文件名
             filename = UUID.randomUUID() + ".tmp";
         }
+        filename = filename.replaceAll("/", "_");
         return filename;
     }
 

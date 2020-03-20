@@ -2,7 +2,6 @@ package com.inspur.emmcloud.baselib.widget.progressbar;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -30,7 +29,6 @@ public class CircleProgressBar extends ProgressBar {
     private int triangleLength;
     private Path mPath;
     private int mRadius = DensityUtil.dip2px(13);
-    private Bitmap failedBitmap;
 
     public CircleProgressBar(Context context) {
         this(context, null);
@@ -71,7 +69,6 @@ public class CircleProgressBar extends ProgressBar {
         initPath();
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inScaled = true;
-        failedBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ee_1, options);
     }
 
     private void initPath() {
