@@ -315,6 +315,10 @@ public class ECMChatInputMenu extends LinearLayout {
         });
     }
 
+    public ChatInputEdit getInputEdit(){
+        return inputEdit;
+    }
+
     /**
      * 语音降噪算法 pcm文件
      **/

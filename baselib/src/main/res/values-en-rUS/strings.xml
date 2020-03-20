@@ -1033,6 +1033,8 @@
     <string name="user_office_phone">Fixed line</string>
     <string name="group_qrcode">QR Code</string>
 
+    <string name="recall_reedit">Re edit</string>
+
     <string name="user_call">Call</string>
     <string name="cloud_plus_update">%1$s Update</string>
     <string-array name="segment_control_items">

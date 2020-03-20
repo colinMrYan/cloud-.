@@ -908,6 +908,8 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="dummy_button">Dummy Button</string>
 
+    <string name="recall_reedit">重新编辑</string>
+
 
     <!-- 拖动listview -->
     <string name="select_remove_mode">Remove modes</string>
