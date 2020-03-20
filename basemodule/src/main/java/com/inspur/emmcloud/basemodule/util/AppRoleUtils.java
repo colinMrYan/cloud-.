@@ -20,7 +20,7 @@ public class AppRoleUtils {
      */
     public static boolean isShowContact(){
         String appRole = PreferencesByUserAndTanentUtils.getString(BaseApplication.getInstance(),Constant.APP_ROLE,"");
-        return JSONUtils.getInt(appRole,CONTACT_KEY,0) != 0;
+        return JSONUtils.getInt(appRole,CONTACT_KEY,1) != 0;
     }
 
     /**
@@ -29,7 +29,7 @@ public class AppRoleUtils {
      */
     public static boolean isCanSendFile(){
         String appRole = PreferencesByUserAndTanentUtils.getString(BaseApplication.getInstance(),Constant.APP_ROLE,"");
-        return JSONUtils.getInt(appRole,SEND_FILE_KEY,0) != 0;
+        return JSONUtils.getInt(appRole,SEND_FILE_KEY,1) != 0;
     }
 
     /**
@@ -38,6 +38,6 @@ public class AppRoleUtils {
      */
     public static boolean isCanSendImage(){
         String appRole = PreferencesByUserAndTanentUtils.getString(BaseApplication.getInstance(),Constant.APP_ROLE,"");
-        return JSONUtils.getInt(appRole,SEND_IMAGE_KEY,0) != 0;
+        return JSONUtils.getInt(appRole,SEND_IMAGE_KEY,1) != 0;
     }
 }
