@@ -654,7 +654,7 @@ public class CommunicationFragment extends BaseFragment {
             isFirstConnectWebsocket = false;
             String appTabs = PreferencesByUserAndTanentUtils.getString(getActivity(), Constant.PREF_APP_TAB_BAR_INFO_CURRENT, "");
             if (!StringUtils.isBlank(appTabs)) {
-                titleText.setText(AppTabUtils.getTabTitle(getActivity(), getClass().getSimpleName()));
+                titleText.setText(AppTabUtils.getTabHeadTitle(getActivity(), getClass().getSimpleName()));
             } else {
                 titleText.setText(R.string.communicate);
             }
