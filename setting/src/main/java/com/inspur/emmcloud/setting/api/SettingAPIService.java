@@ -3,6 +3,7 @@ package com.inspur.emmcloud.setting.api;
 import android.content.Context;
 
 import com.inspur.emmcloud.baselib.router.Router;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
 import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
@@ -508,6 +509,7 @@ public class SettingAPIService {
 
             @Override
             public void callbackSuccess(byte[] arg0) {
+                LogUtils.YfcDebug("卡包内容："+new String(arg0));
                 apiInterface.returnCardPackageListSuccess(new GetCardPackageResult(new String(arg0)));
             }
 

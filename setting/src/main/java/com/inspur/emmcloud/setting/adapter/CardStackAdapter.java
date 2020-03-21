@@ -1,10 +1,17 @@
 package com.inspur.emmcloud.setting.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.widget.dialogs.ActionSheetDialog;
+import com.inspur.emmcloud.baselib.widget.dialogs.BottomDialog;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.setting.R;
 import com.inspur.emmcloud.setting.bean.CardPackageBean;
 import com.inspur.emmcloud.setting.widget.cardstack.RxAdapterStack;
@@ -13,8 +20,11 @@ import com.inspur.emmcloud.setting.widget.cardstack.RxCardStackView;
 
 public class CardStackAdapter extends RxAdapterStack<CardPackageBean> {
 
+    private Context context;
+
     public CardStackAdapter(Context context) {
         super(context);
+        this.context = context;
     }
 
     @Override
@@ -83,9 +93,22 @@ public class CardStackAdapter extends RxAdapterStack<CardPackageBean> {
         public void onItemExpand(boolean b) {
         }
 
-        public void onBind(CardPackageBean cardPackageBean, int position) {
+        public void onBind(final CardPackageBean cardPackageBean, int position) {
             companyNameText.setText(cardPackageBean.getCompany());
             companyNameText.setBackgroundResource(getBackGroundImg(position));
+            companyNameText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    BottomDialog.ActionListSheetBuilder builder = new BottomDialog.ActionListSheetBuilder(context)
+                            .setTitle(context.getString(R.string.user_call))
+                            .setTitleColor(Color.parseColor("#888888"))
+                            .setItemColor(Color.parseColor("#36A5F6"))
+                            .setCancelColor(Color.parseColor("#333333"));
+                    BottomDialog bottomDialog = builder.build();
+                    ImageDisplayUtils.getInstance().displayImage(builder.getQrCodeImage(),cardPackageBean.getBarcodeUrl());
+                    bottomDialog.show();
+                }
+            });
             taxpayerText.setText(cardPackageBean.getTaxpayer());
             bankText.setText(cardPackageBean.getBank());
             bankNumText.setText(cardPackageBean.getBankAccount());

@@ -37,7 +37,7 @@ public class DbCacheUtils {
                 .setDbName("emm.db")
                 // 不设置dbDir时, 默认存储在app的私有目录.
                 .setDbDir(new File(dbCachePath))
-                .setDbVersion(27)
+                .setDbVersion(28)
                 .setAllowTransaction(true)
                 .setDbOpenListener(new DbManager.DbOpenListener() {
                     @Override
@@ -146,6 +146,12 @@ public class DbCacheUtils {
                                 }
                                 if (tableIsExist(db, "DownloadFile")) {
                                     db.execNonQuery("DROP TABLE IF EXISTS DownloadFile");
+                                }
+                            }
+
+                            if(oldVersion < 28){
+                                if (tableIsExist(db, "CardPackageBean")) {
+                                    db.execNonQuery("ALTER TABLE CardPackageBean ADD COLUMN barcodeUrl TEXT DEFAULT ''");
                                 }
                             }
                         } catch (Exception e) {
