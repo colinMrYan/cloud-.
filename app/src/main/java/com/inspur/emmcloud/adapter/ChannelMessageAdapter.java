@@ -17,6 +17,7 @@ import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.widget.CustomLoadingView;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.UIMessage;
@@ -238,12 +239,12 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
             //撤回5分钟以内的文本消息显示撤回选线IG
             cardContentView.findViewById(R.id.tv_edit_again).setVisibility((uiMessage.getMessage().getType()
                     .equals(Message.MESSAGE_TYPE_TEXT_PLAIN)
-                    &&(System.currentTimeMillis() - uiMessage.getMessage().getCreationDate() <= 5* 60 *1000))?View.VISIBLE:View.GONE);
+                    &&(System.currentTimeMillis() - uiMessage.getMessage().getCreationDate() <= 5* 60 *1000)
+                    && uiMessage.getMessage().getFromUser().equals(BaseApplication.getInstance().getUid()))?View.VISIBLE:View.GONE);
             cardContentView.findViewById(R.id.tv_edit_again).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (mItemClickListener != null) {
-                        LogUtils.YfcDebug("发生点击事件");
                         mItemClickListener.onCardItemClick(view, uiMessage);
                     }
                 }
