@@ -1,5 +1,7 @@
 package com.inspur.emmcloud.util.privates.cache;
 
+import android.util.Log;
+
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
@@ -166,10 +168,20 @@ public class ContactOrgCacheUtils {
             if (contactUserList != null) {
                 contactList.addAll(Contact.contactUserList2ContactList(contactUserList));
                 if(contactUserListSearch.size() > 0){
-                    LogUtils.YfcDebug("多组织的人："+contactUserListSearch.size());
                     contactList.addAll(Contact.contactUserList2ContactList(contactUserListSearch));
                 }
             }
+            List<Contact> contactListExpDup = new ArrayList();
+            for (Contact contact : contactList) {
+                if(!contactListExpDup.contains(contact)){
+                    contactListExpDup.add(contact);
+                }
+            }
+            contactList.clear();
+            contactList.addAll(contactListExpDup);
+//            ArrayList<Contact> resultList = new ArrayList<Contact>(new LinkedHashSet<Contact>(contactList));
+//            LinkedList<Contact> tmpList = new LinkedList<>(resultList);
+//            LogUtils.YfcDebug("去重后数量："+tmpList.size());
         } catch (Exception e) {
             e.printStackTrace();
         }

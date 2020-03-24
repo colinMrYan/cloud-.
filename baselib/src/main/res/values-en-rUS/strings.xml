@@ -1025,6 +1025,8 @@
     <string name="emm_secure_keyboard">Safety Keyboard</string>
     <string name="emm_keyboard_space">space</string>
 
+    <string name="card_package_no_qrcode">There is no invoice QR code, please contact the administrator to configure.</string>
+
     <string name="welcome_to">Welcome to </string>
 
     <string name="phone_sms">SMS</string>

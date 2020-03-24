@@ -1036,6 +1036,8 @@
     <string name="emm_secure_keyboard">安全鍵盤</string>
     <string name="emm_keyboard_space">空格</string>
 
+    <string name="card_package_no_qrcode">暫無發票二維碼，請聯系管理員配寘</string>
+
     <string name="welcome_to">歡迎使用</string>
 
     <string name="recall_reedit">重新編輯</string>
