@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.dialogs.ActionSheetDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.BottomDialog;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
@@ -99,14 +100,18 @@ public class CardStackAdapter extends RxAdapterStack<CardPackageBean> {
             companyNameText.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    BottomDialog.ActionListSheetBuilder builder = new BottomDialog.ActionListSheetBuilder(context)
-                            .setTitle(context.getString(R.string.user_call))
-                            .setTitleColor(Color.parseColor("#888888"))
-                            .setItemColor(Color.parseColor("#36A5F6"))
-                            .setCancelColor(Color.parseColor("#333333"));
-                    BottomDialog bottomDialog = builder.build();
-                    ImageDisplayUtils.getInstance().displayImage(builder.getQrCodeImage(),cardPackageBean.getBarcodeUrl());
-                    bottomDialog.show();
+                    if(!StringUtils.isBlank(cardPackageBean.getBarcodeUrl())){
+                        BottomDialog.ActionListSheetBuilder builder = new BottomDialog.ActionListSheetBuilder(context)
+                                .setTitle(context.getString(R.string.user_call))
+                                .setTitleColor(Color.parseColor("#888888"))
+                                .setItemColor(Color.parseColor("#36A5F6"))
+                                .setCancelColor(Color.parseColor("#333333"));
+                        BottomDialog bottomDialog = builder.build();
+                        ImageDisplayUtils.getInstance().displayImage(builder.getQrCodeImage(),cardPackageBean.getBarcodeUrl());
+                        bottomDialog.show();
+                    }else{
+                        ToastUtils.show(context.getString(R.string.card_package_no_qrcode));
+                    }
                 }
             });
             taxpayerText.setText(cardPackageBean.getTaxpayer());

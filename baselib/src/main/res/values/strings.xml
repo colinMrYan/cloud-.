@@ -1090,6 +1090,8 @@
     <string name="emm_secure_keyboard">安全键盘</string>
     <string name="emm_keyboard_space">空格</string>
 
+    <string name="card_package_no_qrcode">暂无发票二维码，请联系管理员配置</string>
+
 
     <string name="phone_sms">短信</string>
     <string name="phone_email">邮件</string>
