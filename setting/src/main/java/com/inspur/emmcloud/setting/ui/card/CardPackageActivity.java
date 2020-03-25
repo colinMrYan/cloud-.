@@ -5,6 +5,7 @@ import android.view.View;
 
 import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
@@ -18,6 +19,8 @@ import com.inspur.emmcloud.setting.bean.GetCardPackageResult;
 import com.inspur.emmcloud.setting.util.CardPackageCacheUtils;
 import com.inspur.emmcloud.setting.widget.cardstack.RxAdapterAllMoveDownAnimator;
 import com.inspur.emmcloud.setting.widget.cardstack.RxCardStackView;
+import com.umeng.commonsdk.UMConfigure;
+import com.umeng.socialize.PlatformConfig;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +43,12 @@ public class CardPackageActivity extends BaseActivity implements RxCardStackView
         ButterKnife.bind(this);
         initViews();
         getCardPackageListFromNet();
+        UMConfigure.init(this, "59aa1f8f76661373290010d3"
+                , "umeng", UMConfigure.DEVICE_TYPE_PHONE, "");
+//        QueuedWork.isUseThreadPool = false;
+//        UMShareAPI.get(this);
+        PlatformConfig.setWeixin(Constant.WECHAT_APPID, "56a0426315f1d0985a1cc1e75e96130d");
+        PlatformConfig.setQQZone("1105561850", "1kaw4r1c37SUupFL");
     }
 
     @Override
