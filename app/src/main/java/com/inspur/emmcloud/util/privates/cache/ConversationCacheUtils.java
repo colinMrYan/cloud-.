@@ -3,6 +3,7 @@ package com.inspur.emmcloud.util.privates.cache;
 import android.content.Context;
 
 import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PinyinUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
@@ -519,6 +520,9 @@ public class ConversationCacheUtils {
 
     public static List<Conversation> getConversationListByIdList(Context context, List<String> conversationIdList) {
         List<Conversation> conversationList = new ArrayList<>();
+        if(conversationIdList == null || conversationIdList.size() == 0){
+            return conversationList;
+        }
         try {
             conversationList = DbCacheUtils.getDb(context).selector(Conversation.class).where("id", "in", conversationIdList).findAll();
         } catch (Exception e) {
