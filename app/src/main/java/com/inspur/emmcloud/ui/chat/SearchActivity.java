@@ -30,6 +30,7 @@ import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.AppRoleUtils;
 import com.inspur.emmcloud.basemodule.util.AppTabUtils;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
+import com.inspur.emmcloud.basemodule.util.TabAndAppExistUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.ConversationWithMessageNum;
 import com.inspur.emmcloud.bean.contact.Contact;
@@ -185,6 +186,8 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                 break;
             }
         }
+        //最后判断一下如果有通讯录的话也可以搜索到人员
+        isSearchContacts = TabAndAppExistUtils.isTabExist(MyApplication.getInstance(), Constant.APP_TAB_BAR_CONTACT);
     }
 
     @Override
