@@ -59,6 +59,7 @@ public class VolumeAPIService {
         final String url = VolumeAPIUri.getVolumeMemUrl(volumeId);
         RequestParams params = ((BaseApplication) context.getApplicationContext()).getHttpRequestParams(url);
         params.addParameter("members", uidList);
+        params.addParameter("defaultGroupSync",false);
         params.setAsJsonContent(true);
         HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, url) {
             @Override
