@@ -161,7 +161,7 @@ public class FileTransferService extends ImpPlugin {
                     if (fileDownloadDlg != null && fileDownloadDlg.isShowing()) {
                         fileDownloadDlg.dismiss();
                     }
-                    if (!StrUtil.strIsNotNull(saveFileCallBack)) {
+                    if (StrUtil.strIsNotNull(saveFileCallBack)) {
                         if (getActivity() != null) {
                             new FileOpen(getActivity(), reallyPath, fileType).showOpenDialog();
                         }
@@ -663,6 +663,7 @@ public class FileTransferService extends ImpPlugin {
             long length = urlConnection.getContentLength();
             totalSize = length;
             if (urlConnection.getResponseCode() >= 400) {
+                LogUtils.YfcDebug("异常："+urlConnection.getResponseCode()+"---"+urlConnection.getResponseMessage());
                 handler.sendEmptyMessage(1);
                 return;
             } else {
@@ -961,6 +962,7 @@ public class FileTransferService extends ImpPlugin {
             try {
                 downLoadFile(downloadUrl);
             } catch (Exception e) {
+                LogUtils.YfcDebug("下载异常："+e.getMessage());
                 e.printStackTrace();
                 handler.sendEmptyMessage(1);
             }
