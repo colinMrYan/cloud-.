@@ -161,11 +161,11 @@ public class FileTransferService extends ImpPlugin {
                     if (fileDownloadDlg != null && fileDownloadDlg.isShowing()) {
                         fileDownloadDlg.dismiss();
                     }
-                    if (StrUtil.strIsNotNull(saveFileCallBack)) {
+//                    if (StrUtil.strIsNotNull(saveFileCallBack)) {
                         if (getActivity() != null) {
                             new FileOpen(getActivity(), reallyPath, fileType).showOpenDialog();
                         }
-                    }
+//                    }
                     fileInfo = (String) msg.obj;
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
