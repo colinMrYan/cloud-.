@@ -1262,4 +1262,50 @@ public class AppUtils {
         ARouter.getInstance().build(Constant.AROUTER_CLASS_WEB_MAIN).with(bundle).navigation();
     }
 
+    /**
+     * 通过获取应用信息捕获异常来发现是否安装了某个应用
+     * @param context
+     * @param pkgName
+     * @return
+     */
+    public static boolean checkAppInstalled(Context context,String pkgName) {
+        if (pkgName== null || pkgName.isEmpty()) {
+            return false;
+        }
+        PackageInfo packageInfo;
+        try {
+            packageInfo = context.getPackageManager().getPackageInfo(pkgName, 0);
+        } catch (Exception e) {
+            packageInfo = null;
+            e.printStackTrace();
+        }
+        if(packageInfo == null) {
+            return false;
+        } else {
+            return true;//true为安装了，false为未安装
+        }
+    }
+
+    /**
+     * 通过检查已经安装的应用列表是否包含传入应用包名检查是否安装
+     * @param context
+     * @param pkgName
+     * @return
+     */
+    public static boolean checkAppInstalledByApplist( Context context, String pkgName) {
+        if (pkgName== null || pkgName.isEmpty()) {
+            return false;
+        }
+        final PackageManager packageManager = context.getPackageManager();
+        List<PackageInfo> info = packageManager.getInstalledPackages(0);
+        if(info == null || info.isEmpty())
+            return false;
+        for ( int i = 0; i < info.size(); i++ ) {
+            if(pkgName.equals(info.get(i).packageName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

@@ -1107,6 +1107,9 @@
 
     <string name="cloud_plus_update">%1$s更新</string>
 
+    <string name="update_2_new_cloud_plus">去下载</string>
+    <string name="update_2_new_cloud_plus_help">新版本使用帮助</string>
+
     <!--日历字符串资源开始-->
     <string-array name="lunar_first_of_month">
         <item>春节</item>

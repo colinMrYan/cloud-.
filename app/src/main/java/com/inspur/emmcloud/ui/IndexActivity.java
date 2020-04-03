@@ -4,8 +4,12 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.method.ScrollingMovementMethod;
+import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.inspur.emmcloud.MyApplication;
@@ -16,8 +20,10 @@ import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.ContactAPIService;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
+import com.inspur.emmcloud.baselib.widget.dialogs.MyDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.ClientConfigItem;
 import com.inspur.emmcloud.basemodule.bean.GetAllConfigVersionResult;
@@ -25,6 +31,7 @@ import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.push.PushManagerUtils;
 import com.inspur.emmcloud.basemodule.util.ApiRequestRecordUploadUtils;
+import com.inspur.emmcloud.basemodule.util.AppConfigCacheUtils;
 import com.inspur.emmcloud.basemodule.util.AppPVManager;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.ClientConfigUpdateUtils;
@@ -41,6 +48,8 @@ import com.inspur.emmcloud.bean.contact.GetContactOrgListUpateResult;
 import com.inspur.emmcloud.bean.contact.GetContactUserListUpateResult;
 import com.inspur.emmcloud.bean.contact.GetMultiContactResult;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
+import com.inspur.emmcloud.bean.system.AppUpdateConfigBean;
+import com.inspur.emmcloud.bean.system.Update2NewVersionUtils;
 import com.inspur.emmcloud.componentservice.app.CommonCallBack;
 import com.inspur.emmcloud.componentservice.application.ApplicationService;
 import com.inspur.emmcloud.componentservice.application.maintab.GetAppMainTabResult;
@@ -89,6 +98,8 @@ public class IndexActivity extends IndexBaseActivity {
     private Handler handler;
     private boolean isHasCacheContact = false;
     private LoadingDialog loadingDlg;
+    //更新到新版本（云+2.0）提醒间隔时间
+    private static final int notUpdateInterval = 86400000;
 
     @Override
     public void onCreate() {
@@ -99,7 +110,9 @@ public class IndexActivity extends IndexBaseActivity {
         getInitData();
         startService();
         uploadApiRequestRecord();
+        new Update2NewVersionUtils(this).checkNeedUpdate2NewVersion();
     }
+
 
     private void getNaviTabData(String naviTabSaveConfigVersion) {
         if (NetUtils.isNetworkConnected(this, false)) {

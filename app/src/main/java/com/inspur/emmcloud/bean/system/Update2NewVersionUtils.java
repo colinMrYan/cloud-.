@@ -2,6 +2,8 @@ package com.inspur.emmcloud.bean.system;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
@@ -12,9 +14,11 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.MainActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
@@ -76,10 +80,10 @@ public class Update2NewVersionUtils {
     public void checkNeedUpdate2NewVersion() {
         AppUpdateConfigBean appUpdateConfigBean = new AppUpdateConfigBean(AppConfigCacheUtils.getAppConfigValue(context,Constant.CONCIG_UPDATE_2_NEWVERSION,""));
         long appUpdate2NewVersionNotUpdateTime = PreferencesUtils.getLong(context,"appUpdate2NewVersionNotUpdateTime",0);
-        //检查如果有新版本的下载地址，才提示更新到新版本
-        if(!StringUtils.isBlank(appUpdateConfigBean.getNewVersionURL()) && (System.currentTimeMillis() - appUpdate2NewVersionNotUpdateTime) > notUpdateInterval){
+        //检查如果没装云+2.0，且有新版本的下载地址，且没有延迟提示，才提示更新到新版本
+        if(!AppUtils.checkAppInstalledByApplist(context,"com.inspur.playwork.internet") && !StringUtils.isBlank(appUpdateConfigBean.getNewVersionURL()) && (System.currentTimeMillis() - appUpdate2NewVersionNotUpdateTime) > notUpdateInterval){
+            showSelectUpgradeDlg(appUpdateConfigBean);
         }
-        showSelectUpgradeDlg(appUpdateConfigBean);
     }
 
     private void handMessage() {
@@ -161,20 +165,24 @@ public class Update2NewVersionUtils {
         }
     }
 
-    private void showSelectUpgradeDlg(AppUpdateConfigBean appUpdateConfigBean) {
+    private void showSelectUpgradeDlg(final AppUpdateConfigBean appUpdateConfigBean) {
         upgradeUrl = appUpdateConfigBean.getNewVersionURL();
         final MyDialog dialog = new MyDialog(context,
                 R.layout.dialog_update_version);
         dialog.setCancelable(false);
         TextView okBtn = dialog.findViewById(R.id.tv_version_update_download);
-        okBtn.setText("去下载");
-//        TextView appUpdateContentText = dialog.findViewById(R.id.text);
-//        appUpdateContentText.setMovementMethod(ScrollingMovementMethod.getInstance());
-//        appUpdateContentText.setText(appUpdateConfigBean.getNewVersionTip());
-//        TextView appUpdateTitle = dialog.findViewById(R.id.app_update_title);
-//        TextView appUpdateVersion = dialog.findViewById(R.id.app_update_version);
-//        appUpdateTitle.setText(context.getString(R.string.app_update_remind));
-//        appUpdateVersion.setText(getString(R.string.app_last_version) + "(" + getUpgradeResult.getLatestVersion() + ")");
+        ((TextView)dialog.findViewById(R.id.tv_version_update_content)).setText(appUpdateConfigBean.getNewVersionTip());
+        dialog.findViewById(R.id.tv_new_version_help).setVisibility(StringUtils.isBlank(appUpdateConfigBean.getHelpURL())?View.GONE:View.VISIBLE);
+        dialog.findViewById(R.id.tv_new_version_help).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString("uri", appUpdateConfigBean.getHelpURL());
+                bundle.putBoolean(Constant.WEB_FRAGMENT_SHOW_HEADER, true);
+                ARouter.getInstance().build(Constant.AROUTER_CLASS_WEB_MAIN).with(bundle).navigation();
+            }
+        });
+        okBtn.setText(R.string.update_2_new_cloud_plus);
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -183,7 +191,6 @@ public class Update2NewVersionUtils {
             }
         });
         ImageView cancelBt = dialog.findViewById(R.id.iv_version_update_close);
-//        cancelBt.setText(context.getString(R.string.not_upgrade));
         cancelBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -227,6 +234,7 @@ public class Update2NewVersionUtils {
         // 判断SD卡是否存在，并且是否具有读写权限
         if (Environment.getExternalStorageState().equals(
                 Environment.MEDIA_MOUNTED)) {
+            LogUtils.YfcDebug("升级下载地址："+upgradeUrl);
             RequestParams params = new RequestParams(upgradeUrl);
             params.setSaveFilePath(DOWNLOAD_PATH + "update.apk");
             cancelable = x.http().get(params,
