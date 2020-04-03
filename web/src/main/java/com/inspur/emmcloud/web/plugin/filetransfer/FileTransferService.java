@@ -104,6 +104,7 @@ public class FileTransferService extends ImpPlugin {
     private int progress;
     private ProgressBar progressBar;
     private String downloadFileType = "";
+    private boolean needOpenFile = true;
     private String replaceBasePath = FilePathUtils.BASE_PATH + "/";
     // 回传下载结果
     Handler handler = new Handler() {
@@ -161,11 +162,11 @@ public class FileTransferService extends ImpPlugin {
                     if (fileDownloadDlg != null && fileDownloadDlg.isShowing()) {
                         fileDownloadDlg.dismiss();
                     }
-//                    if (StrUtil.strIsNotNull(saveFileCallBack)) {
+                    if (needOpenFile) {
                         if (getActivity() != null) {
                             new FileOpen(getActivity(), reallyPath, fileType).showOpenDialog();
                         }
-//                    }
+                    }
                     fileInfo = (String) msg.obj;
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
@@ -257,6 +258,7 @@ public class FileTransferService extends ImpPlugin {
         JSONObject jsonObject = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
         downloadUrl = JSONUtils.getString(jsonObject, "url", "");
         fileName = JSONUtils.getString(jsonObject, "saveName", "");
+        needOpenFile = JSONUtils.getBoolean(jsonObject,"autoOpen",true);
         try {
             JSONObject jsonObjectParam = new JSONObject();
             jsonObject.put("url", downloadUrl);
