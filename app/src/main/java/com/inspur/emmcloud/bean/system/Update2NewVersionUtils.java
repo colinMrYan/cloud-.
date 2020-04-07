@@ -28,6 +28,7 @@ import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.AppConfigCacheUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
+import com.inspur.emmcloud.basemodule.util.NetUtils;
 
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
@@ -81,7 +82,7 @@ public class Update2NewVersionUtils {
         AppUpdateConfigBean appUpdateConfigBean = new AppUpdateConfigBean(AppConfigCacheUtils.getAppConfigValue(context,Constant.CONCIG_UPDATE_2_NEWVERSION,""));
         long appUpdate2NewVersionNotUpdateTime = PreferencesUtils.getLong(context,"appUpdate2NewVersionNotUpdateTime",0);
         //检查如果没装云+2.0，且有新版本的下载地址，且没有延迟提示，才提示更新到新版本
-        if(!AppUtils.checkAppInstalledByApplist(context,"com.inspur.playwork.internet") && !StringUtils.isBlank(appUpdateConfigBean.getNewVersionURL()) && (System.currentTimeMillis() - appUpdate2NewVersionNotUpdateTime) > notUpdateInterval){
+        if(NetUtils.isNetworkConnected(context,false) && !AppUtils.checkAppInstalledByApplist(context,"com.inspur.playwork.internet") && !StringUtils.isBlank(appUpdateConfigBean.getNewVersionURL()) && (System.currentTimeMillis() - appUpdate2NewVersionNotUpdateTime) > notUpdateInterval){
             showSelectUpgradeDlg(appUpdateConfigBean);
         }
     }
