@@ -1042,6 +1042,7 @@
 
     <string name="update_2_new_cloud_plus">To download</string>
     <string name="update_2_new_cloud_plus_help">New version help</string>
+    <string name="re_edit">Re edit</string>
     <string-array name="segment_control_items">
         <item>Low</item>
         <item>Middle</item>
