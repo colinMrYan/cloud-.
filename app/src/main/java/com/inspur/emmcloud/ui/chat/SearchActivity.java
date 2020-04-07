@@ -118,7 +118,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     private String searchText;
     private long lastSearchTime = 0;
     private String shareContent;
-    private boolean isSearchContacts = true;
+    private boolean isSearchContacts = false;
     /**
      * 虚拟键盘
      */
@@ -175,19 +175,14 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         for (int i = 0; i < mainTabResults.size(); i++) {
             if (mainTabResults.get(i).getUri().equals(Constant.APP_TAB_BAR_COMMUNACATE)) {
                 MainTabProperty mainTabProperty = mainTabResults.get(i).getMainTabProperty();
-                if (mainTabProperty != null) {
-                    if (!mainTabProperty.isCanContact() || !AppRoleUtils.isShowContact()) {
-                        isSearchContacts = false;
-                        break;
-                    }
+                if (mainTabProperty != null && mainTabProperty.isCanContact()) {
+                    isSearchContacts = true;
                 }
-            } else if (mainTabResults.get(i).getUri().equals(Constant.APP_TAB_BAR_CONTACT)) {
-                isSearchContacts = false;
-                break;
+            }else if(mainTabResults.get(i).getUri().equals(Constant.APP_TAB_BAR_CONTACT)){
+                isSearchContacts = true;
             }
         }
-        //最后判断一下如果有通讯录的话也可以搜索到人员
-        isSearchContacts = TabAndAppExistUtils.isTabExist(MyApplication.getInstance(), Constant.APP_TAB_BAR_CONTACT);
+
     }
 
     @Override
