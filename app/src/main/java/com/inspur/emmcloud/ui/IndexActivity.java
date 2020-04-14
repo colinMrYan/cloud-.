@@ -110,9 +110,13 @@ public class IndexActivity extends IndexBaseActivity {
         getInitData();
         startService();
         uploadApiRequestRecord();
-        new Update2NewVersionUtils(this).checkNeedUpdate2NewVersion();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        new Update2NewVersionUtils(this).checkNeedUpdate2NewVersion();
+    }
 
     private void getNaviTabData(String naviTabSaveConfigVersion) {
         if (NetUtils.isNetworkConnected(this, false)) {

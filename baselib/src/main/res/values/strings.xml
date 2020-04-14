@@ -1110,6 +1110,7 @@
     <string name="update_2_new_cloud_plus">去下载</string>
     <string name="update_2_new_cloud_plus_help">新版本使用帮助</string>
     <string name="re_edit">重新编辑</string>
+    <string name="want_open">想要打开</string>
 
     <!--日历字符串资源开始-->
     <string-array name="lunar_first_of_month">

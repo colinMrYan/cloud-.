@@ -1264,12 +1264,13 @@ public class AppUtils {
 
     /**
      * 通过获取应用信息捕获异常来发现是否安装了某个应用
+     *
      * @param context
      * @param pkgName
      * @return
      */
-    public static boolean checkAppInstalled(Context context,String pkgName) {
-        if (pkgName== null || pkgName.isEmpty()) {
+    public static boolean checkAppInstalled(Context context, String pkgName) {
+        if (pkgName == null || pkgName.isEmpty()) {
             return false;
         }
         PackageInfo packageInfo;
@@ -1279,7 +1280,7 @@ public class AppUtils {
             packageInfo = null;
             e.printStackTrace();
         }
-        if(packageInfo == null) {
+        if (packageInfo == null) {
             return false;
         } else {
             return true;//true为安装了，false为未安装
@@ -1288,24 +1289,43 @@ public class AppUtils {
 
     /**
      * 通过检查已经安装的应用列表是否包含传入应用包名检查是否安装
+     *
      * @param context
      * @param pkgName
      * @return
      */
-    public static boolean checkAppInstalledByApplist( Context context, String pkgName) {
-        if (pkgName== null || pkgName.isEmpty()) {
+    public static boolean checkAppInstalledByApplist(Context context, String pkgName) {
+        if (pkgName == null || pkgName.isEmpty()) {
             return false;
         }
         final PackageManager packageManager = context.getPackageManager();
         List<PackageInfo> info = packageManager.getInstalledPackages(0);
-        if(info == null || info.isEmpty())
+        if (info == null || info.isEmpty())
             return false;
-        for ( int i = 0; i < info.size(); i++ ) {
-            if(pkgName.equals(info.get(i).packageName)) {
+        for (int i = 0; i < info.size(); i++) {
+            if (pkgName.equals(info.get(i).packageName)) {
                 return true;
             }
         }
         return false;
     }
+
+    /**
+     * 根据包名获取应用名
+     * @param context
+     * @param packageName
+     * @return
+     */
+    public static String getApplicationNameByPackageName(Context context, String packageName) {
+        PackageManager pm = context.getPackageManager();
+        String name;
+        try {
+            name = pm.getApplicationLabel(pm.getApplicationInfo(packageName, PackageManager.GET_META_DATA)).toString();
+        } catch (PackageManager.NameNotFoundException e) {
+            name = "";
+        }
+        return name;
+    }
+
 
 }

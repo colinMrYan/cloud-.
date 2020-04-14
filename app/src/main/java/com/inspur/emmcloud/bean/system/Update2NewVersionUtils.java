@@ -1,8 +1,14 @@
 package com.inspur.emmcloud.bean.system;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -22,8 +28,9 @@ import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
-import com.inspur.emmcloud.baselib.widget.LoadingDialog;
+import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.MyDialog;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.AppConfigCacheUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
@@ -36,6 +43,7 @@ import org.xutils.x;
 
 import java.io.File;
 import java.text.DecimalFormat;
+import java.util.List;
 
 /**
  * Created by: yufuchang
@@ -70,6 +78,11 @@ public class Update2NewVersionUtils {
     private TextView percentText;
     private String upgradeUrl;
     private Handler upgradeHandler;
+
+    /**
+     * 新版应用的包名
+     */
+    private static final String NEW_PACKAGE = "com.inspur.playwork.internet";
     public Update2NewVersionUtils(Context context){
         this.context = context;
         handMessage();
@@ -80,10 +93,34 @@ public class Update2NewVersionUtils {
      */
     public void checkNeedUpdate2NewVersion() {
         AppUpdateConfigBean appUpdateConfigBean = new AppUpdateConfigBean(AppConfigCacheUtils.getAppConfigValue(context,Constant.CONCIG_UPDATE_2_NEWVERSION,""));
-        long appUpdate2NewVersionNotUpdateTime = PreferencesUtils.getLong(context,"appUpdate2NewVersionNotUpdateTime",0);
         //检查如果没装云+2.0，且有新版本的下载地址，且没有延迟提示，才提示更新到新版本
-        if(NetUtils.isNetworkConnected(context,false) && !AppUtils.checkAppInstalledByApplist(context,"com.inspur.playwork.internet") && !StringUtils.isBlank(appUpdateConfigBean.getNewVersionURL()) && (System.currentTimeMillis() - appUpdate2NewVersionNotUpdateTime) > notUpdateInterval){
+        if(NetUtils.isNetworkConnected(context,false) && !AppUtils.
+                checkAppInstalledByApplist(context,NEW_PACKAGE)
+                && !StringUtils.isBlank(appUpdateConfigBean.getNewVersionURL())){
             showSelectUpgradeDlg(appUpdateConfigBean);
+        }else if(AppUtils.
+                checkAppInstalledByApplist(context,NEW_PACKAGE)){
+            // TODO Auto-generated method stub
+            new CustomDialog.MessageDialogBuilder((Activity)context)
+                    .setMessage(AppUtils.getAppName(context)+context.getString(R.string.want_open)+AppUtils.getApplicationNameByPackageName(context,NEW_PACKAGE))
+                    .setNegativeButton(context.getString(com.inspur.emmcloud.setting.R.string.cancel), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            BaseApplication.getInstance().exit();
+                        }
+                    })
+                    .setPositiveButton(context.getString(com.inspur.emmcloud.setting.R.string.ok), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            openPackage(context,NEW_PACKAGE);
+                            BaseApplication.getInstance().exit();
+                        }
+                    })
+                    .setCancelable(false)
+                    .show();
+
         }
     }
 
@@ -217,6 +254,7 @@ public class Update2NewVersionUtils {
                 if (cancelable != null) {
                     cancelable.cancel();
                 }
+                BaseApplication.getInstance().exit();
             }
         });
         percentText = progressDownloadDialog.findViewById(R.id.tv_num_percent);
@@ -294,4 +332,70 @@ public class Update2NewVersionUtils {
         }
 
     }
+
+    public Intent getAppOpenIntentByPackageName(Context context,String packageName){
+        //Activity完整名
+        String mainAct = null;
+        //根据包名寻找
+        PackageManager pkgMag = context.getPackageManager();
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_LAUNCHER);
+        intent.setFlags(Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED|Intent.FLAG_ACTIVITY_NEW_TASK);
+
+
+        @SuppressLint("WrongConstant") List<ResolveInfo> list = pkgMag.queryIntentActivities(intent,
+                PackageManager.GET_ACTIVITIES);
+        for (int i = 0; i < list.size(); i++) {
+            ResolveInfo info = list.get(i);
+            if (info.activityInfo.packageName.equals(packageName)) {
+                mainAct = info.activityInfo.name;
+                break;
+            }
+        }
+        if (StringUtils.isEmpty(mainAct)) {
+            return null;
+        }
+        intent.setComponent(new ComponentName(packageName, mainAct));
+        return intent;
+    }
+
+    public Context getPackageContext(Context context, String packageName) {
+        Context pkgContext = null;
+        if (context.getPackageName().equals(packageName)) {
+            pkgContext = context;
+        } else {
+            // 创建第三方应用的上下文环境
+            try {
+                pkgContext = context.createPackageContext(packageName,
+                        Context.CONTEXT_IGNORE_SECURITY
+                                | Context.CONTEXT_INCLUDE_CODE);
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        return pkgContext;
+    }
+
+    public boolean openPackage(Context context, String packageName) {
+        Context pkgContext = getPackageContext(context, packageName);
+        Intent intent = getAppOpenIntentByPackageName(context, packageName);
+        if (pkgContext != null && intent != null) {
+            intent.putExtra("openMoudle","serviceHall");
+            pkgContext.startActivity(intent);
+            return true;
+        }
+        return false;
+    }
+
+
+    private boolean checkPackInfo(String packname) {
+        PackageInfo packageInfo = null;
+        try {
+            packageInfo = context.getPackageManager().getPackageInfo(packname, 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return packageInfo != null;
+    }
+
 }
