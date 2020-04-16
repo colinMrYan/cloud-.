@@ -2,6 +2,7 @@ package com.inspur.emmcloud.bean.system;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -78,49 +79,89 @@ public class Update2NewVersionUtils {
     private TextView percentText;
     private String upgradeUrl;
     private Handler upgradeHandler;
+    private AlertDialog.Builder customDialog;
+    private MyDialog dialog;
+
+    private static Update2NewVersionUtils update2NewVersionUtils;
 
     /**
      * 新版应用的包名
      */
     private static final String NEW_PACKAGE = "com.inspur.playwork.internet";
-    public Update2NewVersionUtils(Context context){
+    private  Update2NewVersionUtils(Context context){
         this.context = context;
         handMessage();
+    }
+
+    public static Update2NewVersionUtils getInstance(Context context){
+        if(update2NewVersionUtils == null){
+            synchronized (Update2NewVersionUtils.class){
+                if(update2NewVersionUtils == null){
+                    update2NewVersionUtils = new Update2NewVersionUtils(context);
+                }
+            }
+        }
+        return update2NewVersionUtils;
     }
 
     /**
      * 检查是否需要升级到新版本
      */
     public void checkNeedUpdate2NewVersion() {
-        AppUpdateConfigBean appUpdateConfigBean = new AppUpdateConfigBean(AppConfigCacheUtils.getAppConfigValue(context,Constant.CONCIG_UPDATE_2_NEWVERSION,""));
+        String updateInfo = AppConfigCacheUtils.getAppConfigValue(context,Constant.CONCIG_UPDATE_2_NEWVERSION,"");
+        AppUpdateConfigBean appUpdateConfigBean = new AppUpdateConfigBean(updateInfo);
+        if(progressDownloadDialog != null && progressDownloadDialog.isShowing()){
+            return;
+        }
+        if(StringUtils.isBlank(appUpdateConfigBean.getNewVersionURL())){
+            return;
+        }
         //检查如果没装云+2.0，且有新版本的下载地址，且没有延迟提示，才提示更新到新版本
         if(NetUtils.isNetworkConnected(context,false) && !AppUtils.
-                checkAppInstalledByApplist(context,NEW_PACKAGE)
-                && !StringUtils.isBlank(appUpdateConfigBean.getNewVersionURL())){
-            showSelectUpgradeDlg(appUpdateConfigBean);
-        }else if(AppUtils.
                 checkAppInstalledByApplist(context,NEW_PACKAGE)){
-            // TODO Auto-generated method stub
-            new CustomDialog.MessageDialogBuilder((Activity)context)
-                    .setMessage(AppUtils.getAppName(context)+context.getString(R.string.want_open)+AppUtils.getApplicationNameByPackageName(context,NEW_PACKAGE))
-                    .setNegativeButton(context.getString(com.inspur.emmcloud.setting.R.string.cancel), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                            BaseApplication.getInstance().exit();
-                        }
-                    })
-                    .setPositiveButton(context.getString(com.inspur.emmcloud.setting.R.string.ok), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                            openPackage(context,NEW_PACKAGE);
-                            BaseApplication.getInstance().exit();
-                        }
-                    })
-                    .setCancelable(false)
-                    .show();
+            showSelectUpgradeDlg(appUpdateConfigBean);
+            try{
+                if(customDialog != null){
+                    customDialog.show().dismiss();
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
 
+        }else if(AppUtils.checkAppInstalledByApplist(context,NEW_PACKAGE)){
+            // TODO Auto-generated method stub
+            if(customDialog == null){
+                customDialog =  new CustomDialog.MessageDialogBuilder((Activity)context)
+                        .setMessage(AppUtils.getAppName(context)+context.getString(R.string.want_open)+AppUtils.getApplicationNameByPackageName(context,NEW_PACKAGE))
+                        .setNegativeButton(context.getString(com.inspur.emmcloud.setting.R.string.cancel), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+//                                BaseApplication.getInstance().exit();
+                                System.exit(0);
+                            }
+                        })
+                        .setPositiveButton(context.getString(com.inspur.emmcloud.setting.R.string.ok), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                openPackage(context,NEW_PACKAGE);
+//                                BaseApplication.getInstance().exit();
+                                System.exit(0);
+                            }
+                        })
+                        .setCancelable(false);
+            }
+            try {
+                if(customDialog != null){
+                        customDialog.show();
+                }
+                if(dialog != null && dialog.isShowing()){
+                    dialog.dismiss();
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }
     }
 
@@ -205,39 +246,42 @@ public class Update2NewVersionUtils {
 
     private void showSelectUpgradeDlg(final AppUpdateConfigBean appUpdateConfigBean) {
         upgradeUrl = appUpdateConfigBean.getNewVersionURL();
-        final MyDialog dialog = new MyDialog(context,
-                R.layout.dialog_update_version);
-        dialog.setCancelable(false);
-        TextView okBtn = dialog.findViewById(R.id.tv_version_update_download);
-        ((TextView)dialog.findViewById(R.id.tv_version_update_content)).setText(appUpdateConfigBean.getNewVersionTip());
-        dialog.findViewById(R.id.tv_new_version_help).setVisibility(StringUtils.isBlank(appUpdateConfigBean.getHelpURL())?View.GONE:View.VISIBLE);
-        dialog.findViewById(R.id.tv_new_version_help).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                bundle.putString("uri", appUpdateConfigBean.getHelpURL());
-                bundle.putBoolean(Constant.WEB_FRAGMENT_SHOW_HEADER, true);
-                ARouter.getInstance().build(Constant.AROUTER_CLASS_WEB_MAIN).with(bundle).navigation();
-            }
-        });
-        okBtn.setText(R.string.update_2_new_cloud_plus);
-        okBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-                showDownloadDialog();
-            }
-        });
-        ImageView cancelBt = dialog.findViewById(R.id.iv_version_update_close);
-        cancelBt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-                PreferencesUtils.putLong(context, "appUpdate2NewVersionNotUpdateTime", System.currentTimeMillis());
-            }
-        });
-        dialog.show();
-
+        if(dialog == null){
+            dialog = new MyDialog(context,
+                    R.layout.dialog_update_version);
+            dialog.setCancelable(false);
+            TextView okBtn = dialog.findViewById(R.id.tv_version_update_download);
+            ((TextView)dialog.findViewById(R.id.tv_version_update_content)).setText(appUpdateConfigBean.getNewVersionTip());
+            dialog.findViewById(R.id.tv_new_version_help).setVisibility(StringUtils.isBlank(appUpdateConfigBean.getHelpURL())?View.GONE:View.VISIBLE);
+            dialog.findViewById(R.id.tv_new_version_help).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("uri", appUpdateConfigBean.getHelpURL());
+                    bundle.putBoolean(Constant.WEB_FRAGMENT_SHOW_HEADER, true);
+                    ARouter.getInstance().build(Constant.AROUTER_CLASS_WEB_MAIN).with(bundle).navigation();
+                }
+            });
+            okBtn.setText(R.string.update_2_new_cloud_plus);
+            okBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                    showDownloadDialog();
+                }
+            });
+            ImageView cancelBt = dialog.findViewById(R.id.iv_version_update_close);
+            cancelBt.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                    PreferencesUtils.putLong(context, "appUpdate2NewVersionNotUpdateTime", System.currentTimeMillis());
+                }
+            });
+        }
+        if(dialog != null && !dialog.isShowing()){
+            dialog.show();
+        }
     }
 
     private void showDownloadDialog() {
@@ -254,7 +298,8 @@ public class Update2NewVersionUtils {
                 if (cancelable != null) {
                     cancelable.cancel();
                 }
-                BaseApplication.getInstance().exit();
+//                BaseApplication.getInstance().exit();
+                System.exit(0);
             }
         });
         percentText = progressDownloadDialog.findViewById(R.id.tv_num_percent);
