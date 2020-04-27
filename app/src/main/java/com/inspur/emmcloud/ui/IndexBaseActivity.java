@@ -167,7 +167,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
                 Constant.PREF_MNM_DOUBLE_VALIADATION, -1);
         Router router = Router.getInstance();
         SettingService settingService = router.getService(SettingService.class);
-        if (settingService != null && doubleValidation == 1 && settingService.getGestureCodeIsOpenByUser(BaseApplication.getInstance())) {
+        if (settingService != null && doubleValidation == 1 && !settingService.getGestureCodeIsOpenByUser(BaseApplication.getInstance())) {
             Bundle bundle = new Bundle();
             bundle.putBoolean(EXTRA_FORCE_SET, true);
             ARouter.getInstance().build(Constant.AROUTER_CLASS_SETTING_CREATE_GESTURE).with(bundle).navigation(this, REQUEST_CREATE_GUESTURE);
