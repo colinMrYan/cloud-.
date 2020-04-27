@@ -1,20 +1,43 @@
 package com.inspur.emmcloud.setting.adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.baselib.widget.dialogs.ActionSheetDialog;
+import com.inspur.emmcloud.baselib.widget.dialogs.BottomDialog;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.setting.R;
 import com.inspur.emmcloud.setting.bean.CardPackageBean;
+import com.inspur.emmcloud.setting.ui.setting.RecommendAppActivity;
 import com.inspur.emmcloud.setting.widget.cardstack.RxAdapterStack;
 import com.inspur.emmcloud.setting.widget.cardstack.RxCardStackView;
+import com.umeng.socialize.ShareAction;
+import com.umeng.socialize.UMShareListener;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.media.UMImage;
+import com.umeng.socialize.media.UMWeb;
+import com.umeng.socialize.shareboard.SnsPlatform;
+import com.umeng.socialize.utils.ShareBoardlistener;
+
+import java.lang.ref.WeakReference;
 
 
 public class CardStackAdapter extends RxAdapterStack<CardPackageBean> {
 
-    public CardStackAdapter(Context context) {
+    private Activity context;
+    private CustomShareListener mShareListener;
+
+    public CardStackAdapter(Activity context) {
         super(context);
+        this.context = context;
     }
 
     @Override
@@ -83,9 +106,62 @@ public class CardStackAdapter extends RxAdapterStack<CardPackageBean> {
         public void onItemExpand(boolean b) {
         }
 
-        public void onBind(CardPackageBean cardPackageBean, int position) {
+        public void onBind(final CardPackageBean cardPackageBean, int position) {
             companyNameText.setText(cardPackageBean.getCompany());
             companyNameText.setBackgroundResource(getBackGroundImg(position));
+            companyNameText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(!StringUtils.isBlank(cardPackageBean.getBarcodeUrl())){
+                        BottomDialog.ActionListSheetBuilder builder = new BottomDialog.ActionListSheetBuilder(context);
+                        final BottomDialog bottomDialog = builder.build();
+                        ((TextView)bottomDialog.findViewById(R.id.tv_company_name)).setText(cardPackageBean.getCompany());
+                        bottomDialog.findViewById(R.id.iv_close).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                bottomDialog.dismiss();
+                            }
+                        });
+                        bottomDialog.findViewById(R.id.btn_share_group_qrcode).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                bottomDialog.dismiss();
+                                mShareListener = new CustomShareListener(context);
+                                new ShareAction(context).setDisplayList(
+                                        SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE,
+                                        SHARE_MEDIA.QQ, SHARE_MEDIA.QZONE, SHARE_MEDIA.SMS
+                                )
+                                        .setShareboardclickCallback(new ShareBoardlistener() {
+                                            @Override
+                                            public void onclick(SnsPlatform snsPlatform, SHARE_MEDIA share_media) {
+                                                if (share_media == SHARE_MEDIA.SMS) {
+                                                    new ShareAction(context).withText(cardPackageBean.getCompany() + "发票二维码  " + cardPackageBean.getBarcodeUrl())
+                                                            .setPlatform(share_media)
+                                                            .setCallback(mShareListener)
+                                                            .share();
+                                                } else {
+                                                    UMImage thumb = new UMImage(context, R.drawable.ic_launcher_share);
+                                                    UMWeb web = new UMWeb(cardPackageBean.getBarcodeUrl());
+                                                    web.setThumb(thumb);
+                                                    web.setDescription("发票二维码");
+                                                    web.setTitle(cardPackageBean.getCompany());
+                                                    new ShareAction(context).withMedia(web)
+                                                            .setPlatform(share_media)
+                                                            .setCallback(mShareListener)
+                                                            .share();
+                                                }
+                                            }
+                                        })
+                                        .open();
+                            }
+                        });
+                        ImageDisplayUtils.getInstance().displayImage(builder.getQrCodeImage(),cardPackageBean.getBarcodeUrl());
+                        bottomDialog.show();
+                    }else{
+                        ToastUtils.show(context.getString(R.string.card_package_no_qrcode));
+                    }
+                }
+            });
             taxpayerText.setText(cardPackageBean.getTaxpayer());
             bankText.setText(cardPackageBean.getBank());
             bankNumText.setText(cardPackageBean.getBankAccount());
@@ -93,5 +169,41 @@ public class CardStackAdapter extends RxAdapterStack<CardPackageBean> {
             phoneText.setText(cardPackageBean.getPhone());
         }
 
+    }
+
+
+
+
+    private static class CustomShareListener implements UMShareListener {
+
+        private WeakReference<Activity> mActivity;
+
+        private CustomShareListener(Activity activity) {
+            mActivity = new WeakReference(activity);
+        }
+
+        @Override
+        public void onStart(SHARE_MEDIA platform) {
+
+        }
+
+        @Override
+        public void onResult(SHARE_MEDIA platform) {
+            ToastUtils.show(mActivity.get(), R.string.baselib_share_success);
+        }
+
+        @Override
+        public void onError(SHARE_MEDIA platform, Throwable t) {
+            ToastUtils.show(mActivity.get(), R.string.baselib_share_fail);
+            if (t != null) {
+                LogUtils.jasonDebug("throw:" + t.getMessage());
+            }
+
+        }
+
+        @Override
+        public void onCancel(SHARE_MEDIA platform) {
+
+        }
     }
 }

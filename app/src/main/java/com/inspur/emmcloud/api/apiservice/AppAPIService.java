@@ -462,6 +462,47 @@ public class AppAPIService {
         });
     }
 
+    /**
+     * 获取app权限
+     * {
+     *     "enable_contacts": 0,//是否显示通讯录
+     *     "enable_file_send": 0,//是否能发送文件
+     *     "enable_image_send": 0//是否能发送图片
+     * }
+     */
+    public void getAppRole(){
+//        final String url = "https://emm.inspur.com/api/sys/v3.0/config/clientConfig";
+        final String url = APIUri.getAppRoleUrl();
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, url) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnAppRoleSuccess(new String(arg0));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnAppRoleFail(error,responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getAppRole();
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                refreshToken(oauthCallBack, requestTime);
+            }
+        });
+    }
+
 
 
 

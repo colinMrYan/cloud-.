@@ -18,10 +18,12 @@ import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.AppConfigCacheUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
+import com.inspur.emmcloud.bean.system.AppUpdateConfigBean;
 import com.inspur.emmcloud.bean.system.ChangeTabBean;
 import com.inspur.emmcloud.componentservice.app.CommonCallBack;
 import com.inspur.emmcloud.componentservice.application.ApplicationService;
@@ -131,6 +133,11 @@ public class AppSchemeHandleActivity extends BaseActivity {
     private void openScheme() {
         if (((MyApplication) getApplicationContext()).isHaveLogin()) {
             openIndexActivity(this);
+            AppUpdateConfigBean appUpdateConfigBean = new AppUpdateConfigBean(AppConfigCacheUtils.getAppConfigValue(this,Constant.CONCIG_UPDATE_2_NEWVERSION,""));
+            if(!StringUtils.isBlank(appUpdateConfigBean.getNewVersionURL())){
+                finish();
+                return;
+            }
             //此处加延时操作，为了让打开通知时IndexActivity走onCreate()方法
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -565,7 +572,7 @@ public class AppSchemeHandleActivity extends BaseActivity {
         Router router = Router.getInstance();
         if (router.getService(ApplicationService.class) != null) {
             ApplicationService service = router.getService(ApplicationService.class);
-            service.getWebAppRealUrl(new OnGetWebAppRealUrlListener() {
+            service.getWebAppRealUrl(AppSchemeHandleActivity.this,new OnGetWebAppRealUrlListener() {
                 @Override
                 public void getWebAppRealUrlSuccess(String webAppUrl) {
                     boolean isUriHasTitle = (openMode != null && openMode.equals("1"));

@@ -11,6 +11,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.bean.contact.ContactOrg;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
@@ -57,22 +59,17 @@ public class ContactOrgStructureActivity extends BaseActivity {
      * 初始化Adapter数据
      * **/
     private void init() {
-        String uid = null;
-        uid = getIntent().getExtras().getString("uid");
-        contactUser = ContactUserCacheUtils.getContactUserByUid(uid);
+        String orgnaizeId = getIntent().getExtras().getString(UserInfoActivity.ORG_ID);
         orgNameList = new ArrayList<>();
-        if (contactUser != null) {
             String root = "root";
-            String orgNameOrID = contactUser.getParentId();
-            while (!root.equals(orgNameOrID)) {
-                ContactOrg contactOrgTest = ContactOrgCacheUtils.getContactOrg(orgNameOrID);
+            while (!root.equals(orgnaizeId)) {
+                ContactOrg contactOrgTest = ContactOrgCacheUtils.getContactOrg(orgnaizeId);
                 if (contactOrgTest == null) return;
-                orgNameOrID = contactOrgTest.getName();
-                orgNameList.add(orgNameOrID);
-                orgNameOrID = contactOrgTest.getParentId();
+                String orgName = contactOrgTest.getName();
+                orgNameList.add(orgName);
+                orgnaizeId = contactOrgTest.getParentId();
             }
             Collections.reverse(orgNameList);
-        }
     }
 }
 

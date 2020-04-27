@@ -123,7 +123,7 @@ public class APIUri {
     public static String getAppConfigUrl(boolean isGetCommonAppConfig, boolean isGetWebAutoRotate) {
         return WebServiceRouterManager.getInstance().getClusterEmm() + "api/sys/v6.0/config/array?key=PosReportTimeInterval"
                 + (isGetCommonAppConfig ? "&key=CommonFunctions" : "") + (isGetWebAutoRotate ? "&key=WebAutoRotate" : "")
-                + "&key=force_pull_message" + "&key=EnableCommonFunction";
+                + "&key=force_pull_message" + "&key=EnableCommonFunction"+"&key=forceUpdate20";
     }
 
     /**
@@ -1098,6 +1098,22 @@ public class APIUri {
 
     public static String getVolumeShareFileUrl(String volume, String channel) {
         return getUrlBaseVolume() + "/" + volume + "/file/share/channel/" + channel;
+    }
+
+    /**
+     * 获取应用权限的请求地址
+     * @return
+     */
+    public static String getAppRoleUrl(){
+        return getEMMBaseUrl() + "api/sys/v3.0/config/clientConfig";
+    }
+
+    /**
+     * 获取多组织表
+     * @return
+     */
+    public static String getMultiOrgUrl(){
+        return getEMMBaseUrl() + "api/sys/v3.0/contacts/userMultiOrgs";
     }
 
 }

@@ -2,6 +2,7 @@ package com.inspur.emmcloud.web.plugin.gps;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.LocationManager;
 import android.provider.Settings;
@@ -14,7 +15,9 @@ import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
@@ -55,6 +58,7 @@ public class GpsService extends ImpPlugin implements
     private List<AMapLocation> aMapLocationList = new ArrayList<>();
     private int locationCount = 0;
     private AlertDialog dialog;
+    private int openLocationStatus = 0;//0代表初始状态，1代表点击了设置,2，代表点了设置之后已经重新定位
 
     @Override
     public void execute(String action, JSONObject paramsObject) {
@@ -105,6 +109,15 @@ public class GpsService extends ImpPlugin implements
         }
     }
 
+    @Override
+    public void onActivityResume() {
+        super.onActivityResume();
+        if (openLocationStatus == 1 && AppUtils.isLocationEnabled(getFragmentContext())) {
+            startLocation();
+            openLocationStatus = 2;
+        }
+    }
+
 
     /**
      * 获得位置信息
@@ -126,7 +139,28 @@ public class GpsService extends ImpPlugin implements
         PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getActivity(), Permissions.LOCATION, new PermissionRequestCallback() {
             @Override
             public void onPermissionRequestSuccess(List<String> permissions) {
-                startLocation();
+                if (AppUtils.isLocationEnabled(getActivity())) {
+                    startLocation();
+                } else {
+                    new CustomDialog.MessageDialogBuilder(getActivity())
+                            .setMessage(getActivity().getString(R.string.imp_location_enable, AppUtils.getAppName(getFragmentContext())))
+                            .setCancelable(false)
+                            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            })
+                            .setPositiveButton(R.string.go_setting, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    openLocationStatus = 1;
+                                    AppUtils.openLocationSetting(getActivity());
+                                    dialog.dismiss();
+                                }
+                            })
+                            .show();
+                }
             }
 
             @Override

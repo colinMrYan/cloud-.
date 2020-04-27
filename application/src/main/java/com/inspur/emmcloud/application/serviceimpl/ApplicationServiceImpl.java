@@ -136,8 +136,8 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public void getWebAppRealUrl(OnGetWebAppRealUrlListener listener, String url) {
-        new WebAppUtils(BaseApplication.getInstance(), listener).getWebAppRealUrl(url);
+    public void getWebAppRealUrl(Activity activity,OnGetWebAppRealUrlListener listener, String url) {
+        new WebAppUtils(activity, listener).getWebAppRealUrl(url);
     }
 
     @Override

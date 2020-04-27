@@ -36,6 +36,7 @@ import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.bean.badge.BadgeBodyModel;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseFragmentActivity;
+import com.inspur.emmcloud.basemodule.util.AppRoleUtils;
 import com.inspur.emmcloud.basemodule.util.AppTabUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.ECMShortcutBadgeNumberManagerUtils;
@@ -238,8 +239,10 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
                                     }
                                     break;
                                 case Constant.APP_TAB_BAR_CONTACT:
-                                    tabBean = new TabBean(getString(R.string.contact), ContactSearchFragment.class,
-                                            mainTabResult);
+                                    if(AppRoleUtils.isShowContact()){
+                                        tabBean = new TabBean(getString(R.string.contact), ContactSearchFragment.class,
+                                                mainTabResult);
+                                    }
                                     break;
                             }
                             break;

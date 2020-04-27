@@ -192,7 +192,7 @@ public class CommunicationServiceImpl implements CommunicationService {
 
     @Override
     public String getMyAppFragmentHeaderText(String simpleName) {
-        return AppTabUtils.getTabTitle(BaseApplication.getInstance(), simpleName);
+        return AppTabUtils.getTabHeadTitle(BaseApplication.getInstance(), simpleName);
     }
 
     @Override

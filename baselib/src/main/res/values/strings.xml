@@ -908,6 +908,8 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="dummy_button">Dummy Button</string>
 
+    <string name="recall_reedit">重新编辑</string>
+
 
     <!-- 拖动listview -->
     <string name="select_remove_mode">Remove modes</string>
@@ -1088,6 +1090,8 @@
     <string name="emm_secure_keyboard">安全键盘</string>
     <string name="emm_keyboard_space">空格</string>
 
+    <string name="card_package_no_qrcode">暂无发票二维码，请联系管理员配置</string>
+
 
     <string name="phone_sms">短信</string>
     <string name="phone_email">邮件</string>
@@ -1102,6 +1106,11 @@
     <string name="welcome_to">欢迎使用</string>
 
     <string name="cloud_plus_update">%1$s更新</string>
+
+    <string name="update_2_new_cloud_plus">去下载</string>
+    <string name="update_2_new_cloud_plus_help">新版本使用帮助</string>
+    <string name="re_edit">重新编辑</string>
+    <string name="want_open">想要打开</string>
 
     <!--日历字符串资源开始-->
     <string-array name="lunar_first_of_month">

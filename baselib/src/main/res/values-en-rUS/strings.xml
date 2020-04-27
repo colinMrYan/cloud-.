@@ -1025,6 +1025,8 @@
     <string name="emm_secure_keyboard">Safety Keyboard</string>
     <string name="emm_keyboard_space">space</string>
 
+    <string name="card_package_no_qrcode">There is no invoice QR code, please contact the administrator to configure.</string>
+
     <string name="welcome_to">Welcome to </string>
 
     <string name="phone_sms">SMS</string>
@@ -1033,8 +1035,15 @@
     <string name="user_office_phone">Fixed line</string>
     <string name="group_qrcode">QR Code</string>
 
+    <string name="recall_reedit">Re edit</string>
+
     <string name="user_call">Call</string>
     <string name="cloud_plus_update">%1$s Update</string>
+
+    <string name="update_2_new_cloud_plus">To download</string>
+    <string name="update_2_new_cloud_plus_help">New version help</string>
+    <string name="re_edit">Re edit</string>
+    <string name="want_open"> want to open </string>
     <string-array name="segment_control_items">
         <item>Low</item>
         <item>Middle</item>

@@ -1,12 +1,17 @@
 package com.inspur.emmcloud.util.privates.cache;
 
+import android.util.Log;
+
 import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.DbCacheUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.bean.chat.Robot;
 import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.bean.contact.ContactOrg;
+import com.inspur.emmcloud.bean.contact.MultiOrg;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 
 import org.xutils.db.sqlite.WhereBuilder;
@@ -156,15 +161,112 @@ public class ContactOrgCacheUtils {
             // 组织下的组织架构列表
             List<ContactOrg> contactOrgList = DbCacheUtils.getDb().selector(ContactOrg.class).where("parentId", "=", contactOrgId).orderBy("sortOrder").findAll();
             List<ContactUser> contactUserList = DbCacheUtils.getDb().selector(ContactUser.class).where("parentId", "=", contactOrgId).and(WhereBuilder.b().expr("id not in" + excludeUidSql)).orderBy("sortOrder").findAll();
+            List<ContactUser> contactUserListSearch = getContactUserByOrgId(contactOrgId);
             if (contactOrgList != null) {
                 contactList.addAll(Contact.contactOrgList2ContactList(contactOrgList));
             }
             if (contactUserList != null) {
                 contactList.addAll(Contact.contactUserList2ContactList(contactUserList));
+                if(contactUserListSearch.size() > 0){
+                    contactList.addAll(Contact.contactUserList2ContactList(contactUserListSearch));
+                }
             }
+            List<Contact> contactListExpDup = new ArrayList();
+            for (Contact contact : contactList) {
+                if(!contactListExpDup.contains(contact)){
+                    contactListExpDup.add(contact);
+                }
+            }
+            contactList.clear();
+            contactList.addAll(contactListExpDup);
+//            ArrayList<Contact> resultList = new ArrayList<Contact>(new LinkedHashSet<Contact>(contactList));
+//            LinkedList<Contact> tmpList = new LinkedList<>(resultList);
+//            LogUtils.YfcDebug("去重后数量："+tmpList.size());
         } catch (Exception e) {
             e.printStackTrace();
         }
         return contactList;
+    }
+
+
+
+    /**
+     * 删除MultiOrg
+     */
+    private static void deleteMultiOrg(){
+        try {
+            DbCacheUtils.getDb().dropTable(MultiOrg.class);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 保存多组织数据
+     * @param multiOrgList
+     */
+    public static void saveMultiOrg(List<MultiOrg> multiOrgList){
+        deleteMultiOrg();
+        try {
+            DbCacheUtils.getDb().saveOrUpdate(multiOrgList);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 根据人员inspurId获取人员的所有组织
+     * @param inspurId
+     * @return
+     */
+    public static List<ContactOrg> getMultiOrgByInspurId(String inspurId){
+        List<ContactOrg> contactOrgList = new ArrayList<>();
+        try {
+            List<MultiOrg> multiOrgList = DbCacheUtils.getDb().selector(MultiOrg.class).where("inspurId", "=", inspurId).findAll();
+            for (int i = 0; i < multiOrgList.size(); i++) {
+                contactOrgList.add(getContactOrg(multiOrgList.get(i).getOrgId()));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return contactOrgList;
+    }
+
+    public static List<ContactUser> getContactUserByInspurId(String inspurId){
+        List<ContactUser> contactUserList = new ArrayList<>();
+        try {
+            contactUserList.addAll(DbCacheUtils.getDb().selector(ContactUser.class).where("id", "=", inspurId).findAll());
+//            for (int i = 0; i < multiOrgList.size(); i++) {
+//                contactOrgList.add(getContactOrg(multiOrgList.get(i).getOrgId()));
+//            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return contactUserList;
+    }
+
+    /**
+     * 通过组织id获取当前组织下，多组织列表里的人员
+     * @param contactOrgId
+     * @return
+     */
+    private static List<ContactUser> getContactUserByOrgId(String contactOrgId) {
+        List<ContactUser> contactUserList = new ArrayList<>();
+        try {
+            List<String> idList = new ArrayList<>();
+            List<MultiOrg> multiOrgList = DbCacheUtils.getDb().selector(MultiOrg.class).where("orgId", "=", contactOrgId).findAll();
+            for (int i = 0; i < multiOrgList.size(); i++) {
+                idList.add(multiOrgList.get(i).getInspurId());
+            }
+            List<ContactUser> contactUserListSearch = DbCacheUtils.getDb().selector(ContactUser.class).where("id",
+                    "in", idList).findAll();
+            if(contactUserListSearch != null && contactUserListSearch.size() > 0){
+                contactUserList.addAll(contactUserListSearch);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return contactUserList;
     }
 }

@@ -27,8 +27,10 @@ import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.ClearEditText;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.AppRoleUtils;
 import com.inspur.emmcloud.basemodule.util.AppTabUtils;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
+import com.inspur.emmcloud.basemodule.util.TabAndAppExistUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.ConversationWithMessageNum;
 import com.inspur.emmcloud.bean.contact.Contact;
@@ -116,7 +118,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     private String searchText;
     private long lastSearchTime = 0;
     private String shareContent;
-    private boolean isSearchContacts = true;
+    private boolean isSearchContacts = false;
     /**
      * 虚拟键盘
      */
@@ -173,17 +175,14 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         for (int i = 0; i < mainTabResults.size(); i++) {
             if (mainTabResults.get(i).getUri().equals(Constant.APP_TAB_BAR_COMMUNACATE)) {
                 MainTabProperty mainTabProperty = mainTabResults.get(i).getMainTabProperty();
-                if (mainTabProperty != null) {
-                    if (!mainTabProperty.isCanContact()) {
-                        isSearchContacts = false;
-                        break;
-                    }
+                if (mainTabProperty != null && mainTabProperty.isCanContact()) {
+                    isSearchContacts = true;
                 }
-            } else if (mainTabResults.get(i).getUri().equals(Constant.APP_TAB_BAR_CONTACT)) {
-                isSearchContacts = false;
-                break;
+            }else if(mainTabResults.get(i).getUri().equals(Constant.APP_TAB_BAR_CONTACT)){
+                isSearchContacts = true;
             }
         }
+
     }
 
     @Override

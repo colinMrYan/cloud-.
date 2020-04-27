@@ -431,7 +431,9 @@ public class SettingActivity extends BaseActivity {
                         PushManagerUtils.getInstance().unregisterPushId2Emm();
                         dialog.dismiss();
                         boolean isCommunicateExist = TabAndAppExistUtils.isTabExist(BaseApplication.getInstance(), Constant.APP_TAB_BAR_COMMUNACATE);
-                        if (NetUtils.isNetworkConnected(getApplicationContext(), false) && WebServiceRouterManager.getInstance().isV1xVersionChat() && isCommunicateExist) {
+                        if (NetUtils.isNetworkConnected(getApplicationContext(), false) &&
+                                WebServiceRouterManager.getInstance().isV1xVersionChat() &&
+                                isCommunicateExist) {
                             loadingDlg.show();
                             CommunicationService communicationService = Router.getInstance().getService(CommunicationService.class);
                             if (communicationService != null) {

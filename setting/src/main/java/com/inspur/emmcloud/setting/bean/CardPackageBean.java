@@ -21,6 +21,7 @@ public class CardPackageBean {
      * bank : 工商银行济南山大路支行
      * bankAccount : 1602003109004609977
      * color : #579EEF
+     * "barcodeUrl":"https://ecmcloud.oss-cn-beijing.aliyuncs.com/apps/tax_images/cnhfhk.png"
      */
     @Column(name = "id", isId = true)
     private String id;
@@ -40,6 +41,8 @@ public class CardPackageBean {
     private String color;
     @Column(name = "state")
     private int state = 0;
+    @Column(name = "barcodeUrl")
+    private String barcodeUrl;
 
     public CardPackageBean() {
     }
@@ -53,6 +56,7 @@ public class CardPackageBean {
         this.bank = JSONUtils.getString(jsonObject, "bank", "");
         this.bankAccount = JSONUtils.getString(jsonObject, "bankAccount", "");
         this.color = JSONUtils.getString(jsonObject, "color", "");
+        this.barcodeUrl = JSONUtils.getString(jsonObject,"barcodeUrl","");
     }
 
     public String getId() {
@@ -125,6 +129,14 @@ public class CardPackageBean {
 
     public void setState(int state) {
         this.state = state;
+    }
+
+    public String getBarcodeUrl() {
+        return barcodeUrl;
+    }
+
+    public void setBarcodeUrl(String barcodeUrl) {
+        this.barcodeUrl = barcodeUrl;
     }
 
     @Override

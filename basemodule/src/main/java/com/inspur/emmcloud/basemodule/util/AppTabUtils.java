@@ -16,6 +16,7 @@ import com.inspur.emmcloud.componentservice.application.navibar.NaviBarScheme;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -70,6 +71,38 @@ public class AppTabUtils {
 
     public static String getTabTitle(Context context, String tabKey) {
         return getTabTitle(context, tabKey, "");
+    }
+
+    /**
+     * Tab顶部的title获取方法
+     * 如果没有header则显示原来的title
+     * @param context
+     * @param tabKey
+     * @return
+     */
+    public static String getTabHeadTitle(Context context,String tabKey){
+        ArrayList<MainTabResult> tabList = getMainTabList(context);
+        String tabCompontText =  getCompont(tabKey);
+        MainTabResult tab = getTabByTabKey(tabList, tabCompontText);
+        if (tab == null) {
+            return "";
+        }
+        String tabName = "";
+        String environmentLanguage = LanguageManager.getInstance().getCurrentAppLanguage();
+        if (environmentLanguage.toLowerCase().equals("zh") || environmentLanguage.toLowerCase().equals("zh-Hans".toLowerCase())) {
+            tabName = tab.getMainTabTitleResult().getHeaderZhHans();
+        } else if (environmentLanguage.toLowerCase().equals("zh-Hant".toLowerCase())) {
+            tabName = tab.getMainTabTitleResult().getHeaderZhHant();
+        } else if (environmentLanguage.toLowerCase().equals("en-US".toLowerCase()) ||
+                environmentLanguage.toLowerCase().equals("en".toLowerCase())) {
+            tabName = tab.getMainTabTitleResult().getHeaderEnUs();
+        } else {
+            tabName = tab.getMainTabTitleResult().getHeaderZhHans();
+        }
+        if(StringUtils.isBlank(tabName)){
+            tabName =  getTabTitle(context,tabKey);
+        }
+        return tabName;
     }
 
     /**
@@ -177,6 +210,16 @@ public class AppTabUtils {
             getAppMainTabResult.setMainTabPayLoad(mainTabPayLoad);
             // 发送到CommunicationFragment
             EventBus.getDefault().post(getAppMainTabResult);
+        }
+        //增加新接口AppRole对mainTab的控制
+        if(!AppRoleUtils.isShowContact()){
+            Iterator<MainTabResult> iterator = mainTabResultList.iterator();
+            while (iterator.hasNext()){
+                MainTabResult mainTabResult = iterator.next();
+                if(mainTabResult.getUri().equals(Constant.APP_TAB_BAR_CONTACT)){
+                    iterator.remove();
+                }
+            }
         }
         return mainTabResultList;
     }
