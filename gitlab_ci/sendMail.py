@@ -6,7 +6,7 @@ import sys
 
 def sendEmail():
      emailSender = 'ecloud@inspur.com'
-     emailContext = 'Download Url: https://fir.im/spkw'
+     emailContext = 'Download Url: http://d.7short.com/spkw'
      mailReceivers = []
      mailReceivers.append('chenmch@inspur.com')
      mailReceivers.append('zhangyj.lc@inspur.com')
