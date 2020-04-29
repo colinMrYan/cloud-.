@@ -43,12 +43,16 @@ import java.util.Map;
  * @author 浪潮移动应用平台(IMP)产品组
  */
 public class ImpWebViewClient extends WebViewClient {
+    // 设置微信 H5 支付调用 loadDataWithBaseURL 的标记位，避免循环调用，
+    // 再次进入微信 H5 支付流程时记得重置此标记位状态
+    boolean firstVisitWXH5PayUrl = true;
     private ImpWebView myWebView;
     private Handler mHandler = null;
     private Runnable runnable = null;
     private ImpCallBackInterface impCallBackInterface;
     private String url = "";
     private boolean isLogin = false;
+    private String referer = "https://sy.517na.com";
 
     public ImpWebViewClient(ImpCallBackInterface impCallBackInterface) {
         this.impCallBackInterface = impCallBackInterface;
@@ -231,7 +235,11 @@ public class ImpWebViewClient extends WebViewClient {
 
                 @Override
                 public Map<String, String> getRequestHeaders() {
-                    return getWebViewHeaders(request.getUrl().toString());
+                    Map<String, String> headers = getWebViewHeaders(request.getUrl().toString());
+                    if (url.contains("wx.tenpay.com")) {
+                        headers.put("Referer", referer);
+                    }
+                    return headers;
                 }
             };
             return super.shouldOverrideUrlLoading(view, newRequest);
@@ -252,7 +260,31 @@ public class ImpWebViewClient extends WebViewClient {
             runnable = null;
         }
         if (!filterUrl(url, view)) {
-            view.loadUrl(url, getWebViewHeaders(url));
+            if (url.contains("wx.tenpay.com")) {
+
+                // 兼容 Android 4.4.3 和 4.4.4 两个系统版本设置 referer 无效的问题
+                if (("4.4.3".equals(android.os.Build.VERSION.RELEASE))
+                        || ("4.4.4".equals(android.os.Build.VERSION.RELEASE))) {
+                    if (firstVisitWXH5PayUrl) {
+                        view.loadDataWithBaseURL(referer, "<script>window.location.href=\"" + url + "\";</script>",
+                                "text/html", "utf-8", null);
+                        // 修改标记位状态，避免循环调用
+                        // 再次进入微信H5支付流程时记得重置状态 firstVisitWXH5PayUrl = true
+                        firstVisitWXH5PayUrl = false;
+                    }
+                    // 返回 false 由系统 WebView 自己处理该 url
+                    return false;
+                } else {
+                    // HashMap 指定容量初始化，避免不必要的内存消耗
+                    HashMap<String, String> map = new HashMap<>(1);
+                    map.put("Referer", referer);
+                    view.loadUrl(url, map);
+                    return true;
+                }
+            } else {
+                view.loadUrl(url, getWebViewHeaders(url));
+            }
+
         }
         return true;
     }
