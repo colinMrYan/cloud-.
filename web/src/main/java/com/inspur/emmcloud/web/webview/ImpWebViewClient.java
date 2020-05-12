@@ -157,7 +157,7 @@ public class ImpWebViewClient extends WebViewClient {
     public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
         super.onReceivedError(view, request, error);
         // 在这里加上个判断,防止资源文件等错误导致显示错误页
-        if (request.isForMainFrame() && request.getUrl().toString().equals(url)) {
+        if (request.isForMainFrame() && request.getUrl().toString().equals(url) && !(error.getErrorCode() == WebViewClient.ERROR_UNKNOWN)) {
             if (runnable != null) {
                 mHandler.removeCallbacks(runnable);
                 runnable = null;
