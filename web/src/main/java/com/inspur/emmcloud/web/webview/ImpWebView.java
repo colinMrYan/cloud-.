@@ -31,6 +31,7 @@ import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.Language;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.web.R;
 import com.inspur.emmcloud.web.plugin.PluginMgr;
 import com.inspur.emmcloud.web.ui.ImpCallBackInterface;
@@ -278,13 +279,9 @@ public class ImpWebView extends WebView {
      */
     private void setBaseConfig() {
         // 代理字符串，如果字符串为空或者null系统默认字符串将被利用
-        String userAgent = USERAGENT + "/emmcloud/" + AppUtils.getVersion(context) + " ";
-        String languageJson = PreferencesUtils.getString(
-                BaseApplication.getInstance(), BaseApplication.getInstance().getTanent() + "appLanguageObj");
-        if (languageJson != null) {
-            Language language = new Language(languageJson);
-            userAgent = userAgent + "lang/" + language.getIana();
-        }
+        String userAgent = USERAGENT + "/emmcloud/" + AppUtils.getVersion(context) + "";
+        String language = LanguageManager.getInstance().getCurrentAppLanguage();
+        userAgent = userAgent + "/lang/" + language;
         settings.setUserAgentString(userAgent);
         settings.enableSmoothTransition();
         settings.setGeolocationEnabled(true);
