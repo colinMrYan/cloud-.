@@ -334,6 +334,7 @@ public class ContactUserCacheUtils {
                     .where(WhereBuilder.b().expr("id not in" + noInSql))
                     .and(WhereBuilder.b("mobile", "like", searchText)
                             .or("name", "like", searchText)
+                            .or("tel", "like", searchText)
                     )
                     .limit(limit).findAll();
             if (contactUserList != null) {
