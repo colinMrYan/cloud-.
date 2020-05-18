@@ -175,7 +175,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         for (int i = 0; i < mainTabResults.size(); i++) {
             if (mainTabResults.get(i).getUri().equals(Constant.APP_TAB_BAR_COMMUNACATE)) {
                 MainTabProperty mainTabProperty = mainTabResults.get(i).getMainTabProperty();
-                if (mainTabProperty != null && mainTabProperty.isCanContact()) {
+                if (mainTabProperty != null && mainTabProperty.isCanContact() && AppRoleUtils.isShowContact()) {
                     isSearchContacts = true;
                 }
             }else if(mainTabResults.get(i).getUri().equals(Constant.APP_TAB_BAR_CONTACT)){
