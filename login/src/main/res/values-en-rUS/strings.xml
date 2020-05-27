@@ -41,4 +41,5 @@
     <string name="login_more_current_enterprise">Current System：</string>
     <string name="login_more_scan_find_left">Scan to[</string>
     <string name="login_more_scan_find_right">]Do you decide to add？</string>
+    <string name="login_user_account_not_exist">User does not exist</string>
 </resources>

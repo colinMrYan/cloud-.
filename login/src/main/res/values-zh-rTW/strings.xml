@@ -42,4 +42,5 @@
     <string name="login_more_current_enterprise">當前登錄系統：</string>
     <string name="login_more_scan_find_left">掃描到[</string>
     <string name="login_more_scan_find_right">]確定添加嗎？</string>
+    <string name="login_user_account_not_exist">用戶不存在</string>
 </resources>

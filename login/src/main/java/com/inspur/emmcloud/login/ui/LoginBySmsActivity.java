@@ -305,8 +305,12 @@ public class LoginBySmsActivity extends BaseActivity {
             // TODO Auto-generated method stub
             LoadingDialog.dimissDlg(loadingDlg);
             String code = JSONUtils.getString(error, "code", "");
+            /**10901 forbidden**/
             if (errorCode == 400 && code.equals("10901")) {
                 ToastUtils.show(LoginBySmsActivity.this, R.string.login_cant_login_with_sms);
+                /**1002 noAccount**/
+            } else if(errorCode == 400 && code.equals("1002")){
+                ToastUtils.show(R.string.login_user_account_not_exist);
             } else {
                 WebServiceMiddleUtils.hand(LoginBySmsActivity.this, error, errorCode);
             }

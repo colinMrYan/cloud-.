@@ -41,5 +41,6 @@
     <string name="login_more_current_enterprise">当前登录系统：</string>
     <string name="login_more_scan_find_left">扫描到[</string>
     <string name="login_more_scan_find_right">]确定添加吗？</string>
+    <string name="login_user_account_not_exist">用户不存在</string>
 </resources>
 
