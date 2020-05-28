@@ -8,6 +8,7 @@ import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.util.AppTabUtils;
 import com.inspur.emmcloud.componentservice.communication.SearchModel;
 import com.inspur.emmcloud.componentservice.contact.ContactService;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
@@ -90,7 +91,7 @@ public class SelectStaffService extends ImpPlugin {
         bundle.putInt("select_content", 2);
         bundle.putBoolean("isMulti_select", multiSelection != 0);
         bundle.putString("title", getActivity().getString(R.string.adress_list));
-        if (getImpCallBackInterface() != null) {
+        if (getImpCallBackInterface() != null && AppTabUtils.hasContactPermission(getFragmentContext())) {
             getImpCallBackInterface().onStartActivityForResult(Constant.AROUTER_CLASS_CONTACT_SEARCH, bundle, ImpFragment.SELECT_STAFF_SERVICE_REQUEST);
         }
     }

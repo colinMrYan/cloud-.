@@ -32,6 +32,7 @@ import com.inspur.emmcloud.basemodule.bean.CalendarIdAndCloudIdBean;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.AppTabUtils;
 import com.inspur.emmcloud.basemodule.util.CalendarIdAndCloudScheduleIdCacheUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
@@ -528,6 +529,9 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
     /**
      * 选择参会人*/
     private void selectContact(int requestCode) {
+        if(!AppTabUtils.hasContactPermission(this)){
+            return;
+        }
         String title = "";
 
         Bundle bundle = new Bundle();

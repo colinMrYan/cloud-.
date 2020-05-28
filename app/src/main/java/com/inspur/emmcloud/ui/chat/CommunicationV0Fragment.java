@@ -399,7 +399,9 @@ public class CommunicationV0Fragment extends BaseFragment {
     private void showPopupWindow(View view) {
         DropPopMenu dropPopMenu = new DropPopMenu(getActivity());
         List<MenuItem> menuItemList = new ArrayList<>();
-        menuItemList.add(new MenuItem(R.drawable.ic_message_menu_creat_group_black, 1, getActivity().getString(R.string.message_create_group)));
+        if(AppTabUtils.hasContactPermission(getActivity())){
+            menuItemList.add(new MenuItem(R.drawable.ic_message_menu_creat_group_black, 1, getActivity().getString(R.string.message_create_group)));
+        }
         menuItemList.add(new MenuItem(R.drawable.ic_message_menu_scan_black, 2, getString(R.string.sweep)));
         dropPopMenu.setMenuList(menuItemList);
         dropPopMenu.show(view);
@@ -408,13 +410,17 @@ public class CommunicationV0Fragment extends BaseFragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id, MenuItem menuItem) {
                 switch (position) {
                     case 0:
-                        Intent intent = new Intent();
-                        intent.putExtra("select_content", 2);
-                        intent.putExtra("isMulti_select", true);
-                        intent.putExtra("title",
-                                getActivity().getString(R.string.creat_group));
-                        intent.setClass(getActivity(), ContactSearchActivity.class);
-                        startActivityForResult(intent, CREAT_CHANNEL_GROUP);
+                        if(AppTabUtils.hasContactPermission(getActivity())){
+                            Intent intent = new Intent();
+                            intent.putExtra("select_content", 2);
+                            intent.putExtra("isMulti_select", true);
+                            intent.putExtra("title",
+                                    getActivity().getString(R.string.creat_group));
+                            intent.setClass(getActivity(), ContactSearchActivity.class);
+                            startActivityForResult(intent, CREAT_CHANNEL_GROUP);
+                        }else{
+                            AppUtils.openScanCode(CommunicationV0Fragment.this, SCAN_LOGIN_QRCODE_RESULT);
+                        }
                         break;
                     case 1:
                         AppUtils.openScanCode(CommunicationV0Fragment.this, SCAN_LOGIN_QRCODE_RESULT);

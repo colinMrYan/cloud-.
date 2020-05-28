@@ -25,6 +25,7 @@ import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.MyDatePickerDialog;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.AppTabUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.bean.find.GetTripArriveCity;
@@ -162,14 +163,16 @@ public class TripDetailActivity extends BaseActivity {
                 showTimePickerDlg(false);
                 break;
             case R.id.trip_rider_edit:
-                Intent intent = new Intent();
-                intent.putExtra("select_content", 2);
-                intent.putExtra("isMulti_select", false);
-                intent.putExtra("title", getString(R.string.choose_rider));
-                intent.putExtra("isContainMe", true);
-                intent.setClass(getApplicationContext(),
-                        ContactSearchActivity.class);
-                startActivityForResult(intent, SELECT_RIDER);
+                if(AppTabUtils.hasContactPermission(this)){
+                    Intent intent = new Intent();
+                    intent.putExtra("select_content", 2);
+                    intent.putExtra("isMulti_select", false);
+                    intent.putExtra("title", getString(R.string.choose_rider));
+                    intent.putExtra("isContainMe", true);
+                    intent.setClass(getApplicationContext(),
+                            ContactSearchActivity.class);
+                    startActivityForResult(intent, SELECT_RIDER);
+                }
                 break;
             case R.id.save_text:
                 String tripDate = tripDateEdit.getText().toString();

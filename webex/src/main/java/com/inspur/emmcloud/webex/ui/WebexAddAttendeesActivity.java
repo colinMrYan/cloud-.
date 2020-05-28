@@ -22,6 +22,7 @@ import com.inspur.emmcloud.basemodule.api.BaseModuleApiUri;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.AppTabUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.componentservice.communication.SearchModel;
 import com.inspur.emmcloud.componentservice.contact.ContactService;
@@ -91,15 +92,16 @@ public class WebexAddAttendeesActivity extends BaseActivity {
             startActivityForResult(intent, REQUEST_ADD_EXTERNAL_ATTENDEES);
 
         } else if (i == R.id.rl_add_internal_attendees) {
-            Bundle bundle = new Bundle();
-            bundle.putInt("select_content", 2);
-            bundle.putBoolean("isMulti_select", true);
-            bundle.putBoolean("isContainMe", true);
-            bundle.putString("title", getString(R.string.meeting_invating_members));
-            bundle.putInt("select_limit", 20 - getExternalAttendeeList().size());
-            bundle.putSerializable("hasSearchResult", (Serializable) getInternalAttendeesSearchModelLsit());
-            ARouter.getInstance().build(Constant.AROUTER_CLASS_CONTACT_SEARCH).with(bundle).navigation(this, REQUEST_ADD_INTERNAL_ATTENDEES);
-
+            if(AppTabUtils.hasContactPermission(this)){
+                Bundle bundle = new Bundle();
+                bundle.putInt("select_content", 2);
+                bundle.putBoolean("isMulti_select", true);
+                bundle.putBoolean("isContainMe", true);
+                bundle.putString("title", getString(R.string.meeting_invating_members));
+                bundle.putInt("select_limit", 20 - getExternalAttendeeList().size());
+                bundle.putSerializable("hasSearchResult", (Serializable) getInternalAttendeesSearchModelLsit());
+                ARouter.getInstance().build(Constant.AROUTER_CLASS_CONTACT_SEARCH).with(bundle).navigation(this, REQUEST_ADD_INTERNAL_ATTENDEES);
+            }
         }
     }
 

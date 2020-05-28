@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
+import com.inspur.emmcloud.basemodule.util.AppTabUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.componentservice.communication.CommunicationService;
 import com.inspur.emmcloud.componentservice.contact.ContactService;
@@ -33,9 +34,16 @@ public class VolumeInfoMemberAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        if (isOwner) {
+//        if (isOwner) {
+//            return memberList.size() > 9 ? 10 : memberList.size() + 2;
+//        } else {
+//            return memberList.size() > 10 ? 10 : memberList.size();
+//        }
+        if(isOwner && AppTabUtils.hasContactPermission(context)){
             return memberList.size() > 9 ? 10 : memberList.size() + 2;
-        } else {
+        }else if(isOwner && !AppTabUtils.hasContactPermission(context)){
+            return memberList.size() > 9 ? 10 : memberList.size() + 1;
+        }else{
             return memberList.size() > 10 ? 10 : memberList.size();
         }
     }
@@ -63,7 +71,7 @@ public class VolumeInfoMemberAdapter extends BaseAdapter {
             userPhotoUrl = "drawable://" + R.drawable.icon_group_delete;
             userName = context.getString(R.string.delete);
 
-        } else if ((position == getCount() - 2) && isOwner) {
+        } else if ((position == getCount() - 2) && isOwner && AppTabUtils.hasContactPermission(context)) {
 
             userPhotoUrl = "drawable://" + R.drawable.icon_member_add;
             userName = context.getString(R.string.add);

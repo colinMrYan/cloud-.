@@ -33,6 +33,7 @@ import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.AppTabUtils;
 import com.inspur.emmcloud.basemodule.util.DownLoaderUtils;
 import com.inspur.emmcloud.basemodule.util.FileDownloadManager;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
@@ -337,17 +338,21 @@ public class TaskAddActivity extends BaseActivity {
             intent.putExtra(TaskTagsManageActivity.EXTRA_TAGS, (ArrayList<TaskColorTag>) taskColorTagList);
             startActivityForResult(intent, REQUEST_CLASS_TAG);
         } else if (i == R.id.rl_task_manager) {
-            bundle1.putInt(EXTRA_TYPE, 2);
-            bundle1.putBoolean(EXTRA_MULTI_SELECT, false);
-            bundle1.putString(EXTRA_TITLE, getString(R.string.schedule_task_add_manager));
-            ARouter.getInstance().build(Constant.AROUTER_CLASS_CONTACT_SEARCH).with(bundle1).navigation(TaskAddActivity.this, REQUEST_MANGER);
+            if(AppTabUtils.hasContactPermission(this)){
+                bundle1.putInt(EXTRA_TYPE, 2);
+                bundle1.putBoolean(EXTRA_MULTI_SELECT, false);
+                bundle1.putString(EXTRA_TITLE, getString(R.string.schedule_task_add_manager));
+                ARouter.getInstance().build(Constant.AROUTER_CLASS_CONTACT_SEARCH).with(bundle1).navigation(TaskAddActivity.this, REQUEST_MANGER);
+            }
         } else if (i == R.id.rl_task_participant) {
-            bundle1.putInt(EXTRA_TYPE, 2);
-            bundle1.putBoolean(EXTRA_MULTI_SELECT, true);
-            bundle1.putInt(EXTRA_LIMIT, 20);
-            bundle1.putString(EXTRA_TITLE, getString(R.string.schedule_task_add_participant));
-            bundle1.putSerializable(EXTRA_HAS_SELECT, (Serializable) taskParticipantList);
-            ARouter.getInstance().build(Constant.AROUTER_CLASS_CONTACT_SEARCH).with(bundle1).navigation(TaskAddActivity.this, REQUEST_PARTICIPANT);
+            if(AppTabUtils.hasContactPermission(this)){
+                bundle1.putInt(EXTRA_TYPE, 2);
+                bundle1.putBoolean(EXTRA_MULTI_SELECT, true);
+                bundle1.putInt(EXTRA_LIMIT, 20);
+                bundle1.putString(EXTRA_TITLE, getString(R.string.schedule_task_add_participant));
+                bundle1.putSerializable(EXTRA_HAS_SELECT, (Serializable) taskParticipantList);
+                ARouter.getInstance().build(Constant.AROUTER_CLASS_CONTACT_SEARCH).with(bundle1).navigation(TaskAddActivity.this, REQUEST_PARTICIPANT);
+            }
         } else if (i == R.id.rl_deadline) {
             DateTimePickerDialog dataTimePickerDialog = new DateTimePickerDialog(this);
             dataTimePickerDialog.setDataTimePickerDialogListener(new DateTimePickerDialog.TimePickerDialogInterface() {

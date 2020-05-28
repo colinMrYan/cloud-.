@@ -264,4 +264,24 @@ public class AppTabUtils {
         return mineTabResult;
     }
 
+    /**
+     * 判断有无通讯录
+     * @param context
+     * @return
+     */
+    public static boolean hasContactPermission(Context context){
+        boolean isSearchContacts = false;
+        ArrayList<MainTabResult> mainTabResults = AppTabUtils.getMainTabResultList(context);
+        for (int i = 0; i < mainTabResults.size(); i++) {
+            if (mainTabResults.get(i).getUri().equals(Constant.APP_TAB_BAR_COMMUNACATE)) {
+                MainTabProperty mainTabProperty = mainTabResults.get(i).getMainTabProperty();
+                if (mainTabProperty != null && mainTabProperty.isCanContact() && AppRoleUtils.isShowContact()) {
+                    isSearchContacts = true;
+                }
+            } else if(mainTabResults.get(i).getUri().equals(Constant.APP_TAB_BAR_CONTACT)){
+                isSearchContacts = true;
+            }
+        }
+        return isSearchContacts;
+    }
 }

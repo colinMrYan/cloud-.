@@ -10,6 +10,7 @@ import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.mvp.BasePresenter;
+import com.inspur.emmcloud.basemodule.util.AppTabUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
 import com.inspur.emmcloud.componentservice.communication.OnCreateGroupConversationListener;
@@ -70,11 +71,11 @@ public class ConversationInfoPresenter extends BasePresenter<ConversationInfoCon
         if (conversation.getType().equals(Conversation.TYPE_TRANSFER)) {
             uiMemberUidList.add("fileTransfer");
         } else {
+            if(AppTabUtils.hasContactPermission(context)){
+                uiMemberUidList.add("addUser");
+            }
             if (isOwner) {
-                uiMemberUidList.add("addUser");
                 uiMemberUidList.add("deleteUser");
-            } else {
-                uiMemberUidList.add("addUser");
             }
         }
         return uiMemberUidList;
@@ -88,7 +89,9 @@ public class ConversationInfoPresenter extends BasePresenter<ConversationInfoCon
             uiUidList.add("fileTransfer");
         } else {
             uiUidList.add(uid);
-            uiUidList.add("addUser");
+            if(AppTabUtils.hasContactPermission(context)){
+                uiUidList.add("addUser");
+            }
         }
         return uiUidList;
     }

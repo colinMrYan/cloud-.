@@ -138,7 +138,8 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     public void onCreate() {
         ButterKnife.bind(this);
         ImmersionBar.with(this).statusBarColor(R.color.search_contact_header_bg).statusBarDarkFont(true, 0.2f).navigationBarColor(R.color.white).navigationBarDarkIcon(true, 1.0f).init();
-        initData();
+//        initData();
+        isSearchContacts = AppTabUtils.hasContactPermission(this);
         handMessage();
         initSearchRunnable();
         groupAdapter = new GroupOrContactAdapter();
@@ -167,23 +168,23 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         shareContent = (String) getIntent().getSerializableExtra(Constant.SHARE_CONTENT);
     }
 
-    /**
-     * 是否隐藏联系人
-     **/
-    private void initData() {
-        ArrayList<MainTabResult> mainTabResults = AppTabUtils.getMainTabResultList(getApplicationContext());
-        for (int i = 0; i < mainTabResults.size(); i++) {
-            if (mainTabResults.get(i).getUri().equals(Constant.APP_TAB_BAR_COMMUNACATE)) {
-                MainTabProperty mainTabProperty = mainTabResults.get(i).getMainTabProperty();
-                if (mainTabProperty != null && mainTabProperty.isCanContact() && AppRoleUtils.isShowContact()) {
-                    isSearchContacts = true;
-                }
-            }else if(mainTabResults.get(i).getUri().equals(Constant.APP_TAB_BAR_CONTACT)){
-                isSearchContacts = true;
-            }
-        }
-
-    }
+//    /**
+//     * 是否隐藏联系人
+//     **/
+//    private void initData() {
+//        ArrayList<MainTabResult> mainTabResults = AppTabUtils.getMainTabResultList(getApplicationContext());
+//        for (int i = 0; i < mainTabResults.size(); i++) {
+//            if (mainTabResults.get(i).getUri().equals(Constant.APP_TAB_BAR_COMMUNACATE)) {
+//                MainTabProperty mainTabProperty = mainTabResults.get(i).getMainTabProperty();
+//                if (mainTabProperty != null && mainTabProperty.isCanContact() && AppRoleUtils.isShowContact()) {
+//                    isSearchContacts = true;
+//                }
+//            }else if(mainTabResults.get(i).getUri().equals(Constant.APP_TAB_BAR_CONTACT)){
+//                isSearchContacts = true;
+//            }
+//        }
+//
+//    }
 
     @Override
     public int getLayoutResId() {

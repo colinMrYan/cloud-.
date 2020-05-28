@@ -419,7 +419,9 @@ public class CommunicationFragment extends BaseFragment {
     private void showPopupWindow() {
         DropPopMenu dropPopMenu = new DropPopMenu(getActivity());
         List<MenuItem> menuItemList = new ArrayList<>();
-        menuItemList.add(new MenuItem(R.drawable.ic_message_menu_creat_group_black, 1, getActivity().getString(R.string.message_create_group)));
+        if(AppTabUtils.hasContactPermission(getActivity())){
+            menuItemList.add(new MenuItem(R.drawable.ic_message_menu_creat_group_black, 1, getActivity().getString(R.string.message_create_group)));
+        }
         menuItemList.add(new MenuItem(R.drawable.ic_message_menu_scan_black, 2, getString(R.string.sweep)));
         dropPopMenu.setMenuList(menuItemList);
         dropPopMenu.show(headerFunctionOptionImg);
@@ -428,13 +430,17 @@ public class CommunicationFragment extends BaseFragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id, MenuItem menuItem) {
                 switch (position) {
                     case 0:
-                        Intent contactIntent = new Intent();
-                        contactIntent.putExtra(ContactSearchFragment.EXTRA_TYPE, 2);
-                        contactIntent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, true);
-                        contactIntent.putExtra(ContactSearchFragment.EXTRA_TITLE,
-                                getActivity().getString(R.string.message_create_group));
-                        contactIntent.setClass(getActivity(), ContactSearchActivity.class);
-                        startActivityForResult(contactIntent, CREATE_CHANNEL_GROUP);
+                        if(AppTabUtils.hasContactPermission(getActivity())){
+                            Intent contactIntent = new Intent();
+                            contactIntent.putExtra(ContactSearchFragment.EXTRA_TYPE, 2);
+                            contactIntent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, true);
+                            contactIntent.putExtra(ContactSearchFragment.EXTRA_TITLE,
+                                    getActivity().getString(R.string.message_create_group));
+                            contactIntent.setClass(getActivity(), ContactSearchActivity.class);
+                            startActivityForResult(contactIntent, CREATE_CHANNEL_GROUP);
+                        }else{
+                            AppUtils.openScanCode(CommunicationFragment.this, REQUEST_SCAN_LOGIN_QRCODE_RESULT);
+                        }
                         break;
                     case 1:
                         AppUtils.openScanCode(CommunicationFragment.this, REQUEST_SCAN_LOGIN_QRCODE_RESULT);
