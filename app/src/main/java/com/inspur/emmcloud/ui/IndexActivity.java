@@ -115,7 +115,7 @@ public class IndexActivity extends IndexBaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Update2NewVersionUtils.getInstance(this).checkNeedUpdate2NewVersion();
+//        Update2NewVersionUtils.getInstance(this).checkNeedUpdate2NewVersion();
     }
 
     private void getNaviTabData(String naviTabSaveConfigVersion) {

@@ -21,6 +21,7 @@ import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseMvpActivity;
+import com.inspur.emmcloud.basemodule.util.AppTabUtils;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
 import com.inspur.emmcloud.ui.chat.ChannelMembersDelActivity;
 import com.inspur.emmcloud.ui.chat.CommunicationSearchMessagesActivity;
@@ -160,8 +161,8 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
                     intent.setClass(getApplicationContext(),
                             ChannelMembersDelActivity.class);
                     startActivityForResult(intent, QEQUEST_DEL_MEMBER);
-                } else if (i == uiUidList.size() - 2 && isOwner
-                        || (i == uiUidList.size() - 1 && !isOwner)) { /**添加群成員**/
+                } else if ((i == uiUidList.size() - 2 && isOwner
+                        || (i == uiUidList.size() - 1 && !isOwner)) && AppTabUtils.hasContactPermission(ConversationInfoActivity.this)) { /**添加群成員**/
                     intent.putExtra(ContactSearchFragment.EXTRA_TYPE, 2);
                     intent.putExtra(ContactSearchFragment.EXTRA_EXCLUDE_SELECT, uiConversation.getMemberList());
                     intent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, true);

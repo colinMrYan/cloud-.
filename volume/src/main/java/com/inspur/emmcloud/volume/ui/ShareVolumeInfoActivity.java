@@ -20,6 +20,7 @@ import com.inspur.emmcloud.baselib.widget.ScrollViewWithListView;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.AppTabUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.componentservice.communication.SearchModel;
@@ -171,7 +172,7 @@ public class ShareVolumeInfoActivity extends BaseActivity {
         memberGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if ((position == memberGrid.getCount() - 2) && isOwner) {
+                if ((position == memberGrid.getCount() - 2) && isOwner && AppTabUtils.hasContactPermission(ShareVolumeInfoActivity.this)) {
                     Bundle bundle = new Bundle();
                     bundle.putInt("select_content", 2);
                     bundle.putBoolean("isMulti_select", true);

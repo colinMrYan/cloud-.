@@ -11,6 +11,7 @@ import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.NoScrollGridView;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.AppTabUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.componentservice.communication.SearchModel;
@@ -102,7 +103,7 @@ public class GroupInfoActivity extends BaseActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent();
                 Bundle bundle = new Bundle();
-                if (position == memberGrid.getCount() - 2) {
+                if (position == memberGrid.getCount() - 2 && AppTabUtils.hasContactPermission(GroupInfoActivity.this)) {
                     bundle.putInt("select_content", 2);
                     bundle.putBoolean("isMulti_select", true);
                     bundle.putString("title", getString(R.string.volume_clouddriver_add_volume_member));
