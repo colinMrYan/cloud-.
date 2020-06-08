@@ -64,7 +64,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class SettingActivity extends BaseActivity {
 
@@ -480,6 +479,7 @@ public class SettingActivity extends BaseActivity {
                                 break;
                             case 1:
                                 DataCleanManager.cleanWebViewCache(SettingActivity.this);
+                                BaseApplication.getInstance().removeAllSessionCookie();
                                 ToastUtils.show(getApplicationContext(),
                                         R.string.data_clear_success);
                                 break;
@@ -511,6 +511,8 @@ public class SettingActivity extends BaseActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                         DataCleanManager.cleanWebViewCache(SettingActivity.this);
+                        BaseApplication.getInstance().removeAllCookie();
+                        BaseApplication.getInstance().removeAllSessionCookie();
                         ((BaseApplication) getApplicationContext()).deleteAllDb();
                         String msgCachePath = MyAppConfig.getFileDownloadDirPath();
                         String imgCachePath = MyAppConfig.LOCAL_CACHE_PATH;
