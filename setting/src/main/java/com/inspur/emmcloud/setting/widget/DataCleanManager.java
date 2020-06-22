@@ -78,7 +78,7 @@ public class DataCleanManager {
     public static void cleanApplicationData(Context context, String... filepath) {
         cleanInternalCache(context);
         cleanExternalCache(context);
-        cleanWebViewCache(context);
+        //cleanWebViewCache(context);
         cleanFiles(context);
         for (String filePath : filepath) {
             DeleteFile(new File(filePath));
