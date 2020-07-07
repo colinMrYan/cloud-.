@@ -25,6 +25,7 @@ import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseFragment;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.schedule.R;
 import com.inspur.emmcloud.schedule.R2;
@@ -211,8 +212,11 @@ public class ScheduleHomeFragment extends BaseFragment {
         List<Fragment> list = new ArrayList<Fragment>();
         list.add(scheduleFragment);
         list.add(meetingFragment);
-        list.add(taskFragment);
-
+        //开滦云+屏蔽任务
+        String appVersionFlag = AppUtils.getManifestAppVersionFlag(BaseApplication.getInstance());
+        if (appVersionFlag == null || !appVersionFlag.equals("kailuanyunjia")) {
+            list.add(taskFragment);
+        }
         //初始化adapter
         ScheduleHomeFragmentAdapter adapter = new ScheduleHomeFragmentAdapter(getActivity().getSupportFragmentManager(), list);
         //将适配器和ViewPager结合
@@ -221,12 +225,19 @@ public class ScheduleHomeFragment extends BaseFragment {
     }
 
     private void initTabLayout() {
-        int[] tabTitleResIds = {R.string.schedule_work_schedule, R.string.schedule_work_meeting_text, R.string.schedule_work_mession};
-        for (int i = 0; i < tabTitleResIds.length; i++) {
+        List<Integer> tabTitleIdList = new ArrayList<>();
+        tabTitleIdList.add(R.string.schedule_work_schedule);
+        tabTitleIdList.add(R.string.schedule_work_meeting_text);
+        String appVersionFlag = AppUtils.getManifestAppVersionFlag(BaseApplication.getInstance());
+        //开滦云+屏蔽任务
+        if (appVersionFlag == null || !appVersionFlag.equals("kailuanyunjia")) {
+            tabTitleIdList.add(R.string.schedule_work_mession);
+        }
+        for (int i = 0; i < tabTitleIdList.size(); i++) {
             TabLayout.Tab tab = tabLayout.newTab();
             tab.setCustomView(R.layout.schedule_tablayout_text_item_view);
             TextView textView = tab.getCustomView().findViewById(R.id.tv_tab);
-            textView.setText(getString(tabTitleResIds[i]));
+            textView.setText(getString(tabTitleIdList.get(i)));
             updateTabLayoutTextStatus(tab, (i == 0));
             tabLayout.addTab(tab);
         }
