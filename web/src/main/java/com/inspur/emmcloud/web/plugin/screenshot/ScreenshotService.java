@@ -3,6 +3,7 @@ package com.inspur.emmcloud.web.plugin.screenshot;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.WindowManager;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.baselib.util.LogUtils;
@@ -41,6 +42,10 @@ public class ScreenshotService extends ImpPlugin {
     public void execute(String action, JSONObject paramsObject) {
         if (action.equals("do")) {
             screenshot();
+        } else if(action.equals("enableScreenshot")){
+            setWindowSecure(true);
+        } else if(action.equals("disableScreenshot")){
+            setWindowSecure(false);
         } else {
             showCallIMPMethodErrorDlg();
         }
@@ -50,6 +55,27 @@ public class ScreenshotService extends ImpPlugin {
     public String executeAndReturn(String action, JSONObject paramsObject) {
         showCallIMPMethodErrorDlg();
         return null;
+    }
+
+
+    /**
+     * 动态设置防截屏
+     * @param isSecure
+     */
+    private void setWindowSecure(boolean isSecure) {
+        if (isSecure) {
+            if ((getActivity().getWindow().getAttributes().flags & WindowManager.LayoutParams.FLAG_SECURE) != 0) {
+                LogUtils.YfcDebug( "flag already set secure");
+                return;
+            }
+            getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
+        } else {
+            if ((getActivity().getWindow().getAttributes().flags & WindowManager.LayoutParams.FLAG_SECURE) == 0) {
+                LogUtils.YfcDebug(  "flag already set unsecure");
+                return;
+            }
+            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
+        }
     }
 
     private void screenshot() {
