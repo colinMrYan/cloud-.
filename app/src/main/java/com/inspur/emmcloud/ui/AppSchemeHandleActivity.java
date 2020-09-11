@@ -135,6 +135,7 @@ public class AppSchemeHandleActivity extends BaseActivity {
             openIndexActivity(this);
             AppUpdateConfigBean appUpdateConfigBean = new AppUpdateConfigBean(AppConfigCacheUtils.getAppConfigValue(this,Constant.CONCIG_UPDATE_2_NEWVERSION,""));
             if(!StringUtils.isBlank(appUpdateConfigBean.getNewVersionURL())){
+                ToastUtils.show("暂时不支持此功能，请您使用云上协同");
                 finish();
                 return;
             }
