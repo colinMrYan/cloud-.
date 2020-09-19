@@ -1116,4 +1116,30 @@ public class APIUri {
         return getEMMBaseUrl() + "api/sys/v3.0/contacts/userMultiOrgs";
     }
 
+    /**
+     * 获取多组织表
+     * @return
+     */
+    public static String getWxParams(){
+//        return getEMMBaseUrl() + "api/sys/v3.0/contacts/userMultiOrgs";
+        return "http://10.200.52.38:8080/dft/encrypt/encrypt";
+    }
+
+    /**
+     * 获取隐私协议和服务政策是否同意
+     * @return
+     */
+    public static String getIsAgreed(){
+        return getEMMBaseUrl() + "api/sys/v3.0/userprofile/agreed";
+    }
+
+    /**
+     * 保存隐私协议和服务政策是否同意
+     * @return
+     */
+    public static String saveAgreeState(){
+        return getEMMBaseUrl() + "api/sys/v3.0/userprofile/saveAgreement";
+    }
+
+
 }

@@ -335,4 +335,10 @@ public interface APIInterface {
 
     void returnAppRoleSuccess(String appRole);
     void returnAppRoleFail(String error, int errorCode);
+
+    void returnIsAgreedSuccess(String isSuccess);
+    void returnIsAgreedFail(String error, int errorCode);
+
+    void returnSaveAgreedSuccess(String isSaveSuccess);
+    void returnSaveAgreedFail(String error,int errorCode);
 }

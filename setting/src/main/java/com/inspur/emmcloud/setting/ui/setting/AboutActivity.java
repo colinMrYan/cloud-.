@@ -8,8 +8,10 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.dialogs.ActionSheetDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
@@ -43,6 +45,8 @@ public class AboutActivity extends BaseActivity {
     ImageView logoImg;
     @BindView(R2.id.rl_protocol)
     RelativeLayout protocolLayout;
+    @BindView(R2.id.rl_privacy)
+    RelativeLayout privacyLayout;
     @BindView(R2.id.rl_invite_friends)
     RelativeLayout inviteFriendsLayout;
     private Handler handler;
@@ -55,6 +59,7 @@ public class AboutActivity extends BaseActivity {
         ImageDisplayUtils.getInstance().displayImage(logoImg, "drawable://" + AppUtils.getAppIconRes(BaseApplication.getInstance()), R.drawable.ic_launcher);
         protocolLayout.setVisibility(AppUtils.isAppVersionStandard() ? View.VISIBLE : View.GONE);
         inviteFriendsLayout.setVisibility(AppUtils.isAppVersionStandard() ? View.VISIBLE : View.GONE);
+        privacyLayout.setVisibility(AppUtils.isAppVersionStandard() ? View.VISIBLE : View.GONE);
         handMessage();
     }
 
@@ -100,7 +105,8 @@ public class AboutActivity extends BaseActivity {
             IntentUtils.startActivity(AboutActivity.this, GuideActivity.class,
                     bundle);
         } else if (id == R.id.rl_protocol) {
-            IntentUtils.startActivity(AboutActivity.this, ServiceTermActivity.class);
+//            IntentUtils.startActivity(AboutActivity.this, ServiceTermActivity.class);
+            openProtocol(getString(R.string.setting_about_protocol_text),Constant.SERVICE_AGREEMENT);
         } else if (id == R.id.rl_check_update) {
             AppService appService = Router.getInstance().getService(AppService.class);
             if (appService != null) {
@@ -108,7 +114,19 @@ public class AboutActivity extends BaseActivity {
             }
         } else if (id == R.id.rl_invite_friends) {
             IntentUtils.startActivity(AboutActivity.this, RecommendAppActivity.class);
+        } else if (id == R.id.rl_privacy) {
+            openProtocol(getString(R.string.setting_about_privacy_text),Constant.PRIVATE_AGREEMENT);
         }
+    }
+
+
+    private void openProtocol(String appName,String uri){
+        Bundle bundle = new Bundle();
+        bundle.putString("uri", uri);
+        LogUtils.jasonDebug("uri===" + uri);
+        bundle.putString("appName", appName);
+//        bundle.putBoolean(Constant.WEB_FRAGMENT_SHOW_HEADER, isHaveNavBar);
+        ARouter.getInstance().build(Constant.AROUTER_CLASS_WEB_MAIN).with(bundle).navigation();
     }
 
     private void handMessage() {

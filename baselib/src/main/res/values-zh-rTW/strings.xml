@@ -1051,6 +1051,10 @@
     <string name="re_edit">重新編輯</string>
     <string name="want_open">想要打開</string>
 
+    <string name="privacy_title">服務協定和隱私協定</string>
+    <string name="privacy_agree">同意並繼續</string>
+    <string name="privacy_reject">不同意並退出</string>
+
     <!--日历字符串资源开始-->
     <string-array name="lunar_first_of_month">
         <item>春節</item>

@@ -757,6 +757,26 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
+    public void returnIsAgreedSuccess(String isSuccess) {
+
+    }
+
+    @Override
+    public void returnIsAgreedFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnSaveAgreedSuccess(String isSaveSuccess) {
+
+    }
+
+    @Override
+    public void returnSaveAgreedFail(String error, int errorCode) {
+
+    }
+
+    @Override
     public void returnTransmitPictureSuccess(String cid, String description, Message message) {
 
     }

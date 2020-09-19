@@ -1,13 +1,15 @@
 package com.inspur.emmcloud.widget.spans;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.text.TextPaint;
 import android.text.style.ClickableSpan;
 import android.view.View;
 
-import com.inspur.emmcloud.util.privates.UriUtils;
+import com.alibaba.android.arouter.launcher.ARouter;
+import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.util.LanguageManager;
 
 /**
  * Created by yufuchang on 2017/3/21.
@@ -27,8 +29,10 @@ public class URLClickableSpan extends ClickableSpan {
     public void onClick(View view) {
         //Do something with URL here.
         Context context = view.getContext();
-        if (openUri.toLowerCase().startsWith("http")) {
-            UriUtils.openUrl((Activity) context, openUri);
+        if (Constant.SERVICE_AGREEMENT.equals(openUri)) {
+            openUrl(openUri + LanguageManager.getInstance().getCurrentAppLanguage() + ".html");
+        } else if (openUri.toLowerCase().startsWith("http")) {
+            openUrl(openUri);
         } else {
             try {
                 Intent intent = Intent.parseUri(openUri, Intent.URI_INTENT_SCHEME);
@@ -45,5 +49,16 @@ public class URLClickableSpan extends ClickableSpan {
     public void updateDrawState(TextPaint ds) {
         super.updateDrawState(ds);
         ds.setUnderlineText(false);
+    }
+
+    /**
+     * 打开url
+     *
+     * @param uri
+     */
+    private void openUrl( String uri) {
+        Bundle bundle = new Bundle();
+        bundle.putString("uri", uri);
+        ARouter.getInstance().build(Constant.AROUTER_CLASS_WEB_MAIN).with(bundle).navigation();
     }
 }

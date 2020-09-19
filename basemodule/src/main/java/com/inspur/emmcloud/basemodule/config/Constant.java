@@ -317,6 +317,8 @@ public class Constant {
     public static final String AROUTER_CLASS_SETTING_TEST = "/setting/test";
     public static final String AROUTER_CLASS_SETTING_GUIDE = "/setting/guide";
     public static final String AROUTER_CLASS_SETTING_FACEVERIFY = "/setting/FaceVerify";
+    public static final String AROUTER_CLASS_SETTING_SERVICE_TERM = "/setting/serviceTerm";
+
 
     //参会状态
     public static final int ATTEND_MEETING_STATUS_ACCEPT = 1;
@@ -345,5 +347,8 @@ public class Constant {
     public static final boolean IS_VOICE_WORD_CLOUSE = false;
 
     public static final String APP_ROLE = "app_role";
+
+    public static final String PRIVATE_AGREEMENT = "http://emm.inspuronline.com:83/cloudplus_policy.html";
+    public static final String SERVICE_AGREEMENT = "http://emm.inspuronline.com:83/cloudplus_service_";
 
 }

@@ -1,10 +1,16 @@
 package com.inspur.emmcloud.ui;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
 import android.text.method.ScrollingMovementMethod;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -19,11 +25,14 @@ import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.ContactAPIService;
 import com.inspur.emmcloud.baselib.router.Router;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
+import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.MyDialog;
+import com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButton;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.ClientConfigItem;
 import com.inspur.emmcloud.basemodule.bean.GetAllConfigVersionResult;
@@ -36,6 +45,7 @@ import com.inspur.emmcloud.basemodule.util.AppPVManager;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.ClientConfigUpdateUtils;
 import com.inspur.emmcloud.basemodule.util.ClientIDUtils;
+import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
@@ -72,6 +82,7 @@ import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
+import com.inspur.emmcloud.widget.spans.URLClickableSpan;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -93,6 +104,8 @@ import io.reactivex.schedulers.Schedulers;
  */
 @Route(path = Constant.AROUTER_CLASS_APP_INDEX)
 public class IndexActivity extends IndexBaseActivity {
+
+    private static final String AGREEMENT_COLOR = "#180000";
     private static final int SYNC_ALL_BASE_DATA_SUCCESS = 0;
     private static final int RELOAD_WEB = 3;
     private Handler handler;
@@ -100,6 +113,7 @@ public class IndexActivity extends IndexBaseActivity {
     private LoadingDialog loadingDlg;
     //更新到新版本（云+2.0）提醒间隔时间
     private static final int notUpdateInterval = 86400000;
+    private SpannableString agreement;
 
     @Override
     public void onCreate() {
@@ -110,6 +124,7 @@ public class IndexActivity extends IndexBaseActivity {
         getInitData();
         startService();
         uploadApiRequestRecord();
+        getIsAgreed();
     }
 
     @Override
@@ -124,6 +139,15 @@ public class IndexActivity extends IndexBaseActivity {
             appAPIService.setAPIInterface(new WebService());
             appAPIService.getAppNaviTabs(naviTabSaveConfigVersion);
         }
+    }
+
+    /**
+     * 获取是否同意了隐私协议和服务政策
+     */
+    private void getIsAgreed(){
+        AppAPIService appAPIService = new AppAPIService(this);
+        appAPIService.setAPIInterface(new WebService());
+        appAPIService.getIsAgreeAgreement();
     }
 
     /**
@@ -306,6 +330,69 @@ public class IndexActivity extends IndexBaseActivity {
         }
     }
 
+    /**
+     * 隐私协议和服务政策Dialog
+     */
+    private void showProtocolDlg() {
+        final MyDialog dialog = new MyDialog(this,
+                R.layout.basewidget_agreement_dialog_two_buttons);
+        dialog.setCancelable(false);
+        TextView textView = dialog.findViewById(R.id.tv_agreement_content);
+        textView.setMovementMethod(LinkMovementMethod.getInstance());
+        getAgreeContent(LanguageManager.getInstance().getCurrentAppLanguage());
+        textView.setText(agreement);
+        CustomRoundButton customRoundButtonNotAgree = dialog.findViewById(R.id.btn_agreement_not_agree);
+        customRoundButtonNotAgree.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                dialog.dismiss();
+//                BaseApplication.getInstance().signout();
+                showConfirmDlg();
+            }
+        });
+        CustomRoundButton customRoundButtonAgree = dialog.findViewById(R.id.btn_agreement_agree);
+        customRoundButtonAgree.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                saveIsAgreed();
+            }
+        });
+        dialog.show();
+    }
+
+    /**
+     * 保存是否同意隐私政策和服务协议
+     */
+    private void saveIsAgreed() {
+        AppAPIService appAPIService = new AppAPIService(this);
+        appAPIService.setAPIInterface(new WebService());
+        //1代表已经同意隐私政策和服务协议0未同意
+        appAPIService.saveAgreeState("1");
+    }
+
+    /**
+     * 弹出注销提示框
+     */
+    private void showConfirmDlg() {
+        new CustomDialog.MessageDialogBuilder(this)
+                .setMessage("是否确认不同意并退出")
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        BaseApplication.getInstance().signout();
+                    }
+                })
+                .show();
+    }
+
     private void handMessage() {
         // TODO Auto-generated method stub
         handler = new Handler() {
@@ -335,6 +422,63 @@ public class IndexActivity extends IndexBaseActivity {
                 }
             }
         };
+    }
+
+    /**
+     * 获取协议字符串
+     * @param environmentLanguage
+     */
+    private void getAgreeContent(String environmentLanguage) {
+        String agreementStr = "";
+        int startIndexPrivate = 0;
+        int startIndexService = 0;
+        switch (environmentLanguage.toLowerCase()) {
+            case "zh-hant":
+                agreementStr = "歡迎使用雲+!\n        雲+非常重視您的個人信息和隱私保護，為了更好的向您提供交流溝通、文件傳送、電話撥打、位置定位等相關服務，我們會根據您使用服務的具體功能需要，收集必要的用戶信息（可能涉及賬號、設備、日誌等相關內容）。" +
+                        "\n        在使用我們的產品和服務前，請您務必仔細閱讀、充分理解《服務協定》和《隱私協定》各條款。我們將嚴格按照上述條款為您提供服務，保護您的信息安全，點擊“同意”即表示您已閱讀並同意全部條款，可以開始使用我們的產品和服務。";;
+                agreement = new SpannableString(agreementStr);
+                startIndexPrivate = agreementStr.indexOf("《隱私協定》");
+                startIndexService = agreementStr.indexOf("《服務協定》");
+                ForegroundColorSpan colorSpan2 = new ForegroundColorSpan(Color.parseColor(AGREEMENT_COLOR));
+                ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.parseColor(AGREEMENT_COLOR));
+                agreement.setSpan(colorSpan, startIndexPrivate, startIndexPrivate + 4, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                agreement.setSpan(colorSpan2, startIndexService, startIndexService + 4, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                URLClickableSpan urlClickableSpan = new URLClickableSpan(Constant.PRIVATE_AGREEMENT);
+                URLClickableSpan urlClickableSpan2 = new URLClickableSpan(Constant.SERVICE_AGREEMENT);
+                agreement.setSpan(urlClickableSpan, startIndexPrivate, startIndexPrivate + 4, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                agreement.setSpan(urlClickableSpan2, startIndexService, startIndexService + 4, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                break;
+            case "en":
+            case "en-us":
+                agreementStr = "Cloud+ attaches great importance to your personal information and privacy protection. In order to provide you with related services such as communication, file transfer, telephone dialing, and location service, we will collect the necessary users according to the specific functional needs of your use of the service Information (may involve accounts, devices, logs, etc.). \n     Before using our products and services, please read and fully understand the terms of the \"Service Agreement\" and \"Privacy Policy\". We will provide services to you in strict accordance with the above terms and protect the security of your information. Clicking \"Agree\" means that you have read and agreed to all the terms and can start using our products and services.";
+                agreement = new SpannableString (agreementStr);
+                startIndexPrivate = agreementStr.indexOf("Privacy Policy");
+                startIndexService = agreementStr.indexOf("Service Agreement");
+                ForegroundColorSpan colorSpanEn = new ForegroundColorSpan(Color.parseColor(AGREEMENT_COLOR));
+                ForegroundColorSpan colorSpanEn2 = new ForegroundColorSpan(Color.parseColor(AGREEMENT_COLOR));
+                agreement.setSpan(colorSpanEn, startIndexPrivate, startIndexPrivate + 17, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                agreement.setSpan(colorSpanEn2, startIndexService, startIndexService + 17, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                URLClickableSpan urlClickableSpanEn = new URLClickableSpan(Constant.PRIVATE_AGREEMENT);
+                URLClickableSpan urlClickableSpanEn2 = new URLClickableSpan(Constant.SERVICE_AGREEMENT);
+                agreement.setSpan(urlClickableSpanEn, startIndexPrivate, startIndexPrivate + 17, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                agreement.setSpan(urlClickableSpanEn2, startIndexService, startIndexService + 17, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                break;
+            default:
+                agreementStr = "欢迎使用云+!\n        云+非常重视您的个人信息和隐私保护，为了更好的向您提供交流沟通、文件传送、电话拨打、位置定位等相关服务，我们会根据您使用服务的具体功能需要，收集必要的用户信息（可能涉及账号、设备、日志等相关内容）。" +
+                        "\n        在使用我们的产品和服务前，请您务必仔细阅读、充分理解《服务协议》和《隐私政策》各条款。我们将严格按照上述条款为您提供服务，保护您的信息安全，点击“同意”即表示您已阅读并同意全部条款，可以开始使用我们的产品和服务。";
+                agreement = new SpannableString(agreementStr);
+                startIndexPrivate = agreementStr.indexOf("《隐私政策》");
+                startIndexService = agreementStr.indexOf("《服务协议》");
+                ForegroundColorSpan colorSpanZh = new ForegroundColorSpan(Color.parseColor(AGREEMENT_COLOR));
+                ForegroundColorSpan colorSpanZh2 = new ForegroundColorSpan(Color.parseColor(AGREEMENT_COLOR));
+                agreement.setSpan(colorSpanZh, startIndexPrivate, startIndexPrivate + 6, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                agreement.setSpan(colorSpanZh2, startIndexService, startIndexService + 6, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                URLClickableSpan urlClickableSpanZh = new URLClickableSpan(Constant.PRIVATE_AGREEMENT);
+                URLClickableSpan urlClickableSpanZh2 = new URLClickableSpan(Constant.SERVICE_AGREEMENT);
+                agreement.setSpan(urlClickableSpanZh, startIndexPrivate, startIndexPrivate + 6, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                agreement.setSpan(urlClickableSpanZh2, startIndexService, startIndexService + 6, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                break;
+        }
     }
 
     /**
@@ -790,6 +934,19 @@ public class IndexActivity extends IndexBaseActivity {
         @Override
         public void returnAppRoleFail(String error, int errorCode) {
             super.returnAppRoleFail(error, errorCode);
+        }
+
+        @Override
+        public void returnIsAgreedSuccess(String isSuccess) {
+            //0代表未同意，1代表已经统一隐私政策和服务协议
+            if(JSONUtils.getString(isSuccess,"agreed","0").equals("0")){
+                showProtocolDlg();
+            }
+        }
+
+        @Override
+        public void returnIsAgreedFail(String error, int errorCode) {
+            super.returnIsAgreedFail(error, errorCode);
         }
     }
 

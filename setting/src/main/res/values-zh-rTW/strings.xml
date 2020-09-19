@@ -37,6 +37,7 @@
     <string name="setting_about_text">關於</string>
     <string name="setting_about_welcome_text">歡迎頁面</string>
     <string name="setting_about_protocol_text">服務協定</string>
+    <string name="setting_about_privacy_text">隱私協定</string>
     <string name="setting_feed_back_no_empty">請輸入回饋意見</string>
     <string name="setting_feed_back_out_of_length">您輸入的字數已經超過了限制</string>
 

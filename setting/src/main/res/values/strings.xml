@@ -39,6 +39,7 @@
     <string name="setting_about_text">关于</string>
     <string name="setting_about_welcome_text">欢迎页面</string>
     <string name="setting_about_protocol_text">服务协议</string>
+    <string name="setting_about_privacy_text">隐私协议</string>
     <string name="setting_feed_back_no_empty">请输入反馈意见</string>
     <string name="setting_feed_back_out_of_length">您输入的字数已经超过了限制</string>
 

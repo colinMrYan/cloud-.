@@ -12,6 +12,7 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIInterface;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.router.Router;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
 import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
@@ -503,7 +504,113 @@ public class AppAPIService {
         });
     }
 
+    /**
+     * 获取微信参数
+     */
+    public void getWxParams(){
+//        final String url = "https://emm.inspur.com/api/sys/v3.0/config/clientConfig";
+        final String url = APIUri.getWxParams();
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, url) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                LogUtils.YfcDebug("返回参数："+new String(arg0));
+            }
 
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                LogUtils.YfcDebug("返回失败："+error+"-----"+responseCode);
+            }
 
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getWxParams();
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                refreshToken(oauthCallBack, requestTime);
+            }
+        });
+    }
+
+    /**
+     * 获取是否已经隐私政策和服务协议
+     */
+    public void getIsAgreeAgreement(){
+//        final String url = "https://emm.inspur.com/api/sys/v3.0/config/clientConfig";
+        final String url = APIUri.getIsAgreed();
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, url) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnIsAgreedSuccess(new String(arg0));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnIsAgreedFail(error,responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getIsAgreeAgreement();
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                refreshToken(oauthCallBack, requestTime);
+            }
+        });
+    }
+
+    /**
+     * 保存是否同意的状态
+     */
+    public void saveAgreeState(final String isAgree){
+//        final String url = "https://emm.inspur.com/api/sys/v3.0/config/clientConfig";
+        final String url = APIUri.saveAgreeState();
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
+        params.addParameter("isAgreed",isAgree);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, url) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnSaveAgreedSuccess(new String(arg0));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnSaveAgreedFail(error,responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        saveAgreeState(isAgree);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                refreshToken(oauthCallBack, requestTime);
+            }
+        });
+    }
 
 }

@@ -2,6 +2,8 @@ package com.inspur.emmcloud.setting.ui.setting;
 
 import android.view.View;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.setting.R;
 
@@ -10,6 +12,7 @@ import com.inspur.emmcloud.setting.R;
  *
  * @author Administrator
  */
+@Route(path = Constant.AROUTER_CLASS_SETTING_SERVICE_TERM)
 public class ServiceTermActivity extends BaseActivity {
 
     @Override

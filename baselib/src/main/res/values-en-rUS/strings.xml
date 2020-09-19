@@ -820,7 +820,7 @@
 \t\t4）为了更好地服务于用户，或为了向用户提供具有个性的信息内容的需要，本软件产品可能会根据需要对设备信息、产品使用情况等数据进行收集，以持续不断地提升产品体验，改善产品功能设计。这些信息绝不涉及用户的个人隐私数据或企业业务数据，浪潮通用软件有限公司承诺不向未经授权的第三方提供此类信息，以保护用户隐私及企业商业秘密。\n
 \t\t5）使用本软件产品由用户自己承担风险，在适用法律允许的最大范围内，浪潮通用软件有限公司在任何情况下不就因使用或不
 
-能使用本软件产品所发生的特殊的、意外的、非直接或间接的损失承担赔偿责任。即使已事先被告知该损害发生的可能性。\n 
+能使用本软件产品所发生的特殊的、意外的、非直接或间接的损失承担赔偿责任。即使已事先被告知该损害发生的可能性。\n
 \t\t6）浪潮通用软件有限公司定义的信息内容包括：文字、软件、声音；本公司为用户提供的商业信息，所有这些内容受版权、商
 
 标权、和其它知识产权和所有权法律的保护。所以，用户只能在本公司授权下才能使用这些内容，而不能擅自复制、修改、编撰这些
@@ -1045,6 +1045,10 @@
     <string name="update_2_new_cloud_plus_help">New version help</string>
     <string name="re_edit">Re edit</string>
     <string name="want_open"> want to open </string>
+
+    <string name="privacy_title">Welcome to Cloud+!</string>
+    <string name="privacy_agree">Agree</string>
+    <string name="privacy_reject">Reject</string>
     <string-array name="segment_control_items">
         <item>Low</item>
         <item>Middle</item>

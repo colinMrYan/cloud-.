@@ -39,6 +39,7 @@
     <string name="setting_about_text">About</string>
     <string name="setting_about_welcome_text">Welcome Page</string>
     <string name="setting_about_protocol_text">Services Agreement</string>
+    <string name="setting_about_privacy_text">Privacy Agreement</string>
     <string name="setting_feed_back_no_empty">Feedback</string>
     <string name="setting_feed_back_out_of_length">Please limit your feedback to 200 words</string>
 

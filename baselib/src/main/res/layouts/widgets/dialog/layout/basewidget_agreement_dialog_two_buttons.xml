@@ -1,0 +1,79 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@drawable/shape_upgrade_dialog">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"
+        android:textColor="#3E4A59"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="16dp"
+        android:text="@string/privacy_title"/>
+
+    <TextView
+        android:id="@+id/tv_agreement_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#000000"
+        android:textSize="14sp"
+        android:lineSpacingExtra="3dp"
+        android:lineSpacingMultiplier="1.5"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="21dp"
+        android:orientation="horizontal">
+
+        <com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButton
+            android:id="@+id/btn_agreement_not_agree"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:textSize="15sp"
+            android:textColor="#B2B7BA"
+            android:layout_marginLeft="20dp"
+            android:layout_marginBottom="20dp"
+            android:elevation="1dp"
+            android:gravity="center"
+            android:text="@string/privacy_reject"
+            android:textAllCaps="false"
+            app:cus_backgroundColor="#FFFFFF"
+            app:cus_borderWidth="1dp"
+            app:cus_isRadiusAdjustBounds="true"
+            app:cus_borderColor= "#B2B7BA"
+            android:onClick="onClick"/>
+
+
+        <com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButton
+            android:id="@+id/btn_agreement_agree"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:textSize="15sp"
+            android:textColor="#FFFFFF"
+            android:layout_marginLeft="9dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="20dp"
+            android:elevation="1dp"
+            android:gravity="center"
+            android:text="@string/privacy_agree"
+            android:textAllCaps="false"
+            app:cus_backgroundColor="#36A5F6"
+            app:cus_borderWidth="0dp"
+            app:cus_isRadiusAdjustBounds="true"
+            android:onClick="onClick"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>
