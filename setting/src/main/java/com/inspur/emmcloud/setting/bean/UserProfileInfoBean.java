@@ -30,6 +30,7 @@ public class UserProfileInfoBean {
 
 
     private String globalName = "";
+    private String orgId = "";
     private String userName = "";
     private String userMail = "";
     private String userPhone = "";
@@ -57,6 +58,7 @@ public class UserProfileInfoBean {
                 this.userMail = JSONUtils.getString(jsonObjectSubProfileStr, "email", "");
                 this.userPhone = JSONUtils.getString(jsonObjectSubProfileStr, "mobile", "");
                 this.globalName = JSONUtils.getString(jsonObjectSubProfileStr, "globalName", "");
+                this.orgId = JSONUtils.getString(jsonObjectSubProfileStr, "orgId", "");
                 this.empNum = JSONUtils.getString(jsonObjectSubProfileStr, "empNo", "");
                 this.telePhone = JSONUtils.getString(jsonObjectSubProfileStr, "tel", "");
                 this.orgName = JSONUtils.getString(jsonObjectSubProfileStr, "orgName", "");
@@ -80,6 +82,10 @@ public class UserProfileInfoBean {
 
     public String getGlobalName() {
         return globalName;
+    }
+
+    public String getOrgId() {
+        return orgId;
     }
 
     public String getUserName() {

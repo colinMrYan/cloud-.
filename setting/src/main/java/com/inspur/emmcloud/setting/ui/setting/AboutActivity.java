@@ -20,6 +20,7 @@ import com.inspur.emmcloud.basemodule.push.PushManagerUtils;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
+import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.componentservice.app.AppService;
@@ -106,7 +107,7 @@ public class AboutActivity extends BaseActivity {
                     bundle);
         } else if (id == R.id.rl_protocol) {
 //            IntentUtils.startActivity(AboutActivity.this, ServiceTermActivity.class);
-            openProtocol(getString(R.string.setting_about_protocol_text),Constant.SERVICE_AGREEMENT);
+            openProtocol(getString(R.string.setting_about_protocol_text),Constant.SERVICE_AGREEMENT + LanguageManager.getInstance().getCurrentAppLanguage() + ".html");
         } else if (id == R.id.rl_check_update) {
             AppService appService = Router.getInstance().getService(AppService.class);
             if (appService != null) {

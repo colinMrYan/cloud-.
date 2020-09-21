@@ -10,6 +10,8 @@ import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
 import com.inspur.emmcloud.basemodule.api.HttpUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.componentservice.contact.ContactService;
+import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.componentservice.login.LoginService;
 import com.inspur.emmcloud.componentservice.login.OauthCallBack;
 import com.inspur.emmcloud.setting.bean.GetBindingDeviceResult;
@@ -206,7 +208,10 @@ public class SettingAPIService {
         HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(byte[] arg0) {
-                apiInterface.returnUserProfileConfigSuccess(new UserProfileInfoBean(new String(arg0)));
+                UserProfileInfoBean profileInfoBean = new UserProfileInfoBean(new String(arg0));
+                apiInterface.returnUserProfileConfigSuccess(profileInfoBean);
+                checkSelfDBData(profileInfoBean);
+
             }
 
             @Override
@@ -232,6 +237,23 @@ public class SettingAPIService {
             }
 
         });
+    }
+
+
+    /**
+     * 检查自己的数据是否在数据库里，若不在，将其保存到数据库
+     * @param myInfo 服务返回的个人数据
+     */
+    private void checkSelfDBData(UserProfileInfoBean myInfo) {
+        ContactService contactService = Router.getInstance().getService(ContactService.class);
+        if (contactService == null) {
+            return;
+        }
+        if (contactService.getContactUserByUid(BaseApplication.getInstance().getUid()) == null) {
+            contactService.saveContactUser(new ContactUser(myInfo.getId(), myInfo.getUserName(), myInfo.getGlobalName(), "", myInfo.getOrgId(),
+                    myInfo.getUserPhone(), myInfo.getUserMail(), myInfo.getShowHead(),
+                    1000, System.currentTimeMillis() + "", myInfo.getTelePhone(), ""));
+        }
     }
 
 

@@ -46,7 +46,11 @@ public class DepartMentAdpater extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         convertView = LayoutInflater.from(context).inflate(R.layout.item_department, null);
-        ((TextView)convertView.findViewById(R.id.tv_user_department)).setText(contactOrgList.get(position).getName());
+        if (contactOrgList.get(position) != null) {
+            ((TextView) convertView.findViewById(R.id.tv_user_department)).setText(contactOrgList.get(position).getName());
+        } else {
+            convertView.findViewById(R.id.iv_user_depart_detail).setVisibility(View.GONE);
+        }
         convertView.findViewById(R.id.iv_user_depart_detail).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
