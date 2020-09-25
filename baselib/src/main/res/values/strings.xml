@@ -1117,6 +1117,10 @@
     <string name="privacy_agree">同意并继续</string>
     <string name="privacy_reject">不同意并退出</string>
 
+    <string name="privacy_reject_dialog_title">是否确认不同意并退出</string>
+    <string name="privacy_reject_dialog_quit">确定</string>
+    <string name="privacy_reject_dialog_cancel">取消</string>
+
 
     <!--日历字符串资源开始-->
     <string-array name="lunar_first_of_month">

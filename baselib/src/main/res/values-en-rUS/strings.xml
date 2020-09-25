@@ -1049,6 +1049,9 @@
     <string name="privacy_title">Welcome to Cloud+!</string>
     <string name="privacy_agree">Agree</string>
     <string name="privacy_reject">Reject</string>
+    <string name="privacy_reject_dialog_title">Whether to confirm disagree and exit?</string>
+    <string name="privacy_reject_dialog_quit">Quit</string>
+    <string name="privacy_reject_dialog_cancel">Cancel</string>
     <string-array name="segment_control_items">
         <item>Low</item>
         <item>Middle</item>

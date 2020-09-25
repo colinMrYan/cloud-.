@@ -26,6 +26,7 @@
         android:lineSpacingMultiplier="1.5"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
+        android:maxLines="16"
         />
 
     <LinearLayout

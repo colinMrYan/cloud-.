@@ -376,14 +376,14 @@ public class IndexActivity extends IndexBaseActivity {
      */
     private void showConfirmDlg() {
         new CustomDialog.MessageDialogBuilder(this)
-                .setMessage("是否确认不同意并退出")
-                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                .setMessage(getString(R.string.privacy_reject_dialog_title))
+                .setNegativeButton(getString(R.string.privacy_reject_dialog_cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
                 })
-                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.privacy_reject_dialog_quit), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();

@@ -1055,6 +1055,10 @@
     <string name="privacy_agree">同意並繼續</string>
     <string name="privacy_reject">不同意並退出</string>
 
+    <string name="privacy_reject_dialog_title">是否確認不同意並退出</string>
+    <string name="privacy_reject_dialog_quit">確定</string>
+    <string name="privacy_reject_dialog_cancel">取消</string>
+
     <!--日历字符串资源开始-->
     <string-array name="lunar_first_of_month">
         <item>春節</item>
