@@ -28,12 +28,19 @@ import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestM
 
 import java.util.List;
 
+import static com.inspur.emmcloud.basemodule.util.protocol.ProtocolUtil.PREF_PROTOCOL_DLG_AGREED;
+
 public abstract class BaseFragmentActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme();
         super.onCreate(savedInstanceState);
-        checkNecessaryPermission();
+        if(PreferencesUtils.getBoolean(this, PREF_PROTOCOL_DLG_AGREED, false)){
+            checkNecessaryPermission();
+        } else {
+            //目前仅有可能时隐私H5页
+            onCreate();
+        }
     }
 
     private void checkNecessaryPermission() {
