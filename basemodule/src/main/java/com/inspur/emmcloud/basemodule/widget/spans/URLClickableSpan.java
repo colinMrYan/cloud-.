@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.widget.spans;
+package com.inspur.emmcloud.basemodule.widget.spans;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +10,8 @@ import android.view.View;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.LanguageManager;
+
+import static com.inspur.emmcloud.basemodule.util.protocol.ProtocolUtil.SERVICE_AGREEMENT;
 
 /**
  * Created by yufuchang on 2017/3/21.
@@ -29,7 +31,7 @@ public class URLClickableSpan extends ClickableSpan {
     public void onClick(View view) {
         //Do something with URL here.
         Context context = view.getContext();
-        if (Constant.SERVICE_AGREEMENT.equals(openUri)) {
+        if (SERVICE_AGREEMENT.equals(openUri)) {
             openUrl(openUri + LanguageManager.getInstance().getCurrentAppLanguage() + ".html");
         } else if (openUri.toLowerCase().startsWith("http")) {
             openUrl(openUri);

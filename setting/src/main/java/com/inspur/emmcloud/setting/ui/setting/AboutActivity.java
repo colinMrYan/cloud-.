@@ -31,6 +31,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnLongClick;
 
+import static com.inspur.emmcloud.basemodule.util.protocol.ProtocolUtil.PRIVATE_AGREEMENT;
+import static com.inspur.emmcloud.basemodule.util.protocol.ProtocolUtil.SERVICE_AGREEMENT;
+
 /**
  * 关于页面 com.inspur.emmcloud.ui.AboutActivity
  *
@@ -107,7 +110,7 @@ public class AboutActivity extends BaseActivity {
                     bundle);
         } else if (id == R.id.rl_protocol) {
 //            IntentUtils.startActivity(AboutActivity.this, ServiceTermActivity.class);
-            openProtocol(getString(R.string.setting_about_protocol_text),Constant.SERVICE_AGREEMENT + LanguageManager.getInstance().getCurrentAppLanguage() + ".html");
+            openProtocol(getString(R.string.setting_about_protocol_text),SERVICE_AGREEMENT + LanguageManager.getInstance().getCurrentAppLanguage() + ".html");
         } else if (id == R.id.rl_check_update) {
             AppService appService = Router.getInstance().getService(AppService.class);
             if (appService != null) {
@@ -116,7 +119,7 @@ public class AboutActivity extends BaseActivity {
         } else if (id == R.id.rl_invite_friends) {
             IntentUtils.startActivity(AboutActivity.this, RecommendAppActivity.class);
         } else if (id == R.id.rl_privacy) {
-            openProtocol(getString(R.string.setting_about_privacy_text),Constant.PRIVATE_AGREEMENT);
+            openProtocol(getString(R.string.setting_about_privacy_text), PRIVATE_AGREEMENT);
         }
     }
 

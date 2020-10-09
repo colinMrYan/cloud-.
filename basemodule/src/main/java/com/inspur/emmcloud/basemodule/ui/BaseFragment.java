@@ -3,6 +3,7 @@ package com.inspur.emmcloud.basemodule.ui;
 import android.support.v4.app.Fragment;
 
 import com.gyf.barlibrary.ImmersionBar;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.basemodule.R;
 
@@ -30,5 +31,17 @@ public class BaseFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         if (unbinder != null) unbinder.unbind();
+    }
+
+    @Override
+    public void onResume() {
+        LogUtils.debug("TilllLog", this + " onResume");
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        LogUtils.debug("TilllLog", this + " onPause");
+        super.onPause();
     }
 }

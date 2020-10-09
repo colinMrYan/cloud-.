@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
@@ -20,6 +21,7 @@ import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.LanguageManager;
+import com.inspur.emmcloud.basemodule.util.protocol.ProtocolUtil;
 import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
@@ -36,7 +38,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
 
         statusType = getStatusType();
@@ -46,8 +47,18 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (layoutResId != 0) {
             setContentView(layoutResId);
         }
-        checkNecessaryPermission();
         setStatus();
+        //首页先同意隐私协议再检查权限
+        if (this instanceof IMainActivity) {
+            ProtocolUtil.showProtocolDialog(this, new ProtocolUtil.ProtocolDialogCallback() {
+                @Override
+                public void onAgreeDialog() {
+                    checkNecessaryPermission();
+                }
+            });
+        } else {
+            checkNecessaryPermission();
+        }
     }
 
     private void checkNecessaryPermission() {
@@ -169,6 +180,19 @@ public abstract class BaseActivity extends AppCompatActivity {
             titleTv.setVisibility(View.VISIBLE);
             titleTv.setText(title);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        LogUtils.debug("TilllLog", this + " onResume");
+        super.onResume();
+    }
+
+
+    @Override
+    protected void onPause() {
+        LogUtils.debug("TilllLog", this + " onPause");
+        super.onPause();
     }
 
     @Override

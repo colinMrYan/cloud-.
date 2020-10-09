@@ -9,7 +9,7 @@ import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.MentionsAndUrl;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
-import com.inspur.emmcloud.widget.spans.URLClickableSpan;
+import com.inspur.emmcloud.basemodule.widget.spans.URLClickableSpan;
 
 import java.util.ArrayList;
 import java.util.Map;

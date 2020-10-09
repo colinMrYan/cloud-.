@@ -23,6 +23,7 @@ import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.ui.IMainActivity;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.ClickRuleUtil;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
@@ -55,7 +56,7 @@ import pl.droidsonroids.gif.GifImageView;
  * @author Administrator
  */
 @Route(path = Constant.AROUTER_CLASS_APP_MAIN)
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements IMainActivity {
 
     private static final int LOGIN_SUCCESS = 0;
     private static final int LOGIN_FAIL = 1;

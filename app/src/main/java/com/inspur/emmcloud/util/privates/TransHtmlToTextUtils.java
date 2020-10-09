@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.ui.chat.emotion.EmotionUtil;
-import com.inspur.emmcloud.widget.spans.URLClickableSpan;
+import com.inspur.emmcloud.basemodule.widget.spans.URLClickableSpan;
 
 
 public class TransHtmlToTextUtils {

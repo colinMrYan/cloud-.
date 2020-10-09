@@ -348,7 +348,4 @@ public class Constant {
 
     public static final String APP_ROLE = "app_role";
 
-    public static final String PRIVATE_AGREEMENT = "http://emm.inspuronline.com:83/cloudplus_policy.html";
-    public static final String SERVICE_AGREEMENT = "http://emm.inspuronline.com:83/cloudplus_service_";
-
 }
