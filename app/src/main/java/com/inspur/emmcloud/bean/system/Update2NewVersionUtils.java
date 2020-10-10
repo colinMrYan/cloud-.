@@ -129,7 +129,6 @@ public class Update2NewVersionUtils {
             }
 
         }else if(AppUtils.checkAppInstalledByApplist(context,NEW_PACKAGE)){
-            // TODO Auto-generated method stub
             if(customDialog == null){
                 customDialog =  new CustomDialog.MessageDialogBuilder((Activity)context)
                         .setMessage(AppUtils.getAppName(context)+context.getString(R.string.want_open)+AppUtils.getApplicationNameByPackageName(context,NEW_PACKAGE))

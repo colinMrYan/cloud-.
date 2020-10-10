@@ -29,6 +29,7 @@ import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
+import com.inspur.emmcloud.basemodule.util.protocol.ProtocolUtil;
 import com.inspur.emmcloud.login.R;
 import com.inspur.emmcloud.login.R2;
 import com.inspur.emmcloud.login.util.LoginUtils;
@@ -71,6 +72,7 @@ public class LoginActivity extends BaseActivity {
         BaseApplication.getInstance().closeOtherActivity(LoginActivity.this);
         initView();
         handMessage();
+        ProtocolUtil.showProtocolDialog(this, null);
     }
 
     @Override

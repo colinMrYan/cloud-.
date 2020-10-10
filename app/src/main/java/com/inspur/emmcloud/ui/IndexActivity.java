@@ -43,6 +43,7 @@ import com.inspur.emmcloud.bean.contact.GetContactOrgListUpateResult;
 import com.inspur.emmcloud.bean.contact.GetContactUserListUpateResult;
 import com.inspur.emmcloud.bean.contact.GetMultiContactResult;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
+import com.inspur.emmcloud.bean.system.Update2NewVersionUtils;
 import com.inspur.emmcloud.componentservice.app.CommonCallBack;
 import com.inspur.emmcloud.componentservice.application.ApplicationService;
 import com.inspur.emmcloud.componentservice.application.maintab.GetAppMainTabResult;
@@ -111,7 +112,7 @@ public class IndexActivity extends IndexBaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-//        Update2NewVersionUtils.getInstance(this).checkNeedUpdate2NewVersion();
+        Update2NewVersionUtils.getInstance(this).checkNeedUpdate2NewVersion();
     }
 
     private void getNaviTabData(String naviTabSaveConfigVersion) {
