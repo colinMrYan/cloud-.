@@ -140,7 +140,11 @@ public class WebViewNetStateDetailActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        checkingNetConnectState();
+        try {
+            checkingNetConnectState();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     public void onClick(View v) {

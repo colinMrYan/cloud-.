@@ -1044,7 +1044,7 @@
     <string name="update_2_new_cloud_plus">To download</string>
     <string name="update_2_new_cloud_plus_help">New version help</string>
     <string name="re_edit">Re edit</string>
-    <string name="want_open"> want to open </string>
+    <string name="want_open"> want to open &#160;</string>
 
     <string name="privacy_title">Welcome to Cloud+!</string>
     <string name="privacy_agree">Agree</string>
