@@ -14,6 +14,7 @@ import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.compressor.Compressor;
 import com.inspur.emmcloud.bean.chat.Email;
@@ -85,6 +86,11 @@ public class CommunicationUtils {
             title = DirectChannelUtils.getDirectChannelTitle(MyApplication.getInstance(), title);
         } else if (conversation.getType().equals(Conversation.TYPE_CAST)) {
             title = DirectChannelUtils.getRobotInfo(MyApplication.getInstance(), title).getName();
+            //智慧城建定制化需求，不合理，且服务改不了
+            if ("通知公告".equals(title) &&
+                    AppUtils.getManifestAppVersionFlag(MyApplication.getInstance()).equals("zhihuichengjian")) {
+                title = "消息到达";
+            }
         } else if (conversation.getType().equals(Conversation.TYPE_TRANSFER)) {
             title = BaseApplication.getInstance().getString(R.string.chat_file_transfer);
         }
