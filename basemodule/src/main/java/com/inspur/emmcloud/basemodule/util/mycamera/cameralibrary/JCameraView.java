@@ -24,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.VideoView;
 
 import com.inspur.emmcloud.basemodule.R;
+import com.inspur.emmcloud.basemodule.util.mycamera.RectScale;
 import com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary.listener.CaptureListener;
 import com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary.listener.ClickListener;
 import com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary.listener.ErrorListener;
@@ -492,6 +493,10 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
 //        mPhoto.setVisibility(VISIBLE);
 //        mCaptureLayout.startAlphaAnimation();
 //        mCaptureLayout.startTypeBtnAnimator();
+    }
+
+    public RectScale getSelectRectScale(){
+        return cameraCropView.getSelectRectScale();
     }
 
     @Override

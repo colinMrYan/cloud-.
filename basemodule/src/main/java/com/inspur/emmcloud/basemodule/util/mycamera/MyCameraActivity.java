@@ -2,6 +2,7 @@ package com.inspur.emmcloud.basemodule.util.mycamera;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.os.Environment;
 
 import com.gyf.barlibrary.BarHide;
@@ -92,6 +93,13 @@ public class MyCameraActivity extends BaseFragmentActivity implements JCameraLis
 
     @Override
     public void captureSuccess(Bitmap bitmap) {
+        RectScale rectScale = jCameraView.getSelectRectScale();
+        if (rectScale != null && ("增值税".equals(rectScale.getName()) || "火车票".equals(rectScale.getName()))) {
+            Matrix m = new Matrix();
+            m.postRotate(-90);
+            bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), m,
+                    true);
+        }
         savePhoto(bitmap);
         startActivityForResult(
                 new Intent(MyCameraActivity.this, IMGEditActivity.class)

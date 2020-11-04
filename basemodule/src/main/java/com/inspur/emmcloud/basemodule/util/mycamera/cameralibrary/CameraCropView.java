@@ -113,6 +113,13 @@ public class CameraCropView extends RelativeLayout {
         }
     }
 
+    public RectScale getSelectRectScale(){
+        if(rectScaleList == null || radioSelectPosition >= rectScaleList.size()){
+            return null;
+        }
+        return rectScaleList.get(radioSelectPosition);
+    }
+
     public void setCustomRectScale(String rectScale) {
         cropView.setCustomRectScale(rectScale);
     }
