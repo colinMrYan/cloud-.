@@ -100,6 +100,7 @@ public class Constant {
     public static final String EVENTBUS_TAG_GET_MESSAGE_COMMENT = "tag_get_message_comment";
     public static final String EVENTBUS_TAG_SEND_VOICE_CALL_MESSAGE = "tag_send_voice_call_mesage";
     public static final String EVENTBUS_TAG_GET_HISTORY_MESSAGE = "tag_get_history_message";
+    public static final String EVENTBUS_TAG_DELETE_UNREAD_MESSAGE = "tag_delete_unread_message";
     public static final String EVENTBUS_TAG_GET_NEW_MESSAGE = "tag_get_new_message";
     public static final String EVENTBUS_TAG_REFRESH_CONVERSATION = "tag_refresh_conversation";
     public static final String EVENTBUS_TAG_GET_MESSAGE_COMMENT_COUNT = "tag_get_message_comment_count";
@@ -118,10 +119,12 @@ public class Constant {
     public static final String EVENTBUS_TAG_SET_CHANNEL_MESSAGE_READ = "tag_set_channel_message_read";
     public static final String EVENTBUS_TAG_RECERIVER_MESSAGE_STATE_READ = "tag_receive_message_state_read";
     public static final String EVENTBUS_TAG_SET_ALL_MESSAGE_UNREAD_COUNT = "tag_set_all_message_unread_count";
+    public static final String EVENTBUS_TAG_CHANNEL_MESSAGE_STATES = "tag_set_channel_message_states";
     public static final String EVENTBUS_TAG_OPEN_DEFALT_TAB = "tag_open_defalt_tab";
     public static final String EVENTBUS_TAG_REFRESH_CONVERSATION_ADAPTER = "tag_refresh_conversation_adapter";
     public static final String EVENTBUS_TAG_SEND_ACTION_CONTENT_MESSAGE = "tag_send_action_content_message";
     public static final String EVENTBUS_TAG_UPDATE_CHANNEL_NAME = "tag_update_channel_name";
+    public static final String EVENTBUS_TAG_UPDATE_CHANNEL_MEMBERS = "tag_update_channel_members";
     public static final String EVENTBUS_TAG_QUIT_CHANNEL_GROUP = "tag_quit_channel_group";
     public static final String EVENTBUS_TAG_UPDATE_CHANNEL_DND = "tag_update_channel_dnd";
     public static final String EVENTBUS_TAG_CURRENT_CHANNEL_OFFLINE_MESSAGE = "tag_current_channel_offline_message";

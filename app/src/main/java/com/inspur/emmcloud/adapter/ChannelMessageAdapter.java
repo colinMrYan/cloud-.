@@ -1,6 +1,8 @@
 package com.inspur.emmcloud.adapter;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,9 +20,12 @@ import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.widget.CustomLoadingView;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.bean.ChannelMessageStates;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
+import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.UIMessage;
+import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.ui.chat.DisplayAttachmentCardMsg;
 import com.inspur.emmcloud.ui.chat.DisplayCommentTextPlainMsg;
 import com.inspur.emmcloud.ui.chat.DisplayExtendedActionsMsg;
@@ -33,12 +38,17 @@ import com.inspur.emmcloud.ui.chat.DisplayRegularFileMsg;
 import com.inspur.emmcloud.ui.chat.DisplayResUnknownMsg;
 import com.inspur.emmcloud.ui.chat.DisplayTxtMarkdownMsg;
 import com.inspur.emmcloud.ui.chat.DisplayTxtPlainMsg;
+import com.inspur.emmcloud.ui.chat.UnReadDetailActivity;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by chenmch on 2017/11/10.
@@ -50,11 +60,19 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
     private MyItemClickListener mItemClickListener;
     private String channelType;
     private ECMChatInputMenu chatInputMenu;
+    private ArrayList<String> mExceptSelfMemberList = new ArrayList<>();
+    private String uid = BaseApplication.getInstance().getUid();
 
-    public ChannelMessageAdapter(Activity context, String channelType, ECMChatInputMenu chatInputMenu) {
+    public ChannelMessageAdapter(Activity context, String channelType, ECMChatInputMenu chatInputMenu, ArrayList<String> memberList) {
         this.context = context;
         this.channelType = channelType;
         this.chatInputMenu = chatInputMenu;
+        List<ContactUser> totalList = ContactUserCacheUtils.getContactUserListById(memberList);
+        for (ContactUser contact : totalList) {
+            mExceptSelfMemberList.add(contact.getId());
+        }
+        mExceptSelfMemberList.remove(uid);
+
         this.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onChanged() {
@@ -72,6 +90,19 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                 }
             }
         });
+    }
+
+    public void updateMemberList(ArrayList<String> memberList){
+        if (memberList == null) {
+            return;
+        }
+        mExceptSelfMemberList.clear();
+        List<ContactUser> totalList = ContactUserCacheUtils.getContactUserListById(memberList);
+        for (ContactUser contact : totalList) {
+            mExceptSelfMemberList.add(contact.getId());
+        }
+        mExceptSelfMemberList.remove(uid);
+        notifyDataSetChanged();
     }
 
     public void setMessageList(List<UIMessage> UIMessageList) {
@@ -252,6 +283,47 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         }
         holder.cardLayout.addView(cardContentView);
 
+        //处理已读未读
+        if (!StringUtils.isBlank(uiMessage.getMessage().getRecallFrom()) || !NetUtils.isNetworkConnected(context)) {
+            holder.unreadText.setVisibility(View.GONE);
+            return;
+        }
+        Map<String, Set<String>> statesMap = uiMessage.getStatesMap();
+        Set<String> readList = statesMap.get(ChannelMessageStates.READ);
+        Set<String> sentList = statesMap.get(ChannelMessageStates.SENT);
+        Set<String> deliveredList = statesMap.get(ChannelMessageStates.DELIVERED);
+        int readSize = readList == null ? 0 : readList.size();
+        int sentSize = sentList == null ? 0 : sentList.size();
+        int deliveredSize = deliveredList == null ? 0 : deliveredList.size();
+        int allSize = readSize + sentSize + deliveredSize;
+        if (allSize == 0 || !uiMessage.getMessage().getFromUser().equals(uid)) {
+            holder.unreadText.setVisibility(View.GONE);
+        } else if (allSize == 1) {
+            holder.unreadText.setVisibility(View.VISIBLE);
+            holder.unreadText.setText(context.getResources().getString(readSize == 1 ? R.string.read : R.string.unread));
+            holder.unreadText.setTextColor(Color.parseColor(readSize == 1 ? "#999999" : "#36A5F6"));
+            holder.unreadText.setOnClickListener(null);
+        } else if (allSize > 1) {
+            holder.unreadText.setVisibility(View.VISIBLE);
+            if (readSize >= allSize) {
+                holder.unreadText.setText(context.getResources().getString(R.string.all_read));
+                holder.unreadText.setTextColor(Color.parseColor("#999999"));
+                holder.unreadText.setOnClickListener(null);
+            } else {
+                holder.unreadText.setText((sentSize + deliveredSize) + context.getResources().getString(R.string.left_unread));
+                holder.unreadText.setTextColor(Color.parseColor("#36A5F6"));
+                holder.unreadText.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(context, UnReadDetailActivity.class);
+                        intent.putExtra(UnReadDetailActivity.UI_MESSAGE, uiMessage);
+                        intent.putStringArrayListExtra(UnReadDetailActivity.CONVERSATION_ALL_MEMBER, mExceptSelfMemberList);
+                        context.startActivity(intent);
+                    }
+                });
+            }
+        }
+
     }
 
     /**
@@ -338,6 +410,37 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         });
     }
 
+    public void updatesChannelMessageState(String messageId, Map<String, Set<String>> map) {
+        for (int i = UIMessageList.size() - 1; i >= 0; i--) {
+            UIMessage uiMessage = UIMessageList.get(i);
+            if (uiMessage.getId().equals(messageId)) {
+                Set<String> newReadSet = map.get(ChannelMessageStates.READ);
+                if (newReadSet == null || newReadSet.size() == 0 || uiMessage.getStatesMap() == null) {
+                    break;
+                }
+                String newReadId = newReadSet.iterator().next();
+                Set<String> oldReadList = uiMessage.getStatesMap().get(ChannelMessageStates.READ);
+                Set<String> oldSentList = uiMessage.getStatesMap().get(ChannelMessageStates.SENT);
+                Set<String> oldDeliveredList = uiMessage.getStatesMap().get(ChannelMessageStates.DELIVERED);
+                if (oldSentList != null) {
+                    oldSentList.remove(newReadId);
+                }
+                if (oldDeliveredList != null) {
+                    oldDeliveredList.remove(newReadId);
+                }
+                if (oldReadList == null) {
+                    oldReadList = new HashSet<>();
+                    uiMessage.getStatesMap().put(ChannelMessageStates.READ, oldReadList);
+                }
+                if (!oldReadList.contains(newReadId)) {
+                    oldReadList.add(newReadId);
+                    notifyItemChanged(i);
+                }
+                break;
+            }
+        }
+    }
+
     /**
      * 创建一个回调接口
      */
@@ -364,6 +467,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         public ImageView sendFailImg;
         public CustomLoadingView sendingLoadingView;
         public TextView sendTimeText;
+        public TextView unreadText;
         public RelativeLayout cardParentLayout;
         private MyItemClickListener mListener;
 
@@ -386,6 +490,8 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
             sendingLoadingView = (CustomLoadingView) view.findViewById(R.id.qlv_sending);
             sendTimeText = (TextView) view
                     .findViewById(R.id.send_time_text);
+            unreadText = (TextView) view
+                    .findViewById(R.id.chat_msg_unread_text);
             cardParentLayout = (RelativeLayout) view.findViewById(R.id.card_parent_layout);
             itemView.setOnClickListener(this);
 

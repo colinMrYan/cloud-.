@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.util.privates.cache;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.inspur.emmcloud.baselib.util.ListUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
@@ -75,10 +76,8 @@ public class MessageCacheUtil {
      */
     public static void saveMessage(final Context context, final Message message) {
         try {
-
             DbCacheUtils.getDb(context).saveOrUpdate(message); // 存储消息
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -124,6 +123,19 @@ public class MessageCacheUtil {
                     messageIdList.add(message.getId());
                 }
                 List<Message> existMessageList = DbCacheUtils.getDb(context).selector(Message.class).where("id", "in", messageIdList).findAll();
+                //已存在的消息更新已读未读状态
+                List<Message> needUpdateStatesMessage = new ArrayList<>();
+                if (existMessageList != null) {
+                    for (Message oldMessage : existMessageList) {
+                        for (Message newMessage : messageOperationList) {
+                            if (oldMessage.getId().equals(newMessage.getId()) && !TextUtils.isEmpty(newMessage.getStates())) {
+                                oldMessage.setStates(newMessage.getStates());
+                                needUpdateStatesMessage.add(oldMessage);
+                            }
+                        }
+                    }
+                    DbCacheUtils.getDb(context).saveOrUpdate(needUpdateStatesMessage);
+                }
                 if (existMessageList != null && existMessageList.size() > 0) {
                     messageOperationList.removeAll(existMessageList);
                 }

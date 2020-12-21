@@ -5,9 +5,21 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MarkDownLinkCacheUtils;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import static com.inspur.emmcloud.basemodule.bean.ChannelMessageStates.DELIVERED;
+import static com.inspur.emmcloud.basemodule.bean.ChannelMessageStates.READ;
+import static com.inspur.emmcloud.basemodule.bean.ChannelMessageStates.SENT;
 
 public class UIMessage implements Serializable {
     private String id;
@@ -16,18 +28,54 @@ public class UIMessage implements Serializable {
     private Long creationDate;
     private String senderPhotoUrl;
     private int sendStatus = 1;//0 发送中  1发送成功  2发送失败
+    private int read = 0;  //0 未读，1 已读
     private List<MarkDownLink> markDownLinkList = new ArrayList<>();
     private int voicePlayState = 0;//0 未下载，1下载中，2，下载完成，3，未播放,4，播放中，5，播放完成，6，播放停止
+    private Map<String, Set<String>> statesMap = new HashMap<>(); //消息的已读未读列表
 
     public UIMessage(Message message) {
         this.message = message;
         this.id = message.getId();
         this.creationDate = message.getCreationDate();
         this.sendStatus = message.getSendStatus();
+        this.read = message.getRead();
         senderName = ContactUserCacheUtils.getUserName(message.getFromUser());
         senderPhotoUrl = APIUri.getUserIconUrl(MyApplication.getInstance(), message.getFromUser());
         if (message.getType().equals(Message.MESSAGE_TYPE_TEXT_MARKDOWN)) {
             markDownLinkList = MarkDownLinkCacheUtils.getMarkDownLinkListByMid(MyApplication.getInstance(), message.getId());
+        }
+        dealStates(message.getStates());
+    }
+
+    private void dealStates(String states) {
+        try {
+            JSONObject statesJson = new JSONObject(states);
+            if (statesJson.has(SENT)) {
+                JSONArray sentArray = statesJson.optJSONArray(SENT);
+                Set<String> sentList = new HashSet<>();
+                for (int i = 0; i < sentArray.length(); i++) {
+                    sentList.add(sentArray.getString(i));
+                }
+                statesMap.put(SENT, sentList);
+            }
+            if (statesJson.has(DELIVERED)) {
+                JSONArray deliveredArray = statesJson.optJSONArray(DELIVERED);
+                Set<String> deliveredList = new HashSet<>();
+                for (int i = 0; i < deliveredArray.length(); i++) {
+                    deliveredList.add(deliveredArray.getString(i));
+                }
+                statesMap.put(DELIVERED, deliveredList);
+            }
+            if (statesJson.has(READ)) {
+                JSONArray readArray = statesJson.optJSONArray(READ);
+                Set<String> readList = new HashSet<>();
+                for (int i = 0; i < readArray.length(); i++) {
+                    readList.add(readArray.getString(i));
+                }
+                statesMap.put(READ, readList);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 
@@ -69,6 +117,10 @@ public class UIMessage implements Serializable {
         return id;
     }
 
+    public int getRead() {
+        return read;
+    }
+
     public void setId(String id) {
         this.id = id;
     }
@@ -87,6 +139,14 @@ public class UIMessage implements Serializable {
 
     public void setMessage(Message message) {
         this.message = message;
+    }
+
+    public Map<String, Set<String>> getStatesMap(){
+        return statesMap;
+    }
+
+    public void setStatesMap(Map<String, Set<String>> statesMap){
+        this.statesMap = statesMap;
     }
 
     public List<MarkDownLink> getMarkDownLinkList() {

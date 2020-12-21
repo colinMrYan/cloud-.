@@ -361,6 +361,9 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
+            android:name=".ui.chat.UnReadDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.chat.mvp.view.ConversationInfoActivity"
             android:configChanges="locale|layoutDirection"
             android:resizeableActivity="true"

@@ -49,4 +49,19 @@ public class ListUtils {
         }
         return false;
     }
+
+    public static boolean isListContentEqual(List l0, List l1) {
+        if (l0 == l1)
+            return true;
+        if (l0 == null || l1 == null)
+            return false;
+        if (l0.size() != l1.size())
+            return false;
+        for(int i = 0 ; i < l0.size(); i++){
+            if(l0.get(0) != l1.get(i)){
+                return false;
+            }
+        }
+        return true;
+    }
 }

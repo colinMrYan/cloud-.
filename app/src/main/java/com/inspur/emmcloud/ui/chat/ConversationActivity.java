@@ -18,6 +18,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.text.Selection;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -47,6 +48,7 @@ import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButton;
 import com.inspur.emmcloud.basemodule.api.APIDownloadCallBack;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.bean.ChannelMessageStates;
 import com.inspur.emmcloud.basemodule.bean.DownloadFileCategory;
 import com.inspur.emmcloud.basemodule.bean.EventMessage;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
@@ -288,13 +290,13 @@ public class ConversationActivity extends ConversationBaseActivity {
             position = cacheMessageList.size() - 1;
         }
         List<UIMessage> uiMessageListNew = UIMessage.MessageList2UIMessageList(cacheMessageList);
-        if (!ListUtils.isListEqual(uiMessageListNew, uiMessageList)) {
+        if (!ListUtils.isListContentEqual(uiMessageListNew, uiMessageList)) {
             uiMessageList = uiMessageListNew;
             adapter.setMessageList(uiMessageList);
             adapter.notifyDataSetChanged();
             msgListView.scrollToPosition(position);
         }
-
+        deleteUnReadChannel();
     }
 
     /**
@@ -633,7 +635,8 @@ public class ConversationActivity extends ConversationBaseActivity {
         linearLayoutManager = new LinearLayoutManager(this);
         msgListView.setLayoutManager(linearLayoutManager);
         ((DefaultItemAnimator) msgListView.getItemAnimator()).setSupportsChangeAnimations(false);
-        adapter = new ChannelMessageAdapter(ConversationActivity.this, conversation.getType(), chatInputMenu);
+        adapter = new ChannelMessageAdapter(ConversationActivity.this, conversation.getType(),
+                chatInputMenu, conversation.getMemberList());
         adapter.setItemClickListener(new ChannelMessageAdapter.MyItemClickListener() {
             @Override
             public void onMessageResend(UIMessage uiMessage, View view) {
@@ -1242,6 +1245,7 @@ public class ConversationActivity extends ConversationBaseActivity {
      * @param status
      */
     private void addLocalMessage(Message message, int status) {
+        wrapperLocalMessageStates(message);
         setConversationUnhide();
         setMessageSendStatusAndSendTime(message, status);
         //本地添加的消息设置为正在发送状态
@@ -1250,6 +1254,23 @@ public class ConversationActivity extends ConversationBaseActivity {
         adapter.setMessageList(uiMessageList);
         adapter.notifyItemInserted(uiMessageList.size() - 1);
         msgListView.MoveToPosition(uiMessageList.size() - 1);
+    }
+
+    private void wrapperLocalMessageStates(Message message) {
+        JSONArray sentArray = new JSONArray();
+        List<ContactUser> totalList = ContactUserCacheUtils.getContactUserListById(conversation.getMemberList());
+        for(ContactUser user : totalList){
+            if(!TextUtils.equals(BaseApplication.getInstance().getUid(), user.getId())){
+                sentArray.put(user.getId());
+            }
+        }
+        JSONObject statesJson = new JSONObject();
+        try {
+            statesJson.put(ChannelMessageStates.SENT, sentArray);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        message.setStates(statesJson.toString());
     }
 
     /**
@@ -1339,6 +1360,11 @@ public class ConversationActivity extends ConversationBaseActivity {
                 conversation.setName(name);
                 headerText.setText(name);
                 break;
+            case Constant.EVENTBUS_TAG_UPDATE_CHANNEL_MEMBERS:
+                ArrayList<String> memberList = (ArrayList<String>) simpleEventMessage.getMessageObj();
+                conversation.setMembers(JSONUtils.toJSONString(memberList));
+                adapter.updateMemberList(memberList);
+                break;
             case Constant.EVENTBUS_TAG_COMMENT_MESSAGE:
                 Message message = (Message) simpleEventMessage.getMessageObj();
                 uiMessageList.add(new UIMessage(message));
@@ -1372,6 +1398,11 @@ public class ConversationActivity extends ConversationBaseActivity {
                             }
                         }
 
+                    }
+                    //本地过来的途径可能没有states
+                    if(receivedWSMessage.getFromUser().equals(BaseApplication.getInstance().getUid())
+                            && TextUtils.isEmpty(receivedWSMessage.getStates())){
+                        wrapperLocalMessageStates(receivedWSMessage);
                     }
                     if (index == -1) {
                         uiMessageList.add(new UIMessage(receivedWSMessage));
@@ -1442,10 +1473,10 @@ public class ConversationActivity extends ConversationBaseActivity {
      * 获取历史消息
      */
     private void getHistoryMessage() {
-        //当有网络并且本地没有连续消息时，网络获取
-        if ((NetUtils.isNetworkConnected(MyApplication.getInstance(), false) &&
-                !(uiMessageList.size() > 0 && MessageCacheUtil.isDataInLocal(ConversationActivity.this, cid, uiMessageList
-                        .get(0).getCreationDate(), COUNT_EVERY_PAGE)))) {
+        //当有网络并且本地没有连续消息时，网络获取 TilllLog 目前策略简单粗暴一些，无网是使用数据库，有网时请求服务，后面统一调整
+        if ((NetUtils.isNetworkConnected(MyApplication.getInstance(), false))) {
+//                && !(uiMessageList.size() > 0 && MessageCacheUtil.isDataInLocal(ConversationActivity.this, cid, uiMessageList
+//                        .get(0).getCreationDate(), COUNT_EVERY_PAGE)))) {
             // 获取本地发送成功的消息id
             String newMessageId = "";
             for (UIMessage uiMessage : uiMessageList) {
@@ -1563,6 +1594,19 @@ public class ConversationActivity extends ConversationBaseActivity {
         }
     }
 
+    //接收到websocket发过来的状态变化
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onResponseChannelMessageStates(EventMessage eventMessage) {
+        if (!eventMessage.getTag().equals(Constant.EVENTBUS_TAG_CHANNEL_MESSAGE_STATES)){
+            return;
+        }
+        ChannelMessageStates channelMessageStates = new ChannelMessageStates(eventMessage.getContent());
+        if(!TextUtils.equals(cid, channelMessageStates.channel)){
+            return;
+        }
+        adapter.updatesChannelMessageState(channelMessageStates.message, channelMessageStates.statesMap);
+    }
+
     /**
      * 获取此频道的最新消息
      */
@@ -1571,6 +1615,16 @@ public class ConversationActivity extends ConversationBaseActivity {
             WSAPIService.getInstance().getChannelNewMessage(cid);
         }
     }
+
+    /**
+     * 获取此频道的最新消息
+     */
+    private void deleteUnReadChannel() {
+        if (NetUtils.isNetworkConnected(this, false)) {
+            WSAPIService.getInstance().deleteChannelMessageUnread(cid);
+        }
+    }
+
 
     /**
      * 将频道置为不隐藏

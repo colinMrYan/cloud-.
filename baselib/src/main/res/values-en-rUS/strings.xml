@@ -1046,6 +1046,13 @@
     <string name="re_edit">Re edit</string>
     <string name="want_open"> want to open &#160;</string>
 
+    <!--已读未读-->
+    <string name="read">read</string>
+    <string name="unread">unread</string>
+    <string name="left_unread">unread</string>
+    <string name="all_read">all read</string>
+    <string name="unread_detail_title">Message recipients list</string>
+
     <string name="privacy_title">Welcome to Cloud+!</string>
     <string name="privacy_agree">Agree</string>
     <string name="privacy_reject">Reject</string>

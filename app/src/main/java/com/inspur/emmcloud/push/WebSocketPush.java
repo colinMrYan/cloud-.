@@ -469,6 +469,13 @@ public class WebSocketPush {
                                     EventBus.getDefault().post(badgeBodyModel);
                                 }
                                 break;
+                            case "/channel/message/state":
+                                if (wsPushContent.getMethod().equals("put")) {
+//                                    ChannelMessageStates states = new ChannelMessageStates(wsPushContent.getBody());
+                                    EventMessage eventMessage = new EventMessage("", Constant.EVENTBUS_TAG_CHANNEL_MESSAGE_STATES, wsPushContent.getBody());
+                                    EventBus.getDefault().post(eventMessage);
+                                }
+                                break;
                             case "/command/client":
                                 if (wsPushContent.getMethod().equals("post")) {
                                     WSCommand wsCommand = new WSCommand(arg0[0].toString());

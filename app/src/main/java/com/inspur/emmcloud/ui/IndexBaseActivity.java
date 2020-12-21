@@ -720,13 +720,40 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
         return super.onKeyDown(keyCode, event);
     }
 
+    private static int timeout = 500;//双击间四百毫秒延时
+    private int clickCount = 0;//记录连续点击次数
+    private Handler handler = new Handler();
+
     @Override
-    public boolean onTouch(View v, MotionEvent event) {
+    public boolean onTouch(final View v, MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN && !v.equals(mTabHost.getCurrentTabView())) {
             isSystemChangeTag = false;
         }
-        return super.onTouchEvent(event);
+
+        if (!"native://communicate".equals(tabId)) {
+            return super.onTouchEvent(event);
+        }
+
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            clickCount++;
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (clickCount == 1) {
+                        ToastUtils.show("单击");
+                        v.callOnClick();
+                    } else if (clickCount == 2) {
+                        ToastUtils.show("双击");
+                        mTabHost.notifyCommunicationDoubleClick();
+                    }
+                    handler.removeCallbacksAndMessages(null);
+                    clickCount = 0;
+                }
+            }, timeout);
+        }
+        return false;
     }
+
 
     @Override
     public void onTabChanged(final String tabId) {

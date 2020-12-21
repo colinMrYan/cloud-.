@@ -32,6 +32,8 @@ import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TabWidget;
 
+import com.inspur.emmcloud.ui.chat.CommunicationFragment;
+
 import java.util.ArrayList;
 
 /**
@@ -296,6 +298,18 @@ public class MyFragmentTabHost extends TabHost
             mLastTab = newTab;
         }
         return ft;
+    }
+
+    public void notifyCommunicationDoubleClick() {
+        if (mFragmentManager == null) {
+            return;
+        }
+        for (Fragment fragment : mFragmentManager.getFragments()) {
+            if (fragment instanceof CommunicationFragment) {
+                ((CommunicationFragment) fragment).notifyCommunicationDoubleClick();
+                return;
+            }
+        }
     }
 
     static final class TabInfo {

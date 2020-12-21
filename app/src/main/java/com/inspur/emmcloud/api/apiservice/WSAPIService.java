@@ -452,6 +452,7 @@ public class WSAPIService {
             JSONObject queryObj = new JSONObject();
             queryObj.put("before", mid);
             queryObj.put("limit", 20);
+            queryObj.put("withStateOfOwnMessages", true);
             actionObj.put("query", queryObj);
             object.put("action", actionObj);
             JSONObject headerObj = new JSONObject();
@@ -475,6 +476,7 @@ public class WSAPIService {
             JSONObject queryObj = new JSONObject();
             queryObj.put("before", "");
             queryObj.put("limit", 20);
+            queryObj.put("withStateOfOwnMessages", true);
             actionObj.put("query", queryObj);
             object.put("action", actionObj);
             JSONObject headerObj = new JSONObject();
@@ -490,6 +492,26 @@ public class WSAPIService {
         }
     }
 
+    public void deleteChannelMessageUnread(String cid) {
+        try {
+            String tracer = CommunicationUtils.getTracer();
+            JSONObject object = new JSONObject();
+            JSONObject actionObj = new JSONObject();
+            actionObj.put("method", "delete");
+            actionObj.put("path", "/channel/" + cid + "/message/state/read");
+            object.put("action", actionObj);
+            JSONObject headerObj = new JSONObject();
+            headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
+            headerObj.put("tracer", tracer);
+            object.put("headers", headerObj);
+            HashMap hashMap = new HashMap();
+            hashMap.put("cid", cid);
+            EventMessage eventMessage = new EventMessage(tracer, Constant.EVENTBUS_TAG_DELETE_UNREAD_MESSAGE, "", hashMap);
+            WebSocketPush.getInstance().sendEventMessage(eventMessage, object, tracer);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public void sendAppStatus(String state) {
         try {

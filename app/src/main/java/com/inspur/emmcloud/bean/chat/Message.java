@@ -70,6 +70,8 @@ public class Message implements Serializable {
     private String recallFrom = "";
     @Column(name = "lifeCycleState")
     private int lifeCycleState = 0;//0未拆包，1已经拆包
+    @Column(name = "states")
+    private String states = "";//已读未读状态json
     private String tmpId = "";
 
     public Message() {
@@ -100,6 +102,7 @@ public class Message implements Serializable {
         channel = JSONUtils.getString(obj, "channel", "");
         state = JSONUtils.getString(obj, "state", "");
         content = JSONUtils.getString(obj, "content", "");
+        states = JSONUtils.getString(obj, "states", "");
         tmpId = JSONUtils.getString(content, "tmpId", "");
         String UTCTime = JSONUtils.getString(obj, "creationDate", "");
         creationDate = TimeUtils.UTCString2Long(UTCTime);
@@ -243,6 +246,14 @@ public class Message implements Serializable {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getStates() {
+        return states;
+    }
+
+    public void setStates(String states) {
+        this.states = states;
     }
 
     public int getSendStatus() {

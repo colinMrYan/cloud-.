@@ -1257,6 +1257,9 @@ public class CommunicationFragment extends BaseFragment {
                 });
     }
 
+    public void notifyCommunicationDoubleClick(){
+        conversationAdapter.notifyCommunicationDoubleClick();
+    }
 
     /**
      * 接受创建群组头像的icon
