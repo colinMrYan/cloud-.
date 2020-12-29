@@ -239,6 +239,9 @@ public class ImpWebViewClient extends WebViewClient {
                     if (url.contains("wx.tenpay.com")) {
                         headers.put("Referer", referer);
                     }
+                    if (BaseApplication.getInstance().getCurrentEnterprise() != null) {
+                        headers.put("X-ECC-Current-Enterprise", BaseApplication.getInstance().getCurrentEnterprise().getId());
+                    }
                     return headers;
                 }
             };
