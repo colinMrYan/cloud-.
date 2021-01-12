@@ -12,11 +12,14 @@ import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.bean.contact.ContactOrg;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 
+import org.json.JSONArray;
 import org.xutils.db.sqlite.WhereBuilder;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by chenmch on 2018/5/10.
@@ -193,6 +196,38 @@ public class ContactUserCacheUtils {
             contactUserList = new ArrayList<>();
         }
         return contactUserList;
+    }
+
+    /**
+     * 获取一个uid列表中的离职人员
+     *
+     * @param originUidList 原始用户列表
+     * @return 离职的String jsonArray
+     */
+    public static JSONArray getNonexistentUidList(final List<String> originUidList) {
+        if(originUidList == null){
+            return null;
+        }
+        Set<String> copyUidList = new HashSet<>(originUidList);
+        List<ContactUser> contactUserList = null;
+        try {
+            contactUserList = DbCacheUtils.getDb().selector(ContactUser.class).where("id",
+                    "in", originUidList).findAll();
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        }
+        if (contactUserList == null) {
+            contactUserList = new ArrayList<>();
+        }
+        for (ContactUser user : contactUserList) {
+            copyUidList.remove(user.getId());
+        }
+        JSONArray nonexistentUidList = new JSONArray();
+        for(String uid : copyUidList){
+            nonexistentUidList.put(uid);
+        }
+        return nonexistentUidList;
     }
 
 

@@ -628,6 +628,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         startActivity(intent);
     }
 
+    private JSONArray mNonExistentUidArray;
     /**
      * 初始化消息列表UI
      */
@@ -637,6 +638,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         ((DefaultItemAnimator) msgListView.getItemAnimator()).setSupportsChangeAnimations(false);
         adapter = new ChannelMessageAdapter(ConversationActivity.this, conversation.getType(),
                 chatInputMenu, conversation.getMemberList());
+        mNonExistentUidArray = ContactUserCacheUtils.getNonexistentUidList(conversation.getMemberList());
         adapter.setItemClickListener(new ChannelMessageAdapter.MyItemClickListener() {
             @Override
             public void onMessageResend(UIMessage uiMessage, View view) {
@@ -1485,7 +1487,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                     break;
                 }
             }
-            WSAPIService.getInstance().getHistoryMessage(cid, newMessageId);
+            WSAPIService.getInstance().getHistoryMessage(cid, newMessageId, mNonExistentUidArray);
         } else {
             getHistoryMessageFromLocal();
         }
@@ -1612,7 +1614,7 @@ public class ConversationActivity extends ConversationBaseActivity {
      */
     private void getNewMessageOfChannel() {
         if (NetUtils.isNetworkConnected(this, false)) {
-            WSAPIService.getInstance().getChannelNewMessage(cid);
+            WSAPIService.getInstance().getChannelNewMessage(cid, mNonExistentUidArray);
         }
     }
 

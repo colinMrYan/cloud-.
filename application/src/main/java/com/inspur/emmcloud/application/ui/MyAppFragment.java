@@ -1117,6 +1117,12 @@ public class MyAppFragment extends BaseFragment {
         public void returnUserAppsSuccess(final GetAppGroupResult getAppGroupResult, String clientConfigMyAppVersion) {
             swipeRefreshLayout.setRefreshing(false);
             myAppSaveTask = new MyAppSaveTask(clientConfigMyAppVersion);
+//            for(AppGroupBean appGroupBean : getAppGroupResult.getAppGroupBeanList()){
+//                Log.d("TilllLogTest", appGroupBean.getCategoryID() + ","+appGroupBean.getCategoryName());
+//                for(App app : appGroupBean.getAppItemList()){
+//                    Log.d("TilllLogTest", app.getAppID() + ","+app.getAppName());
+//                }
+//            }
             myAppSaveTask.execute(getAppGroupResult);
 //            appListSizeExceptCommonlyUse = getAppGroupResult.getAppGroupBeanList().size();
         }

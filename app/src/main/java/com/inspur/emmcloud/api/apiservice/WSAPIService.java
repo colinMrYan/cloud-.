@@ -442,7 +442,7 @@ public class WSAPIService {
         }
     }
 
-    public void getHistoryMessage(String cid, String mid) {
+    public void getHistoryMessage(String cid, String mid, JSONArray excludeUsers) {
         try {
             String tracer = CommunicationUtils.getTracer();
             JSONObject object = new JSONObject();
@@ -453,6 +453,7 @@ public class WSAPIService {
             queryObj.put("before", mid);
             queryObj.put("limit", 20);
             queryObj.put("withStateOfOwnMessages", true);
+            queryObj.put("messageStatesExcludedUsers", excludeUsers);
             actionObj.put("query", queryObj);
             object.put("action", actionObj);
             JSONObject headerObj = new JSONObject();
@@ -466,7 +467,7 @@ public class WSAPIService {
         }
     }
 
-    public void getChannelNewMessage(String cid) {
+    public void getChannelNewMessage(String cid, JSONArray excludeUsers) {
         try {
             String tracer = CommunicationUtils.getTracer();
             JSONObject object = new JSONObject();
@@ -477,6 +478,7 @@ public class WSAPIService {
             queryObj.put("before", "");
             queryObj.put("limit", 20);
             queryObj.put("withStateOfOwnMessages", true);
+            queryObj.put("messageStatesExcludedUsers", excludeUsers);
             actionObj.put("query", queryObj);
             object.put("action", actionObj);
             JSONObject headerObj = new JSONObject();

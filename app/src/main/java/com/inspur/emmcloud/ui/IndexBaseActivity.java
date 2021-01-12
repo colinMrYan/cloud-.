@@ -740,10 +740,8 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
                 @Override
                 public void run() {
                     if (clickCount == 1) {
-                        ToastUtils.show("单击");
                         v.callOnClick();
                     } else if (clickCount == 2) {
-                        ToastUtils.show("双击");
                         mTabHost.notifyCommunicationDoubleClick();
                     }
                     handler.removeCallbacksAndMessages(null);
