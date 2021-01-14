@@ -64,16 +64,16 @@ public class UnReadDetailActivity extends BaseActivity {
         unReadList = new ArrayList<>();
         if (statesMap.get(ChannelMessageStates.SENT) != null) {
             for (String id : statesMap.get(ChannelMessageStates.SENT)) {
-                if (memberList.contains(id)) {
+//                if (memberList.contains(id)) {
                     unReadList.add(id);
-                }
+//                }
             }
         }
         if (statesMap.get(ChannelMessageStates.DELIVERED) != null) {
             for (String id : statesMap.get(ChannelMessageStates.DELIVERED)) {
-                if (memberList.contains(id)) {
+//                if (memberList.contains(id)) {
                     unReadList.add(id);
-                }
+//                }
             }
         }
 //        Set<String> tempReadList = statesMap.get(ChannelMessageStates.READ);
