@@ -6,28 +6,27 @@ import android.view.View;
 
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.setting.R;
-import com.inspur.emmcloud.setting.R2;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import butterknife.OnClick;
-
 /**
  * Created by yufuchang on 2017/9/7.
  */
-public class CreateGestureGuideActivity extends BaseActivity {
+public class CreateGestureGuideActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EventBus.getDefault().register(this);
+
     }
 
     @Override
     public void onCreate() {
-
+        EventBus.getDefault().register(this);
+        findViewById(R.id.ibt_back).setOnClickListener(this);
+        findViewById(R.id.bt_create_gesture).setOnClickListener(this);
     }
 
     @Override
@@ -35,7 +34,7 @@ public class CreateGestureGuideActivity extends BaseActivity {
         return R.layout.setting_create_gesture_guide_activity;
     }
 
-    @OnClick(R2.id.bt_create_gesture)
+    @Override
     public void onClick(View view) {
         int id = view.getId();
         if (id == R.id.ibt_back) {
@@ -64,4 +63,5 @@ public class CreateGestureGuideActivity extends BaseActivity {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
     }
+
 }
