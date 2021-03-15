@@ -118,11 +118,11 @@ public class SafeCenterActivity extends BaseActivity {
         if (id == R.id.ibt_back) {
             finish();
         } else if (id == R.id.rl_setting_safe_gesture_face) {
-            if (CreateGestureActivity.getGestureCodeIsOpenByUser(this)) {
+//            if (CreateGestureActivity.getGestureCodeIsOpenByUser(this)) {
                 IntentUtils.startActivity(this, SafeGustureFaceSettingActivity.class);
-            } else {
-                IntentUtils.startActivity(SafeCenterActivity.this, CreateGestureActivity.class);
-            }
+//            } else {
+//                IntentUtils.startActivity(SafeCenterActivity.this, CreateGestureActivity.class);
+//            }
 
         } else if (id == R.id.rl_setting_face_unlock) {
             intentFaceVerifyActivity(true);
