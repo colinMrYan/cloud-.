@@ -4,8 +4,11 @@ import android.support.v4.app.Fragment;
 
 import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.basemodule.R;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.config.Constant;
 
 import butterknife.Unbinder;
 
@@ -24,8 +27,12 @@ public class BaseFragment extends Fragment {
     }
 
     protected void setFragmentStatusBarWhite() {
-        int color = ResourceUtils.getResValueOfAttr(getActivity(), R.attr.text_ll_color_nor);
-        ImmersionBar.with(getActivity()).statusBarColor(color).navigationBarColor(color).statusBarDarkFont(true, 0.2f).navigationBarDarkIcon(true, 1.0f).init();
+        int currentThemeNo = PreferencesUtils.getInt(BaseApplication.getInstance(), Constant.PREF_APP_THEME, 0);
+        if (currentThemeNo != 3) {
+            ImmersionBar.with(getActivity()).statusBarColor(R.color.white).navigationBarColor(R.color.white).statusBarDarkFont(true, 0.2f).navigationBarDarkIcon(true, 1.0f).init();
+        } else {
+            ImmersionBar.with(getActivity()).statusBarColor(R.color.black).navigationBarColor(R.color.black).statusBarDarkFont(false, 0.2f).navigationBarDarkIcon(false, 1.0f).init();
+        }
     }
 
     @Override

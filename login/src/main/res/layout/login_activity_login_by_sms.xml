@@ -42,7 +42,8 @@
             android:id="@+id/text_input_layout_phone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:errorEnabled="true">
+            android:theme="@style/EditTextHint"
+            app:errorEnabled="false">
 
             <com.inspur.emmcloud.baselib.widget.ClearEditText
                 android:id="@+id/et_phone"
@@ -59,6 +60,7 @@
                 android:singleLine="true"
                 android:textColor="?attr/text_color"
                 android:textSize="15sp"
+                android:textColorHint="@color/color_text_tip"
                 android:theme="@style/MyEditText" />
 
         </android.support.design.widget.TextInputLayout>
@@ -81,6 +83,7 @@
                 android:singleLine="true"
                 android:textColor="?attr/text_color"
                 android:textSize="15sp"
+                android:textColorHint="@color/color_text_tip"
                 android:theme="@style/MyEditText" />
 
             <Button
@@ -131,7 +134,7 @@
             android:onClick="onClick"
             android:text="@string/login"
             android:textAllCaps="false"
-            android:textColor="?attr/text_ll_color_nor"
+            android:textColor="@color/white"
             android:textSize="17sp" />
 
     </LinearLayout>

@@ -188,7 +188,8 @@ public class LanguageSwitchActivity extends BaseActivity implements LanguageMana
             // 页面
             ViewHolder holder;
             Language language = commonLanguageList.get(position);
-            LayoutInflater inflater = LayoutInflater.from(mContext);
+            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(
+                    LAYOUT_INFLATER_SERVICE);
             if (convertView == null) {
                 convertView = inflater.inflate(
                         R.layout.setting_mine_setting_language_list_item, null);

@@ -37,7 +37,7 @@
             android:layout_toRightOf="@id/tv_update_sub_title"
             android:background="@drawable/ic_version_code_subscript"
             android:text="4.0.1"
-            android:textColor="?attr/text_ll_color_nor"
+            android:textColor="@color/white"
             android:textSize="11sp" />
     </RelativeLayout>
 

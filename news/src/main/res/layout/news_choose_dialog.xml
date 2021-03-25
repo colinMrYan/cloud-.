@@ -134,7 +134,7 @@
                 android:layout_marginLeft="45dp"
                 android:layout_marginTop="15dp"
                 android:text="@string/news_read_mode"
-                android:textColor="?attr/text_ll_color_nor"
+                android:textColor="@color/white"
                 android:textSize="@dimen/content_title_textsize" />
 
             <ImageView

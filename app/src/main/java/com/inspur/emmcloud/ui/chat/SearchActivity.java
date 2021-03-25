@@ -193,7 +193,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
 
     @Override
     protected int getStatusType() {
-        return STATUS_NO_SET;
+        return STATUS_WHITE_DARK_FONT;
     }
 
     /**

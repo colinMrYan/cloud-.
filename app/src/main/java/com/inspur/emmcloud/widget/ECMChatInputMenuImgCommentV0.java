@@ -91,7 +91,7 @@ public class ECMChatInputMenuImgCommentV0 extends LinearLayout {
                 boolean isContentBlank = (s.length() == 0);
                 sendMsgBtn.setEnabled(!isContentBlank);
 //                sendMsgBtn.setBackgroundResource(isContentBlank ? R.drawable.bg_chat_input_send_btn_disable : R.drawable.bg_chat_input_send_btn_enable);
-                sendMsgBtn.setTextColor(isContentBlank ? Color.parseColor("#999999") : ResourceUtils.getResValueOfAttr(BaseApplication.getInstance(), R.attr.text_color));
+                sendMsgBtn.setTextColor(isContentBlank ? Color.parseColor("#999999") : ResourceUtils.getResValueOfAttr(getContext(), R.attr.text_color));
                 if (canMentions && count == 1) {
                     String inputWord = s.toString().substring(start, start + count);
                     if (inputWord.equals("@")) {

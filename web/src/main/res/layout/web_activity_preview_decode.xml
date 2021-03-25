@@ -69,7 +69,7 @@
                     android:layout_below="@id/bt_torch"
                     android:layout_centerHorizontal="true"
                     android:text="@string/turn_on_light"
-                    android:textColor="?attr/text_ll_color_nor" />
+                    android:textColor="@color/white" />
             </RelativeLayout>
         </RelativeLayout>
     </FrameLayout>

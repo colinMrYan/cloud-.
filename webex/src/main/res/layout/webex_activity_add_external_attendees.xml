@@ -97,7 +97,7 @@
                         android:paddingBottom="5dp"
                         android:paddingTop="5dp"
                         android:text="@string/add"
-                        android:textColor="?attr/text_ll_color_nor"
+                        android:textColor="@color/white"
                         app:cus_backgroundColor="#4A90E2"
                         app:cus_borderWidth="0dp"
                         app:cus_isRadiusAdjustBounds="true" />

@@ -92,7 +92,7 @@
                 android:background="#4990E2"
                 android:onClick="onClick"
                 android:text="@string/login_registe_again"
-                android:textColor="?attr/text_ll_color_nor"
+                android:textColor="@color/white"
                 android:textSize="18sp" />
         </LinearLayout>
     </LinearLayout>

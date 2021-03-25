@@ -71,7 +71,7 @@
         android:gravity="center"
         android:onClick="onClick"
         android:text="@string/schedule_task_project_manager_add"
-        android:textColor="?attr/text_ll_color_nor"
+        android:textColor="@color/white"
         android:textSize="15sp"
         app:cus_backgroundColor="@color/color_base_blue"
         app:cus_borderWidth="0dp"

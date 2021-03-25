@@ -69,7 +69,7 @@
         android:minHeight="0dp"
         android:onClick="onClick"
         android:padding="0dp"
-        android:textColor="?attr/text_ll_color_nor"
+        android:textColor="@color/white"
         android:textSize="15sp" />
 
     <View
@@ -77,5 +77,5 @@
         android:layout_width="match_parent"
         android:layout_height="0.5px"
         android:layout_below="@id/ll_content"
-        android:background="?attr/color_list_divider"></View>
+        android:background="@color/white"></View>
 </RelativeLayout>

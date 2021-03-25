@@ -368,7 +368,7 @@
                 android:gravity="center"
                 android:onClick="onClick"
                 android:text="@string/user_new_chat"
-                android:textColor="?attr/text_ll_color_nor"
+                android:textColor="@color/white"
                 android:textSize="18sp" />
         </RelativeLayout>
 

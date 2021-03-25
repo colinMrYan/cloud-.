@@ -55,7 +55,7 @@ public class LoginSelectEnterpriseAdapter extends BaseAdapter {
         int paddingRight = DensityUtil.dip2px(context, 21);
         int paddingTop = DensityUtil.dip2px(context, 12);
         enterpriseText.setPadding(paddingLeft, paddingTop, paddingRight, paddingTop);
-        enterpriseText.setTextColor(ResourceUtils.getResValueOfAttr(BaseApplication.getInstance(), R.attr.text_color));
+        enterpriseText.setTextColor(ResourceUtils.getResValueOfAttr(context, R.attr.text_color));
         Enterprise enterprise = enterpriseList.get(position);
         enterpriseText.setText(enterprise.getName());
         return enterpriseText;

@@ -12,6 +12,9 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.SwitchCompat;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -22,6 +25,7 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.NotificationSetUtils;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
@@ -461,6 +465,8 @@ public class SettingActivity extends BaseActivity {
      * 弹出清除缓存选项提示框
      */
     private void showClearCacheDlg() {
+        SpannableString spanString=new SpannableString(getString(R.string.settings_clean_imgae_attachment));
+        spanString.setSpan(new ForegroundColorSpan(ResourceUtils.getResValueOfAttr(this, R.attr.text_color)), 0, getString(R.string.settings_clean_imgae_attachment).length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
         final String[] items = new String[]{getString(R.string.settings_clean_imgae_attachment), getString(R.string.settings_clean_web), getString(R.string.settings_clean_all)};
         ContextThemeWrapper ctw = new ContextThemeWrapper(this, R.style.cus_dialog_style);
 
