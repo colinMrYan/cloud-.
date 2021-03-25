@@ -16,7 +16,7 @@
         android:layout_width="28dp"
         android:layout_height="28dp"
         android:layout_margin="6dp"
-        app:image_color="#FFFFFF" />
+        app:image_color="?attr/text_ll_color_nor" />
 
     <com.inspur.emmcloud.basemodule.util.imageedit.view.IMGColorRadio
         android:layout_width="28dp"

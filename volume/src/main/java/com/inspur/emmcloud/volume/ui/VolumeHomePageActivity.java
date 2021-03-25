@@ -119,7 +119,7 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
         apiService.setAPIInterface(new WebService());
         volumeRecentUseAdapter = new VolumeRecentUseAdapter(this);
         volumeRecentUseListView.setAdapter(volumeRecentUseAdapter);
-        swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getApplicationContext(), R.color.header_bg_blue), ContextCompat.getColor(getApplicationContext(), R.color.header_bg_blue));
+        swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(this, R.color.header_bg_blue), ContextCompat.getColor(this, R.color.header_bg_blue));
         swipeRefreshLayout.setOnRefreshListener(this);
         volumeHomePageDirectoryList.add(new VolumeHomePageDirectory(R.drawable.volume_ic_my_file, getString(R.string.volume_clouddriver_my_file), ""));
         volumeHomePageDirectoryList.add(new VolumeHomePageDirectory(R.drawable.volume_ic_share_volume, getString(R.string.volume_clouddriver_share_volume), ""));
@@ -250,7 +250,7 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
      * 获取云盘列表
      */
     private void getVolumeList(boolean isShowDlg, boolean isShowNetToast) {
-        if (NetUtils.isNetworkConnected(getApplicationContext(), isShowNetToast)) {
+        if (NetUtils.isNetworkConnected(this, isShowNetToast)) {
             loadingDlg.show(isShowDlg);
             apiService.getVolumeList();
         } else {
@@ -277,7 +277,7 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.volume_app_volume_recent_use_item_view, null);
+            convertView = LayoutInflater.from(VolumeHomePageActivity.this).inflate(R.layout.volume_app_volume_recent_use_item_view, null);
             VolumeHomePageDirectory volumeHomePageDirectory = volumeHomePageDirectoryList.get(position);
             ((TextView) convertView.findViewById(R.id.volume_name_text)).setText(volumeHomePageDirectory.getName());
             ((TextView) convertView.findViewById(R.id.volume_capacity_text)).setText(volumeHomePageDirectory.getText());
@@ -305,7 +305,7 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
         public void returnVolumeListFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDlg);
             swipeRefreshLayout.setRefreshing(false);
-            WebServiceMiddleUtils.hand(getApplicationContext(), error, errorCode);
+            WebServiceMiddleUtils.hand(VolumeHomePageActivity.this, error, errorCode);
         }
     }
 

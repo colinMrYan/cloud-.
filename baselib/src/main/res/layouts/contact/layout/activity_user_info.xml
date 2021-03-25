@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="?attr/text_ll_color_nor"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
@@ -22,7 +22,7 @@
             android:onClick="onClick"
             android:padding="11dp"
             android:scaleType="fitXY"
-            android:src="@drawable/ic_back_btn_white" />
+            android:src="?attr/ic_back_btn" />
 
         <TextView
             android:id="@+id/tv_add_system_contact"
@@ -53,8 +53,8 @@
         app:cardCornerRadius="8dp"
         app:cardElevation="1.5dp"
         app:cardPreventCornerOverlap="true"
-        app:cardUseCompatPadding="true">
-
+        app:cardUseCompatPadding="true"
+        app:cardBackgroundColor="?attr/text_ll_color_nor">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -80,7 +80,7 @@
                 android:layout_marginTop="8dp"
                 android:elevation="10dp"
                 android:maxWidth="300dp"
-                android:textColor="@color/black"
+                android:textColor="?attr/text_color"
                 android:textSize="17sp" />
 
             <TextView
@@ -94,7 +94,7 @@
                 android:gravity="center"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:textColor="@color/black"
+                android:textColor="?attr/text_color"
                 android:textSize="15sp"
                 android:visibility="gone" />
         </LinearLayout>
@@ -103,10 +103,10 @@
     <ScrollView
         android:id="@+id/sv_employee_info"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@id/card_view_user_summary"
         android:layout_marginBottom="50dp"
-        android:background="@color/white"
+        android:background="?attr/text_ll_color_nor"
         android:fadeScrollbars="false"
         android:gravity="center"
         android:orientation="vertical"
@@ -121,7 +121,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/card_view_user_summary"
             android:layout_marginTop="10dp"
-            android:background="@color/white"
+            android:background="?attr/text_ll_color_nor"
             android:orientation="vertical"
             android:paddingLeft="32dp"
             android:paddingBottom="38dp">
@@ -134,7 +134,7 @@
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="0.5px"
-                android:background="@color/color_list_divider" />
+                android:background="?attr/color_list_divider" />
 
             <LinearLayout
                 android:id="@+id/ll_user_department"
@@ -163,7 +163,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/tv_department"
                         android:paddingBottom="7dp"
-                        android:textColor="#333333"
+                        android:textColor="?attr/text_color"
                         android:textIsSelectable="true"
                         android:textSize="@dimen/button_textsize" />
 
@@ -181,7 +181,7 @@
                         android:layout_width="fill_parent"
                         android:layout_height="0.5px"
                         android:layout_below="@id/tv_user_department"
-                        android:background="@color/color_list_divider" />
+                        android:background="?attr/color_list_divider" />
                 </RelativeLayout>
             </LinearLayout>
 
@@ -216,7 +216,7 @@
                         android:paddingRight="24dp"
                         android:paddingBottom="7dp"
                         android:singleLine="true"
-                        android:textColor="#333333"
+                        android:textColor="?attr/text_color"
                         android:textIsSelectable="true"
                         android:textSize="@dimen/content_title_textsize" />
 
@@ -224,7 +224,7 @@
                         android:layout_width="fill_parent"
                         android:layout_height="0.5px"
                         android:layout_below="@id/tv_user_position"
-                        android:background="@color/color_list_divider" />
+                        android:background="?attr/color_list_divider" />
                 </RelativeLayout>
             </LinearLayout>
 
@@ -263,7 +263,7 @@
                         android:layout_width="fill_parent"
                         android:layout_height="0.5px"
                         android:layout_below="@id/tv_user_mail"
-                        android:background="@color/color_list_divider" />
+                        android:background="?attr/color_list_divider" />
                 </RelativeLayout>
             </LinearLayout>
 
@@ -298,7 +298,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="0.5px"
                     android:layout_below="@+id/tv_user_phone_num"
-                    android:background="@color/color_list_divider" />
+                    android:background="?attr/color_list_divider" />
             </RelativeLayout>
 
 
@@ -337,7 +337,7 @@
                         android:layout_width="fill_parent"
                         android:layout_height="0.5px"
                         android:layout_below="@id/tv_user_telephone"
-                        android:background="@color/color_list_divider" />
+                        android:background="?attr/color_list_divider" />
                 </RelativeLayout>
             </LinearLayout>
         </LinearLayout>
@@ -348,7 +348,7 @@
         android:layout_width="match_parent"
         android:layout_height="88dp"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/ic_user_info_contact_way_bg">
+        android:background="?attr/text_ll_color_nor">
 
         <RelativeLayout
             android:id="@+id/rl_start_chat"
@@ -368,7 +368,7 @@
                 android:gravity="center"
                 android:onClick="onClick"
                 android:text="@string/user_new_chat"
-                android:textColor="@color/white"
+                android:textColor="?attr/text_ll_color_nor"
                 android:textSize="18sp" />
         </RelativeLayout>
 

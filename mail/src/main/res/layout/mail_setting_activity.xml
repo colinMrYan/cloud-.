@@ -65,7 +65,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/mail"
-                android:textColor="@color/color_text_common_level_one"
+                android:textColor="?attr/text_color"
                 android:textSize="16sp" />
 
             <TextView
@@ -82,7 +82,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="@color/color_divider" />
+            android:background="?attr/color_list_divider" />
 
         <RelativeLayout
             android:id="@+id/rl_mail_password"
@@ -95,7 +95,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/password"
-                android:textColor="@color/color_text_common_level_one"
+                android:textColor="?attr/text_color"
                 android:textSize="16sp" />
 
             <RelativeLayout
@@ -146,7 +146,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="证书"
-                android:textColor="@color/color_text_common_level_one"
+                android:textColor="?attr/text_color"
                 android:textSize="16sp" />
 
             <RelativeLayout
@@ -182,7 +182,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="@color/color_divider" />
+            android:background="?attr/color_list_divider" />
 
         <RelativeLayout
             android:id="@+id/rl_mail_account_manager"
@@ -195,7 +195,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="账号"
-                android:textColor="@color/color_text_common_level_one"
+                android:textColor="?attr/text_color"
                 android:textSize="16sp" />
 
             <TextView
@@ -214,7 +214,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="@color/color_divider" />
+            android:background="?attr/color_list_divider" />
 
     </LinearLayout>
 

@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/selector_list"
+    android:background="?attr/selector_list"
     android:focusable="false"
     android:focusableInTouchMode="false">
 
@@ -25,7 +25,7 @@
         android:layout_toRightOf="@id/app_icon_img"
         android:ellipsize="end"
         android:singleLine="true"
-        android:textColor="@color/color_text_common_level_one"
+        android:textColor="?attr/text_color"
         android:textSize="@dimen/content_normal_textsize" />
 
     <Button

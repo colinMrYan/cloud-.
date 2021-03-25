@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="30dp"
-        android:textColor="#333333"
+        android:textColor="?attr/text_color"
         android:textSize="16sp" />
 
     <TextView
@@ -21,6 +21,6 @@
         android:gravity="right"
         android:maxLines="1"
         android:paddingRight="15dp"
-        android:textColor="#333333"
+        android:textColor="?attr/text_color"
         android:textSize="16sp" />
 </RelativeLayout>

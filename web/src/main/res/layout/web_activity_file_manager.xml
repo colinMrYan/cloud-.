@@ -52,13 +52,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/rl_header"
-        android:background="@color/content_bg">
+        android:background="?attr/content_bg">
 
         <LinearLayout
             android:id="@+id/ll_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:background="?attr/text_ll_color_nor"
             android:orientation="vertical"
             android:paddingLeft="10dp"
             android:paddingRight="10dp">
@@ -67,12 +67,12 @@
                 android:id="@+id/rcv_title"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#ffffff"></android.support.v7.widget.RecyclerView>
+                android:background="?attr/text_ll_color_nor"></android.support.v7.widget.RecyclerView>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5px"
-                android:background="@color/color_list_divider"></View>
+                android:background="?attr/color_list_divider"></View>
 
         </LinearLayout>
 
@@ -85,7 +85,7 @@
                 android:id="@+id/rcv_file"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#ffffff"></android.support.v7.widget.RecyclerView>
+                android:background="?attr/text_ll_color_nor"></android.support.v7.widget.RecyclerView>
 
             <LinearLayout
                 android:id="@+id/ll_empty"

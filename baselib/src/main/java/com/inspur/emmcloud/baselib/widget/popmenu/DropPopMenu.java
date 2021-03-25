@@ -23,6 +23,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.inspur.baselib.R;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
 
 import java.util.ArrayList;
 import java.util.List;

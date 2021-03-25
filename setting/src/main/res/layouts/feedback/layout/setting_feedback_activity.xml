@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/content_bg"
+    android:background="?attr/content_bg"
     android:fitsSystemWindows="true">
 
     <RelativeLayout
@@ -78,7 +78,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:text="@string/setting_feed_back_without_name"
-            android:textColor="#333333"
+            android:textColor="?attr/text_color"
             android:textSize="16sp" />
 
         <android.support.v7.widget.SwitchCompat
@@ -100,7 +100,7 @@
         android:elevation="1dp"
         android:gravity="center"
         android:text="@string/setting_feed_back_submit"
-        android:textColor="@android:color/white"
+        android:textColor="?attr/text_ll_color_nor"
         android:textSize="15sp"
         app:cus_backgroundColor="#36A5F6"
         app:cus_borderWidth="0dp"

@@ -19,6 +19,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.inspur.baselib.R;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -123,13 +124,14 @@ public class BottomDialog extends Dialog {
         private OnDismissListener mOnActionSheetDlgDismissListener;
         private int titleColor = Color.parseColor("#999999");
         private int titleSize = 14;
-        private int itemColor = Color.parseColor("#333333");
+        private int itemColor;
         private int cancelColor = Color.parseColor("#36A5F6");
 
         public ActionListSheetBuilder(Context context) {
             mContext = context;
             mItems = new ArrayList<>();
             mHeaderViews = new ArrayList<>();
+            itemColor = ResourceUtils.getResValueOfAttr(mContext, R.attr.text_color);
         }
 
 

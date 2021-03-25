@@ -4,7 +4,7 @@
     android:id="@+id/ll_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff"
+    android:background="?attr/text_ll_color_nor"
     android:fitsSystemWindows="true"
     android:onClick="onClick">
 
@@ -27,7 +27,7 @@
         android:layout_marginTop="50dp"
         android:paddingLeft="27dp"
         android:paddingRight="30dp"
-        android:textColor="#FF333333"
+        android:textColor="?attr/text_color"
         android:textSize="26sp" />
 
     <LinearLayout
@@ -58,7 +58,7 @@
                 android:paddingRight="13dp"
                 android:paddingTop="17dp"
                 android:singleLine="true"
-                android:textColor="#333333"
+                android:textColor="?attr/text_color"
                 android:textSize="15sp"
                 android:theme="@style/MyEditText" />
 
@@ -84,7 +84,7 @@
                 android:paddingBottom="17dp"
                 android:paddingTop="17dp"
                 android:singleLine="true"
-                android:textColor="#333333"
+                android:textColor="?attr/text_color"
                 android:textSize="15sp"
                 android:theme="@style/MyEditText" />
 
@@ -136,7 +136,7 @@
             android:onClick="onClick"
             android:text="@string/login"
             android:textAllCaps="false"
-            android:textColor="@color/white"
+            android:textColor="?attr/text_ll_color_nor"
             android:textSize="17sp" />
     </LinearLayout>
 

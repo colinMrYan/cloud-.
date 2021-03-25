@@ -3,7 +3,7 @@
 
 
     <!-- 边框颜色 -->
-    <solid android:color="#eeeeee" />
+    <solid android:color="?attr/text_ll_color_sel" />
     <!-- 填充色 -->
 
 </shape>

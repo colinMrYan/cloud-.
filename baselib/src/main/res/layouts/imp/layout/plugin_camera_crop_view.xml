@@ -17,7 +17,7 @@
         app:focus_guide_color="@android:color/holo_green_dark"
         app:focus_guide_show_mode="not_show"
         app:focus_guide_stroke_weight="1dp"
-        app:focus_handle_color="@android:color/white"
+        app:focus_handle_color="?attr/text_ll_color_nor"
         app:focus_handle_show_mode="show_always"
         app:focus_handle_size="5dp"
         app:focus_initial_frame_scale="0.8"

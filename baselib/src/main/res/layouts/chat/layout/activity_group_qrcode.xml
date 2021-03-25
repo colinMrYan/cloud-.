@@ -3,6 +3,7 @@
     android:id="@+id/main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/content_bg"
     android:fitsSystemWindows="true">
 
     <RelativeLayout
@@ -56,7 +57,7 @@
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
         android:elevation="6dp"
-        android:textColor="@color/color_text_common_level_one" />
+        android:textColor="?attr/text_color" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -65,7 +66,7 @@
         android:layout_marginRight="22dp"
         android:layout_below="@id/rl_header"
         android:layout_marginTop="43dp"
-        android:background="@color/color_bg_content_white"
+        android:background="?attr/text_ll_color_nor"
         android:elevation="5dp">
 
         <ImageView

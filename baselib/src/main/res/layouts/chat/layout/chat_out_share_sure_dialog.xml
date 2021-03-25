@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_bg_content_white"
+    android:background="?attr/text_ll_color_nor"
     android:orientation="vertical"
     android:paddingTop="22dp">
 
@@ -12,7 +12,7 @@
         android:layout_marginLeft="22dp"
         android:layout_marginRight="22dp"
         android:text="@string/baselib_share_send_to"
-        android:textColor="@color/color_text_common_level_one"
+        android:textColor="?attr/text_color"
         android:textSize="16sp" />
 
     <RelativeLayout
@@ -39,7 +39,7 @@
             android:ellipsize="end"
             android:maxLines="2"
             android:paddingRight="16dp"
-            android:textColor="@color/color_text_common_level_one"
+            android:textColor="?attr/text_color"
             android:textSize="16sp" />
     </RelativeLayout>
 
@@ -51,7 +51,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginRight="22dp"
         android:layout_marginBottom="30dp"
-        android:background="@color/color_bg_content_grey"
+        android:background="?attr/content_bg_level_two"
         android:gravity="left"
         android:maxLines="3"
         android:padding="5dp" />
@@ -81,7 +81,7 @@
         <View
             android:layout_width="1px"
             android:layout_height="40dp"
-            android:background="@color/color_divider" />
+            android:background="?attr/color_list_divider" />
 
         <Button
             android:id="@+id/ok_btn"

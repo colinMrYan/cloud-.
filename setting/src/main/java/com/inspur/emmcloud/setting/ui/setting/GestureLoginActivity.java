@@ -12,6 +12,8 @@ import android.widget.TextView;
 import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.ResolutionUtils;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
 import com.inspur.emmcloud.baselib.widget.dialogs.MyDialog;
@@ -119,7 +121,7 @@ public class GestureLoginActivity extends BaseActivity {
         ButterKnife.bind(this);
         EventBus.getDefault().register(this);
         init();
-        ImmersionBar.with(this).statusBarColor(R.color.grey_f6f6f6).statusBarDarkFont(true, 0.2f).navigationBarColor(R.color.white).navigationBarDarkIcon(true, 1.0f).init();
+        ImmersionBar.with(this).statusBarColor(ResourceUtils.getResValueOfAttr(this, R.attr.content_bg_level_two)).statusBarDarkFont(true, 0.2f).navigationBarColor(R.color.white).navigationBarDarkIcon(true, 1.0f).init();
     }
 
     @Override

@@ -23,7 +23,7 @@
         android:ellipsize="end"
         android:gravity="center_vertical"
         android:singleLine="true"
-        android:textColor="#333333"
+        android:textColor="?attr/text_color"
         android:textSize="16sp" />
 
     <ImageView
@@ -41,5 +41,5 @@
         android:layout_width="match_parent"
         android:layout_height="0.5px"
         android:layout_below="@id/tv_name_tips"
-        android:background="@color/color_list_divider"></View>
+        android:background="?attr/color_list_divider"></View>
 </RelativeLayout>

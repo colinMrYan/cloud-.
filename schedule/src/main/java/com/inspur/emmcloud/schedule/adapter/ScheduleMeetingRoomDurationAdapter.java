@@ -11,6 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.baselib.router.Router;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.componentservice.contact.ContactService;
@@ -76,7 +77,7 @@ public class ScheduleMeetingRoomDurationAdapter extends BaseAdapter {
             meetingAddLayout.setVisibility(View.VISIBLE);
             flagView.setBackgroundColor(Color.parseColor("#36A5F6"));
         } else {
-            timeText.setTextColor(Color.parseColor("#333333"));
+            timeText.setTextColor(ResourceUtils.getResValueOfAttr(context, com.inspur.baselib.R.attr.text_color));
             meetingContentLayout.setVisibility(View.VISIBLE);
             meetingAddLayout.setVisibility(View.GONE);
             ContactService contactService = Router.getInstance().getService(ContactService.class);

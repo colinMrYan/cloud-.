@@ -11,9 +11,9 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="6dp"
         android:layout_marginTop="6dp"
-        android:background="@color/color_bg_content_white"
+        android:background="?attr/text_ll_color_nor"
         android:padding="12dp"
-        android:textColor="@color/color_text_common_level_one"
+        android:textColor="?attr/text_color"
         android:textSize="17sp" />
 
 

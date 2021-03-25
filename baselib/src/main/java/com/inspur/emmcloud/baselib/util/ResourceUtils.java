@@ -139,13 +139,13 @@ public class ResourceUtils {
     /**
      * 获取attr中的值,等同于//?attr/xxx
      *
-     * @param activity
+     * @param context
      * @param attr
      * @return
      */
-    public static int getResValueOfAttr(Activity activity, int attr) {
+    public static int getResValueOfAttr(Context context, int attr) {
         TypedValue tv = new TypedValue();
-        activity.getTheme().resolveAttribute(attr, tv, true);
+        context.getTheme().resolveAttribute(attr, tv, true);
         return tv.resourceId;
     }
 

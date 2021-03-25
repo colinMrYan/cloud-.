@@ -15,7 +15,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:textColor="@color/color_text_common_level_one"
+            android:textColor="?attr/text_color"
             android:textSize="@dimen/button_textsize" />
 
         <ImageView
@@ -38,7 +38,7 @@
         android:id="@+id/item_meeting_reply_space"
         android:layout_width="match_parent"
         android:layout_height="9dp"
-        android:background="@color/color_bg_common"
+        android:background="?attr/color_bg_common"
         android:visibility="gone" />
 
 </LinearLayout>

@@ -486,7 +486,7 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
 
             Holder holder = new Holder();
             if (convertView == null) {
-                convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.volume_app_volume_share_item_view, null);
+                convertView = LayoutInflater.from(ShareVolumeActivity.this).inflate(R.layout.volume_app_volume_share_item_view, null);
                 holder.imageView = convertView.findViewById(R.id.file_operation_drop_down_img);
                 holder.textView = convertView.findViewById(R.id.tv_name);
                 holder.volumeSizeView = convertView.findViewById(R.id.tv_volume_size);

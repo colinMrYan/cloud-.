@@ -2,13 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_bg_content_white"
+    android:background="?attr/text_ll_color_nor"
     android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/color_bg_common">
+        android:background="?attr/color_bg_common">
 
         <ImageButton
             android:id="@+id/ibt_menu_back"
@@ -19,7 +19,7 @@
             android:onClick="onClick"
             android:padding="11dp"
             android:scaleType="fitXY"
-            android:src="@drawable/ic_back_btn_white" />
+            android:src="?attr/ic_back_btn" />
 
         <TextView
             android:id="@+id/tv_mail_acount"
@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:onClick="onClick"
-            android:textColor="@color/color_text_common_level_one"
+            android:textColor="?attr/text_color"
             android:textSize="17sp" />
     </RelativeLayout>
 

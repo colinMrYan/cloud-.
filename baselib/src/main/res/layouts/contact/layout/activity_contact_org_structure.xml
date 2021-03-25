@@ -38,14 +38,14 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_below="@id/rl_header"
-        android:background="@color/content_bg"
+        android:background="?attr/content_bg"
         android:orientation="vertical">
 
         <ListView
             android:id="@+id/lv_org_structure"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:background="?attr/text_ll_color_nor"
             android:divider="@null"
             android:listSelector="@android:color/transparent"
             android:paddingBottom="11dp"

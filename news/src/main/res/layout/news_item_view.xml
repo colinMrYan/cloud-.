@@ -14,7 +14,7 @@
         android:layout_marginLeft="15dp"
         android:layout_marginRight="10dp"
         android:scaleType="centerCrop"
-        app:riv_border_color="@color/color_divider"
+        app:riv_border_color="?attr/color_list_divider"
         app:riv_border_width="1px"
         app:riv_corner_radius="6dp"
         app:riv_oval="false" />
@@ -34,7 +34,7 @@
             android:ellipsize="end"
             android:maxLines="2"
             android:paddingTop="1dp"
-            android:textColor="@color/color_text_common_level_one"
+            android:textColor="?attr/text_color"
             android:textSize="16sp" />
 
         <TextView

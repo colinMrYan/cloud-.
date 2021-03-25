@@ -3,7 +3,7 @@
     android:id="@+id/ll_event_detail"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:color/white"
+    android:background="?attr/text_ll_color_nor"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -103,7 +103,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:background="@color/color_bg_common"
+        android:background="?attr/color_bg_common"
         android:gravity="center_vertical|right"
         android:orientation="horizontal">
 

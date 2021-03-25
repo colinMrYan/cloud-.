@@ -10,7 +10,10 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.Enterprise;
+import com.inspur.emmcloud.login.R;
 
 import java.util.List;
 
@@ -52,7 +55,7 @@ public class LoginSelectEnterpriseAdapter extends BaseAdapter {
         int paddingRight = DensityUtil.dip2px(context, 21);
         int paddingTop = DensityUtil.dip2px(context, 12);
         enterpriseText.setPadding(paddingLeft, paddingTop, paddingRight, paddingTop);
-        enterpriseText.setTextColor(Color.parseColor("#333333"));
+        enterpriseText.setTextColor(ResourceUtils.getResValueOfAttr(BaseApplication.getInstance(), R.attr.text_color));
         Enterprise enterprise = enterpriseList.get(position);
         enterpriseText.setText(enterprise.getName());
         return enterpriseText;

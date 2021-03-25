@@ -14,6 +14,9 @@ import android.text.style.QuoteSpan;
 import android.text.style.StrikethroughSpan;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.zzhoujay.markdown.parser.StyleBuilder;
 import com.zzhoujay.markdown.style.CodeSpan;
 import com.zzhoujay.markdown.style.EmailSpan;
@@ -38,7 +41,7 @@ public class StyleBuilderImpl implements StyleBuilder {
     private static final float scale_h4 = 1.5f;
     private static final float scale_h5 = 1.25F, scale_h6 = 1;
     private static final float scale_normal = 1;
-    private static int h1_color = Color.parseColor("#333333");
+    private static int h1_color = ResourceUtils.getResValueOfAttr(BaseApplication.getInstance(), R.attr.text_color);
     private static int h6_color = Color.parseColor("#777777");
     private static int quota_color = Color.parseColor("#DDDDDD");
     private static int code_color = Color.parseColor("#F0F0F0");

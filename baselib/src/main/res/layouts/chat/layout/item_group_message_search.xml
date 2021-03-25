@@ -42,7 +42,7 @@
                 android:layout_marginRight="12dp"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:textColor="@color/color_text_common_level_one"
+                android:textColor="?attr/text_color"
                 android:textSize="16sp" />
         </LinearLayout>
 

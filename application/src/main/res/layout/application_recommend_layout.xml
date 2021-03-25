@@ -7,7 +7,7 @@
         android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/color_bg_common"
+        android:background="?attr/color_bg_common"
         android:scrollbars="vertical">
 
         <com.inspur.emmcloud.baselib.widget.NoHorScrollView
@@ -38,7 +38,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="1px"
                         android:layout_below="@id/avp_ads"
-                        android:background="@color/color_divider" />
+                        android:background="?attr/color_list_divider" />
                 </RelativeLayout>
 
                 <com.inspur.emmcloud.baselib.widget.ScrollViewWithListView

@@ -51,7 +51,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/rl_header"
-        android:background="@color/color_bg_common"
+        android:background="?attr/color_bg_common"
         android:scrollbars="none">
 
         <LinearLayout
@@ -62,7 +62,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/color_bg_content_white"
+                android:background="?attr/text_ll_color_nor"
                 android:orientation="vertical"
                 android:paddingLeft="15dp">
 
@@ -93,7 +93,7 @@
                         android:paddingTop="10dp"
                         android:paddingBottom="10dp"
                         android:singleLine="true"
-                        android:textColor="@color/color_text_common_level_one"
+                        android:textColor="?attr/text_color"
                         android:textSize="@dimen/content_title_textsize" />
                 </RelativeLayout>
 
@@ -124,7 +124,7 @@
                         android:paddingTop="10dp"
                         android:paddingBottom="10dp"
                         android:singleLine="true"
-                        android:textColor="@color/color_text_common_level_one"
+                        android:textColor="?attr/text_color"
                         android:textSize="@dimen/content_title_textsize" />
                 </RelativeLayout>
 
@@ -155,7 +155,7 @@
                         android:paddingTop="10dp"
                         android:paddingBottom="10dp"
                         android:singleLine="true"
-                        android:textColor="@color/color_text_common_level_one"
+                        android:textColor="?attr/text_color"
                         android:textSize="@dimen/content_title_textsize" />
                 </RelativeLayout>
 
@@ -187,7 +187,7 @@
                         android:paddingTop="10dp"
                         android:paddingBottom="10dp"
                         android:singleLine="true"
-                        android:textColor="@color/color_text_common_level_one"
+                        android:textColor="?attr/text_color"
                         android:textSize="@dimen/content_title_textsize" />
                 </RelativeLayout>
 
@@ -219,7 +219,7 @@
                         android:paddingTop="10dp"
                         android:paddingBottom="10dp"
                         android:singleLine="true"
-                        android:textColor="@color/color_text_common_level_one"
+                        android:textColor="?attr/text_color"
                         android:textSize="@dimen/content_title_textsize" />
                 </RelativeLayout>
 
@@ -252,7 +252,7 @@
                         android:paddingTop="10dp"
                         android:paddingBottom="10dp"
                         android:singleLine="true"
-                        android:textColor="@color/color_text_common_level_one"
+                        android:textColor="?attr/text_color"
                         android:textSize="@dimen/content_title_textsize" />
                 </RelativeLayout>
 
@@ -285,7 +285,7 @@
                         android:paddingTop="10dp"
                         android:paddingBottom="10dp"
                         android:singleLine="true"
-                        android:textColor="@color/color_text_common_level_one"
+                        android:textColor="?attr/text_color"
                         android:textSize="@dimen/content_title_textsize" />
                 </RelativeLayout>
 
@@ -318,7 +318,7 @@
                         android:paddingTop="10dp"
                         android:paddingBottom="10dp"
                         android:singleLine="true"
-                        android:textColor="@color/color_text_common_level_one"
+                        android:textColor="?attr/text_color"
                         android:textSize="@dimen/content_title_textsize" />
                 </RelativeLayout>
 
@@ -349,7 +349,7 @@
                         android:paddingTop="10dp"
                         android:paddingBottom="10dp"
                         android:singleLine="true"
-                        android:textColor="@color/color_text_common_level_one"
+                        android:textColor="?attr/text_color"
                         android:textSize="@dimen/content_title_textsize" />
                 </RelativeLayout>
 
@@ -380,7 +380,7 @@
                         android:paddingTop="10dp"
                         android:paddingBottom="10dp"
                         android:singleLine="true"
-                        android:textColor="@color/color_text_common_level_one"
+                        android:textColor="?attr/text_color"
                         android:textSize="@dimen/content_title_textsize" />
                 </RelativeLayout>
             </LinearLayout>
@@ -389,7 +389,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:background="@color/color_bg_content_white"
+                android:background="?attr/text_ll_color_nor"
                 android:orientation="vertical"
                 android:paddingLeft="15dp">
 
@@ -420,7 +420,7 @@
                         android:paddingTop="10dp"
                         android:paddingBottom="10dp"
                         android:singleLine="true"
-                        android:textColor="@color/color_text_common_level_one"
+                        android:textColor="?attr/text_color"
                         android:textSize="@dimen/content_title_textsize" />
                 </RelativeLayout>
 
@@ -451,7 +451,7 @@
                         android:paddingTop="10dp"
                         android:paddingBottom="10dp"
                         android:singleLine="true"
-                        android:textColor="@color/color_text_common_level_one"
+                        android:textColor="?attr/text_color"
                         android:textSize="@dimen/content_title_textsize" />
                 </RelativeLayout>
 
@@ -483,7 +483,7 @@
                         android:paddingTop="10dp"
                         android:paddingBottom="10dp"
                         android:singleLine="true"
-                        android:textColor="@color/color_text_common_level_one"
+                        android:textColor="?attr/text_color"
                         android:textSize="@dimen/content_title_textsize" />
                 </RelativeLayout>
             </LinearLayout>

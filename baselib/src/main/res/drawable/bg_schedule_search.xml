@@ -17,5 +17,5 @@
     <!--android:color="#0000FF" />-->
 
     <!-- 背景色 -->
-    <solid android:color="#F6F6F6"></solid>
+    <solid android:color="?attr/content_bg_level_two"></solid>
 </shape>

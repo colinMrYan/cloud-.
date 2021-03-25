@@ -3,7 +3,7 @@
     android:id="@+id/content"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:background="@color/color_bg_content_white"
+    android:background="?attr/text_ll_color_nor"
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:paddingLeft="10dp"
@@ -35,6 +35,6 @@
         android:ellipsize="end"
         android:gravity="center_vertical"
         android:singleLine="true"
-        android:textColor="@color/color_text_common_level_one"
+        android:textColor="?attr/text_color"
         android:textSize="16sp" />
 </LinearLayout>

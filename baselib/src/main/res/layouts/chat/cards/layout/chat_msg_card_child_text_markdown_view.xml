@@ -24,7 +24,7 @@
             android:layout_marginBottom="5dp"
             android:lineSpacingMultiplier="1.2"
             android:minWidth="40dp"
-            android:textColor="@color/color_text_common_level_one"
+            android:textColor="?attr/text_color"
             android:textIsSelectable="false"
             android:textSize="15sp" />
 
@@ -35,7 +35,7 @@
             android:layout_below="@id/tv_name_tips"
             android:lineSpacingMultiplier="1.2"
             android:minWidth="40dp"
-            android:textColor="@color/color_text_common_level_one"
+            android:textColor="?attr/text_color"
             android:textIsSelectable="false"
             android:textSize="15sp" />
 

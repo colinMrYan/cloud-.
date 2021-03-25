@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff">
+    android:background="?attr/text_ll_color_nor">
 
     <com.inspur.emmcloud.basemodule.util.mycamera.FocusSurfaceView
         android:id="@+id/preview_sv"
@@ -18,12 +18,12 @@
         app:focus_guide_color="@android:color/holo_green_dark"
         app:focus_guide_show_mode="not_show"
         app:focus_guide_stroke_weight="1dp"
-        app:focus_handle_color="@android:color/white"
+        app:focus_handle_color="?attr/text_ll_color_nor"
         app:focus_handle_show_mode="show_always"
         app:focus_handle_size="0dp"
         app:focus_initial_frame_scale="0.9"
         app:focus_min_frame_size="50dp"
-        app:focus_overlay_color="@android:color/white"
+        app:focus_overlay_color="?attr/text_ll_color_nor"
         app:focus_touch_padding="8dp" />
 
 
@@ -53,7 +53,7 @@
                 android:gravity="center"
                 android:paddingBottom="10dp"
                 android:paddingTop="20dp"
-                android:textColor="@android:color/white"
+                android:textColor="?attr/text_ll_color_nor"
                 android:textSize="17sp"
                 android:visibility="gone" />
 

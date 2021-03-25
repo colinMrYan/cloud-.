@@ -37,7 +37,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/rl_header"
-        android:background="@color/content_bg"
+        android:background="?attr/content_bg"
         android:orientation="vertical">
 
         <RelativeLayout
@@ -54,7 +54,7 @@
                 android:paddingBottom="11dp"
                 android:paddingTop="11dp"
                 android:text="@string/setting_switch_gesture_unlock"
-                android:textColor="#333333"
+                android:textColor="?attr/text_color"
                 android:textSize="16sp" />
 
             <android.support.v7.widget.SwitchCompat
@@ -69,7 +69,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0.5px"
                 android:layout_below="@id/tv_setting_safe_start_guesture"
-                android:background="@color/color_list_divider" />
+                android:background="?attr/color_list_divider" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -89,7 +89,7 @@
                 android:paddingBottom="11dp"
                 android:paddingTop="11dp"
                 android:text="@string/setting_safe_center_finger_print"
-                android:textColor="#333333"
+                android:textColor="?attr/text_color"
                 android:textSize="16sp" />
 
             <android.support.v7.widget.SwitchCompat
@@ -104,7 +104,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0.5px"
                 android:layout_below="@id/tv_setting_safe_start_finger_print"
-                android:background="@color/color_list_divider" />
+                android:background="?attr/color_list_divider" />
         </RelativeLayout>
 
 
@@ -125,7 +125,7 @@
                 android:paddingBottom="11dp"
                 android:paddingTop="11dp"
                 android:text="@string/setting_switch_gesture_reset_unlock"
-                android:textColor="#333333"
+                android:textColor="?attr/text_color"
                 android:textSize="16sp" />
 
             <ImageView
@@ -140,7 +140,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0.5px"
                 android:layout_below="@+id/tv_setting_safe_reset_guesture"
-                android:background="@color/color_list_divider" />
+                android:background="?attr/color_list_divider" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -161,7 +161,7 @@
                 android:paddingBottom="11dp"
                 android:paddingTop="11dp"
                 android:text="@string/setting_experience_face_verify"
-                android:textColor="#333333"
+                android:textColor="?attr/text_color"
                 android:textSize="16sp" />
 
             <ImageView
@@ -176,7 +176,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0.5px"
                 android:layout_below="@+id/tv_setting_safe_reset_face"
-                android:background="@color/color_list_divider" />
+                android:background="?attr/color_list_divider" />
         </RelativeLayout>
 
     </LinearLayout>

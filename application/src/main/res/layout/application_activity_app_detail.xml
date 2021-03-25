@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/white"
+    android:background="?attr/text_ll_color_nor"
     android:fitsSystemWindows="true">
 
     <include layout="@layout/include_common_header_layout" />
@@ -11,7 +11,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_below="@id/rl_header"
-        android:background="@color/color_bg_content_white"
+        android:background="?attr/text_ll_color_nor"
         android:scrollbars="none">
 
         <LinearLayout
@@ -22,7 +22,7 @@
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="1px"
-                android:background="@color/color_divider" />
+                android:background="?attr/color_list_divider" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -57,6 +57,7 @@
                         android:layout_marginBottom="5dp"
                         android:ellipsize="end"
                         android:singleLine="true"
+                        android:textColor="?attr/text_color"
                         android:textSize="@dimen/content_normal_textsize" />
 
                     <TextView
@@ -87,13 +88,13 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/color_bg_content_white"
+                android:background="?attr/text_ll_color_nor"
                 android:orientation="vertical">
 
                 <View
                     android:layout_width="fill_parent"
                     android:layout_height="1px"
-                    android:background="@color/color_divider" />
+                    android:background="?attr/color_list_divider" />
 
                 <LinearLayout
                     android:layout_width="fill_parent"
@@ -107,7 +108,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1.0"
-                        android:background="@color/color_bg_content_white"
+                        android:background="?attr/text_ll_color_nor"
                         android:clickable="true"
                         android:gravity="center"
                         android:onClick="onClick"
@@ -121,14 +122,14 @@
                         android:layout_width="2px"
                         android:layout_height="15dp"
                         android:layout_gravity="center_vertical"
-                        android:background="@color/color_divider" />
+                        android:background="?attr/color_list_divider" />
 
                     <TextView
                         android:id="@+id/class_tab_text"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1.0"
-                        android:background="@color/color_bg_content_white"
+                        android:background="?attr/text_ll_color_nor"
                         android:clickable="true"
                         android:gravity="center"
                         android:onClick="onClick"
@@ -173,6 +174,7 @@
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:text="@string/function_intr"
+                android:textColor="?attr/text_color"
                 android:textSize="@dimen/content_normal_textsize" />
 
             <TextView
@@ -188,7 +190,7 @@
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="1px"
-                android:background="@color/color_divider"
+                android:background="?attr/color_list_divider"
                 android:visibility="gone" />
 
 
@@ -206,7 +208,7 @@
                 android:id="@+id/division_line_view"
                 android:layout_width="fill_parent"
                 android:layout_height="1px"
-                android:background="@color/color_divider"
+                android:background="?attr/color_list_divider"
                 android:visibility="gone" />
 
             <android.support.v4.view.ViewPager

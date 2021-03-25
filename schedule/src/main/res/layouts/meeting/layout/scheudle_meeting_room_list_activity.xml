@@ -49,13 +49,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/rl_header"
-        android:background="@color/color_bg_common">
+        android:background="?attr/color_bg_common">
 
         <LinearLayout
             android:id="@+id/ll_filter_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white"
+            android:background="?attr/text_ll_color_nor"
             android:orientation="horizontal"
             android:paddingBottom="15dp"
             android:visibility="gone">
@@ -91,7 +91,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="08:00"
-                    android:textColor="@color/color_text_common_level_one"
+                    android:textColor="?attr/text_color"
                     android:textSize="17sp" />
             </LinearLayout>
 
@@ -132,7 +132,7 @@
                     android:id="@+id/tv_end_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/color_text_common_level_one"
+                    android:textColor="?attr/text_color"
                     android:textSize="17sp" />
             </LinearLayout>
         </LinearLayout>
@@ -147,7 +147,7 @@
                 android:id="@+id/expandable_list_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:divider="@color/color_divider"
+                android:divider="?attr/color_list_divider"
                 android:listSelector="#00000000" />
 
         </com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout>

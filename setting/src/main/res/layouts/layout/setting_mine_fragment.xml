@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ExpandableListView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/expandable_list"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_bg_common"
-    android:childDivider="@android:color/transparent"
-    android:descendantFocusability="blocksDescendants"
-    android:divider="@android:color/transparent"
-    android:dividerHeight="0.5px"
-    android:listSelector="#00000000" />
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true">
+
+    <ExpandableListView
+        android:id="@+id/expandable_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/color_bg_common"
+        android:childDivider="@android:color/transparent"
+        android:descendantFocusability="blocksDescendants"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0.5px"
+        android:listSelector="#00000000" />
+</RelativeLayout>
 

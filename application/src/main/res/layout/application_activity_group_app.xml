@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/content_bg"
+    android:background="?attr/content_bg"
     android:fitsSystemWindows="true">
 
     <RelativeLayout
@@ -40,7 +40,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/rl_header"
-        android:background="@color/color_bg_content_white"
+        android:background="?attr/text_ll_color_nor"
         android:overScrollMode="never"
         android:paddingTop="15dp"
         android:paddingBottom="4dp" />

@@ -38,7 +38,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/rl_header"
-        android:background="@color/content_bg">
+        android:background="?attr/content_bg">
 
         <LinearLayout
             android:id="@+id/ll_scan"
@@ -62,7 +62,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="@string/sweep"
-                android:textColor="@android:color/white"
+                android:textColor="?attr/text_ll_color_nor"
                 android:textSize="15sp" />
         </LinearLayout>
 

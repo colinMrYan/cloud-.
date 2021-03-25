@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.gyf.barlibrary.ImmersionBar;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
@@ -133,7 +134,7 @@ public class CreateGestureActivity extends BaseActivity {
     public void onCreate() {
         ButterKnife.bind(this);
         init();
-        ImmersionBar.with(this).statusBarColor(R.color.grey_f6f6f6).statusBarDarkFont(true, 0.2f).navigationBarColor(R.color.white).navigationBarDarkIcon(true, 1.0f).init();
+        ImmersionBar.with(this).statusBarColor(ResourceUtils.getResValueOfAttr(this, R.attr.content_bg_level_two)).statusBarDarkFont(true, 0.2f).navigationBarColor(R.color.white).navigationBarDarkIcon(true, 1.0f).init();
     }
 
     @Override

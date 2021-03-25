@@ -419,7 +419,7 @@ public class AppCenterActivity extends BaseActivity {
     class RecommendAppAdapter extends BaseAdapter {
         @Override
         public View getView(final int listPosition, View convertView, ViewGroup parent) {
-            convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.application_app_recommand_app_item_view, null);
+            convertView = LayoutInflater.from(AppCenterActivity.this).inflate(R.layout.application_app_recommand_app_item_view, null);
             final int appListIndex = listPosition;
             List<App> appItemList = appList.get(appListIndex);
             if (appItemList.size() > 0) {

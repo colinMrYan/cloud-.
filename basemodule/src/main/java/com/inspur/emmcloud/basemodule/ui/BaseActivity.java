@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.basemodule.ui;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -141,13 +142,31 @@ public abstract class BaseActivity extends AppCompatActivity {
             case 2:
                 setTheme(statusType == STATUS_TRANSPARENT ? R.style.AppTheme_Transparent_2 : R.style.AppTheme_2);
                 break;
+            case 3:
+                setTheme(statusType == STATUS_TRANSPARENT ? R.style.AppTheme_Transparent_3 : R.style.AppTheme_3);
+                break;
             default:
                 setTheme(statusType == STATUS_TRANSPARENT ? R.style.AppTheme_Transparent_0 : R.style.AppTheme_0);
                 break;
         }
     }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        int currentNightMode = newConfig.uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        switch (currentNightMode) {
+            case Configuration.UI_MODE_NIGHT_NO:
+                setTheme(statusType == STATUS_TRANSPARENT ? R.style.AppTheme_Transparent_0 : R.style.AppTheme_0);
+                break;
+            case Configuration.UI_MODE_NIGHT_YES:
+                setTheme(statusType == STATUS_TRANSPARENT ? R.style.AppTheme_Transparent_3 : R.style.AppTheme_3);
+                break;
+        }
+    }
+
     private void setStatus() {
+        int currentThemeNo = PreferencesUtils.getInt(BaseApplication.getInstance(), Constant.PREF_APP_THEME, 0);
         int navigationBarColor = android.R.color.white;
         boolean isStatusBarDarkFont = ResourceUtils.getBoolenOfAttr(this, R.attr.status_bar_dark_font);
         switch (statusType) {
@@ -159,7 +178,11 @@ public abstract class BaseActivity extends AppCompatActivity {
                 ImmersionBar.with(this).navigationBarColor(navigationBarColor).navigationBarDarkIcon(true, 1.0f).init();
                 break;
             case STATUS_WHITE_DARK_FONT:
-                ImmersionBar.with(this).navigationBarColor(navigationBarColor).navigationBarDarkIcon(true, 1.0f).statusBarColor(android.R.color.white).statusBarDarkFont(true, 0.2f).init();
+                if (currentThemeNo != 3) {
+                    ImmersionBar.with(this).navigationBarColor(navigationBarColor).navigationBarDarkIcon(true, 1.0f).statusBarColor(android.R.color.white).statusBarDarkFont(true, 0.2f).init();
+                } else {
+                    ImmersionBar.with(this).transparentStatusBar().statusBarDarkFont(isStatusBarDarkFont, 0.2f).navigationBarColor(navigationBarColor).navigationBarDarkIcon(true, 1.0f).init();
+                }
                 break;
             case STATUS_TRANSPARENT:
                 ImmersionBar.with(this).transparentStatusBar().statusBarDarkFont(isStatusBarDarkFont, 0.2f).navigationBarColor(navigationBarColor).navigationBarDarkIcon(true, 1.0f).init();

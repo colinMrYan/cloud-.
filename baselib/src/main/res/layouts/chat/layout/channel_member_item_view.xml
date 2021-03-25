@@ -25,7 +25,7 @@
         android:ellipsize="end"
         android:gravity="center_horizontal"
         android:singleLine="true"
-        android:textColor="@color/color_text_common_level_one"
+        android:textColor="?attr/text_color"
         android:textSize="@dimen/content_smaller_textsize"
         android:visibility="gone" />
 

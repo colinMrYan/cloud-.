@@ -40,7 +40,7 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:textColor="@color/color_text_common_level_one"
+                    android:textColor="?attr/text_color"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
@@ -60,7 +60,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
-            android:background="@color/color_list_divider" />
+            android:background="?attr/color_list_divider" />
 
         <TextView
             android:layout_width="match_parent"

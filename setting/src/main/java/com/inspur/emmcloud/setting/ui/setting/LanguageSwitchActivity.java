@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.setting.ui.setting;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.Language;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
@@ -40,7 +42,6 @@ public class LanguageSwitchActivity extends BaseActivity implements LanguageMana
 
     @Override
     public void onCreate() {
-        listView = (ListView) findViewById(R.id.lv);
         loadingDlg = new LoadingDialog(this);
         getLanguageList();
     }
@@ -60,7 +61,6 @@ public class LanguageSwitchActivity extends BaseActivity implements LanguageMana
     }
 
     private void initData() {
-        // TODO Auto-generated method stub
         String appDefaultLanguage = Locale.getDefault().getCountry();
         Language language = LanguageManager.getInstance().getContainedLanguage(
                 commonLanguageList, appDefaultLanguage);
@@ -68,7 +68,8 @@ public class LanguageSwitchActivity extends BaseActivity implements LanguageMana
             language = commonLanguageList.get(0);
         }
         commonLanguageList.add(0, language);
-        adapter = new ListViewAdapter();
+        adapter = new ListViewAdapter(this);
+        listView = (ListView) findViewById(R.id.lv);
         listView.setAdapter(adapter);
         listView.setVerticalScrollBarEnabled(false);
         listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
@@ -156,6 +157,12 @@ public class LanguageSwitchActivity extends BaseActivity implements LanguageMana
         // 用于记录每个RadioButton的状态，并保证只可选一个
         HashMap<String, Boolean> states = new HashMap<String, Boolean>();
 
+        private Context mContext;
+
+        public ListViewAdapter(Context context){
+            mContext = context;
+        }
+
         @Override
         public int getCount() {
             // TODO Auto-generated method stub
@@ -181,8 +188,7 @@ public class LanguageSwitchActivity extends BaseActivity implements LanguageMana
             // 页面
             ViewHolder holder;
             Language language = commonLanguageList.get(position);
-            LayoutInflater inflater = LayoutInflater
-                    .from(getApplicationContext());
+            LayoutInflater inflater = LayoutInflater.from(mContext);
             if (convertView == null) {
                 convertView = inflater.inflate(
                         R.layout.setting_mine_setting_language_list_item, null);
@@ -216,7 +222,7 @@ public class LanguageSwitchActivity extends BaseActivity implements LanguageMana
                 iso = iso.replace("-", "_");
                 iso = iso.toLowerCase();
                 Integer id = getResources().getIdentifier(iso, "drawable",
-                        getApplicationContext().getPackageName());
+                        LanguageSwitchActivity.this.getPackageName());
                 if (id == null) {
                     id = R.drawable.zh_cn;
                 }

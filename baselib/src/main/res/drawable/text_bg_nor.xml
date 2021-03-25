@@ -3,7 +3,7 @@
 
 
     <!-- 边框颜色 -->
-    <solid android:color="@color/white" />
+    <solid android:color="?attr/text_ll_color_nor" />
     <!-- 填充色 -->
 
 </shape>

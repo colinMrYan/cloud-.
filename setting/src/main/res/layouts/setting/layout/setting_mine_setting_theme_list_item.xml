@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@id/iv_theme_flag"
-        android:textColor="#333333"
+        android:textColor="?attr/text_color"
         android:textSize="16sp" />
 
     <ImageView
@@ -40,5 +40,5 @@
         android:layout_height="0.5px"
         android:layout_below="@id/iv_theme_flag"
         android:layout_marginLeft="15dp"
-        android:background="@color/color_list_divider" />
+        android:background="?attr/color_list_divider" />
 </RelativeLayout>

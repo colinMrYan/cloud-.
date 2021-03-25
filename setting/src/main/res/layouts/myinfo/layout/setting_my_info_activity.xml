@@ -8,7 +8,7 @@
         android:id="@+id/rl_header"
         android:layout_width="match_parent"
         android:layout_height="@dimen/header_height"
-        android:background="@android:color/white">
+        android:background="?attr/text_ll_color_nor">
 
         <ImageButton
             android:id="@+id/ibt_back"
@@ -19,21 +19,21 @@
             android:onClick="onClick"
             android:padding="11dp"
             android:scaleType="fitXY"
-            android:src="@drawable/ic_back_btn_white" />
+            android:src="?attr/ic_back_btn" />
     </RelativeLayout>
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_below="@id/rl_header"
-        android:background="@color/content_bg"
+        android:background="?attr/content_bg"
         android:orientation="vertical">
 
         <RelativeLayout
             android:id="@+id/rl_photo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white"
+            android:background="?attr/text_ll_color_nor"
             android:paddingBottom="10dp">
 
             <com.inspur.emmcloud.baselib.widget.CircleTextImageView
@@ -58,18 +58,18 @@
             android:layout_below="@id/iv_photo"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="10dp"
-            android:background="@android:color/white"
+            android:background="?attr/text_ll_color_nor"
             android:gravity="center_horizontal"
             android:paddingBottom="18dp"
             android:text="@string/not_set"
-            android:textColor="#333333"
+            android:textColor="?attr/text_color"
             android:textSize="17sp" />
 
         <RelativeLayout
             android:id="@+id/rl_employee_no"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white"
+            android:background="?attr/text_ll_color_nor"
             android:paddingLeft="16dp">
 
             <TextView
@@ -79,7 +79,7 @@
                 android:paddingBottom="11dp"
                 android:paddingTop="11dp"
                 android:text="@string/setting_user_worker_num"
-                android:textColor="#333333"
+                android:textColor="?attr/text_color"
                 android:textSize="16sp" />
 
             <TextView
@@ -100,14 +100,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="0.5px"
                 android:layout_below="@id/tv_employee_no_tips"
-                android:background="@color/color_list_divider"></View>
+                android:background="?attr/color_list_divider"></View>
         </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/rl_office_phone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white"
+            android:background="?attr/text_ll_color_nor"
             android:paddingLeft="16dp">
 
             <TextView
@@ -117,7 +117,7 @@
                 android:paddingBottom="11dp"
                 android:paddingTop="11dp"
                 android:text="@string/user_telephone"
-                android:textColor="#333333"
+                android:textColor="?attr/text_color"
                 android:textSize="16sp" />
 
             <TextView
@@ -138,14 +138,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="0.5px"
                 android:layout_below="@id/tv_office_phone"
-                android:background="@color/color_list_divider"></View>
+                android:background="?attr/color_list_divider"></View>
         </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/rl_phone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white"
+            android:background="?attr/text_ll_color_nor"
             android:paddingLeft="16dp">
 
             <TextView
@@ -155,7 +155,7 @@
                 android:paddingBottom="11dp"
                 android:paddingTop="11dp"
                 android:text="@string/setting_phone_num"
-                android:textColor="#333333"
+                android:textColor="?attr/text_color"
                 android:textSize="16sp" />
 
             <TextView
@@ -176,14 +176,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="0.5px"
                 android:layout_below="@id/tv_phone"
-                android:background="@color/color_list_divider"></View>
+                android:background="?attr/color_list_divider"></View>
         </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/rl_enterprise"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white"
+            android:background="?attr/text_ll_color_nor"
             android:paddingLeft="16dp">
 
             <TextView
@@ -193,7 +193,7 @@
                 android:paddingBottom="11dp"
                 android:paddingTop="11dp"
                 android:text="@string/setting_user_company_info"
-                android:textColor="#333333"
+                android:textColor="?attr/text_color"
                 android:textSize="16sp" />
 
             <TextView
@@ -214,14 +214,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="0.5px"
                 android:layout_below="@id/tv_enterprise"
-                android:background="@color/color_list_divider"></View>
+                android:background="?attr/color_list_divider"></View>
         </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/rl_department"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white"
+            android:background="?attr/text_ll_color_nor"
             android:paddingLeft="16dp">
 
             <TextView
@@ -231,7 +231,7 @@
                 android:paddingBottom="11dp"
                 android:paddingTop="11dp"
                 android:text="@string/user_depart_info_text"
-                android:textColor="#333333"
+                android:textColor="?attr/text_color"
                 android:textSize="16sp" />
 
             <TextView
@@ -252,14 +252,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="0.5px"
                 android:layout_below="@id/tv_department"
-                android:background="@color/color_list_divider"></View>
+                android:background="?attr/color_list_divider"></View>
         </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/rl_mail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white"
+            android:background="?attr/text_ll_color_nor"
             android:paddingLeft="16dp">
 
             <TextView
@@ -269,7 +269,7 @@
                 android:paddingBottom="11dp"
                 android:paddingTop="11dp"
                 android:text="@string/mail"
-                android:textColor="#333333"
+                android:textColor="?attr/text_color"
                 android:textSize="16sp" />
 
             <TextView
@@ -290,7 +290,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0.5px"
                 android:layout_below="@id/tv_mail"
-                android:background="@color/color_list_divider"></View>
+                android:background="?attr/color_list_divider"></View>
         </RelativeLayout>
 
 

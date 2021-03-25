@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/content_bg"
+    android:background="?attr/content_bg"
     android:fitsSystemWindows="true">
 
     <RelativeLayout
@@ -62,7 +62,7 @@
                 android:id="@+id/et_tag_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#FFFFFF"
+                android:background="?attr/text_ll_color_nor"
                 android:hint="@string/schedule_task_label_add_hint"
                 android:paddingLeft="16dp"
                 android:paddingTop="11dp"
@@ -88,8 +88,8 @@
                 android:id="@+id/lv_tag_color"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/color_bg_content_white"
-                android:divider="@color/color_list_divider"
+                android:background="?attr/text_ll_color_nor"
+                android:divider="?attr/color_list_divider"
                 android:dividerHeight="1px"
                 android:paddingLeft="16dp" />
 
@@ -98,7 +98,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:background="@color/color_bg_content_white"
+                android:background="?attr/text_ll_color_nor"
                 android:gravity="center"
                 android:onClick="onClick"
                 android:paddingTop="11dp"

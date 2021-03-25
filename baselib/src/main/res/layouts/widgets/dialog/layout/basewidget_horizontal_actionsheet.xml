@@ -26,14 +26,14 @@
                 android:maxLines="2"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
-                android:textColor="@color/color_text_common_level_one"
+                android:textColor="?attr/text_color"
                 android:textSize="17sp" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:layout_below="@id/title"
-                android:background="@color/color_divider" />
+                android:background="?attr/color_list_divider" />
         </RelativeLayout>
 
 
@@ -42,7 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
-            android:divider="@color/color_divider"
+            android:divider="?attr/color_list_divider"
             android:dividerHeight="1px" />
     </LinearLayout>
 

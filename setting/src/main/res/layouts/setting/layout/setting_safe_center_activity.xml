@@ -36,7 +36,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/rl_header"
-        android:background="@color/content_bg"
+        android:background="?attr/content_bg"
         android:orientation="vertical">
 
         <LinearLayout
@@ -66,7 +66,7 @@
                     android:paddingLeft="16dp"
                     android:paddingTop="11dp"
                     android:text="@string/modify_password"
-                    android:textColor="#333333"
+                    android:textColor="?attr/text_color"
                     android:textSize="16sp" />
 
                 <ImageView
@@ -81,7 +81,7 @@
                     android:layout_height="0.5px"
                     android:layout_below="@id/tv_password_modify"
                     android:layout_marginLeft="16dp"
-                    android:background="@color/color_list_divider" />
+                    android:background="?attr/color_list_divider" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -103,7 +103,7 @@
                     android:paddingLeft="16dp"
                     android:paddingTop="11dp"
                     android:text="@string/modify_reset_password"
-                    android:textColor="#333333"
+                    android:textColor="?attr/text_color"
                     android:textSize="16sp" />
 
                 <ImageView
@@ -118,7 +118,7 @@
                     android:layout_height="0.5px"
                     android:layout_below="@id/tv_password_reset"
                     android:layout_marginLeft="16dp"
-                    android:background="@color/color_list_divider" />
+                    android:background="?attr/color_list_divider" />
             </RelativeLayout>
 
         </LinearLayout>
@@ -139,7 +139,7 @@
                 android:paddingBottom="11dp"
                 android:paddingTop="11dp"
                 android:text="@string/setting_safe_gesture_face"
-                android:textColor="#333333"
+                android:textColor="?attr/text_color"
                 android:textSize="16sp" />
 
             <ImageView
@@ -154,7 +154,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0.5px"
                 android:layout_below="@+id/tv_setting_safe_gesture_face"
-                android:background="@color/color_list_divider" />
+                android:background="?attr/color_list_divider" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -174,7 +174,7 @@
                 android:paddingBottom="11dp"
                 android:paddingTop="11dp"
                 android:text="@string/setting_safe_face_id_unlock"
-                android:textColor="#333333"
+                android:textColor="?attr/text_color"
                 android:textSize="16sp" />
 
             <ImageView
@@ -191,7 +191,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5px"
-            android:background="@color/color_list_divider" />
+            android:background="?attr/color_list_divider" />
 
         <LinearLayout
             android:id="@+id/rl_device_manager"
@@ -203,7 +203,7 @@
                 android:id="@+id/v_line"
                 android:layout_width="match_parent"
                 android:layout_height="0.5px"
-                android:background="@color/color_list_divider" />
+                android:background="?attr/color_list_divider" />
 
             <RelativeLayout
                 android:id="@+id/rl_setting_safe_account_device"
@@ -222,7 +222,7 @@
                     android:paddingBottom="11dp"
                     android:paddingTop="11dp"
                     android:text="@string/settings_device_manager"
-                    android:textColor="#333333"
+                    android:textColor="?attr/text_color"
                     android:textSize="16sp" />
 
                 <ImageView
@@ -237,7 +237,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5px"
-                android:background="@color/color_list_divider" />
+                android:background="?attr/color_list_divider" />
         </LinearLayout>
 
     </LinearLayout>

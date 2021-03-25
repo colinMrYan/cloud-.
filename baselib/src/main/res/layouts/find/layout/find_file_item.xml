@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/selector_list"
+    android:background="?attr/selector_list"
     android:orientation="vertical"
     android:paddingLeft="18dp"
     android:paddingTop="13dp"
@@ -41,7 +41,7 @@
                 android:layout_gravity="left"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:textColor="@color/color_text_common_level_one"
+                android:textColor="?attr/text_color"
                 android:textSize="@dimen/button_textsize"
                 android:textStyle="bold" />
 
@@ -56,21 +56,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingRight="6dp"
-                    android:textColor="@color/color_text_common_level_one"
+                    android:textColor="?attr/text_color"
                     android:textSize="@dimen/content_small_textsize" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingRight="6dp"
-                    android:textColor="@color/color_text_common_level_one"
+                    android:textColor="?attr/text_color"
                     android:textSize="@dimen/content_small_textsize" />
 
                 <TextView
                     android:id="@+id/file_time_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/color_text_common_level_one" />
+                    android:textColor="?attr/text_color" />
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>

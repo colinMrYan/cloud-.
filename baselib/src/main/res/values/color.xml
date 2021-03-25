@@ -6,10 +6,12 @@
     <color name="header_bg_blue">#0F7BCA</color>
     <color name="header_bg_white">#FDFDFD</color>
     <color name="header_bg_grey">#EEEEEE</color>
+    <color name="header_bg_dark">#000000</color>
 
     <color name="footer_bg_blue">#f8f8f8</color>
     <color name="footer_bg_white">#FCFCFC</color>
     <color name="footer_bg_grey">#f8f8f8</color>
+    <color name="footer_bg_dark">#1C1C1C</color>
 
     <color name="header_text">#ffffff</color>
     <color name="header_text_black">#333333</color>
@@ -33,6 +35,9 @@
     <color name="mark_down_url_read">#551a8b</color>
     <color name="schedule_tab_text_normal_blue">#8bbbdf</color>
     <color name="content_bg">#f8f9fb</color>
+    <color name="content_bg_level_two">#f6f6f6</color>
+    <color name="content_bg_dark">#000000</color>
+    <color name="content_bg_dark_level_two">#292929</color>
     <!-- 原底部文字颜色#698fa7 -->
     <!-- 原底部文字颜色#64abe9 -->
     <color name="login_btn_nor">#38a4f0</color>
@@ -113,6 +118,8 @@
     <color name="red_f4333c">#F4333C</color>
     <color name="color_list_divider">#dddddd</color>
     <color name="color_list_divider_tran">#99dddddd</color>
+    <color name="color_list_divider_dark">#484951</color>
+    <color name="color_list_divider_tran_dark">#99ebedf0</color>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
@@ -160,6 +167,15 @@
     <color name="color_bg_content_black">#333333</color>
     <!--全局-->
     <color name="color_bg_common">#F8F9FB</color>
+    <color name="color_bg_common_dark">#1C1C1E</color>
     <color name="color_divider">#DDDDDD</color>
+    <color name="button_color_nor">#FFFFFF</color>
+    <color name="button_color_sel">#EEEEEE</color>
+    <color name="button_color_nor_dark">#1C1C1E</color>
+    <color name="button_color_sel_dark">#222222</color>
+    <color name="text_color">#333333</color>
+    <color name="text_color_dark">#FFFFFF</color>
+    <color name="bubble_bg_color">#ECEEF2</color>
+    <color name="bubble_bg_color_dark">#292929</color>
 
 </resources>

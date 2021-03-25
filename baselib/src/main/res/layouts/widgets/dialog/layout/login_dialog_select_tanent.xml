@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/color_bg_content_white"
+    android:background="?attr/text_ll_color_nor"
     android:orientation="vertical">
 
     <TextView
@@ -13,7 +13,7 @@
         android:paddingBottom="8dp"
         android:paddingTop="22dp"
         android:text="@string/select_enterprise"
-        android:textColor="@color/color_text_common_level_one"
+        android:textColor="?attr/text_color"
         android:textSize="17sp" />
 
     <com.inspur.emmcloud.baselib.widget.MaxHeightListView
@@ -35,7 +35,7 @@
         android:layout_height="1px"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:background="@color/color_divider" />
+        android:background="?attr/color_list_divider" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -52,7 +52,7 @@
             android:layout_centerVertical="true"
             android:gravity="center"
             android:text="@string/auto_select_enterprise"
-            android:textColor="@color/color_text_common_level_one"
+            android:textColor="?attr/text_color"
             android:textSize="16sp" />
 
         <android.support.v7.widget.SwitchCompat

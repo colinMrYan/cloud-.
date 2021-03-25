@@ -66,7 +66,7 @@
         android:paddingTop="8dp"
         android:paddingRight="15dp"
         android:paddingBottom="10dp"
-        android:textColor="@color/color_text_common_level_one"
+        android:textColor="?attr/text_color"
         android:textSize="15sp" />
 
     <TextView
@@ -75,7 +75,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/umeng_socialize_share_edittext"
         android:layout_alignRight="@id/umeng_socialize_share_edittext"
-        android:background="@color/color_bg_content_white"
+        android:background="?attr/text_ll_color_nor"
         android:gravity="right"
         android:paddingRight="15dp"
         android:paddingBottom="10dp"
@@ -90,7 +90,7 @@
         android:layout_below="@id/umeng_socialize_share_word_num"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:background="@color/color_bg_content_grey"
+        android:background="?attr/content_bg_level_two"
         android:visibility="gone">
 
         <RelativeLayout

@@ -34,6 +34,7 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.baselib.util.ImageUtils;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
@@ -1138,7 +1139,7 @@ public class CommunicationV0Fragment extends BaseFragment {
             holder.channelTitleText.setText(channel.getDisplayTitle());
             holder.dndImg.setVisibility(channel.getDnd() ? View.VISIBLE : View.GONE);
             holder.mainLayout
-                    .setBackgroundResource(channel.getIsSetTop() ? R.drawable.selector_set_top_msg_list : R.drawable.selector_list);
+                    .setBackgroundResource(ResourceUtils.getResValueOfAttr(getContext(), channel.getIsSetTop() ? R.attr.selector_list_top : R.attr.selector_list));
             return convertView;
         }
 

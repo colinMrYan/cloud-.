@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:color/white"
+    android:background="?attr/text_ll_color_nor"
     android:orientation="vertical"
     android:paddingTop="10dp">
 
@@ -28,7 +28,7 @@
             android:layout_toLeftOf="@id/iv_icon"
             android:ellipsize="end"
             android:singleLine="true"
-            android:textColor="@color/color_text_common_level_one"
+            android:textColor="?attr/text_color"
             android:textSize="15sp" />
     </RelativeLayout>
 
@@ -54,7 +54,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@id/tv_display_name"
-            android:textColor="@color/color_text_common_level_one"
+            android:textColor="?attr/text_color"
             android:textSize="15sp" />
     </RelativeLayout>
 
@@ -87,5 +87,5 @@
         android:layout_width="match_parent"
         android:layout_height="0.5px"
         android:layout_marginTop="11dp"
-        android:background="@color/color_divider"></View>
+        android:background="?attr/color_list_divider"></View>
 </LinearLayout>

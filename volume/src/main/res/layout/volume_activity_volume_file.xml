@@ -80,7 +80,7 @@
                             android:gravity="center"
                             android:includeFontPadding="false"
                             android:text="1"
-                            android:textColor="@color/black"
+                            android:textColor="?attr/text_color"
                             android:textSize="5sp" />
                     </RelativeLayout>
 
@@ -171,14 +171,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/rl_header"
-        android:background="@color/color_bg_content_white"
+        android:background="?attr/text_ll_color_nor"
         android:ellipsize="middle"
         android:paddingLeft="12dp"
         android:paddingTop="9dp"
         android:paddingRight="10dp"
         android:paddingBottom="9dp"
         android:singleLine="true"
-        android:textColor="@color/color_text_common_level_one"
+        android:textColor="?attr/text_color"
         android:textSize="16sp"
         android:visibility="gone" />
 
@@ -188,7 +188,7 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/rl_bottom_all_action"
         android:layout_below="@id/path_text"
-        android:background="@color/color_bg_common"
+        android:background="?attr/color_bg_common"
         android:scrollbars="vertical">
 
         <RelativeLayout
@@ -199,7 +199,7 @@
                 android:id="@+id/operation_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/color_bg_content_grey"
+                android:background="?attr/content_bg_level_two"
                 android:visibility="gone">
 
                 <TextView
@@ -240,7 +240,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1px"
                     android:layout_below="@id/operation_sort_text"
-                    android:background="@color/color_divider" />
+                    android:background="?attr/color_list_divider" />
             </RelativeLayout>
 
             <android.support.v7.widget.RecyclerView
@@ -254,7 +254,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="112dp"
-                android:background="@color/color_bg_common"
+                android:background="?attr/color_bg_common"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
 
@@ -296,19 +296,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/color_bg_content_white">
+        android:background="?attr/text_ll_color_nor">
 
         <RelativeLayout
             android:id="@+id/bottom_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/color_bg_content_white"
+            android:background="?attr/text_ll_color_nor"
             android:visibility="gone">
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1px"
-                android:background="@color/color_divider" />
+                android:background="?attr/color_list_divider" />
 
             <TextView
                 android:id="@+id/location_select_new_forder_text"
@@ -368,7 +368,7 @@
             android:id="@+id/ll_volume_action"
             android:layout_width="match_parent"
             android:layout_height="58dp"
-            android:background="@color/color_bg_content_white"
+            android:background="?attr/text_ll_color_nor"
             android:paddingTop="8dp"
             android:paddingBottom="10dp"
             android:visibility="gone" />

@@ -16,6 +16,7 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.ImageUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
@@ -24,6 +25,7 @@ import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.UIConversation;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
+import com.inspur.emmcloud.ui.IndexBaseActivity;
 import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
 
 import java.io.File;
@@ -170,7 +172,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
             holder.titleText.setText(uiConversation.getTitle());
             holder.timeText.setText(TimeUtils.getDisplayTime(context, uiConversation.getLastUpdate()));
             holder.dndImg.setVisibility(uiConversation.getConversation().isDnd() ? View.VISIBLE : View.GONE);
-            holder.mainLayout.setBackgroundResource(uiConversation.getConversation().isStick() ? R.drawable.selector_set_top_msg_list : R.drawable.selector_list);
+            holder.mainLayout.setBackgroundResource(ResourceUtils.getResValueOfAttr(context, uiConversation.getConversation().isStick() ? R.attr.selector_list_top : R.attr.selector_list));
             boolean isConversationTypeGroup = uiConversation.getConversation().getType().equals(Conversation.TYPE_GROUP);
             if (isConversationTypeGroup) {
                 File file = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH + "/" + MyApplication.getInstance().getTanent() + uiConversation.getId() + "_100.png1");

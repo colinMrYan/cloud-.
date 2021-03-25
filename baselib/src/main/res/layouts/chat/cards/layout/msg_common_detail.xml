@@ -7,7 +7,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/color_bg_content_white">
+        android:background="?attr/text_ll_color_nor">
 
         <ImageView
             android:id="@+id/content_img"
@@ -26,7 +26,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:background="@color/color_divider" />
+        android:background="?attr/color_list_divider" />
 
     <LinearLayout
         android:id="@+id/comment_file_info_layout"

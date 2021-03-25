@@ -84,7 +84,7 @@ public class CommunicationSearchMessagesActivity extends BaseActivity {
     @Override
     public void onCreate() {
         ButterKnife.bind(this);
-        ImmersionBar.with(this).statusBarColor(R.color.search_contact_header_bg).statusBarDarkFont(true, 0.2f).navigationBarColor(R.color.white).navigationBarDarkIcon(true, 1.0f).init();
+//        ImmersionBar.with(this).statusBarColor(R.color.search_contact_header_bg).statusBarDarkFont(true, 0.2f).navigationBarColor(R.color.white).navigationBarDarkIcon(true, 1.0f).init();
         if (getIntent().hasExtra(SEARCH_ALL_FROM_CHAT)) {                      //直接傳 ConversationWithMessageNum
             conversationFromChatContent = (ConversationWithMessageNum) getIntent().getSerializableExtra(SEARCH_ALL_FROM_CHAT);
             if (conversationFromChatContent.getConversation().getType().equals(Conversation.TYPE_GROUP)) {
@@ -176,7 +176,7 @@ public class CommunicationSearchMessagesActivity extends BaseActivity {
 
     @Override
     protected int getStatusType() {
-        return STATUS_NO_SET;
+        return STATUS_WHITE_DARK_FONT;
     }
 
 
@@ -200,6 +200,7 @@ public class CommunicationSearchMessagesActivity extends BaseActivity {
     public int getLayoutResId() {
         return R.layout.communication_search_messages_activity;
     }
+
 
     /**
      * 统一显示图片

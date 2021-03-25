@@ -97,6 +97,7 @@
     <string name="setting_mine_theme_white">清新白</string>
     <string name="setting_mine_theme_grey">优雅灰</string>
     <string name="setting_mine_theme_blue">商务蓝</string>
+    <string name="setting_mine_theme_dark">暗夜黑</string>
 
     <string name="setting_mine_tab_layout">布局切换</string>
     <string name="setting_mine_tab_layout_switch">是否切换为：%1$s</string>

@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/selector_list"
+    android:background="?attr/selector_list"
     android:orientation="horizontal"
     android:paddingLeft="18dp"
     android:paddingTop="13dp"
@@ -37,7 +37,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
-                android:textColor="@color/color_text_common_level_one"
+                android:textColor="?attr/text_color"
                 android:textSize="@dimen/button_textsize"
                 android:textStyle="bold" />
 

@@ -58,7 +58,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/rl_header"
-            android:background="@color/content_bg"
+            android:background="?attr/content_bg"
             android:orientation="vertical">
 
             <com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout
@@ -82,7 +82,7 @@
                         android:id="@+id/ll_no_meeting"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@color/white"
+                        android:background="?attr/text_ll_color_nor"
                         android:gravity="center"
                         android:orientation="vertical"
                         android:paddingBottom="50dp">
@@ -99,7 +99,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="30dp"
-                            android:textColor="#333333"
+                            android:textColor="?attr/text_color"
                             android:textSize="17sp" />
                     </LinearLayout>
 

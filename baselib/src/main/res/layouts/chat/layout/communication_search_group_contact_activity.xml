@@ -9,7 +9,7 @@
         android:id="@+id/rl_header"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/header_height"
-        android:background="@color/color_bg_content_grey">
+        android:background="?attr/content_bg_level_two">
 
         <TextView
             android:id="@+id/tv_cancel"
@@ -23,7 +23,7 @@
             android:paddingLeft="4dp"
             android:paddingRight="15dp"
             android:text="@string/cancel"
-            android:textColor="@color/color_text_common_level_one"
+            android:textColor="?attr/text_color"
             android:textSize="@dimen/header_function_textsize" />
 
         <RelativeLayout
@@ -51,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_toRightOf="@id/iv_search_members"
-                android:background="@color/white"
+                android:background="?attr/text_ll_color_nor"
                 android:freezesText="true"
                 android:gravity="center_vertical"
                 android:hint="@string/communication_search"
@@ -61,7 +61,7 @@
                 android:paddingRight="5dp"
                 android:paddingBottom="5dp"
                 android:singleLine="true"
-                android:textColor="@color/color_text_common_level_one"
+                android:textColor="?attr/text_color"
                 android:textColorHint="@color/color_text_common_level_two"
                 android:textSize="14sp" />
         </RelativeLayout>
@@ -71,7 +71,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
-        android:background="@color/color_bg_common">
+        android:background="?attr/color_bg_common">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -82,7 +82,7 @@
                 android:id="@+id/ll_all_contact"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/color_bg_content_white"
+                android:background="?attr/text_ll_color_nor"
                 android:orientation="vertical">
 
                 <TextView
@@ -151,7 +151,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:background="@color/color_bg_content_white"
+                android:background="?attr/text_ll_color_nor"
                 android:orientation="vertical">
 
                 <TextView
@@ -221,7 +221,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:background="@color/color_bg_content_white"
+                android:background="?attr/text_ll_color_nor"
                 android:orientation="vertical">
 
                 <TextView
@@ -291,7 +291,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:background="@color/color_bg_content_white"
+                android:background="?attr/text_ll_color_nor"
                 android:orientation="vertical">
 
                 <TextView

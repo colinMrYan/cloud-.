@@ -45,7 +45,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_below="@id/rl_header"
-            android:background="@color/color_bg_content_white">
+            android:background="?attr/text_ll_color_nor">
 
             <RelativeLayout
                 android:id="@+id/rl_mail_content"
@@ -56,7 +56,7 @@
                     android:id="@+id/ll_mail_header"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/color_bg_common"
+                    android:background="?attr/color_bg_common"
                     android:orientation="vertical">
 
                     <RelativeLayout
@@ -92,7 +92,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginRight="8dp"
                             android:layout_toLeftOf="@id/rl_flag"
-                            android:textColor="#333333"
+                            android:textColor="?attr/text_color"
                             android:textSize="17sp" />
                     </RelativeLayout>
 
@@ -279,7 +279,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="0.5px"
                         android:layout_marginTop="12dp"
-                        android:background="@color/color_divider"></View>
+                        android:background="?attr/color_list_divider"></View>
                 </LinearLayout>
 
                 <com.inspur.emmcloud.baselib.widget.ScrollViewWithListView
@@ -353,7 +353,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:background="@color/color_bg_common">
+            android:background="?attr/color_bg_common">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -383,7 +383,7 @@
                         android:layout_below="@id/iv_reply"
                         android:layout_centerHorizontal="true"
                         android:text="回复"
-                        android:textColor="@color/color_text_common_level_one"
+                        android:textColor="?attr/text_color"
                         android:textSize="12sp" />
                 </RelativeLayout>
 
@@ -409,7 +409,7 @@
                         android:layout_below="@id/iv_reply_all"
                         android:layout_marginBottom="4dp"
                         android:text="回复全部"
-                        android:textColor="@color/color_text_common_level_one"
+                        android:textColor="?attr/text_color"
                         android:textSize="12sp" />
                 </RelativeLayout>
 
@@ -433,7 +433,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/iv_forward"
                         android:text="转发"
-                        android:textColor="@color/color_text_common_level_one"
+                        android:textColor="?attr/text_color"
                         android:textSize="12sp" />
                 </RelativeLayout>
             </LinearLayout>

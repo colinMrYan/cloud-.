@@ -8,7 +8,7 @@
         android:id="@+id/rl_header"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/header_height"
-        android:background="@color/color_bg_content_grey">
+        android:background="?attr/content_bg_level_two">
 
         <TextView
             android:id="@+id/tv_cancel"
@@ -21,7 +21,7 @@
             android:paddingLeft="4dp"
             android:paddingRight="15dp"
             android:text="@string/cancel"
-            android:textColor="@color/color_text_common_level_one"
+            android:textColor="?attr/text_color"
             android:textSize="@dimen/header_function_textsize" />
 
         <RelativeLayout
@@ -48,7 +48,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_toRightOf="@id/iv_search_members"
-                android:background="@color/color_bg_content_white"
+                android:background="?attr/text_ll_color_nor"
                 android:drawableRight="@drawable/ic_edit_text_delbtn"
                 android:freezesText="true"
                 android:gravity="center_vertical"
@@ -59,7 +59,7 @@
                 android:paddingRight="5dp"
                 android:paddingBottom="5dp"
                 android:singleLine="true"
-                android:textColor="@color/color_text_common_level_one"
+                android:textColor="?attr/text_color"
                 android:textColorHint="@color/color_text_common_level_two"
                 android:textSize="14sp" />
         </RelativeLayout>
@@ -69,7 +69,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/rl_header"
-        android:background="@color/color_bg_common">
+        android:background="?attr/color_bg_common">
 
         <TextView
             android:id="@+id/tv_group_name_hint"
@@ -90,7 +90,7 @@
             android:layout_width="match_parent"
             android:layout_height="1px"
             android:layout_below="@id/tv_group_name_hint"
-            android:background="@color/color_divider"
+            android:background="?attr/color_list_divider"
             android:visibility="gone" />
 
         <RelativeLayout
@@ -102,7 +102,7 @@
                 android:id="@+id/lv_search_group_show"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/color_bg_content_white"
+                android:background="?attr/text_ll_color_nor"
                 android:dividerHeight="0dp" />
 
             <RelativeLayout
@@ -126,7 +126,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="7dp"
                     android:layout_toRightOf="@id/iv_search_group_hint"
-                    android:background="#ffffff"
+                    android:background="?attr/text_ll_color_nor"
                     android:gravity="center_vertical"
                     android:text="更多群聊"
                     android:textColor="@color/color_text_link"

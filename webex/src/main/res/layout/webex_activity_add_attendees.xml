@@ -55,7 +55,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/rl_header"
-        android:background="@color/content_bg"
+        android:background="?attr/content_bg"
         android:paddingBottom="10dp">
 
         <LinearLayout
@@ -67,7 +67,7 @@
                 android:id="@+id/lv_attendees"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:divider="@color/white"
+                android:divider="?attr/text_ll_color_nor"
                 android:dividerHeight="0.5px"></com.inspur.emmcloud.baselib.widget.ScrollViewWithListView>
 
             <LinearLayout
@@ -75,7 +75,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:background="@color/white"
+                android:background="?attr/text_ll_color_nor"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -104,7 +104,7 @@
                         android:paddingTop="10dp"
                         android:paddingBottom="10dp"
                         android:text="@string/webex_internal_attendees"
-                        android:textColor="#333333"
+                        android:textColor="?attr/text_color"
                         android:textSize="17sp" />
                 </RelativeLayout>
 
@@ -138,7 +138,7 @@
                         android:paddingTop="10dp"
                         android:paddingBottom="10dp"
                         android:text="@string/webex_external_attendees"
-                        android:textColor="#333333"
+                        android:textColor="?attr/text_color"
                         android:textSize="17sp" />
                 </RelativeLayout>
             </LinearLayout>

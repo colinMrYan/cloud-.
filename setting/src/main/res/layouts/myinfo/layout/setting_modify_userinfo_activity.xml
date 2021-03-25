@@ -38,7 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/rl_header"
         android:layout_marginTop="10dp"
-        android:background="@color/white">
+        android:background="?attr/text_ll_color_nor">
 
         <Button
             android:id="@+id/get_modifyinfo_btn"
@@ -46,7 +46,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:background="@color/white"
+            android:background="?attr/text_ll_color_nor"
             android:gravity="center"
             android:hint="@string/setting_resend_code"
 
@@ -83,7 +83,7 @@
                 android:layout_weight="27"
                 android:gravity="center"
                 android:text="@string/setting_user_modify_user_info"
-                android:textColor="#333333"
+                android:textColor="?attr/text_color"
                 android:textSize="@dimen/content_normal_textsize"></TextView>
 
             <com.inspur.emmcloud.baselib.widget.ClearEditText
@@ -100,7 +100,7 @@
                 android:paddingRight="13dp"
                 android:paddingTop="13dp"
                 android:singleLine="true"
-                android:textColor="#333333"
+                android:textColor="?attr/text_color"
                 android:textSize="@dimen/content_normal_textsize"></com.inspur.emmcloud.baselib.widget.ClearEditText>
         </RelativeLayout>
     </RelativeLayout>

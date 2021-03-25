@@ -9,13 +9,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/rl_header"
-        android:background="@color/color_bg_content_white">
+        android:background="?attr/text_ll_color_nor">
 
         <LinearLayout
             android:id="@+id/ll_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/color_bg_content_white"
+            android:background="?attr/text_ll_color_nor"
             android:orientation="vertical"
             android:paddingLeft="10dp"
             android:paddingRight="10dp">
@@ -24,12 +24,12 @@
                 android:id="@+id/rcv_title"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/color_bg_content_white" />
+                android:background="?attr/text_ll_color_nor" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1px"
-                android:background="@color/color_divider" />
+                android:background="?attr/color_list_divider" />
 
         </LinearLayout>
 
@@ -42,7 +42,7 @@
                 android:id="@+id/rcv_file"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/color_bg_content_white" />
+                android:background="?attr/text_ll_color_nor" />
 
             <LinearLayout
                 android:id="@+id/ll_empty"

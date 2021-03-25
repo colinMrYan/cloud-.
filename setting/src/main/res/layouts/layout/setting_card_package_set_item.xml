@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:layout_alignParentTop="true"
-        android:background="@color/color_divider" />
+        android:background="?attr/color_list_divider" />
 
     <TextView
         android:id="@+id/tv_card_package_set_item"
@@ -20,6 +20,7 @@
         android:paddingLeft="12dp"
         android:paddingTop="10dp"
         android:singleLine="true"
+        android:textColor="?attr/text_color"
         android:textSize="@dimen/header_textsize" />
 
     <android.support.v7.widget.SwitchCompat

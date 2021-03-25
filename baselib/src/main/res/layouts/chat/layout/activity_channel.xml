@@ -4,7 +4,7 @@
     android:id="@+id/main_layout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/white"
+    android:background="?attr/text_ll_color_nor"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
@@ -67,7 +67,7 @@
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@color/color_bg_common"
+        android:background="?attr/color_bg_common"
         android:scrollbars="vertical">
 
         <RelativeLayout
@@ -109,6 +109,7 @@
 
     <com.inspur.emmcloud.widget.ECMChatInputMenu
         android:id="@+id/chat_input_menu"
+        android:background="?attr/text_ll_color_nor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

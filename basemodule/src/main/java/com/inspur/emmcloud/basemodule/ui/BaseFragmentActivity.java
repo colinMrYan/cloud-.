@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.basemodule.ui;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -114,8 +115,25 @@ public abstract class BaseFragmentActivity extends FragmentActivity {
             case 2:
                 setTheme(R.style.AppTheme_2);
                 break;
+            case 3:
+                setTheme(R.style.AppTheme_3);
+                break;
             default:
                 setTheme(R.style.AppTheme_0);
+                break;
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        int currentNightMode = newConfig.uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        switch (currentNightMode) {
+            case Configuration.UI_MODE_NIGHT_NO:
+                setTheme(R.style.AppTheme_0);
+                break;
+            case Configuration.UI_MODE_NIGHT_YES:
+                setTheme(R.style.AppTheme_3);
                 break;
         }
     }

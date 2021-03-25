@@ -31,6 +31,7 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.ListViewUtils;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
@@ -792,6 +793,9 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
             searchEdit.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
             searchEdit.setBackground(null);
             searchEdit.setHint(getString(R.string.msg_key_search_member));
+//            searchEdit.setTextColor(ResourceUtils.getResValueOfAttr(getContext(), R.attr.text_color));
+            searchEdit.setHintTextColor(Color.parseColor("#666666"));
+
             searchEdit.addTextChangedListener(myTextWatcher);
         }
 

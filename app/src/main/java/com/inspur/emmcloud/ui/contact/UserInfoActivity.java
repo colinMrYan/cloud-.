@@ -24,11 +24,13 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.ScrollViewWithListView;
 import com.inspur.emmcloud.baselib.widget.dialogs.ActionSheetDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
@@ -341,7 +343,7 @@ public class UserInfoActivity extends BaseActivity {
                 .setTitle(getString(R.string.user_call))
                 .setTitleColor(Color.parseColor("#888888"))
                 .setItemColor(Color.parseColor("#36A5F6"))
-                .setCancelColor(Color.parseColor("#333333"));
+                .setCancelColor(ResourceUtils.getResValueOfAttr(this, R.attr.text_color));
         if (!StringUtils.isBlank(phoneNum)) {
             builder.addItem(getString(R.string.user_info_phone_number) + ":" + phoneNum);
         }

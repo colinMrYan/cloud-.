@@ -9,7 +9,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/color_bg_content_grey">
+        android:background="?attr/content_bg_level_two">
 
         <RelativeLayout
             android:id="@+id/msg_display_header_layout"
@@ -55,7 +55,7 @@
             android:layout_width="match_parent"
             android:layout_height="0px"
             android:layout_below="@id/msg_display_header_layout"
-            android:background="@color/color_divider" />
+            android:background="?attr/color_list_divider" />
 
         <RelativeLayout
             android:id="@+id/msg_display_layout"
@@ -69,7 +69,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:divider="@color/color_bg_common"
+        android:divider="?attr/color_bg_common"
         android:dividerHeight="0dp" />
 
 </LinearLayout>

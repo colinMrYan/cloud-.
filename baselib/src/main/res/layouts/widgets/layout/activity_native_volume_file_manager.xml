@@ -54,7 +54,7 @@
         android:id="@+id/rl_tab_layout"
         android:layout_width="match_parent"
         android:layout_height="35dp"
-        android:background="@color/color_bg_content_white">
+        android:background="?attr/text_ll_color_nor">
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tl_files_source"
@@ -62,9 +62,9 @@
             android:layout_height="match_parent"
             app:tabGravity="fill"
             app:tabMode="fixed"
-            app:tabSelectedTextColor="@color/color_text_common_level_one"
+            app:tabSelectedTextColor="?attr/text_color"
             app:tabTextAppearance="@style/ScheduleTaskTabLayoutTextStyle"
-            app:tabTextColor="#333333" />
+            app:tabTextColor="?attr/text_color" />
     </RelativeLayout>
 
     <RelativeLayout

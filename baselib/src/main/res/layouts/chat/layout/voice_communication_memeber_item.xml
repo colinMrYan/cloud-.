@@ -34,6 +34,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
         android:visibility="gone"
-        app:indicatorColor="@color/color_bg_content_white"
+        app:indicatorColor="?attr/text_ll_color_nor"
         app:indicatorName="BallPulseIndicator" />
 </RelativeLayout>

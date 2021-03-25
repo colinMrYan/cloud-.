@@ -86,7 +86,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/rl_header"
-        android:background="@color/content_bg">
+        android:background="?attr/content_bg">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -95,7 +95,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
+                android:background="?attr/text_ll_color_nor"
                 android:orientation="vertical"
                 android:paddingBottom="10dp">
 
@@ -139,14 +139,14 @@
                         android:layout_toRightOf="@id/iv_photo"
                         android:ellipsize="end"
                         android:maxLines="3"
-                        android:textColor="#333333"
+                        android:textColor="?attr/text_color"
                         android:textSize="17sp" />
                 </RelativeLayout>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="10dp"
-                    android:background="@color/content_bg"></View>
+                    android:background="?attr/content_bg"></View>
 
                 <LinearLayout
                     android:id="@+id/ll_meeting_content"
@@ -169,7 +169,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"
                         android:paddingTop="7dp"
-                        android:textColor="#333333"
+                        android:textColor="?attr/text_color"
                         android:textSize="17sp" />
 
                     <View
@@ -177,7 +177,7 @@
                         android:layout_height="0.5px"
                         android:layout_marginTop="10dp"
                         android:layout_marginBottom="10dp"
-                        android:background="@color/color_list_divider_tran"></View>
+                        android:background="?attr/color_list_divider_tran"></View>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -199,7 +199,7 @@
                             android:layout_marginLeft="20dp"
                             android:ellipsize="end"
                             android:maxLines="1"
-                            android:textColor="#333333"
+                            android:textColor="?attr/text_color"
                             android:textSize="17sp" />
 
                         <TextView
@@ -218,7 +218,7 @@
                         android:layout_height="0.5px"
                         android:layout_marginTop="10dp"
                         android:layout_marginBottom="10dp"
-                        android:background="@color/color_list_divider_tran"></View>
+                        android:background="?attr/color_list_divider_tran"></View>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -234,7 +234,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"
                         android:paddingTop="7dp"
-                        android:textColor="#333333"
+                        android:textColor="?attr/text_color"
                         android:textSize="17sp" />
 
                     <View
@@ -242,7 +242,7 @@
                         android:layout_height="0.5px"
                         android:layout_marginTop="10dp"
                         android:layout_marginBottom="10dp"
-                        android:background="@color/color_list_divider_tran"></View>
+                        android:background="?attr/color_list_divider_tran"></View>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -259,7 +259,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"
                         android:paddingTop="7dp"
-                        android:textColor="#333333"
+                        android:textColor="?attr/text_color"
                         android:textSize="17sp" />
 
                     <RelativeLayout
@@ -274,7 +274,7 @@
                             android:layout_height="0.5px"
                             android:layout_marginTop="10dp"
                             android:layout_marginBottom="10dp"
-                            android:background="@color/color_list_divider_tran"></View>
+                            android:background="?attr/color_list_divider_tran"></View>
 
                         <TextView
                             android:id="@+id/tv_tip_host_key"
@@ -293,7 +293,7 @@
                             android:layout_below="@id/tv_tip_host_key"
                             android:layout_marginLeft="20dp"
                             android:paddingTop="7dp"
-                            android:textColor="#333333"
+                            android:textColor="?attr/text_color"
                             android:textSize="17sp" />
                     </RelativeLayout>
                 </LinearLayout>

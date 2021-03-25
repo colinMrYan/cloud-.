@@ -8,6 +8,7 @@ import android.view.View;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.ui.chat.emotion.EmotionUtil;
 import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
@@ -36,12 +37,12 @@ public class DisplayTxtPlainMsg {
                 MyApplication.getInstance().getUid());
         BubbleLayout cardLayout = cardContentView.findViewById(R.id.bl_card);
         cardLayout.setArrowDirection(isMyMsg ? ArrowDirection.RIGHT : ArrowDirection.LEFT);
-        cardLayout.setBubbleColor(context.getResources().getColor(isMyMsg ? R.color.bg_my_card : R.color.bg_other_card));
+        cardLayout.setBubbleColor(context.getResources().getColor(isMyMsg ? R.color.bg_my_card : ResourceUtils.getResValueOfAttr(context, R.attr.bubble_bg_color)));
         cardLayout.setStrokeWidth(isMyMsg ? 0 : 0.5f);
         final TextViewFixTouchConsume contentText = cardContentView
                 .findViewById(R.id.tv_content);
         contentText.setTextColor(context.getResources().getColor(
-                isMyMsg ? R.color.white : R.color.black));
+                isMyMsg ? R.color.white : ResourceUtils.getResValueOfAttr(context, R.attr.text_color)));
         String text = message.getMsgContentTextPlain().getText();
         contentText.setMovementMethod(TextViewFixTouchConsume.LocalLinkMovementMethod.getInstance());
         contentText.setFocusable(false);

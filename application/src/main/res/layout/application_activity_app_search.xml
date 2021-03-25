@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="?attr/content_bg"
     android:fitsSystemWindows="true">
 
     <RelativeLayout
@@ -37,7 +38,7 @@
         android:layout_width="fill_parent"
         android:layout_height="0.5px"
         android:layout_below="@id/rl_header"
-        android:background="@color/color_divider" />
+        android:background="?attr/color_list_divider" />
 
     <RelativeLayout
         android:id="@+id/search_layout"
@@ -88,11 +89,12 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@id/search_img"
-                android:background="@null"
+                android:background="?attr/text_ll_color_nor"
+                android:textColorHint="@color/color_text_tip"
                 android:hint="@string/application_search"
                 android:imeOptions="actionSearch"
                 android:singleLine="true"
-                android:textColor="@color/color_text_common_level_one"
+                android:textColor="?attr/text_color"
                 android:textSize="@dimen/content_normal_textsize">
 
                 <requestFocus />
@@ -105,7 +107,7 @@
         android:layout_width="fill_parent"
         android:layout_height="0.5px"
         android:layout_below="@id/search_layout"
-        android:background="@color/color_divider" />
+        android:background="?attr/color_list_divider" />
 
     <RelativeLayout
         android:layout_width="match_parent"

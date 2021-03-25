@@ -17,7 +17,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:background="@color/color_divider" />
+        android:background="?attr/color_list_divider" />
 
     <RelativeLayout
         android:id="@+id/rl_select_time"
@@ -33,7 +33,7 @@
             android:layout_centerVertical="true"
             android:paddingLeft="35dp"
             android:text="24:00"
-            android:textColor="@color/color_text_common_level_one"
+            android:textColor="?attr/text_color"
             android:textSize="@dimen/header_function_textsize" />
 
         <ImageView
@@ -55,6 +55,6 @@
             android:layout_width="match_parent"
             android:layout_height="1px"
             android:layout_below="@id/iv_time"
-            android:background="@color/color_divider" />
+            android:background="?attr/color_list_divider" />
     </RelativeLayout>
 </LinearLayout>

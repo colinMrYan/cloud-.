@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -14,7 +15,7 @@
         android:layout_alignParentStart="true"
         android:layout_below="@id/rl_header"
         android:layout_marginTop="0dp"
-        android:background="@color/content_bg">
+        android:background="?attr/content_bg">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -38,7 +39,7 @@
                     android:paddingBottom="11dp"
                     android:paddingTop="11dp"
                     android:text="@string/setting_safe_center"
-                    android:textColor="#333333"
+                    android:textColor="?attr/text_color"
                     android:textSize="16sp" />
 
                 <ImageView
@@ -53,7 +54,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0.5px"
                     android:layout_below="@+id/tv_setting_account_safe"
-                    android:background="@color/color_list_divider" />
+                    android:background="?attr/color_list_divider" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -73,7 +74,7 @@
                     android:paddingBottom="11dp"
                     android:paddingTop="11dp"
                     android:text="@string/settings_language"
-                    android:textColor="#333333"
+                    android:textColor="?attr/text_color"
                     android:textSize="16sp" />
 
                 <ImageView
@@ -111,7 +112,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0.5px"
                     android:layout_below="@id/tv_setting_language_name"
-                    android:background="@color/color_list_divider" />
+                    android:background="?attr/color_list_divider" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -130,7 +131,7 @@
                     android:paddingBottom="11dp"
                     android:paddingTop="11dp"
                     android:text="@string/setting_mine_theme_switch"
-                    android:textColor="#333333"
+                    android:textColor="?attr/text_color"
                     android:textSize="16sp" />
 
 
@@ -159,7 +160,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0.5px"
                     android:layout_below="@id/tv_setting_theme_name"
-                    android:background="@color/color_list_divider" />
+                    android:background="?attr/color_list_divider" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -178,7 +179,7 @@
                     android:paddingBottom="11dp"
                     android:paddingTop="11dp"
                     android:text="@string/setting_mine_tab_layout"
-                    android:textColor="#333333"
+                    android:textColor="?attr/text_color"
                     android:textSize="16sp" />
 
 
@@ -207,7 +208,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0.5px"
                     android:layout_below="@id/tv_setting_tab_name"
-                    android:background="@color/color_list_divider" />
+                    android:background="?attr/color_list_divider" />
             </RelativeLayout>
 
 
@@ -228,7 +229,7 @@
                     android:paddingBottom="11dp"
                     android:paddingTop="11dp"
                     android:text="@string/settings_clear_cache"
-                    android:textColor="#333333"
+                    android:textColor="?attr/text_color"
                     android:textSize="16sp" />
 
 
@@ -244,7 +245,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0.5px"
                     android:layout_below="@id/tv_setting_clear_cache"
-                    android:background="@color/color_list_divider" />
+                    android:background="?attr/color_list_divider" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -262,7 +263,7 @@
                     android:paddingBottom="11dp"
                     android:paddingTop="11dp"
                     android:text="@string/web_app_auto_rotate"
-                    android:textColor="#333333"
+                    android:textColor="?attr/text_color"
                     android:textSize="16sp" />
 
                 <android.support.v7.widget.SwitchCompat
@@ -277,7 +278,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0.5px"
                     android:layout_below="@id/tv_setting_web_rotate"
-                    android:background="@color/color_list_divider" />
+                    android:background="?attr/color_list_divider" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -296,7 +297,7 @@
                     android:paddingBottom="11dp"
                     android:paddingTop="11dp"
                     android:text="@string/voice_word_setting"
-                    android:textColor="#333333"
+                    android:textColor="?attr/text_color"
                     android:textSize="16sp" />
 
                 <android.support.v7.widget.SwitchCompat
@@ -311,7 +312,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0.5px"
                     android:layout_below="@id/tv_setting_voice_2_word"
-                    android:background="@color/color_list_divider" />
+                    android:background="?attr/color_list_divider" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -329,7 +330,7 @@
                     android:paddingBottom="11dp"
                     android:paddingTop="11dp"
                     android:text="@string/notification_switch"
-                    android:textColor="#333333"
+                    android:textColor="?attr/text_color"
                     android:textSize="16sp" />
 
                 <android.support.v7.widget.SwitchCompat
@@ -344,7 +345,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0.5px"
                     android:layout_below="@id/tv_setting_notification_switch"
-                    android:background="@color/color_list_divider" />
+                    android:background="?attr/color_list_divider" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -364,7 +365,7 @@
                     android:paddingBottom="11dp"
                     android:paddingTop="11dp"
                     android:text="自启动选项"
-                    android:textColor="#333333"
+                    android:textColor="?attr/text_color"
                     android:textSize="16sp" />
 
                 <android.support.v7.widget.SwitchCompat
@@ -379,7 +380,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0.5px"
                     android:layout_below="@id/tv_setting_self_start"
-                    android:background="@color/color_list_divider" />
+                    android:background="?attr/color_list_divider" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -399,7 +400,7 @@
                     android:paddingBottom="11dp"
                     android:paddingTop="11dp"
                     android:text="@string/setting_join_experience_plan"
-                    android:textColor="#333333"
+                    android:textColor="?attr/text_color"
                     android:textSize="16sp" />
 
                 <android.support.v7.widget.SwitchCompat
@@ -415,7 +416,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0.5px"
                     android:layout_below="@id/tv_setting_experience_upgrade"
-                    android:background="@color/color_list_divider" />
+                    android:background="?attr/color_list_divider" />
             </RelativeLayout>
 
         </LinearLayout>
@@ -433,7 +434,7 @@
             android:gravity="center"
             android:text="@string/quit_check"
             android:textAllCaps="false"
-            android:textColor="@android:color/white"
+            android:textColor="?attr/text_ll_color_nor"
             android:textSize="15sp"
             app:cus_backgroundColor="#36A5F6"
             app:cus_borderWidth="0dp"

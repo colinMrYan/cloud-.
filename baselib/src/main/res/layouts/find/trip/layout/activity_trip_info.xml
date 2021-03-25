@@ -51,12 +51,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/rl_header"
-        android:background="@color/color_bg_common">
+        android:background="?attr/color_bg_common">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/color_bg_content_white"
+            android:background="?attr/text_ll_color_nor"
             android:orientation="vertical"
             android:paddingLeft="12dp"
             android:paddingRight="11dp">
@@ -81,7 +81,7 @@
                     android:layout_centerVertical="true"
                     android:layout_toRightOf="@id/trip_logo"
                     android:paddingLeft="10dp"
-                    android:textColor="@color/color_text_common_level_one"
+                    android:textColor="?attr/text_color"
                     android:textSize="@dimen/header_textsize" />
 
                 <TextView
@@ -91,7 +91,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:paddingRight="4dp"
-                    android:textColor="@color/color_text_common_level_one"
+                    android:textColor="?attr/text_color"
                     android:textSize="@dimen/content_smaller_textsize" />
             </RelativeLayout>
 
@@ -108,7 +108,7 @@
                     android:id="@+id/trip_from"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/color_text_common_level_one"
+                    android:textColor="?attr/text_color"
                     android:textSize="30sp" />
 
                 <TextView
@@ -125,7 +125,7 @@
                     android:id="@+id/trip_destination"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/color_text_common_level_one"
+                    android:textColor="?attr/text_color"
                     android:textSize="30sp" />
             </LinearLayout>
 
@@ -140,7 +140,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="14dp"
-                    android:textColor="@color/color_text_common_level_one"
+                    android:textColor="?attr/text_color"
                     android:textSize="16sp" />
 
                 <TextView
@@ -150,7 +150,7 @@
                     android:layout_alignParentRight="true"
                     android:paddingRight="15dp"
                     android:text="¥398"
-                    android:textColor="@color/color_text_common_level_one"
+                    android:textColor="?attr/text_color"
                     android:textSize="16sp" />
             </RelativeLayout>
 
@@ -179,7 +179,7 @@
                     android:layout_centerVertical="true"
                     android:layout_toRightOf="@id/trip_user_logo"
                     android:paddingLeft="19dp"
-                    android:textColor="@color/color_text_common_level_one"
+                    android:textColor="?attr/text_color"
                     android:textSize="18sp" />
 
                 <ImageView

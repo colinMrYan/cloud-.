@@ -6,7 +6,7 @@
 
 
     -->
-    <style name="AppRootTheme" parent="Theme.AppCompat.Light" />
+    <style name="AppRootTheme" parent="Theme.AppCompat.DayNight.DarkActionBar" />
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppRootTheme">
         <!--no Action Bar-->
@@ -48,6 +48,19 @@
         <item name="footer_bg">@drawable/footer_bg_white</item>
         <item name="footer_bg_color">@color/footer_bg_white</item>
         <item name="header_text_color">@color/header_text_black</item>
+        <item name="content_bg">@color/content_bg</item>
+        <item name="content_bg_level_two">@color/content_bg_level_two</item>
+        <item name="color_bg_common">@color/color_bg_common</item>
+        <item name="text_ll_color_nor">@color/button_color_nor</item>
+        <item name="text_ll_color_sel">@color/button_color_sel</item>
+        <item name="text_color">@color/text_color</item>
+        <item name="bubble_bg_color">@color/bubble_bg_color</item>
+        <item name="color_list_divider">@color/color_list_divider</item>
+        <item name="color_list_divider_tran">@color/color_list_divider_tran</item>
+        <item name="selector_list">@drawable/selector_list</item>
+        <item name="selector_list_top">@drawable/selector_set_top_msg_list</item>
+
+
         <item name="header_text_blue_white_color">@color/footer_tab_text_sel_blue</item>
         <item name="footer_tab_text_color">@color/seclector_footer_text_white</item>
         <item name="footer_tab_text_color_nor">@color/footer_tab_text_nor_white</item>
@@ -79,6 +92,7 @@
         <item name="schedule_tab_text_color_normal">@color/msg_content_color</item>
         <item name="schedule_tab_text_color_select">@color/header_text_black</item>
 
+
     </style>
 
     <style name="AppTheme_1"  parent="AppTheme">
@@ -88,6 +102,19 @@
         <item name="footer_bg">@drawable/footer_bg_grey</item>
         <item name="footer_bg_color">@color/footer_bg_grey</item>
         <item name="header_text_color">@color/header_text_grey</item>
+        <item name="content_bg">@color/content_bg</item>
+        <item name="content_bg_level_two">@color/content_bg_level_two</item>
+        <item name="color_bg_common">@color/color_bg_common</item>
+        <item name="text_ll_color_nor">@color/button_color_nor</item>
+        <item name="text_ll_color_sel">@color/button_color_sel</item>
+        <item name="text_color">@color/text_color</item>
+        <item name="bubble_bg_color">@color/bubble_bg_color</item>
+        <item name="color_list_divider">@color/color_list_divider</item>
+        <item name="color_list_divider_tran">@color/color_list_divider_tran</item>
+        <item name="selector_list">@drawable/selector_list</item>
+        <item name="selector_list_top">@drawable/selector_set_top_msg_list</item>
+
+
         <item name="header_text_blue_white_color">@color/header_text_grey</item>
         <item name="footer_tab_text_color">@color/seclector_footer_text_grey</item>
         <item name="footer_tab_text_color_nor">@color/footer_tab_text_nor_grey</item>
@@ -127,6 +154,19 @@
         <item name="footer_bg">@drawable/footer_bg_blue</item>
         <item name="footer_bg_color">@color/footer_bg_blue</item>
         <item name="header_text_color">@color/header_text</item>
+        <item name="content_bg">@color/content_bg</item>
+        <item name="content_bg_level_two">@color/content_bg_level_two</item>
+        <item name="color_bg_common">@color/color_bg_common</item>
+        <item name="text_ll_color_nor">@color/button_color_nor</item>
+        <item name="text_ll_color_sel">@color/button_color_sel</item>
+        <item name="text_color">@color/text_color</item>
+        <item name="bubble_bg_color">@color/bubble_bg_color</item>
+        <item name="color_list_divider">@color/color_list_divider</item>
+        <item name="color_list_divider_tran">@color/color_list_divider_tran</item>
+        <item name="selector_list">@drawable/selector_list</item>
+        <item name="selector_list_top">@drawable/selector_set_top_msg_list</item>
+
+
         <item name="header_text_blue_white_color">@color/header_text</item>
         <item name="footer_tab_text_color">@color/seclector_footer_text_blue</item>
         <item name="footer_tab_text_color_nor">@color/footer_tab_text_nor_blue</item>
@@ -150,13 +190,65 @@
         <item name="ic_appcenter_search">@drawable/ic_appcenter_search_blue</item>
         <item name="plugin_ic_header_title_drop_down">@drawable/plugin_ic_header_title_drop_down_blue</item>
         <item name="plugin_ic_header_title_drop_up">@drawable/plugin_ic_header_title_drop_up_blue</item>
-        <item name="mine_my_info_card_name_color">@android:color/white</item>
-        <item name="mine_my_info_card_enterprise_color">@android:color/white</item>
+        <item name="mine_my_info_card_name_color">?attr/text_ll_color_nor</item>
+        <item name="mine_my_info_card_enterprise_color">?attr/text_ll_color_nor</item>
         <item name="mine_my_info_card_bg">@drawable/ic_mine_card_my_info_bg_blue</item>
-        <item name="mine_my_info_menu_tint_color">@android:color/white</item>
+        <item name="mine_my_info_menu_tint_color">?attr/text_ll_color_nor</item>
         <item name="mine_my_info_switch_enterprise">@drawable/basemodule_drop_down_white</item>
         <item name="schedule_tab_text_color_normal">@color/schedule_tab_text_normal_blue</item>
-        <item name="schedule_tab_text_color_select">@android:color/white</item>
+        <item name="schedule_tab_text_color_select">?attr/text_ll_color_nor</item>
+    </style>
+
+    <style name="AppTheme_3"  parent="AppTheme">
+        <item name="android:imageButtonStyle">@style/CusImageButton</item>
+        <item name="header_bg_color">@color/header_bg_dark</item>
+        <item name="header_bg">@drawable/shape_header_bg_dark</item>
+        <item name="footer_bg">@drawable/footer_bg_dark</item>
+        <item name="footer_bg_color">@color/footer_bg_dark</item>
+        <item name="header_text_color">@color/header_text</item>
+        <item name="content_bg">@color/content_bg_dark</item>
+        <item name="content_bg_level_two">@color/content_bg_dark_level_two</item>
+        <item name="color_bg_common">@color/color_bg_common_dark</item>
+        <item name="text_ll_color_nor">@color/button_color_nor_dark</item>
+        <item name="text_ll_color_sel">@color/button_color_sel_dark</item>
+        <item name="text_color">@color/text_color_dark</item>
+        <item name="bubble_bg_color">@color/bubble_bg_color_dark</item>
+        <item name="color_list_divider">@color/color_list_divider_dark</item>
+        <item name="color_list_divider_tran">@color/color_list_divider_tran_dark</item>
+        <item name="selector_list">@drawable/selector_list_dark</item>
+        <item name="selector_list_top">@drawable/selector_set_top_msg_list_dark</item>
+
+
+        <item name="header_text_blue_white_color">@color/header_text</item>
+        <item name="footer_tab_text_color">@color/seclector_footer_text_blue</item>
+        <item name="footer_tab_text_color_nor">@color/footer_tab_text_nor_blue</item>
+        <item name="footer_tab_text_color_select">@color/footer_tab_text_sel_blue</item>
+        <item name="bg_tab_app">@drawable/selector_tab_app_btn_grey</item>
+        <item name="bg_tab_cloud_tweet">@drawable/selector_tab_cloud_tweet_btn_grey</item>
+        <item name="bg_tab_communicate">@drawable/selector_tab_message_btn_grey</item>
+        <item name="bg_tab_contact">@drawable/selector_tab_contact_btn_grey</item>
+        <item name="bg_tab_find">@drawable/selector_tab_find_btn_grey</item>
+        <item name="bg_tab_mine">@drawable/selector_tab_more_btn_grey</item>
+        <item name="bg_tab_unknown">@drawable/selector_tab_unknown_btn_grey</item>
+        <item name="bg_tab_work">@drawable/selector_tab_work_btn_grey</item>
+        <item name="ic_message_header_contact">@drawable/ic_message_header_contact_blue</item>
+        <item name="ic_add">@drawable/ic_add_blue</item>
+        <item name="ic_config">@drawable/ic_config_blue</item>
+        <item name="ic_appcenter_enter">@drawable/ic_appcenter_enter_blue</item>
+        <item name="ic_appcenter_config">@drawable/ic_appcenter_config_blue</item>
+        <item name="ic_header_option">@drawable/ic_header_option_blue</item>
+        <item name="status_bar_dark_font">false</item>
+        <item name="ic_back_btn">@drawable/ic_back_btn_blue</item>
+        <item name="ic_appcenter_search">@drawable/ic_appcenter_search_blue</item>
+        <item name="plugin_ic_header_title_drop_down">@drawable/plugin_ic_header_title_drop_down_blue</item>
+        <item name="plugin_ic_header_title_drop_up">@drawable/plugin_ic_header_title_drop_up_blue</item>
+        <item name="mine_my_info_card_name_color">?attr/text_ll_color_nor</item>
+        <item name="mine_my_info_card_enterprise_color">?attr/text_ll_color_nor</item>
+        <item name="mine_my_info_card_bg">@drawable/ic_mine_card_my_info_bg_blue</item>
+        <item name="mine_my_info_menu_tint_color">?attr/text_ll_color_nor</item>
+        <item name="mine_my_info_switch_enterprise">@drawable/basemodule_drop_down_white</item>
+        <item name="schedule_tab_text_color_normal">@color/schedule_tab_text_normal_blue</item>
+        <item name="schedule_tab_text_color_select">@color/white</item>
     </style>
 
 
@@ -192,6 +284,16 @@
 
     <!-- Application theme. -->
     <style name="AppTheme_Transparent_2" parent="AppTheme_2">
+        <!--不设置activity进入和退出动画样式-->
+        <item name="android:windowAnimationStyle">@null</item>
+        <!--设置窗口的背景为透明，设置透明背景必须要设置此项-->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!--&lt;!&ndash;设置窗口的背景是否为半透明，设置透明背景必须要设置此项&ndash;&gt;-->
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+    <!-- Application theme. -->
+    <style name="AppTheme_Transparent_3" parent="AppTheme_3">
         <!--不设置activity进入和退出动画样式-->
         <item name="android:windowAnimationStyle">@null</item>
         <!--设置窗口的背景为透明，设置透明背景必须要设置此项-->
@@ -291,7 +393,6 @@
         <item name="android:button">@drawable/checkbox_style</item>
     </style>
 
-
     <style name="dialog_activity" parent="@android:style/Theme.Dialog">
         <item name="android:windowFrame">@null</item>
         <!-- 边框 -->
@@ -384,8 +485,10 @@
         <item name="android:textColorPrimary">#333333</item>
     </style>
 
-    <style name="cus_dialog_style" parent="Theme.AppCompat.Light">
+    <style name="cus_dialog_style" parent="Theme.AppCompat.DayNight">
         <item name="colorAccent">#36A5F6</item>
+        <item name="android:background">#ECEEF2</item>
+        <item name="android:textColor">?attr/text_color</item>
         <item name="android:textSize">16dp</item>
     </style>
 
@@ -416,7 +519,7 @@
     <style name="divide_style">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1px</item>
-        <item name="android:background">@color/color_divider</item>
+        <item name="android:background">?attr/color_list_divider</item>
     </style>
 
     <style name="XYLinkTabLayoutTextStyle">

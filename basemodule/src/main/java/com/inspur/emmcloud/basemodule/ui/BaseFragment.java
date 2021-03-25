@@ -24,7 +24,8 @@ public class BaseFragment extends Fragment {
     }
 
     protected void setFragmentStatusBarWhite() {
-        ImmersionBar.with(getActivity()).statusBarColor(R.color.white).navigationBarColor(R.color.white).statusBarDarkFont(true, 0.2f).navigationBarDarkIcon(true, 1.0f).init();
+        int color = ResourceUtils.getResValueOfAttr(getActivity(), R.attr.text_ll_color_nor);
+        ImmersionBar.with(getActivity()).statusBarColor(color).navigationBarColor(color).statusBarDarkFont(true, 0.2f).navigationBarDarkIcon(true, 1.0f).init();
     }
 
     @Override

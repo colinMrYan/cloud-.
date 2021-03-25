@@ -7,7 +7,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/color_bg_content_grey"
+        android:background="?attr/content_bg_level_two"
         android:orientation="vertical">
 
         <View style="@style/divide_style" />
@@ -15,7 +15,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/color_bg_content_white"
+            android:background="?attr/text_ll_color_nor"
             android:paddingTop="7dp"
             android:paddingBottom="5dp">
 
@@ -112,7 +112,7 @@
             android:id="@+id/add_menu_layout"
             android:layout_width="match_parent"
             android:layout_height="274dp"
-            android:background="@color/color_bg_content_grey"
+            android:background="?attr/content_bg_level_two"
             android:paddingLeft="20dp"
             android:paddingTop="25dp"
             android:paddingRight="20dp"
@@ -130,7 +130,7 @@
         android:id="@+id/voice_input_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/color_bg_common"
+        android:background="?attr/color_bg_common"
         android:paddingTop="60dp"
         android:paddingBottom="20dp"
         android:visibility="gone">
@@ -144,7 +144,7 @@
             app:maxProgress="10"
             app:progress="10"
             app:waterWaveBgColor="#28A0DF"
-            app:waterWaveColor="#ffffff" />
+            app:waterWaveColor="?attr/text_ll_color_nor" />
 
         <ImageView
             android:id="@+id/voice_level_img"

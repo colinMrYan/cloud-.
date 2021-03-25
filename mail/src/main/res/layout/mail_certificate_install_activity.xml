@@ -72,7 +72,7 @@
                     android:layout_height="wrap_content"
                     android:paddingTop="10dp"
                     android:text="安装指南"
-                    android:textColor="@color/color_text_common_level_one"
+                    android:textColor="?attr/text_color"
                     android:textSize="14sp" />
 
                 <TextView
@@ -112,7 +112,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="已安装证书"
-                    android:textColor="@color/color_text_common_level_one"
+                    android:textColor="?attr/text_color"
                     android:textSize="14sp" />
 
                 <RelativeLayout
@@ -236,7 +236,7 @@
                                 android:id="@+id/v_topline1"
                                 android:layout_width="match_parent"
                                 android:layout_height="1dp"
-                                android:background="@color/color_divider"></View>
+                                android:background="?attr/color_list_divider"></View>
 
                             <TextView
                                 android:id="@+id/tv_encryption_title"
@@ -245,7 +245,7 @@
                                 android:layout_marginTop="12dp"
                                 android:layout_marginBottom="12dp"
                                 android:text="加密发送邮件的内容和附件"
-                                android:textColor="@color/color_text_common_level_one"
+                                android:textColor="?attr/text_color"
                                 android:textSize="14sp" />
 
                             <android.support.v7.widget.SwitchCompat
@@ -268,7 +268,7 @@
                                 android:id="@+id/v_topline2"
                                 android:layout_width="match_parent"
                                 android:layout_height="1dp"
-                                android:background="@color/color_divider"></View>
+                                android:background="?attr/color_list_divider"></View>
 
                             <TextView
                                 android:id="@+id/tv_signature_title"
@@ -277,7 +277,7 @@
                                 android:layout_marginTop="12dp"
                                 android:layout_marginBottom="12dp"
                                 android:text="加签发送邮件的内容和附件"
-                                android:textColor="@color/color_text_common_level_one"
+                                android:textColor="?attr/text_color"
                                 android:textSize="14sp" />
 
                             <android.support.v7.widget.SwitchCompat

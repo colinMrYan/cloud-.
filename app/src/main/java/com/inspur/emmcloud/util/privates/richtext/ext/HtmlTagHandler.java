@@ -6,6 +6,9 @@ import android.text.Html;
 import android.text.Spanned;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.zzhoujay.markdown.style.CodeSpan;
 import com.zzhoujay.markdown.style.MarkDownBulletSpan;
 
@@ -21,7 +24,7 @@ import java.util.Stack;
 public class HtmlTagHandler implements Html.TagHandler {
 
     private static final int code_color = Color.parseColor("#F0F0F0");
-    private static final int h1_color = Color.parseColor("#333333");
+    private static final int h1_color = ResourceUtils.getResValueOfAttr(BaseApplication.getInstance(), R.attr.text_color);
 
 
     private Stack<Integer> stack;

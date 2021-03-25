@@ -39,7 +39,7 @@
                 android:ellipsize="end"
                 android:lineSpacingMultiplier="1.2"
                 android:maxLines="2"
-                android:textColor="@color/color_text_common_level_one"
+                android:textColor="?attr/text_color"
                 android:textSize="15sp"
                 android:textStyle="bold" />
 
@@ -50,7 +50,7 @@
                 android:layout_below="@+id/tv_name_tips"
                 android:gravity="center_vertical"
                 android:lineSpacingMultiplier="1.2"
-                android:textColor="@color/color_text_common_level_one"
+                android:textColor="?attr/text_color"
                 android:textSize="15sp" />
         </RelativeLayout>
 
@@ -59,7 +59,7 @@
             android:layout_height="1px"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:background="@color/color_divider" />
+            android:background="?attr/color_list_divider" />
 
         <com.inspur.emmcloud.baselib.widget.NoScrollGridView
             android:id="@+id/gv_options_grid"

@@ -34,7 +34,7 @@
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="1px"
-                android:background="@color/color_divider" />
+                android:background="?attr/color_list_divider" />
 
             <EditText
                 android:id="@+id/news_instrcution_text"
@@ -53,7 +53,7 @@
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="1px"
-                android:background="@color/color_divider" />
+                android:background="?attr/color_list_divider" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -78,7 +78,7 @@
                     android:layout_width="1px"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
-                    android:background="@color/color_divider" />
+                    android:background="?attr/color_list_divider" />
 
                 <Button
                     android:id="@+id/ok_btn"

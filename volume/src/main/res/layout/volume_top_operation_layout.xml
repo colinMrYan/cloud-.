@@ -3,7 +3,7 @@
     android:id="@+id/ll_root_bottom_operation_pop"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#ffffff"
+    android:background="?attr/text_ll_color_nor"
     android:orientation="horizontal"
     android:paddingTop="8dp"
     android:paddingBottom="10dp">

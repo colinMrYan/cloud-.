@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_bg_content_white"
+    android:background="?attr/text_ll_color_nor"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:ignore="RtlHardcoded,HardcodedText,RtlSymmetry,SmallSp">
@@ -39,7 +39,7 @@
                 android:id="@+id/lv_task"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:divider="@color/color_divider"
+                android:divider="?attr/color_list_divider"
                 android:dividerHeight="0.5px" />
         </com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout>
 

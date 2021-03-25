@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#ffffff"
+    android:background="?attr/text_ll_color_nor"
     android:orientation="vertical">
 
     <LinearLayout
@@ -45,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:textColor="#333333"
+                android:textColor="?attr/text_color"
                 android:textSize="16sp" />
 
             <TextView
@@ -75,7 +75,7 @@
         android:layout_width="match_parent"
         android:layout_height="0.5px"
         android:layout_marginLeft="61dp"
-        android:background="@color/color_list_divider" />
+        android:background="?attr/color_list_divider" />
 </LinearLayout>
 
 

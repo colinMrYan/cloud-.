@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/content_bg"
+    android:background="?attr/content_bg"
     android:fitsSystemWindows="true">
 
     <RelativeLayout
@@ -36,7 +36,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/rl_header"
-        android:background="@color/content_bg">
+        android:background="?attr/content_bg">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -58,7 +58,7 @@
                 android:layout_below="@id/lv_enterprise"
                 android:layout_marginBottom="30dp"
                 android:layout_marginTop="10dp"
-                android:background="@color/white"
+                android:background="?attr/text_ll_color_nor"
                 android:onClick="onClick"
                 android:paddingLeft="16dp"
                 android:visibility="gone">
@@ -72,7 +72,7 @@
                     android:paddingBottom="11dp"
                     android:paddingTop="11dp"
                     android:text="@string/setting_close_auto_select_enterprise"
-                    android:textColor="#333333"
+                    android:textColor="?attr/text_color"
                     android:textSize="16sp" />
 
                 <ImageView

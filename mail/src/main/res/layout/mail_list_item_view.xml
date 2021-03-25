@@ -38,7 +38,7 @@
             android:layout_toRightOf="@id/v_unread"
             android:ellipsize="end"
             android:singleLine="true"
-            android:textColor="@color/color_text_common_level_one"
+            android:textColor="?attr/text_color"
             android:textSize="15sp" />
 
         <RelativeLayout
@@ -84,7 +84,7 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="15dp"
             android:gravity="right"
-            android:textColor="@color/color_text_common_level_one"
+            android:textColor="?attr/text_color"
             android:textSize="13sp" />
 
         <TextView
@@ -105,5 +105,5 @@
         android:layout_height="0.5px"
         android:layout_below="@id/rl_bottom"
         android:layout_marginLeft="15dp"
-        android:background="@color/color_divider"></View>
+        android:background="?attr/color_list_divider"></View>
 </RelativeLayout>

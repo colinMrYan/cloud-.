@@ -38,7 +38,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/rl_header"
-        android:background="@color/color_bg_content_white">
+        android:background="?attr/text_ll_color_nor">
 
         <TextView
             android:id="@+id/tv_order_by_name_asc"
@@ -76,7 +76,7 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/rl_bottom_all_action"
         android:layout_below="@id/rl_order_by"
-        android:background="#FFECEFF3">
+        android:background="?attr/content_bg">
 
         <ListView
             android:id="@+id/lv_file"
@@ -92,7 +92,7 @@
         android:layout_height="match_parent"
         android:layout_below="@id/rl_order_by"
         android:layout_centerInParent="true"
-        android:background="@android:color/transparent"
+        android:background="?attr/content_bg"
         android:gravity="center"
         android:visibility="gone">
 
@@ -121,13 +121,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/color_bg_content_white">
+        android:background="?attr/text_ll_color_nor">
 
         <com.inspur.emmcloud.baselib.widget.FileActionLayout
             android:id="@+id/ll_file_action"
             android:layout_width="match_parent"
             android:layout_height="58dp"
-            android:background="@color/color_bg_content_white"
+            android:background="?attr/text_ll_color_nor"
             android:paddingTop="8dp"
             android:paddingBottom="10dp"
             android:visibility="gone" />

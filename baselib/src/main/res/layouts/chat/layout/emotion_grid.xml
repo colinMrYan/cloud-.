@@ -5,7 +5,7 @@
     android:id="@+id/emotion_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/color_bg_content_grey"
+    android:background="?attr/content_bg_level_two"
     android:visibility="gone"
     tools:ignore="MissingDefaultResource">
 

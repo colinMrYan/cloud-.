@@ -20,6 +20,8 @@ import android.widget.RelativeLayout;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
@@ -89,7 +91,7 @@ public class ECMChatInputMenuImgCommentV0 extends LinearLayout {
                 boolean isContentBlank = (s.length() == 0);
                 sendMsgBtn.setEnabled(!isContentBlank);
 //                sendMsgBtn.setBackgroundResource(isContentBlank ? R.drawable.bg_chat_input_send_btn_disable : R.drawable.bg_chat_input_send_btn_enable);
-                sendMsgBtn.setTextColor(isContentBlank ? Color.parseColor("#999999") : Color.parseColor("#333333"));
+                sendMsgBtn.setTextColor(isContentBlank ? Color.parseColor("#999999") : ResourceUtils.getResValueOfAttr(BaseApplication.getInstance(), R.attr.text_color));
                 if (canMentions && count == 1) {
                     String inputWord = s.toString().substring(start, start + count);
                     if (inputWord.equals("@")) {

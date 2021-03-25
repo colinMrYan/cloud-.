@@ -25,8 +25,8 @@ import butterknife.ButterKnife;
  * Created by chenmch on 2019/2/26.
  */
 public class ThemeSwitchActivity extends BaseActivity {
-    private static final int[] THEME_FLAG = {R.drawable.ic_mine_theme_white, R.drawable.ic_mine_theme_grey, R.drawable.ic_mine_theme_blue};
-    private static final int[] THEME_NAME = {R.string.setting_mine_theme_white, R.string.setting_mine_theme_grey, R.string.setting_mine_theme_blue};
+    private static final int[] THEME_FLAG = {R.drawable.ic_mine_theme_white, R.drawable.ic_mine_theme_grey, R.drawable.ic_mine_theme_blue, R.drawable.ic_mine_theme_dark};
+    private static final int[] THEME_NAME = {R.string.setting_mine_theme_white, R.string.setting_mine_theme_grey, R.string.setting_mine_theme_blue, R.string.setting_mine_theme_dark};
     @BindView(R2.id.tv_header)
     TextView headerText;
     @BindView(R2.id.lv)

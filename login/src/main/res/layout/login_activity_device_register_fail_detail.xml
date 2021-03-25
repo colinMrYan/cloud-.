@@ -36,7 +36,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_below="@id/rl_header"
-        android:background="@color/content_bg"
+        android:background="?attr/content_bg"
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
@@ -92,7 +92,7 @@
                 android:background="#4990E2"
                 android:onClick="onClick"
                 android:text="@string/login_registe_again"
-                android:textColor="#ffffff"
+                android:textColor="?attr/text_ll_color_nor"
                 android:textSize="18sp" />
         </LinearLayout>
     </LinearLayout>

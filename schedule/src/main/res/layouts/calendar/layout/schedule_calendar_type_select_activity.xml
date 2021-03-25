@@ -37,22 +37,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/rl_header"
-        android:background="@color/color_bg_common"
+        android:background="?attr/color_bg_common"
         android:orientation="vertical">
 
         <ListView
             android:id="@+id/lv_calendars"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/color_bg_content_white"
-            android:divider="@color/color_divider"
+            android:background="?attr/text_ll_color_nor"
+            android:divider="?attr/color_list_divider"
             android:dividerHeight="0.5px"
             android:paddingLeft="14dp"></ListView>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5px"
-            android:background="@color/color_divider"></View>
+            android:background="?attr/color_list_divider"></View>
     </LinearLayout>
 
 </RelativeLayout>

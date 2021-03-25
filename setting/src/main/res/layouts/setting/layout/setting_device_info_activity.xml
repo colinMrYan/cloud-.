@@ -35,7 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/rl_header"
-        android:background="@color/content_bg">
+        android:background="?attr/content_bg">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -46,20 +46,20 @@
                 android:id="@+id/device_model_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
+                android:background="?attr/text_ll_color_nor"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:paddingBottom="10dp"
                 android:paddingLeft="16dp"
                 android:paddingTop="10dp"
-                android:textColor="#333333"
+                android:textColor="?attr/text_color"
                 android:textSize="17sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:background="@color/white"
+                android:background="?attr/text_ll_color_nor"
                 android:orientation="vertical"
                 android:paddingLeft="16dp">
 
@@ -78,7 +78,7 @@
                         android:paddingRight="10dp"
                         android:paddingTop="10dp"
                         android:text="@string/setting_last_use_time"
-                        android:textColor="#333333"
+                        android:textColor="?attr/text_color"
                         android:textSize="17sp" />
 
                     <TextView
@@ -100,7 +100,7 @@
                 <View
                     android:layout_width="fill_parent"
                     android:layout_height="0.5px"
-                    android:background="@color/color_list_divider" />
+                    android:background="?attr/color_list_divider" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -116,7 +116,7 @@
                         android:paddingRight="10dp"
                         android:paddingTop="10dp"
                         android:text="@string/setting_device_id"
-                        android:textColor="#333333"
+                        android:textColor="?attr/text_color"
                         android:textSize="17sp" />
 
                     <TextView
@@ -145,7 +145,7 @@
                 android:paddingLeft="16dp"
                 android:paddingTop="10dp"
                 android:text="@string/setting_device_history_use"
-                android:textColor="#333333"
+                android:textColor="?attr/text_color"
                 android:textSize="15sp"
                 android:visibility="gone" />
 
@@ -153,8 +153,8 @@
                 android:id="@+id/device_log_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:divider="@color/color_list_divider"
+                android:background="?attr/text_ll_color_nor"
+                android:divider="?attr/color_list_divider"
                 android:dividerHeight="0.5dp"
                 android:listSelector="@color/transparent"
                 android:paddingLeft="20dp"></com.inspur.emmcloud.baselib.widget.ScrollViewWithListView>
@@ -164,7 +164,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:background="@color/white"
+                android:background="?attr/text_ll_color_nor"
                 android:gravity="center"
                 android:onClick="onClick"
                 android:paddingBottom="11dp"

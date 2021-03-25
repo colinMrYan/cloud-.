@@ -19,7 +19,7 @@
             android:id="@+id/unread_detail_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#333333"
+            android:textColor="?attr/text_color"
             android:textSize="16sp"
             android:layout_marginStart="16dp"
             android:layout_gravity="center_vertical"/>

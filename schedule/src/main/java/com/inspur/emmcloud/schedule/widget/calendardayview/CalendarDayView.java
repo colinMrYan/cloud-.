@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.ResolutionUtils;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButtonDrawable;
@@ -503,8 +504,8 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
             public void onDismiss() {
                 eventImg.setImageResource(event.getEventIconResId(false));
                 view.setBackground(drawableNormal);
-                eventTitleText.setTextColor(Color.parseColor("#333333"));
-                eventSubtitleText.setTextColor(Color.parseColor("#333333"));
+                eventTitleText.setTextColor(ResourceUtils.getResValueOfAttr(getContext(), com.inspur.baselib.R.attr.text_color));
+                eventSubtitleText.setTextColor(ResourceUtils.getResValueOfAttr(getContext(), com.inspur.baselib.R.attr.text_color));
             }
         });
         int mDeviceHeight = ResolutionUtils.getHeight(getContext());

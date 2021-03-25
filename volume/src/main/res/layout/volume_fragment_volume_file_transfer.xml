@@ -54,7 +54,7 @@
                         android:id="@+id/operation_total_layout"
                         android:layout_width="match_parent"
                         android:layout_height="44dp"
-                        android:background="@color/color_bg_common"
+                        android:background="?attr/color_bg_common"
                         android:focusable="true"
                         android:focusableInTouchMode="true"
                         android:visibility="gone">
@@ -90,7 +90,7 @@
                         android:id="@+id/volume_file_transfer_recycler"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/color_bg_common"
+                        android:background="?attr/color_bg_common"
                         android:scrollbars="none" />
                 </LinearLayout>
 
@@ -114,7 +114,7 @@
                         android:id="@+id/volume_file_transfer_finish_recycler"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/color_bg_common"
+                        android:background="?attr/color_bg_common"
                         android:scrollbars="none" />
                 </LinearLayout>
 
@@ -175,13 +175,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/color_bg_content_white">
+        android:background="?attr/text_ll_color_nor">
 
         <com.inspur.emmcloud.baselib.widget.FileActionLayout
             android:id="@+id/ll_volume_action"
             android:layout_width="match_parent"
             android:layout_height="58dp"
-            android:background="@color/color_bg_content_white"
+            android:background="?attr/text_ll_color_nor"
             android:paddingTop="8dp"
             android:paddingBottom="10dp"
             android:visibility="gone" />

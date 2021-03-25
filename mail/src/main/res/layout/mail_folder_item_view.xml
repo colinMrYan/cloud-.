@@ -33,5 +33,5 @@
         android:layout_width="match_parent"
         android:layout_height="0.5px"
         android:layout_below="@id/iv_folder_icon"
-        android:background="@color/color_bg_common"></View>
+        android:background="?attr/color_bg_common"></View>
 </RelativeLayout>

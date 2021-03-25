@@ -17,5 +17,5 @@
     <!--android:color="#0000FF" />-->
 
     <!-- 背景色 -->
-    <solid android:color="#ffffff"></solid>
+    <solid android:color="?attr/text_ll_color_nor"></solid>
 </shape>

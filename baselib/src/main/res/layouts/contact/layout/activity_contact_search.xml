@@ -58,13 +58,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/rl_header"
-        android:background="@color/content_bg">
+        android:background="?attr/content_bg">
 
         <com.inspur.emmcloud.baselib.widget.MaxHeightScrollView
             android:id="@+id/search_edit_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white">
+            android:background="?attr/text_ll_color_nor">
 
             <RelativeLayout
                 android:id="@+id/layout"
@@ -90,7 +90,7 @@
             android:layout_width="match_parent"
             android:layout_height="1px"
             android:layout_below="@id/search_edit_layout"
-            android:background="@color/color_list_divider" />
+            android:background="?attr/color_list_divider" />
 
         <RelativeLayout
             android:id="@+id/origin_all_layout"
@@ -102,7 +102,7 @@
                 android:id="@+id/open_group_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/white"
+                android:background="?attr/text_ll_color_nor"
                 android:orientation="vertical"
                 android:visibility="gone">
 
@@ -121,7 +121,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1px"
-                    android:background="@color/color_list_divider" />
+                    android:background="?attr/color_list_divider" />
 
                 <RelativeLayout
                     android:id="@+id/rl_select_all"
@@ -154,7 +154,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1.0"
-                    android:divider="#ffffff"
+                    android:divider="?attr/text_ll_color_nor"
                     android:dividerHeight="1px"
                     android:listSelector="#00000000" />
             </LinearLayout>
@@ -170,14 +170,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="6dp"
-                    android:background="@color/white"
+                    android:background="?attr/text_ll_color_nor"
                     android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/title_all_text"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
-                        android:background="@color/white"
+                        android:background="?attr/text_ll_color_nor"
                         android:gravity="center_vertical"
                         android:paddingLeft="15dp"
                         android:paddingRight="10dp"
@@ -188,13 +188,13 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1px"
-                        android:background="@color/color_list_divider" />
+                        android:background="?attr/color_list_divider" />
 
                     <RelativeLayout
                         android:id="@+id/struct_layout"
                         android:layout_width="match_parent"
                         android:layout_height="62dp"
-                        android:background="@color/white">
+                        android:background="?attr/text_ll_color_nor">
 
                         <com.inspur.emmcloud.baselib.widget.CircleTextImageView
                             android:id="@+id/struct_img"
@@ -213,7 +213,7 @@
                             android:layout_toRightOf="@id/struct_img"
                             android:gravity="center_vertical"
                             android:text="@string/origanization_struct"
-                            android:textColor="#333333"
+                            android:textColor="?attr/text_color"
                             android:textSize="16sp" />
                     </RelativeLayout>
 
@@ -221,13 +221,13 @@
                         android:id="@+id/channel_group_layout"
                         android:layout_width="match_parent"
                         android:layout_height="62dp"
-                        android:background="@color/white">
+                        android:background="?attr/text_ll_color_nor">
 
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="1px"
                             android:layout_marginLeft="55dp"
-                            android:background="@color/color_list_divider" />
+                            android:background="?attr/color_list_divider" />
 
                         <com.inspur.emmcloud.baselib.widget.CircleTextImageView
                             android:id="@+id/channel_group_img"
@@ -245,7 +245,7 @@
                             android:layout_toRightOf="@id/channel_group_img"
                             android:gravity="center_vertical"
                             android:text="@string/channel_group"
-                            android:textColor="#030303"
+                            android:textColor="?attr/text_color"
                             android:textSize="@dimen/content_title_textsize" />
                     </RelativeLayout>
 
@@ -253,7 +253,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="1px"
                         android:layout_marginLeft="55dp"
-                        android:background="@color/color_list_divider" />
+                        android:background="?attr/color_list_divider" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -261,14 +261,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1.0"
-                    android:background="@color/white"
+                    android:background="?attr/text_ll_color_nor"
                     android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/second_title_text"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
-                        android:background="#ffffff"
+                        android:background="?attr/text_ll_color_nor"
                         android:gravity="center_vertical"
                         android:paddingLeft="15dp"
                         android:textColor="#666666"
@@ -277,13 +277,13 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1px"
-                        android:background="@color/color_list_divider" />
+                        android:background="?attr/color_list_divider" />
                     <ListView
                         android:id="@+id/second_group_list"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"
-                        android:divider="#ffffff"
+                        android:divider="?attr/text_ll_color_nor"
                         android:dividerHeight="1px"
                         android:listSelector="#00000000" />
                 </LinearLayout>
@@ -308,13 +308,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
-                    android:background="@color/white"
+                    android:background="?attr/text_ll_color_nor"
                     android:orientation="vertical">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
-                        android:background="#ffffff">
+                        android:background="?attr/text_ll_color_nor">
 
                         <android.support.v7.widget.RecyclerView
                             android:id="@+id/pop_third_title_list"
@@ -341,7 +341,7 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1px"
-                        android:background="@color/color_list_divider" />
+                        android:background="?attr/color_list_divider" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -351,7 +351,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="40dp"
                             android:layout_centerVertical="true"
-                            android:background="#ffffff"
+                            android:background="?attr/text_ll_color_nor"
                             android:gravity="center"
                             android:text="@string/no_search_term"
                             android:textColor="#030303"
@@ -361,7 +361,7 @@
                             android:id="@+id/pop_third_group_list"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:divider="#ffffff"
+                            android:divider="?attr/text_ll_color_nor"
                             android:dividerHeight="1px"
                             android:listSelector="#00000000" />
                     </RelativeLayout>
@@ -371,13 +371,13 @@
                     android:id="@+id/pop_second_group_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/white"
+                    android:background="?attr/text_ll_color_nor"
                     android:orientation="vertical">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
-                        android:background="#ffffff">
+                        android:background="?attr/text_ll_color_nor">
 
                         <android.support.v7.widget.RecyclerView
                             android:id="@+id/pop_second_title_list"
@@ -404,7 +404,7 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1px"
-                        android:background="@color/color_list_divider" />
+                        android:background="?attr/color_list_divider" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -414,7 +414,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="40dp"
                             android:layout_centerVertical="true"
-                            android:background="#ffffff"
+                            android:background="?attr/text_ll_color_nor"
                             android:gravity="center"
                             android:text="@string/no_search_term"
                             android:textColor="#030303"
@@ -424,7 +424,7 @@
                             android:id="@+id/pop_second_group_list"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:divider="#ffffff"
+                            android:divider="?attr/text_ll_color_nor"
                             android:dividerHeight="1px"
                             android:listSelector="#00000000" />
                     </RelativeLayout>

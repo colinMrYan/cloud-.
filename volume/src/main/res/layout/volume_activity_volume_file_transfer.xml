@@ -67,13 +67,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:background="@color/color_bg_content_white"
+        android:background="?attr/text_ll_color_nor"
         app:tabBackground="@color/transparent"
         app:tabGravity="fill"
         app:tabMode="scrollable"
         app:tabSelectedTextColor="@color/color_text_link"
         app:tabTextAppearance="@style/VolumeTransferTabLayoutTextStyle"
-        app:tabTextColor="@color/color_text_common_level_one" />
+        app:tabTextColor="?attr/text_color" />
 
     <View style="@style/divide_style" />
 
@@ -82,7 +82,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@color/color_bg_common"
+        android:background="?attr/color_bg_common"
         android:overScrollMode="never" />
 
 </LinearLayout>

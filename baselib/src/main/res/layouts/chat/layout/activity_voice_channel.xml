@@ -3,7 +3,7 @@
     android:id="@+id/rl_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_bg_common"
+    android:background="?attr/color_bg_common"
     android:fitsSystemWindows="true">
 
     <RelativeLayout
@@ -50,7 +50,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="21dp"
                 android:gravity="center_horizontal"
-                android:textColor="@color/color_text_common_level_one"
+                android:textColor="?attr/text_color"
                 android:textSize="20sp" />
 
             <TextView
@@ -60,7 +60,7 @@
                 android:layout_marginTop="6dp"
                 android:gravity="center_horizontal"
                 android:text="@string/voice_communication_invite_you"
-                android:textColor="@color/color_text_common_level_one"
+                android:textColor="?attr/text_color"
                 android:textSize="13sp" />
         </LinearLayout>
 
@@ -102,7 +102,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:text="@string/voice_communication_members"
-                android:textColor="@color/color_text_common_level_one"
+                android:textColor="?attr/text_color"
                 android:textSize="13dp" />
 
             <android.support.v7.widget.RecyclerView
@@ -129,7 +129,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="136dp"
             android:text=""
-            android:textColor="@color/color_text_common_level_one"
+            android:textColor="?attr/text_color"
             android:textSize="16sp" />
 
         <Chronometer
@@ -140,7 +140,7 @@
             android:layout_centerHorizontal="true"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="136dp"
-            android:textColor="@color/color_text_common_level_one"
+            android:textColor="?attr/text_color"
             android:textSize="16sp"
             android:visibility="gone" />
 
@@ -176,7 +176,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="13dp"
                     android:text="@string/voice_communication_mute"
-                    android:textColor="@color/color_text_common_level_one"
+                    android:textColor="?attr/text_color"
                     android:textSize="13sp" />
             </LinearLayout>
 
@@ -204,7 +204,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="13dp"
                     android:text="@string/voice_communication_excuse"
-                    android:textColor="@color/color_text_common_level_one"
+                    android:textColor="?attr/text_color"
                     android:textSize="13sp" />
             </LinearLayout>
 
@@ -231,7 +231,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="13dp"
                     android:text="@string/voice_communication_hands_free"
-                    android:textColor="@color/color_text_common_level_one"
+                    android:textColor="?attr/text_color"
                     android:textSize="13sp" />
             </LinearLayout>
 
@@ -260,7 +260,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="13dp"
                     android:text="@string/voice_communication_tran_video"
-                    android:textColor="@color/color_text_common_level_one"
+                    android:textColor="?attr/text_color"
                     android:textSize="13sp" />
             </LinearLayout>
         </LinearLayout>
@@ -326,7 +326,7 @@
                     android:clickable="false"
                     android:gravity="center_horizontal"
                     android:text="@string/voice_communication_mute"
-                    android:textColor="@color/color_text_common_level_one"
+                    android:textColor="?attr/text_color"
                     android:textSize="13sp" />
             </LinearLayout>
 
@@ -354,7 +354,7 @@
                     android:layout_marginTop="13dp"
                     android:gravity="center_horizontal"
                     android:text="@string/voice_communication_hung_up_direct"
-                    android:textColor="@color/color_text_common_level_one"
+                    android:textColor="?attr/text_color"
                     android:textSize="13sp" />
             </LinearLayout>
 
@@ -382,7 +382,7 @@
                     android:layout_marginTop="13dp"
                     android:gravity="center_horizontal"
                     android:text="@string/voice_communication_answer_phone_direct"
-                    android:textColor="@color/color_text_common_level_one"
+                    android:textColor="?attr/text_color"
                     android:textSize="13sp" />
             </LinearLayout>
 
@@ -412,7 +412,7 @@
                     android:clickable="false"
                     android:gravity="center_horizontal"
                     android:text="@string/voice_communication_hands_free"
-                    android:textColor="@color/color_text_common_level_one"
+                    android:textColor="?attr/text_color"
                     android:textSize="13sp" />
             </LinearLayout>
         </LinearLayout>

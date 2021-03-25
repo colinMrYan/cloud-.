@@ -56,7 +56,7 @@
         android:layout_marginTop="10dp"
         android:includeFontPadding="false"
         android:text="@string/web_put_qrcode_in_frame"
-        android:textColor="#ffffff"
+        android:textColor="?attr/text_ll_color_nor"
         android:textSize="14sp" />
 
     <TextView
@@ -67,7 +67,7 @@
         android:layout_marginTop="10dp"
         android:includeFontPadding="false"
         android:text="@string/web_can_auto_scan"
-        android:textColor="#ffffff"
+        android:textColor="?attr/text_ll_color_nor"
         android:textSize="14sp" />
 
     <RelativeLayout
@@ -94,6 +94,6 @@
             android:layout_below="@id/bt_torch"
             android:layout_centerHorizontal="true"
             android:text="@string/turn_on_light"
-            android:textColor="@color/white" />
+            android:textColor="?attr/text_ll_color_nor" />
     </RelativeLayout>
 </merge>

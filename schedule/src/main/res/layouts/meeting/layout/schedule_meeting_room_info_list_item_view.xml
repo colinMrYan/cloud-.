@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="10dp"
-    app:cardBackgroundColor="@android:color/white"
+    app:cardBackgroundColor="?attr/text_ll_color_nor"
     app:cardCornerRadius="8dp"
     app:cardElevation="1dp"
     app:cardPreventCornerOverlap="true"
@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="15dp"
                 android:paddingTop="8dp"
-                android:textColor="@color/color_text_common_level_one"
+                android:textColor="?attr/text_color"
                 android:textSize="18sp" />
 
             <RelativeLayout
@@ -68,7 +68,7 @@
                         android:layout_toRightOf="@id/iv_point"
                         android:ellipsize="end"
                         android:singleLine="true"
-                        android:textColor="@color/color_text_common_level_one"
+                        android:textColor="?attr/text_color"
                         android:textSize="16sp" />
                 </RelativeLayout>
             </RelativeLayout>

@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:divider="@color/color_bg_content_white"
+            android:divider="?attr/text_ll_color_nor"
             android:dividerHeight="1px"
             tools:listitem="@layout/adapter_folder_list_item" />
     </FrameLayout>

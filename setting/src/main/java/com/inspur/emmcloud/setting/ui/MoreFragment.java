@@ -313,7 +313,7 @@ public class MoreFragment extends BaseFragment {
             View view = new View(getActivity());
             int height = groupPosition > 1 ? DensityUtil.dip2px(BaseApplication.getInstance(), 10) : 0;
             view.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, height));
-            view.setBackgroundColor(ContextCompat.getColor(BaseApplication.getInstance(), R.color.content_bg));
+            view.setBackgroundColor(ContextCompat.getColor(BaseApplication.getInstance(), ResourceUtils.getResValueOfAttr(getActivity(), R.attr.content_bg)));
             return view;
         }
 

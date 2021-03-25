@@ -157,7 +157,7 @@
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
                     android:layout_marginTop="12dp"
-                    android:background="@color/color_divider"></View>
+                    android:background="?attr/color_list_divider"></View>
             </RelativeLayout>
 
             <!-- 邮件抄送人-->
@@ -227,7 +227,7 @@
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
                     android:layout_marginTop="12dp"
-                    android:background="@color/color_divider"></View>
+                    android:background="?attr/color_list_divider"></View>
             </RelativeLayout>
 
             <!-- 邮件发件人-->
@@ -279,7 +279,7 @@
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
                     android:layout_marginTop="12dp"
-                    android:background="@color/color_divider"
+                    android:background="?attr/color_list_divider"
                     android:visibility="gone"></View>
             </RelativeLayout>
 
@@ -337,7 +337,7 @@
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
                     android:layout_marginTop="12dp"
-                    android:background="@color/color_divider"></View>
+                    android:background="?attr/color_list_divider"></View>
             </RelativeLayout>
 
             <!-- 邮件内容编写-->
@@ -392,7 +392,7 @@
                         android:id="@+id/v_include_topLine"
                         android:layout_width="match_parent"
                         android:layout_height="0.5sp"
-                        android:background="@color/color_divider"></View>
+                        android:background="?attr/color_list_divider"></View>
 
                     <CheckBox
                         android:id="@+id/cb_fw_body"

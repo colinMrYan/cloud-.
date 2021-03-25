@@ -56,7 +56,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/rl_header"
-        android:background="@color/content_bg"
+        android:background="?attr/content_bg"
         android:paddingBottom="10dp">
 
         <RelativeLayout
@@ -67,7 +67,7 @@
                 android:id="@+id/lv_attendees"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:divider="@color/white">
+                android:divider="?attr/text_ll_color_nor">
 
             </com.inspur.emmcloud.baselib.widget.ScrollViewWithListView>
 
@@ -82,7 +82,7 @@
                     android:id="@+id/rl"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/white"
+                    android:background="?attr/text_ll_color_nor"
                     android:paddingLeft="15dp"
                     android:paddingRight="15dp">
 
@@ -97,7 +97,7 @@
                         android:paddingBottom="5dp"
                         android:paddingTop="5dp"
                         android:text="@string/add"
-                        android:textColor="#ffffff"
+                        android:textColor="?attr/text_ll_color_nor"
                         app:cus_backgroundColor="#4A90E2"
                         app:cus_borderWidth="0dp"
                         app:cus_isRadiusAdjustBounds="true" />
@@ -119,7 +119,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="0.5px"
                         android:layout_below="@id/et_add_attendees"
-                        android:background="@color/color_list_divider"></View>
+                        android:background="?attr/color_list_divider"></View>
                 </RelativeLayout>
 
                 <TextView

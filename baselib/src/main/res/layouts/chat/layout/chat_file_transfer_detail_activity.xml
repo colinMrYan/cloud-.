@@ -67,7 +67,7 @@
         android:layout_marginTop="2dp"
         android:layout_marginRight="22dp"
         android:text="@string/chat_file_transfer_content"
-        android:textColor="@color/color_text_common_level_one"
+        android:textColor="?attr/text_color"
         android:textSize="16sp" />
 
 

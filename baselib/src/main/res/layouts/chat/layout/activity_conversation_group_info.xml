@@ -10,7 +10,7 @@
         android:id="@+id/rl_header"
         android:layout_width="match_parent"
         android:layout_height="44dp"
-        android:background="@color/color_bg_content_white">
+        >
 
         <ImageButton
             android:id="@+id/ibt_back"
@@ -21,7 +21,7 @@
             android:onClick="onClick"
             android:padding="11dp"
             android:scaleType="fitXY"
-            android:src="@drawable/ic_back_btn_white" />
+            android:src="?attr/ic_back_btn" />
 
     </RelativeLayout>
 
@@ -29,7 +29,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/rl_header"
-        android:background="@color/color_bg_common"
+        android:background="?attr/color_bg_common"
         android:gravity="center"
         android:orientation="vertical">
 
@@ -42,7 +42,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/color_bg_content_white"
+                android:background="?attr/text_ll_color_nor"
                 android:orientation="vertical">
 
                 <android.support.v7.widget.CardView
@@ -53,6 +53,8 @@
                     android:layout_marginTop="-3dp"
                     android:layout_marginRight="15dp"
                     android:layout_marginBottom="5dp"
+                    android:background="?attr/text_ll_color_nor"
+
                     app:cardCornerRadius="8dp"
                     app:cardElevation="1.5dp"
                     app:cardPreventCornerOverlap="true"
@@ -83,7 +85,7 @@
                             android:layout_marginRight="20dp"
                             android:elevation="10dp"
                             android:gravity="center"
-                            android:textColor="@color/color_text_common_level_one"
+                            android:textColor="?attr/text_color"
                             android:textSize="17sp" />
 
                         <LinearLayout
@@ -180,7 +182,7 @@
                         android:id="@+id/tv_member"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/color_text_common_level_one"
+                        android:textColor="?attr/text_color"
                         android:textSize="16sp" />
 
                     <TextView
@@ -233,7 +235,7 @@
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
                     android:text="@string/channel_group_name"
-                    android:textColor="@color/color_text_common_level_one"
+                    android:textColor="?attr/text_color"
                     android:textSize="16sp" />
 
                 <TextView
@@ -282,7 +284,7 @@
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
                     android:text="@string/chat_group_message_search"
-                    android:textColor="@color/color_text_common_level_one"
+                    android:textColor="?attr/text_color"
                     android:textSize="16sp" />
 
                 <ImageView
@@ -298,7 +300,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:background="@color/color_bg_content_white"
+                android:background="?attr/text_ll_color_nor"
                 android:onClick="onClick"
                 android:orientation="vertical"
                 android:paddingLeft="15dp">
@@ -306,7 +308,7 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/color_bg_content_white"
+                    android:background="?attr/color_bg_common"
                     android:paddingRight="16dp">
 
                     <TextView
@@ -316,7 +318,7 @@
                         android:paddingTop="10dp"
                         android:paddingBottom="10dp"
                         android:text="@string/channel_set_top"
-                        android:textColor="@color/color_text_common_level_one"
+                        android:textColor="?attr/text_color"
                         android:textSize="16sp" />
 
                     <android.support.v7.widget.SwitchCompat
@@ -333,7 +335,7 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/color_bg_content_white"
+                    android:background="?attr/color_bg_common"
                     android:paddingRight="16dp">
 
                     <TextView
@@ -343,7 +345,7 @@
                         android:paddingTop="10dp"
                         android:paddingBottom="10dp"
                         android:text="@string/message_without_interruption"
-                        android:textColor="@color/color_text_common_level_one"
+                        android:textColor="?attr/text_color"
                         android:textSize="16sp" />
 
                     <android.support.v7.widget.SwitchCompat

@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
+    android:background="?attr/text_ll_color_nor"
     tools:context=".MainActivity">
 
     <com.inspur.emmcloud.baselib.widget.CircleTextImageView
@@ -41,7 +41,7 @@
             android:maxLines="1"
             android:paddingBottom="4dp"
             android:paddingRight="15dp"
-            android:textColor="#333333"
+            android:textColor="?attr/text_color"
             android:textSize="16sp" />
 
         <TextView
@@ -69,7 +69,7 @@
         android:minHeight="0dp"
         android:onClick="onClick"
         android:padding="0dp"
-        android:textColor="#ffffff"
+        android:textColor="?attr/text_ll_color_nor"
         android:textSize="15sp" />
 
     <View
@@ -77,5 +77,5 @@
         android:layout_width="match_parent"
         android:layout_height="0.5px"
         android:layout_below="@id/ll_content"
-        android:background="@color/color_list_divider"></View>
+        android:background="?attr/color_list_divider"></View>
 </RelativeLayout>

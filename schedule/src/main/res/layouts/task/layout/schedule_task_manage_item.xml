@@ -19,7 +19,7 @@
         android:layout_marginTop="11dp"
         android:layout_toRightOf="@id/iv_task_tag_flag"
         android:paddingRight="35dp"
-        android:textColor="@color/color_text_common_level_one"
+        android:textColor="?attr/text_color"
         android:textSize="16sp" />
 
     <ImageView

@@ -68,7 +68,7 @@
                     android:gravity="center"
                     android:includeFontPadding="false"
                     android:text="1"
-                    android:textColor="@color/color_text_common_level_one"
+                    android:textColor="?attr/text_color"
                     android:textSize="5sp" />
             </RelativeLayout>
 
@@ -92,7 +92,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/rl_header"
-        android:background="@color/color_bg_common"
+        android:background="?attr/color_bg_common"
         android:scrollbars="vertical">
 
         <ListView

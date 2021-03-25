@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/content_bg"
+    android:background="?attr/content_bg"
     android:clipToPadding="true"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
@@ -59,7 +59,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white">
+            android:background="?attr/text_ll_color_nor">
 
             <TextView
                 android:id="@+id/tv_title_tips"
@@ -95,12 +95,12 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5px"
-            android:background="@color/color_list_divider"></View>
+            android:background="?attr/color_list_divider"></View>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:background="?attr/text_ll_color_nor"
             android:paddingRight="5dp">
 
             <TextView
@@ -154,7 +154,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:background="@color/white">
+            android:background="?attr/text_ll_color_nor">
 
             <TextView
                 android:id="@+id/tv_start_tips"
@@ -199,12 +199,12 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5px"
-            android:background="@color/color_list_divider"></View>
+            android:background="?attr/color_list_divider"></View>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white">
+            android:background="?attr/text_ll_color_nor">
 
             <TextView
                 android:id="@+id/tv_duration_tips"
@@ -250,7 +250,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:background="@color/white"
+            android:background="?attr/text_ll_color_nor"
             android:onClick="onClick">
 
             <TextView
