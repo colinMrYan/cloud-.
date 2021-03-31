@@ -3,6 +3,7 @@
     android:layout_width="240dp"
     android:layout_height="match_parent"
     android:gravity="center"
+    android:background="?attr/bubble_bg_color"
     android:orientation="vertical">
 
     <DatePicker

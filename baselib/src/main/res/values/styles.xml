@@ -6,7 +6,7 @@
 
 
     -->
-    <style name="AppRootTheme" parent="Theme.AppCompat.DayNight.DarkActionBar" />
+    <style name="AppRootTheme" parent="Theme.AppCompat.DayNight" />
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppRootTheme">
         <!--no Action Bar-->
@@ -61,11 +61,13 @@
         <item name="text_ll_color_nor">@color/button_color_nor</item>
         <item name="text_ll_color_sel">@color/button_color_sel</item>
         <item name="text_color">@color/text_color</item>
+        <item name="text_color_backup">@color/text_color</item>
         <item name="bubble_bg_color">@color/bubble_bg_color</item>
         <item name="color_list_divider">@color/color_list_divider</item>
         <item name="color_list_divider_tran">@color/color_list_divider_tran</item>
         <item name="selector_list">@drawable/selector_list</item>
         <item name="selector_list_top">@drawable/selector_set_top_msg_list</item>
+        <item name="textColorAlertDialogListItem">@color/color_text_common_level_one</item>
 
 
         <item name="header_text_blue_white_color">@color/footer_tab_text_sel_blue</item>
@@ -98,6 +100,7 @@
         <item name="mine_my_info_switch_enterprise">@drawable/basemodule_drop_down_black</item>
         <item name="schedule_tab_text_color_normal">@color/msg_content_color</item>
         <item name="schedule_tab_text_color_select">@color/header_text_black</item>
+        <item name="android:textColorAlertDialogListItem">@color/text_color</item>
 
 
     </style>
@@ -115,11 +118,13 @@
         <item name="text_ll_color_nor">@color/button_color_nor</item>
         <item name="text_ll_color_sel">@color/button_color_sel</item>
         <item name="text_color">@color/text_color</item>
+        <item name="text_color_backup">@color/text_color</item>
         <item name="bubble_bg_color">@color/bubble_bg_color</item>
         <item name="color_list_divider">@color/color_list_divider</item>
         <item name="color_list_divider_tran">@color/color_list_divider_tran</item>
         <item name="selector_list">@drawable/selector_list</item>
         <item name="selector_list_top">@drawable/selector_set_top_msg_list</item>
+        <item name="textColorAlertDialogListItem">@color/color_text_common_level_one</item>
 
 
         <item name="header_text_blue_white_color">@color/header_text_grey</item>
@@ -167,6 +172,7 @@
         <item name="text_ll_color_nor">@color/button_color_nor</item>
         <item name="text_ll_color_sel">@color/button_color_sel</item>
         <item name="text_color">@color/text_color</item>
+        <item name="text_color_backup">@color/text_color</item>
         <item name="bubble_bg_color">@color/bubble_bg_color</item>
         <item name="color_list_divider">@color/color_list_divider</item>
         <item name="color_list_divider_tran">@color/color_list_divider_tran</item>
@@ -204,6 +210,7 @@
         <item name="mine_my_info_switch_enterprise">@drawable/basemodule_drop_down_white</item>
         <item name="schedule_tab_text_color_normal">@color/schedule_tab_text_normal_blue</item>
         <item name="schedule_tab_text_color_select">?attr/text_ll_color_nor</item>
+        <item name="textColorAlertDialogListItem">@color/color_text_common_level_one</item>
     </style>
 
     <style name="AppTheme_3"  parent="AppTheme">
@@ -219,12 +226,13 @@
         <item name="text_ll_color_nor">@color/button_color_nor_dark</item>
         <item name="text_ll_color_sel">@color/button_color_sel_dark</item>
         <item name="text_color">@color/text_color_dark</item>
+        <item name="text_color_backup">@color/text_color_dark</item>
         <item name="bubble_bg_color">@color/bubble_bg_color_dark</item>
         <item name="color_list_divider">@color/color_list_divider_dark</item>
         <item name="color_list_divider_tran">@color/color_list_divider_tran_dark</item>
         <item name="selector_list">@drawable/selector_list_dark</item>
         <item name="selector_list_top">@drawable/selector_set_top_msg_list_dark</item>
-
+        <item name="textColorAlertDialogListItem">@color/white</item>
 
         <item name="header_text_blue_white_color">@color/header_text</item>
         <item name="footer_tab_text_color">@color/seclector_footer_text_blue</item>
@@ -478,26 +486,29 @@
         <!--这个绿色是选中时的背景颜色，和当前日期的颜色-->
         <item name="colorAccent">#36A5F6</item>
         <!--设置字体颜色-->
-        <item name="android:textColorPrimary">#333333</item>
+        <item name="android:textColorPrimary">?attr/text_color</item>
     </style>
 
     <style name="DateTimeAlertDialog" parent="Theme.AppCompat.DayNight.Dialog.Alert">
         <item name="android:typeface">monospace</item>
         <item name="android:textSize">15sp</item>
         <item name="colorAccent">#36A5F6</item>
+        <item name="android:background">?attr/bubble_bg_color</item>
+        <item name="android:textColorAlertDialogListItem">?attr/text_color</item>
     </style>
 
     <style name="DateTimePickerTimeTheme" parent="@android:style/Theme.Holo.Light.Panel">
         <item name="android:textColor">#36A5F6</item>
         <item name="android:textColorPrimary">#333333</item>
+        <item name="android:background">?attr/bubble_bg_color</item>
+        <item name="android:textColorAlertDialogListItem">?attr/text_color</item>
     </style>
 
-    <style name="cus_dialog_style" parent="Theme.AppCompat.DayNight">
+    <style name="cus_dialog_style" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="colorAccent">#36A5F6</item>
-<!--        <item name="android:background">#ECEEF2</item>-->
-        <item name="android:background">#0FF</item>
-        <item name="android:itemTextAppearance">@style/ListDialogHint</item>
+        <item name="android:background">?attr/text_ll_color_nor</item>
         <item name="android:textSize">16dp</item>
+        <item name="textColorAlertDialogListItem">?attr/text_color</item>
     </style>
 
     <style name="CusButtonBase" parent="android:Widget.Holo.Light.Button" />

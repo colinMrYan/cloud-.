@@ -11,6 +11,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
@@ -54,6 +55,7 @@ import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.CheckingNetStateUtils;
 import com.inspur.emmcloud.basemodule.util.DownLoaderUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
+import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
@@ -344,8 +346,10 @@ public class CommunicationFragment extends BaseFragment {
         int paddingLeft = DensityUtil.dip2px(24);
         textView.setPadding(paddingLeft, paddingTop, paddingLeft, 0);
         textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        new CustomDialog.ListDialogBuilder(getActivity())
-                .setTitle(uiConversation.getTitle())
+
+        ContextThemeWrapper ctw = new ContextThemeWrapper(getActivity(), R.style.cus_dialog_style);
+
+        new CustomDialog.ListDialogBuilder(ctw)
                 .setItems(items, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -356,9 +360,24 @@ public class CommunicationFragment extends BaseFragment {
                             setConversationHide(uiConversation);
                         }
                     }
-                })
-                .setCustomTitle(textView)
+                }).setCustomTitle(textView)
                 .show();
+//        ContextThemeWrapper ctw = new ContextThemeWrapper(getActivity(), R.style.cus_dialog_style);
+//        new CustomDialog.ListDialogBuilder(ctw)
+//                .setTitle(uiConversation.getTitle())
+//                .setItems(items, new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.dismiss();
+//                        if (which == 0) {
+//                            setConversationStick(uiConversation.getId(), !uiConversation.getConversation().isStick());
+//                        } else {
+//                            setConversationHide(uiConversation);
+//                        }
+//                    }
+//                })
+//                .setCustomTitle(textView)
+//                .show();
     }
 
     /**

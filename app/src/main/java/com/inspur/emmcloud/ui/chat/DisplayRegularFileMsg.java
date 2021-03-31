@@ -8,6 +8,8 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
+import com.inspur.emmcloud.basemodule.ui.DarkUtil;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
@@ -45,6 +47,7 @@ public class DisplayRegularFileMsg {
             cardLayout.setArrowWidth(0);
             cardLayout.setCornersRadius(0);
         }
+        cardLayout.setBubbleColor(context.getResources().getColor(ResourceUtils.getResValueOfAttr(context, R.attr.bubble_bg_color)));
         ImageView img = convertView.findViewById(R.id.iv_file_icon);
         final MsgContentRegularFile msgContentFile = message.getMsgContentAttachmentFile();
         img.setImageResource(FileUtils.getFileIconResIdByFileName(msgContentFile.getName()));

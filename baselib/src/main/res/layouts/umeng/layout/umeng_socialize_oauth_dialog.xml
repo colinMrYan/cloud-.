@@ -54,7 +54,7 @@
         android:layout_width="fill_parent"
         android:layout_height="40dp"
         android:layout_alignParentBottom="true"
-        android:background="#AAAAAA"
+        android:background="?attr/bubble_bg_color"
         android:visibility="visible">
         <!--zyj TODO-->
 

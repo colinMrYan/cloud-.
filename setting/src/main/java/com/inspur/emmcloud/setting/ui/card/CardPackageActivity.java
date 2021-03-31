@@ -54,7 +54,6 @@ public class CardPackageActivity extends BaseActivity implements RxCardStackView
     @Override
     protected void onResume() {
         super.onResume();
-        ImmersionBar.with(this).navigationBarColor(R.color.white).statusBarColor(R.color.content_bg).navigationBarDarkIcon(true, 1.0f).init();
     }
 
     @Override
@@ -62,6 +61,7 @@ public class CardPackageActivity extends BaseActivity implements RxCardStackView
         return R.layout.setting_card_package_activity;
     }
 
+    @Override
     protected int getStatusType() {
         return STATUS_WHITE_DARK_FONT;
     }

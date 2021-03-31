@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.baselib.R;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.widget.TimePicker.TimePicker;
 import com.inspur.emmcloud.baselib.widget.TimePicker.Utils.ConvertUtils;
@@ -71,6 +74,8 @@ public class DateTimePickerDialog {
             @Override
             public void onClick(View v) {
                 TimePicker picker = new TimePicker((Activity) context, TimePicker.HOUR_24, true);
+                int currentThemeNo = PreferencesUtils.getInt(context, "app_theme_num_v1", 0);
+                picker.setBackgroundColor(Color.parseColor(currentThemeNo != 3 ? "#ECEEF2":"#292929"));
                 picker.setIntervalMinutes(true);
                 picker.setUseWeight(false);
                 picker.setCycleDisable(false);

@@ -155,6 +155,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         int currentNightMode = newConfig.uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        ToastUtils.show("监听到深色模式变化："+currentNightMode);
         switch (currentNightMode) {
             case Configuration.UI_MODE_NIGHT_NO:
                 setTheme(statusType == STATUS_TRANSPARENT ? R.style.AppTheme_Transparent_0 : R.style.AppTheme_0);
@@ -181,7 +182,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                 if (currentThemeNo != 3) {
                     ImmersionBar.with(this).navigationBarColor(navigationBarColor).navigationBarDarkIcon(true, 1.0f).statusBarColor(android.R.color.white).statusBarDarkFont(true, 0.2f).init();
                 } else {
-                    ImmersionBar.with(this).transparentStatusBar().statusBarDarkFont(isStatusBarDarkFont, 0.2f).navigationBarColor(navigationBarColor).navigationBarDarkIcon(true, 1.0f).init();
+                    ImmersionBar.with(this).navigationBarColor(navigationBarColor).navigationBarDarkIcon(false, 1.0f).statusBarColor(android.R.color.black).statusBarDarkFont(false, 0.2f).init();
                 }
                 break;
             case STATUS_TRANSPARENT:

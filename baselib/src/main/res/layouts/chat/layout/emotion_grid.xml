@@ -95,8 +95,8 @@
             android:layout_height="100dp"
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginRight="0dp"
-            android:background="@drawable/emotion_delete_shadow" />
+            android:layout_marginRight="0dp"/>
+<!--            android:background="@drawable/emotion_delete_shadow" />-->
 
         <ImageView
             android:id="@+id/emotion_delete"

@@ -1,8 +1,10 @@
 package com.inspur.emmcloud.setting.ui.setting;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,12 +18,14 @@ import android.widget.Space;
 import android.widget.TextView;
 
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.Language;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.ui.DarkUtil;
 import com.inspur.emmcloud.basemodule.util.ClientConfigUpdateUtils;
 import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.setting.R;
@@ -100,8 +104,6 @@ public class LanguageSwitchActivity extends BaseActivity implements LanguageMana
      * @param position
      */
     private void showChangeLanguageDlg(final int position) {
-        // TODO Auto-generated method stub
-
         new CustomDialog.MessageDialogBuilder(LanguageSwitchActivity.this)
                 .setMessage(getString(R.string.confirm_modify_language))
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -196,12 +198,15 @@ public class LanguageSwitchActivity extends BaseActivity implements LanguageMana
                 holder = new ViewHolder();
                 holder.nameText = convertView
                         .findViewById(R.id.tv_language_name);
+                holder.nameText.setTextColor(DarkUtil.getTextColor());
                 holder.selectImg = convertView
                         .findViewById(R.id.iv_select);
                 holder.flagImg = convertView
                         .findViewById(R.id.iv_language_flag);
                 holder.space = convertView
                         .findViewById(R.id.space);
+                holder.divider = convertView.findViewById(R.id.setting_language_item_divider);
+                holder.divider.setBackgroundColor(DarkUtil.getListDividerColor());
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
@@ -258,6 +263,7 @@ public class LanguageSwitchActivity extends BaseActivity implements LanguageMana
             TextView nameText;
             ImageView selectImg;
             ImageView flagImg;
+            View divider;
         }
     }
 }

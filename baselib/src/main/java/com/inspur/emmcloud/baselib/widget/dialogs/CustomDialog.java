@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.inspur.baselib.R;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.ResolutionUtils;
 
 import java.lang.reflect.Field;
@@ -113,8 +114,14 @@ public class CustomDialog extends AlertDialog {
         Context context;
 
         public MessageDialogBuilder(Context context) {
-            super(context);
+            super(context, PreferencesUtils.getInt(context, "app_theme_num_v1", 0) != 3 ? R.style.cus_dialog_style : AlertDialog.THEME_DEVICE_DEFAULT_DARK);
             this.context = context;
+        }
+
+        public MessageDialogBuilder(Context context, int themeResId) {
+            super(context, themeResId);
+            this.context = context;
+
         }
 
         @Override
@@ -132,13 +139,10 @@ public class CustomDialog extends AlertDialog {
         private Context context;
 
         public ListDialogBuilder(Context context) {
-            super(context);
+            super(context, PreferencesUtils.getInt(context, "app_theme_num_v1", 0) != 3 ? R.style.cus_dialog_style : AlertDialog.THEME_DEVICE_DEFAULT_DARK);
             this.context = context;
         }
 
-        public ListDialogBuilder(Context context, int themeResId) {
-            super(context, themeResId);
-        }
 
         @Override
         public AlertDialog show() {
@@ -154,7 +158,7 @@ public class CustomDialog extends AlertDialog {
         private Context context;
 
         public SingleChoiceDialogBuilder(Context context) {
-            super(context);
+            super(context, PreferencesUtils.getInt(context, "app_theme_num_v1", 0) != 3 ? R.style.cus_dialog_style : AlertDialog.THEME_DEVICE_DEFAULT_DARK);
             this.context = context;
         }
 
@@ -172,7 +176,7 @@ public class CustomDialog extends AlertDialog {
         private Context context;
 
         public EditDialogBuilder(Context context) {
-            super(context);
+            super(context, PreferencesUtils.getInt(context, "app_theme_num_v1", 0) != 3 ? R.style.cus_dialog_style : AlertDialog.THEME_DEVICE_DEFAULT_DARK);
             this.context = context;
         }
     }

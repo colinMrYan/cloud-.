@@ -8,6 +8,7 @@
     <attr name="text_ll_color_nor" format="reference|color" />
     <attr name="text_ll_color_sel" format="reference|color" />
     <attr name="text_color" format="reference|color" />
+    <attr name="text_color_backup" format="reference|color" />
     <attr name="bubble_bg_color" format="reference|color" />
     <attr name="color_list_divider" format="reference|color" />
     <attr name="color_list_divider_tran" format="reference|color" />
