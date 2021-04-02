@@ -6,6 +6,8 @@ import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 
+import static com.inspur.emmcloud.basemodule.ui.BaseActivity.THEME_DARK;
+
 public class DarkUtil {
 
 
@@ -16,7 +18,7 @@ public class DarkUtil {
      */
     public static int getTextColor(){
         int currentThemeNo = PreferencesUtils.getInt(BaseApplication.getInstance(), Constant.PREF_APP_THEME, 0);
-        return Color.parseColor(currentThemeNo != 3 ? "#333333":"#FFFFFF");
+        return Color.parseColor(currentThemeNo != THEME_DARK ? "#333333":"#FFFFFF");
     }
 
     /**
@@ -26,7 +28,7 @@ public class DarkUtil {
      */
     public static int getTextContainerColor(){
         int currentThemeNo = PreferencesUtils.getInt(BaseApplication.getInstance(), Constant.PREF_APP_THEME, 0);
-        return Color.parseColor(currentThemeNo != 3 ? "#FFFFFF":"#1C1C1E");
+        return Color.parseColor(currentThemeNo != THEME_DARK ? "#FFFFFF":"#1C1C1E");
     }
 
     /**
@@ -36,7 +38,7 @@ public class DarkUtil {
      */
     public static int getListDividerColor(){
         int currentThemeNo = PreferencesUtils.getInt(BaseApplication.getInstance(), Constant.PREF_APP_THEME, 0);
-        return Color.parseColor(currentThemeNo != 3 ? "#dddddd":"#484951");
+        return Color.parseColor(currentThemeNo != THEME_DARK ? "#dddddd":"#484951");
     }
 
     /**
@@ -46,7 +48,7 @@ public class DarkUtil {
      */
     public static int getTextContainerLevelTwoColor(){
         int currentThemeNo = PreferencesUtils.getInt(BaseApplication.getInstance(), Constant.PREF_APP_THEME, 0);
-        return Color.parseColor(currentThemeNo != 3 ? "#f6f6f6":"#292929");
+        return Color.parseColor(currentThemeNo != THEME_DARK ? "#f6f6f6":"#292929");
     }
 
 }

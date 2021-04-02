@@ -1,5 +1,7 @@
 package com.inspur.emmcloud.adapter;
 
+import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +25,11 @@ import java.util.List;
 
 public class PrivateChatAdapter extends BaseAdapter {
     private List<Conversation> conversationList = new ArrayList<>();
+    private Context mContext;
+
+    public PrivateChatAdapter(@NonNull Context context){
+        mContext = context;
+    }
 
     public void setConversationList(List<Conversation> contentList) {
         this.conversationList = contentList;
@@ -47,7 +54,7 @@ public class PrivateChatAdapter extends BaseAdapter {
     public View getView(int i, View view, ViewGroup viewGroup) {
         SearchHolder searchHolder = new SearchHolder();
         if (view == null) {
-            view = LayoutInflater.from(BaseApplication.getInstance()).inflate(R.layout.communication_search_contact_item, null);
+            view = LayoutInflater.from(mContext).inflate(R.layout.communication_search_contact_item, null);
             searchHolder.headImageView = view.findViewById(R.id.iv_contact_head);
             searchHolder.nameTextView = view.findViewById(R.id.tv_contact_name);
             searchHolder.detailTextView = view.findViewById(R.id.tv_contact_detail);

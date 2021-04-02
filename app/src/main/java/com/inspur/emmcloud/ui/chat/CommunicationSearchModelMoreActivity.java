@@ -127,14 +127,14 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
         handMessage();
         initSearchRunnable();
         if (searchArea.equals(SEARCH_ALL_FROM_CHAT)) {          //不同类型加载不同Adapter
-            conversationFromChatContentAdapter = new ConversationFromChatContentAdapter();
+            conversationFromChatContentAdapter = new ConversationFromChatContentAdapter(this);
             conversationFromChatContentAdapter.setLimited(false);
             searchGroupListView.setAdapter(conversationFromChatContentAdapter);
         } else if (searchArea.equals(SEARCH_GROUP)) {
-            groupAdapter = new GroupOrContactAdapter();
+            groupAdapter = new GroupOrContactAdapter(this);
             searchGroupListView.setAdapter(groupAdapter);
         } else if (searchArea.equals(SEARCH_PRIVATE_CHAT)) {
-            privateChatAdapter = new PrivateChatAdapter();
+            privateChatAdapter = new PrivateChatAdapter(this);
             searchGroupListView.setAdapter(privateChatAdapter);
         } else if (searchArea.equals(SEARCH_CONTACT)) {
             contactAdapter = new ContactAdapter();

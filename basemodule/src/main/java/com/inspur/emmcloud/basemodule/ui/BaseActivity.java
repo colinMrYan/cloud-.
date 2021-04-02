@@ -35,6 +35,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected final int STATUS_WHITE_DARK_FONT = 3;
     protected final int STATUS_TRANSPARENT = 4;
     protected final int STATUS_NO_SET = 5;
+    public static final int THEME_DARK = 3;
     private int statusType;
 
     @Override
@@ -168,7 +169,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     private void setStatus() {
         int currentThemeNo = PreferencesUtils.getInt(BaseApplication.getInstance(), Constant.PREF_APP_THEME, 0);
-        int navigationBarColor = android.R.color.white;
+        int navigationBarColor = currentThemeNo != THEME_DARK ? android.R.color.white : android.R.color.black;
         boolean isStatusBarDarkFont = ResourceUtils.getBoolenOfAttr(this, R.attr.status_bar_dark_font);
         switch (statusType) {
             case STATUS_NORMAL:
@@ -179,7 +180,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                 ImmersionBar.with(this).navigationBarColor(navigationBarColor).navigationBarDarkIcon(true, 1.0f).init();
                 break;
             case STATUS_WHITE_DARK_FONT:
-                if (currentThemeNo != 3) {
+                if (currentThemeNo != THEME_DARK) {
                     ImmersionBar.with(this).navigationBarColor(navigationBarColor).navigationBarDarkIcon(true, 1.0f).statusBarColor(android.R.color.white).statusBarDarkFont(true, 0.2f).init();
                 } else {
                     ImmersionBar.with(this).navigationBarColor(navigationBarColor).navigationBarDarkIcon(false, 1.0f).statusBarColor(android.R.color.black).statusBarDarkFont(false, 0.2f).init();

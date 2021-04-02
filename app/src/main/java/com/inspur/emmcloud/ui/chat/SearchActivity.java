@@ -137,15 +137,15 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     @Override
     public void onCreate() {
         ButterKnife.bind(this);
-        ImmersionBar.with(this).statusBarColor(R.color.search_contact_header_bg).statusBarDarkFont(true, 0.2f).navigationBarColor(R.color.white).navigationBarDarkIcon(true, 1.0f).init();
+//        ImmersionBar.with(this).statusBarColor(R.color.search_contact_header_bg).statusBarDarkFont(true, 0.2f).navigationBarColor(R.color.white).navigationBarDarkIcon(true, 1.0f).init();
 //        initData();
         isSearchContacts = AppTabUtils.hasContactPermission(this);
         handMessage();
         initSearchRunnable();
-        groupAdapter = new GroupOrContactAdapter();
-        privateChatAdapter = new PrivateChatAdapter();
-        contactAdapter = new GroupOrContactAdapter();
-        conversationFromChatContentAdapter = new ConversationFromChatContentAdapter();
+        groupAdapter = new GroupOrContactAdapter(this);
+        privateChatAdapter = new PrivateChatAdapter(this);
+        contactAdapter = new GroupOrContactAdapter(this);
+        conversationFromChatContentAdapter = new ConversationFromChatContentAdapter(this);
         searchEdit.setOnEditorActionListener(onEditorActionListener);
         searchEdit.addTextChangedListener(new SearchWatcher());
         searchContactListView.setAdapter(contactAdapter);

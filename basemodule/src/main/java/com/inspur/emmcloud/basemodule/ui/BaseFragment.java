@@ -22,13 +22,14 @@ public class BaseFragment extends Fragment {
     protected void setFragmentStatusBarCommon() {
         int color = ResourceUtils.getResValueOfAttr(getActivity(), R.attr.header_bg_color);
         boolean isStatusBarDarkFont = ResourceUtils.getBoolenOfAttr(getActivity(), R.attr.status_bar_dark_font);
-        ImmersionBar.with(getActivity()).statusBarColor(color).statusBarDarkFont(isStatusBarDarkFont, 0.2f).navigationBarColor(R.color.white).navigationBarDarkIcon(true, 1.0f).init();
+        int currentThemeNo = PreferencesUtils.getInt(BaseApplication.getInstance(), Constant.PREF_APP_THEME, 0);
+        ImmersionBar.with(getActivity()).statusBarColor(color).statusBarDarkFont(isStatusBarDarkFont, 0.2f).navigationBarColor(currentThemeNo != 3 ? R.color.white : R.color.black).navigationBarDarkIcon(true, 1.0f).init();
 
     }
 
     protected void setFragmentStatusBarWhite() {
         int currentThemeNo = PreferencesUtils.getInt(BaseApplication.getInstance(), Constant.PREF_APP_THEME, 0);
-        if (currentThemeNo != 3) {
+        if (currentThemeNo != BaseActivity.THEME_DARK) {
             ImmersionBar.with(getActivity()).statusBarColor(R.color.white).navigationBarColor(R.color.white).statusBarDarkFont(true, 0.2f).navigationBarDarkIcon(true, 1.0f).init();
         } else {
             ImmersionBar.with(getActivity()).statusBarColor(R.color.black).navigationBarColor(R.color.black).statusBarDarkFont(false, 0.2f).navigationBarDarkIcon(false, 1.0f).init();
