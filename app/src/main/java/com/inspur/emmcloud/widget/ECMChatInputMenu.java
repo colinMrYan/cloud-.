@@ -44,6 +44,7 @@ import com.inspur.emmcloud.baselib.widget.dialogs.ActionSheetDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.basemodule.ui.DarkUtil;
 import com.inspur.emmcloud.basemodule.util.AppRoleUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.ClickRuleUtil;
@@ -1317,6 +1318,7 @@ public class ECMChatInputMenu extends LinearLayout {
     private void changeAddMenuLayoutContent(boolean isShowEmotion) {
         viewpagerLayout.setVisibility(isShowEmotion ? View.GONE : View.VISIBLE);
         emotionLayout.setVisibility(isShowEmotion ? View.VISIBLE : View.GONE);
+        emotionLayout.setBackgroundColor(DarkUtil.getTextContainerLevelTwoColor());
         emotionBtn.setImageResource(isShowEmotion ? R.drawable.ic_chat_input_keyboard : R.drawable.ic_chat_btn_emotion);
     }
 

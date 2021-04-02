@@ -132,7 +132,7 @@ public class Update2NewVersionUtils {
             if(customDialog == null){
                 customDialog =  new CustomDialog.MessageDialogBuilder((Activity)context)
                         .setMessage(AppUtils.getAppName(context)+context.getString(R.string.want_open)+AppUtils.getApplicationNameByPackageName(context,NEW_PACKAGE))
-                        .setNegativeButton(context.getString(com.inspur.emmcloud.setting.R.string.cancel), new DialogInterface.OnClickListener() {
+                        .setNegativeButton(context.getString(R.string.cancel), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
@@ -140,7 +140,7 @@ public class Update2NewVersionUtils {
                                 System.exit(0);
                             }
                         })
-                        .setPositiveButton(context.getString(com.inspur.emmcloud.setting.R.string.ok), new DialogInterface.OnClickListener() {
+                        .setPositiveButton(context.getString(R.string.ok), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();

@@ -41,12 +41,12 @@ public class DarkUtil {
 
     /**
      * 兜底
-     * 暗黑模式适配获取BubbleLayoutColor
-     * @return bubbleLayoutColor
+     * 暗黑模式适配获取文字容器二级背景颜色
+     * @return 文字容器二级背景颜色
      */
-    public static int getBubbleLayoutColor(){
+    public static int getTextContainerLevelTwoColor(){
         int currentThemeNo = PreferencesUtils.getInt(BaseApplication.getInstance(), Constant.PREF_APP_THEME, 0);
-        return Color.parseColor(currentThemeNo != 3 ? "#ECEEF2":"#292929");
+        return Color.parseColor(currentThemeNo != 3 ? "#f6f6f6":"#292929");
     }
 
 }

@@ -23,6 +23,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
@@ -31,6 +32,7 @@ import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.NoScrollGridView;
 import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.ui.DarkUtil;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.widget.richedit.InsertModel;
@@ -107,13 +109,21 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
     }
 
     private void initView(final Context context) {
-        // TODO Auto-generated method stub
         View view = LayoutInflater.from(context).inflate(R.layout.communication_widget_chat_input_menu_img_comment, this, true);
         ButterKnife.bind(this, view);
         setAddMenuLayoutShow(true);
+        initDarkSkin();
         initInputEdit();
         initEmotion();
         sendBtn.setEnabled(false);
+    }
+
+    private void initDarkSkin() {
+        Button button = (Button)findViewById(R.id.bt_cancel);
+        button.setTextColor(DarkUtil.getTextColor());
+        TextView textView = (TextView)findViewById(R.id.tv_comment);
+        textView.setTextColor(DarkUtil.getTextColor());
+        findViewById(R.id.communication_edit_rl).setBackgroundColor(DarkUtil.getTextContainerColor());
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -146,6 +156,8 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
                 }
             }
         });
+        inputEdit.setTextColor(DarkUtil.getTextColor());
+        inputEdit.setBackgroundColor(DarkUtil.getTextContainerLevelTwoColor());
     }
 
     private void initEmotion() {
@@ -248,6 +260,7 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
 
     public void showEmotionLayout(boolean isShow) {
         emotionLayout.setVisibility(isShow ? VISIBLE : GONE);
+        emotionLayout.setBackgroundColor(DarkUtil.getTextContainerLevelTwoColor());
         emotionBtn.setImageResource(isShow ? R.drawable.comment_image_keyboard : R.drawable.comment_image_emotion);
     }
 

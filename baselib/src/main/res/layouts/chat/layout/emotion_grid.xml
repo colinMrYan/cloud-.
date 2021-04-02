@@ -5,7 +5,6 @@
     android:id="@+id/emotion_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/content_bg_level_two"
     android:visibility="gone"
     tools:ignore="MissingDefaultResource">
 
@@ -89,14 +88,6 @@
         android:layout_height="100dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true">
-
-        <ImageView
-            android:layout_width="110dp"
-            android:layout_height="100dp"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginRight="0dp"/>
-<!--            android:background="@drawable/emotion_delete_shadow" />-->
 
         <ImageView
             android:id="@+id/emotion_delete"

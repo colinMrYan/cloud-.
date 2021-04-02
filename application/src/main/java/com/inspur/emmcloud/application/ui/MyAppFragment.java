@@ -464,7 +464,9 @@ public class MyAppFragment extends BaseFragment {
             String saveConfigVersion = ClientConfigUpdateUtils.getInstance().getItemNewVersion(ClientConfigItem.CLIENT_CONFIG_MY_APP);
             apiService.getUserApps(saveConfigVersion);
         } else {
-            swipeRefreshLayout.setRefreshing(false);
+            if (swipeRefreshLayout != null) {
+                swipeRefreshLayout.setRefreshing(false);
+            }
         }
     }
 
@@ -1105,7 +1107,7 @@ public class MyAppFragment extends BaseFragment {
                 new AppBadgeUtils(BaseApplication.getInstance()).getAppBadgeCountFromServer();
             }
             appListAdapter.setAppAdapterList(appGroupList);
-            if(swipeRefreshLayout != null){
+            if (swipeRefreshLayout != null) {
                 swipeRefreshLayout.setRefreshing(false);
             }
             refreshRecommendAppWidgetView();
@@ -1129,7 +1131,7 @@ public class MyAppFragment extends BaseFragment {
 
         @Override
         public void returnUserAppsFail(String error, int errorCode) {
-            if(swipeRefreshLayout != null){
+            if (swipeRefreshLayout != null) {
                 swipeRefreshLayout.setRefreshing(false);
             }
             //          WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
