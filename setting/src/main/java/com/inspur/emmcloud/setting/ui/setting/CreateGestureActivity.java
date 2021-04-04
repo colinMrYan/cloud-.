@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.setting.ui.setting;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -134,7 +135,7 @@ public class CreateGestureActivity extends BaseActivity {
     public void onCreate() {
         ButterKnife.bind(this);
         init();
-        ImmersionBar.with(this).statusBarColor(ResourceUtils.getResValueOfAttr(this, R.attr.content_bg_level_two)).statusBarDarkFont(true, 0.2f).navigationBarColor(R.color.white).navigationBarDarkIcon(true, 1.0f).init();
+//        ImmersionBar.with(this).statusBarColor(ResourceUtils.getResValueOfAttr(this, R.attr.content_bg_level_two)).statusBarDarkFont(true, 0.2f).navigationBarColor(R.color.white).navigationBarDarkIcon(true, 1.0f).init();
     }
 
     @Override
@@ -142,9 +143,9 @@ public class CreateGestureActivity extends BaseActivity {
         return R.layout.setting_create_gesture_activity;
     }
 
-    protected int getStatusType() {
-        return STATUS_NO_SET;
-    }
+//    protected int getStatusType() {
+//        return STATUS_NORMAL;
+//    }
     /**
      * 初始化
      */

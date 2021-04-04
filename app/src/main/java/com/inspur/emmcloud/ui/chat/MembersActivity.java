@@ -32,6 +32,7 @@ import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.MaxHeightScrollView;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.ui.DarkUtil;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.PersonDto;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
@@ -283,6 +284,8 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
             editText.setSingleLine(true);
             editText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
             editText.setBackground(null);
+            editText.setTextColor(DarkUtil.getTextColor());
+            editText.setHintTextColor(Color.parseColor("#666666"));
             editText.setHint(getString(R.string.msg_key_search_member));
             editText.addTextChangedListener(this);
         }

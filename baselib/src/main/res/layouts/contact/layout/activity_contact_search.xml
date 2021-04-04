@@ -354,7 +354,7 @@
                             android:background="?attr/text_ll_color_nor"
                             android:gravity="center"
                             android:text="@string/no_search_term"
-                            android:textColor="#030303"
+                            android:textColor="?attr/text_color"
                             android:textSize="@dimen/content_title_textsize" />
 
                         <ListView
@@ -417,7 +417,7 @@
                             android:background="?attr/text_ll_color_nor"
                             android:gravity="center"
                             android:text="@string/no_search_term"
-                            android:textColor="#030303"
+                            android:textColor="?attr/text_color"
                             android:textSize="@dimen/content_title_textsize" />
 
                         <ListView

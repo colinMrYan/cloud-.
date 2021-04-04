@@ -71,6 +71,7 @@
                 android:background="?attr/text_ll_color_nor"
                 android:gravity="top|left"
                 android:textColorHint="@color/color_text_tip"
+                android:textColor="?attr/text_color"
                 android:hint="@string/schedule_task_content_hint"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
@@ -89,7 +90,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="16sp"
                     android:text="@string/schedule_task_priority"
-                    android:textColor="@color/color_bg_content_black"
+                    android:textColor="?attr/text_color"
                     android:textSize="16sp" />
 
                 <cn.carbs.android.segmentcontrolview.library.SegmentControlView

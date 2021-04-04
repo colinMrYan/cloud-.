@@ -38,6 +38,7 @@ import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.ui.DarkUtil;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
@@ -169,6 +170,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
             searchEdit.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
             searchEdit.setBackground(null);
             searchEdit.setHint(getString(R.string.msg_key_search_member));
+            searchEdit.setTextColor(DarkUtil.getTextColor());
             searchEdit.addTextChangedListener(myTextWatcher);
         }
 

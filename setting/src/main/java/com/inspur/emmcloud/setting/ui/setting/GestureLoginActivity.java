@@ -121,7 +121,7 @@ public class GestureLoginActivity extends BaseActivity {
         ButterKnife.bind(this);
         EventBus.getDefault().register(this);
         init();
-        ImmersionBar.with(this).statusBarColor(ResourceUtils.getResValueOfAttr(this, R.attr.content_bg_level_two)).statusBarDarkFont(true, 0.2f).navigationBarColor(R.color.white).navigationBarDarkIcon(true, 1.0f).init();
+//        ImmersionBar.with(this).statusBarColor(ResourceUtils.getResValueOfAttr(this, R.attr.content_bg_level_two)).statusBarDarkFont(true, 0.2f).navigationBarColor(R.color.white).navigationBarDarkIcon(true, 1.0f).init();
     }
 
     @Override
@@ -129,10 +129,9 @@ public class GestureLoginActivity extends BaseActivity {
         return R.layout.setting_gesture_login_activity;
     }
 
-    protected int getStatusType() {
-        return STATUS_NO_SET;
-    }
-
+//    protected int getStatusType() {
+//        return STATUS_NO_SET;
+//    }
 
     private void init() {
         //得到当前用户的手势密码
