@@ -68,7 +68,7 @@
         <item name="selector_list">@drawable/selector_list</item>
         <item name="selector_list_top">@drawable/selector_set_top_msg_list</item>
         <item name="textColorAlertDialogListItem">@color/color_text_common_level_one</item>
-
+        <item name="drawable_list_divider">@drawable/rv_divider</item>
 
         <item name="header_text_blue_white_color">@color/footer_tab_text_sel_blue</item>
         <item name="footer_tab_text_color">@color/seclector_footer_text_white</item>
@@ -125,7 +125,7 @@
         <item name="selector_list">@drawable/selector_list</item>
         <item name="selector_list_top">@drawable/selector_set_top_msg_list</item>
         <item name="textColorAlertDialogListItem">@color/color_text_common_level_one</item>
-
+        <item name="drawable_list_divider">@drawable/rv_divider</item>
 
         <item name="header_text_blue_white_color">@color/header_text_grey</item>
         <item name="footer_tab_text_color">@color/seclector_footer_text_grey</item>
@@ -178,7 +178,7 @@
         <item name="color_list_divider_tran">@color/color_list_divider_tran</item>
         <item name="selector_list">@drawable/selector_list</item>
         <item name="selector_list_top">@drawable/selector_set_top_msg_list</item>
-
+        <item name="drawable_list_divider">@drawable/rv_divider</item>
 
         <item name="header_text_blue_white_color">@color/header_text</item>
         <item name="footer_tab_text_color">@color/seclector_footer_text_blue</item>
@@ -233,6 +233,7 @@
         <item name="selector_list">@drawable/selector_list_dark</item>
         <item name="selector_list_top">@drawable/selector_set_top_msg_list_dark</item>
         <item name="textColorAlertDialogListItem">@color/white</item>
+        <item name="drawable_list_divider">@drawable/rv_divider_dark</item>
 
         <item name="header_text_blue_white_color">@color/header_text</item>
         <item name="footer_tab_text_color">@color/seclector_footer_text_blue</item>

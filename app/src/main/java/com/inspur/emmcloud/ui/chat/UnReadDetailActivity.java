@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.router.Router;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
 import com.inspur.emmcloud.basemodule.api.BaseModuleApiUri;
@@ -154,7 +155,8 @@ public class UnReadDetailActivity extends BaseActivity {
         //设置Adapter
         recyclerView.setAdapter(new RecyclerViewAdapter(list));
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
-        dividerItemDecoration.setDrawable(getResources().getDrawable(R.drawable.unread_rv_divider));
+
+        dividerItemDecoration.setDrawable(getResources().getDrawable(ResourceUtils.getResValueOfAttr(this, R.attr.drawable_list_divider)));
         recyclerView.addItemDecoration(dividerItemDecoration);
         return recyclerView;
     }
