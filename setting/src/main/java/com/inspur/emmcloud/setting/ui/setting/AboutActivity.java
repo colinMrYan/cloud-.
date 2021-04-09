@@ -18,6 +18,7 @@ import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.push.PushManagerUtils;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.ui.DarkUtil;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.LanguageManager;
@@ -89,6 +90,7 @@ public class AboutActivity extends BaseActivity {
                 .addItem("ClientId-->" + PreferencesByUserAndTanentUtils.getString(AboutActivity.this, Constant.PREF_CLIENTID, ""))
 //						.addItem("DeviceId-->"+ AppUtils.getMyUUID(MyApplication.getInstance()))
                 .addItem("DeviceToken-->" + PushManagerUtils.getInstance().getPushId(BaseApplication.getInstance()))
+                .setItemColor(DarkUtil.getTextColor())
                 .build()
                 .show();
         return false;
