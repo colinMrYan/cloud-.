@@ -546,4 +546,9 @@
         <item name="android:textSize">14sp</item>
     </style>
 
+    <style name="DateTimePickerTheme" parent="AppRootTheme">
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:textColorPrimary">@android:color/white</item>
+    </style>
+
 </resources>

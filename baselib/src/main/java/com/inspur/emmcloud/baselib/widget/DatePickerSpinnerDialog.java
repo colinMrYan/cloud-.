@@ -12,6 +12,7 @@ import android.widget.DatePicker;
 import android.widget.NumberPicker;
 
 import com.inspur.baselib.R;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 
 import java.lang.reflect.Field;
 import java.util.Calendar;
@@ -40,7 +41,7 @@ public class DatePickerSpinnerDialog {
      * 初始化Dialog
      */
     private View initPicker() {
-        View inflate = LayoutInflater.from(context).inflate(R.layout.basewidget_dialog_date_picker, null);
+        View inflate = LayoutInflater.from(context).inflate(PreferencesUtils.getInt(context, "app_theme_num_v1", 0) != 3 ? R.layout.basewidget_dialog_date_picker : R.layout.basewidget_dialog_date_picker_dark, null);
         datePicker = inflate.findViewById(R.id.date_picker);
         datePicker.init(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), new DatePicker.OnDateChangedListener() {
             @Override
