@@ -17,6 +17,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.basemodule.ui.DarkUtil;
 
 import java.util.List;
 
@@ -126,7 +127,7 @@ public class PopupWindowList {
             throw new IllegalArgumentException("please fill ListView Data");
         }
         mPopView = new ListView(mContext);
-        mPopView.setBackgroundColor(ContextCompat.getColor(mContext, android.R.color.white));
+        mPopView.setBackgroundColor(DarkUtil.getTextContainerColor());
         mPopView.setVerticalScrollBarEnabled(false);
         mPopView.setDivider(null);
         PopAdapter adapter = new PopAdapter(mContext, mItemData);

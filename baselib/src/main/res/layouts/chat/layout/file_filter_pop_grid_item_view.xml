@@ -18,5 +18,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/filter_type_img"
         android:gravity="center_horizontal"
+        android:textColor="?attr/text_color"
         android:paddingTop="5dp" />
 </RelativeLayout>

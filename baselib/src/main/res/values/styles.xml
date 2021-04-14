@@ -58,6 +58,7 @@
         <item name="content_bg">@color/content_bg</item>
         <item name="content_bg_level_two">@color/content_bg_level_two</item>
         <item name="color_bg_common">@color/color_bg_common</item>
+        <item name="home_common_bg">@color/button_color_nor</item>
         <item name="text_ll_color_nor">@color/button_color_nor</item>
         <item name="text_ll_color_sel">@color/button_color_sel</item>
         <item name="text_color">@color/text_color</item>
@@ -115,6 +116,7 @@
         <item name="content_bg">@color/content_bg</item>
         <item name="content_bg_level_two">@color/content_bg_level_two</item>
         <item name="color_bg_common">@color/color_bg_common</item>
+        <item name="home_common_bg">@color/button_color_nor</item>
         <item name="text_ll_color_nor">@color/button_color_nor</item>
         <item name="text_ll_color_sel">@color/button_color_sel</item>
         <item name="text_color">@color/text_color</item>
@@ -169,6 +171,7 @@
         <item name="content_bg">@color/content_bg</item>
         <item name="content_bg_level_two">@color/content_bg_level_two</item>
         <item name="color_bg_common">@color/color_bg_common</item>
+        <item name="home_common_bg">@color/button_color_nor</item>
         <item name="text_ll_color_nor">@color/button_color_nor</item>
         <item name="text_ll_color_sel">@color/button_color_sel</item>
         <item name="text_color">@color/text_color</item>
@@ -223,6 +226,7 @@
         <item name="content_bg">@color/content_bg_dark</item>
         <item name="content_bg_level_two">@color/content_bg_dark_level_two</item>
         <item name="color_bg_common">@color/color_bg_common_dark</item>
+        <item name="home_common_bg">@color/content_bg_dark</item>
         <item name="text_ll_color_nor">@color/button_color_nor_dark</item>
         <item name="text_ll_color_sel">@color/button_color_sel_dark</item>
         <item name="text_color">@color/text_color_dark</item>

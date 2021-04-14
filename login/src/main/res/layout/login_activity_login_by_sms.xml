@@ -42,8 +42,7 @@
             android:id="@+id/text_input_layout_phone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:theme="@style/EditTextHint"
-            app:errorEnabled="false">
+            android:textColorHint="@color/color_text_tip">
 
             <com.inspur.emmcloud.baselib.widget.ClearEditText
                 android:id="@+id/et_phone"

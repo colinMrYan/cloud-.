@@ -4,14 +4,15 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:paddingLeft="15dp"
-    android:paddingRight="15dp">
+    android:paddingRight="15dp"
+    android:background="?attr/content_bg">
     <TextView
         android:id="@+id/ratio_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingBottom="14dp"
         android:paddingTop="14dp"
-        android:textColor="@color/text_black"
+        android:textColor="?attr/text_color"
         android:textSize="@dimen/header_textsize" />
 
     <ProgressBar

@@ -143,7 +143,7 @@ public class ShareVolumeInfoActivity extends BaseActivity {
         if (isOwner) {
             if (volumeDetail.getGroupWriteList().size() > 0) {
                 groupWriteLayout.setVisibility(View.VISIBLE);
-                groupWriteAdapter = new VolumeInfoGroupAdapter(getApplicationContext(), volumeDetail.getGroupWriteList());
+                groupWriteAdapter = new VolumeInfoGroupAdapter(this, volumeDetail.getGroupWriteList());
                 groupWriteListView.setAdapter(groupWriteAdapter);
                 groupWriteListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -154,7 +154,7 @@ public class ShareVolumeInfoActivity extends BaseActivity {
             }
             if (volumeDetail.getGroupReadList().size() > 0) {
                 groupReadLayout.setVisibility(View.VISIBLE);
-                groupReadAdapter = new VolumeInfoGroupAdapter(getApplicationContext(), volumeDetail.getGroupReadList());
+                groupReadAdapter = new VolumeInfoGroupAdapter(this, volumeDetail.getGroupReadList());
                 groupReadListView.setAdapter(groupReadAdapter);
                 groupReadListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -165,7 +165,7 @@ public class ShareVolumeInfoActivity extends BaseActivity {
             }
         }
         memberLayout.setVisibility(View.GONE);
-        memberAdapter = new VolumeInfoMemberAdapter(getApplicationContext(), volumeDetail.getMemberUidList(), isOwner);
+        memberAdapter = new VolumeInfoMemberAdapter(this, volumeDetail.getMemberUidList(), isOwner);
         memberGrid.setAdapter(memberAdapter);
         updateVolumeMemNum();
         volumeNameText.setText(volumeDetail.getName());

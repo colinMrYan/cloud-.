@@ -116,7 +116,6 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
     @Override
     public void onCreate() {
         ButterKnife.bind(this);
-        ImmersionBar.with(this).statusBarColor(R.color.search_contact_header_bg).statusBarDarkFont(true, 0.2f).navigationBarColor(R.color.white).navigationBarDarkIcon(true, 1.0f).init();
         searchArea = getIntent().getStringExtra("search_type");
         searchText = getIntent().getStringExtra("search_content");
         shareContent = (String) getIntent().getSerializableExtra(Constant.SHARE_CONTENT);
@@ -153,10 +152,10 @@ public class CommunicationSearchModelMoreActivity extends BaseActivity implement
         return R.layout.communication_search_model_detail_activity;
     }
 
-    @Override
-    protected int getStatusType() {
-        return STATUS_NO_SET;
-    }
+//    @Override
+//    protected int getStatusType() {
+//        return STATUS_NO_SET;
+//    }
 
     @Override
     public void onLoadMore() {

@@ -44,7 +44,7 @@
             android:id="@+id/text_input_layout_username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:theme="@style/EditTextHint"
+            android:textColorHint="@color/color_text_tip"
             app:errorEnabled="false">
 
             <com.inspur.emmcloud.baselib.widget.ClearEditText
@@ -60,6 +60,7 @@
                 android:paddingTop="17dp"
                 android:singleLine="true"
                 android:textColor="?attr/text_color"
+                android:textColorHint="@color/color_text_tip"
                 android:textSize="15sp"
                 android:theme="@style/MyEditText" />
 
@@ -71,7 +72,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:theme="@style/EditTextHint"
+            android:textColorHint="@color/color_text_tip"
             app:passwordToggleDrawable="@drawable/app_edittext_eye_selector"
             app:passwordToggleEnabled="true">
 
@@ -87,6 +88,7 @@
                 android:paddingTop="17dp"
                 android:singleLine="true"
                 android:textColor="?attr/text_color"
+                android:textColorHint="@color/color_text_tip"
                 android:textSize="15sp"
                 android:theme="@style/MyEditText" />
 

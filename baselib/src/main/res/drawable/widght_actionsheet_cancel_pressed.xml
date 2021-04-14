@@ -4,8 +4,8 @@
 
     <gradient
         android:angle="90"
-        android:endColor="#CACACB"
-        android:startColor="#CACACB" />
+        android:endColor="?attr/bubble_bg_color"
+        android:startColor="?attr/bubble_bg_color" />
     <!--
     <stroke
         android:dashGap="2dp"

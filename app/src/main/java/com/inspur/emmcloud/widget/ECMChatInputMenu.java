@@ -1544,6 +1544,7 @@ public class ECMChatInputMenu extends LinearLayout {
             builder.addItem(languageList.get(i));
         }
         builder.setOnSheetItemClickListener(onSheetItemClickListener)
+                .setItemColor(DarkUtil.getTextColor())
                 .build()
                 .show();
     }

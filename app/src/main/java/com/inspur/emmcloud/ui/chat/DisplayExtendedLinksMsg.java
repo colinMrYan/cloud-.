@@ -36,7 +36,7 @@ public class DisplayExtendedLinksMsg {
         boolean isMyMsg = message.getFromUser().equals(MyApplication.getInstance().getUid());
         BubbleLayout cardLayout = (BubbleLayout) cardContentView.findViewById(R.id.bl_card);
         cardLayout.setArrowDirection(isMyMsg ? ArrowDirection.RIGHT : ArrowDirection.LEFT);
-        cardLayout.setBubbleColor(ResourceUtils.getResValueOfAttr(context, R.attr.bubble_bg_color));
+        cardLayout.setBubbleColor(context.getResources().getColor(ResourceUtils.getResValueOfAttr(context, R.attr.bubble_bg_color)));
         MsgContentExtendedLinks msgContentExtendedLinks = message.getMsgContentExtendedLinks();
         String title = msgContentExtendedLinks.getTitle();
         String subTitle = msgContentExtendedLinks.getSubtitle();

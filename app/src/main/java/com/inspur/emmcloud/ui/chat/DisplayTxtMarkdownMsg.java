@@ -16,6 +16,7 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.ResolutionUtils;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.bean.chat.MarkDownLink;
@@ -72,12 +73,12 @@ public class DisplayTxtMarkdownMsg {
         final TextView contentText = cardContentView.findViewById(R.id.tv_content);
         BubbleLayout cardLayout = cardContentView.findViewById(R.id.bl_card);
         cardLayout.setArrowDirection(isMyMsg ? ArrowDirection.RIGHT : ArrowDirection.LEFT);
-        cardLayout.setBubbleColor(context.getResources().getColor(isMyMsg ? R.color.bg_my_card : R.color.bg_other_card));
+        cardLayout.setBubbleColor(context.getResources().getColor(isMyMsg ? R.color.bg_my_card : ResourceUtils.getResValueOfAttr(context, R.attr.bubble_bg_color)));
         cardLayout.setStrokeWidth(isMyMsg ? 0 : 0.5f);
         titleText.setTextColor(context.getResources().getColor(
                 isMyMsg ? R.color.white : R.color.black));
         contentText.setTextColor(context.getResources().getColor(
-                isMyMsg ? R.color.white : R.color.black));
+                isMyMsg ? R.color.white : ResourceUtils.getResValueOfAttr(context, R.attr.text_color)));
         String content = msg.getMsgContentTextMarkdown().getText();
         String title = msg.getMsgContentTextMarkdown().getTitle();
         if (StringUtils.isBlank(title)) {

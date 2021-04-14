@@ -65,7 +65,8 @@ public class DatePickerSpinnerDialog {
     }
 
     /**
-     * 初始化Dialog*/
+     * 初始化Dialog
+     */
     private void initPickerTimeDialog(View view) {
         alertDialog = new AlertDialog.Builder(context, R.style.DateTimeAlertDialog);
         alertDialog.setNeutralButton(R.string.cancel, new DialogInterface.OnClickListener() {

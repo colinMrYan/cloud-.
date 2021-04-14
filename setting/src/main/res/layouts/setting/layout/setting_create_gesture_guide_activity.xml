@@ -37,6 +37,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/rl_header"
+        android:background="?attr/header_bg"
         android:orientation="vertical"
         android:paddingBottom="38dp">
 
@@ -59,6 +60,7 @@
             android:paddingLeft="37dp"
             android:paddingRight="37dp"
             android:text="@string/setting_create_gesture_guid"
+            android:textColor="?attr/text_color"
             android:textSize="16sp" />
 
         <com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButton

@@ -85,6 +85,7 @@ public class DateTimePickerDialog {
                 picker.setContentPadding(0, 5);
                 picker.setSelectedItem(resultCalendar.get(Calendar.HOUR_OF_DAY), resultCalendar.get(Calendar.MINUTE));
                 picker.setTopLineVisible(false);
+                picker.setTopBackgroundColor(Color.parseColor(currentThemeNo != 3 ? "#ECEEF2":"#292929"));
                 picker.setTextPadding(ConvertUtils.toPx((Activity) context, 15));
                 picker.setOnTimePickListener(new TimePicker.OnTimePickListener() {
                     @Override

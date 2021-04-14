@@ -13,7 +13,7 @@
     <attr name="color_list_divider" format="reference|color" />
     <attr name="color_list_divider_tran" format="reference|color" />
     <attr name="drawable_list_divider" format="reference" />
-
+    <attr name="home_common_bg" format="reference|color" />
 
     <attr name="header_text_blue_white_color" format="reference|color" />
     <attr name="footer_bg_color" format="reference|color" />

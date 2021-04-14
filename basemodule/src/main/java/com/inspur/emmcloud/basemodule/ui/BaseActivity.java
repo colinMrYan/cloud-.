@@ -1,14 +1,17 @@
 package com.inspur.emmcloud.basemodule.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.LogUtils;
@@ -28,6 +31,8 @@ import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestC
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
 
 import java.util.List;
+
+import static com.inspur.emmcloud.basemodule.application.BaseApplication.getInstance;
 
 public abstract class BaseActivity extends AppCompatActivity {
     protected final int STATUS_NORMAL = 1;
@@ -88,14 +93,14 @@ public abstract class BaseActivity extends AppCompatActivity {
                 layout.setLayoutParams(params);
             }
             ((TextView) permissionDialog.findViewById(R.id.tv_permission_dialog_title)).setText(
-                    getString(R.string.permission_open_cloud_plus, AppUtils.getAppName(BaseApplication.getInstance())));
+                    getString(R.string.permission_open_cloud_plus, AppUtils.getAppName(getInstance())));
             ((TextView) permissionDialog.findViewById(R.id.tv_permission_dialog_summary)).setText(getString(
-                    R.string.permission_necessary_permission, AppUtils.getAppName(BaseApplication.getInstance())));
+                    R.string.permission_necessary_permission, AppUtils.getAppName(getInstance())));
             permissionDialog.findViewById(R.id.tv_next_step).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     permissionDialog.dismiss();
-                    PermissionRequestManagerUtils.getInstance().requestRuntimePermission(BaseApplication.getInstance(),
+                    PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getInstance(),
                             necessaryPermissionArray, new PermissionRequestCallback() {
                                 @Override
                                 public void onPermissionRequestSuccess(List<String> permissions) {
@@ -104,10 +109,10 @@ public abstract class BaseActivity extends AppCompatActivity {
 
                                 @Override
                                 public void onPermissionRequestFail(List<String> permissions) {
-                                    ToastUtils.show(BaseApplication.getInstance(),
+                                    ToastUtils.show(getInstance(),
                                             PermissionRequestManagerUtils.getInstance()
-                                                    .getPermissionToast(BaseApplication.getInstance(), permissions));
-                                    BaseApplication.getInstance().exit();
+                                                    .getPermissionToast(getInstance(), permissions));
+                                    getInstance().exit();
                                 }
                             });
                 }
@@ -135,7 +140,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public void setTheme() {
-        int currentThemeNo = PreferencesUtils.getInt(BaseApplication.getInstance(), Constant.PREF_APP_THEME, 0);
+        int currentThemeNo = PreferencesUtils.getInt(getInstance(), Constant.PREF_APP_THEME, 0);
         switch (currentThemeNo) {
             case 1:
                 setTheme(statusType == STATUS_TRANSPARENT ? R.style.AppTheme_Transparent_1 : R.style.AppTheme_1);
@@ -152,23 +157,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        int currentNightMode = newConfig.uiMode & Configuration.UI_MODE_NIGHT_MASK;
-        ToastUtils.show("监听到深色模式变化："+currentNightMode);
-        switch (currentNightMode) {
-            case Configuration.UI_MODE_NIGHT_NO:
-                setTheme(statusType == STATUS_TRANSPARENT ? R.style.AppTheme_Transparent_0 : R.style.AppTheme_0);
-                break;
-            case Configuration.UI_MODE_NIGHT_YES:
-                setTheme(statusType == STATUS_TRANSPARENT ? R.style.AppTheme_Transparent_3 : R.style.AppTheme_3);
-                break;
-        }
-    }
-
     private void setStatus() {
-        int currentThemeNo = PreferencesUtils.getInt(BaseApplication.getInstance(), Constant.PREF_APP_THEME, 0);
+        int currentThemeNo = PreferencesUtils.getInt(getInstance(), Constant.PREF_APP_THEME, 0);
         int navigationBarColor = currentThemeNo != THEME_DARK ? android.R.color.white : android.R.color.black;
         boolean isStatusBarDarkFont = ResourceUtils.getBoolenOfAttr(this, R.attr.status_bar_dark_font);
         switch (statusType) {
@@ -224,5 +214,31 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         ImmersionBar.with(this).destroy();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        switch (currentNightMode) {
+            case Configuration.UI_MODE_NIGHT_NO:
+                break;
+            case Configuration.UI_MODE_NIGHT_YES:
+                int currentThemeNo = PreferencesUtils.getInt(getInstance(), Constant.PREF_APP_THEME, 0);
+                //不是深色模式
+                if (currentThemeNo != 3) {
+                    PreferencesUtils.putInt(getInstance(), Constant.PREF_APP_THEME, 3);
+                    setTheme();
+                    // 登录相关页面不能跳转IndexActivity
+                    if (TextUtils.isEmpty(PreferencesUtils.getString(getInstance(), "userID"))) {
+                        ARouter.getInstance().build(Constant.AROUTER_CLASS_LOGIN_MAIN).withFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                                | Intent.FLAG_ACTIVITY_CLEAR_TASK).navigation(this);
+                    } else {
+                        ARouter.getInstance().build(Constant.AROUTER_CLASS_APP_INDEX).withFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                                | Intent.FLAG_ACTIVITY_CLEAR_TASK).navigation(this);
+                    }
+                }
+                break;
+        }
     }
 }

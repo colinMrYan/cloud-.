@@ -54,6 +54,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="?attr/content_bg"
         android:layout_below="@id/rl_header">
 
         <LinearLayout
@@ -104,6 +105,7 @@
                     android:layout_marginTop="10dp"
                     app:scv_BackgroundSelectedColor="@color/color_base_blue"
                     app:scv_FrameColor="@color/color_base_blue"
+                    app:scv_BackgroundNormalColor="?attr/text_ll_color_nor"
                     app:scv_FrameCornerRadius="2dp"
                     app:scv_FrameWidth="0.5dp"
                     app:scv_Gradient="true"

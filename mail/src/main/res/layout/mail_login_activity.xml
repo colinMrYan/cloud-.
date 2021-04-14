@@ -34,7 +34,7 @@
             android:id="@+id/text_input_layout_username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:theme="@style/EditTextHint"
+            android:textColorHint="@color/color_text_tip"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:layout_marginTop="35dp"
@@ -51,6 +51,7 @@
                 android:paddingRight="12dp"
                 android:singleLine="true"
                 android:textColor="?attr/text_color"
+                android:textColorHint="@color/color_text_tip"
                 android:textSize="16sp"
                 android:theme="@style/MyEditText" />
 
@@ -61,7 +62,6 @@
             android:id="@+id/text_input_layout_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:theme="@style/EditTextHint"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             app:passwordToggleDrawable="@drawable/app_edittext_eye_selector"
@@ -77,6 +77,7 @@
                 android:inputType="textPassword"
                 android:singleLine="true"
                 android:textColor="?attr/text_color"
+                android:textColorHint="@color/color_text_tip"
                 android:textSize="16sp"
                 android:theme="@style/MyEditText" />
 
