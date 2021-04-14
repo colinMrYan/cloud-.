@@ -224,6 +224,17 @@ public abstract class BaseActivity extends AppCompatActivity {
             case Configuration.UI_MODE_NIGHT_NO:
                 break;
             case Configuration.UI_MODE_NIGHT_YES:
+                // 启动页和splash页不适配深色模式
+                Class<? extends BaseActivity> aClass = getClass();
+                String simpleName = aClass.getSimpleName();
+                if (simpleName.equals("MainActivity")) {
+                    return;
+                }
+                // 第一次打开app,splash页面不适配深色模式
+                Boolean isFirst = PreferencesUtils.getBoolean(this, "isFirst", true);
+                if (isFirst) {
+                    return;
+                }
                 int currentThemeNo = PreferencesUtils.getInt(getInstance(), Constant.PREF_APP_THEME, 0);
                 //不是深色模式
                 if (currentThemeNo != 3) {
