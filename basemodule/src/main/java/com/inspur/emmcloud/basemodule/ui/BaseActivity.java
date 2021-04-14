@@ -32,8 +32,6 @@ import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestM
 
 import java.util.List;
 
-import static com.inspur.emmcloud.basemodule.application.BaseApplication.getInstance;
-
 public abstract class BaseActivity extends AppCompatActivity {
     protected final int STATUS_NORMAL = 1;
     protected final int STATUS_WHITE = 2;
@@ -93,14 +91,14 @@ public abstract class BaseActivity extends AppCompatActivity {
                 layout.setLayoutParams(params);
             }
             ((TextView) permissionDialog.findViewById(R.id.tv_permission_dialog_title)).setText(
-                    getString(R.string.permission_open_cloud_plus, AppUtils.getAppName(getInstance())));
+                    getString(R.string.permission_open_cloud_plus, AppUtils.getAppName(BaseApplication.getInstance())));
             ((TextView) permissionDialog.findViewById(R.id.tv_permission_dialog_summary)).setText(getString(
-                    R.string.permission_necessary_permission, AppUtils.getAppName(getInstance())));
+                    R.string.permission_necessary_permission, AppUtils.getAppName(BaseApplication.getInstance())));
             permissionDialog.findViewById(R.id.tv_next_step).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     permissionDialog.dismiss();
-                    PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getInstance(),
+                    PermissionRequestManagerUtils.getInstance().requestRuntimePermission(BaseApplication.getInstance(),
                             necessaryPermissionArray, new PermissionRequestCallback() {
                                 @Override
                                 public void onPermissionRequestSuccess(List<String> permissions) {
@@ -109,10 +107,10 @@ public abstract class BaseActivity extends AppCompatActivity {
 
                                 @Override
                                 public void onPermissionRequestFail(List<String> permissions) {
-                                    ToastUtils.show(getInstance(),
+                                    ToastUtils.show(BaseApplication.getInstance(),
                                             PermissionRequestManagerUtils.getInstance()
-                                                    .getPermissionToast(getInstance(), permissions));
-                                    getInstance().exit();
+                                                    .getPermissionToast(BaseApplication.getInstance(), permissions));
+                                    BaseApplication.getInstance().exit();
                                 }
                             });
                 }
@@ -140,7 +138,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public void setTheme() {
-        int currentThemeNo = PreferencesUtils.getInt(getInstance(), Constant.PREF_APP_THEME, 0);
+        int currentThemeNo = PreferencesUtils.getInt(BaseApplication.getInstance(), Constant.PREF_APP_THEME, 0);
         switch (currentThemeNo) {
             case 1:
                 setTheme(statusType == STATUS_TRANSPARENT ? R.style.AppTheme_Transparent_1 : R.style.AppTheme_1);
@@ -158,7 +156,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     private void setStatus() {
-        int currentThemeNo = PreferencesUtils.getInt(getInstance(), Constant.PREF_APP_THEME, 0);
+        int currentThemeNo = PreferencesUtils.getInt(BaseApplication.getInstance(), Constant.PREF_APP_THEME, 0);
         int navigationBarColor = currentThemeNo != THEME_DARK ? android.R.color.white : android.R.color.black;
         boolean isStatusBarDarkFont = ResourceUtils.getBoolenOfAttr(this, R.attr.status_bar_dark_font);
         switch (statusType) {
@@ -235,13 +233,13 @@ public abstract class BaseActivity extends AppCompatActivity {
                 if (isFirst) {
                     return;
                 }
-                int currentThemeNo = PreferencesUtils.getInt(getInstance(), Constant.PREF_APP_THEME, 0);
+                int currentThemeNo = PreferencesUtils.getInt(BaseApplication.getInstance(), Constant.PREF_APP_THEME, 0);
                 //不是深色模式
                 if (currentThemeNo != 3) {
-                    PreferencesUtils.putInt(getInstance(), Constant.PREF_APP_THEME, 3);
+                    PreferencesUtils.putInt(BaseApplication.getInstance(), Constant.PREF_APP_THEME, 3);
                     setTheme();
                     // 登录相关页面不能跳转IndexActivity
-                    if (TextUtils.isEmpty(PreferencesUtils.getString(getInstance(), "userID"))) {
+                    if (TextUtils.isEmpty(PreferencesUtils.getString(BaseApplication.getInstance(), "userID"))) {
                         ARouter.getInstance().build(Constant.AROUTER_CLASS_LOGIN_MAIN).withFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                                 | Intent.FLAG_ACTIVITY_CLEAR_TASK).navigation(this);
                     } else {
