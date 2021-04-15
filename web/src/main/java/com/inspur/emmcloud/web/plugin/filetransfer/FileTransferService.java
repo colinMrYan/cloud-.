@@ -586,8 +586,8 @@ public class FileTransferService extends ImpPlugin {
                 .inflate(Res.getLayoutID("web_filetransfer_dialog_file_download_progress"), null);
         ratioText = (TextView) view.findViewById(Res.getWidgetID("ratio_text"));
         progressBar = (ProgressBar) view.findViewById(Res.getWidgetID("update_progress"));
-        fileDownloadDlg = new AlertDialog.Builder(getActivity(),
-                android.R.style.Theme_Holo_Light_Dialog)
+        fileDownloadDlg = new AlertDialog.Builder(getActivity(), PreferencesUtils.getInt(getFragmentContext(),
+                "app_theme_num_v1", 0) != 3 ? android.R.style.Theme_Holo_Light_Dialog : AlertDialog.THEME_HOLO_DARK)
                 .setTitle(Res.getStringID("file_downloading"))
                 .setView(view)
                 .setCancelable(false)
@@ -887,8 +887,8 @@ public class FileTransferService extends ImpPlugin {
 
             }
         });
-        fileUploadDlg = new AlertDialog.Builder(getActivity(),
-                android.R.style.Theme_Holo_Light_Dialog)
+        fileUploadDlg = new AlertDialog.Builder(getActivity(), PreferencesUtils.getInt(getFragmentContext(),
+                        "app_theme_num_v1", 0) != 3 ? android.R.style.Theme_Holo_Light_Dialog : AlertDialog.THEME_HOLO_DARK)
                 .setTitle(Res.getStringID("file_uploading"))
                 .setView(view)
                 .setCancelable(false)

@@ -4,8 +4,8 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:paddingLeft="15dp"
-    android:paddingRight="15dp"
-    android:background="?attr/content_bg">
+    android:paddingRight="15dp">
+
     <TextView
         android:id="@+id/ratio_text"
         android:layout_width="wrap_content"
