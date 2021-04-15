@@ -34,6 +34,7 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.ImageUtils;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.ResolutionUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
@@ -70,6 +71,7 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
     public static final String FACE_VERIFT_IS_OPEN = "face_verify_isopen";
     private static final int TIMEOUT_TIME = 20000;
     private FocusSurfaceView previewSFV;
+    private View viewBg;
     private Camera mCamera;
     private SurfaceHolder mHolder;
     private int currentCameraFacing;
@@ -139,6 +141,10 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
 
     private void init() {
         previewSFV = (FocusSurfaceView) findViewById(R.id.preview_sv);
+        viewBg = (View) findViewById(R.id.view_bg);
+        int currentThemeNo = PreferencesUtils.getInt(BaseApplication.getInstance(), Constant.PREF_APP_THEME, 0);
+        viewBg.setBackground(currentThemeNo != THEME_DARK ? getResources().getDrawable(R.drawable.setting_ic_setting_face_verification_bg)
+                : getResources().getDrawable(R.drawable.setting_ic_setting_face_verification_dark_bg));
         int previewSFVWidth = (int) (ResolutionUtils.getWidth(FaceVerifyActivity.this) * 0.65);
         int previewSFVHeight = (int) (previewSFVWidth * 4 / 3);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(previewSFVWidth, previewSFVHeight);
@@ -233,7 +239,7 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
                         break;
                     }
                 }
-            ToastUtils.show(getApplicationContext(), R.string.open_camera_fail_by_perminssion);
+                ToastUtils.show(getApplicationContext(), R.string.open_camera_fail_by_perminssion);
                 finish();
                 break;
         }

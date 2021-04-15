@@ -58,9 +58,10 @@
                 android:visibility="gone" />
 
             <View
+                android:id="@+id/view_bg"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/setting_ic_setting_face_verification_bg"></View>
+                android:background="@drawable/setting_ic_setting_face_verification_bg"/>
         </com.inspur.emmcloud.baselib.widget.SquareLayout>
     </LinearLayout>
 

@@ -3,6 +3,7 @@ package com.inspur.emmcloud.volume.ui;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -42,6 +43,7 @@ import com.inspur.emmcloud.basemodule.bean.DownloadFileCategory;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.ui.DarkUtil;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.FileDownloadManager;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
@@ -236,6 +238,8 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
             builder.addItem(volumeActionHideList.get(i).getActionName(), volumeActionHideList.get(i).isShow());
         }
         builder.setTitle(volumeFile.getName())
+                .setItemColor(Color.parseColor("#36A5F6"))
+                .setCancelColor(DarkUtil.getTextColor())
                 .setOnSheetItemClickListener(new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {
                     @Override
                     public void onClick(ActionSheetDialog dialog, View itemView, int position) {

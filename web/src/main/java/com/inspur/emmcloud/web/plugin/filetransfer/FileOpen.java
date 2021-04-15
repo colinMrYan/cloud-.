@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.v4.content.FileProvider;
 
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
@@ -411,8 +412,8 @@ public class FileOpen {
      * 显示附件打开对话框
      */
     public void showOpenDialog() {
-        AlertDialog alertDialog = new AlertDialog.Builder(context,
-                android.R.style.Theme_Holo_Light_Dialog)
+        AlertDialog alertDialog = new AlertDialog.Builder(context, PreferencesUtils.getInt(context,
+                        "app_theme_num_v1", 0) != 3 ? android.R.style.Theme_Holo_Light_Dialog : AlertDialog.THEME_HOLO_DARK)
                 .setMessage(Res.getStringID("file_download_success"))
                 .setTitle(Res.getStringID("tips"))
                 .setCancelable(false)

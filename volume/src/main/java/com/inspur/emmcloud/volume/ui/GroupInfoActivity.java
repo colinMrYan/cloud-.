@@ -94,7 +94,7 @@ public class GroupInfoActivity extends BaseActivity {
     }
 
     private void showGroupDetail() {
-        memberAdapter = new VolumeInfoMemberAdapter(getApplicationContext(), group.getMemberUidList(), true);
+        memberAdapter = new VolumeInfoMemberAdapter(this, group.getMemberUidList(), true);
         memberGrid.setAdapter(memberAdapter);
         updateGroupMemNum();
         groupNameText.setText(group.getName());

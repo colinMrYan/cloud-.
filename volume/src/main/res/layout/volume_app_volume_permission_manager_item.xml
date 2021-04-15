@@ -26,6 +26,7 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="40dp"
+        android:textColor="@color/color_text_common_level_two"
         android:gravity="center_vertical"
         android:textSize="17sp" />
 
