@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.basemodule.util;
 
 import android.content.Context;
+import android.content.Intent;
 
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
@@ -81,11 +82,23 @@ public class ECMShortcutBadgeNumberManagerUtils {
         if (!AppUtils.GetChangShang().toLowerCase().startsWith(Constant.XIAOMI_FLAG)) {
             try {
                 ShortcutBadger.applyCount(context, count);
+                appVivoCount(context, count);
             } catch (Exception e) {
                 AppExceptionCacheUtils.saveAppException(context, Constant.APP_EXCEPTION_LEVEL, "Desktop badge count", e.getMessage(), -1);
                 e.printStackTrace();
             }
         }
+    }
+
+    private static void appVivoCount(Context context, int count) {
+        if(!"vivo".equals(android.os.Build.MANUFACTURER)){
+            return;
+        }
+        Intent intent = new Intent();
+        intent.setAction("launcher.action.CHANGE_APPLICATION_NOTIFICATION_NUM");
+        intent.putExtra("packageName", "com.inspur.emmcloud");
+        intent.putExtra("notificationNum", count);
+        context.sendBroadcast(intent);
     }
 
 //    /**
