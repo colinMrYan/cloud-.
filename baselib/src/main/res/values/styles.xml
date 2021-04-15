@@ -555,4 +555,9 @@
         <item name="android:textColorPrimary">@android:color/white</item>
     </style>
 
+    <style name="DateTimePickerDarkTheme" parent="AppRootTheme">
+        <item name="android:textColor">#000000</item>
+        <item name="android:textColorPrimary">@android:color/black</item>
+    </style>
+
 </resources>

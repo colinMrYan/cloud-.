@@ -10,7 +10,6 @@
         android:layout_centerHorizontal="true"
         android:calendarViewShown="false"
         android:datePickerMode="spinner"
-        android:theme="@style/DateTimePickerTheme"
-        />
+        android:theme="@style/DateTimePickerTheme" />
 
 </RelativeLayout>
