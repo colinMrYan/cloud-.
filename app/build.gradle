@@ -54,7 +54,7 @@ android {
         applicationId "com.inspur.emmcloud"
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
-        versionCode 121
+        versionCode 123
         //版本号范例：1.0.0-beta.1, 1.0.0-rc.1, 1.0.0
         versionName "4.8.19"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
