@@ -23,6 +23,16 @@ public class DarkUtil {
 
     /**
      * 兜底
+     * 暗黑模式适配获取文字主色
+     * @return 文字主色
+     */
+    public static int getSendButtonColor(){
+        int currentThemeNo = PreferencesUtils.getInt(BaseApplication.getInstance(), Constant.PREF_APP_THEME, 0);
+        return Color.parseColor(currentThemeNo != THEME_DARK ? "#000000":"#FFFFFF");
+    }
+
+    /**
+     * 兜底
      * 暗黑模式适配获取背景色
      * @return 背景色
      */
