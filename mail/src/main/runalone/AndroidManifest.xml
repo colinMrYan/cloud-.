@@ -12,15 +12,15 @@
         <activity
             android:name=".ui.MailHomeActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="behind"></activity>
         <activity
             android:name=".ui.MailDetailActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="behind"></activity>
         <activity
             android:name=".ui.MailLoginActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait">
+            android:screenOrientation="behind">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -30,14 +30,14 @@
         <activity
             android:name=".ui.MailCertificateInstallActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".ui.MailSendActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".ui.MailSettingActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
     </application>
 </manifest>

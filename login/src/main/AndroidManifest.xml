@@ -7,48 +7,48 @@
             android:name=".ui.LoginActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
 
         <activity
             android:name=".ui.PasswordFirstSettingActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
 
         <activity
             android:name=".ui.ScanQrCodeLoginGSActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".ui.LoginMoreActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".ui.ScanQrCodeLoginActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".ui.PasswordModifyActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".ui.LoginBySmsActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".ui.PasswordResetActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
 
         <!-- MDM设备管理 -->
         <activity
             android:name=".ui.DeviceRegisterFailDetailActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
     </application>
 </manifest>

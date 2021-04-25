@@ -396,11 +396,11 @@
         <activity
             android:name=".util.imagepicker.ui.ImageGridActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+             />
         <activity
             android:name=".util.imagepicker.ui.ImagePreviewActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait">
+            >
             <meta-data
                 android:name="android.notch_support"
                 android:value="true" />
@@ -408,17 +408,17 @@
         <activity
             android:name=".util.imagepicker.ui.ImageCropActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+             />
 
         <activity
             android:name=".util.imageedit.IMGEditActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+             />
 
         <activity
             android:name=".util.mycamera.MyCameraActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"
+
             android:stateNotNeeded="true"
             android:supportsRtl="true"></activity>
         <activity

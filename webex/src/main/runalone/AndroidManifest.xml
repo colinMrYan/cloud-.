@@ -13,7 +13,7 @@
             android:name=".ui.WebexMyMeetingActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait">
+            android:screenOrientation="behind">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -24,27 +24,27 @@
             android:name=".ui.WebexScheduleMeetingActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".ui.WebexAttendeesActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
 
         <activity
             android:name=".ui.WebexMeetingDetailActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".ui.WebexAddAttendeesActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".ui.WebexAddExternalAttendeesActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
     </application>
 </manifest>

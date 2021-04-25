@@ -111,14 +111,14 @@
         <activity
             android:name=".ui.IndexActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"
+            android:screenOrientation="behind"
             android:windowSoftInputMode="adjustNothing" />
 
         <activity
             android:name=".ui.ShareFilesActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait">
+            android:screenOrientation="behind">
 
         </activity>
 
@@ -126,7 +126,7 @@
             android:name=".ui.ShareLinkActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".ui.chat.ShareToConversationBlankActivity"
             android:launchMode="singleTask"
@@ -340,131 +340,131 @@
             android:name=".ui.chat.ChannelV0Activity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"
+            android:screenOrientation="behind"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".ui.chat.ConversationActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"
+            android:screenOrientation="behind"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".ui.chat.ChannelInfoActivity"
             android:configChanges="locale|layoutDirection"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"
+            android:screenOrientation="behind"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".ui.chat.ConversationGroupInfoActivity"
             android:configChanges="locale|layoutDirection"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"
+            android:screenOrientation="behind"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".ui.chat.UnReadDetailActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".ui.chat.mvp.view.ConversationInfoActivity"
             android:configChanges="locale|layoutDirection"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"
+            android:screenOrientation="behind"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".ui.chat.ConversationCastInfoActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".ui.chat.ChannelMemActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"
+            android:screenOrientation="behind"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".ui.chat.ChannelMsgDetailActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"
+            android:screenOrientation="behind"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".ui.chat.ChannelMessageDetailActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"
+            android:screenOrientation="behind"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".ui.chat.VoiceCommunicationActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"
+            android:screenOrientation="behind"
             android:windowSoftInputMode="adjustResize|stateHidden" />
 
         <activity
             android:name=".ui.chat.SearchActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"
+            android:screenOrientation="behind"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".ui.chat.CommunicationSearchModelMoreActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"
+            android:screenOrientation="behind"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".ui.chat.CommunicationSearchMessagesActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"
+            android:screenOrientation="behind"
             android:windowSoftInputMode="adjustResize|stateHidden" />
 
         <activity
             android:name=".ui.chat.CorrectedSpeechInputActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"
+            android:screenOrientation="behind"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".ui.chat.ChatFileDownloadActivtiy"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".ui.chat.FileTransferDetailActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
 
         <activity
             android:name=".widget.filemanager.NativeVolumeFileManagerActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
 
         <activity
             android:name=".ui.contact.ContactSearchActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".ui.contact.ContactOrgStructureActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
 
         <activity
             android:name=".ui.contact.UserInfoActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".ui.contact.RobotInfoActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
 
         <activity
             android:name=".ui.contact.ContactSearchMoreActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"
+            android:screenOrientation="behind"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ui.chat.ImagePagerV0Activity"
@@ -480,75 +480,75 @@
         <activity
             android:name=".ui.chat.MembersActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"
+            android:screenOrientation="behind"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ui.chat.GroupAlbumActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".ui.chat.GroupFileActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".ui.find.AnalysisActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".ui.find.trip.TripInfoActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".ui.appcenter.ReactNativeAppActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"
+            android:screenOrientation="behind"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.chat.ModifyChannelGroupNameActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".ui.chat.ConversationNameModifyActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".ui.chat.ConversationQrCodeActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".ui.find.trip.TravelActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".ui.find.trip.TravelStarsActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".ui.find.trip.TripDetailActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"
+            android:screenOrientation="behind"
             android:windowSoftInputMode="adjustResize|stateHidden" />
 
         <activity
             android:name=".ui.find.DocumentActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".ui.find.KnowledgeActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
 
         <activity
             android:name=".ui.chat.ChannelMembersDelActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
 
         <!-- 云盘 -->
 

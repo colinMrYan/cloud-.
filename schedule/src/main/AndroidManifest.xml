@@ -6,67 +6,67 @@
         <activity
             android:name=".ui.meeting.ScheduleAddActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".ui.meeting.ScheduleDetailActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".ui.meeting.ScheduleDetailReplyActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".ui.meeting.MeetingRoomListActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".ui.meeting.MeetingOfficeSettingActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".ui.meeting.MeetingAttendeeStateActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".ui.ScheduleTypeSelectActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".ui.ScheduleAlertTimeActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".ui.calendar.CalendarSettingActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".ui.calendar.CalendarAccountSelectActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".ui.task.TaskAddActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".ui.task.TaskTagAddActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".ui.task.TaskTagsManageActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".ui.task.TaskSetActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".ui.meeting.MeetingRoomInfoActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".ui.meeting.MeetingHistoryActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
 
     </application>
 

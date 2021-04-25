@@ -6,12 +6,12 @@
             android:name=".ui.NewsWebDetailActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"
+            android:screenOrientation="behind"
             android:windowSoftInputMode="adjustPan" />
 
         <activity
             android:name=".ui.GroupNewsActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
     </application>
 </manifest>

@@ -7,28 +7,28 @@
         <activity
             android:name=".ui.MailHomeActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="behind"></activity>
         <activity
             android:name=".ui.MailDetailActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="behind"></activity>
         <activity
             android:name=".ui.MailLoginActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="behind"></activity>
 
         <activity
             android:name=".ui.MailCertificateInstallActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".ui.MailSendActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".ui.MailSettingActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
 
 
     </application>

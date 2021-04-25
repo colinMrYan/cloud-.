@@ -5,27 +5,27 @@
         <activity
             android:name=".ui.AppCenterActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="behind"></activity>
         <activity
             android:name=".ui.AppCenterMoreActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".ui.AppSearchActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".ui.AppDetailActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
 
         <activity
             android:name=".ui.AppGroupActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
 
 
         <service android:name=".service.SyncCommonAppService"></service>

@@ -39,20 +39,15 @@ import static com.inspur.emmcloud.basemodule.util.protocol.ProtocolUtil.PREF_PRO
 public abstract class BaseFragmentActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme();
         // 设置是否开启原生页面自动旋转
         boolean isNativeAutoRotate = PreferencesByUserAndTanentUtils.getBoolean(this,
                 Constant.PREF_APP_OPEN_NATIVE_ROTATE_SWITCH, false);
-        if (isNativeAutoRotate) {
-            if (this instanceof NotSupportLand) {
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-            } else {
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-            }
-
+        if (isNativeAutoRotate && !(this instanceof NotSupportLand)) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         } else {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
+        setTheme();
         super.onCreate(savedInstanceState);
         if(PreferencesUtils.getBoolean(this, PREF_PROTOCOL_DLG_AGREED, false)){
             checkNecessaryPermission();

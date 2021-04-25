@@ -13,7 +13,7 @@
             android:name=".runalone.ui.WebTestMainActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait">
+            android:screenOrientation="behind">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -36,26 +36,26 @@
         <activity
             android:name=".plugin.barcode.scan.CaptureActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"
+            android:screenOrientation="behind"
             android:stateNotNeeded="true"
             android:supportsRtl="true" />
         <activity
             android:name=".plugin.barcode.decoder.PreviewDecodeActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"
+            android:screenOrientation="behind"
             android:stateNotNeeded="true"
             android:supportsRtl="true" />
         <activity
             android:name=".plugin.barcode.alidecoder.ALiScanActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"
+            android:screenOrientation="behind"
             android:stateNotNeeded="true"
             android:supportsRtl="true" />
         <activity
             android:name=".plugin.photo.ImageGalleryActivity"
             android:label="@string/app_name"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
 
 
         <activity
@@ -69,12 +69,12 @@
             android:name=".plugin.barcode.ScanResultActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".plugin.screenshot.ScreenShotActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"
+            android:screenOrientation="behind"
             android:theme="@style/AppTheme_Transparent" />
     </application>
 </manifest>
