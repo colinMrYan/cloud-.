@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.ui;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
@@ -25,6 +26,7 @@ import com.inspur.emmcloud.basemodule.bean.GetAllConfigVersionResult;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.push.PushManagerUtils;
+import com.inspur.emmcloud.basemodule.ui.NotSupportLand;
 import com.inspur.emmcloud.basemodule.util.ApiRequestRecordUploadUtils;
 import com.inspur.emmcloud.basemodule.util.AppPVManager;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
@@ -113,6 +115,13 @@ public class IndexActivity extends IndexBaseActivity {
     protected void onResume() {
         super.onResume();
 //        Update2NewVersionUtils.getInstance(this).checkNeedUpdate2NewVersion();
+        boolean isNativeAutoRotate = PreferencesByUserAndTanentUtils.getBoolean(this,
+                Constant.PREF_APP_OPEN_NATIVE_ROTATE_SWITCH, false);
+        if (isNativeAutoRotate && !(this instanceof NotSupportLand)) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+        } else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
     }
 
     private void getNaviTabData(String naviTabSaveConfigVersion) {
