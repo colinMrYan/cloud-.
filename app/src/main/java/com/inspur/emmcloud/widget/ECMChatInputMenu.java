@@ -21,10 +21,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -295,6 +297,12 @@ public class ECMChatInputMenu extends LinearLayout {
                 return false;
             }
         });
+        inputEdit.setEditTextActionWatcher(new ChatInputEdit.EditTextActionWatcher() {
+            @Override
+            public void onKeycodeEnter() {
+                hideAddMenuLayout();
+            }
+        });
         inputEdit.setInputWatcher(new ChatInputEdit.InputWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -316,7 +324,7 @@ public class ECMChatInputMenu extends LinearLayout {
         });
     }
 
-    public ChatInputEdit getInputEdit(){
+    public ChatInputEdit getInputEdit() {
         return inputEdit;
     }
 
@@ -527,7 +535,7 @@ public class ECMChatInputMenu extends LinearLayout {
                                 audioDialogManager.dismissVoice2WordProgressDialog();
                             }
                         }
-                    }).setRawPathAndMp3Path(filePathRaw , filePathRaw.replace(".raw", ".mp3")).startConvert();
+                    }).setRawPathAndMp3Path(filePathRaw, filePathRaw.replace(".raw", ".mp3")).startConvert();
                 } else {
                     AndroidMp3ConvertUtils.with(getContext()).setCallBack(new AndroidMp3ConvertUtils.AndroidMp3ConvertCallback() {
                         @Override
@@ -541,7 +549,7 @@ public class ECMChatInputMenu extends LinearLayout {
                         public void onFailure(Exception e) {
 
                         }
-                    }).setRawPathAndMp3Path(filePathRaw , filePathRaw.replace(".raw", ".mp3")).startConvert();
+                    }).setRawPathAndMp3Path(filePathRaw, filePathRaw.replace(".raw", ".mp3")).startConvert();
 
                 }
             }
@@ -1431,6 +1439,8 @@ public class ECMChatInputMenu extends LinearLayout {
             }
             InputMethodUtils.hide((Activity) getContext());
             addMenuLayout.getLayoutParams().height = softInputHeight;
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, softInputHeight);
+            addMenuLayout.setLayoutParams(params);
             addMenuLayout.setVisibility(View.VISIBLE);
         } else if (addMenuLayout.isShown()) {
             hideAddMenuLayout();
@@ -1445,6 +1455,9 @@ public class ECMChatInputMenu extends LinearLayout {
     }
 
     public void hideAddMenuLayout() {
+        // addMenuLayout.setLayoutParams(params); 用于解决横屏时部分手机无法隐藏addMenuLayout
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(0, 0);
+        addMenuLayout.setLayoutParams(params);
         addMenuLayout.setVisibility(View.GONE);
         emotionBtn.setImageResource(R.drawable.ic_chat_btn_emotion);
     }

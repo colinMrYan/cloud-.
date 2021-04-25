@@ -41,6 +41,7 @@ import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.ui.NotSupportLand;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.ClickRuleUtil;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
@@ -87,7 +88,7 @@ import io.agora.rtc.video.VideoCanvas;
  * @see CommunicationFragment#onReceiveVoiceOrVideoCall(GetVoiceAndVideoResult)
  * @see AppSchemeHandleActivity#openScheme()
  */
-public class VoiceCommunicationActivity extends BaseActivity {
+public class VoiceCommunicationActivity extends BaseActivity implements NotSupportLand {
     /**
      * 通话三种状态pre代表正在邀请未接通，ing代表通话中，over代表通话结束，或者来了邀请未点击接听的状态，存储在变量
      * 默认是over状态

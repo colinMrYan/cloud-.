@@ -11,6 +11,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.ui.BaseFragmentActivity;
+import com.inspur.emmcloud.basemodule.ui.NotSupportLand;
 import com.inspur.emmcloud.componentservice.volume.Volume;
 import com.inspur.emmcloud.widget.filemanager.adapter.FileFragmentPagerAdapter;
 
@@ -21,7 +22,7 @@ import java.util.List;
  * Created by libaochao on 2019/10/23.
  */
 
-public class NativeVolumeFileManagerActivity extends BaseFragmentActivity implements View.OnClickListener {
+public class NativeVolumeFileManagerActivity extends BaseFragmentActivity implements View.OnClickListener, NotSupportLand {
 
     NativeFileManagerFragment nativeFileManagerFragment;
     VolumeFileManagerFragment volumeFileManagerFragment;

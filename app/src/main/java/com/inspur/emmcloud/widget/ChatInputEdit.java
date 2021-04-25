@@ -46,6 +46,7 @@ public class ChatInputEdit extends EditText {
     private InputWatcher inputWatcher;
     private InsertModelListWatcher insertModelListWatcher;
     private boolean isRequest = false;
+    private EditTextActionWatcher editTextActionWatcher;
 
     public ChatInputEdit(Context context) {
         super(context);
@@ -70,6 +71,10 @@ public class ChatInputEdit extends EditText {
 
     public void setInputWatcher(InputWatcher inputWatcher) {
         this.inputWatcher = inputWatcher;
+    }
+
+    public void setEditTextActionWatcher(EditTextActionWatcher editTextActionWatcher) {
+        this.editTextActionWatcher = editTextActionWatcher;
     }
 
     public int ParseIconResId(String name) {
@@ -167,6 +172,11 @@ public class ChatInputEdit extends EditText {
                     int selectionStart = getSelectionStart();
                     int selectionEnd = getSelectionEnd();
                     removeInsertModelByDeleteContent(selectionStart, selectionEnd);
+                }
+                // 监听横屏action完成按钮
+                if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN) {
+                    if (editTextActionWatcher != null)
+                        editTextActionWatcher.onKeycodeEnter();
                 }
                 return false;
             }
@@ -444,6 +454,10 @@ public class ChatInputEdit extends EditText {
     public interface InputWatcher {
         void onTextChanged(CharSequence s, int start, int before,
                            int count);
+    }
+
+    public interface EditTextActionWatcher {
+        void onKeycodeEnter();
     }
 
     public interface InsertModelListWatcher {

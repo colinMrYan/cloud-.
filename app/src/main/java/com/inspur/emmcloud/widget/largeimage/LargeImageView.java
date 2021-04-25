@@ -16,6 +16,7 @@ limitations under the License.
 package com.inspur.emmcloud.widget.largeimage;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -621,6 +622,15 @@ public class LargeImageView extends View implements BlockImageLoader.OnImageLoad
 
     @Override
     public void onLoadImageSize(final int imageWidth, final int imageHeight) {
+        Configuration configuration = getResources().getConfiguration();
+        // 适配横屏时图片显示
+        if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            if (imageWidth > imageHeight) {
+                mScale = 1.0f;
+            } else {
+                mScale = 0.25f;
+            }
+        }
         mDrawableWidth = imageWidth;
         mDrawableHeight = imageHeight;
         final int layoutWidth = getMeasuredWidth();

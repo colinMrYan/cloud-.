@@ -94,7 +94,7 @@
         android:paddingLeft="0dp"
         android:paddingTop="0dp"
         android:paddingRight="0dp"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <include layout="@layout/emotion_grid" />
 

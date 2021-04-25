@@ -462,7 +462,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
                 return true;
             }
         }
-            return false;
+        return false;
     }
 
     private void setOriginalImageButtonShow(int position) {
@@ -509,8 +509,8 @@ public class ImagePagerActivity extends BaseFragmentActivity {
             int preViewW = msgContentMediaImage != null ? msgContentMediaImage.getPreviewWidth() : 0;
             String imageName = msgContentMediaImage != null ? msgContentMediaImage.getName() : "";
             LogUtils.LbcDebug("rawH" + rawHigh + "rawW" + rawWidth + "preH" + preViewH + "preW" + preViewW + "name" + imageName);
-                return ImageDetailFragment.newInstance(url, locationW, locationH, locationX, locationY, isNeedTransformIn,
-                        isNeedTransformOut, preViewH, preViewW, rawHigh, rawWidth, imageName);
+            return ImageDetailFragment.newInstance(url, locationW, locationH, locationX, locationY, isNeedTransformIn,
+                    isNeedTransformOut, preViewH, preViewW, rawHigh, rawWidth, imageName);
         }
 
         @Override

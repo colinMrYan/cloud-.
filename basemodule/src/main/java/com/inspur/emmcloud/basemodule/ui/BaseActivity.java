@@ -2,6 +2,7 @@ package com.inspur.emmcloud.basemodule.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -25,6 +26,7 @@ import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.LanguageManager;
+import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.protocol.ProtocolUtil;
 import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
@@ -48,6 +50,19 @@ public abstract class BaseActivity extends AppCompatActivity {
         statusType = getStatusType();
         setTheme();
         super.onCreate(savedInstanceState);
+        // 设置是否开启原生页面自动旋转
+        boolean isNativeAutoRotate = PreferencesByUserAndTanentUtils.getBoolean(this,
+                Constant.PREF_APP_OPEN_NATIVE_ROTATE_SWITCH, false);
+        if (isNativeAutoRotate) {
+            if (this instanceof NotSupportLand) {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            } else {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+            }
+
+        } else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
         int layoutResId = getLayoutResId();
         if (layoutResId != 0) {
             setContentView(layoutResId);
@@ -64,6 +79,19 @@ public abstract class BaseActivity extends AppCompatActivity {
         } else {
             checkNecessaryPermission();
         }
+//         设置是否开启原生页面自动旋转
+//        boolean isNativeAutoRotate = PreferencesByUserAndTanentUtils.getBoolean(this,
+//                Constant.PREF_APP_OPEN_NATIVE_ROTATE_SWITCH, false);
+//        if (isNativeAutoRotate) {
+//            if (this instanceof NotSupportLand) {
+//                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+//            } else {
+//                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+//            }
+//
+//        } else {
+//            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+//        }
     }
 
     private void checkNecessaryPermission() {

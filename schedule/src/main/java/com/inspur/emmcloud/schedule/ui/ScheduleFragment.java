@@ -220,7 +220,9 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
             calendarDayView.post(new Runnable() {
                 @Override
                 public void run() {
-                    eventScrollView.scrollTo(0, calendarDayView.getScrollOffset());
+                    if (eventScrollView != null) {
+                        eventScrollView.scrollTo(0, calendarDayView.getScrollOffset());
+                    }
                 }
             });
         }
@@ -268,6 +270,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
 
     /**
      * 展示日历时间轴上事件标志
+     *
      * @param scheduleList
      */
     private void showAllEventCalendarViewMark(List<Schedule> scheduleList) {

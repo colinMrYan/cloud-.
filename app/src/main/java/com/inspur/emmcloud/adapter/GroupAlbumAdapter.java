@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.adapter;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -119,6 +120,15 @@ public class GroupAlbumAdapter extends RecyclerView.Adapter<GroupAlbumAdapter.Al
         }
         GroupAlbumItemAdapter groupAlbumItemAdapter = new GroupAlbumItemAdapter(context, imgUrlList);
         groupAlbumItemAdapter.setShowSelectState(isSelectState);
+        Configuration configuration = context.getResources().getConfiguration();
+        // 适配横屏图片显示
+        if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            holder.imageGroupGridView.setNumColumns(6);
+
+        } else if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            holder.imageGroupGridView.setNumColumns(4);
+
+        }
         holder.imageGroupGridView.setAdapter(groupAlbumItemAdapter);
         holder.imageGroupGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

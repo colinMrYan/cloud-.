@@ -526,6 +526,7 @@
     <string name="switch_enterprise">Switch</string>
     <string name="current_enterprise">Current enterprise</string>
     <string name="web_app_auto_rotate">Web App Rotation</string>
+    <string name="native_page_auto_rotate">Native Page Rotation</string>
     <string name="signout_fail">Signout failure,please make sure the network connection is normal</string>
 
     <string name="contact">Contact</string>

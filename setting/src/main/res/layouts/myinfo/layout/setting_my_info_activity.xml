@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="?attr/content_bg"
     android:fitsSystemWindows="true">
 
     <RelativeLayout
@@ -22,278 +23,282 @@
             android:src="?attr/ic_back_btn" />
     </RelativeLayout>
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@id/rl_header"
-        android:background="?attr/content_bg"
-        android:orientation="vertical">
+        android:scrollbars="none">
 
-        <RelativeLayout
-            android:id="@+id/rl_photo"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/text_ll_color_nor"
-            android:paddingBottom="10dp">
+            android:orientation="vertical">
 
-            <com.inspur.emmcloud.baselib.widget.CircleTextImageView
-                android:id="@+id/iv_photo"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+            <RelativeLayout
+                android:id="@+id/rl_photo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/text_ll_color_nor"
+                android:paddingBottom="10dp">
+
+                <com.inspur.emmcloud.baselib.widget.CircleTextImageView
+                    android:id="@+id/iv_photo"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_centerHorizontal="true"
+                    android:onClick="onClick" />
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_alignBottom="@id/iv_photo"
+                    android:layout_centerHorizontal="true"
+                    android:src="@drawable/setting_ic_mine_photo_edit" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/iv_photo"
                 android:layout_centerHorizontal="true"
-                android:onClick="onClick" />
-
-            <ImageView
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:layout_alignBottom="@id/iv_photo"
-                android:layout_centerHorizontal="true"
-                android:src="@drawable/setting_ic_mine_photo_edit" />
-        </RelativeLayout>
-
-        <TextView
-            android:id="@+id/tv_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/iv_photo"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="10dp"
-            android:background="?attr/text_ll_color_nor"
-            android:gravity="center_horizontal"
-            android:paddingBottom="18dp"
-            android:text="@string/not_set"
-            android:textColor="?attr/text_color"
-            android:textSize="17sp" />
-
-        <RelativeLayout
-            android:id="@+id/rl_employee_no"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/text_ll_color_nor"
-            android:paddingLeft="16dp">
-
-            <TextView
-                android:id="@+id/tv_employee_no_tips"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingBottom="11dp"
-                android:paddingTop="11dp"
-                android:text="@string/setting_user_worker_num"
-                android:textColor="?attr/text_color"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/tv_employee_no"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/tv_employee_no_tips"
-                android:gravity="right"
-                android:paddingBottom="11dp"
-                android:paddingLeft="20dp"
-                android:paddingRight="15dp"
-                android:paddingTop="11dp"
+                android:layout_marginBottom="10dp"
+                android:background="?attr/text_ll_color_nor"
+                android:gravity="center_horizontal"
+                android:paddingBottom="18dp"
                 android:text="@string/not_set"
-                android:textColor="#888888"
-                android:textSize="16sp" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5px"
-                android:layout_below="@id/tv_employee_no_tips"
-                android:background="?attr/color_list_divider"></View>
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/rl_office_phone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/text_ll_color_nor"
-            android:paddingLeft="16dp">
-
-            <TextView
-                android:id="@+id/tv_office_phone_tips"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingBottom="11dp"
-                android:paddingTop="11dp"
-                android:text="@string/user_telephone"
                 android:textColor="?attr/text_color"
-                android:textSize="16sp" />
+                android:textSize="17sp" />
 
-            <TextView
-                android:id="@+id/tv_office_phone"
+            <RelativeLayout
+                android:id="@+id/rl_employee_no"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/tv_office_phone_tips"
-                android:gravity="right"
-                android:paddingBottom="11dp"
-                android:paddingLeft="20dp"
-                android:paddingRight="15dp"
-                android:paddingTop="11dp"
-                android:text="@string/not_set"
-                android:textColor="#888888"
-                android:textSize="16sp" />
+                android:background="?attr/text_ll_color_nor"
+                android:paddingLeft="16dp">
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5px"
-                android:layout_below="@id/tv_office_phone"
-                android:background="?attr/color_list_divider"></View>
-        </RelativeLayout>
+                <TextView
+                    android:id="@+id/tv_employee_no_tips"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="11dp"
+                    android:paddingBottom="11dp"
+                    android:text="@string/setting_user_worker_num"
+                    android:textColor="?attr/text_color"
+                    android:textSize="16sp" />
 
-        <RelativeLayout
-            android:id="@+id/rl_phone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/text_ll_color_nor"
-            android:paddingLeft="16dp">
+                <TextView
+                    android:id="@+id/tv_employee_no"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/tv_employee_no_tips"
+                    android:gravity="right"
+                    android:paddingLeft="20dp"
+                    android:paddingTop="11dp"
+                    android:paddingRight="15dp"
+                    android:paddingBottom="11dp"
+                    android:text="@string/not_set"
+                    android:textColor="#888888"
+                    android:textSize="16sp" />
 
-            <TextView
-                android:id="@+id/tv_phone_tips"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingBottom="11dp"
-                android:paddingTop="11dp"
-                android:text="@string/setting_phone_num"
-                android:textColor="?attr/text_color"
-                android:textSize="16sp" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5px"
+                    android:layout_below="@id/tv_employee_no_tips"
+                    android:background="?attr/color_list_divider" />
+            </RelativeLayout>
 
-            <TextView
-                android:id="@+id/tv_phone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/tv_phone_tips"
-                android:gravity="right"
-                android:paddingBottom="11dp"
-                android:paddingLeft="20dp"
-                android:paddingRight="15dp"
-                android:paddingTop="11dp"
-                android:text="@string/not_set"
-                android:textColor="#888888"
-                android:textSize="16sp" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5px"
-                android:layout_below="@id/tv_phone"
-                android:background="?attr/color_list_divider"></View>
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/rl_enterprise"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/text_ll_color_nor"
-            android:paddingLeft="16dp">
-
-            <TextView
-                android:id="@+id/tv_enterprise_tips"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingBottom="11dp"
-                android:paddingTop="11dp"
-                android:text="@string/setting_user_company_info"
-                android:textColor="?attr/text_color"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/tv_enterprise"
+            <RelativeLayout
+                android:id="@+id/rl_office_phone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/tv_enterprise_tips"
-                android:gravity="right"
-                android:paddingBottom="11dp"
-                android:paddingLeft="20dp"
-                android:paddingRight="15dp"
-                android:paddingTop="11dp"
-                android:text="@string/not_set"
-                android:textColor="#888888"
-                android:textSize="16sp" />
+                android:background="?attr/text_ll_color_nor"
+                android:paddingLeft="16dp">
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5px"
-                android:layout_below="@id/tv_enterprise"
-                android:background="?attr/color_list_divider"></View>
-        </RelativeLayout>
+                <TextView
+                    android:id="@+id/tv_office_phone_tips"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="11dp"
+                    android:paddingBottom="11dp"
+                    android:text="@string/user_telephone"
+                    android:textColor="?attr/text_color"
+                    android:textSize="16sp" />
 
-        <RelativeLayout
-            android:id="@+id/rl_department"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/text_ll_color_nor"
-            android:paddingLeft="16dp">
+                <TextView
+                    android:id="@+id/tv_office_phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/tv_office_phone_tips"
+                    android:gravity="right"
+                    android:paddingLeft="20dp"
+                    android:paddingTop="11dp"
+                    android:paddingRight="15dp"
+                    android:paddingBottom="11dp"
+                    android:text="@string/not_set"
+                    android:textColor="#888888"
+                    android:textSize="16sp" />
 
-            <TextView
-                android:id="@+id/tv_department_tips"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingBottom="11dp"
-                android:paddingTop="11dp"
-                android:text="@string/user_depart_info_text"
-                android:textColor="?attr/text_color"
-                android:textSize="16sp" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5px"
+                    android:layout_below="@id/tv_office_phone"
+                    android:background="?attr/color_list_divider" />
+            </RelativeLayout>
 
-            <TextView
-                android:id="@+id/tv_department"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/tv_department_tips"
-                android:gravity="right"
-                android:paddingBottom="11dp"
-                android:paddingLeft="20dp"
-                android:paddingRight="15dp"
-                android:paddingTop="11dp"
-                android:text="@string/not_set"
-                android:textColor="#888888"
-                android:textSize="16sp" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5px"
-                android:layout_below="@id/tv_department"
-                android:background="?attr/color_list_divider"></View>
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/rl_mail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/text_ll_color_nor"
-            android:paddingLeft="16dp">
-
-            <TextView
-                android:id="@+id/tv_mail_tips"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingBottom="11dp"
-                android:paddingTop="11dp"
-                android:text="@string/mail"
-                android:textColor="?attr/text_color"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/tv_mail"
+            <RelativeLayout
+                android:id="@+id/rl_phone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/tv_mail_tips"
-                android:gravity="right"
-                android:paddingBottom="11dp"
-                android:paddingLeft="20dp"
-                android:paddingRight="15dp"
-                android:paddingTop="11dp"
-                android:text="@string/not_set"
-                android:textColor="#888888"
-                android:textSize="16sp" />
+                android:background="?attr/text_ll_color_nor"
+                android:paddingLeft="16dp">
 
-            <View
+                <TextView
+                    android:id="@+id/tv_phone_tips"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="11dp"
+                    android:paddingBottom="11dp"
+                    android:text="@string/setting_phone_num"
+                    android:textColor="?attr/text_color"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/tv_phone_tips"
+                    android:gravity="right"
+                    android:paddingLeft="20dp"
+                    android:paddingTop="11dp"
+                    android:paddingRight="15dp"
+                    android:paddingBottom="11dp"
+                    android:text="@string/not_set"
+                    android:textColor="#888888"
+                    android:textSize="16sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5px"
+                    android:layout_below="@id/tv_phone"
+                    android:background="?attr/color_list_divider" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_enterprise"
                 android:layout_width="match_parent"
-                android:layout_height="0.5px"
-                android:layout_below="@id/tv_mail"
-                android:background="?attr/color_list_divider"></View>
-        </RelativeLayout>
+                android:layout_height="wrap_content"
+                android:background="?attr/text_ll_color_nor"
+                android:paddingLeft="16dp">
 
+                <TextView
+                    android:id="@+id/tv_enterprise_tips"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="11dp"
+                    android:paddingBottom="11dp"
+                    android:text="@string/setting_user_company_info"
+                    android:textColor="?attr/text_color"
+                    android:textSize="16sp" />
 
-    </LinearLayout>
+                <TextView
+                    android:id="@+id/tv_enterprise"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/tv_enterprise_tips"
+                    android:gravity="right"
+                    android:paddingLeft="20dp"
+                    android:paddingTop="11dp"
+                    android:paddingRight="15dp"
+                    android:paddingBottom="11dp"
+                    android:text="@string/not_set"
+                    android:textColor="#888888"
+                    android:textSize="16sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5px"
+                    android:layout_below="@id/tv_enterprise"
+                    android:background="?attr/color_list_divider" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_department"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/text_ll_color_nor"
+                android:paddingLeft="16dp">
+
+                <TextView
+                    android:id="@+id/tv_department_tips"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="11dp"
+                    android:paddingBottom="11dp"
+                    android:text="@string/user_depart_info_text"
+                    android:textColor="?attr/text_color"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_department"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/tv_department_tips"
+                    android:gravity="right"
+                    android:paddingLeft="20dp"
+                    android:paddingTop="11dp"
+                    android:paddingRight="15dp"
+                    android:paddingBottom="11dp"
+                    android:text="@string/not_set"
+                    android:textColor="#888888"
+                    android:textSize="16sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5px"
+                    android:layout_below="@id/tv_department"
+                    android:background="?attr/color_list_divider" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_mail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/text_ll_color_nor"
+                android:paddingLeft="16dp">
+
+                <TextView
+                    android:id="@+id/tv_mail_tips"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="11dp"
+                    android:paddingBottom="11dp"
+                    android:text="@string/mail"
+                    android:textColor="?attr/text_color"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_mail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/tv_mail_tips"
+                    android:gravity="right"
+                    android:paddingLeft="20dp"
+                    android:paddingTop="11dp"
+                    android:paddingRight="15dp"
+                    android:paddingBottom="11dp"
+                    android:text="@string/not_set"
+                    android:textColor="#888888"
+                    android:textSize="16sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5px"
+                    android:layout_below="@id/tv_mail"
+                    android:background="?attr/color_list_divider" />
+            </RelativeLayout>
+
+        </LinearLayout>
+    </ScrollView>
 
 </RelativeLayout>

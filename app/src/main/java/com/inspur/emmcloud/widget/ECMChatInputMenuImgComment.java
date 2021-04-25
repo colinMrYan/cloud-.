@@ -10,6 +10,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.text.Spannable;
 import android.util.AttributeSet;
@@ -92,6 +93,7 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
     private ChatInputMenuListener chatInputMenuListener;
     private String cid = "";
     private boolean isAppCloseSoft = false;
+    private boolean iconShowEmotion;
 
     public ECMChatInputMenuImgComment(Context context) {
         this(context, null);
@@ -119,9 +121,9 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
     }
 
     private void initDarkSkin() {
-        Button button = (Button)findViewById(R.id.bt_cancel);
+        Button button = (Button) findViewById(R.id.bt_cancel);
         button.setTextColor(DarkUtil.getTextColor());
-        TextView textView = (TextView)findViewById(R.id.tv_comment);
+        TextView textView = (TextView) findViewById(R.id.tv_comment);
         textView.setTextColor(DarkUtil.getTextColor());
         findViewById(R.id.communication_edit_rl).setBackgroundColor(DarkUtil.getTextContainerColor());
     }
@@ -261,7 +263,13 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
     public void showEmotionLayout(boolean isShow) {
         emotionLayout.setVisibility(isShow ? VISIBLE : GONE);
         emotionLayout.setBackgroundColor(DarkUtil.getTextContainerLevelTwoColor());
-        emotionBtn.setImageResource(isShow ? R.drawable.comment_image_keyboard : R.drawable.comment_image_emotion);
+        if (isShow) {
+            iconShowEmotion = true;
+            emotionBtn.setImageResource(R.drawable.comment_image_keyboard);
+        } else {
+            iconShowEmotion = false;
+            emotionBtn.setImageResource(R.drawable.comment_image_emotion);
+        }
     }
 
     /**
@@ -331,19 +339,34 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
             emotionRecentLayout.setVisibility(recentManager.size() > 0 ? VISIBLE : GONE);
             emotionRecentAdapter.notifyDataSetChanged();
         }
-        if (addMenuLayout.isShown()) {
-            if (InputMethodUtils.isSoftInputShow((Activity) getContext())) {
+        // 适配横竖屏,保持原有竖屏代码
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            if (addMenuLayout.isShown()) {
+                if (InputMethodUtils.isSoftInputShow((Activity) getContext())) {
+                    showSoftInput(false);
+                    showEmotionLayout(true);
+                } else {
+                    showSoftInput(true);
+                    showEmotionLayout(false);
+                }
+            } else {
+                setAddMenuLayoutShow(true);
                 showSoftInput(false);
                 showEmotionLayout(true);
-            } else {
-                showSoftInput(true);
-                showEmotionLayout(false);
             }
         } else {
-            setAddMenuLayoutShow(true);
-            showSoftInput(false);
-            showEmotionLayout(true);
+            if (iconShowEmotion) {
+                showSoftInput(true);
+                showEmotionLayout(false);
+            } else {
+                if (!addMenuLayout.isShown()) {
+                    setAddMenuLayoutShow(true);
+                }
+                showSoftInput(false);
+                showEmotionLayout(true);
+            }
         }
+
     }
 
     /**

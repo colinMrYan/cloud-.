@@ -540,6 +540,7 @@
 
     <string name="turn_off_success">關閉成功</string>
     <string name="web_app_auto_rotate">Web應用支持旋轉</string>
+    <string name="native_page_auto_rotate">原生界面支持旋轉</string>
     <string name="signout_fail">註銷登錄失敗，請確保網絡連接正常</string>
 
 

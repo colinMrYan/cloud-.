@@ -2,6 +2,7 @@ package com.inspur.emmcloud.basemodule.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,18 +26,33 @@ import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.LanguageManager;
+import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
 
 import java.util.List;
 
+import static com.inspur.emmcloud.basemodule.ui.BaseActivity.THEME_DARK;
 import static com.inspur.emmcloud.basemodule.util.protocol.ProtocolUtil.PREF_PROTOCOL_DLG_AGREED;
 
 public abstract class BaseFragmentActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme();
+        // 设置是否开启原生页面自动旋转
+        boolean isNativeAutoRotate = PreferencesByUserAndTanentUtils.getBoolean(this,
+                Constant.PREF_APP_OPEN_NATIVE_ROTATE_SWITCH, false);
+        if (isNativeAutoRotate) {
+            if (this instanceof NotSupportLand) {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            } else {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+            }
+
+        } else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
         super.onCreate(savedInstanceState);
         if(PreferencesUtils.getBoolean(this, PREF_PROTOCOL_DLG_AGREED, false)){
             checkNecessaryPermission();
@@ -142,7 +158,8 @@ public abstract class BaseFragmentActivity extends FragmentActivity {
 
     protected void setStatus() {
         int statusBarColor = ResourceUtils.getResValueOfAttr(this, R.attr.header_bg_color);
-        int navigationBarColor = android.R.color.white;
+        int currentThemeNo = PreferencesUtils.getInt(BaseApplication.getInstance(), Constant.PREF_APP_THEME, 0);
+        int navigationBarColor = currentThemeNo != THEME_DARK ? android.R.color.white : android.R.color.black;
         boolean isStatusBarDarkFont = ResourceUtils.getBoolenOfAttr(this, R.attr.status_bar_dark_font);
         ImmersionBar.with(this).statusBarColor(statusBarColor).navigationBarColor(navigationBarColor).navigationBarDarkIcon(true, 1.0f).statusBarDarkFont(isStatusBarDarkFont, 0.2f).init();
     }

@@ -38,6 +38,7 @@ import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
 import com.inspur.emmcloud.baselib.widget.FlowLayout;
 import com.inspur.emmcloud.baselib.widget.MaxHeightScrollView;
 import com.inspur.emmcloud.baselib.widget.NoHorScrollView;
+import com.inspur.emmcloud.baselib.widget.ScrollViewWithListView;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.MyDialog;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
@@ -133,7 +134,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
     @BindView(R.id.open_first_group_list)
     ListView openGroupListView; // 第一组数据
     @BindView(R.id.second_group_list)
-    ListView secondGroupListView;// 第二组数据
+    ScrollViewWithListView secondGroupListView;// 第二组数据
     @BindView(R.id.search_edit_layout)
     MaxHeightScrollView searchEditLayout;
     @BindView(R.id.pop_second_group_layout)

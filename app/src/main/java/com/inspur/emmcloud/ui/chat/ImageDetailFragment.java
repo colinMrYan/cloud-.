@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.chat;
 
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -164,11 +165,33 @@ public class ImageDetailFragment extends Fragment {
         mImageView.setCriticalScaleValueHook(new LargeImageView.CriticalScaleValueHook() {
             @Override
             public float getMinScale(LargeImageView largeImageView, int imageWidth, int imageHeight, float suggestMinScale) {
+                Configuration configuration = getResources().getConfiguration();
+                // 适配横屏图片显示
+                if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                    if (imageWidth > imageHeight) {
+                        return 1;
+                    } else {
+                        return 0.25f;
+                    }
+                } else if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+                    return 1;
+                }
                 return 1;
             }
 
             @Override
             public float getMaxScale(LargeImageView largeImageView, int imageWidth, int imageHeight, float suggestMaxScale) {
+                Configuration configuration = getResources().getConfiguration();
+                // 适配横屏图片显示
+                if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                    if (imageWidth > imageHeight) {
+                        return 5;
+                    } else {
+                        return 1;
+                    }
+                } else if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+                    return 5;
+                }
                 return 5;
             }
         });

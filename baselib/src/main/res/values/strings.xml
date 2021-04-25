@@ -538,6 +538,7 @@
     <string name="auto_select_enterprise">下次自动帮我选择</string>
 
     <string name="web_app_auto_rotate">Web应用支持旋转</string>
+    <string name="native_page_auto_rotate">原生界面支持旋转</string>
     <string name="turn_off_success">关闭成功</string>
     <string name="signout_fail">注销失败，请确保网络连接正常</string>
 

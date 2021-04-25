@@ -2,6 +2,7 @@ package com.inspur.emmcloud.setting.ui.setting;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Build;
@@ -94,6 +95,8 @@ public class SettingActivity extends BaseActivity {
     TextView tabName;
     @BindView(R2.id.switch_view_setting_notification)
     SwitchCompat notificationSwitch;
+    @BindView(R2.id.switch_view_setting_native_rotate)
+    SwitchCompat nativeRotateSwitch;
     int REQUEST_CODE_CAMERA = 10002;
     Uri fileUri = null;
     private Handler handler;
@@ -107,6 +110,9 @@ public class SettingActivity extends BaseActivity {
                 AppConfig appConfig = new AppConfig(Constant.CONCIG_WEB_AUTO_ROTATE, String.valueOf(b));
                 AppConfigCacheUtils.saveAppConfig(BaseApplication.getInstance(), appConfig);
                 saveWebAutoRotateConfig(b);
+
+            } else if (i == R.id.switch_view_setting_native_rotate) {
+                PreferencesByUserAndTanentUtils.putBoolean(SettingActivity.this, Constant.PREF_APP_OPEN_NATIVE_ROTATE_SWITCH, b);
 
             } else if (i == R.id.switch_view_setting_voice_2_word) {
                 PreferencesByUserAndTanentUtils.putBoolean(SettingActivity.this, Constant.PREF_APP_OPEN_VOICE_WORD_SWITCH,
@@ -186,7 +192,9 @@ public class SettingActivity extends BaseActivity {
         apiService = new SettingAPIService(this);
         apiService.setAPIInterface(new WebService());
         setWebAutoRotateState();
+        setNativeAutoRotateState();
         webRotateSwitch.setOnCheckedChangeListener(onCheckedChangeListener);
+        nativeRotateSwitch.setOnCheckedChangeListener(onCheckedChangeListener);
         if (WebServiceRouterManager.getInstance().isV1xVersionChat() && !LanguageManager.getInstance().isAppLanguageEnglish()) {
             voice2WordLayout.setVisibility(View.VISIBLE);
             voice2WordSwitch.setChecked(AppUtils.getIsVoiceWordOpen());
@@ -299,6 +307,12 @@ public class SettingActivity extends BaseActivity {
     private void setWebAutoRotateState() {
         boolean isWebAutoRotate = Boolean.parseBoolean(AppConfigCacheUtils.getAppConfigValue(this, Constant.CONCIG_WEB_AUTO_ROTATE, "false"));
         webRotateSwitch.setChecked(isWebAutoRotate);
+    }
+
+    private void setNativeAutoRotateState() {
+        boolean isNativeAutoRotate = PreferencesByUserAndTanentUtils.getBoolean(this,
+                Constant.PREF_APP_OPEN_NATIVE_ROTATE_SWITCH, false);
+        nativeRotateSwitch.setChecked(isNativeAutoRotate);
     }
 
     /**
@@ -465,7 +479,7 @@ public class SettingActivity extends BaseActivity {
      * 弹出清除缓存选项提示框
      */
     private void showClearCacheDlg() {
-        SpannableString spanString=new SpannableString(getString(R.string.settings_clean_imgae_attachment));
+        SpannableString spanString = new SpannableString(getString(R.string.settings_clean_imgae_attachment));
         spanString.setSpan(new ForegroundColorSpan(ResourceUtils.getResValueOfAttr(this, R.attr.text_color)), 0, getString(R.string.settings_clean_imgae_attachment).length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
         final String[] items = new String[]{getString(R.string.settings_clean_imgae_attachment), getString(R.string.settings_clean_web), getString(R.string.settings_clean_all)};
         ContextThemeWrapper ctw = new ContextThemeWrapper(this, R.style.cus_dialog_style);

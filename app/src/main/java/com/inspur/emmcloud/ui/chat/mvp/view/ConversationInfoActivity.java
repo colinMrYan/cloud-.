@@ -2,6 +2,7 @@ package com.inspur.emmcloud.ui.chat.mvp.view;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.SwitchCompat;
@@ -146,6 +147,15 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
             muteNotificationLayout.setVisibility(uiConversation.getType().equals(Conversation.TYPE_TRANSFER) ? View.GONE : View.VISIBLE);
         }
         channelMembersHeadAdapter = new ConversationMembersHeadAdapter(this, isOwner, uiUidList);
+        Configuration configuration = getResources().getConfiguration();
+        // 适配横屏头像显示
+        if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            conversationMembersHeadRecyclerView.setNumColumns(8);
+
+        } else if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            conversationMembersHeadRecyclerView.setNumColumns(5);
+
+        }
         conversationMembersHeadRecyclerView.setAdapter(channelMembersHeadAdapter);
         conversationMembersHeadRecyclerView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

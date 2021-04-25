@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.widget;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import com.inspur.emmcloud.adapter.MyViewPagerAdapter;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.widget.NoScrollGridView;
 import com.inspur.emmcloud.bean.chat.InputTypeBean;
+import com.inspur.emmcloud.ui.chat.mvp.adapter.ConversationMembersHeadAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -108,6 +110,15 @@ public class ECMChatInputMenuViewpageLayout extends LinearLayout {
             pageInputTypeBeanList.addAll(inputTypeBeanList.subList(startInd, startInd + 8));
         }
         MsgInputAddItemAdapter adapter = new MsgInputAddItemAdapter(getContext(), pageInputTypeBeanList);
+        Configuration configuration = getResources().getConfiguration();
+        // 适配横屏显示
+        if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            gridView.setNumColumns(6);
+
+        } else if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            gridView.setNumColumns(4);
+
+        }
         gridView.setAdapter(adapter);
         if (onItemClickListener != null) {
             gridView.setOnItemClickListener(onItemClickListener);
