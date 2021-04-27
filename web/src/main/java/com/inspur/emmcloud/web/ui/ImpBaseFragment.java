@@ -69,7 +69,7 @@ public class ImpBaseFragment extends BaseFragment {
                         imageView.setPadding(paddingLeft, paddingTop, paddingLeft, paddingTop);
                         imageView.setOnClickListener(onClickListener);
                         imageView.setLayoutParams(params);
-                        imageView.setColorFilter(getContext().getResources().getColor(ResourceUtils.getResValueOfAttr(getActivity(), R.attr.header_text_color)));
+                        imageView.setColorFilter(getContext().getResources().getColor(ResourceUtils.getResValueOfAttr(getActivity(), R.attr.header_text_color_e1)));
                         ImageDisplayUtils.getInstance().displayImage(imageView, mainTabMenu.getIco());
                         webFunctionLayout.addView(imageView);
                     } else {
@@ -81,7 +81,7 @@ public class ImpBaseFragment extends BaseFragment {
                         textView.setText(mainTabMenu.getText());
                         textView.setOnClickListener(onClickListener);
                         textView.setLayoutParams(params);
-                        int textColor = ResourceUtils.getResValueOfAttr(getActivity(), R.attr.header_text_color);
+                        int textColor = ResourceUtils.getResValueOfAttr(getActivity(), R.attr.header_text_color_e1);
                         textView.setTextColor(getContext().getResources().getColor(textColor));
                         textView.setGravity(Gravity.CENTER_VERTICAL);
                         webFunctionLayout.addView(textView);

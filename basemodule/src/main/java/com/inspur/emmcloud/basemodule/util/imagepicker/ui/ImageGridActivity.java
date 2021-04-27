@@ -60,7 +60,7 @@ public class ImageGridActivity extends ImageBaseActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_grid);
-        ImmersionBar.with(this).statusBarColor(R.color.color_image_grid_header).navigationBarColor(R.color.color_image_grid_header).init();
+        ImmersionBar.with(this).statusBarColor(R.color.color_bg_common_dark).navigationBarColor(R.color.color_bg_common_dark).init();
         // hideBars();
         imagePicker = ImagePicker.getInstance();
         imagePicker.clear();

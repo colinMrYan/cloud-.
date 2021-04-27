@@ -41,7 +41,7 @@
             app:current_day_lunar_text_color="#36A5F6"
             app:current_day_text_color="#36A5F6"
             app:current_month_lunar_text_color="#999999"
-            app:current_month_text_color="?attr/text_color"
+            app:current_month_text_color="?attr/text_color_e1"
             app:lunar_text_size="10sp"
             app:max_year="2099"
             app:min_year="1900"
@@ -50,17 +50,17 @@
             app:other_month_lunar_text_color="#999999"
             app:other_month_text_color="#999999"
             app:scheme_lunar_text_color="#999999"
-            app:scheme_text_color="#333"
+            app:scheme_text_color="?attr/color_33_e1"
             app:scheme_theme_color="#128c4b"
-            app:selected_lunar_text_color="?attr/text_ll_color_nor"
-            app:selected_text_color="?attr/text_ll_color_nor"
+            app:selected_lunar_text_color="@color/button_color_nor"
+            app:selected_text_color="@color/button_color_nor"
             app:selected_theme_color="#36A5F6"
             app:week_background="?attr/text_ll_color_nor"
             app:week_start_with="sun"
-            app:week_text_color="?attr/text_color"
+            app:week_text_color="?attr/text_color_e1"
             app:week_view="com.inspur.emmcloud.schedule.widget.calendarview.custom.CustomWeekView"
             app:week_view_scrollable="true"
-            app:year_view_day_text_color="?attr/text_color"
+            app:year_view_day_text_color="?attr/text_color_e1"
             app:year_view_day_text_size="15sp"
             app:year_view_month_text_color="#ff0000"
             app:year_view_month_text_size="15sp"
@@ -70,7 +70,7 @@
             android:id="@+id/ll_date_and_arrow"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="?attr/content_bg_level_two"
+            android:background="?attr/content_bg_ff_00"
             android:orientation="vertical">
 
             <RelativeLayout
@@ -91,7 +91,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="10dp"
                     android:layout_below="@id/iv_calendar_view_expand"
-                    android:background="?attr/color_bg_common" />
+                    android:background="?attr/color_bg_common_00"
+                    />
 
                 <TextView
                     android:id="@+id/tv_schedule_date"
@@ -103,7 +104,7 @@
                     android:paddingLeft="16dp"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
-                    android:textColor="?attr/text_color"
+                    android:textColor="?attr/text_color_e1"
                     android:textSize="15sp" />
 
                 <TextView
@@ -115,7 +116,7 @@
                     android:paddingTop="10dp"
                     android:paddingRight="17dp"
                     android:paddingBottom="10dp"
-                    android:textColor="?attr/text_color"
+                    android:textColor="?attr/text_color_e1"
                     android:textSize="15sp" />
 
                 <RelativeLayout
@@ -166,7 +167,7 @@
                             android:ellipsize="end"
                             android:maxLines="1"
                             android:paddingRight="7dp"
-                            android:textColor="?attr/text_color"
+                            android:textColor="?attr/text_color_e1"
                             android:textSize="13sp" />
                     </RelativeLayout>
 
@@ -213,7 +214,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:background="?attr/color_bg_common"
+                android:background="?attr/color_bg_common_00"
                 android:gravity="center"
                 android:orientation="vertical">
 

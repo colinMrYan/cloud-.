@@ -5,7 +5,7 @@
         android:width="1px"
         android:color="#222222" />
     <!-- 边框颜色 -->
-    <solid android:color="@color/footer_bg_dark" />
+    <solid android:color="@color/color_bg_common_dark" />
     <!-- 填充色 -->
 
 </shape>

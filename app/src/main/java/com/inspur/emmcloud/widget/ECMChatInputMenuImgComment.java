@@ -32,6 +32,7 @@ import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.NoScrollGridView;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.DarkUtil;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
@@ -52,6 +53,8 @@ import java.util.regex.Pattern;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.inspur.emmcloud.basemodule.ui.BaseActivity.THEME_DARK;
 
 /**
  * com.inspur.emmcloud.widget.ECMChatInputMenu create at 2016年11月24日 上午10:25:52
@@ -163,6 +166,9 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
     }
 
     private void initEmotion() {
+        int currentThemeNo = PreferencesUtils.getInt(BaseApplication.getInstance(), Constant.PREF_APP_THEME, 0);
+        emotionDeleteImg.setImageDrawable(currentThemeNo != THEME_DARK ? getResources().getDrawable(R.drawable.emotion_delete)
+                : getResources().getDrawable(R.drawable.emotion_delete_dark));
         EmotionRecentManager recentManager = EmotionRecentManager.getInstance(getContext());
         recentEmotionList.addAll(recentManager);
         emotionRecentAdapter = new EmotionAdapter(getContext(), 1, recentEmotionList);

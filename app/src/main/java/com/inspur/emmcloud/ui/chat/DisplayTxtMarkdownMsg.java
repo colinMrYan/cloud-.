@@ -78,7 +78,7 @@ public class DisplayTxtMarkdownMsg {
         titleText.setTextColor(context.getResources().getColor(
                 isMyMsg ? R.color.white : R.color.black));
         contentText.setTextColor(context.getResources().getColor(
-                isMyMsg ? R.color.white : ResourceUtils.getResValueOfAttr(context, R.attr.text_color)));
+                isMyMsg ? R.color.white : ResourceUtils.getResValueOfAttr(context, R.attr.text_color_e1)));
         String content = msg.getMsgContentTextMarkdown().getText();
         String title = msg.getMsgContentTextMarkdown().getTitle();
         if (StringUtils.isBlank(title)) {

@@ -111,7 +111,7 @@ public class NativeFileManagerFragment extends BaseFragment {
     }
 
     public void onBackPress() {
-        if (titleAdapter.getItemCount() > 1) {
+        if (titleAdapter != null && titleAdapter.getItemCount() > 1) {
             int index = titleAdapter.getItemCount();
             index = index - 2;
             TitlePath titlePath = (TitlePath) titleAdapter.getItem(index);
@@ -152,7 +152,9 @@ public class NativeFileManagerFragment extends BaseFragment {
         }
     }
 
-    /**点击事件**/
+    /**
+     * 点击事件
+     **/
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.ibt_back) {
@@ -162,7 +164,9 @@ public class NativeFileManagerFragment extends BaseFragment {
         }
     }
 
-    /**返回选择结果**/
+    /**
+     * 返回选择结果
+     **/
     private void returnSelectResult() {
         ArrayList<String> pathList = new ArrayList<>();
         for (FileBean fileBean : selectFileBeanList) {
@@ -180,7 +184,9 @@ public class NativeFileManagerFragment extends BaseFragment {
         new MyTask(rootFile, filterFileTypeList).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "");
     }
 
-    /**刷新文件导航条**/
+    /**
+     * 刷新文件导航条
+     **/
     void refreshTitleState(String title, String path) {
         TitlePath filePath = new TitlePath();
         filePath.setNameState(title + " /");

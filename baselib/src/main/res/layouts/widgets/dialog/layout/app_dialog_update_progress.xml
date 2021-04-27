@@ -14,7 +14,7 @@
         android:background="?attr/text_ll_color_nor"
         android:paddingTop="10dp"
         android:text="@string/downloading_package"
-        android:textColor="?attr/text_color"
+        android:textColor="?attr/text_color_e1"
         android:textSize="@dimen/header_textsize" />
 
     <TextView
@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:paddingBottom="14dp"
         android:paddingTop="14dp"
-        android:textColor="?attr/text_color"
+        android:textColor="?attr/text_color_e1"
         android:textSize="@dimen/header_textsize" />
 
     <ProgressBar

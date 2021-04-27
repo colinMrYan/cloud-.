@@ -128,9 +128,9 @@ public class UserInfoActivity extends BaseActivity {
         return R.layout.activity_user_info;
     }
 
-    protected int getStatusType() {
-        return STATUS_WHITE_DARK_FONT;
-    }
+//    protected int getStatusType() {
+//        return STATUS_WHITE_DARK_FONT;
+//    }
 
 
     @Override

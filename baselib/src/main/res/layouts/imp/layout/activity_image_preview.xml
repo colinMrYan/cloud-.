@@ -14,7 +14,7 @@
         android:id="@+id/top_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/color_image_grid_header"
+        android:background="@color/color_bg_common_dark"
         android:clickable="true">
 
         <View
@@ -25,6 +25,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/header_height"
+
             android:layout_below="@id/v_status_bar">
 
             <ImageButton
@@ -49,7 +50,7 @@
                 android:paddingLeft="10dp"
                 android:paddingRight="15dp"
                 android:paddingTop="10dp"
-                android:textColor="@color/color_text_Anti_White"
+                android:textColor="@color/header_text_e1"
                 android:textSize="@dimen/header_function_textsize"
                 android:textStyle="normal" />
         </RelativeLayout>
@@ -62,7 +63,7 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_alignParentBottom="true"
-        android:background="#c022292c"
+        android:background="@color/color_bg_common_dark"
         android:visibility="gone">
 
         <Button
@@ -75,7 +76,7 @@
             android:paddingRight="20dp"
             android:text="@string/edit"
             android:textAllCaps="false"
-            android:textColor="@color/color_text_Anti_White"
+            android:textColor="@color/header_text_e1"
             android:textSize="16sp" />
 
         <android.support.v7.widget.AppCompatCheckBox
@@ -89,7 +90,7 @@
             android:includeFontPadding="true"
             android:paddingLeft="8dp"
             android:text="@string/origin"
-            android:textColor="@color/color_text_Anti_White"
+            android:textColor="@color/header_text_e1"
             android:textSize="16sp" />
 
         <com.inspur.emmcloud.basemodule.util.imagepicker.view.SuperCheckBox
@@ -104,7 +105,7 @@
             android:includeFontPadding="true"
             android:paddingLeft="8dp"
             android:text="@string/select"
-            android:textColor="@color/color_text_Anti_White"
+            android:textColor="@color/header_text_e1"
             android:visibility="gone" />
     </RelativeLayout>
 

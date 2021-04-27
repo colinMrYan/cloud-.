@@ -13,7 +13,7 @@
             android:id="@+id/common_header_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="?attr/header_bg">
+            android:background="?attr/header_bg_1c">
 
             <ImageButton
                 android:id="@+id/ibt_back"
@@ -37,7 +37,7 @@
                 android:paddingLeft="100dp"
                 android:paddingRight="100dp"
                 android:text="@string/volume_clouddriver_file_permission_manager"
-                android:textColor="?attr/header_text_color"
+                android:textColor="?attr/header_text_color_e1"
                 android:textSize="@dimen/header_textsize" />
 
         </RelativeLayout>

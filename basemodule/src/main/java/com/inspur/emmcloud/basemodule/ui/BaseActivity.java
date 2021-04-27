@@ -183,7 +183,8 @@ public abstract class BaseActivity extends AppCompatActivity {
                 if (currentThemeNo != THEME_DARK) {
                     ImmersionBar.with(this).navigationBarColor(navigationBarColor).navigationBarDarkIcon(true, 1.0f).statusBarColor(android.R.color.white).statusBarDarkFont(true, 0.2f).init();
                 } else {
-                    ImmersionBar.with(this).navigationBarColor(navigationBarColor).navigationBarDarkIcon(false, 1.0f).statusBarColor(android.R.color.black).statusBarDarkFont(false, 0.2f).init();
+                    int statusBarColorDark = ResourceUtils.getResValueOfAttr(BaseActivity.this, R.attr.header_bg_color);
+                    ImmersionBar.with(this).navigationBarColor(navigationBarColor).navigationBarDarkIcon(false, 1.0f).statusBarColor(statusBarColorDark).statusBarDarkFont(false, 0.2f).init();
                 }
                 break;
             case STATUS_TRANSPARENT:

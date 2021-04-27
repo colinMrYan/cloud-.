@@ -438,7 +438,7 @@
             android:name=".widget.filemanager.NativeVolumeFileManagerActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="behind" />
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.contact.ContactSearchActivity"

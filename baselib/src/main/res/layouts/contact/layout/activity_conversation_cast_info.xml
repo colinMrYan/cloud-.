@@ -9,7 +9,7 @@
         android:id="@+id/rl_header"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/header_bg">
+        android:background="?attr/header_bg_1c">
 
         <ImageButton
             android:id="@+id/ibt_back"
@@ -39,7 +39,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginRight="6dp"
             android:paddingBottom="10dp"
-            android:textColor="?attr/header_text_color"
+            android:textColor="?attr/header_text_color_e1"
             android:textSize="@dimen/content_normal_textsize" />
     </RelativeLayout>
 
@@ -64,7 +64,7 @@
                 android:paddingTop="10dp"
                 android:paddingBottom="8dp"
                 android:text="@string/user_function_introduction"
-                android:textColor="?attr/text_color"
+                android:textColor="?attr/text_color_e1"
                 android:textSize="@dimen/header_textsize" />
 
             <TextView
@@ -72,7 +72,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="12dp"
-                android:textColor="?attr/text_color"
+                android:textColor="?attr/text_color_e1"
                 android:textIsSelectable="true"
                 android:textSize="@dimen/content_title_textsize" />
 
@@ -95,7 +95,7 @@
                 android:paddingTop="10dp"
                 android:paddingBottom="8dp"
                 android:text="@string/user_service_and_support"
-                android:textColor="?attr/text_color"
+                android:textColor="?attr/text_color_e1"
                 android:textIsSelectable="true"
                 android:textSize="@dimen/content_title_textsize" />
 
@@ -104,7 +104,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="12dp"
-                android:textColor="?attr/text_color"
+                android:textColor="?attr/text_color_e1"
                 android:textIsSelectable="true"
                 android:textSize="@dimen/content_title_textsize" />
         </LinearLayout>
@@ -128,7 +128,7 @@
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
                 android:text="@string/channel_set_top"
-                android:textColor="?attr/text_color"
+                android:textColor="?attr/text_color_e1"
                 android:textSize="@dimen/content_title_textsize" />
 
             <android.support.v7.widget.SwitchCompat

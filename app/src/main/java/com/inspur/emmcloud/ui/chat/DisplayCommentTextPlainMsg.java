@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentComment;
@@ -34,6 +35,7 @@ public class DisplayCommentTextPlainMsg {
 
     /**
      * 评论卡片
+     *
      * @param context
      * @param message
      * @return
@@ -46,16 +48,16 @@ public class DisplayCommentTextPlainMsg {
                 .findViewById(R.id.comment_text);
         BubbleLayout cardLayout = (BubbleLayout) cardContentView.findViewById(R.id.bl_card);
         cardLayout.setArrowDirection(isMyMsg ? ArrowDirection.RIGHT : ArrowDirection.LEFT);
-        cardLayout.setBubbleColor(context.getResources().getColor(isMyMsg ? R.color.bg_my_card : R.color.bg_other_card));
+        cardLayout.setBubbleColor(context.getResources().getColor(isMyMsg ? R.color.bg_my_card : ResourceUtils.getResValueOfAttr(context, R.attr.bubble_bg_color)));
         cardLayout.setStrokeWidth(isMyMsg ? 0 : 0.5f);
         TextView commentTitleText = (TextView) cardContentView
                 .findViewById(R.id.comment_title_text);
         MsgContentComment msgContentComment = message.getMsgContentComment();
         String text = msgContentComment.getText();
         commentContentText.setTextColor(context.getResources().getColor(
-                isMyMsg ? R.color.white : R.color.black));
+                isMyMsg ? R.color.white : ResourceUtils.getResValueOfAttr(context, R.attr.text_color_e1)));
         commentTitleText.setTextColor(context.getResources().getColor(
-                isMyMsg ? R.color.white : R.color.black));
+                isMyMsg ? R.color.white : ResourceUtils.getResValueOfAttr(context, R.attr.text_color_e1)));
         SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(text, message.getMsgContentTextPlain().getMentionsMap());
         Spannable span = EmotionUtil.getInstance(context).getSmiledText(spannableString, commentTitleText.getTextSize());
         commentContentText.setText(span);

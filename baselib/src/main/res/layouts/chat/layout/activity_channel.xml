@@ -12,7 +12,7 @@
         android:id="@+id/rl_header"
         android:layout_width="match_parent"
         android:layout_height="@dimen/header_height"
-        android:background="?attr/header_bg">
+        android:background="?attr/header_bg_1c">
 
         <ImageButton
             android:id="@+id/ibt_back"
@@ -49,7 +49,7 @@
             android:ellipsize="end"
             android:gravity="center"
             android:singleLine="true"
-            android:textColor="?attr/header_text_color"
+            android:textColor="?attr/header_text_color_e1"
             android:textSize="@dimen/header_textsize"
             android:visibility="gone" />
 
@@ -67,7 +67,7 @@
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="?attr/color_bg_common"
+        android:background="?attr/content_bg"
         android:scrollbars="vertical">
 
         <RelativeLayout

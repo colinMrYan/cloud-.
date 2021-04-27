@@ -25,7 +25,7 @@
             android:layout_centerHorizontal="true"
             android:gravity="center"
             android:text="@string/setting_update_this_time_hint"
-            android:textColor="?attr/text_color"
+            android:textColor="?attr/text_color_e1"
             android:textSize="16sp" />
 
         <TextView

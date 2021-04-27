@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_department"
         android:paddingBottom="7dp"
-        android:textColor="?attr/text_color"
+        android:textColor="?attr/text_color_e1"
         android:textIsSelectable="true"
         android:textSize="@dimen/button_textsize" />
 

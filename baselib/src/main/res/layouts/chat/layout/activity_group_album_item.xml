@@ -9,7 +9,7 @@
         android:id="@+id/tv_image_group_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="?attr/text_color"
+        android:textColor="?attr/text_color_e1"
         android:layout_marginLeft="4dp" />
 
     <com.inspur.emmcloud.baselib.widget.NoScrollGridView

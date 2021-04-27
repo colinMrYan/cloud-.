@@ -14,6 +14,7 @@
     <color name="footer_bg_dark">#1C1C1C</color>
 
     <color name="header_text">#ffffff</color>
+    <color name="header_text_e1">#E1E1E1</color>
     <color name="header_text_black">#333333</color>
     <color name="header_text_grey">#333333</color>
 
@@ -38,6 +39,7 @@
     <color name="content_bg_level_two">#f6f6f6</color>
     <color name="content_bg_dark">#000000</color>
     <color name="content_bg_dark_level_two">#292929</color>
+    <color name="content_bg_dark_30">#303030</color>
     <!-- 原底部文字颜色#698fa7 -->
     <!-- 原底部文字颜色#64abe9 -->
     <color name="login_btn_nor">#38a4f0</color>
@@ -146,6 +148,7 @@
     <!-- UI 字体颜色 -->
     <color name="color_text_common_level_one">#333333</color>
     <color name="color_text_common_level_two">#999999</color>
+    <color name="color_text_common_88">#888888</color>
     <color name="color_text_link">#36A5F6</color>
     <!--提示类的文字颜色 或 其他666-->
     <color name="color_text_tip">#666666</color>
@@ -172,10 +175,12 @@
     <color name="button_color_nor">#FFFFFF</color>
     <color name="button_color_sel">#EEEEEE</color>
     <color name="button_color_nor_dark">#1C1C1E</color>
-    <color name="button_color_sel_dark">#222222</color>
+    <color name="button_color_sel_dark">#323232</color>
     <color name="text_color">#333333</color>
     <color name="text_color_dark">#FFFFFF</color>
     <color name="bubble_bg_color">#ECEEF2</color>
-    <color name="bubble_bg_color_dark">#292929</color>
+    <color name="bubble_bg_color_dark">#303030</color>
+    <color name="color_3a">#3a3a3a</color>
+    <color name="color_88">#888888</color>
 
 </resources>

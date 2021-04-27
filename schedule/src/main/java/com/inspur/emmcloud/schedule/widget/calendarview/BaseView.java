@@ -25,7 +25,13 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.config.Constant;
+
 import java.util.List;
+
+import static com.inspur.emmcloud.basemodule.ui.BaseActivity.THEME_DARK;
 
 /**
  * 基本的日历View，派生出MonthView 和 WeekView
@@ -195,7 +201,9 @@ public abstract class BaseView extends View implements View.OnClickListener, Vie
         mMonthViewBackGroundTextPaint.setAntiAlias(true);
         mMonthViewBackGroundTextPaint.setTextAlign(Paint.Align.CENTER);
         mMonthViewBackGroundTextPaint.setFakeBoldText(false);
-        mMonthViewBackGroundTextPaint.setColor(Color.parseColor("#36A5F6"));
+
+        int currentThemeNo = PreferencesUtils.getInt(BaseApplication.getInstance(), Constant.PREF_APP_THEME, 0);
+        mMonthViewBackGroundTextPaint.setColor(Color.parseColor(currentThemeNo != THEME_DARK ? "#36A5F6":"#888888"));
         mMonthViewBackGroundTextPaint.setAlpha(50);
         mMonthViewBackGroundTextPaint.setTextSize(CalendarUtil.dipToPx(context, 230));
 

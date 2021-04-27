@@ -16,7 +16,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="22dp"
             android:text="@string/permission_open_cloud_plus"
-            android:textColor="?attr/text_color"
+            android:textColor="?attr/text_color_e1"
             android:textSize="17sp" />
 
         <TextView
@@ -28,7 +28,7 @@
             android:layout_marginTop="20dp"
             android:maxWidth="236dp"
             android:text="@string/permission_necessary_permission"
-            android:textColor="?attr/text_color"
+            android:textColor="?attr/text_color_e1"
             android:textSize="14sp" />
 
         <LinearLayout
@@ -60,7 +60,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="11dp"
                     android:text="@string/permission_phone_permission"
-                    android:textColor="?attr/text_color"
+                    android:textColor="?attr/text_color_e1"
                     android:textSize="16sp" />
             </LinearLayout>
 
@@ -84,7 +84,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="11dp"
                     android:text="@string/permission_storage_permission"
-                    android:textColor="?attr/text_color"
+                    android:textColor="?attr/text_color_e1"
                     android:textSize="16sp" />
             </LinearLayout>
         </LinearLayout>

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?attr/selector_list"
-    android:paddingLeft="10dp">
+    android:paddingLeft="16dp">
 
     <com.inspur.emmcloud.baselib.widget.CircleTextImageView
         android:id="@+id/msg_img"
@@ -33,7 +33,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:paddingLeft="10dp"
-                android:paddingRight="10dp"
+                android:paddingRight="16dp"
                 android:textColor="@color/color_text_common_level_two"
                 android:textSize="12sp" />
 
@@ -46,7 +46,7 @@
                 android:ellipsize="end"
                 android:paddingRight="20dp"
                 android:singleLine="true"
-                android:textColor="?attr/text_color"
+                android:textColor="?attr/text_color_e1"
                 android:textSize="17sp" />
         </RelativeLayout>
 
@@ -80,7 +80,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_marginLeft="5dp"
-                android:layout_marginRight="8dp">
+                android:layout_marginRight="16dp">
 
                 <ImageView
                     android:id="@+id/msg_dnd_img"
@@ -118,7 +118,7 @@
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:layout_below="@id/msg_img"
-        android:layout_marginLeft="50dp"
+        android:layout_toRightOf="@id/msg_img"
         android:background="?attr/color_list_divider" />
 
 </RelativeLayout>

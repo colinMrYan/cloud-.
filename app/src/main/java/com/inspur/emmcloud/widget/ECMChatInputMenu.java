@@ -97,6 +97,8 @@ import butterknife.OnClick;
 import butterknife.OnTouch;
 import lbc.com.denosex.denosexUtil;
 
+import static com.inspur.emmcloud.basemodule.ui.BaseActivity.THEME_DARK;
+
 
 /**
  * com.inspur.emmcloud.widget.ECMChatInputMenu create at 2016年11月24日 上午10:25:52
@@ -625,6 +627,9 @@ public class ECMChatInputMenu extends LinearLayout {
      * 初始化表情相关
      */
     private void initEmotion() {
+        int currentThemeNo = PreferencesUtils.getInt(BaseApplication.getInstance(), Constant.PREF_APP_THEME, 0);
+        emotionDeleteImg.setImageDrawable(currentThemeNo != THEME_DARK ? getResources().getDrawable(R.drawable.emotion_delete)
+                : getResources().getDrawable(R.drawable.emotion_delete_dark));
         EmotionRecentManager recentManager = EmotionRecentManager.getInstance(getContext());
         recentEmotionList.addAll(recentManager);
         emotionRecentAdapter = new EmotionAdapter(getContext(), 1, recentEmotionList);

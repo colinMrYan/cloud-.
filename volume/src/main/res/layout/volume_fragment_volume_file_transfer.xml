@@ -126,7 +126,7 @@
         android:id="@+id/batch_operation_header_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?attr/header_bg"
+        android:background="?attr/header_bg_1c"
         android:visibility="gone">
 
         <TextView
@@ -140,7 +140,7 @@
             android:paddingLeft="12dp"
             android:paddingRight="12dp"
             android:text="@string/cancel"
-            android:textColor="?attr/header_text_color"
+            android:textColor="?attr/header_text_color_e1"
             android:textSize="@dimen/header_function_textsize" />
 
         <TextView
@@ -151,7 +151,7 @@
             android:gravity="center"
             android:paddingLeft="100dp"
             android:paddingRight="100dp"
-            android:textColor="?attr/header_text_color"
+            android:textColor="?attr/header_text_color_e1"
             android:textSize="@dimen/header_textsize" />
 
         <TextView
@@ -166,7 +166,7 @@
             android:paddingLeft="12dp"
             android:paddingRight="12dp"
             android:text="@string/select_all"
-            android:textColor="?attr/header_text_color"
+            android:textColor="?attr/header_text_color_e1"
             android:textSize="@dimen/header_function_textsize" />
     </RelativeLayout>
 

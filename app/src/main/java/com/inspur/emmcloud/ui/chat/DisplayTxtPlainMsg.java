@@ -42,7 +42,7 @@ public class DisplayTxtPlainMsg {
         final TextViewFixTouchConsume contentText = cardContentView
                 .findViewById(R.id.tv_content);
         contentText.setTextColor(context.getResources().getColor(
-                isMyMsg ? R.color.white : ResourceUtils.getResValueOfAttr(context, R.attr.text_color)));
+                isMyMsg ? R.color.white : ResourceUtils.getResValueOfAttr(context, R.attr.text_color_e1)));
         String text = message.getMsgContentTextPlain().getText();
         contentText.setMovementMethod(TextViewFixTouchConsume.LocalLinkMovementMethod.getInstance());
         contentText.setFocusable(false);

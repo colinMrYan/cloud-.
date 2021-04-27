@@ -11,7 +11,7 @@
         android:id="@+id/ibt_back_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/header_bg">
+        android:background="?attr/header_bg_1c">
 
         <ImageButton
             android:id="@+id/ibt_back"

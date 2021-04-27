@@ -35,10 +35,12 @@
         <item name="android:color">#858C96</item>
         <item name="CusLoadingStyle">@style/CusLoadingBase</item>
     </style>
+
     <style name="MyEditText" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorControlNormal">#C8C7CC</item>
         <item name="colorControlActivated">#24ABE9</item>
     </style>
+
     <style name="EditTextHint" parent="TextAppearance.AppCompat">
         <item name="android:textColorHint">@color/color_text_tip</item>
         <item name="colorControlNormal">@color/color_text_tip</item>
@@ -48,20 +50,33 @@
         <item name="android:textColor">?attr/text_color</item>
     </style>
 
-    <style name="AppTheme_0"  parent="AppTheme">
+    <style name="AppTheme_0" parent="AppTheme">
         <item name="android:imageButtonStyle">@style/CusImageButton</item>
         <item name="header_bg_color">@color/header_bg_white</item>
+        <item name="header_bg_search_1c">@color/header_bg_white</item>
         <item name="header_bg">@drawable/shape_header_bg_white</item>
+        <item name="header_bg_1c">@drawable/shape_header_bg_white</item>
         <item name="footer_bg">@drawable/footer_bg_white</item>
         <item name="footer_bg_color">@color/footer_bg_white</item>
         <item name="header_text_color">@color/header_text_black</item>
+        <item name="header_text_color_e1">@color/header_text_black</item>
         <item name="content_bg">@color/content_bg</item>
         <item name="content_bg_level_two">@color/content_bg_level_two</item>
+        <item name="content_bg_30">@color/content_bg_level_two</item>
+        <item name="content_bg_ff_00">@color/content_bg_level_two</item>
+        <item name="content_bg_f6_1c">@color/content_bg_level_two</item>
         <item name="color_bg_common">@color/color_bg_common</item>
+        <item name="color_bg_common_00">@color/color_bg_common</item>
+        <item name="color_3a_88">@color/color_3a</item>
         <item name="home_common_bg">@color/button_color_nor</item>
         <item name="text_ll_color_nor">@color/button_color_nor</item>
+        <item name="common_bg_30">@color/button_color_nor</item>
         <item name="text_ll_color_sel">@color/button_color_sel</item>
         <item name="text_color">@color/text_color</item>
+        <item name="text_color_33_66">@color/text_color</item>
+        <item name="text_color_e1">@color/text_color</item>
+        <item name="color_33_e1">@color/text_color</item>
+        <item name="conversation_name_color">@color/color_text_tip</item>
         <item name="text_color_backup">@color/text_color</item>
         <item name="bubble_bg_color">@color/bubble_bg_color</item>
         <item name="color_list_divider">@color/color_list_divider</item>
@@ -70,6 +85,8 @@
         <item name="selector_list_top">@drawable/selector_set_top_msg_list</item>
         <item name="textColorAlertDialogListItem">@color/color_text_common_level_one</item>
         <item name="drawable_list_divider">@drawable/rv_divider</item>
+        <item name="delete_input_icon">@drawable/icon_delete_input</item>
+        <item name="delete_emotion_icon">@drawable/emotion_delete</item>
 
         <item name="header_text_blue_white_color">@color/footer_tab_text_sel_blue</item>
         <item name="footer_tab_text_color">@color/seclector_footer_text_white</item>
@@ -92,8 +109,11 @@
         <item name="status_bar_dark_font">true</item>
         <item name="ic_back_btn">@drawable/ic_back_btn_white</item>
         <item name="ic_appcenter_search">@drawable/ic_appcenter_search_white</item>
-        <item name="plugin_ic_header_title_drop_down">@drawable/plugin_ic_header_title_drop_down_white</item>
-        <item name="plugin_ic_header_title_drop_up">@drawable/plugin_ic_header_title_drop_up_white</item>
+        <item name="plugin_ic_header_title_drop_down">
+            @drawable/plugin_ic_header_title_drop_down_white
+        </item>
+        <item name="plugin_ic_header_title_drop_up">@drawable/plugin_ic_header_title_drop_up_white
+        </item>
         <item name="mine_my_info_card_name_color">@android:color/black</item>
         <item name="mine_my_info_card_enterprise_color">#666666</item>
         <item name="mine_my_info_card_bg">@drawable/ic_mine_card_my_info_bg_white</item>
@@ -106,20 +126,33 @@
 
     </style>
 
-    <style name="AppTheme_1"  parent="AppTheme">
+    <style name="AppTheme_1" parent="AppTheme">
         <item name="android:imageButtonStyle">@style/CusImageButton</item>
         <item name="header_bg_color">@color/header_bg_grey</item>
+        <item name="header_bg_search_1c">@color/header_bg_grey</item>
         <item name="header_bg">@drawable/shape_header_bg_grey</item>
+        <item name="header_bg_1c">@drawable/shape_header_bg_grey</item>
         <item name="footer_bg">@drawable/footer_bg_grey</item>
         <item name="footer_bg_color">@color/footer_bg_grey</item>
         <item name="header_text_color">@color/header_text_grey</item>
+        <item name="header_text_color_e1">@color/header_text_grey</item>
         <item name="content_bg">@color/content_bg</item>
         <item name="content_bg_level_two">@color/content_bg_level_two</item>
+        <item name="content_bg_30">@color/content_bg_level_two</item>
+        <item name="content_bg_ff_00">@color/content_bg_level_two</item>
+        <item name="content_bg_f6_1c">@color/content_bg_level_two</item>
         <item name="color_bg_common">@color/color_bg_common</item>
+        <item name="color_bg_common_00">@color/color_bg_common</item>
+        <item name="color_3a_88">@color/color_3a</item>
         <item name="home_common_bg">@color/button_color_nor</item>
         <item name="text_ll_color_nor">@color/button_color_nor</item>
+        <item name="common_bg_30">@color/button_color_nor</item>
         <item name="text_ll_color_sel">@color/button_color_sel</item>
         <item name="text_color">@color/text_color</item>
+        <item name="text_color_33_66">@color/text_color</item>
+        <item name="text_color_e1">@color/text_color</item>
+        <item name="color_33_e1">@color/text_color</item>
+        <item name="conversation_name_color">@color/color_text_tip</item>
         <item name="text_color_backup">@color/text_color</item>
         <item name="bubble_bg_color">@color/bubble_bg_color</item>
         <item name="color_list_divider">@color/color_list_divider</item>
@@ -128,6 +161,8 @@
         <item name="selector_list_top">@drawable/selector_set_top_msg_list</item>
         <item name="textColorAlertDialogListItem">@color/color_text_common_level_one</item>
         <item name="drawable_list_divider">@drawable/rv_divider</item>
+        <item name="delete_input_icon">@drawable/icon_delete_input</item>
+        <item name="delete_emotion_icon">@drawable/emotion_delete</item>
 
         <item name="header_text_blue_white_color">@color/header_text_grey</item>
         <item name="footer_tab_text_color">@color/seclector_footer_text_grey</item>
@@ -150,8 +185,11 @@
         <item name="status_bar_dark_font">true</item>
         <item name="ic_back_btn">@drawable/ic_back_btn_white</item>
         <item name="ic_appcenter_search">@drawable/ic_appcenter_search_white</item>
-        <item name="plugin_ic_header_title_drop_down">@drawable/plugin_ic_header_title_drop_down_white</item>
-        <item name="plugin_ic_header_title_drop_up">@drawable/plugin_ic_header_title_drop_up_white</item>
+        <item name="plugin_ic_header_title_drop_down">
+            @drawable/plugin_ic_header_title_drop_down_white
+        </item>
+        <item name="plugin_ic_header_title_drop_up">@drawable/plugin_ic_header_title_drop_up_white
+        </item>
         <item name="mine_my_info_card_name_color">@android:color/black</item>
         <item name="mine_my_info_card_enterprise_color">#666666</item>
         <item name="mine_my_info_card_bg">@drawable/ic_mine_card_my_info_bg_white</item>
@@ -161,20 +199,33 @@
         <item name="schedule_tab_text_color_select">@color/header_text_black</item>
     </style>
 
-    <style name="AppTheme_2"  parent="AppTheme">
+    <style name="AppTheme_2" parent="AppTheme">
         <item name="android:imageButtonStyle">@style/CusImageButton</item>
         <item name="header_bg_color">@color/header_bg_blue</item>
+        <item name="header_bg_search_1c">@color/header_bg_blue</item>
         <item name="header_bg">@drawable/shape_header_bg_blue</item>
+        <item name="header_bg_1c">@drawable/shape_header_bg_blue</item>
         <item name="footer_bg">@drawable/footer_bg_blue</item>
         <item name="footer_bg_color">@color/footer_bg_blue</item>
         <item name="header_text_color">@color/header_text</item>
+        <item name="header_text_color_e1">@color/header_text</item>
         <item name="content_bg">@color/content_bg</item>
         <item name="content_bg_level_two">@color/content_bg_level_two</item>
+        <item name="content_bg_30">@color/content_bg_level_two</item>
+        <item name="content_bg_ff_00">@color/content_bg_level_two</item>
+        <item name="content_bg_f6_1c">@color/content_bg_level_two</item>
         <item name="color_bg_common">@color/color_bg_common</item>
+        <item name="color_bg_common_00">@color/color_bg_common</item>
+        <item name="color_3a_88">@color/color_3a</item>
         <item name="home_common_bg">@color/button_color_nor</item>
         <item name="text_ll_color_nor">@color/button_color_nor</item>
+        <item name="common_bg_30">@color/button_color_nor</item>
         <item name="text_ll_color_sel">@color/button_color_sel</item>
         <item name="text_color">@color/text_color</item>
+        <item name="text_color_33_66">@color/text_color</item>
+        <item name="text_color_e1">@color/text_color</item>
+        <item name="color_33_e1">@color/text_color</item>
+        <item name="conversation_name_color">@color/color_text_tip</item>
         <item name="text_color_backup">@color/text_color</item>
         <item name="bubble_bg_color">@color/bubble_bg_color</item>
         <item name="color_list_divider">@color/color_list_divider</item>
@@ -182,6 +233,8 @@
         <item name="selector_list">@drawable/selector_list</item>
         <item name="selector_list_top">@drawable/selector_set_top_msg_list</item>
         <item name="drawable_list_divider">@drawable/rv_divider</item>
+        <item name="delete_input_icon">@drawable/icon_delete_input</item>
+        <item name="delete_emotion_icon">@drawable/emotion_delete</item>
 
         <item name="header_text_blue_white_color">@color/header_text</item>
         <item name="footer_tab_text_color">@color/seclector_footer_text_blue</item>
@@ -204,8 +257,11 @@
         <item name="status_bar_dark_font">false</item>
         <item name="ic_back_btn">@drawable/ic_back_btn_blue</item>
         <item name="ic_appcenter_search">@drawable/ic_appcenter_search_blue</item>
-        <item name="plugin_ic_header_title_drop_down">@drawable/plugin_ic_header_title_drop_down_blue</item>
-        <item name="plugin_ic_header_title_drop_up">@drawable/plugin_ic_header_title_drop_up_blue</item>
+        <item name="plugin_ic_header_title_drop_down">
+            @drawable/plugin_ic_header_title_drop_down_blue
+        </item>
+        <item name="plugin_ic_header_title_drop_up">@drawable/plugin_ic_header_title_drop_up_blue
+        </item>
         <item name="mine_my_info_card_name_color">?attr/text_ll_color_nor</item>
         <item name="mine_my_info_card_enterprise_color">?attr/text_ll_color_nor</item>
         <item name="mine_my_info_card_bg">@drawable/ic_mine_card_my_info_bg_blue</item>
@@ -216,20 +272,33 @@
         <item name="textColorAlertDialogListItem">@color/color_text_common_level_one</item>
     </style>
 
-    <style name="AppTheme_3"  parent="AppTheme">
+    <style name="AppTheme_3" parent="AppTheme">
         <item name="android:imageButtonStyle">@style/CusImageButton</item>
-        <item name="header_bg_color">@color/header_bg_dark</item>
+        <item name="header_bg_color">@color/color_bg_common_dark</item>
+        <item name="header_bg_search_1c">@color/color_bg_common_dark</item>
         <item name="header_bg">@drawable/shape_header_bg_dark</item>
+        <item name="header_bg_1c">@drawable/shape_header_bg_dark_1c</item>
         <item name="footer_bg">@drawable/footer_bg_dark</item>
         <item name="footer_bg_color">@color/footer_bg_dark</item>
         <item name="header_text_color">@color/header_text</item>
+        <item name="header_text_color_e1">@color/header_text_e1</item>
         <item name="content_bg">@color/content_bg_dark</item>
         <item name="content_bg_level_two">@color/content_bg_dark_level_two</item>
+        <item name="content_bg_f6_1c">@color/color_bg_common_dark</item>
+        <item name="content_bg_30">@color/content_bg_dark_30</item>
+        <item name="content_bg_ff_00">@color/content_bg_dark</item>
         <item name="color_bg_common">@color/color_bg_common_dark</item>
+        <item name="color_bg_common_00">@color/content_bg_dark</item>
+        <item name="color_3a_88">@color/color_88</item>
         <item name="home_common_bg">@color/content_bg_dark</item>
         <item name="text_ll_color_nor">@color/button_color_nor_dark</item>
+        <item name="common_bg_30">@color/bubble_bg_color_dark</item>
         <item name="text_ll_color_sel">@color/button_color_sel_dark</item>
         <item name="text_color">@color/text_color_dark</item>
+        <item name="text_color_33_66">@color/color_text_tip</item>
+        <item name="text_color_e1">@color/header_text_e1</item>
+        <item name="color_33_e1">@color/header_text_e1</item>
+        <item name="conversation_name_color">@color/header_text_e1</item>
         <item name="text_color_backup">@color/text_color_dark</item>
         <item name="bubble_bg_color">@color/bubble_bg_color_dark</item>
         <item name="color_list_divider">@color/color_list_divider_dark</item>
@@ -238,6 +307,8 @@
         <item name="selector_list_top">@drawable/selector_set_top_msg_list_dark</item>
         <item name="textColorAlertDialogListItem">@color/white</item>
         <item name="drawable_list_divider">@drawable/rv_divider_dark</item>
+        <item name="delete_input_icon">@drawable/icon_delete_input_dark</item>
+        <item name="delete_emotion_icon">@drawable/emotion_delete_dark</item>
 
         <item name="header_text_blue_white_color">@color/header_text</item>
         <item name="footer_tab_text_color">@color/seclector_footer_text_blue</item>
@@ -251,8 +322,8 @@
         <item name="bg_tab_mine">@drawable/selector_tab_more_btn_grey</item>
         <item name="bg_tab_unknown">@drawable/selector_tab_unknown_btn_grey</item>
         <item name="bg_tab_work">@drawable/selector_tab_work_btn_grey</item>
-        <item name="ic_message_header_contact">@drawable/ic_message_header_contact_blue</item>
-        <item name="ic_add">@drawable/ic_add_blue</item>
+        <item name="ic_message_header_contact">@drawable/ic_message_header_contact_dark</item>
+        <item name="ic_add">@drawable/ic_add_dark</item>
         <item name="ic_config">@drawable/ic_config_blue</item>
         <item name="ic_appcenter_enter">@drawable/ic_appcenter_enter_blue</item>
         <item name="ic_appcenter_config">@drawable/ic_appcenter_config_blue</item>
@@ -260,8 +331,11 @@
         <item name="status_bar_dark_font">false</item>
         <item name="ic_back_btn">@drawable/ic_back_btn_blue</item>
         <item name="ic_appcenter_search">@drawable/ic_appcenter_search_blue</item>
-        <item name="plugin_ic_header_title_drop_down">@drawable/plugin_ic_header_title_drop_down_blue</item>
-        <item name="plugin_ic_header_title_drop_up">@drawable/plugin_ic_header_title_drop_up_blue</item>
+        <item name="plugin_ic_header_title_drop_down">
+            @drawable/plugin_ic_header_title_drop_down_blue
+        </item>
+        <item name="plugin_ic_header_title_drop_up">@drawable/plugin_ic_header_title_drop_up_blue
+        </item>
         <item name="mine_my_info_card_name_color">@color/white</item>
         <item name="mine_my_info_card_enterprise_color">@color/white</item>
         <item name="mine_my_info_card_bg">@drawable/ic_mine_card_my_info_bg_blue</item>
@@ -270,7 +344,6 @@
         <item name="schedule_tab_text_color_normal">@color/schedule_tab_text_normal_blue</item>
         <item name="schedule_tab_text_color_select">@color/white</item>
     </style>
-
 
 
     <!-- Application theme. -->
@@ -323,7 +396,6 @@
     </style>
 
 
-
     <style name="userhead_dialog_bg" parent="@android:style/Theme.Dialog">
         <item name="android:windowIsFloating">true</item>
         <!-- 是否浮现在activity之上 -->
@@ -352,9 +424,6 @@
         <item name="android:windowBackground">@drawable/photo_choose_bg</item>
         <item name="android:background">@android:color/transparent</item>
     </style>
-
-
-
 
 
     <!-- 增加加号部分的style -->
@@ -429,17 +498,18 @@
     </style>
 
     <declare-styleable name="RxCardStackView">
-        <attr name="stackOverlapGaps" format="dimension"/>
-        <attr name="stackOverlapGapsCollapse" format="dimension"/>
-        <attr name="stackHeaderHeight" format="dimension"/>
-        <attr name="stackDuration" format="integer"/>
-        <attr name="stackNumBottomShow" format="integer"/>
+        <attr name="stackOverlapGaps" format="dimension" />
+        <attr name="stackOverlapGapsCollapse" format="dimension" />
+        <attr name="stackHeaderHeight" format="dimension" />
+        <attr name="stackDuration" format="integer" />
+        <attr name="stackNumBottomShow" format="integer" />
         <attr name="stackAnimationType">
-            <flag name="allDown" value="0"/>
-            <flag name="upDown" value="1"/>
-            <flag name="upDownStack" value="2"/>
+            <flag name="allDown" value="0" />
+            <flag name="upDown" value="1" />
+            <flag name="upDownStack" value="2" />
         </attr>
     </declare-styleable>
+
     <style name="AndroidTreeNodeStyleCustom">
         <item name="android:paddingLeft">20dp</item>
         <!--<item name="android:showDividers">middle</item>-->
@@ -460,8 +530,7 @@
 
     </style>
 
-    <style name="Theme.Transparent.Permission"
-        parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="Theme.Transparent.Permission" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowContentOverlay">@null</item>
@@ -487,6 +556,7 @@
     <style name="VolumeTransferTabLayoutTextStyle">
         <item name="android:textSize">13sp</item>
     </style>
+
     <style name="DateTimePickerDateTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!--这个绿色是选中时的背景颜色，和当前日期的颜色-->
         <item name="colorAccent">#36A5F6</item>

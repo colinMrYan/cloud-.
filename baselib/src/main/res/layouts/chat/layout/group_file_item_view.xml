@@ -53,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:textColor="?attr/text_color"
+                android:textColor="?attr/text_color_e1"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 

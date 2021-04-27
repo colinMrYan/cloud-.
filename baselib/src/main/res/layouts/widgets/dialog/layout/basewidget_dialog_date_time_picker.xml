@@ -34,7 +34,7 @@
             android:layout_centerVertical="true"
             android:paddingLeft="35dp"
             android:text="24:00"
-            android:textColor="?attr/text_color"
+            android:textColor="?attr/text_color_e1"
             android:textSize="@dimen/header_function_textsize" />
 
         <ImageView

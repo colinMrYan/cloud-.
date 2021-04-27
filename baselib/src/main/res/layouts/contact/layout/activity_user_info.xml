@@ -11,7 +11,7 @@
         android:id="@+id/ibt_back_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/header_bg">
+        android:background="?attr/header_bg_1c">
 
         <ImageButton
             android:id="@+id/ibt_back"
@@ -81,7 +81,7 @@
                 android:layout_marginTop="8dp"
                 android:elevation="10dp"
                 android:maxWidth="300dp"
-                android:textColor="?attr/text_color"
+                android:textColor="?attr/text_color_e1"
                 android:textSize="17sp" />
 
             <TextView
@@ -95,7 +95,7 @@
                 android:gravity="center"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:textColor="?attr/text_color"
+                android:textColor="?attr/text_color_e1"
                 android:textSize="15sp"
                 android:visibility="gone" />
         </LinearLayout>
@@ -165,7 +165,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/tv_department"
                         android:paddingBottom="7dp"
-                        android:textColor="?attr/text_color"
+                        android:textColor="?attr/text_color_e1"
                         android:textIsSelectable="true"
                         android:textSize="@dimen/button_textsize" />
 
@@ -218,7 +218,7 @@
                         android:paddingRight="24dp"
                         android:paddingBottom="7dp"
                         android:singleLine="true"
-                        android:textColor="?attr/text_color"
+                        android:textColor="?attr/text_color_e1"
                         android:textIsSelectable="true"
                         android:textSize="@dimen/content_title_textsize" />
 

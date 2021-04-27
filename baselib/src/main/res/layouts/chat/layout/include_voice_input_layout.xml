@@ -16,7 +16,7 @@
         android:layout_marginRight="20dp"
         android:background="@null"
         android:maxHeight="180dp"
-        android:textColor="?attr/text_color"
+        android:textColor="?attr/text_color_e1"
         android:textColorHint="@color/footer_tab_text_nor_white"
         android:textSize="16sp"
         android:visibility="gone" />
@@ -30,7 +30,7 @@
         android:drawableRight="@drawable/plugin_ic_header_title_drop_down_white"
         android:drawablePadding="4dp"
         android:text="@string/voice_input_language_mandarin"
-        android:textColor="?attr/text_color"
+        android:textColor="?attr/text_color_e1"
         android:textSize="16sp" />
 
     <com.inspur.emmcloud.widget.waveprogress.WaterWaveProgress
@@ -104,7 +104,7 @@
             android:layout_marginRight="63dp"
             android:layout_toLeftOf="@id/voice_level_img"
             android:text="@string/voice_input_clear"
-            android:textColor="?attr/text_color"
+            android:textColor="?attr/text_color_e1"
             android:textSize="16sp" />
 
         <TextView
@@ -116,7 +116,7 @@
             android:layout_toRightOf="@+id/voice_level_img"
             android:padding="10dp"
             android:text="@string/send"
-            android:textColor="?attr/text_color"
+            android:textColor="?attr/text_color_e1"
             android:textSize="16sp" />
     </RelativeLayout>
 

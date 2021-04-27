@@ -37,7 +37,7 @@
                 android:ellipsize="end"
                 android:lineSpacingMultiplier="1.2"
                 android:maxLines="2"
-                android:textColor="?attr/text_color"
+                android:textColor="?attr/text_color_e1"
                 android:textSize="15sp"
                 android:textStyle="bold" />
 
@@ -48,7 +48,7 @@
                 android:layout_below="@+id/tv_name_tips"
                 android:gravity="center_vertical"
                 android:lineSpacingMultiplier="1.2"
-                android:textColor="?attr/text_color"
+                android:textColor="?attr/text_color_e1"
                 android:textSize="15sp" />
         </RelativeLayout>
 

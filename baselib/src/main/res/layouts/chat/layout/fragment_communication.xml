@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/content_bg">
 
     <RelativeLayout
         android:id="@+id/rl_header"
         android:layout_width="match_parent"
         android:layout_height="@dimen/header_height"
-        android:background="?attr/header_bg">
+        android:background="?attr/header_bg_1c">
 
         <TextView
             android:id="@+id/header_text"
@@ -17,7 +18,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="15dp"
             android:text="@string/communicate"
-            android:textColor="?attr/header_text_color"
+            android:textColor="?attr/header_text_color_e1"
             android:textSize="@dimen/header_textsize_big" />
 
         <ImageView
@@ -52,7 +53,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="55dp"
-        android:background="?attr/header_bg_color">
+        android:background="?attr/header_bg_search_1c">
 
         <TextView
             android:id="@+id/tv_search_contact"

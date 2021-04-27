@@ -54,7 +54,7 @@
                 android:maxLines="1"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:textColor="@color/color_text_tip"
+                android:textColor="?attr/conversation_name_color"
                 android:textSize="14sp" />
 
             <RelativeLayout

@@ -2,7 +2,7 @@
     android:id="@+id/content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_bg_content_black"
+    android:background="@color/content_bg_dark"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
@@ -14,7 +14,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/color_image_grid_header">
+        android:background="@color/content_bg_dark">
 
         <GridView
             android:id="@+id/gridview"
@@ -37,7 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_alignParentBottom="true"
-            android:background="#DC22292C"
+            android:background="@color/color_bg_common_dark"
             android:clickable="true">
 
             <Button
@@ -55,7 +55,7 @@
                 android:singleLine="true"
                 android:text="@string/all_images"
                 android:textAllCaps="false"
-                android:textColor="@color/color_text_Anti_White"
+                android:textColor="@color/header_text_e1"
                 android:textSize="16sp" />
 
             <android.support.v7.widget.AppCompatCheckBox
@@ -69,7 +69,7 @@
                 android:includeFontPadding="true"
                 android:paddingLeft="8dp"
                 android:text="@string/origin"
-                android:textColor="@color/color_text_Anti_White"
+                android:textColor="@color/header_text_e1"
                 android:textSize="16sp" />
 
             <Button
@@ -83,7 +83,7 @@
                 android:paddingRight="16dp"
                 android:text="@string/preview"
                 android:textAllCaps="false"
-                android:textColor="@color/color_text_Anti_White"
+                android:textColor="@color/header_text_e1"
                 android:textSize="16sp" />
 
             <!--zyj TODO-->

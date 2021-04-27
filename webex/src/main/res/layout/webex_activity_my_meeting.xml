@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/header_height"
             android:layout_alignParentTop="true"
-            android:background="?attr/header_bg">
+            android:background="?attr/header_bg_1c">
 
             <ImageButton
                 android:id="@+id/ibt_back"
@@ -35,7 +35,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:text="@string/webex_my_meeting"
-                android:textColor="?attr/header_text_color"
+                android:textColor="?attr/header_text_color_e1"
                 android:textSize="@dimen/header_textsize" />
 
             <ImageView
@@ -50,7 +50,7 @@
                 android:paddingRight="14dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/webex_meeing_add"
-                android:tint="?attr/header_text_color" />
+                android:tint="?attr/header_text_color_e1" />
         </RelativeLayout>
 
 
