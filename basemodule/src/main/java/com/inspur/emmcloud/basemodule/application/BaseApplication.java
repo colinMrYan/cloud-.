@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.support.multidex.MultiDexApplication;
+import android.util.Log;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
@@ -66,6 +67,7 @@ public abstract class BaseApplication extends MultiDexApplication {
     private String tanent;
     private String currentChannelCid = "";
     private boolean isSafeLock = false;//是否正处于安全锁定中（正处于二次认证解锁页面）
+    private boolean mInited = false;
 
 
     /**
@@ -79,17 +81,15 @@ public abstract class BaseApplication extends MultiDexApplication {
 
     public void onCreate() {
         super.onCreate();
-        init();
-        onConfigurationChanged(null);
-        removeAllSessionCookie();
-        myActivityLifecycleCallbacks = new MyActivityLifecycleCallbacks();
-        registerActivityLifecycleCallbacks(myActivityLifecycleCallbacks);
+        instance = this;
     }
 
 
-    private void init() {
-        // TODO Auto-generated method stub
-        instance = this;
+    public void init() {
+        if (mInited) {
+            return;
+        }
+        mInited = true;
         Router.registerComponent("com.inspur.emmcloud.applike.AppApplike");
         Router.registerComponent("com.inspur.emmcloud.login.applike.LoginAppLike");
         Router.registerComponent("com.inspur.emmcloud.web.applike.WebAppLike");
@@ -132,6 +132,11 @@ public abstract class BaseApplication extends MultiDexApplication {
         SpeechUtility.createUtility(this, SpeechConstant.APPID + "=5a6001bf");
         //置为0，调起解锁界面 (强杀进程后)
         PreferencesUtils.putLong(BaseApplication.getInstance(), Constant.PREF_APP_BACKGROUND_TIME, 0L);
+
+        onConfigurationChanged(null);
+        removeAllSessionCookie();
+        myActivityLifecycleCallbacks = new MyActivityLifecycleCallbacks();
+        registerActivityLifecycleCallbacks(myActivityLifecycleCallbacks);
     }
 
     /**************************************登出逻辑相关********************************************************/
@@ -139,7 +144,6 @@ public abstract class BaseApplication extends MultiDexApplication {
      * 注销
      */
     public void signout() {
-        // TODO Auto-generated method stub
         clearNotification();
         removeAllCookie();
         removeAllSessionCookie();

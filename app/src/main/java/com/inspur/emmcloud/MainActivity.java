@@ -19,6 +19,7 @@ import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.ResolutionUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.dialogs.EasyDialog;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
@@ -31,6 +32,7 @@ import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.Res;
 import com.inspur.emmcloud.bean.system.SplashDefaultBean;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
+import com.inspur.emmcloud.componentservice.app.AppService;
 import com.inspur.emmcloud.componentservice.login.LoginService;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.util.privates.NotificationUpgradeUtils;
@@ -371,5 +373,16 @@ public class MainActivity extends BaseActivity implements IMainActivity {
             timer.cancel();
             timer = null;
         }
+    }
+
+    @Override
+    public void onAgreedProtocol() {
+        MyApplication.getInstance().init();
+    }
+
+    @Override
+    public void onClickedProtocolAgreedButton() {
+        MyApplication.getInstance().init();
+        BaseApplication.getInstance().getActivityLifecycleCallbacks().onActivityStarted(MainActivity.this);
     }
 }

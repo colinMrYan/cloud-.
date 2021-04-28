@@ -8,6 +8,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -30,14 +31,16 @@ public class ProtocolUtil {
     private static SpannableString agreement;
 
     public interface ProtocolDialogCallback {
-        void onAgreeDialog();
+        void onAgreed();
+
+        void onClickAgreeButton();
     }
 
 
     public static void showProtocolDialog(final Context context, @Nullable final ProtocolDialogCallback callback) {
         if (PreferencesUtils.getBoolean(context, PREF_PROTOCOL_DLG_AGREED, false)) {
             if (callback != null) {
-                callback.onAgreeDialog();
+                callback.onAgreed();
             }
             return;
         }
@@ -62,7 +65,7 @@ public class ProtocolUtil {
                 dialog.dismiss();
                 PreferencesUtils.putBoolean(context, PREF_PROTOCOL_DLG_AGREED, true);
                 if (callback != null) {
-                    callback.onAgreeDialog();
+                    callback.onClickAgreeButton();
                 }
             }
         });

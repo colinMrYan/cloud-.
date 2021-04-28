@@ -68,7 +68,14 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (this instanceof IMainActivity) {
             ProtocolUtil.showProtocolDialog(this, new ProtocolUtil.ProtocolDialogCallback() {
                 @Override
-                public void onAgreeDialog() {
+                public void onAgreed() {
+                    ((IMainActivity) BaseActivity.this).onAgreedProtocol();
+                    checkNecessaryPermission();
+                }
+
+                @Override
+                public void onClickAgreeButton() {
+                    ((IMainActivity) BaseActivity.this).onClickedProtocolAgreedButton();
                     checkNecessaryPermission();
                 }
             });

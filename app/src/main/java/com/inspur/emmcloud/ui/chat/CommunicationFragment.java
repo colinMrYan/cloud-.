@@ -1289,7 +1289,6 @@ public class CommunicationFragment extends BaseFragment {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            // TODO Auto-generated method stub
             String command = intent.getExtras().getString("command");
             switch (command) {
                 case "creat_group_icon":

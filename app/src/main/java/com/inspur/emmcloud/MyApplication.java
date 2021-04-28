@@ -28,6 +28,8 @@ import java.util.List;
  * Application class
  */
 public class MyApplication extends BaseApplication implements ReactApplication {
+
+    private boolean mInited = false;
     /**
      * ReactNative相关代码
      */
@@ -52,6 +54,15 @@ public class MyApplication extends BaseApplication implements ReactApplication {
 
     public void onCreate() {
         super.onCreate();
+    }
+
+    @Override
+    public void init() {
+        super.init();
+        if (mInited) {
+            return;
+        }
+        mInited = true;
         Router router = Router.getInstance();
         if (router.getService(CommunicationService.class) != null) {
             CommunicationService service = router.getService(CommunicationService.class);

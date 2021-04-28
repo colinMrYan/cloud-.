@@ -72,7 +72,6 @@ public class LoginActivity extends BaseActivity {
         BaseApplication.getInstance().closeOtherActivity(LoginActivity.this);
         initView();
         handMessage();
-        ProtocolUtil.showProtocolDialog(this, null);
     }
 
     @Override
