@@ -12,6 +12,7 @@ import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.ui.NotSupportLand;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.setting.R;
@@ -35,7 +36,7 @@ import butterknife.OnClick;
  * Created by Sym on 2015/12/23.
  */
 @Route(path = Constant.AROUTER_CLASS_SETTING_CREATE_GESTURE)
-public class CreateGestureActivity extends BaseActivity {
+public class CreateGestureActivity extends BaseActivity implements NotSupportLand {
 
     public static final String GESTURE_CODE = "gesture_code";
     public static final String GESTURE_CODE_ISOPEN = "gesture_code_isopen";

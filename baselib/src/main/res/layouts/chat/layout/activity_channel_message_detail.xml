@@ -3,7 +3,7 @@
     android:id="@+id/main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/text_ll_color_nor"
+    android:background="?attr/home_common_bg"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
@@ -40,7 +40,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="?attr/content_bg_level_two">
+        android:background="?attr/content_bg_ff_00">
 
         <ScrollView
             android:id="@+id/scrollview"

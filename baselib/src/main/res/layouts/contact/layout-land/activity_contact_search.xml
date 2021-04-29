@@ -55,8 +55,9 @@
     </RelativeLayout>
 
     <ScrollView
+        android:id="@+id/contact_search_outer_scroller"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@id/rl_header"
         android:scrollbars="none">
 
@@ -114,6 +115,7 @@
 
 
                     <RelativeLayout
+                        android:id="@+id/rl_title_list"
                         android:layout_width="match_parent"
                         android:layout_height="40dp">
 

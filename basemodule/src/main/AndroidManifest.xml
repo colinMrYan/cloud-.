@@ -418,7 +418,7 @@
         <activity
             android:name=".util.mycamera.MyCameraActivity"
             android:resizeableActivity="true"
-
+            android:screenOrientation="portrait"
             android:stateNotNeeded="true"
             android:supportsRtl="true"></activity>
         <activity

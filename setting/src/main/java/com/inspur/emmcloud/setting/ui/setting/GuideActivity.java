@@ -15,6 +15,7 @@ import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.ui.NotSupportLand;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
@@ -35,7 +36,7 @@ import butterknife.ButterKnife;
  * 功能介绍页面 com.inspur.emmcloud.ui.GuideActivity
  */
 @Route(path = Constant.AROUTER_CLASS_SETTING_GUIDE)
-public class GuideActivity extends BaseActivity {
+public class GuideActivity extends BaseActivity implements NotSupportLand {
 
     @BindView(R2.id.viewpager)
     ViewPager viewPager;

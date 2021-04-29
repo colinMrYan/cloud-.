@@ -46,7 +46,7 @@
             android:id="@+id/scan_result_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_black"
+            android:textColor="?attr/text_color_e1"
             android:textIsSelectable="true"
             android:textSize="@dimen/content_normal_textsize" />
     </LinearLayout>

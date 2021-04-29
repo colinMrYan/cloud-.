@@ -42,6 +42,7 @@ import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.ui.NotSupportLand;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.basemodule.util.mycamera.CameraUtils;
@@ -66,7 +67,7 @@ import static android.Manifest.permission.CAMERA;
 /**
  * 面容解锁识别页面
  */
-public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Callback {
+public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Callback, NotSupportLand {
 
     public static final String FACE_VERIFT_IS_OPEN = "face_verify_isopen";
     private static final int TIMEOUT_TIME = 20000;

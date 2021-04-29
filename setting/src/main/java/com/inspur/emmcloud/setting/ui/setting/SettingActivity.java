@@ -26,6 +26,7 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.NotificationSetUtils;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
@@ -113,7 +114,7 @@ public class SettingActivity extends BaseActivity {
                 saveWebAutoRotateConfig(b);
 
             } else if (i == R.id.switch_view_setting_native_rotate) {
-                PreferencesByUserAndTanentUtils.putBoolean(SettingActivity.this, Constant.PREF_APP_OPEN_NATIVE_ROTATE_SWITCH, b);
+                PreferencesUtils.putBoolean(SettingActivity.this, Constant.PREF_APP_OPEN_NATIVE_ROTATE_SWITCH, b);
                 if (b) {
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
                 } else {
@@ -315,7 +316,7 @@ public class SettingActivity extends BaseActivity {
     }
 
     private void setNativeAutoRotateState() {
-        boolean isNativeAutoRotate = PreferencesByUserAndTanentUtils.getBoolean(this,
+        boolean isNativeAutoRotate = PreferencesUtils.getBoolean(this,
                 Constant.PREF_APP_OPEN_NATIVE_ROTATE_SWITCH, false);
         nativeRotateSwitch.setChecked(isNativeAutoRotate);
     }

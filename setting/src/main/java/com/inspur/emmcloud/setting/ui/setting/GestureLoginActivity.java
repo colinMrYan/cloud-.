@@ -22,6 +22,7 @@ import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.ui.NotSupportLand;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
@@ -46,7 +47,7 @@ import butterknife.OnClick;
 /**
  * Created by Sym on 2015/12/24.
  */
-public class GestureLoginActivity extends BaseActivity {
+public class GestureLoginActivity extends BaseActivity implements NotSupportLand {
 
     public final static String GESTURE_CODE_CHANGE = "gesture_code_change";
     private static final int GESTURE_CODE_TIMES = 5;
