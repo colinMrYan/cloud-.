@@ -33,6 +33,7 @@ import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.ui.NotSupportLand;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.Res;
 import com.inspur.emmcloud.basemodule.util.imagepicker.ImagePicker;
@@ -58,7 +59,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
-public class ALiScanActivity extends BaseActivity {
+public class ALiScanActivity extends BaseActivity implements NotSupportLand {
 
     private static final int REQUEST_CODE_PERMISSION = 1;
     private static final int REQUEST_CODE_PHOTO = 2;

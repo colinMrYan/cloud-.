@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="?attr/home_common_bg"
     android:fitsSystemWindows="true">
 
     <RelativeLayout
@@ -92,7 +93,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/rl_header"
-        android:background="?attr/color_bg_common"
+        android:background="?attr/color_bg_common_00"
         android:scrollbars="vertical">
 
         <ListView

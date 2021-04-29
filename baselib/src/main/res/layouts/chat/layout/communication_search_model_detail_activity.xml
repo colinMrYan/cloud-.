@@ -9,7 +9,7 @@
         android:id="@+id/rl_header"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/header_height"
-        android:background="?attr/content_bg_level_two">
+        android:background="?attr/content_bg_f6_1c">
 
         <TextView
             android:id="@+id/tv_cancel"
@@ -23,7 +23,7 @@
             android:paddingLeft="4dp"
             android:paddingRight="15dp"
             android:text="@string/cancel"
-            android:textColor="?attr/text_color"
+            android:textColor="?attr/text_color_e1"
             android:textSize="@dimen/header_function_textsize" />
 
         <RelativeLayout
@@ -43,7 +43,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="8dp"
                 android:background="@drawable/bg_search"
-                android:tint="@color/color_text_common_level_two" />
+                android:tint="#8E8E93" />
 
             <com.inspur.emmcloud.baselib.widget.ClearEditText
                 android:id="@+id/ev_search_input"
@@ -51,7 +51,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_toRightOf="@id/iv_search_members"
-                android:background="?attr/text_ll_color_nor"
+                android:background="?attr/common_bg_30"
+                android:drawableRight="?attr/delete_input_icon"
                 android:freezesText="true"
                 android:gravity="center_vertical"
                 android:hint="@string/communication_search"
@@ -61,7 +62,7 @@
                 android:paddingRight="5dp"
                 android:paddingBottom="5dp"
                 android:singleLine="true"
-                android:textColor="?attr/text_color"
+                android:textColor="?attr/text_color_e1"
                 android:textColorHint="@color/color_text_common_level_two"
                 android:textSize="14sp" />
         </RelativeLayout>

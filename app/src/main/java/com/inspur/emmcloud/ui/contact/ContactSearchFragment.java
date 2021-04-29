@@ -2,6 +2,7 @@ package com.inspur.emmcloud.ui.contact;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -71,6 +72,7 @@ import com.inspur.emmcloud.util.privates.cache.CommonContactCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactOrgCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
+import com.reactnativenavigation.params.Orientation;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -163,6 +165,9 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
     RelativeLayout structLayout;
     @BindView(R.id.channel_group_layout)
     RelativeLayout channelGroupLayout;
+    @BindView(R.id.title_all_text)
+    TextView titleAllTv;
+
     private boolean isSearchSingle = false; // 判断是否搜索单一项
     private boolean isContainMe = false; // 搜索结果是否可以包含自己
     private boolean isMultiSelect = false;
@@ -195,6 +200,8 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
     private List<SearchModel> currentSelectAllSearchModelList = new ArrayList<>();
     private boolean isShowConfirmDialog = false;
     private String sureDialogMessage;
+    private View view;
+    private ScrollView searchOuterScroller;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -206,13 +213,41 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_contact_search, container, false);
+        view = inflater.inflate(R.layout.activity_contact_search, container, false);
         unbinder = ButterKnife.bind(this, view);
         setFragmentStatusBarCommon();
         getIntentData();
         initView();
         initSearchRunnable();
+        adjustListHeight();
         return view;
+    }
+
+    private void adjustListHeight() {
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            searchOuterScroller = view.findViewById(R.id.contact_search_outer_scroller);
+            searchOuterScroller.post(new Runnable() {
+
+
+                @Override
+                public void run() {
+                    if (openGroupListView == null) {
+                        return;
+                    }
+                    int selectAllLayoutHeight = 0;
+                    if (View.VISIBLE == selectAllLayout.getVisibility()) {
+                        selectAllLayoutHeight = selectAllLayout.getHeight();
+                    }
+                    int scrollerHeight = searchOuterScroller.getHeight();
+                    int searchEditLayoutHeight = searchEditLayout.getHeight();
+                    int titleAllTvHeight = titleAllTv.getHeight();
+                    int openGroupListViewHeight = scrollerHeight - searchEditLayoutHeight - titleAllTvHeight - selectAllLayoutHeight -3;
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, openGroupListViewHeight);
+                    openGroupListView.setLayoutParams(params);
+                    openGroupListView.requestLayout();
+                }
+            });
+        }
     }
 
     @Override
@@ -516,6 +551,9 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
         selectAllLayout.setVisibility(isSelectAllLayoutShow ? View.VISIBLE : View.GONE);
         selectAllImg.setSelected(false);
         selectAllImg.setImageResource(R.drawable.ic_select_no);
+        if (View.VISIBLE == selectAllLayout.getVisibility()) {
+            adjustListHeight();
+        }
     }
 
     /**
@@ -931,7 +969,8 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
     /**
      * 弹出分享确认框
      */
-    private void showConfirmDialog(final String searchResult, final SearchModel searchModel, final boolean isGroup) {
+    private void showConfirmDialog(final String searchResult, final SearchModel searchModel,
+                                   final boolean isGroup) {
         final MyDialog dialog = new MyDialog(getActivity(),
                 R.layout.chat_out_share_sure_dialog);
         Button okBtn = dialog.findViewById(R.id.ok_btn);

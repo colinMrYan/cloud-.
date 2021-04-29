@@ -18,6 +18,7 @@ import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.ContactAPIService;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
@@ -115,7 +116,7 @@ public class IndexActivity extends IndexBaseActivity {
     protected void onResume() {
         super.onResume();
 //        Update2NewVersionUtils.getInstance(this).checkNeedUpdate2NewVersion();
-        boolean isNativeAutoRotate = PreferencesByUserAndTanentUtils.getBoolean(this,
+        boolean isNativeAutoRotate = PreferencesUtils.getBoolean(this,
                 Constant.PREF_APP_OPEN_NATIVE_ROTATE_SWITCH, false);
         if (isNativeAutoRotate && !(this instanceof NotSupportLand)) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);

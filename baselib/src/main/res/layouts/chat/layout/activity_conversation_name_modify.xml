@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/home_common_bg"
     android:fitsSystemWindows="true">
 
     <RelativeLayout
@@ -51,7 +52,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/rl_header"
-        android:background="?attr/color_bg_common"
+        android:background="?attr/color_bg_common_00"
         android:paddingTop="10dp">
 
         <TextView
@@ -70,6 +71,7 @@
             android:layout_below="@id/tv_edit_gropName_tip"
             android:layout_marginTop="5dp"
             android:background="@drawable/bg_rectangle_no_fillet"
+            android:drawableRight="?attr/delete_input_icon"
             android:lines="1"
             android:paddingLeft="15dp"
             android:paddingTop="10dp"

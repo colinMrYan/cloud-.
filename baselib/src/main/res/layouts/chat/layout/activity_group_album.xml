@@ -3,6 +3,7 @@
     android:id="@+id/main_layout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="?attr/content_bg"
     android:fitsSystemWindows="true">
 
     <RelativeLayout
@@ -51,7 +52,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/rl_header"
-        android:background="?attr/content_bg_level_two">
+        android:background="?attr/content_bg_ff_00">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view_album"

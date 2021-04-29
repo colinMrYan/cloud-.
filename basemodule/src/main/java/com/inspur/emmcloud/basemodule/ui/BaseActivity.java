@@ -46,7 +46,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // 设置是否开启原生页面自动旋转
-        boolean isNativeAutoRotate = PreferencesByUserAndTanentUtils.getBoolean(this,
+        boolean isNativeAutoRotate = PreferencesUtils.getBoolean(this,
                 Constant.PREF_APP_OPEN_NATIVE_ROTATE_SWITCH, false);
         if (isNativeAutoRotate && !(this instanceof NotSupportLand)) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);

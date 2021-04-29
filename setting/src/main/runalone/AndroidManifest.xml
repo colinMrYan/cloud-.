@@ -45,7 +45,7 @@
             android:name=".ui.setting.CreateGestureActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="behind" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.setting.CreateGestureGuideActivity"
             android:launchMode="singleTask"
@@ -55,17 +55,17 @@
             android:name=".ui.setting.GestureLoginActivity"
             android:launchMode="singleTop"
             android:resizeableActivity="true"
-            android:screenOrientation="behind" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.setting.FaceVerifyActivity"
             android:launchMode="singleTop"
             android:resizeableActivity="true"
-            android:screenOrientation="behind" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.card.CardPackageActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="behind" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.card.CardPackageSetActivity"
             android:launchMode="singleTask"
@@ -150,7 +150,7 @@
             android:name=".ui.setting.GuideActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="behind">
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.notch_support"
                 android:value="true" />

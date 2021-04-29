@@ -51,6 +51,7 @@
             android:src="@drawable/gesture_code_img" />
 
         <TextView
+            android:id="@+id/tv_gesture_guide"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/img"

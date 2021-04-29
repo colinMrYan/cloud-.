@@ -7,6 +7,7 @@ import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.ui.NotSupportLand;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.setting.R;
@@ -31,7 +32,7 @@ import butterknife.ButterKnife;
 /**
  * Created by yufuchang on 2018/7/27.
  */
-public class CardPackageActivity extends BaseActivity implements RxCardStackView.ItemExpendListener {
+public class CardPackageActivity extends BaseActivity implements RxCardStackView.ItemExpendListener, NotSupportLand {
     private static final int CARD_PACKAGE_SET_REQUEST = 1;
     @BindView(R2.id.stackview_card_package)
     RxCardStackView cardStackView;

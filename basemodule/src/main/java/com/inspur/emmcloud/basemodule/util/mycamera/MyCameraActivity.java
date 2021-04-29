@@ -12,6 +12,7 @@ import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.R;
 import com.inspur.emmcloud.basemodule.R2;
 import com.inspur.emmcloud.basemodule.ui.BaseFragmentActivity;
+import com.inspur.emmcloud.basemodule.ui.NotSupportLand;
 import com.inspur.emmcloud.basemodule.util.imageedit.IMGEditActivity;
 import com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary.JCameraView;
 import com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary.listener.ClickListener;
@@ -26,7 +27,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MyCameraActivity extends BaseFragmentActivity implements JCameraListener, ClickListener {
+public class MyCameraActivity extends BaseFragmentActivity implements JCameraListener, ClickListener ,NotSupportLand{
 
     public static final String EXTRA_PHOTO_DIRECTORY_PATH = "IMAGE_SAVE_PATH";
     public static final String EXTRA_PHOTO_NAME = "IMAGE_NAME";

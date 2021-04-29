@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.volume.ui;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -95,6 +96,11 @@ public class GroupInfoActivity extends BaseActivity {
 
     private void showGroupDetail() {
         memberAdapter = new VolumeInfoMemberAdapter(this, group.getMemberUidList(), true);
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            memberGrid.setNumColumns(8);
+        } else {
+            memberGrid.setNumColumns(5);
+        }
         memberGrid.setAdapter(memberAdapter);
         updateGroupMemNum();
         groupNameText.setText(group.getName());
