@@ -152,7 +152,7 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 boolean isContentBlank = StringUtils.isBlank(s.toString());
                 sendBtn.setEnabled(!isContentBlank);
-                sendBtn.setTextColor(isContentBlank ? Color.parseColor("#999999") : Color.parseColor("#000000"));
+                sendBtn.setTextColor(isContentBlank ? Color.parseColor("#999999") : DarkUtil.getSendButtonColor());
                 if (canMentions && count == 1) {
                     String inputWord = s.toString().substring(start, start + count);
                     if (inputWord.equals("@")) {

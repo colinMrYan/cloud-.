@@ -237,26 +237,49 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        // 启动页和splash页不适配深色模式
+        Class<? extends BaseActivity> aClass = getClass();
+        String simpleName = aClass.getSimpleName();
+        if (simpleName.equals("MainActivity")) {
+            return;
+        }
+        // 第一次打开app,splash页面不适配深色模式
+        Boolean isFirst = PreferencesUtils.getBoolean(this, "isFirst", true);
+        if (isFirst) {
+            return;
+        }
+        // 是否跟随系统改变主题模式
+        Boolean followSystem = PreferencesUtils.getBoolean(this, Constant.PREF_FOLLOW_SYSTEM_THEME, true);
+        if (!followSystem) {
+            return;
+        }
+        followSystemTheme();
+    }
+
+    // 跟随系统改变主题
+    protected void followSystemTheme() {
         int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        int currentThemeNo = PreferencesUtils.getInt(BaseApplication.getInstance(), Constant.PREF_APP_THEME, 0);
         switch (currentNightMode) {
             case Configuration.UI_MODE_NIGHT_NO:
+                // 系统是浅色模式下，如果当前主题是暗夜黑则改为白色主题，其他主题则保持不变
+                if (currentThemeNo == THEME_DARK) {
+                    PreferencesUtils.putInt(BaseApplication.getInstance(), Constant.PREF_APP_THEME, 0);
+                    setTheme();
+                    // 登录相关页面不能跳转IndexActivity
+                    if (TextUtils.isEmpty(PreferencesUtils.getString(BaseApplication.getInstance(), "userID"))) {
+                        ARouter.getInstance().build(Constant.AROUTER_CLASS_LOGIN_MAIN).withFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                                | Intent.FLAG_ACTIVITY_CLEAR_TASK).navigation(this);
+                    } else {
+                        ARouter.getInstance().build(Constant.AROUTER_CLASS_APP_INDEX).withFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                                | Intent.FLAG_ACTIVITY_CLEAR_TASK).navigation(this);
+                    }
+                }
                 break;
             case Configuration.UI_MODE_NIGHT_YES:
-                // 启动页和splash页不适配深色模式
-                Class<? extends BaseActivity> aClass = getClass();
-                String simpleName = aClass.getSimpleName();
-                if (simpleName.equals("MainActivity")) {
-                    return;
-                }
-                // 第一次打开app,splash页面不适配深色模式
-                Boolean isFirst = PreferencesUtils.getBoolean(this, "isFirst", true);
-                if (isFirst) {
-                    return;
-                }
-                int currentThemeNo = PreferencesUtils.getInt(BaseApplication.getInstance(), Constant.PREF_APP_THEME, 0);
-                //不是深色模式
-                if (currentThemeNo != 3) {
-                    PreferencesUtils.putInt(BaseApplication.getInstance(), Constant.PREF_APP_THEME, 3);
+                // 系统是深色模式下，如果当前主题不是暗夜黑则改为暗夜黑主题。
+                if (currentThemeNo != THEME_DARK) {
+                    PreferencesUtils.putInt(BaseApplication.getInstance(), Constant.PREF_APP_THEME, THEME_DARK);
                     setTheme();
                     // 登录相关页面不能跳转IndexActivity
                     if (TextUtils.isEmpty(PreferencesUtils.getString(BaseApplication.getInstance(), "userID"))) {

@@ -49,7 +49,7 @@ public abstract class BaseFragmentActivity extends FragmentActivity {
         }
         setTheme();
         super.onCreate(savedInstanceState);
-        if(PreferencesUtils.getBoolean(this, PREF_PROTOCOL_DLG_AGREED, false)){
+        if (PreferencesUtils.getBoolean(this, PREF_PROTOCOL_DLG_AGREED, false)) {
             checkNecessaryPermission();
         } else {
             //目前仅有可能时隐私H5页
@@ -176,15 +176,27 @@ public abstract class BaseFragmentActivity extends FragmentActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        // 是否跟随系统改变主题模式
+        Boolean followSystem = PreferencesUtils.getBoolean(this, Constant.PREF_FOLLOW_SYSTEM_THEME, true);
+        if (!followSystem) {
+            return;
+        }
         int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        int currentThemeNo = PreferencesUtils.getInt(BaseApplication.getInstance(), Constant.PREF_APP_THEME, 0);
         switch (currentNightMode) {
             case Configuration.UI_MODE_NIGHT_NO:
+                // 系统是浅色模式下，如果当前主题是暗夜黑则改为白色主题，其他主题则保持不变
+                if (currentThemeNo == Constant.APP_THEME_DARK) {
+                    PreferencesUtils.putInt(BaseApplication.getInstance(), Constant.PREF_APP_THEME, 0);
+                    setTheme();
+                    ARouter.getInstance().build(Constant.AROUTER_CLASS_APP_INDEX).withFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                            | Intent.FLAG_ACTIVITY_CLEAR_TASK).navigation(this);
+                }
                 break;
             case Configuration.UI_MODE_NIGHT_YES:
-                int currentThemeNo = PreferencesUtils.getInt(BaseApplication.getInstance(), Constant.PREF_APP_THEME, 0);
-                //不是深色模式
-                if (currentThemeNo != 3) {
-                    PreferencesUtils.putInt(BaseApplication.getInstance(), Constant.PREF_APP_THEME, 3);
+                // 系统是深色模式下，如果当前主题不是暗夜黑则改为暗夜黑主题。
+                if (currentThemeNo != Constant.APP_THEME_DARK) {
+                    PreferencesUtils.putInt(BaseApplication.getInstance(), Constant.PREF_APP_THEME, Constant.APP_THEME_DARK);
                     setTheme();
                     ARouter.getInstance().build(Constant.AROUTER_CLASS_APP_INDEX).withFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                             | Intent.FLAG_ACTIVITY_CLEAR_TASK).navigation(this);
