@@ -82,14 +82,10 @@ public abstract class BaseApplication extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
         instance = this;
+        initWithoutUserInfo();
     }
 
-
-    public void init() {
-        if (mInited) {
-            return;
-        }
-        mInited = true;
+    private void initWithoutUserInfo(){
         Router.registerComponent("com.inspur.emmcloud.applike.AppApplike");
         Router.registerComponent("com.inspur.emmcloud.login.applike.LoginAppLike");
         Router.registerComponent("com.inspur.emmcloud.web.applike.WebAppLike");
@@ -100,13 +96,27 @@ public abstract class BaseApplication extends MultiDexApplication {
         Router.registerComponent("com.inspur.emmcloud.application.applike.ApplicationAppLike");
         Router.registerComponent("com.inspur.emmcloud.volume.applike.VolumeAppLike");
         Router.registerComponent("com.inspur.emmcloud.setting.applike.SettingAppLike");
+        if (AppUtils.isApkDebugable(getInstance())) {           // 这两行必须写在init之前，否则这些配置在init过程中将无效
+            ARouter.openLog();     // 打印日志
+            ARouter.openDebug();   // 开启调试模式(如果在InstantRun模式下运行，必须开启调试模式！线上版本需要关闭,否则有安全风险)
+        }
+        ARouter.init(getInstance());
+        Res.init(this); // 注册imp的资源文件类
+        ToastUtils.init(this);
+    }
+
+
+    public void init() {
+        if (mInited) {
+            return;
+        }
+        mInited = true;
         CrashHandler crashHandler = CrashHandler.getInstance();
         crashHandler.init(getInstance());
         x.Ext.init(getInstance());
         x.Ext.setDebug(true);
         LogUtils.isDebug = AppUtils.isApkDebugable(getInstance());
-        Res.init(this); // 注册imp的资源文件类
-        ToastUtils.init(this);
+
         ImageDisplayUtils.getInstance().initImageLoader(getInstance(), new CustomImageDownloader(getInstance()), MyAppConfig.LOCAL_CACHE_PATH);
         initTanent();
         userPhotoUrlMap = new LinkedHashMap<String, String>() {
@@ -117,11 +127,6 @@ public abstract class BaseApplication extends MultiDexApplication {
 
             }
         };
-        if (AppUtils.isApkDebugable(getInstance())) {           // 这两行必须写在init之前，否则这些配置在init过程中将无效
-            ARouter.openLog();     // 打印日志
-            ARouter.openDebug();   // 开启调试模式(如果在InstantRun模式下运行，必须开启调试模式！线上版本需要关闭,否则有安全风险)
-        }
-        ARouter.init(getInstance());
         isActive = false;
         isContactReady = PreferencesUtils.getBoolean(getInstance(),
                 Constant.PREF_IS_CONTACT_READY, false);
