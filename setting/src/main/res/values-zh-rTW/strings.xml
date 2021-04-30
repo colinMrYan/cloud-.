@@ -149,7 +149,7 @@
     <string name="setting_enter_app">進入應用</string>
     <string name="setting_log_off">用戶註銷</string>
     <string name="setting_log_offed">註銷成功</string>
-    <string name="setting_log_off_dialog_info">用戶註銷後不可恢復，請問是否註銷？</string>
+    <string name="setting_log_off_dialog_info">帳號註銷後，您在雲+的所有消息記錄，帳號資訊等均會清除且無法恢復，請您謹慎操作。請確認是否繼續註銷帳號？</string>
 
 
 </resources>
