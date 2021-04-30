@@ -101,6 +101,15 @@ public class SettingAPIUri {
     }
 
     /**
+     * 获取用户注销url
+     * @return
+     */
+    public static String getAccountLogOffUrl() {
+        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/sys/v3.0/user/close_account";
+    }
+
+
+    /**
      * 获取MDM启用状态
      *
      * @return

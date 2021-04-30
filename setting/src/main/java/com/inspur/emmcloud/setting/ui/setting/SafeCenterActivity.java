@@ -1,7 +1,9 @@
 package com.inspur.emmcloud.setting.ui.setting;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -10,10 +12,15 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
+import com.inspur.emmcloud.baselib.widget.dialogs.ActionSheetDialog;
+import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.ui.DarkUtil;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.setting.R;
@@ -21,6 +28,7 @@ import com.inspur.emmcloud.setting.R2;
 import com.inspur.emmcloud.setting.api.SettingAPIInterfaceImpl;
 import com.inspur.emmcloud.setting.api.SettingAPIService;
 import com.inspur.emmcloud.setting.bean.GetMDMStateResult;
+import com.inspur.emmcloud.setting.bean.LogOffResult;
 import com.inspur.emmcloud.setting.bean.UserProfileInfoBean;
 import com.inspur.emmcloud.setting.util.FingerPrintUtils;
 
@@ -41,6 +49,8 @@ public class SafeCenterActivity extends BaseActivity {
     RelativeLayout passwordResetLayout;
     @BindView(R2.id.tv_setting_safe_gesture_face)
     TextView safeGestureFaceText;
+    @BindView(R2.id.setting_safe_center_more)
+    ImageView safeMoreImg;
 
     LoadingDialog loadingDialog;
     SettingAPIService apiService;
@@ -137,8 +147,46 @@ public class SafeCenterActivity extends BaseActivity {
             bundle.putInt("extra_mode", 2);
             bundle.putString("extra_phone", getMyInfoResult.getPhoneNumber());
             ARouter.getInstance().build(Constant.AROUTER_CLASS_LOGIN_BY_SMS).with(bundle).navigation();
+        } else if (id == R.id.setting_safe_center_more){
+            showOperationDialog();
         }
     }
+
+    private void showOperationDialog() {
+        ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener onSheetItemClickListener = new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {
+            @Override
+            public void onClick(ActionSheetDialog dialog, View itemView, int position) {
+                String tag = (String) itemView.getTag();
+                if (tag.equals(getString(R.string.setting_log_off))) {
+                    new CustomDialog.MessageDialogBuilder(SafeCenterActivity.this)
+                            .setMessage(SafeCenterActivity.this.getString(R.string.setting_log_off_dialog_info))
+                            .setNegativeButton(SafeCenterActivity.this.getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            })
+                            .setPositiveButton(SafeCenterActivity.this.getString(R.string.ok), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                    apiService.logOffAccount();
+                                }
+                            })
+                            .setCancelable(false).show();
+                }
+                dialog.dismiss();
+            }
+        };
+
+        ActionSheetDialog.ActionListSheetBuilder builder = new ActionSheetDialog.ActionListSheetBuilder(this);
+            builder.addItem(getString(R.string.setting_log_off));
+        builder.setOnSheetItemClickListener(onSheetItemClickListener)
+                .setItemColor(DarkUtil.getTextColor())
+                .build()
+                .show();
+    }
+
 
     /**
      * 打开设置人脸识别页面
@@ -194,6 +242,10 @@ public class SafeCenterActivity extends BaseActivity {
             setMDMLayoutState(null);
         }
 
-
+        @Override
+        public void returnLogOffSuccess(LogOffResult logOffResult) {
+            ToastUtils.show(getString(R.string.setting_log_offed));
+            BaseApplication.getInstance().signout();
+        }
     }
 }
