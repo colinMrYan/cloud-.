@@ -91,6 +91,7 @@ public class ProtocolUtil {
                         dialog.dismiss();
 //                        BaseApplication.getInstance().signout();
                         BaseApplication.getInstance().exit();
+                        System.exit(0);
 
                     }
                 })
