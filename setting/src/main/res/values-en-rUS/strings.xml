@@ -153,7 +153,7 @@
     <string name="setting_safe_cloud_touch_id">%1$s </string>
     <string name="setting_log_off">Account log off</string>
     <string name="setting_log_offed">Log off Success</string>
-    <string name="setting_log_off_dialog_info">Are you sure log off your account?</string>
+    <string name="setting_log_off_dialog_info">After the account is logged off, all the message records of cloud + will be cleared and cannot be recovered. Please take care. Confirm whether to cancel the account number?</string>
 
 
 

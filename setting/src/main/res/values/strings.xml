@@ -155,7 +155,7 @@
     <string name="setting_enter_app">进入应用</string>
     <string name="setting_log_off">用户注销</string>
     <string name="setting_log_offed">注销成功</string>
-    <string name="setting_log_off_dialog_info">用户注销后不可恢复，请问是否注销？</string>
+    <string name="setting_log_off_dialog_info">账号注销后，您在云+的所有消息记录，账号信息等均会清除且无法恢复，请您谨慎操作。请确认是否继续注销账号？</string>
 
 
 </resources>
