@@ -153,5 +153,9 @@
     <string name="setting_net_check_net_current_state_unknown">未知</string>
 
     <string name="setting_enter_app">进入应用</string>
+    <string name="setting_log_off">用户注销</string>
+    <string name="setting_log_offed">注销成功</string>
+    <string name="setting_log_off_dialog_info">用户注销后不可恢复，请问是否注销？</string>
+
 
 </resources>

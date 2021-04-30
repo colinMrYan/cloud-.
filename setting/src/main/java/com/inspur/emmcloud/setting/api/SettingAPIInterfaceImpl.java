@@ -9,6 +9,7 @@ import com.inspur.emmcloud.setting.bean.GetMDMStateResult;
 import com.inspur.emmcloud.setting.bean.GetUploadMyHeadResult;
 import com.inspur.emmcloud.setting.bean.GetUserCardMenusResult;
 import com.inspur.emmcloud.setting.bean.GetUserHeadUploadResult;
+import com.inspur.emmcloud.setting.bean.LogOffResult;
 import com.inspur.emmcloud.setting.bean.SettingGetBoolenResult;
 import com.inspur.emmcloud.setting.bean.UserProfileInfoBean;
 
@@ -154,6 +155,16 @@ public class SettingAPIInterfaceImpl implements SettingAPIInterface {
 
     @Override
     public void returnMDMStateFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnLogOffSuccess(LogOffResult logOffResult) {
+
+    }
+
+    @Override
+    public void returnLogOffFail(String error, int errorCode) {
 
     }
 

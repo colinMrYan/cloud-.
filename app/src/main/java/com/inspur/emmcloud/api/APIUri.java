@@ -1142,4 +1142,12 @@ public class APIUri {
     }
 
 
+    /**
+     * 获取emm注销地址
+     * @return
+     */
+    public static String getLogOffUrl(){
+        return getEMMBaseUrl() + "api/sys/v3.0/user/close_account";
+    }
+
 }

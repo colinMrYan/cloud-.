@@ -147,4 +147,9 @@
     <string name="setting_safe_cloud_touch_id">%1$s </string>
 
     <string name="setting_enter_app">進入應用</string>
+    <string name="setting_log_off">用戶註銷</string>
+    <string name="setting_log_offed">註銷成功</string>
+    <string name="setting_log_off_dialog_info">用戶註銷後不可恢復，請問是否註銷？</string>
+
+
 </resources>

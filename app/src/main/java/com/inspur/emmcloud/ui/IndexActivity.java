@@ -262,7 +262,7 @@ public class IndexActivity extends IndexBaseActivity {
      * 为了使打开报销web应用更快，进行预加载
      */
     private void setPreloadWebApp() {
-        if (MyApplication.getInstance().getTanent().equals("inspur_esg")) {
+        if (MyApplication.getInstance() != null && "inspur_esg".equals(MyApplication.getInstance().getTanent())) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 webView.getSettings().setSafeBrowsingEnabled(false);
             }
