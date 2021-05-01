@@ -70,6 +70,7 @@
         <item name="color_3a_88">@color/color_3a</item>
         <item name="home_common_bg">@color/button_color_nor</item>
         <item name="text_ll_color_nor">@color/button_color_nor</item>
+        <item name="dialog_common_bg_36">@color/button_color_nor</item>
         <item name="common_bg_30">@color/button_color_nor</item>
         <item name="text_ll_color_sel">@color/button_color_sel</item>
         <item name="text_color">@color/text_color</item>
@@ -87,6 +88,8 @@
         <item name="drawable_list_divider">@drawable/rv_divider</item>
         <item name="delete_input_icon">@drawable/icon_delete_input</item>
         <item name="delete_emotion_icon">@drawable/emotion_delete</item>
+        <item name="contact_struct_icon">@drawable/ic_contact_struct</item>
+        <item name="contact_group_icon">@drawable/ic_contact_group</item>
 
         <item name="header_text_blue_white_color">@color/footer_tab_text_sel_blue</item>
         <item name="footer_tab_text_color">@color/seclector_footer_text_white</item>
@@ -146,6 +149,7 @@
         <item name="color_3a_88">@color/color_3a</item>
         <item name="home_common_bg">@color/button_color_nor</item>
         <item name="text_ll_color_nor">@color/button_color_nor</item>
+        <item name="dialog_common_bg_36">@color/button_color_nor</item>
         <item name="common_bg_30">@color/button_color_nor</item>
         <item name="text_ll_color_sel">@color/button_color_sel</item>
         <item name="text_color">@color/text_color</item>
@@ -163,6 +167,8 @@
         <item name="drawable_list_divider">@drawable/rv_divider</item>
         <item name="delete_input_icon">@drawable/icon_delete_input</item>
         <item name="delete_emotion_icon">@drawable/emotion_delete</item>
+        <item name="contact_struct_icon">@drawable/ic_contact_struct</item>
+        <item name="contact_group_icon">@drawable/ic_contact_group</item>
 
         <item name="header_text_blue_white_color">@color/header_text_grey</item>
         <item name="footer_tab_text_color">@color/seclector_footer_text_grey</item>
@@ -219,6 +225,7 @@
         <item name="color_3a_88">@color/color_3a</item>
         <item name="home_common_bg">@color/button_color_nor</item>
         <item name="text_ll_color_nor">@color/button_color_nor</item>
+        <item name="dialog_common_bg_36">@color/button_color_nor</item>
         <item name="common_bg_30">@color/button_color_nor</item>
         <item name="text_ll_color_sel">@color/button_color_sel</item>
         <item name="text_color">@color/text_color</item>
@@ -235,6 +242,8 @@
         <item name="drawable_list_divider">@drawable/rv_divider</item>
         <item name="delete_input_icon">@drawable/icon_delete_input</item>
         <item name="delete_emotion_icon">@drawable/emotion_delete</item>
+        <item name="contact_struct_icon">@drawable/ic_contact_struct</item>
+        <item name="contact_group_icon">@drawable/ic_contact_group</item>
 
         <item name="header_text_blue_white_color">@color/header_text</item>
         <item name="footer_tab_text_color">@color/seclector_footer_text_blue</item>
@@ -292,6 +301,7 @@
         <item name="color_3a_88">@color/color_88</item>
         <item name="home_common_bg">@color/content_bg_dark</item>
         <item name="text_ll_color_nor">@color/button_color_nor_dark</item>
+        <item name="dialog_common_bg_36">@color/color_36</item>
         <item name="common_bg_30">@color/bubble_bg_color_dark</item>
         <item name="text_ll_color_sel">@color/button_color_sel_dark</item>
         <item name="text_color">@color/text_color_dark</item>
@@ -309,6 +319,8 @@
         <item name="drawable_list_divider">@drawable/rv_divider_dark</item>
         <item name="delete_input_icon">@drawable/icon_delete_input_dark</item>
         <item name="delete_emotion_icon">@drawable/emotion_delete_dark</item>
+        <item name="contact_struct_icon">@drawable/ic_contact_struct_dark</item>
+        <item name="contact_group_icon">@drawable/ic_contact_group_dark</item>
 
         <item name="header_text_blue_white_color">@color/header_text</item>
         <item name="footer_tab_text_color">@color/seclector_footer_text_blue</item>

@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="?attr/home_common_bg"
     android:fitsSystemWindows="true">
 
     <RelativeLayout
@@ -36,8 +37,8 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?attr/content_bg"
-        android:layout_below="@id/rl_header">
+        android:layout_below="@id/rl_header"
+        android:background="?attr/content_bg">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -53,8 +54,8 @@
                     android:id="@+id/rl_check_net_url_logs"
                     android:layout_width="87dp"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true">
 
                     <ImageView
@@ -90,8 +91,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/tv_check_net_url_title"
-                        android:layout_marginRight="14dp"
                         android:layout_marginTop="10dp"
+                        android:layout_marginRight="14dp"
                         android:maxLines="3"
                         android:scrollbars="vertical"
                         android:textColor="#666666"
@@ -109,11 +110,11 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:layout_alignParentRight="true"
                         android:layout_below="@id/tv_check_net_url_content"
+                        android:layout_alignParentRight="true"
                         android:layout_marginLeft="0dp"
-                        android:layout_marginRight="13dp"
                         android:layout_marginTop="20dp"
+                        android:layout_marginRight="13dp"
                         android:background="?attr/color_list_divider" />
                 </LinearLayout>
             </RelativeLayout>
@@ -127,8 +128,8 @@
                     android:id="@+id/rl_check_net_result_logs"
                     android:layout_width="87dp"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true">
 
                     <ImageView
@@ -163,8 +164,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/tv_check_net_result_title"
-                        android:layout_marginRight="16dp"
                         android:layout_marginTop="10dp"
+                        android:layout_marginRight="16dp"
                         android:maxLines="6"
                         android:scrollbars="vertical"
                         android:textColor="#666666"
@@ -182,11 +183,11 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:layout_alignParentRight="true"
                         android:layout_below="@id/tv_check_net_result_content"
+                        android:layout_alignParentRight="true"
                         android:layout_marginLeft="0dp"
-                        android:layout_marginRight="13dp"
                         android:layout_marginTop="20dp"
+                        android:layout_marginRight="13dp"
                         android:background="?attr/color_list_divider" />
                 </LinearLayout>
 
@@ -201,8 +202,8 @@
                     android:id="@+id/rl_check_net_state_logs"
                     android:layout_width="87dp"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true">
 
                     <ImageView
@@ -238,8 +239,8 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentTop="true"
-                        android:layout_marginRight="14dp"
                         android:layout_marginTop="10dp"
+                        android:layout_marginRight="14dp"
                         android:textColor="#666666"
                         android:textSize="15dp"></TextView>
 
@@ -257,8 +258,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_alignParentRight="true"
-                        android:layout_marginRight="13dp"
                         android:layout_marginTop="20dp"
+                        android:layout_marginRight="13dp"
                         android:background="?attr/color_list_divider" />
                 </LinearLayout>
 
@@ -274,8 +275,8 @@
                     android:id="@+id/rl_checking_urls_logs"
                     android:layout_width="87dp"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true">
 
                     <ImageView

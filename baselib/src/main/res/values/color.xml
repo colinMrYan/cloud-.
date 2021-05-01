@@ -34,6 +34,7 @@
     <!-- 导航栏原来色值#1596d2 -->
 
     <color name="mark_down_url_read">#551a8b</color>
+    <color name="mark_down_url_read_95">#95B0C5</color>
     <color name="schedule_tab_text_normal_blue">#8bbbdf</color>
     <color name="content_bg">#f8f9fb</color>
     <color name="content_bg_level_two">#f6f6f6</color>
@@ -182,5 +183,7 @@
     <color name="bubble_bg_color_dark">#303030</color>
     <color name="color_3a">#3a3a3a</color>
     <color name="color_88">#888888</color>
+    <color name="color_40">#404040</color>
+    <color name="color_36">#363636</color>
 
 </resources>

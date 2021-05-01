@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/content_bg_level_two"
+    android:background="?attr/home_common_bg"
     android:orientation="vertical">
 
     <com.inspur.emmcloud.baselib.widget.CircleTextImageView

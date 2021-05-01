@@ -207,12 +207,13 @@
 
                             <com.inspur.emmcloud.baselib.widget.CircleTextImageView
                                 android:id="@+id/struct_img"
-                                android:layout_width="36dp"
-                                android:layout_height="36dp"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
                                 android:layout_centerVertical="true"
+                                android:gravity="center_vertical"
                                 android:layout_marginLeft="15dp"
                                 android:layout_marginRight="10dp"
-                                android:src="@drawable/ic_contact_struct" />
+                                android:src="?attr/contact_struct_icon" />
 
                             <TextView
                                 android:id="@+id/text_title"
@@ -245,7 +246,7 @@
                                 android:layout_centerVertical="true"
                                 android:layout_marginLeft="15dp"
                                 android:layout_marginRight="10dp"
-                                android:src="@drawable/ic_contact_group" />
+                                android:src="?attr/contact_group_icon" />
 
                             <TextView
                                 android:layout_width="match_parent"

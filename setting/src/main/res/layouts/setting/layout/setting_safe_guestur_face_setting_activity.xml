@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/home_common_bg"
     android:clipToPadding="true"
     android:fitsSystemWindows="true">
 
@@ -51,8 +52,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:paddingBottom="11dp"
                 android:paddingTop="11dp"
+                android:paddingBottom="11dp"
                 android:text="@string/setting_switch_gesture_unlock"
                 android:textColor="?attr/text_color"
                 android:textSize="16sp" />
@@ -86,8 +87,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:paddingBottom="11dp"
                 android:paddingTop="11dp"
+                android:paddingBottom="11dp"
                 android:text="@string/setting_safe_center_finger_print"
                 android:textColor="?attr/text_color"
                 android:textSize="16sp" />
@@ -122,8 +123,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:paddingBottom="11dp"
                 android:paddingTop="11dp"
+                android:paddingBottom="11dp"
                 android:text="@string/setting_switch_gesture_reset_unlock"
                 android:textColor="?attr/text_color"
                 android:textSize="16sp" />
@@ -158,8 +159,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:paddingBottom="11dp"
                 android:paddingTop="11dp"
+                android:paddingBottom="11dp"
                 android:text="@string/setting_experience_face_verify"
                 android:textColor="?attr/text_color"
                 android:textSize="16sp" />

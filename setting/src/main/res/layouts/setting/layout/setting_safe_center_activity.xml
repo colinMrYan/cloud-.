@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/home_common_bg"
     android:fitsSystemWindows="true">
 
     <RelativeLayout
@@ -78,9 +79,9 @@
                     android:layout_alignParentLeft="true"
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
-                    android:paddingBottom="11dp"
                     android:paddingLeft="16dp"
                     android:paddingTop="11dp"
+                    android:paddingBottom="11dp"
                     android:text="@string/modify_password"
                     android:textColor="?attr/text_color"
                     android:textSize="16sp" />
@@ -115,9 +116,9 @@
                     android:layout_alignParentLeft="true"
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
-                    android:paddingBottom="11dp"
                     android:paddingLeft="16dp"
                     android:paddingTop="11dp"
+                    android:paddingBottom="11dp"
                     android:text="@string/modify_reset_password"
                     android:textColor="?attr/text_color"
                     android:textSize="16sp" />
@@ -138,6 +139,7 @@
             </RelativeLayout>
 
         </LinearLayout>
+
         <RelativeLayout
             android:id="@+id/rl_setting_safe_gesture_face"
             android:layout_width="match_parent"
@@ -152,8 +154,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:paddingBottom="11dp"
                 android:paddingTop="11dp"
+                android:paddingBottom="11dp"
                 android:text="@string/setting_safe_gesture_face"
                 android:textColor="?attr/text_color"
                 android:textSize="16sp" />
@@ -187,8 +189,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:paddingBottom="11dp"
                 android:paddingTop="11dp"
+                android:paddingBottom="11dp"
                 android:text="@string/setting_safe_face_id_unlock"
                 android:textColor="?attr/text_color"
                 android:textSize="16sp" />
@@ -211,10 +213,11 @@
 
         <LinearLayout
             android:id="@+id/rl_device_manager"
-            android:layout_marginTop="10dp"
             android:layout_width="match_parent"
-            android:orientation="vertical"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical">
+
             <View
                 android:id="@+id/v_line"
                 android:layout_width="match_parent"
@@ -235,8 +238,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:paddingBottom="11dp"
                     android:paddingTop="11dp"
+                    android:paddingBottom="11dp"
                     android:text="@string/settings_device_manager"
                     android:textColor="?attr/text_color"
                     android:textSize="16sp" />

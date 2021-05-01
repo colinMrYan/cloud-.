@@ -32,6 +32,7 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.ListViewUtils;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
@@ -42,6 +43,7 @@ import com.inspur.emmcloud.baselib.widget.NoHorScrollView;
 import com.inspur.emmcloud.baselib.widget.ScrollViewWithListView;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.MyDialog;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
@@ -93,6 +95,7 @@ import butterknife.OnClick;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
+import static com.inspur.emmcloud.basemodule.ui.BaseActivity.THEME_DARK;
 
 /**
  * Created by yufuchang on 2018/6/7.
@@ -241,7 +244,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                     int scrollerHeight = searchOuterScroller.getHeight();
                     int searchEditLayoutHeight = searchEditLayout.getHeight();
                     int titleAllTvHeight = titleAllTv.getHeight();
-                    int openGroupListViewHeight = scrollerHeight - searchEditLayoutHeight - titleAllTvHeight - selectAllLayoutHeight -3;
+                    int openGroupListViewHeight = scrollerHeight - searchEditLayoutHeight - titleAllTvHeight - selectAllLayoutHeight - 3;
                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, openGroupListViewHeight);
                     openGroupListView.setLayoutParams(params);
                     openGroupListView.requestLayout();
@@ -1221,7 +1224,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                 photoImg.setImageResource(R.drawable.icon_channel_group_default);
             }
         } else if (type.equals(SearchModel.TYPE_STRUCT)) {
-            photoImg.setImageResource(R.drawable.ic_contact_struct);
+            photoImg.setImageResource(ResourceUtils.getResValueOfAttr(getActivity(), R.attr.contact_struct_icon));
         } else {
             defaultIcon = R.drawable.icon_person_default;
             if (!searchModel.getId().equals("null")) {

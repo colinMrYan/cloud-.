@@ -28,12 +28,15 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.EditTextUtils;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
 import com.inspur.emmcloud.baselib.widget.FlowLayout;
 import com.inspur.emmcloud.baselib.widget.MaxHeightScrollView;
 import com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
@@ -394,7 +397,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
                 photoImg.setImageResource(R.drawable.icon_channel_group_default);
             }
         } else if (type.equals(SearchModel.TYPE_STRUCT)) {
-            photoImg.setImageResource(R.drawable.ic_contact_struct);
+            photoImg.setImageResource(ResourceUtils.getResValueOfAttr(this, R.attr.contact_group_icon));
         } else {
             defaultIcon = R.drawable.icon_person_default;
             if (!searchModel.getId().equals("null")) {

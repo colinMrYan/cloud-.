@@ -136,7 +136,7 @@ public class IndexActivity extends IndexBaseActivity {
     /**
      * 获取是否同意了隐私协议和服务政策
      */
-    private void getIsAgreed(){
+    private void getIsAgreed() {
         AppAPIService appAPIService = new AppAPIService(this);
         appAPIService.setAPIInterface(new WebService());
         appAPIService.getIsAgreeAgreement();
@@ -203,7 +203,7 @@ public class IndexActivity extends IndexBaseActivity {
      * 获取app权限
      */
     private void getAppRole() {
-        if(NetUtils.isNetworkConnected(this)){
+        if (NetUtils.isNetworkConnected(this)) {
             AppAPIService appAPIService = new AppAPIService(this);
             appAPIService.setAPIInterface(new WebService());
             appAPIService.getAppRole();
@@ -533,8 +533,8 @@ public class IndexActivity extends IndexBaseActivity {
      * 获取多组织
      * 对应的人有
      */
-    private void getMultipleContactOrg(){
-        if(NetUtils.isNetworkConnected(getApplicationContext(),false)){
+    private void getMultipleContactOrg() {
+        if (NetUtils.isNetworkConnected(getApplicationContext(), false)) {
             ContactAPIService apiService = new ContactAPIService(IndexActivity.this);
             apiService.setAPIInterface(new WebService());
             apiService.getMultipleContactOrgList();
@@ -810,7 +810,7 @@ public class IndexActivity extends IndexBaseActivity {
         @Override
         public void returnAppRoleSuccess(String appRole) {
             super.returnAppRoleSuccess(appRole);
-            PreferencesByUserAndTanentUtils.putString(IndexActivity.this,Constant.APP_ROLE,appRole);
+            PreferencesByUserAndTanentUtils.putString(IndexActivity.this, Constant.APP_ROLE, appRole);
         }
 
         @Override
@@ -821,7 +821,7 @@ public class IndexActivity extends IndexBaseActivity {
         @Override
         public void returnIsAgreedSuccess(String isSuccess) {
             //0代表未同意，1代表已经统一隐私政策和服务协议
-            if(JSONUtils.getString(isSuccess,"agreed","0").equals("0")){
+            if (JSONUtils.getString(isSuccess, "agreed", "0").equals("0")) {
 //                ProtocolUtil.showProtocolDialog(IndexActivity.this);
             }
         }

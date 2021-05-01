@@ -125,7 +125,7 @@ public class DisplayTxtMarkdownMsg {
                                         : R.color.header_bg_blue));
                         for (int i = 0; i < markDownLinkList.size(); i++) {
                             if (holder.getUrl().equals(markDownLinkList.get(i).getLink())) {
-                                holder.setColor(context.getResources().getColor(R.color.mark_down_url_read));
+                                holder.setColor(context.getResources().getColor(R.color.mark_down_url_read_95));
                             }
                         }
                     }
